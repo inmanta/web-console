@@ -51,5 +51,8 @@ module.exports = {
   // A map from regular expressions to paths to transformers
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest"
-  }
+  },
+
+  reporters: ["default", "jest-junit"]
+
 };
