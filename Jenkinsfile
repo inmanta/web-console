@@ -25,7 +25,7 @@ pipeline {
 
     post {
         always {
-            junit 'junit.xml'
+            junit 'web-console/junit.xml'
         }
     }
 }
