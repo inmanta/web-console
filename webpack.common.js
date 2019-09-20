@@ -67,7 +67,8 @@ module.exports = {
         test: /\.svg$/,
         // only process SVG modules with this loader if they live under a 'bgimages' directory
         // this is primarily useful when applying a CSS background using an SVG
-        include: input => input.indexOf(BG_IMAGES_DIRNAME) > -1,
+        include: [input => input.indexOf(BG_IMAGES_DIRNAME) > -1,
+          path.resolve(__dirname, 'src')],
         use: {
           loader: 'svg-url-loader',
           options: {}
@@ -115,7 +116,8 @@ module.exports = {
   },
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],

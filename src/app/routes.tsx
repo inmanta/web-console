@@ -7,6 +7,9 @@ import { Dashboard } from '@app/Dashboard/Dashboard';
 import { NotFound } from '@app/NotFound/NotFound';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
+import { ServiceCatalog } from './ServiceCatalog/ServiceCatalog';
+import { ServiceInventory } from './ServiceInventory/ServiceInventory';
+import { LifecycleManager } from './LifecycleManager/LifecycleManager';
 
 let routeFocusTimer: number;
 
@@ -47,25 +50,67 @@ export interface IAppRoute {
   isAsync?: boolean;
 }
 
-const routes: IAppRoute[] = [
-  {
-    component: Dashboard,
-    exact: true,
-    icon: null,
-    label: 'Dashboard',
-    path: '/',
-    title: 'Main Dashboard Title'
-  },
-  {
-    component: Support,
-    exact: true,
-    icon: null,
-    isAsync: true,
-    label: 'Support',
-    path: '/support',
-    title: 'Support Page Title'
-  }
-];
+export interface IAppRouteGroup {
+  name: string, 
+  pathPrefix: string, 
+  exactRoutes: IAppRoute[]
+}
+
+const routes: IAppRouteGroup[] =
+  [
+    {
+      name: 'Lifecycle service management',
+      pathPrefix: '/lsm',
+      exactRoutes: [
+        {
+          component: ServiceCatalog,
+          exact: true,
+          icon: null,
+          label: 'Service Catalog',
+          path: '/catalog',
+          title: 'Service Catalog'
+        },
+        {
+          component: ServiceInventory,
+          exact: true,
+          icon: null,
+          label: 'Service Inventory',
+          path: '/inventory',
+          title: 'Service Inventory'
+        },
+        {
+          component: LifecycleManager,
+          exact: true,
+          icon: null,
+          label: 'Lifecycle Manager',
+          path: '/manager',
+          title: 'Lifecycle Manager'
+        },
+      ]
+    },
+    {
+      name: 'Default',
+      pathPrefix: '',
+      exactRoutes: [{
+        component: Dashboard,
+        exact: true,
+        icon: null,
+        label: 'Dashboard',
+        path: '/',
+        title: 'Main Dashboard Title'
+      },
+      {
+        component: Support,
+        exact: true,
+        icon: null,
+        isAsync: true,
+        label: 'Support',
+        path: '/support',
+        title: 'Support Page Title'
+      }
+      ]
+    }
+  ];
 
 // a custom hook for sending focus to the primary content container
 // after a view has loaded so that subsequent press of tab key
@@ -108,17 +153,20 @@ const PageNotFound = ({ title }: { title: string }) => {
 const AppRoutes = () => (
   <LastLocationProvider>
     <Switch>
-      {routes.map(({ path, exact, component, title, isAsync, icon }, idx) => (
-        <RouteWithTitleUpdates
-          path={path}
-          exact={exact}
-          component={component}
-          key={idx}
-          icon={icon}
-          title={title}
-          isAsync={isAsync}
-        />
-      ))}
+      {routes.map((routeItem) => {
+        return routeItem.exactRoutes.map(({ path, exact, component, title, isAsync, icon }, idx) => (
+          <RouteWithTitleUpdates
+            path={routeItem.pathPrefix + path}
+            exact={exact}
+            component={component}
+            key={idx}
+            icon={icon}
+            title={title}
+            isAsync={isAsync}
+          />
+        ))
+      })
+      }
       <PageNotFound title={'404 Page Not Found'} />
     </Switch>
   </LastLocationProvider>
