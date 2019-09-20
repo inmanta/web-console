@@ -15,7 +15,7 @@ describe('Navigation', () => {
     const nav = wrapper.find('#nav-primary-simple');
     const serviceCatalogEntry = nav.find('.pf-c-nav__link').first();
     serviceCatalogEntry.simulate('click');
-    expect(serviceCatalogEntry.getElement().props['activeClassName'])
+    expect(serviceCatalogEntry.getElement().props.activeClassName)
       .toEqual('pf-m-current');
   });
 

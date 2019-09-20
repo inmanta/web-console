@@ -52,8 +52,8 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
         routes.map((routeItem, idx) => {
           return <NavGroup title={routeItem.name} key={`${routeItem.name}-${idx}`}>
             {
-              routeItem.exactRoutes.map((route, idx) => {
-                return <NavItem key={`${route.label}-${idx}`} id={`${route.label}-${idx}`}>
+              routeItem.exactRoutes.map((route, index) => {
+                return <NavItem key={`${route.label}-${index}`} id={`${route.label}-${index}`}>
                   <NavLink exact={true} to={routeItem.pathPrefix + route.path} activeClassName="pf-m-current">{route.label}</NavLink>
                 </NavItem>
               })

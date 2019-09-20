@@ -51,16 +51,14 @@ export interface IAppRoute {
 }
 
 export interface IAppRouteGroup {
-  name: string, 
-  pathPrefix: string, 
+  name: string,
+  pathPrefix: string,
   exactRoutes: IAppRoute[]
 }
 
 const routes: IAppRouteGroup[] =
   [
     {
-      name: 'Lifecycle service management',
-      pathPrefix: '/lsm',
       exactRoutes: [
         {
           component: ServiceCatalog,
@@ -86,11 +84,11 @@ const routes: IAppRouteGroup[] =
           path: '/manager',
           title: 'Lifecycle Manager'
         },
-      ]
+      ],
+      name: 'Lifecycle service management',
+      pathPrefix: '/lsm',
     },
     {
-      name: 'Default',
-      pathPrefix: '',
       exactRoutes: [{
         component: Dashboard,
         exact: true,
@@ -108,7 +106,9 @@ const routes: IAppRouteGroup[] =
         path: '/support',
         title: 'Support Page Title'
       }
-      ]
+      ],
+      name: 'Default',
+      pathPrefix: '',
     }
   ];
 
