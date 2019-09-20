@@ -2,24 +2,23 @@ import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   Nav,
-  NavList,
   NavItem,
-  NavVariants,
   Page,
   PageHeader,
   PageSidebar,
-  SkipToContent
+  SkipToContent,
+  NavGroup
 } from '@patternfly/react-core';
 import { routes } from '@app/routes';
+import Logo from '!react-svg-loader!@images/logo.svg';
 
 interface IAppLayout {
   children: React.ReactNode;
 }
 
-const AppLayout: React.FunctionComponent<IAppLayout> = ({children}) => {
+const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const logoProps = {
-    href: '/',
-    target: '_blank'
+    href: '/'
   };
   const [isNavOpen, setIsNavOpen] = React.useState(true);
   const [isMobileView, setIsMobileView] = React.useState(true);
@@ -33,9 +32,12 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({children}) => {
   const onPageResize = (props: { mobileView: boolean; windowSize: number }) => {
     setIsMobileView(props.mobileView);
   };
+
+  const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo"/>
+
   const Header = (
     <PageHeader
-      logo="Patternfly"
+      logo={inmantaLogo}
       logoProps={logoProps}
       toolbar="Toolbar"
       showNavToggle={true}
@@ -45,22 +47,28 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({children}) => {
   );
 
   const Navigation = (
-    <Nav id="nav-primary-simple">
-      <NavList id="nav-list-simple" variant={NavVariants.simple}>
-        {routes.map((route, idx) => {
-          return (
-            <NavItem key={`${route.label}-${idx}`} id={`${route.label}-${idx}`}>
-              <NavLink exact={true} to={route.path} activeClassName="pf-m-current">{route.label}</NavLink>
-            </NavItem>
-          );
-        })}
-      </NavList>
+    <Nav id="nav-primary-simple" theme="dark">
+      {
+        routes.map((routeItem, idx) => {
+          return <NavGroup title={routeItem.name} key={`${routeItem.name}-${idx}`}>
+            {
+              routeItem.exactRoutes.map((route, index) => {
+                return <NavItem key={`${route.label}-${index}`} id={`${route.label}-${index}`}>
+                  <NavLink exact={true} to={routeItem.pathPrefix + route.path} activeClassName="pf-m-current">{route.label}</NavLink>
+                </NavItem>
+              })
+            }
+          </NavGroup>
+        }
+        )
+      }
+
     </Nav>
   );
   const Sidebar = (
     <PageSidebar
       nav={Navigation}
-      isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen} />
+      isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen} theme="dark"/>
   );
   const PageSkipToContent = (
     <SkipToContent href="#primary-app-container">
