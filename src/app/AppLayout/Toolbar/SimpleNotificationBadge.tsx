@@ -1,5 +1,5 @@
 import React from 'react';
-import { NotificationBadge} from '@patternfly/react-core';
+import { NotificationBadge } from '@patternfly/react-core';
 import { BellIcon } from '@patternfly/react-icons';
 
 export class SimpleNotificationBadge extends React.Component<{}, { isRead: boolean }> {

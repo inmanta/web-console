@@ -3,10 +3,10 @@ import { ContextSelector, ContextSelectorItem } from '@patternfly/react-core';
 
 export class SimpleContextSelector extends React.Component<{}, { filteredItems: string[], isOpen: boolean, selected: any, searchValue: string }> {
   private items: string[];
-  private onToggle: (event: any, isOpen: any) => void;
+  private onToggle: (event?: any, isOpen?: any) => void;
   private onSelect: (event: any, value: any) => void;
   private onSearchInputChange: (value: any) => void;
-  private  onSearchButtonClick: (event: any) => void;
+  private onSearchButtonClick: (event: any) => void;
   constructor(props) {
     super(props);
     this.items = [
@@ -65,7 +65,7 @@ export class SimpleContextSelector extends React.Component<{}, { filteredItems: 
         searchButtonAriaLabel="Filter Projects"
       >
         {filteredItems.map((item, index) => (
-          <ContextSelectorItem key={index} role="menuitem">{item}</ContextSelectorItem>
+          <ContextSelectorItem  {...{ role: "menuitem" }} key={index}>{item}</ContextSelectorItem>
         ))}
 
       </ContextSelector>

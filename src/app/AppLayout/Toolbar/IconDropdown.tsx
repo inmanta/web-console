@@ -1,9 +1,9 @@
 import React from 'react';
-import { Dropdown, DropdownToggle, DropdownItem, DropdownSeparator, DropdownPosition} from '@patternfly/react-core';
+import { Dropdown, DropdownToggle, DropdownItem, DropdownSeparator, DropdownPosition } from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
 
-export class IconDropdown extends React.Component<{},{isOpen: boolean}> {
+export class IconDropdown extends React.Component<{}, { isOpen: boolean }> {
   private onToggle: (isOpen: any) => void;
   private onSelect: (event: any) => void;
   constructor(props) {
