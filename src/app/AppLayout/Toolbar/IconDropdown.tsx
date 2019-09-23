@@ -1,37 +1,11 @@
 import React from 'react';
-import { NotificationBadge, Dropdown, DropdownToggle, DropdownItem, DropdownSeparator, DropdownPosition, DropdownDirection, KebabToggle } from '@patternfly/react-core';
-import { BellIcon } from '@patternfly/react-icons';
+import { Dropdown, DropdownToggle, DropdownItem, DropdownSeparator, DropdownPosition} from '@patternfly/react-core';
 import { CogIcon } from '@patternfly/react-icons';
 
-class SimpleNotificationBadge extends React.Component<{}, { isRead: boolean }> {
-  onClick: () => void;
-  constructor(props) {
-    super(props);
-    this.state = {
-      isRead: false
-    };
-    this.onClick = () => {
-      this.setState({
-        isRead: true
-      });
-    };
-  }
 
-  render() {
-    const { isRead } = this.state;
-    return (
-      <NotificationBadge isRead={isRead} onClick={this.onClick} aria-label="Notifications">
-        <BellIcon />
-      </NotificationBadge>
-    );
-  }
-}
-
-
-
-class IconDropdown extends React.Component<{},{isOpen: boolean}> {
-  onToggle: (isOpen: any) => void;
-  onSelect: (event: any) => void;
+export class IconDropdown extends React.Component<{},{isOpen: boolean}> {
+  private onToggle: (isOpen: any) => void;
+  private onSelect: (event: any) => void;
   constructor(props) {
     super(props);
     this.state = {
@@ -49,7 +23,7 @@ class IconDropdown extends React.Component<{},{isOpen: boolean}> {
     };
   }
 
-  render() {
+  public render() {
     const { isOpen } = this.state;
     const dropdownItems = [
       // List of actions that be possible
@@ -57,10 +31,10 @@ class IconDropdown extends React.Component<{},{isOpen: boolean}> {
       <DropdownItem key="action" component="button">
         Action
       </DropdownItem>,
-      <DropdownItem key="disabled link" isDisabled>
+      <DropdownItem key="disabled link" isDisabled={true}>
         Disabled Link
       </DropdownItem>,
-      <DropdownItem key="disabled action" isDisabled component="button">
+      <DropdownItem key="disabled action" isDisabled={true} component="button">
         Disabled Action
       </DropdownItem>,
       <DropdownSeparator key="separator" />,
@@ -79,12 +53,9 @@ class IconDropdown extends React.Component<{},{isOpen: boolean}> {
         }
         isOpen={isOpen}
         position={DropdownPosition.right}
-        isPlain
+        isPlain={true}
         dropdownItems={dropdownItems}
       />
     );
   }
 }
-
-
-export { SimpleNotificationBadge, IconDropdown };

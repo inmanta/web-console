@@ -15,8 +15,10 @@ import {
 import { routes } from '@app/routes';
 import Logo from '!react-svg-loader!@images/logo.svg';
 import AvatarImg from '!url-loader!@assets/images/img_avatar.svg';
-import { SimpleNotificationBadge, IconDropdown } from './Toolbar';
-import { SimpleContextSelector } from './SimpleContextSelector';
+
+import { SimpleContextSelector } from './Toolbar/SimpleContextSelector';
+import { SimpleNotificationBadge } from './Toolbar/SimpleNotificationBadge';
+import { IconDropdown } from './Toolbar/IconDropdown';
 
 interface IAppLayout {
   children: React.ReactNode;

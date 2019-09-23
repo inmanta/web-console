@@ -2,11 +2,11 @@ import React from 'react';
 import { ContextSelector, ContextSelectorItem } from '@patternfly/react-core';
 
 export class SimpleContextSelector extends React.Component<{}, { filteredItems: string[], isOpen: boolean, selected: any, searchValue: string }> {
-  items: string[];
-  onToggle: (isOpen: boolean) => void;
-  onSelect: (event: any, value: any) => void;
-  onSearchInputChange: (value: any) => void;
-  onSearchButtonClick: (event: any) => void;
+  private items: string[];
+  private onToggle: (event: any, isOpen: any) => void;
+  private onSelect: (event: any, value: any) => void;
+  private onSearchInputChange: (value: any) => void;
+  private  onSearchButtonClick: (event: any) => void;
   constructor(props) {
     super(props);
     this.items = [
@@ -17,13 +17,13 @@ export class SimpleContextSelector extends React.Component<{}, { filteredItems: 
     ];
 
     this.state = {
+      filteredItems: this.items,
       isOpen: false,
-      selected: this.items[0],
       searchValue: '',
-      filteredItems: this.items
+      selected: this.items[0]
     };
 
-    this.onToggle = (isOpen) => {
+    this.onToggle = (event, isOpen) => {
       this.setState({
         isOpen
       });
@@ -31,8 +31,8 @@ export class SimpleContextSelector extends React.Component<{}, { filteredItems: 
 
     this.onSelect = (event, value) => {
       this.setState({
+        isOpen: !this.state.isOpen,
         selected: value,
-        isOpen: !this.state.isOpen
       });
     };
 
@@ -50,7 +50,7 @@ export class SimpleContextSelector extends React.Component<{}, { filteredItems: 
     };
   }
 
-  render() {
+  public render() {
     const { isOpen, selected, searchValue, filteredItems } = this.state;
     return (
       <ContextSelector
@@ -62,10 +62,12 @@ export class SimpleContextSelector extends React.Component<{}, { filteredItems: 
         onSelect={this.onSelect}
         onSearchButtonClick={this.onSearchButtonClick}
         screenReaderLabel="Selected Project:"
+        searchButtonAriaLabel="Filter Projects"
       >
         {filteredItems.map((item, index) => (
-          <ContextSelectorItem key={index}>{item}</ContextSelectorItem>
+          <ContextSelectorItem key={index} role="menuitem">{item}</ContextSelectorItem>
         ))}
+
       </ContextSelector>
     );
   }
