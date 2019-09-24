@@ -10,10 +10,10 @@ export class SimpleContextSelector extends React.Component<{}, { filteredItems: 
   constructor(props) {
     super(props);
     this.items = [
-      'SD-WAN Testing',
-      'SD-WAN Production',
-      'Secure Internet Testing',
-      'Secure Internet Production'
+      'SD-WAN - Testing',
+      'SD-WAN - Production',
+      'Secure Internet - Testing',
+      'Secure Internet - Production'
     ];
 
     this.state = {
