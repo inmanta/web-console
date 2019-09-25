@@ -15,8 +15,7 @@ import {
 import { routes } from '@app/routes';
 import Logo from '!react-svg-loader!@images/logo.svg';
 import AvatarImg from '!url-loader!@assets/images/img_avatar.svg';
-
-import { SimpleContextSelector } from './Toolbar/SimpleContextSelector';
+import { EnvironmentSelector } from './Toolbar/EnvironmentSelector';
 import { SimpleNotificationBadge } from './Toolbar/SimpleNotificationBadge';
 import { IconDropdown } from './Toolbar/IconDropdown';
 
@@ -59,7 +58,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       logoProps={logoProps}
       toolbar={toolbar}
       showNavToggle={true}
-      topNav={<SimpleContextSelector />}
+      topNav={<EnvironmentSelector />}
       isNavOpen={isNavOpen}
       onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
     />
