@@ -69,6 +69,9 @@
     "@patternfly/react-core": "^3.104.12",
     "@patternfly/react-icons": "^3.14.3",
     "@patternfly/react-styles": "^3.5.22",
+    "dotenv-webpack": "^1.7.0",
+    "keycloak-js": "6.0.1",
+    "react-keycloak": "^6.1.0",
     "react-router-dom": "^5.0.1",
     "react-router-last-location": "^2.0.1"
   }
