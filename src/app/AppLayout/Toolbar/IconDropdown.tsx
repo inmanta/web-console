@@ -3,6 +3,7 @@ import { Dropdown, DropdownToggle, DropdownPosition, IconProps } from '@patternf
 
 
 export class IconDropdown extends React.Component<{icon: FunctionComponent<IconProps>, dropdownItems: JSX.Element[]}, { isOpen: boolean }> {
+
   constructor(props) {
     super(props);
     this.state = {
