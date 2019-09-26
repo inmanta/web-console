@@ -3,19 +3,13 @@ import { NotificationBadge } from '@patternfly/react-core';
 import { BellIcon } from '@patternfly/react-icons';
 
 export class SimpleNotificationBadge extends React.Component<{}, { isRead: boolean }> {
-  private onClick: () => void;
   constructor(props) {
     super(props);
     this.state = {
       isRead: false
     };
-    this.onClick = () => {
-      this.setState({
-        isRead: true
-      });
-    };
+    this.onClick = this.onClick.bind(this);
   }
-
   public render() {
     const { isRead } = this.state;
     return (
@@ -24,4 +18,9 @@ export class SimpleNotificationBadge extends React.Component<{}, { isRead: boole
       </NotificationBadge>
     );
   }
+  private onClick(): void {
+    this.setState({
+      isRead: true
+    });
+  };
 }
