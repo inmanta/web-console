@@ -3,25 +3,14 @@ import { Dropdown, DropdownToggle, DropdownPosition, IconProps } from '@patternf
 
 
 export class IconDropdown extends React.Component<{icon: FunctionComponent<IconProps>, dropdownItems: JSX.Element[]}, { isOpen: boolean }> {
-  private onToggle: (isOpen: any) => void;
-  private onSelect: (event: any) => void;
   constructor(props) {
     super(props);
     this.state = {
       isOpen: false
     };
-    this.onToggle = isOpen => {
-      this.setState({
-        isOpen
-      });
-    };
-    this.onSelect = event => {
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
-    };
+    this.onToggle = this.onToggle.bind(this);
+    this.onSelect = this.onSelect.bind(this);
   }
-
   public render() {
     const { isOpen } = this.state;
     return (
@@ -37,4 +26,14 @@ export class IconDropdown extends React.Component<{icon: FunctionComponent<IconP
       />
     );
   }
+  private onToggle(isOpen: any): void {
+    this.setState({
+      isOpen
+    });
+  };
+  private onSelect(event: any): void {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  };
 }
