@@ -69,7 +69,7 @@
     "@patternfly/react-core": "^3.104.0",
     "@patternfly/react-icons": "^3.14.6",
     "@patternfly/react-styles": "^3.5.22",
-    "react-router-dom": "^5.0.1",
+    "react-router-dom": "^5.1.0",
     "react-router-last-location": "^2.0.1"
   }
 }
