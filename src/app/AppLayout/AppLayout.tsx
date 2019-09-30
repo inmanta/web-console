@@ -51,14 +51,13 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     const [keycloak, initialized] = useKeycloak();
     const [name, setName] = React.useState('');
     keycloak.loadUserProfile().success(userInfo => {
-      setName(userInfo.firstName as string);
+      setName(userInfo.username as string);
     });
 
 
     return (
       <TextContent>
         {name}
-
       </TextContent>
     );
   }
