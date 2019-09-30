@@ -451,17 +451,10 @@
     focus-trap-react "^4.0.1"
     tippy.js "3.4.1"
 
-"@patternfly/react-icons@^3.14.2", "@patternfly/react-icons@^3.14.6":
-  version "3.14.6"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.14.6.tgz#03c6889dd6b484def12c49a77f52db269b20d6fe"
-  integrity sha512-2zzIada6U+NorLyr6OorPdtzsDcYimjPDw22UavtdrKdxB6ihMGuhKGbx9BLm/TIHX0XT357zAoMFb41a7KbbQ==
-  dependencies:
-    "@fortawesome/free-brands-svg-icons" "^5.8.1"
-
-"@patternfly/react-icons@^3.14.5":
-  version "3.14.5"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.14.5.tgz#cf68d3da3ac9cacbd96b0bbd1a4b5bc066c06f8b"
-  integrity sha512-RIwUGtrjgY5rA/5eaVE7653ggPIjjHiAy46/vxn6VDIw8f6j15FrsO09ZvImvbLX4w8mpneBy1hx0NBckgfa+A==
+"@patternfly/react-icons@^3.14.5", "@patternfly/react-icons@^3.14.7":
+  version "3.14.7"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.14.7.tgz#62772dd48cce2a80e838fba98ec08db173846c4e"
+  integrity sha512-lABr5QSGCwMWQb+y+Kd6bcg9fFmXgPuw5sFdULS+rsPd/R+mAjcu7z63Lq8CfkL5mCDXojMUcnyFkvmIMzyVmQ==
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
 
@@ -9129,7 +9122,6 @@ webpack-sources@^1.1.0, webpack-sources@^1.4.0, webpack-sources@^1.4.1:
   dependencies:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
-
 
 webpack@^4.41.0:
   version "4.41.0"
