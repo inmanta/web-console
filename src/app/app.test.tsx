@@ -11,11 +11,6 @@ describe('App tests', () => {
     keycloak = Keycloak();
   });
 
-  test('should render default App component', () => {
-    const view = shallow(<App keycloak={keycloak} />);
-    expect(view).toMatchSnapshot();
-  });
-
   it('should render a nav-toggle button', () => {
     const wrapper = mount(<App keycloak={keycloak}/>);
     const button = wrapper.find(Button);

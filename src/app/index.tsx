@@ -9,16 +9,28 @@ import { KeycloakProvider } from 'react-keycloak';
 
 const keycloakInitConfig = { onLoad: 'login-required', flow: 'implicit' } as KeycloakInitOptions;
 
-const App: React.FunctionComponent<{keycloak: Keycloak.KeycloakInstance}> = (props) => {
+const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance }> = (props) => {
+  const shouldUseAuth = process.env.SHOULD_USE_AUTH === "true";
+  if (shouldUseAuth) {
+    return (
+      <KeycloakProvider keycloak={props.keycloak} initConfig={keycloakInitConfig}>
+        <Router>
+          <AppLayout>
+            <AppRoutes />
+          </AppLayout>
+        </Router>
+      </KeycloakProvider>
+    );
+  }
   return (
-    <KeycloakProvider keycloak={props.keycloak} initConfig={keycloakInitConfig}>
-      <Router>
-        <AppLayout>
-          <AppRoutes />
-        </AppLayout>
-      </Router>
-    </KeycloakProvider>
+    <Router>
+      <AppLayout>
+        <AppRoutes />
+      </AppLayout>
+    </Router>
   );
+
+
 };
 
 export { App };

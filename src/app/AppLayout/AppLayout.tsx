@@ -53,8 +53,6 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     keycloak.loadUserProfile().success(userInfo => {
       setName(userInfo.username as string);
     });
-
-
     return (
       <TextContent>
         {name}
@@ -62,8 +60,37 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     );
   }
 
+  const ProfileDropdownGroup = () => {
+    const shouldUseAuth = process.env.SHOULD_USE_AUTH === "true";
+    const profileDropdownItems = [
+      <DropdownItem key="action" component="button">
+        Action
+      </DropdownItem>,
+      <DropdownSeparator key="separator" />,
+    ];
+    if (shouldUseAuth) {
+      // The value will be always true or always false during one session
+      // tslint:disable:react-hooks-nesting
+      const [keycloak, initialized] = useKeycloak();
+      profileDropdownItems.push(
+        <DropdownItem key="action2" component="button" onClick={keycloak.logout}>
+          Logout
+        </DropdownItem>);
+    } else {
+      profileDropdownItems.push(
+        <DropdownItem key="action2" component="button">
+          Logout
+        </DropdownItem>);
+    }
+    return (
+      <ToolbarGroup>
+        {shouldUseAuth ? <Login /> : <TextContent> inmanta </TextContent>}
+        <IconDropdown icon={AngleDownIcon} dropdownItems={profileDropdownItems} />
+        <Avatar src={AvatarImg} alt="Avatar image" />
+      </ToolbarGroup>)
+  }
+
   const UpperToolbar = () => {
-    const [keycloak, initialized] = useKeycloak();
 
     const dropdownItems = [
       <DropdownItem key="link">Link</DropdownItem>,
@@ -82,25 +109,12 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
         Separated Action
       </DropdownItem>
     ];
-    const profileDropdownItems = [
-      <DropdownItem key="action" component="button">
-        Action
-      </DropdownItem>,
-      <DropdownSeparator key="separator" />,
-      <DropdownItem key="action2" component="button" onClick={keycloak.logout}>
-        Logout
-    </DropdownItem>,
-    ]
     return <Toolbar>
       <ToolbarGroup>
         <SimpleNotificationBadge />
         <IconDropdown icon={CogIcon} dropdownItems={dropdownItems} />
       </ToolbarGroup>
-      <ToolbarGroup>
-        <Login />
-        <IconDropdown icon={AngleDownIcon} dropdownItems={profileDropdownItems} />
-        <Avatar src={AvatarImg} alt="Avatar image" />
-      </ToolbarGroup>
+      <ProfileDropdownGroup />
     </Toolbar>
   }
 
