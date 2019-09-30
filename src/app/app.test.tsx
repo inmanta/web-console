@@ -6,6 +6,7 @@ import Keycloak from 'keycloak-js';
 
 
 describe('App tests', () => {
+  fetchMock.mockResponse(JSON.stringify({}));
   let keycloak: Keycloak.KeycloakInstance;
   beforeEach(() => {
     keycloak = Keycloak();

@@ -23,6 +23,7 @@ export class EnvironmentSelector extends React.Component<{}, { filteredItems: st
     this.onSearchInputChange = this.onSearchInputChange.bind(this);
     this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
   }
+
   public render() {
     const { isOpen, selected, searchValue, filteredItems } = this.state;
     return (
@@ -60,7 +61,7 @@ export class EnvironmentSelector extends React.Component<{}, { filteredItems: st
   };
   private onSearchButtonClick(event: any): void {
     this.filterItems();
-  };;
+  };
   private filterItems(): void {
     const filtered =
       this.state.searchValue === ''
@@ -69,5 +70,5 @@ export class EnvironmentSelector extends React.Component<{}, { filteredItems: st
 
     this.setState({ filteredItems: filtered || [] });
   };
-  
+
 }
