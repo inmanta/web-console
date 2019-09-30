@@ -438,32 +438,30 @@
     "@nodelib/fs.scandir" "2.1.2"
     fastq "^1.6.0"
 
-"@patternfly/react-core@^3.104.12":
-  version "3.105.0"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.105.0.tgz#2bcc814fc7f85fceb5847097ca424be966c97a50"
-  integrity sha512-665PrBCwVERsU6Qxni4b5HRGiCG7ihpMOhN2/a5W9NvP2e22bUX37knOB/Dtnx4UnawjKAor7B49lqYkLG4ieQ==
+"@patternfly/react-core@^3.112.1":
+  version "3.112.1"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.112.1.tgz#d45e41edab363639f3161a10dbc3451ac9bade91"
+  integrity sha512-+SJzyOH7HKxwAojPaC7KRuRi6yKcfXwd93OkGbSE95tSoEy7ltEJ8aJaP0HoI9kDygl2t0JsfB2Fc9s6hmFPCQ==
   dependencies:
-    "@patternfly/react-icons" "^3.14.5"
-    "@patternfly/react-styles" "^3.5.25"
-    "@patternfly/react-tokens" "^2.6.29"
+    "@patternfly/react-icons" "^3.14.7"
+    "@patternfly/react-styles" "^3.5.27"
+    "@patternfly/react-tokens" "^2.6.31"
     emotion "^9.2.9"
     exenv "^1.2.2"
     focus-trap-react "^4.0.1"
     tippy.js "3.4.1"
 
-
-
-"@patternfly/react-icons@^3.14.2", "@patternfly/react-icons@^3.14.6":
-  version "3.14.6"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.14.6.tgz#03c6889dd6b484def12c49a77f52db269b20d6fe"
-  integrity sha512-2zzIada6U+NorLyr6OorPdtzsDcYimjPDw22UavtdrKdxB6ihMGuhKGbx9BLm/TIHX0XT357zAoMFb41a7KbbQ==
+"@patternfly/react-icons@^3.14.7":
+  version "3.14.7"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.14.7.tgz#62772dd48cce2a80e838fba98ec08db173846c4e"
+  integrity sha512-lABr5QSGCwMWQb+y+Kd6bcg9fFmXgPuw5sFdULS+rsPd/R+mAjcu7z63Lq8CfkL5mCDXojMUcnyFkvmIMzyVmQ==
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
 
-"@patternfly/react-styles@^3.5.22":
-  version "3.5.22"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-3.5.22.tgz#12c2ca97a796d6653b2981fc2559103d18f3b3c4"
-  integrity sha512-76g7wc1X+yxQkuVfdt3gP/HdW9FKMzfDg1YNRmVzTOp+tCEMz+ITTCPyr6Y4ysqVJHk+ePOuN6T3103IrC1LRw==
+"@patternfly/react-styles@^3.5.22", "@patternfly/react-styles@^3.5.27":
+  version "3.5.27"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-3.5.27.tgz#a513495932ebe64ecb013d8fb1589d746ac7ea1e"
+  integrity sha512-nDhWOR+7W/oQgIw+4nwvGpoS2OgarfxlIEkFQaNdete6QyKwp2erPxDBNnj2gOGaB/+CKDWvTWD6JPhiuU56ew==
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0-beta.48"
     camel-case "^3.0.0"
@@ -479,29 +477,10 @@
     resolve-from "^4.0.0"
     typescript "3.4.5"
 
-"@patternfly/react-styles@^3.5.25":
-  version "3.5.25"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-3.5.25.tgz#9e514ead4039621d9648cb88edab1aa27a756298"
-  integrity sha512-KPjbFntZwwb7TownrwSSyh05xDRZk8krO5gbWSDm12P+WRcvI2ztC2wTEDwe88Dftnulr2sihXLCldTyoj4Law==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.0.0-beta.48"
-    camel-case "^3.0.0"
-    css "^2.2.3"
-    cssom "^0.3.4"
-    cssstyle "^0.3.1"
-    emotion "^9.2.9"
-    emotion-server "^9.2.9"
-    fbjs-scripts "^0.8.3"
-    fs-extra "^6.0.1"
-    jsdom "^15.1.0"
-    relative "^3.0.2"
-    resolve-from "^4.0.0"
-    typescript "3.4.5"
-
-"@patternfly/react-tokens@^2.6.29":
-  version "2.6.29"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-2.6.29.tgz#dfc6150c120799edc3e20fe133811c5fdc20f8e4"
-  integrity sha512-Q1ICoDNKJJe8OMvozYVIA1n6n+Aq0VvKwxchE+t+8brHimA8nFcJ3AfpIl15lL9wmBOYIs5KzNiwWBOijdoH4Q==
+"@patternfly/react-tokens@^2.6.31":
+  version "2.6.31"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-2.6.31.tgz#3fab62e9ccf4d81f6c10edbcf66836264362b3d3"
+  integrity sha512-K9semfLIdf2vECefAbheXPVwZqq8nXY0Hf/VkWh6OBCL6R4FekxajpSBgobeoTQUotmvz5boMngqhkUjE7yChA==
 
 "@types/anymatch@*":
   version "1.3.1"
@@ -7294,15 +7273,15 @@ react-axe@^3.3.0:
     axe-core "^3.3.2"
     requestidlecallback "^0.3.0"
 
-react-dom@^16.6.3:
-  version "16.9.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.9.0.tgz#5e65527a5e26f22ae3701131bcccaee9fb0d3962"
-  integrity sha512-YFT2rxO9hM70ewk9jq0y6sQk8cL02xm4+IzYBz75CQGlClQQ1Bxq0nhHF6OtSbit+AIahujJgb/CPRibFkMNJQ==
+react-dom@^16.10.1:
+  version "16.10.1"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.10.1.tgz#479a6511ba34a429273c213cbc2a9ac4d296dac1"
+  integrity sha512-SmM4ZW0uug0rn95U8uqr52I7UdNf6wdGLeXDmNLfg3y5q5H9eAbdjF5ubQc3bjDyRrvdAB2IKG7X0GzSpnn5Mg==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.15.0"
+    scheduler "^0.16.1"
 
 react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6, react-is@^16.9.0:
   version "16.9.0"
@@ -7775,6 +7754,14 @@ scheduler@^0.15.0:
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.15.0.tgz#6bfcf80ff850b280fed4aeecc6513bc0b4f17f8e"
   integrity sha512-xAefmSfN6jqAa7Kuq7LIJY0bwAPG3xlCj0HMEBQk1lxYiDKZscY2xJ5U/61ZTrYbmNQbXa+gc7czPkVo11tnCg==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+
+scheduler@^0.16.1:
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.16.1.tgz#a6fb6ddec12dc2119176e6eb54ecfe69a9eba8df"
+  integrity sha512-MIuie7SgsqMYOdCXVFZa8SKoNorJZUWHW8dPgto7uEHn1lX3fg2Gu0TzgK8USj76uxV7vB5eRMnZs/cdEHg+cg==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -8649,10 +8636,10 @@ ts-jest@^24.1.0:
     semver "^5.5"
     yargs-parser "10.x"
 
-ts-loader@^6.0.2:
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-6.1.2.tgz#ff6bc767334970226438949fbde2e211147a1325"
-  integrity sha512-dudxFKm0Ellrg/gLNlu+97/UgwvoMK0SdUVImPUSzq3IcRUVtShylZvcMX+CgvCQL1BEKb913NL0gAP1GA/OFw==
+ts-loader@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-6.2.0.tgz#52d3993ecbc5474c1513242388e1049da0fce880"
+  integrity sha512-Da8h3fD+HiZ9GvZJydqzk3mTC9nuOKYlJcpuk+Zv6Y1DPaMvBL+56GRzZFypx2cWrZFMsQr869+Ua2slGoLxvQ==
   dependencies:
     chalk "^2.3.0"
     enhanced-resolve "^4.0.0"
