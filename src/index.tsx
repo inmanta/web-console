@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { App } from '@app/index';
+import keycloakConf from './app/keycloak.json';
+import Keycloak from "keycloak-js";
 
 if (process.env.NODE_ENV !== "production") {
   // tslint:disable-next-line
@@ -8,4 +10,8 @@ if (process.env.NODE_ENV !== "production") {
   axe(React, ReactDOM, 1000);
 }
 
-ReactDOM.render(<App />, document.getElementById("root") as HTMLElement);
+
+const customKeycloakConf = { ...keycloakConf, "url": process.env.KEYCLOAK_URL }
+const keycloak = Keycloak(customKeycloakConf);
+
+ReactDOM.render(<App keycloak={keycloak}/>, document.getElementById("root") as HTMLElement);

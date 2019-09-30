@@ -1,8 +1,8 @@
 {
-  "realm": "test",
-  "url": "http://localhost:8081/auth",
+  "realm": "master",
+  "url": "http://localhost:8080/auth",
   "ssl-required": "external",
-  "clientId": "react-app",
+  "clientId": "inmanta",
   "public-client": true,
   "confidential-port": 0
 }
