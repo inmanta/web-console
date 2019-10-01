@@ -1,6 +1,6 @@
 import React from 'react';
 import { App } from '@app/index';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Button } from '@patternfly/react-core';
 import Keycloak from 'keycloak-js';
 

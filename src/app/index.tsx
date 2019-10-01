@@ -14,7 +14,6 @@ const keycloakInitConfig = { onLoad: 'login-required', flow: 'implicit' } as Key
 const storeInstance = createStore<IStoreModel>(storeModel);
 
 storeInstance.dispatch.projects.fetch();
-storeInstance.dispatch.environments.fetch();
 
 const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance }> = (props) => {
   const shouldUseAuth = process.env.SHOULD_USE_AUTH === "true";

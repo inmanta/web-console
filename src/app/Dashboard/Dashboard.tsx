@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { PageSection, Title } from '@patternfly/react-core';
-import { useStoreState } from 'easy-peasy';
+import { useStoreState, State } from 'easy-peasy';
+import { IStoreModel } from '@app/Models/core-models';
 
 
 const Project = () => {
+  const projects = useStoreState((state: State<IStoreModel>) => state.projects);
   return (
     <div>
-      <div>{useStoreState(state => state.projects.items.map(project => project.name))}</div>
-      <div>{useStoreState(state => state.environments.items.map(environment => environment.name))}</div>
+      <div>{ projects.selectedProject && projects.selectedProject.name }</div>
+      <div>{ projects.selectedProject && projects.selectedProject.selectedEnvironment && projects.selectedProject.selectedEnvironment.name }</div>
     </div>
   );
 }
