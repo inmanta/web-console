@@ -72,7 +72,7 @@
     "dotenv-webpack": "^1.7.0",
     "keycloak-js": "6.0.1",
     "react-keycloak": "^6.1.0",
-    "react-router-dom": "^5.1.0",
+    "react-router-dom": "^5.1.2",
     "react-router-last-location": "^2.0.1"
   }
 }
