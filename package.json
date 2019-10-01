@@ -26,7 +26,7 @@
     "@types/react-dom": "^16.8.5",
     "@types/react-router-dom": "^5.1.0",
     "@types/victory": "^31.0.14",
-    "@types/webpack": "^4.32.1",
+    "@types/webpack": "^4.39.2",
     "css-loader": "^3.2.0",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
