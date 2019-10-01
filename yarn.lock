@@ -2826,6 +2826,11 @@ decode-uri-component@^0.2.0:
   resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
   integrity sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=
 
+deep-compare@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/deep-compare/-/deep-compare-0.0.5.tgz#c38a8f6a834c27dab427dcc496d9d6e1e1b40b67"
+  integrity sha1-w4qPaoNMJ9q0J9zEltnW4eG0C2c=
+
 deep-equal@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.1.0.tgz#3103cdf8ab6d32cf4a8df7865458f2b8d33f3745"
@@ -7288,11 +7293,12 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-is
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.9.0.tgz#21ca9561399aad0ff1a7701c01683e8ca981edcb"
   integrity sha512-tJBzzzIgnnRfEm046qRcURvwQnZVXmuCbscxUO5RWrGTXpon2d4c8mI0D8WE6ydVIm29JiLB6+RslkIvym9Rjw==
 
-react-keycloak@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/react-keycloak/-/react-keycloak-6.1.0.tgz#672eed832de231e981a717413dc10286dbe701f2"
-  integrity sha512-78F4W4T0A4HhIv93DSREBgXqje0wZv0c6nx1knSLS2WCm6ZQdA5wO5XJ4ETC7uYikTT+6QEHlgmWFJpvuwDQJQ==
+react-keycloak@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/react-keycloak/-/react-keycloak-6.1.1.tgz#aa55055cba6f3ef1ead652a38cd87eb8242eeb66"
+  integrity sha512-gFwhdxNMHn6cRpqK5WZMrW5ITfkXeRn8TynyCuxl6M45KJfPVR3MQZgsxt+NqzYf3jJb+oVVigz976ARBnnvhw==
   dependencies:
+    deep-compare "^0.0.5"
     hoist-non-react-statics "^3.3.0"
     prop-types "^15.7.2"
 
