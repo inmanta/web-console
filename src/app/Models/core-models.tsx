@@ -1,22 +1,25 @@
 import { thunk, Thunk, Action, action, createTypedHooks, Actions } from 'easy-peasy';
+import { IServiceModel } from './LsmModels';
 
 export interface IObjectWithId {
   id: string;
 }
 export interface IProjectModel extends IObjectWithId {
   name: string;
-  environments?: IEnvironmentModel[];
-  selectedEnvironment?: IEnvironmentModel;
+  environments: IEnvironmentModel[];
+  selectedEnvironment: IEnvironmentModel;
 }
 
 export interface IEnvironmentModel extends IObjectWithId {
   name: string;
   projectId: string;
+  services: IServiceModel[];
+  addServices: Action<IEnvironmentModel, IServiceModel[]>;
 }
 
 export interface IProjectStoreModel {
   items: IProjectModel[];
-  selectedProject?: IProjectModel;
+  selectedProject: IProjectModel;
   fetched: Action<IProjectStoreModel, IProjectModel[]>;
   fetch: Thunk<IProjectModel[]>;
   selectEnvironmentByName: Action<IProjectStoreModel, string>;
@@ -47,11 +50,18 @@ export const project: IProjectStoreModel = {
   }),
   fetched: action((state, payload) => {
     state.items.push(...payload);
+    if (payload && payload.length > 0) {
+      state.selectedProject = {...state.selectedProject, ...payload[0]};
+      if (state.selectedProject.environments && state.selectedProject.environments.length > 0 ) {
+        state.selectedProject.selectedEnvironment = {...state.selectedProject.selectedEnvironment, ...payload[0].environments[0]};
+      }
+    }
+
   }),
   items: [],
   selectEnvironmentByName: action((state, payload) => {
     if (state.selectedProject && state.selectedProject.environments) {
-      state.selectedProject.selectedEnvironment = state.selectedProject.environments.find((item => item.name === payload));
+      state.selectedProject.selectedEnvironment = { ...state.selectedProject.selectedEnvironment, ...state.selectedProject.environments.find((item => item.name === payload)) };
     }
   }),
   selectProjectAndEnvironment: thunk((actions, payload) => {
@@ -59,8 +69,15 @@ export const project: IProjectStoreModel = {
     actions.selectEnvironmentByName(payload.environment);
   }),
   selectProjectByName: action((state, payload) => {
-    state.selectedProject = state.items.find((item => item.name === payload));
+    state.selectedProject = { ...state.selectedProject, ...state.items.find((item => item.name === payload)) };
   }),
+  selectedProject: {
+    selectedEnvironment: {
+      addServices: action((state, payload) => {
+        state.services = payload;
+      })
+    } as IEnvironmentModel
+  } as IProjectModel
 };
 
 

@@ -438,10 +438,28 @@
     "@nodelib/fs.scandir" "2.1.2"
     fastq "^1.6.0"
 
+"@patternfly/patternfly@2.33.5":
+  version "2.33.5"
+  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.33.5.tgz#e8abad22510d32de4933a42d7f567b152ccc0e6d"
+  integrity sha512-/4S19Ln2BY62nUP/Ow+j4gzCKm4e3HYehW92R+iaREaBgatfq55G50QdPsXDvTvLeTp9lS6YfXJlLz7OTIHnhw==
+
 "@patternfly/react-core@^3.112.1":
   version "3.112.1"
   resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.112.1.tgz#d45e41edab363639f3161a10dbc3451ac9bade91"
   integrity sha512-+SJzyOH7HKxwAojPaC7KRuRi6yKcfXwd93OkGbSE95tSoEy7ltEJ8aJaP0HoI9kDygl2t0JsfB2Fc9s6hmFPCQ==
+  dependencies:
+    "@patternfly/react-icons" "^3.14.7"
+    "@patternfly/react-styles" "^3.5.27"
+    "@patternfly/react-tokens" "^2.6.31"
+    emotion "^9.2.9"
+    exenv "^1.2.2"
+    focus-trap-react "^4.0.1"
+    tippy.js "3.4.1"
+
+"@patternfly/react-core@^3.112.3":
+  version "3.112.3"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.112.3.tgz#b0af9746581091446052881537106022ed0bbd03"
+  integrity sha512-szN9UtDU3k3X5/UAWb4kv2Z4+UrB9Pd1vYg09Cr7TpjZPGtAVxNVJ6+TzUj58PLwTlS4TYO/+lWl3wjmUukbyQ==
   dependencies:
     "@patternfly/react-icons" "^3.14.7"
     "@patternfly/react-styles" "^3.5.27"
@@ -476,6 +494,20 @@
     relative "^3.0.2"
     resolve-from "^4.0.0"
     typescript "3.4.5"
+
+"@patternfly/react-table@^2.22.19":
+  version "2.22.19"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-table/-/react-table-2.22.19.tgz#ad2aedfcf0575473b749c8a3ea00be947d9b96cb"
+  integrity sha512-pYHYqBth2c5hCkWQNJKx5l5GBfVcDtN9d8kVGNDlbvOuqfBzG64QVB0zdpSXo8tiSgmOuvyRN7ElNVZRA95QrQ==
+  dependencies:
+    "@patternfly/patternfly" "2.33.5"
+    "@patternfly/react-core" "^3.112.3"
+    "@patternfly/react-icons" "^3.14.7"
+    "@patternfly/react-styles" "^3.5.27"
+    "@patternfly/react-tokens" "^2.6.31"
+    classnames "^2.2.5"
+    exenv "^1.2.2"
+    lodash "^4.17.15"
 
 "@patternfly/react-tokens@^2.6.31":
   version "2.6.31"
@@ -2300,6 +2332,11 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+classnames@^2.2.5:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
+  integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
 
 clean-css@4.2.x:
   version "4.2.1"
