@@ -1,11 +1,12 @@
 import React from 'react';
 import { App } from '@app/index';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Button } from '@patternfly/react-core';
 import Keycloak from 'keycloak-js';
 
 
 describe('App tests', () => {
+  fetchMock.mockResponse(JSON.stringify({}));
   let keycloak: Keycloak.KeycloakInstance;
   beforeEach(() => {
     keycloak = Keycloak();

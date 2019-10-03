@@ -23,6 +23,10 @@ import { SimpleNotificationBadge } from './Toolbar/SimpleNotificationBadge';
 import { IconDropdown } from './Toolbar/IconDropdown';
 import { useKeycloak } from 'react-keycloak';
 import { AngleDownIcon, CogIcon } from '@patternfly/react-icons';
+import { useStoreState, State } from 'easy-peasy';
+import { IStoreModel, IProjectModel } from '@app/Models/core-models';
+import * as _ from 'lodash';
+import SimpleBackgroundImage from './SimpleBackgroundImage';
 
 interface IAppLayout {
   children: React.ReactNode;
@@ -44,6 +48,16 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const onPageResize = (props: { mobileView: boolean; windowSize: number }) => {
     setIsMobileView(props.mobileView);
   };
+
+  const getEnvironmentNamesWithSeparator = (project: IProjectModel) => {
+    if (project.environments) {
+      return project.environments.map(environment => project.name + ' / ' + environment.name);
+    }
+    return [project.name];
+  }
+
+  const projects: IProjectModel[] = useStoreState((state: State<IStoreModel>) => state.projects.items);
+  const environments = _.flatMap(projects, (project => getEnvironmentNamesWithSeparator(project)));
 
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />
 
@@ -124,7 +138,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       logoProps={logoProps}
       toolbar={<UpperToolbar />}
       showNavToggle={true}
-      topNav={<EnvironmentSelector />}
+      topNav={<EnvironmentSelector items={environments}/>}
       isNavOpen={isNavOpen}
       onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
     />
@@ -165,7 +179,9 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       header={Header}
       sidebar={Sidebar}
       onPageResize={onPageResize}
-      skipToContent={PageSkipToContent}>
+      skipToContent={PageSkipToContent}
+      >
+        <SimpleBackgroundImage />
       {children}
     </Page>
   );

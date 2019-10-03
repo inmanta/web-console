@@ -1,73 +1,65 @@
 import React from 'react';
 import { ContextSelector, ContextSelectorItem } from '@patternfly/react-core';
+import { IStoreModel } from '@app/Models/core-models';
+import { useStoreDispatch } from 'easy-peasy';
 
-export class EnvironmentSelector extends React.Component<{}, { filteredItems: string[], isOpen: boolean, selected: any, searchValue: string }> {
-  private items: string[];
-  constructor(props) {
-    super(props);
-    this.items = [
-      'SD-WAN - Testing',
-      'SD-WAN - Production',
-      'Secure Internet - Testing',
-      'Secure Internet - Production'
-    ];
+export const EnvironmentSelector = (props: {items: string[]}) => {
+  const items = props.items;
+  const [open, setOpen] = React.useState(false);
+  const [filteredItems, setFilteredItems] = React.useState(items);
+  const [searchValue, setSearchValue] = React.useState('');
+  const [selected, setSelected] = React.useState();
+  const dispatch = useStoreDispatch<IStoreModel>();
 
-    this.state = {
-      filteredItems: this.items,
-      isOpen: false,
-      searchValue: '',
-      selected: this.items[0]
-    };
-    this.onToggle = this.onToggle.bind(this);
-    this.onSelect = this.onSelect.bind(this);
-    this.onSearchInputChange = this.onSearchInputChange.bind(this);
-    this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
-  }
-  public render() {
-    const { isOpen, selected, searchValue, filteredItems } = this.state;
-    return (
-      <ContextSelector
-        toggleText={selected}
-        onSearchInputChange={this.onSearchInputChange}
-        isOpen={isOpen}
-        searchInputValue={searchValue}
-        onToggle={this.onToggle}
-        onSelect={this.onSelect}
-        onSearchButtonClick={this.onSearchButtonClick}
-        screenReaderLabel="Selected Project:"
-        searchButtonAriaLabel="Filter Projects"
-      >
-        {filteredItems.map((item, index) => (
-          <ContextSelectorItem  {...{ role: "menuitem" }} key={index}>{item}</ContextSelectorItem>
-        ))}
-
-      </ContextSelector>
-    );
-  }
-  private onToggle(event?: any, isOpen?: any): void {
-    this.setState({
-      isOpen
-    });
-  };;
-  private onSelect(event: any, value: any): void {
-    this.setState({
-      isOpen: !this.state.isOpen,
-      selected: value,
-    });
+  const onToggle = (event?: any, isOpen?: any) => {
+    setOpen(isOpen);
   };
-  private onSearchInputChange(value: any): void {
-    this.setState({ searchValue: value }, this.filterItems);
+
+  const onSelect = (event: any, value: any) => {
+    setOpen(!open);
+    setSelected(value);
+    const projectAndEnvironment = value.split('/').map(part => part.trim());
+    dispatch.projects.selectProjectAndEnvironment({project: projectAndEnvironment[0], environment: projectAndEnvironment[1]});
   };
-  private onSearchButtonClick(event: any): void {
-    this.filterItems();
-  };;
-  private filterItems(): void {
+  const onSearchInputChange = (value: any) => {
+    setSearchValue(value);
+  };
+  const onSearchButtonClick = (event: any) => {
+    filterItems();
+  };
+
+  React.useEffect(() => {
+    filterItems();
+  }, [searchValue]);
+
+  React.useEffect(() => {
+    setFilteredItems(items)
+  }, [items]);
+
+  const filterItems = () => {
     const filtered =
-      this.state.searchValue === ''
-        ? this.items
-        : this.items.filter(str => str.toLowerCase().indexOf(this.state.searchValue.toLowerCase()) !== -1);
-
-    this.setState({ filteredItems: filtered || [] });
+      searchValue === ''
+        ? items
+        : items.filter(str => str.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1);
+    setFilteredItems(filtered || []);
   };
-  
+  return (
+    <ContextSelector
+      toggleText={selected ? selected : "Select a project"}
+      onSearchInputChange={onSearchInputChange}
+      isOpen={open}
+      searchInputValue={searchValue}
+      onToggle={onToggle}
+      onSelect={onSelect}
+      onSearchButtonClick={onSearchButtonClick}
+      screenReaderLabel="Selected Project:"
+      searchButtonAriaLabel="Filter Projects"
+    >
+      {
+        filteredItems.map((item, index) => (
+        <ContextSelectorItem  {...{ role: "menuitem" }} key={index}>{item}</ContextSelectorItem>
+      ))}
+
+    </ContextSelector>
+  );
 }
