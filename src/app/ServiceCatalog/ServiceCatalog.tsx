@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PageSection, Title } from '@patternfly/react-core';
-import { CatalogAccordion } from './CatalogAccordion';
+import { CatalogDataList } from './CatalogDataList';
 import { useStoreState, State, useStoreDispatch, Dispatch, Action } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/core-models';
 
@@ -15,7 +15,7 @@ const ServiceCatalog: React.FunctionComponent<any> = (props) => {
   return (
     <PageSection>
       <Title size="lg">Service Catalog Page Title</Title>
-      <CatalogAccordion services={project.selectedEnvironment.services} />
+      <CatalogDataList services={project.selectedEnvironment.services} />
     </PageSection>
   );
 }
