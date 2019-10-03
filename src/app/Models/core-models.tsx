@@ -29,8 +29,15 @@ export interface IStoreModel {
 }
 
 
-const fetchProject = () => fetch(process.env.API_BASEURL + '/api/v2/project').then(result => result.json())
-  .catch(error => error); // Show Alert or Notification
+async function fetchProject() {
+  try {
+    const result = await fetch(process.env.API_BASEURL + '/api/v2/project');
+    return result.json();
+  } catch (error) {
+    // Show Alert or Notification
+    return error;
+  } 
+}
 
 export const project: IProjectStoreModel = {
   fetch: thunk(async (actions: Actions<IProjectStoreModel>, payload) => {
