@@ -21,3 +21,7 @@ To enable authentication with keycloak, you can use environment variables, e.g. 
 You can also specify the url of the keycloak server in the same file:
 
     KEYCLOAK_URL=<Your keycloak server url>
+
+The base url of the backend services can also be specified here, e.g.:
+
+    API_BASEURL=http://localhost:8888
