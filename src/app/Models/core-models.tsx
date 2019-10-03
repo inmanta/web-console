@@ -29,7 +29,7 @@ export interface IStoreModel {
 }
 
 
-const fetchProject = () => fetch(process.env.API_BASEURL + '/v2/project').then(result => result.json())
+const fetchProject = async () => await fetch(process.env.API_BASEURL + '/api/v2/project').then(result => result.json())
   .catch(error => error); // Show Alert or Notification
 
 export const project: IProjectStoreModel = {

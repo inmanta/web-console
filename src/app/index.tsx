@@ -17,28 +17,23 @@ storeInstance.dispatch.projects.fetch();
 
 const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance }> = (props) => {
   const shouldUseAuth = process.env.SHOULD_USE_AUTH === "true";
-  if (shouldUseAuth) {
-    return (
-      <KeycloakProvider keycloak={props.keycloak} initConfig={keycloakInitConfig}>
-        <StoreProvider store={storeInstance}>
-          <Router>
-            <AppLayout>
-              <AppRoutes />
-            </AppLayout>
-          </Router>
-        </StoreProvider>
-      </KeycloakProvider>
-    );
-  }
-  return (
+  const AppWithStore = (
     <StoreProvider store={storeInstance}>
       <Router>
         <AppLayout>
           <AppRoutes />
         </AppLayout>
       </Router>
-    </StoreProvider>
-  );
+    </StoreProvider>);
+
+  if (shouldUseAuth) {
+    return (
+      <KeycloakProvider keycloak={props.keycloak} initConfig={keycloakInitConfig}>
+        {AppWithStore}
+      </KeycloakProvider>
+    );
+  }
+  return AppWithStore;
 
 
 };
