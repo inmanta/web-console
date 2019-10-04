@@ -1,34 +1,19 @@
 import { ILifecycleModel } from "@app/Models/LsmModels";
 import React from "react";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
-import { Label } from "@patternfly/react-core";
+import { Badge } from "@patternfly/react-core";
 
 export const LifecycleTable: React.FunctionComponent<{ lifecycle: ILifecycleModel }> = (props) => {
   const columns = ["Source", "Target", "Error", "Target Operation", "Error Operation", "Description", "Event trigger"];
-  const eventTriggerColumnNames = ["api_set_state", "resource_based", "auto"];
+  const eventTriggerColumnNames = ["api_set_state", "resource_based", "auto", "on_update", "on_delete"];
   const modifierColumns = ["validate", "config_name"];
 
   const rows = props.lifecycle.transfers.map(transferRow => {
-    const modifiers = modifierColumns
-      .reduce((acc, col) => {
-        if (transferRow[col]) {
-          acc.push(col);
-        }
-        return acc;
-      }, [] as string[])
-      .map(modifier => <Label key={modifier} isCompact={true}>{modifier}</Label>);
+      const modifiers = modifierColumns
+      .map(modifier => <Badge key={modifier} isRead={!transferRow[modifier]}>{modifier}</Badge>);
 
     const triggers =
-      eventTriggerColumnNames.reduce((acc, trigger) => {
-        if (transferRow[trigger]) {
-          if (acc) {
-            return trigger + ',' + acc;
-          } else {
-            return trigger;
-          }
-        }
-        return acc;
-      }, '');
+      eventTriggerColumnNames.filter(name => transferRow[name]);
     const eventTriggerColumn = <React.Fragment>{modifiers} {triggers}</React.Fragment>;
 
     return {
