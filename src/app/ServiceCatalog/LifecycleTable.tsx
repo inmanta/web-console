@@ -1,31 +1,49 @@
 import { ILifecycleModel } from "@app/Models/LsmModels";
 import React from "react";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
+import { Label } from "@patternfly/react-core";
 
 export const LifecycleTable: React.FunctionComponent<{ lifecycle: ILifecycleModel }> = (props) => {
-  const stateColumns = Object.keys(props.lifecycle.states[0]);
-  const stringifyValues = (value) => {
-    if (value != null && typeof value !== 'string') {
-      return JSON.stringify(value);
-    } else {
-      return value;
-    }
-  }
-  const stateRows = props.lifecycle.states.map(state => Object.values(state).map(value => stringifyValues(value)));
+  const columns = ["Source", "Target", "Error", "Target Operation", "Error Operation", "Description", "Event trigger"];
+  const eventTriggerColumnNames = ["api_set_state", "resource_based", "auto"];
+  const modifierColumns = ["validate", "config_name"];
 
-  const transferColumns = Object.keys(props.lifecycle.transfers[0]);
-  const transferRows = props.lifecycle.transfers.map(transfer => Object.values(transfer).map(value => stringifyValues(value)));
+  const rows = props.lifecycle.transfers.map(transferRow => {
+    const modifiers = modifierColumns
+      .reduce((acc, col) => {
+        if (transferRow[col]) {
+          acc.push(col);
+        }
+        return acc;
+      }, [] as string[])
+      .map(modifier => <Label key={modifier} isCompact={true}>{modifier}</Label>);
 
+    const triggers =
+      eventTriggerColumnNames.reduce((acc, trigger) => {
+        if (transferRow[trigger]) {
+          if (acc) {
+            return trigger + ',' + acc;
+          } else {
+            return trigger;
+          }
+        }
+        return acc;
+      }, '');
+    const eventTriggerColumn = <React.Fragment>{modifiers} {triggers}</React.Fragment>;
 
+    return {
+      cells: [
+        transferRow.source, transferRow.target, transferRow.error,
+        transferRow.target_operation, transferRow.error_operation,
+        transferRow.description,
+        eventTriggerColumn
+      ]
+    };
+  });
   return (
-    <div>Initial state: {props.lifecycle.initialState}
-      <Table caption="States" cells={stateColumns} rows={stateRows}>
-        <TableHeader />
-        <TableBody />
-      </Table>
-      <Table caption="Transfers" cells={transferColumns} rows={transferRows}>
-        <TableHeader />
-        <TableBody />
-      </Table>
-    </div>);
+    <Table aria-label="Lifecycle" cells={columns} rows={rows}>
+      <TableHeader />
+      <TableBody />
+    </Table>
+  );
 }
