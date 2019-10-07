@@ -7,16 +7,15 @@ import '@app/app.css';
 import { KeycloakInitOptions } from 'keycloak-js';
 import { KeycloakProvider } from 'react-keycloak';
 import { createStore, StoreProvider } from 'easy-peasy';
-import { IStoreModel, storeModel } from './Models/core-models';
-
+import { IStoreModel, storeModel } from './Models/CoreModels';
 
 const keycloakInitConfig = { onLoad: 'login-required', flow: 'implicit' } as KeycloakInitOptions;
 const storeInstance = createStore<IStoreModel>(storeModel);
 
 storeInstance.dispatch.projects.fetch();
 
-const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance }> = (props) => {
-  const shouldUseAuth = process.env.SHOULD_USE_AUTH === "true";
+const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance }> = props => {
+  const shouldUseAuth = process.env.SHOULD_USE_AUTH === 'true';
   const AppWithStore = (
     <StoreProvider store={storeInstance}>
       <Router>
@@ -24,7 +23,8 @@ const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance }> = (p
           <AppRoutes />
         </AppLayout>
       </Router>
-    </StoreProvider>);
+    </StoreProvider>
+  );
 
   if (shouldUseAuth) {
     return (
@@ -34,8 +34,6 @@ const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance }> = (p
     );
   }
   return AppWithStore;
-
-
 };
 
 export { App };

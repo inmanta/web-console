@@ -76,7 +76,7 @@
     "@patternfly/react-styles": "^3.5.22",
     "@patternfly/react-table": "^2.22.19",
     "dotenv-webpack": "^1.7.0",
-    "easy-peasy": "^3.0.2",
+    "easy-peasy": "^3.1.0",
     "keycloak-js": "6.0.1",
     "lodash": "^4.17.15",
     "react-keycloak": "^6.1.1",

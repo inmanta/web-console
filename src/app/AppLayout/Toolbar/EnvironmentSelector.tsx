@@ -1,17 +1,20 @@
 import React from 'react';
 import { ContextSelector, ContextSelectorItem } from '@patternfly/react-core';
-import { IStoreModel } from '@app/Models/core-models';
+import { IStoreModel } from '@app/Models/CoreModels';
 import { useStoreDispatch, useStoreState, State } from 'easy-peasy';
 
-export const EnvironmentSelector = (props: {items: string[]}) => {
+export const EnvironmentSelector = (props: { items: string[] }) => {
   const items = props.items;
   const [open, setOpen] = React.useState(false);
   const [filteredItems, setFilteredItems] = React.useState(items);
   const [searchValue, setSearchValue] = React.useState('');
-  const selectedProject = useStoreState((state: State<IStoreModel>) => state.projects.selectedProject);
-  const selectedProjectName =  selectedProject.name + ' / ' + selectedProject.selectedEnvironment.name;
+  const store = useStoreState((state: State<IStoreModel>) => state.projects);
+  const selectedProject = store.getSelectedProject;
+  let selectedProjectName = 'undefined / undefined';
+  if (selectedProject && store.getSelectedEnvironment) {
+    selectedProjectName = selectedProject.name + ' / ' + store.getSelectedEnvironment.name;
+  }
   const dispatch = useStoreDispatch<IStoreModel>();
-  
 
   const onToggle = (event?: any, isOpen?: any) => {
     setOpen(isOpen);
@@ -20,7 +23,10 @@ export const EnvironmentSelector = (props: {items: string[]}) => {
   const onSelect = (event: any, value: any) => {
     setOpen(!open);
     const projectAndEnvironment = value.split('/').map(part => part.trim());
-    dispatch.projects.selectProjectAndEnvironment({project: projectAndEnvironment[0], environment: projectAndEnvironment[1]});
+    dispatch.projects.selectProjectAndEnvironment({
+      environment: projectAndEnvironment[1],
+      project: projectAndEnvironment[0],
+    });
   };
   const onSearchInputChange = (value: any) => {
     setSearchValue(value);
@@ -34,14 +40,12 @@ export const EnvironmentSelector = (props: {items: string[]}) => {
   }, [searchValue]);
 
   React.useEffect(() => {
-    setFilteredItems(items)
+    setFilteredItems(items);
   }, [items]);
 
   const filterItems = () => {
     const filtered =
-      searchValue === ''
-        ? items
-        : items.filter(str => str.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1);
+      searchValue === '' ? items : items.filter(str => str.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1);
     setFilteredItems(filtered || []);
   };
   return (
@@ -56,11 +60,11 @@ export const EnvironmentSelector = (props: {items: string[]}) => {
       screenReaderLabel="Selected Project:"
       searchButtonAriaLabel="Filter Projects"
     >
-      {
-        filteredItems.map((item, index) => (
-        <ContextSelectorItem  {...{ role: "menuitem" }} key={index}>{item}</ContextSelectorItem>
+      {filteredItems.map((item, index) => (
+        <ContextSelectorItem {...{ role: 'menuitem' }} key={index}>
+          {item}
+        </ContextSelectorItem>
       ))}
-
     </ContextSelector>
   );
-}
+};

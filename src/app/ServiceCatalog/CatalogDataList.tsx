@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
-import { Button, DataList, DataListItem, DataListItemRow, DataListToggle, DataListItemCells, DataListCell, DataListContent, DataListAction } from '@patternfly/react-core';
+import {
+  Button,
+  DataList,
+  DataListItem,
+  DataListItemRow,
+  DataListToggle,
+  DataListItemCells,
+  DataListCell,
+  DataListContent,
+  DataListAction
+} from '@patternfly/react-core';
 import { IServiceModel } from '@app/Models/LsmModels';
 import { CatalogContent } from './CatalogContent';
 
-export const CatalogDataList: React.FunctionComponent<{ services: IServiceModel[] }> = (props) => {
+export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel[] }> = props => {
   const [expanded, setExpanded] = useState(['']);
   let serviceItems;
   if (props.services) {
@@ -25,23 +35,23 @@ export const CatalogDataList: React.FunctionComponent<{ services: IServiceModel[
                 <DataListCell key="primary content">
                   <div id={serviceKey}>{service.name}</div>
                 </DataListCell>
-
               ]}
             />
-            <DataListAction aria-labelledby={service.name + "-action"} id={service.name + "-action"} aria-label="Actions">
+            <DataListAction
+              aria-labelledby={service.name + '-action'}
+              id={service.name + '-action'}
+              aria-label="Actions"
+            >
               <Button> Inventory </Button>
               <Button variant="danger"> Delete </Button>
             </DataListAction>
           </DataListItemRow>
-          <DataListContent
-            aria-label="Primary Content Details"
-            id={expandKey}
-            isHidden={!expanded.includes(toggleId)}
-          >
+          <DataListContent aria-label="Primary Content Details" id={expandKey} isHidden={!expanded.includes(toggleId)}>
             <CatalogContent service={service} />
           </DataListContent>
-        </DataListItem>)
-    })
+        </DataListItem>
+      );
+    });
   }
 
   const onToggle = id => {
@@ -49,11 +59,6 @@ export const CatalogDataList: React.FunctionComponent<{ services: IServiceModel[
     const newExpanded =
       index >= 0 ? [...expanded.slice(0, index), ...expanded.slice(index + 1, expanded.length)] : [...expanded, id];
     setExpanded(newExpanded);
-  }
-  return (
-    <DataList aria-label="Expandable data list example">
-      {serviceItems}
-    </DataList>
-  );
-
-}
+  };
+  return <DataList aria-label="Expandable data list example">{serviceItems}</DataList>;
+};
