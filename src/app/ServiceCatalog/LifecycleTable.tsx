@@ -8,12 +8,13 @@ export const LifecycleTable: React.FunctionComponent<{ lifecycle: ILifecycleMode
   const eventTriggerColumnNames = ['api_set_state', 'resource_based', 'auto', 'on_update', 'on_delete'];
 
   const rows = props.lifecycle.transfers.map(transferRow => {
-    const validate = (
+    const validate = transferRow.validate ? (
       <Tooltip key={'validate-tooltip'} content="This transfer goes to error target when validation fails.">
         <Badge key={'validate'} isRead={!transferRow.validate}>
           {'Validate'}
         </Badge>
-      </Tooltip>);
+      </Tooltip>) : '';
+
     const config = transferRow.config_name ? (
       <Tooltip key={'config-tooltip'} content={"This transfer is enabled when " + transferRow.config_name + " is set to true"}>
         <Badge key={'config_name'} isRead={!transferRow.config_name}>
