@@ -9,20 +9,20 @@ export const LifecycleTable: React.FunctionComponent<{ lifecycle: ILifecycleMode
 
   const rows = props.lifecycle.transfers.map(transferRow => {
     const validate = (
-      <Tooltip content="This transfer goes to error target when validation fails.">
+      <Tooltip key={'validate-tooltip'} content="This transfer goes to error target when validation fails.">
         <Badge key={'validate'} isRead={!transferRow.validate}>
           {'Validate'}
         </Badge>
       </Tooltip>);
     const config = transferRow.config_name ? (
-      <Tooltip content={"This transfer is enabled when " + transferRow.config_name + " is set to true"}>
+      <Tooltip key={'config-tooltip'} content={"This transfer is enabled when " + transferRow.config_name + " is set to true"}>
         <Badge key={'config_name'} isRead={!transferRow.config_name}>
           {transferRow.config_name}
         </Badge>
       </Tooltip>
     ) : '';
 
-    const eventTrigger = <Label>{
+    const eventTrigger = <Label key={'trigger-label'}>{
       eventTriggerColumnNames
         .filter(name => transferRow[name])
         .map(trigger => trigger
