@@ -12,7 +12,10 @@
     ]
   },
   "rules": {
-    "ordered-imports": [false],
+    "ordered-imports": [
+      false
+    ],
+    "jsx-no-lambda": false,
     "react-hooks-nesting": "error"
   }
 }
