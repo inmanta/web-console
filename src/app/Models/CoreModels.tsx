@@ -93,13 +93,13 @@ export const projectState: IProjectDictState = {
     }
     return {} as IProjectModel;
   }),
-  selectedProjectId: '',
   selectProjectByName: action((state, payload) => {
     const projectWithName = Object.values(state.byId).find(item => item.name === payload);
     if (projectWithName) {
       state.selectedProjectId = projectWithName.id;
     }
-  })
+  }),
+  selectedProjectId: '',
 }
 
 export const project: IProjectStoreModel = {

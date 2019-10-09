@@ -14,7 +14,7 @@ export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstan
           Object
             .keys(instance.active_attributes)
             .map(attribute =>
-              <ListItem key={instance.id}>
+              <ListItem key={attribute}>
                 {attribute}: {instance.active_attributes[attribute]}
               </ListItem>)
         }

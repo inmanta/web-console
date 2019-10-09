@@ -8,9 +8,12 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   const projectStore = useStoreState((store: State<IStoreModel>) => store.projects);
   const dispatch = useStoreDispatch<IStoreModel>();
   const instancesOfCurrentService = projectStore.serviceInstances.instancesOfService(props.match.params.id);
-  if (projectStore.environments.getSelectedEnvironment.id && instancesOfCurrentService.length === 0) {
-    fetchServiceInventory(dispatch, projectStore.environments.getSelectedEnvironment.id, props.match.params.id);
-  }
+  
+  React.useEffect(() => {
+    if (projectStore.environments.getSelectedEnvironment.id && instancesOfCurrentService.length === 0) {
+      fetchServiceInventory(dispatch, projectStore.environments.getSelectedEnvironment.id, props.match.params.id);
+    }
+  }, [props.match.params.id, projectStore.environments.getSelectedEnvironment.id, instancesOfCurrentService ]);
 
   return (
     <PageSection>
@@ -29,7 +32,6 @@ async function fetchServiceInventory(dispatch: Dispatch<IStoreModel, Action<any>
     });
     const json = await result.json();
     dispatch.projects.serviceInstances.addInstances(json.data);
-    console.log(json.data);
   } catch (error) {
     throw error;
   }

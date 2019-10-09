@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { IServiceModel } from '@app/Models/LsmModels';
 import { CatalogContent } from './CatalogContent';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel[] }> = props => {
   const [expanded, setExpanded] = useState(['']);

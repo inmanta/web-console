@@ -12,9 +12,10 @@ import { IStoreModel, storeModel } from './Models/CoreModels';
 const keycloakInitConfig = { onLoad: 'login-required', flow: 'implicit' } as KeycloakInitOptions;
 const storeInstance = createStore<IStoreModel>(storeModel);
 
-storeInstance.dispatch.projects.fetch();
-
 const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance }> = props => {
+  React.useEffect(()=> {
+    storeInstance.dispatch.projects.fetch();
+  }, []);
   const shouldUseAuth = process.env.SHOULD_USE_AUTH === 'true';
   const AppWithStore = (
     <StoreProvider store={storeInstance}>
