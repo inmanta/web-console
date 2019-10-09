@@ -10,6 +10,7 @@ import { LastLocationProvider, useLastLocation } from 'react-router-last-locatio
 import { ServiceCatalog } from './ServiceCatalog/ServiceCatalog';
 import { ServiceInventory } from './ServiceInventory/ServiceInventory';
 import { LifecycleManager } from './LifecycleManager/LifecycleManager';
+import { PageBreadcrumb } from './AppLayout/PageBreadcrumb';
 
 let routeFocusTimer: number;
 
@@ -48,6 +49,7 @@ export interface IAppRoute {
   path: string;
   title: string;
   isAsync?: boolean;
+  hideOnSideBar?: boolean;
 }
 
 export interface IAppRouteGroup {
@@ -71,19 +73,12 @@ const routes: IAppRouteGroup[] =
         {
           component: ServiceInventory,
           exact: true,
+          hideOnSideBar: true,
           icon: null,
           label: 'Service Inventory',
-          path: '/inventory',
-          title: 'Service Inventory'
-        },
-        {
-          component: LifecycleManager,
-          exact: true,
-          icon: null,
-          label: 'Lifecycle Manager',
-          path: '/manager',
-          title: 'Lifecycle Manager'
-        },
+          path: '/catalog/:id/inventory',
+          title: 'Service Inventory',
+        }
       ],
       name: 'Lifecycle service management',
       pathPrefix: '/lsm',
@@ -142,7 +137,7 @@ const RouteWithTitleUpdates = ({
     );
   }
 
-  return <Route render={routeWithTitle} />;
+  return <Route path={rest.path} exact={rest.exact} render={routeWithTitle} />;
 };
 
 const PageNotFound = ({ title }: { title: string }) => {

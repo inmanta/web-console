@@ -27,6 +27,8 @@ import { useStoreState, State } from 'easy-peasy';
 import { IStoreModel, IProjectModel } from '@app/Models/CoreModels';
 import * as _ from 'lodash';
 import SimpleBackgroundImage from './SimpleBackgroundImage';
+import { PageBreadcrumb } from './PageBreadcrumb';
+
 
 interface IAppLayout {
   children: React.ReactNode;
@@ -56,7 +58,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
     return [project.name];
   };
 
-  const projects: IProjectModel[] = useStoreState((state: State<IStoreModel>) => state.projects.items);
+  const projects: IProjectModel[] = useStoreState((state: State<IStoreModel>) => state.projects.projects.getAllProjects);
   const environments = _.flatMap(projects, project => getEnvironmentNamesWithSeparator(project));
 
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
@@ -150,12 +152,12 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
         return (
           <NavGroup title={routeItem.name} key={`${routeItem.name}-${idx}`}>
             {routeItem.exactRoutes.map((route, index) => {
-              return (
+              return ( !route.hideOnSideBar ?
                 <NavItem key={`${route.label}-${index}`} id={`${route.label}-${index}`}>
                   <NavLink exact={true} to={routeItem.pathPrefix + route.path} activeClassName="pf-m-current">
                     {route.label}
                   </NavLink>
-                </NavItem>
+                </NavItem> : null
               );
             })}
           </NavGroup>
@@ -167,6 +169,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const PageSkipToContent = <SkipToContent href="#primary-app-container">Skip to Content</SkipToContent>;
   return (
     <Page
+      breadcrumb={<PageBreadcrumb />}
       mainContainerId="primary-app-container"
       header={Header}
       sidebar={Sidebar}

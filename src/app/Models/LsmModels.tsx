@@ -1,3 +1,6 @@
+import { IObjectWithId } from "./CoreModels";
+import { Computed, computed, Action, action } from "easy-peasy";
+
 export interface IAttributeModel {
   name: string;
   type: string;
@@ -40,4 +43,74 @@ export interface IServiceModel {
   environment: string;
   lifecycle: ILifecycleModel;
   attributes: IAttributeModel[];
+}
+
+export interface IServiceDict {
+  [Key: string]: IServiceModel
+}
+
+export interface IServiceDictState {
+  allIds: string[],
+  addServices: Action<IServiceDictState, IServiceModel[]>,
+  byId: IServiceDict,
+  getAllServices: Computed<IServiceDictState, IServiceModel[]>;
+  getServicesOfEnvironment: Computed<IServiceDictState, (environmentId: string) => IServiceModel[]>;
+}
+
+export interface IInstanceAttributeModel {
+  [Key: string]: string;
+}
+
+export interface IServiceInstanceModel extends IObjectWithId {
+  active_attributes: IInstanceAttributeModel;
+  callback: string[];
+  candidate_attributes: IInstanceAttributeModel;
+  deleted: boolean;
+  environment: string;
+  last_updated: string;
+  rollback_attributes: null;
+  service_entity: string;
+  state: string;
+  version: number;
+}
+export interface IInstanceDict {
+  [Key: string]: IServiceInstanceModel
+}
+
+export interface IInstanceDictState {
+  addInstances: Action<IInstanceDictState, IServiceInstanceModel[]>;
+  allIds: string[],
+  byId: IInstanceDict,
+  instancesOfService: Computed<IInstanceDictState, (name: string) => IServiceInstanceModel[]>;
+}
+
+export const serviceDictState: IServiceDictState = {
+  addServices: action((state, payload) => {
+    payload.map(service => {
+      state.byId[service.name] = service;
+      state.allIds.push(service.name);
+    });
+  }),
+  allIds: [],
+  byId: {},
+  getAllServices: computed(state => {
+    return Object.values(state.byId);
+  }),
+  getServicesOfEnvironment: computed(state => environmentId => {
+    return Object.values(state.byId).filter(service => service.environment === environmentId);
+  }),
+}
+
+export const instanceDictState: IInstanceDictState = {
+  addInstances: action((state, payload) => {
+    payload.map(instance => {
+      state.byId[instance.id] = instance;
+      state.allIds.push(instance.id);
+    });
+  }),
+  allIds: [],
+  byId: {},
+  instancesOfService: computed((state) => name => {
+    return Object.values(state.byId).filter(instance => (instance.service_entity === name));
+  }),
 }
