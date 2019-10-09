@@ -9,7 +9,7 @@ export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstan
 
   const rows = instances.map(instance => {
     const attributes = (
-      <List>
+      <List role="list">
         {
           Object
             .keys(instance.active_attributes)
