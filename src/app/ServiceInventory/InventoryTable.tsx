@@ -15,7 +15,7 @@ export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstan
         activeAttributes,
         candidateAttributes,
         instance.version,
-        instance.last_updated
+        instance.last_updated.toUTCString()
       ]
     }
   });
@@ -34,10 +34,11 @@ function getFormattedListFromObject(instance: IServiceInstanceModel, key: string
       {
         Object
           .keys(instance[key])
-          .map(attribute =>
-            <ListItem key={attribute}>
-              {attribute}: {instance[key][attribute]}
-            </ListItem>)
+          .map(attribute => {
+            const attributeValue = instance[key][attribute];
+            return <ListItem key={attribute}>
+              {attribute}: {Array.isArray(attributeValue) ? attributeValue.join(', ') : attributeValue}
+          </ListItem>})
       }
     </List>) : null;
 }
