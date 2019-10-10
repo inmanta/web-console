@@ -67,7 +67,7 @@ export interface IServiceInstanceModel extends IObjectWithId {
   candidate_attributes: IInstanceAttributeModel;
   deleted: boolean;
   environment: string;
-  last_updated: Date;
+  last_updated: string;
   rollback_attributes: null;
   service_entity: string;
   state: string;
@@ -78,7 +78,7 @@ export interface IInstanceDict {
 }
 
 export interface IInstanceDictState {
-  addInstances: Action<IInstanceDictState, any[]>;
+  addInstances: Action<IInstanceDictState, IServiceInstanceModel[]>;
   allIds: string[],
   byId: IInstanceDict,
   instancesOfService: Computed<IInstanceDictState, (name: string) => IServiceInstanceModel[]>;
@@ -105,7 +105,6 @@ export const instanceDictState: IInstanceDictState = {
   addInstances: action((state, payload) => {
     payload.map(instance => {
       state.byId[instance.id] = instance as IServiceInstanceModel;
-      state.byId[instance.id].last_updated = new Date(instance.last_updated);
       state.allIds.push(instance.id);
     });
   }),

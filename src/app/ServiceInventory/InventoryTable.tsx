@@ -2,6 +2,7 @@ import { IServiceInstanceModel } from "@app/Models/LsmModels";
 import React from "react";
 import { TableHeader, Table, TableBody } from "@patternfly/react-table";
 import { List, ListItem } from "@patternfly/react-core";
+import moment from 'moment';
 
 export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstanceModel[] }> = props => {
   const columnsInOrder = ["State", "Active Attributes", "Candidate Attributes", "Version", "Last Updated"];
@@ -15,7 +16,7 @@ export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstan
         activeAttributes,
         candidateAttributes,
         instance.version,
-        instance.last_updated.toUTCString()
+        moment(instance.last_updated).format('MMMM Do YYYY, h:mm:ss a')
       ]
     }
   });
