@@ -19,6 +19,7 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
     <PageSection>
       <Title size="lg">Service Inventory</Title>
       {instancesOfCurrentService.length > 0 && <InventoryTable instances={instancesOfCurrentService} />}
+      {instancesOfCurrentService.length == 0 && <div>No Instances found for service: {props.match.params.id}</div>}
     </PageSection>
   );
 };
