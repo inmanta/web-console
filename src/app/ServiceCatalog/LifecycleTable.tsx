@@ -1,7 +1,7 @@
 import { ILifecycleModel } from '@app/Models/LsmModels';
 import React from 'react';
 import { Table, TableHeader, TableBody } from '@patternfly/react-table';
-import { Badge, Label, Tooltip } from '@patternfly/react-core';
+import { Badge, Tooltip } from '@patternfly/react-core';
 
 export const LifecycleTable: React.FunctionComponent<{ lifecycle: ILifecycleModel }> = props => {
   const columns = ['Source', 'Target', 'Error', 'Target Operation', 'Error Operation', 'Description', 'Event trigger'];
@@ -23,14 +23,14 @@ export const LifecycleTable: React.FunctionComponent<{ lifecycle: ILifecycleMode
       </Tooltip>
     ) : '';
 
-    const eventTrigger = <Label key={'trigger-label'}>{
+    const eventTrigger = <Badge key={'trigger-label'}>{
       eventTriggerColumnNames
         .filter(name => transferRow[name])
         .map(trigger => trigger
           .split('_')
           .map(word => word.charAt(0).toUpperCase() + word.substring(1))
           .join(' '))}
-    </Label>;
+    </Badge>;
     const eventTriggerColumn = (
       <React.Fragment>
         {validate} {config} {eventTrigger}
