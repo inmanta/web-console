@@ -2,7 +2,7 @@ import { IResourceModel } from "@app/Models/LsmModels";
 import React from "react";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Button } from "@patternfly/react-core";
-import { ExternalLinkAltIcon } from "@patternfly/react-icons";
+import { ExternalLinkAltIcon, CheckSquareIcon, TimesCircleIcon } from "@patternfly/react-icons";
 import { useStoreState, State } from "easy-peasy";
 import { IStoreModel } from "@app/Models/CoreModels";
 
@@ -20,11 +20,13 @@ export const ResourceTable: React.FunctionComponent<{ resources: IResourceModel[
       <Button component="a" variant="link" isInline={true} icon={<ExternalLinkAltIcon />} href={href} target="_blank">
         Jump to Details
       </Button>);
+    const icon = getStatusIcon(resource.resource_state);
+    const formattedState = <React.Fragment>{icon} {resource.resource_state}</React.Fragment>;
     return {
       cells: [
         resource.resource_id,
         { title: linkToDetails },
-        resource.resource_state
+        formattedState
       ]
     }
   });
@@ -35,6 +37,14 @@ export const ResourceTable: React.FunctionComponent<{ resources: IResourceModel[
       <TableBody />
     </Table>
   );
+}
+
+function getStatusIcon(resourceState: string) {
+  switch (resourceState) {
+    case 'deployed': return <CheckSquareIcon color="#06c" />;
+    case 'failed': return <TimesCircleIcon color="#c9190b" />;
+    default: return null;
+  }
 }
 
 function getHrefFromResourceId(environmentId, resourceId: string): string {
