@@ -51,6 +51,6 @@ function getHrefFromResourceId(environmentId, resourceId: string): string {
   const indexOfVersionSeparator = resourceId.lastIndexOf(',');
   const resourceName = resourceId.substring(0, indexOfVersionSeparator);
   const version = resourceId.substring(indexOfVersionSeparator + LENGTH_OF_VERSION_PREFIX, resourceId.length);
-  const url = `${process.env.API_BASEURL}/dashboard/#!/environment/${environmentId}/version/${version}/${resourceName}`;
+  const url = `${process.env.API_BASEURL}/dashboard/#!/environment/${environmentId}/version/${version}/${encodeURI(resourceName).replace(/\//g,'~2F')}`;
   return url;
 }
