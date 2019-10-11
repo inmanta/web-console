@@ -1,5 +1,6 @@
 import { IObjectWithId } from "./CoreModels";
-import { Computed, computed, Action, action } from "easy-peasy";
+import { Computed, computed, Action, action, Thunk, thunk } from "easy-peasy";
+import * as _ from 'lodash';
 
 export interface IAttributeModel {
   name: string;
@@ -52,6 +53,7 @@ export interface IServiceDict {
 export interface IServiceDictState {
   allIds: string[],
   addServices: Action<IServiceDictState, IServiceModel[]>,
+  updateServices: Thunk<IServiceDictState, IServiceModel[]>,
   byId: IServiceDict,
   getAllServices: Computed<IServiceDictState, IServiceModel[]>;
   getServicesOfEnvironment: Computed<IServiceDictState, (environmentId: string) => IServiceModel[]>;
@@ -95,7 +97,7 @@ export interface IResourceDict {
 }
 
 export interface IResourceDictState {
-  addResources: Action<IResourceDictState, {instanceId: string, resources: IResourceModel[]}>,
+  addResources: Action<IResourceDictState, { instanceId: string, resources: IResourceModel[] }>,
   allIds: string[],
   byId: IResourceDict,
   resourcesOfInstance: Computed<IResourceDictState, (instanceId: string) => IResourceModel[]>
@@ -115,6 +117,11 @@ export const serviceDictState: IServiceDictState = {
   }),
   getServicesOfEnvironment: computed(state => environmentId => {
     return Object.values(state.byId).filter(service => service.environment === environmentId);
+  }),
+  updateServices: thunk((actions, payload, {getState}) => {
+    if (!_.isEqual(getState().getAllServices, payload)) {
+      actions.addServices(payload);
+    }
   }),
 }
 

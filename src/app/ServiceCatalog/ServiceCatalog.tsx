@@ -10,12 +10,14 @@ const ServiceCatalog: React.FunctionComponent<any> = props => {
   const environmentId = projectStore.environments.getSelectedEnvironment.id ? projectStore.environments.getSelectedEnvironment.id : '';
   const servicesOfEnvironment = projectStore.services.getServicesOfEnvironment(environmentId);
   React.useEffect(() => {
-    if (environmentId
-      && servicesOfEnvironment.length === 0) {
+    if (environmentId) {
       fetchServiceCatalog(dispatch, environmentId);
+      const interval = setInterval(() => fetchServiceCatalog(dispatch, environmentId), 5000);
+      return () => clearInterval(interval);
     }
-  }, [environmentId, servicesOfEnvironment]);
-
+    return;
+  }, [dispatch, environmentId, servicesOfEnvironment]);
+  
   return (
     <PageSection>
       <Title size="lg">Service Catalog Page Title</Title>
@@ -32,7 +34,7 @@ async function fetchServiceCatalog(dispatch: Dispatch<IStoreModel, Action<any>>,
       }
     });
     const json = await result.json();
-    dispatch.projects.services.addServices(json.data);
+    dispatch.projects.services.updateServices(json.data);
   } catch (error) {
     throw error;
   }
