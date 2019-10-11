@@ -7,15 +7,19 @@ import { IStoreModel } from '@app/Models/CoreModels';
 const ServiceCatalog: React.FunctionComponent<any> = props => {
   const projectStore = useStoreState((store: State<IStoreModel>) => store.projects);
   const dispatch = useStoreDispatch<IStoreModel>();
-
-  if (projectStore.getSelectedEnvironment.id && !projectStore.getSelectedEnvironment.services) {
-    fetchServiceCatalog(dispatch, projectStore.getSelectedEnvironment.id);
-  }
+  const environmentId = projectStore.environments.getSelectedEnvironment.id ? projectStore.environments.getSelectedEnvironment.id : '';
+  const servicesOfEnvironment = projectStore.services.getServicesOfEnvironment(environmentId);
+  React.useEffect(() => {
+    if (environmentId
+      && servicesOfEnvironment.length === 0) {
+      fetchServiceCatalog(dispatch, environmentId);
+    }
+  }, [environmentId, servicesOfEnvironment]);
 
   return (
     <PageSection>
       <Title size="lg">Service Catalog Page Title</Title>
-      <CatalogDataList services={projectStore.getSelectedEnvironment.services} />
+      <CatalogDataList services={servicesOfEnvironment} />
     </PageSection>
   );
 };
@@ -28,7 +32,7 @@ async function fetchServiceCatalog(dispatch: Dispatch<IStoreModel, Action<any>>,
       }
     });
     const json = await result.json();
-    dispatch.projects.addServicesToSelectedEnvironment(json.data);
+    dispatch.projects.services.addServices(json.data);
   } catch (error) {
     throw error;
   }

@@ -9,10 +9,10 @@ export const EnvironmentSelector = (props: { items: string[] }) => {
   const [filteredItems, setFilteredItems] = React.useState(items);
   const [searchValue, setSearchValue] = React.useState('');
   const store = useStoreState((state: State<IStoreModel>) => state.projects);
-  const selectedProject = store.getSelectedProject;
+  const selectedProject = store.projects.getSelectedProject;
   let selectedProjectName = 'undefined / undefined';
-  if (selectedProject && store.getSelectedEnvironment) {
-    selectedProjectName = selectedProject.name + ' / ' + store.getSelectedEnvironment.name;
+  if (selectedProject && store.environments.getSelectedEnvironment) {
+    selectedProjectName = selectedProject.name + ' / ' + store.environments.getSelectedEnvironment.name;
   }
   const dispatch = useStoreDispatch<IStoreModel>();
 

@@ -12,6 +12,7 @@ import {
 } from '@patternfly/react-core';
 import { IServiceModel } from '@app/Models/LsmModels';
 import { CatalogContent } from './CatalogContent';
+import { Link } from 'react-router-dom';
 
 export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel[] }> = props => {
   const [expanded, setExpanded] = useState(['']);
@@ -42,7 +43,7 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
               id={service.name + '-action'}
               aria-label="Actions"
             >
-              <Button> Inventory </Button>
+              <Link to={"/lsm/catalog/" + service.name + '/inventory'}> <Button> Inventory </Button></Link>
               <Button variant="danger"> Delete </Button>
             </DataListAction>
           </DataListItemRow>
