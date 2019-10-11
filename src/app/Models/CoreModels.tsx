@@ -1,5 +1,5 @@
 import { thunk, Thunk, Action, action, createTypedHooks, Actions, Computed, computed } from 'easy-peasy';
-import { IServiceModel, IServiceInstanceModel, IInstanceDictState, IServiceDictState, instanceDictState, serviceDictState } from './LsmModels';
+import { IServiceModel, IServiceInstanceModel, IInstanceDictState, IServiceDictState, instanceDictState, serviceDictState, IResourceDictState, resourceDictState } from './LsmModels';
 
 export interface IObjectWithId {
   id: string;
@@ -46,6 +46,7 @@ export interface IProjectStoreModel {
   selectProjectAndEnvironment: Thunk<IProjectStoreModel, { project: string; environment: string }>;
   services: IServiceDictState;
   projects: IProjectDictState;
+  resources: IResourceDictState;
   serviceInstances: IInstanceDictState;
 }
 
@@ -126,6 +127,7 @@ export const project: IProjectStoreModel = {
     }
   }),
   projects: projectState,
+  resources: resourceDictState,
   selectProjectAndEnvironment: thunk((actions, payload) => {
     actions.projects.selectProjectByName(payload.project);
     actions.environments.selectEnvironmentByName(payload.environment);
