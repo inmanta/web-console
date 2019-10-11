@@ -12,8 +12,9 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   React.useEffect(() => {
     if (projectStore.environments.getSelectedEnvironment.id && instancesOfCurrentService.length === 0) {
       fetchServiceInventory(dispatch, projectStore.environments.getSelectedEnvironment.id, props.match.params.id);
+      
     }
-  }, [props.match.params.id, projectStore.environments.getSelectedEnvironment.id, instancesOfCurrentService ]);
+  }, [dispatch, props.match.params.id, projectStore.environments.getSelectedEnvironment.id, instancesOfCurrentService ]);
 
   return (
     <PageSection>

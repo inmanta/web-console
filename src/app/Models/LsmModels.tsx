@@ -84,6 +84,23 @@ export interface IInstanceDictState {
   instancesOfService: Computed<IInstanceDictState, (name: string) => IServiceInstanceModel[]>;
 }
 
+export interface IResourceModel {
+  resource_id: string;
+  resource_state: string;
+  instanceId: string;
+}
+
+export interface IResourceDict {
+  [Key: string]: IResourceModel
+}
+
+export interface IResourceDictState {
+  addResources: Action<IResourceDictState, {instanceId: string, resources: IResourceModel[]}>,
+  allIds: string[],
+  byId: IResourceDict,
+  resourcesOfInstance: Computed<IResourceDictState, (instanceId: string) => IResourceModel[]>
+}
+
 export const serviceDictState: IServiceDictState = {
   addServices: action((state, payload) => {
     payload.map(service => {
@@ -112,5 +129,20 @@ export const instanceDictState: IInstanceDictState = {
   byId: {},
   instancesOfService: computed((state) => name => {
     return Object.values(state.byId).filter(instance => (instance.service_entity === name));
+  }),
+}
+
+export const resourceDictState: IResourceDictState = {
+  addResources: action((state, payload) => {
+    payload.resources.map(resource => {
+      state.byId[resource.resource_id] = resource;
+      state.byId[resource.resource_id].instanceId = payload.instanceId;
+      state.allIds.push(resource.resource_id);
+    });
+  }),
+  allIds: [],
+  byId: {},
+  resourcesOfInstance: computed((state) => instanceId => {
+    return Object.values(state.byId).filter(resource => (resource.instanceId === instanceId));
   }),
 }
