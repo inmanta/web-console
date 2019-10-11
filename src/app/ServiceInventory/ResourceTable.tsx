@@ -20,8 +20,8 @@ export const ResourceTable: React.FunctionComponent<{ resources: IResourceModel[
       <Button component="a" variant="link" isInline={true} icon={<ExternalLinkAltIcon />} href={href} target="_blank">
         Jump to Details
       </Button>);
-    const icon = getStatusIcon(resource.resource_state);
-    const formattedState = <React.Fragment>{icon} {resource.resource_state}</React.Fragment>;
+    const Icon = getStatusIcon(resource.resource_state);
+    const formattedState = <React.Fragment > {<Icon key={resource.resource_id} />}  {resource.resource_state}</React.Fragment>;
     return {
       cells: [
         resource.resource_id,
@@ -41,9 +41,9 @@ export const ResourceTable: React.FunctionComponent<{ resources: IResourceModel[
 
 function getStatusIcon(resourceState: string) {
   switch (resourceState) {
-    case 'deployed': return <CheckSquareIcon color="#06c" />;
-    case 'failed': return <TimesCircleIcon color="#c9190b" />;
-    default: return null;
+    case 'deployed': return () => <CheckSquareIcon color="#06c" />;
+    case 'failed': return () => <TimesCircleIcon color="#c9190b" />;
+    default: return () => <></>;
   }
 }
 
