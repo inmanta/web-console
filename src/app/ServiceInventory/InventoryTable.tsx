@@ -6,7 +6,7 @@ import moment from 'moment';
 import { ResourceModal } from "./ResourceModal";
 
 export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstanceModel[] }> = props => {
-  const columnsInOrder = ["State", "Candidate Attributes", "Active Attributes", "Rollback Attributes", "Version", "Last Updated", "Resources"];
+  const columnsInOrder = ["Id", "State", "Candidate Attributes", "Active Attributes", "Rollback Attributes", "Version", "Last Updated", "Resources"];
   const instances = [...props.instances];
   const rows = instances.map(instance => {
     const activeAttributes = getFormattedListFromObject(instance, 'active_attributes');
@@ -15,6 +15,7 @@ export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstan
     const resourceModal = <ResourceModal instance={instance} />
     return {
       cells: [
+        instance.id.substring(0, 4),
         instance.state,
         candidateAttributes,
         activeAttributes,
