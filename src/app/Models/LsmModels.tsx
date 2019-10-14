@@ -1,5 +1,6 @@
 import { IObjectWithId } from "./CoreModels";
-import { Computed, computed, Action, action } from "easy-peasy";
+import { Computed, computed, Action, action, Thunk, thunk } from "easy-peasy";
+import * as _ from 'lodash';
 
 export interface IAttributeModel {
   name: string;
@@ -52,6 +53,7 @@ export interface IServiceDict {
 export interface IServiceDictState {
   allIds: string[],
   addServices: Action<IServiceDictState, IServiceModel[]>,
+  updateServices: Thunk<IServiceDictState, IServiceModel[]>,
   byId: IServiceDict,
   getAllServices: Computed<IServiceDictState, IServiceModel[]>;
   getServicesOfEnvironment: Computed<IServiceDictState, (environmentId: string) => IServiceModel[]>;
@@ -68,7 +70,7 @@ export interface IServiceInstanceModel extends IObjectWithId {
   deleted: boolean;
   environment: string;
   last_updated: string;
-  rollback_attributes: null;
+  rollback_attributes: IInstanceAttributeModel;
   service_entity: string;
   state: string;
   version: number;
@@ -79,9 +81,10 @@ export interface IInstanceDict {
 
 export interface IInstanceDictState {
   addInstances: Action<IInstanceDictState, IServiceInstanceModel[]>;
-  allIds: string[],
-  byId: IInstanceDict,
+  allIds: string[];
+  byId: IInstanceDict;
   instancesOfService: Computed<IInstanceDictState, (name: string) => IServiceInstanceModel[]>;
+  updateInstances: Thunk<IInstanceDictState, { serviceName: string, instances: IServiceInstanceModel[] }>;
 }
 
 export interface IResourceModel {
@@ -95,7 +98,7 @@ export interface IResourceDict {
 }
 
 export interface IResourceDictState {
-  addResources: Action<IResourceDictState, {instanceId: string, resources: IResourceModel[]}>,
+  addResources: Action<IResourceDictState, { instanceId: string, resources: IResourceModel[] }>,
   allIds: string[],
   byId: IResourceDict,
   resourcesOfInstance: Computed<IResourceDictState, (instanceId: string) => IResourceModel[]>
@@ -105,7 +108,9 @@ export const serviceDictState: IServiceDictState = {
   addServices: action((state, payload) => {
     payload.map(service => {
       state.byId[service.name] = service;
-      state.allIds.push(service.name);
+      if (state.allIds.indexOf(service.name) === -1) {
+        state.allIds.push(service.name);
+      }
     });
   }),
   allIds: [],
@@ -116,19 +121,31 @@ export const serviceDictState: IServiceDictState = {
   getServicesOfEnvironment: computed(state => environmentId => {
     return Object.values(state.byId).filter(service => service.environment === environmentId);
   }),
+  updateServices: thunk((actions, payload, { getState }) => {
+    if (!_.isEqual(_.sortBy(getState().getAllServices, 'id'), _.sortBy(payload, 'id'))) {
+      actions.addServices(payload);
+    }
+  }),
 }
 
 export const instanceDictState: IInstanceDictState = {
   addInstances: action((state, payload) => {
     payload.map(instance => {
       state.byId[instance.id] = instance as IServiceInstanceModel;
-      state.allIds.push(instance.id);
+      if (state.allIds.indexOf(instance.id) === -1) {
+        state.allIds.push(instance.id);
+      }
     });
   }),
   allIds: [],
   byId: {},
   instancesOfService: computed((state) => name => {
     return Object.values(state.byId).filter(instance => (instance.service_entity === name));
+  }),
+  updateInstances: thunk((actions, payload, { getState }) => {
+    if (!_.isEqual(_.sortBy(getState().instancesOfService(payload.serviceName), 'id'), _.sortBy(payload.instances, 'id'))) {
+      actions.addInstances(payload.instances);
+    }
   }),
 }
 
@@ -137,7 +154,9 @@ export const resourceDictState: IResourceDictState = {
     payload.resources.map(resource => {
       state.byId[resource.resource_id] = resource;
       state.byId[resource.resource_id].instanceId = payload.instanceId;
-      state.allIds.push(resource.resource_id);
+      if (state.allIds.indexOf(resource.resource_id) === -1) {
+        state.allIds.push(resource.resource_id);
+      }
     });
   }),
   allIds: [],
