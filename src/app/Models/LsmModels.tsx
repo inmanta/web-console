@@ -70,7 +70,7 @@ export interface IServiceInstanceModel extends IObjectWithId {
   deleted: boolean;
   environment: string;
   last_updated: string;
-  rollback_attributes: null;
+  rollback_attributes: IInstanceAttributeModel;
   service_entity: string;
   state: string;
   version: number;
@@ -84,7 +84,7 @@ export interface IInstanceDictState {
   allIds: string[];
   byId: IInstanceDict;
   instancesOfService: Computed<IInstanceDictState, (name: string) => IServiceInstanceModel[]>;
-  updateInstances: Thunk<IInstanceDictState, {serviceName: string, instances: IServiceInstanceModel[]} >;
+  updateInstances: Thunk<IInstanceDictState, { serviceName: string, instances: IServiceInstanceModel[] }>;
 }
 
 export interface IResourceModel {
@@ -121,7 +121,7 @@ export const serviceDictState: IServiceDictState = {
   getServicesOfEnvironment: computed(state => environmentId => {
     return Object.values(state.byId).filter(service => service.environment === environmentId);
   }),
-  updateServices: thunk((actions, payload, {getState}) => {
+  updateServices: thunk((actions, payload, { getState }) => {
     if (!_.isEqual(_.sortBy(getState().getAllServices, 'id'), _.sortBy(payload, 'id'))) {
       actions.addServices(payload);
     }
@@ -142,7 +142,7 @@ export const instanceDictState: IInstanceDictState = {
   instancesOfService: computed((state) => name => {
     return Object.values(state.byId).filter(instance => (instance.service_entity === name));
   }),
-  updateInstances: thunk((actions, payload, {getState}) => {
+  updateInstances: thunk((actions, payload, { getState }) => {
     if (!_.isEqual(_.sortBy(getState().instancesOfService(payload.serviceName), 'id'), _.sortBy(payload.instances, 'id'))) {
       actions.addInstances(payload.instances);
     }
@@ -154,7 +154,9 @@ export const resourceDictState: IResourceDictState = {
     payload.resources.map(resource => {
       state.byId[resource.resource_id] = resource;
       state.byId[resource.resource_id].instanceId = payload.instanceId;
-      state.allIds.push(resource.resource_id);
+      if (state.allIds.indexOf(resource.resource_id) === -1) {
+        state.allIds.push(resource.resource_id);
+      }
     });
   }),
   allIds: [],
