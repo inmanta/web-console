@@ -108,7 +108,9 @@ export const serviceDictState: IServiceDictState = {
   addServices: action((state, payload) => {
     payload.map(service => {
       state.byId[service.name] = service;
-      state.allIds.push(service.name);
+      if (state.allIds.indexOf(service.name) === -1) {
+        state.allIds.push(service.name);
+      }
     });
   }),
   allIds: [],
@@ -130,7 +132,9 @@ export const instanceDictState: IInstanceDictState = {
   addInstances: action((state, payload) => {
     payload.map(instance => {
       state.byId[instance.id] = instance as IServiceInstanceModel;
-      state.allIds.push(instance.id);
+      if (state.allIds.indexOf(instance.id) === -1) {
+        state.allIds.push(instance.id);
+      }
     });
   }),
   allIds: [],
