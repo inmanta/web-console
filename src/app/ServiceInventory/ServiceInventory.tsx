@@ -8,13 +8,16 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   const projectStore = useStoreState((store: State<IStoreModel>) => store.projects);
   const dispatch = useStoreDispatch<IStoreModel>();
   const instancesOfCurrentService = projectStore.serviceInstances.instancesOfService(props.match.params.id);
+  const environmentId = projectStore.environments.getSelectedEnvironment.id;
   
   React.useEffect(() => {
-    if (projectStore.environments.getSelectedEnvironment.id && instancesOfCurrentService.length === 0) {
-      fetchServiceInventory(dispatch, projectStore.environments.getSelectedEnvironment.id, props.match.params.id);
-      
+    if (environmentId) {
+      fetchServiceInventory(dispatch, environmentId, props.match.params.id);
+      const interval = setInterval(() => fetchServiceInventory(dispatch, environmentId, props.match.params.id), 5000);
+      return () => clearInterval(interval);
     }
-  }, [dispatch, props.match.params.id, projectStore.environments.getSelectedEnvironment.id, instancesOfCurrentService ]);
+    return;
+  }, [dispatch, props.match.params.id, environmentId, instancesOfCurrentService]);
 
   return (
     <PageSection>
@@ -33,7 +36,7 @@ async function fetchServiceInventory(dispatch: Dispatch<IStoreModel, Action<any>
       }
     });
     const json = await result.json();
-    dispatch.projects.serviceInstances.addInstances(json.data);
+    dispatch.projects.serviceInstances.updateInstances({ serviceName, instances: json.data });
   } catch (error) {
     throw error;
   }

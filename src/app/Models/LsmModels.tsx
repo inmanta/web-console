@@ -81,9 +81,10 @@ export interface IInstanceDict {
 
 export interface IInstanceDictState {
   addInstances: Action<IInstanceDictState, IServiceInstanceModel[]>;
-  allIds: string[],
-  byId: IInstanceDict,
+  allIds: string[];
+  byId: IInstanceDict;
   instancesOfService: Computed<IInstanceDictState, (name: string) => IServiceInstanceModel[]>;
+  updateInstances: Thunk<IInstanceDictState, {serviceName: string, instances: IServiceInstanceModel[]} >;
 }
 
 export interface IResourceModel {
@@ -136,6 +137,11 @@ export const instanceDictState: IInstanceDictState = {
   byId: {},
   instancesOfService: computed((state) => name => {
     return Object.values(state.byId).filter(instance => (instance.service_entity === name));
+  }),
+  updateInstances: thunk((actions, payload, {getState}) => {
+    if (!_.isEqual(getState().instancesOfService(payload.serviceName), payload.instances)) {
+      actions.addInstances(payload.instances);
+    }
   }),
 }
 
