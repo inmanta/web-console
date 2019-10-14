@@ -16,11 +16,8 @@ export const CatalogTabs: React.FunctionComponent<{ service: IServiceModel }> = 
       <Tab eventKey={0} title="Attributes">
         <AttributeTable attributes={props.service.attributes} />
       </Tab>
-      <Tab eventKey={1} title="Lifecycle">
+      <Tab eventKey={1} title="Lifecycle States">
         <LifecycleTable lifecycle={props.service.lifecycle} />
-      </Tab>
-      <Tab eventKey={2} title="Lifecycle Config">
-        Lifecycle Config
       </Tab>
     </Tabs>
   );
