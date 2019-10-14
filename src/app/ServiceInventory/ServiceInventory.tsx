@@ -3,6 +3,7 @@ import { PageSection, Title } from '@patternfly/react-core';
 import { Dispatch, Action, useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
 import { InventoryTable } from './InventoryTable';
+import { useInterval } from '@app/UseInterval';
 
 const ServiceInventory: React.FunctionComponent<any> = props => {
   const projectStore = useStoreState((store: State<IStoreModel>) => store.projects);
@@ -11,13 +12,9 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   const environmentId = projectStore.environments.getSelectedEnvironment.id;
   
   React.useEffect(() => {
-    if (environmentId) {
-      fetchServiceInventory(dispatch, environmentId, props.match.params.id);
-      const interval = setInterval(() => fetchServiceInventory(dispatch, environmentId, props.match.params.id), 5000);
-      return () => clearInterval(interval);
-    }
-    return;
+    fetchServiceInventory(dispatch, environmentId, props.match.params.id);
   }, [dispatch, props.match.params.id, environmentId, instancesOfCurrentService]);
+  useInterval(() => fetchServiceInventory(dispatch, environmentId, props.match.params.id), 5000);
 
   return (
     <PageSection>
@@ -28,15 +25,17 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   );
 };
 
-async function fetchServiceInventory(dispatch: Dispatch<IStoreModel, Action<any>>, environmentId: string, serviceName: string) {
+async function fetchServiceInventory(dispatch: Dispatch<IStoreModel, Action<any>>, environmentId: string | undefined, serviceName: string) {
   try {
-    const result = await fetch(process.env.API_BASEURL + '/lsm/v1/service_inventory/' + serviceName, {
-      headers: {
-        'X-Inmanta-Tid': environmentId
-      }
-    });
-    const json = await result.json();
-    dispatch.projects.serviceInstances.updateInstances({ serviceName, instances: json.data });
+    if (environmentId) {
+      const result = await fetch(process.env.API_BASEURL + '/lsm/v1/service_inventory/' + serviceName, {
+        headers: {
+          'X-Inmanta-Tid': environmentId
+        }
+      });
+      const json = await result.json();
+      dispatch.projects.serviceInstances.updateInstances({ serviceName, instances: json.data });
+    }
   } catch (error) {
     throw error;
   }
