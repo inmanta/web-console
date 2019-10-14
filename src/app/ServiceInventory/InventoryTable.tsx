@@ -6,22 +6,22 @@ import moment from 'moment';
 import { ResourceModal } from "./ResourceModal";
 
 export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstanceModel[] }> = props => {
-  const columnsInOrder = ["State", "Active Attributes", "Candidate Attributes", "Rollback Attributes", "Version", "Last Updated", "Resources"];
+  const columnsInOrder = ["State", "Candidate Attributes", "Active Attributes", "Rollback Attributes", "Version", "Last Updated", "Resources"];
   const instances = [...props.instances];
   const rows = instances.map(instance => {
     const activeAttributes = getFormattedListFromObject(instance, 'active_attributes');
     const candidateAttributes = getFormattedListFromObject(instance, 'candidate_attributes');
     const rollbackAttributes = getFormattedListFromObject(instance, 'rollback_attributes');
-    const resourceModal =  <ResourceModal instance={instance}/>
+    const resourceModal = <ResourceModal instance={instance} />
     return {
       cells: [
         instance.state,
-        activeAttributes,
         candidateAttributes,
+        activeAttributes,
         rollbackAttributes,
         instance.version,
         moment(instance.last_updated).format('MMMM Do YYYY, h:mm:ss a'),
-        {title: resourceModal, props: {instance}}  
+        { title: resourceModal, props: { instance } }
       ]
     }
   });
@@ -44,7 +44,8 @@ function getFormattedListFromObject(instance: IServiceInstanceModel, key: string
             const attributeValue = instance[key][attribute];
             return <ListItem key={attribute}>
               {attribute}: {Array.isArray(attributeValue) ? attributeValue.join(', ') : String(attributeValue)}
-          </ListItem>})
+            </ListItem>
+          })
       }
     </List>) : null;
 }
