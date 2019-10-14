@@ -122,7 +122,7 @@ export const serviceDictState: IServiceDictState = {
     return Object.values(state.byId).filter(service => service.environment === environmentId);
   }),
   updateServices: thunk((actions, payload, {getState}) => {
-    if (!_.isEqual(getState().getAllServices, payload)) {
+    if (!_.isEqual(getState().getAllServices.sort(), payload.sort())) {
       actions.addServices(payload);
     }
   }),
@@ -143,7 +143,7 @@ export const instanceDictState: IInstanceDictState = {
     return Object.values(state.byId).filter(instance => (instance.service_entity === name));
   }),
   updateInstances: thunk((actions, payload, {getState}) => {
-    if (!_.isEqual(getState().instancesOfService(payload.serviceName), payload.instances)) {
+    if (!_.isEqual(getState().instancesOfService(payload.serviceName).sort(), payload.instances.sort())) {
       actions.addInstances(payload.instances);
     }
   }),
