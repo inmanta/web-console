@@ -3,7 +3,7 @@ import { PageSection, Title } from '@patternfly/react-core';
 import { CatalogDataList } from './CatalogDataList';
 import { useStoreState, State, useStoreDispatch, Dispatch, Action } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
-import { useInterval } from '@app/UseInterval';
+import { useInterval } from '@app/Hooks/UseInterval';
 
 const ServiceCatalog: React.FunctionComponent<any> = props => {
   const projectStore = useStoreState((store: State<IStoreModel>) => store.projects);

@@ -3,7 +3,7 @@ import { PageSection, Title } from '@patternfly/react-core';
 import { Dispatch, Action, useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
 import { InventoryTable } from './InventoryTable';
-import { useInterval } from '@app/UseInterval';
+import { useInterval } from '@app/Hooks/UseInterval';
 
 const ServiceInventory: React.FunctionComponent<any> = props => {
   const projectStore = useStoreState((store: State<IStoreModel>) => store.projects);
