@@ -10,7 +10,7 @@ const LENGTH_OF_VERSION_PREFIX = 3;
 
 export const ResourceTable: React.FunctionComponent<{ resources: IResourceModel[] }> = props => {
   const columns = ["Resource Id", "Details", "State"];
-  const instanceId = props.resources[0].instanceId;
+  const instanceId = props.resources.length > 0 ? props.resources[0].instanceId : '';
   const environmentId = useStoreState((state: State<IStoreModel>) => (
     state.projects.environments.selectedEnvironmentId
   ));
@@ -39,7 +39,7 @@ export const ResourceTable: React.FunctionComponent<{ resources: IResourceModel[
   );
 }
 
-function getStatusIcon(resourceState: string) {
+export function getStatusIcon(resourceState: string) {
   switch (resourceState) {
     case 'deployed': return () => <CheckSquareIcon color="#06c" />;
     case 'failed': return () => <TimesCircleIcon color="#c9190b" />;

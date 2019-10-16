@@ -25,8 +25,9 @@ export const PageBreadcrumb = (props) => {
       return;
     })
   }
+  breadcrumbs = breadcrumbs.filter(breadcrumb => !!breadcrumb);
   return (
     <Breadcrumb>
-      {breadcrumbs}
+      {breadcrumbs.length > 0 ? breadcrumbs : null}
     </Breadcrumb>);
 };
