@@ -1,8 +1,7 @@
 import { CatalogDataList } from "./CatalogDataList";
 import { shallow, mount } from "enzyme";
 import React from "react";
-import { DataListItem, DataListAction, DataListToggle, DataListContent } from "@patternfly/react-core";
-import { act } from "react-dom/test-utils";
+import { DataListItem, DataListAction } from "@patternfly/react-core";
 import { MemoryRouter } from "react-router";
 
 describe('Catalog Data List', () => {
