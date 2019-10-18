@@ -1,5 +1,5 @@
-import { thunk, Thunk, Action, action, createTypedHooks, Actions, Computed, computed } from 'easy-peasy';
-import { IServiceModel, IServiceInstanceModel, IInstanceDictState, IServiceDictState, instanceDictState, serviceDictState, IResourceDictState, resourceDictState } from './LsmModels';
+import { thunk, Thunk, Action, action, createTypedHooks, Computed, computed } from 'easy-peasy';
+import { IInstanceDictState, IServiceDictState, instanceDictState, serviceDictState, IResourceDictState, resourceDictState } from './LsmModels';
 
 export interface IObjectWithId {
   id: string;
@@ -42,7 +42,6 @@ export interface IEnvironmentDictState {
 export interface IProjectStoreModel {
   environments: IEnvironmentDictState;
   fetched: Action<IProjectStoreModel, IProjectModel[]>;
-  fetch: Thunk<IProjectStoreModel>;
   selectProjectAndEnvironment: Thunk<IProjectStoreModel, { project: string; environment: string }>;
   services: IServiceDictState;
   projects: IProjectDictState;
@@ -52,16 +51,6 @@ export interface IProjectStoreModel {
 
 export interface IStoreModel {
   projects: IProjectStoreModel;
-}
-
-async function fetchProject() {
-  try {
-    const result = await fetch(process.env.API_BASEURL + '/api/v2/project');
-    return result.json();
-  } catch (error) {
-    // Show Alert or Notification
-    throw error;
-  }
 }
 
 export const environmentState: IEnvironmentDictState = {
@@ -105,11 +94,6 @@ export const projectState: IProjectDictState = {
 
 export const project: IProjectStoreModel = {
   environments: environmentState,
-  fetch: thunk(async (actions: Actions<IProjectStoreModel>) => {
-    const data = await fetchProject();
-    actions.fetched(data.data);
-    return data;
-  }),
   fetched: action((state, payload) => {
     payload.map(currentProject => {
       state.projects.byId[currentProject.id] = currentProject;

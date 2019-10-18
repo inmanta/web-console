@@ -152,7 +152,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
         return (
           <NavGroup title={routeItem.name} key={`${routeItem.name}-${idx}`}>
             {routeItem.exactRoutes.map((route, index) => {
-              return ( !route.hideOnSideBar ?
+              return (!route.hideOnSideBar ?
                 <NavItem key={`${route.label}-${index}`} id={`${route.label}-${index}`}>
                   <NavLink exact={true} to={routeItem.pathPrefix + route.path} activeClassName="pf-m-current">
                     {route.label}

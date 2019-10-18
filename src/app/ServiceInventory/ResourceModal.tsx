@@ -1,21 +1,26 @@
 import { useState } from "react";
 import React from "react";
-import { Button, Modal } from "@patternfly/react-core";
+import { Button, Modal, Alert } from "@patternfly/react-core";
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
 import { IStoreModel } from "@app/Models/CoreModels";
 import { Action, Dispatch, useStoreDispatch, useStoreState, State } from "easy-peasy";
 import { ResourceTable } from "./ResourceTable";
+import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 
 export const ResourceModal: React.FunctionComponent<{ instance: IServiceInstanceModel }> = props => {
   const instance = props.instance;
-  const dispatch = useStoreDispatch<IStoreModel>();
+  const storeDispatch = useStoreDispatch<IStoreModel>();
   const resources = useStoreState((store: State<IStoreModel>) => store.projects.resources);
   const resourcesOfInstance = resources.resourcesOfInstance(instance.id);
   const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const dispatch = (data) => storeDispatch.projects.resources.addResources({ instanceId: instance.id, resources: data });
+  const resourceUrl = `/lsm/v1/service_inventory/${instance.service_entity}/${instance.id}/resources?current_version=${instance.version}`;
+  const requestParams = { urlEndpoint: resourceUrl, dispatch, isEnvironmentIdRequired: true, environmentId: instance.environment, setErrorMessage };
 
   const handleModalToggle = () => {
     if (!isOpen) {
-      fetchResources(dispatch, instance);
+      fetchInmantaApi(requestParams);
     }
     setIsOpen(!isOpen);
   };
@@ -36,23 +41,10 @@ export const ResourceModal: React.FunctionComponent<{ instance: IServiceInstance
         ]}
         isFooterLeftAligned={true}
       >
+        {errorMessage && <Alert variant='danger' title={errorMessage} />}
         {resourcesOfInstance.length > 0 && <ResourceTable resources={resourcesOfInstance} />}
-        {resourcesOfInstance.length === 0 && <div>No resources found for instance {instance.id}</div>}
+        {(!errorMessage && resourcesOfInstance.length === 0) && <Alert variant='info' title={`No resources found for instance ${instance.id}`} />}
       </Modal>
     </React.Fragment>
   );
-}
-
-async function fetchResources(dispatch: Dispatch<IStoreModel, Action<any>>, instance: IServiceInstanceModel) {
-  try {
-    const result = await fetch(`${process.env.API_BASEURL}/lsm/v1/service_inventory/${instance.service_entity}/${instance.id}/resources?current_version=${instance.version}`, {
-      headers: {
-        'X-Inmanta-Tid': instance.environment
-      }
-    });
-    const json = await result.json();
-    dispatch.projects.resources.addResources({ instanceId: instance.id, resources: json.data });
-  } catch (error) {
-    throw error;
-  }
 }
