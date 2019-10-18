@@ -106,6 +106,8 @@ export interface IResourceDictState {
 
 export const serviceDictState: IServiceDictState = {
   addServices: action((state, payload) => {
+    state.allIds = [];
+    state.byId = {};
     payload.map(service => {
       state.byId[service.name] = service;
       if (state.allIds.indexOf(service.name) === -1) {
@@ -122,7 +124,7 @@ export const serviceDictState: IServiceDictState = {
     return Object.values(state.byId).filter(service => service.environment === environmentId);
   }),
   updateServices: thunk((actions, payload, { getState }) => {
-    if (!_.isEqual(_.sortBy(getState().getAllServices, 'id'), _.sortBy(payload, 'id'))) {
+    if (!_.isEqual(_.sortBy(getState().getAllServices, 'name'), _.sortBy(payload, 'name'))) {
       actions.addServices(payload);
     }
   }),
@@ -130,6 +132,8 @@ export const serviceDictState: IServiceDictState = {
 
 export const instanceDictState: IInstanceDictState = {
   addInstances: action((state, payload) => {
+    state.allIds = [];
+    state.byId = {};
     payload.map(instance => {
       state.byId[instance.id] = instance as IServiceInstanceModel;
       if (state.allIds.indexOf(instance.id) === -1) {

@@ -30,7 +30,7 @@ export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstan
   return (
     <Table aria-label="Instances" cells={columnsInOrder} rows={rows}>
       <TableHeader />
-      <TableBody />
+      <TableBody rowKey={({ rowData, rowIndex }) => rowIndex} />
     </Table>
   );
 };
