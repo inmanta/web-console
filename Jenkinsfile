@@ -25,10 +25,8 @@ pipeline {
 
     post {
         always {
-            steps {
-                junit 'web-console/junit.xml'
-                cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
-            }
+            junit 'web-console/junit.xml'
+            cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
         }
     }
 }
