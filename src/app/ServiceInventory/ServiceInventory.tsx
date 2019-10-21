@@ -1,44 +1,34 @@
 import * as React from 'react';
-import { PageSection, Title } from '@patternfly/react-core';
-import { Dispatch, Action, useStoreState, State, useStoreDispatch } from 'easy-peasy';
+import { PageSection, Title, Alert } from '@patternfly/react-core';
+import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
 import { InventoryTable } from './InventoryTable';
 import { useInterval } from '@app/Hooks/UseInterval';
+import { fetchInmantaApi } from '@app/utils/fetchInmantaApi';
 
 const ServiceInventory: React.FunctionComponent<any> = props => {
+  const serviceName = props.match.params.id;
+  const invetoryUrl = `/lsm/v1/service_inventory/${serviceName}`;
   const projectStore = useStoreState((store: State<IStoreModel>) => store.projects);
-  const dispatch = useStoreDispatch<IStoreModel>();
-  const instancesOfCurrentService = projectStore.serviceInstances.instancesOfService(props.match.params.id);
+  const storeDispatch = useStoreDispatch<IStoreModel>();
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const instancesOfCurrentService = projectStore.serviceInstances.instancesOfService(serviceName);
   const environmentId = projectStore.environments.getSelectedEnvironment.id;
-  
+  const dispatch = (data) => storeDispatch.projects.serviceInstances.updateInstances({ serviceName, instances: data });
+  const requestParams = { urlEndpoint: invetoryUrl, dispatch, isEnvironmentIdRequired: true, environmentId, setErrorMessage };
   React.useEffect(() => {
-    fetchServiceInventory(dispatch, environmentId, props.match.params.id);
-  }, [dispatch, props.match.params.id, environmentId, instancesOfCurrentService]);
-  useInterval(() => fetchServiceInventory(dispatch, environmentId, props.match.params.id), 5000);
+    fetchInmantaApi(requestParams);
+  }, [storeDispatch, serviceName, instancesOfCurrentService, requestParams]);
+  useInterval(() => fetchInmantaApi(requestParams), 5000);
 
   return (
     <PageSection>
       <Title size="lg">Service Inventory</Title>
+      {errorMessage && <Alert variant='danger' title={errorMessage} />}
       {instancesOfCurrentService.length > 0 && <InventoryTable instances={instancesOfCurrentService} />}
-      {instancesOfCurrentService.length === 0 && <div>No Instances found for service: {props.match.params.id}</div>}
+      {(!errorMessage && instancesOfCurrentService.length === 0) && <Alert variant='info' title={`No Instances found for service: ${serviceName}`} />}
     </PageSection>
   );
 };
 
-async function fetchServiceInventory(dispatch: Dispatch<IStoreModel, Action<any>>, environmentId: string | undefined, serviceName: string) {
-  try {
-    if (environmentId) {
-      const result = await fetch(process.env.API_BASEURL + '/lsm/v1/service_inventory/' + serviceName, {
-        headers: {
-          'X-Inmanta-Tid': environmentId
-        }
-      });
-      const json = await result.json();
-      dispatch.projects.serviceInstances.updateInstances({ serviceName, instances: json.data });
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-export { ServiceInventory, fetchServiceInventory };
+export { ServiceInventory };

@@ -1,42 +1,32 @@
 import * as React from 'react';
-import { PageSection, Title } from '@patternfly/react-core';
+import { PageSection, Title, Alert } from '@patternfly/react-core';
 import { CatalogDataList } from './CatalogDataList';
-import { useStoreState, State, useStoreDispatch, Dispatch, Action } from 'easy-peasy';
+import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
 import { useInterval } from '@app/Hooks/UseInterval';
+import { fetchInmantaApi } from '../utils/fetchInmantaApi';
 
 const ServiceCatalog: React.FunctionComponent<any> = props => {
+  const serviceCatalogUrl = '/lsm/v1/service_catalog';
   const projectStore = useStoreState((store: State<IStoreModel>) => store.projects);
-  const dispatch = useStoreDispatch<IStoreModel>();
+  const storeDispatch = useStoreDispatch<IStoreModel>();
+  const [errorMessage, setErrorMessage] = React.useState('');
   const environmentId = projectStore.environments.getSelectedEnvironment.id ? projectStore.environments.getSelectedEnvironment.id : '';
   const servicesOfEnvironment = projectStore.services.getServicesOfEnvironment(environmentId);
+  const dispatch = (data) => storeDispatch.projects.services.updateServices(data);
+  const requestParams = { urlEndpoint: serviceCatalogUrl, dispatch, isEnvironmentIdRequired: true, environmentId, setErrorMessage };
   React.useEffect(() => {
-    fetchServiceCatalog(dispatch, environmentId);
-  }, [dispatch, environmentId, servicesOfEnvironment]);
-  useInterval(() => fetchServiceCatalog(dispatch, environmentId), 5000);
+    fetchInmantaApi(requestParams);
+  }, [dispatch, servicesOfEnvironment, requestParams]);
+  useInterval(() => fetchInmantaApi(requestParams), 5000);
 
   return (
     <PageSection>
-      <Title size="lg">Service Catalog Page Title</Title>
+      <Title size="lg">Service Catalog</Title>
+      {errorMessage && <Alert variant='danger' title={errorMessage} />}
       <CatalogDataList services={servicesOfEnvironment} />
     </PageSection>
   );
 };
-
-async function fetchServiceCatalog(dispatch: Dispatch<IStoreModel, Action<any>>, environmentId: string | undefined) {
-  try {
-    if (environmentId) {
-      const result = await fetch(process.env.API_BASEURL + '/lsm/v1/service_catalog', {
-        headers: {
-          'X-Inmanta-Tid': environmentId
-        }
-      });
-      const json = await result.json();
-      dispatch.projects.services.updateServices(json.data);
-    }
-  } catch (error) {
-    throw error;
-  }
-}
 
 export { ServiceCatalog };

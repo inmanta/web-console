@@ -3,6 +3,8 @@ import { App } from '@app/index';
 import { mount } from 'enzyme';
 import { Button } from '@patternfly/react-core';
 import Keycloak from 'keycloak-js';
+import { wait } from '@testing-library/react';
+
 
 
 describe('App tests', () => {
@@ -13,8 +15,9 @@ describe('App tests', () => {
   });
 
   it('should render a nav-toggle button', () => {
-    const wrapper = mount(<App keycloak={keycloak}/>);
+    const wrapper = mount(<App keycloak={keycloak} />);
     const button = wrapper.find(Button);
+    wait();
     expect(button.exists()).toBe(true);
   });
 
@@ -23,6 +26,7 @@ describe('App tests', () => {
     const button = wrapper.find('#nav-toggle').hostNodes();
     expect(wrapper.find('#page-sidebar').hasClass('pf-m-expanded'));
     button.simulate('click');
+    wait();
     expect(wrapper.find('#page-sidebar').hasClass('pf-m-collapsed'));
   });
 });

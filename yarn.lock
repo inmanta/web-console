@@ -443,19 +443,6 @@
   resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.33.5.tgz#e8abad22510d32de4933a42d7f567b152ccc0e6d"
   integrity sha512-/4S19Ln2BY62nUP/Ow+j4gzCKm4e3HYehW92R+iaREaBgatfq55G50QdPsXDvTvLeTp9lS6YfXJlLz7OTIHnhw==
 
-"@patternfly/react-core@^3.112.1":
-  version "3.112.1"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.112.1.tgz#d45e41edab363639f3161a10dbc3451ac9bade91"
-  integrity sha512-+SJzyOH7HKxwAojPaC7KRuRi6yKcfXwd93OkGbSE95tSoEy7ltEJ8aJaP0HoI9kDygl2t0JsfB2Fc9s6hmFPCQ==
-  dependencies:
-    "@patternfly/react-icons" "^3.14.7"
-    "@patternfly/react-styles" "^3.5.27"
-    "@patternfly/react-tokens" "^2.6.31"
-    emotion "^9.2.9"
-    exenv "^1.2.2"
-    focus-trap-react "^4.0.1"
-    tippy.js "3.4.1"
-
 "@patternfly/react-core@^3.112.3":
   version "3.112.3"
   resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.112.3.tgz#b0af9746581091446052881537106022ed0bbd03"
