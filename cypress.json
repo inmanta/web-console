@@ -1,7 +1,8 @@
 {
   "baseUrl": "http://localhost:9000",
-  "reporter": "cypress-multi-reporters",
+  "video": false,
+  "reporter": "junit",
   "reporterOptions": {
-    "configFile": "reporter.json"
+    "mochaFile": "cypress/reports/junit/test-report-[hash].xml"
   }
 }

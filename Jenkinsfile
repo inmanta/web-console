@@ -25,8 +25,7 @@ pipeline {
             steps {
                 dir('web-console') {
                     sh '''yarn cypress-test;
-                    npx mochawesome-merge --reportDir cypress/reports/mochawesome > cypress/reports/mochawesome.json;
-                    npx mochawesome-report-generator --reportDir cypress/reports/ --charts true cypress/reports/mochawesome.json'''
+                    npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
                 }
             }
         }
@@ -36,14 +35,7 @@ pipeline {
         always {
             junit 'web-console/junit.xml'
             cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
-            publishHTML (target: [
-            allowMissing: true,
-            alwaysLinkToLastBuild: false,
-            keepAll: true,
-            reportDir: 'web-console/cypress/reports/mochawesome',
-            reportFiles: 'mochawesome.html',
-            reportName: "CypressReport"
-            ])
+            junit 'web-console/cypress/reports/cypress-report.xml'
         }
     }
 }
