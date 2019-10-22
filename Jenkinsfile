@@ -11,7 +11,7 @@ pipeline {
     }
 
     stages {
-        stage('Test') {
+        stage('Build & Unit Test') {
             steps {
                 dir('web-console'){
                     sh '''yarn;
@@ -21,12 +21,22 @@ pipeline {
                 }
             }
         }
+        stage('Testing with cypress') {
+            steps {
+                dir('web-console') {
+                    sh '''yarn cypress-test;
+                    npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
+                }
+            }
+        }
     }
 
     post {
         always {
             junit 'web-console/junit.xml'
             cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
+            junit 'web-console/cypress/reports/cypress-report.xml'
+            archiveArtifacts artifacts: 'web-console/cypress/screenshots/*', allowEmptyArchive: true, onlyIfSuccessful: false
         }
     }
 }

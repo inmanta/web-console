@@ -60,6 +60,11 @@ typings/
 # next.js build output
 .next
 
+# cypress reports
+cypress/reports/
+cypress/videos/
+cypress/screenshots/
+
 dist
 yarn-error.log
 stats.json
