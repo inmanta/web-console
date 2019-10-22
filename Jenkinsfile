@@ -24,7 +24,7 @@ pipeline {
         stage('Testing with cypress') {
             steps {
                 dir('web-console') {
-                    sh '''yarn cypress-test;'
+                    sh '''yarn cypress-test;
                     npx mochawesome-merge --reportDir cypress/reports/mochawesome > cypress/reports/mochawesome.json;
                     npx mochawesome-report-generator --reportDir cypress/reports/ --charts true cypress/reports/mochawesome.json'''
                 }
