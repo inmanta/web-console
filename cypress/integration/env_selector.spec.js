@@ -4,7 +4,7 @@ describe('Environment selector', function () {
     cy.server();
     cy.route({
       method: 'GET',
-      url: '/api/v2/project',
+      url: '**/api/v2/project',
       response: 'fixture:environments.json'
     })
     cy.visit('/');

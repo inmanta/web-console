@@ -4,12 +4,12 @@ describe('Service catalog', function () {
     cy.server();
     cy.route({
       method: 'GET',
-      url: '/api/v2/project',
+      url: '**/api/v2/project',
       response: 'fixture:environments.json'
     });
     cy.route({
       method: 'GET',
-      url: '/lsm/v1/service_catalog',
+      url: '**/lsm/v1/service_catalog',
       response: 'fixture:lsm/service_catalog.json'
     });
     cy.visit('/lsm/catalog');

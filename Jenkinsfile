@@ -42,7 +42,7 @@ pipeline {
             keepAll: true,
             reportDir: 'web-console/cypress/reports/mochawesome',
             reportFiles: 'mochawesome.html',
-            reportName: "Mochawesome Tests Report"
+            reportName: "CypressReport"
             ])
         }
     }

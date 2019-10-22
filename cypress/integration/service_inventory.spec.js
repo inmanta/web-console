@@ -4,17 +4,17 @@ describe('Service inventory', function () {
     cy.server();
     cy.route({
       method: 'GET',
-      url: '/api/v2/project',
+      url: '**/api/v2/project',
       response: 'fixture:environments.json'
     });
     cy.route({
       method: 'GET',
-      url: '/lsm/v1/service_inventory/e2e_service',
+      url: '**/lsm/v1/service_inventory/e2e_service',
       response: 'fixture:lsm/service_inventory.json'
     });
     cy.route({
       method: 'GET',
-      url: '/lsm/v1/service_inventory/e2e_service/*/resources?current_version=*',
+      url: '**/lsm/v1/service_inventory/e2e_service/*/resources?current_version=*',
       response: 'fixture:lsm/resources.json'
     })
 
