@@ -36,6 +36,7 @@ pipeline {
             junit 'web-console/junit.xml'
             cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
             junit 'web-console/cypress/reports/cypress-report.xml'
+            archiveArtifacts artifacts: 'web-console/cypress/screenshots/*', allowEmptyArchive: true, onlyIfSuccessful: false
         }
     }
 }
