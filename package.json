@@ -17,8 +17,8 @@
     "bundle-profile:analyze": "yarn build:bundle-profile && webpack-bundle-analyzer ./stats.json",
     "clean": "rimraf dist",
     "delete:reports": "rm -r cypress/reports/* || true",
-    "prereport": "yarn run delete:reports",
-    "report": "yarn start-test 'yarn start' http-get://localhost:9000 'cypress run'"
+    "precypress-test": "yarn run delete:reports",
+    "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'cypress run'"
   },
   "devDependencies": {
     "@testing-library/react": "^9.1.4",

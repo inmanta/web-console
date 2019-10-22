@@ -23,9 +23,8 @@ pipeline {
         }
         stage('Testing with cypress') {
             steps {
-                dir('web-console'){
-                    sh '''yarn delete:reports;
-                    yarn start-test 'yarn start' http-get://localhost:9000 'docker run --net="host" -i -v $PWD:/e2e -w /e2e  cypress/included:3.4.0;'
+                dir('web-console') {
+                    sh '''yarn cypress-test;'
                     npx mochawesome-merge --reportDir cypress/reports/mochawesome > cypress/reports/mochawesome.json;
                     npx mochawesome-report-generator --reportDir cypress/reports/ --charts true cypress/reports/mochawesome.json'''
                 }
