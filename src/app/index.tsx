@@ -14,27 +14,29 @@ import { Alert } from '@patternfly/react-core';
 const keycloakInitConfig = { onLoad: 'login-required', flow: 'implicit' } as KeycloakInitOptions;
 const storeInstance = createStore<IStoreModel>(storeModel);
 
-const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance }> = props => {
+const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance, shouldUseAuth: boolean }> = props => {
   const projectsEndpoint = '/api/v2/project';
   const dispatch = (data) => storeInstance.dispatch.projects.fetched(data);
   const [errorMessage, setErrorMessage] = React.useState('');
-  const requestParams = {urlEndpoint: projectsEndpoint, dispatch, isEnvironmentIdRequired: false, environmentId: undefined, setErrorMessage};
+  const requestParams = { urlEndpoint: projectsEndpoint, dispatch, isEnvironmentIdRequired: false, environmentId: undefined, setErrorMessage };
   React.useEffect(() => {
     fetchInmantaApi(requestParams);
   }, []);
-  const shouldUseAuth = process.env.SHOULD_USE_AUTH === 'true';
+
+  const shouldAddBaseName = process.env.NODE_ENV === 'production';
+
   const AppWithStore = (
     <StoreProvider store={storeInstance}>
-      <Router>
+      <Router basename={shouldAddBaseName ? "/web-console" : "/"}>
         <AppLayout>
-          {errorMessage && <Alert variant='danger' title={errorMessage}/>}
+          {errorMessage && <Alert variant='danger' title={errorMessage} />}
           <AppRoutes />
         </AppLayout>
       </Router>
     </StoreProvider>
   );
 
-  if (shouldUseAuth) {
+  if (props.shouldUseAuth) {
     return (
       <KeycloakProvider keycloak={props.keycloak} initConfig={keycloakInitConfig}>
         {AppWithStore}

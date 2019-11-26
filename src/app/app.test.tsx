@@ -15,14 +15,14 @@ describe('App tests', () => {
   });
 
   it('should render a nav-toggle button', () => {
-    const wrapper = mount(<App keycloak={keycloak} />);
+    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
     const button = wrapper.find(Button);
     wait();
     expect(button.exists()).toBe(true);
   });
 
   it('should hide the sidebar when clicking the nav-toggle button', () => {
-    const wrapper = mount(<App keycloak={keycloak} />);
+    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
     const button = wrapper.find('#nav-toggle').hostNodes();
     expect(wrapper.find('#page-sidebar').hasClass('pf-m-expanded'));
     button.simulate('click');

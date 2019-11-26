@@ -21,14 +21,15 @@ export async function fetchInmantaApi(requestParams: IRequestParams) {
 }
 async function doFetch(urlEndpoint, isEnvironmentIdRequired, environmentId) {
   let result: Response | undefined;
+  const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : '';
   if (isEnvironmentIdRequired && environmentId) {
-    result = await fetch(`${process.env.API_BASEURL}${urlEndpoint}`, {
+    result = await fetch(`${baseUrl}${urlEndpoint}`, {
       headers: {
         'X-Inmanta-Tid': environmentId
       }
     });
   } else if (!isEnvironmentIdRequired) {
-    result = await fetch(`${process.env.API_BASEURL}${urlEndpoint}`);
+    result = await fetch(`${baseUrl}${urlEndpoint}`);
   }
   if (result) {
     if (!result.ok) {
