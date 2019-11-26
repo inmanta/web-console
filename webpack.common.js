@@ -1,7 +1,8 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const Dotenv = require('dotenv-webpack');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const BG_IMAGES_DIRNAME = 'bgimages';
 
@@ -13,7 +14,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'src', 'index.html')
     }),
-    new Dotenv()
+    new webpack.IgnorePlugin(/^\.\/config\.js$/),
+    new CopyPlugin([{ from: 'src/config.js', to: '' }]),
   ],
   module: {
     rules: [
@@ -70,7 +72,7 @@ module.exports = {
         // only process SVG modules with this loader if they live under a 'bgimages' directory
         // this is primarily useful when applying a CSS background using an SVG
         include: [input => input.indexOf(BG_IMAGES_DIRNAME) > -1,
-          path.resolve(__dirname, 'src')],
+        path.resolve(__dirname, 'src')],
         use: {
           loader: 'svg-url-loader',
           options: {}

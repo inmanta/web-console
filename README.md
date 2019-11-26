@@ -24,6 +24,8 @@ You can also specify the url of the keycloak server in the same file:
 
     KEYCLOAK_URL=<Your keycloak server url>
 
+Alternatively, the keycloak parameters can also be specified in an external file in the production environment, called config.js, following the example src/config.js file.
+
 The base url of the backend services can also be specified here, e.g.:
 
     API_BASEURL=http://localhost:8888

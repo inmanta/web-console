@@ -11,14 +11,14 @@ describe('Navigation', () => {
   });
 
   it('should render nav groups', () => {
-    const wrapper = mount(<App keycloak={keycloak} />);
+    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
     const nav = wrapper.find('#nav-primary-simple');
     wait();
     expect(nav.find('.pf-c-nav__section-title')).toHaveLength(2);
   });
 
   it('should navigate when clicking on link', () => {
-    const wrapper = mount(<App keycloak={keycloak} />);
+    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false}/>);
     const nav = wrapper.find('#nav-primary-simple');
     const serviceCatalogEntry = nav.find('.pf-c-nav__link').first();
     serviceCatalogEntry.simulate('click');

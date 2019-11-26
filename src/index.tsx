@@ -10,7 +10,16 @@ if (process.env.NODE_ENV !== 'production') {
   axe(React, ReactDOM, 1000);
 }
 
+// External configuration from the server
+const externalKeycloakConf = globalThis.auth;
+const shouldUseAuth = process.env.SHOULD_USE_AUTH === 'true' || externalKeycloakConf;
 const customKeycloakConf = { ...keycloakConf, url: process.env.KEYCLOAK_URL };
-const keycloak = Keycloak(customKeycloakConf);
+let keycloak: Keycloak.KeycloakInstance;
+if (externalKeycloakConf) {
+  keycloak = Keycloak(externalKeycloakConf);
+} else {
+  keycloak = Keycloak(customKeycloakConf);
+}
 
-ReactDOM.render(<App keycloak={keycloak} />, document.getElementById('root') as HTMLElement);
+
+ReactDOM.render(<App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />, document.getElementById('root') as HTMLElement);

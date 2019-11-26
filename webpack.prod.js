@@ -36,5 +36,8 @@ module.exports = merge(common, {
         use: [MiniCssExtractPlugin.loader, 'css-loader']
       }
     ]
-  }
+  },
+  output: {
+    publicPath: '/web-console/'
+  },
 });
