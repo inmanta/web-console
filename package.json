@@ -1,11 +1,10 @@
 {
-  "name": "web-console",
-  "version": "0.0.1",
+  "name": "@inmanta/web-console",
+  "version": "0.0.2",
   "description": "Web Console for Inmanta Orchestrator",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "prebuild": "yarn clean",
     "build": "webpack --config webpack.prod.js",
@@ -20,6 +19,10 @@
     "precypress-test": "yarn run delete:reports",
     "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'cypress run'"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "files": ["dist/"],
   "devDependencies": {
     "@testing-library/react": "^9.1.4",
     "@types/enzyme": "^3.10.3",
