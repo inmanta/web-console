@@ -163,6 +163,11 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
           </NavGroup>
         );
       })}
+      <NavGroup title="Other sites" key="external">
+        <li className="pf-c-nav__item">
+          <a className="pf-c-nav__link"  href="/dashboard">Dashboard</a>
+        </li>
+      </NavGroup>
     </Nav>
   );
   const Sidebar = <PageSidebar nav={Navigation} isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen} theme="dark" />;

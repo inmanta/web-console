@@ -1,8 +1,11 @@
 const path = require('path');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
+const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const publicPath = '/web-console/'
 
 module.exports = merge(common, {
   mode: 'production',
@@ -16,7 +19,14 @@ module.exports = merge(common, {
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[name].bundle.css'
-    })
+    }),
+    new webpack.EnvironmentPlugin({
+      PUBLIC_PATH: publicPath
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'src', 'index.html'),
+      PUBLIC_PATH: publicPath
+    }),
   ],
   module: {
     rules: [
@@ -38,6 +48,6 @@ module.exports = merge(common, {
     ]
   },
   output: {
-    publicPath: '/web-console/'
+    publicPath: publicPath
   },
 });

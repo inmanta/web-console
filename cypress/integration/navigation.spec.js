@@ -24,13 +24,6 @@ describe('Navigation', function () {
     })
 
   });
-  it('Sidebar navigation should change the url', function () {
-    cy.visit('/');
-    cy.contains('Support').click();
-    cy.url().should('include', 'support');
-    cy.contains('Service Catalog').click();
-    cy.url().should('include', 'lsm/catalog');
-  });
   it('Button and breadcrumb navigation should change the url', function () {
     cy.visit('/lsm/catalog');
     cy.get('.pf-c-data-list__item-action').first().find('.pf-m-primary').click();

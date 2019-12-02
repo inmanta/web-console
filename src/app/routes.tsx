@@ -1,45 +1,14 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
-import { Alert, PageSection } from '@patternfly/react-core';
-import { DynamicImport } from '@app/DynamicImport';
+import { Route, RouteComponentProps, Switch, Redirect } from 'react-router-dom';
 import { accessibleRouteChangeHandler } from '@app/utils/utils';
-import { Dashboard } from '@app/Dashboard/Dashboard';
 import { NotFound } from '@app/NotFound/NotFound';
 import { useDocumentTitle } from '@app/utils/useDocumentTitle';
 import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
 import { ServiceCatalog } from './ServiceCatalog/ServiceCatalog';
 import { ServiceInventory } from './ServiceInventory/ServiceInventory';
-import { LifecycleManager } from './LifecycleManager/LifecycleManager';
-import { PageBreadcrumb } from './AppLayout/PageBreadcrumb';
 
 let routeFocusTimer: number;
 
-const getSupportModuleAsync = () => {
-  return () => import(/* webpackChunkName: 'support' */ '@app/Support/Support');
-};
-
-const Support = (routeProps: RouteComponentProps) => {
-  const lastNavigation = useLastLocation();
-  return (
-    <DynamicImport load={getSupportModuleAsync()} focusContentAfterMount={lastNavigation !== null}>
-      {(Component: any) => {
-        let loadedComponent: any;
-        if (Component === null) {
-          loadedComponent = (
-            <PageSection aria-label="Loading Content Container">
-              <div className="pf-l-bullseye">
-                <Alert title="Loading" className="pf-l-bullseye__item" />
-              </div>
-            </PageSection>
-          );
-        } else {
-          loadedComponent = <Component.Support {...routeProps} />;
-        }
-        return loadedComponent;
-      }}
-    </DynamicImport>
-  );
-};
 
 export interface IAppRoute {
   label?: string;
@@ -83,28 +52,6 @@ const routes: IAppRouteGroup[] =
       name: 'Lifecycle service management',
       pathPrefix: '/lsm',
     },
-    {
-      exactRoutes: [{
-        component: Dashboard,
-        exact: true,
-        icon: null,
-        label: 'Dashboard',
-        path: '/',
-        title: 'Main Dashboard Title'
-      },
-      {
-        component: Support,
-        exact: true,
-        icon: null,
-        isAsync: true,
-        label: 'Support',
-        path: '/support',
-        title: 'Support Page Title'
-      }
-      ],
-      name: 'Default',
-      pathPrefix: '',
-    }
   ];
 
 // a custom hook for sending focus to the primary content container
@@ -162,6 +109,7 @@ const AppRoutes = () => (
         ))
       })
       }
+      <Route exact={true} path='/' component={() => <Redirect to="/lsm/catalog" />} />
       <PageNotFound title={'404 Page Not Found'} />
     </Switch>
   </LastLocationProvider>
