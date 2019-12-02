@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -11,9 +10,6 @@ module.exports = {
     app: path.resolve(__dirname, 'src', 'index.tsx')
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src', 'index.html')
-    }),
     new webpack.IgnorePlugin(/^\.\/config\.js$/),
     new CopyPlugin([{ from: 'src/config.js', to: '' }]),
   ],
