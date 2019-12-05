@@ -27,7 +27,7 @@ const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance, should
 
   const AppWithStore = (
     <StoreProvider store={storeInstance}>
-      <Router basename={shouldAddBaseName ? "/web-console" : "/"}>
+      <Router basename={shouldAddBaseName ? "/console" : "/"}>
         <AppLayout>
           {errorMessage && <Alert variant='danger' title={errorMessage} />}
           <AppRoutes />
