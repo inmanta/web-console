@@ -7,6 +7,8 @@ export interface IAttributeModel {
   type: string;
   description: string;
   modifier: string;
+  default_value?: string;
+  default_value_set: boolean;
 }
 
 export interface IStateModel {
@@ -53,6 +55,7 @@ export interface IServiceDict {
 export interface IServiceDictState {
   allIds: string[],
   addServices: Action<IServiceDictState, IServiceModel[]>,
+  addSingleService: Action<IServiceDictState, IServiceModel>,
   updateServices: Thunk<IServiceDictState, IServiceModel[]>,
   byId: IServiceDict,
   getAllServices: Computed<IServiceDictState, IServiceModel[]>;
@@ -60,7 +63,7 @@ export interface IServiceDictState {
 }
 
 export interface IInstanceAttributeModel {
-  [Key: string]: string | string[];
+  [Key: string]: string | string[] | boolean | number;
 }
 
 export interface IServiceInstanceModel extends IObjectWithId {
@@ -114,6 +117,12 @@ export const serviceDictState: IServiceDictState = {
         state.allIds.push(service.name);
       }
     });
+  }),
+  addSingleService: action((state, service) => {
+    if (state.allIds.indexOf(service.name) === -1) {
+      state.allIds.push(service.name);
+      state.byId[service.name] = service;
+    }
   }),
   allIds: [],
   byId: {},
