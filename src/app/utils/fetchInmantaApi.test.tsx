@@ -64,6 +64,40 @@ describe('Backend data fetching function', () => {
       await fetchInmantaApi(requestParams);
       expect(errorMessage.includes('Network error')).toBeTruthy();
     });
-  })
+  });
+
+  it('Should set content type and data on POST calls', async () => {
+    const data = { attributes: { attribute1: "value" } };
+    fetchMock.mockResponse(JSON.stringify({ data: { ...data, id: 'instanceId1' } }));
+    await fetchInmantaApi({ ...defaultRequestParams, method: 'POST', data });
+    expect(fetchMock.mock.calls).toHaveLength(1);
+    expect(fetchMock.mock.calls[0][1]).toEqual({ headers: { 'X-Inmanta-Tid': 'env-id', 'Content-Type': 'application/json' }, method: 'POST', body: JSON.stringify(data) });
+  });
+  it('Should set content type and data on PATCH calls', async () => {
+    const data = { attributes: { attribute1: "value" } };
+    await fetchInmantaApi({ ...defaultRequestParams, method: 'PATCH', data });
+    expect(fetchMock.mock.calls).toHaveLength(1);
+    expect(fetchMock.mock.calls[0][1]).toEqual({ headers: { 'X-Inmanta-Tid': 'env-id', 'Content-Type': 'application/json' }, method: 'PATCH', body: JSON.stringify(data) });
+  });
+  it('Should set method correctly on DELETE calls', async () => {
+    await fetchInmantaApi({ ...defaultRequestParams, method: 'DELETE' });
+    expect(fetchMock.mock.calls).toHaveLength(1);
+    expect(fetchMock.mock.calls[0][1]).toEqual({ headers: { 'X-Inmanta-Tid': 'env-id', 'Content-Type': 'application/json' }, method: 'DELETE' });
+  });
+  it('Should handle errors on server state modifying calls', async () => {
+    fetchMock.mockResponse(JSON.stringify({}), { status: 400, statusText: 'Bad Request' });
+
+    let errorMessage;
+    const setErrorMessage: React.Dispatch<string> = (message) => { errorMessage = message };
+    const requestParams: IRequestParams = { ...defaultRequestParams, setErrorMessage, method: 'DELETE' };
+    await fetchInmantaApi(requestParams);
+    expect(errorMessage.includes('Bad Request')).toBeTruthy();
+  });
+  it('Should add host to the url when configured', async () => {
+    process.env.API_BASEURL = "http://localhost:8888/api";
+    await fetchInmantaApi({ ...defaultRequestParams, method: 'DELETE' });
+    expect(fetchMock.mock.calls).toHaveLength(1);
+    expect(fetchMock.mock.calls[0][0]).toEqual("http://localhost:8888/api/abc");
+  });
 
 });

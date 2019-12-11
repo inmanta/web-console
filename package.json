@@ -22,7 +22,9 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "devDependencies": {
     "@testing-library/react": "^9.1.4",
     "@types/enzyme": "^3.10.3",
