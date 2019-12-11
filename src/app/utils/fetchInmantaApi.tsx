@@ -16,7 +16,7 @@ export async function fetchInmantaApi(requestParams: IRequestParams) {
     if (!requestParams.method || requestParams.method === 'GET') {
       json = await doFetch(fullEndpointPath, requestParams.isEnvironmentIdRequired, requestParams.environmentId);
     } else {
-      json = await postWithFetchApi(requestParams.urlEndpoint, requestParams.environmentId, requestParams.method, requestParams.data);
+      json = await postWithFetchApi(fullEndpointPath, requestParams.environmentId, requestParams.method, requestParams.data);
     }
 
     if (json && requestParams.dispatch) {
@@ -62,7 +62,7 @@ async function postWithFetchApi(urlEndpoint, environmentId, method = "POST", dat
     if (data) {
       requestOptions.body = JSON.stringify(data);
     }
-    result = await fetch(`$${urlEndpoint}`, requestOptions);
+    result = await fetch(`${urlEndpoint}`, requestOptions);
   }
   if (result) {
     if (!result.ok) {

@@ -93,5 +93,11 @@ describe('Backend data fetching function', () => {
     await fetchInmantaApi(requestParams);
     expect(errorMessage.includes('Bad Request')).toBeTruthy();
   });
+  it('Should add host to the url when configured', async () => {
+    process.env.API_BASEURL = "http://localhost:8888/api";
+    await fetchInmantaApi({ ...defaultRequestParams, method: 'DELETE' });
+    expect(fetchMock.mock.calls).toHaveLength(1);
+    expect(fetchMock.mock.calls[0][0]).toEqual("http://localhost:8888/api/abc");
+  });
 
 });
