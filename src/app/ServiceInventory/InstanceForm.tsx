@@ -31,7 +31,7 @@ const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[]
       })}
     {!Object.keys(attributes).length && <Alert variant="info" isInline={true} title="No editable attributes found" />}
     <ActionGroup key="actions">
-      {Object.keys(attributes).length && <Button id="submit-button" variant="primary" onClick={submitForm}>Confirm</Button>}
+      {!!Object.keys(attributes).length && <Button id="submit-button" variant="primary" onClick={submitForm}>Confirm</Button>}
       <Button variant="secondary" id="cancel-button" onClick={() => closeContainer(props.closeModal)}>Cancel</Button>
     </ActionGroup>
 
