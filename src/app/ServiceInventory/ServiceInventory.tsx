@@ -65,12 +65,3 @@ const InventoryContext = React.createContext({} as IInventoryContextData);
 
 
 export { ServiceInventory, InventoryContext, IInventoryContextData };
-
-// stack_name: stack2
-// openstack_url: http://node1.ii.inmanta.com:5000/v3
-// public_ssh_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCh2lbsVGRGMFWJO9D+0vjJ/GlJJhYdq2KyoIbFYZtBuRtFMVuzFRdHHbpf4dX9cqOAfpNlajifbGCRBrGgP2QDxWJ5xR0oLJ14mAXxlcjejv8rFzOty2eYGcPuQ8B46wjLwfHGC8Jtb1D7EEebgOb0CM0c/30gyzt6IEltCXvY6gy1e7Vkkchy5y4O9YFNNeVtPBNQNGb3bvqGBDze113MqkbZIk6BGt+mTSNgHqgVGVLWBheixEluE87bW11dZ1+Su1cApRlHx3uSjV/mDZXbShEfpwYCnqkXff/y05fC3haCnOPHKIAPW2nhydoZ/rQ+nbbazX+C2sMSy5mEUfPj
-// openstack_project: demo
-// seperate_database: true
-// openstack_password: demo
-// openstack_username: demo
-// openstack_public_network: internal
