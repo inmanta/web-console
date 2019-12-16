@@ -164,6 +164,8 @@ export const instanceDictState: IInstanceDictState = {
 
 export const resourceDictState: IResourceDictState = {
   addResources: action((state, payload) => {
+    state.allIds = [];
+    state.byId = {};
     payload.resources.map(resource => {
       state.byId[resource.resource_id] = resource;
       state.byId[resource.resource_id].instanceId = payload.instanceId;
