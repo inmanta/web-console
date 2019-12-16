@@ -155,5 +155,39 @@ describe('Lsm models', () => {
       const store = createStore(resourceDictState, { initialState });
       expect(store.getState().resourcesOfInstance('instance')).toEqual([resources[0]]);
     });
+    it('Should refresh single resource', () => {
+      const refreshedResource = {
+        instanceId: 'instance',
+        resource_id: 'fortigate::Config[fg101,config_id=system_dhcp_server_1],v=471',
+        resource_state: 'deployed',
+      };
+      const store = createStore(resourceDictState);
+      const singleResource: IResourceModel[] = [resources[0]];
+      store.getActions().addResources({ instanceId: 'instance', resources: singleResource });
+      expect(store.getState().allIds).toEqual(['fortigate::Config[fg101,config_id=system_dhcp_server_1],v=469']);
+      store.getActions().addResources({ instanceId: 'instance', resources: [refreshedResource] });
+      expect(store.getState().allIds).toEqual([refreshedResource.resource_id]);
+      expect(store.getState().allIds).toHaveLength(1);
+    });
+    it('Should refresh multiple resources', () => {
+      const updatedResources = [{
+        instanceId: 'instance',
+        resource_id: 'fortigate::Config[fg101,config_id=system_dhcp_server_1],v=471',
+        resource_state: 'deployed',
+      },
+      {
+        instanceId: 'instance',
+        resource_id: 'openstack::VirtualMachine[openstack,name=fg101],v=471',
+        resource_state: 'deployed',
+      }];
+      const store = createStore(resourceDictState);
+      const singleResource: IResourceModel[] = [resources[0]];
+      store.getActions().addResources({ instanceId: 'instance', resources: singleResource });
+      expect(store.getState().allIds).toEqual(['fortigate::Config[fg101,config_id=system_dhcp_server_1],v=469']);
+      store.getActions().addResources({ instanceId: 'instance', resources: updatedResources });
+      expect(store.getState().allIds).toEqual([updatedResources[0].resource_id, updatedResources[1].resource_id]);
+      expect(store.getState().allIds).toHaveLength(2);
+      expect(Object.keys(store.getState().byId)).toHaveLength(2);
+    });
   });
 });
