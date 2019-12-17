@@ -10,7 +10,12 @@ const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[]
   const handleInputChange = (value, event) => {
     const changedAttributeName = event.target.id;
     const changedAttribute = {};
-    changedAttribute[changedAttributeName] = value;
+    const attribute = props.attributeModels.find((attributeModel) => attributeModel.name === changedAttributeName);
+    if (attribute && ["double", "float", "int", "integer", "number"].includes(attribute.type)) {
+      changedAttribute[changedAttributeName] = Number(value);
+    } else {
+      changedAttribute[changedAttributeName] = value;
+    }
     const updatedValue = { ...attributes, ...changedAttribute };
     setAttributes(updatedValue);
   };
