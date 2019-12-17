@@ -22,7 +22,7 @@ const InstanceFormInput: React.FunctionComponent<{ attributeModels: IAttributeMo
         key={attributeName}
       >
         <TextInput
-          type={matchTextInputWithPatternflyInput(attributeName)}
+          type={matchTextInputWithPatternflyInput(attributeName, attributeWithMatchingName.type)}
           id={attributeName}
           name={attributeName}
           aria-describedby={`${attributeName}-helper`}
@@ -43,7 +43,10 @@ function getDescription(attributes: IAttributeModel[], name: string): string {
   return name;
 }
 
-function matchTextInputWithPatternflyInput(attributeName: string) {
+function matchTextInputWithPatternflyInput(attributeName: string, type: string) {
+  if (["double", "float", "int", "integer", "number"].includes(type)) {
+    return TextInputTypes.number;
+  }
   const pfInputTypeNames = Object.keys(TextInputTypes);
   for (const inputType of pfInputTypeNames) {
     if (attributeName.includes(inputType)) {

@@ -16,7 +16,7 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
   let modalHeaderText = '';
   let modalTitle = '';
   if (props.buttonType === ButtonType.add) {
-    ModalButton = () => <Button variant="primary" onClick={handleModalToggle}><PlusIcon /> Add instance </Button>
+    ModalButton = () => <Button variant="primary" onClick={handleModalToggle} id="add-instance-button"><PlusIcon /> Add instance </Button>
     modalTitle = 'Create instance';
     modalHeaderText = `Create a new instance of ${props.serviceName} with the following parameters`
   } else if (props.buttonType === ButtonType.edit) {

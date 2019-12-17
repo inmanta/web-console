@@ -33,4 +33,9 @@ describe('Service inventory', function () {
     cy.contains('Close').click().should('not.exist');
     cy.get('.pf-c-modal-box').should('not.exist');
   });
+  it('Should show add/hide instance modal on click', function () {
+    cy.visit('/lsm/catalog/e2e_service/inventory');
+    cy.get('#add-instance-button').click();
+    cy.contains('Cancel').click().should('not.exist');
+  });
 });

@@ -27,6 +27,12 @@
         "type": "ip::cidr",
         "modifier": "rw",
         "description": "The network address to use for the lan"
+      },
+      {
+        "name": "id",
+        "type": "number",
+        "modifier": "rw",
+        "description": "Id of the instance"
       }
     ],
     "lifecycle": {
