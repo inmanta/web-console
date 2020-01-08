@@ -4,7 +4,7 @@ import { IAttributeModel, IInstanceAttributeModel } from "@app/Models/LsmModels"
 import { IRequestParams, fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 import { InstanceFormInput } from "./InstanceFormInput";
 
-const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[], requestParams: IRequestParams, closeModal?: () => void, originalAttributes?: IInstanceAttributeModel }> = props => {
+const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[], requestParams: IRequestParams, closeModal?: () => void, originalAttributes?: IInstanceAttributeModel, update?: boolean }> = props => {
   const initialAttributes = extractInitialAttributes(props.attributeModels, props.originalAttributes);
   const [attributes, setAttributes] = useState(initialAttributes);
   const handleInputChange = (value, event) => {
@@ -21,8 +21,8 @@ const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[]
   };
   const submitForm = async () => {
     const requestParams: IRequestParams = props.requestParams;
-    if (props.originalAttributes) {
-      await submitUpdate(requestParams, attributes, props.originalAttributes)
+    if (props.update) {
+      await submitUpdate(requestParams, attributes, props.originalAttributes);
     } else {
       await submitCreate(requestParams, attributes);
     }
@@ -63,7 +63,7 @@ function closeContainer(closingFunction?: () => void): void {
   }
 }
 
-async function submitUpdate(requestParams: IRequestParams, attributeValue: IInstanceAttributeModel, originalAttributes: IInstanceAttributeModel) {
+async function submitUpdate(requestParams: IRequestParams, attributeValue: IInstanceAttributeModel, originalAttributes?: IInstanceAttributeModel) {
   requestParams.method = "PATCH";
   const updatedAttributes = getChangedAttributesOnly(attributeValue, originalAttributes);
   requestParams.data = { attributes: updatedAttributes };
@@ -76,7 +76,10 @@ async function submitCreate(requestParams, attributes) {
   await fetchInmantaApi(requestParams);
 }
 
-function getChangedAttributesOnly(attributesAfterChanges: IInstanceAttributeModel, originalAttributes: IInstanceAttributeModel) {
+function getChangedAttributesOnly(attributesAfterChanges: IInstanceAttributeModel, originalAttributes?: IInstanceAttributeModel) {
+  if (!originalAttributes) {
+    return attributesAfterChanges;
+  };
   const changedAttributeNames = Object.keys(attributesAfterChanges).filter((attributeName) =>
     attributesAfterChanges[attributeName] !== originalAttributes[attributeName]
   );

@@ -21,7 +21,7 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
     modalHeaderText = `Create a new instance of ${props.serviceName} with the following parameters`
   } else if (props.buttonType === ButtonType.edit) {
     modalTitle = 'Edit instance';
-    modalHeaderText =  `Change attributes of instance ${props.instance ? props.instance.id : ''}`
+    modalHeaderText = `Change attributes of instance ${props.instance ? props.instance.id : ''}`
     ModalButton = () => <Button variant="secondary" onClick={handleModalToggle}> <EditIcon /> Edit </Button>
   } else if (props.buttonType === ButtonType.delete) {
     modalTitle = 'Delete instance';
@@ -49,7 +49,7 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
             if (props.buttonType === ButtonType.delete) {
               return <DeleteForm requestParams={requestParams} closeModal={() => setIsOpen(false)} />
             }
-            return <InstanceForm attributeModels={formAttributes} requestParams={requestParams} closeModal={() => setIsOpen(false)} originalAttributes={currentAttributes} />
+            return <InstanceForm attributeModels={formAttributes} requestParams={requestParams} closeModal={() => setIsOpen(false)} originalAttributes={currentAttributes} update={props.buttonType === ButtonType.edit} />
           }}
 
         </InventoryContext.Consumer>
