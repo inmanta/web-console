@@ -61,5 +61,5 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
       index >= 0 ? [...expanded.slice(0, index), ...expanded.slice(index + 1, expanded.length)] : [...expanded, id];
     setExpanded(newExpanded);
   };
-  return <DataList aria-label="Expandable data list example">{serviceItems}</DataList>;
+  return <DataList aria-label="List of service entities" className="horizontally-scrollable">{serviceItems}</DataList>;
 };
