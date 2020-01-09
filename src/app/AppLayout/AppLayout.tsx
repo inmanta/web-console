@@ -165,7 +165,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
       })}
       <NavGroup title="Other sites" key="external">
         <li className="pf-c-nav__item">
-          <a className="pf-c-nav__link"  href="/dashboard">Dashboard</a>
+          <a className="pf-c-nav__link" href="/dashboard">Dashboard</a>
         </li>
       </NavGroup>
     </Nav>
@@ -173,17 +173,20 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const Sidebar = <PageSidebar nav={Navigation} isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen} theme="dark" />;
   const PageSkipToContent = <SkipToContent href="#primary-app-container">Skip to Content</SkipToContent>;
   return (
-    <Page
-      breadcrumb={<PageBreadcrumb />}
-      mainContainerId="primary-app-container"
-      header={Header}
-      sidebar={Sidebar}
-      onPageResize={onPageResize}
-      skipToContent={PageSkipToContent}
-    >
+    <React.Fragment>
       <SimpleBackgroundImage />
-      {children}
-    </Page>
+      <Page
+        breadcrumb={<PageBreadcrumb />}
+        mainContainerId="primary-app-container"
+        header={Header}
+        sidebar={Sidebar}
+        onPageResize={onPageResize}
+        skipToContent={PageSkipToContent}
+        style={{ backgroundColor: "transparent" }}
+      >
+        {children}
+      </Page>
+    </React.Fragment>
   );
 };
 

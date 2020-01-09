@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PageSection, Title, Alert, Card, CardFooter, Toolbar, ToolbarGroup, AlertActionCloseButton } from '@patternfly/react-core';
+import { PageSection, Alert, Card, CardFooter, Toolbar, ToolbarGroup, AlertActionCloseButton } from '@patternfly/react-core';
 import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
 import { InventoryTable } from './InventoryTable';
@@ -31,15 +31,15 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
       {serviceEntity && <InventoryContext.Provider value={{ attributes: serviceEntity.attributes, environmentId, inventoryUrl, setErrorMessage: setInstanceErrorMessage }} >
         {errorMessage && <Alert variant='danger' title={errorMessage} action={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
         {instanceErrorMessage && <Alert variant='danger' title={instanceErrorMessage} action={<AlertActionCloseButton onClose={() => setInstanceErrorMessage('')} />} />}
-        <Card>
+        <Card className={"horizontally-scrollable"}>
           <CardFooter><Toolbar>
             <ToolbarGroup> Showing instances of {serviceName} </ToolbarGroup>
             <ToolbarGroup>
               <InstanceModal buttonType={ButtonType.add} serviceName={serviceEntity.name} />
             </ToolbarGroup>
           </Toolbar></CardFooter>
-        </Card>
         {instancesOfCurrentService.length > 0 && <InventoryTable instances={instancesOfCurrentService} />}
+        </Card>
       </InventoryContext.Provider>}
     </PageSection>
   );
