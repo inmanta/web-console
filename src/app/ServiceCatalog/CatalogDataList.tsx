@@ -8,20 +8,34 @@ import {
   DataListItemCells,
   DataListCell,
   DataListContent,
-  DataListAction
+  DataListAction,
+  Alert,
+  AlertActionCloseButton,
+  Modal
 } from '@patternfly/react-core';
 import { IServiceModel } from '@app/Models/LsmModels';
 import { CatalogContent } from './CatalogContent';
 import { Link } from 'react-router-dom';
+import { IRequestParams } from '@app/utils/fetchInmantaApi';
+import { DeleteForm } from '@app/ServiceInventory/DeleteForm';
 
-export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel[] }> = props => {
+export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel[], environmentId: string, serviceCatalogUrl: string }> = props => {
   const [expanded, setExpanded] = useState(['']);
+
   let serviceItems;
+  const [errorMessage, setErrorMessage] = React.useState('');
   if (props.services) {
     serviceItems = props.services.map(service => {
       const toggleId = service.name + '-toggle';
       const serviceKey = service.name + '-item';
       const expandKey = service.name + '-expand';
+      const requestParams = {
+        environmentId: props.environmentId,
+        isEnvironmentIdRequired: true,
+        method: 'DELETE',
+        setErrorMessage,
+        urlEndpoint: `${props.serviceCatalogUrl}/${service.name}`,
+      } as IRequestParams;
       return (
         <DataListItem key={serviceKey} aria-labelledby={serviceKey} isExpanded={expanded.includes(toggleId)}>
           <DataListItemRow>
@@ -43,8 +57,8 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
               id={service.name + '-action'}
               aria-label="Actions"
             >
-              <Link to={"/lsm/catalog/" + service.name + '/inventory'}> <Button> Inventory </Button></Link>
-              <Button variant="danger"> Delete </Button>
+              <Link to={`/lsm/catalog/${service.name}/inventory`}> <Button> Inventory </Button></Link>
+              <DeleteEntityModal serviceName={service.name} requestParams={requestParams} />
             </DataListAction>
           </DataListItemRow>
           <DataListContent aria-label="Primary Content Details" id={expandKey} isHidden={!expanded.includes(toggleId)}>
@@ -61,5 +75,23 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
       index >= 0 ? [...expanded.slice(0, index), ...expanded.slice(index + 1, expanded.length)] : [...expanded, id];
     setExpanded(newExpanded);
   };
-  return <DataList aria-label="List of service entities" className="horizontally-scrollable">{serviceItems}</DataList>;
+  return <React.Fragment>
+    {errorMessage && <Alert variant='danger' title={errorMessage} action={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
+    <DataList aria-label="List of service entities" className="horizontally-scrollable">{serviceItems}</DataList>
+  </React.Fragment>;
 };
+
+const DeleteEntityModal: React.FunctionComponent<{ serviceName: string, requestParams: IRequestParams }> = props => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleModalToggle = () => {
+    setIsOpen(!isOpen);
+  };
+  return <React.Fragment>
+    <Button variant="danger" onClick={handleModalToggle}> Delete </Button>
+    <Modal isSmall={true} isOpen={isOpen}
+      title="Delete Service Entity" onClose={handleModalToggle}>
+      {`Are you sure you want to delete service entity ${props.serviceName}?`}
+      <DeleteForm requestParams={props.requestParams} closeModal={() => setIsOpen(false)} />
+    </Modal>
+  </React.Fragment>
+}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PageSection, Title, Alert } from '@patternfly/react-core';
+import { PageSection, Alert } from '@patternfly/react-core';
 import { CatalogDataList } from './CatalogDataList';
 import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
@@ -22,9 +22,8 @@ const ServiceCatalog: React.FunctionComponent<any> = props => {
 
   return (
     <PageSection>
-      <Title size="lg">Service Catalog</Title>
       {errorMessage && <Alert variant='danger' title={errorMessage} />}
-      <CatalogDataList services={servicesOfEnvironment} />
+      <CatalogDataList services={servicesOfEnvironment} environmentId={environmentId} serviceCatalogUrl={serviceCatalogUrl} />
     </PageSection>
   );
 };
