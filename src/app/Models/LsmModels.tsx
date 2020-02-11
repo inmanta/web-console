@@ -43,6 +43,7 @@ export interface ILifecycleModel {
 
 export interface IServiceModel {
   name: string;
+  description?: string;
   environment: string;
   lifecycle: ILifecycleModel;
   attributes: IAttributeModel[];
