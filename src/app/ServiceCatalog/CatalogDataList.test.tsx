@@ -7,6 +7,7 @@ import { MemoryRouter } from "react-router";
 describe('Catalog Data List', () => {
   const singleService = [{
     attributes: [],
+    description: 'Description of service1',
     environment: 'env',
     lifecycle: { initialState: '', states: [], transfers: [] },
     name: 'service1',
@@ -64,6 +65,15 @@ describe('Catalog Data List', () => {
     wrapper.find('button#service1-toggle').simulate('click');
     wrapper.find('button#service1-toggle').simulate('click');
     expect(wrapper.find('section#service1-expand').props().hidden).toBeTruthy();
+  });
+
+  it('Should show description of service entity if it\'s available', () => {
+    const wrapper = mount(<MemoryRouter><CatalogDataList services={doubleService} environmentId={environmentId} serviceCatalogUrl={serviceCatalogUrl} /></MemoryRouter>);
+    const listItems = wrapper.find(DataListItem);
+    const firstDescription = listItems.first().find("#service1-description");
+    const lastDescription = listItems.last().find("#otherService-description");
+    expect(firstDescription.exists()).toBeTruthy();
+    expect(lastDescription.exists()).toBeFalsy();
   });
 
 });

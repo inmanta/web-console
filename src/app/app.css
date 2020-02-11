@@ -15,3 +15,11 @@ html, body, #root {
 .horizontally-scrollable {
   overflow-x: auto;
 }
+
+.spacer-with-padding-xs {
+  padding: var(--pf-global--spacer--xs);
+}
+
+.patternfly-text-gray {
+  color: var(--pf-global--Color--200);
+}

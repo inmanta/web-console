@@ -11,7 +11,10 @@ import {
   DataListAction,
   Alert,
   AlertActionCloseButton,
-  Modal
+  Modal,
+  Text,
+  Title,
+  TextVariants
 } from '@patternfly/react-core';
 import { IServiceModel } from '@app/Models/LsmModels';
 import { CatalogContent } from './CatalogContent';
@@ -24,6 +27,17 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
 
   let serviceItems;
   const [errorMessage, setErrorMessage] = React.useState('');
+
+  const Description = (descriptionProps) => {
+    if (descriptionProps.service.description) {
+      return <div id={`${descriptionProps.service.name}-description`}>
+        <div className="spacer-with-padding-xs" />
+        <Text component={TextVariants.small} className="patternfly-text-gray">{descriptionProps.service.description}</Text>
+      </div>
+    }
+    return <div />
+  };
+
   if (props.services) {
     serviceItems = props.services.map(service => {
       const toggleId = service.name + '-toggle';
@@ -48,7 +62,8 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
             <DataListItemCells
               dataListCells={[
                 <DataListCell key="primary content">
-                  <div id={serviceKey}>{service.name}</div>
+                  <Title id={serviceKey} size="xl">{service.name}</Title>
+                  <Description service={service}/>
                 </DataListCell>
               ]}
             />
