@@ -6,6 +6,22 @@ export interface IRequestParams {
   environmentId: string | undefined;
   method?: string;
   setErrorMessage: React.Dispatch<string>;
+  keycloak?: Keycloak.KeycloakInstance
+}
+
+function getAuthorizationHeader(keycloak?: Keycloak.KeycloakInstance) {
+  if (keycloak && keycloak.token) {
+    return { 'Authorization': `Bearer ${keycloak.token}` };
+  }
+  return {};
+}
+
+function extendHeadersWithAuth(headers, keycloak) {
+  const authorizationHeader = getAuthorizationHeader(keycloak);
+  if (authorizationHeader) {
+    headers = { ...headers, ...authorizationHeader };
+  }
+  return headers;
 }
 
 export async function fetchInmantaApi(requestParams: IRequestParams) {
@@ -14,9 +30,9 @@ export async function fetchInmantaApi(requestParams: IRequestParams) {
     const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : '';
     const fullEndpointPath = `${baseUrl}${requestParams.urlEndpoint}`;
     if (!requestParams.method || requestParams.method === 'GET') {
-      json = await doFetch(fullEndpointPath, requestParams.isEnvironmentIdRequired, requestParams.environmentId);
+      json = await doFetch(fullEndpointPath, requestParams.isEnvironmentIdRequired, requestParams.environmentId, requestParams.keycloak);
     } else {
-      json = await postWithFetchApi(fullEndpointPath, requestParams.environmentId, requestParams.method, requestParams.data);
+      json = await postWithFetchApi(fullEndpointPath, requestParams.environmentId, requestParams.method, requestParams.data, requestParams.keycloak);
     }
 
     if (json && requestParams.dispatch) {
@@ -30,33 +46,43 @@ export async function fetchInmantaApi(requestParams: IRequestParams) {
   }
 }
 
-async function doFetch(urlEndpoint, isEnvironmentIdRequired, environmentId) {
+async function doFetch(urlEndpoint, isEnvironmentIdRequired, environmentId, keycloak) {
   let result: Response | undefined;
   if (isEnvironmentIdRequired && environmentId) {
+    const headers = extendHeadersWithAuth({
+      'X-Inmanta-Tid': environmentId
+    }, keycloak);
+
     result = await fetch(`${urlEndpoint}`, {
-      headers: {
-        'X-Inmanta-Tid': environmentId
-      }
+      headers
     });
   } else if (!isEnvironmentIdRequired) {
-    result = await fetch(`${urlEndpoint}`);
+    result = await fetch(`${urlEndpoint}`, { headers: extendHeadersWithAuth({}, keycloak) });
   }
   if (result) {
     if (!result.ok) {
-      throw Error(`The following error occured while fetching data: ${result.statusText}`);
+      let errorMessage = '';
+      if (keycloak && (result.status === 401 || result.status === 403)) {
+        errorMessage = 'Authorization failed, please log in'
+        keycloak.clearToken();
+      }
+      throw Error(`The following error occured while fetching data: ${result.status} ${result.statusText} ${errorMessage}`);
     }
     return result.json();
   }
 }
 
-async function postWithFetchApi(urlEndpoint, environmentId, method = "POST", data = '') {
+async function postWithFetchApi(urlEndpoint, environmentId, method = "POST", data = '', keycloak) {
   let result: Response | undefined;
   if (environmentId) {
+    let headers = {
+      'Content-Type': 'application/json',
+      'X-Inmanta-Tid': environmentId,
+    };
+    headers = extendHeadersWithAuth(headers, keycloak);
+
     const requestOptions: RequestInit = {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Inmanta-Tid': environmentId,
-      },
+      headers,
       method,
     };
     if (data) {
@@ -66,8 +92,12 @@ async function postWithFetchApi(urlEndpoint, environmentId, method = "POST", dat
   }
   if (result) {
     if (!result.ok) {
-      const errorMessage = await result.json();
-      throw Error(`The following error occured while communicating with the server: ${result.statusText} ${errorMessage ? JSON.stringify(errorMessage) : ''}`);
+      let errorMessage = await result.json();
+      if (keycloak && (result.status === 401 || result.status === 403)) {
+        errorMessage += ' Authorization failed, please log in'
+        keycloak.clearToken();
+      }
+      throw Error(`The following error occured while communicating with the server: ${result.status} ${result.statusText} ${errorMessage ? JSON.stringify(errorMessage) : ''}`);
     }
   }
 }

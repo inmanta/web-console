@@ -7,7 +7,7 @@ import { InventoryContext } from "./ServiceInventory";
 import { IServiceInstanceModel, IAttributeModel } from "@app/Models/LsmModels";
 import { DeleteForm } from "./DeleteForm";
 
-const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceName: string, instance?: IServiceInstanceModel }> = props => {
+const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceName: string, instance?: IServiceInstanceModel, keycloak?: Keycloak.KeycloakInstance }> = props => {
   const [isOpen, setIsOpen] = useState(false);
   const handleModalToggle = () => {
     setIsOpen(!isOpen);
@@ -45,7 +45,7 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
               currentAttributes = props.instance.active_attributes;
               formAttributes = getEditableAttributes(attributes);
             }
-            const requestParams = { environmentId, urlEndpoint: urlWithParams, isEnvironmentIdRequired: true, setErrorMessage };
+            const requestParams = { environmentId, urlEndpoint: urlWithParams, isEnvironmentIdRequired: true, setErrorMessage, keycloak: props.keycloak };
             if (props.buttonType === ButtonType.delete) {
               return <DeleteForm requestParams={requestParams} closeModal={() => setIsOpen(false)} />
             }

@@ -42,7 +42,8 @@ describe('Backend data fetching function', () => {
     it('Should not add custom header if not required', async () => {
       const requestParams: IRequestParams = { ...defaultRequestParams, isEnvironmentIdRequired: false };
       const result = await fetchInmantaApi(requestParams);
-      expect(fetchMock.mock.calls[0]).toHaveLength(1);
+      expect(fetchMock.mock.calls[0]).toHaveLength(2);
+      expect(fetchMock.mock.calls[0][1].headers).toEqual({});
     });
   });
   describe('On failed request', () => {
@@ -99,5 +100,40 @@ describe('Backend data fetching function', () => {
     expect(fetchMock.mock.calls).toHaveLength(1);
     expect(fetchMock.mock.calls[0][0]).toEqual("http://localhost:8888/api/abc");
   });
+  describe('When keycloak is enabled', () => {
+    const requestParamsWithKeycloak = { ...defaultRequestParams, keycloak: { token: "JWT token", clearToken: () => {return;} } as Keycloak.KeycloakInstance };
+    it('Should add authorization header to GET requests', async () => {
+      await fetchInmantaApi(requestParamsWithKeycloak);
+      expect(fetchMock.mock.calls).toHaveLength(1);
+      expect(fetchMock.mock.calls[0][1].headers).toEqual({ "Authorization": "Bearer JWT token", "X-Inmanta-Tid": "env-id" });
+    });
+    it('Should add authorization header to other requests', async () => {
+      await fetchInmantaApi({ ...requestParamsWithKeycloak, method: 'POST' });
+      expect(fetchMock.mock.calls).toHaveLength(1);
+      expect(fetchMock.mock.calls[0][1].headers).toEqual({ "Authorization": "Bearer JWT token", "X-Inmanta-Tid": "env-id", "Content-Type": "application/json" });
+    });
+    it('Should add authorization header to GET requests without environment id', async () => {
+      await fetchInmantaApi({ ...requestParamsWithKeycloak, isEnvironmentIdRequired: false });
+      expect(fetchMock.mock.calls).toHaveLength(1);
+      expect(fetchMock.mock.calls[0][1].headers).toEqual({ "Authorization": "Bearer JWT token" });
+    });
+    it('Should handle authorization errors on GET requests', async () => {
+      fetchMock.mockResponse(JSON.stringify({}), { status: 403, statusText: 'Forbidden' });
+      let errorMessage;
+      const setErrorMessage: React.Dispatch<string> = (message) => { errorMessage = message };
+      const requestParams: IRequestParams = { ...requestParamsWithKeycloak, setErrorMessage};
+      await fetchInmantaApi(requestParams);
+      expect(errorMessage.includes('Authorization failed')).toBeTruthy();
+    });
+    it('Should handle authorization errors on POST requests', async () => {
+      fetchMock.mockResponse(JSON.stringify({}), { status: 403, statusText: 'Forbidden' });
+      let errorMessage;
+      const setErrorMessage: React.Dispatch<string> = (message) => { errorMessage = message };
+      const requestParams: IRequestParams = { ...requestParamsWithKeycloak, setErrorMessage, method: 'POST'};
+      await fetchInmantaApi(requestParams);
+      expect(errorMessage.includes('Authorization failed')).toBeTruthy();
+    });
+  })
+
 
 });
