@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // External configuration from the server
-const externalKeycloakConf = globalThis.auth;
+const externalKeycloakConf = (globalThis && globalThis.auth);
 const shouldUseAuth = process.env.SHOULD_USE_AUTH === 'true' || externalKeycloakConf;
 const customKeycloakConf = { ...keycloakConf, url: process.env.KEYCLOAK_URL };
 let keycloak: Keycloak.KeycloakInstance;

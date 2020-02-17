@@ -7,6 +7,7 @@ import { useInterval } from '@app/Hooks/UseInterval';
 import { fetchInmantaApi, IRequestParams } from '@app/utils/fetchInmantaApi';
 import { InstanceModal, ButtonType } from './InstanceModal';
 import { IAttributeModel } from '@app/Models/LsmModels';
+import { useKeycloak } from 'react-keycloak';
 
 const ServiceInventory: React.FunctionComponent<any> = props => {
   const serviceName = props.match.params.id;
@@ -17,10 +18,17 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   const [instanceErrorMessage, setInstanceErrorMessage] = React.useState('');
   const instancesOfCurrentService = projectStore.serviceInstances.instancesOfService(serviceName);
   const environmentId = projectStore.environments.getSelectedEnvironment.id;
+  const shouldUseAuth = process.env.SHOULD_USE_AUTH === 'true' || (globalThis && globalThis.auth);
+  let keycloak;
+  if (shouldUseAuth) {
+    // The value will be always true or always false during one session
+    // tslint:disable:react-hooks-nesting
+     [keycloak, ] = useKeycloak()
+  }
   const dispatchUpdateInstances = (data) => storeDispatch.projects.serviceInstances.updateInstances({ serviceName, instances: data });
-  const requestParams = { urlEndpoint: inventoryUrl, dispatch: dispatchUpdateInstances, isEnvironmentIdRequired: true, environmentId, setErrorMessage };
+  const requestParams = { urlEndpoint: inventoryUrl, dispatch: dispatchUpdateInstances, isEnvironmentIdRequired: true, environmentId, setErrorMessage, keycloak };
   const dispatchEntity = (data) => storeDispatch.projects.services.addSingleService(data);
-  ensureServiceEntityIsLoaded(projectStore, serviceName, { urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`, dispatch: dispatchEntity, isEnvironmentIdRequired: true, environmentId, setErrorMessage });
+  ensureServiceEntityIsLoaded(projectStore, serviceName, { urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`, dispatch: dispatchEntity, isEnvironmentIdRequired: true, environmentId, setErrorMessage, keycloak });
   React.useEffect(() => {
     fetchInmantaApi(requestParams);
   }, [storeDispatch, serviceName, instancesOfCurrentService, requestParams]);
@@ -35,10 +43,10 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
           <CardFooter><Toolbar>
             <ToolbarGroup> Showing instances of {serviceName} </ToolbarGroup>
             <ToolbarGroup>
-              <InstanceModal buttonType={ButtonType.add} serviceName={serviceEntity.name} />
+              <InstanceModal buttonType={ButtonType.add} serviceName={serviceEntity.name} keycloak={keycloak}/>
             </ToolbarGroup>
           </Toolbar></CardFooter>
-        {instancesOfCurrentService.length > 0 && <InventoryTable instances={instancesOfCurrentService} />}
+        {instancesOfCurrentService.length > 0 && <InventoryTable instances={instancesOfCurrentService} keycloak={keycloak}/>}
         </Card>
       </InventoryContext.Provider>}
     </PageSection>

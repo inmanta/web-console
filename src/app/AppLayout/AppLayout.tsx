@@ -12,8 +12,7 @@ import {
   Avatar,
   ToolbarGroup,
   TextContent,
-  DropdownItem,
-  DropdownSeparator
+  DropdownItem
 } from '@patternfly/react-core';
 import { routes } from '@app/routes';
 import Logo from '!react-svg-loader!@images/logo.svg';
@@ -21,23 +20,37 @@ import AvatarImg from '!url-loader!@assets/images/img_avatar.svg';
 import { EnvironmentSelector } from './Toolbar/EnvironmentSelector';
 import { SimpleNotificationBadge } from './Toolbar/SimpleNotificationBadge';
 import { IconDropdown } from './Toolbar/IconDropdown';
-import { useKeycloak } from 'react-keycloak';
 import { AngleDownIcon, CogIcon } from '@patternfly/react-icons';
-import { useStoreState, State } from 'easy-peasy';
+import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel, IProjectModel } from '@app/Models/CoreModels';
 import * as _ from 'lodash';
 import SimpleBackgroundImage from './SimpleBackgroundImage';
 import { PageBreadcrumb } from './PageBreadcrumb';
+import { fetchInmantaApi } from '@app/utils/fetchInmantaApi';
 
 
 interface IAppLayout {
+  keycloak?: Keycloak.KeycloakInstance;
   children: React.ReactNode;
+  setErrorMessage: React.Dispatch<string>;
+  shouldUseAuth: boolean;
 }
 
-const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
+const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, setErrorMessage, shouldUseAuth }) => {
   const logoProps = {
     href: '/'
   };
+  const projectsEndpoint = '/api/v2/project';
+  const storeDispatch = useStoreDispatch<IStoreModel>();
+  const dispatch = (data) => storeDispatch.projects.fetched(data);
+  const requestParams = { urlEndpoint: projectsEndpoint, dispatch, isEnvironmentIdRequired: false, environmentId: undefined, setErrorMessage, keycloak };
+  React.useEffect(() => {
+    fetchInmantaApi(requestParams);
+    if (keycloak && !keycloak.profile) {
+      keycloak.loadUserProfile();
+    }
+  }, [keycloak?.authenticated]);
+
   const [isNavOpen, setIsNavOpen] = React.useState(true);
   const [isMobileView, setIsMobileView] = React.useState(true);
   const [isNavOpenMobile, setIsNavOpenMobile] = React.useState(false);
@@ -64,37 +77,28 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
 
   const Login = () => {
-    const [keycloak, initialized] = useKeycloak();
-    const [name, setName] = React.useState('');
-    keycloak.loadUserProfile().success(userInfo => {
-      setName(userInfo.username as string);
-    });
+    const [name, setName] = React.useState('inmanta2');
+    if (keycloak && keycloak.profile && keycloak.profile.username !== name) {
+        setName(keycloak.profile.username as string);
+    }
+
     return <TextContent>{name}</TextContent>;
   };
 
   const ProfileDropdownGroup = () => {
-    const shouldUseAuth = process.env.SHOULD_USE_AUTH === 'true';
-    const profileDropdownItems = [
-      <DropdownItem key="action" component="button">
-        Action
-      </DropdownItem>,
-      <DropdownSeparator key="separator" />
-    ];
+    let profileDropdownItems;
     if (shouldUseAuth) {
-      // The value will be always true or always false during one session
-      // tslint:disable:react-hooks-nesting
-      const [keycloak, initialized] = useKeycloak();
-      profileDropdownItems.push(
-        <DropdownItem key="action2" component="button" onClick={keycloak.logout}>
+      profileDropdownItems = [(
+        <DropdownItem key="action2" component="button" onClick={keycloak && keycloak.logout}>
           Logout
         </DropdownItem>
-      );
+      )];
     } else {
-      profileDropdownItems.push(
-        <DropdownItem key="action2" component="button">
+      profileDropdownItems = [(
+        <DropdownItem key="action2" component="button" isDisabled={true}>
           Logout
         </DropdownItem>
-      );
+      )];
     }
     return (
       <ToolbarGroup>
@@ -106,23 +110,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ children }) => {
   };
 
   const UpperToolbar = () => {
-    const dropdownItems = [
-      <DropdownItem key="link">Link</DropdownItem>,
-      <DropdownItem key="action" component="button">
-        Action
-      </DropdownItem>,
-      <DropdownItem key="disabled link" isDisabled={true}>
-        Disabled Link
-      </DropdownItem>,
-      <DropdownItem key="disabled action" isDisabled={true} component="button">
-        Disabled Action
-      </DropdownItem>,
-      <DropdownSeparator key="separator" />,
-      <DropdownItem key="separated link">Separated Link</DropdownItem>,
-      <DropdownItem key="separated action" component="button">
-        Separated Action
-      </DropdownItem>
-    ];
+    const dropdownItems = [];
     return (
       <Toolbar>
         <ToolbarGroup>

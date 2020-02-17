@@ -6,20 +6,20 @@ import moment from 'moment';
 import { ResourceModal } from "./ResourceModal";
 import { InstanceModal, ButtonType } from "./InstanceModal";
 
-export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstanceModel[] }> = props => {
+export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstanceModel[], keycloak?: Keycloak.KeycloakInstance }> = props => {
   const columnsInOrder = ["Id", "State", "Candidate Attributes", "Active Attributes", "Rollback Attributes", "Version", "Last Updated", "Resources", "Actions"];
   const instances = [...props.instances];
   const rows = instances.map(instance => {
     const activeAttributes = getFormattedListFromObject(instance, 'active_attributes');
     const candidateAttributes = getFormattedListFromObject(instance, 'candidate_attributes');
     const rollbackAttributes = getFormattedListFromObject(instance, 'rollback_attributes');
-    const resourceModal = <ResourceModal instance={instance} />
+    const resourceModal = <ResourceModal instance={instance} keycloak={props.keycloak}/>
     let actions = <React.Fragment />
     if (instance.state !== "terminated") {
       actions = <div>
-        <InstanceModal buttonType={ButtonType.edit} serviceName={instance.service_entity} instance={instance} />
+        <InstanceModal buttonType={ButtonType.edit} serviceName={instance.service_entity} instance={instance} keycloak={props.keycloak}/>
         <span className="pf-u-pr-xl pf-u-pl-xl" />
-        <InstanceModal buttonType={ButtonType.delete} serviceName={instance.service_entity} instance={instance} />
+        <InstanceModal buttonType={ButtonType.delete} serviceName={instance.service_entity} instance={instance} keycloak={props.keycloak}/>
       </div>
     }
     return {

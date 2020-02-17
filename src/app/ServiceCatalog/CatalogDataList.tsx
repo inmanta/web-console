@@ -22,7 +22,7 @@ import { Link } from 'react-router-dom';
 import { IRequestParams } from '@app/utils/fetchInmantaApi';
 import { DeleteForm } from '@app/ServiceInventory/DeleteForm';
 
-export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel[], environmentId: string, serviceCatalogUrl: string }> = props => {
+export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel[], environmentId: string, serviceCatalogUrl: string, keycloak?: Keycloak.KeycloakInstance }> = props => {
   const [expanded, setExpanded] = useState(['']);
 
   let serviceItems;
@@ -46,6 +46,7 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
       const requestParams = {
         environmentId: props.environmentId,
         isEnvironmentIdRequired: true,
+        keycloak: props.keycloak,
         method: 'DELETE',
         setErrorMessage,
         urlEndpoint: `${props.serviceCatalogUrl}/${service.name}`,

@@ -8,37 +8,32 @@ import { KeycloakInitOptions } from 'keycloak-js';
 import { KeycloakProvider } from 'react-keycloak';
 import { createStore, StoreProvider } from 'easy-peasy';
 import { IStoreModel, storeModel } from './Models/CoreModels';
-import { fetchInmantaApi } from './utils/fetchInmantaApi';
-import { Alert } from '@patternfly/react-core';
+import { Alert, Spinner, AlertActionCloseButton, Bullseye } from '@patternfly/react-core';
 
 const keycloakInitConfig = { onLoad: 'login-required', flow: 'implicit' } as KeycloakInitOptions;
 const storeInstance = createStore<IStoreModel>(storeModel);
 
 const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance, shouldUseAuth: boolean }> = props => {
-  const projectsEndpoint = '/api/v2/project';
-  const dispatch = (data) => storeInstance.dispatch.projects.fetched(data);
   const [errorMessage, setErrorMessage] = React.useState('');
-  const requestParams = { urlEndpoint: projectsEndpoint, dispatch, isEnvironmentIdRequired: false, environmentId: undefined, setErrorMessage };
-  React.useEffect(() => {
-    fetchInmantaApi(requestParams);
-  }, []);
-
   const shouldAddBaseName = process.env.NODE_ENV === 'production';
 
   const AppWithStore = (
     <StoreProvider store={storeInstance}>
       <Router basename={shouldAddBaseName ? "/console" : "/"}>
-        <AppLayout>
-          {errorMessage && <Alert variant='danger' title={errorMessage} />}
+        <AppLayout keycloak={props.shouldUseAuth ? props.keycloak : undefined} setErrorMessage={setErrorMessage} shouldUseAuth={props.shouldUseAuth}>
+          {errorMessage && <Alert variant='danger' title={errorMessage} action={<AlertActionCloseButton onClose={() => setErrorMessage('')}/>}/>}
           <AppRoutes />
         </AppLayout>
       </Router>
     </StoreProvider>
   );
+  const LoadingSpinner = () => <Bullseye>
+    <Spinner size="xl"/>
+  </Bullseye>;
 
   if (props.shouldUseAuth) {
     return (
-      <KeycloakProvider keycloak={props.keycloak} initConfig={keycloakInitConfig}>
+      <KeycloakProvider keycloak={props.keycloak} initConfig={keycloakInitConfig} LoadingComponent={<LoadingSpinner />}>
         {AppWithStore}
       </KeycloakProvider>
     );

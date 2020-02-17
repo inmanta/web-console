@@ -3,11 +3,11 @@ import React from "react";
 import { Button, Modal, Alert } from "@patternfly/react-core";
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
 import { IStoreModel } from "@app/Models/CoreModels";
-import { Action, Dispatch, useStoreDispatch, useStoreState, State } from "easy-peasy";
+import { useStoreDispatch, useStoreState, State } from "easy-peasy";
 import { ResourceTable } from "./ResourceTable";
 import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 
-export const ResourceModal: React.FunctionComponent<{ instance: IServiceInstanceModel }> = props => {
+export const ResourceModal: React.FunctionComponent<{ instance: IServiceInstanceModel, keycloak?: Keycloak.KeycloakInstance }> = props => {
   const instance = props.instance;
   const storeDispatch = useStoreDispatch<IStoreModel>();
   const resources = useStoreState((store: State<IStoreModel>) => store.projects.resources);
@@ -16,7 +16,7 @@ export const ResourceModal: React.FunctionComponent<{ instance: IServiceInstance
   const [errorMessage, setErrorMessage] = React.useState('');
   const dispatch = (data) => storeDispatch.projects.resources.addResources({ instanceId: instance.id, resources: data });
   const resourceUrl = `/lsm/v1/service_inventory/${instance.service_entity}/${instance.id}/resources?current_version=${instance.version}`;
-  const requestParams = { urlEndpoint: resourceUrl, dispatch, isEnvironmentIdRequired: true, environmentId: instance.environment, setErrorMessage };
+  const requestParams = { urlEndpoint: resourceUrl, dispatch, isEnvironmentIdRequired: true, environmentId: instance.environment, setErrorMessage, keycloak: props.keycloak };
 
   const handleModalToggle = () => {
     if (!isOpen) {
