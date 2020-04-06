@@ -39,7 +39,7 @@
     "@types/webpack": "^4.39.2",
     "copy-webpack-plugin": "^5.0.5",
     "css-loader": "^3.2.0",
-    "cypress": "^3.4.1",
+    "cypress": "^4.3.0",
     "cypress-multi-reporters": "^1.2.3",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
