@@ -33,6 +33,12 @@
         "type": "number",
         "modifier": "rw",
         "description": "Id of the instance"
+      },
+      {
+        "name": "readonly",
+        "type": "string",
+        "modifier": "r",
+        "description": "A readonly attribute"
       }
     ],
     "lifecycle": {

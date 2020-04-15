@@ -38,4 +38,9 @@ describe('Service inventory', function () {
     cy.get('#add-instance-button').click();
     cy.contains('Cancel').click().should('not.exist');
   });
+  it('Should filter read-only attributes on create instance modal', function () {
+    cy.visit('/lsm/catalog/e2e_service/inventory');
+    cy.get('#add-instance-button').click();
+    cy.get('#readonly').should('not.exist');
+  });
 });
