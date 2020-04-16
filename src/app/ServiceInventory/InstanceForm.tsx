@@ -13,6 +13,9 @@ const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[]
     const attribute = props.attributeModels.find((attributeModel) => attributeModel.name === changedAttributeName);
     if (attribute && ["double", "float", "int", "integer", "number"].includes(attribute.type)) {
       changedAttribute[changedAttributeName] = Number(value);
+    } else if (attribute && attribute.type.includes("[]")) {
+      const parts = value.split(",").map((piece) => piece.trim());
+      changedAttribute[changedAttributeName] = parts;
     } else {
       changedAttribute[changedAttributeName] = value;
     }
