@@ -44,6 +44,8 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
               urlWithParams = `${inventoryUrl}/${props.instance.id}?current_version=${props.instance.version}`;
               currentAttributes = props.instance.active_attributes;
               formAttributes = getEditableAttributes(attributes);
+            } else {
+              formAttributes = getNotReadonlyAttributes(attributes);
             }
             const requestParams = { environmentId, urlEndpoint: urlWithParams, isEnvironmentIdRequired: true, setErrorMessage, keycloak: props.keycloak };
             if (props.buttonType === ButtonType.delete) {
@@ -67,4 +69,8 @@ function getEditableAttributes(attributes: IAttributeModel[]) {
   return attributes.filter((attribute) => attribute.modifier === "rw+");
 }
 
-export { InstanceModal, ButtonType, getEditableAttributes };
+function getNotReadonlyAttributes(attributes: IAttributeModel[]) {
+  return attributes.filter((attribute) => attribute.modifier !== "r");
+}
+
+export { InstanceModal, ButtonType, getEditableAttributes, getNotReadonlyAttributes };

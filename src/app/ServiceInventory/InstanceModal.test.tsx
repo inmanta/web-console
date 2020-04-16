@@ -1,4 +1,4 @@
-import { InstanceModal, ButtonType, getEditableAttributes } from "./InstanceModal";
+import { InstanceModal, ButtonType, getEditableAttributes, getNotReadonlyAttributes } from "./InstanceModal";
 import React from "react";
 import { mount } from "enzyme";
 import { InventoryContext } from "./ServiceInventory";
@@ -6,7 +6,8 @@ import { InventoryContext } from "./ServiceInventory";
 describe('Instance Modal ', () => {
   const attributes = [
     { name: "name", type: "string", "description": "name", modifier: "rw+", "default_value_set": false },
-    { name: "not_editable", type: "string", "description": "a non updateable attribute", modifier: "rw", "default_value_set": false }
+    { name: "not_editable", type: "string", "description": "a non updateable attribute", modifier: "rw", "default_value_set": false },
+    { name: "read_only", type: "string", "description": "a read-only", modifier: "r", "default_value_set": false }
   ];
   const dummyFunction = () => { return; };
 
@@ -76,6 +77,10 @@ describe('Instance Modal ', () => {
   it('Filters editable attributes', () => {
     const editable = getEditableAttributes(attributes);
     expect(editable).toHaveLength(1);
+  })
+  it('Filters not-readonly attributes', () => {
+    const editable = getNotReadonlyAttributes(attributes);
+    expect(editable).toHaveLength(2);
   })
 
 });
