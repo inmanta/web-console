@@ -37,7 +37,7 @@ describe('Instance Modal ', () => {
 
   it('Prepares add instance form', () => {
     const wrapper = mount(
-      <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage: dummyFunction }}>
+      <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage: dummyFunction, refresh: dummyFunction }}>
         <InstanceModal buttonType={ButtonType.add} serviceName="test_service" />
       </InventoryContext.Provider>);
     const button = wrapper.find('button');
@@ -50,7 +50,7 @@ describe('Instance Modal ', () => {
 
   it('Prepares edit instance form', () => {
     const wrapper = mount(
-      <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage:dummyFunction }}>
+      <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage:dummyFunction, refresh: dummyFunction }}>
         <InstanceModal buttonType={ButtonType.edit} serviceName="test_service" instance={serviceInstanceModel} />
       </InventoryContext.Provider>);
     const button = wrapper.find('button');
@@ -63,7 +63,7 @@ describe('Instance Modal ', () => {
 
   it('Prepares delete instance form', () => {
     const wrapper = mount(
-      <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage: dummyFunction }}>
+      <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage: dummyFunction, refresh: dummyFunction }}>
         <InstanceModal buttonType={ButtonType.delete} serviceName="test_service" instance={serviceInstanceModel} />
       </InventoryContext.Provider>);
     const button = wrapper.find('button');
