@@ -21,13 +21,9 @@ import { CatalogContent } from './CatalogContent';
 import { Link } from 'react-router-dom';
 import { IRequestParams } from '@app/utils/fetchInmantaApi';
 import { DeleteForm } from '@app/ServiceInventory/DeleteForm';
-import { useStoreDispatch } from 'easy-peasy';
-import { IStoreModel } from '@app/Models/CoreModels';
 
 export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel[], environmentId: string, serviceCatalogUrl: string, keycloak?: Keycloak.KeycloakInstance, dispatch?: (data) => any }> = props => {
   const [expanded, setExpanded] = useState(['']);
-
-
   let serviceItems;
   const [errorMessage, setErrorMessage] = React.useState('');
 
