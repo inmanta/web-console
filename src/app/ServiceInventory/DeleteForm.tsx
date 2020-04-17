@@ -6,8 +6,8 @@ const DeleteForm: React.FunctionComponent<{ requestParams: IRequestParams, close
   const submitForm = async () => {
     const requestParams: IRequestParams = props.requestParams;
     requestParams.method = "DELETE";
-    await fetchInmantaApi(props.requestParams);
     props.closeModal();
+    await fetchInmantaApi(props.requestParams); 
   }
 
   return <React.Fragment>

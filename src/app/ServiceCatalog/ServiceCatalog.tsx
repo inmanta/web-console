@@ -16,6 +16,11 @@ const ServiceCatalog: React.FunctionComponent<any> = props => {
   const servicesOfEnvironment = projectStore.services.getServicesOfEnvironment(environmentId);
   const dispatch = (data) => storeDispatch.projects.services.updateServices(data);
   const shouldUseAuth = process.env.SHOULD_USE_AUTH === 'true' || (globalThis && globalThis.auth);
+  const dispatchDelete = (data) => {
+    const urlParts = data.urlEndpoint.split("/");
+    const serviceName = urlParts[urlParts.length -1];
+    storeDispatch.projects.services.removeSingleService(serviceName);
+  };
   let keycloak;
   if (shouldUseAuth) {
     // The value will be always true or always false during one session
@@ -23,16 +28,15 @@ const ServiceCatalog: React.FunctionComponent<any> = props => {
      [keycloak, ] = useKeycloak()
   }
   const requestParams = { urlEndpoint: serviceCatalogUrl, dispatch, isEnvironmentIdRequired: true, environmentId, setErrorMessage, keycloak };
-
   React.useEffect(() => {
     fetchInmantaApi(requestParams);
   }, [dispatch, servicesOfEnvironment, requestParams]);
-  useInterval(() => fetchInmantaApi(requestParams), 5000);
+  useInterval(async () => await fetchInmantaApi(requestParams), 5000);
 
   return (
     <PageSection>
       {errorMessage && <Alert variant='danger' title={errorMessage} />}
-      <CatalogDataList services={servicesOfEnvironment} environmentId={environmentId} serviceCatalogUrl={serviceCatalogUrl} keycloak={keycloak}/>
+      <CatalogDataList services={servicesOfEnvironment} environmentId={environmentId} serviceCatalogUrl={serviceCatalogUrl} keycloak={keycloak} dispatch={dispatchDelete} />
     </PageSection>
   );
 };
