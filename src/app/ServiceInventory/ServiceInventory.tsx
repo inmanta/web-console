@@ -34,9 +34,10 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   }, [storeDispatch, serviceName, instancesOfCurrentService, requestParams]);
   useInterval(() => fetchInmantaApi(requestParams), 5000);
   const serviceEntity = projectStore.services.byId[serviceName];
+  const refreshInstances = async () => fetchInmantaApi(requestParams);
   return (
     <PageSection>
-      {serviceEntity && <InventoryContext.Provider value={{ attributes: serviceEntity.attributes, environmentId, inventoryUrl, setErrorMessage: setInstanceErrorMessage }} >
+      {serviceEntity && <InventoryContext.Provider value={{ attributes: serviceEntity.attributes, environmentId, inventoryUrl, setErrorMessage: setInstanceErrorMessage, refresh: refreshInstances }} >
         {errorMessage && <Alert variant='danger' title={errorMessage} action={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
         {instanceErrorMessage && <Alert variant='danger' title={instanceErrorMessage} action={<AlertActionCloseButton onClose={() => setInstanceErrorMessage('')} />} />}
         <Card className={"horizontally-scrollable"}>
@@ -66,6 +67,7 @@ interface IInventoryContextData {
   environmentId: string | undefined;
   inventoryUrl: string;
   setErrorMessage: React.Dispatch<string>;
+  refresh: (data) => any;
 }
 
 const InventoryContext = React.createContext({} as IInventoryContextData);

@@ -36,7 +36,7 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
         title={modalTitle} onClose={handleModalToggle}>
         {modalHeaderText}
         <InventoryContext.Consumer>
-          {({ attributes, environmentId, inventoryUrl, setErrorMessage }) => {
+          {({ attributes, environmentId, inventoryUrl, setErrorMessage, refresh }) => {
             let urlWithParams = inventoryUrl;
             let currentAttributes;
             let formAttributes = attributes;
@@ -47,7 +47,7 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
             } else {
               formAttributes = getNotReadonlyAttributes(attributes);
             }
-            const requestParams = { environmentId, urlEndpoint: urlWithParams, isEnvironmentIdRequired: true, setErrorMessage, keycloak: props.keycloak };
+            const requestParams = { environmentId, urlEndpoint: urlWithParams, isEnvironmentIdRequired: true, setErrorMessage, keycloak: props.keycloak, dispatch: refresh };
             if (props.buttonType === ButtonType.delete) {
               return <DeleteForm requestParams={requestParams} closeModal={() => setIsOpen(false)} />
             }

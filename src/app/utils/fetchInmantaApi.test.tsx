@@ -23,10 +23,28 @@ describe('Backend data fetching function', () => {
       await fetchInmantaApi(requestParams);
       expect(counter).toBe(1);
     });
+    it('Should call dispatch function with POST method', async () => {
+      let counter = 0;
+      const dispatch = (data) => counter += 1;
+      const requestParams: IRequestParams = { ...defaultRequestParams, dispatch, method: "POST" };
+      await fetchInmantaApi(requestParams);
+      expect(counter).toBe(1);
+    });
     it('Should pass result to dispatch function', async () => {
-      const dispatch = (data) => expect(data).toEqual({ item: 'dummy' });
+      fetchMock.mockResponse(JSON.stringify({ data: { item: 'dummy' } }));
+      let dispatchedData;
+      const dispatch = (data) => dispatchedData = data;
       const requestParams: IRequestParams = { ...defaultRequestParams, dispatch };
       await fetchInmantaApi(requestParams);
+      expect(dispatchedData).toEqual({ item: 'dummy' });
+    });
+    it('Should pass params to dispatch function with POST method if nothing is returned', async () => {
+      fetchMock.mockResponse("");
+      let dispatchedData;
+      const dispatch = (data) => dispatchedData = data;
+      const requestParams: IRequestParams = { ...defaultRequestParams, dispatch, method: "POST" };
+      await fetchInmantaApi(requestParams);
+      expect(dispatchedData).toEqual(requestParams);
     });
     it('Should not fetch if environmentId is required but not set', async () => {
       const requestParams: IRequestParams = { ...defaultRequestParams, environmentId: undefined };

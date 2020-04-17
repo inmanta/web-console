@@ -35,8 +35,13 @@ export async function fetchInmantaApi(requestParams: IRequestParams) {
       json = await postWithFetchApi(fullEndpointPath, requestParams.environmentId, requestParams.method, requestParams.data, requestParams.keycloak);
     }
 
-    if (json && requestParams.dispatch) {
-      requestParams.dispatch(json.data);
+    if (requestParams.dispatch) {
+      if (json) {
+        requestParams.dispatch(json.data);
+      } else if (requestParams.method && requestParams.method !== "GET") {
+        // If there's no body, but a state update should be dispatched, do it based on the request parameters (e.g., for a DELETE)
+        requestParams.dispatch(requestParams);
+      } 
     }
     requestParams.setErrorMessage('');
     return json;
@@ -98,6 +103,9 @@ async function postWithFetchApi(urlEndpoint, environmentId, method = "POST", dat
         keycloak.clearToken();
       }
       throw Error(`The following error occured while communicating with the server: ${result.status} ${result.statusText} ${errorMessage ? JSON.stringify(errorMessage) : ''}`);
+    }
+    if (result.bodyUsed) {
+      return result.json();
     }
   }
 }
