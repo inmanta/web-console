@@ -1,4 +1,4 @@
-import { InstanceForm, extractInitialAttributes, getChangedAttributesOnly } from "./InstanceForm";
+import { InstanceForm, extractInitialAttributes, getChangedAttributesOnly, ensureAttributeType } from "./InstanceForm";
 import React from "react";
 import { mount } from "enzyme";
 import { IRequestParams } from "@app/utils/fetchInmantaApi";
@@ -89,6 +89,33 @@ describe('Instance Form component', () => {
       const afterChanges = { name: "inmanta2", bool_param: false, another_attribute: "same" };
       const diff = getChangedAttributesOnly(afterChanges, originalAttributes);
       expect(diff).toEqual(afterChanges);
+    });
+  });
+  describe('Converts attributes to proper types before submitting request', () => {
+    const attributeModels = [
+      { name: "number", type: "number", description: "name", modifier: "rw+", default_value_set: true, default_value: "inmanta" },
+      { name: "array", type: "string[]", description: "an array attribute", modifier: "rw+", default_value_set: false },
+      { name: "dict_param", type: "dict", description: "a dict attribute", modifier: "rw+", default_value_set: false }
+    ];
+    it('When the parameter is a valid number', () => {
+      const value = ensureAttributeType(attributeModels, "number", "5");
+      expect(value).toEqual(5);
+    });
+    it('When the parameter is an invalid number', () => {
+      const value = ensureAttributeType(attributeModels, "number", "5oooo");
+      expect(value).toBeNaN();
+    });
+    it('When the parameter is a valid dict', () => {
+      const value = ensureAttributeType(attributeModels, "dict_param", "{\"key\": \"val\"}");
+      expect(value).toEqual({ key: "val" });
+    });
+    it('When the parameter is an invalid dict', () => {
+      const value = ensureAttributeType(attributeModels, "dict_param", "{\"key: \"val\"}");
+      expect(value).toEqual("{\"key: \"val\"}");
+    });
+    it('When the parameter is a valid array', () => {
+      const value = ensureAttributeType(attributeModels, "array", "first, ");
+      expect(value).toEqual(["first", ""]);
     });
   });
 
