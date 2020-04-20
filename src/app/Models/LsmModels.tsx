@@ -61,6 +61,7 @@ export interface IServiceDictState {
   byId: IServiceDict,
   getAllServices: Computed<IServiceDictState, IServiceModel[]>;
   getServicesOfEnvironment: Computed<IServiceDictState, (environmentId: string) => IServiceModel[]>;
+  removeSingleService: Action<IServiceDictState, string>;
 }
 
 export interface IInstanceAttributeModel {
@@ -132,6 +133,13 @@ export const serviceDictState: IServiceDictState = {
   }),
   getServicesOfEnvironment: computed(state => environmentId => {
     return Object.values(state.byId).filter(service => service.environment === environmentId);
+  }),
+  removeSingleService: action((state, serviceName) => {
+    const indexOfId = state.allIds.indexOf(serviceName);
+    if (indexOfId > -1) {
+      state.allIds.splice(indexOfId, 1);
+      delete state.byId[serviceName]; 
+    }
   }),
   updateServices: thunk((actions, payload, { getState }) => {
     if (!_.isEqual(_.sortBy(getState().getAllServices, 'name'), _.sortBy(payload, 'name'))) {

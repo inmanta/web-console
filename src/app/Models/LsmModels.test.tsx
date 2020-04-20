@@ -53,6 +53,13 @@ describe('Lsm models', () => {
         { type: '@thunk.updateServices', payload: serviceModels },
       ]);
     });
+    it('Should remove service from the store', () => {
+      const store = createStore(serviceDictState);
+      store.getActions().addServices(serviceModels);
+      expect(store.getState().allIds).toEqual(['test_service', 'another_test_service']);
+      store.getActions().removeSingleService('test_service');
+      expect(store.getState().allIds).toEqual(['another_test_service']);
+    });
   });
   describe('Service instance store', () => {
     const instances: IServiceInstanceModel[] = [
