@@ -104,7 +104,7 @@ describe('Backend data fetching function', () => {
     expect(fetchMock.mock.calls[0][1]).toEqual({ headers: { 'X-Inmanta-Tid': 'env-id', 'Content-Type': 'application/json' }, method: 'DELETE' });
   });
   it('Should handle errors on server state modifying calls', async () => {
-    fetchMock.mockResponse(JSON.stringify({}), { status: 400, statusText: 'Bad Request' });
+    fetchMock.mockResponse(JSON.stringify({"message": "Invalid request"}), { status: 400, statusText: 'Bad Request' });
 
     let errorMessage;
     const setErrorMessage: React.Dispatch<string> = (message) => { errorMessage = message };
@@ -144,7 +144,7 @@ describe('Backend data fetching function', () => {
       expect(errorMessage.includes('Authorization failed')).toBeTruthy();
     });
     it('Should handle authorization errors on POST requests', async () => {
-      fetchMock.mockResponse(JSON.stringify({}), { status: 403, statusText: 'Forbidden' });
+      fetchMock.mockResponse(JSON.stringify({"message": "Access to protected resource is forbidden"}), { status: 403, statusText: 'Forbidden' });
       let errorMessage;
       const setErrorMessage: React.Dispatch<string> = (message) => { errorMessage = message };
       const requestParams: IRequestParams = { ...requestParamsWithKeycloak, setErrorMessage, method: 'POST'};

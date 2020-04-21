@@ -98,6 +98,7 @@ async function postWithFetchApi(urlEndpoint, environmentId, method = "POST", dat
   if (result) {
     if (!result.ok) {
       let errorMessage = await result.json();
+      errorMessage = errorMessage.message.replace(/\n/g, " ");
       if (keycloak && (result.status === 401 || result.status === 403)) {
         errorMessage += ' Authorization failed, please log in'
         keycloak.clearToken();

@@ -57,7 +57,7 @@ function getFormattedListFromObject(instance: IServiceInstanceModel, key: string
           .map(attribute => {
             const attributeValue = instance[key][attribute];
             return <ListItem key={attribute}>
-              {attribute}: {Array.isArray(attributeValue) ? attributeValue.join(', ') : String(attributeValue)}
+              {attribute}: {Array.isArray(attributeValue) ? attributeValue.join(', ') : JSON.stringify(attributeValue)}
             </ListItem>
           })
       }
