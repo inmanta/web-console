@@ -35,12 +35,12 @@ describe('Service inventory', function () {
   });
   it('Should show add/hide instance modal on click', function () {
     cy.visit('/lsm/catalog/e2e_service/inventory');
-    cy.get('#add-instance-button').click();
+    cy.contains("button", "Add instance").click();
     cy.contains('Cancel').click().should('not.exist');
   });
   it('Should filter read-only attributes on create instance modal', function () {
     cy.visit('/lsm/catalog/e2e_service/inventory');
-    cy.get('#add-instance-button').click();
+    cy.contains("button", "Add instance").click();
     cy.get('#readonly').should('not.exist');
   });
 });
