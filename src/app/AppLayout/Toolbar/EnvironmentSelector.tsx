@@ -3,10 +3,17 @@ import { ContextSelector, ContextSelectorItem } from '@patternfly/react-core';
 import { IStoreModel } from '@app/Models/CoreModels';
 import { useStoreDispatch, useStoreState, State } from 'easy-peasy';
 
-export const EnvironmentSelector = (props: { items: string[] }) => {
+export interface IEnvironmentSelectorItem {
+  displayName: string;
+  projectId: string;
+  environmentId?: string;
+}
+
+export const EnvironmentSelector = (props: { items: IEnvironmentSelectorItem[] }) => {
   const items = props.items;
+  const environmentNames = items.map(item => item.displayName);
   const [open, setOpen] = React.useState(false);
-  const [filteredItems, setFilteredItems] = React.useState(items);
+  const [filteredItems, setFilteredItems] = React.useState(environmentNames);
   const [searchValue, setSearchValue] = React.useState('');
   const store = useStoreState((state: State<IStoreModel>) => state.projects);
   const selectedProject = store.projects.getSelectedProject;
@@ -22,11 +29,13 @@ export const EnvironmentSelector = (props: { items: string[] }) => {
 
   const onSelect = (event: any, value: any) => {
     setOpen(!open);
-    const projectAndEnvironment = value.split('/').map(part => part.trim());
-    dispatch.projects.selectProjectAndEnvironment({
-      environment: projectAndEnvironment[1],
-      project: projectAndEnvironment[0],
-    });
+    const matchingEnvItem = items.find(envItem => envItem.displayName === value);
+    if (matchingEnvItem && matchingEnvItem.environmentId) {
+      dispatch.projects.selectProjectAndEnvironment({
+        environment: matchingEnvItem.environmentId,
+        project: matchingEnvItem.projectId,
+      });
+    }
   };
   const onSearchInputChange = (value: any) => {
     setSearchValue(value);
@@ -40,12 +49,12 @@ export const EnvironmentSelector = (props: { items: string[] }) => {
   }, [searchValue]);
 
   React.useEffect(() => {
-    setFilteredItems(items);
+    setFilteredItems(environmentNames);
   }, [items]);
 
   const filterItems = () => {
     const filtered =
-      searchValue === '' ? items : items.filter(str => str.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1);
+      searchValue === '' ? environmentNames : environmentNames.filter(envName => envName.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1);
     setFilteredItems(filtered || []);
   };
   return (

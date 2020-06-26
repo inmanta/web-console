@@ -3,6 +3,8 @@ import { mount } from "enzyme";
 import React from "react";
 import { StoreProvider, createStore } from "easy-peasy";
 import { storeModel } from "@app/Models/CoreModels";
+import { getEnvironmentNamesWithSeparator } from "../AppLayout";
+import _ from "lodash";
 
 describe('Environment Selector', () => {
   it('should show default value when there are no environments', () => {
@@ -17,7 +19,7 @@ describe('Environment Selector', () => {
     let selectorToggle;
     let selectorListItem;
     beforeEach(() => {
-      envSelector = <StoreProvider store={createStore(storeModel)}><EnvironmentSelector items={['test-project / test-environment']} /></StoreProvider>
+      envSelector = <StoreProvider store={createStore(storeModel)}><EnvironmentSelector items={[{ displayName: 'test-project / test-environment', projectId: "projectId1", environmentId: "environmentId1" }]} /></StoreProvider>
       wrapper = mount(envSelector);
       selectorToggle = wrapper.find(".pf-c-context-selector__toggle");
       selectorToggle.simulate('click');
@@ -33,46 +35,70 @@ describe('Environment Selector', () => {
       expect(selectorListItem.exists()).toBeFalsy();
     });
   });
+  const projects = [{
+    environments: [
+      {
+        id: 'env-id',
+        name: 'test-environment',
+        projectId: 'project-id',
+      }
+    ],
+    id: 'project-id',
+    name: 'test-project',
+  },
+  {
+    environments: [
+      {
+        id: 'env-id2',
+        name: 'test-environment2',
+        projectId: 'project-id2',
+      }
+    ],
+    id: 'project-id2',
+    name: 'test-project2',
+  },
+  {
+    environments: [
+      {
+        id: 'env-id3',
+        name: 'test-environment',
+        projectId: 'project-id2',
+      }
+    ],
+    id: 'project-id2',
+    name: 'test-project2',
+  },
+  {
+    environments: [
+      {
+        id: 'env-id4',
+        name: 'test-environment4',
+        projectId: 'project-id4',
+      }
+    ],
+    id: 'project-id4',
+    name: 'test-project4',
+  },
+  {
+    environments: [
+      {
+        id: 'dummy-env-id',
+        name: 'dummy-environment',
+        projectId: 'dummy-project-id',
+      }
+    ],
+    id: 'dummy-project-id',
+    name: 'dummy-project',
+  }];
   describe('with a populated store', () => {
     let envSelector;
     let wrapper;
     let selectorToggle;
     beforeEach(() => {
       const storeInstance = createStore(storeModel);
-      storeInstance.dispatch.projects.fetched([{
-        environments: [
-          {
-            id: 'env-id',
-            name: 'test-environment',
-            projectId: 'project-id',
-          }
-        ],
-        id: 'project-id',
-        name: 'test-project',
-      },
-      {
-        environments: [
-          {
-            id: 'env-id2',
-            name: 'test-environment2',
-            projectId: 'project-id2',
-          }
-        ],
-        id: 'project-id2',
-        name: 'test-project2',
-      },
-      {
-        environments: [
-          {
-            id: 'dummy-env-id',
-            name: 'dummy-environment',
-            projectId: 'dummy-project-id',
-          }
-        ],
-        id: 'dummy-project-id',
-        name: 'dummy-project',
-      }]);
-      envSelector = <StoreProvider store={storeInstance}><EnvironmentSelector items={['test-project / test-environment', 'test-project2 / test-environment2']} /></StoreProvider>
+      storeInstance.dispatch.projects.fetched(projects);
+      const environments = _.flatMap(projects, project => getEnvironmentNamesWithSeparator(project));
+      envSelector = <StoreProvider store={storeInstance}><EnvironmentSelector items={environments} /></StoreProvider>
       wrapper = mount(envSelector);
       selectorToggle = wrapper.find(".pf-c-context-selector__toggle");
     });
@@ -87,8 +113,8 @@ describe('Environment Selector', () => {
     });
     it.each`
     inputValue | numberOfMatchedItems
-    ${'test'} | ${2}
-    ${'2'} | ${1}
+    ${'test'} | ${4}
+    ${'4'} | ${1}
     ${'abcd'} | ${0}
     `('should filter number of results to $numberOfMatchedItems when the filter input is $inputValue', ({ inputValue, numberOfMatchedItems }) => {
       selectorToggle.simulate('click');
@@ -98,7 +124,20 @@ describe('Environment Selector', () => {
       const selectorListItems = wrapper.find('.pf-c-context-selector__menu-list-item');
       expect(selectorListItems).toHaveLength(numberOfMatchedItems);
     });
-
-
+  });
+  it("should select the proper environment when multiple environments have the same name", () => {
+    const storeInstance = createStore(storeModel);
+    storeInstance.dispatch.projects.fetched(projects);
+    const environments = _.flatMap(projects, project => getEnvironmentNamesWithSeparator(project));
+    const envSelector = <StoreProvider store={storeInstance}><EnvironmentSelector items={environments} /></StoreProvider>
+    const wrapper = mount(envSelector);
+    const selectorToggle = wrapper.find(".pf-c-context-selector__toggle");
+    
+    selectorToggle.simulate('click');
+    const selectorListItems = wrapper.find('.pf-c-context-selector__menu-list-item');
+    selectorListItems.at(2).simulate('click');
+    expect(selectorToggle.text()).toEqual('test-project2 / test-environment');
+    expect(storeInstance.getState().projects.projects.getSelectedProject.id).toEqual('project-id2');
+    expect(storeInstance.getState().projects.environments.getSelectedEnvironment.id).toEqual('env-id3');
   });
 });

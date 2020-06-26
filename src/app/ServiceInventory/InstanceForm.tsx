@@ -98,7 +98,6 @@ async function submitUpdate(requestParams: IRequestParams, attributeValue: IInst
   requestParams.method = "PATCH";
   const parsedAttributes = parseAttributes(attributeValue, attributeModels);
   const updatedAttributes = getChangedAttributesOnly(parsedAttributes, originalAttributes);
-  // const parsedAttributes = parseAttributes(updatedAttributes, attributeModels);
   requestParams.data = { attributes: updatedAttributes };
   await fetchInmantaApi(requestParams);
 }
