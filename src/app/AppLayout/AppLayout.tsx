@@ -17,7 +17,7 @@ import {
 import { routes } from '@app/routes';
 import Logo from '!react-svg-loader!@images/logo.svg';
 import AvatarImg from '!url-loader!@assets/images/img_avatar.svg';
-import { EnvironmentSelector } from './Toolbar/EnvironmentSelector';
+import { EnvironmentSelector, IEnvironmentSelectorItem } from './Toolbar/EnvironmentSelector';
 import { SimpleNotificationBadge } from './Toolbar/SimpleNotificationBadge';
 import { IconDropdown } from './Toolbar/IconDropdown';
 import { AngleDownIcon, CogIcon } from '@patternfly/react-icons';
@@ -35,6 +35,15 @@ interface IAppLayout {
   setErrorMessage: React.Dispatch<string>;
   shouldUseAuth: boolean;
 }
+export const getEnvironmentNamesWithSeparator = (project: IProjectModel) => {
+  if (project.environments) {
+    return project.environments.map(environment => {
+      const envSelectorItem: IEnvironmentSelectorItem = { displayName: project.name + ' / ' + environment.name, projectId: project.id, environmentId: environment.id };
+      return envSelectorItem;
+    });
+  }
+  return [{ displayName: project.name, projectId: project.id }];
+};
 
 const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, setErrorMessage, shouldUseAuth }) => {
   const logoProps = {
@@ -64,22 +73,14 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
     setIsMobileView(props.mobileView);
   };
 
-  const getEnvironmentNamesWithSeparator = (project: IProjectModel) => {
-    if (project.environments) {
-      return project.environments.map(environment => project.name + ' / ' + environment.name);
-    }
-    return [project.name];
-  };
-
   const projects: IProjectModel[] = useStoreState((state: State<IStoreModel>) => state.projects.projects.getAllProjects);
   const environments = _.flatMap(projects, project => getEnvironmentNamesWithSeparator(project));
-
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
 
   const Login = () => {
     const [name, setName] = React.useState('inmanta2');
     if (keycloak && keycloak.profile && keycloak.profile.username !== name) {
-        setName(keycloak.profile.username as string);
+      setName(keycloak.profile.username as string);
     }
 
     return <TextContent>{name}</TextContent>;

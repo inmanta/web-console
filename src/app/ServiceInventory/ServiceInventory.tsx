@@ -28,7 +28,9 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   const dispatchUpdateInstances = (data) => storeDispatch.projects.serviceInstances.updateInstances({ serviceName, instances: data });
   const requestParams = { urlEndpoint: inventoryUrl, dispatch: dispatchUpdateInstances, isEnvironmentIdRequired: true, environmentId, setErrorMessage, keycloak };
   const dispatchEntity = (data) => storeDispatch.projects.services.addSingleService(data);
-  ensureServiceEntityIsLoaded(projectStore, serviceName, { urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`, dispatch: dispatchEntity, isEnvironmentIdRequired: true, environmentId, setErrorMessage, keycloak });
+  React.useEffect(() => {
+    ensureServiceEntityIsLoaded(projectStore, serviceName, { urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`, dispatch: dispatchEntity, isEnvironmentIdRequired: true, environmentId, setErrorMessage, keycloak });
+  }, [serviceName, environmentId]);
   React.useEffect(() => {
     fetchInmantaApi(requestParams);
   }, [storeDispatch, serviceName, instancesOfCurrentService, requestParams]);

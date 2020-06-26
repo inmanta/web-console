@@ -24,6 +24,7 @@ export interface IProjectDictState {
   getAllProjects: Computed<IProjectDictState, IProjectModel[]>,
   getSelectedProject: Computed<IProjectDictState, Partial<IProjectModel>>,
   selectedProjectId: string,
+  selectProjectById: Action<IProjectDictState, string>,
   selectProjectByName: Action<IProjectDictState, string>,
 }
 
@@ -36,6 +37,7 @@ export interface IEnvironmentDictState {
   byId: IEnvironmentDict,
   getSelectedEnvironment: Computed<IEnvironmentDictState, Partial<IEnvironmentModel>>,
   selectedEnvironmentId: string,
+  selectEnvironmentById: Action<IEnvironmentDictState, string>,
   selectEnvironmentByName: Action<IEnvironmentDictState, string>,
 }
 
@@ -62,6 +64,9 @@ export const environmentState: IEnvironmentDictState = {
     }
     return {} as IProjectModel;
   }),
+  selectEnvironmentById: action((state, payload) => {
+    state.selectedEnvironmentId = payload;
+  }),
   selectEnvironmentByName: action((state, payload) => {
     const environmentWithName = Object.values(state.byId).find(item => item.name === payload);
     if (environmentWithName) {
@@ -82,6 +87,9 @@ export const projectState: IProjectDictState = {
       return state.byId[state.selectedProjectId];
     }
     return {} as IProjectModel;
+  }),
+  selectProjectById: action((state, payload) => {
+    state.selectedProjectId = payload;
   }),
   selectProjectByName: action((state, payload) => {
     const projectWithName = Object.values(state.byId).find(item => item.name === payload);
@@ -113,8 +121,8 @@ export const project: IProjectStoreModel = {
   projects: projectState,
   resources: resourceDictState,
   selectProjectAndEnvironment: thunk((actions, payload) => {
-    actions.projects.selectProjectByName(payload.project);
-    actions.environments.selectEnvironmentByName(payload.environment);
+    actions.projects.selectProjectById(payload.project);
+    actions.environments.selectEnvironmentById(payload.environment);
   }),
   serviceInstances: instanceDictState,
   services: serviceDictState,
