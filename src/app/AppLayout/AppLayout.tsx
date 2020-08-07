@@ -12,7 +12,11 @@ import {
   Avatar,
   ToolbarGroup,
   TextContent,
-  DropdownItem
+  DropdownItem,
+  AlertGroup,
+  AlertVariant,
+  Alert,
+  AlertActionCloseButton
 } from '@patternfly/react-core';
 import { routes } from '@app/routes';
 import Logo from '!react-svg-loader!@images/logo.svg';
@@ -51,7 +55,33 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
   };
   const projectsEndpoint = '/api/v2/project';
   const storeDispatch = useStoreDispatch<IStoreModel>();
-  const dispatch = (data) => storeDispatch.projects.fetched(data);
+  const [envAlert, setEnvAlert] = React.useState('');
+  const ToastAlertGroup = () => {
+    const variant = "warning";
+    return <AlertGroup isToast={true}>
+            <Alert
+              isLiveRegion={true}
+              variant={AlertVariant[variant]}
+              title={envAlert}
+              id="env-warning-alert"
+              action={
+                <AlertActionCloseButton
+                  title="Close environment warning"
+                  id="close-env-warning-button"
+                  variantLabel={`${variant} alert`}
+                  onClose={() => setEnvAlert('')}
+                />
+              } />
+        </AlertGroup>
+  }
+  const dispatch = (data) => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const envFromUrl = searchParams.get("env");
+    if (envFromUrl && !data.find(project => (project.environments.find(env => env.id === envFromUrl)))) {
+      setEnvAlert(`Environment with id ${envFromUrl} not found, another was selected by default`);
+    }
+    storeDispatch.projects.fetched(data);
+  };
   const requestParams = { urlEndpoint: projectsEndpoint, dispatch, isEnvironmentIdRequired: false, environmentId: undefined, setErrorMessage, keycloak };
   React.useEffect(() => {
     fetchInmantaApi(requestParams);
@@ -76,6 +106,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
   const projects: IProjectModel[] = useStoreState((state: State<IStoreModel>) => state.projects.projects.getAllProjects);
   const environments = _.flatMap(projects, project => getEnvironmentNamesWithSeparator(project));
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
+  const selectedEnvironmentId = useStoreState((state: State<IStoreModel>) => state.projects.environments.selectedEnvironmentId);
 
   const Login = () => {
     const [name, setName] = React.useState('inmanta2');
@@ -143,7 +174,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
             {routeItem.exactRoutes.map((route, index) => {
               return (!route.hideOnSideBar ?
                 <NavItem key={`${route.label}-${index}`} id={`${route.label}-${index}`}>
-                  <NavLink exact={true} to={routeItem.pathPrefix + route.path} activeClassName="pf-m-current">
+                  <NavLink exact={true} to={{pathname: routeItem.pathPrefix + route.path, search: location.search}} activeClassName="pf-m-current">
                     {route.label}
                   </NavLink>
                 </NavItem> : null
@@ -154,7 +185,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
       })}
       <NavGroup title="Other sites" key="external">
         <li className="pf-c-nav__item">
-          <a className="pf-c-nav__link" href="/dashboard">Dashboard</a>
+          <a className="pf-c-nav__link" href={`/dashboard/#!/environment/${selectedEnvironmentId}`} target="_blank">Dashboard</a>
         </li>
       </NavGroup>
     </Nav>
@@ -164,6 +195,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
   return (
     <React.Fragment>
       <SimpleBackgroundImage />
+      {envAlert && <ToastAlertGroup/>}
       <Page
         breadcrumb={<PageBreadcrumb />}
         mainContainerId="primary-app-container"
