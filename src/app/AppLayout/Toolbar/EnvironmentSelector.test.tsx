@@ -139,5 +139,28 @@ describe('Environment Selector', () => {
     expect(selectorToggle.text()).toEqual('test-project2 / test-environment');
     expect(storeInstance.getState().projects.projects.getSelectedProject.id).toEqual('project-id2');
     expect(storeInstance.getState().projects.environments.getSelectedEnvironment.id).toEqual('env-id3');
+    expect(location.search).toEqual("?env=env-id3")
+  });
+  describe('with a populated store', () => {
+    let envSelector;
+    let wrapper;
+    let selectorToggle;
+    beforeEach(() => {
+      const storeInstance = createStore(storeModel);
+      const params = new URLSearchParams(location.search);
+      params.set("env", "env-id2");
+      window.history.replaceState({}, '', `${location.pathname}?${params}`);
+      storeInstance.dispatch.projects.fetched(projects);
+      const environments = _.flatMap(projects, project => getEnvironmentNamesWithSeparator(project));
+      envSelector = <StoreProvider store={storeInstance}><EnvironmentSelector items={environments} /></StoreProvider>
+      wrapper = mount(envSelector);
+      selectorToggle = wrapper.find(".pf-c-context-selector__toggle");
+    });
+    it('should select an environment if query param is specified', () => {
+      expect(selectorToggle.text()).toEqual("test-project2 / test-environment2");
+    });
+    afterEach(() => {
+      window.history.replaceState({}, '', `${location.pathname}`);
+    })
   });
 });

@@ -39,8 +39,8 @@ describe('Catalog Data List', () => {
     const listItems = wrapper.find(DataListItem);
     const buttonOfFirstService = listItems.first().find(DataListAction).children().first();
     const buttonOfLastService = listItems.last().find(DataListAction).children().first();
-    expect(buttonOfFirstService.props().to).toEqual('/lsm/catalog/service1/inventory');
-    expect(buttonOfLastService.props().to).toEqual('/lsm/catalog/otherService/inventory');
+    expect(buttonOfFirstService.props().to).toEqual({pathname: '/lsm/catalog/service1/inventory', search: ""});
+    expect(buttonOfLastService.props().to).toEqual({pathname: '/lsm/catalog/otherService/inventory', search: ""});
   });
   it.each`
   toggles | visibleItems | hiddenItems

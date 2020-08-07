@@ -66,6 +66,9 @@ export const environmentState: IEnvironmentDictState = {
   }),
   selectEnvironmentById: action((state, payload) => {
     state.selectedEnvironmentId = payload;
+    const params = new URLSearchParams(location.search);
+    params.set("env", payload);
+    window.history.replaceState({}, '', `${location.pathname}?${params}`);
   }),
   selectEnvironmentByName: action((state, payload) => {
     const environmentWithName = Object.values(state.byId).find(item => item.name === payload);
@@ -111,11 +114,30 @@ export const project: IProjectStoreModel = {
       state.environments.byId[environment.id] = environment;
       state.environments.allIds.push(environment.id);
     }));
+    const searchParams = new URLSearchParams(window.location.search);
+    const envFromUrl = searchParams.get("env");
+    
     if (!state.projects.selectedProjectId && state.projects.allIds.length > 0) {
-      state.projects.selectedProjectId = state.projects.allIds[0];
+      if (envFromUrl) {
+        const projectByUrl = payload.find(currentPayload => (currentPayload.environments.find(env => env.id === envFromUrl)));
+        if (projectByUrl && state.projects.selectedProjectId !== projectByUrl.id) {
+          state.projects.selectedProjectId = projectByUrl.id;
+        } else {
+          state.projects.selectedProjectId = state.projects.allIds[0];
+        }
+      } else {
+        state.projects.selectedProjectId =  state.projects.allIds[0];
+      }
     }
     if (!state.environments.selectedEnvironmentId && state.environments.allIds.length > 0) {
-      state.environments.selectedEnvironmentId = state.environments.allIds[0];
+      if (envFromUrl && state.environments.allIds.includes(envFromUrl)) {
+        state.environments.selectedEnvironmentId = envFromUrl;
+      } else {
+        state.environments.selectedEnvironmentId = state.environments.allIds[0];
+        const params = new URLSearchParams(location.search);
+        params.set("env", state.environments.selectedEnvironmentId);
+        window.history.replaceState({}, '', `${location.pathname}?${params}`);
+      }
     }
   }),
   projects: projectState,
