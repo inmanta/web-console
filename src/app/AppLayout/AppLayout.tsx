@@ -63,9 +63,11 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
               isLiveRegion={true}
               variant={AlertVariant[variant]}
               title={envAlert}
+              id="env-warning-alert"
               action={
                 <AlertActionCloseButton
-                  title={envAlert}
+                  title="Close environment warning"
+                  id="close-env-warning-button"
                   variantLabel={`${variant} alert`}
                   onClose={() => setEnvAlert('')}
                 />
