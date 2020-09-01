@@ -60,7 +60,7 @@ async function getValidationFailureMessage(instance: IServiceInstanceModel, inve
     if (!trace) {
       return;
     }
-    const errorMessage = compileReport.report.compile_data;
+    const errorMessage = JSON.stringify(compileReport.report.compile_data);
 
     return { errorMessage, trace };
   }

@@ -43,7 +43,28 @@
     },
     "success": false,
     "handled": true,
-    "compile_data": "{\"errors\": [{\"type\": \"inmanta.ast.DoubleSetException\", \"message\": \"value set twice:\\n\\told value: 1\\n\\t\\tset at ./main.cf:30\\n\\tnew value: 0\\n\\t\\tset at ./main.cf:29\\n\", \"category\": \"runtime_error\", \"location\": {\"uri\": \"./main.cf\", \"range\": {\"end\": {\"line\": 29, \"character\": 0}, \"start\": {\"line\": 28, \"character\": 0}}}}]}",
+    "compile_data": {
+      "errors": [
+        {
+          "type": "inmanta.ast.DoubleSetException",
+          "message": "value set twice:\n\told value: 1\n\t\tset at ./main.cf:30\n\tnew value: 0\n\t\tset at ./main.cf:29\n",
+          "category": "runtime_error",
+          "location": {
+            "uri": "./main.cf",
+            "range": {
+              "end": {
+                "line": 29,
+                "character": 0
+              },
+              "start": {
+                "line": 28,
+                "character": 0
+              }
+            }
+          }
+        }
+      ]
+    },
     "reports": [
       {
         "id": "9c1aa62c-6654-44bf-b122-f0b7259b7cf3",
