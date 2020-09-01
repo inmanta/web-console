@@ -113,23 +113,23 @@ const InstanceStatus: React.FunctionComponent<{ instance: IServiceInstanceModel,
   if (!errorMessageDetails && !noProblemsFound && !fetchErrorMessage) {
     return <Spinner size="md" />;
   }
-  let formattedErrorMessageDetails = '';
+  let formattedErrorMessageDetails = <Fragment/>;
   if (errorMessageDetails && isValidJson(errorMessageDetails)) {
     const parsedErrorMessageDetails = JSON.parse(errorMessageDetails);
     if (parsedErrorMessageDetails.errors) {
       formattedErrorMessageDetails = parsedErrorMessageDetails.errors
         .map((errorEntry) => {
-          return <div key={`${props.errorType}-details`}> <Text component={TextVariants.h4}>The following error occured:</Text> {Object.keys(errorEntry)
-            .map((key, idx) => {
-              return <TextContent key={idx}>
-                <Text component={TextVariants.h6}> {key} </Text> {typeof errorEntry[key] === "object" ? JSON.stringify(errorEntry[key]) : errorEntry[key]}
-              </TextContent>
-            })}
-          </div>
-        });
+          return <div key={`${props.errorType}-details`}>
+            <Text component={TextVariants.small}>The following error occured:</Text>
+            < TextContent key={'message'}>
+              <Text component={TextVariants.h4}> {errorEntry.message} </Text>
+              <Text>{errorEntry.type}</Text>
+            </TextContent>
+          </div >
+        })
     }
   } else {
-    formattedErrorMessageDetails = errorMessageDetails;
+    formattedErrorMessageDetails = <TextContent> <Text component={TextVariants.h4}> {errorMessageDetails}</Text></TextContent>
   }
 
 
