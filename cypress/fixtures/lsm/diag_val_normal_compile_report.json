@@ -20,7 +20,9 @@
     "success": true,
     "handled": true,
     "version": 3,
-    "compile_data": "{\"errors\": []}",
+    "compile_data": {
+      "errors": []
+    },
     "reports": [
       {
         "id": "c01e7206-d52c-4392-8d02-4d93a4d00902",

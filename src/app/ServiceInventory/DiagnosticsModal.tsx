@@ -45,7 +45,8 @@ async function getValidationFailureMessage(instance: IServiceInstanceModel, inve
   const logUrl = `${inventoryUrl}/${instance.id}/log`;
   const requestParams = { environmentId, urlEndpoint: logUrl, isEnvironmentIdRequired: true, setErrorMessage, keycloak, dispatch: () => { return; } };
   const logs = await fetchInmantaApi(requestParams);
-  const latestLogRecord = logs?.data[0];
+  // Find matching report for the version
+  const latestLogRecord = logs?.data.find((report) => report.version === instance.version);
   const messageWithCompileReport = latestLogRecord?.events.find((message) => message.id_compile_report!!);
   if (!messageWithCompileReport) {
     return;
