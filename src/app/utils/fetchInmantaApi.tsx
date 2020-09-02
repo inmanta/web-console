@@ -47,7 +47,11 @@ export async function fetchInmantaApi(requestParams: IRequestParams) {
     return json;
   }
   catch (error) {
-    requestParams.setErrorMessage(error.message);
+    if (error.message) {
+      requestParams.setErrorMessage(error.message);
+    } else {
+      requestParams.setErrorMessage('Request failed');
+    }
   }
 }
 

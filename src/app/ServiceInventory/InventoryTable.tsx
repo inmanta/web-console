@@ -5,6 +5,7 @@ import { List, ListItem } from "@patternfly/react-core";
 import moment from 'moment';
 import { ResourceModal } from "./ResourceModal";
 import { InstanceModal, ButtonType } from "./InstanceModal";
+import { DiagnosticsModal } from "./DiagnosticsModal";
 
 export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstanceModel[], keycloak?: Keycloak.KeycloakInstance }> = props => {
   const columnsInOrder = ["Id", "State", "Candidate Attributes", "Active Attributes", "Rollback Attributes", "Version", "Last Updated", "Resources", "Actions"];
@@ -20,6 +21,7 @@ export const InventoryTable: React.FunctionComponent<{ instances: IServiceInstan
         <InstanceModal buttonType={ButtonType.edit} serviceName={instance.service_entity} instance={instance} keycloak={props.keycloak}/>
         <span className="pf-u-pr-xl pf-u-pl-xl" />
         <InstanceModal buttonType={ButtonType.delete} serviceName={instance.service_entity} instance={instance} keycloak={props.keycloak}/>
+        <DiagnosticsModal serviceName={instance.service_entity} instance={instance} keycloak={props.keycloak}/>
       </div>
     }
     return {
