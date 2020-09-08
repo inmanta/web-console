@@ -73,7 +73,7 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
               id={service.name + '-action'}
               aria-label="Actions"
             >
-              <Link to={`/lsm/catalog/${service.name}/inventory`}> <Button> Inventory </Button></Link>
+              <Link to={{pathname:`/lsm/catalog/${service.name}/inventory`, search: location.search }}> <Button> Inventory </Button></Link>
               <DeleteEntityModal serviceName={service.name} requestParams={requestParams} />
             </DataListAction>
           </DataListItemRow>

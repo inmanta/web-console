@@ -23,5 +23,27 @@ describe('Environment selector', function () {
         'End-to-end Service Orchestration Demo / live'
       ]);
     });
-  })
-})
+  });
+  it('Has correct entry selected when env parameter is set', function () {
+    cy.server();
+    cy.route({
+      method: 'GET',
+      url: '**/api/v2/project',
+      response: 'fixture:environments.json'
+    })
+    cy.visit('/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c');
+    cy.get('.pf-c-context-selector__toggle-text').should("contain.text", "live");
+  });
+  it('Displays a warning when the environment from the url doesn\'t exist', function () {
+    cy.server();
+    cy.route({
+      method: 'GET',
+      url: '**/api/v2/project',
+      response: 'fixture:environments.json'
+    })
+    cy.visit('/lsm/catalog?env=nope');
+    cy.get('#env-warning-alert').should("exist");
+    cy.get("#close-env-warning-button").click();
+    cy.get('#env-warning-alert').should("not.exist");
+  });
+});

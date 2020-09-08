@@ -16,7 +16,7 @@ export const PageBreadcrumb = (props) => {
       const isActive = location.pathname.endsWith(pathEnding);
       const isVisible = location.pathname.includes(pathEnding);
       const path = '/lsm' + route.path;
-      const LinkElement = !isActive ? <NavLink to={path}> {route.title} </NavLink> : route.title;
+      const LinkElement = !isActive ? <NavLink to={{pathname: path, search: location.search}}> {route.title} </NavLink> : route.title;
       if (isVisible) {
         return <BreadcrumbItem key={path} isActive={isActive} >
           {LinkElement}

@@ -34,4 +34,13 @@ describe('Breadcrumbs', () => {
     const breadcrumbItems = wrapper.find('.pf-c-breadcrumb__item');
     expect(breadcrumbItems.at(1).hasClass('active')).toBeFalsy();
   });
+  it('should keep the env query parameter on navigation', () => {
+    const history = createMemoryHistory();
+    history.push('/?env=env1');
+    const wrapper = mount(<Router history={history}><PageBreadcrumb /></Router>);
+    history.push('/lsm/catalog/service/inventory?env=env1');
+    wrapper.update();
+    const breadcrumbItems = wrapper.find('.pf-c-breadcrumb__item');
+    expect(breadcrumbItems.at(0).children().at(0).props().to).toEqual({pathname: "/lsm/catalog", search: "?env=env1"});
+  });
 });
