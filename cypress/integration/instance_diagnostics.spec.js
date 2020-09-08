@@ -14,7 +14,7 @@ describe('Service instance diagnostics', function () {
     });
   });
 
-  xit('Should show/hide diagnostics modal on click', function () {
+  it('Should show/hide diagnostics modal on click', function () {
     cy.route({
       method: 'GET',
       url: '**/lsm/v1/service_inventory/test_service',
@@ -44,7 +44,7 @@ describe('Service instance diagnostics', function () {
     cy.get('#nav-toggle').click();
     cy.get('#rca-button').click();
   });
-  xit('Should show deployment failure', function () {
+  it('Should show deployment failure', function () {
     cy.route({
       method: 'GET',
       url: '**/lsm/v1/service_inventory/test_service',
@@ -77,7 +77,7 @@ describe('Service instance diagnostics', function () {
     cy.get("#Deployment-status-ok-message").should("not.be.visible");
     cy.get("#Validation-status-ok-message").should("be.visible");
   });
-  xit('Should show validation failure', function () {
+  it('Should show validation failure', function () {
     cy.route({
       method: 'GET',
       url: '**/lsm/v1/service_inventory/test_service',
@@ -106,7 +106,7 @@ describe('Service instance diagnostics', function () {
     cy.get("#Validation-status-error-message-details").should("be.visible");
     cy.get("#Validation-status-ok-message").should("not.be.visible");
   });
-  xit('Should show both deployment and validation failure', function () {
+  it('Should show both deployment and validation failure', function () {
     cy.route({
       method: 'GET',
       url: '**/lsm/v1/service_inventory/test_service',
