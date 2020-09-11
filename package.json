@@ -87,10 +87,11 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "@patternfly/react-core": "^3.112.3",
-    "@patternfly/react-icons": "^3.14.7",
-    "@patternfly/react-styles": "^3.5.22",
-    "@patternfly/react-table": "^2.22.19",
+    "@patternfly/react-core": "^4.47.0",
+    "@patternfly/react-icons": "^4.7.4",
+    "@patternfly/react-styles": "^4.7.3",
+    "@patternfly/react-table": "^4.16.7",
+    "@patternfly/react-tokens": "^4.9.6",
     "dotenv-webpack": "^1.7.0",
     "easy-peasy": "^3.1.0",
     "keycloak-js": "6.0.1",

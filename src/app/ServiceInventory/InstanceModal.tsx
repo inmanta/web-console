@@ -1,4 +1,4 @@
-import { Modal, Button } from "@patternfly/react-core"
+import { Modal, Button, ModalVariant } from "@patternfly/react-core"
 import { useState } from "react";
 import React from "react";
 import { InstanceForm } from "./InstanceForm";
@@ -32,7 +32,7 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
   return (
     <React.Fragment>
       <ModalButton />
-      <Modal isSmall={true} isOpen={isOpen}
+      <Modal variant={ModalVariant.small} isOpen={isOpen}
         title={modalTitle} onClose={handleModalToggle}>
         {modalHeaderText}
         <InventoryContext.Consumer>

@@ -1,4 +1,4 @@
-import { Modal, Button, Spinner, Text, TextVariants, Expandable, TextContent, Alert, Divider, Label } from "@patternfly/react-core"
+import { Modal, Button, Spinner, Text, TextVariants, TextContent, Alert, Divider, ExpandableSection, ModalVariant } from "@patternfly/react-core"
 import { useState, Fragment } from "react";
 import React from "react";
 import { ToolsIcon, CheckIcon } from "@patternfly/react-icons";
@@ -15,7 +15,7 @@ const DiagnosticsModal: React.FunctionComponent<{ serviceName: string, instance:
   return (
     <React.Fragment>
       <ModalButton />
-      <Modal isSmall={true} isOpen={isOpen}
+      <Modal variant={ModalVariant.small} isOpen={isOpen}
         title='Diagnose service instance' onClose={handleModalToggle}>
         <InventoryContext.Consumer>
           {({ environmentId, inventoryUrl }) => {
@@ -141,13 +141,13 @@ const InstanceStatus: React.FunctionComponent<{ instance: IServiceInstanceModel,
       {(noProblemsFound && !fetchErrorMessage) && <Text id={`${props.errorType}-ok-message`} component={TextVariants.p}>No Problems found <CheckIcon color="green" /> </Text>}
     </Fragment>
     {!!stackTrace &&
-      <Expandable toggleText={"Show Stacktrace"}>
+      <ExpandableSection toggleText={"Show Stacktrace"}>
         <TextContent id={`${props.errorType}-stacktrace`}>
           <Text component={TextVariants.blockquote}>
             {stackTrace.split('\n').map((line, idx) => <Fragment key={`line-${idx}`}>{line}<br /></Fragment>)}
           </Text>
         </TextContent>
-      </Expandable>
+      </ExpandableSection>
     }
   </div>;
 }

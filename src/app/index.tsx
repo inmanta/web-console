@@ -21,7 +21,7 @@ const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance, should
     <StoreProvider store={storeInstance}>
       <Router basename={shouldAddBaseName ? "/console" : "/"}>
         <AppLayout keycloak={props.shouldUseAuth ? props.keycloak : undefined} setErrorMessage={setErrorMessage} shouldUseAuth={props.shouldUseAuth}>
-          {errorMessage && <Alert variant='danger' title={errorMessage} action={<AlertActionCloseButton onClose={() => setErrorMessage('')}/>}/>}
+          {errorMessage && <Alert variant='danger' title={errorMessage} actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')}/>}/>}
           <AppRoutes />
         </AppLayout>
       </Router>

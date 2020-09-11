@@ -16,7 +16,9 @@ import {
   AlertGroup,
   AlertVariant,
   Alert,
-  AlertActionCloseButton
+  AlertActionCloseButton,
+  PageHeaderTools,
+  PageHeaderToolsGroup
 } from '@patternfly/react-core';
 import { routes } from '@app/routes';
 import Logo from '!react-svg-loader!@images/logo.svg';
@@ -59,20 +61,20 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
   const ToastAlertGroup = () => {
     const variant = "warning";
     return <AlertGroup isToast={true}>
-            <Alert
-              isLiveRegion={true}
-              variant={AlertVariant[variant]}
-              title={envAlert}
-              id="env-warning-alert"
-              action={
-                <AlertActionCloseButton
-                  title="Close environment warning"
-                  id="close-env-warning-button"
-                  variantLabel={`${variant} alert`}
-                  onClose={() => setEnvAlert('')}
-                />
-              } />
-        </AlertGroup>
+      <Alert
+        isLiveRegion={true}
+        variant={AlertVariant[variant]}
+        title={envAlert}
+        id="env-warning-alert"
+        actionClose={
+          <AlertActionCloseButton
+            title="Close environment warning"
+            id="close-env-warning-button"
+            variantLabel={`${variant} alert`}
+            onClose={() => setEnvAlert('')}
+          />
+        } />
+    </AlertGroup>
   }
   const dispatch = (data) => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -133,24 +135,24 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
       )];
     }
     return (
-      <ToolbarGroup>
+      <PageHeaderToolsGroup>
         {shouldUseAuth ? <Login /> : <TextContent> inmanta </TextContent>}
         <IconDropdown icon={AngleDownIcon} dropdownItems={profileDropdownItems} />
         <Avatar src={AvatarImg} alt="Avatar image" />
-      </ToolbarGroup>
+      </PageHeaderToolsGroup>
     );
   };
 
   const UpperToolbar = () => {
     const dropdownItems = [];
     return (
-      <Toolbar>
-        <ToolbarGroup>
-          <SimpleNotificationBadge />
-          <IconDropdown icon={CogIcon} dropdownItems={dropdownItems} />
-        </ToolbarGroup>
-        <ProfileDropdownGroup />
-      </Toolbar>
+      <PageHeaderTools>
+        <PageHeaderToolsGroup>
+            <SimpleNotificationBadge />
+            <IconDropdown icon={CogIcon} dropdownItems={dropdownItems} />
+          </PageHeaderToolsGroup>
+          <ProfileDropdownGroup />
+      </PageHeaderTools>
     );
   };
 
@@ -158,11 +160,12 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
     <PageHeader
       logo={inmantaLogo}
       logoProps={logoProps}
-      toolbar={<UpperToolbar />}
+      headerTools={<UpperToolbar />}
       showNavToggle={true}
       topNav={<EnvironmentSelector items={environments} />}
       isNavOpen={isNavOpen}
       onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
+      style={{ backgroundColor: "transparent" }}
     />
   );
 
@@ -174,7 +177,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
             {routeItem.exactRoutes.map((route, index) => {
               return (!route.hideOnSideBar ?
                 <NavItem key={`${route.label}-${index}`} id={`${route.label}-${index}`}>
-                  <NavLink exact={true} to={{pathname: routeItem.pathPrefix + route.path, search: location.search}} activeClassName="pf-m-current">
+                  <NavLink exact={true} to={{ pathname: routeItem.pathPrefix + route.path, search: location.search }} activeClassName="pf-m-current">
                     {route.label}
                   </NavLink>
                 </NavItem> : null
@@ -195,7 +198,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
   return (
     <React.Fragment>
       <SimpleBackgroundImage />
-      {envAlert && <ToastAlertGroup/>}
+      {envAlert && <ToastAlertGroup />}
       <Page
         breadcrumb={<PageBreadcrumb />}
         mainContainerId="primary-app-container"

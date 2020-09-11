@@ -39,7 +39,6 @@ export const ResourceModal: React.FunctionComponent<{ instance: IServiceInstance
             Close
             </Button>
         ]}
-        isFooterLeftAligned={true}
       >
         {errorMessage && <Alert variant='danger' title={errorMessage} />}
         {resourcesOfInstance.length > 0 && <ResourceTable resources={resourcesOfInstance} />}

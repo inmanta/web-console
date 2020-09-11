@@ -18,8 +18,8 @@ describe('Service catalog', function () {
   it('Has multiple entries based on backend response', function () {
     cy.get('.pf-c-data-list__item').should('have.length', 2);
     cy.get('#e2e_service-toggle').click();
-    cy.get('#e2e_service-expand').find('.pf-c-tabs__item').find('.pf-c-tabs__button').should('have.length', 2);
-    cy.get('#e2e_service-expand').find('.pf-c-tabs__item').find('.pf-c-tabs__button').then((tabs) => {
+    cy.get('#e2e_service-expand').find('.pf-c-tabs__item').find('.pf-c-tabs__link').should('have.length', 2);
+    cy.get('#e2e_service-expand').find('.pf-c-tabs__item').find('.pf-c-tabs__link').then((tabs) => {
       let texts = tabs.map((idx, tab) => (
         Cypress.$(tab).text()
       ));

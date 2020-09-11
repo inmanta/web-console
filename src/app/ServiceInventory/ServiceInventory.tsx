@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PageSection, Alert, Card, CardFooter, Toolbar, ToolbarGroup, AlertActionCloseButton } from '@patternfly/react-core';
+import { PageSection, Alert, Card, CardFooter, Toolbar, ToolbarGroup, AlertActionCloseButton, ToolbarItem, ToolbarContent } from '@patternfly/react-core';
 import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
 import { InventoryTable } from './InventoryTable';
@@ -23,7 +23,7 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   if (shouldUseAuth) {
     // The value will be always true or always false during one session
     // tslint:disable:react-hooks-nesting
-     [keycloak, ] = useKeycloak()
+    [keycloak,] = useKeycloak()
   }
   const dispatchUpdateInstances = (data) => storeDispatch.projects.serviceInstances.updateInstances({ serviceName, instances: data });
   const requestParams = { urlEndpoint: inventoryUrl, dispatch: dispatchUpdateInstances, isEnvironmentIdRequired: true, environmentId, setErrorMessage, keycloak };
@@ -40,16 +40,22 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   return (
     <PageSection>
       {serviceEntity && <InventoryContext.Provider value={{ attributes: serviceEntity.attributes, environmentId, inventoryUrl, setErrorMessage: setInstanceErrorMessage, refresh: refreshInstances }} >
-        {errorMessage && <Alert variant='danger' title={errorMessage} action={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
-        {instanceErrorMessage && <Alert variant='danger' title={instanceErrorMessage} action={<AlertActionCloseButton onClose={() => setInstanceErrorMessage('')} />} />}
+        {errorMessage && <Alert variant='danger' title={errorMessage} actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
+        {instanceErrorMessage && <Alert variant='danger' title={instanceErrorMessage} actionClose={<AlertActionCloseButton onClose={() => setInstanceErrorMessage('')} />} />}
         <Card className={"horizontally-scrollable"}>
-          <CardFooter><Toolbar>
-            <ToolbarGroup> Showing instances of {serviceName} </ToolbarGroup>
-            <ToolbarGroup>
-              <InstanceModal buttonType={ButtonType.add} serviceName={serviceEntity.name} keycloak={keycloak}/>
-            </ToolbarGroup>
-          </Toolbar></CardFooter>
-        {instancesOfCurrentService.length > 0 && <InventoryTable instances={instancesOfCurrentService} keycloak={keycloak}/>}
+          <CardFooter>
+            <Toolbar>
+              <ToolbarContent>
+              <ToolbarGroup><ToolbarItem> Showing instances of {serviceName}</ToolbarItem> </ToolbarGroup>
+              <ToolbarGroup>
+                <ToolbarItem>
+                <InstanceModal buttonType={ButtonType.add} serviceName={serviceEntity.name} keycloak={keycloak} />
+                </ToolbarItem>
+              </ToolbarGroup>
+              </ToolbarContent>
+            </Toolbar>
+          </CardFooter>
+          {instancesOfCurrentService.length > 0 && <InventoryTable instances={instancesOfCurrentService} keycloak={keycloak} />}
         </Card>
       </InventoryContext.Provider>}
     </PageSection>
