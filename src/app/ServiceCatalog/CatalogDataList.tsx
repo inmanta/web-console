@@ -14,7 +14,8 @@ import {
   Modal,
   Text,
   Title,
-  TextVariants
+  TextVariants,
+  ModalVariant
 } from '@patternfly/react-core';
 import { IServiceModel } from '@app/Models/LsmModels';
 import { CatalogContent } from './CatalogContent';
@@ -63,7 +64,7 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
             <DataListItemCells
               dataListCells={[
                 <DataListCell key="primary content">
-                  <Title id={serviceKey} size="xl">{service.name}</Title>
+                  <Title id={serviceKey} headingLevel="h2" size="xl">{service.name}</Title>
                   <Description service={service}/>
                 </DataListCell>
               ]}
@@ -92,7 +93,7 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
     setExpanded(newExpanded);
   };
   return <React.Fragment>
-    {errorMessage && <Alert variant='danger' title={errorMessage} action={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
+    {errorMessage && <Alert variant='danger' title={errorMessage} actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
     <DataList aria-label="List of service entities" className="horizontally-scrollable">{serviceItems}</DataList>
   </React.Fragment>;
 };
@@ -104,7 +105,7 @@ const DeleteEntityModal: React.FunctionComponent<{ serviceName: string, requestP
   };
   return <React.Fragment>
     <Button variant="danger" onClick={handleModalToggle}> Delete </Button>
-    <Modal isSmall={true} isOpen={isOpen}
+    <Modal variant={ModalVariant.small} isOpen={isOpen}
       title="Delete Service Entity" onClose={handleModalToggle}>
       {`Are you sure you want to delete service entity ${props.serviceName}?`}
       <DeleteForm requestParams={props.requestParams} closeModal={() => setIsOpen(false)} />

@@ -6,7 +6,7 @@ export class SimpleNotificationBadge extends React.Component<{}, { isRead: boole
   constructor(props) {
     super(props);
     this.state = {
-      isRead: false
+      isRead: true
     };
     this.onClick = this.onClick.bind(this);
   }

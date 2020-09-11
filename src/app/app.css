@@ -10,6 +10,7 @@ html, body, #root {
 */
 .pf-c-page__header-nav {
   align-self: auto;
+  background-color: transparent;
 }
 
 .horizontally-scrollable {
