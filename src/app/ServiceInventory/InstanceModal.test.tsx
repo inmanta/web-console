@@ -42,9 +42,9 @@ describe('Instance Modal ', () => {
       </InventoryContext.Provider>);
     const button = wrapper.find('button');
     button.simulate('click');
-    const title = wrapper.find('.pf-c-title');
+    const title = wrapper.find('.pf-c-modal-box__title');
     const modalHeader = wrapper.find('.pf-c-modal-box__body');
-    expect(title.text()).toContain('Create instance');
+    expect(title.at(0).text()).toContain('Create instance');
     expect(modalHeader.text()).toContain("test_service");
   });
 
@@ -55,9 +55,9 @@ describe('Instance Modal ', () => {
       </InventoryContext.Provider>);
     const button = wrapper.find('button');
     button.simulate('click');
-    const title = wrapper.find('.pf-c-title');
+    const title = wrapper.find('.pf-c-modal-box__title');
     const modalHeader = wrapper.find('.pf-c-modal-box__body');
-    expect(title.text()).toContain('Edit instance');
+    expect(title.at(0).text()).toContain('Edit instance');
     expect(modalHeader.text()).toContain("instance1");
   });
 
@@ -68,9 +68,9 @@ describe('Instance Modal ', () => {
       </InventoryContext.Provider>);
     const button = wrapper.find('button');
     button.simulate('click');
-    const title = wrapper.find('.pf-c-title');
+    const title = wrapper.find('.pf-c-modal-box__title');
     const modalHeader = wrapper.find('.pf-c-modal-box__body');
-    expect(title.text()).toContain('Delete instance');
+    expect(title.at(0).text()).toContain('Delete instance');
     expect(modalHeader.text()).toContain("delete instance instance1 of service entity test_service");
   });
 
