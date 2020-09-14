@@ -1,7 +1,7 @@
-import { Modal, Button, Spinner, Text, TextVariants, TextContent, Alert, Divider, ExpandableSection, ModalVariant } from "@patternfly/react-core"
-import { useState, Fragment } from "react";
+import { Modal, Button, Spinner, Text, TextVariants, TextContent, Alert, Divider, ExpandableSection, ModalVariant, Card, CardHeader, CardBody, CardFooter } from "@patternfly/react-core"
+import { useState, Fragment, useEffect } from "react";
 import React from "react";
-import { ToolsIcon, CheckIcon } from "@patternfly/react-icons";
+import { ToolsIcon, CheckIcon, TimesIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./ServiceInventory";
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
 import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
@@ -20,15 +20,16 @@ const DiagnosticsModal: React.FunctionComponent<{ serviceName: string, instance:
         <InventoryContext.Consumer>
           {({ environmentId, inventoryUrl }) => {
             return <div>
-              <InstanceStatus instance={props.instance}
+              <InstanceStatus index={1}
+                instance={props.instance}
                 inventoryUrl={inventoryUrl}
                 environmentId={environmentId}
                 keycloak={props.keycloak}
                 errorCheckingFunction={getDeploymentFailureMessage}
                 errorType="Deployment-status" />
-              <Divider />
               <br />
-              <InstanceStatus instance={props.instance}
+              <InstanceStatus index={2}
+                instance={props.instance}
                 inventoryUrl={inventoryUrl}
                 environmentId={environmentId}
                 keycloak={props.keycloak}
@@ -84,7 +85,8 @@ async function getDeploymentFailureMessage(instance: IServiceInstanceModel, inve
         for (const logMessage of resourceActionLogs.logs) {
           const errorMessage = logMessage.messages.find((message) => message.level === "ERROR");
           if (errorMessage) {
-            return { errorMessage: errorMessage.msg, trace: errorMessage.kwargs.traceback };
+            const errorMessageWithId = errorMessage.msg.includes(failedResource.resource_id) ? errorMessage.msg : `${failedResource.resource_id}: ${errorMessage.msg}`;
+            return { errorMessage: errorMessageWithId, trace: errorMessage.kwargs.traceback };
           }
         }
       }
@@ -93,13 +95,12 @@ async function getDeploymentFailureMessage(instance: IServiceInstanceModel, inve
   return;
 }
 
-const InstanceStatus: React.FunctionComponent<{ instance: IServiceInstanceModel, inventoryUrl: string, environmentId?: string, keycloak?: Keycloak.KeycloakInstance, errorCheckingFunction, errorType: string }> = props => {
+const InstanceStatus: React.FunctionComponent<{ instance: IServiceInstanceModel, inventoryUrl: string, environmentId?: string, keycloak?: Keycloak.KeycloakInstance, errorCheckingFunction, errorType: string, index: number }> = props => {
   const [errorMessageDetails, setErrorMessageDetails] = useState('');
   const [noProblemsFound, setNoProblemsFound] = useState(false);
   const [stackTrace, setStackTrace] = useState('');
   const [fetchErrorMessage, setFetchErrorMessage] = useState('');
-
-  if (!fetchErrorMessage) {
+  useEffect(() => {
     props.errorCheckingFunction(props.instance, props.inventoryUrl, props.environmentId, setFetchErrorMessage, props.keycloak).then((errorDetails) => {
       if (errorDetails) {
         setErrorMessageDetails(errorDetails.errorMessage);
@@ -109,46 +110,58 @@ const InstanceStatus: React.FunctionComponent<{ instance: IServiceInstanceModel,
         setNoProblemsFound(true);
       }
     });
-  }
+  }, [props.instance, props.errorType]);
+
   if (!errorMessageDetails && !noProblemsFound && !fetchErrorMessage) {
     return <Spinner size="md" />;
   }
-  let formattedErrorMessageDetails = <Fragment/>;
-  if (errorMessageDetails && isValidJson(errorMessageDetails)) {
-    const parsedErrorMessageDetails = JSON.parse(errorMessageDetails);
+
+
+  return <StatusCard errorType={props.errorType} errorMessageDetails={errorMessageDetails} noProblemsFound={noProblemsFound} stackTrace={stackTrace} fetchErrorMessage={fetchErrorMessage} index={props.index} />
+}
+
+const StatusCard: React.FunctionComponent<{ errorType: string, errorMessageDetails: string, noProblemsFound: boolean, stackTrace: string, fetchErrorMessage: string, index: number }> = props => {
+  let formattedErrorMessageDetails = <Fragment />;
+  if (props.errorMessageDetails && isValidJson(props.errorMessageDetails)) {
+    const parsedErrorMessageDetails = JSON.parse(props.errorMessageDetails);
     if (parsedErrorMessageDetails.errors) {
       formattedErrorMessageDetails = parsedErrorMessageDetails.errors
         .map((errorEntry) => {
           return <div key={`${props.errorType}-details`}>
             <Text component={TextVariants.small}>The following error occured:</Text>
             < TextContent key={'message'}>
-              <Text component={TextVariants.h4}> {errorEntry.message} </Text>
+              <Text component={TextVariants.h4}> {errorEntry.message} <TimesIcon color="red" /> </Text>
               <Text>{errorEntry.type}</Text>
             </TextContent>
           </div >
         })
     }
   } else {
-    formattedErrorMessageDetails = <TextContent> <Text component={TextVariants.h4}> {errorMessageDetails}</Text></TextContent>
+    formattedErrorMessageDetails = <TextContent> <Text component={TextVariants.h4}> {props.errorMessageDetails} <TimesIcon color="red" /></Text></TextContent>
   }
 
-
   return <div id={props.errorType + "-div"}>
-    <Fragment>
-      <Text component={TextVariants.h2}>{props.errorType.split("-").join(" ")}</Text>
-      {fetchErrorMessage && <Alert id={`${props.errorType}-fetch-error`} variant='danger' title={fetchErrorMessage} />}
-      {!!errorMessageDetails && <div id={`${props.errorType}-error-message-details`} >{formattedErrorMessageDetails}</div>}
-      {(noProblemsFound && !fetchErrorMessage) && <Text id={`${props.errorType}-ok-message`} component={TextVariants.p}>No Problems found <CheckIcon color="green" /> </Text>}
-    </Fragment>
-    {!!stackTrace &&
-      <ExpandableSection toggleText={"Show Stacktrace"}>
-        <TextContent id={`${props.errorType}-stacktrace`}>
-          <Text component={TextVariants.blockquote}>
-            {stackTrace.split('\n').map((line, idx) => <Fragment key={`line-${idx}`}>{line}<br /></Fragment>)}
-          </Text>
-        </TextContent>
-      </ExpandableSection>
-    }
+    <Card>
+      <CardHeader>
+        <TextContent><Text component={TextVariants.h2}>{`${props.index}. ${props.errorType.split("-").join(" ")}`}</Text></TextContent></CardHeader>
+      <CardBody>
+        {props.fetchErrorMessage && <Alert id={`${props.errorType}-fetch-error`} variant='danger' title={props.fetchErrorMessage} />}
+        {!!props.errorMessageDetails && <div id={`${props.errorType}-error-message-details`} >{formattedErrorMessageDetails}</div>}
+        {(props.noProblemsFound && !props.fetchErrorMessage) && <Text id={`${props.errorType}-ok-message`} component={TextVariants.p}>No Problems found <CheckIcon color="green" /> </Text>}
+      </CardBody>
+
+      {!!props.stackTrace &&
+        <CardFooter>
+          <ExpandableSection toggleText={"Show Stacktrace"}>
+            <TextContent id={`${props.errorType}-stacktrace`}>
+              <Text component={TextVariants.blockquote}>
+                {props.stackTrace.split('\n').map((line, idx) => <Fragment key={`line-${idx}`}>{line}<br /></Fragment>)}
+              </Text>
+            </TextContent>
+          </ExpandableSection>
+        </CardFooter>
+      }
+    </Card>
   </div>;
 }
 
