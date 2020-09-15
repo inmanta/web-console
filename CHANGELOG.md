@@ -1,6 +1,8 @@
 # Release 1.3.1 (2020-09-17)
 
 - Upgrade to Patternfly 2020.11 (#110)
+- Show resource id on diagnose window (#112)
+- Emphasize errors on diagnose window (#113)
 
 # Release 1.3.0 (2020-09-08)
 
