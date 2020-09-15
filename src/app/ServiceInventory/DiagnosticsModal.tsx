@@ -48,7 +48,9 @@ async function getValidationFailureMessage(instance: IServiceInstanceModel, inve
   const logs = await fetchInmantaApi(requestParams);
   // Find matching report for the version
   const latestLogRecord = logs?.data.find((report) => report.version === instance.version);
-  const messageWithCompileReport = latestLogRecord?.events.find((message) => message.id_compile_report!!);
+  const messageWithCompileReport = latestLogRecord?.events
+    .sort((messageA, messageB) => new Date(messageB.timestamp).getTime() - new Date(messageA.timestamp).getTime())
+    .find((message) => message.id_compile_report!!);
   if (!messageWithCompileReport) {
     return;
   }
@@ -174,4 +176,4 @@ function isValidJson(value: string) {
   return true;
 }
 
-export { DiagnosticsModal };
+export { DiagnosticsModal, getValidationFailureMessage };
