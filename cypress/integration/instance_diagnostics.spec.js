@@ -169,4 +169,33 @@ describe('Service instance diagnostics', function () {
     cy.get("#Validation-status-error-message-details").should("not.be.visible");
     cy.get("#Validation-status-ok-message").should("be.visible");
   });
+  it('Should show validation failure on update_rejected', function () {
+    cy.route({
+      method: 'GET',
+      url: '**/lsm/v1/service_inventory/test_service',
+      response: 'fixture:lsm/diag_val_error_instance_update_rejected.json'
+    });
+    cy.route({
+      method: 'GET',
+      url: '**/lsm/v1/service_inventory/test_service/**/resources?current_version=*',
+      response: 'fixture:lsm/diag_dep_normal_resources.json'
+    });
+    cy.route({
+      method: 'GET',
+      url: '**/lsm/v1/service_inventory/test_service/3ae02d7e-eac2-4553-b87f-1359b343e986/log',
+      response: 'fixture:lsm/diag_val_error_log_update_rejected.json'
+    });
+    cy.route({
+      method: 'GET',
+      url: '**/api/v1/compilereport/1346d146-fbcf-4df4-95a1-6df375664669',
+      response: 'fixture:lsm/diag_val_error_compile_report.json'
+    });
+    cy.visit('/lsm/catalog/test_service/inventory');
+    cy.get('#nav-toggle').click();
+    cy.get('#rca-button').click();
+    cy.get("#Deployment-status-error-message-details").should("not.be.visible");
+    cy.get("#Deployment-status-ok-message").should("be.visible");
+    cy.get("#Validation-status-error-message-details").should("be.visible");
+    cy.get("#Validation-status-ok-message").should("not.be.visible");
+  });
 });

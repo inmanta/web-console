@@ -1,0 +1,104 @@
+{
+  "data": [
+    {
+      "service_instance_id": "3ae02d7e-eac2-4553-b87f-1359b343e986",
+      "environment": "d37a6d84-d569-46a6-b227-68e6d0138f77",
+      "service_entity": "test_service",
+      "version": 9,
+      "timestamp": "2020-08-28T14:14:08.476523",
+      "config": {},
+      "state": "update_rejected",
+      "candidate_attributes": {
+        "my_int": -1
+      },
+      "active_attributes": null,
+      "rollback_attributes": null,
+      "created_at": "2020-08-28T14:14:07.707806",
+      "last_updated": "2020-08-28T14:14:07.707806",
+      "callback": [],
+      "deleted": false,
+      "events": [
+        {
+          "id": "bc17e100-f6d9-4cd2-851a-552871437aa2",
+          "service_instance_id": "3ae02d7e-eac2-4553-b87f-1359b343e986",
+          "service_instance_version": 9,
+          "timestamp": "2020-09-08T18:06:04.264697",
+          "source": "update_start",
+          "destination": "update_acknowledged",
+          "message": "Validation compile request queued with id 66cf0677-6920-4f2d-b665-c5ede2bf3e38",
+          "ignored_transition": false,
+          "event_correlation_id": "05dff606-6822-4b68-a85b-177018dc33f5",
+          "severity": 20,
+          "id_compile_report": "66cf0677-6920-4f2d-b665-c5ede2bf3e38",
+          "event_type": "AUTO_TRANSITION",
+          "is_error_transition": false
+        },
+        {
+          "id": "68f9c0f7-3950-4d5b-ac7f-8af3c9ed2d79",
+          "service_instance_id": "3ae02d7e-eac2-4553-b87f-1359b343e986",
+          "service_instance_version": 9,
+          "timestamp": "2020-09-08T18:06:09.130214",
+          "source": "update_start",
+          "destination": "update_rejected",
+          "message": "compile request queued with id 1346d146-fbcf-4df4-95a1-6df375664669",
+          "ignored_transition": false,
+          "event_correlation_id": "05dff606-6822-4b68-a85b-177018dc33f5",
+          "severity": 20,
+          "id_compile_report": "1346d146-fbcf-4df4-95a1-6df375664669",
+          "event_type": "AUTO_TRANSITION",
+          "is_error_transition": true
+        }
+      ]
+    },
+    {
+      "service_instance_id": "3ae02d7e-eac2-4553-b87f-1359b343e986",
+      "environment": "d37a6d84-d569-46a6-b227-68e6d0138f77",
+      "service_entity": "test_service",
+      "version": 1,
+      "timestamp": "2020-08-28T14:14:07.708522",
+      "config": {},
+      "state": "start",
+      "candidate_attributes": {
+        "my_int": -1
+      },
+      "active_attributes": null,
+      "rollback_attributes": null,
+      "created_at": "2020-08-28T14:14:07.707806",
+      "last_updated": "2020-08-28T14:14:07.707806",
+      "callback": [],
+      "deleted": false,
+      "events": [
+        {
+          "id": "1b569319-7a0e-4cf2-892f-cabeb5916a06",
+          "service_instance_id": "3ae02d7e-eac2-4553-b87f-1359b343e986",
+          "service_instance_version": 0,
+          "timestamp": "2020-08-28T14:14:07.709574",
+          "source": null,
+          "destination": "start",
+          "message": "Creation complete",
+          "ignored_transition": false,
+          "event_correlation_id": "33ca4633-508c-40f4-9fab-e0c0bb42846b",
+          "severity": 20,
+          "id_compile_report": null,
+          "event_type": "CREATE_TRANSITION",
+          "is_error_transition": false
+        },
+        {
+          "id": "78346ee7-04eb-40c8-b075-e8dd0113c280",
+          "service_instance_id": "3ae02d7e-eac2-4553-b87f-1359b343e986",
+          "service_instance_version": 0,
+          "timestamp": "2020-08-28T14:14:07.704080",
+          "source": null,
+          "destination": "start",
+          "message": "Creation trigger received for service instance 3ae02d7e-eac2-4553-b87f-1359b343e986.",
+          "ignored_transition": false,
+          "event_correlation_id": "33ca4633-508c-40f4-9fab-e0c0bb42846b",
+          "severity": 20,
+          "id_compile_report": null,
+          "event_type": "CREATE_TRANSITION",
+          "is_error_transition": false
+        }
+      ]
+    }
+  ]
+}
