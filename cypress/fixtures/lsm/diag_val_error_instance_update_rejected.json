@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "id": "3ae02d7e-eac2-4553-b87f-1359b343e986",
+      "environment": "d37a6d84-d569-46a6-b227-68e6d0138f77",
+      "service_entity": "test_service",
+      "version": 9,
+      "config": {},
+      "state": "update_rejected",
+      "candidate_attributes": {
+        "my_int": -1
+      },
+      "active_attributes": null,
+      "rollback_attributes": null,
+      "created_at": "2020-08-28T14:14:07.707806",
+      "last_updated": "2020-08-28T14:14:07.707806",
+      "callback": [],
+      "deleted": false
+    }
+  ]
+}
