@@ -4,6 +4,7 @@
 - Show resource id on diagnose window (#112)
 - Emphasize errors on diagnose window (#113)
 - Fix for diagnosing update_rejected state (#118)
+- Fix service instance error message style and position (#122)
 
 # Release 1.3.0 (2020-09-08)
 
