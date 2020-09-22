@@ -15,7 +15,7 @@ import {
   Text,
   Title,
   TextVariants,
-  ModalVariant
+  ModalVariant, AlertGroup
 } from '@patternfly/react-core';
 import { IServiceModel } from '@app/Models/LsmModels';
 import { CatalogContent } from './CatalogContent';
@@ -93,7 +93,7 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
     setExpanded(newExpanded);
   };
   return <React.Fragment>
-    {errorMessage && <Alert variant='danger' title={errorMessage} actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
+    {errorMessage && <AlertGroup isToast={true}> <Alert variant='danger' title={errorMessage} actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} /></AlertGroup>}
     <DataList aria-label="List of service entities" className="horizontally-scrollable">{serviceItems}</DataList>
   </React.Fragment>;
 };

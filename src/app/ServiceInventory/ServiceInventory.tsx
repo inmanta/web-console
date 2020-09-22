@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PageSection, Alert, Card, CardFooter, Toolbar, ToolbarGroup, AlertActionCloseButton, ToolbarItem, ToolbarContent } from '@patternfly/react-core';
+import { PageSection, Alert, Card, CardFooter, Toolbar, ToolbarGroup, AlertActionCloseButton, ToolbarItem, ToolbarContent, AlertGroup } from '@patternfly/react-core';
 import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
 import { InventoryTable } from './InventoryTable';
@@ -41,7 +41,7 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
     <PageSection>
       {serviceEntity && <InventoryContext.Provider value={{ attributes: serviceEntity.attributes, environmentId, inventoryUrl, setErrorMessage: setInstanceErrorMessage, refresh: refreshInstances }} >
         {errorMessage && <Alert variant='danger' title={errorMessage} actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
-        {instanceErrorMessage && <Alert variant='danger' title={instanceErrorMessage} actionClose={<AlertActionCloseButton onClose={() => setInstanceErrorMessage('')} />} />}
+        {instanceErrorMessage && <AlertGroup isToast={true}> <Alert variant='danger' title={instanceErrorMessage} actionClose={<AlertActionCloseButton data-cy="close-alert" onClose={() => setInstanceErrorMessage('')} />} /> </AlertGroup>}
         <Card className={"horizontally-scrollable"}>
           <CardFooter>
             <Toolbar>
