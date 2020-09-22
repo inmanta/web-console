@@ -43,4 +43,17 @@ describe('Service inventory', function () {
     cy.contains("button", "Add instance").click();
     cy.get('#readonly').should('not.exist');
   });
+  it('Should show error message when deleting is not allowed', function () {
+    cy.route({
+      method: 'DELETE',
+      url: '**/lsm/v1/service_inventory/e2e_service/78ac51dd-ee5b-4e22-9bf0-54bce9664b4e?current_version=3',
+      response: {"message":"Invalid request: Cannot delete service instance 78ac51dd-ee5b-4e22-9bf0-54bce9664b4e"},
+      status: 400
+    });
+    cy.visit('/lsm/catalog/e2e_service/inventory');
+    cy.contains("button", "Delete").click();
+    cy.contains("button", "Yes").click();
+    cy.get('.pf-c-alert.pf-m-danger').should('contain.text', "Bad Request");
+    cy.get('[data-cy=close-alert]').click().should('not.exist');
+  });
 });

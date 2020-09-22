@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PageSection, Alert } from '@patternfly/react-core';
+import { PageSection, Alert, AlertGroup } from '@patternfly/react-core';
 import { CatalogDataList } from './CatalogDataList';
 import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
@@ -18,14 +18,14 @@ const ServiceCatalog: React.FunctionComponent<any> = props => {
   const shouldUseAuth = process.env.SHOULD_USE_AUTH === 'true' || (globalThis && globalThis.auth);
   const dispatchDelete = (data) => {
     const urlParts = data.urlEndpoint.split("/");
-    const serviceName = urlParts[urlParts.length -1];
+    const serviceName = urlParts[urlParts.length - 1];
     storeDispatch.projects.services.removeSingleService(serviceName);
   };
   let keycloak;
   if (shouldUseAuth) {
     // The value will be always true or always false during one session
     // tslint:disable:react-hooks-nesting
-     [keycloak, ] = useKeycloak()
+    [keycloak,] = useKeycloak()
   }
   const requestParams = { urlEndpoint: serviceCatalogUrl, dispatch, isEnvironmentIdRequired: true, environmentId, setErrorMessage, keycloak };
   React.useEffect(() => {
