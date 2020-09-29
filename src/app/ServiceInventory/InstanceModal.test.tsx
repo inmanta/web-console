@@ -2,7 +2,6 @@ import { InstanceModal, ButtonType, getEditableAttributes, getNotReadonlyAttribu
 import React from "react";
 import { mount } from "enzyme";
 import { InventoryContext } from "./ServiceInventory";
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
 
 describe('Instance Modal ', () => {
   const attributes = [
