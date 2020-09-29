@@ -6,6 +6,7 @@ import { PlusIcon, EditIcon, TrashAltIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./ServiceInventory";
 import { IServiceInstanceModel, IAttributeModel } from "@app/Models/LsmModels";
 import { DeleteForm } from "./DeleteForm";
+import _ from "lodash";
 
 const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceName: string, instance?: IServiceInstanceModel, keycloak?: Keycloak.KeycloakInstance }> = props => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +43,7 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
             let formAttributes = attributes;
             if (props.instance) {
               urlWithParams = `${inventoryUrl}/${props.instance.id}?current_version=${props.instance.version}`;
-              currentAttributes = props.instance.active_attributes;
+              currentAttributes = getCurrentAttributes(props.instance);
               formAttributes = getEditableAttributes(attributes);
             } else {
               formAttributes = getNotReadonlyAttributes(attributes);
@@ -72,5 +73,8 @@ function getEditableAttributes(attributes: IAttributeModel[]) {
 function getNotReadonlyAttributes(attributes: IAttributeModel[]) {
   return attributes.filter((attribute) => attribute.modifier !== "r");
 }
+function getCurrentAttributes(instance: IServiceInstanceModel) {
+  return (instance.candidate_attributes && !_.isEmpty(instance.candidate_attributes)) ? instance.candidate_attributes : instance.active_attributes;
+}
 
-export { InstanceModal, ButtonType, getEditableAttributes, getNotReadonlyAttributes };
+export { InstanceModal, ButtonType, getEditableAttributes, getNotReadonlyAttributes, getCurrentAttributes };
