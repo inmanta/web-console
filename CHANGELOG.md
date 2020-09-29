@@ -8,6 +8,7 @@
 - Emphasize errors on diagnose window (#113)
 - Fix for diagnosing update_rejected state (#118)
 - Fix service instance error message style and position (#122)
+- Fix error when updating an instance in rejected state (#128)
 
 # Release 1.3.0 (2020-09-08)
 

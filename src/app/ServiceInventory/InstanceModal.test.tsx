@@ -1,4 +1,4 @@
-import { InstanceModal, ButtonType, getEditableAttributes, getNotReadonlyAttributes } from "./InstanceModal";
+import { InstanceModal, ButtonType, getEditableAttributes, getNotReadonlyAttributes, getCurrentAttributes } from "./InstanceModal";
 import React from "react";
 import { mount } from "enzyme";
 import { InventoryContext } from "./ServiceInventory";
@@ -50,7 +50,7 @@ describe('Instance Modal ', () => {
 
   it('Prepares edit instance form', () => {
     const wrapper = mount(
-      <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage:dummyFunction, refresh: dummyFunction }}>
+      <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage: dummyFunction, refresh: dummyFunction }}>
         <InstanceModal buttonType={ButtonType.edit} serviceName="test_service" instance={serviceInstanceModel} />
       </InventoryContext.Provider>);
     const button = wrapper.find('button');
@@ -77,10 +77,62 @@ describe('Instance Modal ', () => {
   it('Filters editable attributes', () => {
     const editable = getEditableAttributes(attributes);
     expect(editable).toHaveLength(1);
-  })
+  });
   it('Filters not-readonly attributes', () => {
     const editable = getNotReadonlyAttributes(attributes);
     expect(editable).toHaveLength(2);
-  })
+  });
+  it('Chooses current attributes correctly', () => {
+    // serviceInstanceModel has an empty candidate_attributes set
+    const attributeServiceInstanceModel = Object.assign(serviceInstanceModel);
+    let currentAttributes = getCurrentAttributes(attributeServiceInstanceModel);
+    expect(currentAttributes).toEqual({ name: "attribute1" });
+
+    attributeServiceInstanceModel.candidate_attributes = undefined;
+    currentAttributes = getCurrentAttributes(attributeServiceInstanceModel);
+    expect(currentAttributes).toEqual({ name: "attribute1" });
+
+    attributeServiceInstanceModel.candidate_attributes = { name: "attribute2" }
+    currentAttributes = getCurrentAttributes(attributeServiceInstanceModel);
+    expect(currentAttributes).toEqual({ name: "attribute2" });
+  });
+  describe('Edit form', () => {
+    const attributeServiceInstanceModel = {
+      active_attributes: { name: "attribute1" },
+      callback: [],
+      candidate_attributes: {},
+      deleted: false,
+      environment: "envId1",
+      id: "instance1",
+      last_updated: "",
+      rollback_attributes: {},
+      service_entity: "test_service",
+      state: "up",
+      version: 3,
+    };
+    it('Provides correct default values when there are no candidate attributes', () => {
+      const wrapper = mount(
+        <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage: dummyFunction, refresh: dummyFunction }}>
+          <InstanceModal buttonType={ButtonType.edit} serviceName="test_service" instance={attributeServiceInstanceModel} />
+        </InventoryContext.Provider>);
+      const button = wrapper.find('button');
+      button.simulate('click');
+      const attributeField = wrapper.find("#name").hostNodes();
+      expect(attributeField.prop("value")).toEqual("attribute1");
+    });
+    it('Provides correct default values when there are candidate attributes', () => {
+      attributeServiceInstanceModel.candidate_attributes = { name: "candidate" };
+      const wrapper = mount(
+        <InventoryContext.Provider value={{ attributes, environmentId: "envId1", "inventoryUrl": 'api/endpoint', setErrorMessage: dummyFunction, refresh: dummyFunction }}>
+          <InstanceModal buttonType={ButtonType.edit} serviceName="test_service" instance={attributeServiceInstanceModel} />
+        </InventoryContext.Provider>);
+      const button = wrapper.find('button');
+      button.simulate('click');
+      const attributeField = wrapper.find("#name").hostNodes();
+      expect(attributeField.prop("value")).toEqual("candidate");
+    });
+
+  });
+
 
 });
