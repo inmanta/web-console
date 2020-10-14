@@ -17,7 +17,8 @@
     "clean": "rimraf dist",
     "delete:reports": "rm -r cypress/reports/* || true",
     "precypress-test": "yarn run delete:reports",
-    "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'cypress run'"
+    "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'cypress run'",
+    "package-cleanup": "node clean_up_packages"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
