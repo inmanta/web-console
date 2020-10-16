@@ -24,12 +24,16 @@ fetch("https://api.github.com/graphql", {
       .map((devPackageVersion) => { return { id: devPackageVersion.id, version: devPackageVersion.version, updatedAt: devPackageVersion.files.nodes[0].updatedAt } });
 
     // Take the versions that are older than 30 days
-    const oldDevVersions = devVersionsWithDate
+    let oldDevVersions = devVersionsWithDate
       .filter((devPackageVersion) =>
         Math.floor((new Date() - new Date(devPackageVersion.updatedAt)) / (1000 * 60 * 60 * 24)) > 30);
     if (oldDevVersions.length == 0) {
       console.log("No old versions found matching the criteria");
       return;
+    }
+    // Make sure we're not starting too many requests at once
+    if (oldDevVersions.length > 5) {
+      oldDevVersions = oldDevVersions.slice(0, 5);
     }
     oldDevVersions.map((oldDevVersion) => {
       const idToDelete = oldDevVersion.id;
