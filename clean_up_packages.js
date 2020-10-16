@@ -5,7 +5,7 @@ fetch("https://api.github.com/graphql", {
   headers: { "Authorization": `bearer ${process.env.GITHUB_TOKEN}` }, method: 'POST', body:
     JSON.stringify({
       query:
-        `{repository(owner:"inmanta",name:"web-console"){packages(first:1){nodes{packageType,name,id,versions(last:30){nodes{id,version,files(first:1){nodes{name, updatedAt}}}}}}}}`
+        `{repository(owner:"inmanta",name:"web-console"){packages(first:1){nodes{packageType,name,id,versions(last:30, orderBy:{field:CREATED_AT, direction:DESC}){nodes{id,version,files(first:1){nodes{name, updatedAt}}}}}}}}`
     })
 }, (error) => console.log(error)
 ).then((result) => result.json())
