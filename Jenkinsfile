@@ -17,8 +17,7 @@ pipeline {
                 deleteDir()
                 dir('web-console'){
                     checkout scm
-                    sh ''' rm -rf node_modules/
-                    yarn install --frozen-lockfile;
+                    sh '''yarn install --frozen-lockfile;
                     yarn lint;
                     yarn build;
                     yarn test'''
