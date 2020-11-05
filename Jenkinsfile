@@ -15,12 +15,10 @@ pipeline {
         stage('Build & Unit Test') {
             steps {
                 deleteDir()
-                dir('web-console/node_modules') {
-                    deleteDir()
-                }
                 dir('web-console'){
                     checkout scm
-                    sh '''yarn install --frozen-lockfile;
+                    sh ''' rm -rf node_modules/
+                    yarn install --frozen-lockfile;
                     yarn lint;
                     yarn build;
                     yarn test'''
