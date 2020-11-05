@@ -19,8 +19,12 @@ module.exports = merge(common, {
     compress: true,
     inline: true,
     historyApiFallback: true,
+    hot: true,
     overlay: true,
-    open: true
+    open: true,
+    watchOptions: {
+      ignored: /node_modules/
+    }
   },
   plugins: [
     new Dotenv(),
