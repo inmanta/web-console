@@ -4,6 +4,7 @@ pipeline {
     options{
         disableConcurrentBuilds()
         checkoutToSubdirectory('web-console')
+        skipDefaultCheckout()
     }
     triggers{
         pollSCM('* * * * *')
@@ -13,7 +14,9 @@ pipeline {
     stages {
         stage('Build & Unit Test') {
             steps {
+                deleteDir()
                 dir('web-console'){
+                    checkout scm
                     sh '''yarn;
                     yarn lint;
                     yarn build;
