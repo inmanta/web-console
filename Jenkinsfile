@@ -15,7 +15,7 @@ pipeline {
         stage('Build & Unit Test') {
             steps {
                 deleteDir()
-                dir('webconsole/node_modules') {
+                dir('web-console/node_modules') {
                     deleteDir()
                 }
                 dir('web-console'){
