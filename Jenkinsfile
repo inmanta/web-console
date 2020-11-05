@@ -15,6 +15,9 @@ pipeline {
         stage('Build & Unit Test') {
             steps {
                 deleteDir()
+                dir('webconsole/node_modules') {
+                    deleteDir()
+                }
                 dir('web-console'){
                     checkout scm
                     sh '''yarn install --frozen-lockfile;
