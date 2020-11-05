@@ -13,6 +13,7 @@ pipeline {
     stages {
         stage('Build & Unit Test') {
             steps {
+                deleteDir()
                 dir('web-console'){
                     sh '''yarn;
                     yarn lint;
