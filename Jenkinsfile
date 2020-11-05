@@ -13,7 +13,6 @@ pipeline {
     stages {
         stage('Build & Unit Test') {
             steps {
-                deleteDir()
                 dir('web-console'){
                     sh '''yarn;
                     yarn lint;
@@ -36,7 +35,7 @@ pipeline {
         always {
             junit 'web-console/junit.xml'
             cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
-            junit 'web-console/cypress/reports/cypress-report.xml'
+            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml', allowEmptyArchive: true, onlyIfSuccessful: false
             archiveArtifacts artifacts: 'web-console/cypress/screenshots/*', allowEmptyArchive: true, onlyIfSuccessful: false
         }
     }
