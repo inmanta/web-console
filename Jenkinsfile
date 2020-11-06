@@ -4,6 +4,7 @@ pipeline {
     options{
         disableConcurrentBuilds()
         checkoutToSubdirectory('web-console')
+        skipDefaultCheckout()
     }
     triggers{
         pollSCM('* * * * *')
@@ -13,8 +14,10 @@ pipeline {
     stages {
         stage('Build & Unit Test') {
             steps {
+                deleteDir()
                 dir('web-console'){
-                    sh '''yarn;
+                    checkout scm
+                    sh '''yarn install --frozen-lockfile;
                     yarn lint;
                     yarn build;
                     yarn test'''
@@ -35,7 +38,7 @@ pipeline {
         always {
             junit 'web-console/junit.xml'
             cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
-            junit 'web-console/cypress/reports/cypress-report.xml'
+            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml', allowEmptyArchive: true, onlyIfSuccessful: false
             archiveArtifacts artifacts: 'web-console/cypress/screenshots/*', allowEmptyArchive: true, onlyIfSuccessful: false
         }
     }
