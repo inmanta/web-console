@@ -2,7 +2,7 @@ import { Form, ActionGroup, Button, Alert } from "@patternfly/react-core"
 import React, { useState } from "react"
 import { IAttributeModel, IInstanceAttributeModel } from "@app/Models/LsmModels";
 import { IRequestParams, fetchInmantaApi } from "@app/utils/fetchInmantaApi";
-import { InstanceFormInput } from "./InstanceFormInput";
+import { InstanceFormInput, isNumberType } from "./InstanceFormInput";
 import _ from "lodash";
 
 const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[], requestParams: IRequestParams, closeModal?: () => void, originalAttributes?: IInstanceAttributeModel, update?: boolean }> = props => {
@@ -11,12 +11,7 @@ const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[]
   const handleInputChange = (value, event) => {
     const changedAttributeName = event.target.id;
     const changedAttribute = {};
-    const attribute = props.attributeModels.find((attributeModel) => attributeModel.name === changedAttributeName);
-    if (attribute && ["double", "float", "int", "integer", "number"].includes(attribute.type)) {
-      changedAttribute[changedAttributeName] = Number(value);
-    } else {
-      changedAttribute[changedAttributeName] = value;
-    }
+    changedAttribute[changedAttributeName] = value;
     const updatedValue = { ...attributes, ...changedAttribute };
     setAttributes(updatedValue);
   };
@@ -70,7 +65,9 @@ function ensureAttributeType(attributeModels: IAttributeModel[], attributeName: 
   const attribute = attributeModels.find((attributeModel) => attributeModel.name === attributeName);
   let parsedValue = value;
   try {
-    if (attribute && ["double", "float", "int", "integer", "number"].includes(attribute.type)) {
+    if (attribute && attribute.type.includes("?") && value === "") {
+      parsedValue = null;
+    } else if (attribute && isNumberType(attribute.type)) {
       parsedValue = Number(value);
     } else if (attribute && attribute.type.includes("[]")) {
       const parts = value.split(",").map((piece) => piece.trim());
@@ -104,8 +101,10 @@ async function submitUpdate(requestParams: IRequestParams, attributeValue: IInst
 
 async function submitCreate(requestParams: IRequestParams, attributes: IInstanceAttributeModel, attributeModels: IAttributeModel[]) {
   requestParams.method = "POST";
-  const parsedAttributes = parseAttributes(attributes, attributeModels)
-  requestParams.data = { attributes: parsedAttributes };
+  const parsedAttributes = parseAttributes(attributes, attributeModels);
+  // Don't set optional attributes explicitly to null on creation
+  const attributesWithoutNulls = Object.entries(parsedAttributes).reduce((obj, [k, v]) => (v === null ? obj : (obj[k] = v, obj)), {});
+  requestParams.data = { attributes: attributesWithoutNulls };
   await fetchInmantaApi(requestParams);
 }
 
@@ -113,7 +112,9 @@ function getChangedAttributesOnly(attributesAfterChanges: IInstanceAttributeMode
   if (!originalAttributes) {
     return attributesAfterChanges;
   };
+  // Don't include changes from undefined to null, but allow setting a value explicitly to null
   const changedAttributeNames = Object.keys(attributesAfterChanges).filter((attributeName) =>
+    !(originalAttributes[attributeName] === undefined && attributesAfterChanges[attributeName] === null) &&
     !_.isEqual(attributesAfterChanges[attributeName], originalAttributes[attributeName])
   );
   const updatedAttributes = {};
