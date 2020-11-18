@@ -65,7 +65,7 @@ export interface IServiceDictState {
 }
 
 export interface IInstanceAttributeModel {
-  [Key: string]: string | string[] | boolean | number;
+  [Key: string]: string | string[] | boolean | number | null;
 }
 
 export interface IServiceInstanceModel extends IObjectWithId {

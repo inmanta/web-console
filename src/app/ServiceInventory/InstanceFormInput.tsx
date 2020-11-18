@@ -9,9 +9,9 @@ const InstanceFormInput: React.FunctionComponent<{ attributeModels: IAttributeMo
   const attributeWithMatchingName = attributeModels.find(({ name }) => name === attributeName);
   if (attributeWithMatchingName) {
     const description = getDescription(attributeModels, attributeName);
-    if (attributeWithMatchingName.type === "bool") {
+    if (attributeWithMatchingName.type.toLowerCase().includes("bool")) {
       return (
-        <FormGroup fieldId={attributeWithMatchingName.name} key={attributeName}>
+        <FormGroup fieldId={attributeWithMatchingName.name} key={attributeName} label={attributeName}>
           <Checkbox id={attributeWithMatchingName.name} label={description} isChecked={!!attributes[attributeName]} onChange={handleInputChange} />
         </FormGroup>);
     } else {
@@ -44,7 +44,7 @@ function getDescription(attributes: IAttributeModel[], name: string): string {
 }
 
 function matchTextInputWithPatternflyInput(attributeName: string, type: string) {
-  if (["double", "float", "int", "integer", "number"].includes(type)) {
+  if (isNumberType(type)) {
     return TextInputTypes.number;
   }
   const pfInputTypeNames = Object.keys(TextInputTypes);
@@ -56,4 +56,8 @@ function matchTextInputWithPatternflyInput(attributeName: string, type: string) 
   return TextInputTypes.text;
 }
 
-export { InstanceFormInput };
+function isNumberType(type: string): boolean {
+ return ["double", "float", "int", "integer", "number"].filter((numberLike) => type.includes(numberLike)).length > 0;
+}
+
+export { InstanceFormInput, isNumberType };
