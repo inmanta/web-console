@@ -94,7 +94,7 @@ export const CatalogDataList: React.FunctionComponent<{ services?: IServiceModel
   };
   return <React.Fragment>
     {errorMessage && <AlertGroup isToast={true}> <Alert variant='danger' title={errorMessage} actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} /></AlertGroup>}
-    <DataList aria-label="List of service entities" className="horizontally-scrollable">{serviceItems}</DataList>
+    <DataList aria-label="List of service entities" >{serviceItems}</DataList>
   </React.Fragment>;
 };
 
