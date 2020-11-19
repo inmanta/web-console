@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PageSection, Alert, AlertGroup } from '@patternfly/react-core';
+import { PageSection, Alert } from '@patternfly/react-core';
 import { CatalogDataList } from './CatalogDataList';
 import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
 import { IStoreModel } from '@app/Models/CoreModels';
@@ -34,7 +34,7 @@ const ServiceCatalog: React.FunctionComponent<any> = props => {
   useInterval(async () => await fetchInmantaApi(requestParams), 5000);
 
   return (
-    <PageSection>
+    <PageSection className="horizontally-scrollable">
       {errorMessage && <Alert variant='danger' title={errorMessage} />}
       <CatalogDataList services={servicesOfEnvironment} environmentId={environmentId} serviceCatalogUrl={serviceCatalogUrl} keycloak={keycloak} dispatch={dispatchDelete} />
     </PageSection>

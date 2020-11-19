@@ -38,20 +38,20 @@ const ServiceInventory: React.FunctionComponent<any> = props => {
   const serviceEntity = projectStore.services.byId[serviceName];
   const refreshInstances = async () => fetchInmantaApi(requestParams);
   return (
-    <PageSection>
+    <PageSection className={"horizontally-scrollable"}>
       {serviceEntity && <InventoryContext.Provider value={{ attributes: serviceEntity.attributes, environmentId, inventoryUrl, setErrorMessage: setInstanceErrorMessage, refresh: refreshInstances }} >
         {errorMessage && <Alert variant='danger' title={errorMessage} actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')} />} />}
         {instanceErrorMessage && <AlertGroup isToast={true}> <Alert variant='danger' title={instanceErrorMessage} actionClose={<AlertActionCloseButton data-cy="close-alert" onClose={() => setInstanceErrorMessage('')} />} /> </AlertGroup>}
-        <Card className={"horizontally-scrollable"}>
+        <Card className={"card-wrapper"}>
           <CardFooter>
             <Toolbar>
               <ToolbarContent>
-              <ToolbarGroup><ToolbarItem> Showing instances of {serviceName}</ToolbarItem> </ToolbarGroup>
-              <ToolbarGroup>
-                <ToolbarItem>
-                <InstanceModal buttonType={ButtonType.add} serviceName={serviceEntity.name} keycloak={keycloak} />
-                </ToolbarItem>
-              </ToolbarGroup>
+                <ToolbarGroup><ToolbarItem> Showing instances of {serviceName}</ToolbarItem> </ToolbarGroup>
+                <ToolbarGroup>
+                  <ToolbarItem>
+                    <InstanceModal buttonType={ButtonType.add} serviceName={serviceEntity.name} keycloak={keycloak} />
+                  </ToolbarItem>
+                </ToolbarGroup>
               </ToolbarContent>
             </Toolbar>
           </CardFooter>
