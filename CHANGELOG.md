@@ -1,4 +1,7 @@
-# Release 1.4.0 (?)
+# Release 1.5.0 (?)
+
+
+# Release 1.4.0 (2020-12-17)
 
 - Upgrade to Patternfly 2020.11 (#110)
 - Show resource id on diagnose window (#112)
