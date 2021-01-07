@@ -1,4 +1,17 @@
-# web-console
+# Inmanta web console
+
+This project is the current frontend of for the inmanta service orchestrator. The eventual goal is to replace the current dashboard entirely.
+
+The console is developed in typescript using react and redux (through [easy peasy](https://easy-peasy.now.sh/)). Testing is performed using cypress.
+
+## UX Guideliness
+
+The frontend uses the (patternfly v4 framework)[https://www.patternfly.org/v4/] for its UI components. The choice of the framework is motived by:
+
+- Use by many (mostly RedHat backed) infra products (Cockpit, Openstack, Openshift, Keycloack, ...) The advantage of this is that the scope of the component is similar and the design will have some familiarity.
+- There are extensive UX guideliness included with the project both in general and per component.
+
+## Development setup
 
     yarn # install dependencies
 
@@ -10,7 +23,7 @@
 
     yarn lint # Run the linter
 
-    yarn format # Run the code formatter 
+    yarn format # Run the code formatter
 
     yarn bundle-profile:analyze # Launch a tool to inspect the bundle size
 
