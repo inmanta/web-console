@@ -94,7 +94,7 @@
     "@patternfly/react-table": "^4.16.7",
     "@patternfly/react-tokens": "^4.9.6",
     "dotenv-webpack": "^1.7.0",
-    "easy-peasy": "^3.1.0",
+    "easy-peasy": "^4.0.1",
     "keycloak-js": "6.0.1",
     "lodash": "^4.17.19",
     "moment": "^2.24.0",
