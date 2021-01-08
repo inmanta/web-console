@@ -10,19 +10,19 @@ describe('Navigation', () => {
     keycloak = Keycloak();
   });
 
-  it('should render nav groups', () => {
+  it('should render nav groups', async () => {
     const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
     const nav = wrapper.find('#nav-primary-simple');
-    wait();
+    await wait();
     expect(nav.find('.pf-c-nav__section-title')).toHaveLength(2);
   });
 
-  it('should navigate when clicking on link', () => {
+  it('should navigate when clicking on link', async () => {
     const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
     const nav = wrapper.find('#nav-primary-simple');
     const serviceCatalogEntry = nav.find('.pf-c-nav__link').first();
     serviceCatalogEntry.simulate('click');
-    wait();
+    await wait();
     expect(serviceCatalogEntry.getElement().props.activeClassName).toEqual('pf-m-current');
   });
 });

@@ -12,19 +12,19 @@ describe('App tests', () => {
     keycloak = Keycloak();
   });
 
-  it('should render a nav-toggle button', () => {
+  it('should render a nav-toggle button', async () => {
     const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
     const button = wrapper.find(Button);
-    wait();
+    await wait();
     expect(button.exists()).toBe(true);
   });
 
-  it('should hide the sidebar when clicking the nav-toggle button', () => {
+  it('should hide the sidebar when clicking the nav-toggle button', async () => {
     const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
     const button = wrapper.find('#nav-toggle').hostNodes();
     expect(wrapper.find('#page-sidebar').hasClass('pf-m-expanded'));
     button.simulate('click');
-    wait();
+    await wait();
     expect(wrapper.find('#page-sidebar').hasClass('pf-m-collapsed'));
   });
 });
