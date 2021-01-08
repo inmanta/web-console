@@ -5,8 +5,6 @@ import { Button } from '@patternfly/react-core';
 import Keycloak from 'keycloak-js';
 import { wait } from '@testing-library/react';
 
-
-
 describe('App tests', () => {
   fetchMock.mockResponse(JSON.stringify({}));
   let keycloak: Keycloak.KeycloakInstance;
