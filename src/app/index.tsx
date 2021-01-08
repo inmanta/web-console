@@ -13,23 +13,35 @@ import { Alert, Spinner, AlertActionCloseButton, Bullseye } from '@patternfly/re
 const keycloakInitConfig = { onLoad: 'login-required', flow: 'implicit' } as KeycloakInitOptions;
 const storeInstance = createStore<IStoreModel>(storeModel);
 
-const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance, shouldUseAuth: boolean }> = props => {
+const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance; shouldUseAuth: boolean }> = props => {
   const [errorMessage, setErrorMessage] = React.useState('');
   const shouldAddBaseName = process.env.NODE_ENV === 'production';
 
   const AppWithStore = (
     <StoreProvider store={storeInstance}>
-      <Router basename={shouldAddBaseName ? "/console" : "/"}>
-        <AppLayout keycloak={props.shouldUseAuth ? props.keycloak : undefined} setErrorMessage={setErrorMessage} shouldUseAuth={props.shouldUseAuth}>
-          {errorMessage && <Alert variant='danger' title={errorMessage} actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')}/>}/>}
+      <Router basename={shouldAddBaseName ? '/console' : '/'}>
+        <AppLayout
+          keycloak={props.shouldUseAuth ? props.keycloak : undefined}
+          setErrorMessage={setErrorMessage}
+          shouldUseAuth={props.shouldUseAuth}
+        >
+          {errorMessage && (
+            <Alert
+              variant="danger"
+              title={errorMessage}
+              actionClose={<AlertActionCloseButton onClose={() => setErrorMessage('')} />}
+            />
+          )}
           <AppRoutes />
         </AppLayout>
       </Router>
     </StoreProvider>
   );
-  const LoadingSpinner = () => <Bullseye>
-    <Spinner size="xl"/>
-  </Bullseye>;
+  const LoadingSpinner = () => (
+    <Bullseye>
+      <Spinner size="xl" />
+    </Bullseye>
+  );
 
   if (props.shouldUseAuth) {
     return (

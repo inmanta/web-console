@@ -9,7 +9,6 @@ import { ServiceInventory } from './ServiceInventory/ServiceInventory';
 
 let routeFocusTimer: number;
 
-
 export interface IAppRoute {
   label?: string;
   component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
@@ -22,37 +21,36 @@ export interface IAppRoute {
 }
 
 export interface IAppRouteGroup {
-  name: string,
-  pathPrefix: string,
-  exactRoutes: IAppRoute[]
+  name: string;
+  pathPrefix: string;
+  exactRoutes: IAppRoute[];
 }
 
-const routes: IAppRouteGroup[] =
-  [
-    {
-      exactRoutes: [
-        {
-          component: ServiceCatalog,
-          exact: true,
-          icon: null,
-          label: 'Service Catalog',
-          path: '/catalog',
-          title: 'Service Catalog'
-        },
-        {
-          component: ServiceInventory,
-          exact: true,
-          hideOnSideBar: true,
-          icon: null,
-          label: 'Service Inventory',
-          path: '/catalog/:id/inventory',
-          title: 'Service Inventory',
-        }
-      ],
-      name: 'Lifecycle service management',
-      pathPrefix: '/lsm',
-    },
-  ];
+const routes: IAppRouteGroup[] = [
+  {
+    exactRoutes: [
+      {
+        component: ServiceCatalog,
+        exact: true,
+        icon: null,
+        label: 'Service Catalog',
+        path: '/catalog',
+        title: 'Service Catalog'
+      },
+      {
+        component: ServiceInventory,
+        exact: true,
+        hideOnSideBar: true,
+        icon: null,
+        label: 'Service Inventory',
+        path: '/catalog/:id/inventory',
+        title: 'Service Inventory'
+      }
+    ],
+    name: 'Lifecycle service management',
+    pathPrefix: '/lsm'
+  }
+];
 
 // a custom hook for sending focus to the primary content container
 // after a view has loaded so that subsequent press of tab key
@@ -67,21 +65,14 @@ const useA11yRouteChange = (isAsync: boolean) => {
       clearTimeout(routeFocusTimer);
     };
   }, [isAsync, lastNavigation]);
-}
+};
 
-const RouteWithTitleUpdates = ({
-  component: Component,
-  isAsync = false,
-  title,
-  ...rest
-}: IAppRoute) => {
+const RouteWithTitleUpdates = ({ component: Component, isAsync = false, title, ...rest }: IAppRoute) => {
   useA11yRouteChange(isAsync);
   useDocumentTitle(title);
 
   function routeWithTitle(routeProps: RouteComponentProps) {
-    return (
-      <Component {...rest} {...routeProps} />
-    );
+    return <Component {...rest} {...routeProps} />;
   }
 
   return <Route path={rest.path} exact={rest.exact} render={routeWithTitle} />;
@@ -90,12 +81,12 @@ const RouteWithTitleUpdates = ({
 const PageNotFound = ({ title }: { title: string }) => {
   useDocumentTitle(title);
   return <Route component={NotFound} />;
-}
+};
 
 const AppRoutes = () => (
   <LastLocationProvider>
     <Switch>
-      {routes.map((routeItem) => {
+      {routes.map(routeItem => {
         return routeItem.exactRoutes.map(({ path, exact, component, title, isAsync, icon }, idx) => (
           <RouteWithTitleUpdates
             path={routeItem.pathPrefix + path}
@@ -106,10 +97,9 @@ const AppRoutes = () => (
             title={title}
             isAsync={isAsync}
           />
-        ))
-      })
-      }
-      <Route exact={true} path='/' component={() => <Redirect to="/lsm/catalog" />} />
+        ));
+      })}
+      <Route exact={true} path="/" component={() => <Redirect to="/lsm/catalog" />} />
       <PageNotFound title={'404 Page Not Found'} />
     </Switch>
   </LastLocationProvider>

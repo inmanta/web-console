@@ -18,13 +18,11 @@ describe('Navigation', () => {
   });
 
   it('should navigate when clicking on link', () => {
-    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false}/>);
+    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
     const nav = wrapper.find('#nav-primary-simple');
     const serviceCatalogEntry = nav.find('.pf-c-nav__link').first();
     serviceCatalogEntry.simulate('click');
     wait();
-    expect(serviceCatalogEntry.getElement().props.activeClassName)
-      .toEqual('pf-m-current');
+    expect(serviceCatalogEntry.getElement().props.activeClassName).toEqual('pf-m-current');
   });
-
 });
