@@ -13,7 +13,7 @@ import { Alert, Spinner, AlertActionCloseButton, Bullseye } from '@patternfly/re
 const keycloakInitConfig = { onLoad: 'login-required', flow: 'implicit' } as KeycloakInitOptions;
 const storeInstance = createStore<IStoreModel>(storeModel);
 
-const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance; shouldUseAuth: boolean }> = props => {
+const App: React.FunctionComponent<{ keycloak: Keycloak.KeycloakInstance; shouldUseAuth: boolean }> = (props) => {
   const [errorMessage, setErrorMessage] = React.useState('');
   const shouldAddBaseName = process.env.NODE_ENV === 'production';
 

@@ -9,7 +9,7 @@ interface IDynamicImport {
 
 class DynamicImport extends React.Component<IDynamicImport> {
   public state = {
-    component: null
+    component: null,
   };
   private routeFocusTimer: number;
   constructor(props: IDynamicImport) {
@@ -22,10 +22,10 @@ class DynamicImport extends React.Component<IDynamicImport> {
   public componentDidMount() {
     this.props
       .load()
-      .then(component => {
+      .then((component) => {
         if (component) {
           this.setState({
-            component: component.default ? component.default : component
+            component: component.default ? component.default : component,
           });
         }
       })
