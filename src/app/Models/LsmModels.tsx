@@ -10,7 +10,7 @@ export interface IAttributeModel {
   default_value?: string;
   default_value_set: boolean;
   validation_type?: string;
-  validation_parameters?: object;
+  validation_parameters?: Record<string, unknown>;
 }
 
 export interface IStateModel {

@@ -26,7 +26,7 @@ describe("Backend data fetching function", () => {
     });
     it("Should call dispatch function", async () => {
       let counter = 0;
-      const dispatch = (data) => (counter += 1);
+      const dispatch = () => (counter += 1);
       const requestParams: IRequestParams = {
         ...defaultRequestParams,
         dispatch,
@@ -36,7 +36,7 @@ describe("Backend data fetching function", () => {
     });
     it("Should call dispatch function with POST method", async () => {
       let counter = 0;
-      const dispatch = (data) => (counter += 1);
+      const dispatch = () => (counter += 1);
       const requestParams: IRequestParams = {
         ...defaultRequestParams,
         dispatch,
@@ -91,7 +91,7 @@ describe("Backend data fetching function", () => {
         ...defaultRequestParams,
         isEnvironmentIdRequired: false,
       };
-      const result = await fetchInmantaApi(requestParams);
+      await fetchInmantaApi(requestParams);
       expect(fetchMock.mock.calls[0]).toHaveLength(2);
       expect(fetchMock.mock.calls[0][1].headers).toEqual({});
     });

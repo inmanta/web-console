@@ -5,7 +5,7 @@ import keycloakConf from "./app/keycloak.json";
 import Keycloak from "keycloak-js";
 
 if (process.env.NODE_ENV !== "production") {
-  // tslint:disable-next-line
+  /* eslint-disable-next-line @typescript-eslint/no-var-requires */
   const axe = require("react-axe");
   axe(React, ReactDOM, 1000);
 }

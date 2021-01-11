@@ -11,10 +11,12 @@ class SimpleBackgroundImage extends React.Component {
     xs: `${process.env.PUBLIC_PATH}images/pfbg_576.jpg`,
     xs2x: `${process.env.PUBLIC_PATH}/images/pfbg_576@2x.jpg`,
   };
-  constructor(props) {
+
+  constructor(props: Record<string, unknown>) {
     super(props);
   }
-  public render() {
+
+  public render(): JSX.Element {
     return <BackgroundImage src={this.images} alt="Background image" />;
   }
 }

@@ -48,7 +48,7 @@ describe("Instance Form Input", () => {
       default_value_set: false,
     },
   ];
-  const handleInputChange = (value, event) => {
+  const handleInputChange = () => {
     return;
   };
   it("Should render checkbox input for boolean parameters", () => {

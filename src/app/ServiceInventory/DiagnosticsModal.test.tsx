@@ -63,7 +63,6 @@ describe("getValidationFailureMessage function", () => {
         ],
       })
     );
-    const errorMessage = "A bandwidth can't be negative";
     const errorWithTrace = await getValidationFailureMessage(
       { id: "id1", version: 2 } as IServiceInstanceModel,
       "lsm",

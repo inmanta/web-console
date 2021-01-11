@@ -41,7 +41,9 @@ interface IAppLayout {
   setErrorMessage: React.Dispatch<string>;
   shouldUseAuth: boolean;
 }
-export const getEnvironmentNamesWithSeparator = (project: IProjectModel) => {
+export const getEnvironmentNamesWithSeparator = (
+  project: IProjectModel
+): IEnvironmentSelectorItem[] => {
   if (project.environments) {
     return project.environments.map((environment) => {
       const envSelectorItem: IEnvironmentSelectorItem = {
@@ -242,6 +244,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
             className="pf-c-nav__link"
             href={`/dashboard/#!/environment/${selectedEnvironmentId}`}
             target="_blank"
+            rel="noreferrer"
           >
             Dashboard
           </a>

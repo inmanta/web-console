@@ -108,8 +108,9 @@ function closeContainer(closingFunction?: () => void): void {
 function ensureAttributeType(
   attributeModels: IAttributeModel[],
   attributeName: string,
+  /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any */
   value: any
-) {
+): unknown {
   const attribute = attributeModels.find(
     (attributeModel) => attributeModel.name === attributeName
   );
@@ -184,7 +185,7 @@ async function submitCreate(
 function getChangedAttributesOnly(
   attributesAfterChanges: IInstanceAttributeModel,
   originalAttributes?: IInstanceAttributeModel
-) {
+): IInstanceAttributeModel {
   if (!originalAttributes) {
     return attributesAfterChanges;
   }

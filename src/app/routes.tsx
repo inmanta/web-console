@@ -15,8 +15,9 @@ let routeFocusTimer: number;
 export interface IAppRoute {
   label?: string;
   component:
-    | React.ComponentType<RouteComponentProps<any>>
-    | React.ComponentType<any>;
+    | React.ComponentType<RouteComponentProps<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
+    | React.ComponentType<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   icon?: any;
   exact?: boolean;
   path: string;
@@ -93,7 +94,7 @@ const PageNotFound = ({ title }: { title: string }) => {
   return <Route component={NotFound} />;
 };
 
-const AppRoutes = () => (
+const AppRoutes: React.FC = () => (
   <LastLocationProvider>
     <Switch>
       {routes.map((routeItem) => {

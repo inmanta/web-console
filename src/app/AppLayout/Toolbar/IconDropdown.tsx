@@ -6,11 +6,14 @@ import {
 } from "@patternfly/react-core";
 import { SVGIconProps } from "@patternfly/react-icons/dist/js/createIcon";
 
-export class IconDropdown extends React.Component<
-  { icon: ComponentClass<SVGIconProps, any>; dropdownItems: JSX.Element[] },
-  { isOpen: boolean }
-> {
-  constructor(props) {
+interface Props {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  icon: ComponentClass<SVGIconProps, any>;
+  dropdownItems: JSX.Element[];
+}
+
+export class IconDropdown extends React.Component<Props, { isOpen: boolean }> {
+  constructor(props: Props) {
     super(props);
     this.state = {
       isOpen: false,
@@ -18,7 +21,8 @@ export class IconDropdown extends React.Component<
     this.onToggle = this.onToggle.bind(this);
     this.onSelect = this.onSelect.bind(this);
   }
-  public render() {
+
+  public render(): JSX.Element {
     const { isOpen } = this.state;
     return (
       <Dropdown
@@ -42,12 +46,14 @@ export class IconDropdown extends React.Component<
       />
     );
   }
-  private onToggle(isOpen: any): void {
+
+  private onToggle(isOpen: boolean): void {
     this.setState({
       isOpen,
     });
   }
-  private onSelect(event: any): void {
+
+  private onSelect(): void {
     this.setState({
       isOpen: !this.state.isOpen,
     });
