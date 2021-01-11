@@ -1,4 +1,6 @@
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -32,4 +34,12 @@ html, body, #root {
   .card-wrapper {
     width: fit-content;
   }
+}
+
+/*
+  https://www.patternfly.org/v4/components/page#pagebreadcrumb
+  https://www.patternfly.org/v4/components/breadcrumb
+ */
+.pf-c-page {
+  --pf-c-page__main-breadcrumb--PaddingBottom: var(--pf-global--spacer--md);
 }
