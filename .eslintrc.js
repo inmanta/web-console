@@ -43,5 +43,11 @@ module.exports = {
         "react/prop-types": "off",
       },
     },
+    {
+      files: ["**/*webpack*"],
+      rules: {
+        "@typescript-eslint/no-var-requires": "off",
+      },
+    },
   ],
 };

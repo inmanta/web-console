@@ -32,7 +32,6 @@ const ServiceCatalog: React.FC = () => {
   let keycloak;
   if (shouldUseAuth) {
     // The value will be always true or always false during one session
-    // tslint:disable:react-hooks-nesting
     [keycloak] = useKeycloak();
   }
   const requestParams = {
