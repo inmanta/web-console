@@ -1,12 +1,24 @@
-import { Form, ActionGroup, Button, Alert } from "@patternfly/react-core"
-import React, { useState } from "react"
-import { IAttributeModel, IInstanceAttributeModel } from "@app/Models/LsmModels";
+import { Form, ActionGroup, Button, Alert } from "@patternfly/react-core";
+import React, { useState } from "react";
+import {
+  IAttributeModel,
+  IInstanceAttributeModel,
+} from "@app/Models/LsmModels";
 import { IRequestParams, fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 import { InstanceFormInput, isNumberType } from "./InstanceFormInput";
 import _ from "lodash";
 
-const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[], requestParams: IRequestParams, closeModal?: () => void, originalAttributes?: IInstanceAttributeModel, update?: boolean }> = props => {
-  const initialAttributes = extractInitialAttributes(props.attributeModels, props.originalAttributes);
+const InstanceForm: React.FunctionComponent<{
+  attributeModels: IAttributeModel[];
+  requestParams: IRequestParams;
+  closeModal?: () => void;
+  originalAttributes?: IInstanceAttributeModel;
+  update?: boolean;
+}> = (props) => {
+  const initialAttributes = extractInitialAttributes(
+    props.attributeModels,
+    props.originalAttributes
+  );
   const [attributes, setAttributes] = useState(initialAttributes);
   const handleInputChange = (value, event) => {
     const changedAttributeName = event.target.id;
@@ -18,35 +30,67 @@ const InstanceForm: React.FunctionComponent<{ attributeModels: IAttributeModel[]
   const submitForm = async () => {
     const requestParams: IRequestParams = props.requestParams;
     if (props.update) {
-      await submitUpdate(requestParams, attributes, props.attributeModels, props.originalAttributes);
+      await submitUpdate(
+        requestParams,
+        attributes,
+        props.attributeModels,
+        props.originalAttributes
+      );
     } else {
       await submitCreate(requestParams, attributes, props.attributeModels);
     }
     closeContainer(props.closeModal);
-  }
+  };
 
-  return <Form>
-    {Object.keys(attributes).map(
-      (attributeName) => {
-        return <InstanceFormInput key={attributeName} attributeModels={props.attributeModels} attributes={attributes} attributeName={attributeName} handleInputChange={handleInputChange} />;
+  return (
+    <Form>
+      {Object.keys(attributes).map((attributeName) => {
+        return (
+          <InstanceFormInput
+            key={attributeName}
+            attributeModels={props.attributeModels}
+            attributes={attributes}
+            attributeName={attributeName}
+            handleInputChange={handleInputChange}
+          />
+        );
       })}
-    {!Object.keys(attributes).length && <Alert variant="info" isInline={true} title="No editable attributes found" />}
-    <ActionGroup key="actions">
-      {!!Object.keys(attributes).length && <Button id="submit-button" variant="primary" onClick={submitForm}>Confirm</Button>}
-      <Button variant="secondary" id="cancel-button" onClick={() => closeContainer(props.closeModal)}>Cancel</Button>
-    </ActionGroup>
+      {!Object.keys(attributes).length && (
+        <Alert
+          variant="info"
+          isInline={true}
+          title="No editable attributes found"
+        />
+      )}
+      <ActionGroup key="actions">
+        {!!Object.keys(attributes).length && (
+          <Button id="submit-button" variant="primary" onClick={submitForm}>
+            Confirm
+          </Button>
+        )}
+        <Button
+          variant="secondary"
+          id="cancel-button"
+          onClick={() => closeContainer(props.closeModal)}
+        >
+          Cancel
+        </Button>
+      </ActionGroup>
+    </Form>
+  );
+};
 
-  </Form>;
-}
-
-function extractInitialAttributes(attributeModels: IAttributeModel[], originalAttributes?: IInstanceAttributeModel): IInstanceAttributeModel {
+function extractInitialAttributes(
+  attributeModels: IAttributeModel[],
+  originalAttributes?: IInstanceAttributeModel
+): IInstanceAttributeModel {
   return attributeModels.reduce((attributes, attribute) => {
     if (originalAttributes && originalAttributes[attribute.name]) {
       attributes[attribute.name] = originalAttributes[attribute.name];
     } else if (attribute.default_value) {
       attributes[attribute.name] = attribute.default_value;
     } else {
-      attributes[attribute.name] = '';
+      attributes[attribute.name] = "";
     }
     if (attribute.type.includes("dict") && attributes[attribute.name]) {
       attributes[attribute.name] = JSON.stringify(attributes[attribute.name]);
@@ -61,8 +105,14 @@ function closeContainer(closingFunction?: () => void): void {
   }
 }
 
-function ensureAttributeType(attributeModels: IAttributeModel[], attributeName: string, value: any) {
-  const attribute = attributeModels.find((attributeModel) => attributeModel.name === attributeName);
+function ensureAttributeType(
+  attributeModels: IAttributeModel[],
+  attributeName: string,
+  value: any
+) {
+  const attribute = attributeModels.find(
+    (attributeModel) => attributeModel.name === attributeName
+  );
   let parsedValue = value;
   try {
     if (attribute && attribute.type.includes("?") && value === "") {
@@ -82,40 +132,73 @@ function ensureAttributeType(attributeModels: IAttributeModel[], attributeName: 
   return parsedValue;
 }
 
-function parseAttributes(attributes: IInstanceAttributeModel, attributeModels: IAttributeModel[]) {
+function parseAttributes(
+  attributes: IInstanceAttributeModel,
+  attributeModels: IAttributeModel[]
+) {
   const parsedAttributes = Object.assign(
-    {}, ...Object.keys(attributes)
-      .map((attributeName) => ({ [attributeName]: ensureAttributeType(attributeModels, attributeName, attributes[attributeName]) })
-      )
+    {},
+    ...Object.keys(attributes).map((attributeName) => ({
+      [attributeName]: ensureAttributeType(
+        attributeModels,
+        attributeName,
+        attributes[attributeName]
+      ),
+    }))
   );
   return parsedAttributes;
 }
 
-async function submitUpdate(requestParams: IRequestParams, attributeValue: IInstanceAttributeModel, attributeModels: IAttributeModel[], originalAttributes?: IInstanceAttributeModel) {
+async function submitUpdate(
+  requestParams: IRequestParams,
+  attributeValue: IInstanceAttributeModel,
+  attributeModels: IAttributeModel[],
+  originalAttributes?: IInstanceAttributeModel
+) {
   requestParams.method = "PATCH";
   const parsedAttributes = parseAttributes(attributeValue, attributeModels);
-  const updatedAttributes = getChangedAttributesOnly(parsedAttributes, originalAttributes);
+  const updatedAttributes = getChangedAttributesOnly(
+    parsedAttributes,
+    originalAttributes
+  );
   requestParams.data = { attributes: updatedAttributes };
   await fetchInmantaApi(requestParams);
 }
 
-async function submitCreate(requestParams: IRequestParams, attributes: IInstanceAttributeModel, attributeModels: IAttributeModel[]) {
+async function submitCreate(
+  requestParams: IRequestParams,
+  attributes: IInstanceAttributeModel,
+  attributeModels: IAttributeModel[]
+) {
   requestParams.method = "POST";
   const parsedAttributes = parseAttributes(attributes, attributeModels);
   // Don't set optional attributes explicitly to null on creation
-  const attributesWithoutNulls = Object.entries(parsedAttributes).reduce((obj, [k, v]) => (v === null ? obj : (obj[k] = v, obj)), {});
+  const attributesWithoutNulls = Object.entries(parsedAttributes).reduce(
+    (obj, [k, v]) => (v === null ? obj : ((obj[k] = v), obj)),
+    {}
+  );
   requestParams.data = { attributes: attributesWithoutNulls };
   await fetchInmantaApi(requestParams);
 }
 
-function getChangedAttributesOnly(attributesAfterChanges: IInstanceAttributeModel, originalAttributes?: IInstanceAttributeModel) {
+function getChangedAttributesOnly(
+  attributesAfterChanges: IInstanceAttributeModel,
+  originalAttributes?: IInstanceAttributeModel
+) {
   if (!originalAttributes) {
     return attributesAfterChanges;
-  };
+  }
   // Don't include changes from undefined to null, but allow setting a value explicitly to null
-  const changedAttributeNames = Object.keys(attributesAfterChanges).filter((attributeName) =>
-    !(originalAttributes[attributeName] === undefined && attributesAfterChanges[attributeName] === null) &&
-    !_.isEqual(attributesAfterChanges[attributeName], originalAttributes[attributeName])
+  const changedAttributeNames = Object.keys(attributesAfterChanges).filter(
+    (attributeName) =>
+      !(
+        originalAttributes[attributeName] === undefined &&
+        attributesAfterChanges[attributeName] === null
+      ) &&
+      !_.isEqual(
+        attributesAfterChanges[attributeName],
+        originalAttributes[attributeName]
+      )
   );
   const updatedAttributes = {};
   for (const attribute of changedAttributeNames) {
@@ -124,5 +207,9 @@ function getChangedAttributesOnly(attributesAfterChanges: IInstanceAttributeMode
   return updatedAttributes;
 }
 
-
-export { InstanceForm, extractInitialAttributes, ensureAttributeType, getChangedAttributesOnly };
+export {
+  InstanceForm,
+  extractInitialAttributes,
+  ensureAttributeType,
+  getChangedAttributesOnly,
+};

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 export class ErrorBoundary extends React.Component<{}, { hasError: boolean }> {
   public static getDerivedStateFromError(error) {

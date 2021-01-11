@@ -1,13 +1,19 @@
-import React, { ComponentClass } from 'react';
-import { Dropdown, DropdownToggle, DropdownPosition } from '@patternfly/react-core';
-import { SVGIconProps } from '@patternfly/react-icons/dist/js/createIcon';
+import React, { ComponentClass } from "react";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownPosition,
+} from "@patternfly/react-core";
+import { SVGIconProps } from "@patternfly/react-icons/dist/js/createIcon";
 
-
-export class IconDropdown extends React.Component<{icon: ComponentClass<SVGIconProps, any>, dropdownItems: JSX.Element[]}, { isOpen: boolean }> {
+export class IconDropdown extends React.Component<
+  { icon: ComponentClass<SVGIconProps, any>; dropdownItems: JSX.Element[] },
+  { isOpen: boolean }
+> {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: false,
     };
     this.onToggle = this.onToggle.bind(this);
     this.onSelect = this.onSelect.bind(this);
@@ -18,8 +24,15 @@ export class IconDropdown extends React.Component<{icon: ComponentClass<SVGIconP
       <Dropdown
         onSelect={this.onSelect}
         toggle={
-          <DropdownToggle toggleIndicator={null} onToggle={this.onToggle} aria-label="Applications" isDisabled={!this.props.dropdownItems || this.props.dropdownItems.length === 0} >
-            <this.props.icon/>
+          <DropdownToggle
+            toggleIndicator={null}
+            onToggle={this.onToggle}
+            aria-label="Applications"
+            isDisabled={
+              !this.props.dropdownItems || this.props.dropdownItems.length === 0
+            }
+          >
+            <this.props.icon />
           </DropdownToggle>
         }
         isOpen={isOpen}
@@ -31,12 +44,12 @@ export class IconDropdown extends React.Component<{icon: ComponentClass<SVGIconP
   }
   private onToggle(isOpen: any): void {
     this.setState({
-      isOpen
+      isOpen,
     });
-  };
+  }
   private onSelect(event: any): void {
     this.setState({
-      isOpen: !this.state.isOpen
+      isOpen: !this.state.isOpen,
     });
-  };
+  }
 }
