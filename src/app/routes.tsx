@@ -35,7 +35,7 @@ const routes: IAppRouteGroup[] = [
         icon: null,
         label: 'Service Catalog',
         path: '/catalog',
-        title: 'Service Catalog'
+        title: 'Service Catalog',
       },
       {
         component: ServiceInventory,
@@ -44,12 +44,12 @@ const routes: IAppRouteGroup[] = [
         icon: null,
         label: 'Service Inventory',
         path: '/catalog/:id/inventory',
-        title: 'Service Inventory'
-      }
+        title: 'Service Inventory',
+      },
     ],
     name: 'Lifecycle service management',
-    pathPrefix: '/lsm'
-  }
+    pathPrefix: '/lsm',
+  },
 ];
 
 // a custom hook for sending focus to the primary content container
@@ -86,7 +86,7 @@ const PageNotFound = ({ title }: { title: string }) => {
 const AppRoutes = () => (
   <LastLocationProvider>
     <Switch>
-      {routes.map(routeItem => {
+      {routes.map((routeItem) => {
         return routeItem.exactRoutes.map(({ path, exact, component, title, isAsync, icon }, idx) => (
           <RouteWithTitleUpdates
             path={routeItem.pathPrefix + path}
