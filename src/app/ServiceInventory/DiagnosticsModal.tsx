@@ -81,7 +81,8 @@ async function getValidationFailureMessage(
   environmentId: string | undefined,
   setErrorMessage: React.Dispatch<string>,
   keycloak: Keycloak.KeycloakInstance | undefined
-): Promise<undefined | Record<string, unknown>> {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+): Promise<any> {
   const logUrl = `${inventoryUrl}/${instance.id}/log`;
   const requestParams: IRequestParams = {
     environmentId,

@@ -2,11 +2,13 @@ import React from "react";
 import { NotificationBadge } from "@patternfly/react-core";
 import { BellIcon } from "@patternfly/react-icons";
 
+type Props = React.PropsWithChildren<Record<string, unknown>>;
+
 export class SimpleNotificationBadge extends React.Component<
-  void,
+  Props,
   { isRead: boolean }
 > {
-  constructor(props: void) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       isRead: true,
