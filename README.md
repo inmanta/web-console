@@ -46,3 +46,9 @@ The base url of the backend services can also be specified here, e.g.:
 Cypress can be configured via cypress.json (or command line arguments), e.g. to record videos of each test run:
 
     "video": true
+
+### Pre-commit hook
+
+`husky` configures the git hooks. https://github.com/typicode/husky  
+`lint-staged` runs scripts on matched staged source files. https://github.com/okonet/lint-staged  
+There is no need to manually configure anything. Just by installing the dependencies, the git hooks are configured.
