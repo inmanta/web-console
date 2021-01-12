@@ -48,6 +48,7 @@
     "@storybook/addon-links": "^6.1.14",
     "@storybook/react": "^6.1.14",
     "@testing-library/react": "^11.2.3",
+    "@testing-library/jest-dom": "^5.11.8",
     "@types/enzyme": "^3.10.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/fetch-mock": "^7.3.1",

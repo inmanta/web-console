@@ -25,6 +25,6 @@
       "@images/*": ["public/images/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.js"],
   "exclude": ["node_modules"]
 }
