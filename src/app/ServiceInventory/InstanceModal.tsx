@@ -1,4 +1,4 @@
-import { Modal, Button, ModalVariant } from "@patternfly/react-core"
+import { Modal, Button, ModalVariant } from "@patternfly/react-core";
 import { useState } from "react";
 import React from "react";
 import { InstanceForm } from "./InstanceForm";
@@ -8,36 +8,73 @@ import { IServiceInstanceModel, IAttributeModel } from "@app/Models/LsmModels";
 import { DeleteForm } from "./DeleteForm";
 import _ from "lodash";
 
-const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceName: string, instance?: IServiceInstanceModel, keycloak?: Keycloak.KeycloakInstance }> = props => {
+const InstanceModal: React.FunctionComponent<{
+  buttonType: ButtonType;
+  serviceName: string;
+  instance?: IServiceInstanceModel;
+  keycloak?: Keycloak.KeycloakInstance;
+}> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleModalToggle = () => {
     setIsOpen(!isOpen);
   };
   let ModalButton;
-  let modalHeaderText = '';
-  let modalTitle = '';
+  let modalHeaderText = "";
+  let modalTitle = "";
   if (props.buttonType === ButtonType.add) {
-    ModalButton = () => <Button variant="primary" onClick={handleModalToggle} id="add-instance-button"><PlusIcon /> Add instance </Button>
-    modalTitle = 'Create instance';
-    modalHeaderText = `Create a new instance of ${props.serviceName} with the following parameters`
+    ModalButton = () => (
+      <Button
+        variant="primary"
+        onClick={handleModalToggle}
+        id="add-instance-button"
+      >
+        <PlusIcon /> Add instance{" "}
+      </Button>
+    );
+    modalTitle = "Create instance";
+    modalHeaderText = `Create a new instance of ${props.serviceName} with the following parameters`;
   } else if (props.buttonType === ButtonType.edit) {
-    modalTitle = 'Edit instance';
-    modalHeaderText = `Change attributes of instance ${props.instance ? props.instance.id : ''}`
-    ModalButton = () => <Button variant="secondary" onClick={handleModalToggle}> <EditIcon /> Edit </Button>
+    modalTitle = "Edit instance";
+    modalHeaderText = `Change attributes of instance ${
+      props.instance ? props.instance.id : ""
+    }`;
+    ModalButton = () => (
+      <Button variant="secondary" onClick={handleModalToggle}>
+        {" "}
+        <EditIcon /> Edit{" "}
+      </Button>
+    );
   } else if (props.buttonType === ButtonType.delete) {
-    modalTitle = 'Delete instance';
-    modalHeaderText = `Are you sure you want to delete instance ${props.instance ? props.instance.id : ''} of service entity ${props.serviceName}?`
-    ModalButton = () => <Button variant="danger" onClick={handleModalToggle}> <TrashAltIcon /> Delete </Button>
+    modalTitle = "Delete instance";
+    modalHeaderText = `Are you sure you want to delete instance ${
+      props.instance ? props.instance.id : ""
+    } of service entity ${props.serviceName}?`;
+    ModalButton = () => (
+      <Button variant="danger" onClick={handleModalToggle}>
+        {" "}
+        <TrashAltIcon /> Delete{" "}
+      </Button>
+    );
   }
 
   return (
     <React.Fragment>
       <ModalButton />
-      <Modal variant={ModalVariant.small} isOpen={isOpen}
-        title={modalTitle} onClose={handleModalToggle}>
+      <Modal
+        variant={ModalVariant.small}
+        isOpen={isOpen}
+        title={modalTitle}
+        onClose={handleModalToggle}
+      >
         {modalHeaderText}
         <InventoryContext.Consumer>
-          {({ attributes, environmentId, inventoryUrl, setErrorMessage, refresh }) => {
+          {({
+            attributes,
+            environmentId,
+            inventoryUrl,
+            setErrorMessage,
+            refresh,
+          }) => {
             let urlWithParams = inventoryUrl;
             let currentAttributes;
             let formAttributes = attributes;
@@ -48,17 +85,37 @@ const InstanceModal: React.FunctionComponent<{ buttonType: ButtonType, serviceNa
             } else {
               formAttributes = getNotReadonlyAttributes(attributes);
             }
-            const requestParams = { environmentId, urlEndpoint: urlWithParams, isEnvironmentIdRequired: true, setErrorMessage, keycloak: props.keycloak, dispatch: refresh };
+            const requestParams = {
+              environmentId,
+              urlEndpoint: urlWithParams,
+              isEnvironmentIdRequired: true,
+              setErrorMessage,
+              keycloak: props.keycloak,
+              dispatch: refresh,
+            };
             if (props.buttonType === ButtonType.delete) {
-              return <DeleteForm requestParams={requestParams} closeModal={() => setIsOpen(false)} />
+              return (
+                <DeleteForm
+                  requestParams={requestParams}
+                  closeModal={() => setIsOpen(false)}
+                />
+              );
             }
-            return <InstanceForm attributeModels={formAttributes} requestParams={requestParams} closeModal={() => setIsOpen(false)} originalAttributes={currentAttributes} update={props.buttonType === ButtonType.edit} />
+            return (
+              <InstanceForm
+                attributeModels={formAttributes}
+                requestParams={requestParams}
+                closeModal={() => setIsOpen(false)}
+                originalAttributes={currentAttributes}
+                update={props.buttonType === ButtonType.edit}
+              />
+            );
           }}
-
         </InventoryContext.Consumer>
       </Modal>
-    </React.Fragment>);
-}
+    </React.Fragment>
+  );
+};
 
 enum ButtonType {
   add = "ADD",
@@ -74,7 +131,16 @@ function getNotReadonlyAttributes(attributes: IAttributeModel[]) {
   return attributes.filter((attribute) => attribute.modifier !== "r");
 }
 function getCurrentAttributes(instance: IServiceInstanceModel) {
-  return (instance.candidate_attributes && !_.isEmpty(instance.candidate_attributes)) ? instance.candidate_attributes : instance.active_attributes;
+  return instance.candidate_attributes &&
+    !_.isEmpty(instance.candidate_attributes)
+    ? instance.candidate_attributes
+    : instance.active_attributes;
 }
 
-export { InstanceModal, ButtonType, getEditableAttributes, getNotReadonlyAttributes, getCurrentAttributes };
+export {
+  InstanceModal,
+  ButtonType,
+  getEditableAttributes,
+  getNotReadonlyAttributes,
+  getCurrentAttributes,
+};

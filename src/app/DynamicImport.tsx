@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { accessibleRouteChangeHandler } from '@app/utils/utils';
+import * as React from "react";
+import { accessibleRouteChangeHandler } from "@app/utils/utils";
 
 interface IDynamicImport {
   load: () => Promise<any>;

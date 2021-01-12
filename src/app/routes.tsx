@@ -1,17 +1,22 @@
-import * as React from 'react';
-import { Route, RouteComponentProps, Switch, Redirect } from 'react-router-dom';
-import { accessibleRouteChangeHandler } from '@app/utils/utils';
-import { NotFound } from '@app/NotFound/NotFound';
-import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
-import { ServiceCatalog } from './ServiceCatalog/ServiceCatalog';
-import { ServiceInventory } from './ServiceInventory/ServiceInventory';
+import * as React from "react";
+import { Route, RouteComponentProps, Switch, Redirect } from "react-router-dom";
+import { accessibleRouteChangeHandler } from "@app/utils/utils";
+import { NotFound } from "@app/NotFound/NotFound";
+import { useDocumentTitle } from "@app/utils/useDocumentTitle";
+import {
+  LastLocationProvider,
+  useLastLocation,
+} from "react-router-last-location";
+import { ServiceCatalog } from "./ServiceCatalog/ServiceCatalog";
+import { ServiceInventory } from "./ServiceInventory/ServiceInventory";
 
 let routeFocusTimer: number;
 
 export interface IAppRoute {
   label?: string;
-  component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
+  component:
+    | React.ComponentType<RouteComponentProps<any>>
+    | React.ComponentType<any>;
   icon?: any;
   exact?: boolean;
   path: string;
@@ -33,22 +38,22 @@ const routes: IAppRouteGroup[] = [
         component: ServiceCatalog,
         exact: true,
         icon: null,
-        label: 'Service Catalog',
-        path: '/catalog',
-        title: 'Service Catalog',
+        label: "Service Catalog",
+        path: "/catalog",
+        title: "Service Catalog",
       },
       {
         component: ServiceInventory,
         exact: true,
         hideOnSideBar: true,
         icon: null,
-        label: 'Service Inventory',
-        path: '/catalog/:id/inventory',
-        title: 'Service Inventory',
+        label: "Service Inventory",
+        path: "/catalog/:id/inventory",
+        title: "Service Inventory",
       },
     ],
-    name: 'Lifecycle service management',
-    pathPrefix: '/lsm',
+    name: "Lifecycle service management",
+    pathPrefix: "/lsm",
   },
 ];
 
@@ -67,7 +72,12 @@ const useA11yRouteChange = (isAsync: boolean) => {
   }, [isAsync, lastNavigation]);
 };
 
-const RouteWithTitleUpdates = ({ component: Component, isAsync = false, title, ...rest }: IAppRoute) => {
+const RouteWithTitleUpdates = ({
+  component: Component,
+  isAsync = false,
+  title,
+  ...rest
+}: IAppRoute) => {
   useA11yRouteChange(isAsync);
   useDocumentTitle(title);
 
@@ -87,20 +97,26 @@ const AppRoutes = () => (
   <LastLocationProvider>
     <Switch>
       {routes.map((routeItem) => {
-        return routeItem.exactRoutes.map(({ path, exact, component, title, isAsync, icon }, idx) => (
-          <RouteWithTitleUpdates
-            path={routeItem.pathPrefix + path}
-            exact={exact}
-            component={component}
-            key={idx}
-            icon={icon}
-            title={title}
-            isAsync={isAsync}
-          />
-        ));
+        return routeItem.exactRoutes.map(
+          ({ path, exact, component, title, isAsync, icon }, idx) => (
+            <RouteWithTitleUpdates
+              path={routeItem.pathPrefix + path}
+              exact={exact}
+              component={component}
+              key={idx}
+              icon={icon}
+              title={title}
+              isAsync={isAsync}
+            />
+          )
+        );
       })}
-      <Route exact={true} path="/" component={() => <Redirect to="/lsm/catalog" />} />
-      <PageNotFound title={'404 Page Not Found'} />
+      <Route
+        exact={true}
+        path="/"
+        component={() => <Redirect to="/lsm/catalog" />}
+      />
+      <PageNotFound title={"404 Page Not Found"} />
     </Switch>
   </LastLocationProvider>
 );

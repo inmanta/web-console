@@ -7,15 +7,12 @@
     "tslint-react-hooks"
   ],
   "linterOptions": {
-    "exclude": [
-      "**/node_modules/**/*.ts"
-    ]
+    "exclude": ["**/node_modules/**/*.ts"]
   },
   "rules": {
-    "ordered-imports": [
-      false
-    ],
+    "ordered-imports": [false],
     "jsx-no-lambda": false,
-    "react-hooks-nesting": "error"
+    "react-hooks-nesting": "error",
+    "object-literal-sort-keys": false
   }
 }

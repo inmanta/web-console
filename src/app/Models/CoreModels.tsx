@@ -1,5 +1,20 @@
-import { thunk, Thunk, Action, action, createTypedHooks, Computed, computed } from 'easy-peasy';
-import { IInstanceDictState, IServiceDictState, instanceDictState, serviceDictState, IResourceDictState, resourceDictState } from './LsmModels';
+import {
+  thunk,
+  Thunk,
+  Action,
+  action,
+  createTypedHooks,
+  Computed,
+  computed,
+} from "easy-peasy";
+import {
+  IInstanceDictState,
+  IServiceDictState,
+  instanceDictState,
+  serviceDictState,
+  IResourceDictState,
+  resourceDictState,
+} from "./LsmModels";
 
 export interface IObjectWithId {
   id: string;
@@ -15,36 +30,42 @@ export interface IEnvironmentModel extends IObjectWithId {
 }
 
 export interface IProjectDict {
-  [Key: string]: IProjectModel
+  [Key: string]: IProjectModel;
 }
 
 export interface IProjectDictState {
-  allIds: string[],
-  byId: IProjectDict,
-  getAllProjects: Computed<IProjectDictState, IProjectModel[]>,
-  getSelectedProject: Computed<IProjectDictState, Partial<IProjectModel>>,
-  selectedProjectId: string,
-  selectProjectById: Action<IProjectDictState, string>,
-  selectProjectByName: Action<IProjectDictState, string>,
+  allIds: string[];
+  byId: IProjectDict;
+  getAllProjects: Computed<IProjectDictState, IProjectModel[]>;
+  getSelectedProject: Computed<IProjectDictState, Partial<IProjectModel>>;
+  selectedProjectId: string;
+  selectProjectById: Action<IProjectDictState, string>;
+  selectProjectByName: Action<IProjectDictState, string>;
 }
 
 export interface IEnvironmentDict {
-  [Key: string]: IEnvironmentModel
+  [Key: string]: IEnvironmentModel;
 }
 
 export interface IEnvironmentDictState {
-  allIds: string[],
-  byId: IEnvironmentDict,
-  getSelectedEnvironment: Computed<IEnvironmentDictState, Partial<IEnvironmentModel>>,
-  selectedEnvironmentId: string,
-  selectEnvironmentById: Action<IEnvironmentDictState, string>,
-  selectEnvironmentByName: Action<IEnvironmentDictState, string>,
+  allIds: string[];
+  byId: IEnvironmentDict;
+  getSelectedEnvironment: Computed<
+    IEnvironmentDictState,
+    Partial<IEnvironmentModel>
+  >;
+  selectedEnvironmentId: string;
+  selectEnvironmentById: Action<IEnvironmentDictState, string>;
+  selectEnvironmentByName: Action<IEnvironmentDictState, string>;
 }
 
 export interface IProjectStoreModel {
   environments: IEnvironmentDictState;
   fetched: Action<IProjectStoreModel, IProjectModel[]>;
-  selectProjectAndEnvironment: Thunk<IProjectStoreModel, { project: string; environment: string }>;
+  selectProjectAndEnvironment: Thunk<
+    IProjectStoreModel,
+    { project: string; environment: string }
+  >;
   services: IServiceDictState;
   projects: IProjectDictState;
   resources: IResourceDictState;
@@ -58,7 +79,7 @@ export interface IStoreModel {
 export const environmentState: IEnvironmentDictState = {
   allIds: [],
   byId: {},
-  getSelectedEnvironment: computed(state => {
+  getSelectedEnvironment: computed((state) => {
     if (state.allIds.length > 0 && state.selectedEnvironmentId) {
       return state.byId[state.selectedEnvironmentId];
     }
@@ -68,24 +89,26 @@ export const environmentState: IEnvironmentDictState = {
     state.selectedEnvironmentId = payload;
     const params = new URLSearchParams(location.search);
     params.set("env", payload);
-    window.history.replaceState({}, '', `${location.pathname}?${params}`);
+    window.history.replaceState({}, "", `${location.pathname}?${params}`);
   }),
   selectEnvironmentByName: action((state, payload) => {
-    const environmentWithName = Object.values(state.byId).find(item => item.name === payload);
+    const environmentWithName = Object.values(state.byId).find(
+      (item) => item.name === payload
+    );
     if (environmentWithName) {
       state.selectedEnvironmentId = environmentWithName.id;
     }
   }),
-  selectedEnvironmentId: '',
-}
+  selectedEnvironmentId: "",
+};
 
 export const projectState: IProjectDictState = {
   allIds: [],
   byId: {},
-  getAllProjects: computed(state => {
+  getAllProjects: computed((state) => {
     return Object.values(state.byId);
   }),
-  getSelectedProject: computed(state => {
+  getSelectedProject: computed((state) => {
     if (state.allIds.length > 0 && state.selectedProjectId) {
       return state.byId[state.selectedProjectId];
     }
@@ -95,48 +118,60 @@ export const projectState: IProjectDictState = {
     state.selectedProjectId = payload;
   }),
   selectProjectByName: action((state, payload) => {
-    const projectWithName = Object.values(state.byId).find(item => item.name === payload);
+    const projectWithName = Object.values(state.byId).find(
+      (item) => item.name === payload
+    );
     if (projectWithName) {
       state.selectedProjectId = projectWithName.id;
     }
   }),
-  selectedProjectId: '',
-}
+  selectedProjectId: "",
+};
 
 export const project: IProjectStoreModel = {
   environments: environmentState,
   fetched: action((state, payload) => {
-    payload.map(currentProject => {
+    payload.map((currentProject) => {
       state.projects.byId[currentProject.id] = currentProject;
       state.projects.allIds.push(currentProject.id);
     });
-    payload.map(currentProject => currentProject.environments.map(environment => {
-      state.environments.byId[environment.id] = environment;
-      state.environments.allIds.push(environment.id);
-    }));
+    payload.map((currentProject) =>
+      currentProject.environments.map((environment) => {
+        state.environments.byId[environment.id] = environment;
+        state.environments.allIds.push(environment.id);
+      })
+    );
     const searchParams = new URLSearchParams(window.location.search);
     const envFromUrl = searchParams.get("env");
-    
+
     if (!state.projects.selectedProjectId && state.projects.allIds.length > 0) {
       if (envFromUrl) {
-        const projectByUrl = payload.find(currentPayload => (currentPayload.environments.find(env => env.id === envFromUrl)));
-        if (projectByUrl && state.projects.selectedProjectId !== projectByUrl.id) {
+        const projectByUrl = payload.find((currentPayload) =>
+          currentPayload.environments.find((env) => env.id === envFromUrl)
+        );
+        if (
+          projectByUrl &&
+          state.projects.selectedProjectId !== projectByUrl.id
+        ) {
           state.projects.selectedProjectId = projectByUrl.id;
         } else {
           state.projects.selectedProjectId = state.projects.allIds[0];
         }
       } else {
-        state.projects.selectedProjectId =  state.projects.allIds[0];
+        state.projects.selectedProjectId = state.projects.allIds[0];
       }
     }
-    if (!state.environments.selectedEnvironmentId && state.environments.allIds.length > 0) {
+    if (
+      !state.environments.selectedEnvironmentId &&
+      state.environments.allIds.length > 0
+    ) {
       if (envFromUrl && state.environments.allIds.includes(envFromUrl)) {
         state.environments.selectedEnvironmentId = envFromUrl;
       } else {
         state.environments.selectedEnvironmentId = state.environments.allIds[0];
         const params = new URLSearchParams(location.search);
         params.set("env", state.environments.selectedEnvironmentId);
-        window.history.replaceState({}, '', `${location.pathname}?${params}`);
+        window.history.replaceState({}, "", `${location.pathname}?${params}`);
       }
     }
   }),
@@ -151,13 +186,17 @@ export const project: IProjectStoreModel = {
 };
 
 export const storeModel: IStoreModel = {
-  projects: project
+  projects: project,
 };
 
-const { useStoreActions, useStoreState, useStoreDispatch } = createTypedHooks<IStoreModel>();
+const {
+  useStoreActions,
+  useStoreState,
+  useStoreDispatch,
+} = createTypedHooks<IStoreModel>();
 
 export default {
   useStoreActions,
   useStoreDispatch,
-  useStoreState
+  useStoreState,
 };

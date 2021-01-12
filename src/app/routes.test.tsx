@@ -1,28 +1,30 @@
-import React from 'react';
-import { App } from '@app/index';
-import { mount } from 'enzyme';
-import Keycloak from 'keycloak-js';
-import { wait } from '@testing-library/react';
+import React from "react";
+import { App } from "@app/index";
+import { mount } from "enzyme";
+import Keycloak from "keycloak-js";
+import { wait } from "@testing-library/react";
 
-describe('Navigation', () => {
+describe("Navigation", () => {
   let keycloak: Keycloak.KeycloakInstance;
   beforeEach(() => {
     keycloak = Keycloak();
   });
 
-  it('should render nav groups', async () => {
+  it("should render nav groups", async () => {
     const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
-    const nav = wrapper.find('#nav-primary-simple');
+    const nav = wrapper.find("#nav-primary-simple");
     await wait();
-    expect(nav.find('.pf-c-nav__section-title')).toHaveLength(2);
+    expect(nav.find(".pf-c-nav__section-title")).toHaveLength(2);
   });
 
-  it('should navigate when clicking on link', async () => {
+  it("should navigate when clicking on link", async () => {
     const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
-    const nav = wrapper.find('#nav-primary-simple');
-    const serviceCatalogEntry = nav.find('.pf-c-nav__link').first();
-    serviceCatalogEntry.simulate('click');
+    const nav = wrapper.find("#nav-primary-simple");
+    const serviceCatalogEntry = nav.find(".pf-c-nav__link").first();
+    serviceCatalogEntry.simulate("click");
     await wait();
-    expect(serviceCatalogEntry.getElement().props.activeClassName).toEqual('pf-m-current');
+    expect(serviceCatalogEntry.getElement().props.activeClassName).toEqual(
+      "pf-m-current"
+    );
   });
 });

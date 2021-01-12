@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { Tabs, Tab } from '@patternfly/react-core';
-import { IServiceModel } from '@app/Models/LsmModels';
-import { AttributeTable } from './AttributeTable';
-import { LifecycleTable } from './LifecycleTable';
+import React, { useState } from "react";
+import { Tabs, Tab } from "@patternfly/react-core";
+import { IServiceModel } from "@app/Models/LsmModels";
+import { AttributeTable } from "./AttributeTable";
+import { LifecycleTable } from "./LifecycleTable";
 
-export const CatalogTabs: React.FunctionComponent<{ service: IServiceModel }> = props => {
+export const CatalogTabs: React.FunctionComponent<{
+  service: IServiceModel;
+}> = (props) => {
   const [activeTabKey, setActiveTabKey] = useState(0);
 
   const handleTabClick = (event, tabIndex) => {
