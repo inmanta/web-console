@@ -1,9 +1,11 @@
 import React from "react";
 
 interface Props {
-  id: string;
+  serviceName: string;
 }
 
-export const View: React.FC<Props> = ({ id }) => {
-  return <div data-testid="InventoryViewContainer">id: {id}</div>;
+export const View: React.FC<Props> = ({ serviceName }) => {
+  return (
+    <div data-testid="InventoryViewContainer">service name: {serviceName}</div>
+  );
 };
