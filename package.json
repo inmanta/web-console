@@ -21,6 +21,17 @@
     "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'yarn cypress run'",
     "package-cleanup": "node clean_up_packages"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --max-warnings=0",
+      "prettier --check --write"
+    ]
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
@@ -55,10 +66,12 @@
     "fetch-mock": "^7.3.9",
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^4.3.7",
     "imagemin": "^7.0.0",
     "jest": "^26.4.2",
     "jest-fetch-mock": "^2.1.2",
     "jest-junit": "^8.0.0",
+    "lint-staged": "^10.5.3",
     "mini-css-extract-plugin": "^0.8.0",
     "mocha": "^6.2.2",
     "mocha-junit-reporter": "^1.23.1",
