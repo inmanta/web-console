@@ -9,9 +9,11 @@ export interface IEnvironmentSelectorItem {
   environmentId?: string;
 }
 
-export const EnvironmentSelector = (props: {
+interface Props {
   items: IEnvironmentSelectorItem[];
-}) => {
+}
+
+export const EnvironmentSelector: React.FC<Props> = (props) => {
   const items = props.items;
   const environmentNames = items.map((item) => item.displayName);
   const [open, setOpen] = React.useState(false);
@@ -28,10 +30,12 @@ export const EnvironmentSelector = (props: {
   }
   const dispatch = useStoreDispatch<IStoreModel>();
 
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const onToggle = (event?: any, isOpen?: any) => {
     setOpen(isOpen);
   };
 
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const onSelect = (event: any, value: any) => {
     setOpen(!open);
     const matchingEnvItem = items.find(
@@ -44,10 +48,13 @@ export const EnvironmentSelector = (props: {
       });
     }
   };
+
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const onSearchInputChange = (value: any) => {
     setSearchValue(value);
   };
-  const onSearchButtonClick = (event: any) => {
+
+  const onSearchButtonClick = () => {
     filterItems();
   };
 

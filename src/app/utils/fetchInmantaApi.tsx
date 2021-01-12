@@ -1,6 +1,8 @@
 export interface IRequestParams {
   urlEndpoint: string;
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   data?: any;
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   dispatch?: (data) => any;
   isEnvironmentIdRequired: boolean;
   environmentId: string | undefined;
@@ -24,7 +26,10 @@ function extendHeadersWithAuth(headers, keycloak) {
   return headers;
 }
 
-export async function fetchInmantaApi(requestParams: IRequestParams) {
+export async function fetchInmantaApi(
+  requestParams: IRequestParams
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+): Promise<any> {
   try {
     let json;
     const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";

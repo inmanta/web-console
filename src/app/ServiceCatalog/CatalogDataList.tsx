@@ -29,6 +29,7 @@ export const CatalogDataList: React.FunctionComponent<{
   environmentId: string;
   serviceCatalogUrl: string;
   keycloak?: Keycloak.KeycloakInstance;
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   dispatch?: (data) => any;
 }> = (props) => {
   const [expanded, setExpanded] = useState([""]);

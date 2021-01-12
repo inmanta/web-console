@@ -2,7 +2,9 @@ import * as React from "react";
 import { accessibleRouteChangeHandler } from "@app/utils/utils";
 
 interface IDynamicImport {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   load: () => Promise<any>;
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   children: any;
   focusContentAfterMount: boolean;
 }
@@ -16,10 +18,11 @@ class DynamicImport extends React.Component<IDynamicImport> {
     super(props);
     this.routeFocusTimer = 0;
   }
-  public componentWillUnmount() {
+
+  public componentWillUnmount(): void {
     window.clearTimeout(this.routeFocusTimer);
   }
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.props
       .load()
       .then((component) => {
@@ -35,7 +38,8 @@ class DynamicImport extends React.Component<IDynamicImport> {
         }
       });
   }
-  public render() {
+
+  public render(): JSX.Element {
     return this.props.children(this.state.component);
   }
 }

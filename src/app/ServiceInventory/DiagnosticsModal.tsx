@@ -6,7 +6,6 @@ import {
   TextVariants,
   TextContent,
   Alert,
-  Divider,
   ExpandableSection,
   ModalVariant,
   Card,
@@ -19,7 +18,7 @@ import React from "react";
 import { ToolsIcon, CheckIcon, TimesIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./ServiceInventory";
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
-import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
+import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
 
 const DiagnosticsModal: React.FunctionComponent<{
   serviceName: string;
@@ -79,12 +78,13 @@ const DiagnosticsModal: React.FunctionComponent<{
 async function getValidationFailureMessage(
   instance: IServiceInstanceModel,
   inventoryUrl: string,
-  environmentId,
-  setErrorMessage,
-  keycloak
-) {
+  environmentId: string | undefined,
+  setErrorMessage: React.Dispatch<string>,
+  keycloak: Keycloak.KeycloakInstance | undefined
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+): Promise<any> {
   const logUrl = `${inventoryUrl}/${instance.id}/log`;
-  const requestParams = {
+  const requestParams: IRequestParams = {
     environmentId,
     urlEndpoint: logUrl,
     isEnvironmentIdRequired: true,
@@ -105,7 +105,8 @@ async function getValidationFailureMessage(
         new Date(messageB.timestamp).getTime() -
         new Date(messageA.timestamp).getTime()
     )
-    .find((message) => message.id_compile_report!!);
+    .find((message) => !!message.id_compile_report);
+
   if (!messageWithCompileReport) {
     return;
   }

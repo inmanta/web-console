@@ -7,7 +7,7 @@ import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi } from "../utils/fetchInmantaApi";
 import { useKeycloak } from "react-keycloak";
 
-const ServiceCatalog: React.FunctionComponent<any> = (props) => {
+const ServiceCatalog: React.FC = () => {
   const serviceCatalogUrl = "/lsm/v1/service_catalog";
   const projectStore = useStoreState(
     (store: State<IStoreModel>) => store.projects
@@ -32,7 +32,6 @@ const ServiceCatalog: React.FunctionComponent<any> = (props) => {
   let keycloak;
   if (shouldUseAuth) {
     // The value will be always true or always false during one session
-    // tslint:disable:react-hooks-nesting
     [keycloak] = useKeycloak();
   }
   const requestParams = {

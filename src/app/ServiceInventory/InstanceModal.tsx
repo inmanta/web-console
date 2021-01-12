@@ -4,7 +4,11 @@ import React from "react";
 import { InstanceForm } from "./InstanceForm";
 import { PlusIcon, EditIcon, TrashAltIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./ServiceInventory";
-import { IServiceInstanceModel, IAttributeModel } from "@app/Models/LsmModels";
+import {
+  IServiceInstanceModel,
+  IAttributeModel,
+  IInstanceAttributeModel,
+} from "@app/Models/LsmModels";
 import { DeleteForm } from "./DeleteForm";
 import _ from "lodash";
 
@@ -21,16 +25,30 @@ const InstanceModal: React.FunctionComponent<{
   let ModalButton;
   let modalHeaderText = "";
   let modalTitle = "";
+  const AddModalButton = () => (
+    <Button
+      variant="primary"
+      onClick={handleModalToggle}
+      id="add-instance-button"
+    >
+      <PlusIcon /> Add instance{" "}
+    </Button>
+  );
+  const EditModalButton = () => (
+    <Button variant="secondary" onClick={handleModalToggle}>
+      {" "}
+      <EditIcon /> Edit{" "}
+    </Button>
+  );
+  const DeleteModalButton = () => (
+    <Button variant="danger" onClick={handleModalToggle}>
+      {" "}
+      <TrashAltIcon /> Delete{" "}
+    </Button>
+  );
+
   if (props.buttonType === ButtonType.add) {
-    ModalButton = () => (
-      <Button
-        variant="primary"
-        onClick={handleModalToggle}
-        id="add-instance-button"
-      >
-        <PlusIcon /> Add instance{" "}
-      </Button>
-    );
+    ModalButton = AddModalButton;
     modalTitle = "Create instance";
     modalHeaderText = `Create a new instance of ${props.serviceName} with the following parameters`;
   } else if (props.buttonType === ButtonType.edit) {
@@ -38,23 +56,13 @@ const InstanceModal: React.FunctionComponent<{
     modalHeaderText = `Change attributes of instance ${
       props.instance ? props.instance.id : ""
     }`;
-    ModalButton = () => (
-      <Button variant="secondary" onClick={handleModalToggle}>
-        {" "}
-        <EditIcon /> Edit{" "}
-      </Button>
-    );
+    ModalButton = EditModalButton;
   } else if (props.buttonType === ButtonType.delete) {
     modalTitle = "Delete instance";
     modalHeaderText = `Are you sure you want to delete instance ${
       props.instance ? props.instance.id : ""
     } of service entity ${props.serviceName}?`;
-    ModalButton = () => (
-      <Button variant="danger" onClick={handleModalToggle}>
-        {" "}
-        <TrashAltIcon /> Delete{" "}
-      </Button>
-    );
+    ModalButton = DeleteModalButton;
   }
 
   return (
@@ -123,14 +131,20 @@ enum ButtonType {
   delete = "DELETE",
 }
 
-function getEditableAttributes(attributes: IAttributeModel[]) {
+function getEditableAttributes(
+  attributes: IAttributeModel[]
+): IAttributeModel[] {
   return attributes.filter((attribute) => attribute.modifier === "rw+");
 }
 
-function getNotReadonlyAttributes(attributes: IAttributeModel[]) {
+function getNotReadonlyAttributes(
+  attributes: IAttributeModel[]
+): IAttributeModel[] {
   return attributes.filter((attribute) => attribute.modifier !== "r");
 }
-function getCurrentAttributes(instance: IServiceInstanceModel) {
+function getCurrentAttributes(
+  instance: IServiceInstanceModel
+): IInstanceAttributeModel {
   return instance.candidate_attributes &&
     !_.isEmpty(instance.candidate_attributes)
     ? instance.candidate_attributes

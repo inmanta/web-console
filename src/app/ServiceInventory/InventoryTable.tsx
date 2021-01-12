@@ -94,7 +94,7 @@ export const InventoryTable: React.FunctionComponent<{
         className="table-with-max-cell-width"
       >
         <TableHeader />
-        <TableBody rowKey={({ rowData, rowIndex }) => rowIndex} />
+        <TableBody rowKey={({ rowIndex }) => rowIndex} />
       </Table>
     </React.Fragment>
   );

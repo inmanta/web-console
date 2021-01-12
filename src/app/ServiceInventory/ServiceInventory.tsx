@@ -20,7 +20,15 @@ import { InstanceModal, ButtonType } from "./InstanceModal";
 import { IAttributeModel } from "@app/Models/LsmModels";
 import { useKeycloak } from "react-keycloak";
 
-const ServiceInventory: React.FunctionComponent<any> = (props) => {
+interface Props {
+  match: {
+    params: {
+      id: string;
+    };
+  };
+}
+
+const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   const serviceName = props.match.params.id;
   const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}`;
   const projectStore = useStoreState(
@@ -38,7 +46,6 @@ const ServiceInventory: React.FunctionComponent<any> = (props) => {
   let keycloak;
   if (shouldUseAuth) {
     // The value will be always true or always false during one session
-    // tslint:disable:react-hooks-nesting
     [keycloak] = useKeycloak();
   }
   const dispatchUpdateInstances = (data) =>
@@ -160,6 +167,7 @@ interface IInventoryContextData {
   environmentId: string | undefined;
   inventoryUrl: string;
   setErrorMessage: React.Dispatch<string>;
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   refresh: (data) => any;
 }
 

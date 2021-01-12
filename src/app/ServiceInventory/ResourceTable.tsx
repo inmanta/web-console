@@ -60,13 +60,16 @@ export const ResourceTable: React.FunctionComponent<{
   );
 };
 
-export function getStatusIcon(resourceState: string) {
+export function getStatusIcon(resourceState: string): React.FC {
   switch (resourceState) {
     case "deployed":
+      /* eslint-disable-next-line react/display-name */
       return () => <CheckSquareIcon color="#06c" />;
     case "failed":
+      /* eslint-disable-next-line react/display-name */
       return () => <TimesCircleIcon color="#c9190b" />;
     default:
+      /* eslint-disable-next-line react/display-name */
       return () => <></>;
   }
 }
