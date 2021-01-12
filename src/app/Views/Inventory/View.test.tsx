@@ -4,8 +4,9 @@ import { View } from "./View";
 
 test("loads and displays greeting", async () => {
   // Arrange
-  render(<View message="test" />);
+  render(<View id="test" />);
   // Act
   // Assert
-  expect(screen.getByTestId("InventoryViewContainer")).toBeVisible();
+  const container = screen.getByTestId("InventoryViewContainer");
+  expect(container).toHaveTextContent("id: test");
 });
