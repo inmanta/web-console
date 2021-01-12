@@ -11,6 +11,7 @@
     "start": "webpack-dev-server --hot --color --progress --info=true --config webpack.dev.js",
     "test": "jest",
     "format": "prettier --check --write './**/*.{js,jsx,ts,tsx}'",
+    "format:check": "prettier --check './**/*.{js,jsx,ts,tsx}'",
     "lint": "eslint --max-warnings=0 './**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint --max-warnings=0 './**/*.{js,jsx,ts,tsx}' --quiet --fix",
     "build:bundle-profile": "webpack --config webpack.prod.js --profile --json > stats.json",
