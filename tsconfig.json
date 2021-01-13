@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "esnext",
+    "module": "es6", // "es6" because we use "export * as ns"
     "target": "es5",
     "lib": ["es6", "dom"],
     "sourceMap": true,

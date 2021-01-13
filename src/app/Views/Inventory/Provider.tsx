@@ -8,5 +8,5 @@ interface Params {
 
 export const Provider: React.FC = () => {
   const { id } = useParams<Params>();
-  return <View id={id} />;
+  return <View serviceName={id} />;
 };
