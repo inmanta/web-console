@@ -44,7 +44,7 @@ module.exports = {
       },
     },
     {
-      files: ["**/*webpack*"],
+      files: ["**/*webpack*", ".storybook/**/*.js"],
       rules: {
         "@typescript-eslint/no-var-requires": "off",
       },
