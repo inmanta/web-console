@@ -1,8 +1,8 @@
 import { Either } from "@app/Core";
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { Response } from "./Response";
 
 export interface DataManager {
   getInstancesForService(
     serviceName: string
-  ): Promise<Either.Type<string, IServiceInstanceModel>>;
+  ): Promise<Either.Type<string, Response>>;
 }

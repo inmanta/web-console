@@ -1,1 +1,1 @@
-export { View as InventoryView } from "./View";
+export { Provider as Inventory } from "./Provider";

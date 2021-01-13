@@ -4,9 +4,9 @@ import { View } from "./View";
 
 test("loads and displays greeting", async () => {
   // Arrange
-  render(<View serviceName="test" />);
+  render(<View instances={[]} />);
   // Act
   // Assert
   const container = screen.getByTestId("InventoryViewContainer");
-  expect(container).toHaveTextContent("service name: test");
+  expect(container).toHaveTextContent("[]");
 });

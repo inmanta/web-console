@@ -1,12 +1,13 @@
 import { Either } from "@app/Core";
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
-import { serviceInstance } from "@app/fixtures";
+import { response } from "@app/fixtures";
 import { DataManager } from "./DataManager";
+import { Response } from "./Response";
 
 export class InMemoryDataManager implements DataManager {
-  async getInstancesForService(): Promise<
-    Either.Type<string, IServiceInstanceModel>
-  > {
-    return Promise.resolve(Either.right(serviceInstance));
+  async getInstancesForService(
+    serviceName: string
+  ): Promise<Either.Type<string, Response>> {
+    serviceName;
+    return Promise.resolve(Either.right(response));
   }
 }

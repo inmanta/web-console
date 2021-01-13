@@ -144,3 +144,5 @@ export const serviceInstance = ({
   callback: [],
   deleted: false,
 } as unknown) as IServiceInstanceModel;
+
+export const response = { data: [serviceInstance] };
