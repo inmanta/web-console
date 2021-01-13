@@ -1,1 +1,5 @@
+# Ignore build folder
 dist
+
+# Include storybook folder
+!.storybook

@@ -20,7 +20,9 @@
     "delete:reports": "rm -r cypress/reports/* || true",
     "precypress-test": "yarn run delete:reports",
     "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'yarn cypress run'",
-    "package-cleanup": "node clean_up_packages"
+    "package-cleanup": "node clean_up_packages",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "husky": {
     "hooks": {
@@ -40,6 +42,11 @@
     "dist/"
   ],
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@storybook/addon-actions": "^6.1.14",
+    "@storybook/addon-essentials": "^6.1.14",
+    "@storybook/addon-links": "^6.1.14",
+    "@storybook/react": "^6.1.14",
     "@testing-library/react": "^9.1.4",
     "@types/enzyme": "^3.10.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
@@ -53,6 +60,7 @@
     "@types/webpack": "^4.39.2",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
+    "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^5.1.2",
     "css-loader": "^3.2.0",
     "cypress": "^4.3.0",
