@@ -145,4 +145,6 @@ export const serviceInstance = ({
   deleted: false,
 } as unknown) as IServiceInstanceModel;
 
-export const response = { data: [serviceInstance] };
+export const instances = [serviceInstance];
+
+export const response = { data: instances };
