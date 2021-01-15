@@ -6,12 +6,16 @@ export interface Row {
 
 export class RowPresenter {
   createFromInstances(instances: IServiceInstanceModel[]): Row[] {
-    return instances.map(this.instanceToRow);
+    return instances.map(instanceToRow);
   }
+}
 
-  private instanceToRow(instance: IServiceInstanceModel): Row {
-    return {
-      id: instance.id,
-    };
-  }
+function instanceToRow(instance: IServiceInstanceModel): Row {
+  return {
+    id: transformId(instance.id),
+  };
+}
+
+function transformId(id: string): string {
+  return id.substring(0, 4);
 }

@@ -1,6 +1,6 @@
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
 
-export const serviceInstance = ({
+export const instance = ({
   id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
   environment: "621129e4-7fe8-434c-b6cb-ea31d36e1bbc",
   service_entity: "cloudconnectv2",
@@ -145,6 +145,6 @@ export const serviceInstance = ({
   deleted: false,
 } as unknown) as IServiceInstanceModel;
 
-export const instances = [serviceInstance];
+export const instances = [instance];
 
 export const response = { data: instances };
