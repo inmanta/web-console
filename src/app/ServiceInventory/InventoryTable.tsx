@@ -6,7 +6,12 @@ import {
   TableBody,
   wrappable,
 } from "@patternfly/react-table";
-import { List, ListItem } from "@patternfly/react-core";
+import {
+  ClipboardCopy,
+  ClipboardCopyVariant,
+  List,
+  ListItem,
+} from "@patternfly/react-core";
 import moment from "moment";
 import { ResourceModal } from "./ResourceModal";
 import { InstanceModal, ButtonType } from "./InstanceModal";
@@ -71,7 +76,13 @@ export const InventoryTable: React.FunctionComponent<{
     }
     return {
       cells: [
-        instance.id.substring(0, 4),
+        {
+          title: (
+            <ClipboardCopy isReadOnly variant={ClipboardCopyVariant.expansion}>
+              {instance.id}
+            </ClipboardCopy>
+          ),
+        },
         instance.state,
         candidateAttributes,
         activeAttributes,
