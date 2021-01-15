@@ -10,6 +10,7 @@ import {
 import { Tooltip } from "@patternfly/react-core";
 import { InstanceDetails } from "../InstanceDetails/View";
 import { DateInfo } from "./DatePresenter";
+import { content } from "./content";
 
 interface Props {
   row: Row;
@@ -35,12 +36,12 @@ export const InstanceRow: React.FC<Props> = ({
           onToggle,
         }}
       />
-      <Td dataLabel="Id">{row.id}</Td>
-      <Td dataLabel="State">{row.state}</Td>
-      <Td dataLabel="Created">
+      <Td dataLabel={content("inventory.column.id")}>{row.id}</Td>
+      <Td dataLabel={content("inventory.column.state")}>{row.state}</Td>
+      <Td dataLabel={content("inventory.column.createdAt")}>
         <DateWithTooltip date={row.createdAt} />
       </Td>
-      <Td dataLabel="Updated">
+      <Td dataLabel={content("inventory.column.updatedAt")}>
         <DateWithTooltip date={row.updatedAt} />
       </Td>
     </Tr>

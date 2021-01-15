@@ -8,6 +8,9 @@ export interface Row {
   updatedAt: DateInfo;
 }
 
+/**
+ * The RowPresenter is responsible for formatting the domain data.
+ */
 export class RowPresenter {
   constructor(private datePresenter: DatePresenter) {}
 
