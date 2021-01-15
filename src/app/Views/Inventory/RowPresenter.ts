@@ -1,23 +1,30 @@
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { ServiceInstance } from "@app/Core";
+import { DatePresenter, DateInfo } from "./DatePresenter";
 
 export interface Row {
   id: string;
   state: string;
+  createdAt: DateInfo;
+  updatedAt: DateInfo;
 }
 
 export class RowPresenter {
-  createFromInstances(instances: IServiceInstanceModel[]): Row[] {
-    return instances.map(instanceToRow);
+  constructor(private datePresenter: DatePresenter) {}
+
+  public createFromInstances(instances: ServiceInstance[]): Row[] {
+    return instances.map((instance) => this.instanceToRow(instance));
   }
-}
 
-function instanceToRow(instance: IServiceInstanceModel): Row {
-  return {
-    id: transformId(instance.id),
-    state: instance.state,
-  };
-}
+  private instanceToRow(instance: ServiceInstance): Row {
+    return {
+      id: this.transformId(instance.id),
+      state: instance.state,
+      createdAt: this.datePresenter.get(instance.created_at),
+      updatedAt: this.datePresenter.get(instance.last_updated),
+    };
+  }
 
-function transformId(id: string): string {
-  return id.substring(0, 4);
+  private transformId(id: string): string {
+    return id.substring(0, 4);
+  }
 }

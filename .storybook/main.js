@@ -7,4 +7,23 @@ module.exports = {
     config.resolve.plugins.push(new TsconfigPathsPlugin());
     return config;
   },
+  babel: async (options) => ({
+    ...options,
+    /**
+     * This plugin was manually added because storybook was
+     * crashing on a certain TypeScript feature.
+     *
+     * The specific feature that was causing the issue was
+     * the contructor parameter properties shorthand.
+     * With this you can just specific the contructor
+     * parameters and the class properties are automatically
+     * created and set.
+     *
+     * I believe babel for storybook has been configured to understand
+     * TypeScript. But it might just remove typescript syntax.
+     * And sometimes we need certain typescript code to result
+     * in actual javascript code changes. This plugin fixes it.
+     */
+    plugins: ["@babel/plugin-transform-typescript"],
+  }),
 };

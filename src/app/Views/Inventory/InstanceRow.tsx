@@ -7,7 +7,9 @@ import {
   ExpandableRowContent,
   OnCollapse,
 } from "@patternfly/react-table";
+import { Tooltip } from "@patternfly/react-core";
 import { InstanceDetails } from "../InstanceDetails/View";
+import { DateInfo } from "./DatePresenter";
 
 interface Props {
   row: Row;
@@ -16,7 +18,7 @@ interface Props {
   onToggle: OnCollapse;
 }
 
-const COLUMN_LENGTH = 3;
+const COLUMN_LENGTH = 5;
 
 export const InstanceRow: React.FC<Props> = ({
   row,
@@ -33,8 +35,14 @@ export const InstanceRow: React.FC<Props> = ({
           onToggle,
         }}
       />
-      <Td dataLabel="id">{row.id}</Td>
-      <Td dataLabel="state">{row.state}</Td>
+      <Td dataLabel="Id">{row.id}</Td>
+      <Td dataLabel="State">{row.state}</Td>
+      <Td dataLabel="Created">
+        <DateWithTooltip date={row.createdAt} />
+      </Td>
+      <Td dataLabel="Updated">
+        <DateWithTooltip date={row.updatedAt} />
+      </Td>
     </Tr>
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id}`}>
       <Td colSpan={COLUMN_LENGTH}>
@@ -44,4 +52,10 @@ export const InstanceRow: React.FC<Props> = ({
       </Td>
     </Tr>
   </Tbody>
+);
+
+const DateWithTooltip: React.FC<{ date: DateInfo }> = ({ date }) => (
+  <Tooltip content={date.full} entryDelay={200}>
+    <span>{date.relative}</span>
+  </Tooltip>
 );

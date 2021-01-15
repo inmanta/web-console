@@ -11,9 +11,7 @@ export default {
 const Template: Story<Props> = (args) => <View {...args} />;
 
 export const Empty = Template.bind({});
-Empty.args = {
-  instances: [],
-};
+Empty.args = { instances: [] };
 
 export const One = Template.bind({});
 One.args = { instances };

@@ -1,5 +1,5 @@
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { ServiceInstance } from "@app/Core";
 
 export interface Response {
-  data: IServiceInstanceModel[];
+  data: ServiceInstance[];
 }
