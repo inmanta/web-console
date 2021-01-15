@@ -2,7 +2,7 @@ import React from "react";
 import { App } from "@app/index";
 import { mount } from "enzyme";
 import Keycloak from "keycloak-js";
-import { wait } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 
 describe("Navigation", () => {
   let keycloak: Keycloak.KeycloakInstance;
@@ -13,7 +13,7 @@ describe("Navigation", () => {
   it("should render nav groups", async () => {
     const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
     const nav = wrapper.find("#nav-primary-simple");
-    await wait();
+    await waitFor(() => undefined);
     expect(nav.find(".pf-c-nav__section-title")).toHaveLength(2);
   });
 
@@ -22,7 +22,7 @@ describe("Navigation", () => {
     const nav = wrapper.find("#nav-primary-simple");
     const serviceCatalogEntry = nav.find(".pf-c-nav__link").first();
     serviceCatalogEntry.simulate("click");
-    await wait();
+    await waitFor(() => undefined);
     expect(serviceCatalogEntry.getElement().props.activeClassName).toEqual(
       "pf-m-current"
     );
