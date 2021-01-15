@@ -10,7 +10,14 @@ import {
 import { Tooltip } from "@patternfly/react-core";
 import { InstanceDetails } from "../InstanceDetails/View";
 import { DateInfo } from "./DatePresenter";
+import { AttributeInfo } from "./AttributePresenter";
 import { content } from "./content";
+import {
+  OutlinedQuestionCircleIcon,
+  ListIcon,
+  RedoIcon,
+} from "@patternfly/react-icons";
+import { List, ListItem, ListVariant } from "@patternfly/react-core";
 
 interface Props {
   row: Row;
@@ -19,7 +26,7 @@ interface Props {
   onToggle: OnCollapse;
 }
 
-const COLUMN_LENGTH = 5;
+const COLUMN_LENGTH = 6;
 
 export const InstanceRow: React.FC<Props> = ({
   row,
@@ -38,6 +45,9 @@ export const InstanceRow: React.FC<Props> = ({
       />
       <Td dataLabel={content("inventory.column.id")}>{row.id}</Td>
       <Td dataLabel={content("inventory.column.state")}>{row.state}</Td>
+      <Td dataLabel={content("inventory.column.attributes")}>
+        <Attributes info={row.attributes} />
+      </Td>
       <Td dataLabel={content("inventory.column.createdAt")}>
         <DateWithTooltip date={row.createdAt} />
       </Td>
@@ -60,3 +70,21 @@ const DateWithTooltip: React.FC<{ date: DateInfo }> = ({ date }) => (
     <span>{date.relative}</span>
   </Tooltip>
 );
+
+const Attributes: React.FC<{ info: AttributeInfo }> = ({ info }) => {
+  const color = (enabled) => (enabled ? "#030303" : "#D2D2D2");
+
+  return (
+    <List variant={ListVariant.inline}>
+      <ListItem>
+        <OutlinedQuestionCircleIcon color={color(info.candidate)} />
+      </ListItem>
+      <ListItem>
+        <ListIcon color={color(info.active)} />
+      </ListItem>
+      <ListItem>
+        <RedoIcon color={color(info.rollback)} />
+      </ListItem>
+    </List>
+  );
+};

@@ -4,6 +4,7 @@ import { ComposableTableExpandable } from "./DummyTable";
 import { RowPresenter } from "./RowPresenter";
 import { InventoryTable } from "./InventoryTable";
 import { MomentDatePresenter } from "./MomentDatePresenter";
+import { AttributePresenter } from "./AttributePresenter";
 
 export interface Props {
   instances: ServiceInstance[];
@@ -11,7 +12,8 @@ export interface Props {
 
 export const View: React.FC<Props> = ({ instances }) => {
   const datePresenter = new MomentDatePresenter();
-  const rowPresenter = new RowPresenter(datePresenter);
+  const attributePresenter = new AttributePresenter();
+  const rowPresenter = new RowPresenter(datePresenter, attributePresenter);
   const rows = rowPresenter.createFromInstances(instances);
 
   return (
