@@ -16,7 +16,7 @@ interface Props {
   onToggle: OnCollapse;
 }
 
-const COLUMN_LENGTH = 2;
+const COLUMN_LENGTH = 3;
 
 export const InstanceRow: React.FC<Props> = ({
   row,
@@ -34,6 +34,7 @@ export const InstanceRow: React.FC<Props> = ({
         }}
       />
       <Td dataLabel="id">{row.id}</Td>
+      <Td dataLabel="state">{row.state}</Td>
     </Tr>
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id}`}>
       <Td colSpan={COLUMN_LENGTH}>

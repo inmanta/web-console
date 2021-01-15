@@ -19,11 +19,11 @@ Empty.args = {
 export const Many = Template.bind({});
 Many.args = {
   rows: [
-    { id: "1234" },
-    { id: "2345" },
-    { id: "3456" },
-    { id: "4567" },
-    { id: "5678" },
-    { id: "6789" },
+    { id: "1234", state: "rejected" },
+    { id: "2345", state: "rejected" },
+    { id: "3456", state: "rejected" },
+    { id: "4567", state: "rejected" },
+    { id: "5678", state: "rejected" },
+    { id: "6789", state: "rejected" },
   ],
 };

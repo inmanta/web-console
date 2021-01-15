@@ -2,6 +2,7 @@ import { IServiceInstanceModel } from "@app/Models/LsmModels";
 
 export interface Row {
   id: string;
+  state: string;
 }
 
 export class RowPresenter {
@@ -13,6 +14,7 @@ export class RowPresenter {
 function instanceToRow(instance: IServiceInstanceModel): Row {
   return {
     id: transformId(instance.id),
+    state: instance.state,
   };
 }
 

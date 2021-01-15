@@ -17,7 +17,7 @@ function rowsToExpandedDict(rows: Row[]): ExpandedDict {
 }
 
 export const InventoryTable: React.FC<Props> = ({ rows }) => {
-  const columns = ["Id"];
+  const columns = ["Id", "State"];
   const heads = columns.map((column) => <Th key={column}>{column}</Th>);
 
   const [expanded, setExpanded] = React.useState(rowsToExpandedDict(rows));
