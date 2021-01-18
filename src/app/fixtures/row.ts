@@ -1,4 +1,4 @@
-import { Row } from "@app/Views/Inventory/TablePresenter";
+import { Row } from "src/UserInterface/ServiceInstance/TablePresenter";
 
 const Id = (id: string) => ({ full: id, short: id });
 
