@@ -1,8 +1,7 @@
 import React, { useEffect, useState, ReactElement } from "react";
 import { useParams } from "react-router-dom";
-import { RemoteData } from "Core";
+import { RemoteData, InventoryResponse } from "Core";
 import { View } from "./View";
-import { Response } from "./Response";
 import { DataManager } from "./DataManager";
 
 interface Params {
@@ -15,7 +14,7 @@ interface Props {
 
 export const Provider: React.FC<Props> = ({ dataManager }) => {
   const { id } = useParams<Params>();
-  const [data, setData] = useState<RemoteData.Type<string, Response>>(
+  const [data, setData] = useState<RemoteData.Type<string, InventoryResponse>>(
     RemoteData.notAsked()
   );
 
@@ -26,7 +25,7 @@ export const Provider: React.FC<Props> = ({ dataManager }) => {
     })();
   });
 
-  return RemoteData.fold<string, Response, ReactElement>({
+  return RemoteData.fold<string, InventoryResponse, ReactElement>({
     notAsked: () => <p>not asked</p>,
     loading: () => <p>loading</p>,
     failed: (error) => <p>error: {error}</p>,
