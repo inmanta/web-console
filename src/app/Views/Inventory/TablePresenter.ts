@@ -2,9 +2,16 @@ import { ServiceInstance } from "@app/Core";
 import { DatePresenter, DateInfo } from "./DatePresenter";
 import { AttributeInfo, AttributePresenter } from "./AttributePresenter";
 import { content } from "./content";
+import { ReactElement } from "react";
+import { ActionPresenter } from "./Actions/ActionPresenter";
+
+interface Id {
+  full: string;
+  short: string;
+}
 
 export interface Row {
-  id: string;
+  id: Id;
   state: string;
   attributes: AttributeInfo;
   createdAt: DateInfo;
@@ -13,27 +20,36 @@ export interface Row {
 
 /**
  * The TablePresenter is responsible for formatting the domain data.
+ * This class should only hold config data and pure functions.
+ * This class should not hold state as state should be kept in the Redux Store.
  */
 export class TablePresenter {
-  readonly numberOfColumns = 6;
+  readonly columnHeads = [
+    content("inventory.column.id"),
+    content("inventory.column.state"),
+    content("inventory.column.attributes"),
+    content("inventory.column.createdAt"),
+    content("inventory.column.updatedAt"),
+    content("inventory.column.actions"),
+  ];
+  readonly numberOfColumns = this.columnHeads.length + 1;
 
   constructor(
     private datePresenter: DatePresenter,
-    private attributePresenter: AttributePresenter
+    private attributePresenter: AttributePresenter,
+    private actionPresenter: ActionPresenter
   ) {}
+
+  public getActionsFor(id: string): ReactElement | null {
+    return this.actionPresenter.getForId(id);
+  }
 
   public createFromInstances(instances: ServiceInstance[]): Row[] {
     return instances.map((instance) => this.instanceToRow(instance));
   }
 
   public getColumnHeads(): string[] {
-    return [
-      content("inventory.column.id"),
-      content("inventory.column.state"),
-      content("inventory.column.attributes"),
-      content("inventory.column.createdAt"),
-      content("inventory.column.updatedAt"),
-    ];
+    return this.columnHeads;
   }
 
   public getNumberOfColumns(): number {
@@ -52,7 +68,7 @@ export class TablePresenter {
     } = instance;
 
     return {
-      id: this.transformId(id),
+      id: this.getId(id),
       state,
       attributes: this.attributePresenter.get(
         candidate_attributes,
@@ -64,7 +80,10 @@ export class TablePresenter {
     };
   }
 
-  private transformId(id: string): string {
-    return id.substring(0, 4);
+  private getId(full: string): Id {
+    return {
+      full,
+      short: full.substring(0, 4),
+    };
   }
 }

@@ -1,7 +1,9 @@
 import { Row } from "@app/Views/Inventory/TablePresenter";
 
+const Id = (id: string) => ({ full: id, short: id });
+
 export const base: Row = {
-  id: "0001",
+  id: Id("0001"),
   state: "rejected",
   attributes: {
     candidate: true,
@@ -20,12 +22,12 @@ export const base: Row = {
 
 export const row2: Row = {
   ...base,
-  id: "0002",
+  id: Id("0002"),
 };
 
 export const row3: Row = {
   ...base,
-  id: "0003",
+  id: Id("0003"),
 };
 
 export const rows = [base, row2];

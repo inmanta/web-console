@@ -5,12 +5,14 @@ import { rows } from "@app/fixtures/row";
 import { TablePresenter } from "./TablePresenter";
 import { DummyDatePresenter } from "./DummyDatePresenter";
 import { AttributePresenter } from "./AttributePresenter";
+import { DummyActionPresenter } from "./Actions/DummyActionPresenter";
 
 test("loads and displays greeting", async () => {
   // Arrange
   const presenter = new TablePresenter(
     new DummyDatePresenter(),
-    new AttributePresenter()
+    new AttributePresenter(),
+    new DummyActionPresenter()
   );
   render(<InventoryTable rows={rows} tablePresenter={presenter} />);
   const testid = `details_${rows[0].id}`;

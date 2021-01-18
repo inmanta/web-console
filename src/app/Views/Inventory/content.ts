@@ -4,6 +4,7 @@ const dict = {
   "inventory.column.attributes": "Attributes",
   "inventory.column.createdAt": "Created",
   "inventory.column.updatedAt": "Updated",
+  "inventory.column.actions": "Actions",
 };
 
 type Key = keyof typeof dict;

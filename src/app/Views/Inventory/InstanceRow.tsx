@@ -25,6 +25,7 @@ interface Props {
   isExpanded: boolean;
   onToggle: OnCollapse;
   numberOfColumns: number;
+  actions: React.ReactElement | null;
 }
 
 export const InstanceRow: React.FC<Props> = ({
@@ -33,6 +34,7 @@ export const InstanceRow: React.FC<Props> = ({
   isExpanded,
   onToggle,
   numberOfColumns,
+  actions,
 }) => (
   <Tbody isExpanded={false}>
     <Tr>
@@ -43,7 +45,7 @@ export const InstanceRow: React.FC<Props> = ({
           onToggle,
         }}
       />
-      <Td dataLabel={content("inventory.column.id")}>{row.id}</Td>
+      <Td dataLabel={content("inventory.column.id")}>{row.id.short}</Td>
       <Td dataLabel={content("inventory.column.state")}>{row.state}</Td>
       <Td dataLabel={content("inventory.column.attributes")}>
         <Attributes info={row.attributes} />
@@ -54,8 +56,9 @@ export const InstanceRow: React.FC<Props> = ({
       <Td dataLabel={content("inventory.column.updatedAt")}>
         <DateWithTooltip date={row.updatedAt} />
       </Td>
+      <Td dataLabel={content("inventory.column.actions")}>{actions}</Td>
     </Tr>
-    <Tr isExpanded={isExpanded} data-testid={`details_${row.id}`}>
+    <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
       <Td colSpan={numberOfColumns}>
         <ExpandableRowContent>
           <InstanceDetails />

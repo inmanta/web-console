@@ -5,6 +5,7 @@ import { rows } from "@app/fixtures/row";
 import { DummyDatePresenter } from "./DummyDatePresenter";
 import { AttributePresenter } from "./AttributePresenter";
 import { TablePresenter } from "./TablePresenter";
+import { DummyActionPresenter } from "./Actions/DummyActionPresenter";
 
 export default {
   title: "InventoryTable",
@@ -13,7 +14,8 @@ export default {
 
 const tablePresenter = new TablePresenter(
   new DummyDatePresenter(),
-  new AttributePresenter()
+  new AttributePresenter(),
+  new DummyActionPresenter()
 );
 
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => (

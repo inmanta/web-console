@@ -12,10 +12,19 @@ import {
 import { DeleteForm } from "./DeleteForm";
 import _ from "lodash";
 
+type PickedInstance = Pick<
+  IServiceInstanceModel,
+  | "id"
+  | "version"
+  | "candidate_attributes"
+  | "active_attributes"
+  | "rollback_attributes"
+>;
+
 const InstanceModal: React.FunctionComponent<{
   buttonType: ButtonType;
   serviceName: string;
-  instance?: IServiceInstanceModel;
+  instance?: PickedInstance;
   keycloak?: Keycloak.KeycloakInstance;
 }> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -143,7 +152,10 @@ function getNotReadonlyAttributes(
   return attributes.filter((attribute) => attribute.modifier !== "r");
 }
 function getCurrentAttributes(
-  instance: IServiceInstanceModel
+  instance: Pick<
+    IServiceInstanceModel,
+    "candidate_attributes" | "active_attributes"
+  >
 ): IInstanceAttributeModel {
   return instance.candidate_attributes &&
     !_.isEmpty(instance.candidate_attributes)

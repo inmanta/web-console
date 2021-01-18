@@ -41,11 +41,12 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
       {rows.map((row, index) => (
         <InstanceRow
           index={index}
-          key={row.id}
+          key={row.id.full}
           row={row}
           isExpanded={expanded[index]}
           onToggle={handleExpansionToggle}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
+          actions={tablePresenter.getActionsFor(row.id.full)}
         />
       ))}
     </TableComposable>
