@@ -1,21 +1,18 @@
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
-import React from "react";
+import React, { Fragment } from "react";
 import {
   TableHeader,
   Table,
   TableBody,
   wrappable,
 } from "@patternfly/react-table";
-import {
-  ClipboardCopy,
-  ClipboardCopyVariant,
-  List,
-  ListItem,
-} from "@patternfly/react-core";
+import { List, ListItem, Tooltip } from "@patternfly/react-core";
 import moment from "moment";
 import { ResourceModal } from "./ResourceModal";
 import { InstanceModal, ButtonType } from "./InstanceModal";
 import { DiagnosticsModal } from "./DiagnosticsModal";
+import copy from "copy-to-clipboard";
+import { CopyIcon } from "@patternfly/react-icons";
 
 export const InventoryTable: React.FunctionComponent<{
   instances: IServiceInstanceModel[];
@@ -77,11 +74,7 @@ export const InventoryTable: React.FunctionComponent<{
     return {
       cells: [
         {
-          title: (
-            <ClipboardCopy isReadOnly variant={ClipboardCopyVariant.expansion}>
-              {instance.id}
-            </ClipboardCopy>
-          ),
+          title: <IdClipboardCopy id={instance.id} />,
         },
         instance.state,
         candidateAttributes,
@@ -133,3 +126,14 @@ function getFormattedListFromObject(
     </List>
   ) : null;
 }
+
+export const IdClipboardCopy: React.FC<{ id: string }> = (props) => {
+  return (
+    <Fragment>
+      {props.id.substring(0, 4)}
+      <Tooltip content="Copy full service instance id to clipboard">
+        <CopyIcon style={{ paddingLeft: 5 }} onClick={() => copy(props.id)} />
+      </Tooltip>
+    </Fragment>
+  );
+};

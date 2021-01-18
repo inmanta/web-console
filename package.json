@@ -117,6 +117,7 @@
     "@patternfly/react-styles": "^4.7.22",
     "@patternfly/react-table": "^4.19.45",
     "@patternfly/react-tokens": "^4.9.22",
+    "copy-to-clipboard": "^3.3.1",
     "dotenv-webpack": "^1.7.0",
     "easy-peasy": "^4.0.1",
     "keycloak-js": "6.0.1",
