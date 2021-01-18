@@ -1,5 +1,6 @@
 # Release 1.5.0 (?)
 
+- Add clipboard copy funcionality for the full service instance id (#135)
 
 # Release 1.4.0 (2020-12-17)
 
