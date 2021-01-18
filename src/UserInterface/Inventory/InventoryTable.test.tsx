@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
-import { rows } from "Fixtures/row";
+import { rows } from "Fixtures";
 import { tablePresenter } from "./Presenters/TablePresenter.injected";
 
 test("loads and displays greeting", async () => {

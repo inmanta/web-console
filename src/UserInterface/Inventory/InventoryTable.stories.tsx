@@ -1,7 +1,7 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { InventoryTable } from "./InventoryTable";
-import { rows } from "Fixtures/row";
+import { rows } from "Fixtures";
 import { tablePresenter } from "./Presenters/TablePresenter.injected";
 
 export default {
