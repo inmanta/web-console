@@ -8,7 +8,6 @@ import {
   OnCollapse,
 } from "@patternfly/react-table";
 import { Tooltip } from "@patternfly/react-core";
-import { InstanceDetails } from "../InstanceDetails/View";
 import { DateInfo } from "./DatePresenter";
 import { AttributeInfo } from "./AttributePresenter";
 import { content } from "@app/Core";
@@ -61,7 +60,7 @@ export const InstanceRow: React.FC<Props> = ({
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
       <Td colSpan={numberOfColumns}>
         <ExpandableRowContent>
-          <InstanceDetails />
+          <div>instance details</div>
         </ExpandableRowContent>
       </Td>
     </Tr>
