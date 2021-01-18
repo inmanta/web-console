@@ -15,7 +15,7 @@ module.exports = {
      *
      * The specific feature that was causing the issue was
      * the contructor parameter properties shorthand.
-     * With this you can just specific the contructor
+     * With this you can just specify the contructor
      * parameters and the class properties are automatically
      * created and set.
      *
