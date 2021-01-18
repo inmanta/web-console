@@ -8,6 +8,7 @@ import {
   Td,
   ExpandableRowContent,
 } from "@patternfly/react-table";
+import { fromEntries } from "Core";
 
 export const ComposableTableExpandable: React.FC = () => {
   const columns = [
@@ -59,9 +60,7 @@ export const ComposableTableExpandable: React.FC = () => {
   const numColumns = columns.length;
   // Init all to true
   const [expanded, setExpanded] = React.useState(
-    Object.fromEntries(
-      Object.entries(rowPairs).map(([k, v]) => [k, Boolean(v.child)])
-    )
+    fromEntries(Object.entries(rowPairs).map(([k, v]) => [k, Boolean(v.child)]))
   );
   const handleExpansionToggle = (event, pairIndex) => {
     setExpanded({

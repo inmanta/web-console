@@ -2,6 +2,7 @@ import React from "react";
 import { TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import { Row, TablePresenter } from "./TablePresenter";
 import { InstanceRow } from "./InstanceRow";
+import { fromEntries } from "Core";
 
 interface Props {
   rows: Row[];
@@ -14,7 +15,7 @@ interface ExpandedDict {
 
 function rowsToExpandedDict(rows: Row[]): ExpandedDict {
   const pairs = rows.map((_, index) => [index, false]);
-  return Object.fromEntries(pairs);
+  return fromEntries(pairs);
 }
 
 export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
