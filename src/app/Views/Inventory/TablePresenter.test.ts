@@ -12,7 +12,7 @@ const presenter = new TablePresenter(
 const rows = presenter.createFromInstances([instance]);
 
 test("TablePresenter short id", () => {
-  expect(rows[0].id.length).toBe(4);
+  expect(rows[0].id.short.length).toBe(4);
 });
 
 test("TablePresenter full date", () => {

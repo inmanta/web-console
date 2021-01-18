@@ -15,7 +15,7 @@ test("loads and displays greeting", async () => {
     new DummyActionPresenter()
   );
   render(<InventoryTable rows={rows} tablePresenter={presenter} />);
-  const testid = `details_${rows[0].id}`;
+  const testid = `details_${rows[0].id.short}`;
 
   // Act
   fireEvent.click(screen.getAllByRole("button")[0]);
