@@ -1,5 +1,5 @@
 import React from "react";
-import { Row } from "./TablePresenter";
+import { AttributeInfo, Row } from "Core";
 import {
   Tbody,
   Tr,
@@ -8,7 +8,6 @@ import {
   OnCollapse,
 } from "@patternfly/react-table";
 import { Tooltip } from "@patternfly/react-core";
-import { AttributeInfo } from "./AttributePresenter";
 import { DateInfo, content } from "Core";
 import {
   OutlinedQuestionCircleIcon,

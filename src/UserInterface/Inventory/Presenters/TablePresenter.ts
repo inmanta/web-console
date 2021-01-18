@@ -1,16 +1,8 @@
-import { ServiceInstance, DateInfo, content, Id } from "Core";
-import { DatePresenter } from "./DatePresenter";
-import { AttributeInfo, AttributePresenter } from "./AttributePresenter";
 import { ReactElement } from "react";
-import { ActionPresenter } from "./Actions/ActionPresenter";
-
-export interface Row {
-  id: Id;
-  state: string;
-  attributes: AttributeInfo;
-  createdAt: DateInfo;
-  updatedAt: DateInfo;
-}
+import { ServiceInstance, content, Id, Row } from "Core";
+import { DatePresenter } from "./DatePresenter";
+import { AttributePresenter } from "./AttributePresenter";
+import { ActionPresenter } from "./ActionPresenter";
 
 /**
  * The TablePresenter is responsible for formatting the domain data.

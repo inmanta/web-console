@@ -1,8 +1,8 @@
 import React from "react";
 import { TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
-import { Row, TablePresenter } from "./TablePresenter";
+import { fromEntries, Row } from "Core";
+import { TablePresenter } from "./Presenters/TablePresenter";
 import { InstanceRow } from "./InstanceRow";
-import { fromEntries } from "Core";
 
 interface Props {
   rows: Row[];

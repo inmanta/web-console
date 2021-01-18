@@ -1,14 +1,14 @@
 import React from "react";
 import { ButtonType, InstanceModal } from "@app/ServiceInventory/InstanceModal";
 import { DiagnosticsModal } from "@app/ServiceInventory/DiagnosticsModal";
-import { Instance } from "./ActionPresenter";
+import { Instance } from "./Presenters/ActionPresenter";
 
 interface Props {
   instance: Instance;
   keycloak?: Keycloak.KeycloakInstance;
 }
 
-export const Actions: React.FC<Props> = ({ instance, keycloak }) => {
+export const InstanceActions: React.FC<Props> = ({ instance, keycloak }) => {
   if (instance.state === "terminated") return null;
   return (
     <div>

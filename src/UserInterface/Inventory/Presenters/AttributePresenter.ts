@@ -1,10 +1,6 @@
-type Attribute = null | unknown;
+import { AttributeInfo } from "Core";
 
-export interface AttributeInfo {
-  candidate: boolean;
-  active: boolean;
-  rollback: boolean;
-}
+type Attribute = null | unknown;
 
 export class AttributePresenter {
   get(

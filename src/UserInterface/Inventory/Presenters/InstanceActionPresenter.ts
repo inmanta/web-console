@@ -1,6 +1,6 @@
 import React from "react";
-import { Actions } from "./Actions";
 import { ActionPresenter, Instance } from "./ActionPresenter";
+import { InstanceActions } from "UserInterface/Inventory/InstanceActions";
 
 export class InstanceActionPresenter implements ActionPresenter {
   constructor(private readonly instances: Instance[]) {}
@@ -12,6 +12,6 @@ export class InstanceActionPresenter implements ActionPresenter {
   getForId(id: string): React.ReactElement | null {
     const instance = this.getInstanceForId(id);
     if (typeof instance === "undefined") return null;
-    return Actions({ instance });
+    return InstanceActions({ instance });
   }
 }
