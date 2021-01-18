@@ -13,7 +13,7 @@ export class TablePresenter {
   readonly columnHeads = [
     content("inventory.column.id"),
     content("inventory.column.state"),
-    content("inventory.column.attributes"),
+    content("inventory.column.attributesSummary"),
     content("inventory.column.createdAt"),
     content("inventory.column.updatedAt"),
     content("inventory.column.actions"),
