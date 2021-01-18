@@ -74,13 +74,13 @@ export interface IInstanceAttributeModel {
 }
 
 export interface IServiceInstanceModel extends IObjectWithId {
-  active_attributes: IInstanceAttributeModel;
+  active_attributes: IInstanceAttributeModel | null;
   callback: string[];
-  candidate_attributes: IInstanceAttributeModel;
+  candidate_attributes: IInstanceAttributeModel | null;
   deleted: boolean;
   environment: string;
   last_updated: string;
-  rollback_attributes: IInstanceAttributeModel;
+  rollback_attributes: IInstanceAttributeModel | null;
   service_entity: string;
   state: string;
   version: number;

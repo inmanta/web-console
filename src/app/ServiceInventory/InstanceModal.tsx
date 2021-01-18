@@ -156,7 +156,7 @@ function getCurrentAttributes(
     IServiceInstanceModel,
     "candidate_attributes" | "active_attributes"
   >
-): IInstanceAttributeModel {
+): IInstanceAttributeModel | null {
   return instance.candidate_attributes &&
     !_.isEmpty(instance.candidate_attributes)
     ? instance.candidate_attributes

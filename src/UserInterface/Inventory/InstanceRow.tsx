@@ -14,6 +14,7 @@ import {
 import { List, ListItem, ListVariant } from "@patternfly/react-core";
 import { Tooltip } from "@patternfly/react-core";
 import { Row, DateInfo, content, AttributesSummary } from "Core";
+import { InstanceDetails } from "./InstanceDetails";
 
 interface Props {
   row: Row;
@@ -57,7 +58,7 @@ export const InstanceRow: React.FC<Props> = ({
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
       <Td colSpan={numberOfColumns}>
         <ExpandableRowContent>
-          <div>instance details</div>
+          <InstanceDetails attributes={row.attributes} />
         </ExpandableRowContent>
       </Td>
     </Tr>

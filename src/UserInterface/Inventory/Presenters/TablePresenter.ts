@@ -61,6 +61,11 @@ export class TablePresenter {
         active_attributes,
         rollback_attributes
       ),
+      attributes: {
+        candidate: this.attributesPresenter.getPairsSafe(candidate_attributes),
+        active: this.attributesPresenter.getPairsSafe(active_attributes),
+        rollback: this.attributesPresenter.getPairsSafe(rollback_attributes),
+      },
       createdAt: this.datePresenter.get(created_at),
       updatedAt: this.datePresenter.get(last_updated),
     };

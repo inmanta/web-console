@@ -14,10 +14,19 @@ export interface AttributesSummary {
   rollback: boolean;
 }
 
+export type Pairs = [string, string][];
+
+export interface Attributes {
+  candidate: Pairs | null;
+  active: Pairs | null;
+  rollback: Pairs | null;
+}
+
 export interface Row {
   id: Id;
   state: string;
   attributesSummary: AttributesSummary;
+  attributes: Attributes;
   createdAt: DateInfo;
   updatedAt: DateInfo;
 }
