@@ -1,6 +1,5 @@
 import React from "react";
 import { ServiceInstance } from "Core";
-import { ComposableTableExpandable } from "./DummyTable";
 import { TablePresenter } from "./TablePresenter";
 import { InventoryTable } from "./InventoryTable";
 import { MomentDatePresenter } from "./MomentDatePresenter";
@@ -27,16 +26,6 @@ export const View: React.FC<Props> = ({ instances }) => {
       {rows.length > 0 && (
         <InventoryTable rows={rows} tablePresenter={tablePresenter} />
       )}
-      <hr />
-      <pre>
-        <code>{JSON.stringify(rows, null, 4)}</code>
-      </pre>
-      <hr />
-      <pre>
-        <code>{JSON.stringify(instances, null, 4)}</code>
-      </pre>
-      <hr />
-      <ComposableTableExpandable />
     </div>
   );
 };

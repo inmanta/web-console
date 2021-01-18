@@ -8,5 +8,5 @@ test("loads and displays greeting", async () => {
   // Act
   // Assert
   const container = screen.getByTestId("InventoryViewContainer");
-  expect(container).toHaveTextContent("[]");
+  expect(container).toBeVisible();
 });
