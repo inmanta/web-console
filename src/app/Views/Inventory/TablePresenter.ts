@@ -1,6 +1,7 @@
 import { ServiceInstance } from "@app/Core";
 import { DatePresenter, DateInfo } from "./DatePresenter";
 import { AttributeInfo, AttributePresenter } from "./AttributePresenter";
+import { content } from "./content";
 
 export interface Row {
   id: string;
@@ -11,9 +12,11 @@ export interface Row {
 }
 
 /**
- * The RowPresenter is responsible for formatting the domain data.
+ * The TablePresenter is responsible for formatting the domain data.
  */
-export class RowPresenter {
+export class TablePresenter {
+  readonly numberOfColumns = 6;
+
   constructor(
     private datePresenter: DatePresenter,
     private attributePresenter: AttributePresenter
@@ -21,6 +24,20 @@ export class RowPresenter {
 
   public createFromInstances(instances: ServiceInstance[]): Row[] {
     return instances.map((instance) => this.instanceToRow(instance));
+  }
+
+  public getColumnHeads(): string[] {
+    return [
+      content("inventory.column.id"),
+      content("inventory.column.state"),
+      content("inventory.column.attributes"),
+      content("inventory.column.createdAt"),
+      content("inventory.column.updatedAt"),
+    ];
+  }
+
+  public getNumberOfColumns(): number {
+    return this.numberOfColumns;
   }
 
   private instanceToRow(instance: ServiceInstance): Row {

@@ -1,4 +1,4 @@
-import { Row } from "@app/Views/Inventory/RowPresenter";
+import { Row } from "@app/Views/Inventory/TablePresenter";
 
 export const base: Row = {
   id: "0001",

@@ -2,10 +2,17 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
 import { rows } from "@app/fixtures/row";
+import { TablePresenter } from "./TablePresenter";
+import { DummyDatePresenter } from "./DummyDatePresenter";
+import { AttributePresenter } from "./AttributePresenter";
 
 test("loads and displays greeting", async () => {
   // Arrange
-  render(<InventoryTable rows={rows} />);
+  const presenter = new TablePresenter(
+    new DummyDatePresenter(),
+    new AttributePresenter()
+  );
+  render(<InventoryTable rows={rows} tablePresenter={presenter} />);
   const testid = `details_${rows[0].id}`;
 
   // Act

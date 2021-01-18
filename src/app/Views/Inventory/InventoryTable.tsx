@@ -1,11 +1,11 @@
 import React from "react";
 import { TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
-import { Row } from "./RowPresenter";
+import { Row, TablePresenter } from "./TablePresenter";
 import { InstanceRow } from "./InstanceRow";
-import { content } from "./content";
 
 interface Props {
   rows: Row[];
+  tablePresenter: TablePresenter;
 }
 
 interface ExpandedDict {
@@ -17,16 +17,10 @@ function rowsToExpandedDict(rows: Row[]): ExpandedDict {
   return Object.fromEntries(pairs);
 }
 
-export const InventoryTable: React.FC<Props> = ({ rows }) => {
-  const columns = [
-    content("inventory.column.id"),
-    content("inventory.column.state"),
-    content("inventory.column.attributes"),
-    content("inventory.column.createdAt"),
-    content("inventory.column.updatedAt"),
-  ];
-
-  const heads = columns.map((column) => <Th key={column}>{column}</Th>);
+export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
+  const heads = tablePresenter
+    .getColumnHeads()
+    .map((column) => <Th key={column}>{column}</Th>);
 
   const [expanded, setExpanded] = React.useState(rowsToExpandedDict(rows));
   const handleExpansionToggle = (event, index) => {
@@ -51,6 +45,7 @@ export const InventoryTable: React.FC<Props> = ({ rows }) => {
           row={row}
           isExpanded={expanded[index]}
           onToggle={handleExpansionToggle}
+          numberOfColumns={tablePresenter.getNumberOfColumns()}
         />
       ))}
     </TableComposable>

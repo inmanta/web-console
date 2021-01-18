@@ -1,5 +1,5 @@
 import React from "react";
-import { Row } from "./RowPresenter";
+import { Row } from "./TablePresenter";
 import {
   Tbody,
   Tr,
@@ -24,15 +24,15 @@ interface Props {
   index: number;
   isExpanded: boolean;
   onToggle: OnCollapse;
+  numberOfColumns: number;
 }
-
-const COLUMN_LENGTH = 6;
 
 export const InstanceRow: React.FC<Props> = ({
   row,
   index,
   isExpanded,
   onToggle,
+  numberOfColumns,
 }) => (
   <Tbody isExpanded={false}>
     <Tr>
@@ -56,7 +56,7 @@ export const InstanceRow: React.FC<Props> = ({
       </Td>
     </Tr>
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id}`}>
-      <Td colSpan={COLUMN_LENGTH}>
+      <Td colSpan={numberOfColumns}>
         <ExpandableRowContent>
           <InstanceDetails />
         </ExpandableRowContent>
