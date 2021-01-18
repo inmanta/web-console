@@ -11,7 +11,7 @@ import { Tooltip } from "@patternfly/react-core";
 import { InstanceDetails } from "../InstanceDetails/View";
 import { DateInfo } from "./DatePresenter";
 import { AttributeInfo } from "./AttributePresenter";
-import { content } from "./content";
+import { content } from "@app/Core";
 import {
   OutlinedQuestionCircleIcon,
   ListIcon,
