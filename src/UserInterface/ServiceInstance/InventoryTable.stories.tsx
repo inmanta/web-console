@@ -25,5 +25,5 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => (
 export const Empty = Template.bind({});
 Empty.args = { rows: [] };
 
-export const Many = Template.bind({});
-Many.args = { rows };
+export const Multiple = Template.bind({});
+Multiple.args = { rows };

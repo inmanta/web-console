@@ -13,5 +13,5 @@ const Template: Story<Props> = (args) => <View {...args} />;
 export const Empty = Template.bind({});
 Empty.args = { instances: [] };
 
-export const One = Template.bind({});
-One.args = { instances };
+export const Multiple = Template.bind({});
+Multiple.args = { instances };

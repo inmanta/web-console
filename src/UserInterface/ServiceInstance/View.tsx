@@ -23,9 +23,7 @@ export const View: React.FC<Props> = ({ instances }) => {
 
   return (
     <div data-testid="InventoryViewContainer">
-      {rows.length > 0 && (
-        <InventoryTable rows={rows} tablePresenter={tablePresenter} />
-      )}
+      <InventoryTable rows={rows} tablePresenter={tablePresenter} />
     </div>
   );
 };
