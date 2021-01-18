@@ -1,13 +1,8 @@
-import { ServiceInstance, DateInfo, content } from "Core";
+import { ServiceInstance, DateInfo, content, Id } from "Core";
 import { DatePresenter } from "./DatePresenter";
 import { AttributeInfo, AttributePresenter } from "./AttributePresenter";
 import { ReactElement } from "react";
 import { ActionPresenter } from "./Actions/ActionPresenter";
-
-interface Id {
-  full: string;
-  short: string;
-}
 
 export interface Row {
   id: Id;
