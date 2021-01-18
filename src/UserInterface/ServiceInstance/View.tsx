@@ -1,5 +1,5 @@
 import React from "react";
-import { ServiceInstance } from "@app/Core";
+import { ServiceInstance } from "Core";
 import { ComposableTableExpandable } from "./DummyTable";
 import { TablePresenter } from "./TablePresenter";
 import { InventoryTable } from "./InventoryTable";

@@ -1,4 +1,4 @@
-import { ServiceInstance } from "@app/Core";
+import { ServiceInstance } from "Core";
 
 export interface Response {
   data: ServiceInstance[];

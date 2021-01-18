@@ -1,4 +1,4 @@
-import { Either } from "@app/Core";
+import { Either } from "Core";
 import { response } from "@app/fixtures";
 import { DataManager } from "./DataManager";
 import { Response } from "./Response";

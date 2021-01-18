@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ReactElement } from "react";
 import { useParams } from "react-router-dom";
-import { RemoteData } from "@app/Core";
+import { RemoteData } from "Core";
 import { View } from "./View";
 import { Response } from "./Response";
 import { DataManager } from "./DataManager";

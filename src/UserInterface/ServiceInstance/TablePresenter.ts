@@ -1,7 +1,6 @@
-import { ServiceInstance } from "@app/Core";
+import { ServiceInstance, content } from "Core";
 import { DatePresenter, DateInfo } from "./DatePresenter";
 import { AttributeInfo, AttributePresenter } from "./AttributePresenter";
-import { content } from "@app/Core";
 import { ReactElement } from "react";
 import { ActionPresenter } from "./Actions/ActionPresenter";
 

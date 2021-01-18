@@ -10,7 +10,7 @@ import {
 import { Tooltip } from "@patternfly/react-core";
 import { DateInfo } from "./DatePresenter";
 import { AttributeInfo } from "./AttributePresenter";
-import { content } from "@app/Core";
+import { content } from "Core";
 import {
   OutlinedQuestionCircleIcon,
   ListIcon,

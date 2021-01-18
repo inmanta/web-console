@@ -1,4 +1,4 @@
-import { Either } from "@app/Core";
+import { Either } from "Core";
 import { Response } from "./Response";
 
 export interface DataManager {
