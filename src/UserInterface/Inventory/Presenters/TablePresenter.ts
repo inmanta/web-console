@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { ServiceInstance, content, Id, Row } from "Core";
 import { DatePresenter } from "./DatePresenter";
-import { AttributePresenter } from "./AttributePresenter";
+import { AttributesPresenter } from "./AttributesPresenter";
 import { ActionPresenter } from "./ActionPresenter";
 
 /**
@@ -22,7 +22,7 @@ export class TablePresenter {
 
   constructor(
     private datePresenter: DatePresenter,
-    private attributePresenter: AttributePresenter,
+    private attributesPresenter: AttributesPresenter,
     private actionPresenter: ActionPresenter
   ) {}
 
@@ -56,7 +56,7 @@ export class TablePresenter {
     return {
       id: this.getId(id),
       state,
-      attributes: this.attributePresenter.get(
+      attributesSummary: this.attributesPresenter.getSummary(
         candidate_attributes,
         active_attributes,
         rollback_attributes
@@ -67,9 +67,6 @@ export class TablePresenter {
   }
 
   private getId(full: string): Id {
-    return {
-      full,
-      short: full.substring(0, 4),
-    };
+    return { full, short: full.substring(0, 4) };
   }
 }

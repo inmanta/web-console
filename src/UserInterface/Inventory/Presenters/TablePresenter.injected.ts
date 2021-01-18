@@ -1,10 +1,10 @@
 import { TablePresenter } from "./TablePresenter";
 import { DummyDatePresenter } from "./DummyDatePresenter";
-import { AttributePresenter } from "./AttributePresenter";
+import { AttributesPresenter } from "./AttributesPresenter";
 import { DummyActionPresenter } from "./DummyActionPresenter";
 
 export const tablePresenter = new TablePresenter(
   new DummyDatePresenter(),
-  new AttributePresenter(),
+  new AttributesPresenter(),
   new DummyActionPresenter()
 );

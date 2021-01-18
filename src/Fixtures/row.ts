@@ -5,7 +5,7 @@ const Id = (id: string) => ({ full: id, short: id });
 export const base: Row = {
   id: Id("0001"),
   state: "rejected",
-  attributes: {
+  attributesSummary: {
     candidate: true,
     active: false,
     rollback: true,

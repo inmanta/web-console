@@ -1,13 +1,13 @@
-import { AttributeInfo } from "Core";
+import { AttributesSummary } from "Core";
 
 type Attribute = null | unknown;
 
-export class AttributePresenter {
-  get(
+export class AttributesPresenter {
+  getSummary(
     candidate: Attribute,
     active: Attribute,
     rollback: Attribute
-  ): AttributeInfo {
+  ): AttributesSummary {
     return {
       candidate: candidate !== null,
       active: active !== null,

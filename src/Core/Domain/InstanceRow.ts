@@ -8,7 +8,7 @@ export interface DateInfo {
   relative: string;
 }
 
-export interface AttributeInfo {
+export interface AttributesSummary {
   candidate: boolean;
   active: boolean;
   rollback: boolean;
@@ -17,7 +17,7 @@ export interface AttributeInfo {
 export interface Row {
   id: Id;
   state: string;
-  attributes: AttributeInfo;
+  attributesSummary: AttributesSummary;
   createdAt: DateInfo;
   updatedAt: DateInfo;
 }

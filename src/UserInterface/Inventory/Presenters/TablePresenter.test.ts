@@ -1,12 +1,12 @@
 import { TablePresenter } from "./TablePresenter";
 import { DummyDatePresenter } from "./DummyDatePresenter";
-import { AttributePresenter } from "./AttributePresenter";
+import { AttributesPresenter } from "./AttributesPresenter";
 import { DummyActionPresenter } from "./DummyActionPresenter";
 import { instance } from "Fixtures";
 
 const presenter = new TablePresenter(
   new DummyDatePresenter(),
-  new AttributePresenter(),
+  new AttributesPresenter(),
   new DummyActionPresenter()
 );
 const rows = presenter.createFromInstances([instance]);

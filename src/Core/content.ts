@@ -1,7 +1,7 @@
 const dict = {
   "inventory.column.id": "Id",
   "inventory.column.state": "State",
-  "inventory.column.attributes": "Attributes",
+  "inventory.column.attributesSummary": "Attributes",
   "inventory.column.createdAt": "Created",
   "inventory.column.updatedAt": "Updated",
   "inventory.column.actions": "Actions",
