@@ -20,7 +20,7 @@ export const Provider: React.FC<Props> = ({ dataManager }) => {
 
   useEffect(() => {
     (async () => {
-      const data = await dataManager.getInstancesForService(id);
+      const data = await dataManager.getInstancesForService("fakeEnvId", id);
       setData(RemoteData.fromEither(data));
     })();
   });
