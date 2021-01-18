@@ -8,9 +8,8 @@ import {
   OnCollapse,
 } from "@patternfly/react-table";
 import { Tooltip } from "@patternfly/react-core";
-import { DateInfo } from "./DatePresenter";
 import { AttributeInfo } from "./AttributePresenter";
-import { content } from "Core";
+import { DateInfo, content } from "Core";
 import {
   OutlinedQuestionCircleIcon,
   ListIcon,

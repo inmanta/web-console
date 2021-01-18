@@ -1,5 +1,6 @@
 import moment from "moment";
-import { DateInfo, DatePresenter } from "./DatePresenter";
+import { DateInfo } from "Core";
+import { DatePresenter } from "./DatePresenter";
 
 export class MomentDatePresenter implements DatePresenter {
   get(timestamp: string): DateInfo {

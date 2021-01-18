@@ -1,7 +1,4 @@
-export interface DateInfo {
-  full: string;
-  relative: string;
-}
+import { DateInfo } from "Core";
 
 export interface DatePresenter {
   getFull(timestamp: string): string;
