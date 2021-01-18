@@ -1,7 +1,6 @@
-import { Either } from "Core";
+import { Either, InventoryResponse } from "Core";
 import { response } from "Fixtures";
 import { DataManager } from "./DataManager";
-import { InventoryResponse } from "Core";
 
 export class InMemoryDataManager implements DataManager {
   async getInstancesForService(
