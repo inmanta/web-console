@@ -1,7 +1,7 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { View, Props } from "./View";
 import { instances } from "Fixtures";
+import { View, Props } from "./View";
 
 export default {
   title: "Inventory",

@@ -1,10 +1,10 @@
 import React from "react";
 import { ServiceInstance } from "Core";
 import { TablePresenter } from "./Presenters/TablePresenter";
-import { InventoryTable } from "./InventoryTable";
 import { MomentDatePresenter } from "./Presenters/MomentDatePresenter";
 import { AttributePresenter } from "./Presenters/AttributePresenter";
 import { InstanceActionPresenter } from "./Presenters/InstanceActionPresenter";
+import { InventoryTable } from "./InventoryTable";
 
 export interface Props {
   instances: ServiceInstance[];

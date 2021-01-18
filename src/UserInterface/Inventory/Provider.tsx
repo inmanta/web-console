@@ -1,8 +1,8 @@
 import React, { useEffect, useState, ReactElement } from "react";
 import { useParams } from "react-router-dom";
 import { RemoteData, InventoryResponse } from "Core";
-import { View } from "./View";
 import { DataManager } from "Infrastructure";
+import { View } from "./View";
 
 interface Params {
   id: string;

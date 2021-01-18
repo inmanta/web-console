@@ -1,5 +1,4 @@
 import React from "react";
-import { AttributeInfo, Row } from "Core";
 import {
   Tbody,
   Tr,
@@ -7,14 +6,14 @@ import {
   ExpandableRowContent,
   OnCollapse,
 } from "@patternfly/react-table";
-import { Tooltip } from "@patternfly/react-core";
-import { DateInfo, content } from "Core";
 import {
   OutlinedQuestionCircleIcon,
   ListIcon,
   RedoIcon,
 } from "@patternfly/react-icons";
 import { List, ListItem, ListVariant } from "@patternfly/react-core";
+import { Tooltip } from "@patternfly/react-core";
+import { AttributeInfo, Row, DateInfo, content } from "Core";
 
 interface Props {
   row: Row;
