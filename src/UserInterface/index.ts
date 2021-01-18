@@ -1,1 +1,1 @@
-export * from "./ServiceInstance";
+export * from "./Inventory";
