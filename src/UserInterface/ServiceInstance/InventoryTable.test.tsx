@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
-import { rows } from "@app/fixtures/row";
+import { rows } from "Fixtures/row";
 import { TablePresenter } from "./TablePresenter";
 import { DummyDatePresenter } from "./DummyDatePresenter";
 import { AttributePresenter } from "./AttributePresenter";

@@ -1,5 +1,5 @@
 import { Either } from "Core";
-import { response } from "@app/fixtures";
+import { response } from "Fixtures";
 import { DataManager } from "./DataManager";
 import { Response } from "./Response";
 

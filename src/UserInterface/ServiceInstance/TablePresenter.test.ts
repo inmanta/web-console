@@ -1,5 +1,5 @@
 import { TablePresenter } from "./TablePresenter";
-import { instance } from "@app/fixtures";
+import { instance } from "Fixtures";
 import { DummyDatePresenter } from "./DummyDatePresenter";
 import { AttributePresenter } from "./AttributePresenter";
 import { DummyActionPresenter } from "./Actions/DummyActionPresenter";
