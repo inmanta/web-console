@@ -1,6 +1,14 @@
 import { InventoryResponse, Either } from "@/Core";
 import { DataManager } from "./DataManager";
 
+/**
+ * The RemoteDataManager is responsible for fetching data
+ * based on a single action. So each different method and
+ * entity within the REST api should have a separate
+ * function in this class.
+ *
+ * This DataManager is not being used yet!
+ */
 export class RemoteDataManager implements DataManager {
   constructor(private readonly baseUrl: string) {}
 
