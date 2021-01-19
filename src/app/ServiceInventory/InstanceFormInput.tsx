@@ -61,7 +61,7 @@ const InstanceFormInput: React.FunctionComponent<{
               label="None"
               name={`${attributeWithMatchingName.name}`}
               id={`${attributeWithMatchingName.name}-none`}
-              value={undefined}
+              value={""}
             />
           )}
         </FormGroup>

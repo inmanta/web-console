@@ -110,6 +110,28 @@ describe("Instance Form component", () => {
       expect(requestAttributes.opt_int).toBeUndefined();
       expect(fetchMock.mock.calls[0][1].method).toEqual("POST");
     });
+    it("Calls create correctly when not setting optional bool attribute", () => {
+      const optionalBoolAttribute = {
+        name: "bool_param",
+        type: "bool?",
+        description: "a boolean attribute",
+        modifier: "rw+",
+        default_value_set: false,
+      };
+      const wrapper = mount(
+        <InstanceForm
+          attributeModels={[optionalBoolAttribute]}
+          requestParams={requestParams}
+        />
+      );
+      const button = wrapper.find(".pf-c-button.pf-m-primary");
+      button.simulate("click");
+      expect(fetchMock.mock.calls).toHaveLength(1);
+      const requestAttributes = JSON.parse(fetchMock.mock.calls[0][1].body)
+        .attributes;
+      expect(requestAttributes.bool_param).toBeUndefined();
+      expect(fetchMock.mock.calls[0][1].method).toEqual("POST");
+    });
   });
   describe("Update form", () => {
     const originalAttributes = {
@@ -189,6 +211,42 @@ describe("Instance Form component", () => {
       expect(fetchMock.mock.calls).toHaveLength(1);
       expect(
         JSON.parse(fetchMock.mock.calls[0][1].body).attributes.opt_int
+      ).toBeNull();
+      expect(fetchMock.mock.calls[0][1].method).toEqual("PATCH");
+    });
+    it("Calls patch correctly when updating optional bool attribute to null", () => {
+      const optionalBoolAttribute = {
+        name: "bool_param",
+        type: "bool?",
+        description: "a boolean attribute",
+        modifier: "rw+",
+        default_value_set: false,
+      };
+      const wrapper = mount(
+        <InstanceForm
+          attributeModels={[optionalBoolAttribute]}
+          requestParams={requestParams}
+          originalAttributes={{ bool_param: true }}
+          update={true}
+        />
+      );
+      const boolField = wrapper
+        .find("#bool_param-none")
+        .find("input[type='radio']");
+      boolField.getDOMNode<HTMLInputElement>().checked = true;
+      boolField.simulate("change", {
+        target: {
+          name: "bool_param",
+          value: "",
+          type: "radio",
+          checked: true,
+        },
+      });
+      const button = wrapper.find(".pf-c-button.pf-m-primary");
+      button.simulate("click");
+      expect(fetchMock.mock.calls).toHaveLength(1);
+      expect(
+        JSON.parse(fetchMock.mock.calls[0][1].body).attributes.bool_param
       ).toBeNull();
       expect(fetchMock.mock.calls[0][1].method).toEqual("PATCH");
     });
@@ -358,6 +416,28 @@ describe("Instance Form component", () => {
     it("When the parameter is valid for an optional number", () => {
       const value = ensureAttributeType(attributeModels, "int_param", "10");
       expect(value).toEqual(10);
+    });
+    it("When the parameter is valid for an optional boolean", () => {
+      const value = ensureAttributeType(attributeModels, "bool_param", "");
+      expect(value).toBeNull();
+      expect(
+        ensureAttributeType(attributeModels, "bool_param", null)
+      ).toBeNull();
+      expect(
+        ensureAttributeType(attributeModels, "bool_param", undefined)
+      ).toBeNull();
+      expect(
+        ensureAttributeType(attributeModels, "bool_param", "value")
+      ).toBeNull();
+      expect(
+        ensureAttributeType(attributeModels, "bool_param", "true")
+      ).toBeTruthy();
+      expect(
+        ensureAttributeType(attributeModels, "bool_param", true)
+      ).toBeTruthy();
+      expect(
+        ensureAttributeType(attributeModels, "bool_param", "false")
+      ).toBeFalsy();
     });
   });
 });

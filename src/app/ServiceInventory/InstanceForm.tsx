@@ -21,9 +21,15 @@ const InstanceForm: React.FunctionComponent<{
   );
   const [attributes, setAttributes] = useState(initialAttributes);
   const handleInputChange = (value, event) => {
-    const changedAttributeName = event.target.id;
+    const changedAttributeName = event.target.name;
     const changedAttribute = {};
-    changedAttribute[changedAttributeName] = value;
+    if (event.target.type === "radio") {
+      changedAttribute[changedAttributeName] = toOptionalBoolean(
+        event.target.value
+      );
+    } else {
+      changedAttribute[changedAttributeName] = event.target.value;
+    }
     const updatedValue = { ...attributes, ...changedAttribute };
     setAttributes(updatedValue);
   };
@@ -111,10 +117,10 @@ function closeContainer(closingFunction?: () => void): void {
   }
 }
 
-function toOptionalBoolean(value: string): boolean | null {
-  if (value.toLocaleLowerCase() === "true") {
+function toOptionalBoolean(value?: string): boolean | null {
+  if (value?.toLocaleLowerCase() === "true") {
     return true;
-  } else if (value.toLocaleLowerCase() === "false") {
+  } else if (value?.toLocaleLowerCase() === "false") {
     return false;
   } else {
     return null;

@@ -27,6 +27,13 @@ describe("Instance Form Input", () => {
       default_value_set: false,
     },
     {
+      name: "opt_bool_param",
+      type: "bool?",
+      description: "a boolean attribute",
+      modifier: "rw+",
+      default_value_set: false,
+    },
+    {
       name: "db_url",
       type: "string",
       description: "url for a database",
@@ -61,8 +68,23 @@ describe("Instance Form Input", () => {
         handleInputChange={handleInputChange}
       />
     );
-    const radioButton = wrapper.find("input[type='radio']");
-    expect(radioButton.at(0).getDOMNode()).toBeTruthy();
+    const radioButtons = wrapper.find("input[type='radio']");
+    expect(radioButtons.length).toEqual(2);
+    expect(radioButtons.at(0).getDOMNode()).toBeTruthy();
+  });
+  it("Should render radio button input for optional boolean parameters", () => {
+    const attributes = { name: "name", not_editable: "", bool_param: "" };
+    const wrapper = mount(
+      <InstanceFormInput
+        attributeModels={attributeModels}
+        attributeName="opt_bool_param"
+        attributes={attributes}
+        handleInputChange={handleInputChange}
+      />
+    );
+    const radioButtons = wrapper.find("input[type='radio']");
+    expect(radioButtons.length).toEqual(3);
+    expect(radioButtons.at(0).getDOMNode()).toBeTruthy();
   });
   it("Should render default text input for string parameters", () => {
     const attributes = { name: "name", not_editable: "", bool_param: "" };
