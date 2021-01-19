@@ -1,6 +1,6 @@
 import React from "react";
 import { ActionPresenter, ServiceInstanceForAction } from "./ActionPresenter";
-import { InstanceActions } from "UserInterface/Inventory/InstanceActions";
+import { InstanceActions } from "UI/Inventory/InstanceActions";
 
 export class InstanceActionPresenter implements ActionPresenter {
   constructor(private readonly instances: ServiceInstanceForAction[]) {}

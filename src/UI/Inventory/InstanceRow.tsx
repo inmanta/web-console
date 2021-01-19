@@ -15,7 +15,7 @@ import { List, ListItem, ListVariant } from "@patternfly/react-core";
 import { Tooltip } from "@patternfly/react-core";
 import { Row, DateInfo, AttributesSummary } from "Core";
 import { InstanceDetails } from "./InstanceDetails";
-import { words } from "UserInterface";
+import { words } from "UI";
 
 interface Props {
   row: Row;
