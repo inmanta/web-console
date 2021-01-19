@@ -80,6 +80,7 @@ export interface IServiceInstanceModel extends IObjectWithId {
   deleted: boolean;
   environment: string;
   last_updated: string;
+  created_at: string;
   rollback_attributes: IInstanceAttributeModel | null;
   service_entity: string;
   state: string;
