@@ -25,7 +25,7 @@ describe("Service inventory", function () {
     });
   });
 
-  it("Should show/hide resources modal on click", function () {
+  it.skip("Should show/hide resources modal on click", function () {
     cy.visit("/lsm/catalog/e2e_service/inventory");
     cy.get("#nav-toggle").click();
     cy.get(".pf-c-table").find(".pf-c-button.pf-m-primary").click();
