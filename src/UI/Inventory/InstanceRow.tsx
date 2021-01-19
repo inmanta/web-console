@@ -16,6 +16,7 @@ import { Tooltip } from "@patternfly/react-core";
 import { Row, DateInfo, AttributesSummary } from "@/Core";
 import { InstanceDetails } from "./InstanceDetails";
 import { words } from "@/UI";
+import { IdWithCopy } from "./IdWithCopy";
 
 interface Props {
   row: Row;
@@ -43,7 +44,9 @@ export const InstanceRow: React.FC<Props> = ({
           onToggle,
         }}
       />
-      <Td dataLabel={words("inventory.column.id")}>{row.id.short}</Td>
+      <Td dataLabel={words("inventory.column.id")}>
+        <IdWithCopy id={row.id} />
+      </Td>
       <Td dataLabel={words("inventory.column.state")}>{row.state}</Td>
       <Td dataLabel={words("inventory.column.attributesSummary")}>
         <Attributes summary={row.attributesSummary} />
