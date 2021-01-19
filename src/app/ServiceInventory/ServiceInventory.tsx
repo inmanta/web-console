@@ -140,7 +140,7 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
             {instancesOfCurrentService.length > 0 && (
               <InventoryTable
                 instances={instancesOfCurrentService}
-                // keycloak={keycloak}
+                keycloak={keycloak}
               />
             )}
           </Card>

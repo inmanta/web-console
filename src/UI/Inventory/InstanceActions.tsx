@@ -1,11 +1,12 @@
 import React from "react";
+import { KeycloakInstance } from "keycloak-js";
 import { ButtonType, InstanceModal } from "@app/ServiceInventory/InstanceModal";
 import { DiagnosticsModal } from "@app/ServiceInventory/DiagnosticsModal";
 import { ServiceInstanceForAction } from "./Presenters/ActionPresenter";
 
 interface Props {
   instance: ServiceInstanceForAction;
-  keycloak?: Keycloak.KeycloakInstance;
+  keycloak?: KeycloakInstance;
 }
 
 export const InstanceActions: React.FC<Props> = ({ instance, keycloak }) => {

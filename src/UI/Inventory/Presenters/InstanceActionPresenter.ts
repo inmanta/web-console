@@ -1,9 +1,13 @@
 import React from "react";
+import { KeycloakInstance } from "keycloak-js";
 import { ActionPresenter, ServiceInstanceForAction } from "./ActionPresenter";
 import { InstanceActions } from "@/UI/Inventory/InstanceActions";
 
 export class InstanceActionPresenter implements ActionPresenter {
-  constructor(private readonly instances: ServiceInstanceForAction[]) {}
+  constructor(
+    private readonly instances: ServiceInstanceForAction[],
+    private readonly keycloak: KeycloakInstance | undefined
+  ) {}
 
   private getInstanceForId(id: string): ServiceInstanceForAction | undefined {
     return this.instances.find((instance) => instance.id === id);
@@ -12,6 +16,6 @@ export class InstanceActionPresenter implements ActionPresenter {
   getForId(id: string): React.ReactElement | null {
     const instance = this.getInstanceForId(id);
     if (typeof instance === "undefined") return null;
-    return InstanceActions({ instance });
+    return InstanceActions({ instance, keycloak: this.keycloak });
   }
 }
