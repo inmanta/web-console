@@ -1,8 +1,8 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { InventoryTable } from "./InventoryTable";
-import { rows } from "@/Fixtures";
-import { tablePresenter } from "./Presenters/TablePresenter.injected";
+import { rows } from "@/Test/Data";
+import { tablePresenter } from "@/Test/Inject";
 
 export default {
   title: "InventoryTable",
