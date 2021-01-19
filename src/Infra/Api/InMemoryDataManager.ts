@@ -1,5 +1,5 @@
 import { Either, InventoryResponse } from "@/Core";
-import { response } from "@/Test/Data";
+import { response } from "@/Test";
 import { DataManager } from "./DataManager";
 
 export class InMemoryDataManager implements DataManager {

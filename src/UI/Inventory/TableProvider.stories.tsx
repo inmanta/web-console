@@ -1,6 +1,6 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { instances } from "@/Test/Data";
+import { instances } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
 
 export default {

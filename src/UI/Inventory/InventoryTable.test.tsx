@@ -1,8 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
-import { rows } from "@/Test/Data";
-import { tablePresenter } from "@/Test/Inject";
+import { rows, tablePresenter } from "@/Test";
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
