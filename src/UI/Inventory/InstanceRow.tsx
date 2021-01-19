@@ -6,17 +6,14 @@ import {
   ExpandableRowContent,
   OnCollapse,
 } from "@patternfly/react-table";
-import {
-  OutlinedQuestionCircleIcon,
-  ListIcon,
-  RedoIcon,
-} from "@patternfly/react-icons";
-import { List, ListItem, ListVariant } from "@patternfly/react-core";
-import { Tooltip } from "@patternfly/react-core";
-import { Row, DateInfo, AttributesSummary } from "@/Core";
-import { InstanceDetails } from "./InstanceDetails";
+import { Row } from "@/Core";
 import { words } from "@/UI";
-import { IdWithCopy } from "./IdWithCopy";
+import {
+  Attributes,
+  DateWithTooltip,
+  IdWithCopy,
+  InstanceDetails,
+} from "./Components";
 
 interface Props {
   row: Row;
@@ -68,29 +65,3 @@ export const InstanceRow: React.FC<Props> = ({
     </Tr>
   </Tbody>
 );
-
-const DateWithTooltip: React.FC<{ date: DateInfo }> = ({ date }) => (
-  <Tooltip content={date.full} entryDelay={200}>
-    <span>{date.relative}</span>
-  </Tooltip>
-);
-
-const Attributes: React.FC<{ summary: AttributesSummary }> = ({
-  summary: { candidate, active, rollback },
-}) => {
-  const color = (enabled) => (enabled ? "#030303" : "#D2D2D2");
-
-  return (
-    <List variant={ListVariant.inline}>
-      <ListItem>
-        <OutlinedQuestionCircleIcon color={color(candidate)} />
-      </ListItem>
-      <ListItem>
-        <ListIcon color={color(active)} />
-      </ListItem>
-      <ListItem>
-        <RedoIcon color={color(rollback)} />
-      </ListItem>
-    </List>
-  );
-};

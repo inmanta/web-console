@@ -1,10 +1,12 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
-import { TablePresenter } from "./Presenters/TablePresenter";
-import { MomentDatePresenter } from "./Presenters/MomentDatePresenter";
-import { AttributesPresenter } from "./Presenters/AttributesPresenter";
-import { InstanceActionPresenter } from "./Presenters/InstanceActionPresenter";
+import {
+  AttributesPresenter,
+  InstanceActionPresenter,
+  MomentDatePresenter,
+  TablePresenter,
+} from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
 
 export interface Props {

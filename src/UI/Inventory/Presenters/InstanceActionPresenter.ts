@@ -1,7 +1,7 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
+import { InstanceActions } from "@/UI/Inventory/Components";
 import { ActionPresenter, ServiceInstanceForAction } from "./ActionPresenter";
-import { InstanceActions } from "@/UI/Inventory/InstanceActions";
 
 export class InstanceActionPresenter implements ActionPresenter {
   constructor(
