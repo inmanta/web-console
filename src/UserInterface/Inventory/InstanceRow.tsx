@@ -13,8 +13,9 @@ import {
 } from "@patternfly/react-icons";
 import { List, ListItem, ListVariant } from "@patternfly/react-core";
 import { Tooltip } from "@patternfly/react-core";
-import { Row, DateInfo, content, AttributesSummary } from "Core";
+import { Row, DateInfo, AttributesSummary } from "Core";
 import { InstanceDetails } from "./InstanceDetails";
+import { words } from "UserInterface";
 
 interface Props {
   row: Row;
@@ -42,18 +43,18 @@ export const InstanceRow: React.FC<Props> = ({
           onToggle,
         }}
       />
-      <Td dataLabel={content("inventory.column.id")}>{row.id.short}</Td>
-      <Td dataLabel={content("inventory.column.state")}>{row.state}</Td>
-      <Td dataLabel={content("inventory.column.attributesSummary")}>
+      <Td dataLabel={words("inventory.column.id")}>{row.id.short}</Td>
+      <Td dataLabel={words("inventory.column.state")}>{row.state}</Td>
+      <Td dataLabel={words("inventory.column.attributesSummary")}>
         <Attributes summary={row.attributesSummary} />
       </Td>
-      <Td dataLabel={content("inventory.column.createdAt")}>
+      <Td dataLabel={words("inventory.column.createdAt")}>
         <DateWithTooltip date={row.createdAt} />
       </Td>
-      <Td dataLabel={content("inventory.column.updatedAt")}>
+      <Td dataLabel={words("inventory.column.updatedAt")}>
         <DateWithTooltip date={row.updatedAt} />
       </Td>
-      <Td dataLabel={content("inventory.column.actions")}>{actions}</Td>
+      <Td dataLabel={words("inventory.column.actions")}>{actions}</Td>
     </Tr>
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
       <Td colSpan={numberOfColumns}>

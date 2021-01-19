@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
-import { ServiceInstance, content, Id, Row } from "Core";
+import { ServiceInstance, Id, Row } from "Core";
+import { words } from "UserInterface";
 import { DatePresenter } from "./DatePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
 import { ActionPresenter } from "./ActionPresenter";
@@ -11,12 +12,12 @@ import { ActionPresenter } from "./ActionPresenter";
  */
 export class TablePresenter {
   readonly columnHeads = [
-    content("inventory.column.id"),
-    content("inventory.column.state"),
-    content("inventory.column.attributesSummary"),
-    content("inventory.column.createdAt"),
-    content("inventory.column.updatedAt"),
-    content("inventory.column.actions"),
+    words("inventory.column.id"),
+    words("inventory.column.state"),
+    words("inventory.column.attributesSummary"),
+    words("inventory.column.createdAt"),
+    words("inventory.column.updatedAt"),
+    words("inventory.column.actions"),
   ];
   readonly numberOfColumns = this.columnHeads.length + 1;
 

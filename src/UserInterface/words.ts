@@ -9,4 +9,4 @@ const dict = {
 
 type Key = keyof typeof dict;
 
-export const content = (key: Key): string => dict[key];
+export const words = (key: Key): string => dict[key];
