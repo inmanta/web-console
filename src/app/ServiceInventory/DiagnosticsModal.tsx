@@ -20,9 +20,11 @@ import { InventoryContext } from "./ServiceInventory";
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
 import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
 
+type PickedInstance = Pick<IServiceInstanceModel, "id" | "version">;
+
 const DiagnosticsModal: React.FunctionComponent<{
   serviceName: string;
-  instance: IServiceInstanceModel;
+  instance: PickedInstance;
   keycloak?: Keycloak.KeycloakInstance;
 }> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -182,7 +184,7 @@ async function getDeploymentFailureMessage(
 }
 
 const InstanceStatus: React.FunctionComponent<{
-  instance: IServiceInstanceModel;
+  instance: PickedInstance;
   inventoryUrl: string;
   environmentId?: string;
   keycloak?: Keycloak.KeycloakInstance;
