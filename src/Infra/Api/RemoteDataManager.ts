@@ -1,4 +1,4 @@
-import { InventoryResponse, Either } from "Core";
+import { InventoryResponse, Either } from "@/Core";
 import { DataManager } from "./DataManager";
 
 export class RemoteDataManager implements DataManager {

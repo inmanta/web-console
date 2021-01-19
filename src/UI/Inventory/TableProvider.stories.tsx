@@ -1,6 +1,6 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { instances } from "Fixtures";
+import { instances } from "@/Fixtures";
 import { TableProvider, Props } from "./TableProvider";
 
 export default {

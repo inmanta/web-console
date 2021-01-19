@@ -1,6 +1,6 @@
 import React from "react";
 import { List, ListItem } from "@patternfly/react-core";
-import { Pairs } from "Core";
+import { Pairs } from "@/Core";
 
 interface Props {
   attributes: Pairs;

@@ -1,4 +1,4 @@
-import { DateInfo } from "Core";
+import { DateInfo } from "@/Core";
 
 export interface DatePresenter {
   getFull(timestamp: string): string;

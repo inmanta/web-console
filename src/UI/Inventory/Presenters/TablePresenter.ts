@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
-import { Id, Row } from "Core";
-import { words } from "UI";
+import { Id, Row } from "@/Core";
+import { words } from "@/UI";
 import { DatePresenter } from "./DatePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
 import { ActionPresenter } from "./ActionPresenter";

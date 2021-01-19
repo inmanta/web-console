@@ -1,5 +1,4 @@
-import { Either } from "Core";
-import { InventoryResponse } from "Core";
+import { Either, InventoryResponse } from "@/Core";
 
 export interface DataManager {
   getInstancesForService(

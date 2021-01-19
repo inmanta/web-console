@@ -1,4 +1,4 @@
-import { DateInfo } from "Core";
+import { DateInfo } from "@/Core";
 import { DatePresenter } from "./DatePresenter";
 
 export class DummyDatePresenter implements DatePresenter {

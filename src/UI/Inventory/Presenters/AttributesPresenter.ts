@@ -1,5 +1,5 @@
 import { IInstanceAttributeModel } from "@app/Models/LsmModels";
-import { AttributesSummary, Pairs } from "Core";
+import { AttributesSummary, Pairs } from "@/Core";
 
 type Attribute = null | unknown;
 

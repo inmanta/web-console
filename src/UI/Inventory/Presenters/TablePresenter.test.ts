@@ -2,7 +2,7 @@ import { TablePresenter } from "./TablePresenter";
 import { DummyDatePresenter } from "./DummyDatePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
 import { DummyActionPresenter } from "./DummyActionPresenter";
-import { instance } from "Fixtures";
+import { instance } from "@/Fixtures";
 
 const presenter = new TablePresenter(
   new DummyDatePresenter(),

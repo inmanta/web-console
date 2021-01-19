@@ -1,4 +1,4 @@
-import { Attributes } from "Core";
+import { Attributes } from "@/Core";
 import React from "react";
 import { AttributesList } from "./AttributesList";
 

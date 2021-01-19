@@ -1,4 +1,4 @@
-import { Row } from "Core";
+import { Row } from "@/Core";
 
 const Id = (id: string) => ({ full: id, short: id });
 
