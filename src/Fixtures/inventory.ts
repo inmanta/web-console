@@ -1,4 +1,4 @@
-import { ServiceInstance } from "Core";
+import { IServiceInstanceModel } from "@app/Models/LsmModels";
 
 const base = ({
   id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
@@ -143,7 +143,7 @@ const base = ({
   last_updated: "2021-01-11T12:55:52.180900",
   callback: [],
   deleted: false,
-} as unknown) as ServiceInstance;
+} as unknown) as IServiceInstanceModel;
 
 export const instance = base;
 

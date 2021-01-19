@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
-import { ServiceInstance, Id, Row } from "Core";
+import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { Id, Row } from "Core";
 import { words } from "UserInterface";
 import { DatePresenter } from "./DatePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
@@ -31,7 +32,7 @@ export class TablePresenter {
     return this.actionPresenter.getForId(id);
   }
 
-  public createFromInstances(instances: ServiceInstance[]): Row[] {
+  public createFromInstances(instances: IServiceInstanceModel[]): Row[] {
     return instances.map((instance) => this.instanceToRow(instance));
   }
 
@@ -43,7 +44,7 @@ export class TablePresenter {
     return this.numberOfColumns;
   }
 
-  private instanceToRow(instance: ServiceInstance): Row {
+  private instanceToRow(instance: IServiceInstanceModel): Row {
     const {
       id,
       state,
