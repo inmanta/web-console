@@ -10,7 +10,7 @@ export interface Props {
   instances: ServiceInstance[];
 }
 
-export const View: React.FC<Props> = ({ instances }) => {
+export const TableProvider: React.FC<Props> = ({ instances }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
   const actionPresenter = new InstanceActionPresenter(instances);
@@ -22,7 +22,7 @@ export const View: React.FC<Props> = ({ instances }) => {
   const rows = tablePresenter.createFromInstances(instances);
 
   return (
-    <div data-testid="InventoryViewContainer">
+    <div data-testid="InventoryTableContainer">
       <InventoryTable rows={rows} tablePresenter={tablePresenter} />
     </div>
   );

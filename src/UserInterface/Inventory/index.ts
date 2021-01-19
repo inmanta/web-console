@@ -1,1 +1,1 @@
-export { Provider as Inventory } from "./Provider";
+export { TableProvider as InventoryTable } from "./TableProvider";

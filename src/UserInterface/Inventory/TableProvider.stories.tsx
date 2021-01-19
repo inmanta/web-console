@@ -1,14 +1,14 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { instances } from "Fixtures";
-import { View, Props } from "./View";
+import { TableProvider, Props } from "./TableProvider";
 
 export default {
-  title: "Inventory",
-  component: View,
+  title: "TableProvider",
+  component: TableProvider,
 };
 
-const Template: Story<Props> = (args) => <View {...args} />;
+const Template: Story<Props> = (args) => <TableProvider {...args} />;
 
 export const Empty = Template.bind({});
 Empty.args = { instances: [] };

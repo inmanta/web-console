@@ -32,7 +32,7 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
   };
 
   return (
-    <TableComposable aria-label="Expandable Table">
+    <TableComposable>
       <Thead>
         <Tr>
           <Th />
