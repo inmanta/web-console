@@ -1,10 +1,10 @@
 import React from "react";
 import { ButtonType, InstanceModal } from "@app/ServiceInventory/InstanceModal";
 import { DiagnosticsModal } from "@app/ServiceInventory/DiagnosticsModal";
-import { Instance } from "./Presenters/ActionPresenter";
+import { ServiceInstanceForAction } from "./Presenters/ActionPresenter";
 
 interface Props {
-  instance: Instance;
+  instance: ServiceInstanceForAction;
   keycloak?: Keycloak.KeycloakInstance;
 }
 

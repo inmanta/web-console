@@ -1,7 +1,7 @@
 import { IServiceInstanceModel } from "@app/Models/LsmModels";
 import { ReactElement } from "react";
 
-export type Instance = Pick<
+export type ServiceInstanceForAction = Pick<
   IServiceInstanceModel,
   | "id"
   | "state"

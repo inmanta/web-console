@@ -1,11 +1,11 @@
 import React from "react";
-import { ActionPresenter, Instance } from "./ActionPresenter";
+import { ActionPresenter, ServiceInstanceForAction } from "./ActionPresenter";
 import { InstanceActions } from "UserInterface/Inventory/InstanceActions";
 
 export class InstanceActionPresenter implements ActionPresenter {
-  constructor(private readonly instances: Instance[]) {}
+  constructor(private readonly instances: ServiceInstanceForAction[]) {}
 
-  private getInstanceForId(id: string): Instance | undefined {
+  private getInstanceForId(id: string): ServiceInstanceForAction | undefined {
     return this.instances.find((instance) => instance.id === id);
   }
 
