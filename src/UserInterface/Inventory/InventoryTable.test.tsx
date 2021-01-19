@@ -4,7 +4,7 @@ import { InventoryTable } from "./InventoryTable";
 import { rows } from "Fixtures";
 import { tablePresenter } from "./Presenters/TablePresenter.injected";
 
-test("loads and displays greeting", async () => {
+test("InventoryTable can be expanded", async () => {
   // Arrange
   render(<InventoryTable rows={rows} tablePresenter={tablePresenter} />);
   const testid = `details_${rows[0].id.short}`;
