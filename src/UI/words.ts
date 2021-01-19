@@ -11,12 +11,16 @@
  */
 
 const dict = {
+  "attributes.active": "Active Attributes",
+  "attributes.candidate": "Candidate Attributes",
+  "attributes.rollback": "Rollback Attributes",
   "inventory.column.id": "Id",
   "inventory.column.state": "State",
   "inventory.column.attributesSummary": "Attributes",
   "inventory.column.createdAt": "Created",
   "inventory.column.updatedAt": "Updated",
   "inventory.column.actions": "Actions",
+  null: "null",
 };
 
 type Key = keyof typeof dict;
