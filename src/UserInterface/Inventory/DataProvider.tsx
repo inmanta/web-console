@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ReactElement } from "react";
 import { useParams } from "react-router-dom";
 import { RemoteData, InventoryResponse } from "Core";
-import { DataManager } from "Infrastructure";
+import { DataManager } from "Infra";
 import { TableProvider } from "./TableProvider";
 
 interface Params {
