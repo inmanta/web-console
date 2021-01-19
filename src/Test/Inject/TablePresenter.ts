@@ -1,5 +1,6 @@
 import { DummyActionPresenter, DummyDatePresenter } from "@/Test/Mock";
-import { AttributesPresenter, TablePresenter } from "@/UI/Inventory/Presenters";
+import { AttributesPresenter } from "@/UI/Inventory/Presenters/AttributesPresenter";
+import { TablePresenter } from "@/UI/Inventory/Presenters/TablePresenter";
 
 export const tablePresenter = new TablePresenter(
   new DummyDatePresenter(),
