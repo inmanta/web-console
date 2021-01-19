@@ -51,7 +51,7 @@ describe("Instance Form Input", () => {
   const handleInputChange = () => {
     return;
   };
-  it("Should render checkbox input for boolean parameters", () => {
+  it("Should render radio button input for boolean parameters", () => {
     const attributes = { name: "name", not_editable: "", bool_param: "" };
     const wrapper = mount(
       <InstanceFormInput
@@ -61,8 +61,8 @@ describe("Instance Form Input", () => {
         handleInputChange={handleInputChange}
       />
     );
-    const checkbox = wrapper.find(".pf-c-check");
-    expect(checkbox.getDOMNode()).toBeTruthy();
+    const radioButton = wrapper.find("input[type='radio']");
+    expect(radioButton.at(0).getDOMNode()).toBeTruthy();
   });
   it("Should render default text input for string parameters", () => {
     const attributes = { name: "name", not_editable: "", bool_param: "" };

@@ -81,12 +81,25 @@ describe("Instance Form component", () => {
       );
       const notEditableField = wrapper.find("#not_editable");
       notEditableField.at(0).getDOMNode<HTMLInputElement>().value = "Something";
-      notEditableField
-        .at(0)
-        .simulate("change", { target: { id: "not_editable" } });
-      const boolField = wrapper.find("input[type='checkbox']");
-      boolField.at(0).getDOMNode<HTMLInputElement>().checked = true;
-      boolField.at(0).simulate("change", { target: { id: "bool_param" } });
+      notEditableField.at(0).simulate("change", {
+        target: {
+          id: "not_editable",
+          name: "not_editable",
+          value: "Something",
+        },
+      });
+      const boolField = wrapper
+        .find("#bool_param-true")
+        .find("input[type='radio']");
+      boolField.getDOMNode<HTMLInputElement>().checked = true;
+      boolField.simulate("change", {
+        target: {
+          name: "bool_param",
+          value: "true",
+          type: "radio",
+          checked: true,
+        },
+      });
       const button = wrapper.find(".pf-c-button.pf-m-primary");
       button.simulate("click");
       expect(fetchMock.mock.calls).toHaveLength(1);
@@ -168,7 +181,9 @@ describe("Instance Form component", () => {
       );
       const numField = wrapper.find("#opt_int");
       numField.at(0).getDOMNode<HTMLInputElement>().value = "";
-      numField.at(0).simulate("change", { target: { id: "opt_int" } });
+      numField.at(0).simulate("change", {
+        target: { id: "opt_int", name: "opt_int", value: "" },
+      });
       const button = wrapper.find(".pf-c-button.pf-m-primary");
       button.simulate("click");
       expect(fetchMock.mock.calls).toHaveLength(1);

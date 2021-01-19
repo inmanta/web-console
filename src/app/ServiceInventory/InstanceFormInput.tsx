@@ -2,8 +2,8 @@ import { IAttributeModel } from "@app/Models/LsmModels";
 import {
   TextInputTypes,
   FormGroup,
-  Checkbox,
   TextInput,
+  Radio,
 } from "@patternfly/react-core";
 import React from "react";
 
@@ -32,12 +32,38 @@ const InstanceFormInput: React.FunctionComponent<{
           key={attributeName}
           label={attributeName}
         >
-          <Checkbox
-            id={attributeWithMatchingName.name}
-            label={description}
-            isChecked={!!attributes[attributeName]}
+          {description}
+          <Radio
+            isChecked={attributes[attributeName] === true}
             onChange={handleInputChange}
+            label="True"
+            name={`${attributeWithMatchingName.name}`}
+            id={`${attributeWithMatchingName.name}-true`}
+            data-testid={`${attributeWithMatchingName.name}-true`}
+            value={"true"}
           />
+          <Radio
+            isChecked={attributes[attributeName] === false}
+            onChange={handleInputChange}
+            label="False"
+            name={`${attributeWithMatchingName.name}`}
+            id={`${attributeWithMatchingName.name}-false`}
+            value={"false"}
+          />
+          {attributeWithMatchingName.type.toLowerCase().includes("?") && (
+            <Radio
+              isChecked={
+                attributes[attributeName] === undefined ||
+                attributes[attributeName] === null ||
+                attributes[attributeName] === ""
+              }
+              onChange={handleInputChange}
+              label="None"
+              name={`${attributeWithMatchingName.name}`}
+              id={`${attributeWithMatchingName.name}-none`}
+              value={undefined}
+            />
+          )}
         </FormGroup>
       );
     } else {
