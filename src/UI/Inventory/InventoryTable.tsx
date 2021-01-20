@@ -1,35 +1,32 @@
 import React from "react";
 import { TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
-import { fromEntries, Row } from "@/Core";
+import { Row } from "@/Core";
 import { TablePresenter } from "./Presenters";
 import { InstanceRow } from "./InstanceRow";
+import { ExpansionManager } from "./ExpansionManager";
 
 interface Props {
   rows: Row[];
   tablePresenter: TablePresenter;
 }
 
-interface ExpandedDict {
-  [id: string]: boolean;
-}
-
-function rowsToExpandedDict(rows: Row[]): ExpandedDict {
-  const pairs = rows.map((_, index) => [index, false]);
-  return fromEntries(pairs);
-}
-
 export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
+  const expansionManager = new ExpansionManager();
   const heads = tablePresenter
     .getColumnHeads()
     .map((column) => <Th key={column}>{column}</Th>);
 
-  const [expanded, setExpanded] = React.useState(rowsToExpandedDict(rows));
-  const handleExpansionToggle = (event, index) => {
-    setExpanded({
-      ...expanded,
-      [index]: !expanded[index],
-    });
+  const [expansionState, setExpansionState] = React.useState(
+    expansionManager.create(rowsToIds(rows))
+  );
+
+  const handleExpansionToggle = (id: string) => () => {
+    setExpansionState(expansionManager.toggle(expansionState, id));
   };
+
+  React.useEffect(() => {
+    setExpansionState(expansionManager.merge(expansionState, rowsToIds(rows)));
+  }, [rows]);
 
   return (
     <TableComposable>
@@ -44,8 +41,8 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
           index={index}
           key={row.id.full}
           row={row}
-          isExpanded={expanded[index]}
-          onToggle={handleExpansionToggle}
+          isExpanded={expansionState[row.id.full]}
+          onToggle={handleExpansionToggle(row.id.full)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
           actions={tablePresenter.getActionsFor(row.id.full)}
         />
@@ -53,3 +50,7 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
     </TableComposable>
   );
 };
+
+function rowsToIds(rows: Row[]): string[] {
+  return rows.map((row) => row.id.full);
+}
