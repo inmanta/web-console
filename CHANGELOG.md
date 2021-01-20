@@ -2,6 +2,7 @@
 
 - Add clipboard copy funcionality for the full service instance id (#135)
 - Fix validation error for optional boolean inputs (#140)
+- Add expand functionality to the service inventory table (#149)
 
 # Release 1.4.0 (2020-12-17)
 

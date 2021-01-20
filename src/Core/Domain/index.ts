@@ -1,2 +1,2 @@
-export * from "./ServiceInstance";
-export * from "./InstanceRow";
+export * from "./Inventory";
+export * from "./InventoryTable";

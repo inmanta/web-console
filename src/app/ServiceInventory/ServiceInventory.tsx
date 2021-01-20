@@ -13,7 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { useStoreState, State, useStoreDispatch } from "easy-peasy";
 import { IStoreModel } from "@app/Models/CoreModels";
-import { InventoryTable } from "./InventoryTable";
+import { InventoryTable } from "@/UI/Inventory";
 import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
 import { InstanceModal, ButtonType } from "./InstanceModal";
