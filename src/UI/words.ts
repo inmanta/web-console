@@ -22,6 +22,7 @@ const dict = {
   "inventory.column.updatedAt": "Updated",
   "inventory.column.resources": "Resources",
   "inventory.column.actions": "Actions",
+  "inventory.tabs.attributes": "Attributes",
   null: "null",
 };
 
