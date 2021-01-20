@@ -5,7 +5,6 @@ import { instance, DummyActionPresenter, DummyDatePresenter } from "@/Test";
 const presenter = new TablePresenter(
   new DummyDatePresenter(),
   new AttributesPresenter(),
-  new DummyActionPresenter(),
   new DummyActionPresenter()
 );
 const rows = presenter.createFromInstances([instance]);

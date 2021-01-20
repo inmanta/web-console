@@ -5,6 +5,5 @@ import { TablePresenter } from "@/UI/Inventory/Presenters/TablePresenter";
 export const tablePresenter = new TablePresenter(
   new DummyDatePresenter(),
   new AttributesPresenter(),
-  new DummyActionPresenter(),
   new DummyActionPresenter()
 );
