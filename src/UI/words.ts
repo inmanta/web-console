@@ -11,6 +11,7 @@
  */
 
 const dict = {
+  "id.copy": "Copy full service instance id to clipboard",
   "attributes.active": "Active Attributes",
   "attributes.candidate": "Candidate Attributes",
   "attributes.rollback": "Rollback Attributes",
