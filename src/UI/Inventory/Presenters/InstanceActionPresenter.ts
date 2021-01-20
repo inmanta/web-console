@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactElement } from "react";
 import { KeycloakInstance } from "keycloak-js";
 import { InstanceActions } from "@/UI/Inventory/Components";
 import { ActionPresenter, ServiceInstanceForAction } from "./ActionPresenter";
@@ -13,7 +13,7 @@ export class InstanceActionPresenter implements ActionPresenter {
     return this.instances.find((instance) => instance.id === id);
   }
 
-  getForId(id: string): React.ReactElement | null {
+  getForId(id: string): ReactElement | null {
     const instance = this.getInstanceForId(id);
     if (typeof instance === "undefined") return null;
     return InstanceActions({ instance, keycloak: this.keycloak });

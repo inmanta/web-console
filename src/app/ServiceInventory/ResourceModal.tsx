@@ -7,8 +7,13 @@ import { useStoreDispatch, useStoreState, State } from "easy-peasy";
 import { ResourceTable } from "./ResourceTable";
 import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 
+export type ServiceInstanceForResources = Pick<
+  IServiceInstanceModel,
+  "id" | "service_entity" | "version" | "environment"
+>;
+
 export const ResourceModal: React.FunctionComponent<{
-  instance: IServiceInstanceModel;
+  instance: ServiceInstanceForResources;
   keycloak?: Keycloak.KeycloakInstance;
 }> = (props) => {
   const instance = props.instance;

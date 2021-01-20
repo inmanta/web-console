@@ -18,6 +18,7 @@ export class TablePresenter {
     words("inventory.column.attributesSummary"),
     words("inventory.column.createdAt"),
     words("inventory.column.updatedAt"),
+    words("inventory.column.resources"),
     words("inventory.column.actions"),
   ];
   readonly numberOfColumns = this.columnHeads.length + 1;
@@ -25,11 +26,16 @@ export class TablePresenter {
   constructor(
     private datePresenter: DatePresenter,
     private attributesPresenter: AttributesPresenter,
-    private actionPresenter: ActionPresenter
+    private actionPresenter: ActionPresenter,
+    private resourcesPresenter: ActionPresenter
   ) {}
 
   public getActionsFor(id: string): ReactElement | null {
     return this.actionPresenter.getForId(id);
+  }
+
+  public getResourcesFor(id: string): ReactElement | null {
+    return this.resourcesPresenter.getForId(id);
   }
 
   public createFromInstances(instances: IServiceInstanceModel[]): Row[] {

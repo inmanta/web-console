@@ -6,6 +6,7 @@ import {
   InstanceActionPresenter,
   MomentDatePresenter,
   TablePresenter,
+  ResourcesPresenter,
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
 
@@ -18,10 +19,12 @@ export const TableProvider: React.FC<Props> = ({ instances, keycloak }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
   const actionPresenter = new InstanceActionPresenter(instances, keycloak);
+  const resourcesPresenter = new ResourcesPresenter(instances, keycloak);
   const tablePresenter = new TablePresenter(
     datePresenter,
     attributesPresenter,
-    actionPresenter
+    actionPresenter,
+    resourcesPresenter
   );
   const rows = tablePresenter.createFromInstances(instances);
 

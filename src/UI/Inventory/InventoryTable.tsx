@@ -44,6 +44,7 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
           isExpanded={expansionState[row.id.full]}
           onToggle={handleExpansionToggle(row.id.full)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
+          resources={tablePresenter.getResourcesFor(row.id.full)}
           actions={tablePresenter.getActionsFor(row.id.full)}
         />
       ))}
