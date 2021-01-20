@@ -21,9 +21,15 @@ const InstanceForm: React.FunctionComponent<{
   );
   const [attributes, setAttributes] = useState(initialAttributes);
   const handleInputChange = (value, event) => {
-    const changedAttributeName = event.target.id;
+    const changedAttributeName = event.target.name;
     const changedAttribute = {};
-    changedAttribute[changedAttributeName] = value;
+    if (event.target.type === "radio") {
+      changedAttribute[changedAttributeName] = toOptionalBoolean(
+        event.target.value
+      );
+    } else {
+      changedAttribute[changedAttributeName] = event.target.value;
+    }
     const updatedValue = { ...attributes, ...changedAttribute };
     setAttributes(updatedValue);
   };
@@ -85,7 +91,13 @@ function extractInitialAttributes(
   originalAttributes?: IInstanceAttributeModel
 ): IInstanceAttributeModel {
   return attributeModels.reduce((attributes, attribute) => {
-    if (originalAttributes && originalAttributes[attribute.name]) {
+    if (
+      attribute.type.includes("bool") &&
+      originalAttributes &&
+      originalAttributes[attribute.name] !== undefined
+    ) {
+      attributes[attribute.name] = originalAttributes[attribute.name];
+    } else if (originalAttributes && originalAttributes[attribute.name]) {
       attributes[attribute.name] = originalAttributes[attribute.name];
     } else if (attribute.default_value) {
       attributes[attribute.name] = attribute.default_value;
@@ -105,6 +117,16 @@ function closeContainer(closingFunction?: () => void): void {
   }
 }
 
+function toOptionalBoolean(value?: string): boolean | null {
+  if (value?.toLocaleLowerCase() === "true") {
+    return true;
+  } else if (value?.toLocaleLowerCase() === "false") {
+    return false;
+  } else {
+    return null;
+  }
+}
+
 function ensureAttributeType(
   attributeModels: IAttributeModel[],
   attributeName: string,
@@ -116,7 +138,9 @@ function ensureAttributeType(
   );
   let parsedValue = value;
   try {
-    if (attribute && attribute.type.includes("?") && value === "") {
+    if (attribute && attribute.type.includes("bool")) {
+      parsedValue = toOptionalBoolean(value);
+    } else if (attribute && attribute.type.includes("?") && value === "") {
       parsedValue = null;
     } else if (attribute && isNumberType(attribute.type)) {
       parsedValue = Number(value);
