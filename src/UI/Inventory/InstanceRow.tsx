@@ -9,7 +9,7 @@ import {
 import { Row } from "@/Core";
 import { words } from "@/UI";
 import {
-  Attributes,
+  AttributesSummaryView,
   DateWithTooltip,
   IdWithCopy,
   InstanceDetails,
@@ -48,7 +48,7 @@ export const InstanceRow: React.FC<Props> = ({
       </Td>
       <Td dataLabel={words("inventory.column.state")}>{row.state}</Td>
       <Td dataLabel={words("inventory.column.attributesSummary")}>
-        <Attributes summary={row.attributesSummary} />
+        <AttributesSummaryView summary={row.attributesSummary} />
       </Td>
       <Td dataLabel={words("inventory.column.createdAt")}>
         <DateWithTooltip date={row.createdAt} />

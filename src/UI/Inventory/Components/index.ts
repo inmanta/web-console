@@ -1,4 +1,4 @@
-export * from "./Attributes";
+export * from "./AttributesSummaryView";
 export * from "./AttributesList";
 export * from "./DateWithTooltip";
 export * from "./IdWithCopy";
