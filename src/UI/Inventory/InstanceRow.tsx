@@ -12,8 +12,8 @@ import {
   AttributesSummaryView,
   DateWithTooltip,
   IdWithCopy,
-  InstanceDetails,
 } from "./Components";
+import { InstanceDetails, AttributesView } from "@/UI/ServiceInstanceDetails";
 
 interface Props {
   row: Row;
@@ -59,7 +59,9 @@ export const InstanceRow: React.FC<Props> = ({
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
       <Td colSpan={numberOfColumns}>
         <ExpandableRowContent>
-          <InstanceDetails attributes={row.attributes} />
+          <InstanceDetails>
+            <AttributesView attributes={row.attributes} />
+          </InstanceDetails>
         </ExpandableRowContent>
       </Td>
     </Tr>

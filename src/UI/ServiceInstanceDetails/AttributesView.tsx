@@ -2,13 +2,13 @@ import React from "react";
 import { Attributes } from "@/Core";
 import { words } from "@/UI";
 import { Card, CardTitle, CardBody } from "@patternfly/react-core";
-import { AttributesList } from "./AttributesList";
+import { AttributesList } from "../Inventory/Components/AttributesList";
 
 interface Props {
   attributes: Attributes;
 }
 
-export const InstanceDetails: React.FC<Props> = ({ attributes }) => (
+export const AttributesView: React.FC<Props> = ({ attributes }) => (
   <>
     <Wrapper title={words("attributes.candidate")}>
       {attributes.candidate !== null && (
