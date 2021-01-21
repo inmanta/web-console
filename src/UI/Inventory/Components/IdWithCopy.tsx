@@ -11,11 +11,15 @@ interface Props {
 
 export const IdWithCopy: React.FC<Props> = ({ id }) => {
   return (
-    <>
+    <span className="only-on-hover-container">
       {id.short}
       <Tooltip content={words("id.copy")}>
-        <CopyIcon style={{ paddingLeft: 5 }} onClick={() => copy(id.full)} />
+        <CopyIcon
+          className="only-on-hover-visible"
+          style={{ paddingLeft: 5 }}
+          onClick={() => copy(id.full)}
+        />
       </Tooltip>
-    </>
+    </span>
   );
 };
