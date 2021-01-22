@@ -2,61 +2,9 @@ import { ExpansionState } from "@/UI/Inventory/ExpansionManager";
 import { TreeExpansionManager } from "./TreeExpansionManager";
 import { TreeRow } from "./TreeRow";
 
-export function getKeyPaths(
-  separator: string,
-  prefix: string,
-  subject: unknown
-): string[] {
-  if (!isNested(subject)) return [];
-  const keys: string[] = [];
-  const primaryKeys = Object.keys(subject);
-  primaryKeys.forEach((key) => {
-    keys.push(`${prefix}${key}`);
-    keys.push(
-      ...getKeyPaths(separator, `${prefix}${key}${separator}`, subject[key])
-    );
-  });
-  return keys;
-}
-
-export function isNested(value: unknown): value is Record<string, unknown> {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    Object.keys(value).length > 0 &&
-    (!Array.isArray(value) || value.some(isNested))
-  );
-}
-
 type Descriptor<Value = unknown> =
   | { done: false }
   | { done: true; value: Value };
-
-export function getKeyPathsWithValue(
-  separator: string,
-  prefix: string,
-  subject: unknown
-): Record<string, Descriptor> {
-  if (!isNested(subject)) return {};
-  let keys = {};
-  const primaryKeys = Object.keys(subject);
-  primaryKeys.forEach((key) => {
-    if (!isNested(subject[key])) {
-      keys[`${prefix}${key}`] = { done: true, value: subject[key] };
-    } else {
-      keys[`${prefix}${key}`] = { done: false };
-      keys = {
-        ...keys,
-        ...getKeyPathsWithValue(
-          separator,
-          `${prefix}${key}${separator}`,
-          subject[key]
-        ),
-      };
-    }
-  });
-  return keys;
-}
 
 interface AttributesValue {
   candidate: unknown;
@@ -130,7 +78,7 @@ export function getRows(
   });
 }
 
-export function dropLast(value: string, separator: string): string {
+function dropLast(value: string, separator: string): string {
   const parts = value.split(separator);
   parts.pop();
   return parts.join(separator);
@@ -152,53 +100,4 @@ function toString(value: unknown): string {
     if (Array.isArray(value)) return value.join(", ");
   }
   return "";
-}
-
-export function mergeDescriptors(
-  cds: Record<string, Descriptor>,
-  ads: Record<string, Descriptor>,
-  rds: Record<string, Descriptor>
-): Descriptors {
-  const allKeys = Object.keys({
-    ...cds,
-    ...ads,
-    ...rds,
-  });
-
-  return allKeys.reduce((acc, cur) => {
-    const done = getDone(cds[cur], ads[cur], rds[cur]);
-    if (done) {
-      acc[cur] = {
-        done,
-        value: {
-          candidate: getValue(cds[cur]),
-          active: getValue(ads[cur]),
-          rollback: getValue(rds[cur]),
-        },
-      };
-    } else {
-      acc[cur] = { done };
-    }
-
-    return acc;
-  }, {});
-}
-
-function getDone(
-  cd: Descriptor | undefined,
-  ad: Descriptor | undefined,
-  rd: Descriptor | undefined
-): boolean {
-  return isDone(cd) && isDone(ad) && isDone(rd);
-}
-
-function getValue(descriptor: Descriptor | undefined): unknown {
-  if (typeof descriptor === "undefined") return undefined;
-  if (!descriptor.done) return undefined;
-  return descriptor.value;
-}
-
-function isDone(descriptor: Descriptor | undefined): boolean {
-  if (typeof descriptor === "undefined") return true;
-  return descriptor.done;
 }

@@ -3,13 +3,9 @@ import styled from "styled-components";
 import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import { TreeExpansionManager } from "./TreeExpansionManager";
 import { TreeRowView } from "./TreeRow";
-import {
-  getKeyPaths,
-  getKeyPathsWithValue,
-  getRows,
-  mergeDescriptors,
-} from "./getKeyPaths";
+import { getRows } from "./getKeyPaths";
 import { Attributes } from "@/Core";
+import { RowHelper } from "./RowHelper";
 
 interface Props {
   attributes: Attributes;
@@ -18,48 +14,24 @@ interface Props {
 export const TreeTable: React.FC<Props> = ({ attributes }) => {
   const SEPARATOR = "$";
   const expansionManager = new TreeExpansionManager(SEPARATOR);
-  const paths = getKeyPaths(SEPARATOR, "", {
-    ...attributes.active,
-    ...attributes.candidate,
-    ...attributes.rollback,
-  });
-
+  const rowHelper = new RowHelper(SEPARATOR);
+  const attributePaths = rowHelper.getPaths(attributes);
   const [expansionState, setExpansionState] = useState(
-    expansionManager.create(paths)
+    expansionManager.create(attributePaths)
   );
 
-  const onToggle = (key) => () => {
+  const getOnToggle = (key) => () => {
     setExpansionState(expansionManager.toggle(expansionState, key));
   };
 
-  const candidateDescriptors = getKeyPathsWithValue(
-    SEPARATOR,
-    "",
-    attributes.candidate
-  );
-  const activeDescriptors = getKeyPathsWithValue(
-    SEPARATOR,
-    "",
-    attributes.active
-  );
-  const rollbackDescriptors = getKeyPathsWithValue(
-    SEPARATOR,
-    "",
-    attributes.rollback
-  );
-
-  const mergedDescriptors = mergeDescriptors(
-    candidateDescriptors,
-    activeDescriptors,
-    rollbackDescriptors
-  );
+  const multiAttributeDict = rowHelper.getMultiAttributeDict(attributes);
 
   const rows = getRows(
     SEPARATOR,
-    onToggle,
+    getOnToggle,
     expansionManager,
     expansionState,
-    mergedDescriptors
+    multiAttributeDict
   );
 
   return (
