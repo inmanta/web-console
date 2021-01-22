@@ -62,7 +62,7 @@ export const TreeTable: React.FC<Props> = ({ attributes }) => {
   );
 
   return (
-    <TableComposable>
+    <TableComposable variant="compact">
       <Thead>
         <Tr>
           <Th>name</Th>
