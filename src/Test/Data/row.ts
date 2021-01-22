@@ -12,10 +12,10 @@ export const base: Row = {
   },
   attributes: {
     candidate: null,
-    active: [
-      ["a", "123"],
-      ["b", "false"],
-    ],
+    active: {
+      a: 123,
+      b: false,
+    },
     rollback: null,
   },
   createdAt: {

@@ -2,7 +2,7 @@ export type TreeRow = Flat | Root | Branch | Leaf;
 
 interface Cell {
   label: string;
-  value: number | string | boolean;
+  value: string;
 }
 
 interface Flat {
