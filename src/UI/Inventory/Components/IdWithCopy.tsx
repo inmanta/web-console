@@ -13,7 +13,7 @@ export const IdWithCopy: React.FC<Props> = ({ id }) => {
   return (
     <span className="only-on-hover-container">
       {id.short}
-      <Tooltip content={words("id.copy")}>
+      <Tooltip content={words("id.copy")} entryDelay={200}>
         <CopyIcon
           className="only-on-hover-visible"
           style={{ paddingLeft: 5 }}

@@ -58,7 +58,7 @@ const InstanceFormInput: React.FunctionComponent<{
                 attributes[attributeName] === ""
               }
               onChange={handleInputChange}
-              label="None"
+              label="Null"
               name={`${attributeWithMatchingName.name}`}
               id={`${attributeWithMatchingName.name}-none`}
               value={""}
