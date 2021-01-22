@@ -61,7 +61,7 @@ export const InstanceRow: React.FC<Props> = ({
       </Td>
     </Tr>
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
-      <Td colSpan={numberOfColumns}>
+      <Td colSpan={numberOfColumns} noPadding>
         <ExpandableRowContent>
           <InstanceDetails>
             <StatusView

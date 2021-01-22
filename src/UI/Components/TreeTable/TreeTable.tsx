@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import { TreeExpansionManager } from "./TreeExpansionManager";
 import { TreeRowView } from "./TreeRow";
@@ -62,7 +63,7 @@ export const TreeTable: React.FC<Props> = ({ attributes }) => {
   );
 
   return (
-    <TableComposable variant="compact">
+    <StyledTableComposable variant="compact">
       <Thead>
         <Tr>
           <Th>name</Th>
@@ -76,6 +77,10 @@ export const TreeTable: React.FC<Props> = ({ attributes }) => {
           <TreeRowView key={row.id} row={row} />
         ))}
       </Tbody>
-    </TableComposable>
+    </StyledTableComposable>
   );
 };
+
+const StyledTableComposable = styled(TableComposable)`
+  --pf-c-table__expandable-row--after--border-width--base: 0px;
+`;
