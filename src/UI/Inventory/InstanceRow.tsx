@@ -57,7 +57,7 @@ export const InstanceRow: React.FC<Props> = ({
       <Td dataLabel={words("inventory.column.actions")}>{actions}</Td>
     </Tr>
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
-      <Td colSpan={numberOfColumns}>
+      <Td colSpan={numberOfColumns} noPadding>
         <ExpandableRowContent>
           <InstanceDetails>
             <AttributesView attributes={row.attributes} />

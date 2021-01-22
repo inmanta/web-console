@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import { Row } from "@/Core";
 import { TablePresenter } from "./Presenters";
@@ -29,7 +30,7 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
   }, [rows]);
 
   return (
-    <TableComposable>
+    <StyledTableComposable>
       <Thead>
         <Tr>
           <Th />
@@ -47,9 +48,13 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
           actions={tablePresenter.getActionsFor(row.id.full)}
         />
       ))}
-    </TableComposable>
+    </StyledTableComposable>
   );
 };
+
+const StyledTableComposable = styled(TableComposable)`
+  --pf-c-table__expandable-row--after--border-width--base: 0px;
+`;
 
 function rowsToIds(rows: Row[]): string[] {
   return rows.map((row) => row.id.full);
