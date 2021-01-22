@@ -1,62 +1,36 @@
 import React, { useState } from "react";
 import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import { TreeExpansionManager } from "./TreeExpansionManager";
-import { TreeRow, TreeRowView } from "./TreeRow";
+import { TreeRowView } from "./TreeRow";
+import { getKeyPaths, getKeyPathsWithValue, getRows } from "./getKeyPaths";
+import { Attributes } from "@/Core";
 
-export const TreeTable: React.FC = () => {
-  const expansionManager = new TreeExpansionManager(".");
+interface Props {
+  attributes: Attributes;
+}
+
+export const TreeTable: React.FC<Props> = ({ attributes }) => {
+  const SEPARATOR = "$";
+  const expansionManager = new TreeExpansionManager(SEPARATOR);
+  const paths = getKeyPaths("", attributes.active);
 
   const [expansionState, setExpansionState] = useState(
-    expansionManager.create(["a", "a.b", "a.b.c"])
+    expansionManager.create(paths)
   );
 
   const onToggle = (key) => () => {
     setExpansionState(expansionManager.toggle(expansionState, key));
   };
 
-  const b: TreeRow = {
-    kind: "Flat",
-    id: "b",
-    cell: { label: "name", value: "b" },
-    cells: [
-      { label: "candidate", value: "blabla" },
-      { label: "active", value: "blabla" },
-      { label: "rollback", value: "blabla" },
-    ],
-  };
+  const descriptors = getKeyPathsWithValue(SEPARATOR, "", attributes.active);
 
-  const a: TreeRow = {
-    kind: "Root",
-    id: "a",
-    isChildExpanded: expansionManager.get(expansionState, "a"),
-    onToggle: onToggle("a"),
-    cell: { label: "name", value: "a" },
-  };
-
-  const ab: TreeRow = {
-    kind: "Branch",
-    id: "a.b",
-    isExpandedByParent: expansionManager.get(expansionState, "a"),
-    isChildExpanded: expansionManager.get(expansionState, "a.b"),
-    onToggle: onToggle("a.b"),
-    level: 1,
-    cell: { label: "name", value: "b" },
-  };
-
-  const abc: TreeRow = {
-    kind: "Leaf",
-    id: "a.b.c",
-    isExpandedByParent: expansionManager.get(expansionState, "a.b"),
-    cell: { label: "active", value: "c" },
-    cells: [
-      { label: "candidate", value: 123 },
-      { label: "active", value: false },
-      { label: "rollback", value: "blabla" },
-    ],
-    level: 2,
-  };
-
-  const rows = [b, a, ab, abc];
+  const rows = getRows(
+    SEPARATOR,
+    onToggle,
+    expansionManager,
+    expansionState,
+    descriptors
+  );
 
   return (
     <TableComposable>

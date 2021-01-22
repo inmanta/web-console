@@ -45,7 +45,8 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
         <Tr>
           <Td dataLabel="name" colSpan={4}>
             <Indent level={0}>
-              <Toggle expanded={row.isChildExpanded} onToggle={row.onToggle} />a
+              <Toggle expanded={row.isChildExpanded} onToggle={row.onToggle} />
+              {row.cell.value}
             </Indent>
           </Td>
         </Tr>
