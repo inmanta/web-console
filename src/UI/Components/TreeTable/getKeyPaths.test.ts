@@ -1,19 +1,19 @@
 import { dropLast, getKeyPaths, getKeyPathsWithValue } from "./getKeyPaths";
 
 test("getKeyPaths returns empty list for boolean", () => {
-  expect(getKeyPaths("", false)).toEqual([]);
+  expect(getKeyPaths(".", "", false)).toEqual([]);
 });
 
 test("getKeyPaths returns empty list for number", () => {
-  expect(getKeyPaths("", 1234)).toEqual([]);
+  expect(getKeyPaths(".", "", 1234)).toEqual([]);
 });
 
 test("getKeyPaths returns empty list for string", () => {
-  expect(getKeyPaths("", "blabla")).toEqual([]);
+  expect(getKeyPaths(".", "", "blabla")).toEqual([]);
 });
 
 test("getKeyPaths returns empty list for null", () => {
-  expect(getKeyPaths("", null)).toEqual([]);
+  expect(getKeyPaths(".", "", null)).toEqual([]);
 });
 
 test("getKeyPaths returns list for flat object", () => {
@@ -25,7 +25,7 @@ test("getKeyPaths returns list for flat object", () => {
     e: [],
     f: [1234, "blabla"],
   };
-  expect(getKeyPaths("", object)).toEqual(["a", "b", "c", "d", "e", "f"]);
+  expect(getKeyPaths(".", "", object)).toEqual(["a", "b", "c", "d", "e", "f"]);
 });
 
 test("getKeyPaths returns list for nested object", () => {
@@ -45,7 +45,7 @@ test("getKeyPaths returns list for nested object", () => {
       d: 1234,
     },
   };
-  expect(getKeyPaths("", object)).toEqual([
+  expect(getKeyPaths(".", "", object)).toEqual([
     "a",
     "a.b",
     "a.c",

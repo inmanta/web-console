@@ -2,22 +2,35 @@ import { ExpansionState } from "@/UI/Inventory/ExpansionManager";
 import { TreeExpansionManager } from "./TreeExpansionManager";
 import { TreeRow } from "./TreeRow";
 
-export function getKeyPaths(prefix: string, subject: unknown): string[] {
+export function getKeyPaths(
+  separator: string,
+  prefix: string,
+  subject: unknown
+): string[] {
   if (!isNested(subject)) return [];
   const keys: string[] = [];
   const primaryKeys = Object.keys(subject);
   primaryKeys.forEach((key) => {
     keys.push(`${prefix}${key}`);
-    keys.push(...getKeyPaths(`${prefix}${key}.`, subject[key]));
+    keys.push(
+      ...getKeyPaths(separator, `${prefix}${key}${separator}`, subject[key])
+    );
   });
   return keys;
 }
 
 export function isNested(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    Object.keys(value).length > 0 &&
+    (!Array.isArray(value) || value.some(isNested))
+  );
 }
 
-type Descriptor = { done: false } | { done: true; value: unknown };
+type Descriptor<Value = unknown> =
+  | { done: false }
+  | { done: true; value: Value };
 
 export function getKeyPathsWithValue(
   separator: string,
@@ -45,12 +58,20 @@ export function getKeyPathsWithValue(
   return keys;
 }
 
+interface AttributesValue {
+  candidate: unknown;
+  active: unknown;
+  rollback: unknown;
+}
+
+type Descriptors = Record<string, Descriptor<AttributesValue>>;
+
 export function getRows(
   separator: string,
   onToggle: (key: string) => () => void,
   expansionManager: TreeExpansionManager,
   expansionState: ExpansionState,
-  descriptors: Record<string, Descriptor>
+  descriptors: Descriptors
 ): TreeRow[] {
   return Object.entries(descriptors).map(([key, descriptor]) => {
     if (descriptor.done) {
@@ -64,9 +85,9 @@ export function getRows(
           ),
           cell: { label: "active", value: getLast(key, separator) },
           cells: [
-            { label: "candidate", value: toString(descriptor.value) },
-            { label: "active", value: toString(false) },
-            { label: "rollback", value: "blabla" },
+            { label: "candidate", value: toString(descriptor.value.candidate) },
+            { label: "active", value: toString(descriptor.value.active) },
+            { label: "rollback", value: toString(descriptor.value.rollback) },
           ],
           level: key.split(separator).length - 1,
         };
@@ -76,9 +97,9 @@ export function getRows(
           id: key,
           cell: { label: "name", value: key },
           cells: [
-            { label: "candidate", value: toString(descriptor.value) },
-            { label: "active", value: toString(1234) },
-            { label: "rollback", value: "blabla" },
+            { label: "candidate", value: toString(descriptor.value.candidate) },
+            { label: "active", value: toString(descriptor.value.active) },
+            { label: "rollback", value: toString(descriptor.value.rollback) },
           ],
         };
       }
@@ -127,7 +148,57 @@ function toString(value: unknown): string {
   if (typeof value === "undefined") return "";
   if (typeof value === "object") {
     if (value === null) return "null";
+    if (Object.keys(value).length === 0) return "{}";
     if (Array.isArray(value)) return value.join(", ");
   }
   return "";
+}
+
+export function mergeDescriptors(
+  cds: Record<string, Descriptor>,
+  ads: Record<string, Descriptor>,
+  rds: Record<string, Descriptor>
+): Descriptors {
+  const allKeys = Object.keys({
+    ...cds,
+    ...ads,
+    ...rds,
+  });
+
+  return allKeys.reduce((acc, cur) => {
+    const done = getDone(cds[cur], ads[cur], rds[cur]);
+    if (done) {
+      acc[cur] = {
+        done,
+        value: {
+          candidate: getValue(cds[cur]),
+          active: getValue(ads[cur]),
+          rollback: getValue(rds[cur]),
+        },
+      };
+    } else {
+      acc[cur] = { done };
+    }
+
+    return acc;
+  }, {});
+}
+
+function getDone(
+  cd: Descriptor | undefined,
+  ad: Descriptor | undefined,
+  rd: Descriptor | undefined
+): boolean {
+  return isDone(cd) && isDone(ad) && isDone(rd);
+}
+
+function getValue(descriptor: Descriptor | undefined): unknown {
+  if (typeof descriptor === "undefined") return undefined;
+  if (!descriptor.done) return undefined;
+  return descriptor.value;
+}
+
+function isDone(descriptor: Descriptor | undefined): boolean {
+  if (typeof descriptor === "undefined") return true;
+  return descriptor.done;
 }
