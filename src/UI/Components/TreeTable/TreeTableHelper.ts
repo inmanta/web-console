@@ -1,37 +1,70 @@
-import { ExpansionState } from "@/UI/Inventory/ExpansionManager";
-import { TreeExpansionManager } from "./TreeExpansionManager";
+import { Attributes } from "@/Core";
+import { AttributeHelper, MultiAttributeNode } from "./AttributeHelper";
+import { ExpansionState, TreeExpansionManager } from "./TreeExpansionManager";
 import { TreeRow } from "./TreeRow";
+import { words } from "@/UI/words";
 
-type Descriptor<Value = unknown> =
-  | { done: false }
-  | { done: true; value: Value };
+export class TreeTableHelper {
+  private readonly columns = [
+    words("attribute.name"),
+    words("attributesTab.candidate"),
+    words("attributesTab.active"),
+    words("attributesTab.rollback"),
+  ];
 
-interface AttributesValue {
-  candidate: unknown;
-  active: unknown;
-  rollback: unknown;
+  constructor(
+    private readonly separator: string,
+    private readonly attributes: Attributes,
+    private readonly expansionManager: TreeExpansionManager,
+    private readonly attributeHelper: AttributeHelper
+  ) {}
+
+  public getColumns(): string[] {
+    return this.columns;
+  }
+
+  public getExpansionState(): ExpansionState {
+    return this.expansionManager.create(
+      this.attributeHelper.getPaths(this.attributes)
+    );
+  }
+
+  public createRows(
+    expansionState: ExpansionState,
+    setState: (state: ExpansionState) => void
+  ): TreeRow[] {
+    const createOnToggle = (key: string) => () =>
+      setState(this.expansionManager.toggle(expansionState, key));
+
+    const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
+    return getRows(
+      this.separator,
+      createOnToggle,
+      this.expansionManager,
+      expansionState,
+      nodes
+    );
+  }
 }
-
-type Descriptors = Record<string, Descriptor<AttributesValue>>;
 
 export function getRows(
   separator: string,
   onToggle: (key: string) => () => void,
   expansionManager: TreeExpansionManager,
   expansionState: ExpansionState,
-  descriptors: Descriptors
+  descriptors: Record<string, MultiAttributeNode>
 ): TreeRow[] {
   return Object.entries(descriptors).map(([key, descriptor]) => {
-    if (descriptor.done) {
+    if (descriptor.kind === "Leaf") {
       if (key.includes(separator)) {
         return {
           kind: "Leaf",
           id: key,
           isExpandedByParent: expansionManager.get(
             expansionState,
-            dropLast(key, separator)
+            dropLast(separator, key)
           ),
-          cell: { label: "active", value: getLast(key, separator) },
+          cell: { label: "name", value: getLast(separator, key) },
           cells: [
             { label: "candidate", value: toString(descriptor.value.candidate) },
             { label: "active", value: toString(descriptor.value.active) },
@@ -58,12 +91,12 @@ export function getRows(
           id: key,
           isExpandedByParent: expansionManager.get(
             expansionState,
-            dropLast(key, separator)
+            dropLast(separator, key)
           ),
           isChildExpanded: expansionManager.get(expansionState, key),
           onToggle: onToggle(key),
           level: key.split(separator).length - 1,
-          cell: { label: "name", value: getLast(key, separator) },
+          cell: { label: "name", value: getLast(separator, key) },
         };
       } else {
         return {
@@ -78,13 +111,13 @@ export function getRows(
   });
 }
 
-function dropLast(value: string, separator: string): string {
+function dropLast(separator: string, value: string): string {
   const parts = value.split(separator);
   parts.pop();
   return parts.join(separator);
 }
 
-function getLast(value: string, separator: string): string {
+function getLast(separator: string, value: string): string {
   const parts = value.split(separator);
   return parts.pop() as string;
 }
