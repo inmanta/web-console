@@ -1,47 +1,28 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
-import { TreeExpansionManager } from "./TreeExpansionManager";
 import { TreeRowView } from "./TreeRow";
-import { getRows } from "./getKeyPaths";
-import { Attributes } from "@/Core";
-import { RowHelper } from "./RowHelper";
+import { TreeTableHelper } from "./TreeTableHelper";
 
 interface Props {
-  attributes: Attributes;
+  treeTableHelper: TreeTableHelper;
 }
 
-export const TreeTable: React.FC<Props> = ({ attributes }) => {
-  const SEPARATOR = "$";
-  const expansionManager = new TreeExpansionManager(SEPARATOR);
-  const rowHelper = new RowHelper(SEPARATOR);
-  const attributePaths = rowHelper.getPaths(attributes);
+export const TreeTable: React.FC<Props> = ({ treeTableHelper }) => {
   const [expansionState, setExpansionState] = useState(
-    expansionManager.create(attributePaths)
+    treeTableHelper.getExpansionState()
   );
 
-  const getOnToggle = (key) => () => {
-    setExpansionState(expansionManager.toggle(expansionState, key));
-  };
-
-  const multiAttributeDict = rowHelper.getMultiAttributeDict(attributes);
-
-  const rows = getRows(
-    SEPARATOR,
-    getOnToggle,
-    expansionManager,
-    expansionState,
-    multiAttributeDict
-  );
+  const columns = treeTableHelper.getColumns();
+  const rows = treeTableHelper.createRows(expansionState, setExpansionState);
 
   return (
     <StyledTableComposable variant="compact">
       <Thead>
         <Tr>
-          <Th>name</Th>
-          <Th>candidate</Th>
-          <Th>active</Th>
-          <Th>rollback</Th>
+          {columns.map((column) => (
+            <Th key={column}>{column}</Th>
+          ))}
         </Tr>
       </Thead>
       <Tbody>
