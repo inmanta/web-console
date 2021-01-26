@@ -21,7 +21,7 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
   switch (row.kind) {
     case "Flat":
       return (
-        <Tr>
+        <Tr aria-label={`Row-${row.id}`}>
           <Td dataLabel={row.cell.label}>
             <Indent level={0} noToggle>
               {row.cell.value}
@@ -36,10 +36,14 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
       );
     case "Root":
       return (
-        <Tr>
+        <Tr aria-label={`Row-${row.id}`}>
           <Td dataLabel="name" colSpan={4}>
             <Indent level={0}>
-              <Toggle expanded={row.isChildExpanded} onToggle={row.onToggle} />
+              <Toggle
+                expanded={row.isChildExpanded}
+                onToggle={row.onToggle}
+                aria-label={`Toggle-${row.id}`}
+              />
               {row.cell.value}
             </Indent>
           </Td>
@@ -48,10 +52,14 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
 
     case "Branch":
       return (
-        <Tr isExpanded={row.isExpandedByParent}>
+        <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
           <Td colSpan={4} dataLabel={row.cell.label}>
             <Indent level={row.level}>
-              <Toggle expanded={row.isChildExpanded} onToggle={row.onToggle} />
+              <Toggle
+                expanded={row.isChildExpanded}
+                onToggle={row.onToggle}
+                aria-label={`Toggle-${row.id}`}
+              />
               {row.cell.value}
             </Indent>
           </Td>
@@ -60,7 +68,7 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
 
     case "Leaf":
       return (
-        <Tr isExpanded={row.isExpandedByParent}>
+        <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
           <Td dataLabel={row.cell.label}>
             <Indent level={row.level} noToggle>
               {row.cell.value}
