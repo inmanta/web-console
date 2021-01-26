@@ -13,15 +13,20 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper }) => {
     treeTableHelper.getExpansionState()
   );
 
-  const columns = treeTableHelper.getColumns();
+  const [firstColumn, ...columns] = treeTableHelper.getColumns();
   const rows = treeTableHelper.createRows(expansionState, setExpansionState);
 
   return (
     <StyledTableComposable variant="compact">
       <Thead>
         <Tr>
+          <Th key={firstColumn} className="pf-m-width-40">
+            {firstColumn}
+          </Th>
           {columns.map((column) => (
-            <Th key={column}>{column}</Th>
+            <Th key={column} className="pf-m-width-20">
+              {column}
+            </Th>
           ))}
         </Tr>
       </Thead>

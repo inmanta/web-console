@@ -49,3 +49,24 @@ RealData.args = {
     new AttributeHelper("$")
   ),
 };
+
+export const MultipleAttributes = Template.bind({});
+MultipleAttributes.args = {
+  treeTableHelper: new TreeTableHelper(
+    "$",
+    {
+      candidate: {
+        a: {
+          b: {
+            c: "candidate candidate candidate ",
+            d: "candidate candidate candidate ",
+          },
+        },
+      },
+      active: { a: { b: { c: "active active active active ", d: "" } } },
+      rollback: { a: { b: { c: "rollback rollback rollback ", d: "" } } },
+    },
+    new TreeExpansionManager("$"),
+    new AttributeHelper("$")
+  ),
+};

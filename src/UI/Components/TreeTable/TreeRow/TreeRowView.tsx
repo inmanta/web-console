@@ -1,6 +1,6 @@
 import React from "react";
 import { Tr, Td } from "@patternfly/react-table";
-import { TreeRow } from "./TreeRow";
+import { TreeRow, isRowOfMultipleValues } from "./TreeRow";
 import { Toggle } from "@/UI/Components";
 
 interface IndentProps {
@@ -28,7 +28,11 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
             </Indent>
           </Td>
           {row.cells.map(({ label, value }) => (
-            <Td key={label} dataLabel={label}>
+            <Td
+              className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
+              key={label}
+              dataLabel={label}
+            >
               {value}
             </Td>
           ))}
@@ -75,7 +79,11 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
             </Indent>
           </Td>
           {row.cells.map(({ label, value }) => (
-            <Td key={label} dataLabel={label}>
+            <Td
+              className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
+              key={label}
+              dataLabel={label}
+            >
               {value}
             </Td>
           ))}

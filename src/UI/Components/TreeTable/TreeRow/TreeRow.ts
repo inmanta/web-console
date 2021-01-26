@@ -1,6 +1,6 @@
 export type TreeRow = Flat | Root | Branch | Leaf;
 
-interface Cell {
+export interface Cell {
   label: string;
   value: string;
 }
@@ -37,4 +37,10 @@ interface Leaf {
   cell: Cell;
   cells: Cell[];
   level: number;
+}
+
+export function isRowOfMultipleValues(row: Flat | Leaf): boolean {
+  const values = row.cells.map(({ value }) => value);
+  const nonEmptyValues = values.filter((value) => value.length > 0);
+  return nonEmptyValues.length > 1;
 }
