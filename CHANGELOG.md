@@ -4,6 +4,7 @@
 - Fix validation error for optional boolean inputs (#140)
 - Add expand functionality to the service inventory table (#149)
 - Add status tab to service inventory (#182)
+- Add attributes tab to service inventory (#162)
 
 # Release 1.4.0 (2020-12-17)
 
