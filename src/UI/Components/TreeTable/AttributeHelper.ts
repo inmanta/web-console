@@ -26,23 +26,10 @@ export class AttributeHelper {
   }
 
   getMultiAttributeNodes(attributes: Attributes): MultiAttributeNodeDict {
-    const candidateDescriptors = this.getSingleAttributeNodes(
-      "",
-      attributes.candidate
-    );
-    const activeDescriptors = this.getSingleAttributeNodes(
-      "",
-      attributes.active
-    );
-    const rollbackDescriptors = this.getSingleAttributeNodes(
-      "",
-      attributes.rollback
-    );
-
-    return mergeNodes(
-      candidateDescriptors,
-      activeDescriptors,
-      rollbackDescriptors
+    return this.mergeNodes(
+      this.getSingleAttributeNodes("", attributes.candidate),
+      this.getSingleAttributeNodes("", attributes.active),
+      this.getSingleAttributeNodes("", attributes.rollback)
     );
   }
 
@@ -99,26 +86,30 @@ export class AttributeHelper {
       (!Array.isArray(value) || value.some((v) => this.isNested(v)))
     );
   }
-}
 
-export function mergeNodes(
-  candidateNodes: Record<string, TreeNode>,
-  activeNodes: Record<string, TreeNode>,
-  rollbackNodes: Record<string, TreeNode>
-): MultiAttributeNodeDict {
-  const allKeys = Object.keys({
-    ...candidateNodes,
-    ...activeNodes,
-    ...rollbackNodes,
-  });
+  private mergeNodes(
+    candidateNodes: AttributeNodeDict,
+    activeNodes: AttributeNodeDict,
+    rollbackNodes: AttributeNodeDict
+  ): MultiAttributeNodeDict {
+    const paths = Object.keys({
+      ...candidateNodes,
+      ...activeNodes,
+      ...rollbackNodes,
+    });
 
-  return allKeys.reduce<MultiAttributeNodeDict>((acc, cur) => {
-    const isLeaf = isMultiLeaf(
-      candidateNodes[cur],
-      activeNodes[cur],
-      rollbackNodes[cur]
-    );
-    if (isLeaf) {
+    return paths.reduce<MultiAttributeNodeDict>((acc, cur) => {
+      const conform = isMultiLeaf(
+        candidateNodes[cur],
+        activeNodes[cur],
+        rollbackNodes[cur]
+      );
+
+      if (!conform) {
+        acc[cur] = { kind: "Branch" };
+        return acc;
+      }
+
       acc[cur] = {
         kind: "Leaf",
         value: {
@@ -127,12 +118,9 @@ export function mergeNodes(
           rollback: getValue(rollbackNodes[cur]),
         },
       };
-    } else {
-      acc[cur] = { kind: "Branch" };
-    }
-
-    return acc;
-  }, {});
+      return acc;
+    }, {});
+  }
 }
 
 export function isMultiLeaf(
