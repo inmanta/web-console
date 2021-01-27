@@ -1,14 +1,15 @@
 import { AttributeHelper } from "./AttributeHelper";
+import { PathHelper } from "./PathHelper";
 import { TreeExpansionManager } from "./TreeExpansionManager";
 import { TreeTableHelper } from "./TreeTableHelper";
 
 test("TreeTableHelper getExpansionState returns correct expansionState", () => {
   // Arrange
   const treeTableHelper = new TreeTableHelper(
-    ".",
-    { candidate: null, active: { a: "b" }, rollback: null },
+    new PathHelper("."),
     new TreeExpansionManager("."),
-    new AttributeHelper(".")
+    new AttributeHelper("."),
+    { candidate: null, active: { a: "b" }, rollback: null }
   );
   // Act
   const expansionState = treeTableHelper.getExpansionState();
@@ -21,10 +22,10 @@ test("TreeTableHelper getExpansionState returns correct expansionState", () => {
 test("TreeTableHelper createRows returns correct list", () => {
   // Arrange
   const treeTableHelper = new TreeTableHelper(
-    ".",
-    { candidate: null, active: { a: "b", c: { d: "e" } }, rollback: null },
+    new PathHelper("."),
     new TreeExpansionManager("."),
-    new AttributeHelper(".")
+    new AttributeHelper("."),
+    { candidate: null, active: { a: "b", c: { d: "e" } }, rollback: null }
   );
   // Act
   /* eslint-disable-next-line @typescript-eslint/no-empty-function */

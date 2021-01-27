@@ -5,6 +5,7 @@ import { instance } from "@/Test/Data";
 import { TreeTableHelper } from "./TreeTableHelper";
 import { TreeExpansionManager } from "./TreeExpansionManager";
 import { AttributeHelper } from "./AttributeHelper";
+import { PathHelper } from "./PathHelper";
 
 export default {
   title: "TreeTable",
@@ -18,7 +19,9 @@ const Template: Story<ComponentProps<typeof TreeTable>> = (args) => (
 export const Simple = Template.bind({});
 Simple.args = {
   treeTableHelper: new TreeTableHelper(
-    "$",
+    new PathHelper("$"),
+    new TreeExpansionManager("$"),
+    new AttributeHelper("$"),
     {
       candidate: {
         a: { b: { c: "c" } },
@@ -30,30 +33,30 @@ Simple.args = {
       },
       active: null,
       rollback: null,
-    },
-    new TreeExpansionManager("$"),
-    new AttributeHelper("$")
+    }
   ),
 };
 
 export const RealData = Template.bind({});
 RealData.args = {
   treeTableHelper: new TreeTableHelper(
-    "$",
+    new PathHelper("$"),
+    new TreeExpansionManager("$"),
+    new AttributeHelper("$"),
     {
       candidate: instance.candidate_attributes,
       active: instance.active_attributes,
       rollback: instance.rollback_attributes,
-    },
-    new TreeExpansionManager("$"),
-    new AttributeHelper("$")
+    }
   ),
 };
 
 export const MultipleAttributes = Template.bind({});
 MultipleAttributes.args = {
   treeTableHelper: new TreeTableHelper(
-    "$",
+    new PathHelper("$"),
+    new TreeExpansionManager("$"),
+    new AttributeHelper("$"),
     {
       candidate: {
         a: {
@@ -65,8 +68,6 @@ MultipleAttributes.args = {
       },
       active: { a: { b: { c: "active active active active ", d: "" } } },
       rollback: { a: { b: { c: "rollback rollback rollback ", d: "" } } },
-    },
-    new TreeExpansionManager("$"),
-    new AttributeHelper("$")
+    }
   ),
 };

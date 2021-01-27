@@ -4,6 +4,7 @@ import { TreeTable } from "./TreeTable";
 import { TreeTableHelper } from "./TreeTableHelper";
 import { TreeExpansionManager } from "./TreeExpansionManager";
 import { AttributeHelper } from "./AttributeHelper";
+import { PathHelper } from "./PathHelper";
 
 test("TreeTable 1st level of nested property can be expanded", async () => {
   // Arrange
@@ -11,14 +12,14 @@ test("TreeTable 1st level of nested property can be expanded", async () => {
     <TreeTable
       treeTableHelper={
         new TreeTableHelper(
-          "$",
+          new PathHelper("$"),
+          new TreeExpansionManager("$"),
+          new AttributeHelper("$"),
           {
             candidate: null,
             active: { a: { b: { c: "d" } } },
             rollback: null,
-          },
-          new TreeExpansionManager("$"),
-          new AttributeHelper("$")
+          }
         )
       }
     />
@@ -41,14 +42,14 @@ test("TreeTable 2nd level of nested property can be expanded", async () => {
     <TreeTable
       treeTableHelper={
         new TreeTableHelper(
-          "$",
+          new PathHelper("$"),
+          new TreeExpansionManager("$"),
+          new AttributeHelper("$"),
           {
             candidate: null,
             active: { a: { b: { c: "d" } } },
             rollback: null,
-          },
-          new TreeExpansionManager("$"),
-          new AttributeHelper("$")
+          }
         )
       }
     />
