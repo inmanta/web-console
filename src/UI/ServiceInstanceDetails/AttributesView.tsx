@@ -3,8 +3,9 @@ import { Attributes } from "@/Core";
 import { words } from "@/UI";
 import { Card, CardTitle, CardBody } from "@patternfly/react-core";
 import { AttributesList } from "../Inventory/Components/AttributesList";
+import { TabProps } from "./InstanceDetails";
 
-interface Props {
+interface Props extends TabProps {
   attributes: Attributes;
 }
 

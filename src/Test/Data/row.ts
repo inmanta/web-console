@@ -26,6 +26,7 @@ export const base: Row = {
     full: "January 8th 2021, 4:44:27 pm",
     relative: "17 hours ago",
   },
+  version: 2,
 };
 
 export const row2: Row = {

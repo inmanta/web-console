@@ -1,31 +1,38 @@
 import React, { ReactText, useState } from "react";
 import { Tabs, Tab, TabTitleText, TabTitleIcon } from "@patternfly/react-core";
-import { ListIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
 
-type TabKey = "Attributes";
+type TabKey = "Attributes" | "Status";
 
-export const InstanceDetails: React.FC = ({ children }) => {
-  const [activeTab, setActiveTab] = useState<TabKey>("Attributes");
+export interface TabProps {
+  title: string;
+  icon: React.ReactElement;
+}
+
+interface TabViewProps {
+  children: React.ReactElement<TabProps>[];
+}
+
+export const InstanceDetails: React.FC<TabViewProps> = ({ children }) => {
+  const [activeTab, setActiveTab] = useState<TabKey>("Status");
 
   const setActiveTabWithEventKey = (event, eventKey: ReactText) =>
     setActiveTab(eventKey as TabKey);
 
   return (
     <Tabs activeKey={activeTab} onSelect={setActiveTabWithEventKey}>
-      <Tab
-        eventKey="Attributes"
-        title={
-          <>
-            <TabTitleIcon>
-              <ListIcon />
-            </TabTitleIcon>
-            <TabTitleText>{words("inventory.tabs.attributes")}</TabTitleText>
-          </>
-        }
-      >
-        {children}
-      </Tab>
+      {React.Children.map(children, (child) => (
+        <Tab
+          eventKey={child.props.title}
+          title={
+            <>
+              <TabTitleIcon>{child.props.icon}</TabTitleIcon>
+              <TabTitleText>{child.props.title}</TabTitleText>
+            </>
+          }
+        >
+          {child}
+        </Tab>
+      ))}
     </Tabs>
   );
 };

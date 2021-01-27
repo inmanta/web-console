@@ -44,6 +44,7 @@ describe("Service instance diagnostics", function () {
       response: "fixture:lsm/diag_val_normal_compile_report.json",
     });
     cy.visit("/lsm/catalog/test_service/inventory");
+    cy.get("button#expand-toggle0").click();
     cy.get("#nav-toggle").click();
     cy.get("#rca-button").click();
   });
@@ -77,6 +78,7 @@ describe("Service instance diagnostics", function () {
       response: "fixture:lsm/diag_val_normal_compile_report.json",
     });
     cy.visit("/lsm/catalog/test_service/inventory");
+    cy.get("button#expand-toggle0").click();
     cy.get("#nav-toggle").click();
     cy.get("#rca-button").click();
     cy.get("#Deployment-status-error-message-details").should("be.visible");
@@ -107,6 +109,7 @@ describe("Service instance diagnostics", function () {
       response: "fixture:lsm/diag_val_error_compile_report.json",
     });
     cy.visit("/lsm/catalog/test_service/inventory");
+    cy.get("button#expand-toggle0").click();
     cy.get("#nav-toggle").click();
     cy.get("#rca-button").click();
     cy.get("#Deployment-status-error-message-details").should("not.be.visible");
@@ -144,6 +147,7 @@ describe("Service instance diagnostics", function () {
       response: "fixture:lsm/diag_val_error_compile_report.json",
     });
     cy.visit("/lsm/catalog/test_service/inventory");
+    cy.get("button#expand-toggle0").click();
     cy.get("#nav-toggle").click();
     cy.get("#rca-button").click();
     cy.get("#Deployment-status-error-message-details").should("be.visible");
@@ -175,6 +179,7 @@ describe("Service instance diagnostics", function () {
       response: "fixture:lsm/diag_val_normal_compile_report.json",
     });
     cy.visit("/lsm/catalog/test_service/inventory");
+    cy.get("button#expand-toggle0").click();
     cy.get("#nav-toggle").click();
     cy.get("#rca-button").click();
     cy.get("#Deployment-status-error-message-details").should("not.be.visible");
@@ -206,6 +211,7 @@ describe("Service instance diagnostics", function () {
       response: "fixture:lsm/diag_val_error_compile_report.json",
     });
     cy.visit("/lsm/catalog/test_service/inventory");
+    cy.get("button#expand-toggle0").click();
     cy.get("#nav-toggle").click();
     cy.get("#rca-button").click();
     cy.get("#Deployment-status-error-message-details").should("not.be.visible");

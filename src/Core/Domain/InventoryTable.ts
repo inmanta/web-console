@@ -29,4 +29,5 @@ export interface Row {
   attributes: Attributes;
   createdAt: DateInfo;
   updatedAt: DateInfo;
+  version: number;
 }

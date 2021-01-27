@@ -55,6 +55,7 @@ describe("Service inventory", function () {
       status: 400,
     });
     cy.visit("/lsm/catalog/e2e_service/inventory");
+    cy.get("button#expand-toggle0").click();
     cy.contains("button", "Delete").click();
     cy.contains("button", "Yes").click();
     cy.get(".pf-c-alert.pf-m-danger").should("contain.text", "Bad Request");
