@@ -26,7 +26,9 @@ export class TreeExpansionManager {
   }
 
   /**
-   * We need close all the children when a parent is closed
+   * Rows are not a nested structure, they are a flat list.
+   * Closing a parent, does not visually hide the children.
+   * Therefor we need to close all the children when a parent is closed.
    */
   private close(state: ExpansionState, key: string): ExpansionState {
     const keysToClose = Object.keys(state).filter((k) =>
