@@ -13,8 +13,11 @@ import {
   DateWithTooltip,
   IdWithCopy,
 } from "./Components";
-import { InstanceDetails, AttributesView } from "@/UI/ServiceInstanceDetails";
-import { StatusView } from "../ServiceInstanceDetails/StatusView";
+import {
+  InstanceDetails,
+  AttributesView,
+  StatusView,
+} from "@/UI/ServiceInstanceDetails";
 import { InfoCircleIcon, ListIcon } from "@patternfly/react-icons";
 
 interface Props {
