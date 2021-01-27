@@ -1,5 +1,8 @@
-import { MultiAttributeNode } from "../AttributeHelper";
-import { PathHelper } from "../PathHelper";
+import {
+  PathHelper,
+  MultiAttributeNode,
+} from "@/UI/Components/TreeTable/Helpers";
+
 import { TreeRow } from "./TreeRow";
 
 export class TreeRowCreator {

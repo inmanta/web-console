@@ -2,10 +2,12 @@ import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { TreeTable } from "./TreeTable";
 import { instance } from "@/Test/Data";
-import { TreeTableHelper } from "./TreeTableHelper";
-import { TreeExpansionManager } from "./TreeExpansionManager";
-import { AttributeHelper } from "./AttributeHelper";
-import { PathHelper } from "./PathHelper";
+import {
+  AttributeHelper,
+  PathHelper,
+  TreeExpansionManager,
+  TreeTableHelper,
+} from "./Helpers";
 
 export default {
   title: "TreeTable",

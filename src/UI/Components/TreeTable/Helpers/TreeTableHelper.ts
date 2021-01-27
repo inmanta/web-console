@@ -2,7 +2,7 @@ import { Attributes } from "@/Core";
 import { AttributeHelper } from "./AttributeHelper";
 import { PathHelper } from "./PathHelper";
 import { ExpansionState, TreeExpansionManager } from "./TreeExpansionManager";
-import { TreeRow, TreeRowCreator } from "./TreeRow";
+import { TreeRow, TreeRowCreator } from "../TreeRow";
 import { words } from "@/UI/words";
 
 export class TreeTableHelper {

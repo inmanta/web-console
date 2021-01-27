@@ -1,10 +1,12 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { TreeTable } from "./TreeTable";
-import { TreeTableHelper } from "./TreeTableHelper";
-import { TreeExpansionManager } from "./TreeExpansionManager";
-import { AttributeHelper } from "./AttributeHelper";
-import { PathHelper } from "./PathHelper";
+import {
+  AttributeHelper,
+  PathHelper,
+  TreeExpansionManager,
+  TreeTableHelper,
+} from "./Helpers";
 
 test("TreeTable 1st level of nested property can be expanded", async () => {
   // Arrange
