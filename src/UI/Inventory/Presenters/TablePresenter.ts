@@ -18,7 +18,6 @@ export class TablePresenter {
     words("inventory.column.attributesSummary"),
     words("inventory.column.createdAt"),
     words("inventory.column.updatedAt"),
-    words("inventory.column.actions"),
   ];
   readonly numberOfColumns = this.columnHeads.length + 1;
 
@@ -53,6 +52,7 @@ export class TablePresenter {
       rollback_attributes,
       created_at,
       last_updated,
+      version,
     } = instance;
 
     return {
@@ -70,6 +70,7 @@ export class TablePresenter {
       },
       createdAt: this.datePresenter.get(created_at),
       updatedAt: this.datePresenter.get(last_updated),
+      version: version,
     };
   }
 

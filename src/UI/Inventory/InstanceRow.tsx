@@ -14,6 +14,8 @@ import {
   IdWithCopy,
 } from "./Components";
 import { InstanceDetails, AttributesView } from "@/UI/ServiceInstanceDetails";
+import { StatusView } from "../ServiceInstanceDetails/StatusView";
+import { InfoCircleIcon, ListIcon } from "@patternfly/react-icons";
 
 interface Props {
   row: Row;
@@ -54,13 +56,28 @@ export const InstanceRow: React.FC<Props> = ({
       <Td dataLabel={words("inventory.column.updatedAt")}>
         <DateWithTooltip date={row.updatedAt} />
       </Td>
-      <Td dataLabel={words("inventory.column.actions")}>{actions}</Td>
     </Tr>
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
       <Td colSpan={numberOfColumns}>
         <ExpandableRowContent>
           <InstanceDetails>
-            <AttributesView attributes={row.attributes} />
+            <StatusView
+              title={words("inventory.tabs.status")}
+              icon={<InfoCircleIcon />}
+              statusInfo={{
+                instanceId: row.id.full,
+                state: row.state,
+                version: row.version,
+                createdAt: row.createdAt.full,
+                updatedAt: row.updatedAt.full,
+                actions: actions,
+              }}
+            />
+            <AttributesView
+              attributes={row.attributes}
+              title={words("inventory.tabs.attributes")}
+              icon={<ListIcon />}
+            />
           </InstanceDetails>
         </ExpandableRowContent>
       </Td>

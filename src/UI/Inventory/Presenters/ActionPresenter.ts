@@ -10,6 +10,7 @@ export type ServiceInstanceForAction = Pick<
   | "candidate_attributes"
   | "active_attributes"
   | "rollback_attributes"
+  | "environment"
 >;
 
 /**
