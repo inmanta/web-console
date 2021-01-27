@@ -16,4 +16,8 @@ export class PathHelper {
     if (!this.isNested(path)) return path;
     return path.split(this.separator).pop() as string;
   }
+
+  public getLevel(path: string): number {
+    return path.split(this.separator).length - 1;
+  }
 }

@@ -35,3 +35,15 @@ test("PathHelper getSelf returns self for single nested path", () => {
 test("PathHelper getSelf returns self for deeply nested path", () => {
   expect(new PathHelper(".").getSelf("a.b.b.b.c.d")).toMatch("d");
 });
+
+test("PathHelper getLevel returns 0 for flat path", () => {
+  expect(new PathHelper(".").getLevel("a")).toBe(0);
+});
+
+test("PathHelper getLevel returns 1 for single nested path", () => {
+  expect(new PathHelper(".").getLevel("a.b")).toBe(1);
+});
+
+test("PathHelper getLevel returns 5 for deeply nested path", () => {
+  expect(new PathHelper(".").getLevel("a.b.b.b.c.d")).toBe(5);
+});
