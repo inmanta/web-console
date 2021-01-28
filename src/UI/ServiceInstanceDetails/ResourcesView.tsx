@@ -1,5 +1,5 @@
 import React from "react";
-import { TabProps } from "./InstanceDetails";
+import { TabProps } from "./ServiceInstanceDetails";
 
 type Props = TabProps;
 

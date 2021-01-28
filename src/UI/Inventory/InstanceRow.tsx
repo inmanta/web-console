@@ -14,7 +14,7 @@ import {
   IdWithCopy,
 } from "./Components";
 import {
-  InstanceDetails,
+  ServiceInstanceDetails,
   AttributesView,
   StatusView,
   ResourcesView,
@@ -68,7 +68,7 @@ export const InstanceRow: React.FC<Props> = ({
     <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
       <Td colSpan={numberOfColumns}>
         <ExpandableRowContent>
-          <InstanceDetails>
+          <ServiceInstanceDetails>
             <StatusView
               title={words("inventory.tabs.status")}
               icon={<InfoCircleIcon />}
@@ -90,7 +90,7 @@ export const InstanceRow: React.FC<Props> = ({
               title={words("inventory.tabs.resources")}
               icon={<AutomationIcon />}
             />
-          </InstanceDetails>
+          </ServiceInstanceDetails>
         </ExpandableRowContent>
       </Td>
     </Tr>
