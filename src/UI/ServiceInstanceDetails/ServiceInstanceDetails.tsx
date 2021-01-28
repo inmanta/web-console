@@ -12,7 +12,9 @@ interface TabViewProps {
   children: React.ReactElement<TabProps>[];
 }
 
-export const InstanceDetails: React.FC<TabViewProps> = ({ children }) => {
+export const ServiceInstanceDetails: React.FC<TabViewProps> = ({
+  children,
+}) => {
   const [activeTab, setActiveTab] = useState<TabKey>("Status");
 
   const setActiveTabWithEventKey = (event, eventKey: ReactText) =>

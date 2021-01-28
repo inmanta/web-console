@@ -1,7 +1,7 @@
 import React from "react";
 import { Attributes } from "@/Core";
-import { TabProps } from "./InstanceDetails";
-import { TreeTable } from "../Components";
+import { TabProps } from "./ServiceInstanceDetails";
+import { TreeTable } from "@/UI/Components";
 import {
   AttributeHelper,
   PathHelper,
