@@ -8,10 +8,13 @@ import {
   TimesCircleIcon,
 } from "@patternfly/react-icons";
 
-type ResourceModel = Pick<IResourceModel, "resource_id" | "resource_state">;
+export type SlimResourceModel = Pick<
+  IResourceModel,
+  "resource_id" | "resource_state"
+>;
 
 interface Props {
-  resources: ResourceModel[];
+  resources: SlimResourceModel[];
   environmentId: string;
   instanceId: string;
 }

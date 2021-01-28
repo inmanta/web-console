@@ -17,8 +17,13 @@ import {
   InstanceDetails,
   AttributesView,
   StatusView,
+  ResourcesView,
 } from "@/UI/ServiceInstanceDetails";
-import { InfoCircleIcon, ListIcon } from "@patternfly/react-icons";
+import {
+  AutomationIcon,
+  InfoCircleIcon,
+  ListIcon,
+} from "@patternfly/react-icons";
 
 interface Props {
   row: Row;
@@ -80,6 +85,10 @@ export const InstanceRow: React.FC<Props> = ({
               attributes={row.attributes}
               title={words("inventory.tabs.attributes")}
               icon={<ListIcon />}
+            />
+            <ResourcesView
+              title={words("inventory.tabs.resources")}
+              icon={<AutomationIcon />}
             />
           </InstanceDetails>
         </ExpandableRowContent>
