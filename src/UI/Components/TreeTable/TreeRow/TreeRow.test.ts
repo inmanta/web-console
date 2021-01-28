@@ -1,6 +1,6 @@
 import { isRowOfMultipleValues, TreeRow } from "./TreeRow";
 
-test("TreeRow isRowOfMultipleValues returns fa;se for a single value", () => {
+test("TreeRow isRowOfMultipleValues returns false for a single value", () => {
   const row: TreeRow = {
     kind: "Flat",
     id: "a",
