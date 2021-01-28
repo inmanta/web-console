@@ -30,11 +30,6 @@ body,
   table-layout: auto;
   --pf-c-table--cell--MaxWidth: 200px;
 }
-@media screen and (max-width: 1440px) {
-  .card-wrapper {
-    width: fit-content;
-  }
-}
 
 /*
   https://www.patternfly.org/v4/components/page#pagebreadcrumb
