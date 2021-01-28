@@ -17,9 +17,9 @@ export interface AttributesSummary {
 export type Pairs = [string, string][];
 
 export interface Attributes {
-  candidate: Pairs | null;
-  active: Pairs | null;
-  rollback: Pairs | null;
+  candidate: Record<string, unknown> | null;
+  active: Record<string, unknown> | null;
+  rollback: Record<string, unknown> | null;
 }
 
 export interface Row {
