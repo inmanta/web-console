@@ -36,8 +36,8 @@ test("TreeTableHelper createRows returns correct list", () => {
     {
       kind: "Flat",
       id: "a",
-      cell: { label: "name", value: "a" },
-      cells: [
+      primaryCell: { label: "name", value: "a" },
+      valueCells: [
         { label: "candidate", value: "" },
         { label: "active", value: "b" },
         { label: "rollback", value: "" },
@@ -46,17 +46,16 @@ test("TreeTableHelper createRows returns correct list", () => {
     {
       kind: "Root",
       id: "c",
-      // onToggle: cb,
       isChildExpanded: false,
-      cell: { label: "name", value: "c" },
+      primaryCell: { label: "name", value: "c" },
     },
     {
       kind: "Leaf",
       id: "c.d",
       isExpandedByParent: false,
       level: 1,
-      cell: { label: "name", value: "d" },
-      cells: [
+      primaryCell: { label: "name", value: "d" },
+      valueCells: [
         { label: "candidate", value: "" },
         { label: "active", value: "e" },
         { label: "rollback", value: "" },

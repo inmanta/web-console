@@ -4,8 +4,8 @@ test("TreeRow isRowOfMultipleValues returns false for a single value", () => {
   const row: TreeRow = {
     kind: "Flat",
     id: "a",
-    cell: { label: "name", value: "a" },
-    cells: [
+    primaryCell: { label: "name", value: "a" },
+    valueCells: [
       { label: "candidate", value: "" },
       { label: "active", value: "b" },
       { label: "rollback", value: "" },
@@ -18,8 +18,8 @@ test("TreeRow isRowOfMultipleValues returns true for multiple values", () => {
   const row: TreeRow = {
     kind: "Flat",
     id: "a",
-    cell: { label: "name", value: "a" },
-    cells: [
+    primaryCell: { label: "name", value: "a" },
+    valueCells: [
       { label: "candidate", value: "b" },
       { label: "active", value: "b" },
       { label: "rollback", value: "b" },

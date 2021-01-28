@@ -8,8 +8,8 @@ export interface Cell {
 interface Flat {
   kind: "Flat";
   id: string;
-  cell: Cell;
-  cells: Cell[];
+  primaryCell: Cell;
+  valueCells: Cell[];
 }
 
 interface Root {
@@ -17,7 +17,7 @@ interface Root {
   id: string;
   onToggle: () => void;
   isChildExpanded: boolean;
-  cell: Cell;
+  primaryCell: Cell;
 }
 
 interface Branch {
@@ -27,20 +27,20 @@ interface Branch {
   isChildExpanded: boolean;
   onToggle: () => void;
   level: number;
-  cell: Cell;
+  primaryCell: Cell;
 }
 
 interface Leaf {
   kind: "Leaf";
   id: string;
   isExpandedByParent: boolean;
-  cell: Cell;
-  cells: Cell[];
   level: number;
+  primaryCell: Cell;
+  valueCells: Cell[];
 }
 
 export function isRowOfMultipleValues(row: Flat | Leaf): boolean {
-  const values = row.cells.map(({ value }) => value);
+  const values = row.valueCells.map(({ value }) => value);
   const nonEmptyValues = values.filter((value) => value.length > 0);
   return nonEmptyValues.length > 1;
 }

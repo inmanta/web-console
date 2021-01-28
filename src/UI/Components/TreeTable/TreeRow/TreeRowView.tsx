@@ -22,12 +22,12 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
     case "Flat":
       return (
         <Tr aria-label={`Row-${row.id}`}>
-          <Td dataLabel={row.cell.label}>
+          <Td dataLabel={row.primaryCell.label}>
             <Indent level={0} noToggle>
-              {row.cell.value}
+              {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.cells.map(({ label, value }) => (
+          {row.valueCells.map(({ label, value }) => (
             <Td
               className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
               key={label}
@@ -48,7 +48,7 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
                 onToggle={row.onToggle}
                 aria-label={`Toggle-${row.id}`}
               />
-              {row.cell.value}
+              {row.primaryCell.value}
             </Indent>
           </Td>
         </Tr>
@@ -57,14 +57,14 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
     case "Branch":
       return (
         <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
-          <Td colSpan={4} dataLabel={row.cell.label}>
+          <Td colSpan={4} dataLabel={row.primaryCell.label}>
             <Indent level={row.level}>
               <Toggle
                 expanded={row.isChildExpanded}
                 onToggle={row.onToggle}
                 aria-label={`Toggle-${row.id}`}
               />
-              {row.cell.value}
+              {row.primaryCell.value}
             </Indent>
           </Td>
         </Tr>
@@ -73,12 +73,12 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
     case "Leaf":
       return (
         <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
-          <Td dataLabel={row.cell.label}>
+          <Td dataLabel={row.primaryCell.label}>
             <Indent level={row.level} noToggle>
-              {row.cell.value}
+              {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.cells.map(({ label, value }) => (
+          {row.valueCells.map(({ label, value }) => (
             <Td
               className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
               key={label}

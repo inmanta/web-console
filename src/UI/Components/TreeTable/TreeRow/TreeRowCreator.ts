@@ -33,20 +33,20 @@ export class TreeRowCreator {
           kind: "Leaf",
           id: path,
           isExpandedByParent: this.isExpandedByParent(path),
-          cell: { label: "name", value: this.pathHelper.getSelf(path) },
-          cells: [
+          level: this.pathHelper.getLevel(path),
+          primaryCell: { label: "name", value: this.pathHelper.getSelf(path) },
+          valueCells: [
             { label: "candidate", value: this.format(node.value.candidate) },
             { label: "active", value: this.format(node.value.active) },
             { label: "rollback", value: this.format(node.value.rollback) },
           ],
-          level: this.pathHelper.getLevel(path),
         };
       } else {
         return {
           kind: "Flat",
           id: path,
-          cell: { label: "name", value: path },
-          cells: [
+          primaryCell: { label: "name", value: path },
+          valueCells: [
             { label: "candidate", value: this.format(node.value.candidate) },
             { label: "active", value: this.format(node.value.active) },
             { label: "rollback", value: this.format(node.value.rollback) },
@@ -61,8 +61,8 @@ export class TreeRowCreator {
           isExpandedByParent: this.isExpandedByParent(path),
           isChildExpanded: this.isChildExpanded(path),
           onToggle: this.createOnToggle(path),
-          cell: { label: "name", value: this.pathHelper.getSelf(path) },
           level: this.pathHelper.getLevel(path),
+          primaryCell: { label: "name", value: this.pathHelper.getSelf(path) },
         };
       } else {
         return {
@@ -70,7 +70,7 @@ export class TreeRowCreator {
           id: path,
           isChildExpanded: this.isChildExpanded(path),
           onToggle: this.createOnToggle(path),
-          cell: { label: "name", value: path },
+          primaryCell: { label: "name", value: path },
         };
       }
     }
