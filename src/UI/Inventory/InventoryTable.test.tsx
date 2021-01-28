@@ -2,15 +2,28 @@ import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
 import { rows, tablePresenter } from "@/Test";
+import { InstanceRow } from "./InstanceRow";
 
 test("InventoryTable can be expanded", async () => {
-  // Arrange
-  render(<InventoryTable rows={rows} tablePresenter={tablePresenter} />);
-  const testid = `details_${rows[0].id.short}`;
+  /* Arrange */
+  render(
+    <InventoryTable
+      rows={rows}
+      tablePresenter={tablePresenter}
+      RowComponent={(props) => (
+        <InstanceRow {...props} expandedContent={<>expanded</>} />
+      )}
+    />
+  );
 
-  // Act
-  fireEvent.click(screen.getAllByRole("button")[0]);
+  /* Arrange: Verify expanded row is not visible */
+  expect(
+    screen.queryByRole("row", { name: "ExpandedRow-0" })
+  ).not.toBeInTheDocument();
 
-  // Assert
-  expect(await screen.findByTestId(testid)).toBeVisible();
+  /* Act: Click on toggle */
+  fireEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
+
+  /* Assert: expanded row should be visible */
+  expect(screen.getByRole("row", { name: "ExpandedRow-0" })).toBeVisible();
 });

@@ -8,6 +8,19 @@ import {
   TablePresenter,
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
+import { InstanceRow } from "./InstanceRow";
+import {
+  ServiceInstanceDetails,
+  AttributesView,
+  StatusView,
+  ResourcesView,
+} from "@/UI/ServiceInstanceDetails";
+import {
+  AutomationIcon,
+  InfoCircleIcon,
+  ListIcon,
+} from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 export interface Props {
   instances: IServiceInstanceModel[];
@@ -26,8 +39,40 @@ export const TableProvider: React.FC<Props> = ({ instances, keycloak }) => {
   const rows = tablePresenter.createFromInstances(instances);
 
   return (
-    <div data-testid="InventoryTableContainer">
-      <InventoryTable rows={rows} tablePresenter={tablePresenter} />
-    </div>
+    <InventoryTable
+      rows={rows}
+      tablePresenter={tablePresenter}
+      RowComponent={({ row, ...props }) => (
+        <InstanceRow
+          {...props}
+          row={row}
+          expandedContent={
+            <ServiceInstanceDetails>
+              <StatusView
+                title={words("inventory.tabs.status")}
+                icon={<InfoCircleIcon />}
+                statusInfo={{
+                  instanceId: row.id.full,
+                  state: row.state,
+                  version: row.version,
+                  createdAt: row.createdAt.full,
+                  updatedAt: row.updatedAt.full,
+                  actions: tablePresenter.getActionsFor(row.id.full),
+                }}
+              />
+              <AttributesView
+                attributes={row.attributes}
+                title={words("inventory.tabs.attributes")}
+                icon={<ListIcon />}
+              />
+              <ResourcesView
+                title={words("inventory.tabs.resources")}
+                icon={<AutomationIcon />}
+              />
+            </ServiceInstanceDetails>
+          }
+        />
+      )}
+    />
   );
 };

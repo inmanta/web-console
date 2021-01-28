@@ -2,15 +2,21 @@ import React from "react";
 import { TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import { Row } from "@/Core";
 import { TablePresenter } from "./Presenters";
-import { InstanceRow } from "./InstanceRow";
 import { ExpansionManager } from "./ExpansionManager";
+
+import { InstanceRowProps } from "./InstanceRowProps";
 
 interface Props {
   rows: Row[];
   tablePresenter: TablePresenter;
+  RowComponent: React.FC<InstanceRowProps>;
 }
 
-export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
+export const InventoryTable: React.FC<Props> = ({
+  rows,
+  tablePresenter,
+  RowComponent,
+}) => {
   const expansionManager = new ExpansionManager();
   const heads = tablePresenter
     .getColumnHeads()
@@ -31,20 +37,19 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
   return (
     <TableComposable>
       <Thead>
-        <Tr>
+        <Tr aria-label="Headers">
           <Th />
           {heads}
         </Tr>
       </Thead>
       {rows.map((row, index) => (
-        <InstanceRow
+        <RowComponent
           index={index}
           key={row.id.full}
           row={row}
           isExpanded={expansionState[row.id.full]}
           onToggle={handleExpansionToggle(row.id.full)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
-          actions={tablePresenter.getActionsFor(row.id.full)}
         />
       ))}
     </TableComposable>

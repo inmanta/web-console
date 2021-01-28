@@ -1,37 +1,15 @@
 import React from "react";
-import {
-  Tbody,
-  Tr,
-  Td,
-  ExpandableRowContent,
-  OnCollapse,
-} from "@patternfly/react-table";
-import { Row } from "@/Core";
+import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
 import {
   AttributesSummaryView,
   DateWithTooltip,
   IdWithCopy,
 } from "./Components";
-import {
-  ServiceInstanceDetails,
-  AttributesView,
-  StatusView,
-  ResourcesView,
-} from "@/UI/ServiceInstanceDetails";
-import {
-  AutomationIcon,
-  InfoCircleIcon,
-  ListIcon,
-} from "@patternfly/react-icons";
+import { InstanceRowProps } from "./InstanceRowProps";
 
-interface Props {
-  row: Row;
-  index: number;
-  isExpanded: boolean;
-  onToggle: OnCollapse;
-  numberOfColumns: number;
-  actions: React.ReactElement | null;
+interface Props extends InstanceRowProps {
+  expandedContent: React.ReactElement | null;
 }
 
 export const InstanceRow: React.FC<Props> = ({
@@ -40,11 +18,12 @@ export const InstanceRow: React.FC<Props> = ({
   isExpanded,
   onToggle,
   numberOfColumns,
-  actions,
+  expandedContent,
 }) => (
   <Tbody isExpanded={false}>
-    <Tr>
+    <Tr aria-label={`Row-${index}`}>
       <Td
+        aria-label={`Toggle_${index}`}
         expand={{
           rowIndex: index,
           isExpanded,
@@ -65,33 +44,9 @@ export const InstanceRow: React.FC<Props> = ({
         <DateWithTooltip date={row.updatedAt} />
       </Td>
     </Tr>
-    <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
+    <Tr isExpanded={isExpanded} aria-label={`ExpandedRow-${index}`}>
       <Td colSpan={numberOfColumns}>
-        <ExpandableRowContent>
-          <ServiceInstanceDetails>
-            <StatusView
-              title={words("inventory.tabs.status")}
-              icon={<InfoCircleIcon />}
-              statusInfo={{
-                instanceId: row.id.full,
-                state: row.state,
-                version: row.version,
-                createdAt: row.createdAt.full,
-                updatedAt: row.updatedAt.full,
-                actions: actions,
-              }}
-            />
-            <AttributesView
-              attributes={row.attributes}
-              title={words("inventory.tabs.attributes")}
-              icon={<ListIcon />}
-            />
-            <ResourcesView
-              title={words("inventory.tabs.resources")}
-              icon={<AutomationIcon />}
-            />
-          </ServiceInstanceDetails>
-        </ExpandableRowContent>
+        <ExpandableRowContent>{expandedContent}</ExpandableRowContent>
       </Td>
     </Tr>
   </Tbody>
