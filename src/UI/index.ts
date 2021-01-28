@@ -1,2 +1,2 @@
-export * from "./Inventory";
+export * from "./ServiceInventory";
 export * from "./words";

@@ -2,7 +2,7 @@ import React from "react";
 import { KeycloakInstance } from "keycloak-js";
 import { ButtonType, InstanceModal } from "@app/ServiceInventory/InstanceModal";
 import { DiagnosticsModal } from "@app/ServiceInventory/DiagnosticsModal";
-import { ServiceInstanceForAction } from "@/UI/Inventory/Presenters";
+import { ServiceInstanceForAction } from "@/UI/ServiceInventory/Presenters";
 import { DescriptionList, DescriptionListGroup } from "@patternfly/react-core";
 import { ResourceModal } from "@app/ServiceInventory/ResourceModal";
 
