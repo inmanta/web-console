@@ -1,12 +1,7 @@
 import { createStore } from "easy-peasy";
-import { ServiceModel } from "@/Core";
-import {
-  IServiceInstanceModel,
-  instanceDictState,
-  resourceDictState,
-  IResourceModel,
-} from "./LsmModels";
-import { serviceState } from "@/UI";
+import { ServiceModel, ResourceModel } from "@/Core";
+import { IServiceInstanceModel, instanceDictState } from "./LsmModels";
+import { serviceState, resourceState } from "@/UI";
 
 describe("Lsm models", () => {
   describe("Service store", () => {
@@ -163,7 +158,7 @@ describe("Lsm models", () => {
     });
   });
   describe("Resource store", () => {
-    const resources: IResourceModel[] = [
+    const resources: ResourceModel[] = [
       {
         instanceId: "instance",
         resource_id:
@@ -188,8 +183,8 @@ describe("Lsm models", () => {
       },
     };
     it("Should add resources", () => {
-      const store = createStore(resourceDictState);
-      const singleResource: IResourceModel[] = [resources[0]];
+      const store = createStore(resourceState);
+      const singleResource: ResourceModel[] = [resources[0]];
       store
         .getActions()
         .addResources({ instanceId: "instance", resources: singleResource });
@@ -198,7 +193,7 @@ describe("Lsm models", () => {
       ]);
     });
     it("Should filter resources of a specific instance", () => {
-      const store = createStore(resourceDictState, { initialState });
+      const store = createStore(resourceState, { initialState });
       expect(store.getState().resourcesOfInstance("instance")).toEqual([
         resources[0],
       ]);
@@ -210,8 +205,8 @@ describe("Lsm models", () => {
           "fortigate::Config[fg101,config_id=system_dhcp_server_1],v=471",
         resource_state: "deployed",
       };
-      const store = createStore(resourceDictState);
-      const singleResource: IResourceModel[] = [resources[0]];
+      const store = createStore(resourceState);
+      const singleResource: ResourceModel[] = [resources[0]];
       store
         .getActions()
         .addResources({ instanceId: "instance", resources: singleResource });
@@ -239,8 +234,8 @@ describe("Lsm models", () => {
           resource_state: "deployed",
         },
       ];
-      const store = createStore(resourceDictState);
-      const singleResource: IResourceModel[] = [resources[0]];
+      const store = createStore(resourceState);
+      const singleResource: ResourceModel[] = [resources[0]];
       store
         .getActions()
         .addResources({ instanceId: "instance", resources: singleResource });

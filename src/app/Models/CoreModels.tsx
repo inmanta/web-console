@@ -7,13 +7,8 @@ import {
   Computed,
   computed,
 } from "easy-peasy";
-import {
-  IInstanceDictState,
-  instanceDictState,
-  IResourceDictState,
-  resourceDictState,
-} from "./LsmModels";
-import { ServiceState, serviceState } from "@/UI";
+import { IInstanceDictState, instanceDictState } from "./LsmModels";
+import { ServiceState, serviceState, ResourceState, resourceState } from "@/UI";
 
 export interface IObjectWithId {
   id: string;
@@ -67,7 +62,7 @@ export interface IProjectStoreModel {
   >;
   services: ServiceState;
   projects: IProjectDictState;
-  resources: IResourceDictState;
+  resources: ResourceState;
   serviceInstances: IInstanceDictState;
 }
 
@@ -175,7 +170,7 @@ export const project: IProjectStoreModel = {
     }
   }),
   projects: projectState,
-  resources: resourceDictState,
+  resources: resourceState,
   selectProjectAndEnvironment: thunk((actions, payload) => {
     actions.projects.selectProjectById(payload.project);
     actions.environments.selectEnvironmentById(payload.environment);

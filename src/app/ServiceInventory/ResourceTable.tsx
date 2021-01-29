@@ -1,4 +1,3 @@
-import { IResourceModel } from "@app/Models/LsmModels";
 import React from "react";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Button } from "@patternfly/react-core";
@@ -9,11 +8,12 @@ import {
 } from "@patternfly/react-icons";
 import { useStoreState, State } from "easy-peasy";
 import { IStoreModel } from "@app/Models/CoreModels";
+import { ResourceModel } from "@/Core";
 
 const LENGTH_OF_VERSION_PREFIX = 3;
 
 export const ResourceTable: React.FunctionComponent<{
-  resources: IResourceModel[];
+  resources: ResourceModel[];
 }> = (props) => {
   const columns = ["Resource Id", "Details", "State"];
   const instanceId =

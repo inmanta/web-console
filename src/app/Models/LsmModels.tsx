@@ -20,6 +20,11 @@ export interface IServiceInstanceModel extends IObjectWithId {
   version: number;
 }
 
+export interface ServiceInstanceModelWithTargetStates
+  extends IServiceInstanceModel {
+  instanceSetStateTargets: string[];
+}
+
 export interface IInstanceDictState {
   addInstances: Action<IInstanceDictState, IServiceInstanceModel[]>;
   allIds: string[];
@@ -36,30 +41,6 @@ export interface IInstanceDictState {
   updateInstances: Thunk<
     IInstanceDictState,
     { serviceName: string; instances: IServiceInstanceModel[] }
-  >;
-}
-
-export interface ServiceInstanceModelWithTargetStates
-  extends IServiceInstanceModel {
-  instanceSetStateTargets: string[];
-}
-
-export interface IResourceModel {
-  resource_id: string;
-  resource_state: string;
-  instanceId: string;
-}
-
-export interface IResourceDictState {
-  addResources: Action<
-    IResourceDictState,
-    { instanceId: string; resources: IResourceModel[] }
-  >;
-  allIds: string[];
-  byId: Record<string, IResourceModel>;
-  resourcesOfInstance: Computed<
-    IResourceDictState,
-    (instanceId: string) => IResourceModel[]
   >;
 }
 
@@ -113,26 +94,5 @@ export const instanceDictState: IInstanceDictState = {
     ) {
       actions.addInstances(payload.instances);
     }
-  }),
-};
-
-export const resourceDictState: IResourceDictState = {
-  addResources: action((state, payload) => {
-    state.allIds = [];
-    state.byId = {};
-    payload.resources.map((resource) => {
-      state.byId[resource.resource_id] = resource;
-      state.byId[resource.resource_id].instanceId = payload.instanceId;
-      if (state.allIds.indexOf(resource.resource_id) === -1) {
-        state.allIds.push(resource.resource_id);
-      }
-    });
-  }),
-  allIds: [],
-  byId: {},
-  resourcesOfInstance: computed((state) => (instanceId) => {
-    return Object.values(state.byId).filter(
-      (resource) => resource.instanceId === instanceId
-    );
   }),
 };
