@@ -9,12 +9,11 @@ import {
 } from "easy-peasy";
 import {
   IInstanceDictState,
-  IServiceDictState,
   instanceDictState,
-  serviceDictState,
   IResourceDictState,
   resourceDictState,
 } from "./LsmModels";
+import { ServiceState, serviceState } from "@/UI";
 
 export interface IObjectWithId {
   id: string;
@@ -66,7 +65,7 @@ export interface IProjectStoreModel {
     IProjectStoreModel,
     { project: string; environment: string }
   >;
-  services: IServiceDictState;
+  services: ServiceState;
   projects: IProjectDictState;
   resources: IResourceDictState;
   serviceInstances: IInstanceDictState;
@@ -182,7 +181,7 @@ export const project: IProjectStoreModel = {
     actions.environments.selectEnvironmentById(payload.environment);
   }),
   serviceInstances: instanceDictState,
-  services: serviceDictState,
+  services: serviceState,
 };
 
 export const storeModel: IStoreModel = {

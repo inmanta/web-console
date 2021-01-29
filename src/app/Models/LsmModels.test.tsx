@@ -1,12 +1,12 @@
 import { createStore } from "easy-peasy";
 import { ServiceModel } from "@/Core";
 import {
-  serviceDictState,
   IServiceInstanceModel,
   instanceDictState,
   resourceDictState,
   IResourceModel,
 } from "./LsmModels";
+import { serviceState } from "@/UI";
 
 describe("Lsm models", () => {
   describe("Service store", () => {
@@ -33,7 +33,7 @@ describe("Lsm models", () => {
     };
 
     it("Should add services to the store", () => {
-      const store = createStore(serviceDictState);
+      const store = createStore(serviceState);
       store.getActions().addServices(serviceModels);
       expect(store.getState().allIds).toEqual([
         "test_service",
@@ -54,14 +54,14 @@ describe("Lsm models", () => {
           name: "test_service",
         },
       ];
-      const store = createStore(serviceDictState, { initialState });
+      const store = createStore(serviceState, { initialState });
       store.getActions().updateServices(updatedContent);
       expect(store.getState().allIds).toEqual(["test_service"]);
       expect(Object.keys(store.getState().byId)).toEqual(["test_service"]);
     });
 
     it("Should not update services if updated content is the same", () => {
-      const store = createStore(serviceDictState, {
+      const store = createStore(serviceState, {
         initialState,
         mockActions: true,
       });
@@ -73,7 +73,7 @@ describe("Lsm models", () => {
       ]);
     });
     it("Should remove service from the store", () => {
-      const store = createStore(serviceDictState);
+      const store = createStore(serviceState);
       store.getActions().addServices(serviceModels);
       expect(store.getState().allIds).toEqual([
         "test_service",
