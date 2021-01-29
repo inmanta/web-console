@@ -76,6 +76,9 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   React.useEffect(() => {
     fetchInmantaApi(requestParams);
   }, [storeDispatch, serviceName, instancesOfCurrentService, requestParams]);
+  const instancesWithTargets = projectStore.serviceInstances.instancesWithTargetStates(
+    serviceName
+  );
   useInterval(() => fetchInmantaApi(requestParams), 5000);
   const serviceEntity = projectStore.services.byId[serviceName];
   const refreshInstances = async () => fetchInmantaApi(requestParams);
@@ -139,7 +142,7 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
             </CardFooter>
             {instancesOfCurrentService.length > 0 && (
               <InventoryTable
-                instances={instancesOfCurrentService}
+                instances={instancesWithTargets}
                 keycloak={keycloak}
               />
             )}

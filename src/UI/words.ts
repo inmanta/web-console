@@ -26,6 +26,13 @@ const dict = {
   "inventory.statustab.actions": "Actions",
   "inventory.statustab.version": "Version",
   "inventory.statustab.details": "Instance Details",
+  "inventory.statustab.setInstanceState": "Set Instance State",
+  "inventory.statustab.confirmTitle": "Confirm triggering state transition",
+  "inventory.statustab.confirmMessage":
+    "Are you sure you want to trigger transition of instance ${id} to state ${state}",
+  cancel: "Cancel",
+  yes: "Yes",
+  no: "No",
   null: "null",
 };
 

@@ -30,4 +30,5 @@ export interface Row {
   createdAt: DateInfo;
   updatedAt: DateInfo;
   version: number;
+  instanceSetStateTargets?: string[];
 }

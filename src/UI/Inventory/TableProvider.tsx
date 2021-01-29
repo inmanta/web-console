@@ -1,23 +1,32 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { ServiceInstanceModelWithTargetStates } from "@app/Models/LsmModels";
 import {
   AttributesPresenter,
   InstanceActionPresenter,
+  InstanceSetStatePresenter,
   MomentDatePresenter,
   TablePresenter,
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
 
 export interface Props {
-  instances: IServiceInstanceModel[];
+  instances: ServiceInstanceModelWithTargetStates[];
   keycloak?: KeycloakInstance;
 }
 
 export const TableProvider: React.FC<Props> = ({ instances, keycloak }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
-  const actionPresenter = new InstanceActionPresenter(instances, keycloak);
+  const instanceSetStatePresenter = new InstanceSetStatePresenter(
+    instances,
+    keycloak
+  );
+  const actionPresenter = new InstanceActionPresenter(
+    instances,
+    keycloak,
+    instanceSetStatePresenter
+  );
   const tablePresenter = new TablePresenter(
     datePresenter,
     attributesPresenter,

@@ -1,8 +1,8 @@
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { ServiceInstanceModelWithTargetStates } from "@app/Models/LsmModels";
 import { ReactElement } from "react";
 
 export type ServiceInstanceForAction = Pick<
-  IServiceInstanceModel,
+  ServiceInstanceModelWithTargetStates,
   | "id"
   | "state"
   | "version"
@@ -11,6 +11,7 @@ export type ServiceInstanceForAction = Pick<
   | "active_attributes"
   | "rollback_attributes"
   | "environment"
+  | "instanceSetStateTargets"
 >;
 
 /**

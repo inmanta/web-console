@@ -1,4 +1,4 @@
-import { IObjectWithId } from "./CoreModels";
+import { IObjectWithId, IProjectStoreModel } from "./CoreModels";
 import { Computed, computed, Action, action, Thunk, thunk } from "easy-peasy";
 import * as _ from "lodash";
 
@@ -98,10 +98,20 @@ export interface IInstanceDictState {
     IInstanceDictState,
     (name: string) => IServiceInstanceModel[]
   >;
+  instancesWithTargetStates: Computed<
+    IInstanceDictState,
+    (name: string) => ServiceInstanceModelWithTargetStates[],
+    IProjectStoreModel
+  >;
   updateInstances: Thunk<
     IInstanceDictState,
     { serviceName: string; instances: IServiceInstanceModel[] }
   >;
+}
+
+export interface ServiceInstanceModelWithTargetStates
+  extends IServiceInstanceModel {
+  instanceSetStateTargets?: string[];
 }
 
 export interface IResourceModel {
@@ -191,6 +201,26 @@ export const instanceDictState: IInstanceDictState = {
       (instance) => instance.service_entity === name
     );
   }),
+  instancesWithTargetStates: computed(
+    [(state) => state, (state, storeState) => storeState.projects],
+    (serviceInstances, storeState) => (name) => {
+      const instances = serviceInstances.instancesOfService(name);
+      const instancesWithTargets = instances.map((instance) => {
+        const instanceState = instance.state;
+        const service = ((storeState as unknown) as IProjectStoreModel).services
+          .byId[name];
+        const setStateTransfers = service.lifecycle.transfers.filter(
+          (transfer) =>
+            transfer.source === instanceState && transfer.api_set_state
+        );
+        const setStateTargets = setStateTransfers.map(
+          (transfer) => transfer.target
+        );
+        return { ...instance, instanceSetStateTargets: setStateTargets };
+      });
+      return instancesWithTargets;
+    }
+  ),
   updateInstances: thunk((actions, payload, { getState }) => {
     if (
       !_.isEqual(

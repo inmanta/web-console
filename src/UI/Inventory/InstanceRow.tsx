@@ -27,6 +27,7 @@ interface Props {
   onToggle: OnCollapse;
   numberOfColumns: number;
   actions: React.ReactElement | null;
+  setStateTargets?: string[];
 }
 
 export const InstanceRow: React.FC<Props> = ({
