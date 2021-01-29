@@ -13,13 +13,8 @@ import {
   ServiceInstanceDetails,
   AttributesView,
   StatusView,
-  ResourcesView,
 } from "@/UI/ServiceInstanceDetails";
-import {
-  AutomationIcon,
-  InfoCircleIcon,
-  ListIcon,
-} from "@patternfly/react-icons";
+import { InfoCircleIcon, ListIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 
 export interface Props {
@@ -64,10 +59,6 @@ export const TableProvider: React.FC<Props> = ({ instances, keycloak }) => {
                 attributes={row.attributes}
                 title={words("inventory.tabs.attributes")}
                 icon={<ListIcon />}
-              />
-              <ResourcesView
-                title={words("inventory.tabs.resources")}
-                icon={<AutomationIcon />}
               />
             </ServiceInstanceDetails>
           }
