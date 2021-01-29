@@ -6,11 +6,11 @@ import { PlusIcon, EditIcon, TrashAltIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./ServiceInventory";
 import {
   IServiceInstanceModel,
-  IAttributeModel,
   IInstanceAttributeModel,
 } from "@app/Models/LsmModels";
 import { DeleteForm } from "./DeleteForm";
 import _ from "lodash";
+import { AttributeModel } from "@/Core";
 
 type PickedInstance = Pick<
   IServiceInstanceModel,
@@ -140,15 +140,13 @@ enum ButtonType {
   delete = "DELETE",
 }
 
-function getEditableAttributes(
-  attributes: IAttributeModel[]
-): IAttributeModel[] {
+function getEditableAttributes(attributes: AttributeModel[]): AttributeModel[] {
   return attributes.filter((attribute) => attribute.modifier === "rw+");
 }
 
 function getNotReadonlyAttributes(
-  attributes: IAttributeModel[]
-): IAttributeModel[] {
+  attributes: AttributeModel[]
+): AttributeModel[] {
   return attributes.filter((attribute) => attribute.modifier !== "r");
 }
 function getCurrentAttributes(

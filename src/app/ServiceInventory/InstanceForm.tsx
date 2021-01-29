@@ -1,15 +1,13 @@
 import { Form, ActionGroup, Button, Alert } from "@patternfly/react-core";
 import React, { useState } from "react";
-import {
-  IAttributeModel,
-  IInstanceAttributeModel,
-} from "@app/Models/LsmModels";
+import { AttributeModel } from "@/Core";
+import { IInstanceAttributeModel } from "@app/Models/LsmModels";
 import { IRequestParams, fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 import { InstanceFormInput, isNumberType } from "./InstanceFormInput";
 import _ from "lodash";
 
 const InstanceForm: React.FunctionComponent<{
-  attributeModels: IAttributeModel[];
+  attributeModels: AttributeModel[];
   requestParams: IRequestParams;
   closeModal?: () => void;
   originalAttributes?: IInstanceAttributeModel;
@@ -87,7 +85,7 @@ const InstanceForm: React.FunctionComponent<{
 };
 
 function extractInitialAttributes(
-  attributeModels: IAttributeModel[],
+  attributeModels: AttributeModel[],
   originalAttributes?: IInstanceAttributeModel
 ): IInstanceAttributeModel {
   return attributeModels.reduce((attributes, attribute) => {
@@ -128,7 +126,7 @@ function toOptionalBoolean(value?: string): boolean | null {
 }
 
 function ensureAttributeType(
-  attributeModels: IAttributeModel[],
+  attributeModels: AttributeModel[],
   attributeName: string,
   /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any */
   value: any
@@ -159,7 +157,7 @@ function ensureAttributeType(
 
 function parseAttributes(
   attributes: IInstanceAttributeModel,
-  attributeModels: IAttributeModel[]
+  attributeModels: AttributeModel[]
 ) {
   const parsedAttributes = Object.assign(
     {},
@@ -177,7 +175,7 @@ function parseAttributes(
 async function submitUpdate(
   requestParams: IRequestParams,
   attributeValue: IInstanceAttributeModel,
-  attributeModels: IAttributeModel[],
+  attributeModels: AttributeModel[],
   originalAttributes?: IInstanceAttributeModel
 ) {
   requestParams.method = "PATCH";
@@ -193,7 +191,7 @@ async function submitUpdate(
 async function submitCreate(
   requestParams: IRequestParams,
   attributes: IInstanceAttributeModel,
-  attributeModels: IAttributeModel[]
+  attributeModels: AttributeModel[]
 ) {
   requestParams.method = "POST";
   const parsedAttributes = parseAttributes(attributes, attributeModels);

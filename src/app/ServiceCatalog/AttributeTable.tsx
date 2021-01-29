@@ -1,9 +1,9 @@
 import React from "react";
-import { IAttributeModel } from "@app/Models/LsmModels";
+import { AttributeModel } from "@/Core";
 import { Table, TableBody, TableHeader } from "@patternfly/react-table";
 
 export const AttributeTable: React.FunctionComponent<{
-  attributes: IAttributeModel[];
+  attributes: AttributeModel[];
 }> = (props) => {
   const attributes = [...props.attributes];
   if (attributes.length > 0) {

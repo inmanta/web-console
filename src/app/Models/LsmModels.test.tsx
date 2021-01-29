@@ -1,7 +1,7 @@
 import { createStore } from "easy-peasy";
+import { ServiceModel } from "@/Core";
 import {
   serviceDictState,
-  IServiceModel,
   IServiceInstanceModel,
   instanceDictState,
   resourceDictState,
@@ -10,7 +10,7 @@ import {
 
 describe("Lsm models", () => {
   describe("Service store", () => {
-    const serviceModels: IServiceModel[] = [
+    const serviceModels: ServiceModel[] = [
       {
         attributes: [],
         environment: "env-id",

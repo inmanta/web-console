@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Tabs, Tab } from "@patternfly/react-core";
-import { IServiceModel } from "@app/Models/LsmModels";
+import { ServiceModel } from "@/Core";
 import { AttributeTable } from "./AttributeTable";
 import { LifecycleTable } from "./LifecycleTable";
 
 export const CatalogTabs: React.FunctionComponent<{
-  service: IServiceModel;
+  service: ServiceModel;
 }> = (props) => {
   const [activeTabKey, setActiveTabKey] = useState(0);
 

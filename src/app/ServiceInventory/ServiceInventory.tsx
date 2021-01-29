@@ -17,7 +17,7 @@ import { InventoryTable } from "@/UI/ServiceInventory";
 import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
 import { InstanceModal, ButtonType } from "./InstanceModal";
-import { IAttributeModel } from "@app/Models/LsmModels";
+import { AttributeModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 
 interface Props {
@@ -164,7 +164,7 @@ async function ensureServiceEntityIsLoaded(
 }
 
 interface IInventoryContextData {
-  attributes: IAttributeModel[];
+  attributes: AttributeModel[];
   environmentId: string | undefined;
   inventoryUrl: string;
   setErrorMessage: React.Dispatch<string>;

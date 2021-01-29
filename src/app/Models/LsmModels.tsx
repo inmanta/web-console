@@ -1,70 +1,22 @@
 import { IObjectWithId, IProjectStoreModel } from "./CoreModels";
 import { Computed, computed, Action, action, Thunk, thunk } from "easy-peasy";
 import * as _ from "lodash";
-
-export interface IAttributeModel {
-  name: string;
-  type: string;
-  description: string;
-  modifier: string;
-  default_value?: string;
-  default_value_set: boolean;
-  validation_type?: string;
-  validation_parameters?: Record<string, unknown>;
-}
-
-export interface IStateModel {
-  deleted: boolean;
-  label: string;
-  model_state: string;
-  name: string;
-  purge_resources: boolean;
-}
-
-export interface ITransferModel {
-  api_set_state: boolean;
-  auto: boolean;
-  config_name: string;
-  description: string;
-  error: string;
-  error_operation: string;
-  on_delete: boolean;
-  on_update: boolean;
-  resource_based: boolean;
-  source: string;
-  target: string;
-  target_operation: string;
-  validate: boolean;
-}
-
-export interface ILifecycleModel {
-  initialState: string;
-  states: IStateModel[];
-  transfers: ITransferModel[];
-}
-
-export interface IServiceModel {
-  name: string;
-  description?: string;
-  environment: string;
-  lifecycle: ILifecycleModel;
-  attributes: IAttributeModel[];
-}
+import { ServiceModel } from "@/Core";
 
 export interface IServiceDict {
-  [Key: string]: IServiceModel;
+  [Key: string]: ServiceModel;
 }
 
 export interface IServiceDictState {
   allIds: string[];
-  addServices: Action<IServiceDictState, IServiceModel[]>;
-  addSingleService: Action<IServiceDictState, IServiceModel>;
-  updateServices: Thunk<IServiceDictState, IServiceModel[]>;
+  addServices: Action<IServiceDictState, ServiceModel[]>;
+  addSingleService: Action<IServiceDictState, ServiceModel>;
+  updateServices: Thunk<IServiceDictState, ServiceModel[]>;
   byId: IServiceDict;
-  getAllServices: Computed<IServiceDictState, IServiceModel[]>;
+  getAllServices: Computed<IServiceDictState, ServiceModel[]>;
   getServicesOfEnvironment: Computed<
     IServiceDictState,
-    (environmentId: string) => IServiceModel[]
+    (environmentId: string) => ServiceModel[]
   >;
   removeSingleService: Action<IServiceDictState, string>;
 }

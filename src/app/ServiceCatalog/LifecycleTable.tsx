@@ -1,10 +1,10 @@
-import { ILifecycleModel } from "@app/Models/LsmModels";
+import { LifecycleModel } from "@/Core";
 import React from "react";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Badge, Tooltip } from "@patternfly/react-core";
 
 export const LifecycleTable: React.FunctionComponent<{
-  lifecycle: ILifecycleModel;
+  lifecycle: LifecycleModel;
 }> = (props) => {
   const columns = [
     "Source",
