@@ -118,7 +118,7 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
               />{" "}
             </AlertGroup>
           )}
-          <Card className={"card-wrapper"}>
+          <Card>
             <CardFooter>
               <Toolbar>
                 <ToolbarContent>
