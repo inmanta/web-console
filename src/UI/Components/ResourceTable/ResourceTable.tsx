@@ -7,23 +7,24 @@ import {
   CheckSquareIcon,
   TimesCircleIcon,
 } from "@patternfly/react-icons";
+import { HrefCreator } from "./HrefCreator";
 
-type ResourceModel = Pick<IResourceModel, "resource_id" | "resource_state">;
+type SlimResourceModel = Pick<IResourceModel, "resource_id" | "resource_state">;
 
 interface Props {
-  resources: ResourceModel[];
-  environmentId: string;
-  instanceId: string;
+  caption: string;
+  hrefCreator: HrefCreator;
+  resources: SlimResourceModel[];
 }
 
 export const ResourceTable: React.FC<Props> = ({
+  caption,
+  hrefCreator,
   resources,
-  environmentId,
-  instanceId,
 }) => {
   const columns = ["Resource Id", "Details", "State"];
   const rows = resources.map((resource) => {
-    const href = getHrefFromResourceId(environmentId, resource.resource_id);
+    const href = hrefCreator.create(resource.resource_id);
     const linkToDetails = (
       <Button
         component="a"
@@ -49,11 +50,7 @@ export const ResourceTable: React.FC<Props> = ({
   });
 
   return (
-    <Table
-      caption={`Resources for instance with id ${instanceId}`}
-      cells={columns}
-      rows={rows}
-    >
+    <Table caption={caption} cells={columns} rows={rows}>
       <TableHeader />
       <TableBody />
     </Table>
@@ -69,20 +66,4 @@ export function getStatusIcon(resourceState: string): React.FC {
     default:
       return () => <></>;
   }
-}
-
-const LENGTH_OF_VERSION_PREFIX = 3;
-
-function getHrefFromResourceId(environmentId, resourceId: string): string {
-  const indexOfVersionSeparator = resourceId.lastIndexOf(",");
-  const resourceName = resourceId.substring(0, indexOfVersionSeparator);
-  const version = resourceId.substring(
-    indexOfVersionSeparator + LENGTH_OF_VERSION_PREFIX,
-    resourceId.length
-  );
-  const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
-  const url = `${baseUrl}/dashboard/#!/environment/${environmentId}/version/${version}/${encodeURI(
-    resourceName
-  ).replace(/\//g, "~2F")}`;
-  return url;
 }
