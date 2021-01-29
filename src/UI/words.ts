@@ -31,9 +31,11 @@ const dict = {
   "inventory.statustab.actions": "Actions",
   "inventory.statustab.version": "Version",
   "inventory.statustab.details": "Instance Details",
+  "inventory.resourcesTable.caption": (id: string) =>
+    `Resources for instance with id ${id}`,
   null: "null",
 };
 
 type Key = keyof typeof dict;
 
-export const words = (key: Key): string => dict[key];
+export const words = <K extends Key>(key: K): typeof dict[K] => dict[key];
