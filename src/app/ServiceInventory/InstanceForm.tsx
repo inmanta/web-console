@@ -1,7 +1,6 @@
 import { Form, ActionGroup, Button, Alert } from "@patternfly/react-core";
 import React, { useState } from "react";
-import { AttributeModel } from "@/Core";
-import { IInstanceAttributeModel } from "@app/Models/LsmModels";
+import { AttributeModel, InstanceAttributeModel } from "@/Core";
 import { IRequestParams, fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 import { InstanceFormInput, isNumberType } from "./InstanceFormInput";
 import _ from "lodash";
@@ -10,7 +9,7 @@ const InstanceForm: React.FunctionComponent<{
   attributeModels: AttributeModel[];
   requestParams: IRequestParams;
   closeModal?: () => void;
-  originalAttributes?: IInstanceAttributeModel;
+  originalAttributes?: InstanceAttributeModel;
   update?: boolean;
 }> = (props) => {
   const initialAttributes = extractInitialAttributes(
@@ -86,8 +85,8 @@ const InstanceForm: React.FunctionComponent<{
 
 function extractInitialAttributes(
   attributeModels: AttributeModel[],
-  originalAttributes?: IInstanceAttributeModel
-): IInstanceAttributeModel {
+  originalAttributes?: InstanceAttributeModel
+): InstanceAttributeModel {
   return attributeModels.reduce((attributes, attribute) => {
     if (
       attribute.type.includes("bool") &&
@@ -156,7 +155,7 @@ function ensureAttributeType(
 }
 
 function parseAttributes(
-  attributes: IInstanceAttributeModel,
+  attributes: InstanceAttributeModel,
   attributeModels: AttributeModel[]
 ) {
   const parsedAttributes = Object.assign(
@@ -174,9 +173,9 @@ function parseAttributes(
 
 async function submitUpdate(
   requestParams: IRequestParams,
-  attributeValue: IInstanceAttributeModel,
+  attributeValue: InstanceAttributeModel,
   attributeModels: AttributeModel[],
-  originalAttributes?: IInstanceAttributeModel
+  originalAttributes?: InstanceAttributeModel
 ) {
   requestParams.method = "PATCH";
   const parsedAttributes = parseAttributes(attributeValue, attributeModels);
@@ -190,7 +189,7 @@ async function submitUpdate(
 
 async function submitCreate(
   requestParams: IRequestParams,
-  attributes: IInstanceAttributeModel,
+  attributes: InstanceAttributeModel,
   attributeModels: AttributeModel[]
 ) {
   requestParams.method = "POST";
@@ -205,9 +204,9 @@ async function submitCreate(
 }
 
 function getChangedAttributesOnly(
-  attributesAfterChanges: IInstanceAttributeModel,
-  originalAttributes?: IInstanceAttributeModel
-): IInstanceAttributeModel {
+  attributesAfterChanges: InstanceAttributeModel,
+  originalAttributes?: InstanceAttributeModel
+): InstanceAttributeModel {
   if (!originalAttributes) {
     return attributesAfterChanges;
   }

@@ -7,8 +7,14 @@ import {
   Computed,
   computed,
 } from "easy-peasy";
-import { IInstanceDictState, instanceDictState } from "./LsmModels";
-import { ServiceState, serviceState, ResourceState, resourceState } from "@/UI";
+import {
+  ServiceState,
+  serviceState,
+  ResourceState,
+  resourceState,
+  ServiceInstanceState,
+  serviceInstanceState,
+} from "@/UI";
 
 export interface IObjectWithId {
   id: string;
@@ -63,7 +69,7 @@ export interface IProjectStoreModel {
   services: ServiceState;
   projects: IProjectDictState;
   resources: ResourceState;
-  serviceInstances: IInstanceDictState;
+  serviceInstances: ServiceInstanceState;
 }
 
 export interface IStoreModel {
@@ -175,7 +181,7 @@ export const project: IProjectStoreModel = {
     actions.projects.selectProjectById(payload.project);
     actions.environments.selectEnvironmentById(payload.environment);
   }),
-  serviceInstances: instanceDictState,
+  serviceInstances: serviceInstanceState,
   services: serviceState,
 };
 

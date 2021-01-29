@@ -1,4 +1,4 @@
-import { ServiceInstanceModelWithTargetStates } from "@app/Models/LsmModels";
+import { ServiceInstanceModelWithTargetStates } from "@/Core";
 
 const base = ({
   id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",

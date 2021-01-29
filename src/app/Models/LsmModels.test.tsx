@@ -1,7 +1,6 @@
 import { createStore } from "easy-peasy";
-import { ServiceModel, ResourceModel } from "@/Core";
-import { IServiceInstanceModel, instanceDictState } from "./LsmModels";
-import { serviceState, resourceState } from "@/UI";
+import { ServiceModel, ResourceModel, ServiceInstanceModel } from "@/Core";
+import { serviceState, resourceState, serviceInstanceState } from "@/UI";
 
 describe("Lsm models", () => {
   describe("Service store", () => {
@@ -79,7 +78,7 @@ describe("Lsm models", () => {
     });
   });
   describe("Service instance store", () => {
-    const instances: IServiceInstanceModel[] = [
+    const instances: ServiceInstanceModel[] = [
       {
         active_attributes: {},
         callback: [],
@@ -117,12 +116,12 @@ describe("Lsm models", () => {
       },
     };
     it("Should add instances", () => {
-      const store = createStore(instanceDictState);
+      const store = createStore(serviceInstanceState);
       store.getActions().addInstances(instances);
       expect(store.getState().allIds).toEqual(["instance", "anotherInstance"]);
     });
     it("Should update instances", () => {
-      const store = createStore(instanceDictState, { initialState });
+      const store = createStore(serviceInstanceState, { initialState });
       store.getActions().updateInstances({
         instances: [
           {
@@ -145,7 +144,7 @@ describe("Lsm models", () => {
       expect(store.getState().byId.instance.state).toEqual("up");
     });
     it("Should not update instances, if the content is the same", () => {
-      const store = createStore(instanceDictState, {
+      const store = createStore(serviceInstanceState, {
         initialState,
         mockActions: true,
       });

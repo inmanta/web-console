@@ -1,55 +1,36 @@
-import { IObjectWithId, IProjectStoreModel } from "./CoreModels";
 import { Computed, computed, Action, action, Thunk, thunk } from "easy-peasy";
+import {
+  ServiceInstanceModel,
+  ServiceInstanceModelWithTargetStates,
+} from "@/Core";
+import { IProjectStoreModel } from "@app/Models/CoreModels";
 import * as _ from "lodash";
 
-export interface IInstanceAttributeModel {
-  [Key: string]: string | string[] | boolean | number | null;
-}
-
-export interface IServiceInstanceModel extends IObjectWithId {
-  active_attributes: IInstanceAttributeModel | null;
-  callback: string[];
-  candidate_attributes: IInstanceAttributeModel | null;
-  deleted: boolean;
-  environment: string;
-  last_updated: string;
-  created_at: string;
-  rollback_attributes: IInstanceAttributeModel | null;
-  service_entity: string;
-  state: string;
-  version: number;
-}
-
-export interface ServiceInstanceModelWithTargetStates
-  extends IServiceInstanceModel {
-  instanceSetStateTargets: string[];
-}
-
-export interface IInstanceDictState {
-  addInstances: Action<IInstanceDictState, IServiceInstanceModel[]>;
+export interface ServiceInstanceState {
+  addInstances: Action<ServiceInstanceState, ServiceInstanceModel[]>;
   allIds: string[];
-  byId: Record<string, IServiceInstanceModel>;
+  byId: Record<string, ServiceInstanceModel>;
   instancesOfService: Computed<
-    IInstanceDictState,
-    (name: string) => IServiceInstanceModel[]
+    ServiceInstanceState,
+    (name: string) => ServiceInstanceModel[]
   >;
   instancesWithTargetStates: Computed<
-    IInstanceDictState,
+    ServiceInstanceState,
     (name: string) => ServiceInstanceModelWithTargetStates[],
     IProjectStoreModel
   >;
   updateInstances: Thunk<
-    IInstanceDictState,
-    { serviceName: string; instances: IServiceInstanceModel[] }
+    ServiceInstanceState,
+    { serviceName: string; instances: ServiceInstanceModel[] }
   >;
 }
 
-export const instanceDictState: IInstanceDictState = {
+export const serviceInstanceState: ServiceInstanceState = {
   addInstances: action((state, payload) => {
     state.allIds = [];
     state.byId = {};
     payload.map((instance) => {
-      state.byId[instance.id] = instance as IServiceInstanceModel;
+      state.byId[instance.id] = instance as ServiceInstanceModel;
       if (state.allIds.indexOf(instance.id) === -1) {
         state.allIds.push(instance.id);
       }

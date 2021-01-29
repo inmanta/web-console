@@ -1,14 +1,14 @@
 import { useState } from "react";
 import React from "react";
 import { Button, Modal, Alert } from "@patternfly/react-core";
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { ServiceInstanceModel } from "@/Core";
 import { IStoreModel } from "@app/Models/CoreModels";
 import { useStoreDispatch, useStoreState, State } from "easy-peasy";
 import { ResourceTable } from "./ResourceTable";
 import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 
 export type ServiceInstanceForResources = Pick<
-  IServiceInstanceModel,
+  ServiceInstanceModel,
   "id" | "service_entity" | "version" | "environment"
 >;
 

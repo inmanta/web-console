@@ -4,16 +4,16 @@ import React from "react";
 import { InstanceForm } from "./InstanceForm";
 import { PlusIcon, EditIcon, TrashAltIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./ServiceInventory";
-import {
-  IServiceInstanceModel,
-  IInstanceAttributeModel,
-} from "@app/Models/LsmModels";
 import { DeleteForm } from "./DeleteForm";
 import _ from "lodash";
-import { AttributeModel } from "@/Core";
+import {
+  AttributeModel,
+  ServiceInstanceModel,
+  InstanceAttributeModel,
+} from "@/Core";
 
 type PickedInstance = Pick<
-  IServiceInstanceModel,
+  ServiceInstanceModel,
   | "id"
   | "version"
   | "candidate_attributes"
@@ -151,10 +151,10 @@ function getNotReadonlyAttributes(
 }
 function getCurrentAttributes(
   instance: Pick<
-    IServiceInstanceModel,
+    ServiceInstanceModel,
     "candidate_attributes" | "active_attributes"
   >
-): IInstanceAttributeModel | null {
+): InstanceAttributeModel | null {
   return instance.candidate_attributes &&
     !_.isEmpty(instance.candidate_attributes)
     ? instance.candidate_attributes
