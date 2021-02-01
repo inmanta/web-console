@@ -15,7 +15,7 @@ import { words } from "@/UI";
 
 interface Props {
   id: string;
-  targets?: string[] | null;
+  targets: string[] | null;
   onSetInstanceState:
     | ((
         id: string,

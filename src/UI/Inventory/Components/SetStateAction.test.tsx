@@ -7,6 +7,7 @@ test("SetStateAction dropdown is disabled when no targets are found", async () =
   render(
     <SetStateAction
       id="instanceId1"
+      targets={[]}
       onSetInstanceState={async () => {
         return;
       }}
