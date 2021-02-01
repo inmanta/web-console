@@ -111,7 +111,7 @@ export interface IInstanceDictState {
 
 export interface ServiceInstanceModelWithTargetStates
   extends IServiceInstanceModel {
-  instanceSetStateTargets?: string[];
+  instanceSetStateTargets: string[];
 }
 
 export interface IResourceModel {
@@ -210,7 +210,7 @@ export const instanceDictState: IInstanceDictState = {
         const service = ((storeState as unknown) as IProjectStoreModel).services
           .byId[name];
         if (!service) {
-          return instance;
+          return { ...instance, instanceSetStateTargets: [] };
         }
         const setStateTransfers = service.lifecycle.transfers.filter(
           (transfer) =>

@@ -3,7 +3,7 @@ import { KeycloakInstance } from "keycloak-js";
 import { InstanceSetStateManager } from "./InstanceSetStateManager";
 
 const rows = [
-  { ...instance, ...{ setStateTargets: ["acknowledged", "designed"] } },
+  { ...instance, ...{ instanceSetStateTargets: ["acknowledged", "designed"] } },
 ];
 const manager = new InstanceSetStateManager(rows, undefined);
 

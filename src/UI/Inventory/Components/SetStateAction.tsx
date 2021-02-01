@@ -48,9 +48,7 @@ export const SetStateAction: React.FC<Props> = ({
     setIsDropdownOpen(false);
     setTargetState(event.target.text);
     setConfirmationText(
-      words("inventory.statustab.confirmMessage")
-        .replace("${id}", id)
-        .replace("${state}", event.currentTarget.innerText)
+      words("inventory.statustab.confirmMessage")(id, event.target.text)
     );
     handleModalToggle();
   };
