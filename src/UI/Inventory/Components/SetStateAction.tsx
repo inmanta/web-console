@@ -39,14 +39,14 @@ export const SetStateAction: React.FC<Props> = ({
     setIsModalOpen(!isModalOpen);
   };
   const dropdownItems = targets?.map((target) => (
-    <DropdownItem key={target} data-testid={`${id}-${target}`}>
+    <DropdownItem key={target} value={target} data-testid={`${id}-${target}`}>
       {target}
     </DropdownItem>
   ));
 
   const onSelect = (event) => {
     setIsDropdownOpen(false);
-    setTargetState(event.currentTarget.innerText);
+    setTargetState(event.target.text);
     setConfirmationText(
       words("inventory.statustab.confirmMessage")
         .replace("${id}", id)
