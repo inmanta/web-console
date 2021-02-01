@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import {
+  Alert,
+  AlertActionCloseButton,
+  AlertGroup,
   Button,
   Dropdown,
   DropdownItem,
@@ -13,9 +16,12 @@ import { words } from "@/UI";
 interface Props {
   id: string;
   targets?: string[] | null;
-  environment: string;
   onSetInstanceState:
-    | ((id: string, targetState: string) => Promise<void>)
+    | ((
+        id: string,
+        targetState: string,
+        setErrorMessage: (message: string) => void
+      ) => Promise<void>)
     | null;
 }
 
@@ -28,11 +34,14 @@ export const SetStateAction: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmationText, setConfirmationText] = useState<string>("");
   const [targetState, setTargetState] = useState<string>("");
+  const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
   const dropdownItems = targets?.map((target) => (
-    <DropdownItem key={target}>{target}</DropdownItem>
+    <DropdownItem key={target} data-testid={`${id}-${target}`}>
+      {target}
+    </DropdownItem>
   ));
 
   const onSelect = (event) => {
@@ -48,11 +57,18 @@ export const SetStateAction: React.FC<Props> = ({
 
   return (
     <>
+      {stateErrorMessage && (
+        <ToastAlertMessage
+          stateErrorMessage={stateErrorMessage}
+          id={id}
+          setStateErrorMessage={setStateErrorMessage}
+        />
+      )}
       <Dropdown
         toggle={
           <DropdownToggle
-            id={`${id}-set-state-toggle`}
-            onToggle={() => setIsDropdownOpen(true)}
+            data-testid={`${id}-set-state-toggle`}
+            onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
             toggleIndicator={CaretDownIcon}
             isDisabled={!dropdownItems || dropdownItems.length === 0}
           >
@@ -71,6 +87,7 @@ export const SetStateAction: React.FC<Props> = ({
           targetState={targetState}
           isModalOpen={isModalOpen}
           setIsModalOpen={handleModalToggle}
+          setErrorMessage={setStateErrorMessage}
         />
       )}
     </>
@@ -81,11 +98,14 @@ interface ModalProps {
   confirmationText: string;
   id: string;
   targetState: string;
-  onSetInstanceState:
-    | ((id: string, targetState: string) => Promise<void>)
-    | null;
+  onSetInstanceState: (
+    id: string,
+    targetState: string,
+    setErrorMessage: (message: string) => void
+  ) => Promise<void>;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
+  setErrorMessage: (message: string) => void;
 }
 
 const ConfirmationModal: React.FC<ModalProps> = ({
@@ -95,29 +115,39 @@ const ConfirmationModal: React.FC<ModalProps> = ({
   setIsModalOpen,
   id,
   targetState,
+  setErrorMessage,
 }) => {
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
   const handleConfirm = async () => {
     handleModalToggle();
-    if (onSetInstanceState) {
-      await onSetInstanceState(id, targetState);
-    }
+    await onSetInstanceState(id, targetState, setErrorMessage);
   };
 
   return (
     <React.Fragment>
       <Modal
+        data-testid={`${id}-set-state-modal`}
         variant={ModalVariant.small}
         title={words("inventory.statustab.confirmTitle")}
         isOpen={isModalOpen}
         onClose={handleModalToggle}
         actions={[
-          <Button key="confirm" variant="primary" onClick={handleConfirm}>
+          <Button
+            key="confirm"
+            variant="primary"
+            data-testid={`${id}-set-state-modal-confirm`}
+            onClick={handleConfirm}
+          >
             {words("yes")}
           </Button>,
-          <Button key="cancel" variant="link" onClick={handleModalToggle}>
+          <Button
+            key="cancel"
+            variant="link"
+            data-testid={`${id}-set-state-modal-cancel`}
+            onClick={handleModalToggle}
+          >
             {words("no")}
           </Button>,
         ]}
@@ -125,5 +155,33 @@ const ConfirmationModal: React.FC<ModalProps> = ({
         {confirmationText}
       </Modal>
     </React.Fragment>
+  );
+};
+
+interface ToastAlertMessageProps {
+  stateErrorMessage: string;
+  id: string;
+  setStateErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const ToastAlertMessage: React.FC<ToastAlertMessageProps> = ({
+  stateErrorMessage,
+  id,
+  setStateErrorMessage,
+}) => {
+  return (
+    <AlertGroup isToast={true}>
+      <Alert
+        variant="danger"
+        title={stateErrorMessage}
+        data-testid={`${id}-error-message`}
+        actionClose={
+          <AlertActionCloseButton
+            data-testid={`${id}-close-error-message`}
+            onClose={() => setStateErrorMessage("")}
+          />
+        }
+      />
+    </AlertGroup>
   );
 };

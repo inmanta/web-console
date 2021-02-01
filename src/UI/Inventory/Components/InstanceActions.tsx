@@ -11,7 +11,11 @@ interface Props {
   instance: ServiceInstanceForAction;
   keycloak?: KeycloakInstance;
   onSetInstanceState:
-    | ((instanceId: string, targetState: string) => Promise<void>)
+    | ((
+        instanceId: string,
+        targetState: string,
+        setErrorMessage: (message: string) => void
+      ) => Promise<void>)
     | null;
 }
 
@@ -52,7 +56,6 @@ export const InstanceActions: React.FC<Props> = ({
       <DescriptionListGroup>
         <SetStateAction
           id={instance.id}
-          environment={instance.environment}
           targets={instance.instanceSetStateTargets}
           onSetInstanceState={onSetInstanceState}
         />

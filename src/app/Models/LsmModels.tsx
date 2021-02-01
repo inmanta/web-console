@@ -209,6 +209,9 @@ export const instanceDictState: IInstanceDictState = {
         const instanceState = instance.state;
         const service = ((storeState as unknown) as IProjectStoreModel).services
           .byId[name];
+        if (!service) {
+          return instance;
+        }
         const setStateTransfers = service.lifecycle.transfers.filter(
           (transfer) =>
             transfer.source === instanceState && transfer.api_set_state

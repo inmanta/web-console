@@ -4,11 +4,11 @@ import { ServiceInstanceModelWithTargetStates } from "@app/Models/LsmModels";
 import {
   AttributesPresenter,
   InstanceActionPresenter,
-  InstanceSetStatePresenter,
   MomentDatePresenter,
   TablePresenter,
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
+import { InstanceSetStateManager } from "./InstanceSetStateManager";
 
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
@@ -18,7 +18,7 @@ export interface Props {
 export const TableProvider: React.FC<Props> = ({ instances, keycloak }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
-  const instanceSetStatePresenter = new InstanceSetStatePresenter(
+  const instanceSetStatePresenter = new InstanceSetStateManager(
     instances,
     keycloak
   );

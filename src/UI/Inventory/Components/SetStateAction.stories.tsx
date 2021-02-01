@@ -13,11 +13,10 @@ const Template: Story<ComponentProps<typeof SetStateAction>> = (args) => (
 );
 
 export const Empty = Template.bind({});
-Empty.args = { id: "id1", environment: "env-id1", targets: [] };
+Empty.args = { id: "id1", targets: [] };
 
 export const Multiple = Template.bind({});
 Multiple.args = {
   id: "id2",
-  environment: "env-id2",
   targets: ["designed", "acknowledged"],
 };
