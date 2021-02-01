@@ -43,6 +43,7 @@ export const SetStateAction: React.FC<Props> = ({
       {target}
     </DropdownItem>
   ));
+  const isDisabled = !dropdownItems || dropdownItems.length === 0;
 
   const onSelect = (event) => {
     setIsDropdownOpen(false);
@@ -68,7 +69,7 @@ export const SetStateAction: React.FC<Props> = ({
             data-testid={`${id}-set-state-toggle`}
             onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
             toggleIndicator={CaretDownIcon}
-            isDisabled={!dropdownItems || dropdownItems.length === 0}
+            isDisabled={isDisabled}
           >
             {words("inventory.statustab.setInstanceState")}
           </DropdownToggle>
@@ -76,6 +77,7 @@ export const SetStateAction: React.FC<Props> = ({
         dropdownItems={dropdownItems}
         isOpen={isDropdownOpen}
         onSelect={onSelect}
+        style={isDisabled ? { cursor: "not-allowed" } : {}}
       />
       {onSetInstanceState && (
         <ConfirmationModal
