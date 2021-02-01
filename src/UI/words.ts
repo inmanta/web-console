@@ -30,10 +30,10 @@ const dict = {
   "inventory.statustab.actions": "Actions",
   "inventory.statustab.version": "Version",
   "inventory.statustab.details": "Instance Details",
-  "inventory.statustab.setInstanceState": "Trigger state transfer",
-  "inventory.statustab.confirmTitle": "Confirm triggering state transfer",
+  "inventory.statustab.setInstanceState": "Set state to",
+  "inventory.statustab.confirmTitle": "Confirm set state transfer",
   "inventory.statustab.confirmMessage":
-    "Are you sure you want to trigger transfer of instance ${id} to state ${state}",
+    "Are you sure you want to set state of instance ${id} to ${state}?",
   cancel: "Cancel",
   yes: "Yes",
   no: "No",
