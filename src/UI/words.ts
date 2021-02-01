@@ -32,14 +32,16 @@ const dict = {
   "inventory.statustab.details": "Instance Details",
   "inventory.statustab.setInstanceState": "Set state to",
   "inventory.statustab.confirmTitle": "Confirm set state transfer",
-  "inventory.statustab.confirmMessage":
-    "Are you sure you want to set state of instance ${id} to ${state}?",
+  "inventory.statustab.confirmMessage": (id: string, state: string) =>
+    `Are you sure you want to set state of instance ${id} to ${state}?`,
   cancel: "Cancel",
   yes: "Yes",
   no: "No",
+  "inventory.resourcesTable.caption": (id: string) =>
+    `Resources for instance with id ${id}`,
   null: "null",
 };
 
 type Key = keyof typeof dict;
 
-export const words = (key: Key): string => dict[key];
+export const words = <K extends Key>(key: K): typeof dict[K] => dict[key];
