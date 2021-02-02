@@ -2,21 +2,21 @@ import { Computed, Action, Thunk, computed, action, thunk } from "easy-peasy";
 import { ServiceModel } from "@/Core";
 import * as _ from "lodash";
 
-export interface ServiceState {
+export interface ServicesSlice {
   allIds: string[];
-  addServices: Action<ServiceState, ServiceModel[]>;
-  addSingleService: Action<ServiceState, ServiceModel>;
-  updateServices: Thunk<ServiceState, ServiceModel[]>;
+  addServices: Action<ServicesSlice, ServiceModel[]>;
+  addSingleService: Action<ServicesSlice, ServiceModel>;
+  updateServices: Thunk<ServicesSlice, ServiceModel[]>;
   byId: Record<string, ServiceModel>;
-  getAllServices: Computed<ServiceState, ServiceModel[]>;
+  getAllServices: Computed<ServicesSlice, ServiceModel[]>;
   getServicesOfEnvironment: Computed<
-    ServiceState,
+    ServicesSlice,
     (environmentId: string) => ServiceModel[]
   >;
-  removeSingleService: Action<ServiceState, string>;
+  removeSingleService: Action<ServicesSlice, string>;
 }
 
-export const serviceState: ServiceState = {
+export const servicesSlice: ServicesSlice = {
   addServices: action((state, payload) => {
     state.allIds = [];
     state.byId = {};
