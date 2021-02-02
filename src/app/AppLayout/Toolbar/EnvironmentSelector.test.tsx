@@ -2,7 +2,7 @@ import { EnvironmentSelector } from "./EnvironmentSelector";
 import { mount } from "enzyme";
 import React from "react";
 import { StoreProvider, createStore } from "easy-peasy";
-import { storeModel } from "@app/Models/CoreModels";
+import { storeModel } from "@/UI/Store";
 import { getEnvironmentNamesWithSeparator } from "../AppLayout";
 import _ from "lodash";
 

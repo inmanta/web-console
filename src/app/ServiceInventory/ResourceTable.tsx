@@ -7,7 +7,7 @@ import {
   TimesCircleIcon,
 } from "@patternfly/react-icons";
 import { useStoreState, State } from "easy-peasy";
-import { IStoreModel } from "@app/Models/CoreModels";
+import { StoreModel } from "@/UI/Store";
 import { ResourceModel } from "@/Core";
 
 const LENGTH_OF_VERSION_PREFIX = 3;
@@ -19,7 +19,7 @@ export const ResourceTable: React.FunctionComponent<{
   const instanceId =
     props.resources.length > 0 ? props.resources[0].instanceId : "";
   const environmentId = useStoreState(
-    (state: State<IStoreModel>) =>
+    (state: State<StoreModel>) =>
       state.projects.environments.selectedEnvironmentId
   );
   const rows = props.resources.map((resource) => {

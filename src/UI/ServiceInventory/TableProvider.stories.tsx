@@ -3,14 +3,14 @@ import { Story } from "@storybook/react/types-6-0";
 import { instances } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
 import { createStore, StoreProvider } from "easy-peasy";
-import { IStoreModel, storeModel } from "@app/Models/CoreModels";
+import { StoreModel, storeModel } from "@/UI/Store";
 
 export default {
   title: "TableProvider",
   component: TableProvider,
 };
 
-const storeInstance = createStore<IStoreModel>(storeModel);
+const storeInstance = createStore<StoreModel>(storeModel);
 
 const Template: Story<Props> = (args) => (
   <StoreProvider store={storeInstance}>

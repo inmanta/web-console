@@ -1,6 +1,6 @@
 import React from "react";
 import { ContextSelector, ContextSelectorItem } from "@patternfly/react-core";
-import { IStoreModel } from "@app/Models/CoreModels";
+import { StoreModel } from "@/UI/Store";
 import { useStoreDispatch, useStoreState, State } from "easy-peasy";
 
 export interface IEnvironmentSelectorItem {
@@ -19,7 +19,7 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
   const [open, setOpen] = React.useState(false);
   const [filteredItems, setFilteredItems] = React.useState(environmentNames);
   const [searchValue, setSearchValue] = React.useState("");
-  const store = useStoreState((state: State<IStoreModel>) => state.projects);
+  const store = useStoreState((state: State<StoreModel>) => state.projects);
   const selectedProject = store.projects.getSelectedProject;
   let selectedProjectName = "undefined / undefined";
   if (selectedProject && store.environments.getSelectedEnvironment) {
@@ -28,7 +28,7 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
       " / " +
       store.environments.getSelectedEnvironment.name;
   }
-  const dispatch = useStoreDispatch<IStoreModel>();
+  const dispatch = useStoreDispatch<StoreModel>();
 
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const onToggle = (event?: any, isOpen?: any) => {

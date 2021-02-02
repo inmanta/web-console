@@ -2,7 +2,7 @@ import { useState } from "react";
 import React from "react";
 import { Button, Modal, Alert } from "@patternfly/react-core";
 import { ServiceInstanceModel } from "@/Core";
-import { IStoreModel } from "@app/Models/CoreModels";
+import { StoreModel } from "@/UI/Store";
 import { useStoreDispatch, useStoreState, State } from "easy-peasy";
 import { ResourceTable } from "./ResourceTable";
 import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
@@ -17,9 +17,9 @@ export const ResourceModal: React.FunctionComponent<{
   keycloak?: Keycloak.KeycloakInstance;
 }> = (props) => {
   const instance = props.instance;
-  const storeDispatch = useStoreDispatch<IStoreModel>();
+  const storeDispatch = useStoreDispatch<StoreModel>();
   const resources = useStoreState(
-    (store: State<IStoreModel>) => store.projects.resources
+    (store: State<StoreModel>) => store.projects.resources
   );
   const resourcesOfInstance = resources.resourcesOfInstance(instance.id);
   const [isOpen, setIsOpen] = useState(false);
