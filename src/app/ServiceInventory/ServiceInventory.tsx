@@ -11,8 +11,7 @@ import {
   ToolbarContent,
   AlertGroup,
 } from "@patternfly/react-core";
-import { useStoreState, State, useStoreDispatch } from "easy-peasy";
-import { StoreModel } from "@/UI/Store";
+import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import { InventoryTable } from "@/UI/ServiceInventory";
 import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
@@ -31,10 +30,8 @@ interface Props {
 const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   const serviceName = props.match.params.id;
   const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}`;
-  const projectStore = useStoreState(
-    (store: State<StoreModel>) => store.projects
-  );
-  const storeDispatch = useStoreDispatch<StoreModel>();
+  const projectStore = useStoreState((store) => store.projects);
+  const storeDispatch = useStoreDispatch();
   const [errorMessage, setErrorMessage] = React.useState("");
   const [instanceErrorMessage, setInstanceErrorMessage] = React.useState("");
   const instancesOfCurrentService = projectStore.serviceInstances.instancesWithTargetStates(

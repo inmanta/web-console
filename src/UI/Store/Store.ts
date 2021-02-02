@@ -9,14 +9,8 @@ export const storeModel: StoreModel = {
   projects: appSlice,
 };
 
-const {
+export const {
   useStoreActions,
   useStoreState,
   useStoreDispatch,
 } = createTypedHooks<StoreModel>();
-
-export default {
-  useStoreActions,
-  useStoreDispatch,
-  useStoreState,
-};

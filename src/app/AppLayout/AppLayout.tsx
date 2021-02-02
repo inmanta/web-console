@@ -28,8 +28,7 @@ import {
 import { SimpleNotificationBadge } from "./Toolbar/SimpleNotificationBadge";
 import { IconDropdown } from "./Toolbar/IconDropdown";
 import { AngleDownIcon, CogIcon } from "@patternfly/react-icons";
-import { useStoreState, State, useStoreDispatch } from "easy-peasy";
-import { StoreModel } from "@/UI/Store";
+import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import * as _ from "lodash";
 import SimpleBackgroundImage from "./SimpleBackgroundImage";
 import { PageBreadcrumb } from "./PageBreadcrumb";
@@ -68,7 +67,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
     href: "/",
   };
   const projectsEndpoint = "/api/v2/project";
-  const storeDispatch = useStoreDispatch<StoreModel>();
+  const storeDispatch = useStoreDispatch();
   const [envAlert, setEnvAlert] = React.useState("");
   const ToastAlertGroup = () => {
     const variant = "warning";
@@ -135,15 +134,14 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
   };
 
   const projects: ProjectModel[] = useStoreState(
-    (state: State<StoreModel>) => state.projects.projects.getAllProjects
+    (state) => state.projects.projects.getAllProjects
   );
   const environments = _.flatMap(projects, (project) =>
     getEnvironmentNamesWithSeparator(project)
   );
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
   const selectedEnvironmentId = useStoreState(
-    (state: State<StoreModel>) =>
-      state.projects.environments.selectedEnvironmentId
+    (state) => state.projects.environments.selectedEnvironmentId
   );
 
   const Login = () => {

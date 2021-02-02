@@ -1,18 +1,15 @@
 import * as React from "react";
 import { PageSection, Alert } from "@patternfly/react-core";
 import { CatalogDataList } from "./CatalogDataList";
-import { useStoreState, State, useStoreDispatch } from "easy-peasy";
-import { StoreModel } from "@/UI/Store";
+import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi } from "../utils/fetchInmantaApi";
 import { useKeycloak } from "react-keycloak";
 
 const ServiceCatalog: React.FC = () => {
   const serviceCatalogUrl = "/lsm/v1/service_catalog";
-  const projectStore = useStoreState(
-    (store: State<StoreModel>) => store.projects
-  );
-  const storeDispatch = useStoreDispatch<StoreModel>();
+  const projectStore = useStoreState((store) => store.projects);
+  const storeDispatch = useStoreDispatch();
   const [errorMessage, setErrorMessage] = React.useState("");
   const environmentId = projectStore.environments.getSelectedEnvironment.id
     ? projectStore.environments.getSelectedEnvironment.id
