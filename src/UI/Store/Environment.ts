@@ -1,16 +1,19 @@
 import { Action, action, Computed, computed } from "easy-peasy";
 import { ProjectModel, EnvironmentModel } from "@/Core";
 
-export interface EnvironmentSlice {
+export interface EnvironmentsSlice {
   allIds: string[];
   byId: Record<string, EnvironmentModel>;
-  getSelectedEnvironment: Computed<EnvironmentSlice, Partial<EnvironmentModel>>;
+  getSelectedEnvironment: Computed<
+    EnvironmentsSlice,
+    Partial<EnvironmentModel>
+  >;
   selectedEnvironmentId: string;
-  selectEnvironmentById: Action<EnvironmentSlice, string>;
-  selectEnvironmentByName: Action<EnvironmentSlice, string>;
+  selectEnvironmentById: Action<EnvironmentsSlice, string>;
+  selectEnvironmentByName: Action<EnvironmentsSlice, string>;
 }
 
-export const environmentSlice: EnvironmentSlice = {
+export const environmentsSlice: EnvironmentsSlice = {
   allIds: [],
   byId: {},
   getSelectedEnvironment: computed((state) => {
