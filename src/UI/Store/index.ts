@@ -1,4 +1,4 @@
-export * from "./Environment";
+export * from "./EnvironmentsSlice";
 export * from "./ProjectsSlice";
 export * from "./Resource";
 export * from "./Service";
