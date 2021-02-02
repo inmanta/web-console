@@ -27,6 +27,7 @@ export const base: Row = {
     relative: "17 hours ago",
   },
   version: 2,
+  instanceSetStateTargets: [],
 };
 
 export const row2: Row = {
