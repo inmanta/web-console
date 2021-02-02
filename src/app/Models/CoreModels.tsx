@@ -1,7 +1,7 @@
 import { thunk, Thunk, Action, action, createTypedHooks } from "easy-peasy";
 import {
-  EnvironmentState,
-  environmentState,
+  EnvironmentSlice,
+  environmentSlice,
   ProjectState,
   projectState,
   ServiceState,
@@ -14,7 +14,7 @@ import {
 import { ProjectModel } from "@/Core";
 
 export interface IProjectStoreModel {
-  environments: EnvironmentState;
+  environments: EnvironmentSlice;
   fetched: Action<IProjectStoreModel, ProjectModel[]>;
   selectProjectAndEnvironment: Thunk<
     IProjectStoreModel,
@@ -31,7 +31,7 @@ export interface IStoreModel {
 }
 
 export const project: IProjectStoreModel = {
-  environments: environmentState,
+  environments: environmentSlice,
   fetched: action((state, payload) => {
     payload.map((currentProject) => {
       state.projects.byId[currentProject.id] = currentProject;
