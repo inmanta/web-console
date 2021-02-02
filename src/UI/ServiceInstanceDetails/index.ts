@@ -1,3 +1,3 @@
-export * from "./InstanceDetails";
+export * from "./ServiceInstanceDetails";
 export * from "./AttributesView";
 export * from "./StatusView";

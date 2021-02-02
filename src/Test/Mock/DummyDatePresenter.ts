@@ -1,5 +1,5 @@
 import { DateInfo } from "@/Core";
-import { DatePresenter } from "@/UI/Inventory/Presenters";
+import { DatePresenter } from "@/UI/ServiceInventory/Presenters";
 
 export class DummyDatePresenter implements DatePresenter {
   getFull(): string {
