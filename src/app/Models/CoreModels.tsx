@@ -8,8 +8,8 @@ import {
   servicesSlice,
   ResourcesSlice,
   resourcesSlice,
-  ServiceInstanceState,
-  serviceInstanceState,
+  ServiceInstancesSlice,
+  serviceInstancesSlice,
 } from "@/UI";
 import { ProjectModel } from "@/Core";
 
@@ -23,7 +23,7 @@ export interface IProjectStoreModel {
   services: ServicesSlice;
   projects: ProjectsSlice;
   resources: ResourcesSlice;
-  serviceInstances: ServiceInstanceState;
+  serviceInstances: ServiceInstancesSlice;
 }
 
 export interface IStoreModel {
@@ -83,7 +83,7 @@ export const project: IProjectStoreModel = {
     actions.projects.selectProjectById(payload.project);
     actions.environments.selectEnvironmentById(payload.environment);
   }),
-  serviceInstances: serviceInstanceState,
+  serviceInstances: serviceInstancesSlice,
   services: servicesSlice,
 };
 

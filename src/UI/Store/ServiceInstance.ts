@@ -6,26 +6,26 @@ import {
 import { IProjectStoreModel } from "@app/Models/CoreModels";
 import * as _ from "lodash";
 
-export interface ServiceInstanceState {
-  addInstances: Action<ServiceInstanceState, ServiceInstanceModel[]>;
+export interface ServiceInstancesSlice {
+  addInstances: Action<ServiceInstancesSlice, ServiceInstanceModel[]>;
   allIds: string[];
   byId: Record<string, ServiceInstanceModel>;
   instancesOfService: Computed<
-    ServiceInstanceState,
+    ServiceInstancesSlice,
     (name: string) => ServiceInstanceModel[]
   >;
   instancesWithTargetStates: Computed<
-    ServiceInstanceState,
+    ServiceInstancesSlice,
     (name: string) => ServiceInstanceModelWithTargetStates[],
     IProjectStoreModel
   >;
   updateInstances: Thunk<
-    ServiceInstanceState,
+    ServiceInstancesSlice,
     { serviceName: string; instances: ServiceInstanceModel[] }
   >;
 }
 
-export const serviceInstanceState: ServiceInstanceState = {
+export const serviceInstancesSlice: ServiceInstancesSlice = {
   addInstances: action((state, payload) => {
     state.allIds = [];
     state.byId = {};

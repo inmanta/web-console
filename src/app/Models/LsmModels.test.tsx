@@ -1,6 +1,6 @@
 import { createStore } from "easy-peasy";
 import { ServiceModel, ResourceModel, ServiceInstanceModel } from "@/Core";
-import { servicesSlice, resourcesSlice, serviceInstanceState } from "@/UI";
+import { servicesSlice, resourcesSlice, serviceInstancesSlice } from "@/UI";
 
 describe("Lsm models", () => {
   describe("Service store", () => {
@@ -116,12 +116,12 @@ describe("Lsm models", () => {
       },
     };
     it("Should add instances", () => {
-      const store = createStore(serviceInstanceState);
+      const store = createStore(serviceInstancesSlice);
       store.getActions().addInstances(instances);
       expect(store.getState().allIds).toEqual(["instance", "anotherInstance"]);
     });
     it("Should update instances", () => {
-      const store = createStore(serviceInstanceState, { initialState });
+      const store = createStore(serviceInstancesSlice, { initialState });
       store.getActions().updateInstances({
         instances: [
           {
@@ -144,7 +144,7 @@ describe("Lsm models", () => {
       expect(store.getState().byId.instance.state).toEqual("up");
     });
     it("Should not update instances, if the content is the same", () => {
-      const store = createStore(serviceInstanceState, {
+      const store = createStore(serviceInstancesSlice, {
         initialState,
         mockActions: true,
       });
