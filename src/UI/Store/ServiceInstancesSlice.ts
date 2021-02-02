@@ -3,7 +3,7 @@ import {
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
 } from "@/Core";
-import { AppSlice } from "./AppSlice";
+import { StoreModel } from "./Store";
 import * as _ from "lodash";
 
 export interface ServiceInstancesSlice {
@@ -17,7 +17,7 @@ export interface ServiceInstancesSlice {
   instancesWithTargetStates: Computed<
     ServiceInstancesSlice,
     (name: string) => ServiceInstanceModelWithTargetStates[],
-    AppSlice
+    StoreModel
   >;
   updateInstances: Thunk<
     ServiceInstancesSlice,
@@ -44,14 +44,12 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
     );
   }),
   instancesWithTargetStates: computed(
-    [(state) => state, (state, storeState) => storeState.projects],
+    [(state) => state, (state, storeState) => storeState],
     (serviceInstances, storeState) => (name) => {
       const instances = serviceInstances.instancesOfService(name);
       const instancesWithTargets = instances.map((instance) => {
         const instanceState = instance.state;
-        const service = ((storeState as unknown) as AppSlice).services.byId[
-          name
-        ];
+        const service = storeState.services.byId[name];
         if (!service) {
           return { ...instance, instanceSetStateTargets: [] };
         }

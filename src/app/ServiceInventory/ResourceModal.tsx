@@ -17,12 +17,12 @@ export const ResourceModal: React.FunctionComponent<{
 }> = (props) => {
   const instance = props.instance;
   const storeDispatch = useStoreDispatch();
-  const resources = useStoreState((store) => store.projects.resources);
+  const resources = useStoreState((store) => store.resources);
   const resourcesOfInstance = resources.resourcesOfInstance(instance.id);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
   const dispatch = (data) =>
-    storeDispatch.projects.resources.addResources({
+    storeDispatch.resources.addResources({
       instanceId: instance.id,
       resources: data,
     });

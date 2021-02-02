@@ -18,7 +18,7 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
   const [open, setOpen] = React.useState(false);
   const [filteredItems, setFilteredItems] = React.useState(environmentNames);
   const [searchValue, setSearchValue] = React.useState("");
-  const store = useStoreState((state) => state.projects);
+  const store = useStoreState((state) => state);
   const selectedProject = store.projects.getSelectedProject;
   let selectedProjectName = "undefined / undefined";
   if (selectedProject && store.environments.getSelectedEnvironment) {
@@ -41,7 +41,7 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
       (envItem) => envItem.displayName === value
     );
     if (matchingEnvItem && matchingEnvItem.environmentId) {
-      dispatch.projects.selectProjectAndEnvironment({
+      dispatch.selectProjectAndEnvironment({
         environment: matchingEnvItem.environmentId,
         project: matchingEnvItem.projectId,
       });

@@ -18,7 +18,7 @@ export const ResourceTable: React.FunctionComponent<{
   const instanceId =
     props.resources.length > 0 ? props.resources[0].instanceId : "";
   const environmentId = useStoreState(
-    (state) => state.projects.environments.selectedEnvironmentId
+    (state) => state.environments.selectedEnvironmentId
   );
   const rows = props.resources.map((resource) => {
     const href = getHrefFromResourceId(environmentId, resource.resource_id);

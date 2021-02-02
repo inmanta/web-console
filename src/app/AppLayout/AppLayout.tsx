@@ -103,7 +103,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
         `Environment with id ${envFromUrl} not found, another was selected by default`
       );
     }
-    storeDispatch.projects.fetched(data);
+    storeDispatch.fetched(data);
   };
   const requestParams = {
     urlEndpoint: projectsEndpoint,
@@ -134,14 +134,14 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
   };
 
   const projects: ProjectModel[] = useStoreState(
-    (state) => state.projects.projects.getAllProjects
+    (state) => state.projects.getAllProjects
   );
   const environments = _.flatMap(projects, (project) =>
     getEnvironmentNamesWithSeparator(project)
   );
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
   const selectedEnvironmentId = useStoreState(
-    (state) => state.projects.environments.selectedEnvironmentId
+    (state) => state.environments.selectedEnvironmentId
   );
 
   const Login = () => {
