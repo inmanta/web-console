@@ -1,6 +1,6 @@
 import { createStore } from "easy-peasy";
 import { ServiceInstanceModel } from "@/Core";
-import { serviceInstancesSlice } from "@/UI";
+import { serviceInstancesSlice } from "./ServiceInstancesSlice";
 
 describe("Service instance store", () => {
   const instances: ServiceInstanceModel[] = [

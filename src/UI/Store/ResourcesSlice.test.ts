@@ -1,6 +1,6 @@
 import { createStore } from "easy-peasy";
 import { ResourceModel } from "@/Core";
-import { resourcesSlice } from "@/UI";
+import { resourcesSlice } from "./ResourcesSlice";
 
 describe("ResourcesSlice", () => {
   const resources: ResourceModel[] = [
