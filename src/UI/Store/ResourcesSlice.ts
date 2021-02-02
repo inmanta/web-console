@@ -1,20 +1,20 @@
 import { Action, action, Computed, computed } from "easy-peasy";
 import { ResourceModel } from "@/Core";
 
-export interface ResourceState {
+export interface ResourcesSlice {
   addResources: Action<
-    ResourceState,
+    ResourcesSlice,
     { instanceId: string; resources: ResourceModel[] }
   >;
   allIds: string[];
   byId: Record<string, ResourceModel>;
   resourcesOfInstance: Computed<
-    ResourceState,
+    ResourcesSlice,
     (instanceId: string) => ResourceModel[]
   >;
 }
 
-export const resourceState: ResourceState = {
+export const resourcesSlice: ResourcesSlice = {
   addResources: action((state, payload) => {
     state.allIds = [];
     state.byId = {};

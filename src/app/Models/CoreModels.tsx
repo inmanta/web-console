@@ -6,8 +6,8 @@ import {
   projectsSlice,
   ServiceState,
   serviceState,
-  ResourceState,
-  resourceState,
+  ResourcesSlice,
+  resourcesSlice,
   ServiceInstanceState,
   serviceInstanceState,
 } from "@/UI";
@@ -22,7 +22,7 @@ export interface IProjectStoreModel {
   >;
   services: ServiceState;
   projects: ProjectsSlice;
-  resources: ResourceState;
+  resources: ResourcesSlice;
   serviceInstances: ServiceInstanceState;
 }
 
@@ -78,7 +78,7 @@ export const project: IProjectStoreModel = {
     }
   }),
   projects: projectsSlice,
-  resources: resourceState,
+  resources: resourcesSlice,
   selectProjectAndEnvironment: thunk((actions, payload) => {
     actions.projects.selectProjectById(payload.project);
     actions.environments.selectEnvironmentById(payload.environment);

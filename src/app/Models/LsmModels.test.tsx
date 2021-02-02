@@ -1,6 +1,6 @@
 import { createStore } from "easy-peasy";
 import { ServiceModel, ResourceModel, ServiceInstanceModel } from "@/Core";
-import { serviceState, resourceState, serviceInstanceState } from "@/UI";
+import { serviceState, resourcesSlice, serviceInstanceState } from "@/UI";
 
 describe("Lsm models", () => {
   describe("Service store", () => {
@@ -182,7 +182,7 @@ describe("Lsm models", () => {
       },
     };
     it("Should add resources", () => {
-      const store = createStore(resourceState);
+      const store = createStore(resourcesSlice);
       const singleResource: ResourceModel[] = [resources[0]];
       store
         .getActions()
@@ -192,7 +192,7 @@ describe("Lsm models", () => {
       ]);
     });
     it("Should filter resources of a specific instance", () => {
-      const store = createStore(resourceState, { initialState });
+      const store = createStore(resourcesSlice, { initialState });
       expect(store.getState().resourcesOfInstance("instance")).toEqual([
         resources[0],
       ]);
@@ -204,7 +204,7 @@ describe("Lsm models", () => {
           "fortigate::Config[fg101,config_id=system_dhcp_server_1],v=471",
         resource_state: "deployed",
       };
-      const store = createStore(resourceState);
+      const store = createStore(resourcesSlice);
       const singleResource: ResourceModel[] = [resources[0]];
       store
         .getActions()
@@ -233,7 +233,7 @@ describe("Lsm models", () => {
           resource_state: "deployed",
         },
       ];
-      const store = createStore(resourceState);
+      const store = createStore(resourcesSlice);
       const singleResource: ResourceModel[] = [resources[0]];
       store
         .getActions()

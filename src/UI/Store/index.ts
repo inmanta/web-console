@@ -1,5 +1,5 @@
 export * from "./EnvironmentsSlice";
 export * from "./ProjectsSlice";
-export * from "./Resource";
+export * from "./ResourcesSlice";
 export * from "./Service";
 export * from "./ServiceInstance";
