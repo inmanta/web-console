@@ -29,11 +29,12 @@ import { SimpleNotificationBadge } from "./Toolbar/SimpleNotificationBadge";
 import { IconDropdown } from "./Toolbar/IconDropdown";
 import { AngleDownIcon, CogIcon } from "@patternfly/react-icons";
 import { useStoreState, State, useStoreDispatch } from "easy-peasy";
-import { IStoreModel, IProjectModel } from "@app/Models/CoreModels";
+import { IStoreModel } from "@app/Models/CoreModels";
 import * as _ from "lodash";
 import SimpleBackgroundImage from "./SimpleBackgroundImage";
 import { PageBreadcrumb } from "./PageBreadcrumb";
 import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
+import { ProjectModel } from "@/Core";
 
 interface IAppLayout {
   keycloak?: Keycloak.KeycloakInstance;
@@ -42,7 +43,7 @@ interface IAppLayout {
   shouldUseAuth: boolean;
 }
 export const getEnvironmentNamesWithSeparator = (
-  project: IProjectModel
+  project: ProjectModel
 ): IEnvironmentSelectorItem[] => {
   if (project.environments) {
     return project.environments.map((environment) => {
@@ -133,7 +134,7 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
     setIsMobileView(props.mobileView);
   };
 
-  const projects: IProjectModel[] = useStoreState(
+  const projects: ProjectModel[] = useStoreState(
     (state: State<IStoreModel>) => state.projects.projects.getAllProjects
   );
   const environments = _.flatMap(projects, (project) =>
