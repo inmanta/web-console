@@ -1,5 +1,5 @@
-import { Action, action, Computed, computed } from "easy-peasy";
-import { ResourceModel } from "@/Core";
+import { Action, action, Computed, computed, Thunk, thunk } from "easy-peasy";
+import { Either, ResourceModel } from "@/Core";
 
 export interface ResourcesSlice {
   addResources: Action<
@@ -11,6 +11,10 @@ export interface ResourcesSlice {
   resourcesOfInstance: Computed<
     ResourcesSlice,
     (instanceId: string) => ResourceModel[]
+  >;
+  fetchResources: Thunk<
+    ResourcesSlice,
+    { id: string; serviceEntity: string; version: string; environment: string }
   >;
 }
 
@@ -33,4 +37,52 @@ export const resourcesSlice: ResourcesSlice = {
       (resource) => resource.instanceId === instanceId
     );
   }),
+  fetchResources: thunk(
+    async (actions, { id, serviceEntity, version, environment }) => {
+      const fetcher = new ApiFetcher();
+
+      const result = await fetcher.getResources(
+        id,
+        serviceEntity,
+        version,
+        environment
+      );
+      if (Either.isLeft(result)) {
+        // what now? show error...
+      } else {
+        actions.addResources({
+          instanceId: id,
+          resources: result.value as ResourceModel[],
+        });
+      }
+    }
+  ),
 };
+
+class ApiFetcher {
+  private getBaseUrl() {
+    return process.env.API_BASEURL ? process.env.API_BASEURL : "";
+  }
+
+  private getResourcesUrl(entity: string, id: string, version: string) {
+    return `${this.getBaseUrl()}/lsm/v1/service_inventory/${entity}/${id}/resources?current_version=${version}`;
+  }
+
+  async getResources(
+    id: string,
+    entity: string,
+    version: string,
+    environment: string
+  ): Promise<Either.Type<string, unknown>> {
+    const url = this.getResourcesUrl(entity, id, version);
+    const headers = { "X-Inmanta-Tid": environment };
+
+    try {
+      const result = await fetch(`${url}`, { headers });
+      const data = await result.json();
+      return Either.right(data.data);
+    } catch (e) {
+      return Either.left(e);
+    }
+  }
+}
