@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { ServiceInstanceModelWithTargetStates } from "@app/Models/LsmModels";
 import { Id, Row } from "@/Core";
 import { words } from "@/UI";
 import { DatePresenter } from "./DatePresenter";
@@ -31,7 +31,9 @@ export class TablePresenter {
     return this.actionPresenter.getForId(id);
   }
 
-  public createFromInstances(instances: IServiceInstanceModel[]): Row[] {
+  public createFromInstances(
+    instances: ServiceInstanceModelWithTargetStates[]
+  ): Row[] {
     return instances.map((instance) => this.instanceToRow(instance));
   }
 
@@ -43,7 +45,7 @@ export class TablePresenter {
     return this.numberOfColumns;
   }
 
-  private instanceToRow(instance: IServiceInstanceModel): Row {
+  private instanceToRow(instance: ServiceInstanceModelWithTargetStates): Row {
     const {
       id,
       state,
@@ -53,6 +55,7 @@ export class TablePresenter {
       created_at,
       last_updated,
       version,
+      instanceSetStateTargets,
     } = instance;
 
     return {
@@ -71,6 +74,7 @@ export class TablePresenter {
       createdAt: this.datePresenter.get(created_at),
       updatedAt: this.datePresenter.get(last_updated),
       version: version,
+      instanceSetStateTargets,
     };
   }
 

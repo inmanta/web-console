@@ -7,7 +7,9 @@ const presenter = new TablePresenter(
   new AttributesPresenter(),
   new DummyActionPresenter()
 );
-const rows = presenter.createFromInstances([instance]);
+const rows = presenter.createFromInstances([
+  { ...instance, instanceSetStateTargets: [] },
+]);
 
 test("TablePresenter short id", () => {
   expect(rows[0].id.short.length).toBe(4);

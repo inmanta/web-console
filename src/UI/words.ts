@@ -30,6 +30,13 @@ const dict = {
   "inventory.statustab.actions": "Actions",
   "inventory.statustab.version": "Version",
   "inventory.statustab.details": "Instance Details",
+  "inventory.statustab.setInstanceState": "Set state to",
+  "inventory.statustab.confirmTitle": "Confirm set state transfer",
+  "inventory.statustab.confirmMessage": (id: string, state: string) =>
+    `Are you sure you want to set state of instance ${id} to ${state}?`,
+  cancel: "Cancel",
+  yes: "Yes",
+  no: "No",
   "inventory.resourcesTable.caption": (id: string) =>
     `Resources for instance with id ${id}`,
   null: "null",
