@@ -1,17 +1,17 @@
 import { Action, action, Computed, computed } from "easy-peasy";
 import { ProjectModel } from "@/Core";
 
-export interface ProjectState {
+export interface ProjectSlice {
   allIds: string[];
   byId: Record<string, ProjectModel>;
-  getAllProjects: Computed<ProjectState, ProjectModel[]>;
-  getSelectedProject: Computed<ProjectState, Partial<ProjectModel>>;
+  getAllProjects: Computed<ProjectSlice, ProjectModel[]>;
+  getSelectedProject: Computed<ProjectSlice, Partial<ProjectModel>>;
   selectedProjectId: string;
-  selectProjectById: Action<ProjectState, string>;
-  selectProjectByName: Action<ProjectState, string>;
+  selectProjectById: Action<ProjectSlice, string>;
+  selectProjectByName: Action<ProjectSlice, string>;
 }
 
-export const projectState: ProjectState = {
+export const projectSlice: ProjectSlice = {
   allIds: [],
   byId: {},
   getAllProjects: computed((state) => {

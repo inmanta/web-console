@@ -2,8 +2,8 @@ import { thunk, Thunk, Action, action, createTypedHooks } from "easy-peasy";
 import {
   EnvironmentSlice,
   environmentSlice,
-  ProjectState,
-  projectState,
+  ProjectSlice,
+  projectSlice,
   ServiceState,
   serviceState,
   ResourceState,
@@ -21,7 +21,7 @@ export interface IProjectStoreModel {
     { project: string; environment: string }
   >;
   services: ServiceState;
-  projects: ProjectState;
+  projects: ProjectSlice;
   resources: ResourceState;
   serviceInstances: ServiceInstanceState;
 }
@@ -77,7 +77,7 @@ export const project: IProjectStoreModel = {
       }
     }
   }),
-  projects: projectState,
+  projects: projectSlice,
   resources: resourceState,
   selectProjectAndEnvironment: thunk((actions, payload) => {
     actions.projects.selectProjectById(payload.project);
