@@ -9,15 +9,10 @@ import {
 } from "@patternfly/react-icons";
 import { HrefCreator } from "./HrefCreator";
 
-export type SlimResourceModel = Pick<
-  ResourceModel,
-  "resource_id" | "resource_state"
->;
-
 interface Props {
   caption: string;
   hrefCreator: HrefCreator;
-  resources: SlimResourceModel[];
+  resources: Pick<ResourceModel, "resource_id" | "resource_state">[];
 }
 
 export const ResourceTable: React.FC<Props> = ({

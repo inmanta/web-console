@@ -1,4 +1,4 @@
-import { thunk, Thunk, Action, action, createTypedHooks } from "easy-peasy";
+import { thunk, Thunk, Action, action } from "easy-peasy";
 import { EnvironmentsSlice, environmentsSlice } from "./EnvironmentsSlice";
 import { ProjectsSlice, projectsSlice } from "./ProjectsSlice";
 import { ResourcesSlice, resourcesSlice } from "./ResourcesSlice";
@@ -80,9 +80,3 @@ export const storeModel: StoreModel = {
   serviceInstances: serviceInstancesSlice,
   services: servicesSlice,
 };
-
-export const {
-  useStoreActions,
-  useStoreState,
-  useStoreDispatch,
-} = createTypedHooks<StoreModel>();

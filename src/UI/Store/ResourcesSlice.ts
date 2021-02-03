@@ -1,5 +1,6 @@
 import { Action, action, Computed, computed, Thunk, thunk } from "easy-peasy";
-import { Either, ResourceModel } from "@/Core";
+import { Either, RemoteData, ResourceModel } from "@/Core";
+import { Injections } from "./Setup";
 
 export interface ResourcesSlice {
   addResources: Action<
@@ -15,9 +16,9 @@ export interface ResourcesSlice {
   fetchResources: Thunk<
     ResourcesSlice,
     { id: string; serviceEntity: string; version: string; environment: string },
-    unknown,
+    Injections,
     Record<string, unknown>,
-    Promise<string | null>
+    Promise<RemoteData.Type<string, unknown>>
   >;
 }
 
@@ -40,50 +41,22 @@ export const resourcesSlice: ResourcesSlice = {
       (resource) => resource.instanceId === instanceId
     );
   }),
-  fetchResources: thunk(
-    async (actions, { id, serviceEntity, version, environment }) => {
-      const fetcher = new ApiFetcher();
+  fetchResources: thunk(async (actions, payload, helpers) => {
+    const { id, serviceEntity, version, environment } = payload;
+    const { resourceFetcher } = helpers.injections;
 
-      const result = await fetcher.getResources(
-        id,
-        serviceEntity,
-        version,
-        environment
-      );
-      if (Either.isLeft(result)) return result.value;
+    const result = await resourceFetcher.getResources(
+      id,
+      serviceEntity,
+      version,
+      environment
+    );
+    if (Either.isRight(result)) {
       actions.addResources({
         instanceId: id,
         resources: result.value as ResourceModel[],
       });
-      return null;
     }
-  ),
+    return RemoteData.fromEither(result);
+  }),
 };
-
-class ApiFetcher {
-  private getBaseUrl() {
-    return process.env.API_BASEURL ? process.env.API_BASEURL : "";
-  }
-
-  private getResourcesUrl(entity: string, id: string, version: string) {
-    return `${this.getBaseUrl()}/lsm/v1/service_inventory/${entity}/${id}/resources?current_version=${version}`;
-  }
-
-  async getResources(
-    id: string,
-    entity: string,
-    version: string,
-    environment: string
-  ): Promise<Either.Type<string, unknown>> {
-    const url = this.getResourcesUrl(entity, id, version);
-    const headers = { "X-Inmanta-Tid": environment };
-
-    try {
-      const result = await fetch(`${url}`, { headers });
-      const data = await result.json();
-      return Either.right(data.data);
-    } catch (e) {
-      return Either.left(e);
-    }
-  }
-}
