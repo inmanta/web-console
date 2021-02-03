@@ -2,7 +2,7 @@ import { EnvironmentSelector } from "./EnvironmentSelector";
 import { mount } from "enzyme";
 import React from "react";
 import { StoreProvider, createStore } from "easy-peasy";
-import { storeModel } from "@app/Models/CoreModels";
+import { storeModel } from "@/UI/Store";
 import { getEnvironmentNamesWithSeparator } from "../AppLayout";
 import _ from "lodash";
 
@@ -116,7 +116,7 @@ describe("Environment Selector", () => {
     let selectorToggle;
     beforeEach(() => {
       const storeInstance = createStore(storeModel);
-      storeInstance.dispatch.projects.fetched(projects);
+      storeInstance.dispatch.fetched(projects);
       const environments = _.flatMap(projects, (project) =>
         getEnvironmentNamesWithSeparator(project)
       );
@@ -162,7 +162,7 @@ describe("Environment Selector", () => {
   });
   it("should select the proper environment when multiple environments have the same name", () => {
     const storeInstance = createStore(storeModel);
-    storeInstance.dispatch.projects.fetched(projects);
+    storeInstance.dispatch.fetched(projects);
     const environments = _.flatMap(projects, (project) =>
       getEnvironmentNamesWithSeparator(project)
     );
@@ -180,11 +180,11 @@ describe("Environment Selector", () => {
     );
     selectorListItems.at(2).simulate("click");
     expect(selectorToggle.text()).toEqual("test-project2 / test-environment");
+    expect(storeInstance.getState().projects.getSelectedProject.id).toEqual(
+      "project-id2"
+    );
     expect(
-      storeInstance.getState().projects.projects.getSelectedProject.id
-    ).toEqual("project-id2");
-    expect(
-      storeInstance.getState().projects.environments.getSelectedEnvironment.id
+      storeInstance.getState().environments.getSelectedEnvironment.id
     ).toEqual("env-id3");
     expect(location.search).toEqual("?env=env-id3");
   });
@@ -197,7 +197,7 @@ describe("Environment Selector", () => {
       const params = new URLSearchParams(location.search);
       params.set("env", "env-id2");
       window.history.replaceState({}, "", `${location.pathname}?${params}`);
-      storeInstance.dispatch.projects.fetched(projects);
+      storeInstance.dispatch.fetched(projects);
       const environments = _.flatMap(projects, (project) =>
         getEnvironmentNamesWithSeparator(project)
       );

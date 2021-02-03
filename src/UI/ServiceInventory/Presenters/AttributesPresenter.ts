@@ -1,9 +1,8 @@
-import { IInstanceAttributeModel } from "@app/Models/LsmModels";
-import { AttributesSummary, Pairs } from "@/Core";
+import { AttributesSummary, Pairs, InstanceAttributeModel } from "@/Core";
 
 type Attribute = null | unknown;
 
-type Value = IInstanceAttributeModel["key"];
+type Value = InstanceAttributeModel["key"];
 
 export class AttributesPresenter {
   getSummary(
@@ -18,12 +17,12 @@ export class AttributesPresenter {
     };
   }
 
-  getPairsSafe(attributes: IInstanceAttributeModel | null): Pairs | null {
+  getPairsSafe(attributes: InstanceAttributeModel | null): Pairs | null {
     if (attributes === null) return null;
     return this.getPairs(attributes);
   }
 
-  getPairs(attributes: IInstanceAttributeModel): Pairs {
+  getPairs(attributes: InstanceAttributeModel): Pairs {
     return Object.entries(attributes).map(([key, value]) => [
       key,
       this.printValue(value),

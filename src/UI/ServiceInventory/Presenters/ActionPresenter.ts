@@ -1,4 +1,4 @@
-import { ServiceInstanceModelWithTargetStates } from "@app/Models/LsmModels";
+import { ServiceInstanceModelWithTargetStates } from "@/Core";
 import { ReactElement } from "react";
 
 export type ServiceInstanceForAction = Pick<

@@ -1,5 +1,5 @@
 import React from "react";
-import { IResourceModel } from "@app/Models/LsmModels";
+import { ResourceModel } from "@/Core";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Button } from "@patternfly/react-core";
 import {
@@ -9,7 +9,10 @@ import {
 } from "@patternfly/react-icons";
 import { HrefCreator } from "./HrefCreator";
 
-type SlimResourceModel = Pick<IResourceModel, "resource_id" | "resource_state">;
+export type SlimResourceModel = Pick<
+  ResourceModel,
+  "resource_id" | "resource_state"
+>;
 
 interface Props {
   caption: string;

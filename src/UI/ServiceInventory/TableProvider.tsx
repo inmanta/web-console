@@ -1,6 +1,6 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
-import { ServiceInstanceModelWithTargetStates } from "@app/Models/LsmModels";
+import { ServiceInstanceModelWithTargetStates } from "@/Core";
 import {
   AttributesPresenter,
   InstanceActionPresenter,

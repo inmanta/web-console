@@ -1,4 +1,4 @@
-import { IAttributeModel } from "@app/Models/LsmModels";
+import { AttributeModel } from "@/Core";
 import {
   TextInputTypes,
   FormGroup,
@@ -8,7 +8,7 @@ import {
 import React from "react";
 
 const InstanceFormInput: React.FunctionComponent<{
-  attributeModels: IAttributeModel[];
+  attributeModels: AttributeModel[];
   attributeName: string;
   attributes;
   handleInputChange: (value, event) => void;
@@ -92,7 +92,7 @@ const InstanceFormInput: React.FunctionComponent<{
   return <div key={attributeName} />;
 };
 
-function getDescription(attributes: IAttributeModel[], name: string): string {
+function getDescription(attributes: AttributeModel[], name: string): string {
   const attributeWithMatchingName = attributes.find(
     (attribute) => attribute.name === name
   );

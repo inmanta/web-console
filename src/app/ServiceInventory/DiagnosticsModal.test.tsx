@@ -1,5 +1,5 @@
 import { getValidationFailureMessage } from "./DiagnosticsModal";
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { ServiceInstanceModel } from "@/Core";
 
 describe("getValidationFailureMessage function", () => {
   it("Should find the correct compile report when there are multiple in the logs", async () => {
@@ -32,7 +32,7 @@ describe("getValidationFailureMessage function", () => {
       })
     );
     const errorWithTrace = await getValidationFailureMessage(
-      { id: "id1", version: 2 } as IServiceInstanceModel,
+      { id: "id1", version: 2 } as ServiceInstanceModel,
       "lsm",
       "envId1",
       () => {
@@ -64,7 +64,7 @@ describe("getValidationFailureMessage function", () => {
       })
     );
     const errorWithTrace = await getValidationFailureMessage(
-      { id: "id1", version: 2 } as IServiceInstanceModel,
+      { id: "id1", version: 2 } as ServiceInstanceModel,
       "lsm",
       "envId1",
       () => {

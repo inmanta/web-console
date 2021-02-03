@@ -1,14 +1,13 @@
 import { useState } from "react";
 import React from "react";
 import { Button, Modal, Alert } from "@patternfly/react-core";
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
-import { IStoreModel } from "@app/Models/CoreModels";
-import { useStoreDispatch, useStoreState, State } from "easy-peasy";
+import { ServiceInstanceModel } from "@/Core";
+import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import { ResourceTable } from "./ResourceTable";
 import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 
 export type ServiceInstanceForResources = Pick<
-  IServiceInstanceModel,
+  ServiceInstanceModel,
   "id" | "service_entity" | "version" | "environment"
 >;
 
@@ -17,15 +16,13 @@ export const ResourceModal: React.FunctionComponent<{
   keycloak?: Keycloak.KeycloakInstance;
 }> = (props) => {
   const instance = props.instance;
-  const storeDispatch = useStoreDispatch<IStoreModel>();
-  const resources = useStoreState(
-    (store: State<IStoreModel>) => store.projects.resources
-  );
+  const storeDispatch = useStoreDispatch();
+  const resources = useStoreState((store) => store.resources);
   const resourcesOfInstance = resources.resourcesOfInstance(instance.id);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
   const dispatch = (data) =>
-    storeDispatch.projects.resources.addResources({
+    storeDispatch.resources.addResources({
       instanceId: instance.id,
       resources: data,
     });

@@ -7,7 +7,7 @@ import "@app/app.css";
 import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import { createStore, StoreProvider } from "easy-peasy";
-import { IStoreModel, storeModel } from "./Models/CoreModels";
+import { StoreModel, storeModel } from "@/UI";
 import {
   Alert,
   Spinner,
@@ -19,7 +19,7 @@ const keycloakInitConfig = {
   onLoad: "login-required",
   flow: "implicit",
 } as KeycloakInitOptions;
-const storeInstance = createStore<IStoreModel>(storeModel);
+const storeInstance = createStore<StoreModel>(storeModel);
 
 const App: React.FunctionComponent<{
   keycloak: Keycloak.KeycloakInstance;

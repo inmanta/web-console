@@ -17,10 +17,10 @@ import { useState, Fragment, useEffect } from "react";
 import React from "react";
 import { ToolsIcon, CheckIcon, TimesIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./ServiceInventory";
-import { IServiceInstanceModel } from "@app/Models/LsmModels";
+import { ServiceInstanceModel } from "@/Core";
 import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
 
-type PickedInstance = Pick<IServiceInstanceModel, "id" | "version">;
+type PickedInstance = Pick<ServiceInstanceModel, "id" | "version">;
 
 const DiagnosticsModal: React.FunctionComponent<{
   serviceName: string;
@@ -78,7 +78,7 @@ const DiagnosticsModal: React.FunctionComponent<{
 };
 
 async function getValidationFailureMessage(
-  instance: IServiceInstanceModel,
+  instance: ServiceInstanceModel,
   inventoryUrl: string,
   environmentId: string | undefined,
   setErrorMessage: React.Dispatch<string>,
@@ -132,7 +132,7 @@ async function getValidationFailureMessage(
 }
 
 async function getDeploymentFailureMessage(
-  instance: IServiceInstanceModel,
+  instance: ServiceInstanceModel,
   inventoryUrl: string,
   environmentId,
   setErrorMessage,
