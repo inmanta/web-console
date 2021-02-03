@@ -32,3 +32,8 @@ export interface Row {
   version: number;
   instanceSetStateTargets: string[];
 }
+
+export interface State {
+  name: string;
+  label?: "info" | "success" | "danger" | "warning";
+}

@@ -142,6 +142,7 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
               <InventoryTable
                 instances={instancesOfCurrentService}
                 keycloak={keycloak}
+                serviceEntity={serviceEntity}
               />
             )}
           </Card>

@@ -1,9 +1,13 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
-import { ServiceInstanceModelWithTargetStates } from "@app/Models/LsmModels";
+import {
+  IServiceModel,
+  ServiceInstanceModelWithTargetStates,
+} from "@app/Models/LsmModels";
 import {
   AttributesPresenter,
   InstanceActionPresenter,
+  InstanceStatePresenter,
   MomentDatePresenter,
   TablePresenter,
 } from "./Presenters";
@@ -13,9 +17,14 @@ import { InstanceSetStateManager } from "./InstanceSetStateManager";
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
   keycloak?: KeycloakInstance;
+  serviceEntity: IServiceModel;
 }
 
-export const TableProvider: React.FC<Props> = ({ instances, keycloak }) => {
+export const TableProvider: React.FC<Props> = ({
+  instances,
+  keycloak,
+  serviceEntity,
+}) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
   const instanceSetStatePresenter = new InstanceSetStateManager(
@@ -27,10 +36,12 @@ export const TableProvider: React.FC<Props> = ({ instances, keycloak }) => {
     keycloak,
     instanceSetStatePresenter
   );
+  const statePresenter = new InstanceStatePresenter(instances, serviceEntity);
   const tablePresenter = new TablePresenter(
     datePresenter,
     attributesPresenter,
-    actionPresenter
+    actionPresenter,
+    statePresenter
   );
   const rows = tablePresenter.createFromInstances(instances);
 

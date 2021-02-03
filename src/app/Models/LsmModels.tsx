@@ -15,10 +15,10 @@ export interface IAttributeModel {
 
 export interface IStateModel {
   deleted: boolean;
-  label: string;
-  model_state: string;
+  label?: "info" | "success" | "danger" | "warning";
   name: string;
   purge_resources: boolean;
+  export_resources: boolean;
 }
 
 export interface ITransferModel {
