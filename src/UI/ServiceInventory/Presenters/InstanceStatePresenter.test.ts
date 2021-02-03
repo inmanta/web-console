@@ -1,5 +1,5 @@
+import { ServiceModel } from "@/Core";
 import { instance } from "@/Test";
-import { IServiceModel } from "@app/Models/LsmModels";
 import { InstanceStatePresenter } from "./InstanceStatePresenter";
 
 test("InstanceStatePresenter returns correct InstanceState when every input is correct", () => {
@@ -7,7 +7,7 @@ test("InstanceStatePresenter returns correct InstanceState when every input is c
   const partialEntity = {
     name: "cloudconnectv2",
     lifecycle: { states: [{ name: "creating", label: "info" }] },
-  } as IServiceModel;
+  } as ServiceModel;
 
   const statePresenter = new InstanceStatePresenter(instances, partialEntity);
 
@@ -23,7 +23,7 @@ test("InstanceStatePresenter returns null when the instance can't be found", () 
   const partialEntity = {
     name: "cloudconnectv2",
     lifecycle: { states: [{ name: "creating", label: "info" }] },
-  } as IServiceModel;
+  } as ServiceModel;
 
   const statePresenter = new InstanceStatePresenter(instances, partialEntity);
 
@@ -37,7 +37,7 @@ test("InstanceStatePresenter returns null when the state can't be found in the l
   const partialEntity = {
     name: "cloudconnectv2",
     lifecycle: { states: [{ name: "up", label: "success" }] },
-  } as IServiceModel;
+  } as ServiceModel;
 
   const statePresenter = new InstanceStatePresenter(instances, partialEntity);
 

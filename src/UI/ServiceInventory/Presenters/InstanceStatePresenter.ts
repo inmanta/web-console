@@ -1,7 +1,4 @@
-import {
-  IServiceModel,
-  ServiceInstanceModelWithTargetStates,
-} from "@app/Models/LsmModels";
+import { ServiceInstanceModelWithTargetStates, ServiceModel } from "@/Core";
 import { ReactElement } from "react";
 import { InstanceState } from "../Components/InstanceState";
 import { StatePresenter } from "./StatePresenter";
@@ -9,7 +6,7 @@ import { StatePresenter } from "./StatePresenter";
 export class InstanceStatePresenter implements StatePresenter {
   constructor(
     private readonly instances: ServiceInstanceModelWithTargetStates[],
-    private readonly serviceEntity: IServiceModel
+    private readonly serviceEntity: ServiceModel
   ) {}
 
   private getInstanceForId(
