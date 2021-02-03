@@ -11,7 +11,7 @@ import {
   Grid,
   GridItem,
 } from "@patternfly/react-core";
-import { TabProps } from "./InstanceDetails";
+import { TabProps } from "./ServiceInstanceDetails";
 
 interface Props extends TabProps {
   statusInfo: StatusInfo;

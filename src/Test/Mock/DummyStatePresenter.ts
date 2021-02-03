@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { StatePresenter } from "@/UI/Inventory/Presenters";
+import { StatePresenter } from "@/UI/ServiceInventory/Presenters";
 
 export class DummyStatePresenter implements StatePresenter {
   getForId(): ReactElement | null {
