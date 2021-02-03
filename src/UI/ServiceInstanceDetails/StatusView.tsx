@@ -19,7 +19,7 @@ interface Props extends TabProps {
 
 interface StatusInfo {
   instanceId: string;
-  state: string;
+  state: React.ReactElement | null;
   version: number;
   createdAt: string;
   updatedAt: string;

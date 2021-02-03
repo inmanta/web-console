@@ -45,6 +45,7 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
           onToggle={handleExpansionToggle(row.id.full)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
           actions={tablePresenter.getActionsFor(row.id.full)}
+          state={tablePresenter.getStateFor(row.id.full)}
         />
       ))}
     </TableComposable>

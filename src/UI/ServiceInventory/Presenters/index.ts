@@ -4,3 +4,5 @@ export * from "./DatePresenter";
 export * from "./InstanceActionPresenter";
 export * from "./MomentDatePresenter";
 export * from "./TablePresenter";
+export * from "./StatePresenter";
+export * from "./InstanceStatePresenter";

@@ -11,8 +11,8 @@ export interface AttributeModel {
 
 interface StateModel {
   deleted: boolean;
-  label: string;
-  model_state: string;
+  label?: "info" | "success" | "warning" | "danger";
+  export_resources: boolean;
   name: string;
   purge_resources: boolean;
 }

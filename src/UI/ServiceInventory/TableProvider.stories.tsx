@@ -4,6 +4,7 @@ import { instances } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
 import { createStore, StoreProvider } from "easy-peasy";
 import { StoreModel, storeModel } from "@/UI/Store";
+import { ServiceModel } from "@/Core";
 
 export default {
   title: "TableProvider",
@@ -22,4 +23,10 @@ export const Empty = Template.bind({});
 Empty.args = { instances: [] };
 
 export const Multiple = Template.bind({});
-Multiple.args = { instances };
+Multiple.args = {
+  instances,
+  serviceEntity: {
+    name: "cloudconnectv2",
+    lifecycle: { states: [{ name: "creating", label: "info" }] },
+  } as ServiceModel,
+};

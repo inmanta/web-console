@@ -4,6 +4,7 @@ import { words } from "@/UI";
 import { DatePresenter } from "./DatePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
 import { ActionPresenter } from "./ActionPresenter";
+import { StatePresenter } from "./StatePresenter";
 
 /**
  * The TablePresenter is responsible for formatting the domain data.
@@ -23,7 +24,8 @@ export class TablePresenter {
   constructor(
     private datePresenter: DatePresenter,
     private attributesPresenter: AttributesPresenter,
-    private actionPresenter: ActionPresenter
+    private actionPresenter: ActionPresenter,
+    private statePresenter: StatePresenter
   ) {}
 
   public getActionsFor(id: string): ReactElement | null {
@@ -44,10 +46,13 @@ export class TablePresenter {
     return this.numberOfColumns;
   }
 
+  public getStateFor(id: string): ReactElement | null {
+    return this.statePresenter.getForId(id);
+  }
+
   private instanceToRow(instance: ServiceInstanceModelWithTargetStates): Row {
     const {
       id,
-      state,
       candidate_attributes,
       active_attributes,
       rollback_attributes,
@@ -59,7 +64,6 @@ export class TablePresenter {
 
     return {
       id: this.getId(id),
-      state,
       attributesSummary: this.attributesPresenter.getSummary(
         candidate_attributes,
         active_attributes,

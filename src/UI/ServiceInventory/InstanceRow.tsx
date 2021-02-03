@@ -27,7 +27,7 @@ interface Props {
   onToggle: OnCollapse;
   numberOfColumns: number;
   actions: React.ReactElement | null;
-  setStateTargets?: string[];
+  state: React.ReactElement | null;
 }
 
 export const InstanceRow: React.FC<Props> = ({
@@ -37,6 +37,7 @@ export const InstanceRow: React.FC<Props> = ({
   onToggle,
   numberOfColumns,
   actions,
+  state,
 }) => (
   <Tbody isExpanded={false}>
     <Tr>
@@ -50,7 +51,7 @@ export const InstanceRow: React.FC<Props> = ({
       <Td dataLabel={words("inventory.column.id")}>
         <IdWithCopy id={row.id} />
       </Td>
-      <Td dataLabel={words("inventory.column.state")}>{row.state}</Td>
+      <Td dataLabel={words("inventory.column.state")}>{state}</Td>
       <Td dataLabel={words("inventory.column.attributesSummary")}>
         <AttributesSummaryView summary={row.attributesSummary} />
       </Td>
@@ -70,7 +71,7 @@ export const InstanceRow: React.FC<Props> = ({
               icon={<InfoCircleIcon />}
               statusInfo={{
                 instanceId: row.id.full,
-                state: row.state,
+                state: state,
                 version: row.version,
                 createdAt: row.createdAt.full,
                 updatedAt: row.updatedAt.full,

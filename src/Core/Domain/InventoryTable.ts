@@ -24,11 +24,15 @@ export interface Attributes {
 
 export interface Row {
   id: Id;
-  state: string;
   attributesSummary: AttributesSummary;
   attributes: Attributes;
   createdAt: DateInfo;
   updatedAt: DateInfo;
   version: number;
   instanceSetStateTargets: string[];
+}
+
+export interface State {
+  name: string;
+  label?: "info" | "success" | "danger" | "warning";
 }

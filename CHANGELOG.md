@@ -6,6 +6,7 @@
 - Add status tab to service inventory (#182)
 - Add attributes tab to service inventory (#162)
 - Show available set states on the status tab (#94)
+- Mark instance states according to labels (#153)
 
 # Release 1.4.0 (2020-12-17)
 
