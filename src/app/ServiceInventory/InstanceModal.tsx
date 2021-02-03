@@ -4,16 +4,16 @@ import React from "react";
 import { InstanceForm } from "./InstanceForm";
 import { PlusIcon, EditIcon, TrashAltIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./ServiceInventory";
-import {
-  IServiceInstanceModel,
-  IAttributeModel,
-  IInstanceAttributeModel,
-} from "@app/Models/LsmModels";
 import { DeleteForm } from "./DeleteForm";
 import _ from "lodash";
+import {
+  AttributeModel,
+  ServiceInstanceModel,
+  InstanceAttributeModel,
+} from "@/Core";
 
 type PickedInstance = Pick<
-  IServiceInstanceModel,
+  ServiceInstanceModel,
   | "id"
   | "version"
   | "candidate_attributes"
@@ -140,23 +140,21 @@ enum ButtonType {
   delete = "DELETE",
 }
 
-function getEditableAttributes(
-  attributes: IAttributeModel[]
-): IAttributeModel[] {
+function getEditableAttributes(attributes: AttributeModel[]): AttributeModel[] {
   return attributes.filter((attribute) => attribute.modifier === "rw+");
 }
 
 function getNotReadonlyAttributes(
-  attributes: IAttributeModel[]
-): IAttributeModel[] {
+  attributes: AttributeModel[]
+): AttributeModel[] {
   return attributes.filter((attribute) => attribute.modifier !== "r");
 }
 function getCurrentAttributes(
   instance: Pick<
-    IServiceInstanceModel,
+    ServiceInstanceModel,
     "candidate_attributes" | "active_attributes"
   >
-): IInstanceAttributeModel | null {
+): InstanceAttributeModel | null {
   return instance.candidate_attributes &&
     !_.isEmpty(instance.candidate_attributes)
     ? instance.candidate_attributes

@@ -1,9 +1,9 @@
 import React from "react";
-import { IServiceModel } from "@app/Models/LsmModels";
+import { ServiceModel } from "@/Core";
 import { CatalogTabs } from "./CatalogTabs";
 
 export const CatalogContent: React.FunctionComponent<{
-  service: IServiceModel;
+  service: ServiceModel;
 }> = (props) => {
   return <CatalogTabs service={props.service} />;
 };

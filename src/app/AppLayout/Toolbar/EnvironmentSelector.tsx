@@ -1,7 +1,6 @@
 import React from "react";
 import { ContextSelector, ContextSelectorItem } from "@patternfly/react-core";
-import { IStoreModel } from "@app/Models/CoreModels";
-import { useStoreDispatch, useStoreState, State } from "easy-peasy";
+import { useStoreDispatch, useStoreState } from "@/UI/Store";
 
 export interface IEnvironmentSelectorItem {
   displayName: string;
@@ -19,7 +18,7 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
   const [open, setOpen] = React.useState(false);
   const [filteredItems, setFilteredItems] = React.useState(environmentNames);
   const [searchValue, setSearchValue] = React.useState("");
-  const store = useStoreState((state: State<IStoreModel>) => state.projects);
+  const store = useStoreState((state) => state);
   const selectedProject = store.projects.getSelectedProject;
   let selectedProjectName = "undefined / undefined";
   if (selectedProject && store.environments.getSelectedEnvironment) {
@@ -28,7 +27,7 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
       " / " +
       store.environments.getSelectedEnvironment.name;
   }
-  const dispatch = useStoreDispatch<IStoreModel>();
+  const dispatch = useStoreDispatch();
 
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const onToggle = (event?: any, isOpen?: any) => {
@@ -42,7 +41,7 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
       (envItem) => envItem.displayName === value
     );
     if (matchingEnvItem && matchingEnvItem.environmentId) {
-      dispatch.projects.selectProjectAndEnvironment({
+      dispatch.selectProjectAndEnvironment({
         environment: matchingEnvItem.environmentId,
         project: matchingEnvItem.projectId,
       });

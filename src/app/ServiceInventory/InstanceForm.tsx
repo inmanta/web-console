@@ -1,18 +1,15 @@
 import { Form, ActionGroup, Button, Alert } from "@patternfly/react-core";
 import React, { useState } from "react";
-import {
-  IAttributeModel,
-  IInstanceAttributeModel,
-} from "@app/Models/LsmModels";
+import { AttributeModel, InstanceAttributeModel } from "@/Core";
 import { IRequestParams, fetchInmantaApi } from "@app/utils/fetchInmantaApi";
 import { InstanceFormInput, isNumberType } from "./InstanceFormInput";
 import _ from "lodash";
 
 const InstanceForm: React.FunctionComponent<{
-  attributeModels: IAttributeModel[];
+  attributeModels: AttributeModel[];
   requestParams: IRequestParams;
   closeModal?: () => void;
-  originalAttributes?: IInstanceAttributeModel;
+  originalAttributes?: InstanceAttributeModel;
   update?: boolean;
 }> = (props) => {
   const initialAttributes = extractInitialAttributes(
@@ -87,9 +84,9 @@ const InstanceForm: React.FunctionComponent<{
 };
 
 function extractInitialAttributes(
-  attributeModels: IAttributeModel[],
-  originalAttributes?: IInstanceAttributeModel
-): IInstanceAttributeModel {
+  attributeModels: AttributeModel[],
+  originalAttributes?: InstanceAttributeModel
+): InstanceAttributeModel {
   return attributeModels.reduce((attributes, attribute) => {
     if (
       attribute.type.includes("bool") &&
@@ -128,7 +125,7 @@ function toOptionalBoolean(value?: string): boolean | null {
 }
 
 function ensureAttributeType(
-  attributeModels: IAttributeModel[],
+  attributeModels: AttributeModel[],
   attributeName: string,
   /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any */
   value: any
@@ -158,8 +155,8 @@ function ensureAttributeType(
 }
 
 function parseAttributes(
-  attributes: IInstanceAttributeModel,
-  attributeModels: IAttributeModel[]
+  attributes: InstanceAttributeModel,
+  attributeModels: AttributeModel[]
 ) {
   const parsedAttributes = Object.assign(
     {},
@@ -176,9 +173,9 @@ function parseAttributes(
 
 async function submitUpdate(
   requestParams: IRequestParams,
-  attributeValue: IInstanceAttributeModel,
-  attributeModels: IAttributeModel[],
-  originalAttributes?: IInstanceAttributeModel
+  attributeValue: InstanceAttributeModel,
+  attributeModels: AttributeModel[],
+  originalAttributes?: InstanceAttributeModel
 ) {
   requestParams.method = "PATCH";
   const parsedAttributes = parseAttributes(attributeValue, attributeModels);
@@ -192,8 +189,8 @@ async function submitUpdate(
 
 async function submitCreate(
   requestParams: IRequestParams,
-  attributes: IInstanceAttributeModel,
-  attributeModels: IAttributeModel[]
+  attributes: InstanceAttributeModel,
+  attributeModels: AttributeModel[]
 ) {
   requestParams.method = "POST";
   const parsedAttributes = parseAttributes(attributes, attributeModels);
@@ -207,9 +204,9 @@ async function submitCreate(
 }
 
 function getChangedAttributesOnly(
-  attributesAfterChanges: IInstanceAttributeModel,
-  originalAttributes?: IInstanceAttributeModel
-): IInstanceAttributeModel {
+  attributesAfterChanges: InstanceAttributeModel,
+  originalAttributes?: InstanceAttributeModel
+): InstanceAttributeModel {
   if (!originalAttributes) {
     return attributesAfterChanges;
   }

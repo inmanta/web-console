@@ -1,9 +1,6 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
-import {
-  IServiceModel,
-  ServiceInstanceModelWithTargetStates,
-} from "@app/Models/LsmModels";
+import { ServiceInstanceModelWithTargetStates, ServiceModel } from "@/Core";
 import {
   AttributesPresenter,
   InstanceActionPresenter,
@@ -17,7 +14,7 @@ import { InstanceSetStateManager } from "./InstanceSetStateManager";
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
   keycloak?: KeycloakInstance;
-  serviceEntity: IServiceModel;
+  serviceEntity: ServiceModel;
 }
 
 export const TableProvider: React.FC<Props> = ({

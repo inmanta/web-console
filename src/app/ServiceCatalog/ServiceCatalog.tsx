@@ -1,33 +1,29 @@
 import * as React from "react";
 import { PageSection, Alert } from "@patternfly/react-core";
 import { CatalogDataList } from "./CatalogDataList";
-import { useStoreState, State, useStoreDispatch } from "easy-peasy";
-import { IStoreModel } from "@app/Models/CoreModels";
+import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi } from "../utils/fetchInmantaApi";
 import { useKeycloak } from "react-keycloak";
 
 const ServiceCatalog: React.FC = () => {
   const serviceCatalogUrl = "/lsm/v1/service_catalog";
-  const projectStore = useStoreState(
-    (store: State<IStoreModel>) => store.projects
-  );
-  const storeDispatch = useStoreDispatch<IStoreModel>();
+  const store = useStoreState((store) => store);
+  const storeDispatch = useStoreDispatch();
   const [errorMessage, setErrorMessage] = React.useState("");
-  const environmentId = projectStore.environments.getSelectedEnvironment.id
-    ? projectStore.environments.getSelectedEnvironment.id
+  const environmentId = store.environments.getSelectedEnvironment.id
+    ? store.environments.getSelectedEnvironment.id
     : "";
-  const servicesOfEnvironment = projectStore.services.getServicesOfEnvironment(
+  const servicesOfEnvironment = store.services.getServicesOfEnvironment(
     environmentId
   );
-  const dispatch = (data) =>
-    storeDispatch.projects.services.updateServices(data);
+  const dispatch = (data) => storeDispatch.services.updateServices(data);
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
   const dispatchDelete = (data) => {
     const urlParts = data.urlEndpoint.split("/");
     const serviceName = urlParts[urlParts.length - 1];
-    storeDispatch.projects.services.removeSingleService(serviceName);
+    storeDispatch.services.removeSingleService(serviceName);
   };
   let keycloak;
   if (shouldUseAuth) {

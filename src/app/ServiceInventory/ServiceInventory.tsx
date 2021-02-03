@@ -11,13 +11,12 @@ import {
   ToolbarContent,
   AlertGroup,
 } from "@patternfly/react-core";
-import { useStoreState, State, useStoreDispatch } from "easy-peasy";
-import { IStoreModel } from "@app/Models/CoreModels";
+import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import { InventoryTable } from "@/UI/ServiceInventory";
 import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
 import { InstanceModal, ButtonType } from "./InstanceModal";
-import { IAttributeModel } from "@app/Models/LsmModels";
+import { AttributeModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 
 interface Props {
@@ -31,16 +30,14 @@ interface Props {
 const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   const serviceName = props.match.params.id;
   const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}`;
-  const projectStore = useStoreState(
-    (store: State<IStoreModel>) => store.projects
-  );
-  const storeDispatch = useStoreDispatch<IStoreModel>();
+  const store = useStoreState((store) => store);
+  const storeDispatch = useStoreDispatch();
   const [errorMessage, setErrorMessage] = React.useState("");
   const [instanceErrorMessage, setInstanceErrorMessage] = React.useState("");
-  const instancesOfCurrentService = projectStore.serviceInstances.instancesWithTargetStates(
+  const instancesOfCurrentService = store.serviceInstances.instancesWithTargetStates(
     serviceName
   );
-  const environmentId = projectStore.environments.getSelectedEnvironment.id;
+  const environmentId = store.environments.getSelectedEnvironment.id;
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
   let keycloak;
@@ -49,7 +46,7 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
     [keycloak] = useKeycloak();
   }
   const dispatchUpdateInstances = (data) =>
-    storeDispatch.projects.serviceInstances.updateInstances({
+    storeDispatch.serviceInstances.updateInstances({
       serviceName,
       instances: data,
     });
@@ -62,9 +59,9 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
     keycloak,
   };
   const dispatchEntity = (data) =>
-    storeDispatch.projects.services.addSingleService(data);
+    storeDispatch.services.addSingleService(data);
   React.useEffect(() => {
-    ensureServiceEntityIsLoaded(projectStore, serviceName, {
+    ensureServiceEntityIsLoaded(store, serviceName, {
       urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`,
       dispatch: dispatchEntity,
       isEnvironmentIdRequired: true,
@@ -78,7 +75,7 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   }, [storeDispatch, serviceName, instancesOfCurrentService, requestParams]);
 
   useInterval(() => fetchInmantaApi(requestParams), 5000);
-  const serviceEntity = projectStore.services.byId[serviceName];
+  const serviceEntity = store.services.byId[serviceName];
   const refreshInstances = async () => fetchInmantaApi(requestParams);
   return (
     <PageSection className={"horizontally-scrollable"}>
@@ -153,11 +150,11 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
 };
 
 async function ensureServiceEntityIsLoaded(
-  projectStore,
+  store,
   serviceName: string,
   requestParams: IRequestParams
 ) {
-  const serviceEntity = projectStore.services.byId[serviceName];
+  const serviceEntity = store.services.byId[serviceName];
   if (serviceEntity) {
     return;
   }
@@ -165,7 +162,7 @@ async function ensureServiceEntityIsLoaded(
 }
 
 interface IInventoryContextData {
-  attributes: IAttributeModel[];
+  attributes: AttributeModel[];
   environmentId: string | undefined;
   inventoryUrl: string;
   setErrorMessage: React.Dispatch<string>;

@@ -18,14 +18,14 @@ import {
   ModalVariant,
   AlertGroup,
 } from "@patternfly/react-core";
-import { IServiceModel } from "@app/Models/LsmModels";
+import { ServiceModel } from "@/Core";
 import { CatalogContent } from "./CatalogContent";
 import { Link } from "react-router-dom";
 import { IRequestParams } from "@app/utils/fetchInmantaApi";
 import { DeleteForm } from "@app/ServiceInventory/DeleteForm";
 
 export const CatalogDataList: React.FunctionComponent<{
-  services?: IServiceModel[];
+  services?: ServiceModel[];
   environmentId: string;
   serviceCatalogUrl: string;
   keycloak?: Keycloak.KeycloakInstance;
