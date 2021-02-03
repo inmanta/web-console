@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { TabProps } from "./ServiceInstanceDetails";
 import { useStoreDispatch, useStoreState } from "../Store";
 
@@ -16,23 +16,30 @@ export const ResourcesView: React.FC<Props> = ({
   environment,
 }) => {
   const dispatch = useStoreDispatch();
-
   const resources = useStoreState((store) =>
     store.resources.resourcesOfInstance(id)
   );
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    dispatch.resources.fetchResources({
-      id,
-      serviceEntity: entity,
-      version,
-      environment,
-    });
+    const fetchResources = async () => {
+      const error = await dispatch.resources.fetchResources({
+        id,
+        serviceEntity: entity,
+        version,
+        environment,
+      });
+      setError(error);
+    };
+    fetchResources();
   }, []);
 
   return (
-    <pre>
-      <code>{JSON.stringify(resources, null, 4)}</code>
-    </pre>
+    <>
+      {error && <div>{error}</div>}
+      <pre>
+        <code>{JSON.stringify(resources, null, 4)}</code>
+      </pre>
+    </>
   );
 };

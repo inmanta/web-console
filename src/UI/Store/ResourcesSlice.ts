@@ -14,7 +14,10 @@ export interface ResourcesSlice {
   >;
   fetchResources: Thunk<
     ResourcesSlice,
-    { id: string; serviceEntity: string; version: string; environment: string }
+    { id: string; serviceEntity: string; version: string; environment: string },
+    unknown,
+    Record<string, unknown>,
+    Promise<string | null>
   >;
 }
 
@@ -47,14 +50,12 @@ export const resourcesSlice: ResourcesSlice = {
         version,
         environment
       );
-      if (Either.isLeft(result)) {
-        // what now? show error...
-      } else {
-        actions.addResources({
-          instanceId: id,
-          resources: result.value as ResourceModel[],
-        });
-      }
+      if (Either.isLeft(result)) return result.value;
+      actions.addResources({
+        instanceId: id,
+        resources: result.value as ResourceModel[],
+      });
+      return null;
     }
   ),
 };
