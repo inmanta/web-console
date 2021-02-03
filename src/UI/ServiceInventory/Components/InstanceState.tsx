@@ -9,13 +9,6 @@ import {
 import React from "react";
 
 export const InstanceState: React.FC<State> = ({ name, label }) => {
-  return getIcon(name, label);
-};
-
-function getIcon(
-  name: string,
-  label?: "danger" | "warning" | "success" | "info"
-) {
   switch (label) {
     case "danger":
       return (
@@ -43,4 +36,4 @@ function getIcon(
         </Label>
       );
   }
-}
+};

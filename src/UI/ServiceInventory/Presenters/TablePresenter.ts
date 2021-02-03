@@ -54,7 +54,6 @@ export class TablePresenter {
   private instanceToRow(instance: ServiceInstanceModelWithTargetStates): Row {
     const {
       id,
-      state,
       candidate_attributes,
       active_attributes,
       rollback_attributes,
@@ -66,7 +65,6 @@ export class TablePresenter {
 
     return {
       id: this.getId(id),
-      state,
       attributesSummary: this.attributesPresenter.getSummary(
         candidate_attributes,
         active_attributes,

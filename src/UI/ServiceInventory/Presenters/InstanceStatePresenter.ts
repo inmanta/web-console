@@ -23,6 +23,7 @@ export class InstanceStatePresenter implements StatePresenter {
     if (typeof instance === "undefined") {
       return null;
     }
+    // The service entity lifecycle contains all of the states an instance of that entity can reach
     const lifecycleState = this.serviceEntity.lifecycle.states.find(
       (state) => state.name === instance.state
     );

@@ -24,7 +24,6 @@ export interface Attributes {
 
 export interface Row {
   id: Id;
-  state: string;
   attributesSummary: AttributesSummary;
   attributes: Attributes;
   createdAt: DateInfo;
