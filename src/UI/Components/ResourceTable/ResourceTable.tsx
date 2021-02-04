@@ -35,13 +35,17 @@ export const ResourceTable: React.FC<Props> = ({
         Jump to Details
       </Button>
     );
-    const Icon = getStatusIcon(resource.resource_state);
+
     const formattedState = (
-      <React.Fragment>
-        {" "}
-        {<Icon key={resource.resource_id} />} {resource.resource_state}
-      </React.Fragment>
+      <>
+        <StatusIcon
+          state={resource.resource_state}
+          key={resource.resource_id}
+        />
+        {resource.resource_state}
+      </>
     );
+
     return {
       cells: [resource.resource_id, { title: linkToDetails }, formattedState],
     };
@@ -60,13 +64,13 @@ export const ResourceTable: React.FC<Props> = ({
   );
 };
 
-export function getStatusIcon(resourceState: string): React.FC {
-  switch (resourceState) {
+const StatusIcon: React.FC<{ state: string }> = ({ state }) => {
+  switch (state) {
     case "deployed":
-      return () => <CheckSquareIcon color="#06c" />;
+      return <CheckSquareIcon color="#06c" />;
     case "failed":
-      return () => <TimesCircleIcon color="#c9190b" />;
+      return <TimesCircleIcon color="#c9190b" />;
     default:
-      return () => <></>;
+      return null;
   }
-}
+};

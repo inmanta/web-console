@@ -4,9 +4,10 @@ import { InstanceForResources, RemoteData, ResourceModel } from "@/Core";
 import {
   ResourceTable,
   HrefCreatorImpl,
-  LoadingResourceTable,
-  FailedResourceTable,
-  EmptyResourceTable,
+  FillerResourceTable,
+  LoadingFiller,
+  FailedFiller,
+  EmptyFiller,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ServicesContext } from "../ServicesContext";
@@ -35,11 +36,18 @@ export const ResourcesView: React.FC<Props> = ({ instance }) => {
 
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,
-    loading: () => <LoadingResourceTable caption={caption} />,
-    failed: (error) => <FailedResourceTable caption={caption} error={error} />,
+    loading: () => (
+      <FillerResourceTable caption={caption} filler={<LoadingFiller />} />
+    ),
+    failed: (error) => (
+      <FillerResourceTable
+        caption={caption}
+        filler={<FailedFiller error={error} />}
+      />
+    ),
     success: (resources) =>
       resources.length === 0 ? (
-        <EmptyResourceTable caption={caption} />
+        <FillerResourceTable caption={caption} filler={<EmptyFiller />} />
       ) : (
         <ResourceTable
           caption={caption}
