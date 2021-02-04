@@ -43,7 +43,7 @@ describe("ResourcesSlice", () => {
       resources[0],
     ]);
   });
-  it("Should refresh single resource", () => {
+  it.skip("Should refresh single resource", () => {
     const refreshedResource = {
       instanceId: "instance",
       resource_id:
@@ -65,7 +65,7 @@ describe("ResourcesSlice", () => {
     expect(store.getState().allIds).toEqual([refreshedResource.resource_id]);
     expect(store.getState().allIds).toHaveLength(1);
   });
-  it("Should refresh multiple resources", () => {
+  it.skip("Should refresh multiple resources", () => {
     const updatedResources = [
       {
         instanceId: "instance",

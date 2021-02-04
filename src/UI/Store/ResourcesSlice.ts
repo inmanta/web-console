@@ -1,5 +1,10 @@
 import { Action, action, Computed, computed, Thunk, thunk } from "easy-peasy";
-import { Either, RemoteData, ResourceModel } from "@/Core";
+import {
+  Either,
+  InstanceForResources,
+  RemoteData,
+  ResourceModel,
+} from "@/Core";
 import { Injections } from "./Setup";
 
 export interface ResourcesSlice {
@@ -15,7 +20,7 @@ export interface ResourcesSlice {
   >;
   fetchResources: Thunk<
     ResourcesSlice,
-    { id: string; serviceEntity: string; version: string; environment: string },
+    { instance: InstanceForResources },
     Injections,
     Record<string, unknown>,
     Promise<RemoteData.Type<string, unknown>>
@@ -24,8 +29,6 @@ export interface ResourcesSlice {
 
 export const resourcesSlice: ResourcesSlice = {
   addResources: action((state, payload) => {
-    state.allIds = [];
-    state.byId = {};
     payload.resources.map((resource) => {
       state.byId[resource.resource_id] = resource;
       state.byId[resource.resource_id].instanceId = payload.instanceId;
@@ -42,18 +45,12 @@ export const resourcesSlice: ResourcesSlice = {
     );
   }),
   fetchResources: thunk(async (actions, payload, helpers) => {
-    const { id, serviceEntity, version, environment } = payload;
+    const { instance } = payload;
     const { resourceFetcher } = helpers.injections;
-
-    const result = await resourceFetcher.getResources(
-      id,
-      serviceEntity,
-      version,
-      environment
-    );
+    const result = await resourceFetcher.getResources(instance);
     if (Either.isRight(result)) {
       actions.addResources({
-        instanceId: id,
+        instanceId: instance.id,
         resources: result.value as ResourceModel[],
       });
     }

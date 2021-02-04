@@ -30,6 +30,8 @@ export interface Row {
   updatedAt: DateInfo;
   version: number;
   instanceSetStateTargets: string[];
+  service_entity: string;
+  environment: string;
 }
 
 export interface State {

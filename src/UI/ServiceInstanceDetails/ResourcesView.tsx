@@ -1,31 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { TabProps } from "./ServiceInstanceDetails";
 import { useStoreDispatch, useStoreState } from "../Store";
-import { RemoteData } from "@/Core";
+import { InstanceForResources, RemoteData } from "@/Core";
 import {
   ResourceTable,
   HrefCreatorImpl,
   LoadingResourceTable,
   FailedResourceTable,
+  EmptyResourceTable,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props extends TabProps {
-  id: string;
-  entity: string;
-  version: string;
-  environment: string;
+  instance: InstanceForResources;
 }
 
-export const ResourcesView: React.FC<Props> = ({
-  id,
-  entity,
-  version,
-  environment,
-}) => {
+export const ResourcesView: React.FC<Props> = ({ instance }) => {
   const dispatch = useStoreDispatch();
   const resources = useStoreState((store) =>
-    store.resources.resourcesOfInstance(id)
+    store.resources.resourcesOfInstance(instance.id)
   );
   const [result, setResult] = useState<RemoteData.Type<string, unknown>>(
     RemoteData.notAsked()
@@ -33,31 +26,27 @@ export const ResourcesView: React.FC<Props> = ({
 
   useEffect(() => {
     const fetchResources = async () => {
-      setResult(
-        await dispatch.resources.fetchResources({
-          id,
-          serviceEntity: entity,
-          version,
-          environment,
-        })
-      );
+      setResult(await dispatch.resources.fetchResources({ instance }));
     };
     setResult(RemoteData.loading());
     fetchResources();
   }, []);
 
-  const caption = words("inventory.resourcesTable.caption")(id);
+  const caption = words("inventory.resourcesTable.caption")(instance.id);
 
   return RemoteData.fold<string, unknown, JSX.Element | null>({
     notAsked: () => null,
     loading: () => <LoadingResourceTable caption={caption} />,
     failed: (error) => <FailedResourceTable caption={caption} error={error} />,
-    success: () => (
-      <ResourceTable
-        caption={caption}
-        hrefCreator={new HrefCreatorImpl(environment)}
-        resources={resources}
-      />
-    ),
+    success: () =>
+      resources.length === 0 ? (
+        <EmptyResourceTable caption={caption} />
+      ) : (
+        <ResourceTable
+          caption={caption}
+          hrefCreator={new HrefCreatorImpl(instance.environment)}
+          resources={resources}
+        />
+      ),
   })(result);
 };

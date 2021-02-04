@@ -1,21 +1,21 @@
-import { Either, ResourceFetcher } from "@/Core";
+import { Either, InstanceForResources, ResourceFetcher } from "@/Core";
 
 export class ResourceFetcherImpl implements ResourceFetcher {
   private getBaseUrl() {
     return process.env.API_BASEURL ? process.env.API_BASEURL : "";
   }
 
-  private getResourcesUrl(entity: string, id: string, version: string) {
+  private getResourcesUrl(entity: string, id: string, version: number) {
     return `${this.getBaseUrl()}/lsm/v1/service_inventory/${entity}/${id}/resources?current_version=${version}`;
   }
 
-  async getResources(
-    id: string,
-    entity: string,
-    version: string,
-    environment: string
-  ): Promise<Either.Type<string, unknown>> {
-    const url = this.getResourcesUrl(entity, id, version);
+  async getResources({
+    id,
+    service_entity,
+    environment,
+    version,
+  }: InstanceForResources): Promise<Either.Type<string, unknown>> {
+    const url = this.getResourcesUrl(service_entity, id, version);
     const headers = { "X-Inmanta-Tid": environment };
 
     try {

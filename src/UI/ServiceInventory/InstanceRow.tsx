@@ -6,7 +6,7 @@ import {
   ExpandableRowContent,
   OnCollapse,
 } from "@patternfly/react-table";
-import { Row } from "@/Core";
+import { InstanceForResources, Row } from "@/Core";
 import { words } from "@/UI";
 import {
   AttributesSummaryView,
@@ -17,8 +17,13 @@ import {
   ServiceInstanceDetails,
   AttributesView,
   StatusView,
+  ResourcesView,
 } from "@/UI/ServiceInstanceDetails";
-import { InfoCircleIcon, ListIcon } from "@patternfly/react-icons";
+import {
+  AutomationIcon,
+  InfoCircleIcon,
+  ListIcon,
+} from "@patternfly/react-icons";
 
 interface Props {
   row: Row;
@@ -28,6 +33,7 @@ interface Props {
   numberOfColumns: number;
   actions: React.ReactElement | null;
   state: React.ReactElement | null;
+  instanceForResources: InstanceForResources;
 }
 
 export const InstanceRow: React.FC<Props> = ({
@@ -38,6 +44,7 @@ export const InstanceRow: React.FC<Props> = ({
   numberOfColumns,
   actions,
   state,
+  instanceForResources,
 }) => (
   <Tbody isExpanded={false}>
     <Tr>
@@ -82,6 +89,11 @@ export const InstanceRow: React.FC<Props> = ({
               attributes={row.attributes}
               title={words("inventory.tabs.attributes")}
               icon={<ListIcon />}
+            />
+            <ResourcesView
+              instance={instanceForResources}
+              title={words("inventory.tabs.resources")}
+              icon={<AutomationIcon />}
             />
           </ServiceInstanceDetails>
         </ExpandableRowContent>

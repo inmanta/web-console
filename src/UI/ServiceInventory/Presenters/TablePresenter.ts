@@ -60,6 +60,8 @@ export class TablePresenter {
       last_updated,
       version,
       instanceSetStateTargets,
+      environment,
+      service_entity,
     } = instance;
 
     return {
@@ -78,6 +80,8 @@ export class TablePresenter {
       updatedAt: this.datePresenter.get(last_updated),
       version: version,
       instanceSetStateTargets,
+      environment,
+      service_entity,
     };
   }
 
