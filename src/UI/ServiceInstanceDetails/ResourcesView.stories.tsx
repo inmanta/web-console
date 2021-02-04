@@ -1,6 +1,6 @@
 import React from "react";
 import { ResourcesView } from "./ResourcesView";
-import { DummyResourceFetcher } from "@/Test";
+import { DummyResourceFetcher, Resource } from "@/Test";
 import { ServicesContext } from "../ServicesContext";
 
 export default {
@@ -17,7 +17,7 @@ const instance = {
 
 export const Loading: React.FC = () => (
   <ServicesContext.Provider
-    value={{ resourceFetcher: new DummyResourceFetcher("Loading") }}
+    value={{ resourceFetcher: new DummyResourceFetcher({ kind: "Loading" }) }}
   >
     <ResourcesView instance={instance} title="" icon={<></>} />
   </ServicesContext.Provider>
@@ -25,7 +25,12 @@ export const Loading: React.FC = () => (
 
 export const Empty: React.FC = () => (
   <ServicesContext.Provider
-    value={{ resourceFetcher: new DummyResourceFetcher("Empty") }}
+    value={{
+      resourceFetcher: new DummyResourceFetcher({
+        kind: "Success",
+        resources: [],
+      }),
+    }}
   >
     <ResourcesView instance={instance} title="" icon={<></>} />
   </ServicesContext.Provider>
@@ -33,7 +38,12 @@ export const Empty: React.FC = () => (
 
 export const Failed: React.FC = () => (
   <ServicesContext.Provider
-    value={{ resourceFetcher: new DummyResourceFetcher("Failed") }}
+    value={{
+      resourceFetcher: new DummyResourceFetcher({
+        kind: "Failed",
+        error: "error",
+      }),
+    }}
   >
     <ResourcesView instance={instance} title="" icon={<></>} />
   </ServicesContext.Provider>
@@ -41,7 +51,12 @@ export const Failed: React.FC = () => (
 
 export const Success: React.FC = () => (
   <ServicesContext.Provider
-    value={{ resourceFetcher: new DummyResourceFetcher("Success") }}
+    value={{
+      resourceFetcher: new DummyResourceFetcher({
+        kind: "Success",
+        resources: Resource.resources,
+      }),
+    }}
   >
     <ResourcesView instance={instance} title="" icon={<></>} />
   </ServicesContext.Provider>

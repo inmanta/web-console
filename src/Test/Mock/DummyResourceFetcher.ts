@@ -1,13 +1,16 @@
 import { Either, ResourceFetcher, ResourceModel } from "@/Core";
-import { Resource } from "@/Test";
 
-type Resolve = "Loading" | "Failed" | "Empty" | "Success";
+type Outcome =
+  | { kind: "Loading" }
+  | { kind: "Failed"; error: string }
+  | { kind: "Success"; resources: ResourceModel[] };
 
 export class DummyResourceFetcher implements ResourceFetcher {
-  constructor(private readonly resolve: Resolve) {}
+  constructor(private readonly outcome: Outcome) {}
 
   getResources(): Promise<Either.Type<string, ResourceModel[]>> {
-    switch (this.resolve) {
+    const { outcome } = this;
+    switch (outcome.kind) {
       case "Loading":
         return new Promise(() => {
           undefined;
@@ -15,17 +18,12 @@ export class DummyResourceFetcher implements ResourceFetcher {
 
       case "Failed":
         return new Promise((resolve) => {
-          resolve(Either.left("error"));
-        });
-
-      case "Empty":
-        return new Promise((resolve) => {
-          resolve(Either.right([]));
+          resolve(Either.left(outcome.error));
         });
 
       case "Success":
         return new Promise((resolve) => {
-          resolve(Either.right(Resource.resources));
+          resolve(Either.right(outcome.resources));
         });
     }
   }

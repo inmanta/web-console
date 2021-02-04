@@ -7,5 +7,8 @@ export interface ServicesBundle {
 }
 
 export const ServicesContext = createContext<ServicesBundle>({
-  resourceFetcher: new DummyResourceFetcher("Success"),
+  resourceFetcher: new DummyResourceFetcher({
+    kind: "Failed",
+    error: "Fallback for default DummyResourceFetcher",
+  }),
 });
