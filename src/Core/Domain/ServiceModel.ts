@@ -17,7 +17,7 @@ interface StateModel {
   purge_resources: boolean;
 }
 
-interface TransferModel {
+export interface TransferModel {
   api_set_state: boolean;
   auto: boolean;
   config_name: string;

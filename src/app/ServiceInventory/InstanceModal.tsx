@@ -1,5 +1,5 @@
-import { Modal, Button, ModalVariant } from "@patternfly/react-core";
-import { useState } from "react";
+import { Modal, Button, ModalVariant, Tooltip } from "@patternfly/react-core";
+import { ReactElement, useState } from "react";
 import React from "react";
 import { InstanceForm } from "./InstanceForm";
 import { PlusIcon, EditIcon, TrashAltIcon } from "@patternfly/react-icons";
@@ -11,6 +11,7 @@ import {
   ServiceInstanceModel,
   InstanceAttributeModel,
 } from "@/Core";
+import { words } from "@/UI";
 
 type PickedInstance = Pick<
   ServiceInstanceModel,
@@ -26,6 +27,7 @@ const InstanceModal: React.FunctionComponent<{
   serviceName: string;
   instance?: PickedInstance;
   keycloak?: Keycloak.KeycloakInstance;
+  isDisabled?: boolean;
 }> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleModalToggle = () => {
@@ -34,25 +36,33 @@ const InstanceModal: React.FunctionComponent<{
   let ModalButton;
   let modalHeaderText = "";
   let modalTitle = "";
-  const AddModalButton = () => (
+  const AddModalButton = (
     <Button
       variant="primary"
       onClick={handleModalToggle}
       id="add-instance-button"
     >
-      <PlusIcon /> Add instance{" "}
+      <PlusIcon /> Add instance
     </Button>
   );
-  const EditModalButton = () => (
-    <Button variant="secondary" onClick={handleModalToggle}>
-      {" "}
-      <EditIcon /> Edit{" "}
+  const EditModalButton = (
+    <Button
+      variant="secondary"
+      onClick={handleModalToggle}
+      isAriaDisabled={props.isDisabled}
+      style={props.isDisabled ? { cursor: "not-allowed" } : {}}
+    >
+      <EditIcon /> Edit
     </Button>
   );
-  const DeleteModalButton = () => (
-    <Button variant="danger" onClick={handleModalToggle}>
-      {" "}
-      <TrashAltIcon /> Delete{" "}
+  const DeleteModalButton = (
+    <Button
+      variant="danger"
+      onClick={handleModalToggle}
+      isAriaDisabled={props.isDisabled}
+      style={props.isDisabled ? { cursor: "not-allowed" } : {}}
+    >
+      <TrashAltIcon /> Delete
     </Button>
   );
 
@@ -65,18 +75,26 @@ const InstanceModal: React.FunctionComponent<{
     modalHeaderText = `Change attributes of instance ${
       props.instance ? props.instance.id : ""
     }`;
-    ModalButton = EditModalButton;
+    ModalButton = props.isDisabled ? (
+      <DisabledTooltipWrapper>{EditModalButton}</DisabledTooltipWrapper>
+    ) : (
+      EditModalButton
+    );
   } else if (props.buttonType === ButtonType.delete) {
     modalTitle = "Delete instance";
     modalHeaderText = `Are you sure you want to delete instance ${
       props.instance ? props.instance.id : ""
     } of service entity ${props.serviceName}?`;
-    ModalButton = DeleteModalButton;
+    ModalButton = props.isDisabled ? (
+      <DisabledTooltipWrapper>{DeleteModalButton}</DisabledTooltipWrapper>
+    ) : (
+      DeleteModalButton
+    );
   }
 
   return (
     <React.Fragment>
-      <ModalButton />
+      {ModalButton}
       <Modal
         variant={ModalVariant.small}
         isOpen={isOpen}
@@ -131,6 +149,21 @@ const InstanceModal: React.FunctionComponent<{
         </InventoryContext.Consumer>
       </Modal>
     </React.Fragment>
+  );
+};
+
+// Type of children from the Tooltip component of Patternfly
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+const DisabledTooltipWrapper: React.FC<{ children?: ReactElement<any> }> = ({
+  children,
+}) => {
+  return (
+    <Tooltip
+      entryDelay={200}
+      content={words("inventory.statustab.actionDisabled")}
+    >
+      {children}
+    </Tooltip>
   );
 };
 

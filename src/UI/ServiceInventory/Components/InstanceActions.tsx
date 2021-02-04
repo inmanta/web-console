@@ -7,9 +7,11 @@ import { DescriptionList, DescriptionListGroup } from "@patternfly/react-core";
 import { ResourceModal } from "@app/ServiceInventory/ResourceModal";
 import { SetStateAction } from "./SetStateAction";
 
-interface Props {
+export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
   keycloak?: KeycloakInstance;
+  editDisabled: boolean;
+  deleteDisabled: boolean;
   onSetInstanceState:
     | ((
         instanceId: string,
@@ -19,9 +21,11 @@ interface Props {
     | null;
 }
 
-export const InstanceActions: React.FC<Props> = ({
+export const InstanceActions: React.FC<InstanceActionsProps> = ({
   instance,
   keycloak,
+  editDisabled,
+  deleteDisabled,
   onSetInstanceState,
 }) => {
   if (instance.state === "terminated") return null;
@@ -29,6 +33,7 @@ export const InstanceActions: React.FC<Props> = ({
     <DescriptionList>
       <DescriptionListGroup>
         <InstanceModal
+          isDisabled={editDisabled}
           buttonType={ButtonType.edit}
           serviceName={instance.service_entity}
           instance={instance}
@@ -37,6 +42,7 @@ export const InstanceActions: React.FC<Props> = ({
       </DescriptionListGroup>
       <DescriptionListGroup>
         <InstanceModal
+          isDisabled={deleteDisabled}
           buttonType={ButtonType.delete}
           serviceName={instance.service_entity}
           instance={instance}

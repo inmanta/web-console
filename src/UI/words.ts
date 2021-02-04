@@ -39,6 +39,8 @@ const dict = {
   no: "No",
   "inventory.resourcesTable.caption": (id: string) =>
     `Resources for instance with id ${id}`,
+  "inventory.statustab.actionDisabled":
+    "This action is not supported by the lifecycle in the current state",
   null: "null",
 };
 
