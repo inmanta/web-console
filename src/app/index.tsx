@@ -7,7 +7,7 @@ import "@app/app.css";
 import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import { createStore, StoreProvider } from "easy-peasy";
-import { StoreModel, storeModel, Injections, injections } from "@/UI";
+import { StoreModel, storeModel } from "@/UI";
 import {
   Alert,
   Spinner,
@@ -20,10 +20,7 @@ const keycloakInitConfig = {
   flow: "implicit",
 } as KeycloakInitOptions;
 
-const storeInstance = createStore<StoreModel, undefined, Injections>(
-  storeModel,
-  { injections }
-);
+const storeInstance = createStore<StoreModel>(storeModel);
 
 const App: React.FunctionComponent<{
   keycloak: Keycloak.KeycloakInstance;
