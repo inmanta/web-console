@@ -7,6 +7,7 @@ import {
   EmptyStateVariant,
   Title,
 } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
 interface Props {
   caption: string;
@@ -24,10 +25,10 @@ export const FailedResourceTable: React.FC<Props> = ({ caption, error }) => {
           title: (
             <EmptyState variant={EmptyStateVariant.small}>
               <Title headingLevel="h2" size="lg">
-                Something went wrong
+                {words("inventory.resourcesTab.failed.title")}
               </Title>
               <EmptyStateBody>
-                There was an error retrieving data.
+                {words("inventory.resourcesTab.failed.body")}
                 <p>{error}</p>
               </EmptyStateBody>
             </EmptyState>

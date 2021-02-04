@@ -7,6 +7,7 @@ import {
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
+import { words } from "@/UI/words";
 
 interface Props {
   caption: string;
@@ -24,10 +25,10 @@ export const EmptyResourceTable: React.FC<Props> = ({ caption }) => {
             <EmptyState>
               <EmptyStateIcon icon={SearchIcon} />
               <Title headingLevel="h5" size="lg">
-                No resources found
+                {words("inventory.resourcesTab.empty.title")}
               </Title>
               <EmptyStateBody>
-                No resources could be found for this instance
+                {words("inventory.resourcesTab.empty.body")}
               </EmptyStateBody>
             </EmptyState>
           ),

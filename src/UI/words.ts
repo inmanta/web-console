@@ -35,6 +35,11 @@ const dict = {
   "inventory.statustab.confirmTitle": "Confirm set state transfer",
   "inventory.statustab.confirmMessage": (id: string, state: string) =>
     `Are you sure you want to set state of instance ${id} to ${state}?`,
+  "inventory.resourcesTab.empty.title": "No resources found",
+  "inventory.resourcesTab.empty.body":
+    "No resources could be found for this instance",
+  "inventory.resourcesTab.failed.title": "Something went wrong",
+  "inventory.resourcesTab.failed.body": "There was an error retrieving data.",
   cancel: "Cancel",
   yes: "Yes",
   no: "No",
