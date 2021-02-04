@@ -12,6 +12,7 @@ import {
 } from "@patternfly/react-core";
 import { CaretDownIcon } from "@patternfly/react-icons";
 import { words } from "@/UI";
+import { ActionDisabledTooltip } from "./ActionDisabledTooltip";
 
 interface Props {
   id: string;
@@ -63,22 +64,25 @@ export const SetStateAction: React.FC<Props> = ({
           setStateErrorMessage={setStateErrorMessage}
         />
       )}
-      <Dropdown
-        toggle={
-          <DropdownToggle
-            data-testid={`${id}-set-state-toggle`}
-            onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
-            toggleIndicator={CaretDownIcon}
-            isDisabled={isDisabled}
-          >
-            {words("inventory.statustab.setInstanceState")}
-          </DropdownToggle>
-        }
-        dropdownItems={dropdownItems}
-        isOpen={isDropdownOpen}
-        onSelect={onSelect}
-        style={isDisabled ? { cursor: "not-allowed" } : {}}
-      />
+      <ActionDisabledTooltip isDisabled={isDisabled}>
+        <Dropdown
+          toggle={
+            <DropdownToggle
+              data-testid={`${id}-set-state-toggle`}
+              onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
+              toggleIndicator={CaretDownIcon}
+              isDisabled={isDisabled}
+            >
+              {words("inventory.statustab.setInstanceState")}
+            </DropdownToggle>
+          }
+          dropdownItems={dropdownItems}
+          isOpen={isDropdownOpen}
+          onSelect={onSelect}
+          style={isDisabled ? { cursor: "not-allowed" } : {}}
+        />
+      </ActionDisabledTooltip>
+
       {onSetInstanceState && (
         <ConfirmationModal
           confirmationText={confirmationText}

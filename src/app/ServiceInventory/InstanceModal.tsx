@@ -1,5 +1,5 @@
-import { Modal, Button, ModalVariant, Tooltip } from "@patternfly/react-core";
-import { ReactElement, useState } from "react";
+import { Modal, Button, ModalVariant } from "@patternfly/react-core";
+import { useState } from "react";
 import React from "react";
 import { InstanceForm } from "./InstanceForm";
 import { PlusIcon, EditIcon, TrashAltIcon } from "@patternfly/react-icons";
@@ -11,7 +11,7 @@ import {
   ServiceInstanceModel,
   InstanceAttributeModel,
 } from "@/Core";
-import { words } from "@/UI";
+import { ActionDisabledTooltip } from "@/UI/ServiceInventory/Components";
 
 type PickedInstance = Pick<
   ServiceInstanceModel,
@@ -75,20 +75,20 @@ const InstanceModal: React.FunctionComponent<{
     modalHeaderText = `Change attributes of instance ${
       props.instance ? props.instance.id : ""
     }`;
-    ModalButton = props.isDisabled ? (
-      <DisabledTooltipWrapper>{EditModalButton}</DisabledTooltipWrapper>
-    ) : (
-      EditModalButton
+    ModalButton = (
+      <ActionDisabledTooltip isDisabled={props.isDisabled}>
+        {EditModalButton}
+      </ActionDisabledTooltip>
     );
   } else if (props.buttonType === ButtonType.delete) {
     modalTitle = "Delete instance";
     modalHeaderText = `Are you sure you want to delete instance ${
       props.instance ? props.instance.id : ""
     } of service entity ${props.serviceName}?`;
-    ModalButton = props.isDisabled ? (
-      <DisabledTooltipWrapper>{DeleteModalButton}</DisabledTooltipWrapper>
-    ) : (
-      DeleteModalButton
+    ModalButton = (
+      <ActionDisabledTooltip isDisabled={props.isDisabled}>
+        {DeleteModalButton}
+      </ActionDisabledTooltip>
     );
   }
 
@@ -149,21 +149,6 @@ const InstanceModal: React.FunctionComponent<{
         </InventoryContext.Consumer>
       </Modal>
     </React.Fragment>
-  );
-};
-
-// Type of children from the Tooltip component of Patternfly
-/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-const DisabledTooltipWrapper: React.FC<{ children?: ReactElement<any> }> = ({
-  children,
-}) => {
-  return (
-    <Tooltip
-      entryDelay={200}
-      content={words("inventory.statustab.actionDisabled")}
-    >
-      {children}
-    </Tooltip>
   );
 };
 
