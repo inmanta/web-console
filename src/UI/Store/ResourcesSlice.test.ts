@@ -1,9 +1,9 @@
 import { createStore } from "easy-peasy";
-import { ResourceModel } from "@/Core";
+import { ResourceModelWithInstance } from "@/Core";
 import { resourcesSlice } from "./ResourcesSlice";
 
 describe("ResourcesSlice", () => {
-  const resources: ResourceModel[] = [
+  const resources: ResourceModelWithInstance[] = [
     {
       instanceId: "instance",
       resource_id:
@@ -29,7 +29,7 @@ describe("ResourcesSlice", () => {
   };
   it("Should add resources", () => {
     const store = createStore(resourcesSlice);
-    const singleResource: ResourceModel[] = [resources[0]];
+    const singleResource: ResourceModelWithInstance[] = [resources[0]];
     store
       .getActions()
       .addResources({ instanceId: "instance", resources: singleResource });
@@ -51,7 +51,7 @@ describe("ResourcesSlice", () => {
       resource_state: "deployed",
     };
     const store = createStore(resourcesSlice);
-    const singleResource: ResourceModel[] = [resources[0]];
+    const singleResource: ResourceModelWithInstance[] = [resources[0]];
     store
       .getActions()
       .addResources({ instanceId: "instance", resources: singleResource });
@@ -80,7 +80,7 @@ describe("ResourcesSlice", () => {
       },
     ];
     const store = createStore(resourcesSlice);
-    const singleResource: ResourceModel[] = [resources[0]];
+    const singleResource: ResourceModelWithInstance[] = [resources[0]];
     store
       .getActions()
       .addResources({ instanceId: "instance", resources: singleResource });

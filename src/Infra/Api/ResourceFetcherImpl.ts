@@ -1,4 +1,9 @@
-import { Either, InstanceForResources, ResourceFetcher } from "@/Core";
+import {
+  Either,
+  InstanceForResources,
+  ResourceFetcher,
+  ResourceModel,
+} from "@/Core";
 
 export class ResourceFetcherImpl implements ResourceFetcher {
   private getBaseUrl() {
@@ -14,7 +19,7 @@ export class ResourceFetcherImpl implements ResourceFetcher {
     service_entity,
     environment,
     version,
-  }: InstanceForResources): Promise<Either.Type<string, unknown>> {
+  }: InstanceForResources): Promise<Either.Type<string, ResourceModel[]>> {
     const url = this.getResourcesUrl(service_entity, id, version);
     const headers = { "X-Inmanta-Tid": environment };
 

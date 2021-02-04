@@ -12,7 +12,7 @@ import { HrefCreator } from "./HrefCreator";
 interface Props {
   caption: string;
   hrefCreator: HrefCreator;
-  resources: Pick<ResourceModel, "resource_id" | "resource_state">[];
+  resources: ResourceModel[];
 }
 
 export const ResourceTable: React.FC<Props> = ({

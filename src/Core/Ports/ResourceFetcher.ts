@@ -1,4 +1,4 @@
-import { Either, ServiceInstanceModel } from "@/Core";
+import { Either, ServiceInstanceModel, ResourceModel } from "@/Core";
 
 export type InstanceForResources = Pick<
   ServiceInstanceModel,
@@ -8,5 +8,5 @@ export type InstanceForResources = Pick<
 export interface ResourceFetcher {
   getResources(
     instance: InstanceForResources
-  ): Promise<Either.Type<string, unknown>>;
+  ): Promise<Either.Type<string, ResourceModel[]>>;
 }

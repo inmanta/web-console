@@ -7,12 +7,12 @@ import {
   TimesCircleIcon,
 } from "@patternfly/react-icons";
 import { useStoreState } from "@/UI/Store";
-import { ResourceModel } from "@/Core";
+import { ResourceModelWithInstance } from "@/Core";
 
 const LENGTH_OF_VERSION_PREFIX = 3;
 
 export const ResourceTable: React.FunctionComponent<{
-  resources: ResourceModel[];
+  resources: ResourceModelWithInstance[];
 }> = (props) => {
   const columns = ["Resource Id", "Details", "State"];
   const instanceId =

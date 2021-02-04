@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { Id, Row, ServiceInstanceModelWithTargetStates } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { DatePresenter } from "./DatePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
 import { ActionPresenter } from "./ActionPresenter";

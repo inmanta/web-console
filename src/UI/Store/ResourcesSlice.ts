@@ -3,20 +3,20 @@ import {
   Either,
   InstanceForResources,
   RemoteData,
-  ResourceModel,
+  ResourceModelWithInstance,
 } from "@/Core";
 import { Injections } from "./Setup";
 
 export interface ResourcesSlice {
   addResources: Action<
     ResourcesSlice,
-    { instanceId: string; resources: ResourceModel[] }
+    { instanceId: string; resources: ResourceModelWithInstance[] }
   >;
   allIds: string[];
-  byId: Record<string, ResourceModel>;
+  byId: Record<string, ResourceModelWithInstance>;
   resourcesOfInstance: Computed<
     ResourcesSlice,
-    (instanceId: string) => ResourceModel[]
+    (instanceId: string) => ResourceModelWithInstance[]
   >;
   fetchResources: Thunk<
     ResourcesSlice,
@@ -51,7 +51,7 @@ export const resourcesSlice: ResourcesSlice = {
     if (Either.isRight(result)) {
       actions.addResources({
         instanceId: instance.id,
-        resources: result.value as ResourceModel[],
+        resources: result.value as ResourceModelWithInstance[],
       });
     }
     return RemoteData.fromEither(result);

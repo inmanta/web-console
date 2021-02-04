@@ -1,50 +1,48 @@
-import React, { ComponentProps } from "react";
-import { Story } from "@storybook/react/types-6-0";
+import React from "react";
 import { ResourcesView } from "./ResourcesView";
-import { createStore, StoreProvider } from "easy-peasy";
-import { Injections, StoreModel, storeModel } from "@/UI/Store";
 import { DummyResourceFetcher } from "@/Test";
+import { ServicesContext } from "../ServicesContext";
 
 export default {
   title: "ResourcesView",
   component: ResourcesView,
 };
 
-interface TemplateProps extends ComponentProps<typeof ResourcesView> {
-  injections: Injections;
-}
-
-const Template: Story<TemplateProps> = (args) => (
-  <StoreProvider
-    store={createStore<StoreModel, undefined, Injections>(storeModel, {
-      injections: args.injections,
-    })}
-  >
-    <ResourcesView {...args} />
-  </StoreProvider>
-);
-
-const baseProps = {
+const instance = {
   id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-  entity: "vlan-assignment",
-  version: "4",
+  service_entity: "vlan-assignment",
+  version: 4,
   environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
 };
 
-export const Loading = Template.bind({});
-Loading.args = {
-  ...baseProps,
-  injections: { resourceFetcher: new DummyResourceFetcher("Loading") },
-};
+export const Loading: React.FC = () => (
+  <ServicesContext.Provider
+    value={{ resourceFetcher: new DummyResourceFetcher("Loading") }}
+  >
+    <ResourcesView instance={instance} title="" icon={<></>} />
+  </ServicesContext.Provider>
+);
 
-export const Failed = Template.bind({});
-Failed.args = {
-  ...baseProps,
-  injections: { resourceFetcher: new DummyResourceFetcher("Failed") },
-};
+export const Empty: React.FC = () => (
+  <ServicesContext.Provider
+    value={{ resourceFetcher: new DummyResourceFetcher("Empty") }}
+  >
+    <ResourcesView instance={instance} title="" icon={<></>} />
+  </ServicesContext.Provider>
+);
 
-export const Success = Template.bind({});
-Success.args = {
-  ...baseProps,
-  injections: { resourceFetcher: new DummyResourceFetcher("Success") },
-};
+export const Failed: React.FC = () => (
+  <ServicesContext.Provider
+    value={{ resourceFetcher: new DummyResourceFetcher("Failed") }}
+  >
+    <ResourcesView instance={instance} title="" icon={<></>} />
+  </ServicesContext.Provider>
+);
+
+export const Success: React.FC = () => (
+  <ServicesContext.Provider
+    value={{ resourceFetcher: new DummyResourceFetcher("Success") }}
+  >
+    <ResourcesView instance={instance} title="" icon={<></>} />
+  </ServicesContext.Provider>
+);
