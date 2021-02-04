@@ -25,6 +25,7 @@ export const ServiceInstanceDetails: React.FC<TabViewProps> = ({
       activeKey={activeTab}
       onSelect={setActiveTabWithEventKey}
       mountOnEnter
+      unmountOnExit
     >
       {React.Children.map(children, (child) => (
         <Tab

@@ -20,7 +20,7 @@ export const ResourcesView: React.FC<Props> = ({ instance }) => {
   const { resourceFetcher } = useContext(ServicesContext);
   const [result, setResult] = useState<
     RemoteData.Type<string, ResourceModel[]>
-  >(RemoteData.notAsked());
+  >(RemoteData.loading());
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -28,7 +28,6 @@ export const ResourcesView: React.FC<Props> = ({ instance }) => {
         RemoteData.fromEither(await resourceFetcher.getResources(instance))
       );
     };
-    setResult(RemoteData.loading());
     fetchResources();
   }, []);
 
