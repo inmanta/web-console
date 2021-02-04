@@ -42,7 +42,7 @@ export const FailedResourceTable: React.FC<Props> = ({ caption, error }) => {
       caption={caption}
       cells={columns}
       rows={rows}
-      aria-label="Error Table Demo"
+      aria-label="ResourceTable-Failed"
     >
       <TableHeader />
       <TableBody />

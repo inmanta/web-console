@@ -27,8 +27,9 @@ export class ResourceFetcherImpl implements ResourceFetcher {
       const result = await fetch(`${url}`, { headers });
       const data = await result.json();
       return Either.right(data.data);
-    } catch (e) {
-      return Either.left(e);
+    } catch (error) {
+      if (error.message) return Either.left(error.message);
+      return Either.left(`Error: ${error}`);
     }
   }
 }

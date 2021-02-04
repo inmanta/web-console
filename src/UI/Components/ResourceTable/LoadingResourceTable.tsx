@@ -29,7 +29,7 @@ export const LoadingResourceTable: React.FC<Props> = ({ caption }) => {
       caption={caption}
       cells={columns}
       rows={rows}
-      aria-label="Error Table Demo"
+      aria-label="ResourceTable-Loading"
     >
       <TableHeader />
       <TableBody />

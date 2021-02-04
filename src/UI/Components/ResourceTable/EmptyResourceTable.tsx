@@ -37,7 +37,12 @@ export const EmptyResourceTable: React.FC<Props> = ({ caption }) => {
   ];
 
   return (
-    <Table caption={caption} cells={columns} rows={rows}>
+    <Table
+      caption={caption}
+      cells={columns}
+      rows={rows}
+      aria-label="ResourceTable-Empty"
+    >
       <TableHeader />
       <TableBody />
     </Table>

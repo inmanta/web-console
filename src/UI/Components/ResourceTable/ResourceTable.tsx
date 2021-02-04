@@ -48,7 +48,12 @@ export const ResourceTable: React.FC<Props> = ({
   });
 
   return (
-    <Table caption={caption} cells={columns} rows={rows}>
+    <Table
+      caption={caption}
+      cells={columns}
+      rows={rows}
+      aria-label="ResourceTable"
+    >
       <TableHeader />
       <TableBody />
     </Table>
