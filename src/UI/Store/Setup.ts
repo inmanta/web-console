@@ -14,5 +14,5 @@ export interface Injections {
 }
 
 export const injections: Injections = {
-  resourceFetcher: new ResourceFetcherImpl(),
+  resourceFetcher: new ResourceFetcherImpl(undefined),
 };

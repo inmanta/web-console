@@ -26,7 +26,7 @@ if (externalKeycloakConf) {
 
 ReactDOM.render(
   <ServicesContext.Provider
-    value={{ resourceFetcher: new ResourceFetcherImpl() }}
+    value={{ resourceFetcher: new ResourceFetcherImpl(keycloak) }}
   >
     <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
   </ServicesContext.Provider>,
