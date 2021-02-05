@@ -26,6 +26,7 @@ const dict = {
   "inventory.column.updatedAt": "Updated",
   "inventory.column.resources": "Resources",
   "inventory.tabs.attributes": "Attributes",
+  "inventory.tabs.resources": "Resources",
   "inventory.tabs.status": "Status",
   "inventory.statustab.actions": "Actions",
   "inventory.statustab.version": "Version",
@@ -34,14 +35,21 @@ const dict = {
   "inventory.statustab.confirmTitle": "Confirm set state transfer",
   "inventory.statustab.confirmMessage": (id: string, state: string) =>
     `Are you sure you want to set state of instance ${id} to ${state}?`,
+  "inventory.statustab.actionDisabled":
+    "This action is not supported by the lifecycle in the current state",
+  "inventory.resourcesTab.empty.title": "No resources found",
+  "inventory.resourcesTab.empty.body":
+    "No resources could be found for this instance",
+  "inventory.resourcesTab.failed.title": "Something went wrong",
+  "inventory.resourcesTab.failed.body": "There was an error retrieving data.",
+  "inventory.resourcesTab.detailsLink": "Jump to Details",
   cancel: "Cancel",
   yes: "Yes",
   no: "No",
-  "inventory.resourcesTable.caption": (id: string) =>
-    `Resources for instance with id ${id}`,
-  "inventory.statustab.actionDisabled":
-    "This action is not supported by the lifecycle in the current state",
   null: "null",
+  "error.server.intro": (errorMessage: string) =>
+    `The following error occured while communicating with the server: ${errorMessage}`,
+  "error.authorizationFailed": "Authorization failed, please log in",
 };
 
 type Key = keyof typeof dict;

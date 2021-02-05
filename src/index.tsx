@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import { App } from "@app/index";
 import keycloakConf from "./app/keycloak.json";
 import Keycloak from "keycloak-js";
+import { ServicesContext } from "@/UI/ServicesContext";
+import { ResourceFetcherImpl } from "@/Infra";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -23,6 +25,10 @@ if (externalKeycloakConf) {
 }
 
 ReactDOM.render(
-  <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />,
+  <ServicesContext.Provider
+    value={{ resourceFetcher: new ResourceFetcherImpl(keycloak) }}
+  >
+    <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+  </ServicesContext.Provider>,
   document.getElementById("root") as HTMLElement
 );

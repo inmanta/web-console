@@ -25,13 +25,18 @@ describe("Service inventory", function () {
     });
   });
 
-  it.skip("Should show/hide resources modal on click", function () {
+  it("Should show/hide resources tab on click", function () {
     cy.visit("/lsm/catalog/e2e_service/inventory");
-    cy.get("#nav-toggle").click();
-    cy.get(".pf-c-table").find(".pf-c-button.pf-m-primary").click();
+    // click first toggle for expansion
+    cy.get("#expand-toggle0").click();
+    // click resources tab
+    cy.get(".pf-c-tabs").contains("Resources").click();
+    // expect deployed to be in the State cell
     cy.get('td[data-label="State"]').should("include.text", "deployed");
-    cy.contains("Close").click().should("not.exist");
-    cy.get(".pf-c-modal-box").should("not.exist");
+    // click toggle again to close the expansion
+    cy.get("#expand-toggle0").click();
+    // expect resources tab to not be visible
+    cy.get(".pf-c-tabs").contains("Resources").should("not.be.visible");
   });
   it("Should show add/hide instance modal on click", function () {
     cy.visit("/lsm/catalog/e2e_service/inventory");

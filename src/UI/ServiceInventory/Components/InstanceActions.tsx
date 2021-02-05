@@ -4,7 +4,6 @@ import { ButtonType, InstanceModal } from "@app/ServiceInventory/InstanceModal";
 import { DiagnosticsModal } from "@app/ServiceInventory/DiagnosticsModal";
 import { ServiceInstanceForAction } from "@/UI/ServiceInventory/Presenters";
 import { DescriptionList, DescriptionListGroup } from "@patternfly/react-core";
-import { ResourceModal } from "@app/ServiceInventory/ResourceModal";
 import { SetStateAction } from "./SetStateAction";
 
 export interface InstanceActionsProps {
@@ -55,9 +54,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
           instance={instance}
           keycloak={keycloak}
         />
-      </DescriptionListGroup>
-      <DescriptionListGroup>
-        <ResourceModal instance={instance} keycloak={keycloak} />
       </DescriptionListGroup>
       <DescriptionListGroup>
         <SetStateAction
