@@ -27,6 +27,8 @@ export const base: Row = {
   },
   version: 2,
   instanceSetStateTargets: [],
+  environment: "env",
+  service_entity: "entity",
 };
 
 export const row2: Row = {

@@ -8,23 +8,14 @@ import {
   TimesCircleIcon,
 } from "@patternfly/react-icons";
 import { HrefCreator } from "./HrefCreator";
-
-export type SlimResourceModel = Pick<
-  ResourceModel,
-  "resource_id" | "resource_state"
->;
+import { words } from "@/UI/words";
 
 interface Props {
-  caption: string;
   hrefCreator: HrefCreator;
-  resources: SlimResourceModel[];
+  resources: ResourceModel[];
 }
 
-export const ResourceTable: React.FC<Props> = ({
-  caption,
-  hrefCreator,
-  resources,
-}) => {
+export const ResourceTable: React.FC<Props> = ({ hrefCreator, resources }) => {
   const columns = ["Resource Id", "Details", "State"];
   const rows = resources.map((resource) => {
     const href = hrefCreator.create(resource.resource_id);
@@ -37,36 +28,40 @@ export const ResourceTable: React.FC<Props> = ({
         href={href}
         target="_blank"
       >
-        Jump to Details
+        {words("inventory.resourcesTab.detailsLink")}
       </Button>
     );
-    const Icon = getStatusIcon(resource.resource_state);
+
     const formattedState = (
-      <React.Fragment>
-        {" "}
-        {<Icon key={resource.resource_id} />} {resource.resource_state}
-      </React.Fragment>
+      <>
+        <StatusIcon
+          state={resource.resource_state}
+          key={resource.resource_id}
+        />
+        {resource.resource_state}
+      </>
     );
+
     return {
       cells: [resource.resource_id, { title: linkToDetails }, formattedState],
     };
   });
 
   return (
-    <Table caption={caption} cells={columns} rows={rows}>
+    <Table cells={columns} rows={rows} aria-label="ResourceTable">
       <TableHeader />
       <TableBody />
     </Table>
   );
 };
 
-export function getStatusIcon(resourceState: string): React.FC {
-  switch (resourceState) {
+const StatusIcon: React.FC<{ state: string }> = ({ state }) => {
+  switch (state) {
     case "deployed":
-      return () => <CheckSquareIcon color="#06c" />;
+      return <CheckSquareIcon color="#06c" />;
     case "failed":
-      return () => <TimesCircleIcon color="#c9190b" />;
+      return <TimesCircleIcon color="#c9190b" />;
     default:
-      return () => <></>;
+      return null;
   }
-}
+};

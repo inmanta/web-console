@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { Id, Row, ServiceInstanceModelWithTargetStates } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { DatePresenter } from "./DatePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
 import { ActionPresenter } from "./ActionPresenter";
@@ -60,6 +60,8 @@ export class TablePresenter {
       last_updated,
       version,
       instanceSetStateTargets,
+      environment,
+      service_entity,
     } = instance;
 
     return {
@@ -78,6 +80,8 @@ export class TablePresenter {
       updatedAt: this.datePresenter.get(last_updated),
       version: version,
       instanceSetStateTargets,
+      environment,
+      service_entity,
     };
   }
 

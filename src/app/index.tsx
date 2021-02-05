@@ -19,6 +19,7 @@ const keycloakInitConfig = {
   onLoad: "login-required",
   flow: "implicit",
 } as KeycloakInitOptions;
+
 const storeInstance = createStore<StoreModel>(storeModel);
 
 const App: React.FunctionComponent<{
