@@ -8,6 +8,7 @@ import {
   TimesCircleIcon,
 } from "@patternfly/react-icons";
 import { HrefCreator } from "./HrefCreator";
+import { words } from "@/UI/words";
 
 interface Props {
   caption: string;
@@ -32,7 +33,7 @@ export const ResourceTable: React.FC<Props> = ({
         href={href}
         target="_blank"
       >
-        Jump to Details
+        {words("inventory.resourcesTab.detailsLink")}
       </Button>
     );
 

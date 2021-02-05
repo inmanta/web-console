@@ -40,6 +40,7 @@ const dict = {
     "No resources could be found for this instance",
   "inventory.resourcesTab.failed.title": "Something went wrong",
   "inventory.resourcesTab.failed.body": "There was an error retrieving data.",
+  "inventory.resourcesTab.detailsLink": "Jump to Details",
   cancel: "Cancel",
   yes: "Yes",
   no: "No",
