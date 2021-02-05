@@ -9,6 +9,7 @@
 - Mark instance states according to labels (#153)
 - Disable edit and delete instance actions when not allowed by the lifecycle (#184)
 - Add resources tab to service inventory (#164)
+- Add inmanta favicon (#78)
 
 # Release 1.4.0 (2020-12-17)
 
