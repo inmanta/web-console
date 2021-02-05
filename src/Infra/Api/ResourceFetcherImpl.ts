@@ -4,6 +4,7 @@ import {
   ResourceFetcher,
   ResourceModel,
 } from "@/Core";
+import { words } from "@/UI/words";
 import { KeycloakInstance } from "keycloak-js";
 
 export class ResourceFetcherImpl implements ResourceFetcher {
@@ -27,6 +28,21 @@ export class ResourceFetcherImpl implements ResourceFetcher {
     };
   }
 
+  private formatError(message: string, response: Response): string {
+    let errorMessage = message.replace(/\n/g, " ");
+
+    if (this.keycloak && (response.status === 401 || response.status === 403)) {
+      errorMessage += ` ${words("error.authorizationFailed")}`;
+      this.keycloak.clearToken();
+    }
+
+    return words("error.server.intro")(
+      `${response.status} ${response.statusText} ${
+        errorMessage ? JSON.stringify(errorMessage) : ""
+      }`
+    );
+  }
+
   async getResources({
     id,
     service_entity,
@@ -34,12 +50,15 @@ export class ResourceFetcherImpl implements ResourceFetcher {
     version,
   }: InstanceForResources): Promise<Either.Type<string, ResourceModel[]>> {
     try {
-      const result = await fetch(
+      const response = await fetch(
         this.getResourcesUrl(service_entity, id, version),
         { headers: this.getHeaders(environment) }
       );
-      const data = await result.json();
-      return Either.right(data.data);
+      if (response.ok) {
+        const data = await response.json();
+        return Either.right(data.data);
+      }
+      return Either.left(this.formatError(await response.json(), response));
     } catch (error) {
       if (error.message) return Either.left(error.message);
       return Either.left(`Error: ${error}`);

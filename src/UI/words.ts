@@ -48,6 +48,9 @@ const dict = {
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   null: "null",
+  "error.server.intro": (errorMessage: string) =>
+    `The following error occured while communicating with the server: ${errorMessage}`,
+  "error.authorizationFailed": "Authorization failed, please log in",
 };
 
 type Key = keyof typeof dict;
