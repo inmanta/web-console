@@ -27,6 +27,9 @@ Multiple.args = {
   instances,
   serviceEntity: {
     name: "cloudconnectv2",
-    lifecycle: { states: [{ name: "creating", label: "info" }] },
+    lifecycle: {
+      states: [{ name: "creating", label: "info" }],
+      transfers: [{ source: "creating", on_update: true }],
+    },
   } as ServiceModel,
 };
