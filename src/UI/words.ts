@@ -35,6 +35,8 @@ const dict = {
   "inventory.statustab.confirmTitle": "Confirm set state transfer",
   "inventory.statustab.confirmMessage": (id: string, state: string) =>
     `Are you sure you want to set state of instance ${id} to ${state}?`,
+  "inventory.statustab.actionDisabled":
+    "This action is not supported by the lifecycle in the current state",
   "inventory.resourcesTab.empty.title": "No resources found",
   "inventory.resourcesTab.empty.body":
     "No resources could be found for this instance",
@@ -44,10 +46,6 @@ const dict = {
   cancel: "Cancel",
   yes: "Yes",
   no: "No",
-  "inventory.resourcesTable.caption": (id: string) =>
-    `Resources for instance with id ${id}`,
-  "inventory.statustab.actionDisabled":
-    "This action is not supported by the lifecycle in the current state",
   null: "null",
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,

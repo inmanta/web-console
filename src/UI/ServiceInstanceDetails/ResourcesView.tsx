@@ -9,7 +9,6 @@ import {
   FailedFiller,
   EmptyFiller,
 } from "@/UI/Components";
-import { words } from "@/UI/words";
 import { ServicesContext } from "../ServicesContext";
 
 interface Props extends TabProps {
@@ -31,25 +30,17 @@ export const ResourcesView: React.FC<Props> = ({ instance }) => {
     fetchResources();
   }, []);
 
-  const caption = words("inventory.resourcesTable.caption")(instance.id);
-
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,
-    loading: () => (
-      <FillerResourceTable caption={caption} filler={<LoadingFiller />} />
-    ),
+    loading: () => <FillerResourceTable filler={<LoadingFiller />} />,
     failed: (error) => (
-      <FillerResourceTable
-        caption={caption}
-        filler={<FailedFiller error={error} />}
-      />
+      <FillerResourceTable filler={<FailedFiller error={error} />} />
     ),
     success: (resources) =>
       resources.length === 0 ? (
-        <FillerResourceTable caption={caption} filler={<EmptyFiller />} />
+        <FillerResourceTable filler={<EmptyFiller />} />
       ) : (
         <ResourceTable
-          caption={caption}
           hrefCreator={new HrefCreatorImpl(instance.environment)}
           resources={resources}
         />

@@ -11,16 +11,11 @@ import { HrefCreator } from "./HrefCreator";
 import { words } from "@/UI/words";
 
 interface Props {
-  caption: string;
   hrefCreator: HrefCreator;
   resources: ResourceModel[];
 }
 
-export const ResourceTable: React.FC<Props> = ({
-  caption,
-  hrefCreator,
-  resources,
-}) => {
+export const ResourceTable: React.FC<Props> = ({ hrefCreator, resources }) => {
   const columns = ["Resource Id", "Details", "State"];
   const rows = resources.map((resource) => {
     const href = hrefCreator.create(resource.resource_id);
@@ -53,12 +48,7 @@ export const ResourceTable: React.FC<Props> = ({
   });
 
   return (
-    <Table
-      caption={caption}
-      cells={columns}
-      rows={rows}
-      aria-label="ResourceTable"
-    >
+    <Table cells={columns} rows={rows} aria-label="ResourceTable">
       <TableHeader />
       <TableBody />
     </Table>
