@@ -51,7 +51,7 @@ export const InstanceRow: React.FC<Props> = ({
   };
   return (
     <Tbody isExpanded={false}>
-      <Tr>
+      <Tr id={`instance-row-${row.id.short}`}>
         <Td
           expand={{
             rowIndex: index,
@@ -64,10 +64,12 @@ export const InstanceRow: React.FC<Props> = ({
         </Td>
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>
         <Td dataLabel={words("inventory.column.attributesSummary")}>
-          <AttributesSummaryView
-            summary={row.attributesSummary}
-            onClick={attributesOnClick}
-          />
+          <a href={`#instance-row-${row.id.short}`}>
+            <AttributesSummaryView
+              summary={row.attributesSummary}
+              onClick={attributesOnClick}
+            />
+          </a>
         </Td>
         <Td dataLabel={words("inventory.column.createdAt")}>
           <DateWithTooltip date={row.createdAt} />
