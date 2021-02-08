@@ -27,6 +27,28 @@ test("AttributeHelper getPaths", () => {
   expect(paths).toEqual(["a", "a.b", "a.b.c", "e", "g", "g.h"]);
 });
 
+test("AttributeHelper getPaths sorts paths", () => {
+  const attributeHelper = new AttributeHelper(".");
+  const attributes = {
+    candidate: null,
+    active: {
+      g: {
+        h: "i",
+      },
+      e: "f",
+      a: {
+        b: {
+          c: "d",
+        },
+      },
+    },
+    rollback: null,
+  };
+  const paths = attributeHelper.getPaths(attributes);
+
+  expect(paths).toEqual(["a", "a.b", "a.b.c", "e", "g", "g.h"]);
+});
+
 test("AttributeHelper getMultiAttributeNodes", () => {
   const attributeHelper = new AttributeHelper(".");
   const attributes = {
