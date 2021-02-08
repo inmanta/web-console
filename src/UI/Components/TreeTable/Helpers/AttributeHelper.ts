@@ -39,7 +39,7 @@ export class AttributeHelper {
   ): AttributeNodeDict {
     if (!this.isNested(subject)) return {};
     let keys: AttributeNodeDict = {};
-    const primaryKeys = Object.keys(subject);
+    const primaryKeys = Object.keys(subject).sort();
     primaryKeys.forEach((key) => {
       if (!this.isNested(subject[key])) {
         keys[`${prefix}${key}`] = { kind: "Leaf", value: subject[key] };
