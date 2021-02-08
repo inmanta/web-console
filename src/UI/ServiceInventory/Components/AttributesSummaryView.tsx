@@ -10,8 +10,13 @@ import { words } from "@/UI/words";
 
 export const AttributesSummaryView: React.FC<{
   summary: AttributesSummary;
-}> = ({ summary: { candidate, active, rollback } }) => (
-  <List variant={ListVariant.inline}>
+  onClick: () => void;
+}> = ({ summary: { candidate, active, rollback }, onClick }) => (
+  <List
+    variant={ListVariant.inline}
+    onClick={onClick}
+    data-testid={`attributes-summary`}
+  >
     <ListItem>
       <Tooltip content={words("attributes.candidate")} entryDelay={200}>
         <OutlinedQuestionCircleIcon color={getColor(candidate)} />

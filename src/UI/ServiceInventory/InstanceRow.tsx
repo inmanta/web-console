@@ -1,12 +1,6 @@
-import React from "react";
-import {
-  Tbody,
-  Tr,
-  Td,
-  ExpandableRowContent,
-  OnCollapse,
-} from "@patternfly/react-table";
 import { InstanceForResources, Row } from "@/Core";
+import React, { useState } from "react";
+import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
 import {
   AttributesSummaryView,
@@ -18,6 +12,7 @@ import {
   AttributesView,
   StatusView,
   ResourcesView,
+  TabKey,
 } from "@/UI/ServiceInstanceDetails";
 import {
   AutomationIcon,
@@ -29,7 +24,7 @@ interface Props {
   row: Row;
   index: number;
   isExpanded: boolean;
-  onToggle: OnCollapse;
+  onToggle: () => void;
   numberOfColumns: number;
   actions: React.ReactElement | null;
   state: React.ReactElement | null;
@@ -45,59 +40,76 @@ export const InstanceRow: React.FC<Props> = ({
   actions,
   state,
   instanceForResources,
-}) => (
-  <Tbody isExpanded={false}>
-    <Tr>
-      <Td
-        expand={{
-          rowIndex: index,
-          isExpanded,
-          onToggle,
-        }}
-      />
-      <Td dataLabel={words("inventory.column.id")}>
-        <IdWithCopy id={row.id} />
-      </Td>
-      <Td dataLabel={words("inventory.column.state")}>{state}</Td>
-      <Td dataLabel={words("inventory.column.attributesSummary")}>
-        <AttributesSummaryView summary={row.attributesSummary} />
-      </Td>
-      <Td dataLabel={words("inventory.column.createdAt")}>
-        <DateWithTooltip date={row.createdAt} />
-      </Td>
-      <Td dataLabel={words("inventory.column.updatedAt")}>
-        <DateWithTooltip date={row.updatedAt} />
-      </Td>
-    </Tr>
-    <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
-      <Td colSpan={numberOfColumns}>
-        <ExpandableRowContent>
-          <ServiceInstanceDetails>
-            <StatusView
-              title={words("inventory.tabs.status")}
-              icon={<InfoCircleIcon />}
-              statusInfo={{
-                instanceId: row.id.full,
-                state: state,
-                version: row.version,
-                createdAt: row.createdAt.full,
-                updatedAt: row.updatedAt.full,
-                actions: actions,
-              }}
+}) => {
+  const [activeTab, setActiveTab] = useState<TabKey>("Status");
+  const attributesOnClick = () => {
+    if (!isExpanded) {
+      onToggle();
+    }
+    setActiveTab("Attributes");
+  };
+  return (
+    <Tbody isExpanded={false}>
+      <Tr id={`instance-row-${row.id.short}`}>
+        <Td
+          expand={{
+            rowIndex: index,
+            isExpanded,
+            onToggle,
+          }}
+        />
+        <Td dataLabel={words("inventory.column.id")}>
+          <IdWithCopy id={row.id} />
+        </Td>
+        <Td dataLabel={words("inventory.column.state")}>{state}</Td>
+        <Td dataLabel={words("inventory.column.attributesSummary")}>
+          <a href={`#instance-row-${row.id.short}`}>
+            <AttributesSummaryView
+              summary={row.attributesSummary}
+              onClick={attributesOnClick}
             />
-            <AttributesView
-              attributes={row.attributes}
-              title={words("inventory.tabs.attributes")}
-              icon={<ListIcon />}
-            />
-            <ResourcesView
-              instance={instanceForResources}
-              title={words("inventory.tabs.resources")}
-              icon={<AutomationIcon />}
-            />
-          </ServiceInstanceDetails>
-        </ExpandableRowContent>
-      </Td>
-    </Tr>
-  </Tbody>
-);
+          </a>
+        </Td>
+        <Td dataLabel={words("inventory.column.createdAt")}>
+          <DateWithTooltip date={row.createdAt} />
+        </Td>
+        <Td dataLabel={words("inventory.column.updatedAt")}>
+          <DateWithTooltip date={row.updatedAt} />
+        </Td>
+      </Tr>
+      <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
+        <Td colSpan={numberOfColumns}>
+          <ExpandableRowContent>
+            <ServiceInstanceDetails
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            >
+              <StatusView
+                title={words("inventory.tabs.status")}
+                icon={<InfoCircleIcon />}
+                statusInfo={{
+                  instanceId: row.id.full,
+                  state: state,
+                  version: row.version,
+                  createdAt: row.createdAt.full,
+                  updatedAt: row.updatedAt.full,
+                  actions: actions,
+                }}
+              />
+              <AttributesView
+                attributes={row.attributes}
+                title={words("inventory.tabs.attributes")}
+                icon={<ListIcon />}
+              />
+              <ResourcesView
+                instance={instanceForResources}
+                title={words("inventory.tabs.resources")}
+                icon={<AutomationIcon />}
+              />
+            </ServiceInstanceDetails>
+          </ExpandableRowContent>
+        </Td>
+      </Tr>
+    </Tbody>
+  );
+};
