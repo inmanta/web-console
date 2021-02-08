@@ -17,7 +17,10 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper }) => {
   const rows = treeTableHelper.createRows(expansionState, setExpansionState);
 
   return (
-    <StyledTableComposable variant="compact">
+    <StyledTableComposable
+      variant="compact"
+      data-testid={"attributes-tree-table"}
+    >
       <Thead>
         <Tr>
           <Th key={firstColumn} className="pf-m-width-40">
