@@ -12,14 +12,13 @@ import {
   AttributesView,
   StatusView,
   ResourcesView,
+  TabKey,
 } from "@/UI/ServiceInstanceDetails";
 import {
   AutomationIcon,
   InfoCircleIcon,
   ListIcon,
 } from "@patternfly/react-icons";
-
-type TabKey = "Attributes" | "Status";
 
 interface Props {
   row: Row;

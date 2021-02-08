@@ -1,7 +1,7 @@
 import React, { ReactText } from "react";
 import { Tabs, Tab, TabTitleText, TabTitleIcon } from "@patternfly/react-core";
 
-type TabKey = "Attributes" | "Status";
+export type TabKey = "Attributes" | "Status" | "Resources";
 
 export interface TabProps {
   title: string;
@@ -10,7 +10,7 @@ export interface TabProps {
 
 interface TabViewProps {
   activeTab: TabKey;
-  setActiveTab: React.Dispatch<React.SetStateAction<TabKey>>;
+  setActiveTab: (tabKey: TabKey) => void;
   children: React.ReactElement<TabProps>[];
 }
 
