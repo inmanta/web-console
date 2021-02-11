@@ -7,7 +7,7 @@ interface Props {
   id: string;
 }
 
-export const DummyComponent: React.FC<Props> = ({ id }) => {
+export const SubscriptionComponent: React.FC<Props> = ({ id }) => {
   const { dataManager } = useContext(ServicesContext);
 
   // This is an effect that will subscribe and unsubscribe automatially.

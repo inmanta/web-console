@@ -5,8 +5,8 @@ export class ApiHelperImpl implements ApiHelper {
   async getData(id: string): Promise<Either.Type<string, DataModel>> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(Either.right({ id, value: new Date().getSeconds() }));
-      }, 1000);
+        resolve(Either.right({ id, value: 2 }));
+      }, 200);
     });
   }
 }

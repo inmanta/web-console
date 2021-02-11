@@ -21,8 +21,12 @@ export class HookedDataManagerImpl implements HookedDataManager {
 
   useSubscription(subject: Subject): void {
     useEffect(() => {
+      const value = this.stateHelper.getDirect(subject.id);
+      if (RemoteData.isNotAsked(value)) {
+        this.stateHelper.set(subject.id, RemoteData.loading());
+      }
       this.subscriptionHelper.subscribeTo(subject, (data) => {
-        this.stateHelper.set(subject.id, data);
+        this.stateHelper.set(subject.id, RemoteData.fromEither(data));
       });
       return () => {
         this.subscriptionHelper.unsubscribeFrom(subject);

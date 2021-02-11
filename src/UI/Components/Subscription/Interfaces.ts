@@ -8,8 +8,9 @@ export interface DataModel {
 export type Timer = ReturnType<typeof setInterval>;
 
 export interface StateHelper {
-  set(id: string, value: Either.Type<string, DataModel>): void;
+  set(id: string, value: RemoteData.Type<string, DataModel>): void;
   get(id: string): RemoteData.Type<string, DataModel>;
+  getDirect(id: string): RemoteData.Type<string, DataModel>;
 }
 
 export interface ApiHelper {

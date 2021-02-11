@@ -5,25 +5,26 @@ import {
   Store as _Store,
   createTypedHooks,
 } from "easy-peasy";
-import { Either, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
 import { DataModel } from "./Interfaces";
 
 export interface StoreModel {
   data: Record<string, RemoteData.Type<string, DataModel>>;
   setData: Action<
     StoreModel,
-    { id: string; value: Either.Type<string, DataModel> }
+    { id: string; value: RemoteData.Type<string, DataModel> }
   >;
 }
 
 export const storeModel: StoreModel = {
   data: {},
   setData: action((state, payload) => {
-    state.data[payload.id] = RemoteData.fromEither(payload.value);
+    state.data[payload.id] = payload.value;
   }),
 };
 
-export const storeInstance = createStore<StoreModel>(storeModel);
+export const getStoreInstance = (): Store =>
+  createStore<StoreModel>(storeModel);
 
 export type Store = _Store<StoreModel>;
 
