@@ -5,6 +5,9 @@ export interface DataModel {
   value: number;
 }
 
+export const isEqual = (a: DataModel, b: DataModel): boolean =>
+  a.id === b.id && a.value === b.value;
+
 export type Timer = ReturnType<typeof setInterval>;
 
 export interface StateHelper {
