@@ -2,10 +2,10 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { SubscriptionComponent } from "./SubscriptionComponent";
 import { ServicesContext } from "./ServicesContext";
-import { HookedDataManagerImpl } from "./HookedDataManagerImpl";
+import { DataManagerImpl } from "./DataManagerImpl";
 import { StateHelperImpl } from "./StateHelperImpl";
 import { getStoreInstance } from "./Store";
-import { DummySubscriptionHelper, DummyApiHelper } from "@/Test";
+import { DummyApiHelper, DummySubscriptionHelper } from "./Test";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 
@@ -20,7 +20,7 @@ function setup(): Tools {
   const apiHelper = new DummyApiHelper();
   const subscriptionHelper = new DummySubscriptionHelper(apiHelper);
   const services = {
-    dataManager: new HookedDataManagerImpl(
+    dataManager: new DataManagerImpl(
       new StateHelperImpl(storeInstance),
       subscriptionHelper
     ),

@@ -1,6 +1,9 @@
+export * from "./DeferredApiHelper";
+export * from "./InstantApiHelper";
+
 export * from "./DummyActionPresenter";
-export * from "./DummyApiHelper";
+export * from "./DummyDataManager";
 export * from "./DummyDatePresenter";
-export * from "./DummyResourceFetcher";
+export * from "./DummyStateHelper";
 export * from "./DummyStatePresenter";
 export * from "./DummySubscriptionHelper";

@@ -1,13 +1,37 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
-import { rows, tablePresenter } from "@/Test";
+import {
+  DummyStateHelper,
+  DummySubscriptionHelper,
+  InstantApiHelper,
+  rows,
+  tablePresenter,
+} from "@/Test";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { DummyResourceFetcher } from "@/Test";
+import { DataManagerImpl } from "../Data/DataManagerImpl";
+import { getStoreInstance } from "../Store";
+import { StoreProvider } from "easy-peasy";
+import { StateHelperImpl } from "@/UI/Data/StateHelperImpl";
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
-  render(<InventoryTable rows={rows} tablePresenter={tablePresenter} />);
+  const dataManager = new DataManagerImpl(
+    new DummyStateHelper(),
+    new DummySubscriptionHelper(
+      new InstantApiHelper({
+        kind: "Success",
+        resources: [
+          { resource_id: "resource_id_1", resource_state: "resource_state" },
+        ],
+      })
+    )
+  );
+  render(
+    <ServicesContext.Provider value={{ dataManager }}>
+      <InventoryTable rows={rows} tablePresenter={tablePresenter} />
+    </ServicesContext.Provider>
+  );
   const testid = `details_${rows[0].id.short}`;
 
   // Act
@@ -18,25 +42,29 @@ test("InventoryTable can be expanded", async () => {
 });
 
 test("ServiceInventory can show resources for instance", async () => {
-  // Arrange
-  const resources = [
-    { resource_id: "resource_id_1", resource_state: "resource_state" },
-  ];
-  const resourceFetcher = new DummyResourceFetcher({
-    kind: "Success",
-    resources,
-  });
+  const store = getStoreInstance();
+  const dataManager = new DataManagerImpl(
+    new StateHelperImpl(store),
+    new DummySubscriptionHelper(
+      new InstantApiHelper({
+        kind: "Success",
+        resources: [
+          { resource_id: "resource_id_1", resource_state: "resource_state" },
+        ],
+      })
+    )
+  );
   render(
-    <ServicesContext.Provider value={{ resourceFetcher }}>
-      <InventoryTable rows={rows} tablePresenter={tablePresenter} />
+    <ServicesContext.Provider value={{ dataManager }}>
+      <StoreProvider store={store}>
+        <InventoryTable rows={rows} tablePresenter={tablePresenter} />
+      </StoreProvider>
     </ServicesContext.Provider>
   );
 
-  // Act
   fireEvent.click(screen.getAllByRole("button")[0]);
   fireEvent.click(screen.getByRole("button", { name: "Resources" }));
 
-  // Assert
   expect(
     await screen.findByRole("grid", { name: "ResourceTable" })
   ).toBeInTheDocument();

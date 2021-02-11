@@ -1,25 +1,29 @@
-import { Maybe } from "@/Core";
 import {
   ApiHelper,
   Dictionary,
-  Subject,
+  Maybe,
   SubscriptionHelper,
-  UpdateHandler,
   Timer,
-} from "./Interfaces";
+  UpdateHandler,
+} from "@/Core";
+import { DataModel, Subject } from "./DataModel";
 
-export class SubscriptionHelperImpl implements SubscriptionHelper {
+export class SubscriptionHelperImpl
+  implements SubscriptionHelper<Subject, string, DataModel> {
   constructor(
     private readonly DELAY: number,
-    private readonly apiHelper: ApiHelper,
+    private readonly apiHelper: ApiHelper<Subject, string, DataModel>,
     private readonly intervals: Dictionary<Timer>
   ) {}
 
-  subscribeTo(subject: Subject, updateHandler: UpdateHandler): boolean {
+  subscribeTo(
+    subject: Subject,
+    updateHandler: UpdateHandler<string, DataModel>
+  ): boolean {
     if (!this.intervals.isFree(subject.id)) return false;
 
     const intervalId = setInterval(async () => {
-      const data = await this.apiHelper.getData(subject.id);
+      const data = await this.apiHelper.getData(subject);
       updateHandler(data);
     }, this.DELAY);
     this.intervals.set(subject.id, intervalId);

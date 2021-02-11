@@ -1,34 +1,29 @@
-import {
-  ApiHelper,
-  ResourceModel,
-  Subject,
-  SubscriptionHelper,
-  UpdateHandler,
-} from "@/Core";
+import { ApiHelper, SubscriptionHelper, UpdateHandler } from "@/Core";
+import { Subject, DataModel } from "../DataModel";
 
 export class DummySubscriptionHelper
-  implements SubscriptionHelper<Subject, string, ResourceModel[]> {
+  implements SubscriptionHelper<Subject, string, DataModel> {
   private state: Record<string, () => void> = {};
 
   constructor(
-    private readonly apiHelper: ApiHelper<Subject, string, ResourceModel[]>
+    private readonly apiHelper: ApiHelper<Subject, string, DataModel>
   ) {}
 
   subscribeTo(
     subject: Subject,
-    updateHandler: UpdateHandler<string, ResourceModel[]>
+    updateHandler: UpdateHandler<string, DataModel>
   ): boolean {
     const handler = async () => {
       const result = await this.apiHelper.getData(subject);
       updateHandler(result);
     };
-    this.state[subject.query.id] = handler;
+    this.state[subject.id] = handler;
     handler();
     return true;
   }
 
   unsubscribeFrom(subject: Subject): void {
-    delete this.state[subject.query.id];
+    delete this.state[subject.id];
   }
 
   executeAll(): void {

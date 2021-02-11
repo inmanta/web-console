@@ -1,8 +1,13 @@
-import { createTypedHooks } from "easy-peasy";
-import { StoreModel } from "./Store";
+import { createStore, createTypedHooks, Store as _Store } from "easy-peasy";
+import { StoreModel, storeModel } from "./Store";
 
 export const {
   useStoreActions,
   useStoreState,
   useStoreDispatch,
 } = createTypedHooks<StoreModel>();
+
+export type Store = _Store<StoreModel>;
+
+export const getStoreInstance = (): Store =>
+  createStore<StoreModel>(storeModel);

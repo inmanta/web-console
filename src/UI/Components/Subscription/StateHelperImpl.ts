@@ -1,15 +1,10 @@
-import { RemoteData } from "@/Core";
-import { DataModel, StateHelper, isEqual } from "./Interfaces";
+import { RemoteData, StateHelper } from "@/Core";
+import { DataModel, isEqual } from "./DataModel";
 import { Store, useStoreState } from "./Store";
 
-export class StateHelperImpl implements StateHelper {
+export class StateHelperImpl implements StateHelper<string, DataModel> {
   constructor(private readonly store: Store) {}
-
-  set(id: string, value: RemoteData.Type<string, DataModel>): void {
-    this.store.dispatch.setData({ id, value });
-  }
-
-  get(id: string): RemoteData.Type<string, DataModel> {
+  getViaHook(id: string): RemoteData.Type<string, DataModel> {
     return useStoreState(
       (state) => {
         return this.enforce(state.data[id]);
@@ -25,14 +20,18 @@ export class StateHelperImpl implements StateHelper {
     );
   }
 
+  set(id: string, value: RemoteData.Type<string, DataModel>): void {
+    this.store.dispatch.setData({ id, value });
+  }
+
+  get(id: string): RemoteData.Type<string, DataModel> {
+    return this.enforce(this.store.getState().data[id]);
+  }
+
   private enforce(
     value: undefined | RemoteData.Type<string, DataModel>
   ): RemoteData.Type<string, DataModel> {
     if (typeof value === "undefined") return RemoteData.notAsked();
     return value;
-  }
-
-  getDirect(id: string): RemoteData.Type<string, DataModel> {
-    return this.enforce(this.store.getState().data[id]);
   }
 }

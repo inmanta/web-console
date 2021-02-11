@@ -1,6 +1,6 @@
 import { RemoteData } from "@/Core";
 import React, { useContext } from "react";
-import { DataModel } from "./Interfaces";
+import { DataModel } from "./DataModel";
 import { ServicesContext } from "./ServicesContext";
 
 interface Props {

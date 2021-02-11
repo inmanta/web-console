@@ -6,8 +6,6 @@ import { AppRoutes } from "@app/routes";
 import "@app/app.css";
 import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
-import { createStore, StoreProvider } from "easy-peasy";
-import { StoreModel, storeModel } from "@/UI";
 import {
   Alert,
   Spinner,
@@ -20,8 +18,6 @@ const keycloakInitConfig = {
   flow: "implicit",
 } as KeycloakInitOptions;
 
-const storeInstance = createStore<StoreModel>(storeModel);
-
 const App: React.FunctionComponent<{
   keycloak: Keycloak.KeycloakInstance;
   shouldUseAuth: boolean;
@@ -30,26 +26,24 @@ const App: React.FunctionComponent<{
   const shouldAddBaseName = process.env.NODE_ENV === "production";
 
   const AppWithStore = (
-    <StoreProvider store={storeInstance}>
-      <Router basename={shouldAddBaseName ? "/console" : "/"}>
-        <AppLayout
-          keycloak={props.shouldUseAuth ? props.keycloak : undefined}
-          setErrorMessage={setErrorMessage}
-          shouldUseAuth={props.shouldUseAuth}
-        >
-          {errorMessage && (
-            <Alert
-              variant="danger"
-              title={errorMessage}
-              actionClose={
-                <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-              }
-            />
-          )}
-          <AppRoutes />
-        </AppLayout>
-      </Router>
-    </StoreProvider>
+    <Router basename={shouldAddBaseName ? "/console" : "/"}>
+      <AppLayout
+        keycloak={props.shouldUseAuth ? props.keycloak : undefined}
+        setErrorMessage={setErrorMessage}
+        shouldUseAuth={props.shouldUseAuth}
+      >
+        {errorMessage && (
+          <Alert
+            variant="danger"
+            title={errorMessage}
+            actionClose={
+              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
+            }
+          />
+        )}
+        <AppRoutes />
+      </AppLayout>
+    </Router>
   );
   const LoadingSpinner = () => (
     <Bullseye>

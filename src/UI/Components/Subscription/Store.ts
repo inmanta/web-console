@@ -6,7 +6,7 @@ import {
   createTypedHooks,
 } from "easy-peasy";
 import { RemoteData } from "@/Core";
-import { DataModel } from "./Interfaces";
+import { DataModel } from "./DataModel";
 
 export interface StoreModel {
   data: Record<string, RemoteData.Type<string, DataModel>>;

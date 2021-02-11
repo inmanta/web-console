@@ -6,3 +6,14 @@ export interface ResourceModel {
 export interface ResourceModelWithInstance extends ResourceModel {
   instanceId: string;
 }
+
+export const isEqual = (a: ResourceModel, b: ResourceModel): boolean =>
+  a.resource_id === b.resource_id && a.resource_state === b.resource_state;
+
+export const isListEqual = (
+  a: ResourceModel[],
+  b: ResourceModel[]
+): boolean => {
+  if (a.length !== b.length) return false;
+  return a.every((element, index) => isEqual(element, b[index]));
+};

@@ -3,7 +3,7 @@ import { StoreProvider } from "easy-peasy";
 import { SubscriptionComponent } from "./SubscriptionComponent";
 import { getStoreInstance } from "./Store";
 import { ServicesContext } from "./ServicesContext";
-import { HookedDataManagerImpl } from "./HookedDataManagerImpl";
+import { DataManagerImpl } from "./DataManagerImpl";
 import { StateHelperImpl } from "./StateHelperImpl";
 import { SubscriptionHelperImpl } from "./SubscriptionHelperImpl";
 import { ApiHelperImpl } from "./ApiHelperImpl";
@@ -17,7 +17,7 @@ export default {
 const storeInstance = getStoreInstance();
 
 const services = {
-  dataManager: new HookedDataManagerImpl(
+  dataManager: new DataManagerImpl(
     new StateHelperImpl(storeInstance),
     new SubscriptionHelperImpl(
       2000,

@@ -1,11 +1,11 @@
-import { Either } from "@/Core";
-import { ApiHelper, DataModel } from "./Interfaces";
+import { Either, ApiHelper } from "@/Core";
+import { DataModel, Subject } from "./DataModel";
 
-export class ApiHelperImpl implements ApiHelper {
-  async getData(id: string): Promise<Either.Type<string, DataModel>> {
+export class ApiHelperImpl implements ApiHelper<Subject, string, DataModel> {
+  async getData(subject: Subject): Promise<Either.Type<string, DataModel>> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(Either.right({ id, value: 2 }));
+        resolve(Either.right({ id: subject.id, value: 2 }));
       }, 200);
     });
   }

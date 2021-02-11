@@ -1,23 +1,36 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { instances } from "@/Test";
+import { DummySubscriptionHelper, instances, InstantApiHelper } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
-import { createStore, StoreProvider } from "easy-peasy";
-import { StoreModel, storeModel } from "@/UI/Store";
+import { StoreProvider } from "easy-peasy";
+import { getStoreInstance } from "@/UI/Store";
 import { ServiceModel } from "@/Core";
+import { ServicesContext } from "@/UI/ServicesContext";
+import { DataManagerImpl } from "@/UI/Data/DataManagerImpl";
+import { StateHelperImpl } from "../Data/StateHelperImpl";
 
 export default {
   title: "TableProvider",
   component: TableProvider,
 };
 
-const storeInstance = createStore<StoreModel>(storeModel);
+const Template: Story<Props> = (args) => {
+  const store = getStoreInstance();
+  const dataManager = new DataManagerImpl(
+    new StateHelperImpl(store),
+    new DummySubscriptionHelper(
+      new InstantApiHelper({ kind: "Success", resources: [] })
+    )
+  );
 
-const Template: Story<Props> = (args) => (
-  <StoreProvider store={storeInstance}>
-    <TableProvider {...args} />
-  </StoreProvider>
-);
+  return (
+    <ServicesContext.Provider value={{ dataManager }}>
+      <StoreProvider store={store}>
+        <TableProvider {...args} />
+      </StoreProvider>
+    </ServicesContext.Provider>
+  );
+};
 
 export const Empty = Template.bind({});
 Empty.args = { instances: [] };

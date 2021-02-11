@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { TabProps } from "./ServiceInstanceDetails";
-import { InstanceForResources, RemoteData, ResourceModel } from "@/Core";
+import { ResourcesQuery, RemoteData, ResourceModel } from "@/Core";
 import {
   ResourceTable,
   HrefCreatorImpl,
@@ -12,23 +12,16 @@ import {
 import { ServicesContext } from "../ServicesContext";
 
 interface Props extends TabProps {
-  instance: InstanceForResources;
+  instance: ResourcesQuery;
 }
 
 export const ResourcesView: React.FC<Props> = ({ instance }) => {
-  const { resourceFetcher } = useContext(ServicesContext);
-  const [result, setResult] = useState<
-    RemoteData.Type<string, ResourceModel[]>
-  >(RemoteData.loading());
+  const { dataManager } = useContext(ServicesContext);
 
-  useEffect(() => {
-    const fetchResources = async () => {
-      setResult(
-        RemoteData.fromEither(await resourceFetcher.getResources(instance))
-      );
-    };
-    fetchResources();
-  }, []);
+  dataManager.useSubscription({ kind: "Resources", query: instance });
+  const data = dataManager.useData({ kind: "Resources", query: instance });
+
+  console.log("render", data);
 
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,
@@ -45,5 +38,5 @@ export const ResourcesView: React.FC<Props> = ({ instance }) => {
           resources={resources}
         />
       ),
-  })(result);
+  })(data);
 };
