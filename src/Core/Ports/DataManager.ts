@@ -15,14 +15,6 @@ export type UpdateHandler<Error, Data> = (
   data: Either.Type<Error, Data>
 ) => void;
 
-export interface SubscriptionHelper<Subject, Error, Data> {
-  subscribeTo(
-    subject: Subject,
-    updateHandler: UpdateHandler<Error, Data>
-  ): void;
-  unsubscribeFrom(subject: Subject): void;
-}
-
 export type Timer = ReturnType<typeof setInterval>;
 
 export interface Dictionary<Value> {

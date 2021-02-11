@@ -3,7 +3,7 @@ import { Store, useStoreState } from "@/UI/Store";
 
 type Data = RemoteData.Type<string, ResourceModel[]>;
 
-export class ResourcesStateHelperImpl
+export class ResourcesStateHelper
   implements StateHelper<string, ResourceModel[]> {
   constructor(private readonly store: Store) {}
 

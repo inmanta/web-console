@@ -9,8 +9,8 @@ import { ResourceFetcherImpl } from "@/Infra";
 import {
   DataManagerImpl,
   IntervalsDictionary,
-  StateHelperImpl,
-  SubscriptionHelperImpl,
+  ResourcesStateHelper,
+  LiveSubscriptionController,
 } from "@/UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
@@ -35,12 +35,9 @@ const storeInstance = getStoreInstance();
 
 const services: Services = {
   dataManager: new DataManagerImpl(
-    new StateHelperImpl(storeInstance),
-    new SubscriptionHelperImpl(
-      5000,
-      new ResourceFetcherImpl(keycloak),
-      new IntervalsDictionary()
-    )
+    new ResourceFetcherImpl(keycloak),
+    new ResourcesStateHelper(storeInstance),
+    new LiveSubscriptionController(5000, new IntervalsDictionary())
   ),
 };
 

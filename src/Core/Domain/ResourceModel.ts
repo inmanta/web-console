@@ -1,3 +1,5 @@
+import { getIsListEqual } from "@/Core/Language/Utils";
+
 export interface ResourceModel {
   resource_id: string;
   resource_state: string;
@@ -10,10 +12,4 @@ export interface ResourceModelWithInstance extends ResourceModel {
 export const isEqual = (a: ResourceModel, b: ResourceModel): boolean =>
   a.resource_id === b.resource_id && a.resource_state === b.resource_state;
 
-export const isListEqual = (
-  a: ResourceModel[],
-  b: ResourceModel[]
-): boolean => {
-  if (a.length !== b.length) return false;
-  return a.every((element, index) => isEqual(element, b[index]));
-};
+export const isListEqual = getIsListEqual(isEqual);

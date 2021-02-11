@@ -2,14 +2,13 @@ import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { InventoryTable } from "./InventoryTable";
 import {
-  DummySubscriptionHelper,
   InstantApiHelper,
   rows,
+  StaticSubscriptionController,
   tablePresenter,
 } from "@/Test";
 import { getStoreInstance } from "@/UI/Store";
-import { DataManagerImpl } from "../Data/DataManagerImpl";
-import { StateHelperImpl } from "../Data/StateHelperImpl";
+import { DataManagerImpl, ResourcesStateHelper } from "@/UI/Data";
 import { ServicesContext } from "../ServicesContext";
 import { StoreProvider } from "easy-peasy";
 
@@ -21,10 +20,9 @@ export default {
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
   const dataManager = new DataManagerImpl(
-    new StateHelperImpl(store),
-    new DummySubscriptionHelper(
-      new InstantApiHelper({ kind: "Success", resources: [] })
-    )
+    new InstantApiHelper({ kind: "Success", resources: [] }),
+    new ResourcesStateHelper(store),
+    new StaticSubscriptionController()
   );
 
   return (

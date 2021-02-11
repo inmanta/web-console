@@ -1,35 +1,38 @@
 import {
   RemoteData,
   DataManager,
-  SubscriptionHelper,
   Subject,
   StateHelper,
   ResourceModel,
+  ApiHelper,
+  SubscriptionController,
 } from "@/Core";
 import { useEffect } from "react";
 
 export class DataManagerImpl
   implements DataManager<Subject, string, ResourceModel[]> {
   constructor(
+    private readonly apiHelper: ApiHelper<Subject, string, ResourceModel[]>,
     private readonly stateHelper: StateHelper<string, ResourceModel[]>,
-    private readonly subscriptionHelper: SubscriptionHelper<
-      Subject,
-      string,
-      ResourceModel[]
-    >
+    private readonly subscriptionController: SubscriptionController
   ) {}
 
   useSubscription(subject: Subject): void {
+    const handler = async () => {
+      this.stateHelper.set(
+        subject.query.id,
+        RemoteData.fromEither(await this.apiHelper.getData(subject))
+      );
+    };
+
     useEffect(() => {
       const value = this.stateHelper.get(subject.query.id);
       if (RemoteData.isNotAsked(value)) {
         this.stateHelper.set(subject.query.id, RemoteData.loading());
       }
-      this.subscriptionHelper.subscribeTo(subject, (data) => {
-        this.stateHelper.set(subject.query.id, RemoteData.fromEither(data));
-      });
+      this.subscriptionController.subscribeTo(subject.query.id, handler);
       return () => {
-        this.subscriptionHelper.unsubscribeFrom(subject);
+        this.subscriptionController.unsubscribeFrom(subject.query.id);
       };
     }, [subject.query.id]);
   }

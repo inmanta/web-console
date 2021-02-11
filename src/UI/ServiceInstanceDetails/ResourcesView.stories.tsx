@@ -1,7 +1,7 @@
 import React from "react";
 import { ResourcesView } from "./ResourcesView";
 import {
-  DummySubscriptionHelper,
+  StaticSubscriptionController,
   Outcome,
   InstantApiHelper,
   Resource,
@@ -10,7 +10,7 @@ import { ServicesContext } from "../ServicesContext";
 import { DataManagerImpl } from "../Data/DataManagerImpl";
 import { getStoreInstance } from "../Store";
 import { StoreProvider } from "easy-peasy";
-import { StateHelperImpl } from "../Data/StateHelperImpl";
+import { ResourcesStateHelper } from "../Data/ResourcesStateHelper";
 
 export default {
   title: "ResourcesView",
@@ -20,8 +20,9 @@ export default {
 const Template: React.FC<{ outcome: Outcome }> = ({ outcome }) => {
   const store = getStoreInstance();
   const dataManager = new DataManagerImpl(
-    new StateHelperImpl(store),
-    new DummySubscriptionHelper(new InstantApiHelper(outcome))
+    new InstantApiHelper(outcome),
+    new ResourcesStateHelper(store),
+    new StaticSubscriptionController()
   );
 
   const instance = {
