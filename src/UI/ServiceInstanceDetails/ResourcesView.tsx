@@ -21,8 +21,6 @@ export const ResourcesView: React.FC<Props> = ({ instance }) => {
   dataManager.useSubscription({ kind: "Resources", query: instance });
   const data = dataManager.useData({ kind: "Resources", query: instance });
 
-  console.log("render", data);
-
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,
     loading: () => <FillerResourceTable filler={<LoadingFiller />} />,

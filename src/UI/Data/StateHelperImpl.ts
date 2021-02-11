@@ -3,7 +3,8 @@ import { Store, useStoreState } from "@/UI/Store";
 
 type Data = RemoteData.Type<string, ResourceModel[]>;
 
-export class StateHelperImpl implements StateHelper<string, ResourceModel[]> {
+export class ResourcesStateHelperImpl
+  implements StateHelper<string, ResourceModel[]> {
   constructor(private readonly store: Store) {}
 
   set(id: string, value: Data): void {
@@ -15,17 +16,14 @@ export class StateHelperImpl implements StateHelper<string, ResourceModel[]> {
       (state) => {
         return this.enforce(state.resources.byId[id]);
       },
-      (prev, next) => {
-        const result = RemoteData.dualFold<string, ResourceModel[], boolean>({
+      (prev, next) =>
+        RemoteData.dualFold<string, ResourceModel[], boolean>({
           notAsked: () => true,
           loading: () => true,
           failed: (a, b) => a === b,
           success: (a, b) => isListEqual(a, b),
           incompatible: () => false,
-        })(prev, next);
-        console.log("check", { result, prev, next });
-        return result;
-      }
+        })(prev, next)
     );
   }
 
