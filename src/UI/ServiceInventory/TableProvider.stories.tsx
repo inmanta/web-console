@@ -10,7 +10,11 @@ import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceModel } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { DataManagerImpl, ResourcesStateHelper } from "@/UI/Data";
+import {
+  DataManagerImpl,
+  ResourcesEntityManager,
+  ResourcesStateHelper,
+} from "@/UI/Data";
 
 export default {
   title: "TableProvider",
@@ -20,8 +24,10 @@ export default {
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
   const dataManager = new DataManagerImpl(
-    new InstantApiHelper({ kind: "Success", resources: [] }),
-    new ResourcesStateHelper(store),
+    new ResourcesEntityManager(
+      new InstantApiHelper({ kind: "Success", resources: [] }),
+      new ResourcesStateHelper(store)
+    ),
     new StaticSubscriptionController()
   );
 

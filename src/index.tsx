@@ -11,6 +11,7 @@ import {
   IntervalsDictionary,
   ResourcesStateHelper,
   LiveSubscriptionController,
+  ResourcesEntityManager,
 } from "@/UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
@@ -35,8 +36,10 @@ const storeInstance = getStoreInstance();
 
 const services: Services = {
   dataManager: new DataManagerImpl(
-    new ResourceFetcherImpl(keycloak),
-    new ResourcesStateHelper(storeInstance),
+    new ResourcesEntityManager(
+      new ResourceFetcherImpl(keycloak),
+      new ResourcesStateHelper(storeInstance)
+    ),
     new LiveSubscriptionController(5000, new IntervalsDictionary())
   ),
 };

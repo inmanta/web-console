@@ -8,7 +8,11 @@ import {
   tablePresenter,
 } from "@/Test";
 import { getStoreInstance } from "@/UI/Store";
-import { DataManagerImpl, ResourcesStateHelper } from "@/UI/Data";
+import {
+  DataManagerImpl,
+  ResourcesEntityManager,
+  ResourcesStateHelper,
+} from "@/UI/Data";
 import { ServicesContext } from "../ServicesContext";
 import { StoreProvider } from "easy-peasy";
 
@@ -20,8 +24,10 @@ export default {
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
   const dataManager = new DataManagerImpl(
-    new InstantApiHelper({ kind: "Success", resources: [] }),
-    new ResourcesStateHelper(store),
+    new ResourcesEntityManager(
+      new InstantApiHelper({ kind: "Success", resources: [] }),
+      new ResourcesStateHelper(store)
+    ),
     new StaticSubscriptionController()
   );
 

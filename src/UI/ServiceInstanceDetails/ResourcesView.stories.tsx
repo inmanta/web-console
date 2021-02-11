@@ -11,6 +11,7 @@ import { DataManagerImpl } from "../Data/DataManagerImpl";
 import { getStoreInstance } from "../Store";
 import { StoreProvider } from "easy-peasy";
 import { ResourcesStateHelper } from "../Data/ResourcesStateHelper";
+import { ResourcesEntityManager } from "../Data";
 
 export default {
   title: "ResourcesView",
@@ -20,8 +21,10 @@ export default {
 const Template: React.FC<{ outcome: Outcome }> = ({ outcome }) => {
   const store = getStoreInstance();
   const dataManager = new DataManagerImpl(
-    new InstantApiHelper(outcome),
-    new ResourcesStateHelper(store),
+    new ResourcesEntityManager(
+      new InstantApiHelper(outcome),
+      new ResourcesStateHelper(store)
+    ),
     new StaticSubscriptionController()
   );
 

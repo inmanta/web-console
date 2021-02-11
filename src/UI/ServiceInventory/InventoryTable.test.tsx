@@ -11,18 +11,24 @@ import {
 import { ServicesContext } from "@/UI/ServicesContext";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
-import { DataManagerImpl, ResourcesStateHelper } from "@/UI/Data";
+import {
+  DataManagerImpl,
+  ResourcesEntityManager,
+  ResourcesStateHelper,
+} from "@/UI/Data";
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
   const dataManager = new DataManagerImpl(
-    new InstantApiHelper({
-      kind: "Success",
-      resources: [
-        { resource_id: "resource_id_1", resource_state: "resource_state" },
-      ],
-    }),
-    new DummyStateHelper(),
+    new ResourcesEntityManager(
+      new InstantApiHelper({
+        kind: "Success",
+        resources: [
+          { resource_id: "resource_id_1", resource_state: "resource_state" },
+        ],
+      }),
+      new DummyStateHelper()
+    ),
     new StaticSubscriptionController()
   );
   render(
@@ -42,13 +48,15 @@ test("InventoryTable can be expanded", async () => {
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const dataManager = new DataManagerImpl(
-    new InstantApiHelper({
-      kind: "Success",
-      resources: [
-        { resource_id: "resource_id_1", resource_state: "resource_state" },
-      ],
-    }),
-    new ResourcesStateHelper(store),
+    new ResourcesEntityManager(
+      new InstantApiHelper({
+        kind: "Success",
+        resources: [
+          { resource_id: "resource_id_1", resource_state: "resource_state" },
+        ],
+      }),
+      new ResourcesStateHelper(store)
+    ),
     new StaticSubscriptionController()
   );
   render(
