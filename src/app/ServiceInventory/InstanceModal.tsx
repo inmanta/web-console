@@ -110,7 +110,7 @@ const InstanceModal: React.FunctionComponent<{
             setErrorMessage,
             refresh,
           }) => {
-            let urlWithParams = inventoryUrl.split("?")[0];
+            let urlWithParams = inventoryUrl;
             let currentAttributes;
             let formAttributes = attributes;
             if (props.instance) {

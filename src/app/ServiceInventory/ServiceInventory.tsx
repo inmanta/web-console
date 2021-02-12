@@ -84,7 +84,7 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
           value={{
             attributes: serviceEntity.attributes,
             environmentId,
-            inventoryUrl,
+            inventoryUrl: inventoryUrl.split("?")[0],
             setErrorMessage: setInstanceErrorMessage,
             refresh: refreshInstances,
           }}
