@@ -1,8 +1,9 @@
 import { Either, Maybe, RemoteData } from "@/Core/Language";
+import { Query, QueryResult } from "@/Core/Domain";
 
-export interface DataManager<Subject, Error, Data> {
-  useSubscription(subject: Subject): void;
-  useData(subject: Subject): RemoteData.Type<Error, Data>;
+export interface DataManager {
+  useSubscription(query: Query): void;
+  useData(query: Query): QueryResult[typeof query.kind];
 }
 
 export interface StateHelper<Error, Data> {

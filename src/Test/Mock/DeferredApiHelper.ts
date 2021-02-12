@@ -1,4 +1,4 @@
-import { Either, ApiHelper, Subject, ResourceModel } from "@/Core";
+import { Either, ApiHelper, Query, ResourceModel } from "@/Core";
 
 type Data = Either.Type<string, ResourceModel[]>;
 
@@ -7,7 +7,7 @@ interface Handlers {
 }
 
 export class DeferredApiHelper
-  implements ApiHelper<Subject, string, ResourceModel[]> {
+  implements ApiHelper<Query, string, ResourceModel[]> {
   private handlers: Handlers | null = null;
 
   getData(): Promise<Data> {

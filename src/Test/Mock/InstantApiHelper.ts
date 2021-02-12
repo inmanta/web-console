@@ -1,4 +1,4 @@
-import { Either, ApiHelper, Subject, ResourceModel } from "@/Core";
+import { Either, ApiHelper, Query, ResourceModel } from "@/Core";
 
 type Data = Either.Type<string, ResourceModel[]>;
 
@@ -8,7 +8,7 @@ export type Outcome =
   | { kind: "Success"; resources: ResourceModel[] };
 
 export class InstantApiHelper
-  implements ApiHelper<Subject, string, ResourceModel[]> {
+  implements ApiHelper<Query, string, ResourceModel[]> {
   constructor(private readonly outcome: Outcome) {}
 
   getData(): Promise<Data> {

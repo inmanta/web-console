@@ -1,35 +1,42 @@
 import {
   RemoteData,
   DataManager,
-  Subject,
+  Query,
   ResourceModel,
   SubscriptionController,
   EntityManager,
 } from "@/Core";
 import { useEffect } from "react";
 
-export class DataManagerImpl
-  implements DataManager<Subject, string, ResourceModel[]> {
+export class DataManagerImpl implements DataManager {
   constructor(
-    private readonly entityManager: EntityManager<string, ResourceModel[]>,
+    private readonly resourceEntityManager: EntityManager<
+      RemoteData.Type<string, ResourceModel[]>
+    >,
     private readonly subscriptionController: SubscriptionController
   ) {}
 
-  useSubscription(subject: Subject): void {
-    const handler = async () => {
-      this.entityManager.update(subject);
-    };
+  useSubscription(query: Query): void {
+    switch (query.kind) {
+      case "Resources":
+        const handler = async () => {
+          this.resourceEntityManager.update(query);
+        };
 
-    useEffect(() => {
-      this.entityManager.initialize(subject.query.id);
-      this.subscriptionController.subscribeTo(subject.query.id, handler);
-      return () => {
-        this.subscriptionController.unsubscribeFrom(subject.query.id);
-      };
-    }, [subject.query.id]);
+        useEffect(() => {
+          this.resourceEntityManager.initialize(query.qualifier.id);
+          this.subscriptionController.subscribeTo(query.qualifier.id, handler);
+          return () => {
+            this.subscriptionController.unsubscribeFrom(query.qualifier.id);
+          };
+        }, [query.qualifier.id]);
+    }
   }
 
-  useData(subject: Subject): RemoteData.Type<string, ResourceModel[]> {
-    return this.entityManager.get(subject.query.id);
+  useData(query: Query): RemoteData.Type<string, ResourceModel[]> {
+    switch (query.kind) {
+      case "Resources":
+        return this.resourceEntityManager.get(query.qualifier.id);
+    }
   }
 }

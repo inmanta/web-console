@@ -4,7 +4,7 @@ import { App } from "@app/index";
 import keycloakConf from "./app/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance, Services, ServicesContext } from "@/UI";
+import { getStoreInstance, ServicesContext } from "@/UI";
 import { ResourceFetcherImpl } from "@/Infra";
 import {
   DataManagerImpl,
@@ -34,18 +34,16 @@ if (externalKeycloakConf) {
 
 const storeInstance = getStoreInstance();
 
-const services: Services = {
-  dataManager: new DataManagerImpl(
-    new ResourcesEntityManager(
-      new ResourceFetcherImpl(keycloak),
-      new ResourcesStateHelper(storeInstance)
-    ),
-    new LiveSubscriptionController(5000, new IntervalsDictionary())
+const dataManager = new DataManagerImpl(
+  new ResourcesEntityManager(
+    new ResourceFetcherImpl(keycloak),
+    new ResourcesStateHelper(storeInstance)
   ),
-};
+  new LiveSubscriptionController(5000, new IntervalsDictionary())
+);
 
 ReactDOM.render(
-  <ServicesContext.Provider value={services}>
+  <ServicesContext.Provider value={{ dataManager }}>
     <StoreProvider store={storeInstance}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
     </StoreProvider>

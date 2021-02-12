@@ -46,7 +46,7 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
           numberOfColumns={tablePresenter.getNumberOfColumns()}
           actions={tablePresenter.getActionsFor(row.id.full)}
           state={tablePresenter.getStateFor(row.id.full)}
-          instanceForResources={{
+          resourcesQualifier={{
             id: row.id.full,
             service_entity: row.service_entity,
             environment: row.environment,

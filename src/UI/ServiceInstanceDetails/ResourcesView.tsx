@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { TabProps } from "./ServiceInstanceDetails";
-import { ResourcesQuery, RemoteData, ResourceModel } from "@/Core";
+import { ResourcesQualifier, RemoteData, ResourceModel } from "@/Core";
 import {
   ResourceTable,
   HrefCreatorImpl,
@@ -12,14 +12,14 @@ import {
 import { ServicesContext } from "../ServicesContext";
 
 interface Props extends TabProps {
-  instance: ResourcesQuery;
+  qualifier: ResourcesQualifier;
 }
 
-export const ResourcesView: React.FC<Props> = ({ instance }) => {
+export const ResourcesView: React.FC<Props> = ({ qualifier }) => {
   const { dataManager } = useContext(ServicesContext);
 
-  dataManager.useSubscription({ kind: "Resources", query: instance });
-  const data = dataManager.useData({ kind: "Resources", query: instance });
+  dataManager.useSubscription({ kind: "Resources", qualifier });
+  const data = dataManager.useData({ kind: "Resources", qualifier });
 
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,
@@ -32,7 +32,7 @@ export const ResourcesView: React.FC<Props> = ({ instance }) => {
         <FillerResourceTable filler={<EmptyFiller />} />
       ) : (
         <ResourceTable
-          hrefCreator={new HrefCreatorImpl(instance.environment)}
+          hrefCreator={new HrefCreatorImpl(qualifier.environment)}
           resources={resources}
         />
       ),
