@@ -10,12 +10,13 @@ import { ResourcesStateHelper } from "../Data/ResourcesStateHelper";
 import { ResourcesEntityManager } from "../Data";
 import { Either } from "@/Core";
 
-test("ResourcesView shows empty table", async () => {
+function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
+  const subscriptionController = new StaticSubscriptionController();
   const dataManager = new DataManagerImpl(
     new ResourcesEntityManager(apiHelper, new ResourcesStateHelper(store)),
-    new StaticSubscriptionController()
+    subscriptionController
   );
 
   const instance = {
@@ -25,13 +26,20 @@ test("ResourcesView shows empty table", async () => {
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
 
-  render(
+  const component = (
     <ServicesContext.Provider value={{ dataManager }}>
       <StoreProvider store={store}>
         <ResourcesView qualifier={instance} title="" icon={<></>} />
       </StoreProvider>
     </ServicesContext.Provider>
   );
+
+  return { component, apiHelper, subscriptionController };
+}
+
+test("ResourcesView shows empty table", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Loading" })
@@ -45,27 +53,8 @@ test("ResourcesView shows empty table", async () => {
 });
 
 test("ResourcesView shows failed table", async () => {
-  const store = getStoreInstance();
-  const apiHelper = new DeferredApiHelper();
-  const dataManager = new DataManagerImpl(
-    new ResourcesEntityManager(apiHelper, new ResourcesStateHelper(store)),
-    new StaticSubscriptionController()
-  );
-
-  const instance = {
-    id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-    service_entity: "vlan-assignment",
-    version: 4,
-    environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
-  };
-
-  render(
-    <ServicesContext.Provider value={{ dataManager }}>
-      <StoreProvider store={store}>
-        <ResourcesView qualifier={instance} title="" icon={<></>} />
-      </StoreProvider>
-    </ServicesContext.Provider>
-  );
+  const { component, apiHelper } = setup();
+  render(component);
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Loading" })
@@ -79,31 +68,37 @@ test("ResourcesView shows failed table", async () => {
 });
 
 test("ResourcesView shows success table", async () => {
-  const store = getStoreInstance();
-  const apiHelper = new DeferredApiHelper();
-  const dataManager = new DataManagerImpl(
-    new ResourcesEntityManager(apiHelper, new ResourcesStateHelper(store)),
-    new StaticSubscriptionController()
-  );
-
-  const instance = {
-    id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-    service_entity: "vlan-assignment",
-    version: 4,
-    environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
-  };
-
-  render(
-    <ServicesContext.Provider value={{ dataManager }}>
-      <StoreProvider store={store}>
-        <ResourcesView qualifier={instance} title="" icon={<></>} />
-      </StoreProvider>
-    </ServicesContext.Provider>
-  );
+  const { component, apiHelper } = setup();
+  render(component);
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Loading" })
   ).toBeInTheDocument();
+
+  apiHelper.resolve(
+    Either.right([{ resource_id: "abc123", resource_state: "deployed" }])
+  );
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourceTable-Success" })
+  ).toBeInTheDocument();
+});
+
+test("ResourcesView shows updated table", async () => {
+  const { component, apiHelper, subscriptionController } = setup();
+  render(component);
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourceTable-Loading" })
+  ).toBeInTheDocument();
+
+  apiHelper.resolve(Either.right([]));
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourceTable-Empty" })
+  ).toBeInTheDocument();
+
+  subscriptionController.executeAll();
 
   apiHelper.resolve(
     Either.right([{ resource_id: "abc123", resource_state: "deployed" }])

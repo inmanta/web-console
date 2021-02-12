@@ -71,7 +71,7 @@ test("ServiceInventory can show resources for instance", async () => {
   fireEvent.click(screen.getByRole("button", { name: "Resources" }));
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable" })
+    await screen.findByRole("grid", { name: "ResourceTable-Success" })
   ).toBeInTheDocument();
 
   expect(screen.getByText("resource_id_1")).toBeInTheDocument();
