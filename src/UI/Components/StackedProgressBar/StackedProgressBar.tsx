@@ -26,9 +26,14 @@ export const StackedProgressBar: React.FC<Props> = ({
           <>
             <Tooltip
               entryDelay={200}
-              content={words("inventory.deploymentProgress.waiting")}
+              content={words("inventory.deploymentProgress.ready")}
             >
-              <span style={{ width: `${scaledWaiting}%` }}> {waiting}</span>
+              <span
+                style={{ width: `${scaledSuccess}%` }}
+                className="progress-success"
+              >
+                {success}
+              </span>
             </Tooltip>
             <Tooltip
               entryDelay={200}
@@ -43,14 +48,9 @@ export const StackedProgressBar: React.FC<Props> = ({
             </Tooltip>
             <Tooltip
               entryDelay={200}
-              content={words("inventory.deploymentProgress.success")}
+              content={words("inventory.deploymentProgress.inProgress")}
             >
-              <span
-                style={{ width: `${scaledSuccess}%` }}
-                className="progress-success"
-              >
-                {success}
-              </span>
+              <span style={{ width: `${scaledWaiting}%` }}> {waiting}</span>
             </Tooltip>
           </>
         )}

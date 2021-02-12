@@ -9,7 +9,7 @@ describe("Service inventory", function () {
     });
     cy.route({
       method: "GET",
-      url: "**/lsm/v1/service_inventory/e2e_service",
+      url: "**/lsm/v1/service_inventory/e2e_service?**",
       response: "fixture:lsm/service_inventory.json",
     });
     cy.route({

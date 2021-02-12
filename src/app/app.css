@@ -76,7 +76,3 @@ body,
   opacity: .2;
   width: 100%;
 }
-.progress.progress-stacked > .progress-description {
-  color: var(--pf-global--Color--100);
-  background-color:  var(--pf-global--BackgroundColor--100);
-}
