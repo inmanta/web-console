@@ -11,11 +11,7 @@ import { Type } from "@/Core/Language/RemoteData";
 export class ResourcesEntityManager
   implements EntityManager<RemoteData.Type<string, ResourceModel[]>> {
   constructor(
-    private readonly apiHelper: ApiHelper<
-      ResourcesQuery,
-      string,
-      ResourceModel[]
-    >,
+    private readonly apiHelper: ApiHelper<ResourcesQuery>,
     private readonly stateHelper: StateHelper<string, ResourceModel[]>
   ) {}
 

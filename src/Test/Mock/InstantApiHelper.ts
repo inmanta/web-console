@@ -7,8 +7,7 @@ export type Outcome =
   | { kind: "Failed"; error: string }
   | { kind: "Success"; resources: ResourceModel[] };
 
-export class InstantApiHelper
-  implements ApiHelper<Query, string, ResourceModel[]> {
+export class InstantApiHelper implements ApiHelper<Query> {
   constructor(private readonly outcome: Outcome) {}
 
   getData(): Promise<Data> {

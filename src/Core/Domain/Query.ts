@@ -1,4 +1,4 @@
-import { RemoteData } from "@/Core/Language";
+import { Either, RemoteData } from "@/Core/Language";
 import { HookHelper } from "../Ports/DataManager";
 import { ResourceModel } from "./ResourceModel";
 import { ServiceInstanceModel } from "./ServiceInstanceModel";
@@ -22,5 +22,6 @@ export interface QueryInfo {
       RemoteData.Type<string, ResourceModel[]>
     >;
     data: RemoteData.Type<string, ResourceModel[]>;
+    apiData: Either.Type<string, ResourceModel[]>;
   };
 }

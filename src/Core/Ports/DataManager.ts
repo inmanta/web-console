@@ -25,8 +25,8 @@ export interface Dictionary<Value> {
   drop(key: string): void;
 }
 
-export interface ApiHelper<Subject, Error, Data> {
-  getData(subject: Subject): Promise<Either.Type<Error, Data>>;
+export interface ApiHelper<Q extends Query> {
+  getData(query: Q): Promise<QueryInfo[typeof query.kind]["apiData"]>;
 }
 
 export interface HookHelper<Q = unknown, D = unknown> {

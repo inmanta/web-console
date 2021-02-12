@@ -6,8 +6,7 @@ interface Handlers {
   resolve: (value: Data | PromiseLike<Data>) => void;
 }
 
-export class DeferredApiHelper
-  implements ApiHelper<Query, string, ResourceModel[]> {
+export class DeferredApiHelper implements ApiHelper<Query> {
   private handlers: Handlers | null = null;
 
   getData(): Promise<Data> {
