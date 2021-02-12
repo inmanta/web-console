@@ -12,6 +12,7 @@ import {
   ResourcesStateHelper,
   LiveSubscriptionController,
   ResourcesEntityManager,
+  ResourcesHookHelper,
 } from "@/UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
@@ -34,13 +35,15 @@ if (externalKeycloakConf) {
 
 const storeInstance = getStoreInstance();
 
-const dataManager = new DataManagerImpl(
-  new ResourcesEntityManager(
-    new ResourceFetcherImpl(keycloak),
-    new ResourcesStateHelper(storeInstance)
+const dataManager = new DataManagerImpl([
+  new ResourcesHookHelper(
+    new ResourcesEntityManager(
+      new ResourceFetcherImpl(keycloak),
+      new ResourcesStateHelper(storeInstance)
+    ),
+    new LiveSubscriptionController(5000, new IntervalsDictionary())
   ),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
-);
+]);
 
 ReactDOM.render(
   <ServicesContext.Provider value={{ dataManager }}>

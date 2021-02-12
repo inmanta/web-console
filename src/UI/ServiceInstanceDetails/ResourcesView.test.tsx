@@ -1,23 +1,28 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { ResourcesView } from "./ResourcesView";
-import { StaticSubscriptionController, DeferredApiHelper } from "@/Test";
-import { ServicesContext } from "../ServicesContext";
-import { DataManagerImpl } from "../Data/DataManagerImpl";
-import { getStoreInstance } from "../Store";
 import { StoreProvider } from "easy-peasy";
-import { ResourcesStateHelper } from "../Data/ResourcesStateHelper";
-import { ResourcesEntityManager } from "../Data";
+import { StaticSubscriptionController, DeferredApiHelper } from "@/Test";
 import { Either } from "@/Core";
+import { ServicesContext } from "@/UI/ServicesContext";
+import {
+  DataManagerImpl,
+  ResourcesStateHelper,
+  ResourcesEntityManager,
+  ResourcesHookHelper,
+} from "@/UI/Data";
+import { getStoreInstance } from "@/UI/Store";
+import { ResourcesView } from "./ResourcesView";
 
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const subscriptionController = new StaticSubscriptionController();
-  const dataManager = new DataManagerImpl(
-    new ResourcesEntityManager(apiHelper, new ResourcesStateHelper(store)),
-    subscriptionController
-  );
+  const dataManager = new DataManagerImpl([
+    new ResourcesHookHelper(
+      new ResourcesEntityManager(apiHelper, new ResourcesStateHelper(store)),
+      subscriptionController
+    ),
+  ]);
 
   const instance = {
     id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",

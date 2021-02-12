@@ -1,4 +1,5 @@
 import { RemoteData } from "@/Core/Language";
+import { HookHelper } from "../Ports/DataManager";
 import { ResourceModel } from "./ResourceModel";
 import { ServiceInstanceModel } from "./ServiceInstanceModel";
 
@@ -14,6 +15,12 @@ export interface ResourcesQuery {
 
 export type Query = ResourcesQuery;
 
-export interface QueryResult {
-  Resources: RemoteData.Type<string, ResourceModel[]>;
+export interface QueryInfo {
+  Resources: {
+    hookHelper: HookHelper<
+      ResourcesQuery,
+      RemoteData.Type<string, ResourceModel[]>
+    >;
+    data: RemoteData.Type<string, ResourceModel[]>;
+  };
 }

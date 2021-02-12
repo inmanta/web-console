@@ -1,42 +1,23 @@
-import {
-  RemoteData,
-  DataManager,
-  Query,
-  ResourceModel,
-  SubscriptionController,
-  EntityManager,
-} from "@/Core";
-import { useEffect } from "react";
+import { DataManager, Query, HookHelper, QueryInfo } from "@/Core";
 
 export class DataManagerImpl implements DataManager {
-  constructor(
-    private readonly resourceEntityManager: EntityManager<
-      RemoteData.Type<string, ResourceModel[]>
-    >,
-    private readonly subscriptionController: SubscriptionController
-  ) {}
+  constructor(private readonly hookHelpers: HookHelper[]) {}
 
-  useSubscription(query: Query): void {
-    switch (query.kind) {
-      case "Resources":
-        const handler = async () => {
-          this.resourceEntityManager.update(query);
-        };
-
-        useEffect(() => {
-          this.resourceEntityManager.initialize(query.qualifier.id);
-          this.subscriptionController.subscribeTo(query.qualifier.id, handler);
-          return () => {
-            this.subscriptionController.unsubscribeFrom(query.qualifier.id);
-          };
-        }, [query.qualifier.id]);
+  getHelper(query: Query): QueryInfo[typeof query.kind]["hookHelper"] {
+    const hookHelper = this.hookHelpers.find((helper) => helper.matches(query));
+    if (typeof hookHelper !== "undefined") {
+      return hookHelper as QueryInfo[typeof query.kind]["hookHelper"];
     }
+    throw new Error(`Can't find HookHelper for query ${query.kind}`);
   }
 
-  useData(query: Query): RemoteData.Type<string, ResourceModel[]> {
-    switch (query.kind) {
-      case "Resources":
-        return this.resourceEntityManager.get(query.qualifier.id);
-    }
+  useSubscription(query: Query): void {
+    const helper = this.getHelper(query);
+    helper.useSubscription(query);
+  }
+
+  useData(query: Query): QueryInfo[typeof query.kind]["data"] {
+    const helper = this.getHelper(query);
+    return helper.useData(query);
   }
 }

@@ -1,9 +1,9 @@
 import { Either, Maybe, RemoteData } from "@/Core/Language";
-import { Query, QueryResult } from "@/Core/Domain";
+import { Query, QueryInfo } from "@/Core/Domain";
 
 export interface DataManager {
   useSubscription(query: Query): void;
-  useData(query: Query): QueryResult[typeof query.kind];
+  useData(query: Query): QueryInfo[typeof query.kind]["data"];
 }
 
 export interface StateHelper<Error, Data> {
@@ -27,4 +27,10 @@ export interface Dictionary<Value> {
 
 export interface ApiHelper<Subject, Error, Data> {
   getData(subject: Subject): Promise<Either.Type<Error, Data>>;
+}
+
+export interface HookHelper<Q = unknown, D = unknown> {
+  useSubscription(query: Q): void;
+  useData(query: Q): D;
+  matches(query: Query): boolean;
 }

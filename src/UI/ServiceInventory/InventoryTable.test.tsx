@@ -14,23 +14,26 @@ import { StoreProvider } from "easy-peasy";
 import {
   DataManagerImpl,
   ResourcesEntityManager,
+  ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
-  const dataManager = new DataManagerImpl(
-    new ResourcesEntityManager(
-      new InstantApiHelper({
-        kind: "Success",
-        resources: [
-          { resource_id: "resource_id_1", resource_state: "resource_state" },
-        ],
-      }),
-      new DummyStateHelper()
+  const dataManager = new DataManagerImpl([
+    new ResourcesHookHelper(
+      new ResourcesEntityManager(
+        new InstantApiHelper({
+          kind: "Success",
+          resources: [
+            { resource_id: "resource_id_1", resource_state: "resource_state" },
+          ],
+        }),
+        new DummyStateHelper()
+      ),
+      new StaticSubscriptionController()
     ),
-    new StaticSubscriptionController()
-  );
+  ]);
   render(
     <ServicesContext.Provider value={{ dataManager }}>
       <InventoryTable rows={rows} tablePresenter={tablePresenter} />
@@ -47,18 +50,20 @@ test("InventoryTable can be expanded", async () => {
 
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
-  const dataManager = new DataManagerImpl(
-    new ResourcesEntityManager(
-      new InstantApiHelper({
-        kind: "Success",
-        resources: [
-          { resource_id: "resource_id_1", resource_state: "resource_state" },
-        ],
-      }),
-      new ResourcesStateHelper(store)
+  const dataManager = new DataManagerImpl([
+    new ResourcesHookHelper(
+      new ResourcesEntityManager(
+        new InstantApiHelper({
+          kind: "Success",
+          resources: [
+            { resource_id: "resource_id_1", resource_state: "resource_state" },
+          ],
+        }),
+        new ResourcesStateHelper(store)
+      ),
+      new StaticSubscriptionController()
     ),
-    new StaticSubscriptionController()
-  );
+  ]);
   render(
     <ServicesContext.Provider value={{ dataManager }}>
       <StoreProvider store={store}>

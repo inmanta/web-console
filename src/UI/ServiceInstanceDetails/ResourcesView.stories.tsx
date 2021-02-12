@@ -11,7 +11,7 @@ import { DataManagerImpl } from "../Data/DataManagerImpl";
 import { getStoreInstance } from "../Store";
 import { StoreProvider } from "easy-peasy";
 import { ResourcesStateHelper } from "../Data/ResourcesStateHelper";
-import { ResourcesEntityManager } from "../Data";
+import { ResourcesEntityManager, ResourcesHookHelper } from "../Data";
 
 export default {
   title: "ResourcesView",
@@ -20,13 +20,15 @@ export default {
 
 const Template: React.FC<{ outcome: Outcome }> = ({ outcome }) => {
   const store = getStoreInstance();
-  const dataManager = new DataManagerImpl(
-    new ResourcesEntityManager(
-      new InstantApiHelper(outcome),
-      new ResourcesStateHelper(store)
+  const dataManager = new DataManagerImpl([
+    new ResourcesHookHelper(
+      new ResourcesEntityManager(
+        new InstantApiHelper(outcome),
+        new ResourcesStateHelper(store)
+      ),
+      new StaticSubscriptionController()
     ),
-    new StaticSubscriptionController()
-  );
+  ]);
 
   const instance = {
     id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",

@@ -13,6 +13,7 @@ import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataManagerImpl,
   ResourcesEntityManager,
+  ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
 
@@ -23,13 +24,15 @@ export default {
 
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
-  const dataManager = new DataManagerImpl(
-    new ResourcesEntityManager(
-      new InstantApiHelper({ kind: "Success", resources: [] }),
-      new ResourcesStateHelper(store)
+  const dataManager = new DataManagerImpl([
+    new ResourcesHookHelper(
+      new ResourcesEntityManager(
+        new InstantApiHelper({ kind: "Success", resources: [] }),
+        new ResourcesStateHelper(store)
+      ),
+      new StaticSubscriptionController()
     ),
-    new StaticSubscriptionController()
-  );
+  ]);
 
   return (
     <ServicesContext.Provider value={{ dataManager }}>
