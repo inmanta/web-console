@@ -1,17 +1,20 @@
 import React from "react";
-import { ResourcesView } from "./ResourcesView";
+import { StoreProvider } from "easy-peasy";
+import { getStoreInstance } from "@/UI/Store";
 import {
   StaticSubscriptionController,
   Outcome,
   InstantApiHelper,
   Resource,
 } from "@/Test";
-import { ServicesContext } from "../ServicesContext";
-import { DataManagerImpl } from "../Data/DataManagerImpl";
-import { getStoreInstance } from "../Store";
-import { StoreProvider } from "easy-peasy";
-import { ResourcesStateHelper } from "../Data/ResourcesStateHelper";
-import { ResourcesEntityManager, ResourcesHookHelper } from "../Data";
+import { ServicesContext } from "@/UI/ServicesContext";
+import {
+  DataManagerImpl,
+  ResourcesStateHelper,
+  ResourcesEntityManager,
+  ResourcesHookHelper,
+} from "@/UI/Data";
+import { ResourcesView } from "./ResourcesView";
 
 export default {
   title: "ResourcesView",
