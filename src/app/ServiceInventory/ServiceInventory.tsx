@@ -29,7 +29,7 @@ interface Props {
 
 const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   const serviceName = props.match.params.id;
-  const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}`;
+  const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}?include_deployment_progress=True`;
   const store = useStoreState((store) => store);
   const storeDispatch = useStoreDispatch();
   const [errorMessage, setErrorMessage] = React.useState("");

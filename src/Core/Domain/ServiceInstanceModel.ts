@@ -4,6 +4,13 @@ export interface InstanceAttributeModel {
   [Key: string]: string | string[] | boolean | number | null;
 }
 
+export interface DeploymentProgress {
+  total: number;
+  failed: number;
+  deployed: number;
+  waiting: number;
+}
+
 export interface ServiceInstanceModel extends WithId {
   active_attributes: InstanceAttributeModel | null;
   callback: string[];
@@ -16,6 +23,7 @@ export interface ServiceInstanceModel extends WithId {
   service_entity: string;
   state: string;
   version: number;
+  deployment_progress?: DeploymentProgress;
 }
 
 export interface ServiceInstanceModelWithTargetStates

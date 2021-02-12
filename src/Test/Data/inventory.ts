@@ -151,6 +151,7 @@ export const instance = base;
 const instance2 = {
   ...base,
   id: "0002fake-4f80-45e1-b2ad-137c442c68b8",
+  deployment_progress: { total: 5, failed: 1, waiting: 2, deployed: 2 },
 };
 
 const instance3 = {
