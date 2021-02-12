@@ -23,17 +23,29 @@ export const ResourcesView: React.FC<Props> = ({ qualifier }) => {
 
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,
-    loading: () => <FillerResourceTable filler={<LoadingFiller />} />,
+    loading: () => (
+      <FillerResourceTable
+        filler={<LoadingFiller />}
+        aria-label="ResourceTable-Loading"
+      />
+    ),
     failed: (error) => (
-      <FillerResourceTable filler={<FailedFiller error={error} />} />
+      <FillerResourceTable
+        filler={<FailedFiller error={error} />}
+        aria-label="ResourceTable-Failed"
+      />
     ),
     success: (resources) =>
       resources.length === 0 ? (
-        <FillerResourceTable filler={<EmptyFiller />} />
+        <FillerResourceTable
+          filler={<EmptyFiller />}
+          aria-label="ResourceTable-Empty"
+        />
       ) : (
         <ResourceTable
           hrefCreator={new HrefCreatorImpl(qualifier.environment)}
           resources={resources}
+          aria-label="ResourceTable-Success"
         />
       ),
   })(data);
