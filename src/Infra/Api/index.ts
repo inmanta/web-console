@@ -1,1 +1,1 @@
-export * from "./ResourceFetcherImpl";
+export * from "./ResourcesApiHelper";

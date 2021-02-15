@@ -1,8 +1,8 @@
-import { ApiHelper, Either, ResourceModel, ResourcesQuery } from "@/Core";
+import { ApiHelper, Either, ResourceModel, Query } from "@/Core";
 import { words } from "@/UI/words";
 import { KeycloakInstance } from "keycloak-js";
 
-export class ResourceFetcherImpl implements ApiHelper<ResourcesQuery> {
+export class ResourcesApiHelper implements ApiHelper<Query.ResourcesQuery> {
   constructor(private readonly keycloak: KeycloakInstance | undefined) {}
 
   private getBaseUrl() {
@@ -39,7 +39,7 @@ export class ResourceFetcherImpl implements ApiHelper<ResourcesQuery> {
   }
 
   async getData(
-    query: ResourcesQuery
+    query: Query.ResourcesQuery
   ): Promise<Either.Type<string, ResourceModel[]>> {
     try {
       const { id, version, environment, service_entity } = query.qualifier;

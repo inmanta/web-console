@@ -3,4 +3,4 @@ export * from "./ServiceModel";
 export * from "./ResourceModel";
 export * from "./ServiceInstanceModel";
 export * from "./ProjectModel";
-export * from "./Query";
+export * as Query from "./Query";

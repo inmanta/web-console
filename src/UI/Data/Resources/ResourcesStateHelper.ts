@@ -11,7 +11,7 @@ export class ResourcesStateHelper
     this.store.dispatch.resources.setData({ id, value });
   }
 
-  getViaHook(id: string): Data {
+  getHooked(id: string): Data {
     return useStoreState(
       (state) => {
         return this.enforce(state.resources.byId[id]);
@@ -32,7 +32,7 @@ export class ResourcesStateHelper
     return value;
   }
 
-  get(id: string): Data {
+  getOnce(id: string): Data {
     return this.enforce(this.store.getState().resources.byId[id]);
   }
 }

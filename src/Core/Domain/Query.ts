@@ -1,5 +1,3 @@
-import { Either, RemoteData } from "@/Core/Language";
-import { HookHelper } from "../Ports/DataManager";
 import { ResourceModel } from "./ResourceModel";
 import { ServiceInstanceModel } from "./ServiceInstanceModel";
 
@@ -13,15 +11,22 @@ export interface ResourcesQuery {
   qualifier: ResourcesQualifier;
 }
 
-export type Query = ResourcesQuery;
+type Query = ResourcesQuery;
 
-export interface QueryInfo {
+export type Type = Query;
+
+interface Manifest {
   Resources: {
-    hookHelper: HookHelper<
-      ResourcesQuery,
-      RemoteData.Type<string, ResourceModel[]>
-    >;
-    data: RemoteData.Type<string, ResourceModel[]>;
-    apiData: Either.Type<string, ResourceModel[]>;
+    error: string;
+    data: ResourceModel[];
+    query: ResourcesQuery;
   };
 }
+
+export type Kind = Query["kind"];
+
+export type Error<K extends Kind> = Manifest[K]["error"];
+
+export type Data<K extends Kind> = Manifest[K]["data"];
+
+export type SubQuery<K extends Kind> = Manifest[K]["query"];

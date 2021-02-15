@@ -8,3 +8,5 @@ export const getIsListEqual = <Data>(
   if (a.length !== b.length) return false;
   return a.every((element, index) => isEqual(element, b[index]));
 };
+
+export type Timer = ReturnType<typeof setInterval>;

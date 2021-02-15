@@ -3,14 +3,12 @@ import {
   ResourceModel,
   SubscriptionController,
   EntityManager,
-  ResourcesQuery,
+  Query,
   HookHelper,
 } from "@/Core";
 import { useEffect } from "react";
 
-type Data = RemoteData.Type<string, ResourceModel[]>;
-
-export class ResourcesHookHelper implements HookHelper<ResourcesQuery, Data> {
+export class ResourcesHookHelper implements HookHelper<Query.ResourcesQuery> {
   constructor(
     private readonly entityManager: EntityManager<
       RemoteData.Type<string, ResourceModel[]>
@@ -18,7 +16,7 @@ export class ResourcesHookHelper implements HookHelper<ResourcesQuery, Data> {
     private readonly subscriptionController: SubscriptionController
   ) {}
 
-  useSubscription(query: ResourcesQuery): void {
+  useSubscription(query: Query.ResourcesQuery): void {
     const handler = async () => {
       this.entityManager.update(query);
     };
@@ -32,11 +30,13 @@ export class ResourcesHookHelper implements HookHelper<ResourcesQuery, Data> {
     }, [query.qualifier.id]);
   }
 
-  useData(query: ResourcesQuery): Data {
+  useData(
+    query: Query.ResourcesQuery
+  ): RemoteData.Type<string, ResourceModel[]> {
     return this.entityManager.get(query.qualifier.id);
   }
 
-  matches(query: ResourcesQuery): boolean {
+  matches(query: Query.ResourcesQuery): boolean {
     return query.kind === "Resources";
   }
 }

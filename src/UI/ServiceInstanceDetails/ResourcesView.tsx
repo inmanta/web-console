@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { TabProps } from "./ServiceInstanceDetails";
-import { ResourcesQualifier, RemoteData, ResourceModel } from "@/Core";
+import { Query, RemoteData, ResourceModel } from "@/Core";
 import {
   ResourceTable,
   HrefCreatorImpl,
@@ -12,7 +12,7 @@ import {
 import { ServicesContext } from "../ServicesContext";
 
 interface Props extends TabProps {
-  qualifier: ResourcesQualifier;
+  qualifier: Query.ResourcesQualifier;
 }
 
 export const ResourcesView: React.FC<Props> = ({ qualifier }) => {

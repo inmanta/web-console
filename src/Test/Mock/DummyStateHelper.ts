@@ -9,11 +9,11 @@ export class DummyStateHelper implements StateHelper<string, ResourceModel[]> {
     this.state[id] = value;
   }
 
-  getViaHook(id: string): Data {
+  getHooked(id: string): Data {
     return this.state[id];
   }
 
-  get(id: string): Data {
+  getOnce(id: string): Data {
     return this.state[id];
   }
 }

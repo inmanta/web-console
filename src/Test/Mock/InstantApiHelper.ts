@@ -1,16 +1,14 @@
-import { Either, ApiHelper, Query, ResourceModel } from "@/Core";
-
-type Data = Either.Type<string, ResourceModel[]>;
+import { Either, ApiHelper, ResourceModel } from "@/Core";
 
 export type Outcome =
   | { kind: "Loading" }
   | { kind: "Failed"; error: string }
   | { kind: "Success"; resources: ResourceModel[] };
 
-export class InstantApiHelper implements ApiHelper<Query> {
+export class InstantApiHelper implements ApiHelper {
   constructor(private readonly outcome: Outcome) {}
 
-  getData(): Promise<Data> {
+  getData(): Promise<Either.Type<string, ResourceModel[]>> {
     const { outcome } = this;
 
     switch (outcome.kind) {

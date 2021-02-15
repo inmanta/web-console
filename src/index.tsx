@@ -5,7 +5,7 @@ import keycloakConf from "./app/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance, ServicesContext } from "@/UI";
-import { ResourceFetcherImpl } from "@/Infra";
+import { ResourcesApiHelper } from "@/Infra";
 import {
   DataManagerImpl,
   IntervalsDictionary,
@@ -38,7 +38,7 @@ const storeInstance = getStoreInstance();
 const dataManager = new DataManagerImpl([
   new ResourcesHookHelper(
     new ResourcesEntityManager(
-      new ResourceFetcherImpl(keycloak),
+      new ResourcesApiHelper(keycloak),
       new ResourcesStateHelper(storeInstance)
     ),
     new LiveSubscriptionController(5000, new IntervalsDictionary())

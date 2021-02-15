@@ -3,7 +3,7 @@ import {
   EntityManager,
   RemoteData,
   ResourceModel,
-  ResourcesQuery,
+  Query,
   StateHelper,
 } from "@/Core";
 import { Type } from "@/Core/Language/RemoteData";
@@ -11,18 +11,18 @@ import { Type } from "@/Core/Language/RemoteData";
 export class ResourcesEntityManager
   implements EntityManager<RemoteData.Type<string, ResourceModel[]>> {
   constructor(
-    private readonly apiHelper: ApiHelper<ResourcesQuery>,
+    private readonly apiHelper: ApiHelper<Query.ResourcesQuery>,
     private readonly stateHelper: StateHelper<string, ResourceModel[]>
   ) {}
 
   initialize(id: string): void {
-    const value = this.stateHelper.get(id);
+    const value = this.stateHelper.getOnce(id);
     if (RemoteData.isNotAsked(value)) {
       this.stateHelper.set(id, RemoteData.loading());
     }
   }
 
-  async update(query: ResourcesQuery): Promise<void> {
+  async update(query: Query.ResourcesQuery): Promise<void> {
     this.stateHelper.set(
       query.qualifier.id,
       RemoteData.fromEither(await this.apiHelper.getData(query))
@@ -30,6 +30,6 @@ export class ResourcesEntityManager
   }
 
   get(id: string): Type<string, ResourceModel[]> {
-    return this.stateHelper.getViaHook(id);
+    return this.stateHelper.getHooked(id);
   }
 }

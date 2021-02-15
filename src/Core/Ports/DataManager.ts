@@ -1,36 +1,12 @@
-import { Either, Maybe, RemoteData } from "@/Core/Language";
-import { Query, QueryInfo } from "@/Core/Domain";
+import { RemoteData } from "@/Core/Language";
+import { Query } from "@/Core/Domain";
+
+type Data<K extends Query.Kind> = RemoteData.Type<
+  Query.Error<K>,
+  Query.Data<K>
+>;
 
 export interface DataManager {
-  useSubscription(query: Query): void;
-  useData(query: Query): QueryInfo[typeof query.kind]["data"];
-}
-
-export interface StateHelper<Error, Data> {
-  set(id: string, value: RemoteData.Type<Error, Data>): void;
-  get(id: string): RemoteData.Type<Error, Data>;
-  getViaHook(id: string): RemoteData.Type<Error, Data>;
-}
-
-export type UpdateHandler<Error, Data> = (
-  data: Either.Type<Error, Data>
-) => void;
-
-export type Timer = ReturnType<typeof setInterval>;
-
-export interface Dictionary<Value> {
-  get(key: string): Maybe.Type<Value>;
-  set(key: string, value: Value): boolean;
-  isFree(key: string): boolean;
-  drop(key: string): void;
-}
-
-export interface ApiHelper<Q extends Query> {
-  getData(query: Q): Promise<QueryInfo[typeof query.kind]["apiData"]>;
-}
-
-export interface HookHelper<Q = unknown, D = unknown> {
-  useSubscription(query: Q): void;
-  useData(query: Q): D;
-  matches(query: Query): boolean;
+  useSubscription(query: Query.Type): void;
+  useData(query: Query.Type): Data<typeof query.kind>;
 }
