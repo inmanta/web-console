@@ -12,7 +12,7 @@ import { ServicesContext } from "@/UI/ServicesContext";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
-  DataManagerImpl,
+  DataProviderImpl,
   ResourcesEntityManager,
   ResourcesHookHelper,
   ResourcesStateHelper,
@@ -20,7 +20,7 @@ import {
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
-  const dataManager = new DataManagerImpl([
+  const dataManager = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesEntityManager(
         new InstantApiHelper({
@@ -50,7 +50,7 @@ test("InventoryTable can be expanded", async () => {
 
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
-  const dataManager = new DataManagerImpl([
+  const dataManager = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesEntityManager(
         new InstantApiHelper({

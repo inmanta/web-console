@@ -7,7 +7,7 @@ import { StoreProvider } from "easy-peasy";
 import { getStoreInstance, ServicesContext } from "@/UI";
 import { ResourcesApiHelper } from "@/Infra";
 import {
-  DataManagerImpl,
+  DataProviderImpl,
   IntervalsDictionary,
   ResourcesStateHelper,
   LiveSubscriptionController,
@@ -35,7 +35,7 @@ if (externalKeycloakConf) {
 
 const storeInstance = getStoreInstance();
 
-const dataManager = new DataManagerImpl([
+const dataManager = new DataProviderImpl([
   new ResourcesHookHelper(
     new ResourcesEntityManager(
       new ResourcesApiHelper(keycloak),

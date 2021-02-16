@@ -9,7 +9,7 @@ import {
 } from "@/Test";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
-  DataManagerImpl,
+  DataProviderImpl,
   ResourcesStateHelper,
   ResourcesEntityManager,
   ResourcesHookHelper,
@@ -23,7 +23,7 @@ export default {
 
 const Template: React.FC<{ outcome: Outcome }> = ({ outcome }) => {
   const store = getStoreInstance();
-  const dataManager = new DataManagerImpl([
+  const dataManager = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesEntityManager(
         new InstantApiHelper(outcome),

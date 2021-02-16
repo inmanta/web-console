@@ -11,7 +11,7 @@ import { getStoreInstance } from "@/UI/Store";
 import { ServiceModel } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
-  DataManagerImpl,
+  DataProviderImpl,
   ResourcesEntityManager,
   ResourcesHookHelper,
   ResourcesStateHelper,
@@ -24,7 +24,7 @@ export default {
 
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
-  const dataManager = new DataManagerImpl([
+  const dataManager = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesEntityManager(
         new InstantApiHelper({ kind: "Success", resources: [] }),

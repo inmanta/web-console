@@ -9,7 +9,7 @@ import {
 } from "@/Test";
 import { getStoreInstance } from "@/UI/Store";
 import {
-  DataManagerImpl,
+  DataProviderImpl,
   ResourcesEntityManager,
   ResourcesHookHelper,
   ResourcesStateHelper,
@@ -24,7 +24,7 @@ export default {
 
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
-  const dataManager = new DataManagerImpl([
+  const dataManager = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesEntityManager(
         new InstantApiHelper({ kind: "Success", resources: [] }),

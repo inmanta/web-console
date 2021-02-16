@@ -5,7 +5,7 @@ import { StaticSubscriptionController, DeferredApiHelper } from "@/Test";
 import { Either } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
-  DataManagerImpl,
+  DataProviderImpl,
   ResourcesStateHelper,
   ResourcesEntityManager,
   ResourcesHookHelper,
@@ -17,7 +17,7 @@ function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const subscriptionController = new StaticSubscriptionController();
-  const dataManager = new DataManagerImpl([
+  const dataManager = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesEntityManager(apiHelper, new ResourcesStateHelper(store)),
       subscriptionController

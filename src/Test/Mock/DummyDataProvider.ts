@@ -1,6 +1,6 @@
-import { DataManager, RemoteData, ResourceModel } from "@/Core";
+import { DataProvider, RemoteData, ResourceModel } from "@/Core";
 
-export class DummyDataManager implements DataManager {
+export class DummyDataProvider implements DataProvider {
   useSubscription(): void {
     throw new Error("DummyDataManager useSubscription mocked");
   }

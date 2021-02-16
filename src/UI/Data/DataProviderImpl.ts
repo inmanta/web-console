@@ -1,4 +1,4 @@
-import { DataManager, Query, HookHelper, RemoteData } from "@/Core";
+import { DataProvider, Query, HookHelper, RemoteData } from "@/Core";
 
 type Helper<K extends Query.Kind> = HookHelper<Query.SubQuery<K>>;
 
@@ -7,7 +7,7 @@ type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Data<K>
 >;
 
-export class DataManagerImpl implements DataManager {
+export class DataProviderImpl implements DataProvider {
   constructor(private readonly hookHelpers: HookHelper[]) {}
 
   getHelper(query: Query.Type): Helper<typeof query.kind> {
