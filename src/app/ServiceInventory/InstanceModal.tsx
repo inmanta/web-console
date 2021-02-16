@@ -114,7 +114,7 @@ const InstanceModal: React.FunctionComponent<{
             let currentAttributes;
             let formAttributes = attributes;
             if (props.instance) {
-              urlWithParams = `${inventoryUrl}/${props.instance.id}?current_version=${props.instance.version}`;
+              urlWithParams = `${urlWithParams}/${props.instance.id}?current_version=${props.instance.version}`;
               currentAttributes = getCurrentAttributes(props.instance);
               formAttributes = getEditableAttributes(attributes);
             } else {

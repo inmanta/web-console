@@ -19,6 +19,7 @@ import {
   InfoCircleIcon,
   ListIcon,
 } from "@patternfly/react-icons";
+import { DeploymentProgressPresenter } from "./Presenters";
 
 interface Props {
   row: Row;
@@ -42,6 +43,7 @@ export const InstanceRow: React.FC<Props> = ({
   instanceForResources,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>("Status");
+  const deploymentProgressPresenter = new DeploymentProgressPresenter();
   const attributesOnClick = () => {
     if (!isExpanded) {
       onToggle();
@@ -69,6 +71,11 @@ export const InstanceRow: React.FC<Props> = ({
               onClick={attributesOnClick}
             />
           </a>
+        </Td>
+        <Td dataLabel={words("inventory.collumn.deploymentProgress")}>
+          {deploymentProgressPresenter.getDeploymentProgressBar(
+            row.deploymentProgress
+          )}
         </Td>
         <Td dataLabel={words("inventory.column.createdAt")}>
           <DateWithTooltip date={row.createdAt} />

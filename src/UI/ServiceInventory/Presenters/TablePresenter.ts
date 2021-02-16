@@ -16,6 +16,7 @@ export class TablePresenter {
     words("inventory.column.id"),
     words("inventory.column.state"),
     words("inventory.column.attributesSummary"),
+    words("inventory.collumn.deploymentProgress"),
     words("inventory.column.createdAt"),
     words("inventory.column.updatedAt"),
   ];
@@ -62,6 +63,7 @@ export class TablePresenter {
       instanceSetStateTargets,
       environment,
       service_entity,
+      deployment_progress,
     } = instance;
 
     return {
@@ -82,6 +84,7 @@ export class TablePresenter {
       instanceSetStateTargets,
       environment,
       service_entity,
+      deploymentProgress: deployment_progress,
     };
   }
 

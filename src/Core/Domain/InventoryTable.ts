@@ -1,3 +1,5 @@
+import { DeploymentProgress } from "./ServiceInstanceModel";
+
 export interface Id {
   full: string;
   short: string;
@@ -32,6 +34,7 @@ export interface Row {
   instanceSetStateTargets: string[];
   service_entity: string;
   environment: string;
+  deploymentProgress?: DeploymentProgress;
 }
 
 export interface State {
