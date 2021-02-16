@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { InventoryTable } from "./InventoryTable";
 import {
-  InstantApiHelper,
+  InstantFetcher,
   rows,
   StaticSubscriptionController,
   tablePresenter,
@@ -27,7 +27,7 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesDataManager(
-        new InstantApiHelper({ kind: "Success", resources: [] }),
+        new InstantFetcher({ kind: "Success", resources: [] }),
         new ResourcesStateHelper(store)
       ),
       new StaticSubscriptionController()

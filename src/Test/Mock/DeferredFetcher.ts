@@ -1,4 +1,4 @@
-import { Either, ApiHelper, ResourceModel } from "@/Core";
+import { Either, Fetcher, ResourceModel } from "@/Core";
 
 type Data = Either.Type<string, ResourceModel[]>;
 
@@ -6,7 +6,7 @@ interface Handlers {
   resolve: (value: Data | PromiseLike<Data>) => void;
 }
 
-export class DeferredApiHelper implements ApiHelper {
+export class DeferredFetcher implements Fetcher<"Resources"> {
   private handlers: Handlers | null = null;
 
   getData(): Promise<Data> {

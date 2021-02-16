@@ -1,18 +1,18 @@
 import {
   DataManager,
   RemoteData,
-  ResourceModel,
+  ServiceInstanceModel,
   Query,
   StateHelper,
   Fetcher,
 } from "@/Core";
 import { Type } from "@/Core/Language/RemoteData";
 
-export class ResourcesDataManager
-  implements DataManager<RemoteData.Type<string, ResourceModel[]>> {
+export class ServiceInstancesDataManager
+  implements DataManager<RemoteData.Type<string, ServiceInstanceModel[]>> {
   constructor(
-    private readonly fetcher: Fetcher<"Resources">,
-    private readonly stateHelper: StateHelper<string, ResourceModel[]>
+    private readonly fetcher: Fetcher<"ServiceInstances">,
+    private readonly stateHelper: StateHelper<string, ServiceInstanceModel[]>
   ) {}
 
   initialize(id: string): void {
@@ -22,14 +22,14 @@ export class ResourcesDataManager
     }
   }
 
-  async update(query: Query.ResourcesQuery): Promise<void> {
+  async update(query: Query.ServiceInstancesQuery): Promise<void> {
     this.stateHelper.set(
-      query.qualifier.id,
+      query.qualifier.serviceName,
       RemoteData.fromEither(await this.fetcher.getData(query))
     );
   }
 
-  get(id: string): Type<string, ResourceModel[]> {
+  get(id: string): Type<string, ServiceInstanceModel[]> {
     return this.stateHelper.getHooked(id);
   }
 }

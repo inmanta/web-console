@@ -4,7 +4,7 @@ import { getStoreInstance } from "@/UI/Store";
 import {
   StaticSubscriptionController,
   Outcome,
-  InstantApiHelper,
+  InstantFetcher,
   Resource,
 } from "@/Test";
 import { ServicesContext } from "@/UI/ServicesContext";
@@ -26,7 +26,7 @@ const Template: React.FC<{ outcome: Outcome }> = ({ outcome }) => {
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesDataManager(
-        new InstantApiHelper(outcome),
+        new InstantFetcher(outcome),
         new ResourcesStateHelper(store)
       ),
       new StaticSubscriptionController()

@@ -5,7 +5,11 @@ import keycloakConf from "./app/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance, ServicesContext } from "@/UI";
-import { ResourcesApiHelper } from "@/Infra";
+import {
+  BaseApiHelper,
+  ResourcesFetcher,
+  ServiceInstancesFetcher,
+} from "@/Infra";
 import {
   DataProviderImpl,
   IntervalsDictionary,
@@ -13,6 +17,9 @@ import {
   LiveSubscriptionController,
   ResourcesDataManager,
   ResourcesHookHelper,
+  ServiceInstancesDataManager,
+  ServiceInstancesHookHelper,
+  ServiceInstancesStateHelper,
 } from "@/UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
@@ -35,14 +42,27 @@ if (externalKeycloakConf) {
 
 const storeInstance = getStoreInstance();
 
-const dataProvider = new DataProviderImpl([
-  new ResourcesHookHelper(
-    new ResourcesDataManager(
-      new ResourcesApiHelper(keycloak),
-      new ResourcesStateHelper(storeInstance)
-    ),
-    new LiveSubscriptionController(5000, new IntervalsDictionary())
+const baseApiHelper = new BaseApiHelper(keycloak);
+
+const resourcesHelper = new ResourcesHookHelper(
+  new ResourcesDataManager(
+    new ResourcesFetcher(baseApiHelper),
+    new ResourcesStateHelper(storeInstance)
   ),
+  new LiveSubscriptionController(5000, new IntervalsDictionary())
+);
+
+const serviceInstancesHelper = new ServiceInstancesHookHelper(
+  new ServiceInstancesDataManager(
+    new ServiceInstancesFetcher(baseApiHelper),
+    new ServiceInstancesStateHelper(storeInstance)
+  ),
+  new LiveSubscriptionController(5000, new IntervalsDictionary())
+);
+
+const dataProvider = new DataProviderImpl([
+  resourcesHelper,
+  serviceInstancesHelper,
 ]);
 
 ReactDOM.render(

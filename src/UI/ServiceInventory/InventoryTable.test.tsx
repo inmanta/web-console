@@ -4,7 +4,7 @@ import { InventoryTable } from "./InventoryTable";
 import {
   DummyStateHelper,
   StaticSubscriptionController,
-  InstantApiHelper,
+  InstantFetcher,
   rows,
   tablePresenter,
 } from "@/Test";
@@ -23,7 +23,7 @@ test("InventoryTable can be expanded", async () => {
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesDataManager(
-        new InstantApiHelper({
+        new InstantFetcher({
           kind: "Success",
           resources: [
             { resource_id: "resource_id_1", resource_state: "resource_state" },
@@ -53,7 +53,7 @@ test("ServiceInventory can show resources for instance", async () => {
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesDataManager(
-        new InstantApiHelper({
+        new InstantFetcher({
           kind: "Success",
           resources: [
             { resource_id: "resource_id_1", resource_state: "resource_state" },

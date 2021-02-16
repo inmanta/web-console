@@ -8,6 +8,10 @@ import {
   serviceInstancesSlice,
 } from "./ServiceInstancesSlice";
 import { ProjectModel } from "@/Core";
+import {
+  serviceInstancesSlice2,
+  ServiceInstancesSlice2,
+} from "./ServiceInstancesSlice2";
 
 export interface StoreModel {
   environments: EnvironmentsSlice;
@@ -20,6 +24,7 @@ export interface StoreModel {
   services: ServicesSlice;
   projects: ProjectsSlice;
   serviceInstances: ServiceInstancesSlice;
+  serviceInstances2: ServiceInstancesSlice2;
 }
 
 const fetched: StoreModel["fetched"] = action((state, payload) => {
@@ -78,5 +83,6 @@ export const storeModel: StoreModel = {
     actions.environments.selectEnvironmentById(payload.environment);
   }),
   serviceInstances: serviceInstancesSlice,
+  serviceInstances2: serviceInstancesSlice2,
   services: servicesSlice,
 };

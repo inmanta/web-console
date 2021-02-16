@@ -14,5 +14,5 @@ type Data<K extends Query.Kind> = RemoteData.Type<
  */
 export interface DataProvider {
   useSubscription(query: Query.Type): void;
-  useData(query: Query.Type): Data<typeof query.kind>;
+  useData<Kind extends Query.Kind>(query: Query.SubQuery<Kind>): Data<Kind>;
 }

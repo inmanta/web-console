@@ -12,7 +12,17 @@ export interface ResourcesQuery {
   qualifier: ServiceInstanceIdentifier;
 }
 
-type Query = ResourcesQuery;
+export interface ServiceInstancesQualifier {
+  serviceName: string;
+  environment: string;
+}
+
+export interface ServiceInstancesQuery {
+  kind: "ServiceInstances";
+  qualifier: ServiceInstancesQualifier;
+}
+
+type Query = ResourcesQuery | ServiceInstancesQuery;
 
 export type Type = Query;
 
@@ -21,6 +31,11 @@ interface Manifest {
     error: string;
     data: ResourceModel[];
     query: ResourcesQuery;
+  };
+  ServiceInstances: {
+    error: string;
+    data: ServiceInstanceModel[];
+    query: ServiceInstancesQuery;
   };
 }
 

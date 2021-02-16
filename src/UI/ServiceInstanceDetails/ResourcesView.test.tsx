@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { StaticSubscriptionController, DeferredApiHelper } from "@/Test";
+import { StaticSubscriptionController, DeferredFetcher } from "@/Test";
 import { Either } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
@@ -15,7 +15,7 @@ import { ResourcesView } from "./ResourcesView";
 
 function setup() {
   const store = getStoreInstance();
-  const apiHelper = new DeferredApiHelper();
+  const apiHelper = new DeferredFetcher();
   const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
