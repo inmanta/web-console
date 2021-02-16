@@ -1,3 +1,3 @@
-export * from "./ResourcesEntityManager";
+export * from "./ResourcesDataManager";
 export * from "./ResourcesHookHelper";
 export * from "./ResourcesStateHelper";

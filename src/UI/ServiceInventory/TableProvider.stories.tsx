@@ -12,7 +12,7 @@ import { ServiceModel } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataProviderImpl,
-  ResourcesEntityManager,
+  ResourcesDataManager,
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
@@ -24,9 +24,9 @@ export default {
 
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
-  const dataManager = new DataProviderImpl([
+  const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new ResourcesEntityManager(
+      new ResourcesDataManager(
         new InstantApiHelper({ kind: "Success", resources: [] }),
         new ResourcesStateHelper(store)
       ),
@@ -35,7 +35,7 @@ const Template: Story<Props> = (args) => {
   ]);
 
   return (
-    <ServicesContext.Provider value={{ dataManager }}>
+    <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
         <TableProvider {...args} />
       </StoreProvider>

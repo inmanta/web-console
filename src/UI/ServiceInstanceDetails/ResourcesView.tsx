@@ -16,10 +16,10 @@ interface Props extends TabProps {
 }
 
 export const ResourcesView: React.FC<Props> = ({ qualifier }) => {
-  const { dataManager } = useContext(ServicesContext);
+  const { dataProvider } = useContext(ServicesContext);
 
-  dataManager.useSubscription({ kind: "Resources", qualifier });
-  const data = dataManager.useData({ kind: "Resources", qualifier });
+  dataProvider.useSubscription({ kind: "Resources", qualifier });
+  const data = dataProvider.useData({ kind: "Resources", qualifier });
 
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,

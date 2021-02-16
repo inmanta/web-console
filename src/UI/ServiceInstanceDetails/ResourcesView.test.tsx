@@ -7,7 +7,7 @@ import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
-  ResourcesEntityManager,
+  ResourcesDataManager,
   ResourcesHookHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -17,9 +17,9 @@ function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const subscriptionController = new StaticSubscriptionController();
-  const dataManager = new DataProviderImpl([
+  const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new ResourcesEntityManager(apiHelper, new ResourcesStateHelper(store)),
+      new ResourcesDataManager(apiHelper, new ResourcesStateHelper(store)),
       subscriptionController
     ),
   ]);
@@ -32,7 +32,7 @@ function setup() {
   };
 
   const component = (
-    <ServicesContext.Provider value={{ dataManager }}>
+    <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
         <ResourcesView qualifier={instance} title="" icon={<></>} />
       </StoreProvider>

@@ -1,6 +1,6 @@
 import {
   ApiHelper,
-  EntityManager,
+  DataManager,
   RemoteData,
   ResourceModel,
   Query,
@@ -8,8 +8,8 @@ import {
 } from "@/Core";
 import { Type } from "@/Core/Language/RemoteData";
 
-export class ResourcesEntityManager
-  implements EntityManager<RemoteData.Type<string, ResourceModel[]>> {
+export class ResourcesDataManager
+  implements DataManager<RemoteData.Type<string, ResourceModel[]>> {
   constructor(
     private readonly apiHelper: ApiHelper<Query.ResourcesQuery>,
     private readonly stateHelper: StateHelper<string, ResourceModel[]>

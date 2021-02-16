@@ -13,16 +13,16 @@ import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
   DataProviderImpl,
-  ResourcesEntityManager,
+  ResourcesDataManager,
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
-  const dataManager = new DataProviderImpl([
+  const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new ResourcesEntityManager(
+      new ResourcesDataManager(
         new InstantApiHelper({
           kind: "Success",
           resources: [
@@ -35,7 +35,7 @@ test("InventoryTable can be expanded", async () => {
     ),
   ]);
   render(
-    <ServicesContext.Provider value={{ dataManager }}>
+    <ServicesContext.Provider value={{ dataProvider }}>
       <InventoryTable rows={rows} tablePresenter={tablePresenter} />
     </ServicesContext.Provider>
   );
@@ -50,9 +50,9 @@ test("InventoryTable can be expanded", async () => {
 
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
-  const dataManager = new DataProviderImpl([
+  const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new ResourcesEntityManager(
+      new ResourcesDataManager(
         new InstantApiHelper({
           kind: "Success",
           resources: [
@@ -65,7 +65,7 @@ test("ServiceInventory can show resources for instance", async () => {
     ),
   ]);
   render(
-    <ServicesContext.Provider value={{ dataManager }}>
+    <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
         <InventoryTable rows={rows} tablePresenter={tablePresenter} />
       </StoreProvider>

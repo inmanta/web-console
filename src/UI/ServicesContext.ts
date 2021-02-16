@@ -3,9 +3,9 @@ import { DataProvider } from "@/Core";
 import { DummyDataProvider } from "@/Test";
 
 export interface Services {
-  dataManager: DataProvider;
+  dataProvider: DataProvider;
 }
 
 export const ServicesContext = createContext<Services>({
-  dataManager: new DummyDataProvider(),
+  dataProvider: new DummyDataProvider(),
 });

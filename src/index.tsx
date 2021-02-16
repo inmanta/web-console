@@ -11,7 +11,7 @@ import {
   IntervalsDictionary,
   ResourcesStateHelper,
   LiveSubscriptionController,
-  ResourcesEntityManager,
+  ResourcesDataManager,
   ResourcesHookHelper,
 } from "@/UI/Data";
 
@@ -35,9 +35,9 @@ if (externalKeycloakConf) {
 
 const storeInstance = getStoreInstance();
 
-const dataManager = new DataProviderImpl([
+const dataProvider = new DataProviderImpl([
   new ResourcesHookHelper(
-    new ResourcesEntityManager(
+    new ResourcesDataManager(
       new ResourcesApiHelper(keycloak),
       new ResourcesStateHelper(storeInstance)
     ),
@@ -46,7 +46,7 @@ const dataManager = new DataProviderImpl([
 ]);
 
 ReactDOM.render(
-  <ServicesContext.Provider value={{ dataManager }}>
+  <ServicesContext.Provider value={{ dataProvider }}>
     <StoreProvider store={storeInstance}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
     </StoreProvider>

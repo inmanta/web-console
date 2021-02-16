@@ -10,7 +10,7 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 export class DataProviderImpl implements DataProvider {
   constructor(private readonly hookHelpers: HookHelper[]) {}
 
-  getHelper(query: Query.Type): Helper<typeof query.kind> {
+  private getHelper(query: Query.Type): Helper<typeof query.kind> {
     const hookHelper = this.hookHelpers.find((helper) => helper.matches(query));
     if (typeof hookHelper !== "undefined") {
       return hookHelper as Helper<typeof query.kind>;
