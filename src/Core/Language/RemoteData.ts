@@ -1,5 +1,20 @@
 import { Either } from ".";
 
+/**
+ * The RemoteData type is a synchronous container for async data.
+ *
+ * There are 4 states:
+ * - NotAsked means no data has been requested. This is usually the
+ * initial state.
+ *
+ * - Loading means data has been requested, but not yet resolved.
+ * This is the synchronous version of a pending promise.
+ *
+ * - Failed means the data request resulted in an error. Any reason
+ * not resulting in valid data is contained in this Failed state.
+ *
+ * - Success means the data request resulted in actual valid data.
+ */
 type RemoteData<F, S> = NotAsked | Loading | Failed<F> | Success<S>;
 
 export type Type<F, S> = RemoteData<F, S>;

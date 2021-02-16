@@ -2,6 +2,10 @@ import { RemoteData } from "@/Core/Language";
 
 /**
  * The StateHelper is responsible for getting and setting state.
+ * This doesn't own any data because we keep the data in a redux
+ * store instance. This allows us to use the redux-react bindings
+ * under the hood.
+ *
  * We need 2 getters, getOnce & getHooked.
  *
  * getHooked is based on React Hooks. This can only be used in a

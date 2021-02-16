@@ -9,4 +9,11 @@ export const getIsListEqual = <Data>(
   return a.every((element, index) => isEqual(element, b[index]));
 };
 
-export type Timer = ReturnType<typeof setInterval>;
+/**
+ * We define the TimerId type explicitly because for some reason
+ * the return type of setInterval is not always the same. In a DOM
+ * context it is a number. But in a NodeJS context, it is something
+ * more complex. TypeScript for now seems to confuse these 2 return
+ * types. So we can't just use number. We need to use TimerId.
+ */
+export type TimerId = ReturnType<typeof setInterval>;

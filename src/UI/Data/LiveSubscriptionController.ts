@@ -1,9 +1,9 @@
-import { Maybe, Dictionary, Timer, SubscriptionController } from "@/Core";
+import { Maybe, Dictionary, TimerId, SubscriptionController } from "@/Core";
 
 export class LiveSubscriptionController implements SubscriptionController {
   constructor(
     private readonly DELAY: number,
-    private readonly intervals: Dictionary<Timer>
+    private readonly intervals: Dictionary<TimerId>
   ) {}
 
   subscribeTo(id: string, handler: () => void): boolean {

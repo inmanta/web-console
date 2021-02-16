@@ -1,15 +1,19 @@
-import { Maybe, Dictionary, Timer } from "@/Core";
+import { Maybe, Dictionary, TimerId } from "@/Core";
 
-export class IntervalsDictionary implements Dictionary<Timer> {
-  private state: Record<string, { value: Timer }> = {};
+/**
+ * The IntervalsDictionary stores TimerIds.
+ * These are just numbers representing registered interval callbacks.
+ */
+export class IntervalsDictionary implements Dictionary<TimerId> {
+  private state: Record<string, { value: TimerId }> = {};
 
-  get(key: string): Maybe.Type<Timer> {
+  get(key: string): Maybe.Type<TimerId> {
     const lookup = this.state[key];
     if (typeof lookup === "undefined") return Maybe.none();
     return Maybe.some(lookup.value);
   }
 
-  set(key: string, value: Timer): boolean {
+  set(key: string, value: TimerId): boolean {
     if (!this.isFree(key)) return false;
     this.state[key] = { value };
     return true;

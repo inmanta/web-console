@@ -1,3 +1,9 @@
+/**
+ * The Maybe type is an explicit container for the 'optional' concept.
+ * A value is either a 'None' or a 'Some' value.
+ * When you have a 'None', the value is missing.
+ * When you have a 'Some', the value is present.
+ */
 type Maybe<Value> = None | Some<Value>;
 
 export type Type<Value> = Maybe<Value>;

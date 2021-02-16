@@ -30,3 +30,13 @@ export type Error<K extends Kind> = Manifest[K]["error"];
 export type Data<K extends Kind> = Manifest[K]["data"];
 
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
+
+export interface ResourcesQuery {
+  kind: "Resources";
+  qualifier: {
+    id: string;
+    environment: string;
+    service_entity: string;
+    version: number;
+  };
+}
