@@ -11,6 +11,7 @@
 - Add resources tab to service inventory (#164)
 - Add inmanta favicon (#78)
 - Show resource deployment progress in the inventory view (#154)
+- Add auto-updating of data to ResourcesTab (#225)
 
 # Release 1.4.0 (2020-12-17)
 

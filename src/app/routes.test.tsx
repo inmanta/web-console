@@ -3,6 +3,8 @@ import { App } from "@app/index";
 import { mount } from "enzyme";
 import Keycloak from "keycloak-js";
 import { waitFor } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { getStoreInstance } from "@/UI/Store";
 
 describe("Navigation", () => {
   let keycloak: Keycloak.KeycloakInstance;
@@ -11,14 +13,22 @@ describe("Navigation", () => {
   });
 
   it("should render nav groups", async () => {
-    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
+    const wrapper = mount(
+      <StoreProvider store={getStoreInstance()}>
+        <App keycloak={keycloak} shouldUseAuth={false} />
+      </StoreProvider>
+    );
     const nav = wrapper.find("#nav-primary-simple");
     await waitFor(() => undefined);
     expect(nav.find(".pf-c-nav__section-title")).toHaveLength(2);
   });
 
   it("should navigate when clicking on link", async () => {
-    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
+    const wrapper = mount(
+      <StoreProvider store={getStoreInstance()}>
+        <App keycloak={keycloak} shouldUseAuth={false} />
+      </StoreProvider>
+    );
     const nav = wrapper.find("#nav-primary-simple");
     const serviceCatalogEntry = nav.find(".pf-c-nav__link").first();
     serviceCatalogEntry.simulate("click");

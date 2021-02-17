@@ -3,8 +3,17 @@ import ReactDOM from "react-dom";
 import { App } from "@app/index";
 import keycloakConf from "./app/keycloak.json";
 import Keycloak from "keycloak-js";
-import { ServicesContext } from "@/UI/ServicesContext";
-import { ResourceFetcherImpl } from "@/Infra";
+import { StoreProvider } from "easy-peasy";
+import { getStoreInstance, ServicesContext } from "@/UI";
+import { ResourcesApiHelper } from "@/Infra";
+import {
+  DataProviderImpl,
+  IntervalsDictionary,
+  ResourcesStateHelper,
+  LiveSubscriptionController,
+  ResourcesDataManager,
+  ResourcesHookHelper,
+} from "@/UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -24,11 +33,23 @@ if (externalKeycloakConf) {
   keycloak = Keycloak(customKeycloakConf);
 }
 
+const storeInstance = getStoreInstance();
+
+const dataProvider = new DataProviderImpl([
+  new ResourcesHookHelper(
+    new ResourcesDataManager(
+      new ResourcesApiHelper(keycloak),
+      new ResourcesStateHelper(storeInstance)
+    ),
+    new LiveSubscriptionController(5000, new IntervalsDictionary())
+  ),
+]);
+
 ReactDOM.render(
-  <ServicesContext.Provider
-    value={{ resourceFetcher: new ResourceFetcherImpl(keycloak) }}
-  >
-    <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+  <ServicesContext.Provider value={{ dataProvider }}>
+    <StoreProvider store={storeInstance}>
+      <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+    </StoreProvider>
   </ServicesContext.Provider>,
   document.getElementById("root") as HTMLElement
 );

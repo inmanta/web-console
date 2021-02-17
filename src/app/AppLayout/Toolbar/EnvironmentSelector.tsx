@@ -18,14 +18,15 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
   const [open, setOpen] = React.useState(false);
   const [filteredItems, setFilteredItems] = React.useState(environmentNames);
   const [searchValue, setSearchValue] = React.useState("");
-  const store = useStoreState((state) => state);
-  const selectedProject = store.projects.getSelectedProject;
+  const projects = useStoreState((state) => state.projects);
+  const getSelectedEnvironment = useStoreState(
+    (state) => state.environments.getSelectedEnvironment
+  );
+  const selectedProject = projects.getSelectedProject;
   let selectedProjectName = "undefined / undefined";
-  if (selectedProject && store.environments.getSelectedEnvironment) {
+  if (selectedProject && getSelectedEnvironment) {
     selectedProjectName =
-      selectedProject.name +
-      " / " +
-      store.environments.getSelectedEnvironment.name;
+      selectedProject.name + " / " + getSelectedEnvironment.name;
   }
   const dispatch = useStoreDispatch();
 

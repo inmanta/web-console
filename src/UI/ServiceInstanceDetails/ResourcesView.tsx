@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { TabProps } from "./ServiceInstanceDetails";
-import { InstanceForResources, RemoteData, ResourceModel } from "@/Core";
+import { RemoteData, ResourceModel, ServiceInstanceIdentifier } from "@/Core";
 import {
   ResourceTable,
   HrefCreatorImpl,
@@ -12,38 +12,41 @@ import {
 import { ServicesContext } from "../ServicesContext";
 
 interface Props extends TabProps {
-  instance: InstanceForResources;
+  qualifier: ServiceInstanceIdentifier;
 }
 
-export const ResourcesView: React.FC<Props> = ({ instance }) => {
-  const { resourceFetcher } = useContext(ServicesContext);
-  const [result, setResult] = useState<
-    RemoteData.Type<string, ResourceModel[]>
-  >(RemoteData.loading());
+export const ResourcesView: React.FC<Props> = ({ qualifier }) => {
+  const { dataProvider } = useContext(ServicesContext);
 
-  useEffect(() => {
-    const fetchResources = async () => {
-      setResult(
-        RemoteData.fromEither(await resourceFetcher.getResources(instance))
-      );
-    };
-    fetchResources();
-  }, []);
+  dataProvider.useSubscription({ kind: "Resources", qualifier });
+  const data = dataProvider.useData({ kind: "Resources", qualifier });
 
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,
-    loading: () => <FillerResourceTable filler={<LoadingFiller />} />,
+    loading: () => (
+      <FillerResourceTable
+        filler={<LoadingFiller />}
+        aria-label="ResourceTable-Loading"
+      />
+    ),
     failed: (error) => (
-      <FillerResourceTable filler={<FailedFiller error={error} />} />
+      <FillerResourceTable
+        filler={<FailedFiller error={error} />}
+        aria-label="ResourceTable-Failed"
+      />
     ),
     success: (resources) =>
       resources.length === 0 ? (
-        <FillerResourceTable filler={<EmptyFiller />} />
+        <FillerResourceTable
+          filler={<EmptyFiller />}
+          aria-label="ResourceTable-Empty"
+        />
       ) : (
         <ResourceTable
-          hrefCreator={new HrefCreatorImpl(instance.environment)}
+          hrefCreator={new HrefCreatorImpl(qualifier.environment)}
           resources={resources}
+          aria-label="ResourceTable-Success"
         />
       ),
-  })(result);
+  })(data);
 };

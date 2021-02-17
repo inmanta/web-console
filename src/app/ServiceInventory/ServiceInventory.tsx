@@ -30,14 +30,17 @@ interface Props {
 const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   const serviceName = props.match.params.id;
   const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}?include_deployment_progress=True`;
-  const store = useStoreState((store) => store);
+  const services = useStoreState((store) => store.services);
+  const serviceInstances = useStoreState((store) => store.serviceInstances);
+  const environmentId = useStoreState(
+    (store) => store.environments.getSelectedEnvironment.id
+  );
   const storeDispatch = useStoreDispatch();
   const [errorMessage, setErrorMessage] = React.useState("");
   const [instanceErrorMessage, setInstanceErrorMessage] = React.useState("");
-  const instancesOfCurrentService = store.serviceInstances.instancesWithTargetStates(
+  const instancesOfCurrentService = serviceInstances.instancesWithTargetStates(
     serviceName
   );
-  const environmentId = store.environments.getSelectedEnvironment.id;
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
   let keycloak;
@@ -61,7 +64,7 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   const dispatchEntity = (data) =>
     storeDispatch.services.addSingleService(data);
   React.useEffect(() => {
-    ensureServiceEntityIsLoaded(store, serviceName, {
+    ensureServiceEntityIsLoaded(services, serviceName, {
       urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`,
       dispatch: dispatchEntity,
       isEnvironmentIdRequired: true,
@@ -75,7 +78,7 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   }, [storeDispatch, serviceName, instancesOfCurrentService, requestParams]);
 
   useInterval(() => fetchInmantaApi(requestParams), 5000);
-  const serviceEntity = store.services.byId[serviceName];
+  const serviceEntity = services.byId[serviceName];
   const refreshInstances = async () => fetchInmantaApi(requestParams);
   return (
     <PageSection className={"horizontally-scrollable"}>
@@ -150,11 +153,11 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
 };
 
 async function ensureServiceEntityIsLoaded(
-  store,
+  services,
   serviceName: string,
   requestParams: IRequestParams
 ) {
-  const serviceEntity = store.services.byId[serviceName];
+  const serviceEntity = services.byId[serviceName];
   if (serviceEntity) {
     return;
   }

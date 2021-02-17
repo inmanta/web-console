@@ -1,14 +1,11 @@
-import { ResourceFetcher } from "@/Core";
-import { DummyResourceFetcher } from "@/Test";
 import { createContext } from "react";
+import { DataProvider } from "@/Core";
+import { DummyDataProvider } from "@/Test";
 
-export interface ServicesBundle {
-  resourceFetcher: ResourceFetcher;
+export interface Services {
+  dataProvider: DataProvider;
 }
 
-export const ServicesContext = createContext<ServicesBundle>({
-  resourceFetcher: new DummyResourceFetcher({
-    kind: "Failed",
-    error: "Fallback for default DummyResourceFetcher",
-  }),
+export const ServicesContext = createContext<Services>({
+  dataProvider: new DummyDataProvider(),
 });
