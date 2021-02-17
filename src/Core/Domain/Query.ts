@@ -1,14 +1,15 @@
 import { ResourceModel } from "./ResourceModel";
-import { ServiceInstanceModel } from "./ServiceInstanceModel";
+import { ServiceInstanceIdentifier } from "./ServiceInstanceModel";
 
-export type ResourcesQualifier = Pick<
-  ServiceInstanceModel,
-  "id" | "service_entity" | "version" | "environment"
->;
-
+/**
+ * The ResourcesQuery describes resources for a service instance.
+ * We are not asking for 1 specific resource. We are asking for all the
+ * resources of 1 specific service instance. So the qualifier property
+ * identifies a service instance.
+ */
 export interface ResourcesQuery {
   kind: "Resources";
-  qualifier: ResourcesQualifier;
+  qualifier: ServiceInstanceIdentifier;
 }
 
 type Query = ResourcesQuery;
@@ -30,13 +31,3 @@ export type Error<K extends Kind> = Manifest[K]["error"];
 export type Data<K extends Kind> = Manifest[K]["data"];
 
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
-
-export interface ResourcesQuery {
-  kind: "Resources";
-  qualifier: {
-    id: string;
-    environment: string;
-    service_entity: string;
-    version: number;
-  };
-}

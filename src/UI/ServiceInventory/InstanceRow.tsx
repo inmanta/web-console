@@ -1,4 +1,4 @@
-import { Query, Row } from "@/Core";
+import { Row, ServiceInstanceIdentifier } from "@/Core";
 import React, { useState } from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
@@ -29,7 +29,7 @@ interface Props {
   numberOfColumns: number;
   actions: React.ReactElement | null;
   state: React.ReactElement | null;
-  resourcesQualifier: Query.ResourcesQualifier;
+  serviceInstanceIdentifier: ServiceInstanceIdentifier;
 }
 
 export const InstanceRow: React.FC<Props> = ({
@@ -40,7 +40,7 @@ export const InstanceRow: React.FC<Props> = ({
   numberOfColumns,
   actions,
   state,
-  resourcesQualifier,
+  serviceInstanceIdentifier,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>("Status");
   const deploymentProgressPresenter = new DeploymentProgressPresenter();
@@ -109,7 +109,7 @@ export const InstanceRow: React.FC<Props> = ({
                 icon={<ListIcon />}
               />
               <ResourcesView
-                qualifier={resourcesQualifier}
+                qualifier={serviceInstanceIdentifier}
                 title={words("inventory.tabs.resources")}
                 icon={<AutomationIcon />}
               />
