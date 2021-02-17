@@ -57,7 +57,7 @@ It is important we don't trigger unneeded rerenders when updating the state.
 
 Each second, multiple api calls could be updating the state, potentially resulting in a lot of rerenders.  
 So each component should only listen to specific data changed.  
-This is handled by the uniqueness of the query combinbed with the `useStoreState` hook.  
+This is handled by the uniqueness of the query combined with the `useStoreState` hook.  
 Each component defines a query, and is only rerendered when data for that query changes.
 
 ## Stale data
