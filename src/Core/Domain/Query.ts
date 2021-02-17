@@ -1,5 +1,8 @@
 import { ResourceModel } from "./ResourceModel";
-import { ServiceInstanceIdentifier } from "./ServiceInstanceModel";
+import {
+  ServiceInstanceIdentifier,
+  ServiceInstanceModel,
+} from "./ServiceInstanceModel";
 
 /**
  * The ResourcesQuery describes resources for a service instance.
