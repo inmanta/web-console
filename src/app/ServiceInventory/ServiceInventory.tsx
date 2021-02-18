@@ -10,14 +10,22 @@ import {
   ToolbarItem,
   ToolbarContent,
   AlertGroup,
+  Button,
 } from "@patternfly/react-core";
 import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import { InventoryTable } from "@/UI/ServiceInventory";
 import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
-import { InstanceModal, ButtonType } from "./InstanceModal";
 import { AttributeModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
+import { Link } from "react-router-dom";
+import { words } from "@/UI";
+import { PlusIcon } from "@patternfly/react-icons";
+import { StateMapper } from "easy-peasy";
+import { EnvironmentsSlice } from "@/UI/Store/EnvironmentsSlice";
+import { ServicesSlice } from "@/UI/Store/ServicesSlice";
+import { ProjectsSlice } from "@/UI/Store/ProjectsSlice";
+import { ServiceInstancesSlice } from "@/UI/Store/ServiceInstancesSlice";
 
 interface Props {
   match: {
@@ -125,11 +133,16 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
                   </ToolbarGroup>
                   <ToolbarGroup>
                     <ToolbarItem>
-                      <InstanceModal
-                        buttonType={ButtonType.add}
-                        serviceName={serviceEntity.name}
-                        keycloak={keycloak}
-                      />
+                      <Link
+                        to={{
+                          pathname: `/lsm/catalog/${serviceName}/inventory/add`,
+                          search: location.search,
+                        }}
+                      >
+                        <Button id="add-instance-button">
+                          <PlusIcon /> {words("inventory.addInstance.button")}
+                        </Button>
+                      </Link>
                     </ToolbarItem>
                   </ToolbarGroup>
                 </ToolbarContent>
@@ -149,11 +162,16 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
   );
 };
 
-async function ensureServiceEntityIsLoaded(
-  store,
+export async function ensureServiceEntityIsLoaded(
+  store: StateMapper<{
+    environments: EnvironmentsSlice;
+    services: ServicesSlice;
+    projects: ProjectsSlice;
+    serviceInstances: ServiceInstancesSlice;
+  }>,
   serviceName: string,
   requestParams: IRequestParams
-) {
+): Promise<void> {
   const serviceEntity = store.services.byId[serviceName];
   if (serviceEntity) {
     return;

@@ -9,6 +9,7 @@ import {
 } from "react-router-last-location";
 import { ServiceCatalog } from "./ServiceCatalog/ServiceCatalog";
 import { ServiceInventory } from "./ServiceInventory/ServiceInventory";
+import { CreateInstancePage } from "@/UI/ServiceInstanceForm";
 
 let routeFocusTimer: number;
 
@@ -51,6 +52,15 @@ const routes: IAppRouteGroup[] = [
         label: "Service Inventory",
         path: "/catalog/:id/inventory",
         title: "Service Inventory",
+      },
+      {
+        component: CreateInstancePage,
+        exact: true,
+        hideOnSideBar: true,
+        icon: null,
+        label: "Create Instance",
+        path: "/catalog/:id/inventory/add",
+        title: "Add Instance",
       },
     ],
     name: "Lifecycle service management",

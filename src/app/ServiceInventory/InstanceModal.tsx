@@ -4,7 +4,7 @@ import React from "react";
 import { InstanceForm } from "./InstanceForm";
 import { PlusIcon, EditIcon, TrashAltIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./ServiceInventory";
-import { DeleteForm } from "./DeleteForm";
+import { DeleteForm } from "../../UI/ServiceInstanceForm/Delete";
 import _ from "lodash";
 import {
   AttributeModel,

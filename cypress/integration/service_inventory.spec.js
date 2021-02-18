@@ -38,15 +38,10 @@ describe("Service inventory", function () {
     // expect resources tab to not be visible
     cy.get(".pf-c-tabs").contains("Resources").should("not.be.visible");
   });
-  it("Should show add/hide instance modal on click", function () {
+  it("Should show/hide add instance page on click", function () {
     cy.visit("/lsm/catalog/e2e_service/inventory");
-    cy.contains("button", "Add instance").click();
+    cy.get("#add-instance-button").click();
     cy.contains("Cancel").click().should("not.exist");
-  });
-  it("Should filter read-only attributes on create instance modal", function () {
-    cy.visit("/lsm/catalog/e2e_service/inventory");
-    cy.contains("button", "Add instance").click();
-    cy.get("#readonly").should("not.exist");
   });
   it("Should show error message when deleting is not allowed", function () {
     cy.route({

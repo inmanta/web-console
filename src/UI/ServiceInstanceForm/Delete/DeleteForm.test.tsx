@@ -12,6 +12,7 @@ describe("Delete Form", () => {
     environmentId: "envId1",
     urlEndpoint: "api/delete/instance",
     setErrorMessage: dummyFunction,
+    method: "DELETE",
   };
   beforeEach(() => {
     fetchMock.resetMocks();

@@ -1,16 +1,15 @@
 import { Form, ActionGroup, Button } from "@patternfly/react-core";
 import React from "react";
 import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
+import { words } from "@/UI";
 
 const DeleteForm: React.FunctionComponent<{
   requestParams: IRequestParams;
   closeModal: () => void;
-}> = (props) => {
+}> = ({ requestParams, closeModal }) => {
   const submitForm = async () => {
-    const requestParams: IRequestParams = props.requestParams;
-    requestParams.method = "DELETE";
-    props.closeModal();
-    await fetchInmantaApi(props.requestParams);
+    closeModal();
+    await fetchInmantaApi(requestParams);
   };
 
   return (
@@ -18,10 +17,10 @@ const DeleteForm: React.FunctionComponent<{
       <Form>
         <ActionGroup>
           <Button variant="primary" id="submit" onClick={submitForm}>
-            Yes
+            {words("yes")}
           </Button>
-          <Button variant="secondary" id="cancel" onClick={props.closeModal}>
-            No
+          <Button variant="secondary" id="cancel" onClick={closeModal}>
+            {words("no")}
           </Button>
         </ActionGroup>
       </Form>

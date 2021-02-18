@@ -15,11 +15,16 @@ export const PageBreadcrumb: React.FC = () => {
       const pathEnding = pathParts[pathParts.length - 1];
       const isActive = location.pathname.endsWith(pathEnding);
       const isVisible = location.pathname.includes(pathEnding);
-      const path = "/lsm" + route.path;
+      let path = "/lsm" + route.path;
+      if (location.pathname.endsWith("add")) {
+        if (pathParts.length === 4) {
+          pathParts[2] = location.pathname.split("/")[3];
+          path = "/lsm" + pathParts.join("/");
+        }
+      }
       const LinkElement = !isActive ? (
         <NavLink to={{ pathname: path, search: location.search }}>
-          {" "}
-          {route.title}{" "}
+          {route.title}
         </NavLink>
       ) : (
         route.title
