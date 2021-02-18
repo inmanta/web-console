@@ -1,10 +1,10 @@
 import {
   RemoteData,
-  ServiceInstanceModel,
   SubscriptionController,
   DataManager,
   Query,
   HookHelper,
+  ServiceInstanceModelWithTargetStates,
 } from "@/Core";
 import { useEffect } from "react";
 
@@ -12,7 +12,7 @@ export class ServiceInstancesHookHelper
   implements HookHelper<Query.ServiceInstancesQuery> {
   constructor(
     private readonly dataManager: DataManager<
-      RemoteData.Type<string, ServiceInstanceModel[]>
+      RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>
     >,
     private readonly subscriptionController: SubscriptionController
   ) {}
@@ -23,26 +23,25 @@ export class ServiceInstancesHookHelper
     };
 
     useEffect(() => {
-      this.dataManager.initialize(query.qualifier.serviceName);
-      this.subscriptionController.subscribeTo(
-        query.qualifier.serviceName,
-        handler
-      );
+      this.dataManager.initialize(query.qualifier.name);
+      this.subscriptionController.subscribeTo(query.qualifier.name, handler);
       return () => {
-        this.subscriptionController.unsubscribeFrom(
-          query.qualifier.serviceName
-        );
+        this.subscriptionController.unsubscribeFrom(query.qualifier.name);
       };
-    }, [query.qualifier.serviceName]);
+    }, [query.qualifier.name]);
   }
 
   useData(
     query: Query.ServiceInstancesQuery
-  ): RemoteData.Type<string, ServiceInstanceModel[]> {
-    return this.dataManager.get(query.qualifier.serviceName);
+  ): RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]> {
+    return this.dataManager.get(query.qualifier.name);
   }
 
-  matches(query: Query.ResourcesQuery): boolean {
-    return query.kind === "Resources";
+  trigger(query: Query.ServiceInstancesQuery): void {
+    this.subscriptionController.trigger(query.qualifier.name);
+  }
+
+  matches(query: Query.ServiceInstancesQuery): boolean {
+    return query.kind === "ServiceInstances";
   }
 }

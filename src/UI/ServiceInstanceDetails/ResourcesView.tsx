@@ -9,7 +9,7 @@ import {
   FailedFiller,
   EmptyFiller,
 } from "@/UI/Components";
-import { ServicesContext } from "../ServicesContext";
+import { ServicesContext } from "@/UI/ServicesContext";
 
 interface Props extends TabProps {
   qualifier: ServiceInstanceIdentifier;

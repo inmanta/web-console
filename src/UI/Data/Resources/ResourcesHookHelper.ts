@@ -36,6 +36,10 @@ export class ResourcesHookHelper implements HookHelper<Query.ResourcesQuery> {
     return this.dataManager.get(query.qualifier.id);
   }
 
+  trigger(query: Query.ResourcesQuery): void {
+    this.subscriptionController.trigger(query.qualifier.id);
+  }
+
   matches(query: Query.ResourcesQuery): boolean {
     return query.kind === "Resources";
   }

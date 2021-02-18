@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import {
   PageSection,
   Alert,
@@ -13,11 +13,12 @@ import {
 } from "@patternfly/react-core";
 import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import { InventoryTable } from "@/UI/ServiceInventory";
-import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
 import { InstanceModal, ButtonType } from "./InstanceModal";
-import { AttributeModel } from "@/Core";
+import { AttributeModel, RemoteData, Query } from "@/Core";
 import { useKeycloak } from "react-keycloak";
+import { KeycloakInstance } from "keycloak-js";
+import { ServicesContext } from "@/UI/ServicesContext";
 
 interface Props {
   match: {
@@ -27,20 +28,29 @@ interface Props {
   };
 }
 
-const ServiceInventory: React.FunctionComponent<Props> = (props) => {
-  const serviceName = props.match.params.id;
-  const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}?include_deployment_progress=True`;
-  const services = useStoreState((store) => store.services);
-  const serviceInstances = useStoreState((store) => store.serviceInstances);
+const Provider: React.FunctionComponent<Props> = ({ match }) => {
   const environmentId = useStoreState(
     (store) => store.environments.getSelectedEnvironment.id
   );
+  if (!environmentId) return null;
+  return (
+    <ServiceInventory
+      serviceName={match.params.id}
+      environmentId={environmentId}
+    />
+  );
+};
+
+const ServiceInventory: React.FunctionComponent<{
+  serviceName: string;
+  environmentId: string;
+}> = ({ serviceName, environmentId }) => {
+  const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}?include_deployment_progress=True`;
+  const services = useStoreState((store) => store.services);
   const storeDispatch = useStoreDispatch();
   const [errorMessage, setErrorMessage] = React.useState("");
   const [instanceErrorMessage, setInstanceErrorMessage] = React.useState("");
-  const instancesOfCurrentService = serviceInstances.instancesWithTargetStates(
-    serviceName
-  );
+
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
   let keycloak;
@@ -48,21 +58,13 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
     // The value will be always true or always false during one session
     [keycloak] = useKeycloak();
   }
-  const dispatchUpdateInstances = (data) =>
-    storeDispatch.serviceInstances.updateInstances({
-      serviceName,
-      instances: data,
-    });
-  const requestParams = {
-    urlEndpoint: inventoryUrl,
-    dispatch: dispatchUpdateInstances,
-    isEnvironmentIdRequired: true,
-    environmentId,
-    setErrorMessage,
-    keycloak,
-  };
+
   const dispatchEntity = (data) =>
     storeDispatch.services.addSingleService(data);
+
+  /**
+   * Fetch service ONCE
+   */
   React.useEffect(() => {
     ensureServiceEntityIsLoaded(services, serviceName, {
       urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`,
@@ -73,13 +75,34 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
       keycloak,
     });
   }, [serviceName, environmentId]);
-  React.useEffect(() => {
-    fetchInmantaApi(requestParams);
-  }, [storeDispatch, serviceName, instancesOfCurrentService, requestParams]);
 
-  useInterval(() => fetchInmantaApi(requestParams), 5000);
+  const { dataProvider } = useContext(ServicesContext);
+  const query: Query.ServiceInstancesQuery = {
+    kind: "ServiceInstances",
+    qualifier: { name: serviceName, environment: environmentId || "" },
+  };
+  dataProvider.useSubscription(query);
+  const data = dataProvider.useData<"ServiceInstances">(query);
+
+  if (RemoteData.isNotAsked(data)) return null;
+  if (RemoteData.isLoading(data)) return <div>loading...</div>;
+  if (RemoteData.isFailed(data)) {
+    return (
+      <PageSection className={"horizontally-scrollable"}>
+        <Alert
+          variant="danger"
+          title={data.value}
+          actionClose={
+            <AlertActionCloseButton onClose={() => setErrorMessage("")} />
+          }
+        />
+      </PageSection>
+    );
+  }
+
   const serviceEntity = services.byId[serviceName];
-  const refreshInstances = async () => fetchInmantaApi(requestParams);
+  const refreshInstances = async () => dataProvider.trigger(query);
+
   return (
     <PageSection className={"horizontally-scrollable"}>
       {serviceEntity && (
@@ -103,7 +126,6 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
           )}
           {instanceErrorMessage && (
             <AlertGroup isToast={true}>
-              {" "}
               <Alert
                 variant="danger"
                 title={instanceErrorMessage}
@@ -113,34 +135,14 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
                     onClose={() => setInstanceErrorMessage("")}
                   />
                 }
-              />{" "}
+              />
             </AlertGroup>
           )}
           <Card>
-            <CardFooter>
-              <Toolbar>
-                <ToolbarContent>
-                  <ToolbarGroup>
-                    <ToolbarItem>
-                      {" "}
-                      Showing instances of {serviceName}
-                    </ToolbarItem>{" "}
-                  </ToolbarGroup>
-                  <ToolbarGroup>
-                    <ToolbarItem>
-                      <InstanceModal
-                        buttonType={ButtonType.add}
-                        serviceName={serviceEntity.name}
-                        keycloak={keycloak}
-                      />
-                    </ToolbarItem>
-                  </ToolbarGroup>
-                </ToolbarContent>
-              </Toolbar>
-            </CardFooter>
-            {instancesOfCurrentService.length > 0 && (
+            <Title serviceName={serviceName} keycloak={keycloak} />
+            {data.value.length > 0 && (
               <InventoryTable
-                instances={instancesOfCurrentService}
+                instances={data.value}
                 keycloak={keycloak}
                 serviceEntity={serviceEntity}
               />
@@ -151,6 +153,30 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
     </PageSection>
   );
 };
+
+const Title: React.FC<{ serviceName: string; keycloak: KeycloakInstance }> = ({
+  serviceName,
+  keycloak,
+}) => (
+  <CardFooter>
+    <Toolbar>
+      <ToolbarContent>
+        <ToolbarGroup>
+          <ToolbarItem> Showing instances of {serviceName}</ToolbarItem>
+        </ToolbarGroup>
+        <ToolbarGroup>
+          <ToolbarItem>
+            <InstanceModal
+              buttonType={ButtonType.add}
+              serviceName={serviceName}
+              keycloak={keycloak}
+            />
+          </ToolbarItem>
+        </ToolbarGroup>
+      </ToolbarContent>
+    </Toolbar>
+  </CardFooter>
+);
 
 async function ensureServiceEntityIsLoaded(
   services,
@@ -175,4 +201,8 @@ interface IInventoryContextData {
 
 const InventoryContext = React.createContext({} as IInventoryContextData);
 
-export { ServiceInventory, InventoryContext, IInventoryContextData };
+export {
+  Provider as ServiceInventory,
+  InventoryContext,
+  IInventoryContextData,
+};

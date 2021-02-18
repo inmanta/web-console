@@ -17,3 +17,8 @@ export const getIsListEqual = <Data>(
  * types. So we can't just use number. We need to use TimerId.
  */
 export type TimerId = ReturnType<typeof setInterval>;
+
+export interface Interval {
+  timerId: TimerId;
+  handler: () => void;
+}

@@ -20,8 +20,8 @@ import { RemoteData } from "@/Core/Language";
  * without a component context. We use it in the effect callback to
  * initialise data.
  */
-export interface StateHelper<Error, Data> {
-  set(id: string, value: RemoteData.Type<Error, Data>): void;
+export interface StateHelper<Error, Data, ApiData = Data> {
+  set(id: string, value: RemoteData.Type<Error, ApiData>): void;
   getOnce(id: string): RemoteData.Type<Error, Data>;
   getHooked(id: string): RemoteData.Type<Error, Data>;
 }

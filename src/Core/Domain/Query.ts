@@ -2,7 +2,9 @@ import { ResourceModel } from "./ResourceModel";
 import {
   ServiceInstanceIdentifier,
   ServiceInstanceModel,
+  ServiceInstanceModelWithTargetStates,
 } from "./ServiceInstanceModel";
+import { ServiceIdentifier } from "./ServiceModel";
 
 /**
  * The ResourcesQuery describes resources for a service instance.
@@ -15,14 +17,14 @@ export interface ResourcesQuery {
   qualifier: ServiceInstanceIdentifier;
 }
 
-export interface ServiceInstancesQualifier {
-  serviceName: string;
-  environment: string;
-}
-
+/**
+ * The ServiceInstancesQuery describes instances of a service.
+ * We are asking for all the instances of 1 unique service
+ * based on its name and environment.
+ */
 export interface ServiceInstancesQuery {
   kind: "ServiceInstances";
-  qualifier: ServiceInstancesQualifier;
+  qualifier: ServiceIdentifier;
 }
 
 type Query = ResourcesQuery | ServiceInstancesQuery;
@@ -32,12 +34,14 @@ export type Type = Query;
 interface Manifest {
   Resources: {
     error: string;
+    apiResponse: ResourceModel[];
     data: ResourceModel[];
     query: ResourcesQuery;
   };
   ServiceInstances: {
     error: string;
-    data: ServiceInstanceModel[];
+    apiResponse: ServiceInstanceModel[];
+    data: ServiceInstanceModelWithTargetStates[];
     query: ServiceInstancesQuery;
   };
 }
@@ -47,5 +51,7 @@ export type Kind = Query["kind"];
 export type Error<K extends Kind> = Manifest[K]["error"];
 
 export type Data<K extends Kind> = Manifest[K]["data"];
+
+export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
 
 export type SubQuery<K extends Kind> = Manifest[K]["query"];

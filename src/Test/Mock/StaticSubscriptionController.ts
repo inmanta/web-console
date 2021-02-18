@@ -13,6 +13,13 @@ export class StaticSubscriptionController implements SubscriptionController {
     delete this.state[id];
   }
 
+  trigger(id: string): boolean {
+    const handler = this.state[id];
+    if (typeof handler === "undefined") return false;
+    handler();
+    return true;
+  }
+
   executeAll(): void {
     Object.keys(this.state).forEach((key) => {
       this.state[key]();
