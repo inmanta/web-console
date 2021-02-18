@@ -13,9 +13,14 @@ import { words } from "@/UI/words";
 interface Props {
   hrefCreator: HrefCreator;
   resources: ResourceModel[];
+  "aria-label"?: string;
 }
 
-export const ResourceTable: React.FC<Props> = ({ hrefCreator, resources }) => {
+export const ResourceTable: React.FC<Props> = ({
+  hrefCreator,
+  resources,
+  ...props
+}) => {
   const columns = ["Resource Id", "Details", "State"];
   const rows = resources.map((resource) => {
     const href = hrefCreator.create(resource.resource_id);
@@ -48,7 +53,7 @@ export const ResourceTable: React.FC<Props> = ({ hrefCreator, resources }) => {
   });
 
   return (
-    <Table cells={columns} rows={rows} aria-label="ResourceTable">
+    <Table cells={columns} rows={rows} aria-label={props["aria-label"]}>
       <TableHeader />
       <TableBody />
     </Table>

@@ -2,6 +2,7 @@ import { thunk, Thunk, Action, action } from "easy-peasy";
 import { EnvironmentsSlice, environmentsSlice } from "./EnvironmentsSlice";
 import { ProjectsSlice, projectsSlice } from "./ProjectsSlice";
 import { ServicesSlice, servicesSlice } from "./ServicesSlice";
+import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 import {
   ServiceInstancesSlice,
   serviceInstancesSlice,
@@ -15,6 +16,7 @@ export interface StoreModel {
     StoreModel,
     { project: string; environment: string }
   >;
+  resources: ResourcesSlice;
   services: ServicesSlice;
   projects: ProjectsSlice;
   serviceInstances: ServiceInstancesSlice;
@@ -70,6 +72,7 @@ export const storeModel: StoreModel = {
   environments: environmentsSlice,
   fetched,
   projects: projectsSlice,
+  resources: resourcesSlice,
   selectProjectAndEnvironment: thunk((actions, payload) => {
     actions.projects.selectProjectById(payload.project);
     actions.environments.selectEnvironmentById(payload.environment);

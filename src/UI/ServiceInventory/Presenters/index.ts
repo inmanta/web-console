@@ -6,3 +6,4 @@ export * from "./MomentDatePresenter";
 export * from "./TablePresenter";
 export * from "./StatePresenter";
 export * from "./InstanceStatePresenter";
+export * from "./DeploymentProgressPresenter";

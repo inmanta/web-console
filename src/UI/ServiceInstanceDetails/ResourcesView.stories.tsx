@@ -1,63 +1,65 @@
 import React from "react";
+import { StoreProvider } from "easy-peasy";
+import { getStoreInstance } from "@/UI/Store";
+import {
+  StaticSubscriptionController,
+  Outcome,
+  InstantApiHelper,
+  Resource,
+} from "@/Test";
+import { ServicesContext } from "@/UI/ServicesContext";
+import {
+  DataProviderImpl,
+  ResourcesStateHelper,
+  ResourcesDataManager,
+  ResourcesHookHelper,
+} from "@/UI/Data";
 import { ResourcesView } from "./ResourcesView";
-import { DummyResourceFetcher, Resource } from "@/Test";
-import { ServicesContext } from "../ServicesContext";
 
 export default {
   title: "ResourcesView",
   component: ResourcesView,
 };
 
-const instance = {
-  id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-  service_entity: "vlan-assignment",
-  version: 4,
-  environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
+const Template: React.FC<{ outcome: Outcome }> = ({ outcome }) => {
+  const store = getStoreInstance();
+  const dataProvider = new DataProviderImpl([
+    new ResourcesHookHelper(
+      new ResourcesDataManager(
+        new InstantApiHelper(outcome),
+        new ResourcesStateHelper(store)
+      ),
+      new StaticSubscriptionController()
+    ),
+  ]);
+
+  const instance = {
+    id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+    service_entity: "vlan-assignment",
+    version: 4,
+    environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
+  };
+
+  return (
+    <ServicesContext.Provider value={{ dataProvider }}>
+      <StoreProvider store={store}>
+        <ResourcesView qualifier={instance} title="" icon={<></>} />
+      </StoreProvider>
+    </ServicesContext.Provider>
+  );
 };
 
 export const Loading: React.FC = () => (
-  <ServicesContext.Provider
-    value={{ resourceFetcher: new DummyResourceFetcher({ kind: "Loading" }) }}
-  >
-    <ResourcesView instance={instance} title="" icon={<></>} />
-  </ServicesContext.Provider>
+  <Template outcome={{ kind: "Loading" }} />
 );
 
 export const Empty: React.FC = () => (
-  <ServicesContext.Provider
-    value={{
-      resourceFetcher: new DummyResourceFetcher({
-        kind: "Success",
-        resources: [],
-      }),
-    }}
-  >
-    <ResourcesView instance={instance} title="" icon={<></>} />
-  </ServicesContext.Provider>
+  <Template outcome={{ kind: "Success", resources: [] }} />
 );
-
 export const Failed: React.FC = () => (
-  <ServicesContext.Provider
-    value={{
-      resourceFetcher: new DummyResourceFetcher({
-        kind: "Failed",
-        error: "error",
-      }),
-    }}
-  >
-    <ResourcesView instance={instance} title="" icon={<></>} />
-  </ServicesContext.Provider>
+  <Template outcome={{ kind: "Failed", error: "error" }} />
 );
 
 export const Success: React.FC = () => (
-  <ServicesContext.Provider
-    value={{
-      resourceFetcher: new DummyResourceFetcher({
-        kind: "Success",
-        resources: Resource.resources,
-      }),
-    }}
-  >
-    <ResourcesView instance={instance} title="" icon={<></>} />
-  </ServicesContext.Provider>
+  <Template outcome={{ kind: "Success", resources: Resource.resources }} />
 );

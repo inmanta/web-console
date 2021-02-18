@@ -1,15 +1,16 @@
-import { Either, ResourceFetcher, ResourceModel } from "@/Core";
+import { Either, ApiHelper, ResourceModel } from "@/Core";
 
-type Outcome =
+export type Outcome =
   | { kind: "Loading" }
   | { kind: "Failed"; error: string }
   | { kind: "Success"; resources: ResourceModel[] };
 
-export class DummyResourceFetcher implements ResourceFetcher {
+export class InstantApiHelper implements ApiHelper {
   constructor(private readonly outcome: Outcome) {}
 
-  getResources(): Promise<Either.Type<string, ResourceModel[]>> {
+  getData(): Promise<Either.Type<string, ResourceModel[]>> {
     const { outcome } = this;
+
     switch (outcome.kind) {
       case "Loading":
         return new Promise(() => {

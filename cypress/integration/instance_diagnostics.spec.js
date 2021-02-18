@@ -17,7 +17,7 @@ describe("Service instance diagnostics", function () {
   it("Should show/hide diagnostics modal on click", function () {
     cy.route({
       method: "GET",
-      url: "**/lsm/v1/service_inventory/test_service",
+      url: "**/lsm/v1/service_inventory/test_service?**",
       response: "fixture:lsm/diag_dep_error_instance.json",
     });
     cy.route({
@@ -51,7 +51,7 @@ describe("Service instance diagnostics", function () {
   it("Should show deployment failure", function () {
     cy.route({
       method: "GET",
-      url: "**/lsm/v1/service_inventory/test_service",
+      url: "**/lsm/v1/service_inventory/test_service?**",
       response: "fixture:lsm/diag_dep_error_instance.json",
     });
     cy.route({
@@ -88,7 +88,7 @@ describe("Service instance diagnostics", function () {
   it("Should show validation failure", function () {
     cy.route({
       method: "GET",
-      url: "**/lsm/v1/service_inventory/test_service",
+      url: "**/lsm/v1/service_inventory/test_service?**",
       response: "fixture:lsm/diag_val_error_instance.json",
     });
     cy.route({
@@ -120,7 +120,7 @@ describe("Service instance diagnostics", function () {
   it("Should show both deployment and validation failure", function () {
     cy.route({
       method: "GET",
-      url: "**/lsm/v1/service_inventory/test_service",
+      url: "**/lsm/v1/service_inventory/test_service?**",
       response: "fixture:lsm/diag_val_error_instance.json",
     });
     cy.route({
@@ -158,7 +158,7 @@ describe("Service instance diagnostics", function () {
   it("Should show both deployment and validation status ok", function () {
     cy.route({
       method: "GET",
-      url: "**/lsm/v1/service_inventory/test_service",
+      url: "**/lsm/v1/service_inventory/test_service?**",
       response: "fixture:lsm/diag_normal_instance.json",
     });
     cy.route({
@@ -190,7 +190,7 @@ describe("Service instance diagnostics", function () {
   it("Should show validation failure on update_rejected", function () {
     cy.route({
       method: "GET",
-      url: "**/lsm/v1/service_inventory/test_service",
+      url: "**/lsm/v1/service_inventory/test_service?**",
       response: "fixture:lsm/diag_val_error_instance_update_rejected.json",
     });
     cy.route({

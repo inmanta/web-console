@@ -1,5 +1,20 @@
 import { Either } from ".";
 
+/**
+ * The RemoteData type is a synchronous container for async data.
+ *
+ * There are 4 states:
+ * - NotAsked means no data has been requested. This is usually the
+ * initial state.
+ *
+ * - Loading means data has been requested, but not yet resolved.
+ * This is the synchronous version of a pending promise.
+ *
+ * - Failed means the data request resulted in an error. Any reason
+ * not resulting in valid data is contained in this Failed state.
+ *
+ * - Success means the data request resulted in actual valid data.
+ */
 type RemoteData<F, S> = NotAsked | Loading | Failed<F> | Success<S>;
 
 export type Type<F, S> = RemoteData<F, S>;
@@ -18,6 +33,9 @@ interface Loading {
 }
 
 export const loading = (): Loading => ({ kind: "Loading" });
+
+export const isLoading = <F, S>(data: RemoteData<F, S>): data is Loading =>
+  data.kind === "Loading";
 
 interface Failed<V> {
   kind: "Failed";
@@ -74,4 +92,23 @@ export const fold = <F, S, R>(handlers: {
     case "Success":
       return handlers.success(data.value);
   }
+};
+
+export const isEqual = <F, S>(
+  a: RemoteData<F, S>,
+  b: RemoteData<F, S>
+): boolean => a.kind === b.kind;
+
+export const dualFold = <F, S, R>(handlers: {
+  notAsked: () => R;
+  loading: () => R;
+  failed: (a: F, b: F) => R;
+  success: (a: S, b: S) => R;
+  incompatible: () => R;
+}) => (a: RemoteData<F, S>, b: RemoteData<F, S>): R => {
+  if (isNotAsked(a) && isNotAsked(b)) return handlers.notAsked();
+  if (isLoading(a) && isLoading(b)) return handlers.loading();
+  if (isFailed(a) && isFailed(b)) return handlers.failed(a.value, b.value);
+  if (isSuccess(a) && isSuccess(b)) return handlers.success(a.value, b.value);
+  return handlers.incompatible();
 };

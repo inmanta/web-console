@@ -1,3 +1,4 @@
+import { ServicesSlice } from "@/UI/Store/ServicesSlice";
 import { ensureServiceEntityIsLoaded } from "@app/ServiceInventory/ServiceInventory";
 import { Alert, AlertGroup, PageSection } from "@patternfly/react-core";
 import React, { useCallback, useState } from "react";
@@ -29,14 +30,18 @@ export const CreateInstancePage: React.FC<Props> = ({ match }) => {
   const dispatchEntity = (data) =>
     storeDispatch.services.addSingleService(data);
   React.useEffect(() => {
-    ensureServiceEntityIsLoaded(store, serviceName, {
-      urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`,
-      dispatch: dispatchEntity,
-      isEnvironmentIdRequired: true,
-      environmentId,
-      setErrorMessage,
-      keycloak,
-    });
+    ensureServiceEntityIsLoaded(
+      (store.services as unknown) as ServicesSlice,
+      serviceName,
+      {
+        urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`,
+        dispatch: dispatchEntity,
+        isEnvironmentIdRequired: true,
+        environmentId,
+        setErrorMessage,
+        keycloak,
+      }
+    );
   }, [serviceName, environmentId]);
   const serviceEntity = store.services.byId[serviceName];
   const location = useLocation();
