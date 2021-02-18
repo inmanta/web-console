@@ -1,0 +1,2 @@
+[tool.irt.version-bump]
+tool = "yarn"
