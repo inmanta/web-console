@@ -12,6 +12,7 @@ import {
   serviceInstancesSlice2,
   ServiceInstancesSlice2,
 } from "./ServiceInstancesSlice2";
+import { servicesSlice2, ServicesSlice2 } from "./ServicesSlice2";
 
 export interface StoreModel {
   environments: EnvironmentsSlice;
@@ -22,6 +23,7 @@ export interface StoreModel {
   >;
   resources: ResourcesSlice;
   services: ServicesSlice;
+  services2: ServicesSlice2;
   projects: ProjectsSlice;
   serviceInstances: ServiceInstancesSlice;
   serviceInstances2: ServiceInstancesSlice2;
@@ -85,4 +87,5 @@ export const storeModel: StoreModel = {
   serviceInstances: serviceInstancesSlice,
   serviceInstances2: serviceInstancesSlice2,
   services: servicesSlice,
+  services2: servicesSlice2,
 };

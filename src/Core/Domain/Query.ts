@@ -4,7 +4,26 @@ import {
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
 } from "./ServiceInstanceModel";
-import { ServiceIdentifier } from "./ServiceModel";
+import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
+
+type Query = ServiceQuery | ServiceInstancesQuery | ResourcesQuery;
+export type Type = Query;
+
+/**
+ * The ServiceQuery describes a service. The qualifier identifies 1
+ * specific service.
+ */
+export interface ServiceQuery {
+  kind: "Service";
+  qualifier: ServiceIdentifier;
+}
+
+interface ServiceManifest {
+  error: string;
+  apiResponse: ServiceModel;
+  data: ServiceModel;
+  query: ServiceQuery;
+}
 
 /**
  * The ResourcesQuery describes resources for a service instance.
@@ -17,33 +36,39 @@ export interface ResourcesQuery {
   qualifier: ServiceInstanceIdentifier;
 }
 
+interface ResourcesManifest {
+  error: string;
+  apiResponse: ResourceModel[];
+  data: ResourceModel[];
+  query: ResourcesQuery;
+}
+
 /**
  * The ServiceInstancesQuery describes instances of a service.
  * We are asking for all the instances of 1 unique service
- * based on its name and environment.
+ * based on its name and environment. The qualifier identifies 1
+ * specific service.
  */
 export interface ServiceInstancesQuery {
   kind: "ServiceInstances";
   qualifier: ServiceIdentifier;
 }
 
-type Query = ResourcesQuery | ServiceInstancesQuery;
+interface ServiceInstancesManifest {
+  error: string;
+  apiResponse: ServiceInstanceModel[];
+  data: ServiceInstanceModelWithTargetStates[];
+  query: ServiceInstancesQuery;
+}
 
-export type Type = Query;
-
+/**
+ * The Manifest is just a utility that collects all the different
+ * types related to all the sub queries.
+ */
 interface Manifest {
-  Resources: {
-    error: string;
-    apiResponse: ResourceModel[];
-    data: ResourceModel[];
-    query: ResourcesQuery;
-  };
-  ServiceInstances: {
-    error: string;
-    apiResponse: ServiceInstanceModel[];
-    data: ServiceInstanceModelWithTargetStates[];
-    query: ServiceInstancesQuery;
-  };
+  Service: ServiceManifest;
+  ServiceInstances: ServiceInstancesManifest;
+  Resources: ResourcesManifest;
 }
 
 export type Kind = Query["kind"];

@@ -24,25 +24,11 @@ export class ServiceInstancesStateHelper
   }
 
   getHooked(id: string): Data {
-    return useStoreState(
-      (state) => {
-        return this.enforce(
-          state.serviceInstances2.instancesWithTargetStates(id)
-        );
-      },
-      (prev, next) =>
-        RemoteData.dualFold<
-          string,
-          ServiceInstanceModelWithTargetStates[],
-          boolean
-        >({
-          notAsked: () => true,
-          loading: () => true,
-          failed: (a, b) => a === b,
-          success: (a, b) => isEqual(a, b),
-          incompatible: () => false,
-        })(prev, next)
-    );
+    return useStoreState((state) => {
+      return this.enforce(
+        state.serviceInstances2.instancesWithTargetStates(id)
+      );
+    }, isEqual);
   }
 
   private enforce(value: undefined | Data): Data {

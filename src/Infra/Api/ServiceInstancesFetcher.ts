@@ -5,8 +5,7 @@ export class ServiceInstancesFetcher implements Fetcher<"ServiceInstances"> {
   constructor(private readonly baseApiHelper: BaseApiHelper) {}
 
   private getUrl(serviceName: string) {
-    // ?include_deployment_progress=True
-    return `${this.baseApiHelper.getBaseUrl()}/lsm/v1/service_inventory/${serviceName}?`;
+    return `${this.baseApiHelper.getBaseUrl()}/lsm/v1/service_inventory/${serviceName}?include_deployment_progress=True`;
   }
 
   async getData(

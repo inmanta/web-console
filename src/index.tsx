@@ -8,19 +8,24 @@ import { getStoreInstance, ServicesContext } from "@/UI";
 import {
   BaseApiHelper,
   ResourcesFetcher,
+  ServiceFetcher,
   ServiceInstancesFetcher,
 } from "@/Infra";
 import {
   DataProviderImpl,
   IntervalsDictionary,
-  ResourcesStateHelper,
   LiveSubscriptionController,
-  ResourcesDataManager,
-  ResourcesHookHelper,
+  ServiceDataManager,
+  ServiceHookHelper,
+  ServiceStateHelper,
   ServiceInstancesDataManager,
   ServiceInstancesHookHelper,
   ServiceInstancesStateHelper,
+  ResourcesStateHelper,
+  ResourcesDataManager,
+  ResourcesHookHelper,
 } from "@/UI/Data";
+import {} from "@/UI/Data/Service";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -60,9 +65,18 @@ const serviceInstancesHelper = new ServiceInstancesHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
+const serviceHelper = new ServiceHookHelper(
+  new ServiceDataManager(
+    new ServiceFetcher(baseApiHelper),
+    new ServiceStateHelper(storeInstance)
+  ),
+  new LiveSubscriptionController(5000, new IntervalsDictionary())
+);
+
 const dataProvider = new DataProviderImpl([
-  resourcesHelper,
+  serviceHelper,
   serviceInstancesHelper,
+  resourcesHelper,
 ]);
 
 ReactDOM.render(
