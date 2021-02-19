@@ -10,6 +10,12 @@ import {
   ToolbarItem,
   ToolbarContent,
   AlertGroup,
+  EmptyState,
+  EmptyStateIcon,
+  Button,
+  EmptyStateBody,
+  Title,
+  Spinner,
 } from "@patternfly/react-core";
 import { useStoreState } from "@/UI/Store";
 import { InventoryTable } from "@/UI/ServiceInventory";
@@ -18,6 +24,7 @@ import { AttributeModel, RemoteData, Query, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { KeycloakInstance } from "keycloak-js";
 import { ServicesContext } from "@/UI/ServicesContext";
+import { ExclamationCircleIcon } from "@patternfly/react-icons";
 
 const EnvironmentProvider: React.FunctionComponent<{
   match: { params: { id: string } };
@@ -29,10 +36,12 @@ const EnvironmentProvider: React.FunctionComponent<{
 
   return (
     <PageSection className={"horizontally-scrollable"}>
-      <ServiceProvider
-        serviceName={match.params.id}
-        environmentId={environmentId}
-      />
+      <Card>
+        <ServiceProvider
+          serviceName={match.params.id}
+          environmentId={environmentId}
+        />
+      </Card>
     </PageSection>
   );
 };
@@ -48,15 +57,25 @@ const ServiceProvider: React.FunctionComponent<{
   };
   dataProvider.useSubscription(query);
   const data = dataProvider.useData<"Service">(query);
-  if (!RemoteData.isSuccess(data)) return null;
 
-  return (
-    <ServiceInventory
-      serviceName={serviceName}
-      environmentId={environmentId}
-      service={data.value}
-    />
-  );
+  return RemoteData.fold<
+    Query.Error<"Service">,
+    Query.Data<"Service">,
+    JSX.Element | null
+  >({
+    notAsked: () => null,
+    loading: () => <LoadingView />,
+    failed: (error) => (
+      <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+    ),
+    success: (service) => (
+      <ServiceInventory
+        serviceName={serviceName}
+        environmentId={environmentId}
+        service={service}
+      />
+    ),
+  })(data);
 };
 
 const ServiceInventory: React.FunctionComponent<{
@@ -64,10 +83,6 @@ const ServiceInventory: React.FunctionComponent<{
   environmentId: string;
   service: ServiceModel;
 }> = ({ serviceName, environmentId, service }) => {
-  const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}?include_deployment_progress=True`;
-  // const services = useStoreState((store) => store.services);
-  // const storeDispatch = useStoreDispatch();
-  const [errorMessage, setErrorMessage] = React.useState("");
   const [instanceErrorMessage, setInstanceErrorMessage] = React.useState("");
 
   const shouldUseAuth =
@@ -86,73 +101,57 @@ const ServiceInventory: React.FunctionComponent<{
   dataProvider.useSubscription(query);
   const data = dataProvider.useData<"ServiceInstances">(query);
 
-  if (RemoteData.isNotAsked(data)) return null;
-  if (RemoteData.isLoading(data)) return <div>loading...</div>;
-  if (RemoteData.isFailed(data)) {
-    return (
-      <Alert
-        variant="danger"
-        title={data.value}
-        actionClose={
-          <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-        }
-      />
-    );
-  }
-
-  const refreshInstances = async () => dataProvider.trigger(query);
-
-  return (
-    <InventoryContext.Provider
-      value={{
-        attributes: service.attributes,
-        environmentId,
-        inventoryUrl: inventoryUrl.split("?")[0],
-        setErrorMessage: setInstanceErrorMessage,
-        refresh: refreshInstances,
-      }}
-    >
-      {errorMessage && (
-        <Alert
-          variant="danger"
-          title={errorMessage}
-          actionClose={
-            <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-          }
-        />
-      )}
-      {instanceErrorMessage && (
-        <AlertGroup isToast={true}>
-          <Alert
-            variant="danger"
-            title={instanceErrorMessage}
-            actionClose={
-              <AlertActionCloseButton
-                data-cy="close-alert"
-                onClose={() => setInstanceErrorMessage("")}
-              />
-            }
-          />
-        </AlertGroup>
-      )}
-      <Card>
-        <Title serviceName={serviceName} keycloak={keycloak} />
-        {data.value.length > 0 && (
+  return RemoteData.fold<
+    Query.Error<"ServiceInstances">,
+    Query.Data<"ServiceInstances">,
+    JSX.Element | null
+  >({
+    notAsked: () => null,
+    loading: () => <LoadingView />,
+    failed: (error) => (
+      <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+    ),
+    success: (instances) => (
+      <InventoryContext.Provider
+        value={{
+          attributes: service.attributes,
+          environmentId,
+          inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
+          setErrorMessage: setInstanceErrorMessage,
+          refresh: () => dataProvider.trigger(query),
+        }}
+      >
+        {instanceErrorMessage && (
+          <AlertGroup isToast={true}>
+            <Alert
+              variant="danger"
+              title={instanceErrorMessage}
+              actionClose={
+                <AlertActionCloseButton
+                  data-cy="close-alert"
+                  onClose={() => setInstanceErrorMessage("")}
+                />
+              }
+            />
+          </AlertGroup>
+        )}
+        <IntroView serviceName={serviceName} keycloak={keycloak} />
+        {instances.length > 0 && (
           <InventoryTable
-            instances={data.value}
+            instances={instances}
             keycloak={keycloak}
             serviceEntity={service}
           />
         )}
-      </Card>
-    </InventoryContext.Provider>
-  );
+      </InventoryContext.Provider>
+    ),
+  })(data);
 };
 
-const Title: React.FC<{ serviceName: string; keycloak: KeycloakInstance }> = ({
-  serviceName,
-  keycloak,
-}) => (
+const IntroView: React.FC<{
+  serviceName: string;
+  keycloak: KeycloakInstance;
+}> = ({ serviceName, keycloak }) => (
   <CardFooter>
     <Toolbar>
       <ToolbarContent>
@@ -171,6 +170,31 @@ const Title: React.FC<{ serviceName: string; keycloak: KeycloakInstance }> = ({
       </ToolbarContent>
     </Toolbar>
   </CardFooter>
+);
+
+const LoadingView: React.FC = () => (
+  <EmptyState>
+    <EmptyStateIcon variant="container" component={Spinner} />
+    <Title size="lg" headingLevel="h4">
+      Loading
+    </Title>
+  </EmptyState>
+);
+
+const ErrorView: React.FC<{ error: string; retry: () => void }> = ({
+  error,
+  retry,
+}) => (
+  <EmptyState>
+    <EmptyStateIcon icon={ExclamationCircleIcon} />
+    <Title headingLevel="h4" size="lg">
+      Something went wrong.
+    </Title>
+    <EmptyStateBody>{error}</EmptyStateBody>
+    <Button variant="primary" onClick={retry}>
+      Retry
+    </Button>
+  </EmptyState>
 );
 
 interface IInventoryContextData {
