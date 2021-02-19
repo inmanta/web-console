@@ -43,7 +43,7 @@ export async function submitCreate(
   service: ServiceModel,
   attributes: FormAttributeResult[],
   setErrorMessage: (message: string) => void,
-  setIsSuccessFul: (successful: boolean) => void,
+  dispatch: () => void,
   keycloak?: KeycloakInstance
 ): Promise<void> {
   const attributeConverter = new AttributeConverter();
@@ -54,7 +54,7 @@ export async function submitCreate(
     environmentId: service.environment,
     method: "POST",
     setErrorMessage: setErrorMessage,
-    dispatch: () => setIsSuccessFul(true),
+    dispatch: dispatch,
     keycloak: keycloak,
   };
   const parsedAttributes = attributeConverter.parseAttributesToCorrectTypes(

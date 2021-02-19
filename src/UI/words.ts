@@ -62,7 +62,6 @@ const dict = {
   confirm: "Confirm",
   "inventory.addInstance.title": (serviceName: string) =>
     `Create a new instance of ${serviceName} with the following parameters`,
-  "inventory.addInstance.success": "Instance created successfully",
   "inventory.addInstance.button": "Add instance",
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",

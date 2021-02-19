@@ -29,13 +29,12 @@ export const CreateFormCard: React.FC<Props> = ({
   keycloak,
 }) => {
   const [errorMessage, setErrorMessage] = useState("");
-  const [isSuccessful, setIsSuccessful] = useState(false);
   const submitCreateInstance = (attributes: FormAttributeResult[]) => {
     submitCreate(
       serviceEntity,
       attributes,
       setErrorMessage,
-      setIsSuccessful,
+      handleRedirect,
       keycloak
     );
   };
@@ -63,17 +62,6 @@ export const CreateFormCard: React.FC<Props> = ({
                 <AlertActionCloseButton onClose={() => setErrorMessage("")} />
               }
             ></Alert>
-          )}
-          {isSuccessful && (
-            <Alert
-              variant={"success"}
-              title={words("inventory.addInstance.success")}
-              actionClose={
-                <AlertActionCloseButton
-                  onClose={() => setIsSuccessful(false)}
-                />
-              }
-            />
           )}
         </AlertGroup>
       </CardFooter>

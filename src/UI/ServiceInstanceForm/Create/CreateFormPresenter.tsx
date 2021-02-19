@@ -12,7 +12,7 @@ export class CreateFormPresenter {
   presentForm(
     attributes: AttributeModel[],
     onSubmit: (attributes: FormAttributeResult[]) => void,
-    onCancel: () => void
+    onRedirect: () => void
   ): React.ReactElement {
     const formInputAttributes = this.getFormInputsForCreateForm(attributes);
 
@@ -20,7 +20,7 @@ export class CreateFormPresenter {
       <ServiceInstanceForm
         formInputAttributes={formInputAttributes}
         onSubmit={onSubmit}
-        onCancel={onCancel}
+        onCancel={onRedirect}
       />
     );
   }

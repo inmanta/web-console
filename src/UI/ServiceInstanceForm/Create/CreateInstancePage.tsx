@@ -49,7 +49,7 @@ export const CreateInstancePage: React.FC<Props> = ({ match }) => {
   pathParts.pop();
   const inventoryPath = pathParts.join("/").concat(location.search);
   const history = useHistory();
-  const handleCancel = useCallback(() => history.push(`${inventoryPath}`), [
+  const handleRedirect = useCallback(() => history.push(`${inventoryPath}`), [
     history,
   ]);
 
@@ -68,7 +68,7 @@ export const CreateInstancePage: React.FC<Props> = ({ match }) => {
           )}
           <CreateFormCard
             serviceEntity={serviceEntity}
-            handleRedirect={handleCancel}
+            handleRedirect={handleRedirect}
             keycloak={keycloak}
           />
         </PageSection>
