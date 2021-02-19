@@ -13,8 +13,8 @@ const Template: Story<ComponentProps<typeof ServiceInstanceForm>> = (args) => (
   <ServiceInstanceForm {...args} />
 );
 
-export const Success = Template.bind({});
-Success.args = {
+export const OneOfEach = Template.bind({});
+OneOfEach.args = {
   formInputAttributes: [
     {
       name: "BoolParam",
