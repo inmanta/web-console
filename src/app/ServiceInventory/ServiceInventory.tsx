@@ -17,6 +17,7 @@ import {
   Title,
   Spinner,
 } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 import { useStoreState } from "@/UI/Store";
 import { InventoryTable } from "@/UI/ServiceInventory";
 import { InstanceModal, ButtonType } from "./InstanceModal";
@@ -32,15 +33,18 @@ const EnvironmentProvider: React.FunctionComponent<{
   const environmentId = useStoreState(
     (store) => store.environments.getSelectedEnvironment.id
   );
-  if (!environmentId) return null;
 
   return (
     <PageSection className={"horizontally-scrollable"}>
       <Card>
-        <ServiceProvider
-          serviceName={match.params.id}
-          environmentId={environmentId}
-        />
+        {environmentId ? (
+          <ServiceProvider
+            serviceName={match.params.id}
+            environmentId={environmentId}
+          />
+        ) : (
+          <ErrorView error={words("error.environment.missing")} />
+        )}
       </Card>
     </PageSection>
   );
@@ -156,7 +160,7 @@ const IntroView: React.FC<{
     <Toolbar>
       <ToolbarContent>
         <ToolbarGroup>
-          <ToolbarItem> Showing instances of {serviceName}</ToolbarItem>
+          <ToolbarItem>{words("inventory.intro")(serviceName)}</ToolbarItem>
         </ToolbarGroup>
         <ToolbarGroup>
           <ToolbarItem>
@@ -181,7 +185,7 @@ const LoadingView: React.FC = () => (
   </EmptyState>
 );
 
-const ErrorView: React.FC<{ error: string; retry: () => void }> = ({
+const ErrorView: React.FC<{ error: string; retry?: () => void }> = ({
   error,
   retry,
 }) => (
