@@ -46,7 +46,9 @@ export class BaseApiHelper implements ApiHelper {
         const data = await response.json();
         return Either.right(data.data);
       }
-      return Either.left(this.formatError(await response.json(), response));
+      return Either.left(
+        this.formatError((await response.json()).message, response)
+      );
     } catch (error) {
       if (error.message) return Either.left(error.message);
       return Either.left(`Error: ${error}`);
