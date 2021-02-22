@@ -121,46 +121,44 @@ export const ServiceInventory: React.FunctionComponent<{
     failed: (error) => (
       <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
     ),
-    success: (instances) =>
-      instances.length <= 0 ? (
-        <EmptyView />
-      ) : (
-        <Wrapper aria-label="ServiceInventory-Success">
-          <InventoryContext.Provider
-            value={{
-              attributes: service.attributes,
-              environmentId,
-              inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
-              setErrorMessage: setInstanceErrorMessage,
-              refresh: () => dataProvider.trigger(query),
-            }}
-            aria-label="ServiceInventory-Success"
-          >
-            {instanceErrorMessage && (
-              <AlertGroup isToast={true}>
-                <Alert
-                  variant="danger"
-                  title={instanceErrorMessage}
-                  actionClose={
-                    <AlertActionCloseButton
-                      data-cy="close-alert"
-                      onClose={() => setInstanceErrorMessage("")}
-                    />
-                  }
-                />
-              </AlertGroup>
-            )}
-            <IntroView serviceName={serviceName} keycloak={keycloak} />
-            {instances.length > 0 && (
-              <InventoryTable
-                instances={instances}
-                keycloak={keycloak}
-                serviceEntity={service}
+    success: (instances) => (
+      <Wrapper aria-label="ServiceInventory-Success">
+        <InventoryContext.Provider
+          value={{
+            attributes: service.attributes,
+            environmentId,
+            inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
+            setErrorMessage: setInstanceErrorMessage,
+            refresh: () => dataProvider.trigger(query),
+          }}
+        >
+          {instanceErrorMessage && (
+            <AlertGroup isToast={true}>
+              <Alert
+                variant="danger"
+                title={instanceErrorMessage}
+                actionClose={
+                  <AlertActionCloseButton
+                    data-cy="close-alert"
+                    onClose={() => setInstanceErrorMessage("")}
+                  />
+                }
               />
-            )}
-          </InventoryContext.Provider>
-        </Wrapper>
-      ),
+            </AlertGroup>
+          )}
+          <IntroView serviceName={serviceName} keycloak={keycloak} />
+          {instances.length > 0 ? (
+            <InventoryTable
+              instances={instances}
+              keycloak={keycloak}
+              serviceEntity={service}
+            />
+          ) : (
+            <EmptyView />
+          )}
+        </InventoryContext.Provider>
+      </Wrapper>
+    ),
   })(data);
 };
 
