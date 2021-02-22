@@ -20,6 +20,8 @@ const dict = {
   "attributesTab.candidate": "Candidate",
   "attributesTab.rollback": "Rollback",
   "inventory.intro": (service: string) => `Showing instances of ${service}`,
+  "inventory.empty.title": "No instances found",
+  "inventory.empty.body": "No instances found for this service.",
   "inventory.column.id": "Id",
   "inventory.column.state": "State",
   "inventory.column.attributesSummary": "Attributes",
@@ -58,6 +60,9 @@ const dict = {
     `The following error occured while communicating with the server: ${errorMessage}`,
   "error.authorizationFailed": "Authorization failed, please log in",
   "error.environment.missing": "Environment is missing",
+  error: "Something went wrong",
+  loading: "Loading",
+  retry: "Retry",
 };
 
 type Key = keyof typeof dict;

@@ -193,7 +193,7 @@ const LoadingView: React.FC = () => (
     <EmptyState>
       <EmptyStateIcon variant="container" component={Spinner} />
       <Title size="lg" headingLevel="h4">
-        Loading
+        {words("loading")}
       </Title>
     </EmptyState>
   </Wrapper>
@@ -207,11 +207,11 @@ const ErrorView: React.FC<{ error: string; retry?: () => void }> = ({
     <EmptyState>
       <EmptyStateIcon icon={ExclamationCircleIcon} />
       <Title headingLevel="h4" size="lg">
-        Something went wrong.
+        {words("error")}
       </Title>
       <EmptyStateBody>{error}</EmptyStateBody>
       <Button variant="primary" onClick={retry}>
-        Retry
+        {words("retry")}
       </Button>
     </EmptyState>
   </Wrapper>
@@ -222,9 +222,9 @@ const EmptyView: React.FC = () => (
     <EmptyState>
       <EmptyStateIcon icon={SearchIcon} />
       <Title size="lg" headingLevel="h4">
-        No instances found
+        {words("inventory.empty.title")}
       </Title>
-      <EmptyStateBody>No instances found for this service.</EmptyStateBody>
+      <EmptyStateBody>{words("inventory.empty.body")}</EmptyStateBody>
     </EmptyState>
   </Wrapper>
 );
