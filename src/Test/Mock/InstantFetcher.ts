@@ -1,14 +1,14 @@
-import { Either, Fetcher, ResourceModel } from "@/Core";
+import { Either, Fetcher, Query } from "@/Core";
 
-export type Outcome =
+export type Outcome<K extends Query.Kind> =
   | { kind: "Loading" }
-  | { kind: "Failed"; error: string }
-  | { kind: "Success"; resources: ResourceModel[] };
+  | { kind: "Failed"; error: Query.Error<K> }
+  | { kind: "Success"; data: Query.ApiResponse<K> };
 
-export class InstantFetcher implements Fetcher<"Resources"> {
-  constructor(private readonly outcome: Outcome) {}
+export class InstantFetcher<K extends Query.Kind> implements Fetcher<K> {
+  constructor(private outcome: Outcome<K>) {}
 
-  getData(): Promise<Either.Type<string, ResourceModel[]>> {
+  getData(): Promise<Either.Type<Query.Error<K>, Query.ApiResponse<K>>> {
     const { outcome } = this;
 
     switch (outcome.kind) {
@@ -24,7 +24,7 @@ export class InstantFetcher implements Fetcher<"Resources"> {
 
       case "Success":
         return new Promise((resolve) => {
-          resolve(Either.right(outcome.resources));
+          resolve(Either.right(outcome.data));
         });
     }
   }

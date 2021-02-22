@@ -27,7 +27,7 @@ export class ResourcesHookHelper implements HookHelper<Query.ResourcesQuery> {
       return () => {
         this.subscriptionController.unsubscribeFrom(query.qualifier.id);
       };
-    }, [query.qualifier.id]);
+    }, [query.qualifier.id, query.qualifier.version]);
   }
 
   useData(

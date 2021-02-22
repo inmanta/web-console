@@ -1,4 +1,5 @@
 export * from "./inventory";
 export * from "./row";
-export * as Resource from "./resource";
-export * as Service from "./service";
+export * as Resources from "./Resources";
+export * as Service from "./Service";
+export * as ServiceInstance from "./ServiceInstance";

@@ -15,7 +15,7 @@ import { ResourcesView } from "./ResourcesView";
 
 function setup() {
   const store = getStoreInstance();
-  const apiHelper = new DeferredFetcher();
+  const apiHelper = new DeferredFetcher<"Resources">();
   const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(

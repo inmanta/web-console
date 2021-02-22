@@ -23,9 +23,9 @@ test("InventoryTable can be expanded", async () => {
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesDataManager(
-        new InstantFetcher({
+        new InstantFetcher<"Resources">({
           kind: "Success",
-          resources: [
+          data: [
             { resource_id: "resource_id_1", resource_state: "resource_state" },
           ],
         }),
@@ -53,9 +53,9 @@ test("ServiceInventory can show resources for instance", async () => {
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesDataManager(
-        new InstantFetcher({
+        new InstantFetcher<"Resources">({
           kind: "Success",
-          resources: [
+          data: [
             { resource_id: "resource_id_1", resource_state: "resource_state" },
           ],
         }),
