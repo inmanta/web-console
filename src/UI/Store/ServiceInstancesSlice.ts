@@ -6,14 +6,14 @@ import {
 } from "@/Core";
 import { StoreModel } from "./Store";
 
-export interface ServiceInstancesSlice2 {
+export interface ServiceInstancesSlice {
   byId: Record<string, RemoteData.Type<string, ServiceInstanceModel[]>>;
   setData: Action<
-    ServiceInstancesSlice2,
+    ServiceInstancesSlice,
     { id: string; value: RemoteData.Type<string, ServiceInstanceModel[]> }
   >;
   instancesWithTargetStates: Computed<
-    ServiceInstancesSlice2,
+    ServiceInstancesSlice,
     (
       name: string
     ) => RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>,
@@ -21,7 +21,7 @@ export interface ServiceInstancesSlice2 {
   >;
 }
 
-export const serviceInstancesSlice2: ServiceInstancesSlice2 = {
+export const serviceInstancesSlice: ServiceInstancesSlice = {
   byId: {},
   setData: action((state, payload) => {
     state.byId[payload.id] = payload.value;

@@ -5,9 +5,9 @@ import { ServicesSlice, servicesSlice } from "./ServicesSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 import { ProjectModel } from "@/Core";
 import {
-  serviceInstancesSlice2,
-  ServiceInstancesSlice2,
-} from "./ServiceInstancesSlice2";
+  serviceInstancesSlice,
+  ServiceInstancesSlice,
+} from "./ServiceInstancesSlice";
 import { servicesSlice2, ServicesSlice2 } from "./ServicesSlice2";
 
 export interface StoreModel {
@@ -21,7 +21,7 @@ export interface StoreModel {
   services: ServicesSlice;
   services2: ServicesSlice2;
   projects: ProjectsSlice;
-  serviceInstances2: ServiceInstancesSlice2;
+  serviceInstances: ServiceInstancesSlice;
 }
 
 const fetched: StoreModel["fetched"] = action((state, payload) => {
@@ -79,7 +79,7 @@ export const storeModel: StoreModel = {
     actions.projects.selectProjectById(payload.project);
     actions.environments.selectEnvironmentById(payload.environment);
   }),
-  serviceInstances2: serviceInstancesSlice2,
+  serviceInstances: serviceInstancesSlice,
   services: servicesSlice,
   services2: servicesSlice2,
 };

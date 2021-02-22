@@ -28,14 +28,12 @@ export class ServiceInstancesStateHelper
    * to check if the data is changed.
    */
   set(id: string, value: ApiData): void {
-    this.store.dispatch.serviceInstances2.setData({ id, value });
+    this.store.dispatch.serviceInstances.setData({ id, value });
   }
 
   getHooked(id: string): Data {
     return useStoreState((state) => {
-      return this.enforce(
-        state.serviceInstances2.instancesWithTargetStates(id)
-      );
+      return this.enforce(state.serviceInstances.instancesWithTargetStates(id));
     }, isEqual);
   }
 
@@ -46,7 +44,7 @@ export class ServiceInstancesStateHelper
 
   getOnce(id: string): Data {
     return this.enforce(
-      this.store.getState().serviceInstances2.instancesWithTargetStates(id)
+      this.store.getState().serviceInstances.instancesWithTargetStates(id)
     );
   }
 }
