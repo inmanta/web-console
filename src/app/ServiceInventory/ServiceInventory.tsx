@@ -25,28 +25,34 @@ import { AttributeModel, RemoteData, Query, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { KeycloakInstance } from "keycloak-js";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { ExclamationCircleIcon } from "@patternfly/react-icons";
+import { ExclamationCircleIcon, SearchIcon } from "@patternfly/react-icons";
 
-const EnvironmentProvider: React.FunctionComponent<{
+const Wrapper: React.FC<{ "aria-label": string }> = ({
+  children,
+  ...props
+}) => (
+  <PageSection
+    className={"horizontally-scrollable"}
+    aria-label={props["aria-label"]}
+  >
+    <Card>{children}</Card>
+  </PageSection>
+);
+
+export const ServiceInventoryWithProvider: React.FunctionComponent<{
   match: { params: { id: string } };
 }> = ({ match }) => {
   const environmentId = useStoreState(
     (store) => store.environments.getSelectedEnvironment.id
   );
 
-  return (
-    <PageSection className={"horizontally-scrollable"}>
-      <Card>
-        {environmentId ? (
-          <ServiceProvider
-            serviceName={match.params.id}
-            environmentId={environmentId}
-          />
-        ) : (
-          <ErrorView error={words("error.environment.missing")} />
-        )}
-      </Card>
-    </PageSection>
+  return environmentId ? (
+    <ServiceProvider
+      serviceName={match.params.id}
+      environmentId={environmentId}
+    />
+  ) : (
+    <ErrorView error={words("error.environment.missing")} />
   );
 };
 
@@ -82,7 +88,7 @@ const ServiceProvider: React.FunctionComponent<{
   })(data);
 };
 
-const ServiceInventory: React.FunctionComponent<{
+export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   environmentId: string;
   service: ServiceModel;
@@ -115,40 +121,46 @@ const ServiceInventory: React.FunctionComponent<{
     failed: (error) => (
       <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
     ),
-    success: (instances) => (
-      <InventoryContext.Provider
-        value={{
-          attributes: service.attributes,
-          environmentId,
-          inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
-          setErrorMessage: setInstanceErrorMessage,
-          refresh: () => dataProvider.trigger(query),
-        }}
-      >
-        {instanceErrorMessage && (
-          <AlertGroup isToast={true}>
-            <Alert
-              variant="danger"
-              title={instanceErrorMessage}
-              actionClose={
-                <AlertActionCloseButton
-                  data-cy="close-alert"
-                  onClose={() => setInstanceErrorMessage("")}
+    success: (instances) =>
+      instances.length <= 0 ? (
+        <EmptyView />
+      ) : (
+        <Wrapper aria-label="ServiceInventory-Success">
+          <InventoryContext.Provider
+            value={{
+              attributes: service.attributes,
+              environmentId,
+              inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
+              setErrorMessage: setInstanceErrorMessage,
+              refresh: () => dataProvider.trigger(query),
+            }}
+            aria-label="ServiceInventory-Success"
+          >
+            {instanceErrorMessage && (
+              <AlertGroup isToast={true}>
+                <Alert
+                  variant="danger"
+                  title={instanceErrorMessage}
+                  actionClose={
+                    <AlertActionCloseButton
+                      data-cy="close-alert"
+                      onClose={() => setInstanceErrorMessage("")}
+                    />
+                  }
                 />
-              }
-            />
-          </AlertGroup>
-        )}
-        <IntroView serviceName={serviceName} keycloak={keycloak} />
-        {instances.length > 0 && (
-          <InventoryTable
-            instances={instances}
-            keycloak={keycloak}
-            serviceEntity={service}
-          />
-        )}
-      </InventoryContext.Provider>
-    ),
+              </AlertGroup>
+            )}
+            <IntroView serviceName={serviceName} keycloak={keycloak} />
+            {instances.length > 0 && (
+              <InventoryTable
+                instances={instances}
+                keycloak={keycloak}
+                serviceEntity={service}
+              />
+            )}
+          </InventoryContext.Provider>
+        </Wrapper>
+      ),
   })(data);
 };
 
@@ -177,31 +189,47 @@ const IntroView: React.FC<{
 );
 
 const LoadingView: React.FC = () => (
-  <EmptyState>
-    <EmptyStateIcon variant="container" component={Spinner} />
-    <Title size="lg" headingLevel="h4">
-      Loading
-    </Title>
-  </EmptyState>
+  <Wrapper aria-label="ServiceInventory-Loading">
+    <EmptyState>
+      <EmptyStateIcon variant="container" component={Spinner} />
+      <Title size="lg" headingLevel="h4">
+        Loading
+      </Title>
+    </EmptyState>
+  </Wrapper>
 );
 
 const ErrorView: React.FC<{ error: string; retry?: () => void }> = ({
   error,
   retry,
 }) => (
-  <EmptyState>
-    <EmptyStateIcon icon={ExclamationCircleIcon} />
-    <Title headingLevel="h4" size="lg">
-      Something went wrong.
-    </Title>
-    <EmptyStateBody>{error}</EmptyStateBody>
-    <Button variant="primary" onClick={retry}>
-      Retry
-    </Button>
-  </EmptyState>
+  <Wrapper aria-label="ServiceInventory-Failed">
+    <EmptyState>
+      <EmptyStateIcon icon={ExclamationCircleIcon} />
+      <Title headingLevel="h4" size="lg">
+        Something went wrong.
+      </Title>
+      <EmptyStateBody>{error}</EmptyStateBody>
+      <Button variant="primary" onClick={retry}>
+        Retry
+      </Button>
+    </EmptyState>
+  </Wrapper>
 );
 
-interface IInventoryContextData {
+const EmptyView: React.FC = () => (
+  <Wrapper aria-label="ServiceInventory-Empty">
+    <EmptyState>
+      <EmptyStateIcon icon={SearchIcon} />
+      <Title size="lg" headingLevel="h4">
+        No instances found
+      </Title>
+      <EmptyStateBody>No instances found for this service.</EmptyStateBody>
+    </EmptyState>
+  </Wrapper>
+);
+
+export interface IInventoryContextData {
   attributes: AttributeModel[];
   environmentId: string | undefined;
   inventoryUrl: string;
@@ -210,10 +238,6 @@ interface IInventoryContextData {
   refresh: (data) => any;
 }
 
-const InventoryContext = React.createContext({} as IInventoryContextData);
-
-export {
-  EnvironmentProvider as ServiceInventory,
-  InventoryContext,
-  IInventoryContextData,
-};
+export const InventoryContext = React.createContext(
+  {} as IInventoryContextData
+);
