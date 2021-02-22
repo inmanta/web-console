@@ -6,6 +6,11 @@ import {
 } from "@/Core";
 import { StoreModel } from "./Store";
 
+/**
+ * The ServiceInstancesSlice stores ServiceInstances.
+ * ServicesInstances belong to a service, so they are stored by
+ * their service name.
+ */
 export interface ServiceInstancesSlice {
   byId: Record<string, RemoteData.Type<string, ServiceInstanceModel[]>>;
   setData: Action<
