@@ -19,6 +19,14 @@ export class ServiceInstancesStateHelper
     > {
   constructor(private readonly store: Store) {}
 
+  /**
+   * We could implement a performance improvement here by first checking
+   * if the same data is already in the store. If the data is the same,
+   * there is no need to trigger an action. But triggering the action
+   * always is useful for debugging purposes. And the view is not
+   * rerendered anyway because the getStoreState hook is also optimized
+   * to check if the data is changed.
+   */
   set(id: string, value: ApiData): void {
     this.store.dispatch.serviceInstances2.setData({ id, value });
   }

@@ -3,10 +3,6 @@ import { EnvironmentsSlice, environmentsSlice } from "./EnvironmentsSlice";
 import { ProjectsSlice, projectsSlice } from "./ProjectsSlice";
 import { ServicesSlice, servicesSlice } from "./ServicesSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
-import {
-  ServiceInstancesSlice,
-  serviceInstancesSlice,
-} from "./ServiceInstancesSlice";
 import { ProjectModel } from "@/Core";
 import {
   serviceInstancesSlice2,
@@ -25,7 +21,6 @@ export interface StoreModel {
   services: ServicesSlice;
   services2: ServicesSlice2;
   projects: ProjectsSlice;
-  serviceInstances: ServiceInstancesSlice;
   serviceInstances2: ServiceInstancesSlice2;
 }
 
@@ -84,7 +79,6 @@ export const storeModel: StoreModel = {
     actions.projects.selectProjectById(payload.project);
     actions.environments.selectEnvironmentById(payload.environment);
   }),
-  serviceInstances: serviceInstancesSlice,
   serviceInstances2: serviceInstancesSlice2,
   services: servicesSlice,
   services2: servicesSlice2,
