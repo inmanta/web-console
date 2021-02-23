@@ -1,4 +1,4 @@
-import { mount } from "enzyme";
+import { render, screen } from "@testing-library/react";
 import React from "react";
 import { BooleanFormInput } from "./BooleanFormInput";
 
@@ -6,8 +6,8 @@ describe("BooleanFormInput", () => {
   const handleInputChange = () => {
     return;
   };
-  it("Should render radio button input for boolean parameters", () => {
-    const wrapper = mount(
+  it("Should render radio button input for boolean parameters", async () => {
+    render(
       <BooleanFormInput
         attributeName="bool_param"
         isChecked={true}
@@ -16,12 +16,11 @@ describe("BooleanFormInput", () => {
         handleInputChange={handleInputChange}
       />
     );
-    const radioButtons = wrapper.find("input[type='radio']");
+    const radioButtons = await screen.findAllByRole("radio");
     expect(radioButtons.length).toEqual(2);
-    expect(radioButtons.at(0).getDOMNode()).toBeTruthy();
   });
-  it("Should render radio button input for optional boolean parameters", () => {
-    const wrapper = mount(
+  it("Should render radio button input for optional boolean parameters", async () => {
+    render(
       <BooleanFormInput
         attributeName="opt_bool_param"
         isChecked={null}
@@ -30,8 +29,7 @@ describe("BooleanFormInput", () => {
         handleInputChange={handleInputChange}
       />
     );
-    const radioButtons = wrapper.find("input[type='radio']");
+    const radioButtons = await screen.findAllByRole("radio");
     expect(radioButtons.length).toEqual(3);
-    expect(radioButtons.at(0).getDOMNode()).toBeTruthy();
   });
 });

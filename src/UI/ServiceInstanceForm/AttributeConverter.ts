@@ -4,10 +4,13 @@ import {
   ServiceInstanceModel,
 } from "@/Core";
 import { TextInputTypes } from "@patternfly/react-core";
-import _ from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { FormAttributeResult } from "./ServiceInstanceForm";
 
 export class AttributeConverter {
+  /**
+   * Determines what kind of input should be used for a Service Attribute
+   */
   getInputType(attributeModel: AttributeModel): TextInputTypes | "bool" {
     return attributeModel.type.includes("bool")
       ? "bool"
@@ -17,6 +20,9 @@ export class AttributeConverter {
         );
   }
 
+  /**
+   * Determines the default value for an attribute, taking into account the form input that will be rendered
+   */
   getFormDefaultValue(
     inputType: TextInputTypes | "bool",
     defaultValueSet: boolean,
@@ -27,6 +33,7 @@ export class AttributeConverter {
     } else if (inputType === "bool") {
       return null;
     } else {
+      // Use empty string for the empty state when it's not a boolean, for booleans it's handled differently
       return "";
     }
   }
@@ -47,7 +54,7 @@ export class AttributeConverter {
     return TextInputTypes.text;
   }
 
-  isNumberType(type: string): boolean {
+  private isNumberType(type: string): boolean {
     return (
       ["double", "float", "int", "integer", "number"].filter((numberLike) =>
         type.includes(numberLike)
@@ -55,6 +62,11 @@ export class AttributeConverter {
     );
   }
 
+  /**
+   * Parses a value to the expected inmanta type. Validation errors are handled by the backend for now
+   * @param value The value of an attribute
+   * @param type The expected inmanta type
+   */
   ensureAttributeType(
     /* eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any */
     value: any,
@@ -83,6 +95,10 @@ export class AttributeConverter {
     return parsedValue;
   }
 
+  /**
+   * Creates a type-correct object from the attribute list, that can be used for communication with the backend
+   * @param attributes The results from a form
+   */
   parseAttributesToCorrectTypes(
     attributes: FormAttributeResult[]
   ): InstanceAttributeModel {
@@ -100,6 +116,10 @@ export class AttributeConverter {
     return attributesTypeCorrect;
   }
 
+  /**
+   * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
+   * and to the active attribute set otherwise
+   */
   getCurrentAttributes(
     instance: Pick<
       ServiceInstanceModel,
@@ -107,11 +127,17 @@ export class AttributeConverter {
     >
   ): InstanceAttributeModel | null {
     return instance.candidate_attributes &&
-      !_.isEmpty(instance.candidate_attributes)
+      !isEmpty(instance.candidate_attributes)
       ? instance.candidate_attributes
       : instance.active_attributes;
   }
 
+  /**
+   * Calculates the difference between the current attributes of an instance versus the updates (from a form)
+   * This is required because in the PATCH update instance method, only the changed attributes should be sent
+   * @param attributesAfterChanges The attributes with the changes
+   * @param originalAttributes The attributes to compare to
+   */
   calculateDiff(
     attributesAfterChanges: InstanceAttributeModel,
     originalAttributes: InstanceAttributeModel | null
@@ -126,7 +152,7 @@ export class AttributeConverter {
           originalAttributes[attributeName] === undefined &&
           attributesAfterChanges[attributeName] === null
         ) &&
-        !_.isEqual(
+        !isEqual(
           attributesAfterChanges[attributeName],
           originalAttributes[attributeName]
         )
