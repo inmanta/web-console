@@ -49,8 +49,10 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
         project: matchingEnvItem.projectId,
       });
       const params = new URLSearchParams(location.search);
-      params.set("env", matchingEnvItem.environmentId);
-      history.push(`/lsm/catalog?${params}`);
+      if (params.get("env") !== matchingEnvItem.environmentId) {
+        params.set("env", matchingEnvItem.environmentId);
+        history.push(`/lsm/catalog?${params}`);
+      }
     }
   };
 
