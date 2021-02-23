@@ -39,10 +39,13 @@ export interface LifecycleModel {
   transfers: TransferModel[];
 }
 
-export interface ServiceModel {
+export interface ServiceIdentifier {
   name: string;
-  description?: string;
   environment: string;
+}
+
+export interface ServiceModel extends ServiceIdentifier {
+  description?: string;
   lifecycle: LifecycleModel;
   attributes: AttributeModel[];
 }

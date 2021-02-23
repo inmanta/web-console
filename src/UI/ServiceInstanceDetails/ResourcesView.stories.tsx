@@ -4,8 +4,8 @@ import { getStoreInstance } from "@/UI/Store";
 import {
   StaticSubscriptionController,
   Outcome,
-  InstantApiHelper,
-  Resource,
+  InstantFetcher,
+  Resources,
 } from "@/Test";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
@@ -21,12 +21,12 @@ export default {
   component: ResourcesView,
 };
 
-const Template: React.FC<{ outcome: Outcome }> = ({ outcome }) => {
+const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesDataManager(
-        new InstantApiHelper(outcome),
+        new InstantFetcher<"Resources">(outcome),
         new ResourcesStateHelper(store)
       ),
       new StaticSubscriptionController()
@@ -54,12 +54,12 @@ export const Loading: React.FC = () => (
 );
 
 export const Empty: React.FC = () => (
-  <Template outcome={{ kind: "Success", resources: [] }} />
+  <Template outcome={{ kind: "Success", data: [] }} />
 );
 export const Failed: React.FC = () => (
   <Template outcome={{ kind: "Failed", error: "error" }} />
 );
 
 export const Success: React.FC = () => (
-  <Template outcome={{ kind: "Success", resources: Resource.resources }} />
+  <Template outcome={{ kind: "Success", data: Resources.A }} />
 );

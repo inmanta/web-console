@@ -5,13 +5,16 @@ import { StoreProvider, createStore } from "easy-peasy";
 import { storeModel } from "@/UI/Store";
 import { getEnvironmentNamesWithSeparator } from "../AppLayout";
 import _ from "lodash";
+import { MemoryRouter } from "react-router-dom";
 
 describe("Environment Selector", () => {
   it("should show default value when there are no environments", () => {
     const envSelector = (
-      <StoreProvider store={createStore(storeModel)}>
-        <EnvironmentSelector items={[]} />
-      </StoreProvider>
+      <MemoryRouter>
+        <StoreProvider store={createStore(storeModel)}>
+          <EnvironmentSelector items={[]} />
+        </StoreProvider>
+      </MemoryRouter>
     );
     const wrapper = mount(envSelector);
     const selectorToggle = wrapper.find(".pf-c-context-selector__toggle");
@@ -24,17 +27,19 @@ describe("Environment Selector", () => {
     let selectorListItem;
     beforeEach(() => {
       envSelector = (
-        <StoreProvider store={createStore(storeModel)}>
-          <EnvironmentSelector
-            items={[
-              {
-                displayName: "test-project / test-environment",
-                projectId: "projectId1",
-                environmentId: "environmentId1",
-              },
-            ]}
-          />
-        </StoreProvider>
+        <MemoryRouter>
+          <StoreProvider store={createStore(storeModel)}>
+            <EnvironmentSelector
+              items={[
+                {
+                  displayName: "test-project / test-environment",
+                  projectId: "projectId1",
+                  environmentId: "environmentId1",
+                },
+              ]}
+            />
+          </StoreProvider>
+        </MemoryRouter>
       );
       wrapper = mount(envSelector);
       selectorToggle = wrapper.find(".pf-c-context-selector__toggle");
@@ -121,9 +126,11 @@ describe("Environment Selector", () => {
         getEnvironmentNamesWithSeparator(project)
       );
       envSelector = (
-        <StoreProvider store={storeInstance}>
-          <EnvironmentSelector items={environments} />
-        </StoreProvider>
+        <MemoryRouter>
+          <StoreProvider store={storeInstance}>
+            <EnvironmentSelector items={environments} />
+          </StoreProvider>
+        </MemoryRouter>
       );
       wrapper = mount(envSelector);
       selectorToggle = wrapper.find(".pf-c-context-selector__toggle");
@@ -167,9 +174,11 @@ describe("Environment Selector", () => {
       getEnvironmentNamesWithSeparator(project)
     );
     const envSelector = (
-      <StoreProvider store={storeInstance}>
-        <EnvironmentSelector items={environments} />
-      </StoreProvider>
+      <MemoryRouter>
+        <StoreProvider store={storeInstance}>
+          <EnvironmentSelector items={environments} />
+        </StoreProvider>
+      </MemoryRouter>
     );
     const wrapper = mount(envSelector);
     const selectorToggle = wrapper.find(".pf-c-context-selector__toggle");
@@ -186,7 +195,16 @@ describe("Environment Selector", () => {
     expect(
       storeInstance.getState().environments.getSelectedEnvironment.id
     ).toEqual("env-id3");
-    expect(location.search).toEqual("?env=env-id3");
+    /**
+     * We are not longer directly manipulating the window.location.
+     * We are using the history library, which manipulates the
+     * window.location for us. This is probably causing the extra
+     * delay in updating the location.search. This timeout hack
+     * waits for that delay before verifying.
+     */
+    setTimeout(() => {
+      expect(location.search).toEqual("?env=env-id3");
+    }, 0);
   });
   describe("with a populated store", () => {
     let envSelector;
@@ -202,9 +220,11 @@ describe("Environment Selector", () => {
         getEnvironmentNamesWithSeparator(project)
       );
       envSelector = (
-        <StoreProvider store={storeInstance}>
-          <EnvironmentSelector items={environments} />
-        </StoreProvider>
+        <MemoryRouter>
+          <StoreProvider store={storeInstance}>
+            <EnvironmentSelector items={environments} />
+          </StoreProvider>
+        </MemoryRouter>
       );
       wrapper = mount(envSelector);
       selectorToggle = wrapper.find(".pf-c-context-selector__toggle");

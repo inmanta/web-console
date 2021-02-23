@@ -15,5 +15,6 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 export interface HookHelper<Q extends Query.Type = Query.Type> {
   useSubscription(query: Q): void;
   useData(query: Q): Data<typeof query.kind>;
+  trigger(query: Q): void;
   matches(query: Query.Type): boolean;
 }

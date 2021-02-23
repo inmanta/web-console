@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import {
   PageSection,
   Alert,
@@ -11,40 +11,94 @@ import {
   ToolbarContent,
   AlertGroup,
   Button,
+  EmptyState,
+  Spinner,
+  Title,
+  EmptyStateIcon,
+  EmptyStateBody,
 } from "@patternfly/react-core";
-import { useStoreState, useStoreDispatch } from "@/UI/Store";
+import { words } from "@/UI/words";
+import { useStoreState } from "@/UI/Store";
 import { InventoryTable } from "@/UI/ServiceInventory";
-import { useInterval } from "@app/Hooks/UseInterval";
-import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
-import { AttributeModel } from "@/Core";
+import { AttributeModel, Query, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
-import { words } from "@/UI";
-import { PlusIcon } from "@patternfly/react-icons";
-import { ServicesSlice } from "@/UI/Store/ServicesSlice";
+import {
+  ExclamationCircleIcon,
+  PlusIcon,
+  SearchIcon,
+} from "@patternfly/react-icons";
+import { ServicesContext } from "@/UI/ServicesContext";
+import { KeycloakInstance } from "keycloak-js";
 
-interface Props {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-}
+const Wrapper: React.FC<{ "aria-label": string }> = ({
+  children,
+  ...props
+}) => (
+  <PageSection
+    className={"horizontally-scrollable"}
+    aria-label={props["aria-label"]}
+  >
+    <Card>{children}</Card>
+  </PageSection>
+);
 
-const ServiceInventory: React.FunctionComponent<Props> = (props) => {
-  const serviceName = props.match.params.id;
-  const inventoryUrl = `/lsm/v1/service_inventory/${serviceName}?include_deployment_progress=True`;
-  const services = useStoreState((store) => store.services);
-  const serviceInstances = useStoreState((store) => store.serviceInstances);
+export const ServiceInventoryWithProvider: React.FunctionComponent<{
+  match: { params: { id: string } };
+}> = ({ match }) => {
   const environmentId = useStoreState(
     (store) => store.environments.getSelectedEnvironment.id
   );
-  const storeDispatch = useStoreDispatch();
-  const [errorMessage, setErrorMessage] = React.useState("");
-  const [instanceErrorMessage, setInstanceErrorMessage] = React.useState("");
-  const instancesOfCurrentService = serviceInstances.instancesWithTargetStates(
-    serviceName
+
+  return environmentId ? (
+    <ServiceProvider
+      serviceName={match.params.id}
+      environmentId={environmentId}
+    />
+  ) : (
+    <ErrorView error={words("error.environment.missing")} />
   );
+};
+
+const ServiceProvider: React.FunctionComponent<{
+  serviceName: string;
+  environmentId: string;
+}> = ({ serviceName, environmentId }) => {
+  const { dataProvider } = useContext(ServicesContext);
+  const query: Query.ServiceQuery = {
+    kind: "Service",
+    qualifier: { name: serviceName, environment: environmentId },
+  };
+  dataProvider.useSubscription(query);
+  const data = dataProvider.useData<"Service">(query);
+
+  return RemoteData.fold<
+    Query.Error<"Service">,
+    Query.Data<"Service">,
+    JSX.Element | null
+  >({
+    notAsked: () => null,
+    loading: () => <LoadingView />,
+    failed: (error) => (
+      <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+    ),
+    success: (service) => (
+      <ServiceInventory
+        serviceName={serviceName}
+        environmentId={environmentId}
+        service={service}
+      />
+    ),
+  })(data);
+};
+
+export const ServiceInventory: React.FunctionComponent<{
+  serviceName: string;
+  environmentId: string;
+  service: ServiceModel;
+}> = ({ serviceName, environmentId, service }) => {
+  const [instanceErrorMessage, setInstanceErrorMessage] = React.useState("");
+
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
   let keycloak;
@@ -52,66 +106,38 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
     // The value will be always true or always false during one session
     [keycloak] = useKeycloak();
   }
-  const dispatchUpdateInstances = (data) =>
-    storeDispatch.serviceInstances.updateInstances({
-      serviceName,
-      instances: data,
-    });
-  const requestParams = {
-    urlEndpoint: inventoryUrl,
-    dispatch: dispatchUpdateInstances,
-    isEnvironmentIdRequired: true,
-    environmentId,
-    setErrorMessage,
-    keycloak,
-  };
-  const dispatchEntity = (data) =>
-    storeDispatch.services.addSingleService(data);
-  React.useEffect(() => {
-    ensureServiceEntityIsLoaded(
-      (services as unknown) as ServicesSlice,
-      serviceName,
-      {
-        urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`,
-        dispatch: dispatchEntity,
-        isEnvironmentIdRequired: true,
-        environmentId,
-        setErrorMessage,
-        keycloak,
-      }
-    );
-  }, [serviceName, environmentId]);
-  React.useEffect(() => {
-    fetchInmantaApi(requestParams);
-  }, [storeDispatch, serviceName, instancesOfCurrentService, requestParams]);
 
-  useInterval(() => fetchInmantaApi(requestParams), 5000);
-  const serviceEntity = services.byId[serviceName];
-  const refreshInstances = async () => fetchInmantaApi(requestParams);
-  return (
-    <PageSection className={"horizontally-scrollable"}>
-      {serviceEntity && (
+  const { dataProvider } = useContext(ServicesContext);
+  const query: Query.ServiceInstancesQuery = {
+    kind: "ServiceInstances",
+    qualifier: { name: serviceName, environment: environmentId || "" },
+  };
+  dataProvider.useSubscription(query);
+  const data = dataProvider.useData<"ServiceInstances">(query);
+
+  return RemoteData.fold<
+    Query.Error<"ServiceInstances">,
+    Query.Data<"ServiceInstances">,
+    JSX.Element | null
+  >({
+    notAsked: () => null,
+    loading: () => <LoadingView />,
+    failed: (error) => (
+      <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+    ),
+    success: (instances) => (
+      <Wrapper aria-label="ServiceInventory-Success">
         <InventoryContext.Provider
           value={{
-            attributes: serviceEntity.attributes,
+            attributes: service.attributes,
             environmentId,
-            inventoryUrl: inventoryUrl.split("?")[0],
+            inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
             setErrorMessage: setInstanceErrorMessage,
-            refresh: refreshInstances,
+            refresh: () => dataProvider.trigger(query),
           }}
         >
-          {errorMessage && (
-            <Alert
-              variant="danger"
-              title={errorMessage}
-              actionClose={
-                <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-              }
-            />
-          )}
           {instanceErrorMessage && (
             <AlertGroup isToast={true}>
-              {" "}
               <Alert
                 variant="danger"
                 title={instanceErrorMessage}
@@ -121,63 +147,96 @@ const ServiceInventory: React.FunctionComponent<Props> = (props) => {
                     onClose={() => setInstanceErrorMessage("")}
                   />
                 }
-              />{" "}
+              />
             </AlertGroup>
           )}
-          <Card>
-            <CardFooter>
-              <Toolbar>
-                <ToolbarContent>
-                  <ToolbarGroup>
-                    <ToolbarItem>
-                      {" "}
-                      Showing instances of {serviceName}
-                    </ToolbarItem>{" "}
-                  </ToolbarGroup>
-                  <ToolbarGroup>
-                    <ToolbarItem>
-                      <Link
-                        to={{
-                          pathname: `/lsm/catalog/${serviceName}/inventory/add`,
-                          search: location.search,
-                        }}
-                      >
-                        <Button id="add-instance-button">
-                          <PlusIcon /> {words("inventory.addInstance.button")}
-                        </Button>
-                      </Link>
-                    </ToolbarItem>
-                  </ToolbarGroup>
-                </ToolbarContent>
-              </Toolbar>
-            </CardFooter>
-            {instancesOfCurrentService.length > 0 && (
-              <InventoryTable
-                instances={instancesOfCurrentService}
-                keycloak={keycloak}
-                serviceEntity={serviceEntity}
-              />
-            )}
-          </Card>
+          <IntroView serviceName={serviceName} keycloak={keycloak} />
+          {instances.length > 0 ? (
+            <InventoryTable
+              instances={instances}
+              keycloak={keycloak}
+              serviceEntity={service}
+            />
+          ) : (
+            <EmptyView />
+          )}
         </InventoryContext.Provider>
-      )}
-    </PageSection>
-  );
+      </Wrapper>
+    ),
+  })(data);
 };
 
-export async function ensureServiceEntityIsLoaded(
-  services: ServicesSlice,
-  serviceName: string,
-  requestParams: IRequestParams
-): Promise<void> {
-  const serviceEntity = services.byId[serviceName];
-  if (serviceEntity) {
-    return;
-  }
-  await fetchInmantaApi(requestParams);
-}
+const IntroView: React.FC<{
+  serviceName: string;
+  keycloak: KeycloakInstance;
+}> = ({ serviceName }) => (
+  <CardFooter>
+    <Toolbar>
+      <ToolbarContent>
+        <ToolbarGroup>
+          <ToolbarItem>{words("inventory.intro")(serviceName)}</ToolbarItem>
+        </ToolbarGroup>
+        <ToolbarGroup>
+          <ToolbarItem>
+            <Link
+              to={{
+                pathname: `/lsm/catalog/${serviceName}/inventory/add`,
+                search: location.search,
+              }}
+            >
+              <Button id="add-instance-button">
+                <PlusIcon /> {words("inventory.addInstance.button")}
+              </Button>
+            </Link>
+          </ToolbarItem>
+        </ToolbarGroup>
+      </ToolbarContent>
+    </Toolbar>
+  </CardFooter>
+);
 
-interface IInventoryContextData {
+const LoadingView: React.FC = () => (
+  <Wrapper aria-label="ServiceInventory-Loading">
+    <EmptyState>
+      <EmptyStateIcon variant="container" component={Spinner} />
+      <Title size="lg" headingLevel="h4">
+        {words("loading")}
+      </Title>
+    </EmptyState>
+  </Wrapper>
+);
+
+const ErrorView: React.FC<{ error: string; retry?: () => void }> = ({
+  error,
+  retry,
+}) => (
+  <Wrapper aria-label="ServiceInventory-Failed">
+    <EmptyState>
+      <EmptyStateIcon icon={ExclamationCircleIcon} />
+      <Title headingLevel="h4" size="lg">
+        {words("error")}
+      </Title>
+      <EmptyStateBody>{error}</EmptyStateBody>
+      <Button variant="primary" onClick={retry}>
+        {words("retry")}
+      </Button>
+    </EmptyState>
+  </Wrapper>
+);
+
+const EmptyView: React.FC = () => (
+  <Wrapper aria-label="ServiceInventory-Empty">
+    <EmptyState>
+      <EmptyStateIcon icon={SearchIcon} />
+      <Title size="lg" headingLevel="h4">
+        {words("inventory.empty.title")}
+      </Title>
+      <EmptyStateBody>{words("inventory.empty.body")}</EmptyStateBody>
+    </EmptyState>
+  </Wrapper>
+);
+
+export interface IInventoryContextData {
   attributes: AttributeModel[];
   environmentId: string | undefined;
   inventoryUrl: string;
@@ -186,6 +245,6 @@ interface IInventoryContextData {
   refresh: (data) => any;
 }
 
-const InventoryContext = React.createContext({} as IInventoryContextData);
-
-export { ServiceInventory, InventoryContext, IInventoryContextData };
+export const InventoryContext = React.createContext(
+  {} as IInventoryContextData
+);
