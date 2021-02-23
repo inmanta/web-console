@@ -56,6 +56,15 @@ const dict = {
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
   "error.authorizationFailed": "Authorization failed, please log in",
+  "events.column.date": "Date",
+  "events.column.id": "Event id",
+  "events.column.instanceVersion": "Instance version",
+  "events.column.sourceState": "Source state",
+  "events.column.destinationState": "Destination state",
+  "events.column.eventType": "Event Type",
+  "events.column.message": "Message",
+  "events.details.compileReport": "Open compile report",
+  "events.details.title": "Event details",
 };
 
 type Key = keyof typeof dict;
