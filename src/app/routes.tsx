@@ -7,7 +7,7 @@ import {
   LastLocationProvider,
   useLastLocation,
 } from "react-router-last-location";
-import { ServiceCatalog } from "./ServiceCatalog/ServiceCatalog";
+import { ServiceCatalogWithProvider } from "./ServiceCatalog/ServiceCatalog";
 import { CreateInstancePageWithProvider } from "@/UI/ServiceInstanceForm";
 import { ServiceInventoryWithProvider } from "./ServiceInventory/ServiceInventory";
 
@@ -37,7 +37,7 @@ const routes: IAppRouteGroup[] = [
   {
     exactRoutes: [
       {
-        component: ServiceCatalog,
+        component: ServiceCatalogWithProvider,
         exact: true,
         icon: null,
         label: "Service Catalog",

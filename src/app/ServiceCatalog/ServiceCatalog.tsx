@@ -1,19 +1,37 @@
-import * as React from "react";
+import React from "react";
 import { PageSection, Alert } from "@patternfly/react-core";
 import { CatalogDataList } from "./CatalogDataList";
 import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import { useInterval } from "@app/Hooks/UseInterval";
 import { fetchInmantaApi } from "../utils/fetchInmantaApi";
 import { useKeycloak } from "react-keycloak";
+import { ErrorView } from "@/UI/Components";
+import { words } from "@/UI/words";
 
-const ServiceCatalog: React.FC = () => {
+export const ServiceCatalogWithProvider: React.FC = () => {
+  const environmentId = useStoreState(
+    (store) => store.environments.getSelectedEnvironment.id
+  );
+
+  return environmentId ? (
+    <ServiceCatalog environmentId={environmentId} />
+  ) : (
+    <PageSection
+      className={"horizontally-scrollable"}
+      aria-label="ServiceCatalog-Failed"
+    >
+      <ErrorView error={words("error.environment.missing")} />
+    </PageSection>
+  );
+};
+
+export const ServiceCatalog: React.FC<{ environmentId: string }> = ({
+  environmentId,
+}) => {
   const serviceCatalogUrl = "/lsm/v1/service_catalog";
   const store = useStoreState((store) => store);
   const storeDispatch = useStoreDispatch();
   const [errorMessage, setErrorMessage] = React.useState("");
-  const environmentId = store.environments.getSelectedEnvironment.id
-    ? store.environments.getSelectedEnvironment.id
-    : "";
   const servicesOfEnvironment = store.services.getServicesOfEnvironment(
     environmentId
   );
@@ -56,5 +74,3 @@ const ServiceCatalog: React.FC = () => {
     </PageSection>
   );
 };
-
-export { ServiceCatalog };

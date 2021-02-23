@@ -5,7 +5,9 @@ export interface ProjectModel extends WithId {
   environments: EnvironmentModel[];
 }
 
-export interface EnvironmentModel extends WithId {
+export type EnvironmentIdentifier = WithId;
+
+export interface EnvironmentModel extends EnvironmentIdentifier {
   name: string;
   projectId: string;
 }
