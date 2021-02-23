@@ -49,7 +49,7 @@ body,
   background-color:var(--pf-global--BackgroundColor--100);
   color: var(--pf-global--palette--black-100);
   box-sizing: initial;
-  font-size: var(--pf-global--FontSize--md);
+  font-size: var(--pf-global--FontSize--sm);
   height: var(--pf-c-progress__indicator--Height);
   line-height: var(--pf-c-progress__indicator--Height);
   margin: 6px 0;
