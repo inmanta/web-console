@@ -1,24 +1,106 @@
-import { ServicesSlice } from "@/UI/Store/ServicesSlice";
-import { ensureServiceEntityIsLoaded } from "@app/ServiceInventory/ServiceInventory";
-import { Alert, AlertGroup, PageSection } from "@patternfly/react-core";
-import React, { useCallback, useState } from "react";
+import { Query, RemoteData, ServiceModel } from "@/Core";
+import {
+  Alert,
+  AlertGroup,
+  Button,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  PageSection,
+  Spinner,
+  Title,
+} from "@patternfly/react-core";
+import { ExclamationCircleIcon } from "@patternfly/react-icons";
+import React, { useCallback, useContext, useState } from "react";
 import { useKeycloak } from "react-keycloak";
 import { useHistory, useLocation } from "react-router-dom";
-import { useStoreDispatch, useStoreState } from "../..";
+import { ServicesContext, useStoreState, words } from "../..";
 import { CreateFormCard } from "./CreateFormCard";
 
-interface Props {
-  match: {
-    params: {
-      id: string;
-    };
+export const CreateInstancePageWithProvider: React.FunctionComponent<{
+  match: { params: { id: string } };
+}> = ({ match }) => {
+  const environmentId = useStoreState(
+    (store) => store.environments.getSelectedEnvironment.id
+  );
+
+  return environmentId ? (
+    <ServiceProvider
+      serviceName={match.params.id}
+      environmentId={environmentId}
+    />
+  ) : (
+    <ErrorView error={words("error.environment.missing")} />
+  );
+};
+
+const ServiceProvider: React.FunctionComponent<{
+  serviceName: string;
+  environmentId: string;
+}> = ({ serviceName, environmentId }) => {
+  const { dataProvider } = useContext(ServicesContext);
+  const query: Query.ServiceQuery = {
+    kind: "Service",
+    qualifier: { name: serviceName, environment: environmentId },
   };
-}
-export const CreateInstancePage: React.FC<Props> = ({ match }) => {
-  const serviceName = match.params.id;
-  const store = useStoreState((store) => store);
-  const storeDispatch = useStoreDispatch();
-  const environmentId = store.environments.getSelectedEnvironment.id;
+  dataProvider.useSubscription(query);
+  const data = dataProvider.useData<"Service">(query);
+
+  return RemoteData.fold<
+    Query.Error<"Service">,
+    Query.Data<"Service">,
+    JSX.Element | null
+  >({
+    notAsked: () => null,
+    loading: () => <LoadingView />,
+    failed: (error) => (
+      <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+    ),
+    success: (service) => (
+      <PageWrapper aria-label="AddInstance-Success">
+        <CreateInstancePage serviceEntity={service} />
+      </PageWrapper>
+    ),
+  })(data);
+};
+
+const LoadingView: React.FC = () => (
+  <PageWrapper aria-label="AddInstance-Loading">
+    <EmptyState>
+      <EmptyStateIcon variant="container" component={Spinner} />
+      <Title size="lg" headingLevel="h4">
+        {words("loading")}
+      </Title>
+    </EmptyState>
+  </PageWrapper>
+);
+
+const ErrorView: React.FC<{ error: string; retry?: () => void }> = ({
+  error,
+  retry,
+}) => (
+  <PageWrapper aria-label="AddInstance-Failed">
+    <EmptyState>
+      <EmptyStateIcon icon={ExclamationCircleIcon} />
+      <Title headingLevel="h4" size="lg">
+        {words("error")}
+      </Title>
+      <EmptyStateBody>{error}</EmptyStateBody>
+      <Button variant="primary" onClick={retry}>
+        {words("retry")}
+      </Button>
+    </EmptyState>
+  </PageWrapper>
+);
+
+const PageWrapper: React.FC<{ "aria-label": string }> = ({
+  children,
+  ...props
+}) => <PageSection aria-label={props["aria-label"]}>{children}</PageSection>;
+
+export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
+  serviceEntity,
+}) => {
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
   let keycloak;
@@ -27,23 +109,6 @@ export const CreateInstancePage: React.FC<Props> = ({ match }) => {
     [keycloak] = useKeycloak();
   }
   const [errorMessage, setErrorMessage] = useState("");
-  const dispatchEntity = (data) =>
-    storeDispatch.services.addSingleService(data);
-  React.useEffect(() => {
-    ensureServiceEntityIsLoaded(
-      (store.services as unknown) as ServicesSlice,
-      serviceName,
-      {
-        urlEndpoint: `/lsm/v1/service_catalog/${serviceName}`,
-        dispatch: dispatchEntity,
-        isEnvironmentIdRequired: true,
-        environmentId,
-        setErrorMessage,
-        keycloak,
-      }
-    );
-  }, [serviceName, environmentId]);
-  const serviceEntity = store.services.byId[serviceName];
   const location = useLocation();
   const pathParts = location.pathname.split("/");
   pathParts.pop();
@@ -55,24 +120,20 @@ export const CreateInstancePage: React.FC<Props> = ({ match }) => {
 
   return (
     <>
-      {serviceEntity && (
-        <PageSection>
-          {errorMessage && (
-            <AlertGroup isToast>
-              <Alert
-                variant={"danger"}
-                title={errorMessage}
-                actionClose={() => setErrorMessage("")}
-              />
-            </AlertGroup>
-          )}
-          <CreateFormCard
-            serviceEntity={serviceEntity}
-            handleRedirect={handleRedirect}
-            keycloak={keycloak}
+      {errorMessage && (
+        <AlertGroup isToast>
+          <Alert
+            variant={"danger"}
+            title={errorMessage}
+            actionClose={() => setErrorMessage("")}
           />
-        </PageSection>
+        </AlertGroup>
       )}
+      <CreateFormCard
+        serviceEntity={serviceEntity}
+        handleRedirect={handleRedirect}
+        keycloak={keycloak}
+      />
     </>
   );
 };
