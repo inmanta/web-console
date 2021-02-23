@@ -10,22 +10,26 @@ import {
   ToolbarItem,
   ToolbarContent,
   AlertGroup,
-  EmptyState,
-  EmptyStateIcon,
   Button,
-  EmptyStateBody,
-  Title,
+  EmptyState,
   Spinner,
+  Title,
+  EmptyStateIcon,
+  EmptyStateBody,
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { useStoreState } from "@/UI/Store";
 import { InventoryTable } from "@/UI/ServiceInventory";
-import { InstanceModal, ButtonType } from "./InstanceModal";
-import { AttributeModel, RemoteData, Query, ServiceModel } from "@/Core";
+import { AttributeModel, Query, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
-import { KeycloakInstance } from "keycloak-js";
+import { Link } from "react-router-dom";
+import {
+  ExclamationCircleIcon,
+  PlusIcon,
+  SearchIcon,
+} from "@patternfly/react-icons";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { ExclamationCircleIcon, SearchIcon } from "@patternfly/react-icons";
+import { KeycloakInstance } from "keycloak-js";
 
 const Wrapper: React.FC<{ "aria-label": string }> = ({
   children,
@@ -165,7 +169,7 @@ export const ServiceInventory: React.FunctionComponent<{
 const IntroView: React.FC<{
   serviceName: string;
   keycloak: KeycloakInstance;
-}> = ({ serviceName, keycloak }) => (
+}> = ({ serviceName }) => (
   <CardFooter>
     <Toolbar>
       <ToolbarContent>
@@ -174,11 +178,16 @@ const IntroView: React.FC<{
         </ToolbarGroup>
         <ToolbarGroup>
           <ToolbarItem>
-            <InstanceModal
-              buttonType={ButtonType.add}
-              serviceName={serviceName}
-              keycloak={keycloak}
-            />
+            <Link
+              to={{
+                pathname: `/lsm/catalog/${serviceName}/inventory/add`,
+                search: location.search,
+              }}
+            >
+              <Button id="add-instance-button">
+                <PlusIcon /> {words("inventory.addInstance.button")}
+              </Button>
+            </Link>
           </ToolbarItem>
         </ToolbarGroup>
       </ToolbarContent>
