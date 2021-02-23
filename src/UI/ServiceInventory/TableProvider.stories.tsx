@@ -2,7 +2,7 @@ import React from "react";
 import { Story } from "@storybook/react/types-6-0";
 import {
   instances,
-  InstantApiHelper,
+  InstantFetcher,
   StaticSubscriptionController,
 } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
@@ -27,7 +27,7 @@ const Template: Story<Props> = (args) => {
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
       new ResourcesDataManager(
-        new InstantApiHelper({ kind: "Success", resources: [] }),
+        new InstantFetcher<"Resources">({ kind: "Success", data: [] }),
         new ResourcesStateHelper(store)
       ),
       new StaticSubscriptionController()

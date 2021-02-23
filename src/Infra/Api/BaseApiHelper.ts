@@ -1,16 +1,12 @@
-import { ApiHelper, Either, ResourceModel, Query } from "@/Core";
+import { ApiHelper, Either } from "@/Core";
 import { words } from "@/UI/words";
 import { KeycloakInstance } from "keycloak-js";
 
-export class ResourcesApiHelper implements ApiHelper<Query.ResourcesQuery> {
+export class BaseApiHelper implements ApiHelper {
   constructor(private readonly keycloak: KeycloakInstance | undefined) {}
 
-  private getBaseUrl() {
+  getBaseUrl(): string {
     return process.env.API_BASEURL ? process.env.API_BASEURL : "";
-  }
-
-  private getResourcesUrl(entity: string, id: string, version: number) {
-    return `${this.getBaseUrl()}/lsm/v1/service_inventory/${entity}/${id}/resources?current_version=${version}`;
   }
 
   private getHeaders(environment: string): Record<string, string> {
@@ -38,20 +34,21 @@ export class ResourcesApiHelper implements ApiHelper<Query.ResourcesQuery> {
     );
   }
 
-  async getData(
-    query: Query.ResourcesQuery
-  ): Promise<Either.Type<string, ResourceModel[]>> {
+  async get<T>(
+    url: string,
+    environment: string
+  ): Promise<Either.Type<string, T>> {
     try {
-      const { id, version, environment, service_entity } = query.qualifier;
-      const response = await fetch(
-        this.getResourcesUrl(service_entity, id, version),
-        { headers: this.getHeaders(environment) }
-      );
+      const response = await fetch(url, {
+        headers: this.getHeaders(environment),
+      });
       if (response.ok) {
         const data = await response.json();
         return Either.right(data.data);
       }
-      return Either.left(this.formatError(await response.json(), response));
+      return Either.left(
+        this.formatError((await response.json()).message, response)
+      );
     } catch (error) {
       if (error.message) return Either.left(error.message);
       return Either.left(`Error: ${error}`);

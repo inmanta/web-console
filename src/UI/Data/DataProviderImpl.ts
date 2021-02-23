@@ -27,4 +27,9 @@ export class DataProviderImpl implements DataProvider {
     const helper = this.getHelper(query);
     return helper.useData(query);
   }
+
+  trigger(query: Query.Type): void {
+    const helper = this.getHelper(query);
+    helper.trigger(query);
+  }
 }

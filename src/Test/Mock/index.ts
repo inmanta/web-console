@@ -1,5 +1,5 @@
-export * from "./DeferredApiHelper";
-export * from "./InstantApiHelper";
+export * from "./DeferredFetcher";
+export * from "./InstantFetcher";
 export * from "./StaticSubscriptionController";
 
 export * from "./DummyActionPresenter";

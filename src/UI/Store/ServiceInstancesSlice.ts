@@ -1,78 +1,63 @@
-import { Computed, computed, Action, action, Thunk, thunk } from "easy-peasy";
+import { Action, action, computed, Computed } from "easy-peasy";
 import {
+  RemoteData,
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
 } from "@/Core";
 import { StoreModel } from "./Store";
-import * as _ from "lodash";
 
+/**
+ * The ServiceInstancesSlice stores ServiceInstances.
+ * ServicesInstances belong to a service, so they are stored by
+ * their service name.
+ */
 export interface ServiceInstancesSlice {
-  addInstances: Action<ServiceInstancesSlice, ServiceInstanceModel[]>;
-  allIds: string[];
-  byId: Record<string, ServiceInstanceModel>;
-  instancesOfService: Computed<
+  byId: Record<string, RemoteData.Type<string, ServiceInstanceModel[]>>;
+  setData: Action<
     ServiceInstancesSlice,
-    (name: string) => ServiceInstanceModel[]
+    { id: string; value: RemoteData.Type<string, ServiceInstanceModel[]> }
   >;
   instancesWithTargetStates: Computed<
     ServiceInstancesSlice,
-    (name: string) => ServiceInstanceModelWithTargetStates[],
+    (
+      name: string
+    ) => RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>,
     StoreModel
-  >;
-  updateInstances: Thunk<
-    ServiceInstancesSlice,
-    { serviceName: string; instances: ServiceInstanceModel[] }
   >;
 }
 
 export const serviceInstancesSlice: ServiceInstancesSlice = {
-  addInstances: action((state, payload) => {
-    state.allIds = [];
-    state.byId = {};
-    payload.map((instance) => {
-      state.byId[instance.id] = instance as ServiceInstanceModel;
-      if (state.allIds.indexOf(instance.id) === -1) {
-        state.allIds.push(instance.id);
-      }
-    });
-  }),
-  allIds: [],
   byId: {},
-  instancesOfService: computed((state) => (name) => {
-    return Object.values(state.byId).filter(
-      (instance) => instance.service_entity === name
-    );
+  setData: action((state, payload) => {
+    state.byId[payload.id] = payload.value;
   }),
   instancesWithTargetStates: computed(
-    [(state) => state, (state, storeState) => storeState],
-    (serviceInstances, storeState) => (name) => {
-      const instances = serviceInstances.instancesOfService(name);
-      const instancesWithTargets = instances.map((instance) => {
-        const instanceState = instance.state;
-        const service = storeState.services.byId[name];
-        if (!service) {
-          return { ...instance, instanceSetStateTargets: [] };
-        }
-        const setStateTransfers = service.lifecycle.transfers.filter(
-          (transfer) =>
-            transfer.source === instanceState && transfer.api_set_state
-        );
-        const setStateTargets = setStateTransfers.map(
-          (transfer) => transfer.target
-        );
-        return { ...instance, instanceSetStateTargets: setStateTargets };
-      });
-      return instancesWithTargets;
+    [(state) => state.byId, (state, storeState) => storeState],
+    (byId, storeState) => (name) => {
+      const data = byId[name];
+      if (typeof data === "undefined") return RemoteData.loading();
+
+      return RemoteData.mapSuccess<
+        string,
+        ServiceInstanceModel[],
+        ServiceInstanceModelWithTargetStates[]
+      >((instances) => {
+        return instances.map((instance) => {
+          const instanceState = instance.state;
+          const service = storeState.services.byId[name];
+          if (!service) {
+            return { ...instance, instanceSetStateTargets: [] };
+          }
+          const setStateTransfers = service.lifecycle.transfers.filter(
+            (transfer) =>
+              transfer.source === instanceState && transfer.api_set_state
+          );
+          const setStateTargets = setStateTransfers.map(
+            (transfer) => transfer.target
+          );
+          return { ...instance, instanceSetStateTargets: setStateTargets };
+        });
+      })(data);
     }
   ),
-  updateInstances: thunk((actions, payload, { getState }) => {
-    if (
-      !_.isEqual(
-        _.sortBy(getState().instancesOfService(payload.serviceName), "id"),
-        _.sortBy(payload.instances, "id")
-      )
-    ) {
-      actions.addInstances(payload.instances);
-    }
-  }),
 };

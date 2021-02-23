@@ -1,11 +1,14 @@
 import { DataManager, RemoteData, Query, StateHelper, Fetcher } from "@/Core";
 
-type Data = RemoteData.Type<Query.Error<"Resources">, Query.Data<"Resources">>;
+type Data = RemoteData.Type<Query.Error<"Service">, Query.Data<"Service">>;
 
-export class ResourcesDataManager implements DataManager<Data> {
+export class ServiceDataManager implements DataManager<Data> {
   constructor(
-    private readonly fetcher: Fetcher<"Resources">,
-    private readonly stateHelper: StateHelper<string, Query.Data<"Resources">>
+    private readonly fetcher: Fetcher<"Service">,
+    private readonly stateHelper: StateHelper<
+      Query.Error<"Service">,
+      Query.Data<"Service">
+    >
   ) {}
 
   initialize(id: string): void {
@@ -15,9 +18,9 @@ export class ResourcesDataManager implements DataManager<Data> {
     }
   }
 
-  async update(query: Query.ResourcesQuery): Promise<void> {
+  async update(query: Query.ServiceQuery): Promise<void> {
     this.stateHelper.set(
-      query.qualifier.id,
+      query.qualifier.name,
       RemoteData.fromEither(await this.fetcher.getData(query))
     );
   }

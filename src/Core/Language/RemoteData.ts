@@ -93,22 +93,3 @@ export const fold = <F, S, R>(handlers: {
       return handlers.success(data.value);
   }
 };
-
-export const isEqual = <F, S>(
-  a: RemoteData<F, S>,
-  b: RemoteData<F, S>
-): boolean => a.kind === b.kind;
-
-export const dualFold = <F, S, R>(handlers: {
-  notAsked: () => R;
-  loading: () => R;
-  failed: (a: F, b: F) => R;
-  success: (a: S, b: S) => R;
-  incompatible: () => R;
-}) => (a: RemoteData<F, S>, b: RemoteData<F, S>): R => {
-  if (isNotAsked(a) && isNotAsked(b)) return handlers.notAsked();
-  if (isLoading(a) && isLoading(b)) return handlers.loading();
-  if (isFailed(a) && isFailed(b)) return handlers.failed(a.value, b.value);
-  if (isSuccess(a) && isSuccess(b)) return handlers.success(a.value, b.value);
-  return handlers.incompatible();
-};
