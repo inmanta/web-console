@@ -1,5 +1,4 @@
 import { InstanceEvent } from "@/Core";
-import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
 import React from "react";
 import { ExpansionManager } from "../ServiceInventory/ExpansionManager";
 import { EventTablePresenter } from "./EventTablePresenter";
@@ -17,9 +16,6 @@ export const EventTable: React.FC<Props> = ({
   environmentId,
 }) => {
   const expansionManager = new ExpansionManager();
-  const heads = tablePresenter
-    .getColumnHeads()
-    .map((column) => <Th key={column}>{column}</Th>);
 
   const [expansionState, setExpansionState] = React.useState(
     expansionManager.create(rowsToIds(events))
@@ -36,13 +32,7 @@ export const EventTable: React.FC<Props> = ({
   }, [events]);
   const rows = tablePresenter.createFromEvents(events);
   return (
-    <TableComposable>
-      <Thead>
-        <Tr>
-          <Th />
-          {heads}
-        </Tr>
-      </Thead>
+    <>
       {rows.map((row, index) => (
         <EventTableRow
           index={index}
@@ -54,7 +44,7 @@ export const EventTable: React.FC<Props> = ({
           environmentId={environmentId}
         />
       ))}
-    </TableComposable>
+    </>
   );
 };
 function rowsToIds(rows: InstanceEvent[]): string[] {

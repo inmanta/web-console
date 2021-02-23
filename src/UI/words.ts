@@ -67,6 +67,8 @@ const dict = {
   "events.column.eventType": "Event Type",
   "events.column.message": "Message",
   "events.details.compileReport": "Open compile report",
+  "events.empty.title": "No events found",
+  "events.empty.body": "No events could be found for this instance",
   "events.details.title": "Event details",
   "events.title": "Events",
   "error.environment.missing": "Environment is missing",

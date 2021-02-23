@@ -1,15 +1,15 @@
 import { InstanceEvent, RemoteData, ServiceInstanceIdentifier } from "@/Core";
-import { TabProps } from "@patternfly/react-core";
 import React, { useContext } from "react";
 import { ServicesContext } from "..";
+import { FailedFiller, LoadingFiller } from "../Components";
 import {
-  EmptyFiller,
-  FailedFiller,
-  FillerResourceTable,
-  LoadingFiller,
-} from "../Components";
-import { EventTable, EventTablePresenter } from "../InstanceEventView";
+  EventTable,
+  EventTablePresenter,
+  FillerEventTable,
+} from "../InstanceEventView";
+import { EmptyFiller } from "../InstanceEventView/EmptyFiller";
 import { MomentDatePresenter } from "../ServiceInventory/Presenters";
+import { TabProps } from "./ServiceInstanceDetails";
 
 interface Props extends TabProps {
   qualifier: ServiceInstanceIdentifier;
@@ -23,32 +23,41 @@ export const EventsView: React.FC<Props> = ({ qualifier }) => {
     kind: "Events",
     qualifier,
   });
+  const tablePresenter = new EventTablePresenter(new MomentDatePresenter());
 
   return RemoteData.fold<string, InstanceEvent[], JSX.Element | null>({
     notAsked: () => null,
     loading: () => (
-      <FillerResourceTable
+      <FillerEventTable
+        tablePresenter={tablePresenter}
         filler={<LoadingFiller />}
-        aria-label="ResourceTable-Loading"
+        aria-label="EventTable-Loading"
       />
     ),
     failed: (error) => (
-      <FillerResourceTable
+      <FillerEventTable
+        tablePresenter={tablePresenter}
         filler={<FailedFiller error={error} />}
-        aria-label="ResourceTable-Failed"
+        aria-label="EventTable-Failed"
       />
     ),
     success: (events) =>
       events.length === 0 ? (
-        <FillerResourceTable
+        <FillerEventTable
+          tablePresenter={tablePresenter}
           filler={<EmptyFiller />}
-          aria-label="ResourceTable-Empty"
+          aria-label="EventTable-Empty"
         />
       ) : (
-        <EventTable
-          events={events}
-          environmentId={qualifier.environment}
-          tablePresenter={new EventTablePresenter(new MomentDatePresenter())}
+        <FillerEventTable
+          tablePresenter={tablePresenter}
+          filler={
+            <EventTable
+              events={events}
+              environmentId={qualifier.environment}
+              tablePresenter={tablePresenter}
+            />
+          }
           aria-label="EventTable-Success"
         />
       ),
