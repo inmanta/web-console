@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { ContextSelector, ContextSelectorItem } from "@patternfly/react-core";
 import { useStoreDispatch, useStoreState } from "@/UI/Store";
 
@@ -19,6 +20,7 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
   const [filteredItems, setFilteredItems] = React.useState(environmentNames);
   const [searchValue, setSearchValue] = React.useState("");
   const projects = useStoreState((state) => state.projects);
+  const history = useHistory();
   const getSelectedEnvironment = useStoreState(
     (state) => state.environments.getSelectedEnvironment
   );
@@ -46,6 +48,9 @@ export const EnvironmentSelector: React.FC<Props> = (props) => {
         environment: matchingEnvItem.environmentId,
         project: matchingEnvItem.projectId,
       });
+      const params = new URLSearchParams(location.search);
+      params.set("env", matchingEnvItem.environmentId);
+      history.push(`/lsm/catalog?${params}`);
     }
   };
 

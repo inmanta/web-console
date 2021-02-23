@@ -24,9 +24,6 @@ export const environmentsSlice: EnvironmentsSlice = {
   }),
   selectEnvironmentById: action((state, payload) => {
     state.selectedEnvironmentId = payload;
-    const params = new URLSearchParams(location.search);
-    params.set("env", payload);
-    window.history.replaceState({}, "", `${location.pathname}?${params}`);
   }),
   selectEnvironmentByName: action((state, payload) => {
     const environmentWithName = Object.values(state.byId).find(
