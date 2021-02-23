@@ -68,6 +68,7 @@ const dict = {
   "events.column.message": "Message",
   "events.details.compileReport": "Open compile report",
   "events.details.title": "Event details",
+  "events.title": "Events",
   "error.environment.missing": "Environment is missing",
   error: "Something went wrong",
   loading: "Loading",

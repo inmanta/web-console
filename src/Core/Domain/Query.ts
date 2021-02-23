@@ -1,3 +1,4 @@
+import { InstanceEvent } from "./EventModel";
 import { ResourceModel } from "./ResourceModel";
 import {
   ServiceInstanceIdentifier,
@@ -6,7 +7,11 @@ import {
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 
-type Query = ServiceQuery | ServiceInstancesQuery | ResourcesQuery;
+type Query =
+  | ServiceQuery
+  | ServiceInstancesQuery
+  | ResourcesQuery
+  | InstanceEventsQuery;
 export type Type = Query;
 
 /**
@@ -61,6 +66,22 @@ interface ServiceInstancesManifest {
   query: ServiceInstancesQuery;
 }
 
+/** The events query describes events belonging to one specific service instance */
+export interface InstanceEventsQuery {
+  kind: "Events";
+  qualifier: Pick<
+    ServiceInstanceIdentifier,
+    "environment" | "id" | "service_entity"
+  >;
+}
+
+interface EventsManifest {
+  error: string;
+  apiResponse: InstanceEvent[];
+  data: InstanceEvent[];
+  query: InstanceEventsQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -69,6 +90,7 @@ interface Manifest {
   Service: ServiceManifest;
   ServiceInstances: ServiceInstancesManifest;
   Resources: ResourcesManifest;
+  Events: EventsManifest;
 }
 
 export type Kind = Query["kind"];

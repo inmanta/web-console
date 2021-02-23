@@ -18,8 +18,10 @@ import {
   AutomationIcon,
   InfoCircleIcon,
   ListIcon,
+  PortIcon,
 } from "@patternfly/react-icons";
 import { DeploymentProgressPresenter } from "./Presenters";
+import { EventsView } from "../ServiceInstanceDetails/EventsView";
 
 interface Props {
   row: Row;
@@ -112,6 +114,11 @@ export const InstanceRow: React.FC<Props> = ({
                 qualifier={serviceInstanceIdentifier}
                 title={words("inventory.tabs.resources")}
                 icon={<AutomationIcon />}
+              />
+              <EventsView
+                qualifier={serviceInstanceIdentifier}
+                title={words("events.title")}
+                icon={<PortIcon />}
               />
             </ServiceInstanceDetails>
           </ExpandableRowContent>

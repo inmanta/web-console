@@ -7,6 +7,7 @@ import { StoreProvider } from "easy-peasy";
 import { getStoreInstance, ServicesContext } from "@/UI";
 import {
   BaseApiHelper,
+  EventsFetcher,
   ResourcesFetcher,
   ServiceFetcher,
   ServiceInstancesFetcher,
@@ -26,6 +27,11 @@ import {
   ResourcesHookHelper,
 } from "@/UI/Data";
 import {} from "@/UI/Data/Service";
+import {
+  EventsDataManager,
+  EventsHookHelper,
+  EventsStateHelper,
+} from "./UI/Data/Events";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -73,10 +79,19 @@ const serviceHelper = new ServiceHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
+const eventsHelper = new EventsHookHelper(
+  new EventsDataManager(
+    new EventsFetcher(baseApiHelper),
+    new EventsStateHelper(storeInstance)
+  ),
+  new LiveSubscriptionController(5000, new IntervalsDictionary())
+);
+
 const dataProvider = new DataProviderImpl([
   serviceHelper,
   serviceInstancesHelper,
   resourcesHelper,
+  eventsHelper,
 ]);
 
 ReactDOM.render(
