@@ -8,7 +8,7 @@ import {
   useLastLocation,
 } from "react-router-last-location";
 import { ServiceCatalog } from "./ServiceCatalog/ServiceCatalog";
-import { ServiceInventory } from "./ServiceInventory/ServiceInventory";
+import { ServiceInventoryWithProvider } from "./ServiceInventory/ServiceInventory";
 
 let routeFocusTimer: number;
 
@@ -44,7 +44,7 @@ const routes: IAppRouteGroup[] = [
         title: "Service Catalog",
       },
       {
-        component: ServiceInventory,
+        component: ServiceInventoryWithProvider,
         exact: true,
         hideOnSideBar: true,
         icon: null,

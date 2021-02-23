@@ -1,3 +1,5 @@
+[Index](./index.md)
+
 # Auto-updating
 
 The auto-updating mechanism is based on queries, hooks and intervals.  

@@ -19,6 +19,9 @@ const dict = {
   "attributesTab.active": "Active",
   "attributesTab.candidate": "Candidate",
   "attributesTab.rollback": "Rollback",
+  "inventory.intro": (service: string) => `Showing instances of ${service}`,
+  "inventory.empty.title": "No instances found",
+  "inventory.empty.body": "No instances found for this service.",
   "inventory.column.id": "Id",
   "inventory.column.state": "State",
   "inventory.column.attributesSummary": "Attributes",
@@ -65,6 +68,10 @@ const dict = {
   "events.column.message": "Message",
   "events.details.compileReport": "Open compile report",
   "events.details.title": "Event details",
+  "error.environment.missing": "Environment is missing",
+  error: "Something went wrong",
+  loading: "Loading",
+  retry: "Retry",
 };
 
 type Key = keyof typeof dict;

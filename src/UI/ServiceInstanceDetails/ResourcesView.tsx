@@ -9,7 +9,7 @@ import {
   FailedFiller,
   EmptyFiller,
 } from "@/UI/Components";
-import { ServicesContext } from "../ServicesContext";
+import { ServicesContext } from "@/UI/ServicesContext";
 
 interface Props extends TabProps {
   qualifier: ServiceInstanceIdentifier;
@@ -19,7 +19,10 @@ export const ResourcesView: React.FC<Props> = ({ qualifier }) => {
   const { dataProvider } = useContext(ServicesContext);
 
   dataProvider.useSubscription({ kind: "Resources", qualifier });
-  const data = dataProvider.useData({ kind: "Resources", qualifier });
+  const data = dataProvider.useData<"Resources">({
+    kind: "Resources",
+    qualifier,
+  });
 
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,

@@ -1,5 +1,6 @@
-import { isListEqual, RemoteData, ResourceModel, StateHelper } from "@/Core";
+import { RemoteData, ResourceModel, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/UI/Store";
+import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<string, ResourceModel[]>;
 
@@ -12,19 +13,9 @@ export class ResourcesStateHelper
   }
 
   getHooked(id: string): Data {
-    return useStoreState(
-      (state) => {
-        return this.enforce(state.resources.byId[id]);
-      },
-      (prev, next) =>
-        RemoteData.dualFold<string, ResourceModel[], boolean>({
-          notAsked: () => true,
-          loading: () => true,
-          failed: (a, b) => a === b,
-          success: (a, b) => isListEqual(a, b),
-          incompatible: () => false,
-        })(prev, next)
-    );
+    return useStoreState((state) => {
+      return this.enforce(state.resources.byId[id]);
+    }, isEqual);
   }
 
   private enforce(value: undefined | Data): Data {

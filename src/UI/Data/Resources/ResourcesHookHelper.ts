@@ -27,13 +27,17 @@ export class ResourcesHookHelper implements HookHelper<Query.ResourcesQuery> {
       return () => {
         this.subscriptionController.unsubscribeFrom(query.qualifier.id);
       };
-    }, [query.qualifier.id]);
+    }, [query.qualifier.id, query.qualifier.version]);
   }
 
   useData(
     query: Query.ResourcesQuery
   ): RemoteData.Type<string, ResourceModel[]> {
     return this.dataManager.get(query.qualifier.id);
+  }
+
+  trigger(query: Query.ResourcesQuery): void {
+    this.subscriptionController.trigger(query.qualifier.id);
   }
 
   matches(query: Query.ResourcesQuery): boolean {
