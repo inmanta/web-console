@@ -6,6 +6,7 @@ import {
   HookHelper,
 } from "@/Core";
 import { useEffect } from "react";
+import { getId } from "./id";
 
 type Data = RemoteData.Type<Query.Error<"Service">, Query.Data<"Service">>;
 
@@ -21,20 +22,20 @@ export class ServiceHookHelper implements HookHelper<Query.ServiceQuery> {
     };
 
     useEffect(() => {
-      this.dataManager.initialize(query.qualifier.name);
-      this.subscriptionController.subscribeTo(query.qualifier.name, handler);
+      this.dataManager.initialize(getId(query));
+      this.subscriptionController.subscribeTo(getId(query), handler);
       return () => {
-        this.subscriptionController.unsubscribeFrom(query.qualifier.name);
+        this.subscriptionController.unsubscribeFrom(getId(query));
       };
     }, [query.qualifier.name]);
   }
 
   useData(query: Query.ServiceQuery): Data {
-    return this.dataManager.get(query.qualifier.name);
+    return this.dataManager.get(getId(query));
   }
 
   trigger(query: Query.ServiceQuery): void {
-    this.subscriptionController.trigger(query.qualifier.name);
+    this.subscriptionController.trigger(getId(query));
   }
 
   matches(query: Query.ServiceQuery): boolean {

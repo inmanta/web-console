@@ -1,4 +1,5 @@
 import { DataManager, RemoteData, Query, StateHelper, Fetcher } from "@/Core";
+import { getId } from "./id";
 
 type Data = RemoteData.Type<Query.Error<"Service">, Query.Data<"Service">>;
 
@@ -20,7 +21,7 @@ export class ServiceDataManager implements DataManager<Data> {
 
   async update(query: Query.ServiceQuery): Promise<void> {
     this.stateHelper.set(
-      query.qualifier.name,
+      getId(query),
       RemoteData.fromEither(await this.fetcher.getData(query))
     );
   }
