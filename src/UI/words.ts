@@ -71,6 +71,24 @@ const dict = {
   "events.empty.body": "No events could be found for this instance",
   "events.details.title": "Event details",
   "events.title": "Events",
+  true: "True",
+  false: "False",
+  submit: "Submit",
+  confirm: "Confirm",
+  "inventory.addInstance.title": (serviceName: string) =>
+    `Create a new instance of ${serviceName} with the following parameters`,
+  "inventory.addInstance.button": "Add instance",
+  "inventory.editInstance.button": "Edit",
+  "inventory.editInstance.title": "Edit instance",
+  "inventory.editInstance.header": (instanceId: string) =>
+    `Change attributes of instance ${instanceId}`,
+  "inventory.deleteInstance.button": "Delete",
+  "inventory.deleteInstance.title": "Delete instance",
+  "inventory.deleteInstance.header": (
+    instanceId: string,
+    serviceName: string
+  ) =>
+    `Are you sure you want to delete instance ${instanceId} of service entity ${serviceName}?`,
   "error.environment.missing": "Environment is missing",
   error: "Something went wrong",
   loading: "Loading",

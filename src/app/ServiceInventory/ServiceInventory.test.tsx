@@ -21,6 +21,7 @@ import {
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
+import { MemoryRouter } from "react-router-dom";
 
 function setup() {
   const store = getStoreInstance();
@@ -48,15 +49,17 @@ function setup() {
   ]);
 
   const component = (
-    <ServicesContext.Provider value={{ dataProvider }}>
-      <StoreProvider store={store}>
-        <ServiceInventory
-          serviceName={Service.A.name}
-          environmentId={Service.A.environment}
-          service={Service.A}
-        />
-      </StoreProvider>
-    </ServicesContext.Provider>
+    <MemoryRouter>
+      <ServicesContext.Provider value={{ dataProvider }}>
+        <StoreProvider store={store}>
+          <ServiceInventory
+            serviceName={Service.A.name}
+            environmentId={Service.A.environment}
+            service={Service.A}
+          />
+        </StoreProvider>
+      </ServicesContext.Provider>
+    </MemoryRouter>
   );
 
   return {

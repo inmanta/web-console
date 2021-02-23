@@ -44,11 +44,11 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
       >((instances) => {
         return instances.map((instance) => {
           const instanceState = instance.state;
-          const service = storeState.services.byId[name];
-          if (!service) {
+          const service = storeState.services2.byId[name];
+          if (!service || service.kind !== "Success") {
             return { ...instance, instanceSetStateTargets: [] };
           }
-          const setStateTransfers = service.lifecycle.transfers.filter(
+          const setStateTransfers = service.value.lifecycle.transfers.filter(
             (transfer) =>
               transfer.source === instanceState && transfer.api_set_state
           );

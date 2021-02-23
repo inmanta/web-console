@@ -1,10 +1,11 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
-import { ButtonType, InstanceModal } from "@app/ServiceInventory/InstanceModal";
 import { DiagnosticsModal } from "@app/ServiceInventory/DiagnosticsModal";
 import { ServiceInstanceForAction } from "@/UI/ServiceInventory/Presenters";
 import { DescriptionList, DescriptionListGroup } from "@patternfly/react-core";
 import { SetStateAction } from "./SetStateAction";
+import { EditInstanceModal } from "@/UI/ServiceInstanceForm/Edit/EditInstanceModal";
+import { DeleteModal } from "@/UI/ServiceInstanceForm/Delete/DeleteModal";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
@@ -31,20 +32,18 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   return (
     <DescriptionList>
       <DescriptionListGroup>
-        <InstanceModal
+        <EditInstanceModal
           isDisabled={editDisabled}
-          buttonType={ButtonType.edit}
-          serviceName={instance.service_entity}
           instance={instance}
           keycloak={keycloak}
         />
       </DescriptionListGroup>
       <DescriptionListGroup>
-        <InstanceModal
+        <DeleteModal
           isDisabled={deleteDisabled}
-          buttonType={ButtonType.delete}
           serviceName={instance.service_entity}
-          instance={instance}
+          instanceId={instance.id}
+          instanceVersion={instance.version}
           keycloak={keycloak}
         />
       </DescriptionListGroup>
