@@ -14,7 +14,7 @@ export interface ServicesSlice2 {
   /**
    * Stores the full list of service names by their environment.
    */
-  namesByEnv: Record<string, RemoteData.Type<string, string[]>>;
+  listByEnv: Record<string, RemoteData.Type<string, ServiceModel[]>>;
   /**
    * Sets a list of service names linked to an environment.
    * It also stores the services in the servicesByNameAndEnv record.
@@ -45,24 +45,19 @@ export interface ServicesSlice2 {
 }
 
 export const servicesSlice2: ServicesSlice2 = {
-  namesByEnv: {},
-  setList: action((state, { qualifier, data }) => {
+  listByEnv: {},
+  setList: action(({ listByEnv, byNameAndEnv }, { qualifier, data }) => {
     const environment = qualifier.id;
-    if (!RemoteData.isSuccess(data)) {
-      state.namesByEnv[environment] = data;
-    } else {
-      const { value: services } = data;
-      state.namesByEnv[environment] = RemoteData.success(
-        services.map((service) => service.name)
-      );
-      services.forEach((service) => {
-        const key = injections.serviceKeyMaker.make({
-          environment,
-          name: service.name,
-        });
-        state.byNameAndEnv[key] = RemoteData.success(service);
+    listByEnv[environment] = data;
+    if (!RemoteData.isSuccess(data)) return;
+    const { value: services } = data;
+    services.forEach((service) => {
+      const key = injections.serviceKeyMaker.make({
+        environment,
+        name: service.name,
       });
-    }
+      byNameAndEnv[key] = RemoteData.success(service);
+    });
   }),
   byNameAndEnv: {},
   setSingle: action((state, payload) => {
