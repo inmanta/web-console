@@ -5,6 +5,7 @@ import {
   ServiceIdentifier,
   ServiceModel,
 } from "@/Core";
+import { injections } from "@/UI/Store/Injections";
 
 /**
  * The ServicesSlice stores Services.
@@ -55,17 +56,17 @@ export const servicesSlice2: ServicesSlice2 = {
         services.map((service) => service.name)
       );
       services.forEach((service) => {
-        const key = getKey({ environment, name: service.name });
+        const key = injections.serviceKeyMaker.make({
+          environment,
+          name: service.name,
+        });
         state.byNameAndEnv[key] = RemoteData.success(service);
       });
     }
   }),
   byNameAndEnv: {},
   setSingle: action((state, payload) => {
-    state.byNameAndEnv[getKey(payload.qualifier)] = payload.data;
+    state.byNameAndEnv[injections.serviceKeyMaker.make(payload.qualifier)] =
+      payload.data;
   }),
 };
-
-function getKey({ environment, name }: ServiceIdentifier): string {
-  return `${environment}__?__${name}`;
-}

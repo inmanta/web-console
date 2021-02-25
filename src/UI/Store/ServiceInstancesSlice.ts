@@ -5,8 +5,8 @@ import {
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
 } from "@/Core";
-import { StoreModel } from "./Store";
-import { getKey } from "../Data/Service/getKey";
+import { StoreModel } from "@/UI/Store/Store";
+import { injections } from "@/UI/Store/Injections";
 
 /**
  * The ServiceInstancesSlice stores ServiceInstances.
@@ -46,7 +46,10 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
       >((instances) => {
         return instances.map((instance) => {
           const instanceState = instance.state;
-          const service = storeState.services2.byNameAndEnv[getKey(qualifier)];
+          const service =
+            storeState.services2.byNameAndEnv[
+              injections.serviceKeyMaker.make(qualifier)
+            ];
           if (!service || service.kind !== "Success") {
             return { ...instance, instanceSetStateTargets: [] };
           }

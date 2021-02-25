@@ -4,16 +4,17 @@ import {
   DataManager,
   Query,
   HookHelper,
+  KeyMaker,
 } from "@/Core";
 import { useEffect } from "react";
-import { getKey } from "./getKey";
 
 type Data = RemoteData.Type<Query.Error<"Service">, Query.Data<"Service">>;
 
 export class ServiceHookHelper implements HookHelper<"Service"> {
   constructor(
     private readonly dataManager: DataManager<"Service">,
-    private readonly subscriptionController: SubscriptionController
+    private readonly subscriptionController: SubscriptionController,
+    private readonly keyMaker: KeyMaker<Query.Qualifier<"Service">>
   ) {}
 
   useSubscription(qualifier: Query.Qualifier<"Service">): void {
@@ -22,12 +23,13 @@ export class ServiceHookHelper implements HookHelper<"Service"> {
     };
 
     useEffect(() => {
+      const key = this.keyMaker.make(qualifier);
       this.dataManager.initialize(qualifier);
-      this.subscriptionController.subscribeTo(getKey(qualifier), handler);
+      this.subscriptionController.subscribeTo(key, handler);
       return () => {
-        this.subscriptionController.unsubscribeFrom(getKey(qualifier));
+        this.subscriptionController.unsubscribeFrom(key);
       };
-    }, [qualifier.name]);
+    }, [qualifier.name, qualifier.environment]);
   }
 
   useData(qualifier: Query.Qualifier<"Service">): Data {
@@ -35,7 +37,7 @@ export class ServiceHookHelper implements HookHelper<"Service"> {
   }
 
   trigger(qualifier: Query.Qualifier<"Service">): void {
-    this.subscriptionController.trigger(getKey(qualifier));
+    this.subscriptionController.trigger(this.keyMaker.make(qualifier));
   }
 
   matches(query: Query.ServiceQuery): boolean {

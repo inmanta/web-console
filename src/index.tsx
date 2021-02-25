@@ -18,6 +18,7 @@ import {
   LiveSubscriptionController,
   ServiceDataManager,
   ServiceHookHelper,
+  ServiceKeyMaker,
   ServiceStateHelper,
   ServiceInstancesDataManager,
   ServiceInstancesHookHelper,
@@ -29,7 +30,6 @@ import {
   EventsDataManager,
   EventsStateHelper,
 } from "@/UI/Data";
-import {} from "@/UI/Data/Service";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -69,12 +69,14 @@ const serviceInstancesHelper = new ServiceInstancesHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
+const serviceKeyMaker = new ServiceKeyMaker();
 const serviceHelper = new ServiceHookHelper(
   new ServiceDataManager(
     new ServiceFetcher(baseApiHelper),
-    new ServiceStateHelper(storeInstance)
+    new ServiceStateHelper(storeInstance, serviceKeyMaker)
   ),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+  new LiveSubscriptionController(5000, new IntervalsDictionary()),
+  serviceKeyMaker
 );
 
 const eventsHelper = new EventsHookHelper(
