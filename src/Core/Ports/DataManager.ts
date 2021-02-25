@@ -1,4 +1,5 @@
 import { Query } from "@/Core/Domain";
+import { RemoteData } from "@/Core/Language";
 
 /**
  * The DataManager is responsible for managing data.
@@ -7,8 +8,10 @@ import { Query } from "@/Core/Domain";
  * extra wrapper to hide details. It still uses a
  * state provider which does own the data.
  */
-export interface DataManager<Data = unknown> {
-  initialize(id: string): void;
-  update(query: Query.Type): Promise<void>;
-  get(id: string): Data;
+export interface DataManager<K extends Query.Kind> {
+  initialize(qualifier: Query.Qualifier<K>): void;
+  update(qualifier: Query.Qualifier<K>): Promise<void>;
+  get(
+    qualifier: Query.Qualifier<K>
+  ): RemoteData.Type<Query.Error<K>, Query.Data<K>>;
 }

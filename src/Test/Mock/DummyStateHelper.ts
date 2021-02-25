@@ -1,19 +1,23 @@
-import { RemoteData, ResourceModel, StateHelper } from "@/Core";
+import { Query, RemoteData, StateHelper } from "@/Core";
 
-type Data = RemoteData.Type<string, ResourceModel[]>;
+type Data<K extends Query.Kind> = RemoteData.Type<string, Query.Data<K>>;
 
-export class DummyStateHelper implements StateHelper<string, ResourceModel[]> {
+export class DummyStateHelper<K extends Query.Kind> implements StateHelper<K> {
   private state = {};
 
-  set(id: string, value: Data): void {
-    this.state[id] = value;
+  set(qualifier: Query.Qualifier<K>, value: Data<K>): void {
+    this.state[getKey(qualifier)] = value;
   }
 
-  getHooked(id: string): Data {
-    return this.state[id];
+  getHooked(qualifier: Query.Qualifier<K>): Data<K> {
+    return this.state[getKey(qualifier)];
   }
 
-  getOnce(id: string): Data {
-    return this.state[id];
+  getOnce(qualifier: Query.Qualifier<K>): Data<K> {
+    return this.state[getKey(qualifier)];
   }
+}
+
+function getKey(qualifier: Query.Qualifier<Query.Kind>): string {
+  return JSON.stringify(qualifier);
 }

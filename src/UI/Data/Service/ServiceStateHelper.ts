@@ -1,20 +1,20 @@
 import { Query, RemoteData, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
+import { getKey } from "./getKey";
 
 type Data = RemoteData.Type<Query.Error<"Service">, Query.Data<"Service">>;
 
-export class ServiceStateHelper
-  implements StateHelper<Query.Error<"Service">, Query.Data<"Service">> {
+export class ServiceStateHelper implements StateHelper<"Service"> {
   constructor(private readonly store: Store) {}
 
-  set(id: string, value: Data): void {
-    this.store.dispatch.services2.setData({ id, value });
+  set(qualifier: Query.Qualifier<"Service">, data: Data): void {
+    this.store.dispatch.services2.setSingle({ qualifier, data });
   }
 
-  getHooked(id: string): Data {
+  getHooked(qualifier: Query.Qualifier<"Service">): Data {
     return useStoreState((state) => {
-      return this.enforce(state.services2.byId[id]);
+      return this.enforce(state.services2.byNameAndEnv[getKey(qualifier)]);
     }, isEqual);
   }
 
@@ -23,7 +23,9 @@ export class ServiceStateHelper
     return value;
   }
 
-  getOnce(id: string): Data {
-    return this.enforce(this.store.getState().services2.byId[id]);
+  getOnce(id: Query.Qualifier<"Service">): Data {
+    return this.enforce(
+      this.store.getState().services2.byNameAndEnv[getKey(id)]
+    );
   }
 }

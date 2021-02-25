@@ -11,6 +11,6 @@ import { Query } from "@/Core/Domain";
  */
 export interface Fetcher<Kind extends Query.Kind> {
   getData(
-    query: Query.SubQuery<Kind>
+    qualifier: Query.Qualifier<Kind>
   ): Promise<Either.Type<Query.Error<Kind>, Query.ApiResponse<Kind>>>;
 }

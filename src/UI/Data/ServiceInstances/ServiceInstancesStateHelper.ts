@@ -1,4 +1,5 @@
 import {
+  Query,
   RemoteData,
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
@@ -11,12 +12,7 @@ type Data = RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>;
 type ApiData = RemoteData.Type<string, ServiceInstanceModel[]>;
 
 export class ServiceInstancesStateHelper
-  implements
-    StateHelper<
-      string,
-      ServiceInstanceModelWithTargetStates[],
-      ServiceInstanceModel[]
-    > {
+  implements StateHelper<"ServiceInstances"> {
   constructor(private readonly store: Store) {}
 
   /**
@@ -27,13 +23,15 @@ export class ServiceInstancesStateHelper
    * rerendered anyway because the getStoreState hook is also optimized
    * to check if the data is changed.
    */
-  set(id: string, value: ApiData): void {
-    this.store.dispatch.serviceInstances.setData({ id, value });
+  set(qualifier: Query.Qualifier<"ServiceInstances">, value: ApiData): void {
+    this.store.dispatch.serviceInstances.setData({ id: qualifier.name, value });
   }
 
-  getHooked(id: string): Data {
+  getHooked(qualifier: Query.Qualifier<"ServiceInstances">): Data {
     return useStoreState((state) => {
-      return this.enforce(state.serviceInstances.instancesWithTargetStates(id));
+      return this.enforce(
+        state.serviceInstances.instancesWithTargetStates(qualifier)
+      );
     }, isEqual);
   }
 
@@ -42,9 +40,11 @@ export class ServiceInstancesStateHelper
     return value;
   }
 
-  getOnce(id: string): Data {
+  getOnce(qualifier: Query.Qualifier<"ServiceInstances">): Data {
     return this.enforce(
-      this.store.getState().serviceInstances.instancesWithTargetStates(id)
+      this.store
+        .getState()
+        .serviceInstances.instancesWithTargetStates(qualifier)
     );
   }
 }

@@ -1,35 +1,33 @@
 import { DataProvider, Query, HookHelper, RemoteData } from "@/Core";
 
-type Helper<K extends Query.Kind> = HookHelper<Query.SubQuery<K>>;
-
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,
   Query.Data<K>
 >;
 
 export class DataProviderImpl implements DataProvider {
-  constructor(private readonly hookHelpers: HookHelper[]) {}
+  constructor(private readonly hookHelpers: HookHelper<Query.Kind>[]) {}
 
-  private getHelper(query: Query.Type): Helper<typeof query.kind> {
+  private getHelper(query: Query.Type): HookHelper<typeof query.kind> {
     const hookHelper = this.hookHelpers.find((helper) => helper.matches(query));
     if (typeof hookHelper !== "undefined") {
-      return hookHelper as Helper<typeof query.kind>;
+      return hookHelper as HookHelper<typeof query.kind>;
     }
     throw new Error(`Can't find HookHelper for query ${query.kind}`);
   }
 
   useSubscription(query: Query.Type): void {
     const helper = this.getHelper(query);
-    helper.useSubscription(query);
+    helper.useSubscription(query.qualifier);
   }
 
   useData(query: Query.Type): Data<typeof query.kind> {
     const helper = this.getHelper(query);
-    return helper.useData(query);
+    return helper.useData(query.qualifier);
   }
 
   trigger(query: Query.Type): void {
     const helper = this.getHelper(query);
-    helper.trigger(query);
+    helper.trigger(query.qualifier);
   }
 }

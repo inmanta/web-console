@@ -9,10 +9,10 @@ interface Handlers<K extends Query.Kind> {
 
 export class DeferredFetcher<K extends Query.Kind> implements Fetcher<K> {
   private handlers: Handlers<K> | null = null;
-  private invocations: Query.SubQuery<K>[] = [];
+  private invocations: Query.Qualifier<K>[] = [];
 
-  getData(query: Query.SubQuery<K>): Promise<Data<K>> {
-    this.invocations.push(query);
+  getData(qualifier: Query.Qualifier<K>): Promise<Data<K>> {
+    this.invocations.push(qualifier);
     const promise: Promise<Data<K>> = new Promise((resolve) => {
       this.handlers = { resolve, promise };
     });
@@ -27,7 +27,7 @@ export class DeferredFetcher<K extends Query.Kind> implements Fetcher<K> {
     return promise;
   }
 
-  getInvocations(): Query.SubQuery<K>[] {
+  getInvocations(): Query.Qualifier<K>[] {
     return this.invocations;
   }
 }

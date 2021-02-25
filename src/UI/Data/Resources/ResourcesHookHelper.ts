@@ -8,39 +8,37 @@ import {
 } from "@/Core";
 import { useEffect } from "react";
 
-export class ResourcesHookHelper implements HookHelper<Query.ResourcesQuery> {
+export class ResourcesHookHelper implements HookHelper<"Resources"> {
   constructor(
-    private readonly dataManager: DataManager<
-      RemoteData.Type<string, ResourceModel[]>
-    >,
+    private readonly dataManager: DataManager<"Resources">,
     private readonly subscriptionController: SubscriptionController
   ) {}
 
-  useSubscription(query: Query.ResourcesQuery): void {
+  useSubscription(qualifier: Query.Qualifier<"Resources">): void {
     const handler = async () => {
-      this.dataManager.update(query);
+      this.dataManager.update(qualifier);
     };
 
     useEffect(() => {
-      this.dataManager.initialize(query.qualifier.id);
-      this.subscriptionController.subscribeTo(query.qualifier.id, handler);
+      this.dataManager.initialize(qualifier);
+      this.subscriptionController.subscribeTo(qualifier.id, handler);
       return () => {
-        this.subscriptionController.unsubscribeFrom(query.qualifier.id);
+        this.subscriptionController.unsubscribeFrom(qualifier.id);
       };
-    }, [query.qualifier.id, query.qualifier.version]);
+    }, [qualifier.id, qualifier.version]);
   }
 
   useData(
-    query: Query.ResourcesQuery
+    qualifier: Query.Qualifier<"Resources">
   ): RemoteData.Type<string, ResourceModel[]> {
-    return this.dataManager.get(query.qualifier.id);
+    return this.dataManager.get(qualifier);
   }
 
-  trigger(query: Query.ResourcesQuery): void {
-    this.subscriptionController.trigger(query.qualifier.id);
+  trigger(qualifier: Query.Qualifier<"Resources">): void {
+    this.subscriptionController.trigger(qualifier.id);
   }
 
-  matches(query: Query.ResourcesQuery): boolean {
+  matches(query: Query.SubQuery<"Resources">): boolean {
     return query.kind === "Resources";
   }
 }

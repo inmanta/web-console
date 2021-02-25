@@ -1,20 +1,19 @@
-import { RemoteData, ResourceModel, StateHelper } from "@/Core";
+import { Query, RemoteData, ResourceModel, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<string, ResourceModel[]>;
 
-export class ResourcesStateHelper
-  implements StateHelper<string, ResourceModel[]> {
+export class ResourcesStateHelper implements StateHelper<"Resources"> {
   constructor(private readonly store: Store) {}
 
-  set(id: string, value: Data): void {
-    this.store.dispatch.resources.setData({ id, value });
+  set(qualifier: Query.Qualifier<"Resources">, value: Data): void {
+    this.store.dispatch.resources.setData({ id: qualifier.id, value });
   }
 
-  getHooked(id: string): Data {
+  getHooked(qualifier: Query.Qualifier<"Resources">): Data {
     return useStoreState((state) => {
-      return this.enforce(state.resources.byId[id]);
+      return this.enforce(state.resources.byId[qualifier.id]);
     }, isEqual);
   }
 
@@ -23,7 +22,7 @@ export class ResourcesStateHelper
     return value;
   }
 
-  getOnce(id: string): Data {
-    return this.enforce(this.store.getState().resources.byId[id]);
+  getOnce(qualifier: Query.Qualifier<"Resources">): Data {
+    return this.enforce(this.store.getState().resources.byId[qualifier.id]);
   }
 }

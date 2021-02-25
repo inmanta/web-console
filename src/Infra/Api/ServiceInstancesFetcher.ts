@@ -8,10 +8,12 @@ export class ServiceInstancesFetcher implements Fetcher<"ServiceInstances"> {
     return `${this.baseApiHelper.getBaseUrl()}/lsm/v1/service_inventory/${serviceName}?include_deployment_progress=True`;
   }
 
-  async getData(
-    query: Query.ServiceInstancesQuery
-  ): Promise<Either.Type<string, ServiceInstanceModel[]>> {
-    const { environment, name } = query.qualifier;
+  async getData({
+    environment,
+    name,
+  }: Query.Qualifier<"ServiceInstances">): Promise<
+    Either.Type<string, ServiceInstanceModel[]>
+  > {
     return this.baseApiHelper.get(this.getUrl(name), environment);
   }
 }

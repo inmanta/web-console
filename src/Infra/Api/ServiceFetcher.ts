@@ -8,10 +8,10 @@ export class ServiceFetcher implements Fetcher<"Service"> {
     return `${this.baseApiHelper.getBaseUrl()}/lsm/v1/service_catalog/${serviceName}`;
   }
 
-  async getData(
-    query: Query.ServiceQuery
-  ): Promise<Either.Type<string, ServiceModel>> {
-    const { environment, name } = query.qualifier;
+  async getData({
+    environment,
+    name,
+  }: Query.Qualifier<"Service">): Promise<Either.Type<string, ServiceModel>> {
     return this.baseApiHelper.get(this.getUrl(name), environment);
   }
 }
