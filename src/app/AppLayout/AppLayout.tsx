@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import * as React from "react";
+import { NavLink } from "react-router-dom";
 import {
   Nav,
   NavItem,
@@ -16,22 +16,24 @@ import {
   Alert,
   AlertActionCloseButton,
   PageHeaderTools,
-  PageHeaderToolsGroup
-} from '@patternfly/react-core';
-import { routes } from '@app/routes';
-import Logo from '!react-svg-loader!@images/logo.svg';
-import AvatarImg from '!url-loader!@assets/images/img_avatar.svg';
-import { EnvironmentSelector, IEnvironmentSelectorItem } from './Toolbar/EnvironmentSelector';
-import { SimpleNotificationBadge } from './Toolbar/SimpleNotificationBadge';
-import { IconDropdown } from './Toolbar/IconDropdown';
-import { AngleDownIcon, CogIcon } from '@patternfly/react-icons';
-import { useStoreState, State, useStoreDispatch } from 'easy-peasy';
-import { IStoreModel, IProjectModel } from '@app/Models/CoreModels';
-import * as _ from 'lodash';
-import SimpleBackgroundImage from './SimpleBackgroundImage';
-import { PageBreadcrumb } from './PageBreadcrumb';
-import { fetchInmantaApi } from '@app/utils/fetchInmantaApi';
-
+  PageHeaderToolsGroup,
+} from "@patternfly/react-core";
+import { routes } from "@app/routes";
+import Logo from "!react-svg-loader!@images/logo.svg";
+import AvatarImg from "!url-loader!@assets/images/img_avatar.svg";
+import {
+  EnvironmentSelector,
+  IEnvironmentSelectorItem,
+} from "./Toolbar/EnvironmentSelector";
+import { SimpleNotificationBadge } from "./Toolbar/SimpleNotificationBadge";
+import { IconDropdown } from "./Toolbar/IconDropdown";
+import { AngleDownIcon, CogIcon } from "@patternfly/react-icons";
+import { useStoreState, useStoreDispatch } from "@/UI/Store";
+import * as _ from "lodash";
+import SimpleBackgroundImage from "./SimpleBackgroundImage";
+import { PageBreadcrumb } from "./PageBreadcrumb";
+import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
+import { ProjectModel } from "@/Core";
 
 interface IAppLayout {
   keycloak?: Keycloak.KeycloakInstance;
@@ -39,50 +41,78 @@ interface IAppLayout {
   setErrorMessage: React.Dispatch<string>;
   shouldUseAuth: boolean;
 }
-export const getEnvironmentNamesWithSeparator = (project: IProjectModel) => {
+export const getEnvironmentNamesWithSeparator = (
+  project: ProjectModel
+): IEnvironmentSelectorItem[] => {
   if (project.environments) {
-    return project.environments.map(environment => {
-      const envSelectorItem: IEnvironmentSelectorItem = { displayName: project.name + ' / ' + environment.name, projectId: project.id, environmentId: environment.id };
+    return project.environments.map((environment) => {
+      const envSelectorItem: IEnvironmentSelectorItem = {
+        displayName: project.name + " / " + environment.name,
+        projectId: project.id,
+        environmentId: environment.id,
+      };
       return envSelectorItem;
     });
   }
   return [{ displayName: project.name, projectId: project.id }];
 };
 
-const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, setErrorMessage, shouldUseAuth }) => {
+const AppLayout: React.FunctionComponent<IAppLayout> = ({
+  keycloak,
+  children,
+  setErrorMessage,
+  shouldUseAuth,
+}) => {
   const logoProps = {
-    href: '/'
+    href: "/",
   };
-  const projectsEndpoint = '/api/v2/project';
-  const storeDispatch = useStoreDispatch<IStoreModel>();
-  const [envAlert, setEnvAlert] = React.useState('');
+  const projectsEndpoint = "/api/v2/project";
+  const storeDispatch = useStoreDispatch();
+  const [envAlert, setEnvAlert] = React.useState("");
   const ToastAlertGroup = () => {
     const variant = "warning";
-    return <AlertGroup isToast={true}>
-      <Alert
-        isLiveRegion={true}
-        variant={AlertVariant[variant]}
-        title={envAlert}
-        id="env-warning-alert"
-        actionClose={
-          <AlertActionCloseButton
-            title="Close environment warning"
-            id="close-env-warning-button"
-            variantLabel={`${variant} alert`}
-            onClose={() => setEnvAlert('')}
-          />
-        } />
-    </AlertGroup>
-  }
+    return (
+      <AlertGroup isToast={true}>
+        <Alert
+          isLiveRegion={true}
+          variant={AlertVariant[variant]}
+          title={envAlert}
+          id="env-warning-alert"
+          actionClose={
+            <AlertActionCloseButton
+              title="Close environment warning"
+              id="close-env-warning-button"
+              variantLabel={`${variant} alert`}
+              onClose={() => setEnvAlert("")}
+            />
+          }
+        />
+      </AlertGroup>
+    );
+  };
   const dispatch = (data) => {
     const searchParams = new URLSearchParams(window.location.search);
     const envFromUrl = searchParams.get("env");
-    if (envFromUrl && !data.find(project => (project.environments.find(env => env.id === envFromUrl)))) {
-      setEnvAlert(`Environment with id ${envFromUrl} not found, another was selected by default`);
+    if (
+      envFromUrl &&
+      !data.find((project) =>
+        project.environments.find((env) => env.id === envFromUrl)
+      )
+    ) {
+      setEnvAlert(
+        `Environment with id ${envFromUrl} not found, another was selected by default`
+      );
     }
-    storeDispatch.projects.fetched(data);
+    storeDispatch.fetched(data);
   };
-  const requestParams = { urlEndpoint: projectsEndpoint, dispatch, isEnvironmentIdRequired: false, environmentId: undefined, setErrorMessage, keycloak };
+  const requestParams = {
+    urlEndpoint: projectsEndpoint,
+    dispatch,
+    isEnvironmentIdRequired: false,
+    environmentId: undefined,
+    setErrorMessage,
+    keycloak,
+  };
   React.useEffect(() => {
     fetchInmantaApi(requestParams);
     if (keycloak && !keycloak.profile) {
@@ -103,13 +133,19 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
     setIsMobileView(props.mobileView);
   };
 
-  const projects: IProjectModel[] = useStoreState((state: State<IStoreModel>) => state.projects.projects.getAllProjects);
-  const environments = _.flatMap(projects, project => getEnvironmentNamesWithSeparator(project));
+  const projects: ProjectModel[] = useStoreState(
+    (state) => state.projects.getAllProjects
+  );
+  const environments = _.flatMap(projects, (project) =>
+    getEnvironmentNamesWithSeparator(project)
+  );
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
-  const selectedEnvironmentId = useStoreState((state: State<IStoreModel>) => state.projects.environments.selectedEnvironmentId);
+  const selectedEnvironmentId = useStoreState(
+    (state) => state.environments.selectedEnvironmentId
+  );
 
   const Login = () => {
-    const [name, setName] = React.useState('inmanta2');
+    const [name, setName] = React.useState("inmanta2");
     if (keycloak && keycloak.profile && keycloak.profile.username !== name) {
       setName(keycloak.profile.username as string);
     }
@@ -120,22 +156,29 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
   const ProfileDropdownGroup = () => {
     let profileDropdownItems;
     if (shouldUseAuth) {
-      profileDropdownItems = [(
-        <DropdownItem key="action2" component="button" onClick={keycloak && keycloak.logout}>
+      profileDropdownItems = [
+        <DropdownItem
+          key="action2"
+          component="button"
+          onClick={keycloak && keycloak.logout}
+        >
           Logout
-        </DropdownItem>
-      )];
+        </DropdownItem>,
+      ];
     } else {
-      profileDropdownItems = [(
+      profileDropdownItems = [
         <DropdownItem key="action2" component="button" isDisabled={true}>
           Logout
-        </DropdownItem>
-      )];
+        </DropdownItem>,
+      ];
     }
     return (
       <PageHeaderToolsGroup>
         {shouldUseAuth ? <Login /> : <TextContent> inmanta </TextContent>}
-        <IconDropdown icon={AngleDownIcon} dropdownItems={profileDropdownItems} />
+        <IconDropdown
+          icon={AngleDownIcon}
+          dropdownItems={profileDropdownItems}
+        />
         <Avatar src={AvatarImg} alt="Avatar image" />
       </PageHeaderToolsGroup>
     );
@@ -146,10 +189,10 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
     return (
       <PageHeaderTools>
         <PageHeaderToolsGroup>
-            <SimpleNotificationBadge />
-            <IconDropdown icon={CogIcon} dropdownItems={dropdownItems} />
-          </PageHeaderToolsGroup>
-          <ProfileDropdownGroup />
+          <SimpleNotificationBadge />
+          <IconDropdown icon={CogIcon} dropdownItems={dropdownItems} />
+        </PageHeaderToolsGroup>
+        <ProfileDropdownGroup />
       </PageHeaderTools>
     );
   };
@@ -173,26 +216,51 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({ keycloak, children, se
         return (
           <NavGroup title={routeItem.name} key={`${routeItem.name}-${idx}`}>
             {routeItem.exactRoutes.map((route, index) => {
-              return (!route.hideOnSideBar ?
-                <NavItem key={`${route.label}-${index}`} id={`${route.label}-${index}`}>
-                  <NavLink exact={true} to={{ pathname: routeItem.pathPrefix + route.path, search: location.search }} activeClassName="pf-m-current">
+              return !route.hideOnSideBar ? (
+                <NavItem
+                  key={`${route.label}-${index}`}
+                  id={`${route.label}-${index}`}
+                >
+                  <NavLink
+                    exact={true}
+                    to={{
+                      pathname: routeItem.pathPrefix + route.path,
+                      search: location.search,
+                    }}
+                    activeClassName="pf-m-current"
+                  >
                     {route.label}
                   </NavLink>
-                </NavItem> : null
-              );
+                </NavItem>
+              ) : null;
             })}
           </NavGroup>
         );
       })}
       <NavGroup title="Other sites" key="external">
         <li className="pf-c-nav__item">
-          <a className="pf-c-nav__link" href={`/dashboard/#!/environment/${selectedEnvironmentId}`} target="_blank">Dashboard</a>
+          <a
+            className="pf-c-nav__link"
+            href={`/dashboard/#!/environment/${selectedEnvironmentId}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Dashboard
+          </a>
         </li>
       </NavGroup>
     </Nav>
   );
-  const Sidebar = <PageSidebar nav={Navigation} isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen} theme="dark" />;
-  const PageSkipToContent = <SkipToContent href="#primary-app-container">Skip to Content</SkipToContent>;
+  const Sidebar = (
+    <PageSidebar
+      nav={Navigation}
+      isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
+      theme="dark"
+    />
+  );
+  const PageSkipToContent = (
+    <SkipToContent href="#primary-app-container">Skip to Content</SkipToContent>
+  );
   return (
     <React.Fragment>
       <SimpleBackgroundImage />

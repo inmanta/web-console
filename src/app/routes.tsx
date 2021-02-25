@@ -1,18 +1,24 @@
-import * as React from 'react';
-import { Route, RouteComponentProps, Switch, Redirect } from 'react-router-dom';
-import { accessibleRouteChangeHandler } from '@app/utils/utils';
-import { NotFound } from '@app/NotFound/NotFound';
-import { useDocumentTitle } from '@app/utils/useDocumentTitle';
-import { LastLocationProvider, useLastLocation } from 'react-router-last-location';
-import { ServiceCatalog } from './ServiceCatalog/ServiceCatalog';
-import { ServiceInventory } from './ServiceInventory/ServiceInventory';
+import * as React from "react";
+import { Route, RouteComponentProps, Switch, Redirect } from "react-router-dom";
+import { accessibleRouteChangeHandler } from "@app/utils/utils";
+import { NotFound } from "@app/NotFound/NotFound";
+import { useDocumentTitle } from "@app/utils/useDocumentTitle";
+import {
+  LastLocationProvider,
+  useLastLocation,
+} from "react-router-last-location";
+import { ServiceCatalog } from "./ServiceCatalog/ServiceCatalog";
+import { CreateInstancePageWithProvider } from "@/UI/ServiceInstanceForm";
+import { ServiceInventoryWithProvider } from "./ServiceInventory/ServiceInventory";
 
 let routeFocusTimer: number;
 
-
 export interface IAppRoute {
   label?: string;
-  component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
+  component:
+    | React.ComponentType<RouteComponentProps<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
+    | React.ComponentType<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   icon?: any;
   exact?: boolean;
   path: string;
@@ -22,37 +28,45 @@ export interface IAppRoute {
 }
 
 export interface IAppRouteGroup {
-  name: string,
-  pathPrefix: string,
-  exactRoutes: IAppRoute[]
+  name: string;
+  pathPrefix: string;
+  exactRoutes: IAppRoute[];
 }
 
-const routes: IAppRouteGroup[] =
-  [
-    {
-      exactRoutes: [
-        {
-          component: ServiceCatalog,
-          exact: true,
-          icon: null,
-          label: 'Service Catalog',
-          path: '/catalog',
-          title: 'Service Catalog'
-        },
-        {
-          component: ServiceInventory,
-          exact: true,
-          hideOnSideBar: true,
-          icon: null,
-          label: 'Service Inventory',
-          path: '/catalog/:id/inventory',
-          title: 'Service Inventory',
-        }
-      ],
-      name: 'Lifecycle service management',
-      pathPrefix: '/lsm',
-    },
-  ];
+const routes: IAppRouteGroup[] = [
+  {
+    exactRoutes: [
+      {
+        component: ServiceCatalog,
+        exact: true,
+        icon: null,
+        label: "Service Catalog",
+        path: "/catalog",
+        title: "Service Catalog",
+      },
+      {
+        component: ServiceInventoryWithProvider,
+        exact: true,
+        hideOnSideBar: true,
+        icon: null,
+        label: "Service Inventory",
+        path: "/catalog/:id/inventory",
+        title: "Service Inventory",
+      },
+      {
+        component: CreateInstancePageWithProvider,
+        exact: true,
+        hideOnSideBar: true,
+        icon: null,
+        label: "Create Instance",
+        path: "/catalog/:id/inventory/add",
+        title: "Add Instance",
+      },
+    ],
+    name: "Lifecycle service management",
+    pathPrefix: "/lsm",
+  },
+];
 
 // a custom hook for sending focus to the primary content container
 // after a view has loaded so that subsequent press of tab key
@@ -67,7 +81,7 @@ const useA11yRouteChange = (isAsync: boolean) => {
       clearTimeout(routeFocusTimer);
     };
   }, [isAsync, lastNavigation]);
-}
+};
 
 const RouteWithTitleUpdates = ({
   component: Component,
@@ -79,9 +93,7 @@ const RouteWithTitleUpdates = ({
   useDocumentTitle(title);
 
   function routeWithTitle(routeProps: RouteComponentProps) {
-    return (
-      <Component {...rest} {...routeProps} />
-    );
+    return <Component {...rest} {...routeProps} />;
   }
 
   return <Route path={rest.path} exact={rest.exact} render={routeWithTitle} />;
@@ -90,27 +102,32 @@ const RouteWithTitleUpdates = ({
 const PageNotFound = ({ title }: { title: string }) => {
   useDocumentTitle(title);
   return <Route component={NotFound} />;
-}
+};
 
-const AppRoutes = () => (
+const AppRoutes: React.FC = () => (
   <LastLocationProvider>
     <Switch>
       {routes.map((routeItem) => {
-        return routeItem.exactRoutes.map(({ path, exact, component, title, isAsync, icon }, idx) => (
-          <RouteWithTitleUpdates
-            path={routeItem.pathPrefix + path}
-            exact={exact}
-            component={component}
-            key={idx}
-            icon={icon}
-            title={title}
-            isAsync={isAsync}
-          />
-        ))
-      })
-      }
-      <Route exact={true} path='/' component={() => <Redirect to="/lsm/catalog" />} />
-      <PageNotFound title={'404 Page Not Found'} />
+        return routeItem.exactRoutes.map(
+          ({ path, exact, component, title, isAsync, icon }, idx) => (
+            <RouteWithTitleUpdates
+              path={routeItem.pathPrefix + path}
+              exact={exact}
+              component={component}
+              key={idx}
+              icon={icon}
+              title={title}
+              isAsync={isAsync}
+            />
+          )
+        );
+      })}
+      <Route
+        exact={true}
+        path="/"
+        component={() => <Redirect to="/lsm/catalog" />}
+      />
+      <PageNotFound title={"404 Page Not Found"} />
     </Switch>
   </LastLocationProvider>
 );

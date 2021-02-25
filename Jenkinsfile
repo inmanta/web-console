@@ -19,6 +19,7 @@ pipeline {
                     checkout scm
                     sh '''yarn install --frozen-lockfile;
                     yarn lint;
+                    yarn format:check;
                     yarn build;
                     yarn test'''
                 }

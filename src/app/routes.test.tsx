@@ -1,30 +1,40 @@
-import React from 'react';
-import { App } from '@app/index';
-import { mount } from 'enzyme';
-import Keycloak from 'keycloak-js';
-import { wait } from '@testing-library/react';
+import React from "react";
+import { App } from "@app/index";
+import { mount } from "enzyme";
+import Keycloak from "keycloak-js";
+import { waitFor } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { getStoreInstance } from "@/UI/Store";
 
-describe('Navigation', () => {
+describe("Navigation", () => {
   let keycloak: Keycloak.KeycloakInstance;
   beforeEach(() => {
     keycloak = Keycloak();
   });
 
-  it('should render nav groups', () => {
-    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false} />);
-    const nav = wrapper.find('#nav-primary-simple');
-    wait();
-    expect(nav.find('.pf-c-nav__section-title')).toHaveLength(2);
+  it("should render nav groups", async () => {
+    const wrapper = mount(
+      <StoreProvider store={getStoreInstance()}>
+        <App keycloak={keycloak} shouldUseAuth={false} />
+      </StoreProvider>
+    );
+    const nav = wrapper.find("#nav-primary-simple");
+    await waitFor(() => undefined);
+    expect(nav.find(".pf-c-nav__section-title")).toHaveLength(2);
   });
 
-  it('should navigate when clicking on link', () => {
-    const wrapper = mount(<App keycloak={keycloak} shouldUseAuth={false}/>);
-    const nav = wrapper.find('#nav-primary-simple');
-    const serviceCatalogEntry = nav.find('.pf-c-nav__link').first();
-    serviceCatalogEntry.simulate('click');
-    wait();
-    expect(serviceCatalogEntry.getElement().props.activeClassName)
-      .toEqual('pf-m-current');
+  it("should navigate when clicking on link", async () => {
+    const wrapper = mount(
+      <StoreProvider store={getStoreInstance()}>
+        <App keycloak={keycloak} shouldUseAuth={false} />
+      </StoreProvider>
+    );
+    const nav = wrapper.find("#nav-primary-simple");
+    const serviceCatalogEntry = nav.find(".pf-c-nav__link").first();
+    serviceCatalogEntry.simulate("click");
+    await waitFor(() => undefined);
+    expect(serviceCatalogEntry.getElement().props.activeClassName).toEqual(
+      "pf-m-current"
+    );
   });
-
 });

@@ -1,25 +1,42 @@
-import React, { ComponentClass } from 'react';
-import { Dropdown, DropdownToggle, DropdownPosition } from '@patternfly/react-core';
-import { SVGIconProps } from '@patternfly/react-icons/dist/js/createIcon';
+import React, { ComponentClass } from "react";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownPosition,
+} from "@patternfly/react-core";
+import { SVGIconProps } from "@patternfly/react-icons/dist/js/createIcon";
 
+interface Props {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  icon: ComponentClass<SVGIconProps, any>;
+  dropdownItems: JSX.Element[];
+}
 
-export class IconDropdown extends React.Component<{icon: ComponentClass<SVGIconProps, any>, dropdownItems: JSX.Element[]}, { isOpen: boolean }> {
-  constructor(props) {
+export class IconDropdown extends React.Component<Props, { isOpen: boolean }> {
+  constructor(props: Props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: false,
     };
     this.onToggle = this.onToggle.bind(this);
     this.onSelect = this.onSelect.bind(this);
   }
-  public render() {
+
+  public render(): JSX.Element {
     const { isOpen } = this.state;
     return (
       <Dropdown
         onSelect={this.onSelect}
         toggle={
-          <DropdownToggle toggleIndicator={null} onToggle={this.onToggle} aria-label="Applications" isDisabled={!this.props.dropdownItems || this.props.dropdownItems.length === 0} >
-            <this.props.icon/>
+          <DropdownToggle
+            toggleIndicator={null}
+            onToggle={this.onToggle}
+            aria-label="Applications"
+            isDisabled={
+              !this.props.dropdownItems || this.props.dropdownItems.length === 0
+            }
+          >
+            <this.props.icon />
           </DropdownToggle>
         }
         isOpen={isOpen}
@@ -29,14 +46,16 @@ export class IconDropdown extends React.Component<{icon: ComponentClass<SVGIconP
       />
     );
   }
-  private onToggle(isOpen: any): void {
+
+  private onToggle(isOpen: boolean): void {
     this.setState({
-      isOpen
+      isOpen,
     });
-  };
-  private onSelect(event: any): void {
+  }
+
+  private onSelect(): void {
     this.setState({
-      isOpen: !this.state.isOpen
+      isOpen: !this.state.isOpen,
     });
-  };
+  }
 }

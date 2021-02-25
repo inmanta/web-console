@@ -1,4 +1,6 @@
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -28,8 +30,49 @@ html, body, #root {
   table-layout: auto;
   --pf-c-table--cell--MaxWidth: 200px;
 }
-@media screen and (max-width: 1440px) {
-  .card-wrapper {
-    width: fit-content;
-  }
+
+/*
+  https://www.patternfly.org/v4/components/page#pagebreadcrumb
+  https://www.patternfly.org/v4/components/breadcrumb
+ */
+.pf-c-page {
+  --pf-c-page__main-breadcrumb--PaddingBottom: var(--pf-global--spacer--md);
+}
+.only-on-hover-container:hover > .only-on-hover-visible {
+  opacity: 1;
+}
+.only-on-hover-visible {
+  opacity: 0;
+}
+
+.progress-stacked {
+  background-color:var(--pf-global--BackgroundColor--100);
+  color: var(--pf-global--palette--black-100);
+  box-sizing: initial;
+  font-size: var(--pf-global--FontSize--sm);
+  height: var(--pf-c-progress__indicator--Height);
+  line-height: var(--pf-c-progress__indicator--Height);
+  margin: 6px 0;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+.progress-stacked > span {
+  background-color: var(--pf-global--primary-color--100);
+  color: var(--pf-global--palette--black-100);
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+  width: auto;
+  vertical-align: top;
+}
+.progress-stacked > .progress-success {
+  background-color: var(--pf-global--success-color--100);
+}
+.progress-stacked > .progress-failure {
+  background-color: var(--pf-global--danger-color--100);
+}
+.progress-stacked > .progress-empty {
+  opacity: .2;
+  width: 100%;
 }

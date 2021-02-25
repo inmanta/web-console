@@ -1,5 +1,19 @@
-# Release 1.4.1 (?)
+# Release 1.5.0 (?)
 
+- Add clipboard copy funcionality for the full service instance id (#135)
+- Fix validation error for optional boolean inputs (#140)
+- Add expand functionality to the service inventory table (#149)
+- Add status tab to service inventory (#182)
+- Add attributes tab to service inventory (#162)
+- Show available set states on the status tab (#94)
+- Mark instance states according to labels (#153)
+- Disable edit and delete instance actions when not allowed by the lifecycle (#184)
+- Add resources tab to service inventory (#164)
+- Add inmanta favicon (#78)
+- Show resource deployment progress in the inventory view (#154)
+- Add auto-updating of data to ResourcesTab (#225)
+- Add auto-updating of service instances to ServiceInventory (#225)
+- Add separate create instance page (#181)
 
 # Release 1.4.0 (2020-12-17)
 

@@ -1,7 +1,7 @@
-import React from 'react';
-import { ContextSelector, ContextSelectorItem } from '@patternfly/react-core';
-import { IStoreModel } from '@app/Models/CoreModels';
-import { useStoreDispatch, useStoreState, State } from 'easy-peasy';
+import React from "react";
+import { useHistory } from "react-router-dom";
+import { ContextSelector, ContextSelectorItem } from "@patternfly/react-core";
+import { useStoreDispatch, useStoreState } from "@/UI/Store";
 
 export interface IEnvironmentSelectorItem {
   displayName: string;
@@ -9,38 +9,59 @@ export interface IEnvironmentSelectorItem {
   environmentId?: string;
 }
 
-export const EnvironmentSelector = (props: { items: IEnvironmentSelectorItem[] }) => {
+interface Props {
+  items: IEnvironmentSelectorItem[];
+}
+
+export const EnvironmentSelector: React.FC<Props> = (props) => {
   const items = props.items;
-  const environmentNames = items.map(item => item.displayName);
+  const environmentNames = items.map((item) => item.displayName);
   const [open, setOpen] = React.useState(false);
   const [filteredItems, setFilteredItems] = React.useState(environmentNames);
-  const [searchValue, setSearchValue] = React.useState('');
-  const store = useStoreState((state: State<IStoreModel>) => state.projects);
-  const selectedProject = store.projects.getSelectedProject;
-  let selectedProjectName = 'undefined / undefined';
-  if (selectedProject && store.environments.getSelectedEnvironment) {
-    selectedProjectName = selectedProject.name + ' / ' + store.environments.getSelectedEnvironment.name;
+  const [searchValue, setSearchValue] = React.useState("");
+  const projects = useStoreState((state) => state.projects);
+  const history = useHistory();
+  const getSelectedEnvironment = useStoreState(
+    (state) => state.environments.getSelectedEnvironment
+  );
+  const selectedProject = projects.getSelectedProject;
+  let selectedProjectName = "undefined / undefined";
+  if (selectedProject && getSelectedEnvironment) {
+    selectedProjectName =
+      selectedProject.name + " / " + getSelectedEnvironment.name;
   }
-  const dispatch = useStoreDispatch<IStoreModel>();
+  const dispatch = useStoreDispatch();
 
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const onToggle = (event?: any, isOpen?: any) => {
     setOpen(isOpen);
   };
 
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const onSelect = (event: any, value: any) => {
     setOpen(!open);
-    const matchingEnvItem = items.find(envItem => envItem.displayName === value);
+    const matchingEnvItem = items.find(
+      (envItem) => envItem.displayName === value
+    );
     if (matchingEnvItem && matchingEnvItem.environmentId) {
-      dispatch.projects.selectProjectAndEnvironment({
+      dispatch.selectProjectAndEnvironment({
         environment: matchingEnvItem.environmentId,
         project: matchingEnvItem.projectId,
       });
+      const params = new URLSearchParams(location.search);
+      if (params.get("env") !== matchingEnvItem.environmentId) {
+        params.set("env", matchingEnvItem.environmentId);
+        history.push(`/lsm/catalog?${params}`);
+      }
     }
   };
+
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const onSearchInputChange = (value: any) => {
     setSearchValue(value);
   };
-  const onSearchButtonClick = (event: any) => {
+
+  const onSearchButtonClick = () => {
     filterItems();
   };
 
@@ -54,7 +75,12 @@ export const EnvironmentSelector = (props: { items: IEnvironmentSelectorItem[] }
 
   const filterItems = () => {
     const filtered =
-      searchValue === '' ? environmentNames : environmentNames.filter(envName => envName.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1);
+      searchValue === ""
+        ? environmentNames
+        : environmentNames.filter(
+            (envName) =>
+              envName.toLowerCase().indexOf(searchValue.toLowerCase()) !== -1
+          );
     setFilteredItems(filtered || []);
   };
   return (
@@ -70,7 +96,7 @@ export const EnvironmentSelector = (props: { items: IEnvironmentSelectorItem[] }
       searchButtonAriaLabel="Filter Projects"
     >
       {filteredItems.map((item, index) => (
-        <ContextSelectorItem {...{ role: 'menuitem' }} key={index}>
+        <ContextSelectorItem {...{ role: "menuitem" }} key={index}>
           {item}
         </ContextSelectorItem>
       ))}
