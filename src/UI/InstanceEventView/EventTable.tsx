@@ -1,12 +1,12 @@
-import { InstanceEvent } from "@/Core";
+import { EventRow, InstanceEvent } from "@/Core";
 import React from "react";
 import { ExpansionManager } from "../ServiceInventory/ExpansionManager";
-import { EventTablePresenter } from "./EventTablePresenter";
+import { TablePresenter } from "../ServiceInventory/Presenters";
 import { EventTableRow } from "./EventTableRow";
 
 interface Props {
   events: InstanceEvent[];
-  tablePresenter: EventTablePresenter;
+  tablePresenter: TablePresenter<InstanceEvent, EventRow>;
   environmentId: string;
 }
 
@@ -30,7 +30,7 @@ export const EventTable: React.FC<Props> = ({
       expansionManager.merge(expansionState, rowsToIds(events))
     );
   }, [events]);
-  const rows = tablePresenter.createFromEvents(events);
+  const rows = tablePresenter.createRows(events);
   return (
     <>
       {rows.map((row, index) => (

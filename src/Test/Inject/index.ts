@@ -1,1 +1,1 @@
-export * from "./TablePresenter";
+export * from "./InventoryTablePresenter";

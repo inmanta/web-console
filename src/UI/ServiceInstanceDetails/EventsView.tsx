@@ -31,6 +31,7 @@ export const EventsView: React.FC<Props> = ({ qualifier }) => {
       <FillerEventTable
         tablePresenter={tablePresenter}
         filler={<LoadingFiller />}
+        wrapInTd
         aria-label="EventTable-Loading"
       />
     ),
@@ -38,6 +39,7 @@ export const EventsView: React.FC<Props> = ({ qualifier }) => {
       <FillerEventTable
         tablePresenter={tablePresenter}
         filler={<FailedFiller error={error} />}
+        wrapInTd
         aria-label="EventTable-Failed"
       />
     ),
@@ -46,11 +48,13 @@ export const EventsView: React.FC<Props> = ({ qualifier }) => {
         <FillerEventTable
           tablePresenter={tablePresenter}
           filler={<EmptyFiller />}
+          wrapInTd
           aria-label="EventTable-Empty"
         />
       ) : (
         <FillerEventTable
           tablePresenter={tablePresenter}
+          wrapInTd={false}
           filler={
             <EventTable
               events={events}

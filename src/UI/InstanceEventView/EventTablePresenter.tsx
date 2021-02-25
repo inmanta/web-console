@@ -1,8 +1,9 @@
 import { EventRow, InstanceEvent } from "@/Core";
-import { DatePresenter } from "../ServiceInventory/Presenters";
+import { DatePresenter, TablePresenter } from "../ServiceInventory/Presenters";
 import { words } from "../words";
 
-export class EventTablePresenter {
+export class EventTablePresenter
+  implements TablePresenter<InstanceEvent, EventRow> {
   constructor(private datePresenter: DatePresenter) {}
   readonly columnHeads = [
     words("events.column.eventType"),
@@ -20,7 +21,7 @@ export class EventTablePresenter {
   public getNumberOfColumns(): number {
     return this.numberOfColumns;
   }
-  public createFromEvents(events: InstanceEvent[]): EventRow[] {
+  public createRows(events: InstanceEvent[]): EventRow[] {
     return events.map((instance) => this.instanceToRow(instance));
   }
   private instanceToRow(event: InstanceEvent): EventRow {

@@ -6,7 +6,7 @@ import {
   InstanceActionPresenter,
   InstanceStatePresenter,
   MomentDatePresenter,
-  TablePresenter,
+  InventoryTablePresenter,
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
 import { InstanceSetStateManager } from "./InstanceSetStateManager";
@@ -35,13 +35,13 @@ export const TableProvider: React.FC<Props> = ({
     serviceEntity
   );
   const statePresenter = new InstanceStatePresenter(instances, serviceEntity);
-  const tablePresenter = new TablePresenter(
+  const tablePresenter = new InventoryTablePresenter(
     datePresenter,
     attributesPresenter,
     actionPresenter,
     statePresenter
   );
-  const rows = tablePresenter.createFromInstances(instances);
+  const rows = tablePresenter.createRows(instances);
 
   return (
     <div data-testid="InventoryTableContainer">
