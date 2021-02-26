@@ -9,6 +9,7 @@ import {
   ServiceInstancesSlice,
 } from "./ServiceInstancesSlice";
 import { servicesSlice2, ServicesSlice2 } from "./ServicesSlice2";
+import { EventsSlice, eventsSlice } from "./EventsSlice";
 
 export interface StoreModel {
   environments: EnvironmentsSlice;
@@ -18,6 +19,7 @@ export interface StoreModel {
     { project: string; environment: string }
   >;
   resources: ResourcesSlice;
+  events: EventsSlice;
   services: ServicesSlice;
   services2: ServicesSlice2;
   projects: ProjectsSlice;
@@ -75,6 +77,7 @@ export const storeModel: StoreModel = {
   fetched,
   projects: projectsSlice,
   resources: resourcesSlice,
+  events: eventsSlice,
   selectProjectAndEnvironment: thunk((actions, payload) => {
     actions.projects.selectProjectById(payload.project);
     actions.environments.selectEnvironmentById(payload.environment);

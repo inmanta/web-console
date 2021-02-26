@@ -76,3 +76,9 @@ body,
   opacity: .2;
   width: 100%;
 }
+.ignored-transition {
+  background-color: var(--pf-global--palette--black-200);
+}
+.error-transition {
+  background-color: var(--pf-global--palette--orange-100);
+}

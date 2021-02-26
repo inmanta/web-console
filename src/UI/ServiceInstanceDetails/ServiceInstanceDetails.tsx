@@ -1,7 +1,7 @@
 import React, { ReactText } from "react";
 import { Tabs, Tab, TabTitleText, TabTitleIcon } from "@patternfly/react-core";
 
-export type TabKey = "Attributes" | "Status" | "Resources";
+export type TabKey = "Attributes" | "Status" | "Resources" | "Events";
 
 export interface TabProps {
   title: string;

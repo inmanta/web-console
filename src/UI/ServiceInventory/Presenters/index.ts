@@ -3,6 +3,7 @@ export * from "./AttributesPresenter";
 export * from "./DatePresenter";
 export * from "./InstanceActionPresenter";
 export * from "./MomentDatePresenter";
+export * from "./InventoryTablePresenter";
 export * from "./TablePresenter";
 export * from "./StatePresenter";
 export * from "./InstanceStatePresenter";

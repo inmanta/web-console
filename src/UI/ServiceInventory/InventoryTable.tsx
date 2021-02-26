@@ -1,13 +1,13 @@
 import React from "react";
 import { TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import { Row } from "@/Core";
-import { TablePresenter } from "./Presenters";
+import { InventoryTablePresenter } from "./Presenters";
 import { InstanceRow } from "./InstanceRow";
 import { ExpansionManager } from "./ExpansionManager";
 
 interface Props {
   rows: Row[];
-  tablePresenter: TablePresenter;
+  tablePresenter: InventoryTablePresenter;
 }
 
 export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
