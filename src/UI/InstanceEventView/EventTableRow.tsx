@@ -38,62 +38,60 @@ export const EventTableRow: React.FC<Props> = ({
     return "";
   };
   return (
-    <>
-      <Tbody isExpanded={false} className={getColorCodeClass(row)}>
-        <Tr id={`event-row-${row.id}`}>
-          <Td
-            expand={{
-              rowIndex: index,
-              isExpanded,
-              onToggle,
-            }}
-          />
-          <Td>
-            <EventIcon eventType={row.eventType} />
-          </Td>
-          <Td>
-            <DateWithTooltip date={row.timestamp} />
-          </Td>
-          <Td>{row.serviceInstanceVersion}</Td>
-          <Td>{row.source}</Td>
-          <Td>{row.destination}</Td>
-        </Tr>
-        <Tr isExpanded={isExpanded} data-testid={`details_${row.id}`}>
-          <Td colSpan={numberOfColumns}>
-            <ExpandableRowContent>
-              <DescriptionList>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>
-                    {words("events.column.message")}
-                  </DescriptionListTerm>
-                  <DescriptionListDescription>
-                    {row.message}
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
-                <DescriptionListGroup>
-                  <DescriptionListTerm>
-                    {words("events.details.title")}
-                  </DescriptionListTerm>
-                  <DescriptionListDescription>
-                    <pre
-                      style={{
-                        whiteSpace: "pre-wrap",
-                        fontFamily: "Liberation Mono",
-                      }}
-                    >
-                      <code>{JSON.stringify(row.fullJson, null, 2)}</code>
-                    </pre>
-                  </DescriptionListDescription>
-                </DescriptionListGroup>
-                <CompileReportLink
-                  compileReportId={row.idCompileReport}
-                  environmentId={environmentId}
-                />
-              </DescriptionList>
-            </ExpandableRowContent>
-          </Td>
-        </Tr>
-      </Tbody>
-    </>
+    <Tbody isExpanded={false} className={getColorCodeClass(row)}>
+      <Tr id={`event-row-${row.id}`}>
+        <Td
+          expand={{
+            rowIndex: index,
+            isExpanded,
+            onToggle,
+          }}
+        />
+        <Td>
+          <EventIcon eventType={row.eventType} />
+        </Td>
+        <Td>
+          <DateWithTooltip date={row.timestamp} />
+        </Td>
+        <Td>{row.serviceInstanceVersion}</Td>
+        <Td>{row.source}</Td>
+        <Td>{row.destination}</Td>
+      </Tr>
+      <Tr isExpanded={isExpanded} data-testid={`details_${row.id}`}>
+        <Td colSpan={numberOfColumns}>
+          <ExpandableRowContent>
+            <DescriptionList>
+              <DescriptionListGroup>
+                <DescriptionListTerm>
+                  {words("events.column.message")}
+                </DescriptionListTerm>
+                <DescriptionListDescription>
+                  {row.message}
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+              <DescriptionListGroup>
+                <DescriptionListTerm>
+                  {words("events.details.title")}
+                </DescriptionListTerm>
+                <DescriptionListDescription>
+                  <pre
+                    style={{
+                      whiteSpace: "pre-wrap",
+                      fontFamily: "Liberation Mono",
+                    }}
+                  >
+                    <code>{JSON.stringify(row.fullJson, null, 2)}</code>
+                  </pre>
+                </DescriptionListDescription>
+              </DescriptionListGroup>
+              <CompileReportLink
+                compileReportId={row.idCompileReport}
+                environmentId={environmentId}
+              />
+            </DescriptionList>
+          </ExpandableRowContent>
+        </Td>
+      </Tr>
+    </Tbody>
   );
 };

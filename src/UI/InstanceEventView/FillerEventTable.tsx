@@ -13,7 +13,7 @@ import { EventTablePresenter } from "./EventTablePresenter";
 interface Props {
   tablePresenter: EventTablePresenter;
   filler: ReactElement;
-  wrapInTd: boolean;
+  wrapInTd?: boolean;
   "aria-label"?: string;
 }
 

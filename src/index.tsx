@@ -25,13 +25,11 @@ import {
   ResourcesStateHelper,
   ResourcesDataManager,
   ResourcesHookHelper,
+  EventsHookHelper,
+  EventsDataManager,
+  EventsStateHelper,
 } from "@/UI/Data";
 import {} from "@/UI/Data/Service";
-import {
-  EventsDataManager,
-  EventsHookHelper,
-  EventsStateHelper,
-} from "./UI/Data/Events";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */

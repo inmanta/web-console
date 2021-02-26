@@ -54,7 +54,6 @@ export const EventsView: React.FC<Props> = ({ qualifier }) => {
       ) : (
         <FillerEventTable
           tablePresenter={tablePresenter}
-          wrapInTd={false}
           filler={
             <EventTable
               events={events}
