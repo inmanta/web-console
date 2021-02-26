@@ -1,4 +1,4 @@
-# Release 1.3.2 (?)
+# Release 1.3.2 (2021-02-26)
 
 - Fix service instance error message style and position (#122)
 - Fix error when updating an instance in rejected state (#128)
