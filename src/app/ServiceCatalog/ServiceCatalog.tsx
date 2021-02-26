@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { PageSection } from "@patternfly/react-core";
 import { CatalogDataList } from "./CatalogDataList";
-import { useStoreState, useStoreDispatch } from "@/UI/Store";
+import { useStoreState } from "@/UI/Store";
 import { useKeycloak } from "react-keycloak";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -36,13 +36,10 @@ export const ServiceCatalog: React.FC<{ environmentId: string }> = ({
   dataProvider.useSubscription(query);
   const data = dataProvider.useData<"Services">(query);
 
-  const storeDispatch = useStoreDispatch();
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
-  const dispatchDelete = (data) => {
-    const urlParts = data.urlEndpoint.split("/");
-    const serviceName = urlParts[urlParts.length - 1];
-    storeDispatch.services.removeSingleService(serviceName);
+  const dispatchDelete = () => {
+    dataProvider.trigger(query);
   };
   let keycloak;
   if (shouldUseAuth) {

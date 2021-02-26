@@ -51,6 +51,10 @@ export const servicesSlice2: ServicesSlice2 = {
     listByEnv[environment] = data;
     if (!RemoteData.isSuccess(data)) return;
     const { value: services } = data;
+    const toDelete = Object.keys(byNameAndEnv).filter((key) =>
+      injections.serviceKeyMaker.matches({ environment, name: "" }, key)
+    );
+    toDelete.forEach((key) => delete byNameAndEnv[key]);
     services.forEach((service) => {
       const key = injections.serviceKeyMaker.make({
         environment,

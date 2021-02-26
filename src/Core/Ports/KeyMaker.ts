@@ -3,4 +3,5 @@
  */
 export interface KeyMaker<Input> {
   make(input: Input): string;
+  matches(input: Input, key: string): boolean;
 }
