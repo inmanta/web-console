@@ -11,13 +11,13 @@ export class ServiceStateHelper implements StateHelper<"Service"> {
   ) {}
 
   set(qualifier: Query.Qualifier<"Service">, data: Data): void {
-    this.store.dispatch.services2.setSingle({ qualifier, data });
+    this.store.dispatch.services.setSingle({ qualifier, data });
   }
 
   getHooked(qualifier: Query.Qualifier<"Service">): Data {
     return useStoreState((state) => {
       return this.enforce(
-        state.services2.byNameAndEnv[this.keyMaker.make(qualifier)]
+        state.services.byNameAndEnv[this.keyMaker.make(qualifier)]
       );
     }, isEqual);
   }
@@ -29,7 +29,7 @@ export class ServiceStateHelper implements StateHelper<"Service"> {
 
   getOnce(id: Query.Qualifier<"Service">): Data {
     return this.enforce(
-      this.store.getState().services2.byNameAndEnv[this.keyMaker.make(id)]
+      this.store.getState().services.byNameAndEnv[this.keyMaker.make(id)]
     );
   }
 }

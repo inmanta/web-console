@@ -1,14 +1,13 @@
 import { thunk, Thunk, Action, action } from "easy-peasy";
 import { EnvironmentsSlice, environmentsSlice } from "./EnvironmentsSlice";
 import { ProjectsSlice, projectsSlice } from "./ProjectsSlice";
-import { ServicesSlice, servicesSlice } from "./ServicesSlice";
+import { servicesSlice, ServicesSlice } from "./ServicesSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 import { ProjectModel } from "@/Core";
 import {
   serviceInstancesSlice,
   ServiceInstancesSlice,
 } from "./ServiceInstancesSlice";
-import { servicesSlice2, ServicesSlice2 } from "./ServicesSlice2";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
 
 export interface StoreModel {
@@ -21,7 +20,6 @@ export interface StoreModel {
   resources: ResourcesSlice;
   events: EventsSlice;
   services: ServicesSlice;
-  services2: ServicesSlice2;
   projects: ProjectsSlice;
   serviceInstances: ServiceInstancesSlice;
 }
@@ -84,5 +82,4 @@ export const storeModel: StoreModel = {
   }),
   serviceInstances: serviceInstancesSlice,
   services: servicesSlice,
-  services2: servicesSlice2,
 };

@@ -47,7 +47,7 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
         return instances.map((instance) => {
           const instanceState = instance.state;
           const service =
-            storeState.services2.byNameAndEnv[
+            storeState.services.byNameAndEnv[
               injections.serviceKeyMaker.make(qualifier)
             ];
           if (!service || service.kind !== "Success") {
