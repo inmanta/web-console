@@ -1,4 +1,4 @@
-# Release 1.5.0 (?)
+# Release 1.5.0 (2021-02-26)
 
 - Add clipboard copy funcionality for the full service instance id (#135)
 - Fix validation error for optional boolean inputs (#140)
