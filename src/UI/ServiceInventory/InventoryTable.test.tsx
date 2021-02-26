@@ -29,7 +29,7 @@ test("InventoryTable can be expanded", async () => {
             { resource_id: "resource_id_1", resource_state: "resource_state" },
           ],
         }),
-        new DummyStateHelper()
+        new DummyStateHelper<"Resources">()
       ),
       new StaticSubscriptionController()
     ),

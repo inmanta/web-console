@@ -12,9 +12,9 @@ type Data<K extends Query.Kind> = RemoteData.Type<
  *
  * The matches method dictates what kind of query this helper supports.
  */
-export interface HookHelper<Q extends Query.Type = Query.Type> {
-  useSubscription(query: Q): void;
-  useData(query: Q): Data<typeof query.kind>;
-  trigger(query: Q): void;
+export interface HookHelper<K extends Query.Kind> {
+  useSubscription(qualifier: Query.Qualifier<K>): void;
+  useData(qualifier: Query.Qualifier<K>): Data<K>;
+  trigger(qualifier: Query.Qualifier<K>): void;
   matches(query: Query.Type): boolean;
 }

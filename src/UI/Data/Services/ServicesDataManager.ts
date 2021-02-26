@@ -1,28 +1,28 @@
 import { DataManager, RemoteData, Query, StateHelper, Fetcher } from "@/Core";
 
-type Data = RemoteData.Type<Query.Error<"Service">, Query.Data<"Service">>;
+type Data = RemoteData.Type<Query.Error<"Services">, Query.Data<"Services">>;
 
-export class ServiceDataManager implements DataManager<"Service"> {
+export class ServicesDataManager implements DataManager<"Services"> {
   constructor(
-    private readonly fetcher: Fetcher<"Service">,
-    private readonly stateHelper: StateHelper<"Service">
+    private readonly fetcher: Fetcher<"Services">,
+    private readonly stateHelper: StateHelper<"Services">
   ) {}
 
-  initialize(qualifier: Query.Qualifier<"Service">): void {
+  initialize(qualifier: Query.Qualifier<"Services">): void {
     const value = this.stateHelper.getOnce(qualifier);
     if (RemoteData.isNotAsked(value)) {
       this.stateHelper.set(qualifier, RemoteData.loading());
     }
   }
 
-  async update(qualifier: Query.Qualifier<"Service">): Promise<void> {
+  async update(qualifier: Query.Qualifier<"Services">): Promise<void> {
     this.stateHelper.set(
       qualifier,
       RemoteData.fromEither(await this.fetcher.getData(qualifier))
     );
   }
 
-  get(qualifier: Query.Qualifier<"Service">): Data {
+  get(qualifier: Query.Qualifier<"Services">): Data {
     return this.stateHelper.getHooked(qualifier);
   }
 }

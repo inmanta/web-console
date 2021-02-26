@@ -1,4 +1,5 @@
 import { InstanceEvent } from "./EventModel";
+import { EnvironmentIdentifier } from "./ProjectModel";
 import { ResourceModel } from "./ResourceModel";
 import {
   ServiceInstanceIdentifier,
@@ -8,11 +9,27 @@ import {
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 
 type Query =
+  | ServicesQuery
   | ServiceQuery
   | ServiceInstancesQuery
   | ResourcesQuery
   | InstanceEventsQuery;
 export type Type = Query;
+
+/**
+ * The ServicesQuery describes all services beloning to an environment.
+ */
+export interface ServicesQuery {
+  kind: "Services";
+  qualifier: EnvironmentIdentifier;
+}
+
+interface ServicesManifest {
+  error: string;
+  apiResponse: ServiceModel[];
+  data: ServiceModel[];
+  query: ServicesQuery;
+}
 
 /**
  * The ServiceQuery describes a service. The qualifier identifies 1
@@ -66,7 +83,9 @@ interface ServiceInstancesManifest {
   query: ServiceInstancesQuery;
 }
 
-/** The events query describes events belonging to one specific service instance */
+/**
+ * The events query describes events belonging to one specific service instance
+ */
 export interface InstanceEventsQuery {
   kind: "Events";
   qualifier: Pick<
@@ -87,18 +106,19 @@ interface EventsManifest {
  * types related to all the sub queries.
  */
 interface Manifest {
+  Services: ServicesManifest;
   Service: ServiceManifest;
   ServiceInstances: ServiceInstancesManifest;
   Resources: ResourcesManifest;
   Events: EventsManifest;
 }
 
+/**
+ * Query Utilities
+ */
 export type Kind = Query["kind"];
-
 export type Error<K extends Kind> = Manifest[K]["error"];
-
 export type Data<K extends Kind> = Manifest[K]["data"];
-
 export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
-
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
+export type Qualifier<K extends Kind> = SubQuery<K>["qualifier"];

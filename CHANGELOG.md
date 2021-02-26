@@ -15,6 +15,7 @@
 - Add auto-updating of service instances to ServiceInventory (#225)
 - Add separate create instance page (#181)
 - Add events tab (#183)
+- Add auto-updating of services to ServiceCatalog (#227)
 
 # Release 1.4.0 (2020-12-17)
 

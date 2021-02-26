@@ -1,63 +1,71 @@
-import { Computed, Action, Thunk, computed, action, thunk } from "easy-peasy";
-import { ServiceModel } from "@/Core";
-import * as _ from "lodash";
+import { Action, action } from "easy-peasy";
+import {
+  EnvironmentIdentifier,
+  RemoteData,
+  ServiceIdentifier,
+  ServiceModel,
+} from "@/Core";
+import { injections } from "@/UI/Store/Injections";
 
+/**
+ * The ServicesSlice stores Services.
+ */
 export interface ServicesSlice {
-  allIds: string[];
-  addServices: Action<ServicesSlice, ServiceModel[]>;
-  addSingleService: Action<ServicesSlice, ServiceModel>;
-  updateServices: Thunk<ServicesSlice, ServiceModel[]>;
-  byId: Record<string, ServiceModel>;
-  getAllServices: Computed<ServicesSlice, ServiceModel[]>;
-  getServicesOfEnvironment: Computed<
+  /**
+   * Stores the full list of service names by their environment.
+   */
+  listByEnv: Record<string, RemoteData.Type<string, ServiceModel[]>>;
+  /**
+   * Sets a list of service names linked to an environment.
+   * It also stores the services in the servicesByNameAndEnv record.
+   */
+  setList: Action<
     ServicesSlice,
-    (environmentId: string) => ServiceModel[]
+    {
+      qualifier: EnvironmentIdentifier;
+      data: RemoteData.Type<string, ServiceModel[]>;
+    }
   >;
-  removeSingleService: Action<ServicesSlice, string>;
+  /**
+   * Stores a single service by its name and environment.
+   */
+  byNameAndEnv: Record<string, RemoteData.Type<string, ServiceModel>>;
+  /**
+   * Sets a single service linked to an environment and service name.
+   * This should not add services to the namesByEnv record
+   * because we don't have the full list.
+   */
+  setSingle: Action<
+    ServicesSlice,
+    {
+      qualifier: ServiceIdentifier;
+      data: RemoteData.Type<string, ServiceModel>;
+    }
+  >;
 }
 
 export const servicesSlice: ServicesSlice = {
-  addServices: action((state, payload) => {
-    state.allIds = [];
-    state.byId = {};
-    payload.map((service) => {
-      state.byId[service.name] = service;
-      if (state.allIds.indexOf(service.name) === -1) {
-        state.allIds.push(service.name);
-      }
+  listByEnv: {},
+  setList: action(({ listByEnv, byNameAndEnv }, { qualifier, data }) => {
+    const environment = qualifier.id;
+    listByEnv[environment] = data;
+    if (!RemoteData.isSuccess(data)) return;
+    const { value: services } = data;
+    const toDelete = Object.keys(byNameAndEnv).filter((key) =>
+      injections.serviceKeyMaker.matches({ environment, name: "" }, key)
+    );
+    toDelete.forEach((key) => delete byNameAndEnv[key]);
+    services.forEach((service) => {
+      const key = injections.serviceKeyMaker.make({
+        environment,
+        name: service.name,
+      });
+      byNameAndEnv[key] = RemoteData.success(service);
     });
   }),
-  addSingleService: action((state, service) => {
-    if (state.allIds.indexOf(service.name) === -1) {
-      state.allIds.push(service.name);
-      state.byId[service.name] = service;
-    }
-  }),
-  allIds: [],
-  byId: {},
-  getAllServices: computed((state) => {
-    return Object.values(state.byId);
-  }),
-  getServicesOfEnvironment: computed((state) => (environmentId) => {
-    return Object.values(state.byId).filter(
-      (service) => service.environment === environmentId
-    );
-  }),
-  removeSingleService: action((state, serviceName) => {
-    const indexOfId = state.allIds.indexOf(serviceName);
-    if (indexOfId > -1) {
-      state.allIds.splice(indexOfId, 1);
-      delete state.byId[serviceName];
-    }
-  }),
-  updateServices: thunk((actions, payload, { getState }) => {
-    if (
-      !_.isEqual(
-        _.sortBy(getState().getAllServices, "name"),
-        _.sortBy(payload, "name")
-      )
-    ) {
-      actions.addServices(payload);
-    }
+  byNameAndEnv: {},
+  setSingle: action((state, payload) => {
+    state.byNameAndEnv[injections.serviceKeyMaker.make(payload.qualifier)] =
+      payload.data;
   }),
 };

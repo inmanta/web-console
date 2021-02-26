@@ -143,5 +143,5 @@ test("ResourcesView fetches resources for new instance after instance update", a
   ).toBeInTheDocument();
 
   expect(resourcesFetcher.getInvocations().length).toEqual(2);
-  expect(resourcesFetcher.getInvocations()[1].qualifier.version).toEqual(4);
+  expect(resourcesFetcher.getInvocations()[1].version).toEqual(4);
 });

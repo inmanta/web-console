@@ -28,7 +28,7 @@ export const ResourcesView: React.FC<Props> = ({ qualifier }) => {
     notAsked: () => null,
     loading: () => (
       <FillerResourceTable
-        filler={<LoadingFiller />}
+        filler={<LoadingFiller delay={500} />}
         aria-label="ResourceTable-Loading"
       />
     ),

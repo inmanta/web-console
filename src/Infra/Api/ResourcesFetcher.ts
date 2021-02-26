@@ -9,9 +9,9 @@ export class ResourcesFetcher implements Fetcher<"Resources"> {
   }
 
   async getData(
-    query: Query.ResourcesQuery
+    qualifier: Query.Qualifier<"Resources">
   ): Promise<Either.Type<string, ResourceModel[]>> {
-    const { id, version, environment, service_entity } = query.qualifier;
+    const { id, version, environment, service_entity } = qualifier;
     return this.baseApiHelper.get(
       this.getUrl(service_entity, id, version),
       environment

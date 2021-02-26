@@ -8,39 +8,37 @@ import {
 } from "@/Core";
 import { useEffect } from "react";
 
-export class EventsHookHelper implements HookHelper<Query.InstanceEventsQuery> {
+export class EventsHookHelper implements HookHelper<"Events"> {
   constructor(
-    private readonly dataManager: DataManager<
-      RemoteData.Type<string, InstanceEvent[]>
-    >,
+    private readonly dataManager: DataManager<"Events">,
     private readonly subscriptionController: SubscriptionController
   ) {}
 
-  useSubscription(query: Query.InstanceEventsQuery): void {
+  useSubscription(qualifier: Query.Qualifier<"Events">): void {
     const handler = async () => {
-      this.dataManager.update(query);
+      this.dataManager.update(qualifier);
     };
 
     useEffect(() => {
-      this.dataManager.initialize(query.qualifier.id);
-      this.subscriptionController.subscribeTo(query.qualifier.id, handler);
+      this.dataManager.initialize(qualifier);
+      this.subscriptionController.subscribeTo(qualifier.id, handler);
       return () => {
-        this.subscriptionController.unsubscribeFrom(query.qualifier.id);
+        this.subscriptionController.unsubscribeFrom(qualifier.id);
       };
-    }, [query.qualifier.id, query.qualifier.service_entity]);
+    }, [qualifier.id, qualifier.service_entity]);
   }
 
   useData(
-    query: Query.InstanceEventsQuery
+    qualifier: Query.Qualifier<"Events">
   ): RemoteData.Type<string, InstanceEvent[]> {
-    return this.dataManager.get(query.qualifier.id);
+    return this.dataManager.get(qualifier);
   }
 
-  trigger(query: Query.InstanceEventsQuery): void {
-    this.subscriptionController.trigger(query.qualifier.id);
+  trigger(qualifier: Query.Qualifier<"Events">): void {
+    this.subscriptionController.trigger(qualifier.id);
   }
 
-  matches(query: Query.InstanceEventsQuery): boolean {
+  matches(query: Query.SubQuery<"Events">): boolean {
     return query.kind === "Events";
   }
 }

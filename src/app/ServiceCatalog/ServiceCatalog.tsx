@@ -1,60 +1,93 @@
-import * as React from "react";
-import { PageSection, Alert } from "@patternfly/react-core";
+import React, { useContext } from "react";
+import { PageSection } from "@patternfly/react-core";
 import { CatalogDataList } from "./CatalogDataList";
-import { useStoreState, useStoreDispatch } from "@/UI/Store";
-import { useInterval } from "@app/Hooks/UseInterval";
-import { fetchInmantaApi } from "../utils/fetchInmantaApi";
+import { useStoreState } from "@/UI/Store";
 import { useKeycloak } from "react-keycloak";
+import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import { words } from "@/UI/words";
+import { ServicesContext } from "@/UI";
+import { Query, RemoteData, ServiceModel } from "@/Core";
 
-const ServiceCatalog: React.FC = () => {
-  const serviceCatalogUrl = "/lsm/v1/service_catalog";
-  const store = useStoreState((store) => store);
-  const storeDispatch = useStoreDispatch();
-  const [errorMessage, setErrorMessage] = React.useState("");
-  const environmentId = store.environments.getSelectedEnvironment.id
-    ? store.environments.getSelectedEnvironment.id
-    : "";
-  const servicesOfEnvironment = store.services.getServicesOfEnvironment(
-    environmentId
+export const ServiceCatalogWithProvider: React.FC = () => {
+  const environmentId = useStoreState(
+    (store) => store.environments.getSelectedEnvironment.id
   );
-  const dispatch = (data) => storeDispatch.services.updateServices(data);
+
+  return environmentId ? (
+    <ServiceCatalog environmentId={environmentId} />
+  ) : (
+    <PageSection
+      className={"horizontally-scrollable"}
+      aria-label="ServiceCatalog-Failed"
+    >
+      <ErrorView error={words("error.environment.missing")} delay={1000} />
+    </PageSection>
+  );
+};
+
+interface Props {
+  environmentId: string;
+}
+
+export const ServiceCatalog: React.FC<Props> = ({ environmentId }) => {
+  const { dataProvider } = useContext(ServicesContext);
+  const query: Query.SubQuery<"Services"> = {
+    kind: "Services",
+    qualifier: { id: environmentId },
+  };
+  dataProvider.useSubscription(query);
+  const data = dataProvider.useData<"Services">(query);
+
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
-  const dispatchDelete = (data) => {
-    const urlParts = data.urlEndpoint.split("/");
-    const serviceName = urlParts[urlParts.length - 1];
-    storeDispatch.services.removeSingleService(serviceName);
+  const dispatchDelete = () => {
+    dataProvider.trigger(query);
   };
   let keycloak;
   if (shouldUseAuth) {
     // The value will be always true or always false during one session
     [keycloak] = useKeycloak();
   }
-  const requestParams = {
-    urlEndpoint: serviceCatalogUrl,
-    dispatch,
-    isEnvironmentIdRequired: true,
-    environmentId,
-    setErrorMessage,
-    keycloak,
-  };
-  React.useEffect(() => {
-    fetchInmantaApi(requestParams);
-  }, [dispatch, servicesOfEnvironment, requestParams]);
-  useInterval(async () => await fetchInmantaApi(requestParams), 5000);
 
-  return (
-    <PageSection className="horizontally-scrollable">
-      {errorMessage && <Alert variant="danger" title={errorMessage} />}
-      <CatalogDataList
-        services={servicesOfEnvironment}
-        environmentId={environmentId}
-        serviceCatalogUrl={serviceCatalogUrl}
-        keycloak={keycloak}
-        dispatch={dispatchDelete}
-      />
-    </PageSection>
-  );
+  return RemoteData.fold<string, ServiceModel[], JSX.Element | null>({
+    notAsked: () => null,
+    loading: () => (
+      <PageSection
+        className="horizontally-scrollable"
+        aria-label="ServiceCatalog-Loading"
+      >
+        <LoadingView delay={500} />
+      </PageSection>
+    ),
+    failed: (error) => (
+      <PageSection
+        className="horizontally-scrollable"
+        aria-label="ServiceCatalog-Failed"
+      >
+        <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+      </PageSection>
+    ),
+    success: (services) =>
+      services.length <= 0 ? (
+        <PageSection
+          className="horizontally-scrollable"
+          aria-label="ServiceCatalog-Empty"
+        >
+          <EmptyView message={words("catalog.empty.message")} />
+        </PageSection>
+      ) : (
+        <PageSection
+          className="horizontally-scrollable"
+          aria-label="ServiceCatalog-Success"
+        >
+          <CatalogDataList
+            services={services}
+            environmentId={environmentId}
+            serviceCatalogUrl={"/lsm/v1/service_catalog"}
+            keycloak={keycloak}
+            dispatch={dispatchDelete}
+          />
+        </PageSection>
+      ),
+  })(data);
 };
-
-export { ServiceCatalog };

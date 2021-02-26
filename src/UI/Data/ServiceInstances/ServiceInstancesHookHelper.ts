@@ -9,39 +9,37 @@ import {
 import { useEffect } from "react";
 
 export class ServiceInstancesHookHelper
-  implements HookHelper<Query.ServiceInstancesQuery> {
+  implements HookHelper<"ServiceInstances"> {
   constructor(
-    private readonly dataManager: DataManager<
-      RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>
-    >,
+    private readonly dataManager: DataManager<"ServiceInstances">,
     private readonly subscriptionController: SubscriptionController
   ) {}
 
-  useSubscription(query: Query.ServiceInstancesQuery): void {
+  useSubscription(qualifier: Query.Qualifier<"ServiceInstances">): void {
     const handler = async () => {
-      this.dataManager.update(query);
+      this.dataManager.update(qualifier);
     };
 
     useEffect(() => {
-      this.dataManager.initialize(query.qualifier.name);
-      this.subscriptionController.subscribeTo(query.qualifier.name, handler);
+      this.dataManager.initialize(qualifier);
+      this.subscriptionController.subscribeTo(qualifier.name, handler);
       return () => {
-        this.subscriptionController.unsubscribeFrom(query.qualifier.name);
+        this.subscriptionController.unsubscribeFrom(qualifier.name);
       };
-    }, [query.qualifier.name]);
+    }, [qualifier.name]);
   }
 
   useData(
-    query: Query.ServiceInstancesQuery
+    qualifier: Query.Qualifier<"ServiceInstances">
   ): RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]> {
-    return this.dataManager.get(query.qualifier.name);
+    return this.dataManager.get(qualifier);
   }
 
-  trigger(query: Query.ServiceInstancesQuery): void {
-    this.subscriptionController.trigger(query.qualifier.name);
+  trigger(qualifier: Query.Qualifier<"ServiceInstances">): void {
+    this.subscriptionController.trigger(qualifier.name);
   }
 
-  matches(query: Query.ServiceInstancesQuery): boolean {
+  matches(query: Query.SubQuery<"ServiceInstances">): boolean {
     return query.kind === "ServiceInstances";
   }
 }

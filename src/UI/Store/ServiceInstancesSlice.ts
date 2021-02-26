@@ -1,15 +1,17 @@
 import { Action, action, computed, Computed } from "easy-peasy";
 import {
   RemoteData,
+  ServiceIdentifier,
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
 } from "@/Core";
-import { StoreModel } from "./Store";
+import { StoreModel } from "@/UI/Store/Store";
+import { injections } from "@/UI/Store/Injections";
 
 /**
  * The ServiceInstancesSlice stores ServiceInstances.
  * ServicesInstances belong to a service, so they are stored by
- * their service name.
+ * their service name. So byId means by ServiceName.
  */
 export interface ServiceInstancesSlice {
   byId: Record<string, RemoteData.Type<string, ServiceInstanceModel[]>>;
@@ -20,7 +22,7 @@ export interface ServiceInstancesSlice {
   instancesWithTargetStates: Computed<
     ServiceInstancesSlice,
     (
-      name: string
+      qualifier: ServiceIdentifier
     ) => RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>,
     StoreModel
   >;
@@ -33,8 +35,8 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
   }),
   instancesWithTargetStates: computed(
     [(state) => state.byId, (state, storeState) => storeState],
-    (byId, storeState) => (name) => {
-      const data = byId[name];
+    (byId, storeState) => (qualifier) => {
+      const data = byId[qualifier.name];
       if (typeof data === "undefined") return RemoteData.loading();
 
       return RemoteData.mapSuccess<
@@ -44,7 +46,10 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
       >((instances) => {
         return instances.map((instance) => {
           const instanceState = instance.state;
-          const service = storeState.services2.byId[name];
+          const service =
+            storeState.services.byNameAndEnv[
+              injections.serviceKeyMaker.make(qualifier)
+            ];
           if (!service || service.kind !== "Success") {
             return { ...instance, instanceSetStateTargets: [] };
           }

@@ -1,17 +1,17 @@
-import { InstanceEvent, RemoteData, StateHelper } from "@/Core";
+import { InstanceEvent, Query, RemoteData, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<string, InstanceEvent[]>;
 
-export class EventsStateHelper implements StateHelper<string, InstanceEvent[]> {
+export class EventsStateHelper implements StateHelper<"Events"> {
   constructor(private readonly store: Store) {}
 
-  set(id: string, value: Data): void {
+  set({ id }: Query.Qualifier<"Events">, value: Data): void {
     this.store.dispatch.events.setData({ id, value });
   }
 
-  getHooked(id: string): Data {
+  getHooked({ id }: Query.Qualifier<"Events">): Data {
     return useStoreState((state) => {
       return this.enforce(state.events.byId[id]);
     }, isEqual);
@@ -22,7 +22,7 @@ export class EventsStateHelper implements StateHelper<string, InstanceEvent[]> {
     return value;
   }
 
-  getOnce(id: string): Data {
+  getOnce({ id }: Query.Qualifier<"Events">): Data {
     return this.enforce(this.store.getState().events.byId[id]);
   }
 }

@@ -5,3 +5,4 @@ export * from "./Service";
 export * from "./ServiceInstances";
 export * from "./Resources";
 export * from "./Events";
+export * from "./Services";

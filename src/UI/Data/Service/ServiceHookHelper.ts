@@ -4,37 +4,40 @@ import {
   DataManager,
   Query,
   HookHelper,
+  KeyMaker,
 } from "@/Core";
 import { useEffect } from "react";
 
 type Data = RemoteData.Type<Query.Error<"Service">, Query.Data<"Service">>;
 
-export class ServiceHookHelper implements HookHelper<Query.ServiceQuery> {
+export class ServiceHookHelper implements HookHelper<"Service"> {
   constructor(
-    private readonly dataManager: DataManager<Data>,
-    private readonly subscriptionController: SubscriptionController
+    private readonly dataManager: DataManager<"Service">,
+    private readonly subscriptionController: SubscriptionController,
+    private readonly keyMaker: KeyMaker<Query.Qualifier<"Service">>
   ) {}
 
-  useSubscription(query: Query.ServiceQuery): void {
+  useSubscription(qualifier: Query.Qualifier<"Service">): void {
     const handler = async () => {
-      this.dataManager.update(query);
+      this.dataManager.update(qualifier);
     };
 
     useEffect(() => {
-      this.dataManager.initialize(query.qualifier.name);
-      this.subscriptionController.subscribeTo(query.qualifier.name, handler);
+      const key = this.keyMaker.make(qualifier);
+      this.dataManager.initialize(qualifier);
+      this.subscriptionController.subscribeTo(key, handler);
       return () => {
-        this.subscriptionController.unsubscribeFrom(query.qualifier.name);
+        this.subscriptionController.unsubscribeFrom(key);
       };
-    }, [query.qualifier.name]);
+    }, [qualifier.name, qualifier.environment]);
   }
 
-  useData(query: Query.ServiceQuery): Data {
-    return this.dataManager.get(query.qualifier.name);
+  useData(qualifier: Query.Qualifier<"Service">): Data {
+    return this.dataManager.get(qualifier);
   }
 
-  trigger(query: Query.ServiceQuery): void {
-    this.subscriptionController.trigger(query.qualifier.name);
+  trigger(qualifier: Query.Qualifier<"Service">): void {
+    this.subscriptionController.trigger(this.keyMaker.make(qualifier));
   }
 
   matches(query: Query.ServiceQuery): boolean {

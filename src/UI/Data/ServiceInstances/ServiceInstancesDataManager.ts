@@ -5,39 +5,33 @@ import {
   Query,
   StateHelper,
   Fetcher,
-  ServiceInstanceModel,
 } from "@/Core";
 import { Type } from "@/Core/Language/RemoteData";
 
 export class ServiceInstancesDataManager
-  implements
-    DataManager<
-      RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>
-    > {
+  implements DataManager<"ServiceInstances"> {
   constructor(
     private readonly fetcher: Fetcher<"ServiceInstances">,
-    private readonly stateHelper: StateHelper<
-      string,
-      ServiceInstanceModelWithTargetStates[],
-      ServiceInstanceModel[]
-    >
+    private readonly stateHelper: StateHelper<"ServiceInstances">
   ) {}
 
-  initialize(id: string): void {
-    const value = this.stateHelper.getOnce(id);
+  initialize(qualifier: Query.Qualifier<"ServiceInstances">): void {
+    const value = this.stateHelper.getOnce(qualifier);
     if (RemoteData.isNotAsked(value)) {
-      this.stateHelper.set(id, RemoteData.loading());
+      this.stateHelper.set(qualifier, RemoteData.loading());
     }
   }
 
-  async update(query: Query.ServiceInstancesQuery): Promise<void> {
+  async update(qualifier: Query.Qualifier<"ServiceInstances">): Promise<void> {
     this.stateHelper.set(
-      query.qualifier.name,
-      RemoteData.fromEither(await this.fetcher.getData(query))
+      qualifier,
+      RemoteData.fromEither(await this.fetcher.getData(qualifier))
     );
   }
 
-  get(id: string): Type<string, ServiceInstanceModelWithTargetStates[]> {
-    return this.stateHelper.getHooked(id);
+  get(
+    qualifier: Query.Qualifier<"ServiceInstances">
+  ): Type<string, ServiceInstanceModelWithTargetStates[]> {
+    return this.stateHelper.getHooked(qualifier);
   }
 }

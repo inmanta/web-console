@@ -11,11 +11,6 @@ import {
   ToolbarContent,
   AlertGroup,
   Button,
-  EmptyState,
-  Spinner,
-  Title,
-  EmptyStateIcon,
-  EmptyStateBody,
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { useStoreState } from "@/UI/Store";
@@ -23,13 +18,10 @@ import { InventoryTable } from "@/UI/ServiceInventory";
 import { AttributeModel, Query, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
-import {
-  ExclamationCircleIcon,
-  PlusIcon,
-  SearchIcon,
-} from "@patternfly/react-icons";
+import { PlusIcon } from "@patternfly/react-icons";
 import { ServicesContext } from "@/UI/ServicesContext";
 import { KeycloakInstance } from "keycloak-js";
+import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 
 const Wrapper: React.FC<{ "aria-label": string }> = ({
   children,
@@ -56,7 +48,9 @@ export const ServiceInventoryWithProvider: React.FunctionComponent<{
       environmentId={environmentId}
     />
   ) : (
-    <ErrorView error={words("error.environment.missing")} />
+    <Wrapper aria-label="ServiceInventory-Failed">
+      <ErrorView error={words("error.environment.missing")} delay={500} />
+    </Wrapper>
   );
 };
 
@@ -78,9 +72,15 @@ const ServiceProvider: React.FunctionComponent<{
     JSX.Element | null
   >({
     notAsked: () => null,
-    loading: () => <LoadingView />,
+    loading: () => (
+      <Wrapper aria-label="ServiceInventory-Loading">
+        <LoadingView delay={500} />
+      </Wrapper>
+    ),
     failed: (error) => (
-      <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+      <Wrapper aria-label="ServiceInventory-Failed">
+        <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+      </Wrapper>
     ),
     success: (service) => (
       <ServiceInventory
@@ -121,47 +121,58 @@ export const ServiceInventory: React.FunctionComponent<{
     JSX.Element | null
   >({
     notAsked: () => null,
-    loading: () => <LoadingView />,
+    loading: () => (
+      <Wrapper aria-label="ServiceInventory-Loading">
+        <LoadingView delay={500} />
+      </Wrapper>
+    ),
     failed: (error) => (
-      <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+      <Wrapper aria-label="ServiceInventory-Failed">
+        <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+      </Wrapper>
     ),
     success: (instances) => (
-      <Wrapper aria-label="ServiceInventory-Success">
-        <InventoryContext.Provider
-          value={{
-            attributes: service.attributes,
-            environmentId,
-            inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
-            setErrorMessage: setInstanceErrorMessage,
-            refresh: () => dataProvider.trigger(query),
-          }}
-        >
-          {instanceErrorMessage && (
-            <AlertGroup isToast={true}>
-              <Alert
-                variant="danger"
-                title={instanceErrorMessage}
-                actionClose={
-                  <AlertActionCloseButton
-                    data-cy="close-alert"
-                    onClose={() => setInstanceErrorMessage("")}
-                  />
-                }
-              />
-            </AlertGroup>
-          )}
-          <IntroView serviceName={serviceName} keycloak={keycloak} />
-          {instances.length > 0 ? (
+      <InventoryContext.Provider
+        value={{
+          attributes: service.attributes,
+          environmentId,
+          inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
+          setErrorMessage: setInstanceErrorMessage,
+          refresh: () => dataProvider.trigger(query),
+        }}
+      >
+        {instanceErrorMessage && (
+          <AlertGroup isToast={true}>
+            <Alert
+              variant="danger"
+              title={instanceErrorMessage}
+              actionClose={
+                <AlertActionCloseButton
+                  data-cy="close-alert"
+                  onClose={() => setInstanceErrorMessage("")}
+                />
+              }
+            />
+          </AlertGroup>
+        )}
+        {instances.length > 0 ? (
+          <Wrapper aria-label="ServiceInventory-Success">
+            <IntroView serviceName={serviceName} keycloak={keycloak} />
             <InventoryTable
               instances={instances}
               keycloak={keycloak}
               serviceEntity={service}
             />
-          ) : (
-            <EmptyView />
-          )}
-        </InventoryContext.Provider>
-      </Wrapper>
+          </Wrapper>
+        ) : (
+          <Wrapper aria-label="ServiceInventory-Empty">
+            <IntroView serviceName={serviceName} keycloak={keycloak} />
+            <EmptyView
+              message={words("inventory.empty.message")(serviceName)}
+            />
+          </Wrapper>
+        )}
+      </InventoryContext.Provider>
     ),
   })(data);
 };
@@ -193,47 +204,6 @@ const IntroView: React.FC<{
       </ToolbarContent>
     </Toolbar>
   </CardFooter>
-);
-
-const LoadingView: React.FC = () => (
-  <Wrapper aria-label="ServiceInventory-Loading">
-    <EmptyState>
-      <EmptyStateIcon variant="container" component={Spinner} />
-      <Title size="lg" headingLevel="h4">
-        {words("loading")}
-      </Title>
-    </EmptyState>
-  </Wrapper>
-);
-
-const ErrorView: React.FC<{ error: string; retry?: () => void }> = ({
-  error,
-  retry,
-}) => (
-  <Wrapper aria-label="ServiceInventory-Failed">
-    <EmptyState>
-      <EmptyStateIcon icon={ExclamationCircleIcon} />
-      <Title headingLevel="h4" size="lg">
-        {words("error")}
-      </Title>
-      <EmptyStateBody>{error}</EmptyStateBody>
-      <Button variant="primary" onClick={retry}>
-        {words("retry")}
-      </Button>
-    </EmptyState>
-  </Wrapper>
-);
-
-const EmptyView: React.FC = () => (
-  <Wrapper aria-label="ServiceInventory-Empty">
-    <EmptyState>
-      <EmptyStateIcon icon={SearchIcon} />
-      <Title size="lg" headingLevel="h4">
-        {words("inventory.empty.title")}
-      </Title>
-      <EmptyStateBody>{words("inventory.empty.body")}</EmptyStateBody>
-    </EmptyState>
-  </Wrapper>
 );
 
 export interface IInventoryContextData {

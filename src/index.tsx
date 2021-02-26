@@ -11,6 +11,7 @@ import {
   ResourcesFetcher,
   ServiceFetcher,
   ServiceInstancesFetcher,
+  ServicesFetcher,
 } from "@/Infra";
 import {
   DataProviderImpl,
@@ -18,6 +19,7 @@ import {
   LiveSubscriptionController,
   ServiceDataManager,
   ServiceHookHelper,
+  ServiceKeyMaker,
   ServiceStateHelper,
   ServiceInstancesDataManager,
   ServiceInstancesHookHelper,
@@ -28,8 +30,10 @@ import {
   EventsHookHelper,
   EventsDataManager,
   EventsStateHelper,
+  ServicesHookHelper,
+  ServicesDataManager,
+  ServicesStateHelper,
 } from "@/UI/Data";
-import {} from "@/UI/Data/Service";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -50,15 +54,24 @@ if (externalKeycloakConf) {
 }
 
 const storeInstance = getStoreInstance();
-
 const baseApiHelper = new BaseApiHelper(keycloak);
+const serviceKeyMaker = new ServiceKeyMaker();
 
-const resourcesHelper = new ResourcesHookHelper(
-  new ResourcesDataManager(
-    new ResourcesFetcher(baseApiHelper),
-    new ResourcesStateHelper(storeInstance)
+const servicesHelper = new ServicesHookHelper(
+  new ServicesDataManager(
+    new ServicesFetcher(baseApiHelper),
+    new ServicesStateHelper(storeInstance, serviceKeyMaker)
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
+);
+
+const serviceHelper = new ServiceHookHelper(
+  new ServiceDataManager(
+    new ServiceFetcher(baseApiHelper),
+    new ServiceStateHelper(storeInstance, serviceKeyMaker)
+  ),
+  new LiveSubscriptionController(5000, new IntervalsDictionary()),
+  serviceKeyMaker
 );
 
 const serviceInstancesHelper = new ServiceInstancesHookHelper(
@@ -69,10 +82,10 @@ const serviceInstancesHelper = new ServiceInstancesHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
-const serviceHelper = new ServiceHookHelper(
-  new ServiceDataManager(
-    new ServiceFetcher(baseApiHelper),
-    new ServiceStateHelper(storeInstance)
+const resourcesHelper = new ResourcesHookHelper(
+  new ResourcesDataManager(
+    new ResourcesFetcher(baseApiHelper),
+    new ResourcesStateHelper(storeInstance)
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
@@ -86,6 +99,7 @@ const eventsHelper = new EventsHookHelper(
 );
 
 const dataProvider = new DataProviderImpl([
+  servicesHelper,
   serviceHelper,
   serviceInstancesHelper,
   resourcesHelper,

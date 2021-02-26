@@ -1,5 +1,5 @@
 import { createStore, createTypedHooks, Store as _Store } from "easy-peasy";
-import { StoreModel, storeModel } from "./Store";
+import { StoreModel, storeModel } from "@/UI/Store/Store";
 
 export const {
   useStoreActions,
