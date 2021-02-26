@@ -19,9 +19,11 @@ const dict = {
   "attributesTab.active": "Active",
   "attributesTab.candidate": "Candidate",
   "attributesTab.rollback": "Rollback",
+  "catalog.empty.message": "No services found",
+  "empty.title": "There is nothing here",
   "inventory.intro": (service: string) => `Showing instances of ${service}`,
-  "inventory.empty.title": "No instances found",
-  "inventory.empty.body": "No instances found for this service.",
+  "inventory.empty.message": (service: string) =>
+    `No instances found for service ${service}`,
   "inventory.column.id": "Id",
   "inventory.column.state": "State",
   "inventory.column.attributesSummary": "Attributes",

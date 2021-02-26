@@ -167,7 +167,9 @@ export const ServiceInventory: React.FunctionComponent<{
         ) : (
           <Wrapper aria-label="ServiceInventory-Empty">
             <IntroView serviceName={serviceName} keycloak={keycloak} />
-            <EmptyView />
+            <EmptyView
+              message={words("inventory.empty.message")(serviceName)}
+            />
           </Wrapper>
         )}
       </InventoryContext.Provider>

@@ -6,14 +6,18 @@ import {
   EmptyStateIcon,
   Title,
 } from "@patternfly/react-core";
-import { SearchIcon } from "@patternfly/react-icons";
+import { ExclamationCircleIcon } from "@patternfly/react-icons";
 
-export const EmptyView: React.FC = () => (
+interface Props {
+  message: string;
+}
+
+export const EmptyView: React.FC<Props> = ({ message }) => (
   <EmptyState>
-    <EmptyStateIcon icon={SearchIcon} />
+    <EmptyStateIcon icon={ExclamationCircleIcon} />
     <Title size="lg" headingLevel="h4">
-      {words("inventory.empty.title")}
+      {words("empty.title")}
     </Title>
-    <EmptyStateBody>{words("inventory.empty.body")}</EmptyStateBody>
+    {message && <EmptyStateBody>{message}</EmptyStateBody>}
   </EmptyState>
 );

@@ -3,7 +3,7 @@ import { PageSection } from "@patternfly/react-core";
 import { CatalogDataList } from "./CatalogDataList";
 import { useStoreState } from "@/UI/Store";
 import { useKeycloak } from "react-keycloak";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ServicesContext } from "@/UI";
 import { Query, RemoteData, ServiceModel } from "@/Core";
@@ -25,9 +25,11 @@ export const ServiceCatalogWithProvider: React.FC = () => {
   );
 };
 
-export const ServiceCatalog: React.FC<{ environmentId: string }> = ({
-  environmentId,
-}) => {
+interface Props {
+  environmentId: string;
+}
+
+export const ServiceCatalog: React.FC<Props> = ({ environmentId }) => {
   const { dataProvider } = useContext(ServicesContext);
   const query: Query.SubQuery<"Services"> = {
     kind: "Services",
@@ -65,19 +67,27 @@ export const ServiceCatalog: React.FC<{ environmentId: string }> = ({
         <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
       </PageSection>
     ),
-    success: (services) => (
-      <PageSection
-        className="horizontally-scrollable"
-        aria-label="ServiceCatalog-Success"
-      >
-        <CatalogDataList
-          services={services}
-          environmentId={environmentId}
-          serviceCatalogUrl={"/lsm/v1/service_catalog"}
-          keycloak={keycloak}
-          dispatch={dispatchDelete}
-        />
-      </PageSection>
-    ),
+    success: (services) =>
+      services.length <= 0 ? (
+        <PageSection
+          className="horizontally-scrollable"
+          aria-label="ServiceCatalog-Empty"
+        >
+          <EmptyView message={words("catalog.empty.message")} />
+        </PageSection>
+      ) : (
+        <PageSection
+          className="horizontally-scrollable"
+          aria-label="ServiceCatalog-Success"
+        >
+          <CatalogDataList
+            services={services}
+            environmentId={environmentId}
+            serviceCatalogUrl={"/lsm/v1/service_catalog"}
+            keycloak={keycloak}
+            dispatch={dispatchDelete}
+          />
+        </PageSection>
+      ),
   })(data);
 };

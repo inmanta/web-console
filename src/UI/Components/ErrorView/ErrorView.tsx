@@ -6,7 +6,7 @@ import {
   EmptyStateIcon,
   Title,
 } from "@patternfly/react-core";
-import { ExclamationCircleIcon } from "@patternfly/react-icons";
+import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { Delayed } from "@/UI/Utils";
 
@@ -19,7 +19,7 @@ interface Props {
 export const ErrorView: React.FC<Props> = ({ error, retry, delay }) => (
   <Delayed delay={delay}>
     <EmptyState>
-      <EmptyStateIcon icon={ExclamationCircleIcon} />
+      <EmptyStateIcon icon={ExclamationTriangleIcon} />
       <Title headingLevel="h4" size="lg">
         {words("error")}
       </Title>
