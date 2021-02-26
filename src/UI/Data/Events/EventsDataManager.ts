@@ -2,27 +2,27 @@ import { DataManager, RemoteData, Query, StateHelper, Fetcher } from "@/Core";
 
 type Data = RemoteData.Type<Query.Error<"Events">, Query.Data<"Events">>;
 
-export class EventsDataManager implements DataManager<Data> {
+export class EventsDataManager implements DataManager<"Events"> {
   constructor(
     private readonly fetcher: Fetcher<"Events">,
-    private readonly stateHelper: StateHelper<string, Query.Data<"Events">>
+    private readonly stateHelper: StateHelper<"Events">
   ) {}
 
-  initialize(id: string): void {
-    const value = this.stateHelper.getOnce(id);
+  initialize(qualifier: Query.Qualifier<"Events">): void {
+    const value = this.stateHelper.getOnce(qualifier);
     if (RemoteData.isNotAsked(value)) {
-      this.stateHelper.set(id, RemoteData.loading());
+      this.stateHelper.set(qualifier, RemoteData.loading());
     }
   }
 
-  async update(query: Query.InstanceEventsQuery): Promise<void> {
+  async update(qualifier: Query.Qualifier<"Events">): Promise<void> {
     this.stateHelper.set(
-      query.qualifier.id,
-      RemoteData.fromEither(await this.fetcher.getData(query))
+      qualifier,
+      RemoteData.fromEither(await this.fetcher.getData(qualifier))
     );
   }
 
-  get(id: string): Data {
-    return this.stateHelper.getHooked(id);
+  get(qualifier: Query.Qualifier<"Events">): Data {
+    return this.stateHelper.getHooked(qualifier);
   }
 }

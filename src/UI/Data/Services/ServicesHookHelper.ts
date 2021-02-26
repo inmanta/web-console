@@ -37,7 +37,7 @@ export class ServicesHookHelper implements HookHelper<"Services"> {
     this.subscriptionController.trigger(qualifier.id);
   }
 
-  matches(query: Query.ServiceQuery): boolean {
-    return query.kind === "Service";
+  matches(query: Query.SubQuery<"Services">): boolean {
+    return query.kind === "Services";
   }
 }

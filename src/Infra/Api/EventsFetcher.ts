@@ -8,10 +8,11 @@ export class EventsFetcher implements Fetcher<"Events"> {
     return `${this.baseApiHelper.getBaseUrl()}/lsm/v1/service_inventory/${entity}/${id}/events`;
   }
 
-  async getData(
-    query: Query.InstanceEventsQuery
-  ): Promise<Either.Type<string, InstanceEvent[]>> {
-    const { id, environment, service_entity } = query.qualifier;
+  async getData({
+    id,
+    environment,
+    service_entity,
+  }: Query.Qualifier<"Events">): Promise<Either.Type<string, InstanceEvent[]>> {
     return this.baseApiHelper.get(this.getUrl(service_entity, id), environment);
   }
 }
