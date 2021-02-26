@@ -132,44 +132,45 @@ export const ServiceInventory: React.FunctionComponent<{
       </Wrapper>
     ),
     success: (instances) => (
-      <Wrapper aria-label="ServiceInventory-Success">
-        <InventoryContext.Provider
-          value={{
-            attributes: service.attributes,
-            environmentId,
-            inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
-            setErrorMessage: setInstanceErrorMessage,
-            refresh: () => dataProvider.trigger(query),
-          }}
-        >
-          {instanceErrorMessage && (
-            <AlertGroup isToast={true}>
-              <Alert
-                variant="danger"
-                title={instanceErrorMessage}
-                actionClose={
-                  <AlertActionCloseButton
-                    data-cy="close-alert"
-                    onClose={() => setInstanceErrorMessage("")}
-                  />
-                }
-              />
-            </AlertGroup>
-          )}
-          <IntroView serviceName={serviceName} keycloak={keycloak} />
-          {instances.length > 0 ? (
+      <InventoryContext.Provider
+        value={{
+          attributes: service.attributes,
+          environmentId,
+          inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
+          setErrorMessage: setInstanceErrorMessage,
+          refresh: () => dataProvider.trigger(query),
+        }}
+      >
+        {instanceErrorMessage && (
+          <AlertGroup isToast={true}>
+            <Alert
+              variant="danger"
+              title={instanceErrorMessage}
+              actionClose={
+                <AlertActionCloseButton
+                  data-cy="close-alert"
+                  onClose={() => setInstanceErrorMessage("")}
+                />
+              }
+            />
+          </AlertGroup>
+        )}
+        {instances.length > 0 ? (
+          <Wrapper aria-label="ServiceInventory-Success">
+            <IntroView serviceName={serviceName} keycloak={keycloak} />
             <InventoryTable
               instances={instances}
               keycloak={keycloak}
               serviceEntity={service}
             />
-          ) : (
-            <Wrapper aria-label="ServiceInventory-Empty">
-              <EmptyView />
-            </Wrapper>
-          )}
-        </InventoryContext.Provider>
-      </Wrapper>
+          </Wrapper>
+        ) : (
+          <Wrapper aria-label="ServiceInventory-Empty">
+            <IntroView serviceName={serviceName} keycloak={keycloak} />
+            <EmptyView />
+          </Wrapper>
+        )}
+      </InventoryContext.Provider>
     ),
   })(data);
 };
