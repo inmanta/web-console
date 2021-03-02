@@ -18,8 +18,7 @@ interface Props extends TabProps {
 export const ResourcesView: React.FC<Props> = ({ qualifier }) => {
   const { dataProvider } = useContext(ServicesContext);
 
-  dataProvider.useSubscription({ kind: "Resources", qualifier });
-  const data = dataProvider.useData<"Resources">({
+  const [data] = dataProvider.useContinuous<"Resources">({
     kind: "Resources",
     qualifier,
   });

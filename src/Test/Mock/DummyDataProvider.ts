@@ -1,13 +1,9 @@
-import { DataProvider, RemoteData, ResourceModel } from "@/Core";
+import { DataProvider, Query, RemoteData } from "@/Core";
+
+type Data = RemoteData.Type<Query.Error<Query.Kind>, Query.Data<Query.Kind>>;
 
 export class DummyDataProvider implements DataProvider {
-  useSubscription(): void {
-    throw new Error("DummyDataManager.useSubscription mocked");
-  }
-  useData(): RemoteData.Type<string, ResourceModel[]> {
+  useContinuous(): [Data, () => void] {
     throw new Error("DummyDataManager.useData mocked");
-  }
-  trigger(): void {
-    throw new Error("DummyDataManager.trigger mocked");
   }
 }

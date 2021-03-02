@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { InstanceLog, Query, RemoteData } from "@/Core";
+import { Query, RemoteData } from "@/Core";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 
@@ -17,18 +17,20 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
 }) => {
   const { dataProvider } = useContext(ServicesContext);
 
-  const query: Query.SubQuery<"InstanceLogs"> = {
+  const [data] = dataProvider.useContinuous<"InstanceLogs">({
     kind: "InstanceLogs",
     qualifier: {
       environment,
       id: instanceId,
       service_entity,
     },
-  };
-  dataProvider.useSubscription(query);
-  const data = dataProvider.useData<"InstanceLogs">(query);
+  });
 
-  return RemoteData.fold<string, InstanceLog[], JSX.Element | null>({
+  return RemoteData.fold<
+    Query.Error<"InstanceLogs">,
+    Query.Data<"InstanceLogs">,
+    JSX.Element | null
+  >({
     notAsked: () => null,
     loading: () => <LoadingView delay={500} />,
     failed: (error) => <ErrorView error={error} />,

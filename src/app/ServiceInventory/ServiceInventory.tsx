@@ -59,12 +59,11 @@ const ServiceProvider: React.FunctionComponent<{
   environmentId: string;
 }> = ({ serviceName, environmentId }) => {
   const { dataProvider } = useContext(ServicesContext);
-  const query: Query.ServiceQuery = {
+
+  const [data, retry] = dataProvider.useContinuous<"Service">({
     kind: "Service",
     qualifier: { name: serviceName, environment: environmentId },
-  };
-  dataProvider.useSubscription(query);
-  const data = dataProvider.useData<"Service">(query);
+  });
 
   return RemoteData.fold<
     Query.Error<"Service">,
@@ -79,7 +78,7 @@ const ServiceProvider: React.FunctionComponent<{
     ),
     failed: (error) => (
       <Wrapper aria-label="ServiceInventory-Failed">
-        <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+        <ErrorView error={error} retry={retry} />
       </Wrapper>
     ),
     success: (service) => (
@@ -108,12 +107,11 @@ export const ServiceInventory: React.FunctionComponent<{
   }
 
   const { dataProvider } = useContext(ServicesContext);
-  const query: Query.ServiceInstancesQuery = {
+
+  const [data, retry] = dataProvider.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
     qualifier: { name: serviceName, environment: environmentId || "" },
-  };
-  dataProvider.useSubscription(query);
-  const data = dataProvider.useData<"ServiceInstances">(query);
+  });
 
   return RemoteData.fold<
     Query.Error<"ServiceInstances">,
@@ -128,7 +126,7 @@ export const ServiceInventory: React.FunctionComponent<{
     ),
     failed: (error) => (
       <Wrapper aria-label="ServiceInventory-Failed">
-        <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+        <ErrorView error={error} retry={retry} />
       </Wrapper>
     ),
     success: (instances) => (
@@ -138,7 +136,7 @@ export const ServiceInventory: React.FunctionComponent<{
           environmentId,
           inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
           setErrorMessage: setInstanceErrorMessage,
-          refresh: () => dataProvider.trigger(query),
+          refresh: retry,
         }}
       >
         {instanceErrorMessage && (

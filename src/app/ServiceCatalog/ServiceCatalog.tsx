@@ -35,14 +35,11 @@ export const ServiceCatalog: React.FC<Props> = ({ environmentId }) => {
     kind: "Services",
     qualifier: { id: environmentId },
   };
-  dataProvider.useSubscription(query);
-  const data = dataProvider.useData<"Services">(query);
+  const [data, retry] = dataProvider.useContinuous<"Services">(query);
 
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
-  const dispatchDelete = () => {
-    dataProvider.trigger(query);
-  };
+
   let keycloak;
   if (shouldUseAuth) {
     // The value will be always true or always false during one session
@@ -64,7 +61,7 @@ export const ServiceCatalog: React.FC<Props> = ({ environmentId }) => {
         className="horizontally-scrollable"
         aria-label="ServiceCatalog-Failed"
       >
-        <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
+        <ErrorView error={error} retry={retry} />
       </PageSection>
     ),
     success: (services) =>
@@ -85,7 +82,7 @@ export const ServiceCatalog: React.FC<Props> = ({ environmentId }) => {
             environmentId={environmentId}
             serviceCatalogUrl={"/lsm/v1/service_catalog"}
             keycloak={keycloak}
-            dispatch={dispatchDelete}
+            dispatch={retry}
           />
         </PageSection>
       ),
