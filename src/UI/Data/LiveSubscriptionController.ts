@@ -21,7 +21,7 @@ export class LiveSubscriptionController implements SubscriptionController {
     this.intervals.drop(id);
   }
 
-  trigger(id: string): boolean {
+  refresh(id: string): boolean {
     const interval = this.intervals.get(id);
     if (Maybe.isNone(interval)) return false;
     this.unsubscribeFrom(id);

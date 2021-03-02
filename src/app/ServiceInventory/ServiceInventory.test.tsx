@@ -128,7 +128,7 @@ test("ResourcesView fetches resources for new instance after instance update", a
     screen.getByRole("cell", { name: "resource_id_a_1" })
   ).toBeInTheDocument();
 
-  serviceInstancesSubscriptionController.trigger(Service.A.name);
+  serviceInstancesSubscriptionController.refresh(Service.A.name);
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(

@@ -13,7 +13,7 @@ export class StaticSubscriptionController implements SubscriptionController {
     delete this.state[id];
   }
 
-  trigger(id: string): boolean {
+  refresh(id: string): boolean {
     const handler = this.state[id];
     if (typeof handler === "undefined") {
       throw new Error(`No handler found for id ${id}`);

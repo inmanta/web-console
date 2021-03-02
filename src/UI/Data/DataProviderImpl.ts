@@ -16,12 +16,21 @@ export class DataProviderImpl implements DataProvider {
     throw new Error(`Can't find HookHelper for query ${query.kind}`);
   }
 
+  useOnce(query: Query.Type): [Data<typeof query.kind>, () => void] {
+    const helper = this.getHelper(query);
+    helper.useOnce(query.qualifier);
+    return [
+      helper.useData(query.qualifier),
+      () => helper.refreshOnce(query.qualifier),
+    ];
+  }
+
   useContinuous(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getHelper(query);
     helper.useSubscription(query.qualifier);
     return [
       helper.useData(query.qualifier),
-      () => helper.trigger(query.qualifier),
+      () => helper.refreshSubscription(query.qualifier),
     ];
   }
 }

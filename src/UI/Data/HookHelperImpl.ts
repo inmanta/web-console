@@ -30,6 +30,17 @@ export class HookHelperImpl<Kind extends Query.Kind>
     private readonly kind: Kind
   ) {}
 
+  useOnce(qualifier: Query.Qualifier<Kind>): void {
+    useEffect(() => {
+      this.dataManager.initialize(qualifier);
+      this.dataManager.update(qualifier);
+    }, this.getDependencies(qualifier));
+  }
+
+  refreshOnce(qualifier: Query.Qualifier<Kind>): void {
+    this.dataManager.update(qualifier);
+  }
+
   useSubscription(qualifier: Query.Qualifier<Kind>): void {
     const handler = async () => {
       this.dataManager.update(qualifier);
@@ -51,8 +62,8 @@ export class HookHelperImpl<Kind extends Query.Kind>
     return this.dataManager.get(qualifier);
   }
 
-  trigger(qualifier: Query.Qualifier<Kind>): void {
-    this.subscriptionController.trigger(this.getUnique(qualifier));
+  refreshSubscription(qualifier: Query.Qualifier<Kind>): void {
+    this.subscriptionController.refresh(this.getUnique(qualifier));
   }
 
   matches(query: Query.SubQuery<Kind>): boolean {
