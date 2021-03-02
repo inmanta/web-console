@@ -7,12 +7,12 @@ export interface InstanceLog {
   service_entity: string;
   version: number;
   timestamp: string;
-  state: "creating";
+  state: string;
   candidate_attributes: InstanceAttributeModel | null;
   active_attributes: InstanceAttributeModel | null;
   rollback_attributes: InstanceAttributeModel | null;
   created_at: string;
   last_updated: string;
-  deleted: false;
+  deleted: boolean;
   events: InstanceEvent[];
 }
