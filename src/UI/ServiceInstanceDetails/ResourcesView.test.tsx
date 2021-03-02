@@ -7,8 +7,8 @@ import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
-  ResourcesDataManager,
   ResourcesHookHelper,
+  DataManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesView } from "./ResourcesView";
@@ -19,7 +19,10 @@ function setup() {
   const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new ResourcesDataManager(apiHelper, new ResourcesStateHelper(store)),
+      new DataManagerImpl<"Resources">(
+        apiHelper,
+        new ResourcesStateHelper(store)
+      ),
       subscriptionController
     ),
   ]);

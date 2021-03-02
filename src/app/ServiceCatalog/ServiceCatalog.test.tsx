@@ -6,8 +6,8 @@ import { Either } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataProviderImpl,
+  DataManagerImpl,
   ServicesHookHelper,
-  ServicesDataManager,
   ServicesStateHelper,
   ServiceKeyMaker,
 } from "@/UI/Data";
@@ -21,7 +21,7 @@ function setup() {
   const servicesFetcher = new DeferredFetcher<"Services">();
   const servicesSubscriptionController = new StaticSubscriptionController();
   const servicesHelper = new ServicesHookHelper(
-    new ServicesDataManager(
+    new DataManagerImpl<"Services">(
       servicesFetcher,
       new ServicesStateHelper(store, new ServiceKeyMaker())
     ),

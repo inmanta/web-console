@@ -11,7 +11,7 @@ import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
-  ResourcesDataManager,
+  DataManagerImpl,
   ResourcesHookHelper,
 } from "@/UI/Data";
 import { ResourcesView } from "./ResourcesView";
@@ -25,7 +25,7 @@ const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new ResourcesDataManager(
+      new DataManagerImpl<"Resources">(
         new InstantFetcher<"Resources">(outcome),
         new ResourcesStateHelper(store)
       ),

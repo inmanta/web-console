@@ -7,14 +7,14 @@ import {
   StaticSubscriptionController,
 } from "@/Test";
 import { EventsView } from "./EventsView";
-import { getStoreInstance } from "../Store";
-import { DataProviderImpl } from "../Data";
+import { getStoreInstance } from "@/UI/Store";
 import {
-  EventsDataManager,
+  DataProviderImpl,
+  DataManagerImpl,
   EventsHookHelper,
   EventsStateHelper,
-} from "../Data/Events";
-import { ServicesContext } from "../ServicesContext";
+} from "@/UI/Data";
+import { ServicesContext } from "@/UI/ServicesContext";
 import { StoreProvider } from "easy-peasy";
 
 export default {
@@ -26,7 +26,7 @@ const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new EventsHookHelper(
-      new EventsDataManager(
+      new DataManagerImpl<"Events">(
         new InstantFetcher<"Events">(outcome),
         new EventsStateHelper(store)
       ),

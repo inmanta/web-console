@@ -4,14 +4,14 @@ import { StoreProvider } from "easy-peasy";
 import { StaticSubscriptionController, DeferredFetcher } from "@/Test";
 import { Either } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { DataProviderImpl } from "@/UI/Data";
-import { getStoreInstance } from "@/UI/Store";
-import { EventsView } from "./EventsView";
 import {
-  EventsDataManager,
+  DataProviderImpl,
+  DataManagerImpl,
   EventsHookHelper,
   EventsStateHelper,
-} from "../Data/Events";
+} from "@/UI/Data";
+import { getStoreInstance } from "@/UI/Store";
+import { EventsView } from "./EventsView";
 
 function setup() {
   const store = getStoreInstance();
@@ -19,7 +19,7 @@ function setup() {
   const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
     new EventsHookHelper(
-      new EventsDataManager(apiHelper, new EventsStateHelper(store)),
+      new DataManagerImpl<"Events">(apiHelper, new EventsStateHelper(store)),
       subscriptionController
     ),
   ]);

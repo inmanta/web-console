@@ -10,7 +10,7 @@ import {
 import { getStoreInstance } from "@/UI/Store";
 import {
   DataProviderImpl,
-  ResourcesDataManager,
+  DataManagerImpl,
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
@@ -26,7 +26,7 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new ResourcesDataManager(
+      new DataManagerImpl<"Resources">(
         new InstantFetcher<"Resources">({ kind: "Success", data: [] }),
         new ResourcesStateHelper(store)
       ),

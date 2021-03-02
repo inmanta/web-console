@@ -12,11 +12,10 @@ import { Either } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataProviderImpl,
+  DataManagerImpl,
   ServiceInstancesHookHelper,
-  ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
   ResourcesHookHelper,
-  ResourcesDataManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -29,7 +28,7 @@ function setup() {
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
   const serviceInstancesSubscriptionController = new StaticSubscriptionController();
   const serviceInstancesHelper = new ServiceInstancesHookHelper(
-    new ServiceInstancesDataManager(
+    new DataManagerImpl<"ServiceInstances">(
       serviceInstancesFetcher,
       new ServiceInstancesStateHelper(store)
     ),
@@ -39,7 +38,10 @@ function setup() {
   const resourcesFetcher = new DeferredFetcher<"Resources">();
   const resourcesSubscriptionController = new StaticSubscriptionController();
   const resourcesHelper = new ResourcesHookHelper(
-    new ResourcesDataManager(resourcesFetcher, new ResourcesStateHelper(store)),
+    new DataManagerImpl<"Resources">(
+      resourcesFetcher,
+      new ResourcesStateHelper(store)
+    ),
     resourcesSubscriptionController
   );
 

@@ -4,11 +4,10 @@ import { Service, ServiceInstance, Resources, InstantFetcher } from "@/Test";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataProviderImpl,
+  DataManagerImpl,
   ServiceInstancesHookHelper,
-  ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
   ResourcesHookHelper,
-  ResourcesDataManager,
   ResourcesStateHelper,
   LiveSubscriptionController,
   IntervalsDictionary,
@@ -33,7 +32,7 @@ const serviceInstancesSubscriptionController = new LiveSubscriptionController(
   new IntervalsDictionary()
 );
 const serviceInstancesHelper = new ServiceInstancesHookHelper(
-  new ServiceInstancesDataManager(
+  new DataManagerImpl<"ServiceInstances">(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store)
   ),
@@ -50,7 +49,10 @@ const resourcesSubscriptionController = new LiveSubscriptionController(
   new IntervalsDictionary()
 );
 const resourcesHelper = new ResourcesHookHelper(
-  new ResourcesDataManager(resourcesFetcher, new ResourcesStateHelper(store)),
+  new DataManagerImpl<"Resources">(
+    resourcesFetcher,
+    new ResourcesStateHelper(store)
+  ),
   resourcesSubscriptionController
 );
 
