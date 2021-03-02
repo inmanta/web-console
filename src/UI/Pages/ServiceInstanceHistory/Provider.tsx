@@ -1,7 +1,9 @@
-import { useStoreState } from "@/UI/Store";
 import React from "react";
 import { useParams } from "react-router-dom";
+import { useStoreState } from "@/UI/Store";
+import { ErrorView } from "@/UI/Components";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
+import { words } from "@/UI/words";
 
 interface Params {
   serviceId: string;
@@ -21,6 +23,6 @@ export const Provider: React.FC = () => {
       env={environmentId}
     />
   ) : (
-    <div>no env</div>
+    <ErrorView error={words("error.environment.missing")} delay={500} />
   );
 };
