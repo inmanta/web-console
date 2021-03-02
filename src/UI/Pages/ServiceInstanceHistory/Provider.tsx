@@ -18,9 +18,9 @@ export const Provider: React.FC = () => {
 
   return environmentId ? (
     <ServiceInstanceHistory
-      serviceId={serviceId}
+      service_entity={serviceId}
       instanceId={instanceId}
-      env={environmentId}
+      environment={environmentId}
     />
   ) : (
     <ErrorView error={words("error.environment.missing")} delay={500} />
