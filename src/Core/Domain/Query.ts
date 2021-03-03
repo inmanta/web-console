@@ -3,9 +3,10 @@ import { InstanceLog } from "./InstanceLogModel";
 import { EnvironmentIdentifier } from "./ProjectModel";
 import { ResourceModel } from "./ResourceModel";
 import {
-  ServiceInstanceIdentifier,
+  VersionedServiceInstanceIdentifier,
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
+  ServiceInstanceIdentifier,
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 
@@ -57,7 +58,7 @@ interface ServiceManifest {
  */
 export interface ResourcesQuery {
   kind: "Resources";
-  qualifier: ServiceInstanceIdentifier;
+  qualifier: VersionedServiceInstanceIdentifier;
 }
 
 interface ResourcesManifest {
@@ -90,7 +91,7 @@ interface ServiceInstancesManifest {
  */
 export interface InstanceEventsQuery {
   kind: "Events";
-  qualifier: Omit<ServiceInstanceIdentifier, "version">;
+  qualifier: ServiceInstanceIdentifier;
 }
 
 interface EventsManifest {
@@ -105,7 +106,7 @@ interface EventsManifest {
  */
 export interface InstanceLogsQuery {
   kind: "InstanceLogs";
-  qualifier: Omit<ServiceInstanceIdentifier, "version">;
+  qualifier: ServiceInstanceIdentifier;
 }
 
 interface InstanceLogsManifest {
