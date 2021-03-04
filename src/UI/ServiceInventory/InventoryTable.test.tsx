@@ -13,7 +13,7 @@ import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
   DataProviderImpl,
-  ResourcesDataManager,
+  DataManagerImpl,
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
@@ -22,7 +22,7 @@ test("InventoryTable can be expanded", async () => {
   // Arrange
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new ResourcesDataManager(
+      new DataManagerImpl<"Resources">(
         new InstantFetcher<"Resources">({
           kind: "Success",
           data: [
@@ -52,7 +52,7 @@ test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new ResourcesDataManager(
+      new DataManagerImpl<"Resources">(
         new InstantFetcher<"Resources">({
           kind: "Success",
           data: [

@@ -5,14 +5,17 @@
 The auto-updating mechanism is based on queries, hooks and intervals.  
 A component subscribes to a query and then receives data through a state hook.
 
-Example:
+## Example
+
+The `useContinuous` custom hook registers a subscription for the provided query.  
+It then returns the data that is in the store now for that query.  
+It also returns a retry function which manually triggers the api call again.
 
 ```typescript
-// Register the subscription
-dataProvider.useSubscription({ kind: "Resources", qualifier });
-
-// Get the data that is in store now for this query
-const data = dataProvider.useData({ kind: "Resources", qualifier });
+const [data, retry] = dataProvider.useContinuous({
+  kind: "Resources",
+  qualifier,
+});
 ```
 
 ## Query

@@ -17,9 +17,7 @@ interface Props extends TabProps {
 
 export const EventsView: React.FC<Props> = ({ qualifier }) => {
   const { dataProvider } = useContext(ServicesContext);
-
-  dataProvider.useSubscription({ kind: "Events", qualifier });
-  const data = dataProvider.useData<"Events">({
+  const [data] = dataProvider.useContinuous<"Events">({
     kind: "Events",
     qualifier,
   });

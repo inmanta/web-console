@@ -6,6 +6,8 @@ type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Data<K>
 >;
 
+type Pair<K extends Query.Kind> = [Data<K>, () => void];
+
 /**
  * The DataProvider is responsible for providing data to
  * components. This is based on hooks so that the logic is
@@ -13,7 +15,6 @@ type Data<K extends Query.Kind> = RemoteData.Type<
  * based on a query.
  */
 export interface DataProvider {
-  useSubscription(query: Query.Type): void;
-  useData<Kind extends Query.Kind>(query: Query.SubQuery<Kind>): Data<Kind>;
-  trigger(query: Query.Type): void;
+  useContinuous<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
+  useOnce<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
 }

@@ -1,4 +1,4 @@
-import { Row, ServiceInstanceIdentifier } from "@/Core";
+import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import React, { useState } from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
@@ -31,7 +31,7 @@ interface Props {
   numberOfColumns: number;
   actions: React.ReactElement | null;
   state: React.ReactElement | null;
-  serviceInstanceIdentifier: ServiceInstanceIdentifier;
+  serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
 }
 
 export const InstanceRow: React.FC<Props> = ({

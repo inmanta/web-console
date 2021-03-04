@@ -14,10 +14,15 @@ export interface DeploymentProgress {
 export interface ServiceInstanceIdentifier extends WithId {
   service_entity: string;
   environment: string;
+}
+
+export interface VersionedServiceInstanceIdentifier
+  extends ServiceInstanceIdentifier {
   version: number;
 }
 
-export interface ServiceInstanceModel extends ServiceInstanceIdentifier {
+export interface ServiceInstanceModel
+  extends VersionedServiceInstanceIdentifier {
   active_attributes: InstanceAttributeModel | null;
   callback: string[];
   candidate_attributes: InstanceAttributeModel | null;

@@ -11,6 +11,32 @@
  */
 
 const dict = {
+  /**
+   * General text
+   */
+  true: "True",
+  false: "False",
+  submit: "Submit",
+  confirm: "Confirm",
+  cancel: "Cancel",
+  yes: "Yes",
+  no: "No",
+  null: "null",
+  loading: "Loading",
+  retry: "Retry",
+
+  /**
+   * Error related text
+   */
+  error: "Something went wrong",
+  "error.environment.missing": "Environment is missing",
+  "error.server.intro": (errorMessage: string) =>
+    `The following error occured while communicating with the server: ${errorMessage}`,
+  "error.authorizationFailed": "Authorization failed, please log in",
+
+  /**
+   * Inventory related text
+   */
   "id.copy": "Copy full service instance id to clipboard",
   "attributes.active": "Active Attributes",
   "attributes.candidate": "Candidate Attributes",
@@ -54,29 +80,6 @@ const dict = {
   "inventory.deploymentProgress.ready": "Ready",
   "inventory.deploymentProgress.total": "Total",
   "inventory.deploymentProgress.notFound": "No resources available yet",
-  cancel: "Cancel",
-  yes: "Yes",
-  no: "No",
-  null: "null",
-  "error.server.intro": (errorMessage: string) =>
-    `The following error occured while communicating with the server: ${errorMessage}`,
-  "error.authorizationFailed": "Authorization failed, please log in",
-  "events.column.date": "Date",
-  "events.column.id": "Event id",
-  "events.column.instanceVersion": "Instance version",
-  "events.column.sourceState": "Source state",
-  "events.column.destinationState": "Destination state",
-  "events.column.eventType": "Event Type",
-  "events.column.message": "Message",
-  "events.details.compileReport": "Open compile report",
-  "events.empty.title": "No events found",
-  "events.empty.body": "No events could be found for this instance",
-  "events.details.title": "Event details",
-  "events.title": "Events",
-  true: "True",
-  false: "False",
-  submit: "Submit",
-  confirm: "Confirm",
   "inventory.addInstance.title": (serviceName: string) =>
     `Create a new instance of ${serviceName} with the following parameters`,
   "inventory.addInstance.button": "Add instance",
@@ -91,10 +94,28 @@ const dict = {
     serviceName: string
   ) =>
     `Are you sure you want to delete instance ${instanceId} of service entity ${serviceName}?`,
-  "error.environment.missing": "Environment is missing",
-  error: "Something went wrong",
-  loading: "Loading",
-  retry: "Retry",
+
+  /**
+   * Events related text
+   */
+  "events.column.date": "Date",
+  "events.column.id": "Event id",
+  "events.column.instanceVersion": "Instance version",
+  "events.column.sourceState": "Source state",
+  "events.column.destinationState": "Destination state",
+  "events.column.eventType": "Event Type",
+  "events.column.message": "Message",
+  "events.details.compileReport": "Open compile report",
+  "events.empty.title": "No events found",
+  "events.empty.body": "No events could be found for this instance",
+  "events.details.title": "Event details",
+  "events.title": "Events",
+
+  /**
+   * History related text
+   */
+  "history.missing": (instanceId: string) =>
+    `No history could be found for instance ${instanceId}`,
 };
 
 type Key = keyof typeof dict;

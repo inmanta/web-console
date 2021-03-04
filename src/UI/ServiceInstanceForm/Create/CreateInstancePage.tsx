@@ -39,12 +39,11 @@ const ServiceProvider: React.FunctionComponent<{
   environmentId: string;
 }> = ({ serviceName, environmentId }) => {
   const { dataProvider } = useContext(ServicesContext);
-  const query: Query.ServiceQuery = {
+
+  const [data, retry] = dataProvider.useContinuous<"Service">({
     kind: "Service",
     qualifier: { name: serviceName, environment: environmentId },
-  };
-  dataProvider.useSubscription(query);
-  const data = dataProvider.useData<"Service">(query);
+  });
 
   return RemoteData.fold<
     Query.Error<"Service">,
@@ -53,9 +52,7 @@ const ServiceProvider: React.FunctionComponent<{
   >({
     notAsked: () => null,
     loading: () => <LoadingView />,
-    failed: (error) => (
-      <ErrorView error={error} retry={() => dataProvider.trigger(query)} />
-    ),
+    failed: (error) => <ErrorView error={error} retry={retry} />,
     success: (service) => (
       <PageWrapper aria-label="AddInstance-Success">
         <CreateInstancePage serviceEntity={service} />

@@ -1,17 +1,17 @@
 import { SubscriptionController, DataManager } from "@/Core";
 import { HookHelperImpl } from "../HookHelperImpl";
 
-export class ResourcesHookHelper extends HookHelperImpl<"Resources"> {
+export class InstanceLogsHookHelper extends HookHelperImpl<"InstanceLogs"> {
   constructor(
-    dataManager: DataManager<"Resources">,
+    dataManager: DataManager<"InstanceLogs">,
     subscriptionController: SubscriptionController
   ) {
     super(
       dataManager,
       subscriptionController,
       (qualifier) => qualifier.id,
-      (qualifier) => [qualifier.id, qualifier.version],
-      "Resources"
+      (qualifier) => [qualifier.id, qualifier.service_entity],
+      "InstanceLogs"
     );
   }
 }

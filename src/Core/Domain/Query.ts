@@ -1,10 +1,12 @@
 import { InstanceEvent } from "./EventModel";
+import { InstanceLog } from "./InstanceLogModel";
 import { EnvironmentIdentifier } from "./ProjectModel";
 import { ResourceModel } from "./ResourceModel";
 import {
-  ServiceInstanceIdentifier,
+  VersionedServiceInstanceIdentifier,
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
+  ServiceInstanceIdentifier,
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 
@@ -13,7 +15,8 @@ type Query =
   | ServiceQuery
   | ServiceInstancesQuery
   | ResourcesQuery
-  | InstanceEventsQuery;
+  | InstanceEventsQuery
+  | InstanceLogsQuery;
 export type Type = Query;
 
 /**
@@ -55,7 +58,7 @@ interface ServiceManifest {
  */
 export interface ResourcesQuery {
   kind: "Resources";
-  qualifier: ServiceInstanceIdentifier;
+  qualifier: VersionedServiceInstanceIdentifier;
 }
 
 interface ResourcesManifest {
@@ -88,10 +91,7 @@ interface ServiceInstancesManifest {
  */
 export interface InstanceEventsQuery {
   kind: "Events";
-  qualifier: Pick<
-    ServiceInstanceIdentifier,
-    "environment" | "id" | "service_entity"
-  >;
+  qualifier: ServiceInstanceIdentifier;
 }
 
 interface EventsManifest {
@@ -99,6 +99,21 @@ interface EventsManifest {
   apiResponse: InstanceEvent[];
   data: InstanceEvent[];
   query: InstanceEventsQuery;
+}
+
+/**
+ * The events query describes events belonging to one specific service instance
+ */
+export interface InstanceLogsQuery {
+  kind: "InstanceLogs";
+  qualifier: ServiceInstanceIdentifier;
+}
+
+interface InstanceLogsManifest {
+  error: string;
+  apiResponse: InstanceLog[];
+  data: InstanceLog[];
+  query: InstanceLogsQuery;
 }
 
 /**
@@ -111,6 +126,7 @@ interface Manifest {
   ServiceInstances: ServiceInstancesManifest;
   Resources: ResourcesManifest;
   Events: EventsManifest;
+  InstanceLogs: InstanceLogsManifest;
 }
 
 /**

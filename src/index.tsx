@@ -17,22 +17,18 @@ import {
   DataProviderImpl,
   IntervalsDictionary,
   LiveSubscriptionController,
-  ServiceDataManager,
   ServiceHookHelper,
   ServiceKeyMaker,
   ServiceStateHelper,
-  ServiceInstancesDataManager,
   ServiceInstancesHookHelper,
   ServiceInstancesStateHelper,
   ResourcesStateHelper,
-  ResourcesDataManager,
   ResourcesHookHelper,
   EventsHookHelper,
-  EventsDataManager,
   EventsStateHelper,
   ServicesHookHelper,
-  ServicesDataManager,
   ServicesStateHelper,
+  DataManagerImpl,
 } from "@/UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
@@ -58,7 +54,7 @@ const baseApiHelper = new BaseApiHelper(keycloak);
 const serviceKeyMaker = new ServiceKeyMaker();
 
 const servicesHelper = new ServicesHookHelper(
-  new ServicesDataManager(
+  new DataManagerImpl<"Services">(
     new ServicesFetcher(baseApiHelper),
     new ServicesStateHelper(storeInstance, serviceKeyMaker)
   ),
@@ -66,7 +62,7 @@ const servicesHelper = new ServicesHookHelper(
 );
 
 const serviceHelper = new ServiceHookHelper(
-  new ServiceDataManager(
+  new DataManagerImpl<"Service">(
     new ServiceFetcher(baseApiHelper),
     new ServiceStateHelper(storeInstance, serviceKeyMaker)
   ),
@@ -75,7 +71,7 @@ const serviceHelper = new ServiceHookHelper(
 );
 
 const serviceInstancesHelper = new ServiceInstancesHookHelper(
-  new ServiceInstancesDataManager(
+  new DataManagerImpl<"ServiceInstances">(
     new ServiceInstancesFetcher(baseApiHelper),
     new ServiceInstancesStateHelper(storeInstance)
   ),
@@ -83,7 +79,7 @@ const serviceInstancesHelper = new ServiceInstancesHookHelper(
 );
 
 const resourcesHelper = new ResourcesHookHelper(
-  new ResourcesDataManager(
+  new DataManagerImpl<"Resources">(
     new ResourcesFetcher(baseApiHelper),
     new ResourcesStateHelper(storeInstance)
   ),
@@ -91,7 +87,7 @@ const resourcesHelper = new ResourcesHookHelper(
 );
 
 const eventsHelper = new EventsHookHelper(
-  new EventsDataManager(
+  new DataManagerImpl<"Events">(
     new EventsFetcher(baseApiHelper),
     new EventsStateHelper(storeInstance)
   ),
