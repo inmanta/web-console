@@ -1,17 +1,24 @@
-import React, { ComponentProps } from "react";
-import { Story } from "@storybook/react/types-6-0";
+import React from "react";
 import { ExpandableTable } from "./ExpandableTable";
+import { InstanceLog as InstanceLogData } from "@/Test";
+import { InstanceLog } from "@/Core";
+import { InstanceLogRow } from "@/UI/Pages/ServiceInstanceHistory/InstanceLogRow";
 
 export default {
   title: "ExpandableTable",
   component: ExpandableTable,
 };
 
-const Template: Story<ComponentProps<typeof ExpandableTable>> = (args) => (
-  <ExpandableTable {...args} />
-);
-export const Default = Template.bind({});
-Default.args = {
-  columnHeads: ["Version", "Timestamp", "State", "Attributes"],
-  ids: ["1", "2", "3", "4"],
+export const Default: React.FC = () => {
+  const columnHeads = ["Version", "Timestamp", "State", "Attributes"];
+  const ids = InstanceLogData.list.map((log) => log.version.toString());
+  const dict: Record<string, InstanceLog> = {};
+  InstanceLogData.list.forEach((log) => (dict[log.version.toString()] = log));
+  return (
+    <ExpandableTable
+      columnHeads={columnHeads}
+      ids={ids}
+      Row={(props) => <InstanceLogRow {...props} log={dict[props.id]} />}
+    />
+  );
 };

@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { Query, RemoteData } from "@/Core";
+import { InstanceLog, Query, RemoteData } from "@/Core";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { ExpandableTable } from "@/UI/Components/ExpandableTable/ExpandableTable";
+import { InstanceLogRow } from "./InstanceLogRow";
 
 interface Props {
   service_entity: string;
@@ -34,17 +36,29 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
     notAsked: () => null,
     loading: () => <LoadingView delay={500} />,
     failed: (error) => <ErrorView error={error} />,
-    success: (logs) =>
-      logs.length > 0 ? (
+    success: (logs) => {
+      if (logs.length <= 0) {
+        return (
+          <div aria-label="ServiceInstanceHistory-Empty">
+            <EmptyView message={words("history.missing")(instanceId)} />
+          </div>
+        );
+      }
+
+      const columnHeads = ["Version", "Timestamp", "State", "Attributes"];
+      const ids = logs.map((log) => log.version.toString());
+      const dict: Record<string, InstanceLog> = {};
+      logs.forEach((log) => (dict[log.version.toString()] = log));
+
+      return (
         <div aria-label="ServiceInstanceHistory-Success">
-          <pre>
-            <code>{JSON.stringify({ logs }, null, 4)}</code>
-          </pre>
+          <ExpandableTable
+            columnHeads={columnHeads}
+            ids={ids}
+            Row={(props) => <InstanceLogRow {...props} log={dict[props.id]} />}
+          />
         </div>
-      ) : (
-        <div aria-label="ServiceInstanceHistory-Empty">
-          <EmptyView message={words("history.missing")(instanceId)} />
-        </div>
-      ),
+      );
+    },
   })(data);
 };
