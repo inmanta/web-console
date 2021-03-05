@@ -9,7 +9,10 @@ import {
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { InstanceLogRow } from "./InstanceLogRow";
-import { MomentDatePresenter } from "@/UI/ServiceInventory/Presenters";
+import {
+  AttributesPresenter,
+  MomentDatePresenter,
+} from "@/UI/ServiceInventory/Presenters";
 
 interface Props {
   service_entity: string;
@@ -55,6 +58,7 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
       const dict: Record<string, InstanceLog> = {};
       logs.forEach((log) => (dict[log.version.toString()] = log));
       const datePresenter = new MomentDatePresenter();
+      const attributesPresenter = new AttributesPresenter();
 
       return (
         <div aria-label="ServiceInstanceHistory-Success">
@@ -66,6 +70,11 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
                 {...props}
                 log={dict[props.id]}
                 timestamp={datePresenter.get(dict[props.id].timestamp)}
+                attributesSummary={attributesPresenter.getSummary(
+                  dict[props.id].candidate_attributes,
+                  dict[props.id].active_attributes,
+                  dict[props.id].rollback_attributes
+                )}
               />
             )}
           />
