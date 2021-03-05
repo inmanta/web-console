@@ -53,3 +53,5 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
 export const Empty: React.FC = () => <Template logs={[]} />;
 
 export const One: React.FC = () => <Template logs={[InstanceLog.A]} />;
+
+export const Multiple: React.FC = () => <Template logs={InstanceLog.list2} />;

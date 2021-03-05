@@ -54,9 +54,10 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
       }
 
       const columnHeads = ["Version", "Timestamp", "State", "Attributes"];
-      const ids = logs.map((log) => log.version.toString());
+      const sorted = logs.sort((a, b) => a.version - b.version);
+      const ids = sorted.map((log) => log.version.toString());
       const dict: Record<string, InstanceLog> = {};
-      logs.forEach((log) => (dict[log.version.toString()] = log));
+      sorted.forEach((log) => (dict[log.version.toString()] = log));
       const datePresenter = new MomentDatePresenter();
       const attributesPresenter = new AttributesPresenter();
 
