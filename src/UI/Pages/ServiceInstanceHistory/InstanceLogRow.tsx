@@ -4,18 +4,14 @@ import {
   InstanceEvent,
   InstanceLog,
 } from "@/Core";
-import { DateWithTooltip, EmptyFiller } from "@/UI/Components";
+import { DateWithTooltip, EmptyFiller, SimpleTabs } from "@/UI/Components";
 import { ExpandableRowProps } from "@/UI/Components/ExpandableTable";
 import {
   EventTable,
   EventTablePresenter,
   FillerEventTable,
 } from "@/UI/InstanceEventView";
-import {
-  AttributesView,
-  ServiceInstanceDetails,
-  TabProps,
-} from "@/UI/ServiceInstanceDetails";
+import { AttributesView } from "@/UI/ServiceInstanceDetails";
 import { AttributesSummaryView } from "@/UI/ServiceInventory/Components";
 import { MomentDatePresenter } from "@/UI/ServiceInventory/Presenters";
 import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
@@ -29,8 +25,6 @@ interface Props extends ExpandableRowProps {
   attributesSummary: AttributesSummary;
 }
 
-type TabKey = "Status" | "Attributes" | "Events" | "Resources";
-
 export const InstanceLogRow: React.FC<Props> = ({
   numberOfColumns,
   isExpanded,
@@ -41,7 +35,7 @@ export const InstanceLogRow: React.FC<Props> = ({
   timestamp,
   attributesSummary,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabKey>("Attributes");
+  const [activeTab, setActiveTab] = useState("Details");
   const attributesOnClick = () => {
     if (!isExpanded) {
       onToggle();
@@ -76,36 +70,53 @@ export const InstanceLogRow: React.FC<Props> = ({
       <Tr isExpanded={isExpanded} data-testid={`details_${id}`}>
         <Td colSpan={numberOfColumns}>
           <ExpandableRowContent>
-            <ServiceInstanceDetails
+            <SimpleTabs
               activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            >
-              <DetailsView
-                title={"Details"}
-                icon={<InfoCircleIcon />}
-                info={{
-                  state: null,
-                  version: log.version,
-                  timestamp: timestamp.full,
-                }}
-              />
-
-              <AttributesView
-                attributes={{
-                  candidate: log.candidate_attributes,
-                  active: log.active_attributes,
-                  rollback: log.rollback_attributes,
-                }}
-                title={"Attributes"}
-                icon={<ListIcon />}
-              />
-              <EventsView
-                events={log.events}
-                environmentId={log.environment}
-                title={"Events"}
-                icon={<PortIcon />}
-              />
-            </ServiceInstanceDetails>
+              onChange={setActiveTab as (a: string) => void}
+              tabs={[
+                {
+                  id: "Details",
+                  title: "Details",
+                  icon: <InfoCircleIcon />,
+                  view: (
+                    <DetailsView
+                      info={{
+                        state: null,
+                        version: log.version,
+                        timestamp: timestamp.full,
+                      }}
+                    />
+                  ),
+                },
+                {
+                  id: "Attributes",
+                  title: "Attributes",
+                  icon: <ListIcon />,
+                  view: (
+                    <AttributesView
+                      title={"Attributes"}
+                      icon={<ListIcon />}
+                      attributes={{
+                        candidate: log.candidate_attributes,
+                        active: log.active_attributes,
+                        rollback: log.rollback_attributes,
+                      }}
+                    />
+                  ),
+                },
+                {
+                  id: "Events",
+                  title: "Events",
+                  icon: <PortIcon />,
+                  view: (
+                    <EventsView
+                      events={log.events}
+                      environmentId={log.environment}
+                    />
+                  ),
+                },
+              ]}
+            />
           </ExpandableRowContent>
         </Td>
       </Tr>
@@ -113,7 +124,7 @@ export const InstanceLogRow: React.FC<Props> = ({
   );
 };
 
-interface EventsViewProps extends TabProps {
+interface EventsViewProps {
   events: InstanceEvent[];
   environmentId: string;
 }

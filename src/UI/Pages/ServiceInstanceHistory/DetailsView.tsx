@@ -8,9 +8,8 @@ import {
   DescriptionListTerm,
   DescriptionListDescription,
 } from "@patternfly/react-core";
-import { TabProps } from "@/UI/ServiceInstanceDetails";
 
-interface Props extends TabProps {
+interface Props {
   info: Info;
 }
 
