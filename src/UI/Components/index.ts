@@ -1,3 +1,4 @@
+export * from "./DateWithTooltip";
 export * from "./EmptyView";
 export * from "./ErrorView";
 export * from "./ExpandableTable";

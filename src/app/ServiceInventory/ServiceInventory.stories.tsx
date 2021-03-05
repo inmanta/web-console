@@ -1,5 +1,6 @@
 import React from "react";
 import { StoreProvider } from "easy-peasy";
+import { MemoryRouter } from "react-router-dom";
 import { Service, ServiceInstance, Resources, InstantFetcher } from "@/Test";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
@@ -64,11 +65,13 @@ const dataProvider = new DataProviderImpl([
 export const Basic: React.FC = () => (
   <ServicesContext.Provider value={{ dataProvider }}>
     <StoreProvider store={store}>
-      <ServiceInventory
-        serviceName={Service.A.name}
-        environmentId={Service.A.environment}
-        service={Service.A}
-      />
+      <MemoryRouter>
+        <ServiceInventory
+          serviceName={Service.A.name}
+          environmentId={Service.A.environment}
+          service={Service.A}
+        />
+      </MemoryRouter>
     </StoreProvider>
   </ServicesContext.Provider>
 );
