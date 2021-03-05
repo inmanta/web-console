@@ -49,7 +49,7 @@ export class InventoryTablePresenter
   }
 
   public getIdColumnName(): string {
-    if (this.serviceIdentityDisplayName) {
+    if (this.serviceIdentityDisplayName && this.serviceIdentity) {
       return this.serviceIdentityDisplayName;
     } else if (this.serviceIdentity) {
       return this.serviceIdentity;
