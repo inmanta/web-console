@@ -1,9 +1,27 @@
-import { AttributesSummary, DateInfo, InstanceLog } from "@/Core";
-import { DateWithTooltip } from "@/UI/Components";
+import {
+  AttributesSummary,
+  DateInfo,
+  InstanceEvent,
+  InstanceLog,
+} from "@/Core";
+import { DateWithTooltip, EmptyFiller } from "@/UI/Components";
 import { ExpandableRowProps } from "@/UI/Components/ExpandableTable";
+import {
+  EventTable,
+  EventTablePresenter,
+  FillerEventTable,
+} from "@/UI/InstanceEventView";
+import {
+  AttributesView,
+  ServiceInstanceDetails,
+  TabProps,
+} from "@/UI/ServiceInstanceDetails";
 import { AttributesSummaryView } from "@/UI/ServiceInventory/Components";
+import { MomentDatePresenter } from "@/UI/ServiceInventory/Presenters";
+import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import React, { useState } from "react";
+import { DetailsView } from "./DetailsView";
 
 interface Props extends ExpandableRowProps {
   log: InstanceLog;
@@ -11,7 +29,7 @@ interface Props extends ExpandableRowProps {
   attributesSummary: AttributesSummary;
 }
 
-type TabKey = "Details" | "Attributes" | "Events";
+type TabKey = "Status" | "Attributes" | "Events" | "Resources";
 
 export const InstanceLogRow: React.FC<Props> = ({
   numberOfColumns,
@@ -23,7 +41,7 @@ export const InstanceLogRow: React.FC<Props> = ({
   timestamp,
   attributesSummary,
 }) => {
-  const [, setActiveTab] = useState<TabKey>("Details");
+  const [activeTab, setActiveTab] = useState<TabKey>("Attributes");
   const attributesOnClick = () => {
     if (!isExpanded) {
       onToggle();
@@ -57,9 +75,69 @@ export const InstanceLogRow: React.FC<Props> = ({
       </Tr>
       <Tr isExpanded={isExpanded} data-testid={`details_${id}`}>
         <Td colSpan={numberOfColumns}>
-          <ExpandableRowContent>expanded</ExpandableRowContent>
+          <ExpandableRowContent>
+            <ServiceInstanceDetails
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+            >
+              <DetailsView
+                title={"Details"}
+                icon={<InfoCircleIcon />}
+                info={{
+                  state: null,
+                  version: log.version,
+                  timestamp: timestamp.full,
+                }}
+              />
+
+              <AttributesView
+                attributes={{
+                  candidate: log.candidate_attributes,
+                  active: log.active_attributes,
+                  rollback: log.rollback_attributes,
+                }}
+                title={"Attributes"}
+                icon={<ListIcon />}
+              />
+              <EventsView
+                events={log.events}
+                environmentId={log.environment}
+                title={"Events"}
+                icon={<PortIcon />}
+              />
+            </ServiceInstanceDetails>
+          </ExpandableRowContent>
         </Td>
       </Tr>
     </Tbody>
+  );
+};
+
+interface EventsViewProps extends TabProps {
+  events: InstanceEvent[];
+  environmentId: string;
+}
+
+const EventsView: React.FC<EventsViewProps> = ({ events, environmentId }) => {
+  const tablePresenter = new EventTablePresenter(new MomentDatePresenter());
+  return events.length === 0 ? (
+    <FillerEventTable
+      tablePresenter={tablePresenter}
+      filler={<EmptyFiller />}
+      wrapInTd
+      aria-label="EventTable-Empty"
+    />
+  ) : (
+    <FillerEventTable
+      tablePresenter={tablePresenter}
+      filler={
+        <EventTable
+          events={events}
+          environmentId={environmentId}
+          tablePresenter={tablePresenter}
+        />
+      }
+      aria-label="EventTable-Success"
+    />
   );
 };
