@@ -144,6 +144,7 @@ const base = ({
   callback: [],
   deleted: false,
   instanceSetStateTargets: [],
+  service_identity_attribute_value: "9764848531585023834",
 } as unknown) as ServiceInstanceModelWithTargetStates;
 
 export const instance = base;
@@ -152,11 +153,13 @@ const instance2 = {
   ...base,
   id: "0002fake-4f80-45e1-b2ad-137c442c68b8",
   deployment_progress: { total: 5, failed: 1, waiting: 2, deployed: 2 },
+  service_identity_attribute_value: "8764848531585023834",
 };
 
 const instance3 = {
   ...base,
   id: "0003fake-4f80-45e1-b2ad-137c442c68b8",
+  service_identity_attribute_value: "7764848531585023834",
 };
 
 export const instances = [instance, instance2, instance3];

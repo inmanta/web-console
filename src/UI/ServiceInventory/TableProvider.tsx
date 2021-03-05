@@ -39,7 +39,9 @@ export const TableProvider: React.FC<Props> = ({
     datePresenter,
     attributesPresenter,
     actionPresenter,
-    statePresenter
+    statePresenter,
+    serviceEntity.service_identity,
+    serviceEntity.service_identity_display_name
   );
   const rows = tablePresenter.createRows(instances);
 

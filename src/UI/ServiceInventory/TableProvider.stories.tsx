@@ -16,6 +16,7 @@ import {
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
+import { ServiceWithIdentity } from "@/Test/Data/Service";
 
 export default {
   title: "TableProvider",
@@ -44,7 +45,7 @@ const Template: Story<Props> = (args) => {
 };
 
 export const Empty = Template.bind({});
-Empty.args = { instances: [] };
+Empty.args = { instances: [], serviceEntity: {} as ServiceModel };
 
 export const Multiple = Template.bind({});
 Multiple.args = {
@@ -56,4 +57,9 @@ Multiple.args = {
       transfers: [{ source: "creating", on_update: true }],
     },
   } as ServiceModel,
+};
+export const WithIdentity = Template.bind({});
+WithIdentity.args = {
+  instances,
+  serviceEntity: ServiceWithIdentity,
 };

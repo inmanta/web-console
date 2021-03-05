@@ -14,22 +14,27 @@ import { TablePresenter } from "./TablePresenter";
  */
 export class InventoryTablePresenter
   implements TablePresenter<ServiceInstanceModelWithTargetStates, Row> {
-  readonly columnHeads = [
-    words("inventory.column.id"),
-    words("inventory.column.state"),
-    words("inventory.column.attributesSummary"),
-    words("inventory.collumn.deploymentProgress"),
-    words("inventory.column.createdAt"),
-    words("inventory.column.updatedAt"),
-  ];
-  readonly numberOfColumns = this.columnHeads.length + 1;
+  readonly columnHeads: string[];
+  readonly numberOfColumns: number;
 
   constructor(
     private datePresenter: DatePresenter,
     private attributesPresenter: AttributesPresenter,
     private actionPresenter: ActionPresenter,
-    private statePresenter: StatePresenter
-  ) {}
+    private statePresenter: StatePresenter,
+    private serviceIdentity?: string,
+    private serviceIdentityDisplayName?: string
+  ) {
+    this.columnHeads = [
+      this.getIdColumnName(),
+      words("inventory.column.state"),
+      words("inventory.column.attributesSummary"),
+      words("inventory.collumn.deploymentProgress"),
+      words("inventory.column.createdAt"),
+      words("inventory.column.updatedAt"),
+    ];
+    this.numberOfColumns = this.columnHeads.length + 1;
+  }
 
   public getActionsFor(id: string): ReactElement | null {
     return this.actionPresenter.getForId(id);
@@ -41,6 +46,20 @@ export class InventoryTablePresenter
 
   public getColumnHeads(): string[] {
     return this.columnHeads;
+  }
+
+  public getIdColumnName(): string {
+    if (this.serviceIdentityDisplayName) {
+      return this.serviceIdentityDisplayName;
+    } else if (this.serviceIdentity) {
+      return this.serviceIdentity;
+    } else {
+      return words("inventory.column.id");
+    }
+  }
+
+  public shouldUseServiceIdentity(): boolean {
+    return !!this.serviceIdentity;
   }
 
   public getNumberOfColumns(): number {
@@ -64,6 +83,7 @@ export class InventoryTablePresenter
       environment,
       service_entity,
       deployment_progress,
+      service_identity_attribute_value,
     } = instance;
 
     return {
@@ -85,6 +105,7 @@ export class InventoryTablePresenter
       environment,
       service_entity,
       deploymentProgress: deployment_progress,
+      serviceIdentityValue: service_identity_attribute_value,
     };
   }
 

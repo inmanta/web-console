@@ -7,6 +7,7 @@ import {
   InstantFetcher,
   rows,
   tablePresenter,
+  tablePresenterWithIdentity,
 } from "@/Test";
 import { ServicesContext } from "@/UI/ServicesContext";
 import { getStoreInstance } from "@/UI/Store";
@@ -93,4 +94,17 @@ test("ServiceInventory shows attribute tab when clicking on attribute summary", 
   expect(
     await screen.findByTestId("attributes-tree-table")
   ).toBeInTheDocument();
+});
+
+test("ServiceInventory shows service identity if it's defined", async () => {
+  render(
+    <InventoryTable
+      rows={[rows[0]]}
+      tablePresenter={tablePresenterWithIdentity}
+    />
+  );
+
+  expect(await screen.findByText("Order ID")).toBeVisible();
+
+  expect(await screen.findByText("instance1")).toBeVisible();
 });

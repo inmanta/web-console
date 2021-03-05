@@ -35,6 +35,7 @@ export interface Row {
   service_entity: string;
   environment: string;
   deploymentProgress?: DeploymentProgress;
+  serviceIdentityValue?: string;
 }
 
 export interface State {
