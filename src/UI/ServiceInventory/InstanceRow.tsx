@@ -32,6 +32,8 @@ interface Props {
   actions: React.ReactElement | null;
   state: React.ReactElement | null;
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
+  shouldUseServiceIdentity?: boolean;
+  idDataLabel: string;
 }
 
 export const InstanceRow: React.FC<Props> = ({
@@ -43,6 +45,8 @@ export const InstanceRow: React.FC<Props> = ({
   actions,
   state,
   serviceInstanceIdentifier,
+  shouldUseServiceIdentity,
+  idDataLabel,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>("Status");
   const deploymentProgressPresenter = new DeploymentProgressPresenter();
@@ -62,8 +66,9 @@ export const InstanceRow: React.FC<Props> = ({
             onToggle,
           }}
         />
-        <Td dataLabel={words("inventory.column.id")}>
-          <IdWithCopy id={row.id} />
+        <Td dataLabel={idDataLabel}>
+          {shouldUseServiceIdentity && row.serviceIdentityValue}
+          {!shouldUseServiceIdentity && <IdWithCopy id={row.id} />}
         </Td>
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>
         <Td dataLabel={words("inventory.column.attributesSummary")}>

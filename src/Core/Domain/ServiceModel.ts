@@ -48,4 +48,6 @@ export interface ServiceModel extends ServiceIdentifier {
   description?: string;
   lifecycle: LifecycleModel;
   attributes: AttributeModel[];
+  service_identity?: string;
+  service_identity_display_name?: string;
 }

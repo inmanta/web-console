@@ -52,6 +52,8 @@ export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
             environment: row.environment,
             version: row.version,
           }}
+          shouldUseServiceIdentity={tablePresenter.shouldUseServiceIdentity()}
+          idDataLabel={tablePresenter.getIdColumnName()}
         />
       ))}
     </TableComposable>

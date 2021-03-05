@@ -29,16 +29,19 @@ export const base: Row = {
   instanceSetStateTargets: [],
   environment: "env",
   service_entity: "entity",
+  serviceIdentityValue: "instance1",
 };
 
 export const row2: Row = {
   ...base,
   id: Id("0002"),
+  serviceIdentityValue: "instance2",
 };
 
 export const row3: Row = {
   ...base,
   id: Id("0003"),
+  serviceIdentityValue: "instance3",
 };
 
 export const rows = [base, row2];
