@@ -1,10 +1,15 @@
 import React, { useContext } from "react";
 import { ServicesContext } from "@/UI/ServicesContext";
 import { InstanceLog, Query, RemoteData } from "@/Core";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  ExpandableTable,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
-import { ExpandableTable } from "@/UI/Components/ExpandableTable/ExpandableTable";
 import { InstanceLogRow } from "./InstanceLogRow";
+import { MomentDatePresenter } from "@/UI/ServiceInventory/Presenters";
 
 interface Props {
   service_entity: string;
@@ -49,13 +54,20 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
       const ids = logs.map((log) => log.version.toString());
       const dict: Record<string, InstanceLog> = {};
       logs.forEach((log) => (dict[log.version.toString()] = log));
+      const datePresenter = new MomentDatePresenter();
 
       return (
         <div aria-label="ServiceInstanceHistory-Success">
           <ExpandableTable
             columnHeads={columnHeads}
             ids={ids}
-            Row={(props) => <InstanceLogRow {...props} log={dict[props.id]} />}
+            Row={(props) => (
+              <InstanceLogRow
+                {...props}
+                log={dict[props.id]}
+                timestamp={datePresenter.get(dict[props.id].timestamp)}
+              />
+            )}
           />
         </div>
       );

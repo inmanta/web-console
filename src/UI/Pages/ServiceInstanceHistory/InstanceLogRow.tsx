@@ -1,10 +1,12 @@
-import { InstanceLog } from "@/Core";
+import { DateInfo, InstanceLog } from "@/Core";
+import { DateWithTooltip } from "@/UI/Components";
 import { ExpandableRowProps } from "@/UI/Components/ExpandableTable";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import React from "react";
 
 interface Props extends ExpandableRowProps {
   log: InstanceLog;
+  timestamp: DateInfo;
 }
 
 export const InstanceLogRow: React.FC<Props> = ({
@@ -14,6 +16,7 @@ export const InstanceLogRow: React.FC<Props> = ({
   onToggle,
   id,
   log,
+  timestamp,
 }) => (
   <Tbody isExpanded={false}>
     <Tr id={`instance-row-${id}`}>
@@ -25,7 +28,9 @@ export const InstanceLogRow: React.FC<Props> = ({
         }}
       />
       <Td dataLabel={"version"}>{id}</Td>
-      <Td dataLabel={"timestamp"}>{log.timestamp}</Td>
+      <Td dataLabel={"timestamp"}>
+        <DateWithTooltip date={timestamp} />
+      </Td>
       <Td dataLabel={"state"}>{log.state}</Td>
       <Td dataLabel={"Attributes"}>{log.service_instance_id}</Td>
     </Tr>
