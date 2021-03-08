@@ -1,19 +1,13 @@
+import { AttributesSummary, DateInfo, InstanceLog } from "@/Core";
 import {
-  AttributesSummary,
-  DateInfo,
-  InstanceEvent,
-  InstanceLog,
-} from "@/Core";
-import { DateWithTooltip, EmptyFiller, SimpleTabs } from "@/UI/Components";
+  AttributesTable,
+  DateWithTooltip,
+  EventsTable,
+  IconTabs,
+  TabDescriptor,
+} from "@/UI/Components";
 import { ExpandableRowProps } from "@/UI/Components/ExpandableTable";
-import {
-  EventTable,
-  EventTablePresenter,
-  FillerEventTable,
-} from "@/UI/InstanceEventView";
-import { AttributesView } from "@/UI/ServiceInstanceDetails";
 import { AttributesSummaryView } from "@/UI/ServiceInventory/Components";
-import { MomentDatePresenter } from "@/UI/ServiceInventory/Presenters";
 import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import React, { useState } from "react";
@@ -37,9 +31,7 @@ export const InstanceLogRow: React.FC<Props> = ({
 }) => {
   const [activeTab, setActiveTab] = useState("Details");
   const attributesOnClick = () => {
-    if (!isExpanded) {
-      onToggle();
-    }
+    if (!isExpanded) onToggle();
     setActiveTab("Attributes");
   };
 
@@ -70,51 +62,13 @@ export const InstanceLogRow: React.FC<Props> = ({
       <Tr isExpanded={isExpanded} data-testid={`details_${id}`}>
         <Td colSpan={numberOfColumns}>
           <ExpandableRowContent>
-            <SimpleTabs
+            <IconTabs
               activeTab={activeTab}
               onChange={setActiveTab as (a: string) => void}
               tabs={[
-                {
-                  id: "Details",
-                  title: "Details",
-                  icon: <InfoCircleIcon />,
-                  view: (
-                    <DetailsView
-                      info={{
-                        state: null,
-                        version: log.version,
-                        timestamp: timestamp.full,
-                      }}
-                    />
-                  ),
-                },
-                {
-                  id: "Attributes",
-                  title: "Attributes",
-                  icon: <ListIcon />,
-                  view: (
-                    <AttributesView
-                      title={"Attributes"}
-                      icon={<ListIcon />}
-                      attributes={{
-                        candidate: log.candidate_attributes,
-                        active: log.active_attributes,
-                        rollback: log.rollback_attributes,
-                      }}
-                    />
-                  ),
-                },
-                {
-                  id: "Events",
-                  title: "Events",
-                  icon: <PortIcon />,
-                  view: (
-                    <EventsView
-                      events={log.events}
-                      environmentId={log.environment}
-                    />
-                  ),
-                },
+                detailsTab(log.version, timestamp.full),
+                attributesTab(log),
+                eventsTab(log),
               ]}
             />
           </ExpandableRowContent>
@@ -124,31 +78,31 @@ export const InstanceLogRow: React.FC<Props> = ({
   );
 };
 
-interface EventsViewProps {
-  events: InstanceEvent[];
-  environmentId: string;
-}
+const detailsTab = (version: number, timestamp: string): TabDescriptor => ({
+  id: "Details",
+  title: "Details",
+  icon: <InfoCircleIcon />,
+  view: <DetailsView info={{ state: null, version, timestamp }} />,
+});
 
-const EventsView: React.FC<EventsViewProps> = ({ events, environmentId }) => {
-  const tablePresenter = new EventTablePresenter(new MomentDatePresenter());
-  return events.length === 0 ? (
-    <FillerEventTable
-      tablePresenter={tablePresenter}
-      filler={<EmptyFiller />}
-      wrapInTd
-      aria-label="EventTable-Empty"
+const attributesTab = (log: InstanceLog): TabDescriptor => ({
+  id: "Attributes",
+  title: "Attributes",
+  icon: <ListIcon />,
+  view: (
+    <AttributesTable
+      attributes={{
+        candidate: log.candidate_attributes,
+        active: log.active_attributes,
+        rollback: log.rollback_attributes,
+      }}
     />
-  ) : (
-    <FillerEventTable
-      tablePresenter={tablePresenter}
-      filler={
-        <EventTable
-          events={events}
-          environmentId={environmentId}
-          tablePresenter={tablePresenter}
-        />
-      }
-      aria-label="EventTable-Success"
-    />
-  );
-};
+  ),
+});
+
+const eventsTab = (log: InstanceLog): TabDescriptor => ({
+  id: "Events",
+  title: "Events",
+  icon: <PortIcon />,
+  view: <EventsTable events={log.events} environmentId={log.environment} />,
+});

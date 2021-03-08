@@ -1,7 +1,7 @@
 import React, { ReactText } from "react";
 import { Tabs, Tab, TabTitleText, TabTitleIcon } from "@patternfly/react-core";
 
-interface TabType {
+export interface TabDescriptor {
   id: string;
   title: string;
   icon: React.ReactElement;
@@ -9,12 +9,15 @@ interface TabType {
 }
 
 interface Props {
-  tabs: TabType[];
+  tabs: TabDescriptor[];
   activeTab: string;
   onChange: (tabKey: string) => void;
 }
 
-export const SimpleTabs: React.FC<Props> = ({ activeTab, onChange, tabs }) => {
+/**
+ * A tabs component with icons in the title
+ */
+export const IconTabs: React.FC<Props> = ({ activeTab, onChange, tabs }) => {
   const setActiveTabWithEventKey = (event, eventKey: ReactText) =>
     onChange(eventKey as typeof activeTab);
 
