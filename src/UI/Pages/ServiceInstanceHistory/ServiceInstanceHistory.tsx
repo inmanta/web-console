@@ -43,7 +43,7 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
   >({
     notAsked: () => null,
     loading: () => <LoadingView delay={500} />,
-    failed: (error) => <ErrorView error={error} />,
+    failed: (error) => <ErrorView message={error} />,
     success: (logs) => {
       if (logs.length <= 0) {
         return (

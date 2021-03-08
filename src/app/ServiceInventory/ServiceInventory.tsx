@@ -49,7 +49,7 @@ export const ServiceInventoryWithProvider: React.FunctionComponent<{
     />
   ) : (
     <Wrapper aria-label="ServiceInventory-Failed">
-      <ErrorView error={words("error.environment.missing")} delay={500} />
+      <ErrorView message={words("error.environment.missing")} delay={500} />
     </Wrapper>
   );
 };
@@ -78,7 +78,7 @@ const ServiceProvider: React.FunctionComponent<{
     ),
     failed: (error) => (
       <Wrapper aria-label="ServiceInventory-Failed">
-        <ErrorView error={error} retry={retry} />
+        <ErrorView message={error} retry={retry} />
       </Wrapper>
     ),
     success: (service) => (
@@ -126,7 +126,7 @@ export const ServiceInventory: React.FunctionComponent<{
     ),
     failed: (error) => (
       <Wrapper aria-label="ServiceInventory-Failed">
-        <ErrorView error={error} retry={retry} />
+        <ErrorView message={error} retry={retry} />
       </Wrapper>
     ),
     success: (instances) => (

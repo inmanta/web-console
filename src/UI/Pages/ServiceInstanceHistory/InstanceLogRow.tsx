@@ -3,11 +3,13 @@ import {
   AttributesTable,
   DateWithTooltip,
   EventsTable,
+  EventsTablePresenter,
   IconTabs,
   TabDescriptor,
 } from "@/UI/Components";
 import { ExpandableRowProps } from "@/UI/Components/ExpandableTable";
 import { AttributesSummaryView } from "@/UI/ServiceInventory/Components";
+import { MomentDatePresenter } from "@/UI/ServiceInventory/Presenters";
 import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import React, { useState } from "react";
@@ -104,5 +106,11 @@ const eventsTab = (log: InstanceLog): TabDescriptor => ({
   id: "Events",
   title: "Events",
   icon: <PortIcon />,
-  view: <EventsTable events={log.events} environmentId={log.environment} />,
+  view: (
+    <EventsTable
+      events={log.events}
+      environmentId={log.environment}
+      tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
+    />
+  ),
 });

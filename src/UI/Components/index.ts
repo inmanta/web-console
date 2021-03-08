@@ -2,6 +2,7 @@ export * from "./AttributesTable";
 export * from "./DateWithTooltip";
 export * from "./EmptyView";
 export * from "./ErrorView";
+export * from "./EventIcon";
 export * from "./EventsTable";
 export * from "./ExpandableTable";
 export * from "./IconTabs";

@@ -73,7 +73,8 @@ const dict = {
   "inventory.resourcesTab.empty.body":
     "No resources could be found for this instance",
   "inventory.resourcesTab.failed.title": "Something went wrong",
-  "inventory.resourcesTab.failed.body": "There was an error retrieving data.",
+  "inventory.resourcesTab.failed.body": (error: string) =>
+    `There was an error retrieving data: ${error}`,
   "inventory.resourcesTab.detailsLink": "Jump to Details",
   "inventory.deploymentProgress.inProgress": "In Progress",
   "inventory.deploymentProgress.failed": "Failed",
@@ -110,6 +111,9 @@ const dict = {
   "events.empty.body": "No events could be found for this instance",
   "events.details.title": "Event details",
   "events.title": "Events",
+  "events.failed.title": "Something went wrong",
+  "events.failed.body": (error: string) =>
+    `There was an error retrieving data: ${error}`,
 
   /**
    * History related text

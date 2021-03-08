@@ -8,12 +8,13 @@ import {
 import {
   ResourceTable,
   HrefCreatorImpl,
-  FillerResourceTable,
-  LoadingFiller,
-  FailedFiller,
-  EmptyFiller,
+  ResourceTableWrapper,
+  EmptyView,
+  LoadingView,
+  ErrorView,
 } from "@/UI/Components";
 import { ServicesContext } from "@/UI/ServicesContext";
+import { words } from "@/UI/words";
 
 interface Props extends TabProps {
   qualifier: VersionedServiceInstanceIdentifier;
@@ -30,23 +31,26 @@ export const ResourcesView: React.FC<Props> = ({ qualifier }) => {
   return RemoteData.fold<string, ResourceModel[], JSX.Element | null>({
     notAsked: () => null,
     loading: () => (
-      <FillerResourceTable
-        filler={<LoadingFiller delay={500} />}
-        aria-label="ResourceTable-Loading"
-      />
+      <ResourceTableWrapper aria-label="ResourceTable-Loading">
+        <LoadingView delay={500} />
+      </ResourceTableWrapper>
     ),
     failed: (error) => (
-      <FillerResourceTable
-        filler={<FailedFiller error={error} />}
-        aria-label="ResourceTable-Failed"
-      />
+      <ResourceTableWrapper aria-label="ResourceTable-Failed">
+        <ErrorView
+          title={words("inventory.resourcesTab.failed.title")}
+          message={words("inventory.resourcesTab.failed.body")(error)}
+        />
+      </ResourceTableWrapper>
     ),
     success: (resources) =>
       resources.length === 0 ? (
-        <FillerResourceTable
-          filler={<EmptyFiller />}
-          aria-label="ResourceTable-Empty"
-        />
+        <ResourceTableWrapper aria-label="ResourceTable-Empty">
+          <EmptyView
+            title={words("inventory.resourcesTab.empty.title")}
+            message={words("inventory.resourcesTab.empty.body")}
+          />
+        </ResourceTableWrapper>
       ) : (
         <ResourceTable
           hrefCreator={new HrefCreatorImpl(qualifier.environment)}

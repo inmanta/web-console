@@ -23,6 +23,6 @@ export const Provider: React.FC = () => {
       environment={environmentId}
     />
   ) : (
-    <ErrorView error={words("error.environment.missing")} delay={500} />
+    <ErrorView message={words("error.environment.missing")} delay={500} />
   );
 };
