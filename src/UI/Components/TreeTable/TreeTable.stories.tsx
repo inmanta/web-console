@@ -39,6 +39,24 @@ Simple.args = {
   ),
 };
 
+export const FlatOnly = Template.bind({});
+FlatOnly.args = {
+  treeTableHelper: new TreeTableHelper(
+    new PathHelper("$"),
+    new TreeExpansionManager("$"),
+    new AttributeHelper("$"),
+    {
+      candidate: {
+        b: 1234,
+        c: false,
+        d: "blabla",
+      },
+      active: null,
+      rollback: null,
+    }
+  ),
+};
+
 export const RealData = Template.bind({});
 RealData.args = {
   treeTableHelper: new TreeTableHelper(

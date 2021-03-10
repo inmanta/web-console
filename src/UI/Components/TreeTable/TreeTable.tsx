@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
-import { TreeRowView } from "./TreeRow";
+import { TreeRowView, Indent } from "./TreeRow";
 import { TreeTableHelper } from "./Helpers";
 
 interface Props {
@@ -24,7 +24,9 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper }) => {
       <Thead>
         <Tr>
           <Th key={firstColumn} className="pf-m-width-40">
-            {firstColumn}
+            <Indent level={0} noToggle>
+              {firstColumn}
+            </Indent>
           </Th>
           {columns.map((column) => (
             <Th key={column} className="pf-m-width-20">
