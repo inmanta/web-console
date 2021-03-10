@@ -9,3 +9,14 @@ Usually we use Chrome Devtools to lookup an element and find its `role`.
 For the `td` element, the `role` assigned to it by Chrome was `gridcell`.  
 But in **jsdom** the `role` assigned to the element was `cell`.
 This might save some time and frustrations in the future.
+
+## Bypass CORS issues
+
+When for some reason you get CORS during local development, you can bypass this with a proxy.  
+`local-cors-proxy` is a simple tool that let's you do just that. (https://www.npmjs.com/package/local-cors-proxy)
+
+```bash
+$ lcp --proxyUrl [API_BASE_URL]
+```
+
+This is however only a temporary solution. You should fix the cors problem... I mean core problem.

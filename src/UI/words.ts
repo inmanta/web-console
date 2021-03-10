@@ -69,6 +69,7 @@ const dict = {
     `Are you sure you want to set state of instance ${id} to ${state}?`,
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
+  "inventory.statusTab.history": "History",
   "inventory.resourcesTab.empty.title": "No resources found",
   "inventory.resourcesTab.empty.body":
     "No resources could be found for this instance",
