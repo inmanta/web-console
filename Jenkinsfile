@@ -8,7 +8,7 @@ pipeline {
     }
     triggers{
         pollSCM('* * * * *')
-        cron("H H(2-5) * * *")
+        cron(BRANCH_NAME ==~ /master|iso[0-9]+/ ? "H H(2-5) * * *" : "")
     }
 
     stages {
