@@ -25,9 +25,8 @@ import {
   EnvironmentSelector,
   IEnvironmentSelectorItem,
 } from "./Toolbar/EnvironmentSelector";
-import { SimpleNotificationBadge } from "./Toolbar/SimpleNotificationBadge";
 import { IconDropdown } from "./Toolbar/IconDropdown";
-import { AngleDownIcon, CogIcon } from "@patternfly/react-icons";
+import { AngleDownIcon } from "@patternfly/react-icons";
 import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import * as _ from "lodash";
 import SimpleBackgroundImage from "./SimpleBackgroundImage";
@@ -184,24 +183,15 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
     );
   };
 
-  const UpperToolbar = () => {
-    const dropdownItems = [];
-    return (
-      <PageHeaderTools>
-        <PageHeaderToolsGroup>
-          <SimpleNotificationBadge />
-          <IconDropdown icon={CogIcon} dropdownItems={dropdownItems} />
-        </PageHeaderToolsGroup>
-        <ProfileDropdownGroup />
-      </PageHeaderTools>
-    );
-  };
-
   const Header = (
     <PageHeader
       logo={inmantaLogo}
       logoProps={logoProps}
-      headerTools={<UpperToolbar />}
+      headerTools={
+        <PageHeaderTools>
+          <ProfileDropdownGroup />
+        </PageHeaderTools>
+      }
       showNavToggle={true}
       topNav={<EnvironmentSelector items={environments} />}
       isNavOpen={isNavOpen}
