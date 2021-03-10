@@ -4,6 +4,7 @@ import * as ServiceInstance from "./ServiceInstance";
 const base: InstanceLog = {
   ...ServiceInstance.A,
   version: 1,
+  state: "rejected",
   service_instance_id: ServiceInstance.A.id,
   events: [],
   timestamp: "2021-01-11T12:55:25.961567",
@@ -22,7 +23,7 @@ export const list2 = [
     version: 3,
     timestamp: "2021-02-15T14:27:54.609061",
     config: {},
-    state: "creating",
+    state: "rejected",
     candidate_attributes: null,
     active_attributes: {
       vc_id: 10000,
@@ -130,7 +131,7 @@ export const list2 = [
     version: 4,
     timestamp: "2021-02-15T14:29:18.968061",
     config: {},
-    state: "create_failed",
+    state: "rejected",
     candidate_attributes: null,
     active_attributes: {
       vc_id: 10000,
@@ -222,7 +223,7 @@ export const list2 = [
     version: 5,
     timestamp: "2021-02-15T14:29:38.019725",
     config: {},
-    state: "awaiting_up",
+    state: "rollback",
     candidate_attributes: null,
     active_attributes: {
       vc_id: 10000,
@@ -406,7 +407,7 @@ export const list2 = [
     version: 2,
     timestamp: "2021-02-15T14:27:45.928622",
     config: {},
-    state: "allocating",
+    state: "rejected",
     candidate_attributes: {
       vc_id: 10000,
       csp_port: "ge-0/0/2",
@@ -498,7 +499,7 @@ export const list2 = [
     version: 1,
     timestamp: "2021-02-15T14:27:34.722210",
     // config: {},
-    state: "ordered",
+    state: "rollback",
     candidate_attributes: {
       customer: "BEL/HOMME",
       service_mtu: 1500,

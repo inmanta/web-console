@@ -34,7 +34,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
   </PageSection>
 );
 
-export const Provider: React.FC<{
+export const ServiceInventoryWithProvider: React.FC<{
   match: { params: { id: string } };
 }> = ({ match }) => (
   <EnvironmentProvider

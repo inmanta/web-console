@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import {
   InstantFetcher,
+  Service,
   ServiceInstance,
   StaticSubscriptionController,
 } from "@/Test";
@@ -17,7 +18,7 @@ import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 
 it("ServiceInstanceHistory renders", async () => {
-  const { service_entity, id, environment } = ServiceInstance.A;
+  const { id, environment } = ServiceInstance.A;
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new InstanceLogsHookHelper(
@@ -33,7 +34,7 @@ it("ServiceInstanceHistory renders", async () => {
     <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
-          service_entity={service_entity}
+          service={Service.A}
           instanceId={id}
           environment={environment}
         />

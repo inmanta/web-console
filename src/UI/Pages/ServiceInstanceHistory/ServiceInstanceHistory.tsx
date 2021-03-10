@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { InstanceLog, Query, RemoteData } from "@/Core";
+import { InstanceLog, Query, RemoteData, ServiceModel } from "@/Core";
 import {
   EmptyView,
   ErrorView,
   LoadingView,
   ExpandableTable,
+  InstanceState,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { InstanceLogRow } from "./InstanceLogRow";
@@ -15,13 +16,13 @@ import {
 } from "@/UI/ServiceInventory/Presenters";
 
 interface Props {
-  service_entity: string;
+  service: ServiceModel;
   instanceId: string;
   environment: string;
 }
 
 export const ServiceInstanceHistory: React.FC<Props> = ({
-  service_entity,
+  service,
   instanceId,
   environment,
 }) => {
@@ -32,7 +33,7 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
     qualifier: {
       environment,
       id: instanceId,
-      service_entity,
+      service_entity: service.name,
     },
   });
 
@@ -76,6 +77,7 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
                   dict[props.id].active_attributes,
                   dict[props.id].rollback_attributes
                 )}
+                state={<State service={service} state={dict[props.id].state} />}
               />
             )}
           />
@@ -83,4 +85,22 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
       );
     },
   })(data);
+};
+
+const State: React.FC<{ service: ServiceModel; state: string }> = ({
+  service,
+  state,
+}) => {
+  // The service entity lifecycle contains all of the states an instance of that entity can reach
+  const lifecycleState = service.lifecycle.states.find(
+    (serviceState) => serviceState.name === state
+  );
+  if (!lifecycleState) {
+    return null;
+  }
+
+  return InstanceState({
+    name: lifecycleState.name,
+    label: lifecycleState.label,
+  });
 };

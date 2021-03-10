@@ -19,6 +19,7 @@ interface Props extends ExpandableRowProps {
   log: InstanceLog;
   timestamp: DateInfo;
   attributesSummary: AttributesSummary;
+  state: React.ReactElement;
 }
 
 export const InstanceLogRow: React.FC<Props> = ({
@@ -30,6 +31,7 @@ export const InstanceLogRow: React.FC<Props> = ({
   log,
   timestamp,
   attributesSummary,
+  state,
 }) => {
   const [activeTab, setActiveTab] = useState("Details");
   const attributesOnClick = () => {
@@ -51,7 +53,7 @@ export const InstanceLogRow: React.FC<Props> = ({
         <Td dataLabel={"timestamp"}>
           <DateWithTooltip date={timestamp} />
         </Td>
-        <Td dataLabel={"state"}>{log.state}</Td>
+        <Td dataLabel={"state"}>{state}</Td>
         <Td dataLabel={"Attributes"}>
           <a href={`#instance-row-${id}`}>
             <AttributesSummaryView
@@ -68,7 +70,7 @@ export const InstanceLogRow: React.FC<Props> = ({
               activeTab={activeTab}
               onChange={setActiveTab as (a: string) => void}
               tabs={[
-                detailsTab(log.version, timestamp.full),
+                detailsTab(state, log.version, timestamp.full),
                 attributesTab(log),
                 eventsTab(log),
               ]}
@@ -80,11 +82,15 @@ export const InstanceLogRow: React.FC<Props> = ({
   );
 };
 
-const detailsTab = (version: number, timestamp: string): TabDescriptor => ({
+const detailsTab = (
+  state: React.ReactElement,
+  version: number,
+  timestamp: string
+): TabDescriptor => ({
   id: "Details",
   title: "Details",
   icon: <InfoCircleIcon />,
-  view: <DetailsView info={{ state: null, version, timestamp }} />,
+  view: <DetailsView info={{ state, version, timestamp }} />,
 });
 
 const attributesTab = (log: InstanceLog): TabDescriptor => ({

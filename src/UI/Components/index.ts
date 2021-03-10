@@ -7,6 +7,7 @@ export * from "./EventIcon";
 export * from "./EventsTable";
 export * from "./ExpandableTable";
 export * from "./IconTabs";
+export * from "./InstanceState";
 export * from "./LoadingView";
 export * from "./ResourceTable";
 export * from "./ServiceProvider";
