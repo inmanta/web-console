@@ -152,36 +152,32 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
     return <TextContent>{name}</TextContent>;
   };
 
-  const ProfileDropdownGroup = () => (
-    <PageHeaderToolsGroup>
-      <Login />
-      <IconDropdown
-        icon={AngleDownIcon}
-        dropdownItems={[
-          <DropdownItem
-            key="action2"
-            component="button"
-            onClick={keycloak && keycloak.logout}
-          >
-            Logout
-          </DropdownItem>,
-        ]}
-      />
-      <Avatar src={AvatarImg} alt="Avatar image" />
-    </PageHeaderToolsGroup>
+  const Profile = () => (
+    <PageHeaderTools>
+      <PageHeaderToolsGroup>
+        <Login />
+        <IconDropdown
+          icon={AngleDownIcon}
+          dropdownItems={[
+            <DropdownItem
+              key="action2"
+              component="button"
+              onClick={keycloak && keycloak.logout}
+            >
+              Logout
+            </DropdownItem>,
+          ]}
+        />
+        <Avatar src={AvatarImg} alt="Avatar image" />
+      </PageHeaderToolsGroup>
+    </PageHeaderTools>
   );
 
   const Header = (
     <PageHeader
       logo={inmantaLogo}
       logoProps={logoProps}
-      headerTools={
-        shouldUseAuth ? (
-          <PageHeaderTools>
-            <ProfileDropdownGroup />
-          </PageHeaderTools>
-        ) : undefined
-      }
+      headerTools={shouldUseAuth ? <Profile /> : undefined}
       showNavToggle={true}
       topNav={<EnvironmentSelector items={environments} />}
       isNavOpen={isNavOpen}
