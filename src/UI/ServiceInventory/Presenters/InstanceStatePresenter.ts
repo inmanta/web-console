@@ -1,6 +1,6 @@
-import { ServiceInstanceModelWithTargetStates, ServiceModel } from "@/Core";
 import { ReactElement } from "react";
-import { InstanceState } from "../Components/InstanceState";
+import { InstanceState } from "@/UI/Components";
+import { ServiceInstanceModelWithTargetStates, ServiceModel } from "@/Core";
 import { StatePresenter } from "./StatePresenter";
 
 export class InstanceStatePresenter implements StatePresenter {

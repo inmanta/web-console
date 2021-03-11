@@ -4,6 +4,7 @@ import { StoreProvider } from "easy-peasy";
 import {
   InstantFetcher,
   InstanceLog,
+  Service,
   StaticSubscriptionController,
 } from "@/Test";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
@@ -22,7 +23,7 @@ export default {
 };
 
 const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
-  const { service_entity, service_instance_id, environment } = InstanceLog.A;
+  const { service_instance_id, environment } = InstanceLog.A;
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new InstanceLogsHookHelper(
@@ -41,7 +42,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
     <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
-          service_entity={service_entity}
+          service={Service.A}
           instanceId={service_instance_id}
           environment={environment}
         />
@@ -53,3 +54,5 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
 export const Empty: React.FC = () => <Template logs={[]} />;
 
 export const One: React.FC = () => <Template logs={[InstanceLog.A]} />;
+
+export const Multiple: React.FC = () => <Template logs={InstanceLog.list2} />;

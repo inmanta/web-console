@@ -13,7 +13,6 @@ import {
   Button,
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
-import { useStoreState } from "@/UI/Store";
 import { InventoryTable } from "@/UI/ServiceInventory";
 import { AttributeModel, Query, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
@@ -21,75 +20,41 @@ import { Link } from "react-router-dom";
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServicesContext } from "@/UI/ServicesContext";
 import { KeycloakInstance } from "keycloak-js";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  ServiceProvider,
+  EnvironmentProvider,
+} from "@/UI/Components";
 
-const Wrapper: React.FC<{ "aria-label": string }> = ({
-  children,
-  ...props
-}) => (
-  <PageSection
-    className={"horizontally-scrollable"}
-    aria-label={props["aria-label"]}
-  >
+const Wrapper: React.FC = ({ children, ...props }) => (
+  <PageSection className={"horizontally-scrollable"} {...props}>
     <Card>{children}</Card>
   </PageSection>
 );
 
-export const ServiceInventoryWithProvider: React.FunctionComponent<{
+export const ServiceInventoryWithProvider: React.FC<{
   match: { params: { id: string } };
-}> = ({ match }) => {
-  const environmentId = useStoreState(
-    (store) => store.environments.getSelectedEnvironment.id
-  );
-
-  return environmentId ? (
-    <ServiceProvider
-      serviceName={match.params.id}
-      environmentId={environmentId}
-    />
-  ) : (
-    <Wrapper aria-label="ServiceInventory-Failed">
-      <ErrorView error={words("error.environment.missing")} delay={500} />
-    </Wrapper>
-  );
-};
-
-const ServiceProvider: React.FunctionComponent<{
-  serviceName: string;
-  environmentId: string;
-}> = ({ serviceName, environmentId }) => {
-  const { dataProvider } = useContext(ServicesContext);
-
-  const [data, retry] = dataProvider.useContinuous<"Service">({
-    kind: "Service",
-    qualifier: { name: serviceName, environment: environmentId },
-  });
-
-  return RemoteData.fold<
-    Query.Error<"Service">,
-    Query.Data<"Service">,
-    JSX.Element | null
-  >({
-    notAsked: () => null,
-    loading: () => (
-      <Wrapper aria-label="ServiceInventory-Loading">
-        <LoadingView delay={500} />
-      </Wrapper>
-    ),
-    failed: (error) => (
-      <Wrapper aria-label="ServiceInventory-Failed">
-        <ErrorView error={error} retry={retry} />
-      </Wrapper>
-    ),
-    success: (service) => (
-      <ServiceInventory
-        serviceName={serviceName}
-        environmentId={environmentId}
-        service={service}
+}> = ({ match }) => (
+  <EnvironmentProvider
+    Wrapper={Wrapper}
+    Dependant={({ environment }) => (
+      <ServiceProvider
+        serviceName={match.params.id}
+        environmentId={environment}
+        Wrapper={Wrapper}
+        Dependant={({ service }) => (
+          <ServiceInventory
+            service={service}
+            environmentId={environment}
+            serviceName={match.params.id}
+          />
+        )}
       />
-    ),
-  })(data);
-};
+    )}
+  />
+);
 
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
@@ -126,7 +91,7 @@ export const ServiceInventory: React.FunctionComponent<{
     ),
     failed: (error) => (
       <Wrapper aria-label="ServiceInventory-Failed">
-        <ErrorView error={error} retry={retry} />
+        <ErrorView message={error} retry={retry} />
       </Wrapper>
     ),
     success: (instances) => (

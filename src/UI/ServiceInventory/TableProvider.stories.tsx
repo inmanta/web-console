@@ -16,6 +16,7 @@ import {
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
+import { MemoryRouter } from "react-router";
 import { ServiceWithIdentity } from "@/Test/Data/Service";
 
 export default {
@@ -37,9 +38,11 @@ const Template: Story<Props> = (args) => {
 
   return (
     <ServicesContext.Provider value={{ dataProvider }}>
-      <StoreProvider store={store}>
-        <TableProvider {...args} />
-      </StoreProvider>
+      <MemoryRouter>
+        <StoreProvider store={store}>
+          <TableProvider {...args} />
+        </StoreProvider>
+      </MemoryRouter>
     </ServicesContext.Provider>
   );
 };

@@ -1,3 +1,4 @@
+import React from "react";
 import { State } from "@/Core";
 import { Label } from "@patternfly/react-core";
 import {
@@ -6,7 +7,6 @@ import {
   ExclamationTriangleIcon,
   InfoCircleIcon,
 } from "@patternfly/react-icons";
-import React from "react";
 
 export const InstanceState: React.FC<State> = ({ name, label }) => {
   switch (label) {

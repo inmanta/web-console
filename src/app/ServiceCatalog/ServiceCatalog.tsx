@@ -20,7 +20,7 @@ export const ServiceCatalogWithProvider: React.FC = () => {
       className={"horizontally-scrollable"}
       aria-label="ServiceCatalog-Failed"
     >
-      <ErrorView error={words("error.environment.missing")} delay={1000} />
+      <ErrorView message={words("error.environment.missing")} delay={1000} />
     </PageSection>
   );
 };
@@ -61,7 +61,7 @@ export const ServiceCatalog: React.FC<Props> = ({ environmentId }) => {
         className="horizontally-scrollable"
         aria-label="ServiceCatalog-Failed"
       >
-        <ErrorView error={error} retry={retry} />
+        <ErrorView message={error} retry={retry} />
       </PageSection>
     ),
     success: (services) =>

@@ -1,11 +1,11 @@
+import React from "react";
+import { mount } from "enzyme";
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InfoCircleIcon,
 } from "@patternfly/react-icons";
-import { mount } from "enzyme";
-import React from "react";
 import { InstanceState } from "./InstanceState";
 
 describe("InstanceState shows ", () => {

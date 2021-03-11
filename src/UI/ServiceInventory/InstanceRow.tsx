@@ -2,11 +2,8 @@ import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import React, { useState } from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
-import {
-  AttributesSummaryView,
-  DateWithTooltip,
-  IdWithCopy,
-} from "./Components";
+import { DateWithTooltip } from "@/UI/Components";
+import { AttributesSummaryView, IdWithCopy } from "./Components";
 import {
   ServiceInstanceDetails,
   AttributesView,

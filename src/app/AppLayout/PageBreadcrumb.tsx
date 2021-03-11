@@ -22,6 +22,13 @@ export const PageBreadcrumb: React.FC = () => {
           path = "/lsm" + pathParts.join("/");
         }
       }
+
+      if (location.pathname.endsWith("history")) {
+        if (route.title === "Service Inventory") {
+          pathParts[2] = location.pathname.split("/")[3];
+          path = "/lsm" + pathParts.join("/");
+        }
+      }
       const LinkElement = !isActive ? (
         <NavLink to={{ pathname: path, search: location.search }}>
           {route.title}

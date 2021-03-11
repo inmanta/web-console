@@ -10,6 +10,7 @@ import {
 import { ServiceCatalogWithProvider } from "./ServiceCatalog/ServiceCatalog";
 import { CreateInstancePageWithProvider } from "@/UI/ServiceInstanceForm";
 import { ServiceInventoryWithProvider } from "./ServiceInventory/ServiceInventory";
+import { ServiceInstanceHistoryWithProvider } from "@/UI/Pages";
 
 let routeFocusTimer: number;
 
@@ -61,6 +62,15 @@ const routes: IAppRouteGroup[] = [
         label: "Create Instance",
         path: "/catalog/:id/inventory/add",
         title: "Add Instance",
+      },
+      {
+        component: ServiceInstanceHistoryWithProvider,
+        exact: true,
+        hideOnSideBar: true,
+        icon: null,
+        label: "Service Instance History",
+        path: "/catalog/:id/inventory/:instanceId/history",
+        title: "Service Instance History",
       },
     ],
     name: "Lifecycle service management",

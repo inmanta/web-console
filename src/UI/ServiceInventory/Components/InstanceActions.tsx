@@ -2,10 +2,17 @@ import React from "react";
 import { KeycloakInstance } from "keycloak-js";
 import { DiagnosticsModal } from "@app/ServiceInventory/DiagnosticsModal";
 import { ServiceInstanceForAction } from "@/UI/ServiceInventory/Presenters";
-import { DescriptionList, DescriptionListGroup } from "@patternfly/react-core";
+import {
+  Button,
+  DescriptionList,
+  DescriptionListGroup,
+} from "@patternfly/react-core";
 import { SetStateAction } from "./SetStateAction";
 import { EditInstanceModal } from "@/UI/ServiceInstanceForm/Edit/EditInstanceModal";
 import { DeleteModal } from "@/UI/ServiceInstanceForm/Delete/DeleteModal";
+import { Link, useLocation } from "react-router-dom";
+import { HistoryIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
@@ -28,6 +35,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   deleteDisabled,
   onSetInstanceState,
 }) => {
+  const location = useLocation();
   if (instance.state === "terminated") return null;
   return (
     <DescriptionList>
@@ -53,6 +61,18 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
           instance={instance}
           keycloak={keycloak}
         />
+      </DescriptionListGroup>
+      <DescriptionListGroup>
+        <Link
+          to={{
+            pathname: `/lsm/catalog/${instance.service_entity}/inventory/${instance.id}/history`,
+            search: location.search,
+          }}
+        >
+          <Button isBlock>
+            <HistoryIcon /> {words("inventory.statusTab.history")}
+          </Button>
+        </Link>
       </DescriptionListGroup>
       <DescriptionListGroup>
         <SetStateAction

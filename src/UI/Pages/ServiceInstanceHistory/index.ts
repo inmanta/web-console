@@ -1,1 +1,1 @@
-export { Provider as ServiceInstanceHistory } from "./Provider";
+export { Provider as ServiceInstanceHistoryWithProvider } from "./Provider";

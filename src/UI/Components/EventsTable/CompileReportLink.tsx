@@ -1,7 +1,7 @@
 import { Button } from "@patternfly/react-core";
 import { ExternalLinkAltIcon } from "@patternfly/react-icons";
 import React from "react";
-import { words } from "..";
+import { words } from "@/UI/words";
 
 interface Props {
   compileReportId: string | null;

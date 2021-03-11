@@ -11,6 +11,7 @@ import {
   ResourcesFetcher,
   ServiceFetcher,
   ServiceInstancesFetcher,
+  ServiceInstanceLogsFetcher,
   ServicesFetcher,
 } from "@/Infra";
 import {
@@ -29,6 +30,8 @@ import {
   ServicesHookHelper,
   ServicesStateHelper,
   DataManagerImpl,
+  InstanceLogsHookHelper,
+  InstanceLogsStateHelper,
 } from "@/UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
@@ -94,12 +97,21 @@ const eventsHelper = new EventsHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
+const instanceLogsHelper = new InstanceLogsHookHelper(
+  new DataManagerImpl<"InstanceLogs">(
+    new ServiceInstanceLogsFetcher(baseApiHelper),
+    new InstanceLogsStateHelper(storeInstance)
+  ),
+  new LiveSubscriptionController(5000, new IntervalsDictionary())
+);
+
 const dataProvider = new DataProviderImpl([
   servicesHelper,
   serviceHelper,
   serviceInstancesHelper,
   resourcesHelper,
   eventsHelper,
+  instanceLogsHelper,
 ]);
 
 ReactDOM.render(

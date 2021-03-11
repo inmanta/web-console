@@ -7,20 +7,18 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import React from "react";
-import { ReactElement } from "react";
-import { EventTablePresenter } from "./EventTablePresenter";
+import { EventsTablePresenter } from "./EventsTablePresenter";
 
 interface Props {
-  tablePresenter: EventTablePresenter;
-  filler: ReactElement;
+  tablePresenter: EventsTablePresenter;
   wrapInTd?: boolean;
   "aria-label"?: string;
 }
 
-export const FillerEventTable: React.FC<Props> = ({
+export const EventsTableWrapper: React.FC<Props> = ({
   tablePresenter,
-  filler,
   wrapInTd,
+  children,
   ...props
 }) => {
   const heads = tablePresenter
@@ -34,14 +32,15 @@ export const FillerEventTable: React.FC<Props> = ({
           {heads}
         </Tr>
       </Thead>
-      {wrapInTd && (
+      {wrapInTd ? (
         <Tbody>
           <Tr>
-            <Td colSpan={tablePresenter.getNumberOfColumns()}>{filler}</Td>
+            <Td colSpan={tablePresenter.getNumberOfColumns()}>{children}</Td>
           </Tr>
         </Tbody>
+      ) : (
+        children
       )}
-      {!wrapInTd && filler}
     </TableComposable>
   );
 };

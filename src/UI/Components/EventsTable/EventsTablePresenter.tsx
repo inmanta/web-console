@@ -1,8 +1,11 @@
 import { EventRow, InstanceEvent } from "@/Core";
-import { DatePresenter, TablePresenter } from "../ServiceInventory/Presenters";
-import { words } from "../words";
+import {
+  DatePresenter,
+  TablePresenter,
+} from "@/UI/ServiceInventory/Presenters";
+import { words } from "@/UI/words";
 
-export class EventTablePresenter
+export class EventsTablePresenter
   implements TablePresenter<InstanceEvent, EventRow> {
   constructor(private datePresenter: DatePresenter) {}
   readonly columnHeads = [

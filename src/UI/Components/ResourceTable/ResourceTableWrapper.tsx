@@ -1,15 +1,17 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 
 interface Props {
-  filler: ReactElement;
   "aria-label"?: string;
 }
 
-export const FillerResourceTable: React.FC<Props> = ({ filler, ...props }) => {
+export const ResourceTableWrapper: React.FC<Props> = ({
+  children,
+  ...props
+}) => {
   const columns = ["Resource Id", "Details", "State"];
   const rows = [
-    { heightAuto: true, cells: [{ props: { colSpan: 8 }, title: filler }] },
+    { heightAuto: true, cells: [{ props: { colSpan: 8 }, title: children }] },
   ];
 
   return (
