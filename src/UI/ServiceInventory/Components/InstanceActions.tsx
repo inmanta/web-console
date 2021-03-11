@@ -8,8 +8,8 @@ import {
   DescriptionListGroup,
 } from "@patternfly/react-core";
 import { SetStateAction } from "./SetStateAction";
-import { EditInstanceModal } from "@/UI/ServiceInstanceForm/Edit/EditInstanceModal";
-import { DeleteModal } from "@/UI/ServiceInstanceForm/Delete/DeleteModal";
+import { EditInstanceModal } from "@/UI/Pages/ServiceInstanceForm/Edit/EditInstanceModal";
+import { DeleteModal } from "@/UI/Pages/ServiceInstanceForm/Delete/DeleteModal";
 import { Link, useLocation } from "react-router-dom";
 import { HistoryIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";

@@ -7,8 +7,8 @@ import {
   LastLocationProvider,
   useLastLocation,
 } from "react-router-last-location";
-import { CreateInstancePageWithProvider } from "@/UI/ServiceInstanceForm";
 import {
+  CreateInstancePageWithProvider,
   ServiceCatalogWithProvider,
   ServiceInstanceHistoryWithProvider,
   ServiceInventoryWithProvider,

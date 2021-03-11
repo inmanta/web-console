@@ -3,8 +3,8 @@ import { Button, Modal } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { KeycloakInstance } from "keycloak-js";
 import React, { useState } from "react";
-import { ActionDisabledTooltip } from "../../ServiceInventory/Components";
-import { words } from "../../words";
+import { ActionDisabledTooltip } from "@/UI/ServiceInventory/Components";
+import { words } from "@/UI/words";
 import { DeleteForm } from "./DeleteForm";
 
 interface Props {

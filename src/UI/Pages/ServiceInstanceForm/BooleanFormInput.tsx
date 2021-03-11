@@ -1,6 +1,6 @@
 import { FormGroup, Radio } from "@patternfly/react-core";
 import React from "react";
-import { words } from "../words";
+import { words } from "@/UI/words";
 
 interface Props {
   isChecked: boolean | null;

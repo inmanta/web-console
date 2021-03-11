@@ -5,7 +5,7 @@ import {
   TextInputTypes,
 } from "@patternfly/react-core";
 import React, { useState } from "react";
-import { words } from "../words";
+import { words } from "@/UI/words";
 import { toOptionalBoolean } from "./AttributeConverter";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { TextFormInput } from "./TextFormInput";

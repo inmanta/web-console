@@ -14,7 +14,9 @@ import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import React, { useCallback, useContext, useState } from "react";
 import { useKeycloak } from "react-keycloak";
 import { useHistory, useLocation } from "react-router-dom";
-import { ServicesContext, useStoreState, words } from "../..";
+import { words } from "@/UI/words";
+import { useStoreState } from "@/UI/Store";
+import { ServicesContext } from "@/UI/ServicesContext";
 import { CreateFormCard } from "./CreateFormCard";
 
 export const CreateInstancePageWithProvider: React.FunctionComponent<{

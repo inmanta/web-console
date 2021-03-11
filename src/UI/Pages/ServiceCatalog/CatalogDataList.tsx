@@ -22,7 +22,7 @@ import { ServiceModel } from "@/Core";
 import { CatalogContent } from "./CatalogContent";
 import { Link } from "react-router-dom";
 import { IRequestParams } from "@/UI/App/utils/fetchInmantaApi";
-import { DeleteForm } from "@/UI/ServiceInstanceForm/Delete";
+import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
 
 export const CatalogDataList: React.FunctionComponent<{
   services?: ServiceModel[];
