@@ -20,3 +20,16 @@ $ lcp --proxyUrl [API_BASE_URL]
 ```
 
 This is however only a temporary solution. You should fix the cors problem... I mean core problem.
+
+## Pruning unused code
+
+TypeScript by itself can detect unused code. But once you export it, TypeScript no longer cares about it.  
+The tool `ts-prune` looks for unused exports. Some of these exports can be removed.  
+Some can not be removed. For example the exports done in storybook files and not used anywhere.  
+But Storybook does pick them up.
+
+You can list the unused exports by running:
+
+```bash
+$ yarn ts-prune
+```
