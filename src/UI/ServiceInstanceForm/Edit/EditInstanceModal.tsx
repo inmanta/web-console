@@ -1,7 +1,7 @@
 import { words } from "@/UI";
 import { ActionDisabledTooltip } from "@/UI/ServiceInventory/Components";
 import { ServiceInstanceForAction } from "@/UI/ServiceInventory/Presenters";
-import { InventoryContext } from "@app/ServiceInventory/ServiceInventory";
+import { InventoryContext } from "@/UI/Pages/ServiceInventory";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { EditIcon } from "@patternfly/react-icons";
 import { KeycloakInstance } from "keycloak-js";

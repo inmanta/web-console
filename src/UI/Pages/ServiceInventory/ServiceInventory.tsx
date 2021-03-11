@@ -14,7 +14,7 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { InventoryTable } from "@/UI/ServiceInventory";
-import { AttributeModel, Query, RemoteData, ServiceModel } from "@/Core";
+import { Query, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
 import { PlusIcon } from "@patternfly/react-icons";
@@ -27,6 +27,7 @@ import {
   ServiceProvider,
   EnvironmentProvider,
 } from "@/UI/Components";
+import { InventoryContext } from "./InventoryContext";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -167,17 +168,4 @@ const IntroView: React.FC<{
       </ToolbarContent>
     </Toolbar>
   </CardFooter>
-);
-
-interface IInventoryContextData {
-  attributes: AttributeModel[];
-  environmentId: string | undefined;
-  inventoryUrl: string;
-  setErrorMessage: React.Dispatch<string>;
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  refresh: (data) => any;
-}
-
-export const InventoryContext = React.createContext(
-  {} as IInventoryContextData
 );

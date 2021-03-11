@@ -1,4 +1,4 @@
-import { InventoryContext } from "@app/ServiceInventory/ServiceInventory";
+import { InventoryContext } from "@/UI/Pages/ServiceInventory";
 import { Button, Modal } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { KeycloakInstance } from "keycloak-js";
