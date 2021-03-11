@@ -32,6 +32,7 @@ export interface ServiceInstanceModel
   rollback_attributes: InstanceAttributeModel | null;
   state: string;
   deployment_progress?: DeploymentProgress;
+  service_identity_attribute_value?: string;
 }
 
 export interface ServiceInstanceModelWithTargetStates

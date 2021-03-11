@@ -17,23 +17,42 @@ const base = ({
       description:
         "A list of customer location IDS where the service should be delivered.",
     },
+    {
+      name: "order_id",
+      type: "string",
+      modifier: "rw",
+      description: "ID of the service",
+    },
   ],
   lifecycle: {
     states: [
       {
-        name: "rollback",
-        model_state: "active",
+        name: "start",
+        export_resources: false,
         purge_resources: false,
         deleted: false,
-        values: {},
+        label: "info",
+      },
+      { name: "creating", label: "info" },
+      {
+        name: "acknowledged",
+        export_resources: false,
+        purge_resources: false,
+        deleted: false,
         label: "info",
       },
       {
         name: "rejected",
-        model_state: "inactive",
+        export_resources: false,
         purge_resources: false,
         deleted: false,
-        values: {},
+        label: "warning",
+      },
+      {
+        name: "terminated",
+        export_resources: false,
+        purge_resources: false,
+        deleted: true,
         label: "warning",
       },
     ],
@@ -80,3 +99,9 @@ const base = ({
 } as unknown) as ServiceModel;
 
 export const A = base;
+
+export const ServiceWithIdentity = {
+  ...base,
+  service_identity: "order_id",
+  service_identity_display_name: "Order ID",
+};

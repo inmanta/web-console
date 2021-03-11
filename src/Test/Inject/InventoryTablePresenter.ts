@@ -12,3 +12,12 @@ export const tablePresenter = new InventoryTablePresenter(
   new DummyActionPresenter(),
   new DummyStatePresenter()
 );
+
+export const tablePresenterWithIdentity = new InventoryTablePresenter(
+  new DummyDatePresenter(),
+  new AttributesPresenter(),
+  new DummyActionPresenter(),
+  new DummyStatePresenter(),
+  "order_id",
+  "Order ID"
+);
