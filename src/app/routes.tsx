@@ -7,10 +7,12 @@ import {
   LastLocationProvider,
   useLastLocation,
 } from "react-router-last-location";
-import { ServiceCatalogWithProvider } from "./ServiceCatalog/ServiceCatalog";
 import { CreateInstancePageWithProvider } from "@/UI/ServiceInstanceForm";
 import { ServiceInventoryWithProvider } from "./ServiceInventory/ServiceInventory";
-import { ServiceInstanceHistoryWithProvider } from "@/UI/Pages";
+import {
+  ServiceInstanceHistoryWithProvider,
+  ServiceCatalogWithProvider,
+} from "@/UI/Pages";
 
 let routeFocusTimer: number;
 
