@@ -1,0 +1,6 @@
+description: Fix spacing for state value in ResourceTable
+issue-nr: 233
+change-type: patch
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
