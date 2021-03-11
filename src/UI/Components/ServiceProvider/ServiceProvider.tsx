@@ -32,7 +32,7 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
     notAsked: () => null,
     loading: () => (
       <Wrapper aria-label="ServiceProvider-Loading">
-        <LoadingView delay={500} />
+        <LoadingView />
       </Wrapper>
     ),
     failed: (error) => (
