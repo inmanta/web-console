@@ -9,7 +9,7 @@ import {
   ErrorView,
 } from "@/UI/Components";
 
-import { MomentDatePresenter } from "../ServiceInventory/Presenters";
+import { MomentDatePresenter } from "../Presenters";
 import { TabProps } from "./ServiceInstanceDetails";
 import { words } from "@/UI/words";
 

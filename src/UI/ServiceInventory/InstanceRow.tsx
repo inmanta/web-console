@@ -10,7 +10,8 @@ import {
   StatusView,
   ResourcesView,
   TabKey,
-} from "@/UI/ServiceInstanceDetails";
+  EventsView,
+} from "./ServiceInstanceDetails";
 import {
   AutomationIcon,
   InfoCircleIcon,
@@ -18,7 +19,6 @@ import {
   PortIcon,
 } from "@patternfly/react-icons";
 import { DeploymentProgressPresenter } from "./Presenters";
-import { EventsView } from "../ServiceInstanceDetails/EventsView";
 
 interface Props {
   row: Row;
