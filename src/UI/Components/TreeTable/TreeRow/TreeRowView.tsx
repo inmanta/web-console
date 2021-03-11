@@ -2,16 +2,7 @@ import React from "react";
 import { Tr, Td } from "@patternfly/react-table";
 import { TreeRow, isRowOfMultipleValues } from "./TreeRow";
 import { Toggle } from "@/UI/Components";
-
-interface IndentProps {
-  level: number;
-  noToggle?: boolean;
-}
-
-const Indent: React.FC<IndentProps> = ({ level, children, noToggle }) => {
-  const space = level * 16 + (noToggle ? 48 : 0);
-  return <span style={{ marginLeft: `${space}px` }}>{children}</span>;
-};
+import { Indent } from "./Indent";
 
 interface RowProps {
   row: TreeRow;
