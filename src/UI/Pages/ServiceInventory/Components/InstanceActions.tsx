@@ -1,7 +1,7 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
 import { DiagnosticsModal } from "@/UI/Pages/ServiceInventory";
-import { ServiceInstanceForAction } from "@/UI/ServiceInventory/Presenters";
+import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
 import {
   Button,
   DescriptionList,

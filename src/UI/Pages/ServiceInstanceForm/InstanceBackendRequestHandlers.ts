@@ -5,7 +5,7 @@ import {
 } from "@/UI/App/utils/fetchInmantaApi";
 import { KeycloakInstance } from "keycloak-js";
 import { FormAttributeResult } from ".";
-import { ServiceInstanceForAction } from "@/UI/ServiceInventory/Presenters";
+import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
 import { AttributeConverter } from "./AttributeConverter";
 
 export async function submitUpdate(

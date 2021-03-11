@@ -1,5 +1,5 @@
 import { AttributeModel, InstanceAttributeModel } from "@/Core";
-import { ServiceInstanceForAction } from "@/UI/ServiceInventory/Presenters";
+import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
 import React from "react";
 import {
   FormAttributeResult,

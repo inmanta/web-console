@@ -13,7 +13,7 @@ import {
   Button,
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
-import { InventoryTable } from "@/UI/ServiceInventory";
+import { TableProvider } from "./TableProvider";
 import { Query, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
@@ -122,7 +122,7 @@ export const ServiceInventory: React.FunctionComponent<{
         {instances.length > 0 ? (
           <Wrapper aria-label="ServiceInventory-Success">
             <IntroView serviceName={serviceName} keycloak={keycloak} />
-            <InventoryTable
+            <TableProvider
               instances={instances}
               keycloak={keycloak}
               serviceEntity={service}

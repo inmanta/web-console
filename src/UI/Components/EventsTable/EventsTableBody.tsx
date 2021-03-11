@@ -1,7 +1,7 @@
 import { EventRow, InstanceEvent } from "@/Core";
 import React from "react";
-import { ExpansionManager } from "@/UI/ServiceInventory/ExpansionManager";
-import { TablePresenter } from "@/UI/ServiceInventory/Presenters";
+import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
+import { TablePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 import { EventsTableRow } from "./EventsTableRow";
 
 interface Props {

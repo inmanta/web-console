@@ -1,6 +1,6 @@
 import { words } from "@/UI";
-import { ActionDisabledTooltip } from "@/UI/ServiceInventory/Components";
-import { ServiceInstanceForAction } from "@/UI/ServiceInventory/Presenters";
+import { ActionDisabledTooltip } from "@/UI/Pages/ServiceInventory/Components";
+import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
 import { InventoryContext } from "@/UI/Pages/ServiceInventory";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { EditIcon } from "@patternfly/react-icons";

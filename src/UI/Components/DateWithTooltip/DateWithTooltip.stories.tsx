@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { ServiceInstance } from "@/Test";
 import { DateWithTooltip } from "./DateWithTooltip";
-import { MomentDatePresenter } from "@/UI/ServiceInventory/Presenters";
+import { MomentDatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 
 export default {
   title: "DateWithTooltip",

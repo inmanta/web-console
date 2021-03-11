@@ -2,7 +2,7 @@ import { EventRow, InstanceEvent } from "@/Core";
 import {
   DatePresenter,
   TablePresenter,
-} from "@/UI/ServiceInventory/Presenters";
+} from "@/UI/Pages/ServiceInventory/Presenters";
 import { words } from "@/UI/words";
 
 export class EventsTablePresenter

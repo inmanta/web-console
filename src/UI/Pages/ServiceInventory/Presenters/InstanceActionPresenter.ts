@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { KeycloakInstance } from "keycloak-js";
-import { InstanceActions } from "@/UI/ServiceInventory/Components";
+import { InstanceActions } from "@/UI/Pages/ServiceInventory/Components";
 import { ActionPresenter, ServiceInstanceForAction } from "./ActionPresenter";
 import { InstanceSetStateManager } from "../InstanceSetStateManager";
 import { ServiceModel } from "@/Core";

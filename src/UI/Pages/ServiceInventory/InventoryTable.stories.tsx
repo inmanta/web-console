@@ -14,7 +14,7 @@ import {
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
-import { ServicesContext } from "../ServicesContext";
+import { ServicesContext } from "@/UI/ServicesContext";
 import { StoreProvider } from "easy-peasy";
 
 export default {
