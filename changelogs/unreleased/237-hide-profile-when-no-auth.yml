@@ -1,0 +1,6 @@
+description: Hide Profile when no auth
+issue-nr: 237
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

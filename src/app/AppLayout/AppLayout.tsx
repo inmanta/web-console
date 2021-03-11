@@ -152,46 +152,32 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
     return <TextContent>{name}</TextContent>;
   };
 
-  const ProfileDropdownGroup = () => {
-    let profileDropdownItems;
-    if (shouldUseAuth) {
-      profileDropdownItems = [
-        <DropdownItem
-          key="action2"
-          component="button"
-          onClick={keycloak && keycloak.logout}
-        >
-          Logout
-        </DropdownItem>,
-      ];
-    } else {
-      profileDropdownItems = [
-        <DropdownItem key="action2" component="button" isDisabled={true}>
-          Logout
-        </DropdownItem>,
-      ];
-    }
-    return (
+  const Profile = () => (
+    <PageHeaderTools>
       <PageHeaderToolsGroup>
-        {shouldUseAuth ? <Login /> : <TextContent> inmanta </TextContent>}
+        <Login />
         <IconDropdown
           icon={AngleDownIcon}
-          dropdownItems={profileDropdownItems}
+          dropdownItems={[
+            <DropdownItem
+              key="action2"
+              component="button"
+              onClick={keycloak && keycloak.logout}
+            >
+              Logout
+            </DropdownItem>,
+          ]}
         />
         <Avatar src={AvatarImg} alt="Avatar image" />
       </PageHeaderToolsGroup>
-    );
-  };
+    </PageHeaderTools>
+  );
 
   const Header = (
     <PageHeader
       logo={inmantaLogo}
       logoProps={logoProps}
-      headerTools={
-        <PageHeaderTools>
-          <ProfileDropdownGroup />
-        </PageHeaderTools>
-      }
+      headerTools={shouldUseAuth ? <Profile /> : undefined}
       showNavToggle={true}
       topNav={<EnvironmentSelector items={environments} />}
       isNavOpen={isNavOpen}
