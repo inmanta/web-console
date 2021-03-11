@@ -1,0 +1,8 @@
+description: Run tests nightly on iso branches
+issue-repo: infra-tickets
+issue-nr: 133
+change-type: patch
+destination-branches:
+  - master
+  - iso4
+  - iso3
