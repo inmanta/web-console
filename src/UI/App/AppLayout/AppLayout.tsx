@@ -18,7 +18,7 @@ import {
   PageHeaderTools,
   PageHeaderToolsGroup,
 } from "@patternfly/react-core";
-import { routes } from "@app/routes";
+import { routes } from "@/UI/App/routes";
 import Logo from "!react-svg-loader!@images/logo.svg";
 import AvatarImg from "!url-loader!@assets/images/img_avatar.svg";
 import {
@@ -29,9 +29,9 @@ import { IconDropdown } from "./Toolbar/IconDropdown";
 import { AngleDownIcon } from "@patternfly/react-icons";
 import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import * as _ from "lodash";
-import SimpleBackgroundImage from "./SimpleBackgroundImage";
+import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 import { PageBreadcrumb } from "./PageBreadcrumb";
-import { fetchInmantaApi } from "@app/utils/fetchInmantaApi";
+import { fetchInmantaApi } from "@/UI/App/utils/fetchInmantaApi";
 import { ProjectModel } from "@/Core";
 
 interface IAppLayout {
@@ -40,6 +40,7 @@ interface IAppLayout {
   setErrorMessage: React.Dispatch<string>;
   shouldUseAuth: boolean;
 }
+
 export const getEnvironmentNamesWithSeparator = (
   project: ProjectModel
 ): IEnvironmentSelectorItem[] => {
@@ -56,7 +57,7 @@ export const getEnvironmentNamesWithSeparator = (
   return [{ displayName: project.name, projectId: project.id }];
 };
 
-const AppLayout: React.FunctionComponent<IAppLayout> = ({
+export const AppLayout: React.FunctionComponent<IAppLayout> = ({
   keycloak,
   children,
   setErrorMessage,
@@ -255,5 +256,3 @@ const AppLayout: React.FunctionComponent<IAppLayout> = ({
     </React.Fragment>
   );
 };
-
-export { AppLayout };

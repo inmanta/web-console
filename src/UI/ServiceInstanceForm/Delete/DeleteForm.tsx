@@ -1,6 +1,9 @@
 import { Form, ActionGroup, Button } from "@patternfly/react-core";
 import React from "react";
-import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
+import {
+  fetchInmantaApi,
+  IRequestParams,
+} from "@/UI/App/utils/fetchInmantaApi";
 import { words } from "@/UI";
 
 const DeleteForm: React.FunctionComponent<{

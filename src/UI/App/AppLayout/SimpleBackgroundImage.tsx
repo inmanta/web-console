@@ -2,7 +2,7 @@ import React from "react";
 import { BackgroundImage } from "@patternfly/react-core";
 import filter from "@patternfly/patternfly/assets/images/background-filter.svg";
 
-class SimpleBackgroundImage extends React.Component {
+export class SimpleBackgroundImage extends React.Component {
   private images = {
     filter: `${filter}#image_overlay`,
     lg: `${process.env.PUBLIC_PATH}images/pfbg_2000.jpg`,
@@ -20,5 +20,3 @@ class SimpleBackgroundImage extends React.Component {
     return <BackgroundImage src={this.images} alt="Background image" />;
   }
 }
-
-export default SimpleBackgroundImage;

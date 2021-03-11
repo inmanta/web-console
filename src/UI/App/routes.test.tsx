@@ -1,5 +1,5 @@
 import React from "react";
-import { App } from "@app/index";
+import { App } from "@/UI/App/app";
 import { mount } from "enzyme";
 import Keycloak from "keycloak-js";
 import { waitFor } from "@testing-library/react";

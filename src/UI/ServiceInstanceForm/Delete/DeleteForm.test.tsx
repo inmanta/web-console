@@ -1,7 +1,7 @@
 import { DeleteForm } from "./DeleteForm";
 import React from "react";
 import { mount } from "enzyme";
-import { IRequestParams } from "@app/utils/fetchInmantaApi";
+import { IRequestParams } from "@/UI/App/utils/fetchInmantaApi";
 
 describe("Delete Form", () => {
   const dummyFunction = () => {

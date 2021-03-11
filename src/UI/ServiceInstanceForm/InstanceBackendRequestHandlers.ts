@@ -1,5 +1,8 @@
 import { ServiceModel } from "@/Core";
-import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
+import {
+  fetchInmantaApi,
+  IRequestParams,
+} from "@/UI/App/utils/fetchInmantaApi";
 import { KeycloakInstance } from "keycloak-js";
 import { FormAttributeResult } from ".";
 import { ServiceInstanceForAction } from "../ServiceInventory/Presenters";

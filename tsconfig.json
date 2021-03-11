@@ -20,7 +20,6 @@
     "rootDir": ".",
     "outDir": "dist",
     "paths": {
-      "@app/*": ["src/app/*"],
       "@assets/*": ["node_modules/@patternfly/react-core/dist/styles/assets/*"],
       "@images/*": ["public/images/*"],
       "@/*": ["src/*"]

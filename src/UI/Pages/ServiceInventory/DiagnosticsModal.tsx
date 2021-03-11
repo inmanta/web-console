@@ -18,7 +18,10 @@ import React from "react";
 import { ToolsIcon, CheckIcon, TimesIcon } from "@patternfly/react-icons";
 import { InventoryContext } from "./InventoryContext";
 import { ServiceInstanceModel } from "@/Core";
-import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
+import {
+  fetchInmantaApi,
+  IRequestParams,
+} from "@/UI/App/utils/fetchInmantaApi";
 
 type PickedInstance = Pick<ServiceInstanceModel, "id" | "version">;
 

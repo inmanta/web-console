@@ -1,4 +1,7 @@
-import { fetchInmantaApi, IRequestParams } from "@app/utils/fetchInmantaApi";
+import {
+  fetchInmantaApi,
+  IRequestParams,
+} from "@/UI/App/utils/fetchInmantaApi";
 import { KeycloakInstance } from "keycloak-js";
 import { ServiceInstanceForAction } from "./Presenters/ActionPresenter";
 

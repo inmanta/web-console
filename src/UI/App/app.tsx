@@ -1,9 +1,9 @@
 import * as React from "react";
 import "@patternfly/react-core/dist/styles/base.css";
 import { BrowserRouter as Router } from "react-router-dom";
-import { AppLayout } from "@app/AppLayout/AppLayout";
-import { AppRoutes } from "@app/routes";
-import "@app/app.css";
+import { AppLayout } from "@/UI/App/AppLayout/AppLayout";
+import { AppRoutes } from "@/UI/App/routes";
+import "@/UI/App/app.css";
 import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import {
@@ -18,7 +18,7 @@ const keycloakInitConfig = {
   flow: "implicit",
 } as KeycloakInitOptions;
 
-const App: React.FunctionComponent<{
+export const App: React.FunctionComponent<{
   keycloak: Keycloak.KeycloakInstance;
   shouldUseAuth: boolean;
 }> = (props) => {
@@ -64,5 +64,3 @@ const App: React.FunctionComponent<{
   }
   return AppWithStore;
 };
-
-export { App };

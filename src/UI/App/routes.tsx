@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Route, RouteComponentProps, Switch, Redirect } from "react-router-dom";
-import { accessibleRouteChangeHandler } from "@app/utils/utils";
-import { NotFound } from "@app/NotFound/NotFound";
-import { useDocumentTitle } from "@app/utils/useDocumentTitle";
+import { accessibleRouteChangeHandler } from "@/UI/App/utils/utils";
+import { NotFound } from "@/UI/App/NotFound/NotFound";
+import { useDocumentTitle } from "@/UI/App/utils/useDocumentTitle";
 import {
   LastLocationProvider,
   useLastLocation,

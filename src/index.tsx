@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "@app/index";
-import keycloakConf from "./app/keycloak.json";
+import { App } from "@/UI/App/app";
+import keycloakConf from "@/UI/App/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance, ServicesContext } from "@/UI";
