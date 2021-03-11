@@ -37,18 +37,12 @@ export const ResourceTable: React.FC<Props> = ({
       </Button>
     );
 
-    const formattedState = (
-      <>
-        <StatusIcon
-          state={resource.resource_state}
-          key={resource.resource_id}
-        />
-        {resource.resource_state}
-      </>
-    );
-
     return {
-      cells: [resource.resource_id, { title: linkToDetails }, formattedState],
+      cells: [
+        resource.resource_id,
+        { title: linkToDetails },
+        { title: <Status state={resource.resource_state} /> },
+      ],
     };
   });
 
@@ -60,13 +54,21 @@ export const ResourceTable: React.FC<Props> = ({
   );
 };
 
-const StatusIcon: React.FC<{ state: string }> = ({ state }) => {
+const Status: React.FC<{ state: string }> = ({ state }) => {
   switch (state) {
     case "deployed":
-      return <CheckSquareIcon color="#06c" />;
+      return (
+        <>
+          <CheckSquareIcon color="#06c" /> {state}
+        </>
+      );
     case "failed":
-      return <TimesCircleIcon color="#c9190b" />;
+      return (
+        <>
+          <TimesCircleIcon color="#c9190b" /> {state}
+        </>
+      );
     default:
-      return null;
+      return <>{state}</>;
   }
 };
