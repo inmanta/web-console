@@ -1,8 +1,8 @@
 import { EventRow, InstanceEvent } from "@/Core";
 import React from "react";
-import { ExpansionManager } from "../ServiceInventory/ExpansionManager";
-import { TablePresenter } from "../ServiceInventory/Presenters";
-import { EventTableRow } from "./EventTableRow";
+import { ExpansionManager } from "@/UI/ServiceInventory/ExpansionManager";
+import { TablePresenter } from "@/UI/ServiceInventory/Presenters";
+import { EventsTableRow } from "./EventsTableRow";
 
 interface Props {
   events: InstanceEvent[];
@@ -10,7 +10,7 @@ interface Props {
   environmentId: string;
 }
 
-export const EventTable: React.FC<Props> = ({
+export const EventsTableBody: React.FC<Props> = ({
   events,
   tablePresenter,
   environmentId,
@@ -34,7 +34,7 @@ export const EventTable: React.FC<Props> = ({
   return (
     <>
       {rows.map((row, index) => (
-        <EventTableRow
+        <EventsTableRow
           index={index}
           key={row.id}
           isExpanded={expansionState[row.id]}

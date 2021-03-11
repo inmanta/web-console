@@ -1,15 +1,17 @@
 import { InstanceEvent, RemoteData, ServiceInstanceIdentifier } from "@/Core";
 import React, { useContext } from "react";
-import { ServicesContext } from "..";
-import { FailedFiller, LoadingFiller } from "../Components";
+import { ServicesContext } from "@/UI/ServicesContext";
 import {
-  EventTable,
-  EventTablePresenter,
-  FillerEventTable,
-} from "../InstanceEventView";
-import { EmptyFiller } from "../InstanceEventView/EmptyFiller";
+  EventsTable,
+  EventsTableWrapper,
+  EventsTablePresenter,
+  LoadingView,
+  ErrorView,
+} from "@/UI/Components";
+
 import { MomentDatePresenter } from "../ServiceInventory/Presenters";
 import { TabProps } from "./ServiceInstanceDetails";
+import { words } from "@/UI/words";
 
 interface Props extends TabProps {
   qualifier: ServiceInstanceIdentifier;
@@ -21,46 +23,37 @@ export const EventsView: React.FC<Props> = ({ qualifier }) => {
     kind: "Events",
     qualifier,
   });
-  const tablePresenter = new EventTablePresenter(new MomentDatePresenter());
+  const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());
 
   return RemoteData.fold<string, InstanceEvent[], JSX.Element | null>({
     notAsked: () => null,
     loading: () => (
-      <FillerEventTable
+      <EventsTableWrapper
         tablePresenter={tablePresenter}
-        filler={<LoadingFiller />}
         wrapInTd
         aria-label="EventTable-Loading"
-      />
+      >
+        <LoadingView />
+      </EventsTableWrapper>
     ),
     failed: (error) => (
-      <FillerEventTable
+      <EventsTableWrapper
         tablePresenter={tablePresenter}
-        filler={<FailedFiller error={error} />}
         wrapInTd
         aria-label="EventTable-Failed"
+      >
+        <ErrorView
+          title={words("events.failed.title")}
+          message={words("events.failed.body")(error)}
+        />
+      </EventsTableWrapper>
+    ),
+    success: (events) => (
+      <EventsTable
+        events={events}
+        environmentId={qualifier.environment}
+        tablePresenter={tablePresenter}
       />
     ),
-    success: (events) =>
-      events.length === 0 ? (
-        <FillerEventTable
-          tablePresenter={tablePresenter}
-          filler={<EmptyFiller />}
-          wrapInTd
-          aria-label="EventTable-Empty"
-        />
-      ) : (
-        <FillerEventTable
-          tablePresenter={tablePresenter}
-          filler={
-            <EventTable
-              events={events}
-              environmentId={qualifier.environment}
-              tablePresenter={tablePresenter}
-            />
-          }
-          aria-label="EventTable-Success"
-        />
-      ),
   })(data);
 };

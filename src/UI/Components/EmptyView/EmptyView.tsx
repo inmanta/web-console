@@ -10,14 +10,15 @@ import { ExclamationCircleIcon } from "@patternfly/react-icons";
 
 interface Props {
   message: string;
+  title?: string;
 }
 
-export const EmptyView: React.FC<Props> = ({ message }) => (
+export const EmptyView: React.FC<Props> = ({ title, message }) => (
   <EmptyState>
     <EmptyStateIcon icon={ExclamationCircleIcon} />
     <Title size="lg" headingLevel="h4">
-      {words("empty.title")}
+      {title || words("empty.title")}
     </Title>
-    {message && <EmptyStateBody>{message}</EmptyStateBody>}
+    <EmptyStateBody>{message}</EmptyStateBody>
   </EmptyState>
 );

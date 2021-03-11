@@ -11,19 +11,25 @@ import { words } from "@/UI/words";
 import { Delayed } from "@/UI/Utils";
 
 interface Props {
-  error: string;
+  message: string;
+  title?: string;
   retry?: () => void;
   delay?: number;
 }
 
-export const ErrorView: React.FC<Props> = ({ error, retry, delay }) => (
+export const ErrorView: React.FC<Props> = ({
+  message,
+  title,
+  retry,
+  delay,
+}) => (
   <Delayed delay={delay}>
     <EmptyState>
       <EmptyStateIcon icon={ExclamationTriangleIcon} />
       <Title headingLevel="h4" size="lg">
-        {words("error")}
+        {title || words("error")}
       </Title>
-      <EmptyStateBody>{error}</EmptyStateBody>
+      <EmptyStateBody>{message}</EmptyStateBody>
       {retry && (
         <Button variant="primary" onClick={retry}>
           {words("retry")}
