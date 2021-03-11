@@ -1,6 +1,6 @@
 import { fromEntries } from "@/Core";
 
-export interface ExpansionState {
+interface ExpansionState {
   [id: string]: boolean;
 }
 

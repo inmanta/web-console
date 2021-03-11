@@ -6,8 +6,8 @@ import {
   EventsTablePresenter,
   IconTabs,
   TabDescriptor,
+  ExpandableRowProps,
 } from "@/UI/Components";
-import { ExpandableRowProps } from "@/UI/Components/ExpandableTable";
 import { AttributesSummaryView } from "@/UI/ServiceInventory/Components";
 import { MomentDatePresenter } from "@/UI/ServiceInventory/Presenters";
 import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";

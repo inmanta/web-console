@@ -14,7 +14,7 @@ import { ServiceInstanceHistoryWithProvider } from "@/UI/Pages";
 
 let routeFocusTimer: number;
 
-export interface IAppRoute {
+interface IAppRoute {
   label?: string;
   component:
     | React.ComponentType<RouteComponentProps<any>> // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -28,7 +28,7 @@ export interface IAppRoute {
   hideOnSideBar?: boolean;
 }
 
-export interface IAppRouteGroup {
+interface IAppRouteGroup {
   name: string;
   pathPrefix: string;
   exactRoutes: IAppRoute[];

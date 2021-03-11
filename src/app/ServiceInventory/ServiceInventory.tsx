@@ -169,7 +169,7 @@ const IntroView: React.FC<{
   </CardFooter>
 );
 
-export interface IInventoryContextData {
+interface IInventoryContextData {
   attributes: AttributeModel[];
   environmentId: string | undefined;
   inventoryUrl: string;
