@@ -1,0 +1,6 @@
+description: Add full ServiceInstanceHistory page with breadcrumbs
+issue-nr: 186
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
