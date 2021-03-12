@@ -13,7 +13,7 @@ import { InstanceLogRow } from "./InstanceLogRow";
 import {
   AttributesPresenter,
   MomentDatePresenter,
-} from "@/UI/ServiceInventory/Presenters";
+} from "@/UI/Pages/ServiceInventory/Presenters";
 
 interface Props {
   service: ServiceModel;

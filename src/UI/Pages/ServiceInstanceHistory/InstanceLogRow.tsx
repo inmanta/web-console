@@ -6,10 +6,10 @@ import {
   EventsTablePresenter,
   IconTabs,
   TabDescriptor,
+  ExpandableRowProps,
 } from "@/UI/Components";
-import { ExpandableRowProps } from "@/UI/Components/ExpandableTable";
-import { AttributesSummaryView } from "@/UI/ServiceInventory/Components";
-import { MomentDatePresenter } from "@/UI/ServiceInventory/Presenters";
+import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
+import { MomentDatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import React, { useState } from "react";

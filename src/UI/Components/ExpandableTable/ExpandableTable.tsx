@@ -1,6 +1,6 @@
 import React from "react";
 import { TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
-import { ExpansionManager } from "@/UI/ServiceInventory/ExpansionManager";
+import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 
 export interface ExpandableRowProps {
   id: string;
