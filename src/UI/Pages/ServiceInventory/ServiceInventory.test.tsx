@@ -84,7 +84,7 @@ test("ServiceInventory shows updated instances", async () => {
     await screen.findByRole("region", { name: "ServiceInventory-Loading" })
   ).toBeInTheDocument();
 
-  serviceInstancesFetcher.resolve(Either.right([]));
+  serviceInstancesFetcher.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceInventory-Empty" })
@@ -92,7 +92,7 @@ test("ServiceInventory shows updated instances", async () => {
 
   serviceInstancesSubscriptionController.executeAll();
 
-  serviceInstancesFetcher.resolve(Either.right([ServiceInstance.A]));
+  serviceInstancesFetcher.resolve(Either.right({ data: [ServiceInstance.A] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceInventory-Success" })
@@ -110,7 +110,9 @@ test("ResourcesView fetches resources for new instance after instance update", a
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(Either.right([ServiceInstance.A]));
+    await serviceInstancesFetcher.resolve(
+      Either.right({ data: [ServiceInstance.A] })
+    );
   });
 
   expect(
@@ -121,7 +123,7 @@ test("ResourcesView fetches resources for new instance after instance update", a
   fireEvent.click(await screen.findByRole("button", { name: "Resources" }));
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right(Resources.A));
+    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
   });
 
   expect(
@@ -132,12 +134,12 @@ test("ResourcesView fetches resources for new instance after instance update", a
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
-      Either.right([{ ...ServiceInstance.A, version: 4 }])
+      Either.right({ data: [{ ...ServiceInstance.A, version: 4 }] })
     );
   });
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right(Resources.B));
+    await resourcesFetcher.resolve(Either.right({ data: Resources.B }));
   });
 
   expect(

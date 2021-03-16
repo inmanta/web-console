@@ -29,7 +29,7 @@ export interface ServicesQuery {
 
 interface ServicesManifest {
   error: string;
-  apiResponse: ServiceModel[];
+  apiResponse: { data: ServiceModel[] };
   data: ServiceModel[];
   query: ServicesQuery;
 }
@@ -45,7 +45,7 @@ export interface ServiceQuery {
 
 interface ServiceManifest {
   error: string;
-  apiResponse: ServiceModel;
+  apiResponse: { data: ServiceModel };
   data: ServiceModel;
   query: ServiceQuery;
 }
@@ -63,7 +63,7 @@ export interface ResourcesQuery {
 
 interface ResourcesManifest {
   error: string;
-  apiResponse: ResourceModel[];
+  apiResponse: { data: ResourceModel[] };
   data: ResourceModel[];
   query: ResourcesQuery;
 }
@@ -81,7 +81,7 @@ export interface ServiceInstancesQuery {
 
 interface ServiceInstancesManifest {
   error: string;
-  apiResponse: ServiceInstanceModel[];
+  apiResponse: { data: ServiceInstanceModel[] };
   data: ServiceInstanceModelWithTargetStates[];
   query: ServiceInstancesQuery;
 }
@@ -96,7 +96,7 @@ export interface InstanceEventsQuery {
 
 interface EventsManifest {
   error: string;
-  apiResponse: InstanceEvent[];
+  apiResponse: { data: InstanceEvent[] };
   data: InstanceEvent[];
   query: InstanceEventsQuery;
 }
@@ -111,7 +111,7 @@ export interface InstanceLogsQuery {
 
 interface InstanceLogsManifest {
   error: string;
-  apiResponse: InstanceLog[];
+  apiResponse: { data: InstanceLog[] };
   data: InstanceLog[];
   query: InstanceLogsQuery;
 }

@@ -1,4 +1,4 @@
-import { Fetcher, Either, Query, InstanceEvent } from "@/Core";
+import { Fetcher, Either, Query } from "@/Core";
 import { BaseApiHelper } from "./BaseApiHelper";
 
 export class EventsFetcher implements Fetcher<"Events"> {
@@ -12,7 +12,9 @@ export class EventsFetcher implements Fetcher<"Events"> {
     id,
     environment,
     service_entity,
-  }: Query.Qualifier<"Events">): Promise<Either.Type<string, InstanceEvent[]>> {
+  }: Query.Qualifier<"Events">): Promise<
+    Either.Type<string, Query.ApiResponse<"Events">>
+  > {
     return this.baseApiHelper.get(this.getUrl(service_entity, id), environment);
   }
 }

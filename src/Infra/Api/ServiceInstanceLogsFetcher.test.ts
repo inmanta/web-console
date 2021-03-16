@@ -12,7 +12,7 @@ test("ServiceInstanceLogsFetcher getData fetches logs (empty)", async () => {
   };
 
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
-  expect(await fetcher.getData(qualifier)).toEqual(Either.right([]));
+  expect(await fetcher.getData(qualifier)).toEqual(Either.right({ data: [] }));
 
   const [url, { headers }] = fetchMock.mock.calls[0];
   expect(url).toEqual(
@@ -31,7 +31,7 @@ test("ServiceInstanceLogsFetcher getData fetches logs (1)", async () => {
 
   fetchMock.mockResponse(JSON.stringify({ data: [InstanceLog.A] }));
   expect(await fetcher.getData(qualifier)).toEqual(
-    Either.right([InstanceLog.A])
+    Either.right({ data: [InstanceLog.A] })
   );
 
   const [url, { headers }] = fetchMock.mock.calls[0];

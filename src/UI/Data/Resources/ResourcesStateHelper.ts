@@ -3,11 +3,16 @@ import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<string, ResourceModel[]>;
+type ApiData = RemoteData.Type<string, Query.ApiResponse<"Resources">>;
 
 export class ResourcesStateHelper implements StateHelper<"Resources"> {
   constructor(private readonly store: Store) {}
 
-  set(qualifier: Query.Qualifier<"Resources">, value: Data): void {
+  set(qualifier: Query.Qualifier<"Resources">, data: ApiData): void {
+    const value = RemoteData.mapSuccessCombined(
+      (wrapped) => wrapped.data,
+      data
+    );
     this.store.dispatch.resources.setData({ id: qualifier.id, value });
   }
 

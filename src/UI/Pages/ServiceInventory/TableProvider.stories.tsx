@@ -29,7 +29,10 @@ const Template: Story<Props> = (args) => {
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
       new DataManagerImpl<"Resources">(
-        new InstantFetcher<"Resources">({ kind: "Success", data: [] }),
+        new InstantFetcher<"Resources">({
+          kind: "Success",
+          data: { data: [] },
+        }),
         new ResourcesStateHelper(store)
       ),
       new StaticSubscriptionController()

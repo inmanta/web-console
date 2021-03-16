@@ -67,6 +67,14 @@ export const mapSuccess = <F, S, N>(mapper: (s: S) => N) => (
   return success(mapper(data.value));
 };
 
+export const mapSuccessCombined = <F, S, N>(
+  mapper: (s: S) => N,
+  data: RemoteData<F, S>
+): RemoteData<F, N> => {
+  if (!isSuccess(data)) return data;
+  return success(mapper(data.value));
+};
+
 export const fromEither = <L, R>(
   either: Either.Type<L, R>
 ): RemoteData<L, R> => {

@@ -55,16 +55,18 @@ export const Loading: React.FC = () => (
 );
 
 export const Empty: React.FC = () => (
-  <Template outcome={{ kind: "Success", data: [] }} />
+  <Template outcome={{ kind: "Success", data: { data: [] } }} />
 );
 export const Failed: React.FC = () => (
   <Template outcome={{ kind: "Failed", error: "error" }} />
 );
 
 export const MultipleSuccessful: React.FC = () => (
-  <Template outcome={{ kind: "Success", data: instanceEvents }} />
+  <Template outcome={{ kind: "Success", data: { data: instanceEvents } }} />
 );
 
 export const MultipleTypes: React.FC = () => (
-  <Template outcome={{ kind: "Success", data: ignoredErrorNormalEvents }} />
+  <Template
+    outcome={{ kind: "Success", data: { data: ignoredErrorNormalEvents } }}
+  />
 );

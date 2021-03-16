@@ -54,12 +54,12 @@ export const Loading: React.FC = () => (
 );
 
 export const Empty: React.FC = () => (
-  <Template outcome={{ kind: "Success", data: [] }} />
+  <Template outcome={{ kind: "Success", data: { data: [] } }} />
 );
 export const Failed: React.FC = () => (
   <Template outcome={{ kind: "Failed", error: "error" }} />
 );
 
 export const Success: React.FC = () => (
-  <Template outcome={{ kind: "Success", data: Resources.A }} />
+  <Template outcome={{ kind: "Success", data: { data: Resources.A } }} />
 );

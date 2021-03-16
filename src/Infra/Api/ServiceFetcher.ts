@@ -1,4 +1,4 @@
-import { Fetcher, Either, ServiceModel, Query } from "@/Core";
+import { Fetcher, Either, Query } from "@/Core";
 import { BaseApiHelper } from "./BaseApiHelper";
 
 export class ServiceFetcher implements Fetcher<"Service"> {
@@ -11,7 +11,9 @@ export class ServiceFetcher implements Fetcher<"Service"> {
   async getData({
     environment,
     name,
-  }: Query.Qualifier<"Service">): Promise<Either.Type<string, ServiceModel>> {
+  }: Query.Qualifier<"Service">): Promise<
+    Either.Type<string, Query.ApiResponse<"Service">>
+  > {
     return this.baseApiHelper.get(this.getUrl(name), environment);
   }
 }

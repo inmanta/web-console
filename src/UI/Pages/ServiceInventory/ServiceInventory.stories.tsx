@@ -25,7 +25,7 @@ const store = getStoreInstance();
 
 const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
   kind: "Success",
-  data: [ServiceInstance.A],
+  data: { data: [ServiceInstance.A] },
 });
 
 const serviceInstancesSubscriptionController = new LiveSubscriptionController(
@@ -42,7 +42,7 @@ const serviceInstancesHelper = new ServiceInstancesHookHelper(
 
 const resourcesFetcher = new InstantFetcher<"Resources">({
   kind: "Success",
-  data: Resources.B,
+  data: { data: Resources.B },
 });
 
 const resourcesSubscriptionController = new LiveSubscriptionController(

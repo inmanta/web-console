@@ -23,7 +23,10 @@ it("ServiceInstanceHistory renders", async () => {
   const dataProvider = new DataProviderImpl([
     new InstanceLogsHookHelper(
       new DataManagerImpl<"InstanceLogs">(
-        new InstantFetcher<"InstanceLogs">({ kind: "Success", data: [] }),
+        new InstantFetcher<"InstanceLogs">({
+          kind: "Success",
+          data: { data: [] },
+        }),
         new InstanceLogsStateHelper(store)
       ),
       new StaticSubscriptionController()

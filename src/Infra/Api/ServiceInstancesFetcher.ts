@@ -1,4 +1,4 @@
-import { Fetcher, Either, ServiceInstanceModel, Query } from "@/Core";
+import { Fetcher, Either, Query } from "@/Core";
 import { BaseApiHelper } from "./BaseApiHelper";
 
 export class ServiceInstancesFetcher implements Fetcher<"ServiceInstances"> {
@@ -12,7 +12,7 @@ export class ServiceInstancesFetcher implements Fetcher<"ServiceInstances"> {
     environment,
     name,
   }: Query.Qualifier<"ServiceInstances">): Promise<
-    Either.Type<string, ServiceInstanceModel[]>
+    Either.Type<string, Query.ApiResponse<"ServiceInstances">>
   > {
     return this.baseApiHelper.get(this.getUrl(name), environment);
   }

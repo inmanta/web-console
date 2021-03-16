@@ -1,15 +1,9 @@
-import {
-  Query,
-  RemoteData,
-  ServiceInstanceModel,
-  ServiceInstanceModelWithTargetStates,
-  StateHelper,
-} from "@/Core";
+import { Query, RemoteData, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
 
-type Data = RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>;
-type ApiData = RemoteData.Type<string, ServiceInstanceModel[]>;
+type Data = RemoteData.Type<string, Query.Data<"ServiceInstances">>;
+type ApiData = RemoteData.Type<string, Query.ApiResponse<"ServiceInstances">>;
 
 export class ServiceInstancesStateHelper
   implements StateHelper<"ServiceInstances"> {
@@ -23,7 +17,11 @@ export class ServiceInstancesStateHelper
    * rerendered anyway because the getStoreState hook is also optimized
    * to check if the data is changed.
    */
-  set(qualifier: Query.Qualifier<"ServiceInstances">, value: ApiData): void {
+  set(qualifier: Query.Qualifier<"ServiceInstances">, data: ApiData): void {
+    const value = RemoteData.mapSuccessCombined(
+      (wrapped) => wrapped.data,
+      data
+    );
     this.store.dispatch.serviceInstances.setData({ id: qualifier.name, value });
   }
 
