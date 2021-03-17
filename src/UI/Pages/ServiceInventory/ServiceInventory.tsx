@@ -123,6 +123,7 @@ export const ServiceInventory: React.FunctionComponent<{
           <Wrapper aria-label="ServiceInventory-Success">
             <IntroView serviceName={serviceName} keycloak={keycloak} />
             <TableProvider
+              handlers={{}}
               instances={instances}
               keycloak={keycloak}
               serviceEntity={service}

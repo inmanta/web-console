@@ -138,3 +138,8 @@ export type Data<K extends Kind> = Manifest[K]["data"];
 export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
 export type Qualifier<K extends Kind> = SubQuery<K>["qualifier"];
+
+export interface PaginationHandlers {
+  prev?: () => void;
+  next?: () => void;
+}
