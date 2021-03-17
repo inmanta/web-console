@@ -84,7 +84,7 @@ test("ServiceInventory shows updated instances", async () => {
     await screen.findByRole("region", { name: "ServiceInventory-Loading" })
   ).toBeInTheDocument();
 
-  serviceInstancesFetcher.resolve(Either.right({ data: [] }));
+  serviceInstancesFetcher.resolve(Either.right({ data: [], links: {} }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceInventory-Empty" })
@@ -92,7 +92,9 @@ test("ServiceInventory shows updated instances", async () => {
 
   serviceInstancesSubscriptionController.executeAll();
 
-  serviceInstancesFetcher.resolve(Either.right({ data: [ServiceInstance.A] }));
+  serviceInstancesFetcher.resolve(
+    Either.right({ data: [ServiceInstance.A], links: {} })
+  );
 
   expect(
     await screen.findByRole("region", { name: "ServiceInventory-Success" })
@@ -111,7 +113,7 @@ test("ResourcesView fetches resources for new instance after instance update", a
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
-      Either.right({ data: [ServiceInstance.A] })
+      Either.right({ data: [ServiceInstance.A], links: {} })
     );
   });
 
@@ -134,7 +136,7 @@ test("ResourcesView fetches resources for new instance after instance update", a
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
-      Either.right({ data: [{ ...ServiceInstance.A, version: 4 }] })
+      Either.right({ data: [{ ...ServiceInstance.A, version: 4 }], links: {} })
     );
   });
 

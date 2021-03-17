@@ -81,8 +81,14 @@ export interface ServiceInstancesQuery {
 
 interface ServiceInstancesManifest {
   error: string;
-  apiResponse: { data: ServiceInstanceModel[] };
-  data: ServiceInstanceModelWithTargetStates[];
+  apiResponse: {
+    data: ServiceInstanceModel[];
+    links: { prev?: string; next?: string };
+  };
+  data: {
+    data: ServiceInstanceModelWithTargetStates[];
+    links: { prev?: string; next?: string };
+  };
   query: ServiceInstancesQuery;
 }
 

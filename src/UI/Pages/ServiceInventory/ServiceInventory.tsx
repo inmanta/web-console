@@ -95,7 +95,7 @@ export const ServiceInventory: React.FunctionComponent<{
         <ErrorView message={error} retry={retry} />
       </Wrapper>
     ),
-    success: (instances) => (
+    success: ({ data: instances }) => (
       <InventoryContext.Provider
         value={{
           attributes: service.attributes,
