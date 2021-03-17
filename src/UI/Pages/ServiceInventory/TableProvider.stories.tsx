@@ -51,11 +51,10 @@ const Template: Story<Props> = (args) => {
 };
 
 export const Empty = Template.bind({});
-Empty.args = { handlers: {}, instances: [], serviceEntity: {} as ServiceModel };
+Empty.args = { instances: [], serviceEntity: {} as ServiceModel };
 
 export const Multiple = Template.bind({});
 Multiple.args = {
-  handlers: {},
   instances,
   serviceEntity: {
     name: "cloudconnectv2",
@@ -67,7 +66,6 @@ Multiple.args = {
 };
 export const WithIdentity = Template.bind({});
 WithIdentity.args = {
-  handlers: {},
   instances,
   serviceEntity: ServiceWithIdentity,
 };

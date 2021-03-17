@@ -17,9 +17,12 @@ import { TableProvider } from "./TableProvider";
 import { Query, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
-import { PlusIcon } from "@patternfly/react-icons";
+import {
+  AngleLeftIcon,
+  AngleRightIcon,
+  PlusIcon,
+} from "@patternfly/react-icons";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { KeycloakInstance } from "keycloak-js";
 import {
   EmptyView,
   ErrorView,
@@ -121,9 +124,8 @@ export const ServiceInventory: React.FunctionComponent<{
         )}
         {instances.length > 0 ? (
           <Wrapper aria-label="ServiceInventory-Success">
-            <IntroView serviceName={serviceName} keycloak={keycloak} />
+            <Bar serviceName={serviceName} handlers={{}} />
             <TableProvider
-              handlers={{}}
               instances={instances}
               keycloak={keycloak}
               serviceEntity={service}
@@ -131,7 +133,7 @@ export const ServiceInventory: React.FunctionComponent<{
           </Wrapper>
         ) : (
           <Wrapper aria-label="ServiceInventory-Empty">
-            <IntroView serviceName={serviceName} keycloak={keycloak} />
+            <Bar serviceName={serviceName} handlers={{}} />
             <EmptyView
               message={words("inventory.empty.message")(serviceName)}
             />
@@ -142,10 +144,12 @@ export const ServiceInventory: React.FunctionComponent<{
   })(data);
 };
 
-const IntroView: React.FC<{
+interface BarProps {
   serviceName: string;
-  keycloak: KeycloakInstance;
-}> = ({ serviceName }) => (
+  handlers: Query.PaginationHandlers;
+}
+
+const Bar: React.FC<BarProps> = ({ serviceName, handlers }) => (
   <CardFooter>
     <Toolbar>
       <ToolbarContent>
@@ -166,7 +170,26 @@ const IntroView: React.FC<{
             </Link>
           </ToolbarItem>
         </ToolbarGroup>
+        <ToolbarItem variant="pagination">
+          <Pagination handlers={handlers} />
+        </ToolbarItem>
       </ToolbarContent>
     </Toolbar>
   </CardFooter>
 );
+
+const Pagination: React.FC<{ handlers: Query.PaginationHandlers }> = ({
+  handlers: { prev, next },
+}) => {
+  return (
+    <>
+      <Button variant="plain" onClick={prev} isDisabled={!Boolean(prev)}>
+        <AngleLeftIcon />
+      </Button>
+
+      <Button variant="plain" onClick={next} isDisabled={!Boolean(next)}>
+        <AngleRightIcon />
+      </Button>
+    </>
+  );
+};
