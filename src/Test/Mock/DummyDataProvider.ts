@@ -1,6 +1,9 @@
 import { DataProvider, Query, RemoteData } from "@/Core";
 
-type Data = RemoteData.Type<Query.Error<Query.Kind>, Query.Data<Query.Kind>>;
+type Data = RemoteData.Type<
+  Query.Error<Query.Kind>,
+  Query.UsedData<Query.Kind>
+>;
 
 export class DummyDataProvider implements DataProvider {
   useOnce(): [Data, () => void] {

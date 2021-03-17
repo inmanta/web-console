@@ -2,14 +2,19 @@ import { DataManager, RemoteData, Query, StateHelper, Fetcher } from "@/Core";
 
 type Data<Kind extends Query.Kind> = RemoteData.Type<
   Query.Error<Kind>,
-  Query.Data<Kind>
+  Query.UsedData<Kind>
 >;
 
 export class DataManagerImpl<Kind extends Query.Kind>
   implements DataManager<Kind> {
   constructor(
     private readonly fetcher: Fetcher<Kind>,
-    private readonly stateHelper: StateHelper<Kind>
+    private readonly stateHelper: StateHelper<Kind>,
+    private readonly toUsed: (
+      data: Query.Data<Kind>,
+      fetcher: Fetcher<Kind>,
+      stateHelper: StateHelper<Kind>
+    ) => Query.UsedData<Kind>
   ) {}
 
   initialize(qualifier: Query.Qualifier<Kind>): void {
@@ -27,6 +32,9 @@ export class DataManagerImpl<Kind extends Query.Kind>
   }
 
   get(qualifier: Query.Qualifier<Kind>): Data<Kind> {
-    return this.stateHelper.getHooked(qualifier);
+    return RemoteData.mapSuccessCombined(
+      (data) => this.toUsed(data, this.fetcher, this.stateHelper),
+      this.stateHelper.getHooked(qualifier)
+    );
   }
 }

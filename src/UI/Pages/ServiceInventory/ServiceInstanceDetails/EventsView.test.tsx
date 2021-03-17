@@ -12,6 +12,7 @@ import {
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { EventsView } from "./EventsView";
+import { identity } from "lodash";
 
 function setup() {
   const store = getStoreInstance();
@@ -19,7 +20,11 @@ function setup() {
   const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
     new EventsHookHelper(
-      new DataManagerImpl<"Events">(apiHelper, new EventsStateHelper(store)),
+      new DataManagerImpl<"Events">(
+        apiHelper,
+        new EventsStateHelper(store),
+        identity
+      ),
       subscriptionController
     ),
   ]);

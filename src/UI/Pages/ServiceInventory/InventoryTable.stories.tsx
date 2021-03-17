@@ -16,6 +16,7 @@ import {
 } from "@/UI/Data";
 import { ServicesContext } from "@/UI/ServicesContext";
 import { StoreProvider } from "easy-peasy";
+import { identity } from "lodash";
 
 export default {
   title: "InventoryTable",
@@ -31,7 +32,8 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
           kind: "Success",
           data: { data: [] },
         }),
-        new ResourcesStateHelper(store)
+        new ResourcesStateHelper(store),
+        identity
       ),
       new StaticSubscriptionController()
     ),

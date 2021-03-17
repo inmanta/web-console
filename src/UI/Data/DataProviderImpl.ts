@@ -2,7 +2,7 @@ import { DataProvider, Query, HookHelper, RemoteData } from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,
-  Query.Data<K>
+  Query.UsedData<K>
 >;
 
 export class DataProviderImpl implements DataProvider {

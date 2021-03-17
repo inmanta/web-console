@@ -12,6 +12,7 @@ import {
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesView } from "./ResourcesView";
+import { identity } from "lodash";
 
 function setup() {
   const store = getStoreInstance();
@@ -21,7 +22,8 @@ function setup() {
     new ResourcesHookHelper(
       new DataManagerImpl<"Resources">(
         apiHelper,
-        new ResourcesStateHelper(store)
+        new ResourcesStateHelper(store),
+        identity
       ),
       subscriptionController
     ),

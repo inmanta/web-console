@@ -101,3 +101,24 @@ export const fold = <F, S, R>(handlers: {
       return handlers.success(data.value);
   }
 };
+
+export const foldCombined = <F, S, R>(
+  handlers: {
+    notAsked: () => R;
+    loading: () => R;
+    failed: (value: F) => R;
+    success: (value: S) => R;
+  },
+  data: RemoteData<F, S>
+): R => {
+  switch (data.kind) {
+    case "NotAsked":
+      return handlers.notAsked();
+    case "Loading":
+      return handlers.loading();
+    case "Failed":
+      return handlers.failed(data.value);
+    case "Success":
+      return handlers.success(data.value);
+  }
+};

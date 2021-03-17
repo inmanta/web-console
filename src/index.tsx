@@ -33,6 +33,7 @@ import {
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
+import { identity } from "lodash";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -59,7 +60,8 @@ const serviceKeyMaker = new ServiceKeyMaker();
 const servicesHelper = new ServicesHookHelper(
   new DataManagerImpl<"Services">(
     new ServicesFetcher(baseApiHelper),
-    new ServicesStateHelper(storeInstance, serviceKeyMaker)
+    new ServicesStateHelper(storeInstance, serviceKeyMaker),
+    identity
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
@@ -67,7 +69,8 @@ const servicesHelper = new ServicesHookHelper(
 const serviceHelper = new ServiceHookHelper(
   new DataManagerImpl<"Service">(
     new ServiceFetcher(baseApiHelper),
-    new ServiceStateHelper(storeInstance, serviceKeyMaker)
+    new ServiceStateHelper(storeInstance, serviceKeyMaker),
+    identity
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary()),
   serviceKeyMaker
@@ -76,7 +79,16 @@ const serviceHelper = new ServiceHookHelper(
 const serviceInstancesHelper = new ServiceInstancesHookHelper(
   new DataManagerImpl<"ServiceInstances">(
     new ServiceInstancesFetcher(baseApiHelper),
-    new ServiceInstancesStateHelper(storeInstance)
+    new ServiceInstancesStateHelper(storeInstance),
+    (data) => {
+      return {
+        data: data.data,
+        handlers: {
+          prev: () => console.log({ prev: data.links.prev }),
+          next: () => console.log({ next: data.links.next }),
+        },
+      };
+    }
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
@@ -84,7 +96,8 @@ const serviceInstancesHelper = new ServiceInstancesHookHelper(
 const resourcesHelper = new ResourcesHookHelper(
   new DataManagerImpl<"Resources">(
     new ResourcesFetcher(baseApiHelper),
-    new ResourcesStateHelper(storeInstance)
+    new ResourcesStateHelper(storeInstance),
+    identity
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
@@ -92,7 +105,8 @@ const resourcesHelper = new ResourcesHookHelper(
 const eventsHelper = new EventsHookHelper(
   new DataManagerImpl<"Events">(
     new EventsFetcher(baseApiHelper),
-    new EventsStateHelper(storeInstance)
+    new EventsStateHelper(storeInstance),
+    identity
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
@@ -100,7 +114,8 @@ const eventsHelper = new EventsHookHelper(
 const instanceLogsHelper = new InstanceLogsHookHelper(
   new DataManagerImpl<"InstanceLogs">(
     new ServiceInstanceLogsFetcher(baseApiHelper),
-    new InstanceLogsStateHelper(storeInstance)
+    new InstanceLogsStateHelper(storeInstance),
+    identity
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );

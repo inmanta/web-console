@@ -17,7 +17,7 @@ type GetDependencies<Kind extends Query.Kind> = (
 
 type Data<Kind extends Query.Kind> = RemoteData.Type<
   Query.Error<Kind>,
-  Query.Data<Kind>
+  Query.UsedData<Kind>
 >;
 
 export class HookHelperImpl<Kind extends Query.Kind>

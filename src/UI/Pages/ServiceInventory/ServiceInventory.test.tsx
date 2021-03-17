@@ -21,6 +21,7 @@ import {
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
+import { identity } from "lodash";
 
 function setup() {
   const store = getStoreInstance();
@@ -30,7 +31,8 @@ function setup() {
   const serviceInstancesHelper = new ServiceInstancesHookHelper(
     new DataManagerImpl<"ServiceInstances">(
       serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store)
+      new ServiceInstancesStateHelper(store),
+      ({ data }) => ({ data, handlers: {} })
     ),
     serviceInstancesSubscriptionController
   );
@@ -40,7 +42,8 @@ function setup() {
   const resourcesHelper = new ResourcesHookHelper(
     new DataManagerImpl<"Resources">(
       resourcesFetcher,
-      new ResourcesStateHelper(store)
+      new ResourcesStateHelper(store),
+      identity
     ),
     resourcesSubscriptionController
   );

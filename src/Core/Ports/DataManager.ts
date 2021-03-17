@@ -13,5 +13,5 @@ export interface DataManager<K extends Query.Kind> {
   update(qualifier: Query.Qualifier<K>): Promise<void>;
   get(
     qualifier: Query.Qualifier<K>
-  ): RemoteData.Type<Query.Error<K>, Query.Data<K>>;
+  ): RemoteData.Type<Query.Error<K>, Query.UsedData<K>>;
 }

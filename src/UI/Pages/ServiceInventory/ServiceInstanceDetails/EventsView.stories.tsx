@@ -16,6 +16,7 @@ import {
 } from "@/UI/Data";
 import { ServicesContext } from "@/UI/ServicesContext";
 import { StoreProvider } from "easy-peasy";
+import { identity } from "lodash";
 
 export default {
   title: "EventsView",
@@ -28,7 +29,8 @@ const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
     new EventsHookHelper(
       new DataManagerImpl<"Events">(
         new InstantFetcher<"Events">(outcome),
-        new EventsStateHelper(store)
+        new EventsStateHelper(store),
+        identity
       ),
       new StaticSubscriptionController()
     ),

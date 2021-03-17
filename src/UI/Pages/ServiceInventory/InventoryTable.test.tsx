@@ -18,6 +18,7 @@ import {
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
+import { identity } from "lodash";
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
@@ -35,7 +36,8 @@ test("InventoryTable can be expanded", async () => {
             ],
           },
         }),
-        new DummyStateHelper<"Resources">()
+        new DummyStateHelper<"Resources">(),
+        identity
       ),
       new StaticSubscriptionController()
     ),
@@ -70,7 +72,8 @@ test("ServiceInventory can show resources for instance", async () => {
             ],
           },
         }),
-        new ResourcesStateHelper(store)
+        new ResourcesStateHelper(store),
+        identity
       ),
       new StaticSubscriptionController()
     ),

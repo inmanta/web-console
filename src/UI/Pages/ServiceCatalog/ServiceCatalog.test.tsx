@@ -14,6 +14,7 @@ import {
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceCatalog } from "./ServiceCatalog";
 import { MemoryRouter } from "react-router-dom";
+import { identity } from "lodash";
 
 function setup() {
   const store = getStoreInstance();
@@ -23,7 +24,8 @@ function setup() {
   const servicesHelper = new ServicesHookHelper(
     new DataManagerImpl<"Services">(
       servicesFetcher,
-      new ServicesStateHelper(store, new ServiceKeyMaker())
+      new ServicesStateHelper(store, new ServiceKeyMaker()),
+      identity
     ),
     servicesSubscriptionController
   );

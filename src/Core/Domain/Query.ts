@@ -31,6 +31,7 @@ interface ServicesManifest {
   error: string;
   apiResponse: { data: ServiceModel[] };
   data: ServiceModel[];
+  usedData: ServiceModel[];
   query: ServicesQuery;
 }
 
@@ -47,6 +48,7 @@ interface ServiceManifest {
   error: string;
   apiResponse: { data: ServiceModel };
   data: ServiceModel;
+  usedData: ServiceModel;
   query: ServiceQuery;
 }
 
@@ -65,6 +67,7 @@ interface ResourcesManifest {
   error: string;
   apiResponse: { data: ResourceModel[] };
   data: ResourceModel[];
+  usedData: ResourceModel[];
   query: ResourcesQuery;
 }
 
@@ -83,11 +86,15 @@ interface ServiceInstancesManifest {
   error: string;
   apiResponse: {
     data: ServiceInstanceModel[];
-    links: { prev?: string; next?: string };
+    links: Links;
   };
   data: {
     data: ServiceInstanceModelWithTargetStates[];
-    links: { prev?: string; next?: string };
+    links: Links;
+  };
+  usedData: {
+    data: ServiceInstanceModelWithTargetStates[];
+    handlers: PaginationHandlers;
   };
   query: ServiceInstancesQuery;
 }
@@ -104,6 +111,7 @@ interface EventsManifest {
   error: string;
   apiResponse: { data: InstanceEvent[] };
   data: InstanceEvent[];
+  usedData: InstanceEvent[];
   query: InstanceEventsQuery;
 }
 
@@ -119,6 +127,7 @@ interface InstanceLogsManifest {
   error: string;
   apiResponse: { data: InstanceLog[] };
   data: InstanceLog[];
+  usedData: InstanceLog[];
   query: InstanceLogsQuery;
 }
 
@@ -136,6 +145,19 @@ interface Manifest {
 }
 
 /**
+ * Pagination
+ */
+export interface PaginationHandlers {
+  prev?: () => void;
+  next?: () => void;
+}
+
+interface Links {
+  prev?: string;
+  next?: string;
+}
+
+/**
  * Query Utilities
  */
 export type Kind = Query["kind"];
@@ -144,8 +166,4 @@ export type Data<K extends Kind> = Manifest[K]["data"];
 export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
 export type Qualifier<K extends Kind> = SubQuery<K>["qualifier"];
-
-export interface PaginationHandlers {
-  prev?: () => void;
-  next?: () => void;
-}
+export type UsedData<K extends Kind> = Manifest[K]["usedData"];

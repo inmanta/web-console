@@ -3,7 +3,7 @@ import { RemoteData } from "@/Core/Language";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,
-  Query.Data<K>
+  Query.UsedData<K>
 >;
 
 /**

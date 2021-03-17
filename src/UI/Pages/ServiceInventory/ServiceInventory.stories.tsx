@@ -15,6 +15,7 @@ import {
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
+import { identity } from "lodash";
 
 export default {
   title: "ServiceInventory",
@@ -35,7 +36,8 @@ const serviceInstancesSubscriptionController = new LiveSubscriptionController(
 const serviceInstancesHelper = new ServiceInstancesHookHelper(
   new DataManagerImpl<"ServiceInstances">(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store)
+    new ServiceInstancesStateHelper(store),
+    ({ data }) => ({ data, handlers: {} })
   ),
   serviceInstancesSubscriptionController
 );
@@ -52,7 +54,8 @@ const resourcesSubscriptionController = new LiveSubscriptionController(
 const resourcesHelper = new ResourcesHookHelper(
   new DataManagerImpl<"Resources">(
     resourcesFetcher,
-    new ResourcesStateHelper(store)
+    new ResourcesStateHelper(store),
+    identity
   ),
   resourcesSubscriptionController
 );
