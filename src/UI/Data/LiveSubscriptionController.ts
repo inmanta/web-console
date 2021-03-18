@@ -28,10 +28,4 @@ export class LiveSubscriptionController implements SubscriptionController {
     this.subscribeTo(id, interval.value.handler);
     return true;
   }
-
-  replace(id: string, handler: () => void): void {
-    const interval = this.intervals.get(id);
-    if (Maybe.isSome(interval)) this.unsubscribeFrom(id);
-    this.subscribeTo(id, handler);
-  }
 }
