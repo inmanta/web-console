@@ -9,6 +9,7 @@ import {
   ServiceInstanceIdentifier,
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
+import * as Pagination from "./Pagination";
 
 type Query =
   | ServicesQuery
@@ -86,15 +87,15 @@ interface ServiceInstancesManifest {
   error: string;
   apiResponse: {
     data: ServiceInstanceModel[];
-    links: Links;
+    links: Pagination.Links;
   };
   data: {
     data: ServiceInstanceModelWithTargetStates[];
-    links: Links;
+    links: Pagination.Links;
   };
   usedData: {
     data: ServiceInstanceModelWithTargetStates[];
-    handlers: PaginationHandlers;
+    handlers: Pagination.Handlers;
   };
   query: ServiceInstancesQuery;
 }
@@ -142,19 +143,6 @@ interface Manifest {
   Resources: ResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;
-}
-
-/**
- * Pagination
- */
-export interface PaginationHandlers {
-  prev?: () => void;
-  next?: () => void;
-}
-
-interface Links {
-  prev?: string;
-  next?: string;
 }
 
 /**

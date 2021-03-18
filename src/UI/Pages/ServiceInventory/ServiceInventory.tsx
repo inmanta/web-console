@@ -14,7 +14,7 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import { Query, RemoteData, ServiceModel } from "@/Core";
+import { Pagination, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
 import {
@@ -145,7 +145,7 @@ export const ServiceInventory: React.FunctionComponent<{
 
 interface BarProps {
   serviceName: string;
-  handlers: Query.PaginationHandlers;
+  handlers: Pagination.Handlers;
 }
 
 const Bar: React.FC<BarProps> = ({ serviceName, handlers }) => (
@@ -169,19 +169,17 @@ const Bar: React.FC<BarProps> = ({ serviceName, handlers }) => (
             </Link>
           </ToolbarItem>
         </ToolbarGroup>
-        <ToolbarItem variant="pagination">
-          <Pagination handlers={handlers} />
-        </ToolbarItem>
+        <PaginationToolbar handlers={handlers} />
       </ToolbarContent>
     </Toolbar>
   </CardFooter>
 );
 
-const Pagination: React.FC<{ handlers: Query.PaginationHandlers }> = ({
+const PaginationToolbar: React.FC<{ handlers: Pagination.Handlers }> = ({
   handlers: { prev, next },
 }) => {
   return (
-    <>
+    <ToolbarItem variant="pagination">
       <Button
         variant="plain"
         onClick={prev}
@@ -190,7 +188,6 @@ const Pagination: React.FC<{ handlers: Query.PaginationHandlers }> = ({
       >
         <AngleLeftIcon />
       </Button>
-
       <Button
         variant="plain"
         onClick={next}
@@ -199,6 +196,6 @@ const Pagination: React.FC<{ handlers: Query.PaginationHandlers }> = ({
       >
         <AngleRightIcon />
       </Button>
-    </>
+    </ToolbarItem>
   );
 };

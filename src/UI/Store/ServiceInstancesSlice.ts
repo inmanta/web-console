@@ -1,6 +1,7 @@
 import { Action, action, computed, Computed } from "easy-peasy";
 import {
   Query,
+  Pagination,
   RemoteData,
   ServiceIdentifier,
   ServiceInstanceModelWithTargetStates,
@@ -29,7 +30,7 @@ export interface ServiceInstancesSlice {
       string,
       {
         data: ServiceInstanceModelWithTargetStates[];
-        links: { prev?: string; next?: string };
+        links: Pagination.Links;
       }
     >,
     StoreModel
