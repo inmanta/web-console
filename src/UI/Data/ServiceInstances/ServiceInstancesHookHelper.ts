@@ -13,7 +13,7 @@ export class ServiceInstancesHookHelper extends HookHelperImpl<"ServiceInstances
       (qualifier) => [qualifier.name],
       "ServiceInstances",
       ({ name }) =>
-        `/lsm/v1/service_inventory/${name}?include_deployment_progress=True`,
+        `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`,
       ({ data, links }, setUrl) => {
         if (typeof links === "undefined") return { data: data, handlers: {} };
         const { prev, next } = links;

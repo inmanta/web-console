@@ -101,6 +101,31 @@ test("ServiceInventory shows updated instances", async () => {
   ).toBeInTheDocument();
 });
 
+test("ServiceInventory shows next page of instances", async () => {
+  const { component, serviceInstancesFetcher } = setup();
+  render(component);
+
+  serviceInstancesFetcher.resolve(
+    Either.right({
+      data: [{ ...ServiceInstance.A, id: "a" }],
+      links: { next: "fake-url" },
+    })
+  );
+
+  expect(await screen.findByRole("cell", { name: "a" })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole("button", { name: "Next" }));
+
+  serviceInstancesFetcher.resolve(
+    Either.right({
+      data: [{ ...ServiceInstance.A, id: "b" }],
+      links: {},
+    })
+  );
+
+  expect(await screen.findByRole("cell", { name: "b" })).toBeInTheDocument();
+});
+
 test("ResourcesView fetches resources for new instance after instance update", async () => {
   const {
     component,

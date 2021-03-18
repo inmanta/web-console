@@ -182,11 +182,21 @@ const Pagination: React.FC<{ handlers: Query.PaginationHandlers }> = ({
 }) => {
   return (
     <>
-      <Button variant="plain" onClick={prev} isDisabled={!Boolean(prev)}>
+      <Button
+        variant="plain"
+        onClick={prev}
+        isDisabled={!Boolean(prev)}
+        aria-label="Prev"
+      >
         <AngleLeftIcon />
       </Button>
 
-      <Button variant="plain" onClick={next} isDisabled={!Boolean(next)}>
+      <Button
+        variant="plain"
+        onClick={next}
+        isDisabled={!Boolean(next)}
+        aria-label="Next"
+      >
         <AngleRightIcon />
       </Button>
     </>
