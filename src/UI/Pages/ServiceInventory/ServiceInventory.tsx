@@ -82,7 +82,7 @@ export const ServiceInventory: React.FunctionComponent<{
     qualifier: { name: serviceName, environment: environmentId || "" },
   });
 
-  return RemoteData.foldCombined(
+  return RemoteData.fold(
     {
       notAsked: () => null,
       loading: () => (

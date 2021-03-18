@@ -6,7 +6,7 @@ import { useKeycloak } from "react-keycloak";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { ServicesContext } from "@/UI";
-import { Query, RemoteData, ServiceModel } from "@/Core";
+import { Query, RemoteData } from "@/Core";
 
 export const ServiceCatalogWithProvider: React.FC = () => {
   const environment = useStoreState(
@@ -44,45 +44,48 @@ export const ServiceCatalog: React.FC<{ environment: string }> = ({
     [keycloak] = useKeycloak();
   }
 
-  return RemoteData.fold<string, ServiceModel[], JSX.Element | null>({
-    notAsked: () => null,
-    loading: () => (
-      <PageSection
-        className="horizontally-scrollable"
-        aria-label="ServiceCatalog-Loading"
-      >
-        <LoadingView delay={500} />
-      </PageSection>
-    ),
-    failed: (error) => (
-      <PageSection
-        className="horizontally-scrollable"
-        aria-label="ServiceCatalog-Failed"
-      >
-        <ErrorView message={error} retry={retry} />
-      </PageSection>
-    ),
-    success: (services) =>
-      services.length <= 0 ? (
+  return RemoteData.fold(
+    {
+      notAsked: () => null,
+      loading: () => (
         <PageSection
           className="horizontally-scrollable"
-          aria-label="ServiceCatalog-Empty"
+          aria-label="ServiceCatalog-Loading"
         >
-          <EmptyView message={words("catalog.empty.message")} />
-        </PageSection>
-      ) : (
-        <PageSection
-          className="horizontally-scrollable"
-          aria-label="ServiceCatalog-Success"
-        >
-          <CatalogDataList
-            services={services}
-            environmentId={environment}
-            serviceCatalogUrl={"/lsm/v1/service_catalog"}
-            keycloak={keycloak}
-            dispatch={retry}
-          />
+          <LoadingView delay={500} />
         </PageSection>
       ),
-  })(data);
+      failed: (error) => (
+        <PageSection
+          className="horizontally-scrollable"
+          aria-label="ServiceCatalog-Failed"
+        >
+          <ErrorView message={error} retry={retry} />
+        </PageSection>
+      ),
+      success: (services) =>
+        services.length <= 0 ? (
+          <PageSection
+            className="horizontally-scrollable"
+            aria-label="ServiceCatalog-Empty"
+          >
+            <EmptyView message={words("catalog.empty.message")} />
+          </PageSection>
+        ) : (
+          <PageSection
+            className="horizontally-scrollable"
+            aria-label="ServiceCatalog-Success"
+          >
+            <CatalogDataList
+              services={services}
+              environmentId={environment}
+              serviceCatalogUrl={"/lsm/v1/service_catalog"}
+              keycloak={keycloak}
+              dispatch={retry}
+            />
+          </PageSection>
+        ),
+    },
+    data
+  );
 };
