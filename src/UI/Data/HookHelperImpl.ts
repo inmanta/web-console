@@ -83,7 +83,7 @@ export class HookHelperImpl<Kind extends Query.Kind>
         (data) => this.toUsed(data, setUrl),
         this.dataManager.get(qualifier)
       ),
-      () => this.dataManager.update(qualifier, url),
+      () => this.subscriptionController.refresh(this.getUnique(qualifier)),
     ];
   }
 

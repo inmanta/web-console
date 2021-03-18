@@ -101,6 +101,27 @@ test("ServiceInventory shows updated instances", async () => {
   ).toBeInTheDocument();
 });
 
+test("ServiceInventory shows error with retry", async () => {
+  const { component, serviceInstancesFetcher } = setup();
+  render(component);
+
+  serviceInstancesFetcher.resolve(Either.left("fake error"));
+
+  expect(
+    await screen.findByRole("region", { name: "ServiceInventory-Failed" })
+  ).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+
+  serviceInstancesFetcher.resolve(
+    Either.right({ data: [ServiceInstance.A], links: {} })
+  );
+
+  expect(
+    await screen.findByRole("region", { name: "ServiceInventory-Success" })
+  ).toBeInTheDocument();
+});
+
 test("ServiceInventory shows next page of instances", async () => {
   const { component, serviceInstancesFetcher } = setup();
   render(component);
