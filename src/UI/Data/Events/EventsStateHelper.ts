@@ -9,7 +9,7 @@ export class EventsStateHelper implements StateHelper<"Events"> {
   constructor(private readonly store: Store) {}
 
   set({ id }: Query.Qualifier<"Events">, data: ApiData): void {
-    const value = RemoteData.mapSuccessCombined((data) => data.data, data);
+    const value = RemoteData.mapSuccess((data) => data.data, data);
     this.store.dispatch.events.setData({ id, value });
   }
 

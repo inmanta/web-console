@@ -48,7 +48,7 @@ export class HookHelperImpl<Kind extends Query.Kind>
     }, [url]);
 
     return [
-      RemoteData.mapSuccessCombined(
+      RemoteData.mapSuccess(
         (d) => this.toUsed(d, setUrl),
         this.dataManager.get(qualifier)
       ),
@@ -79,7 +79,7 @@ export class HookHelperImpl<Kind extends Query.Kind>
     }, [url]);
 
     return [
-      RemoteData.mapSuccessCombined(
+      RemoteData.mapSuccess(
         (data) => this.toUsed(data, setUrl),
         this.dataManager.get(qualifier)
       ),

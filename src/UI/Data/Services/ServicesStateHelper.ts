@@ -15,10 +15,7 @@ export class ServicesStateHelper implements StateHelper<"Services"> {
   ) {}
 
   set(qualifier: Query.Qualifier<"Services">, data: ApiData): void {
-    const unwrapped = RemoteData.mapSuccessCombined(
-      (wrapped) => wrapped.data,
-      data
-    );
+    const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
     this.store.dispatch.services.setList({ qualifier, data: unwrapped });
   }
 

@@ -47,7 +47,7 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
       const data = byId[qualifier.name];
       if (typeof data === "undefined") return RemoteData.loading();
 
-      return RemoteData.mapSuccessCombined(({ data, links }) => {
+      return RemoteData.mapSuccess(({ data, links }) => {
         return {
           data: data.map((instance) => {
             const instanceState = instance.state;
