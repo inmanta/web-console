@@ -5,15 +5,7 @@ import keycloakConf from "@/UI/App/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance, ServicesContext } from "@/UI";
-import {
-  BaseApiHelper,
-  EventsFetcher,
-  ResourcesFetcher,
-  ServiceFetcher,
-  ServiceInstancesFetcher,
-  ServiceInstanceLogsFetcher,
-  ServicesFetcher,
-} from "@/Infra";
+import { BaseApiHelper, FetcherImpl } from "@/Infra";
 import {
   DataProviderImpl,
   IntervalsDictionary,
@@ -33,7 +25,6 @@ import {
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
-import { identity } from "lodash";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -59,18 +50,16 @@ const serviceKeyMaker = new ServiceKeyMaker();
 
 const servicesHelper = new ServicesHookHelper(
   new DataManagerImpl<"Services">(
-    new ServicesFetcher(baseApiHelper),
-    new ServicesStateHelper(storeInstance, serviceKeyMaker),
-    identity
+    new FetcherImpl<"Services">(baseApiHelper),
+    new ServicesStateHelper(storeInstance, serviceKeyMaker)
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
 const serviceHelper = new ServiceHookHelper(
   new DataManagerImpl<"Service">(
-    new ServiceFetcher(baseApiHelper),
-    new ServiceStateHelper(storeInstance, serviceKeyMaker),
-    identity
+    new FetcherImpl<"Service">(baseApiHelper),
+    new ServiceStateHelper(storeInstance, serviceKeyMaker)
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary()),
   serviceKeyMaker
@@ -78,44 +67,32 @@ const serviceHelper = new ServiceHookHelper(
 
 const serviceInstancesHelper = new ServiceInstancesHookHelper(
   new DataManagerImpl<"ServiceInstances">(
-    new ServiceInstancesFetcher(baseApiHelper),
-    new ServiceInstancesStateHelper(storeInstance),
-    (data) => {
-      return {
-        data: data.data,
-        handlers: {
-          prev: () => console.log({ prev: data.links.prev }),
-          next: () => console.log({ next: data.links.next }),
-        },
-      };
-    }
+    new FetcherImpl<"ServiceInstances">(baseApiHelper),
+    new ServiceInstancesStateHelper(storeInstance)
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
 const resourcesHelper = new ResourcesHookHelper(
   new DataManagerImpl<"Resources">(
-    new ResourcesFetcher(baseApiHelper),
-    new ResourcesStateHelper(storeInstance),
-    identity
+    new FetcherImpl<"Resources">(baseApiHelper),
+    new ResourcesStateHelper(storeInstance)
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
 const eventsHelper = new EventsHookHelper(
   new DataManagerImpl<"Events">(
-    new EventsFetcher(baseApiHelper),
-    new EventsStateHelper(storeInstance),
-    identity
+    new FetcherImpl<"Events">(baseApiHelper),
+    new EventsStateHelper(storeInstance)
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
 const instanceLogsHelper = new InstanceLogsHookHelper(
   new DataManagerImpl<"InstanceLogs">(
-    new ServiceInstanceLogsFetcher(baseApiHelper),
-    new InstanceLogsStateHelper(storeInstance),
-    identity
+    new FetcherImpl<"InstanceLogs">(baseApiHelper),
+    new InstanceLogsStateHelper(storeInstance)
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );

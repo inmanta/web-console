@@ -15,7 +15,6 @@ import {
   ResourcesHookHelper,
 } from "@/UI/Data";
 import { ResourcesView } from "./ResourcesView";
-import { identity } from "lodash";
 
 export default {
   title: "ResourcesView",
@@ -28,8 +27,7 @@ const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
     new ResourcesHookHelper(
       new DataManagerImpl<"Resources">(
         new InstantFetcher<"Resources">(outcome),
-        new ResourcesStateHelper(store),
-        identity
+        new ResourcesStateHelper(store)
       ),
       new StaticSubscriptionController()
     ),

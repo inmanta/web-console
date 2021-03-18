@@ -22,7 +22,7 @@ export class ServicesStateHelper implements StateHelper<"Services"> {
     this.store.dispatch.services.setList({ qualifier, data: unwrapped });
   }
 
-  getHooked({ id: environment }: Query.Qualifier<"Services">): Data {
+  getHooked({ environment }: Query.Qualifier<"Services">): Data {
     return useStoreState(
       (state) => this.enforce(state.services.listByEnv[environment]),
       isEqual
@@ -34,7 +34,7 @@ export class ServicesStateHelper implements StateHelper<"Services"> {
     return value;
   }
 
-  getOnce({ id: environment }: Query.Qualifier<"Services">): Data {
+  getOnce({ environment }: Query.Qualifier<"Services">): Data {
     return this.enforce(this.store.getState().services.listByEnv[environment]);
   }
 }

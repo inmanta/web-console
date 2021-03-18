@@ -18,17 +18,11 @@ export class DataProviderImpl implements DataProvider {
 
   useOnce(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getHelper(query);
-    return [
-      helper.useOnce(query.qualifier),
-      () => helper.refreshOnce(query.qualifier),
-    ];
+    return helper.useOnce(query.qualifier);
   }
 
   useContinuous(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getHelper(query);
-    return [
-      helper.useSubscription(query.qualifier),
-      () => helper.refreshSubscription(query.qualifier),
-    ];
+    return helper.useSubscription(query.qualifier);
   }
 }

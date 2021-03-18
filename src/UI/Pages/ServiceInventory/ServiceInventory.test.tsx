@@ -21,7 +21,6 @@ import {
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
-import { identity } from "lodash";
 
 function setup() {
   const store = getStoreInstance();
@@ -31,8 +30,7 @@ function setup() {
   const serviceInstancesHelper = new ServiceInstancesHookHelper(
     new DataManagerImpl<"ServiceInstances">(
       serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store),
-      ({ data }) => ({ data, handlers: {} })
+      new ServiceInstancesStateHelper(store)
     ),
     serviceInstancesSubscriptionController
   );
@@ -42,8 +40,7 @@ function setup() {
   const resourcesHelper = new ResourcesHookHelper(
     new DataManagerImpl<"Resources">(
       resourcesFetcher,
-      new ResourcesStateHelper(store),
-      identity
+      new ResourcesStateHelper(store)
     ),
     resourcesSubscriptionController
   );
@@ -152,5 +149,7 @@ test("ResourcesView fetches resources for new instance after instance update", a
   ).toBeInTheDocument();
 
   expect(resourcesFetcher.getInvocations().length).toEqual(2);
-  expect(resourcesFetcher.getInvocations()[1].version).toEqual(4);
+  expect(resourcesFetcher.getInvocations()[1][1]).toMatch(
+    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=4"
+  );
 });

@@ -14,7 +14,6 @@ import {
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceCatalog } from "./ServiceCatalog";
 import { MemoryRouter } from "react-router-dom";
-import { identity } from "lodash";
 
 function setup() {
   const store = getStoreInstance();
@@ -24,8 +23,7 @@ function setup() {
   const servicesHelper = new ServicesHookHelper(
     new DataManagerImpl<"Services">(
       servicesFetcher,
-      new ServicesStateHelper(store, new ServiceKeyMaker()),
-      identity
+      new ServicesStateHelper(store, new ServiceKeyMaker())
     ),
     servicesSubscriptionController
   );
@@ -36,7 +34,7 @@ function setup() {
     <MemoryRouter>
       <ServicesContext.Provider value={{ dataProvider }}>
         <StoreProvider store={store}>
-          <ServiceCatalog environmentId={Service.A.environment} />
+          <ServiceCatalog environment={Service.A.environment} />
         </StoreProvider>
       </ServicesContext.Provider>
     </MemoryRouter>

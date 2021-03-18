@@ -18,7 +18,6 @@ import {
 } from "@/UI/Data";
 import { MemoryRouter } from "react-router";
 import { ServiceWithIdentity } from "@/Test/Data/Service";
-import { identity } from "lodash";
 
 export default {
   title: "TableProvider",
@@ -34,8 +33,7 @@ const Template: Story<Props> = (args) => {
           kind: "Success",
           data: { data: [] },
         }),
-        new ResourcesStateHelper(store),
-        identity
+        new ResourcesStateHelper(store)
       ),
       new StaticSubscriptionController()
     ),

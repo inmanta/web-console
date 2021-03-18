@@ -6,6 +6,8 @@ type Data<K extends Query.Kind> = RemoteData.Type<
   Query.UsedData<K>
 >;
 
+type Pair<K extends Query.Kind> = [Data<K>, () => void];
+
 /**
  * The HookHelper defines data hooks for a specific 'kind' of query.
  * This correlates to a specific data source.
@@ -13,9 +15,7 @@ type Data<K extends Query.Kind> = RemoteData.Type<
  * The matches method dictates what kind of query this helper supports.
  */
 export interface HookHelper<K extends Query.Kind> {
-  useOnce(qualifier: Query.Qualifier<K>): Data<K>;
-  refreshOnce(qualifier: Query.Qualifier<K>): void;
-  useSubscription(qualifier: Query.Qualifier<K>): Data<K>;
-  refreshSubscription(qualifier: Query.Qualifier<K>): void;
+  useOnce(qualifier: Query.Qualifier<K>): Pair<K>;
+  useSubscription(qualifier: Query.Qualifier<K>): Pair<K>;
   matches(query: Query.Type): boolean;
 }

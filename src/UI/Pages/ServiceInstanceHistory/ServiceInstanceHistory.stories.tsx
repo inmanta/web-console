@@ -16,7 +16,6 @@ import {
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
-import { identity } from "lodash";
 
 export default {
   title: "ServiceInstanceHistory",
@@ -33,8 +32,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
           kind: "Success",
           data: { data: logs },
         }),
-        new InstanceLogsStateHelper(store),
-        identity
+        new InstanceLogsStateHelper(store)
       ),
       new StaticSubscriptionController()
     ),

@@ -9,12 +9,12 @@ import { ServicesContext } from "@/UI";
 import { Query, RemoteData, ServiceModel } from "@/Core";
 
 export const ServiceCatalogWithProvider: React.FC = () => {
-  const environmentId = useStoreState(
+  const environment = useStoreState(
     (store) => store.environments.getSelectedEnvironment.id
   );
 
-  return environmentId ? (
-    <ServiceCatalog environmentId={environmentId} />
+  return environment ? (
+    <ServiceCatalog environment={environment} />
   ) : (
     <PageSection
       className={"horizontally-scrollable"}
@@ -25,15 +25,13 @@ export const ServiceCatalogWithProvider: React.FC = () => {
   );
 };
 
-interface Props {
-  environmentId: string;
-}
-
-export const ServiceCatalog: React.FC<Props> = ({ environmentId }) => {
+export const ServiceCatalog: React.FC<{ environment: string }> = ({
+  environment,
+}) => {
   const { dataProvider } = useContext(ServicesContext);
   const query: Query.SubQuery<"Services"> = {
     kind: "Services",
-    qualifier: { id: environmentId },
+    qualifier: { environment },
   };
   const [data, retry] = dataProvider.useContinuous<"Services">(query);
 
@@ -79,7 +77,7 @@ export const ServiceCatalog: React.FC<Props> = ({ environmentId }) => {
         >
           <CatalogDataList
             services={services}
-            environmentId={environmentId}
+            environmentId={environment}
             serviceCatalogUrl={"/lsm/v1/service_catalog"}
             keycloak={keycloak}
             dispatch={retry}

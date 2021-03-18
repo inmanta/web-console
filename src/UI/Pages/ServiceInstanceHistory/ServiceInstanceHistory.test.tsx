@@ -16,7 +16,6 @@ import {
 import { ServicesContext } from "@/UI/ServicesContext";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
-import { identity } from "lodash";
 
 it("ServiceInstanceHistory renders", async () => {
   const { id, environment } = ServiceInstance.A;
@@ -28,8 +27,7 @@ it("ServiceInstanceHistory renders", async () => {
           kind: "Success",
           data: { data: [] },
         }),
-        new InstanceLogsStateHelper(store),
-        identity
+        new InstanceLogsStateHelper(store)
       ),
       new StaticSubscriptionController()
     ),

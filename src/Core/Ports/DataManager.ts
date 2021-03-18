@@ -10,8 +10,8 @@ import { RemoteData } from "@/Core/Language";
  */
 export interface DataManager<K extends Query.Kind> {
   initialize(qualifier: Query.Qualifier<K>): void;
-  update(qualifier: Query.Qualifier<K>): Promise<void>;
+  update(qualifier: Query.Qualifier<K>, url: string): Promise<void>;
   get(
     qualifier: Query.Qualifier<K>
-  ): RemoteData.Type<Query.Error<K>, Query.UsedData<K>>;
+  ): RemoteData.Type<Query.Error<K>, Query.Data<K>>;
 }
