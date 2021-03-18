@@ -1,0 +1,6 @@
+description: Add paging to Service Inventory
+issue-nr: 151
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
