@@ -11,7 +11,7 @@ import {
   ResourcesView,
   TabKey,
   EventsView,
-} from "./ServiceInstanceDetails";
+} from "./Details";
 import {
   AutomationIcon,
   InfoCircleIcon,
