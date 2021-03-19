@@ -1,0 +1,6 @@
+description: Update the service catalog when the environment changes
+issue-nr: 285
+change-type: patch
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
