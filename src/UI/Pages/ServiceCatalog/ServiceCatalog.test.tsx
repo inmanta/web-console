@@ -34,7 +34,7 @@ function setup() {
     <MemoryRouter>
       <ServicesContext.Provider value={{ dataProvider }}>
         <StoreProvider store={store}>
-          <ServiceCatalog environmentId={Service.A.environment} />
+          <ServiceCatalog environment={Service.A.environment} />
         </StoreProvider>
       </ServicesContext.Provider>
     </MemoryRouter>
@@ -59,7 +59,7 @@ test("ServiceCatalog shows updated services", async () => {
     await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
-  servicesFetcher.resolve(Either.right([]));
+  servicesFetcher.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Empty" })
@@ -67,7 +67,7 @@ test("ServiceCatalog shows updated services", async () => {
 
   servicesSubscriptionController.executeAll();
 
-  servicesFetcher.resolve(Either.right([Service.A]));
+  servicesFetcher.resolve(Either.right({ data: [Service.A] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
@@ -86,7 +86,7 @@ test("ServiceCatalog shows updated empty", async () => {
     await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
-  servicesFetcher.resolve(Either.right([Service.A]));
+  servicesFetcher.resolve(Either.right({ data: [Service.A] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
@@ -94,7 +94,7 @@ test("ServiceCatalog shows updated empty", async () => {
 
   servicesSubscriptionController.executeAll();
 
-  servicesFetcher.resolve(Either.right([]));
+  servicesFetcher.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Empty" })
@@ -109,7 +109,7 @@ test("ServiceCatalog removes service after deletion", async () => {
     await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
-  servicesFetcher.resolve(Either.right([Service.A]));
+  servicesFetcher.resolve(Either.right({ data: [Service.A] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
@@ -128,7 +128,7 @@ test("ServiceCatalog removes service after deletion", async () => {
    * to finish, we wouldn't need this hack.
    */
   setTimeout(() => {
-    servicesFetcher.resolve(Either.right([]));
+    servicesFetcher.resolve(Either.right({ data: [] }));
   }, 0);
 
   expect(

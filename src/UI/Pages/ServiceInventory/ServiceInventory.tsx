@@ -14,12 +14,15 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import { Query, RemoteData, ServiceModel } from "@/Core";
+import { Pagination, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
-import { PlusIcon } from "@patternfly/react-icons";
+import {
+  AngleLeftIcon,
+  AngleRightIcon,
+  PlusIcon,
+} from "@patternfly/react-icons";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { KeycloakInstance } from "keycloak-js";
 import {
   EmptyView,
   ErrorView,
@@ -79,72 +82,73 @@ export const ServiceInventory: React.FunctionComponent<{
     qualifier: { name: serviceName, environment: environmentId || "" },
   });
 
-  return RemoteData.fold<
-    Query.Error<"ServiceInstances">,
-    Query.Data<"ServiceInstances">,
-    JSX.Element | null
-  >({
-    notAsked: () => null,
-    loading: () => (
-      <Wrapper aria-label="ServiceInventory-Loading">
-        <LoadingView delay={500} />
-      </Wrapper>
-    ),
-    failed: (error) => (
-      <Wrapper aria-label="ServiceInventory-Failed">
-        <ErrorView message={error} retry={retry} />
-      </Wrapper>
-    ),
-    success: (instances) => (
-      <InventoryContext.Provider
-        value={{
-          attributes: service.attributes,
-          environmentId,
-          inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
-          setErrorMessage: setInstanceErrorMessage,
-          refresh: retry,
-        }}
-      >
-        {instanceErrorMessage && (
-          <AlertGroup isToast={true}>
-            <Alert
-              variant="danger"
-              title={instanceErrorMessage}
-              actionClose={
-                <AlertActionCloseButton
-                  data-cy="close-alert"
-                  onClose={() => setInstanceErrorMessage("")}
-                />
-              }
-            />
-          </AlertGroup>
-        )}
-        {instances.length > 0 ? (
-          <Wrapper aria-label="ServiceInventory-Success">
-            <IntroView serviceName={serviceName} keycloak={keycloak} />
-            <TableProvider
-              instances={instances}
-              keycloak={keycloak}
-              serviceEntity={service}
-            />
-          </Wrapper>
-        ) : (
-          <Wrapper aria-label="ServiceInventory-Empty">
-            <IntroView serviceName={serviceName} keycloak={keycloak} />
-            <EmptyView
-              message={words("inventory.empty.message")(serviceName)}
-            />
-          </Wrapper>
-        )}
-      </InventoryContext.Provider>
-    ),
-  })(data);
+  return RemoteData.fold(
+    {
+      notAsked: () => null,
+      loading: () => (
+        <Wrapper aria-label="ServiceInventory-Loading">
+          <LoadingView delay={500} />
+        </Wrapper>
+      ),
+      failed: (error) => (
+        <Wrapper aria-label="ServiceInventory-Failed">
+          <ErrorView message={error} retry={retry} />
+        </Wrapper>
+      ),
+      success: ({ data: instances, handlers }) => (
+        <InventoryContext.Provider
+          value={{
+            attributes: service.attributes,
+            environmentId,
+            inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
+            setErrorMessage: setInstanceErrorMessage,
+            refresh: retry,
+          }}
+        >
+          {instanceErrorMessage && (
+            <AlertGroup isToast={true}>
+              <Alert
+                variant="danger"
+                title={instanceErrorMessage}
+                actionClose={
+                  <AlertActionCloseButton
+                    data-cy="close-alert"
+                    onClose={() => setInstanceErrorMessage("")}
+                  />
+                }
+              />
+            </AlertGroup>
+          )}
+          {instances.length > 0 ? (
+            <Wrapper aria-label="ServiceInventory-Success">
+              <Bar serviceName={serviceName} handlers={handlers} />
+              <TableProvider
+                instances={instances}
+                keycloak={keycloak}
+                serviceEntity={service}
+              />
+            </Wrapper>
+          ) : (
+            <Wrapper aria-label="ServiceInventory-Empty">
+              <Bar serviceName={serviceName} handlers={handlers} />
+              <EmptyView
+                message={words("inventory.empty.message")(serviceName)}
+              />
+            </Wrapper>
+          )}
+        </InventoryContext.Provider>
+      ),
+    },
+    data
+  );
 };
 
-const IntroView: React.FC<{
+interface BarProps {
   serviceName: string;
-  keycloak: KeycloakInstance;
-}> = ({ serviceName }) => (
+  handlers: Pagination.Handlers;
+}
+
+const Bar: React.FC<BarProps> = ({ serviceName, handlers }) => (
   <CardFooter>
     <Toolbar>
       <ToolbarContent>
@@ -165,7 +169,33 @@ const IntroView: React.FC<{
             </Link>
           </ToolbarItem>
         </ToolbarGroup>
+        <PaginationToolbar handlers={handlers} />
       </ToolbarContent>
     </Toolbar>
   </CardFooter>
 );
+
+const PaginationToolbar: React.FC<{ handlers: Pagination.Handlers }> = ({
+  handlers: { prev, next },
+}) => {
+  return (
+    <ToolbarItem variant="pagination">
+      <Button
+        variant="plain"
+        onClick={prev}
+        isDisabled={!Boolean(prev)}
+        aria-label="Prev"
+      >
+        <AngleLeftIcon />
+      </Button>
+      <Button
+        variant="plain"
+        onClick={next}
+        isDisabled={!Boolean(next)}
+        aria-label="Next"
+      >
+        <AngleRightIcon />
+      </Button>
+    </ToolbarItem>
+  );
+};

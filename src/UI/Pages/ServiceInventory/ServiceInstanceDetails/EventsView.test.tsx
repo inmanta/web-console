@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { StaticSubscriptionController, DeferredFetcher } from "@/Test";
-import { Either } from "@/Core";
+import { Either, InstanceEvent } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataProviderImpl,
@@ -50,7 +50,7 @@ test("EventsView shows empty table", async () => {
     await screen.findByRole("grid", { name: "EventTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right([]));
+  apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("grid", { name: "EventTable-Empty" })
@@ -81,24 +81,26 @@ test("EventsView shows success table", async () => {
   ).toBeInTheDocument();
 
   apiHelper.resolve(
-    Either.right([
-      {
-        id: "049dd20f-c432-4b93-bf1c-32c572e49cc7",
-        service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
-        service_instance_version: 3,
-        timestamp: "2021-01-11T12:56:56.205131",
-        source: "creating",
-        destination: "awaiting_up",
-        message:
-          "Service instance bd200aec-4f80-45e1-b2ad-137c442c68b8 successfully executed transfer creating -> awaiting_up (error=False)",
-        ignored_transition: false,
-        event_correlation_id: "363cc930-d847-4e8a-b605-41b87a903248",
-        severity: 20,
-        id_compile_report: null,
-        event_type: "RESOURCE_TRANSITION",
-        is_error_transition: false,
-      },
-    ])
+    Either.right({
+      data: [
+        {
+          id: "049dd20f-c432-4b93-bf1c-32c572e49cc7",
+          service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+          service_instance_version: 3,
+          timestamp: "2021-01-11T12:56:56.205131",
+          source: "creating",
+          destination: "awaiting_up",
+          message:
+            "Service instance bd200aec-4f80-45e1-b2ad-137c442c68b8 successfully executed transfer creating -> awaiting_up (error=False)",
+          ignored_transition: false,
+          event_correlation_id: "363cc930-d847-4e8a-b605-41b87a903248",
+          severity: 20,
+          id_compile_report: null,
+          event_type: "RESOURCE_TRANSITION",
+          is_error_transition: false,
+        } as InstanceEvent,
+      ],
+    })
   );
 
   expect(
@@ -114,7 +116,7 @@ test("EventsView shows updated table", async () => {
     await screen.findByRole("grid", { name: "EventTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right([]));
+  apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("grid", { name: "EventTable-Empty" })
@@ -123,24 +125,26 @@ test("EventsView shows updated table", async () => {
   subscriptionController.executeAll();
 
   apiHelper.resolve(
-    Either.right([
-      {
-        id: "049dd20f-c432-4b93-bf1c-32c572e49cc7",
-        service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
-        service_instance_version: 3,
-        timestamp: "2021-01-11T12:56:56.205131",
-        source: "creating",
-        destination: "awaiting_up",
-        message:
-          "Service instance bd200aec-4f80-45e1-b2ad-137c442c68b8 successfully executed transfer creating -> awaiting_up (error=False)",
-        ignored_transition: false,
-        event_correlation_id: "363cc930-d847-4e8a-b605-41b87a903248",
-        severity: 20,
-        id_compile_report: null,
-        event_type: "RESOURCE_TRANSITION",
-        is_error_transition: false,
-      },
-    ])
+    Either.right({
+      data: [
+        {
+          id: "049dd20f-c432-4b93-bf1c-32c572e49cc7",
+          service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+          service_instance_version: 3,
+          timestamp: "2021-01-11T12:56:56.205131",
+          source: "creating",
+          destination: "awaiting_up",
+          message:
+            "Service instance bd200aec-4f80-45e1-b2ad-137c442c68b8 successfully executed transfer creating -> awaiting_up (error=False)",
+          ignored_transition: false,
+          event_correlation_id: "363cc930-d847-4e8a-b605-41b87a903248",
+          severity: 20,
+          id_compile_report: null,
+          event_type: "RESOURCE_TRANSITION",
+          is_error_transition: false,
+        } as InstanceEvent,
+      ],
+    })
   );
 
   expect(

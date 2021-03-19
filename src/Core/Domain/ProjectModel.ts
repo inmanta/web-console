@@ -5,9 +5,11 @@ export interface ProjectModel extends WithId {
   environments: EnvironmentModel[];
 }
 
-export type EnvironmentIdentifier = WithId;
+export interface EnvironmentIdentifier {
+  environment: string;
+}
 
-export interface EnvironmentModel extends EnvironmentIdentifier {
+export interface EnvironmentModel extends WithId {
   name: string;
   projectId: string;
 }

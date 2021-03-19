@@ -26,9 +26,14 @@ test("InventoryTable can be expanded", async () => {
       new DataManagerImpl<"Resources">(
         new InstantFetcher<"Resources">({
           kind: "Success",
-          data: [
-            { resource_id: "resource_id_1", resource_state: "resource_state" },
-          ],
+          data: {
+            data: [
+              {
+                resource_id: "resource_id_1",
+                resource_state: "resource_state",
+              },
+            ],
+          },
         }),
         new DummyStateHelper<"Resources">()
       ),
@@ -56,9 +61,14 @@ test("ServiceInventory can show resources for instance", async () => {
       new DataManagerImpl<"Resources">(
         new InstantFetcher<"Resources">({
           kind: "Success",
-          data: [
-            { resource_id: "resource_id_1", resource_state: "resource_state" },
-          ],
+          data: {
+            data: [
+              {
+                resource_id: "resource_id_1",
+                resource_state: "resource_state",
+              },
+            ],
+          },
         }),
         new ResourcesStateHelper(store)
       ),

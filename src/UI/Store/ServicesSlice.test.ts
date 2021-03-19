@@ -21,7 +21,7 @@ describe("ServicesSlice", () => {
   it("SetList adds services to the store", () => {
     const store = createStore(servicesSlice);
     store.getActions().setList({
-      qualifier: { id: "env-id" },
+      qualifier: { environment: "env-id" },
       data: RemoteData.success(serviceModels),
     });
 
@@ -38,12 +38,12 @@ describe("ServicesSlice", () => {
   it("SetList removes services from the store", () => {
     const store = createStore(servicesSlice);
     store.getActions().setList({
-      qualifier: { id: "env-id" },
+      qualifier: { environment: "env-id" },
       data: RemoteData.success(serviceModels),
     });
 
     store.getActions().setList({
-      qualifier: { id: "env-id" },
+      qualifier: { environment: "env-id" },
       data: RemoteData.success([serviceModels[0]]),
     });
 

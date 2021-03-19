@@ -3,6 +3,10 @@ import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<Query.Error<"Service">, Query.Data<"Service">>;
+type ApiData = RemoteData.Type<
+  Query.Error<"Service">,
+  Query.ApiResponse<"Service">
+>;
 
 export class ServiceStateHelper implements StateHelper<"Service"> {
   constructor(
@@ -10,8 +14,9 @@ export class ServiceStateHelper implements StateHelper<"Service"> {
     private readonly keyMaker: KeyMaker<Query.Qualifier<"Service">>
   ) {}
 
-  set(qualifier: Query.Qualifier<"Service">, data: Data): void {
-    this.store.dispatch.services.setSingle({ qualifier, data });
+  set(qualifier: Query.Qualifier<"Service">, data: ApiData): void {
+    const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
+    this.store.dispatch.services.setSingle({ qualifier, data: unwrapped });
   }
 
   getHooked(qualifier: Query.Qualifier<"Service">): Data {

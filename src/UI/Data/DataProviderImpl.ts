@@ -2,7 +2,7 @@ import { DataProvider, Query, HookHelper, RemoteData } from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,
-  Query.Data<K>
+  Query.UsedData<K>
 >;
 
 export class DataProviderImpl implements DataProvider {
@@ -18,19 +18,11 @@ export class DataProviderImpl implements DataProvider {
 
   useOnce(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getHelper(query);
-    helper.useOnce(query.qualifier);
-    return [
-      helper.useData(query.qualifier),
-      () => helper.refreshOnce(query.qualifier),
-    ];
+    return helper.useOnce(query.qualifier);
   }
 
   useContinuous(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getHelper(query);
-    helper.useSubscription(query.qualifier);
-    return [
-      helper.useData(query.qualifier),
-      () => helper.refreshSubscription(query.qualifier),
-    ];
+    return helper.useSubscription(query.qualifier);
   }
 }

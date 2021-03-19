@@ -84,7 +84,7 @@ test("ServiceInventory shows updated instances", async () => {
     await screen.findByRole("region", { name: "ServiceInventory-Loading" })
   ).toBeInTheDocument();
 
-  serviceInstancesFetcher.resolve(Either.right([]));
+  serviceInstancesFetcher.resolve(Either.right({ data: [], links: {} }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceInventory-Empty" })
@@ -92,11 +92,59 @@ test("ServiceInventory shows updated instances", async () => {
 
   serviceInstancesSubscriptionController.executeAll();
 
-  serviceInstancesFetcher.resolve(Either.right([ServiceInstance.A]));
+  serviceInstancesFetcher.resolve(
+    Either.right({ data: [ServiceInstance.A], links: {} })
+  );
 
   expect(
     await screen.findByRole("region", { name: "ServiceInventory-Success" })
   ).toBeInTheDocument();
+});
+
+test("ServiceInventory shows error with retry", async () => {
+  const { component, serviceInstancesFetcher } = setup();
+  render(component);
+
+  serviceInstancesFetcher.resolve(Either.left("fake error"));
+
+  expect(
+    await screen.findByRole("region", { name: "ServiceInventory-Failed" })
+  ).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+
+  serviceInstancesFetcher.resolve(
+    Either.right({ data: [ServiceInstance.A], links: {} })
+  );
+
+  expect(
+    await screen.findByRole("region", { name: "ServiceInventory-Success" })
+  ).toBeInTheDocument();
+});
+
+test("ServiceInventory shows next page of instances", async () => {
+  const { component, serviceInstancesFetcher } = setup();
+  render(component);
+
+  serviceInstancesFetcher.resolve(
+    Either.right({
+      data: [{ ...ServiceInstance.A, id: "a" }],
+      links: { next: "fake-url" },
+    })
+  );
+
+  expect(await screen.findByRole("cell", { name: "a" })).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole("button", { name: "Next" }));
+
+  serviceInstancesFetcher.resolve(
+    Either.right({
+      data: [{ ...ServiceInstance.A, id: "b" }],
+      links: {},
+    })
+  );
+
+  expect(await screen.findByRole("cell", { name: "b" })).toBeInTheDocument();
 });
 
 test("ResourcesView fetches resources for new instance after instance update", async () => {
@@ -110,7 +158,9 @@ test("ResourcesView fetches resources for new instance after instance update", a
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(Either.right([ServiceInstance.A]));
+    await serviceInstancesFetcher.resolve(
+      Either.right({ data: [ServiceInstance.A], links: {} })
+    );
   });
 
   expect(
@@ -121,7 +171,7 @@ test("ResourcesView fetches resources for new instance after instance update", a
   fireEvent.click(await screen.findByRole("button", { name: "Resources" }));
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right(Resources.A));
+    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
   });
 
   expect(
@@ -132,12 +182,12 @@ test("ResourcesView fetches resources for new instance after instance update", a
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
-      Either.right([{ ...ServiceInstance.A, version: 4 }])
+      Either.right({ data: [{ ...ServiceInstance.A, version: 4 }], links: {} })
     );
   });
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right(Resources.B));
+    await resourcesFetcher.resolve(Either.right({ data: Resources.B }));
   });
 
   expect(
@@ -145,5 +195,7 @@ test("ResourcesView fetches resources for new instance after instance update", a
   ).toBeInTheDocument();
 
   expect(resourcesFetcher.getInvocations().length).toEqual(2);
-  expect(resourcesFetcher.getInvocations()[1].version).toEqual(4);
+  expect(resourcesFetcher.getInvocations()[1][1]).toMatch(
+    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=4"
+  );
 });

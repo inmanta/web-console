@@ -1,15 +1,9 @@
-import {
-  Query,
-  RemoteData,
-  ServiceInstanceModel,
-  ServiceInstanceModelWithTargetStates,
-  StateHelper,
-} from "@/Core";
+import { Query, RemoteData, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
 
-type Data = RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>;
-type ApiData = RemoteData.Type<string, ServiceInstanceModel[]>;
+type Data = RemoteData.Type<string, Query.Data<"ServiceInstances">>;
+type ApiData = RemoteData.Type<string, Query.ApiResponse<"ServiceInstances">>;
 
 export class ServiceInstancesStateHelper
   implements StateHelper<"ServiceInstances"> {

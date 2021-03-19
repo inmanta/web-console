@@ -7,12 +7,14 @@ interface Handlers<K extends Query.Kind> {
   promise: Promise<Data<K>>;
 }
 
+type Invocation = [string, string];
+
 export class DeferredFetcher<K extends Query.Kind> implements Fetcher<K> {
   private handlers: Handlers<K> | null = null;
-  private invocations: Query.Qualifier<K>[] = [];
+  private invocations: Invocation[] = [];
 
-  getData(qualifier: Query.Qualifier<K>): Promise<Data<K>> {
-    this.invocations.push(qualifier);
+  getData(environment: string, url: string): Promise<Data<K>> {
+    this.invocations.push([environment, url]);
     const promise: Promise<Data<K>> = new Promise((resolve) => {
       this.handlers = { resolve, promise };
     });
@@ -27,7 +29,7 @@ export class DeferredFetcher<K extends Query.Kind> implements Fetcher<K> {
     return promise;
   }
 
-  getInvocations(): Query.Qualifier<K>[] {
+  getInvocations(): Invocation[] {
     return this.invocations;
   }
 }

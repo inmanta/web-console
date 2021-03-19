@@ -5,7 +5,7 @@ import {
   Query,
   HookHelper,
 } from "@/Core";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type GetUnique<Kind extends Query.Kind> = (
   qualifier: Query.Qualifier<Kind>
@@ -15,10 +15,10 @@ type GetDependencies<Kind extends Query.Kind> = (
   qualifier: Query.Qualifier<Kind>
 ) => (string | number | boolean)[];
 
-type Data<Kind extends Query.Kind> = RemoteData.Type<
-  Query.Error<Kind>,
-  Query.Data<Kind>
->;
+type Data<Kind extends Query.Kind> = [
+  RemoteData.Type<Query.Error<Kind>, Query.UsedData<Kind>>,
+  () => void
+];
 
 export class HookHelperImpl<Kind extends Query.Kind>
   implements HookHelper<Kind> {
@@ -27,23 +27,44 @@ export class HookHelperImpl<Kind extends Query.Kind>
     private readonly subscriptionController: SubscriptionController,
     private readonly getUnique: GetUnique<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
-    private readonly kind: Kind
+    private readonly kind: Kind,
+    private readonly getUrl: (qualifier: Query.Qualifier<Kind>) => string,
+    private readonly toUsed: (
+      data: Query.Data<Kind>,
+      setUrl: (url: string) => void
+    ) => Query.UsedData<Kind>
   ) {}
 
-  useOnce(qualifier: Query.Qualifier<Kind>): void {
+  useOnce(qualifier: Query.Qualifier<Kind>): Data<Kind> {
+    const [url, setUrl] = useState(this.getUrl(qualifier));
+
+    useEffect(() => {
+      setUrl(this.getUrl(qualifier));
+    }, this.getDependencies(qualifier));
+
     useEffect(() => {
       this.dataManager.initialize(qualifier);
-      this.dataManager.update(qualifier);
+      this.dataManager.update(qualifier, url);
+    }, [url]);
+
+    return [
+      RemoteData.mapSuccess(
+        (d) => this.toUsed(d, setUrl),
+        this.dataManager.get(qualifier)
+      ),
+      () => this.dataManager.update(qualifier, url),
+    ];
+  }
+
+  useSubscription(qualifier: Query.Qualifier<Kind>): Data<Kind> {
+    const [url, setUrl] = useState(this.getUrl(qualifier));
+
+    useEffect(() => {
+      setUrl(this.getUrl(qualifier));
     }, this.getDependencies(qualifier));
-  }
 
-  refreshOnce(qualifier: Query.Qualifier<Kind>): void {
-    this.dataManager.update(qualifier);
-  }
-
-  useSubscription(qualifier: Query.Qualifier<Kind>): void {
     const handler = async () => {
-      this.dataManager.update(qualifier);
+      this.dataManager.update(qualifier, url);
     };
 
     useEffect(() => {
@@ -55,15 +76,15 @@ export class HookHelperImpl<Kind extends Query.Kind>
       return () => {
         this.subscriptionController.unsubscribeFrom(this.getUnique(qualifier));
       };
-    }, this.getDependencies(qualifier));
-  }
+    }, [url]);
 
-  useData(qualifier: Query.Qualifier<Kind>): Data<Kind> {
-    return this.dataManager.get(qualifier);
-  }
-
-  refreshSubscription(qualifier: Query.Qualifier<Kind>): void {
-    this.subscriptionController.refresh(this.getUnique(qualifier));
+    return [
+      RemoteData.mapSuccess(
+        (data) => this.toUsed(data, setUrl),
+        this.dataManager.get(qualifier)
+      ),
+      () => this.subscriptionController.refresh(this.getUnique(qualifier)),
+    ];
   }
 
   matches(query: Query.SubQuery<Kind>): boolean {

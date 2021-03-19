@@ -3,6 +3,10 @@ import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<Query.Error<"Services">, Query.Data<"Services">>;
+type ApiData = RemoteData.Type<
+  Query.Error<"Services">,
+  Query.ApiResponse<"Services">
+>;
 
 export class ServicesStateHelper implements StateHelper<"Services"> {
   constructor(
@@ -10,11 +14,12 @@ export class ServicesStateHelper implements StateHelper<"Services"> {
     private readonly keyMaker: KeyMaker<Query.Qualifier<"Service">>
   ) {}
 
-  set(qualifier: Query.Qualifier<"Services">, data: Data): void {
-    this.store.dispatch.services.setList({ qualifier, data });
+  set(qualifier: Query.Qualifier<"Services">, data: ApiData): void {
+    const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
+    this.store.dispatch.services.setList({ qualifier, data: unwrapped });
   }
 
-  getHooked({ id: environment }: Query.Qualifier<"Services">): Data {
+  getHooked({ environment }: Query.Qualifier<"Services">): Data {
     return useStoreState(
       (state) => this.enforce(state.services.listByEnv[environment]),
       isEqual
@@ -26,7 +31,7 @@ export class ServicesStateHelper implements StateHelper<"Services"> {
     return value;
   }
 
-  getOnce({ id: environment }: Query.Qualifier<"Services">): Data {
+  getOnce({ environment }: Query.Qualifier<"Services">): Data {
     return this.enforce(this.store.getState().services.listByEnv[environment]);
   }
 }

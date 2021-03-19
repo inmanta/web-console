@@ -1,4 +1,5 @@
 import { SubscriptionController, DataManager } from "@/Core";
+import { identity } from "lodash";
 import { HookHelperImpl } from "../HookHelperImpl";
 
 export class EventsHookHelper extends HookHelperImpl<"Events"> {
@@ -11,7 +12,10 @@ export class EventsHookHelper extends HookHelperImpl<"Events"> {
       subscriptionController,
       (qualifier) => qualifier.id,
       (qualifier) => [qualifier.id, qualifier.service_entity],
-      "Events"
+      "Events",
+      ({ service_entity, id }) =>
+        `/lsm/v1/service_inventory/${service_entity}/${id}/events`,
+      identity
     );
   }
 }

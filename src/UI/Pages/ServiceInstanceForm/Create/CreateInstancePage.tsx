@@ -1,4 +1,4 @@
-import { Query, RemoteData, ServiceModel } from "@/Core";
+import { RemoteData, ServiceModel } from "@/Core";
 import {
   Alert,
   AlertGroup,
@@ -47,20 +47,19 @@ const ServiceProvider: React.FunctionComponent<{
     qualifier: { name: serviceName, environment: environmentId },
   });
 
-  return RemoteData.fold<
-    Query.Error<"Service">,
-    Query.Data<"Service">,
-    JSX.Element | null
-  >({
-    notAsked: () => null,
-    loading: () => <LoadingView />,
-    failed: (error) => <ErrorView error={error} retry={retry} />,
-    success: (service) => (
-      <PageWrapper aria-label="AddInstance-Success">
-        <CreateInstancePage serviceEntity={service} />
-      </PageWrapper>
-    ),
-  })(data);
+  return RemoteData.fold(
+    {
+      notAsked: () => null,
+      loading: () => <LoadingView />,
+      failed: (error) => <ErrorView error={error} retry={retry} />,
+      success: (service) => (
+        <PageWrapper aria-label="AddInstance-Success">
+          <CreateInstancePage serviceEntity={service} />
+        </PageWrapper>
+      ),
+    },
+    data
+  );
 };
 
 const LoadingView: React.FC = () => (

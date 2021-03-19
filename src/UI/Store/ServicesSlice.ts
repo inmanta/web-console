@@ -47,7 +47,7 @@ export interface ServicesSlice {
 export const servicesSlice: ServicesSlice = {
   listByEnv: {},
   setList: action(({ listByEnv, byNameAndEnv }, { qualifier, data }) => {
-    const environment = qualifier.id;
+    const { environment } = qualifier;
     listByEnv[environment] = data;
     if (!RemoteData.isSuccess(data)) return;
     const { value: services } = data;

@@ -1,6 +1,6 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
-import { ServiceInstanceModelWithTargetStates, ServiceModel } from "@/Core";
+import { ServiceModel, ServiceInstanceModelWithTargetStates } from "@/Core";
 import {
   AttributesPresenter,
   InstanceActionPresenter,
@@ -13,14 +13,14 @@ import { InstanceSetStateManager } from "./InstanceSetStateManager";
 
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
-  keycloak?: KeycloakInstance;
   serviceEntity: ServiceModel;
+  keycloak?: KeycloakInstance;
 }
 
 export const TableProvider: React.FC<Props> = ({
   instances,
-  keycloak,
   serviceEntity,
+  keycloak,
 }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();

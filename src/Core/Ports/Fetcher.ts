@@ -11,6 +11,7 @@ import { Query } from "@/Core/Domain";
  */
 export interface Fetcher<Kind extends Query.Kind> {
   getData(
-    qualifier: Query.Qualifier<Kind>
+    environment: string,
+    url: string
   ): Promise<Either.Type<Query.Error<Kind>, Query.ApiResponse<Kind>>>;
 }

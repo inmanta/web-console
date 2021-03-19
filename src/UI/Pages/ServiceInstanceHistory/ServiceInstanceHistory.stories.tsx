@@ -30,7 +30,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
       new DataManagerImpl<"InstanceLogs">(
         new InstantFetcher<"InstanceLogs">({
           kind: "Success",
-          data: logs,
+          data: { data: logs },
         }),
         new InstanceLogsStateHelper(store)
       ),

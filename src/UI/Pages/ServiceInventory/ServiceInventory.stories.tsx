@@ -21,57 +21,91 @@ export default {
   component: ServiceInventory,
 };
 
-const store = getStoreInstance();
+export const Basic: React.FC = () => {
+  const store = getStoreInstance();
+  const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
+    kind: "Success",
+    data: { data: [ServiceInstance.A], links: {} },
+  });
+  const serviceInstancesSubscriptionController = new LiveSubscriptionController(
+    2000,
+    new IntervalsDictionary()
+  );
+  const serviceInstancesHelper = new ServiceInstancesHookHelper(
+    new DataManagerImpl<"ServiceInstances">(
+      serviceInstancesFetcher,
+      new ServiceInstancesStateHelper(store)
+    ),
+    serviceInstancesSubscriptionController
+  );
+  const resourcesFetcher = new InstantFetcher<"Resources">({
+    kind: "Success",
+    data: { data: Resources.B },
+  });
 
-const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
-  kind: "Success",
-  data: [ServiceInstance.A],
-});
+  const resourcesSubscriptionController = new LiveSubscriptionController(
+    2000,
+    new IntervalsDictionary()
+  );
+  const resourcesHelper = new ResourcesHookHelper(
+    new DataManagerImpl<"Resources">(
+      resourcesFetcher,
+      new ResourcesStateHelper(store)
+    ),
+    resourcesSubscriptionController
+  );
 
-const serviceInstancesSubscriptionController = new LiveSubscriptionController(
-  2000,
-  new IntervalsDictionary()
-);
-const serviceInstancesHelper = new ServiceInstancesHookHelper(
-  new DataManagerImpl<"ServiceInstances">(
-    serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store)
-  ),
-  serviceInstancesSubscriptionController
-);
+  const dataProvider = new DataProviderImpl([
+    serviceInstancesHelper,
+    resourcesHelper,
+  ]);
 
-const resourcesFetcher = new InstantFetcher<"Resources">({
-  kind: "Success",
-  data: Resources.B,
-});
+  return (
+    <ServicesContext.Provider value={{ dataProvider }}>
+      <StoreProvider store={store}>
+        <MemoryRouter>
+          <ServiceInventory
+            serviceName={Service.A.name}
+            environmentId={Service.A.environment}
+            service={Service.A}
+          />
+        </MemoryRouter>
+      </StoreProvider>
+    </ServicesContext.Provider>
+  );
+};
 
-const resourcesSubscriptionController = new LiveSubscriptionController(
-  2000,
-  new IntervalsDictionary()
-);
-const resourcesHelper = new ResourcesHookHelper(
-  new DataManagerImpl<"Resources">(
-    resourcesFetcher,
-    new ResourcesStateHelper(store)
-  ),
-  resourcesSubscriptionController
-);
+export const Failed: React.FC = () => {
+  const store = getStoreInstance();
+  const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
+    kind: "Failed",
+    error: "fake error message",
+  });
+  const serviceInstancesSubscriptionController = new LiveSubscriptionController(
+    2000,
+    new IntervalsDictionary()
+  );
+  const serviceInstancesHelper = new ServiceInstancesHookHelper(
+    new DataManagerImpl<"ServiceInstances">(
+      serviceInstancesFetcher,
+      new ServiceInstancesStateHelper(store)
+    ),
+    serviceInstancesSubscriptionController
+  );
 
-const dataProvider = new DataProviderImpl([
-  serviceInstancesHelper,
-  resourcesHelper,
-]);
+  const dataProvider = new DataProviderImpl([serviceInstancesHelper]);
 
-export const Basic: React.FC = () => (
-  <ServicesContext.Provider value={{ dataProvider }}>
-    <StoreProvider store={store}>
-      <MemoryRouter>
-        <ServiceInventory
-          serviceName={Service.A.name}
-          environmentId={Service.A.environment}
-          service={Service.A}
-        />
-      </MemoryRouter>
-    </StoreProvider>
-  </ServicesContext.Provider>
-);
+  return (
+    <ServicesContext.Provider value={{ dataProvider }}>
+      <StoreProvider store={store}>
+        <MemoryRouter>
+          <ServiceInventory
+            serviceName={Service.A.name}
+            environmentId={Service.A.environment}
+            service={Service.A}
+          />
+        </MemoryRouter>
+      </StoreProvider>
+    </ServicesContext.Provider>
+  );
+};

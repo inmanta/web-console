@@ -53,7 +53,7 @@ test("ResourcesView shows empty table", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right([]));
+  apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Empty" })
@@ -84,7 +84,9 @@ test("ResourcesView shows success table", async () => {
   ).toBeInTheDocument();
 
   apiHelper.resolve(
-    Either.right([{ resource_id: "abc123", resource_state: "deployed" }])
+    Either.right({
+      data: [{ resource_id: "abc123", resource_state: "deployed" }],
+    })
   );
 
   expect(
@@ -100,7 +102,7 @@ test("ResourcesView shows updated table", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right([]));
+  apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Empty" })
@@ -109,7 +111,9 @@ test("ResourcesView shows updated table", async () => {
   subscriptionController.executeAll();
 
   apiHelper.resolve(
-    Either.right([{ resource_id: "abc123", resource_state: "deployed" }])
+    Either.right({
+      data: [{ resource_id: "abc123", resource_state: "deployed" }],
+    })
   );
 
   expect(

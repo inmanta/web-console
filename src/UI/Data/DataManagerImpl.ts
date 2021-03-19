@@ -19,10 +19,12 @@ export class DataManagerImpl<Kind extends Query.Kind>
     }
   }
 
-  async update(qualifier: Query.Qualifier<Kind>): Promise<void> {
+  async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       qualifier,
-      RemoteData.fromEither(await this.fetcher.getData(qualifier))
+      RemoteData.fromEither(
+        await this.fetcher.getData(qualifier.environment, url)
+      )
     );
   }
 

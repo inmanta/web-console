@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { InstanceLog, Query, RemoteData, ServiceModel } from "@/Core";
+import { InstanceLog, RemoteData, ServiceModel } from "@/Core";
 import {
   EmptyView,
   ErrorView,
@@ -37,54 +37,55 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
     },
   });
 
-  return RemoteData.fold<
-    Query.Error<"InstanceLogs">,
-    Query.Data<"InstanceLogs">,
-    JSX.Element | null
-  >({
-    notAsked: () => null,
-    loading: () => <LoadingView delay={500} />,
-    failed: (error) => <ErrorView message={error} />,
-    success: (logs) => {
-      if (logs.length <= 0) {
+  return RemoteData.fold(
+    {
+      notAsked: () => null,
+      loading: () => <LoadingView delay={500} />,
+      failed: (error) => <ErrorView message={error} />,
+      success: (logs) => {
+        if (logs.length <= 0) {
+          return (
+            <div aria-label="ServiceInstanceHistory-Empty">
+              <EmptyView message={words("history.missing")(instanceId)} />
+            </div>
+          );
+        }
+
+        const columnHeads = ["Version", "Timestamp", "State", "Attributes"];
+        const sorted = logs.sort((a, b) => a.version - b.version);
+        const ids = sorted.map((log) => log.version.toString());
+        const dict: Record<string, InstanceLog> = {};
+        sorted.forEach((log) => (dict[log.version.toString()] = log));
+        const datePresenter = new MomentDatePresenter();
+        const attributesPresenter = new AttributesPresenter();
+
         return (
-          <div aria-label="ServiceInstanceHistory-Empty">
-            <EmptyView message={words("history.missing")(instanceId)} />
+          <div aria-label="ServiceInstanceHistory-Success">
+            <ExpandableTable
+              columnHeads={columnHeads}
+              ids={ids}
+              Row={(props) => (
+                <InstanceLogRow
+                  {...props}
+                  log={dict[props.id]}
+                  timestamp={datePresenter.get(dict[props.id].timestamp)}
+                  attributesSummary={attributesPresenter.getSummary(
+                    dict[props.id].candidate_attributes,
+                    dict[props.id].active_attributes,
+                    dict[props.id].rollback_attributes
+                  )}
+                  state={
+                    <State service={service} state={dict[props.id].state} />
+                  }
+                />
+              )}
+            />
           </div>
         );
-      }
-
-      const columnHeads = ["Version", "Timestamp", "State", "Attributes"];
-      const sorted = logs.sort((a, b) => a.version - b.version);
-      const ids = sorted.map((log) => log.version.toString());
-      const dict: Record<string, InstanceLog> = {};
-      sorted.forEach((log) => (dict[log.version.toString()] = log));
-      const datePresenter = new MomentDatePresenter();
-      const attributesPresenter = new AttributesPresenter();
-
-      return (
-        <div aria-label="ServiceInstanceHistory-Success">
-          <ExpandableTable
-            columnHeads={columnHeads}
-            ids={ids}
-            Row={(props) => (
-              <InstanceLogRow
-                {...props}
-                log={dict[props.id]}
-                timestamp={datePresenter.get(dict[props.id].timestamp)}
-                attributesSummary={attributesPresenter.getSummary(
-                  dict[props.id].candidate_attributes,
-                  dict[props.id].active_attributes,
-                  dict[props.id].rollback_attributes
-                )}
-                state={<State service={service} state={dict[props.id].state} />}
-              />
-            )}
-          />
-        </div>
-      );
+      },
     },
-  })(data);
+    data
+  );
 };
 
 const State: React.FC<{ service: ServiceModel; state: string }> = ({

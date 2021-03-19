@@ -1,12 +1,18 @@
 import { Action, action, computed, Computed } from "easy-peasy";
 import {
+  Query,
+  Pagination,
   RemoteData,
   ServiceIdentifier,
-  ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
 } from "@/Core";
 import { StoreModel } from "@/UI/Store/Store";
 import { injections } from "@/UI/Store/Injections";
+
+type Data = RemoteData.Type<
+  Query.Error<"ServiceInstances">,
+  Query.ApiResponse<"ServiceInstances">
+>;
 
 /**
  * The ServiceInstancesSlice stores ServiceInstances.
@@ -14,16 +20,19 @@ import { injections } from "@/UI/Store/Injections";
  * their service name. So byId means by ServiceName.
  */
 export interface ServiceInstancesSlice {
-  byId: Record<string, RemoteData.Type<string, ServiceInstanceModel[]>>;
-  setData: Action<
-    ServiceInstancesSlice,
-    { id: string; value: RemoteData.Type<string, ServiceInstanceModel[]> }
-  >;
+  byId: Record<string, Data>;
+  setData: Action<ServiceInstancesSlice, { id: string; value: Data }>;
   instancesWithTargetStates: Computed<
     ServiceInstancesSlice,
     (
       qualifier: ServiceIdentifier
-    ) => RemoteData.Type<string, ServiceInstanceModelWithTargetStates[]>,
+    ) => RemoteData.Type<
+      string,
+      {
+        data: ServiceInstanceModelWithTargetStates[];
+        links: Pagination.Links;
+      }
+    >,
     StoreModel
   >;
 }
@@ -39,30 +48,29 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
       const data = byId[qualifier.name];
       if (typeof data === "undefined") return RemoteData.loading();
 
-      return RemoteData.mapSuccess<
-        string,
-        ServiceInstanceModel[],
-        ServiceInstanceModelWithTargetStates[]
-      >((instances) => {
-        return instances.map((instance) => {
-          const instanceState = instance.state;
-          const service =
-            storeState.services.byNameAndEnv[
-              injections.serviceKeyMaker.make(qualifier)
-            ];
-          if (!service || service.kind !== "Success") {
-            return { ...instance, instanceSetStateTargets: [] };
-          }
-          const setStateTransfers = service.value.lifecycle.transfers.filter(
-            (transfer) =>
-              transfer.source === instanceState && transfer.api_set_state
-          );
-          const setStateTargets = setStateTransfers.map(
-            (transfer) => transfer.target
-          );
-          return { ...instance, instanceSetStateTargets: setStateTargets };
-        });
-      })(data);
+      return RemoteData.mapSuccess(({ data, links }) => {
+        return {
+          data: data.map((instance) => {
+            const instanceState = instance.state;
+            const service =
+              storeState.services.byNameAndEnv[
+                injections.serviceKeyMaker.make(qualifier)
+              ];
+            if (!service || service.kind !== "Success") {
+              return { ...instance, instanceSetStateTargets: [] };
+            }
+            const setStateTransfers = service.value.lifecycle.transfers.filter(
+              (transfer) =>
+                transfer.source === instanceState && transfer.api_set_state
+            );
+            const setStateTargets = setStateTransfers.map(
+              (transfer) => transfer.target
+            );
+            return { ...instance, instanceSetStateTargets: setStateTargets };
+          }),
+          links,
+        };
+      }, data);
     }
   ),
 };

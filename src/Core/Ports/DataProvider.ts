@@ -3,7 +3,7 @@ import { Query } from "@/Core/Domain";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,
-  Query.Data<K>
+  Query.UsedData<K>
 >;
 
 type Pair<K extends Query.Kind> = [Data<K>, () => void];

@@ -1,11 +1,15 @@
 import { Query, RemoteData, StateHelper } from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<string, Query.Data<K>>;
+type ApiData<K extends Query.Kind> = RemoteData.Type<
+  string,
+  Query.ApiResponse<K>
+>;
 
 export class DummyStateHelper<K extends Query.Kind> implements StateHelper<K> {
   private state = {};
 
-  set(qualifier: Query.Qualifier<K>, value: Data<K>): void {
+  set(qualifier: Query.Qualifier<K>, value: ApiData<K>): void {
     this.state[getKey(qualifier)] = value;
   }
 

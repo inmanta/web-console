@@ -9,6 +9,7 @@ import {
   ServiceInstanceIdentifier,
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
+import * as Pagination from "./Pagination";
 
 type Query =
   | ServicesQuery
@@ -29,8 +30,9 @@ export interface ServicesQuery {
 
 interface ServicesManifest {
   error: string;
-  apiResponse: ServiceModel[];
+  apiResponse: { data: ServiceModel[] };
   data: ServiceModel[];
+  usedData: ServiceModel[];
   query: ServicesQuery;
 }
 
@@ -45,8 +47,9 @@ export interface ServiceQuery {
 
 interface ServiceManifest {
   error: string;
-  apiResponse: ServiceModel;
+  apiResponse: { data: ServiceModel };
   data: ServiceModel;
+  usedData: ServiceModel;
   query: ServiceQuery;
 }
 
@@ -63,8 +66,9 @@ export interface ResourcesQuery {
 
 interface ResourcesManifest {
   error: string;
-  apiResponse: ResourceModel[];
+  apiResponse: { data: ResourceModel[] };
   data: ResourceModel[];
+  usedData: ResourceModel[];
   query: ResourcesQuery;
 }
 
@@ -81,8 +85,18 @@ export interface ServiceInstancesQuery {
 
 interface ServiceInstancesManifest {
   error: string;
-  apiResponse: ServiceInstanceModel[];
-  data: ServiceInstanceModelWithTargetStates[];
+  apiResponse: {
+    data: ServiceInstanceModel[];
+    links: Pagination.Links;
+  };
+  data: {
+    data: ServiceInstanceModelWithTargetStates[];
+    links: Pagination.Links;
+  };
+  usedData: {
+    data: ServiceInstanceModelWithTargetStates[];
+    handlers: Pagination.Handlers;
+  };
   query: ServiceInstancesQuery;
 }
 
@@ -96,8 +110,9 @@ export interface InstanceEventsQuery {
 
 interface EventsManifest {
   error: string;
-  apiResponse: InstanceEvent[];
+  apiResponse: { data: InstanceEvent[] };
   data: InstanceEvent[];
+  usedData: InstanceEvent[];
   query: InstanceEventsQuery;
 }
 
@@ -111,8 +126,9 @@ export interface InstanceLogsQuery {
 
 interface InstanceLogsManifest {
   error: string;
-  apiResponse: InstanceLog[];
+  apiResponse: { data: InstanceLog[] };
   data: InstanceLog[];
+  usedData: InstanceLog[];
   query: InstanceLogsQuery;
 }
 
@@ -138,3 +154,4 @@ export type Data<K extends Kind> = Manifest[K]["data"];
 export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
 export type Qualifier<K extends Kind> = SubQuery<K>["qualifier"];
+export type UsedData<K extends Kind> = Manifest[K]["usedData"];

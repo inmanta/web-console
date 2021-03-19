@@ -1,5 +1,6 @@
 import { SubscriptionController, DataManager } from "@/Core";
 import { HookHelperImpl } from "../HookHelperImpl";
+import { identity } from "lodash";
 
 export class ServicesHookHelper extends HookHelperImpl<"Services"> {
   constructor(
@@ -9,9 +10,11 @@ export class ServicesHookHelper extends HookHelperImpl<"Services"> {
     super(
       dataManager,
       subscriptionController,
-      (qualifier) => qualifier.id,
-      (qualifier) => [qualifier.id],
-      "Services"
+      (qualifier) => qualifier.environment,
+      (qualifier) => [qualifier.environment],
+      "Services",
+      () => `/lsm/v1/service_catalog`,
+      identity
     );
   }
 }
