@@ -1,5 +1,6 @@
 export * from "./AttributesTable";
 export * from "./DateWithTooltip";
+export * from "./DefaultSwitch";
 export * from "./EmptyView";
 export * from "./EnvironmentProvider";
 export * from "./ErrorView";

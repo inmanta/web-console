@@ -97,6 +97,11 @@ const dict = {
   ) =>
     `Are you sure you want to delete instance ${instanceId} of service entity ${serviceName}?`,
 
+  "setting.label.true": "True",
+  "setting.label.trueDefault": "True (service default)",
+  "setting.label.false": "False",
+  "setting.label.falseDefault": "False (service default)",
+
   /**
    * Events related text
    */

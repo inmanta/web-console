@@ -1,3 +1,4 @@
+export * from "./Config";
 export * from "./EventModel";
 export * from "./InstanceLogModel";
 export * from "./InventoryTable";
