@@ -14,7 +14,7 @@ interface TabViewProps {
   children: React.ReactElement<TabProps>[];
 }
 
-export const ServiceInstanceDetails: React.FC<TabViewProps> = ({
+export const Details: React.FC<TabViewProps> = ({
   children,
   activeTab,
   setActiveTab,

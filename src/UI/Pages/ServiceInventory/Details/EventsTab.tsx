@@ -10,14 +10,14 @@ import {
 } from "@/UI/Components";
 
 import { MomentDatePresenter } from "../Presenters";
-import { TabProps } from "./ServiceInstanceDetails";
+import { TabProps } from "./Details";
 import { words } from "@/UI/words";
 
 interface Props extends TabProps {
   qualifier: ServiceInstanceIdentifier;
 }
 
-export const EventsView: React.FC<Props> = ({ qualifier }) => {
+export const EventsTab: React.FC<Props> = ({ qualifier }) => {
   const { dataProvider } = useContext(ServicesContext);
   const [data] = dataProvider.useContinuous<"Events">({
     kind: "Events",

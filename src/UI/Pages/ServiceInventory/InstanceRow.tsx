@@ -5,12 +5,12 @@ import { words } from "@/UI";
 import { DateWithTooltip } from "@/UI/Components";
 import { AttributesSummaryView, IdWithCopy } from "./Components";
 import {
-  ServiceInstanceDetails,
-  AttributesView,
-  StatusView,
-  ResourcesView,
+  Details,
   TabKey,
-  EventsView,
+  AttributesTab,
+  StatusTab,
+  ResourcesTab,
+  EventsTab,
 } from "./Details";
 import {
   AutomationIcon,
@@ -91,11 +91,8 @@ export const InstanceRow: React.FC<Props> = ({
       <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
         <Td colSpan={numberOfColumns}>
           <ExpandableRowContent>
-            <ServiceInstanceDetails
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            >
-              <StatusView
+            <Details activeTab={activeTab} setActiveTab={setActiveTab}>
+              <StatusTab
                 title={words("inventory.tabs.status")}
                 icon={<InfoCircleIcon />}
                 statusInfo={{
@@ -107,22 +104,22 @@ export const InstanceRow: React.FC<Props> = ({
                   actions: actions,
                 }}
               />
-              <AttributesView
+              <AttributesTab
                 attributes={row.attributes}
                 title={words("inventory.tabs.attributes")}
                 icon={<ListIcon />}
               />
-              <ResourcesView
+              <ResourcesTab
                 qualifier={serviceInstanceIdentifier}
                 title={words("inventory.tabs.resources")}
                 icon={<AutomationIcon />}
               />
-              <EventsView
+              <EventsTab
                 qualifier={serviceInstanceIdentifier}
                 title={words("events.title")}
                 icon={<PortIcon />}
               />
-            </ServiceInstanceDetails>
+            </Details>
           </ExpandableRowContent>
         </Td>
       </Tr>

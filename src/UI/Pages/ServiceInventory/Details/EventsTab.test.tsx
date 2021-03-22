@@ -11,7 +11,7 @@ import {
   EventsStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
-import { EventsView } from "./EventsView";
+import { EventsTab } from "./EventsTab";
 
 function setup() {
   const store = getStoreInstance();
@@ -34,7 +34,7 @@ function setup() {
   const component = (
     <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
-        <EventsView qualifier={instance} title="" icon={<></>} />
+        <EventsTab qualifier={instance} title="" icon={<></>} />
       </StoreProvider>
     </ServicesContext.Provider>
   );

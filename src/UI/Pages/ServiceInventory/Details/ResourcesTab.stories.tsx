@@ -1,34 +1,33 @@
 import React from "react";
-import {
-  ignoredErrorNormalEvents,
-  instanceEvents,
-  InstantFetcher,
-  Outcome,
-  StaticSubscriptionController,
-} from "@/Test";
-import { EventsView } from "./EventsView";
+import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
 import {
-  DataProviderImpl,
-  DataManagerImpl,
-  EventsHookHelper,
-  EventsStateHelper,
-} from "@/UI/Data";
+  StaticSubscriptionController,
+  Outcome,
+  InstantFetcher,
+  Resources,
+} from "@/Test";
 import { ServicesContext } from "@/UI/ServicesContext";
-import { StoreProvider } from "easy-peasy";
+import {
+  DataProviderImpl,
+  ResourcesStateHelper,
+  DataManagerImpl,
+  ResourcesHookHelper,
+} from "@/UI/Data";
+import { ResourcesTab } from "./ResourcesTab";
 
 export default {
-  title: "EventsView",
-  component: EventsView,
+  title: "ResourcesView",
+  component: ResourcesTab,
 };
 
-const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
+const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new EventsHookHelper(
-      new DataManagerImpl<"Events">(
-        new InstantFetcher<"Events">(outcome),
-        new EventsStateHelper(store)
+    new ResourcesHookHelper(
+      new DataManagerImpl<"Resources">(
+        new InstantFetcher<"Resources">(outcome),
+        new ResourcesStateHelper(store)
       ),
       new StaticSubscriptionController()
     ),
@@ -44,7 +43,7 @@ const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
   return (
     <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
-        <EventsView qualifier={instance} title="" icon={<></>} />
+        <ResourcesTab qualifier={instance} title="" icon={<></>} />
       </StoreProvider>
     </ServicesContext.Provider>
   );
@@ -61,12 +60,6 @@ export const Failed: React.FC = () => (
   <Template outcome={{ kind: "Failed", error: "error" }} />
 );
 
-export const MultipleSuccessful: React.FC = () => (
-  <Template outcome={{ kind: "Success", data: { data: instanceEvents } }} />
-);
-
-export const MultipleTypes: React.FC = () => (
-  <Template
-    outcome={{ kind: "Success", data: { data: ignoredErrorNormalEvents } }}
-  />
+export const Success: React.FC = () => (
+  <Template outcome={{ kind: "Success", data: { data: Resources.A } }} />
 );

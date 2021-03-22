@@ -11,7 +11,7 @@ import {
   DataManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
-import { ResourcesView } from "./ResourcesView";
+import { ResourcesTab } from "./ResourcesTab";
 
 function setup() {
   const store = getStoreInstance();
@@ -37,7 +37,7 @@ function setup() {
   const component = (
     <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
-        <ResourcesView qualifier={instance} title="" icon={<></>} />
+        <ResourcesTab qualifier={instance} title="" icon={<></>} />
       </StoreProvider>
     </ServicesContext.Provider>
   );
