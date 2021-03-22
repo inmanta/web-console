@@ -121,6 +121,9 @@ const dict = {
    */
   "history.missing": (instanceId: string) =>
     `No history could be found for instance ${instanceId}`,
+  "history.detailsTab.title": "Details",
+  "history.attributesTab.title": "Attributes",
+  "history.eventsTab.title": "Events",
 };
 
 type Key = keyof typeof dict;
