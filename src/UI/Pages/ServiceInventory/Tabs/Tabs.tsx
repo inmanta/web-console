@@ -4,6 +4,7 @@ import { words } from "@/UI/words";
 import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
   AutomationIcon,
+  CogIcon,
   InfoCircleIcon,
   ListIcon,
   PortIcon,
@@ -12,12 +13,14 @@ import { StatusTab } from "./StatusTab";
 import { AttributesTab } from "./AttributesTab";
 import { ResourcesTab } from "./ResourcesTab";
 import { EventsTab } from "./EventsTab";
+import { ConfigTab } from "./ConfigTab";
 
 export enum TabKey {
   Status = "Status",
   Attributes = "Attributes",
   Resources = "Resources",
   Events = "Events",
+  Config = "Config",
 }
 
 interface Props {
@@ -45,6 +48,7 @@ export const Tabs: React.FC<Props> = ({
       attributesTab(row),
       resourcesTab(serviceInstanceIdentifier),
       eventsTab(serviceInstanceIdentifier),
+      configTab(serviceInstanceIdentifier),
     ]}
   />
 );
@@ -94,4 +98,13 @@ const eventsTab = (
   title: words("events.title"),
   icon: <PortIcon />,
   view: <EventsTab qualifier={serviceInstanceIdentifier} />,
+});
+
+const configTab = (
+  serviceInstanceIdentifier: VersionedServiceInstanceIdentifier
+): TabDescriptor<TabKey> => ({
+  id: TabKey.Config,
+  title: words("config.title"),
+  icon: <CogIcon />,
+  view: <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />,
 });

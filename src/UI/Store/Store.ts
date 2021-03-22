@@ -1,6 +1,10 @@
 import { thunk, Thunk, Action, action } from "easy-peasy";
 import { EnvironmentsSlice, environmentsSlice } from "./EnvironmentsSlice";
 import { InstanceLogsSlice, instanceLogsSlice } from "./InstanceLogsSlice";
+import {
+  InstanceConfigSlice,
+  instanceConfigSlice,
+} from "./InstanceConfigSlice";
 import { ProjectsSlice, projectsSlice } from "./ProjectsSlice";
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
@@ -22,6 +26,7 @@ export interface StoreModel {
   events: EventsSlice;
   services: ServicesSlice;
   instanceLogs: InstanceLogsSlice;
+  instanceConfig: InstanceConfigSlice;
   projects: ProjectsSlice;
   serviceInstances: ServiceInstancesSlice;
 }
@@ -76,6 +81,7 @@ export const storeModel: StoreModel = {
   environments: environmentsSlice,
   fetched,
   instanceLogs: instanceLogsSlice,
+  instanceConfig: instanceConfigSlice,
   projects: projectsSlice,
   resources: resourcesSlice,
   events: eventsSlice,

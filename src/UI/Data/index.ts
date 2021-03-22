@@ -1,4 +1,5 @@
 export * from "./Events";
+export * from "./InstanceConfig";
 export * from "./InstanceLogs";
 export * from "./Resources";
 export * from "./Service";

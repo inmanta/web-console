@@ -3,3 +3,5 @@ export interface Setting {
   value: boolean;
   defaultValue: boolean;
 }
+
+export type InstanceConfig = Record<string, boolean>;
