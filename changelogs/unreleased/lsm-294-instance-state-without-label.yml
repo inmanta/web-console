@@ -1,0 +1,8 @@
+description: Add support for service instance state without a label
+issue-repo: lsm
+issue-nr: 294
+destination-branches:
+  - master
+  - iso4
+sections:
+  feature: "{{description}}"
