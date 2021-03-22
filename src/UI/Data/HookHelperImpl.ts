@@ -45,7 +45,7 @@ export class HookHelperImpl<Kind extends Query.Kind>
     useEffect(() => {
       this.dataManager.initialize(qualifier);
       this.dataManager.update(qualifier, url);
-    }, [url]);
+    }, [url, qualifier.environment]);
 
     return [
       RemoteData.mapSuccess(
@@ -76,7 +76,7 @@ export class HookHelperImpl<Kind extends Query.Kind>
       return () => {
         this.subscriptionController.unsubscribeFrom(this.getUnique(qualifier));
       };
-    }, [url]);
+    }, [url, qualifier.environment]);
 
     return [
       RemoteData.mapSuccess(
