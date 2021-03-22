@@ -44,7 +44,7 @@ const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
   return (
     <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
-        <EventsTab qualifier={instance} title="" icon={<></>} />
+        <EventsTab qualifier={instance} />
       </StoreProvider>
     </ServicesContext.Provider>
   );

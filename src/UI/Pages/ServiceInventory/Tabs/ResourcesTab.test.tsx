@@ -37,7 +37,7 @@ function setup() {
   const component = (
     <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
-        <ResourcesTab qualifier={instance} title="" icon={<></>} />
+        <ResourcesTab qualifier={instance} />
       </StoreProvider>
     </ServicesContext.Provider>
   );

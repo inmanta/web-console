@@ -19,7 +19,7 @@ interface Info {
   timestamp: string;
 }
 
-export const DetailsView: React.FC<Props> = ({ info }) => (
+export const DetailsTab: React.FC<Props> = ({ info }) => (
   <Card>
     <CardBody isFilled={true}>
       <DescriptionList isHorizontal>

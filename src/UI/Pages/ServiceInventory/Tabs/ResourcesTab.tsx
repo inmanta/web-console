@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { TabProps } from "./Details";
 import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
   ResourceTable,
@@ -12,7 +11,7 @@ import {
 import { ServicesContext } from "@/UI/ServicesContext";
 import { words } from "@/UI/words";
 
-interface Props extends TabProps {
+interface Props {
   qualifier: VersionedServiceInstanceIdentifier;
 }
 

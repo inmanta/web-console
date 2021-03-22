@@ -1,6 +1,5 @@
 import React from "react";
 import { Attributes } from "@/Core";
-import { TabProps } from "./Details";
 import { TreeTable } from "@/UI/Components";
 import {
   AttributeHelper,
@@ -9,7 +8,7 @@ import {
   TreeTableHelper,
 } from "@/UI/Components/TreeTable/Helpers";
 
-interface Props extends TabProps {
+interface Props {
   attributes: Attributes;
 }
 

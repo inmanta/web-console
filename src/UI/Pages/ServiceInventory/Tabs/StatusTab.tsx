@@ -1,5 +1,4 @@
 import React from "react";
-import { words } from "@/UI";
 import {
   Card,
   CardBody,
@@ -11,7 +10,7 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { TabProps } from "./Details";
+import { words } from "@/UI";
 
 interface StatusInfo {
   instanceId: string;
@@ -22,7 +21,7 @@ interface StatusInfo {
   actions: React.ReactElement | null;
 }
 
-interface Props extends TabProps {
+interface Props {
   statusInfo: StatusInfo;
 }
 

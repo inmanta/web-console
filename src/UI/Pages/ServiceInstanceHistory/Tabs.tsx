@@ -10,8 +10,7 @@ import {
 } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 import { words } from "@/UI/words";
-
-import { DetailsView } from "./DetailsView";
+import { DetailsTab } from "./DetailsTab";
 
 export enum TabKey {
   Details = "Details",
@@ -53,14 +52,14 @@ const detailsTab = (
   timestamp: string
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Details,
-  title: words("history.detailsTab.title"),
+  title: words("history.tabs.details"),
   icon: <InfoCircleIcon />,
-  view: <DetailsView info={{ state, version, timestamp }} />,
+  view: <DetailsTab info={{ state, version, timestamp }} />,
 });
 
 const attributesTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
-  title: words("history.attributesTab.title"),
+  title: words("history.tabs.attributes"),
   icon: <ListIcon />,
   view: (
     <AttributesTable
@@ -75,7 +74,7 @@ const attributesTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
 
 const eventsTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
   id: TabKey.Events,
-  title: words("history.eventsTab.title"),
+  title: words("history.tabs.events"),
   icon: <PortIcon />,
   view: (
     <EventsTable

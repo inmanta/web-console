@@ -10,10 +10,9 @@ import {
 } from "@/UI/Components";
 
 import { MomentDatePresenter } from "../Presenters";
-import { TabProps } from "./Details";
 import { words } from "@/UI/words";
 
-interface Props extends TabProps {
+interface Props {
   qualifier: ServiceInstanceIdentifier;
 }
 

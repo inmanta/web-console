@@ -43,7 +43,7 @@ const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
   return (
     <ServicesContext.Provider value={{ dataProvider }}>
       <StoreProvider store={store}>
-        <ResourcesTab qualifier={instance} title="" icon={<></>} />
+        <ResourcesTab qualifier={instance} />
       </StoreProvider>
     </ServicesContext.Provider>
   );
