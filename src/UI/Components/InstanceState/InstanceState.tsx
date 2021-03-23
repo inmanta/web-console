@@ -29,11 +29,12 @@ export const InstanceState: React.FC<State> = ({ name, label }) => {
         </Label>
       );
     case "info":
-    default:
       return (
         <Label icon={<InfoCircleIcon />} color={"blue"}>
           {name}
         </Label>
       );
+    default:
+      return <>{name}</>;
   }
 };

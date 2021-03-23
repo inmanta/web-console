@@ -15,7 +15,6 @@ describe("InstanceState shows ", () => {
     ${(<ExclamationCircleIcon />)}   | ${"danger"}
     ${(<ExclamationTriangleIcon />)} | ${"warning"}
     ${(<InfoCircleIcon />)}          | ${"info"}
-    ${(<InfoCircleIcon />)}          | ${undefined}
   `("icon $icon for label $label", ({ icon, label }) => {
     const wrapper = mount(<InstanceState name="up" label={label} />);
     expect(wrapper.contains(icon)).toBeTruthy();
