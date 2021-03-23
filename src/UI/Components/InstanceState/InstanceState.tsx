@@ -35,6 +35,6 @@ export const InstanceState: React.FC<State> = ({ name, label }) => {
         </Label>
       );
     default:
-      return <Label color={"grey"}>{name}</Label>;
+      return { name };
   }
 };
