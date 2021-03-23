@@ -10,7 +10,7 @@ interface Props {
 export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
   const { dataProvider } = useContext(ServicesContext);
 
-  const [data] = dataProvider.useOnce({
+  const [data, retry] = dataProvider.useOnce({
     kind: "InstanceConfig",
     qualifier: serviceInstanceIdentifier,
   });
@@ -19,7 +19,7 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
     {
       notAsked: () => null,
       loading: () => <LoadingView />,
-      failed: (error) => <ErrorView message={error} />,
+      failed: (error) => <ErrorView message={error} retry={retry} />,
       success: (data) => (
         <div>
           <pre>
