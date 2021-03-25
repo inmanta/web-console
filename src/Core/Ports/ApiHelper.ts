@@ -5,5 +5,13 @@ import { Either } from "@/Core";
  */
 export interface ApiHelper {
   getBaseUrl(): string;
-  get<T>(url: string, environment: string): Promise<Either.Type<string, T>>;
+  get<Data>(
+    url: string,
+    environment: string
+  ): Promise<Either.Type<string, Data>>;
+  post<Data, Body = Data>(
+    url: string,
+    environment: string,
+    body: Body
+  ): Promise<Either.Type<string, Data>>;
 }
