@@ -13,8 +13,8 @@ export const DependencyContext = createContext<Dependencies>({
 });
 
 export const DependencyProvider: React.FC<{
-  injections: Partial<Dependencies>;
-}> = ({ injections: { commandProvider, dataProvider }, children }) => (
+  dependencies: Partial<Dependencies>;
+}> = ({ dependencies: { commandProvider, dataProvider }, children }) => (
   <DependencyContext.Provider
     value={{
       commandProvider: commandProvider || new DummyCommandProvider(),

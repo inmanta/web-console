@@ -10,7 +10,7 @@ import {
   Pagination,
 } from "@/Test";
 import { Either } from "@/Core";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   DataManagerImpl,
@@ -53,7 +53,7 @@ function setup() {
 
   const component = (
     <MemoryRouter>
-      <ServicesContext.Provider value={{ dataProvider }}>
+      <DependencyProvider dependencies={{ dataProvider }}>
         <StoreProvider store={store}>
           <ServiceInventory
             serviceName={Service.A.name}
@@ -61,7 +61,7 @@ function setup() {
             service={Service.A}
           />
         </StoreProvider>
-      </ServicesContext.Provider>
+      </DependencyProvider>
     </MemoryRouter>
   );
 

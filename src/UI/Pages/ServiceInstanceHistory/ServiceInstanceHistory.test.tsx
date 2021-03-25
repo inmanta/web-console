@@ -13,7 +13,7 @@ import {
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 
@@ -34,7 +34,7 @@ it("ServiceInstanceHistory renders", async () => {
   ]);
 
   render(
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
           service={Service.A}
@@ -42,7 +42,7 @@ it("ServiceInstanceHistory renders", async () => {
           environment={environment}
         />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 
   expect(

@@ -8,15 +8,15 @@ import {
   LoadingView,
   ErrorView,
 } from "@/UI/Components";
-import { ServicesContext } from "@/UI/ServicesContext";
 import { words } from "@/UI/words";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   qualifier: VersionedServiceInstanceIdentifier;
 }
 
 export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
-  const { dataProvider } = useContext(ServicesContext);
+  const { dataProvider } = useContext(DependencyContext);
 
   const [data] = dataProvider.useContinuous<"Resources">({
     kind: "Resources",

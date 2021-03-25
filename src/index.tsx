@@ -4,7 +4,7 @@ import { App } from "@/UI/App/app";
 import keycloakConf from "@/UI/App/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance, ServicesContext, DependencyProvider } from "@/UI";
+import { getStoreInstance, DependencyProvider } from "@/UI";
 import { BaseApiHelper, FetcherImpl } from "@/Infra";
 import {
   DataProviderImpl,
@@ -126,12 +126,10 @@ const commandProvider = new CommandProviderImpl(
 );
 
 ReactDOM.render(
-  <DependencyProvider injections={{ commandProvider, dataProvider }}>
-    <ServicesContext.Provider value={{ dataProvider }}>
-      <StoreProvider store={storeInstance}>
-        <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
-      </StoreProvider>
-    </ServicesContext.Provider>
+  <DependencyProvider dependencies={{ commandProvider, dataProvider }}>
+    <StoreProvider store={storeInstance}>
+      <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+    </StoreProvider>
   </DependencyProvider>,
   document.getElementById("root") as HTMLElement
 );

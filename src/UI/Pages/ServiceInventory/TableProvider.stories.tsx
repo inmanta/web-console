@@ -9,7 +9,7 @@ import { TableProvider, Props } from "./TableProvider";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceModel } from "@/Core";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   DataManagerImpl,
@@ -40,13 +40,13 @@ const Template: Story<Props> = (args) => {
   ]);
 
   return (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <MemoryRouter>
         <StoreProvider store={store}>
           <TableProvider {...args} />
         </StoreProvider>
       </MemoryRouter>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 };
 

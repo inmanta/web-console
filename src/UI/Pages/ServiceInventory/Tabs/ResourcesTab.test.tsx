@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { StaticSubscriptionController, DeferredFetcher } from "@/Test";
 import { Either } from "@/Core";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
@@ -35,11 +35,11 @@ function setup() {
   };
 
   const component = (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <ResourcesTab qualifier={instance} />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 
   return { component, apiHelper, subscriptionController };

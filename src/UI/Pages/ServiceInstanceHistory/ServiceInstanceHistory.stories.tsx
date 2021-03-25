@@ -8,7 +8,7 @@ import {
   StaticSubscriptionController,
 } from "@/Test";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import {
   DataManagerImpl,
@@ -39,7 +39,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   ]);
 
   return (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
           service={Service.A}
@@ -47,7 +47,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
           environment={environment}
         />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 };
 

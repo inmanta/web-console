@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyContext } from "@/UI/Dependency";
 import { RemoteData, ServiceModel } from "@/Core";
 import { LoadingView } from "@/UI/Components/LoadingView";
 import { ErrorView } from "@/UI/Components/ErrorView";
@@ -17,7 +17,7 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
   Wrapper,
   Dependant,
 }) => {
-  const { dataProvider } = useContext(ServicesContext);
+  const { dataProvider } = useContext(DependencyContext);
 
   const [data, retry] = dataProvider.useContinuous<"Service">({
     kind: "Service",

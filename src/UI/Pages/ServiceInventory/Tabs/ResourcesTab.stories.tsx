@@ -7,7 +7,7 @@ import {
   InstantFetcher,
   Resources,
 } from "@/Test";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
@@ -41,11 +41,11 @@ const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
   };
 
   return (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <ResourcesTab qualifier={instance} />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 };
 

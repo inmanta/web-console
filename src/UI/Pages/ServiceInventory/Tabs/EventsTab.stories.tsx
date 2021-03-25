@@ -14,7 +14,7 @@ import {
   EventsHookHelper,
   EventsStateHelper,
 } from "@/UI/Data";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import { StoreProvider } from "easy-peasy";
 
 export default {
@@ -42,11 +42,11 @@ const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
   };
 
   return (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <EventsTab qualifier={instance} />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 };
 

@@ -1,6 +1,6 @@
 import { RemoteData, ServiceInstanceIdentifier } from "@/Core";
 import React, { useContext } from "react";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyContext } from "@/UI/Dependency";
 import {
   EventsTable,
   EventsTableWrapper,
@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const EventsTab: React.FC<Props> = ({ qualifier }) => {
-  const { dataProvider } = useContext(ServicesContext);
+  const { dataProvider } = useContext(DependencyContext);
   const [data] = dataProvider.useContinuous<"Events">({
     kind: "Events",
     qualifier,
