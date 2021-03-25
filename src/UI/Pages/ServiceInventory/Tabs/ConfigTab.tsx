@@ -1,6 +1,6 @@
 import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ErrorView, LoadingView } from "@/UI/Components";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyContext } from "@/UI/Dependency";
 import React, { useContext } from "react";
 
 interface Props {
@@ -8,15 +8,11 @@ interface Props {
 }
 
 export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
-  const { dataProvider, commandProvider } = useContext(ServicesContext);
-  console.log({ commandProvider });
-  if (!commandProvider) return null;
-
+  const { commandProvider, dataProvider } = useContext(DependencyContext);
   const [data, retry] = dataProvider.useOnce({
     kind: "InstanceConfig",
     qualifier: serviceInstanceIdentifier,
   });
-
   const trigger = commandProvider.getTrigger<"InstanceConfig">({
     kind: "InstanceConfig",
     qualifier: serviceInstanceIdentifier,
