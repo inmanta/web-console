@@ -26,6 +26,7 @@ import {
   InstanceLogsStateHelper,
   InstanceConfigHookHelper,
   InstanceConfigStateHelper,
+  CommandProviderImpl,
 } from "@/UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
@@ -99,10 +100,12 @@ const instanceLogsHelper = new InstanceLogsHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
+const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);
+
 const instanceConfigHelper = new InstanceConfigHookHelper(
   new DataManagerImpl<"InstanceConfig">(
     new FetcherImpl<"InstanceConfig">(baseApiHelper),
-    new InstanceConfigStateHelper(storeInstance)
+    instanceConfigStateHelper
   ),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
@@ -117,8 +120,13 @@ const dataProvider = new DataProviderImpl([
   instanceConfigHelper,
 ]);
 
+const commandProvider = new CommandProviderImpl(
+  baseApiHelper,
+  instanceConfigStateHelper
+);
+
 ReactDOM.render(
-  <ServicesContext.Provider value={{ dataProvider }}>
+  <ServicesContext.Provider value={{ dataProvider, commandProvider }}>
     <StoreProvider store={storeInstance}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
     </StoreProvider>

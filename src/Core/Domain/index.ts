@@ -1,3 +1,4 @@
+export * as Command from "./Command";
 export * from "./Config";
 export * from "./EventModel";
 export * from "./InstanceLogModel";

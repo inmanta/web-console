@@ -1,0 +1,40 @@
+import { VersionedServiceInstanceIdentifier } from "./ServiceInstanceModel";
+import { InstanceConfig } from "./Config";
+
+type Command = InstanceConfigCommand;
+export type Type = Command;
+
+/**
+ * The instanceConfig command updates the config belonging to one specific service instance
+ */
+export interface InstanceConfigCommand {
+  kind: "InstanceConfig";
+  qualifier: VersionedServiceInstanceIdentifier;
+}
+
+interface InstanceConfigManifest {
+  error: string;
+  apiData: { data: InstanceConfig };
+  offer: { config: InstanceConfig };
+  command: InstanceConfigCommand;
+  trigger: (option: string, value: boolean) => void;
+}
+
+/**
+ * The Manifest is just a utility that collects all the different
+ * types related to all the sub commands.
+ */
+interface Manifest {
+  InstanceConfig: InstanceConfigManifest;
+}
+
+/**
+ * Query Utilities
+ */
+export type Kind = Command["kind"];
+export type Error<K extends Kind> = Manifest[K]["error"];
+export type Offer<K extends Kind> = Manifest[K]["offer"];
+export type ApiData<K extends Kind> = Manifest[K]["apiData"];
+export type SubCommand<K extends Kind> = Manifest[K]["command"];
+export type Qualifier<K extends Kind> = SubCommand<K>["qualifier"];
+export type Trigger<K extends Kind> = Manifest[K]["trigger"];

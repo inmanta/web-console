@@ -5,6 +5,7 @@ export * from "./Resources";
 export * from "./Service";
 export * from "./ServiceInstances";
 export * from "./Services";
+export * from "./CommandProviderImpl";
 export * from "./DataManagerImpl";
 export * from "./DataProviderImpl";
 export * from "./IntervalsDictionary";

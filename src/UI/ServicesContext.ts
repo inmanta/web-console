@@ -1,11 +1,13 @@
 import { createContext } from "react";
-import { DataProvider } from "@/Core";
-import { DummyDataProvider } from "@/Test";
+import { CommandProvider, DataProvider } from "@/Core";
+import { DummyDataProvider, DummyCommandProvider } from "@/Test";
 
 export interface Services {
   dataProvider: DataProvider;
+  commandProvider?: CommandProvider;
 }
 
 export const ServicesContext = createContext<Services>({
   dataProvider: new DummyDataProvider(),
+  commandProvider: new DummyCommandProvider(),
 });

@@ -1,4 +1,5 @@
 export * from "./ApiHelper";
+export * from "./CommandProvider";
 export * from "./Fetcher";
 export * from "./DataProvider";
 export * from "./Dictionary";
