@@ -10,14 +10,14 @@ interface Setting {
 
 interface Props {
   settings: Setting[];
+  onChange: (name: string, value: boolean) => void;
 }
 
-export const ConfigView: React.FC<Props> = ({ settings }) => {
+export const ConfigView: React.FC<Props> = ({ settings, onChange }) => {
   if (settings.length <= 0) return null;
 
-  const handleChange = (name: string) => (value: boolean) => {
-    console.log(name, value);
-  };
+  const handleChange = (name: string) => (value: boolean) =>
+    onChange(name, value);
 
   return (
     <Flex>

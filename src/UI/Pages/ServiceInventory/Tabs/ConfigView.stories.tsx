@@ -13,4 +13,11 @@ const settings = [
   { name: "auto_update_inprogress", value: true, defaultValue: true },
 ];
 
-export const Default: React.FC = () => <ConfigView settings={settings} />;
+export const Default: React.FC = () => (
+  <ConfigView
+    settings={settings}
+    onChange={(name, value) => {
+      console.log({ name, value });
+    }}
+  />
+);
