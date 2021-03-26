@@ -1,0 +1,6 @@
+description: Add total to pagination on ServiceInventory
+issue-nr: 276
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
