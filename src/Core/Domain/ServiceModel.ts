@@ -1,3 +1,5 @@
+import { Config } from "./Config";
+
 export interface AttributeModel {
   name: string;
   type: string;
@@ -50,4 +52,5 @@ export interface ServiceModel extends ServiceIdentifier {
   attributes: AttributeModel[];
   service_identity?: string;
   service_identity_display_name?: string;
+  config: Config;
 }

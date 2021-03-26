@@ -4,4 +4,4 @@ export interface Setting {
   defaultValue: boolean;
 }
 
-export type InstanceConfig = Record<string, boolean>;
+export type Config = Record<string, boolean>;

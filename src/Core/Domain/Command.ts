@@ -1,5 +1,5 @@
 import { VersionedServiceInstanceIdentifier } from "./ServiceInstanceModel";
-import { InstanceConfig } from "./Config";
+import { Config } from "./Config";
 
 type Command = InstanceConfigCommand;
 export type Type = Command;
@@ -14,8 +14,8 @@ export interface InstanceConfigCommand {
 
 interface InstanceConfigManifest {
   error: string;
-  apiData: { data: InstanceConfig };
-  offer: { config: InstanceConfig };
+  apiData: { data: Config };
+  offer: { config: Config };
   command: InstanceConfigCommand;
   trigger: (option: string, value: boolean) => void;
 }

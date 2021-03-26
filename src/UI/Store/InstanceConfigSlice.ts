@@ -1,5 +1,5 @@
 import { Action, action } from "easy-peasy";
-import { InstanceConfig, RemoteData } from "@/Core";
+import { Config, RemoteData } from "@/Core";
 
 /**
  * The InstanceConfigSlice stores the config for service instances.
@@ -7,10 +7,10 @@ import { InstanceConfig, RemoteData } from "@/Core";
  * So 'byId' means by ServiceInstance id.
  */
 export interface InstanceConfigSlice {
-  byId: Record<string, RemoteData.Type<string, InstanceConfig>>;
+  byId: Record<string, RemoteData.Type<string, Config>>;
   setData: Action<
     InstanceConfigSlice,
-    { id: string; value: RemoteData.Type<string, InstanceConfig> }
+    { id: string; value: RemoteData.Type<string, Config> }
   >;
 }
 
