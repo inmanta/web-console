@@ -59,11 +59,13 @@ const servicesHelper = new ServicesHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
+const serviceDataManager = new DataManagerImpl<"Service">(
+  new FetcherImpl<"Service">(baseApiHelper),
+  new ServiceStateHelper(storeInstance, serviceKeyMaker)
+);
+
 const serviceHelper = new ServiceHookHelper(
-  new DataManagerImpl<"Service">(
-    new FetcherImpl<"Service">(baseApiHelper),
-    new ServiceStateHelper(storeInstance, serviceKeyMaker)
-  ),
+  serviceDataManager,
   new LiveSubscriptionController(5000, new IntervalsDictionary()),
   serviceKeyMaker
 );
@@ -107,6 +109,7 @@ const instanceConfigHelper = new InstanceConfigHookHelper(
     new FetcherImpl<"InstanceConfig">(baseApiHelper),
     instanceConfigStateHelper
   ),
+  serviceDataManager,
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 

@@ -1,21 +1,98 @@
-import { SubscriptionController, DataManager } from "@/Core";
-import { identity } from "lodash";
-import { HookHelperImpl } from "../HookHelperImpl";
+import {
+  SubscriptionController,
+  DataManager,
+  HookHelper,
+  ServiceInstanceIdentifier,
+  Query,
+  RemoteData,
+  ServiceModel,
+  isNotNull,
+  Setting,
+} from "@/Core";
+import { useEffect } from "react";
+import { uniq } from "lodash";
 
-export class InstanceConfigHookHelper extends HookHelperImpl<"InstanceConfig"> {
+type Data = RemoteData.Type<
+  Query.Error<"InstanceConfig">,
+  Query.UsedData<"InstanceConfig">
+>;
+
+export class InstanceConfigHookHelper implements HookHelper<"InstanceConfig"> {
   constructor(
-    dataManager: DataManager<"InstanceConfig">,
-    subscriptionController: SubscriptionController
-  ) {
-    super(
-      dataManager,
-      subscriptionController,
-      (qualifier) => qualifier.id,
-      (qualifier) => [qualifier.id, qualifier.service_entity],
-      "InstanceConfig",
-      ({ service_entity, id }) =>
-        `/lsm/v1/service_inventory/${service_entity}/${id}/config`,
-      identity
-    );
+    private readonly configDataManager: DataManager<"InstanceConfig">,
+    private readonly serviceDataManager: DataManager<"Service">,
+    private readonly subscriptionController: SubscriptionController
+  ) {}
+
+  private getConfigUrl({
+    service_entity,
+    id,
+  }: ServiceInstanceIdentifier): string {
+    return `/lsm/v1/service_inventory/${service_entity}/${id}/config`;
   }
+
+  private getServiceUrl(name: string): string {
+    return `/lsm/v1/service_catalog/${name}`;
+  }
+
+  private getDependencies({
+    service_entity,
+    id,
+  }: ServiceInstanceIdentifier): (string | number | boolean)[] {
+    return [id, service_entity];
+  }
+
+  useOnce(qualifier: ServiceInstanceIdentifier): [Data, () => void] {
+    const { service_entity, environment } = qualifier;
+    const serviceIdentifier = { name: service_entity, environment };
+    const serviceData = this.serviceDataManager.get(serviceIdentifier);
+
+    useEffect(() => {
+      if (!RemoteData.isSuccess(serviceData)) {
+        this.serviceDataManager.update(
+          serviceIdentifier,
+          this.getServiceUrl(service_entity)
+        );
+      }
+    });
+
+    useEffect(() => {
+      this.configDataManager.initialize(qualifier);
+      this.configDataManager.update(qualifier, this.getConfigUrl(qualifier));
+    }, [qualifier.environment]);
+    const configData = this.configDataManager.get(qualifier);
+    const merged = RemoteData.mapSuccess((service) => {
+      if (!RemoteData.isSuccess(configData)) return [];
+      const config = configData.value;
+      const options = getOptionsFromService(service);
+      const settings: Setting[] = options.map((option) => ({
+        name: option,
+        value: config[option] || false,
+        defaultValue: service.config[option] || false,
+      }));
+      return settings;
+    }, serviceData);
+
+    return [
+      merged,
+      () =>
+        this.configDataManager.update(qualifier, this.getConfigUrl(qualifier)),
+    ];
+  }
+
+  useSubscription(): [Data, () => void] {
+    throw new Error("Method not implemented.");
+  }
+
+  matches(query: Query.SubQuery<"InstanceConfig">): boolean {
+    return query.kind === "InstanceConfig";
+  }
+}
+
+function getOptionsFromService(service: ServiceModel): string[] {
+  return uniq(
+    service.lifecycle.transfers
+      .map((transfer) => transfer.config_name)
+      .filter(isNotNull)
+  );
 }

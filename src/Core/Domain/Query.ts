@@ -10,7 +10,7 @@ import {
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 import * as Pagination from "./Pagination";
-import { Config } from "./Config";
+import { Config, Setting } from "./Config";
 
 type Query =
   | ServicesQuery
@@ -168,7 +168,7 @@ interface InstanceConfigManifest {
   error: string;
   apiResponse: { data: Config };
   data: Config;
-  usedData: Config;
+  usedData: Setting[];
   query: InstanceConfigQuery;
 }
 

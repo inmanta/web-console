@@ -22,7 +22,7 @@ interface StateModel {
 interface TransferModel {
   api_set_state: boolean;
   auto: boolean;
-  config_name: string;
+  config_name: string | null;
   description: string;
   error: string;
   error_operation: string;

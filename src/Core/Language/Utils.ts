@@ -15,3 +15,6 @@ export interface Interval {
   timerId: TimerId;
   handler: () => void;
 }
+
+export const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
+  value !== null;
