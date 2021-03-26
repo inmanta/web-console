@@ -17,11 +17,7 @@ import { TableProvider } from "./TableProvider";
 import { Pagination, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
-import {
-  AngleLeftIcon,
-  AngleRightIcon,
-  PlusIcon,
-} from "@patternfly/react-icons";
+import { PlusIcon } from "@patternfly/react-icons";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
   EmptyView,
@@ -31,6 +27,7 @@ import {
   EnvironmentProvider,
 } from "@/UI/Components";
 import { InventoryContext } from "./InventoryContext";
+import { PaginationToolbar } from "./Components";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -95,7 +92,7 @@ export const ServiceInventory: React.FunctionComponent<{
           <ErrorView message={error} retry={retry} />
         </Wrapper>
       ),
-      success: ({ data: instances, handlers }) => (
+      success: ({ data: instances, handlers, metadata }) => (
         <InventoryContext.Provider
           value={{
             attributes: service.attributes,
@@ -121,7 +118,11 @@ export const ServiceInventory: React.FunctionComponent<{
           )}
           {instances.length > 0 ? (
             <Wrapper aria-label="ServiceInventory-Success">
-              <Bar serviceName={serviceName} handlers={handlers} />
+              <Bar
+                serviceName={serviceName}
+                handlers={handlers}
+                metadata={metadata}
+              />
               <TableProvider
                 instances={instances}
                 keycloak={keycloak}
@@ -130,7 +131,11 @@ export const ServiceInventory: React.FunctionComponent<{
             </Wrapper>
           ) : (
             <Wrapper aria-label="ServiceInventory-Empty">
-              <Bar serviceName={serviceName} handlers={handlers} />
+              <Bar
+                serviceName={serviceName}
+                handlers={handlers}
+                metadata={metadata}
+              />
               <EmptyView
                 message={words("inventory.empty.message")(serviceName)}
               />
@@ -146,9 +151,10 @@ export const ServiceInventory: React.FunctionComponent<{
 interface BarProps {
   serviceName: string;
   handlers: Pagination.Handlers;
+  metadata: Pagination.Metadata;
 }
 
-const Bar: React.FC<BarProps> = ({ serviceName, handlers }) => (
+const Bar: React.FC<BarProps> = ({ serviceName, handlers, metadata }) => (
   <CardFooter>
     <Toolbar>
       <ToolbarContent>
@@ -169,33 +175,8 @@ const Bar: React.FC<BarProps> = ({ serviceName, handlers }) => (
             </Link>
           </ToolbarItem>
         </ToolbarGroup>
-        <PaginationToolbar handlers={handlers} />
+        <PaginationToolbar handlers={handlers} metadata={metadata} />
       </ToolbarContent>
     </Toolbar>
   </CardFooter>
 );
-
-const PaginationToolbar: React.FC<{ handlers: Pagination.Handlers }> = ({
-  handlers: { prev, next },
-}) => {
-  return (
-    <ToolbarItem variant="pagination">
-      <Button
-        variant="plain"
-        onClick={prev}
-        isDisabled={!Boolean(prev)}
-        aria-label="Prev"
-      >
-        <AngleLeftIcon />
-      </Button>
-      <Button
-        variant="plain"
-        onClick={next}
-        isDisabled={!Boolean(next)}
-        aria-label="Next"
-      >
-        <AngleRightIcon />
-      </Button>
-    </ToolbarItem>
-  );
-};
