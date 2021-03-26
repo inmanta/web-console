@@ -1,7 +1,13 @@
 import React from "react";
 import { StoreProvider } from "easy-peasy";
 import { MemoryRouter } from "react-router-dom";
-import { Service, ServiceInstance, Resources, InstantFetcher } from "@/Test";
+import {
+  Service,
+  ServiceInstance,
+  Resources,
+  InstantFetcher,
+  Pagination,
+} from "@/Test";
 import { ServicesContext } from "@/UI/ServicesContext";
 import {
   DataProviderImpl,
@@ -25,7 +31,11 @@ export const Basic: React.FC = () => {
   const store = getStoreInstance();
   const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
     kind: "Success",
-    data: { data: [ServiceInstance.A], links: {} },
+    data: {
+      data: [ServiceInstance.A],
+      links: Pagination.links,
+      metadata: Pagination.metadata,
+    },
   });
   const serviceInstancesSubscriptionController = new LiveSubscriptionController(
     2000,

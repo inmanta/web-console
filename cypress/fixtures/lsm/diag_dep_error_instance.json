@@ -17,5 +17,12 @@
       "callback": [],
       "deleted": false
     }
-  ]
+  ],
+  "links": {},
+  "metadata": {
+    "before": 0,
+    "after": 0,
+    "page_size": 20,
+    "total": 1
+  }
 }

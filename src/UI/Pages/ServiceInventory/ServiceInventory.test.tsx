@@ -7,6 +7,7 @@ import {
   Service,
   ServiceInstance,
   Resources,
+  Pagination,
 } from "@/Test";
 import { Either } from "@/Core";
 import { ServicesContext } from "@/UI/ServicesContext";
@@ -84,7 +85,13 @@ test("ServiceInventory shows updated instances", async () => {
     await screen.findByRole("region", { name: "ServiceInventory-Loading" })
   ).toBeInTheDocument();
 
-  serviceInstancesFetcher.resolve(Either.right({ data: [], links: {} }));
+  serviceInstancesFetcher.resolve(
+    Either.right({
+      data: [],
+      links: Pagination.links,
+      metadata: Pagination.metadata,
+    })
+  );
 
   expect(
     await screen.findByRole("region", { name: "ServiceInventory-Empty" })
@@ -93,7 +100,11 @@ test("ServiceInventory shows updated instances", async () => {
   serviceInstancesSubscriptionController.executeAll();
 
   serviceInstancesFetcher.resolve(
-    Either.right({ data: [ServiceInstance.A], links: {} })
+    Either.right({
+      data: [ServiceInstance.A],
+      links: Pagination.links,
+      metadata: Pagination.metadata,
+    })
   );
 
   expect(
@@ -114,7 +125,11 @@ test("ServiceInventory shows error with retry", async () => {
   fireEvent.click(screen.getByRole("button", { name: "Retry" }));
 
   serviceInstancesFetcher.resolve(
-    Either.right({ data: [ServiceInstance.A], links: {} })
+    Either.right({
+      data: [ServiceInstance.A],
+      links: Pagination.links,
+      metadata: Pagination.metadata,
+    })
   );
 
   expect(
@@ -129,7 +144,8 @@ test("ServiceInventory shows next page of instances", async () => {
   serviceInstancesFetcher.resolve(
     Either.right({
       data: [{ ...ServiceInstance.A, id: "a" }],
-      links: { next: "fake-url" },
+      links: { ...Pagination.links, next: "fake-url" },
+      metadata: Pagination.metadata,
     })
   );
 
@@ -140,7 +156,8 @@ test("ServiceInventory shows next page of instances", async () => {
   serviceInstancesFetcher.resolve(
     Either.right({
       data: [{ ...ServiceInstance.A, id: "b" }],
-      links: {},
+      links: Pagination.links,
+      metadata: Pagination.metadata,
     })
   );
 
@@ -159,7 +176,11 @@ test("ResourcesView fetches resources for new instance after instance update", a
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
-      Either.right({ data: [ServiceInstance.A], links: {} })
+      Either.right({
+        data: [ServiceInstance.A],
+        links: Pagination.links,
+        metadata: Pagination.metadata,
+      })
     );
   });
 
@@ -182,7 +203,11 @@ test("ResourcesView fetches resources for new instance after instance update", a
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
-      Either.right({ data: [{ ...ServiceInstance.A, version: 4 }], links: {} })
+      Either.right({
+        data: [{ ...ServiceInstance.A, version: 4 }],
+        links: Pagination.links,
+        metadata: Pagination.metadata,
+      })
     );
   });
 

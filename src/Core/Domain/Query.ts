@@ -88,14 +88,17 @@ interface ServiceInstancesManifest {
   apiResponse: {
     data: ServiceInstanceModel[];
     links: Pagination.Links;
+    metadata: Pagination.Metadata;
   };
   data: {
     data: ServiceInstanceModelWithTargetStates[];
     links: Pagination.Links;
+    metadata: Pagination.Metadata;
   };
   usedData: {
     data: ServiceInstanceModelWithTargetStates[];
     handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
   };
   query: ServiceInstancesQuery;
 }

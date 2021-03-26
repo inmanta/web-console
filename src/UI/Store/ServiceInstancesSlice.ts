@@ -31,6 +31,7 @@ export interface ServiceInstancesSlice {
       {
         data: ServiceInstanceModelWithTargetStates[];
         links: Pagination.Links;
+        metadata: Pagination.Metadata;
       }
     >,
     StoreModel
@@ -48,7 +49,7 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
       const data = byId[qualifier.name];
       if (typeof data === "undefined") return RemoteData.loading();
 
-      return RemoteData.mapSuccess(({ data, links }) => {
+      return RemoteData.mapSuccess(({ data, ...rest }) => {
         return {
           data: data.map((instance) => {
             const instanceState = instance.state;
@@ -68,7 +69,7 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
             );
             return { ...instance, instanceSetStateTargets: setStateTargets };
           }),
-          links,
+          ...rest,
         };
       }, data);
     }
