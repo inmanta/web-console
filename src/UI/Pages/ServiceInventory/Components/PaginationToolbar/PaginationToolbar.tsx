@@ -2,7 +2,7 @@ import React from "react";
 import { ToolbarItem, Button } from "@patternfly/react-core";
 import { Pagination } from "@/Core";
 import { AngleLeftIcon, AngleRightIcon } from "@patternfly/react-icons";
-import { getIndicator } from "./getIndicator";
+import { Indicator } from "./Indicator";
 
 export const PaginationToolbar: React.FC<{
   handlers: Pagination.Handlers;
@@ -10,7 +10,7 @@ export const PaginationToolbar: React.FC<{
 }> = ({ handlers: { prev, next }, metadata }) => {
   return (
     <ToolbarItem variant="pagination">
-      <span>{getIndicator(metadata)}</span>
+      <Indicator metadata={metadata} />
       <Button
         variant="plain"
         onClick={prev}
