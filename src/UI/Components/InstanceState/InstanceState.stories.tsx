@@ -24,4 +24,4 @@ export const Danger = Template.bind({});
 Danger.args = { name: "danger", label: "danger" };
 
 export const NoLabel = Template.bind({});
-NoLabel.args = { name: "no-label", label: null };
+NoLabel.args = { name: "no-label", label: undefined };
