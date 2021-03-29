@@ -26,5 +26,6 @@ export const DefaultSwitch: React.FC<Props> = ({
     }
     isChecked={value}
     onChange={onChange}
+    aria-label={value ? `${name}-True` : `${name}-False`}
   />
 );
