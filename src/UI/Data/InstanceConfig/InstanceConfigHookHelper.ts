@@ -1,7 +1,6 @@
 import {
-  SubscriptionController,
   DataManager,
-  HookHelper,
+  OneTimeHookHelper,
   ServiceInstanceIdentifier,
   Query,
   RemoteData,
@@ -17,11 +16,11 @@ type Data = RemoteData.Type<
   Query.UsedData<"InstanceConfig">
 >;
 
-export class InstanceConfigHookHelper implements HookHelper<"InstanceConfig"> {
+export class InstanceConfigHookHelper
+  implements OneTimeHookHelper<"InstanceConfig"> {
   constructor(
     private readonly configDataManager: DataManager<"InstanceConfig">,
-    private readonly serviceDataManager: DataManager<"Service">,
-    private readonly subscriptionController: SubscriptionController
+    private readonly serviceDataManager: DataManager<"Service">
   ) {}
 
   private getConfigUrl({
@@ -42,7 +41,7 @@ export class InstanceConfigHookHelper implements HookHelper<"InstanceConfig"> {
     return [id, service_entity];
   }
 
-  useOnce(qualifier: ServiceInstanceIdentifier): [Data, () => void] {
+  useOneTime(qualifier: ServiceInstanceIdentifier): [Data, () => void] {
     const { service_entity, environment } = qualifier;
     const serviceIdentifier = { name: service_entity, environment };
     const serviceData = this.serviceDataManager.get(serviceIdentifier);
@@ -78,10 +77,6 @@ export class InstanceConfigHookHelper implements HookHelper<"InstanceConfig"> {
       () =>
         this.configDataManager.update(qualifier, this.getConfigUrl(qualifier)),
     ];
-  }
-
-  useSubscription(): [Data, () => void] {
-    throw new Error("Method not implemented.");
   }
 
   matches(query: Query.SubQuery<"InstanceConfig">): boolean {

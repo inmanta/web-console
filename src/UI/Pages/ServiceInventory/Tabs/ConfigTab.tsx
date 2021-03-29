@@ -9,7 +9,7 @@ interface Props {
 
 export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
   const { commandProvider, dataProvider } = useContext(DependencyContext);
-  const [data, retry] = dataProvider.useOnce<"InstanceConfig">({
+  const [data, retry] = dataProvider.useOneTime<"InstanceConfig">({
     kind: "InstanceConfig",
     qualifier: serviceInstanceIdentifier,
   });

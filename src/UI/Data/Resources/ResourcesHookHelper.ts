@@ -1,8 +1,8 @@
 import { SubscriptionController, DataManager } from "@/Core";
 import { identity } from "lodash";
-import { HookHelperImpl } from "../HookHelperImpl";
+import { ContinuousHookHelperImpl } from "../HookHelperImpl";
 
-export class ResourcesHookHelper extends HookHelperImpl<"Resources"> {
+export class ResourcesHookHelper extends ContinuousHookHelperImpl<"Resources"> {
   constructor(
     dataManager: DataManager<"Resources">,
     subscriptionController: SubscriptionController

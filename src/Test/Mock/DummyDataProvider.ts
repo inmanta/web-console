@@ -6,7 +6,7 @@ type Data = RemoteData.Type<
 >;
 
 export class DummyDataProvider implements DataProvider {
-  useOnce(): [Data, () => void] {
+  useOneTime(): [Data, () => void] {
     throw new Error("DummyDataManager.useData mocked");
   }
 

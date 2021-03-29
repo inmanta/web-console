@@ -1,12 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
-import {
-  InstantFetcher,
-  Service,
-  ServiceInstance,
-  StaticSubscriptionController,
-} from "@/Test";
+import { InstantFetcher, Service, ServiceInstance } from "@/Test";
 import {
   DataManagerImpl,
   DataProviderImpl,
@@ -28,8 +23,7 @@ it("ServiceInstanceHistory renders", async () => {
           data: { data: [] },
         }),
         new InstanceLogsStateHelper(store)
-      ),
-      new StaticSubscriptionController()
+      )
     ),
   ]);
 

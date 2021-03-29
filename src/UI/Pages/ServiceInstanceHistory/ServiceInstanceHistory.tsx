@@ -28,7 +28,7 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
 }) => {
   const { dataProvider } = useContext(DependencyContext);
 
-  const [data] = dataProvider.useOnce<"InstanceLogs">({
+  const [data] = dataProvider.useOneTime<"InstanceLogs">({
     kind: "InstanceLogs",
     qualifier: {
       environment,

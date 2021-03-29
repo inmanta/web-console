@@ -1,8 +1,8 @@
 import { SubscriptionController, DataManager } from "@/Core";
-import { HookHelperImpl } from "../HookHelperImpl";
+import { ContinuousHookHelperImpl } from "../HookHelperImpl";
 import { getServiceInstancesUrl } from "./getServiceInstancesUrl";
 
-export class ServiceInstancesHookHelper extends HookHelperImpl<"ServiceInstances"> {
+export class ServiceInstancesHookHelper extends ContinuousHookHelperImpl<"ServiceInstances"> {
   constructor(
     dataManager: DataManager<"ServiceInstances">,
     subscriptionController: SubscriptionController

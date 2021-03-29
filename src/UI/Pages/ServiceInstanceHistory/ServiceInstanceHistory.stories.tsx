@@ -1,12 +1,7 @@
 import React from "react";
 import { InstanceLog as InstanceLogModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import {
-  InstantFetcher,
-  InstanceLog,
-  Service,
-  StaticSubscriptionController,
-} from "@/Test";
+import { InstantFetcher, InstanceLog, Service } from "@/Test";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
@@ -33,8 +28,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
           data: { data: logs },
         }),
         new InstanceLogsStateHelper(store)
-      ),
-      new StaticSubscriptionController()
+      )
     ),
   ]);
 

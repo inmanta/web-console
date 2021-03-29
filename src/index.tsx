@@ -98,8 +98,7 @@ const instanceLogsHelper = new InstanceLogsHookHelper(
   new DataManagerImpl<"InstanceLogs">(
     new FetcherImpl<"InstanceLogs">(baseApiHelper),
     new InstanceLogsStateHelper(storeInstance)
-  ),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+  )
 );
 
 const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);
@@ -109,8 +108,7 @@ const instanceConfigHelper = new InstanceConfigHookHelper(
     new FetcherImpl<"InstanceConfig">(baseApiHelper),
     instanceConfigStateHelper
   ),
-  serviceDataManager,
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+  serviceDataManager
 );
 
 const dataProvider = new DataProviderImpl([
