@@ -21,7 +21,11 @@ export const ConfigView: React.FC<Props> = ({ settings, onChange }) => {
 
   return (
     <Flex>
-      <Flex direction={{ default: "column" }}>
+      <Flex
+        direction={{ default: "column" }}
+        justifyContent={{ default: "justifyContentSpaceBetween" }}
+        alignSelf={{ default: "alignSelfStretch" }}
+      >
         {settings.map((setting) => (
           <FlexItem key={setting.name}>{setting.name}</FlexItem>
         ))}
