@@ -100,11 +100,13 @@ const dict = {
   /**
    * Config related text
    */
-  "setting.label.true": "True",
-  "setting.label.trueDefault": "True (service default)",
-  "setting.label.false": "False",
-  "setting.label.falseDefault": "False (service default)",
+  "setting.label.true": "On",
+  "setting.label.trueDefault": "On (service default)",
+  "setting.label.false": "Off",
+  "setting.label.falseDefault": "Off (service default)",
   "config.title": "Config",
+  "config.reset": "Reset",
+  "config.reset.description": "Reset to service defaults",
 
   /**
    * Events related text

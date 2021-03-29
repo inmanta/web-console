@@ -15,9 +15,13 @@ export interface InstanceConfigCommand {
 interface InstanceConfigManifest {
   error: string;
   apiData: { data: Config };
-  offer: { config: Config };
+  offer: { values: Config };
   command: InstanceConfigCommand;
-  trigger: (option: string, value: boolean) => void;
+  trigger: (
+    payload:
+      | { kind: "RESET" }
+      | { kind: "UPDATE"; option: string; value: boolean }
+  ) => void;
 }
 
 /**

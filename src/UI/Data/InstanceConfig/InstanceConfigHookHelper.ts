@@ -7,6 +7,7 @@ import {
   ServiceModel,
   isNotNull,
   Setting,
+  Config,
 } from "@/Core";
 import { useEffect } from "react";
 import { uniq } from "lodash";
@@ -59,21 +60,12 @@ export class InstanceConfigHookHelper
       this.configDataManager.initialize(qualifier);
       this.configDataManager.update(qualifier, this.getConfigUrl(qualifier));
     }, [qualifier.environment]);
-    const configData = this.configDataManager.get(qualifier);
-    const merged = RemoteData.mapSuccess((service) => {
-      if (!RemoteData.isSuccess(configData)) return [];
-      const config = configData.value;
-      const options = getOptionsFromService(service);
-      const settings: Setting[] = options.map((option) => ({
-        name: option,
-        value: config[option] || false,
-        defaultValue: service.config[option] || false,
-      }));
-      return settings;
-    }, serviceData);
 
     return [
-      merged,
+      this.merge(
+        this.configDataManager.get(qualifier),
+        this.serviceDataManager.get(serviceIdentifier)
+      ),
       () =>
         this.configDataManager.update(qualifier, this.getConfigUrl(qualifier)),
     ];
@@ -81,6 +73,23 @@ export class InstanceConfigHookHelper
 
   matches(query: Query.SubQuery<"InstanceConfig">): boolean {
     return query.kind === "InstanceConfig";
+  }
+
+  private merge(
+    configData: RemoteData.Type<string, Config>,
+    serviceData: RemoteData.Type<string, ServiceModel>
+  ): RemoteData.Type<string, Setting[]> {
+    if (!RemoteData.isSuccess(configData)) return configData;
+    if (!RemoteData.isSuccess(serviceData)) return serviceData;
+    const config = configData.value;
+    const service = serviceData.value;
+    const options = getOptionsFromService(service);
+    const settings: Setting[] = options.map((option) => ({
+      name: option,
+      value: getValueForOption(config[option], service.config[option]),
+      defaultValue: service.config[option] || false,
+    }));
+    return RemoteData.success(settings);
   }
 }
 
@@ -90,4 +99,13 @@ function getOptionsFromService(service: ServiceModel): string[] {
       .map((transfer) => transfer.config_name)
       .filter(isNotNull)
   );
+}
+
+function getValueForOption(
+  instance: boolean | undefined,
+  service: boolean | undefined
+): boolean {
+  if (typeof instance !== "undefined") return instance;
+  if (typeof service !== "undefined") return service;
+  return false;
 }
