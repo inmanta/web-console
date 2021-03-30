@@ -85,14 +85,15 @@ export class InstanceConfigHookHelper
   }
 }
 
+const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
+  value !== null;
+
 function getOptionsFromService(service: ServiceModel): string[] {
-  const names = service.lifecycle.transfers.map(
-    (transfer) => transfer.config_name
+  return uniq(
+    service.lifecycle.transfers
+      .map((transfer) => transfer.config_name)
+      .filter(isNotNull)
   );
-  const filtered = names.filter(
-    <T>(value: T | null): value is NonNullable<T> => value !== null
-  );
-  return uniq(filtered);
 }
 
 function getValueForOption(
