@@ -5,7 +5,6 @@ import {
   Query,
   RemoteData,
   ServiceModel,
-  isNotNull,
   Setting,
   Config,
 } from "@/Core";
@@ -90,8 +89,9 @@ function getOptionsFromService(service: ServiceModel): string[] {
   const names = service.lifecycle.transfers.map(
     (transfer) => transfer.config_name
   );
-  const filtered = names.filter(isNotNull);
-  console.log(isNotNull);
+  const filtered = names.filter(
+    <T>(value: T | null): value is NonNullable<T> => value !== null
+  );
   return uniq(filtered);
 }
 
