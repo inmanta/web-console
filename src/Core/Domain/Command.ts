@@ -15,7 +15,7 @@ export interface InstanceConfigCommand {
 interface InstanceConfigManifest {
   error: string;
   apiData: { data: Config };
-  offer: { values: Config };
+  body: { values: Config };
   command: InstanceConfigCommand;
   trigger: (
     payload:
@@ -37,7 +37,7 @@ interface Manifest {
  */
 export type Kind = Command["kind"];
 export type Error<K extends Kind> = Manifest[K]["error"];
-export type Offer<K extends Kind> = Manifest[K]["offer"];
+export type Body<K extends Kind> = Manifest[K]["body"];
 export type ApiData<K extends Kind> = Manifest[K]["apiData"];
 export type SubCommand<K extends Kind> = Manifest[K]["command"];
 export type Qualifier<K extends Kind> = SubCommand<K>["qualifier"];

@@ -5,7 +5,7 @@ import keycloakConf from "@/UI/App/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance, DependencyProvider } from "@/UI";
-import { BaseApiHelper, FetcherImpl } from "@/Infra";
+import { BaseApiHelper, FetcherImpl, InstanceConfigPoster } from "@/Infra";
 import {
   DataProviderImpl,
   IntervalsDictionary,
@@ -122,7 +122,7 @@ const dataProvider = new DataProviderImpl([
 ]);
 
 const commandProvider = new CommandProviderImpl(
-  baseApiHelper,
+  new InstanceConfigPoster(baseApiHelper),
   instanceConfigStateHelper
 );
 

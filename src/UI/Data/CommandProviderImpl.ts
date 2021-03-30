@@ -2,13 +2,13 @@ import {
   CommandProvider,
   Command,
   RemoteData,
-  ApiHelper,
   StateHelper,
+  Poster,
 } from "@/Core";
 
 export class CommandProviderImpl implements CommandProvider {
   constructor(
-    private readonly apiHelper: ApiHelper,
+    private readonly poster: Poster<"InstanceConfig">,
     private readonly stateHelper: StateHelper<"InstanceConfig">
   ) {}
   getTrigger({
@@ -30,35 +30,28 @@ export class CommandProviderImpl implements CommandProvider {
     option: string,
     value: boolean
   ): Promise<void> {
-    const data = this.stateHelper.getOnce(qualifier);
-    if (!RemoteData.isSuccess(data)) return;
-    const config = data.value;
-    const newConfig = {
-      ...config,
-      [option]: value,
-    };
-    const url = `${this.apiHelper.getBaseUrl()}/lsm/v1/service_inventory/${
-      qualifier.service_entity
-    }/${qualifier.id}/config?current_version=${qualifier.version}`;
-    const response = await this.apiHelper.post<
-      Command.ApiData<"InstanceConfig">,
-      Command.Offer<"InstanceConfig">
-    >(url, qualifier.environment, { values: newConfig });
+    const configData = this.stateHelper.getOnce(qualifier);
+    if (!RemoteData.isSuccess(configData)) return;
 
-    this.stateHelper.set(qualifier, RemoteData.fromEither(response));
+    this.stateHelper.set(
+      qualifier,
+      RemoteData.fromEither(
+        await this.poster.post(qualifier, {
+          values: {
+            ...configData.value,
+            [option]: value,
+          },
+        })
+      )
+    );
   }
 
   private async reset(
     qualifier: Command.Qualifier<"InstanceConfig">
   ): Promise<void> {
-    const url = `${this.apiHelper.getBaseUrl()}/lsm/v1/service_inventory/${
-      qualifier.service_entity
-    }/${qualifier.id}/config?current_version=${qualifier.version}`;
-    const response = await this.apiHelper.post<
-      Command.ApiData<"InstanceConfig">,
-      Command.Offer<"InstanceConfig">
-    >(url, qualifier.environment, { values: {} });
-
-    this.stateHelper.set(qualifier, RemoteData.fromEither(response));
+    this.stateHelper.set(
+      qualifier,
+      RemoteData.fromEither(await this.poster.post(qualifier, { values: {} }))
+    );
   }
 }

@@ -1,6 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import { BaseApiHelper } from "@/Infra";
+import { fireEvent, render, screen } from "@testing-library/react";
 import {
   CommandProviderImpl,
   DataManagerImpl,
@@ -13,12 +12,17 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { ConfigTab } from "./ConfigTab";
-import { InstantFetcher, Service, ServiceInstance } from "@/Test";
+import {
+  InstantFetcher,
+  InstantPoster,
+  Service,
+  ServiceInstance,
+} from "@/Test";
 import { StoreProvider } from "easy-peasy";
+import { RemoteData } from "@/Core";
 
 test("ConfigTab can reset all settings", async () => {
   const storeInstance = getStoreInstance();
-  const baseApiHelper = new BaseApiHelper(undefined);
   const serviceKeyMaker = new ServiceKeyMaker();
 
   const serviceDataManager = new DataManagerImpl<"Service">(
@@ -47,7 +51,7 @@ test("ConfigTab can reset all settings", async () => {
   const dataProvider = new DataProviderImpl([instanceConfigHelper]);
 
   const commandProvider = new CommandProviderImpl(
-    baseApiHelper,
+    new InstantPoster(RemoteData.success({ data: {} })),
     instanceConfigStateHelper
   );
 
@@ -69,9 +73,13 @@ test("ConfigTab can reset all settings", async () => {
   const resetButton = await screen.findByRole("button", { name: "Reset" });
   expect(resetButton).toBeVisible();
 
-  const toggle = screen.getByRole("checkbox", {
-    name: "auto_creating-False",
-  });
+  expect(
+    screen.getByRole("checkbox", { name: "auto_creating-False" })
+  ).toBeVisible();
 
-  expect(toggle).toBeVisible();
+  fireEvent.click(resetButton);
+
+  expect(
+    await screen.findByRole("checkbox", { name: "auto_creating-True" })
+  ).toBeVisible();
 });
