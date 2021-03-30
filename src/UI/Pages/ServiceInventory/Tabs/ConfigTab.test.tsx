@@ -21,7 +21,7 @@ import {
 import { StoreProvider } from "easy-peasy";
 import { RemoteData } from "@/Core";
 
-test("ConfigTab can reset all settings", async () => {
+function setup() {
   const storeInstance = getStoreInstance();
   const serviceKeyMaker = new ServiceKeyMaker();
 
@@ -50,17 +50,33 @@ test("ConfigTab can reset all settings", async () => {
 
   const dataProvider = new DataProviderImpl([instanceConfigHelper]);
 
-  const commandProvider = new CommandProviderImpl(
-    new InstantPoster(RemoteData.success({ data: {} })),
-    instanceConfigStateHelper
-  );
-
   const instanceIdentifier = {
     id: ServiceInstance.A.id,
     service_entity: Service.A.name,
     environment: Service.A.environment,
     version: ServiceInstance.A.version,
   };
+
+  return {
+    storeInstance,
+    dataProvider,
+    instanceConfigStateHelper,
+    instanceIdentifier,
+  };
+}
+
+test("ConfigTab can reset all settings", async () => {
+  const {
+    storeInstance,
+    dataProvider,
+    instanceConfigStateHelper,
+    instanceIdentifier,
+  } = setup();
+
+  const commandProvider = new CommandProviderImpl(
+    new InstantPoster(RemoteData.success({ data: {} })),
+    instanceConfigStateHelper
+  );
 
   render(
     <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
@@ -81,5 +97,43 @@ test("ConfigTab can reset all settings", async () => {
 
   expect(
     await screen.findByRole("checkbox", { name: "auto_creating-True" })
+  ).toBeVisible();
+});
+
+test("ConfigTab can change 1 toggle", async () => {
+  const {
+    storeInstance,
+    dataProvider,
+    instanceConfigStateHelper,
+    instanceIdentifier,
+  } = setup();
+
+  const commandProvider = new CommandProviderImpl(
+    new InstantPoster(
+      RemoteData.success({
+        data: { auto_creating: false, auto_designed: false },
+      })
+    ),
+    instanceConfigStateHelper
+  );
+
+  render(
+    <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
+      <StoreProvider store={storeInstance}>
+        <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
+      </StoreProvider>
+    </DependencyProvider>
+  );
+
+  const toggle = await screen.findByRole("checkbox", {
+    name: "auto_designed-True",
+  });
+
+  expect(toggle).toBeVisible();
+
+  fireEvent.click(toggle);
+
+  expect(
+    await screen.findByRole("checkbox", { name: "auto_creating-False" })
   ).toBeVisible();
 });
