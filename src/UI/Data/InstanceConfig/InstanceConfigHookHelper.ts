@@ -35,13 +35,6 @@ export class InstanceConfigHookHelper
     return `/lsm/v1/service_catalog/${name}`;
   }
 
-  private getDependencies({
-    service_entity,
-    id,
-  }: ServiceInstanceIdentifier): (string | number | boolean)[] {
-    return [id, service_entity];
-  }
-
   useOneTime(qualifier: ServiceInstanceIdentifier): [Data, () => void] {
     const { service_entity, environment } = qualifier;
     const serviceIdentifier = { name: service_entity, environment };
@@ -54,7 +47,7 @@ export class InstanceConfigHookHelper
           this.getServiceUrl(service_entity)
         );
       }
-    });
+    }, [serviceData.kind]);
 
     useEffect(() => {
       this.configDataManager.initialize(qualifier);
