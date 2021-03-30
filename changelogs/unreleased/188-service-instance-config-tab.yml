@@ -1,0 +1,6 @@
+description: Add config tab to ServiceInstance detail view
+issue-nr: 188
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
