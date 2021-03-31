@@ -1,10 +1,11 @@
 import { Command } from "@/Core/Domain";
 
 /**
- * The DataProvider is responsible for providing data to
- * components. This is based on hooks so that the logic is
- * attached to the component lifecycle. Data is provided
- * based on a query.
+ * The CommandProvider is responsible for providing a
+ * trigger to components. This trigger can be used to
+ * execute POST requests. The trigger receives a command
+ * object which contains everything required to execute
+ * the POST request.
  */
 export interface CommandProvider {
   getTrigger<Kind extends Command.Kind>(
