@@ -1,6 +1,7 @@
 import React, { createContext } from "react";
 import { CommandProvider, DataProvider } from "@/Core";
-import { DummyCommandProvider, DummyDataProvider } from "@/Test";
+import { DummyCommandProvider } from "./DummyCommandProvider";
+import { DummyDataProvider } from "./DummyDataProvider";
 
 export interface Dependencies {
   commandProvider: CommandProvider;
