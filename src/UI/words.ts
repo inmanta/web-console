@@ -107,6 +107,7 @@ const dict = {
   "config.title": "Config",
   "config.reset": "Reset",
   "config.reset.description": "Reset to service defaults",
+  "config.empty": "No settings found",
 
   /**
    * Events related text

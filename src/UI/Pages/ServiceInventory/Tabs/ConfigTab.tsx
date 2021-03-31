@@ -1,5 +1,5 @@
 import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import {
@@ -33,30 +33,37 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
       notAsked: () => null,
       loading: () => <LoadingView />,
       failed: (error) => <ErrorView message={error} retry={retry} />,
-      success: (data) => (
-        <Card>
-          <CardHeader>
-            <CardActions>
-              <Tooltip
-                content={words("config.reset.description")}
-                entryDelay={200}
-              >
-                <Button isSmall onClick={() => trigger({ kind: "RESET" })}>
-                  {words("config.reset")}
-                </Button>
-              </Tooltip>
-            </CardActions>
-          </CardHeader>
-          <CardBody>
-            <ConfigView
-              settings={data}
-              onChange={(option, value) =>
-                trigger({ kind: "UPDATE", option, value })
-              }
-            />
-          </CardBody>
-        </Card>
-      ),
+      success: (settings) =>
+        settings.length <= 0 ? (
+          <Card>
+            <CardBody>
+              <EmptyView message={words("config.empty")} />
+            </CardBody>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardActions>
+                <Tooltip
+                  content={words("config.reset.description")}
+                  entryDelay={200}
+                >
+                  <Button isSmall onClick={() => trigger({ kind: "RESET" })}>
+                    {words("config.reset")}
+                  </Button>
+                </Tooltip>
+              </CardActions>
+            </CardHeader>
+            <CardBody>
+              <ConfigView
+                settings={settings}
+                onChange={(option, value) =>
+                  trigger({ kind: "UPDATE", option, value })
+                }
+              />
+            </CardBody>
+          </Card>
+        ),
     },
     data
   );
