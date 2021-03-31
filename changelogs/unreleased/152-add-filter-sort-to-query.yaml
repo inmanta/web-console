@@ -1,0 +1,4 @@
+description: Add filter & sort properties to ServiceInstancesQuery
+issue-nr: 152
+change-type: patch
+destination-branches: [master, iso4]

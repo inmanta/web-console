@@ -80,7 +80,26 @@ interface ResourcesManifest {
  */
 export interface ServiceInstancesQuery {
   kind: "ServiceInstances";
-  qualifier: ServiceIdentifier;
+  qualifier: ServiceIdentifier & { filter?: Filter; sort?: Sort };
+}
+
+interface Filter {
+  id?: string[];
+  state?: string[];
+  deleted?: boolean;
+  attribute_set_empty?:
+    | "active_attributes"
+    | "candidate_attributes"
+    | "rollback_attributes";
+  attribute_set_not_empty?:
+    | "active_attributes"
+    | "candidate_attributes"
+    | "rollback_attributes";
+}
+
+interface Sort {
+  name: string;
+  order: "ASC" | "DESC";
 }
 
 interface ServiceInstancesManifest {

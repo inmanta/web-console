@@ -1,5 +1,6 @@
 import { SubscriptionController, DataManager } from "@/Core";
 import { HookHelperImpl } from "../HookHelperImpl";
+import { getServiceInstancesUrl } from "./getServiceInstancesUrl";
 
 export class ServiceInstancesHookHelper extends HookHelperImpl<"ServiceInstances"> {
   constructor(
@@ -12,8 +13,7 @@ export class ServiceInstancesHookHelper extends HookHelperImpl<"ServiceInstances
       (qualifier) => qualifier.name,
       (qualifier) => [qualifier.name],
       "ServiceInstances",
-      ({ name }) =>
-        `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`,
+      getServiceInstancesUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")
           return { data: data, handlers: {}, metadata };
