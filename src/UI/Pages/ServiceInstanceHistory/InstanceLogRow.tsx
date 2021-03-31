@@ -1,19 +1,9 @@
 import { AttributesSummary, DateInfo, InstanceLog } from "@/Core";
-import {
-  AttributesTable,
-  DateWithTooltip,
-  EventsTable,
-  EventsTablePresenter,
-  IconTabs,
-  TabDescriptor,
-  ExpandableRowProps,
-} from "@/UI/Components";
+import { DateWithTooltip, ExpandableRowProps } from "@/UI/Components";
 import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
-import { MomentDatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
-import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import React, { useState } from "react";
-import { DetailsView } from "./DetailsView";
+import { Tabs, TabKey } from "./Tabs";
 
 interface Props extends ExpandableRowProps {
   log: InstanceLog;
@@ -33,10 +23,10 @@ export const InstanceLogRow: React.FC<Props> = ({
   attributesSummary,
   state,
 }) => {
-  const [activeTab, setActiveTab] = useState("Details");
+  const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Details);
   const attributesOnClick = () => {
     if (!isExpanded) onToggle();
-    setActiveTab("Attributes");
+    setActiveTab(TabKey.Attributes);
   };
 
   return (
@@ -66,14 +56,12 @@ export const InstanceLogRow: React.FC<Props> = ({
       <Tr isExpanded={isExpanded} data-testid={`details_${id}`}>
         <Td colSpan={numberOfColumns}>
           <ExpandableRowContent>
-            <IconTabs
+            <Tabs
               activeTab={activeTab}
-              onChange={setActiveTab as (a: string) => void}
-              tabs={[
-                detailsTab(state, log.version, timestamp.full),
-                attributesTab(log),
-                eventsTab(log),
-              ]}
+              setActiveTab={setActiveTab}
+              state={state}
+              log={log}
+              timestamp={timestamp}
             />
           </ExpandableRowContent>
         </Td>
@@ -81,42 +69,3 @@ export const InstanceLogRow: React.FC<Props> = ({
     </Tbody>
   );
 };
-
-const detailsTab = (
-  state: React.ReactElement,
-  version: number,
-  timestamp: string
-): TabDescriptor => ({
-  id: "Details",
-  title: "Details",
-  icon: <InfoCircleIcon />,
-  view: <DetailsView info={{ state, version, timestamp }} />,
-});
-
-const attributesTab = (log: InstanceLog): TabDescriptor => ({
-  id: "Attributes",
-  title: "Attributes",
-  icon: <ListIcon />,
-  view: (
-    <AttributesTable
-      attributes={{
-        candidate: log.candidate_attributes,
-        active: log.active_attributes,
-        rollback: log.rollback_attributes,
-      }}
-    />
-  ),
-});
-
-const eventsTab = (log: InstanceLog): TabDescriptor => ({
-  id: "Events",
-  title: "Events",
-  icon: <PortIcon />,
-  view: (
-    <EventsTable
-      events={log.events}
-      environmentId={log.environment}
-      tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
-    />
-  ),
-});

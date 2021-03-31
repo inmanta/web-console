@@ -10,6 +10,7 @@ import {
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 import * as Pagination from "./Pagination";
+import { Config, Setting } from "./Config";
 
 type Query =
   | ServicesQuery
@@ -17,7 +18,8 @@ type Query =
   | ServiceInstancesQuery
   | ResourcesQuery
   | InstanceEventsQuery
-  | InstanceLogsQuery;
+  | InstanceLogsQuery
+  | InstanceConfigQuery;
 export type Type = Query;
 
 /**
@@ -139,7 +141,7 @@ interface EventsManifest {
 }
 
 /**
- * The events query describes events belonging to one specific service instance
+ * The instanceLogs query describes logs belonging to one specific service instance
  */
 export interface InstanceLogsQuery {
   kind: "InstanceLogs";
@@ -155,6 +157,22 @@ interface InstanceLogsManifest {
 }
 
 /**
+ * The instanceConfig query describes the config belonging to one specific service instance
+ */
+export interface InstanceConfigQuery {
+  kind: "InstanceConfig";
+  qualifier: ServiceInstanceIdentifier;
+}
+
+interface InstanceConfigManifest {
+  error: string;
+  apiResponse: { data: Config };
+  data: Config;
+  usedData: Setting[];
+  query: InstanceConfigQuery;
+}
+
+/**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
  */
@@ -165,6 +183,7 @@ interface Manifest {
   Resources: ResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;
+  InstanceConfig: InstanceConfigManifest;
 }
 
 /**

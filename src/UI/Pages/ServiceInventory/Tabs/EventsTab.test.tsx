@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { StaticSubscriptionController, DeferredFetcher } from "@/Test";
 import { Either, InstanceEvent } from "@/Core";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   DataManagerImpl,
@@ -11,7 +11,7 @@ import {
   EventsStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
-import { EventsView } from "./EventsView";
+import { EventsTab } from "./EventsTab";
 
 function setup() {
   const store = getStoreInstance();
@@ -32,11 +32,11 @@ function setup() {
   };
 
   const component = (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
-        <EventsView qualifier={instance} title="" icon={<></>} />
+        <EventsTab qualifier={instance} />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 
   return { component, apiHelper, subscriptionController };

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyContext } from "@/UI/Dependency";
 import { InstanceLog, RemoteData, ServiceModel } from "@/Core";
 import {
   EmptyView,
@@ -26,9 +26,9 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
   instanceId,
   environment,
 }) => {
-  const { dataProvider } = useContext(ServicesContext);
+  const { dataProvider } = useContext(DependencyContext);
 
-  const [data] = dataProvider.useOnce<"InstanceLogs">({
+  const [data] = dataProvider.useOneTime<"InstanceLogs">({
     kind: "InstanceLogs",
     qualifier: {
       environment,

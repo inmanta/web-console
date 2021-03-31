@@ -9,7 +9,7 @@ import {
   tablePresenter,
   tablePresenterWithIdentity,
 } from "@/Test";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
@@ -41,9 +41,9 @@ test("InventoryTable can be expanded", async () => {
     ),
   ]);
   render(
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <InventoryTable rows={rows} tablePresenter={tablePresenter} />
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
   const testid = `details_${rows[0].id.short}`;
 
@@ -76,11 +76,11 @@ test("ServiceInventory can show resources for instance", async () => {
     ),
   ]);
   render(
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <InventoryTable rows={rows} tablePresenter={tablePresenter} />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 
   fireEvent.click(screen.getAllByRole("button")[0]);

@@ -1,19 +1,14 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
-import {
-  InstantFetcher,
-  Service,
-  ServiceInstance,
-  StaticSubscriptionController,
-} from "@/Test";
+import { InstantFetcher, Service, ServiceInstance } from "@/Test";
 import {
   DataManagerImpl,
   DataProviderImpl,
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 
@@ -28,13 +23,12 @@ it("ServiceInstanceHistory renders", async () => {
           data: { data: [] },
         }),
         new InstanceLogsStateHelper(store)
-      ),
-      new StaticSubscriptionController()
+      )
     ),
   ]);
 
   render(
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
           service={Service.A}
@@ -42,7 +36,7 @@ it("ServiceInstanceHistory renders", async () => {
           environment={environment}
         />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 
   expect(

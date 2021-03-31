@@ -12,6 +12,7 @@ describe("Catalog Data List", () => {
       environment: "env",
       lifecycle: { initialState: "", states: [], transfers: [] },
       name: "service1",
+      config: {},
     },
   ];
   const doubleService = [
@@ -21,6 +22,7 @@ describe("Catalog Data List", () => {
       environment: "env",
       lifecycle: { initialState: "", states: [], transfers: [] },
       name: "otherService",
+      config: {},
     },
   ];
   const serviceCatalogUrl = "/lsm/v1/service_catalog";

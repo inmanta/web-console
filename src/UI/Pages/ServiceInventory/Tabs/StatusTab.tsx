@@ -1,5 +1,4 @@
 import React from "react";
-import { words } from "@/UI";
 import {
   Card,
   CardBody,
@@ -11,11 +10,7 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { TabProps } from "./ServiceInstanceDetails";
-
-interface Props extends TabProps {
-  statusInfo: StatusInfo;
-}
+import { words } from "@/UI";
 
 interface StatusInfo {
   instanceId: string;
@@ -26,7 +21,11 @@ interface StatusInfo {
   actions: React.ReactElement | null;
 }
 
-export const StatusView: React.FC<Props> = ({ statusInfo }) => (
+interface Props {
+  statusInfo: StatusInfo;
+}
+
+export const StatusTab: React.FC<Props> = ({ statusInfo }) => (
   <Card>
     <CardBody>
       <Flex spaceItems={{ default: "spaceItemsXl" }}>

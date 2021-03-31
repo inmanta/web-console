@@ -34,14 +34,11 @@ export class BaseApiHelper implements ApiHelper {
     );
   }
 
-  async get<T>(
-    url: string,
-    environment: string
-  ): Promise<Either.Type<string, T>> {
+  private async execute<Data>(
+    ...params: Parameters<typeof fetch>
+  ): Promise<Either.Type<string, Data>> {
     try {
-      const response = await fetch(url, {
-        headers: this.getHeaders(environment),
-      });
+      const response = await fetch(...params);
       if (response.ok) {
         const data = await response.json();
         return Either.right(data);
@@ -53,5 +50,29 @@ export class BaseApiHelper implements ApiHelper {
       if (error.message) return Either.left(error.message);
       return Either.left(`Error: ${error}`);
     }
+  }
+
+  async get<Data>(
+    url: string,
+    environment: string
+  ): Promise<Either.Type<string, Data>> {
+    return this.execute<Data>(url, {
+      headers: this.getHeaders(environment),
+    });
+  }
+
+  async post<Data, Body>(
+    url: string,
+    environment: string,
+    body: Body
+  ): Promise<Either.Type<string, Data>> {
+    return this.execute<Data>(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...this.getHeaders(environment),
+      },
+      method: "POST",
+      body: JSON.stringify(body),
+    });
   }
 }

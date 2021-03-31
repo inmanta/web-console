@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { StaticSubscriptionController, DeferredFetcher, Service } from "@/Test";
 import { Either } from "@/Core";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   DataManagerImpl,
@@ -32,11 +32,11 @@ function setup() {
 
   const component = (
     <MemoryRouter>
-      <ServicesContext.Provider value={{ dataProvider }}>
+      <DependencyProvider dependencies={{ dataProvider }}>
         <StoreProvider store={store}>
           <ServiceCatalog environment={Service.A.environment} />
         </StoreProvider>
-      </ServicesContext.Provider>
+      </DependencyProvider>
     </MemoryRouter>
   );
 

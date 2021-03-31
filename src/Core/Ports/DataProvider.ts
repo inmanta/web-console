@@ -15,6 +15,6 @@ type Pair<K extends Query.Kind> = [Data<K>, () => void];
  * based on a query.
  */
 export interface DataProvider {
+  useOneTime<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
   useContinuous<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
-  useOnce<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
 }

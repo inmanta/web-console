@@ -1,25 +1,29 @@
 import React, { ReactText } from "react";
 import { Tabs, Tab, TabTitleText, TabTitleIcon } from "@patternfly/react-core";
 
-export interface TabDescriptor {
-  id: string;
+export interface TabDescriptor<K extends string> {
+  id: K;
   title: string;
   icon: React.ReactElement;
   view: React.ReactElement;
 }
 
-interface Props {
-  tabs: TabDescriptor[];
-  activeTab: string;
-  onChange: (tabKey: string) => void;
+interface Props<K extends string> {
+  tabs: TabDescriptor<K>[];
+  activeTab: K;
+  onChange: (tabKey: K) => void;
 }
 
 /**
  * A tabs component with icons in the title
  */
-export const IconTabs: React.FC<Props> = ({ activeTab, onChange, tabs }) => {
+export const IconTabs = <Key extends string>({
+  activeTab,
+  onChange,
+  tabs,
+}: Props<Key>): ReturnType<React.FC<Props<Key>>> => {
   const setActiveTabWithEventKey = (event, eventKey: ReactText) =>
-    onChange(eventKey as typeof activeTab);
+    onChange(eventKey as Key);
 
   return (
     <Tabs

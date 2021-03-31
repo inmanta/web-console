@@ -4,8 +4,8 @@ import { App } from "@/UI/App/app";
 import keycloakConf from "@/UI/App/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance, ServicesContext } from "@/UI";
-import { BaseApiHelper, FetcherImpl } from "@/Infra";
+import { getStoreInstance, DependencyProvider } from "@/UI";
+import { BaseApiHelper, FetcherImpl, InstanceConfigPoster } from "@/Infra";
 import {
   DataProviderImpl,
   IntervalsDictionary,
@@ -24,6 +24,9 @@ import {
   DataManagerImpl,
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
+  InstanceConfigHookHelper,
+  InstanceConfigStateHelper,
+  CommandProviderImpl,
 } from "@/UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
@@ -56,11 +59,13 @@ const servicesHelper = new ServicesHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
+const serviceDataManager = new DataManagerImpl<"Service">(
+  new FetcherImpl<"Service">(baseApiHelper),
+  new ServiceStateHelper(storeInstance, serviceKeyMaker)
+);
+
 const serviceHelper = new ServiceHookHelper(
-  new DataManagerImpl<"Service">(
-    new FetcherImpl<"Service">(baseApiHelper),
-    new ServiceStateHelper(storeInstance, serviceKeyMaker)
-  ),
+  serviceDataManager,
   new LiveSubscriptionController(5000, new IntervalsDictionary()),
   serviceKeyMaker
 );
@@ -93,8 +98,17 @@ const instanceLogsHelper = new InstanceLogsHookHelper(
   new DataManagerImpl<"InstanceLogs">(
     new FetcherImpl<"InstanceLogs">(baseApiHelper),
     new InstanceLogsStateHelper(storeInstance)
+  )
+);
+
+const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);
+
+const instanceConfigHelper = new InstanceConfigHookHelper(
+  new DataManagerImpl<"InstanceConfig">(
+    new FetcherImpl<"InstanceConfig">(baseApiHelper),
+    instanceConfigStateHelper
   ),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+  serviceDataManager
 );
 
 const dataProvider = new DataProviderImpl([
@@ -104,13 +118,19 @@ const dataProvider = new DataProviderImpl([
   resourcesHelper,
   eventsHelper,
   instanceLogsHelper,
+  instanceConfigHelper,
 ]);
 
+const commandProvider = new CommandProviderImpl(
+  new InstanceConfigPoster(baseApiHelper),
+  instanceConfigStateHelper
+);
+
 ReactDOM.render(
-  <ServicesContext.Provider value={{ dataProvider }}>
+  <DependencyProvider dependencies={{ commandProvider, dataProvider }}>
     <StoreProvider store={storeInstance}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
     </StoreProvider>
-  </ServicesContext.Provider>,
+  </DependencyProvider>,
   document.getElementById("root") as HTMLElement
 );

@@ -98,6 +98,18 @@ const dict = {
     `Are you sure you want to delete instance ${instanceId} of service entity ${serviceName}?`,
 
   /**
+   * Config related text
+   */
+  "setting.label.true": "On",
+  "setting.label.trueDefault": "On (service default)",
+  "setting.label.false": "Off",
+  "setting.label.falseDefault": "Off (service default)",
+  "config.title": "Config",
+  "config.reset": "Reset",
+  "config.reset.description": "Reset to service defaults",
+  "config.empty": "No settings found",
+
+  /**
    * Events related text
    */
   "events.column.date": "Date",
@@ -121,6 +133,9 @@ const dict = {
    */
   "history.missing": (instanceId: string) =>
     `No history could be found for instance ${instanceId}`,
+  "history.tabs.details": "Details",
+  "history.tabs.attributes": "Attributes",
+  "history.tabs.events": "Events",
 };
 
 type Key = keyof typeof dict;

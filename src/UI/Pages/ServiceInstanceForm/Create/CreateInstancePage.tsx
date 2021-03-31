@@ -16,7 +16,7 @@ import { useKeycloak } from "react-keycloak";
 import { useHistory, useLocation } from "react-router-dom";
 import { words } from "@/UI/words";
 import { useStoreState } from "@/UI/Store";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyContext } from "@/UI/Dependency";
 import { CreateFormCard } from "./CreateFormCard";
 
 export const CreateInstancePageWithProvider: React.FunctionComponent<{
@@ -40,7 +40,7 @@ const ServiceProvider: React.FunctionComponent<{
   serviceName: string;
   environmentId: string;
 }> = ({ serviceName, environmentId }) => {
-  const { dataProvider } = useContext(ServicesContext);
+  const { dataProvider } = useContext(DependencyContext);
 
   const [data, retry] = dataProvider.useContinuous<"Service">({
     kind: "Service",

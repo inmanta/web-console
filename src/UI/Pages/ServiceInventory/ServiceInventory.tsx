@@ -18,7 +18,7 @@ import { Pagination, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
 import { PlusIcon } from "@patternfly/react-icons";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
   ErrorView,
@@ -72,7 +72,7 @@ export const ServiceInventory: React.FunctionComponent<{
     [keycloak] = useKeycloak();
   }
 
-  const { dataProvider } = useContext(ServicesContext);
+  const { dataProvider } = useContext(DependencyContext);
 
   const [data, retry] = dataProvider.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",

@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { TabProps } from "./ServiceInstanceDetails";
 import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
   ResourceTable,
@@ -9,15 +8,15 @@ import {
   LoadingView,
   ErrorView,
 } from "@/UI/Components";
-import { ServicesContext } from "@/UI/ServicesContext";
 import { words } from "@/UI/words";
+import { DependencyContext } from "@/UI/Dependency";
 
-interface Props extends TabProps {
+interface Props {
   qualifier: VersionedServiceInstanceIdentifier;
 }
 
-export const ResourcesView: React.FC<Props> = ({ qualifier }) => {
-  const { dataProvider } = useContext(ServicesContext);
+export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
+  const { dataProvider } = useContext(DependencyContext);
 
   const [data] = dataProvider.useContinuous<"Resources">({
     kind: "Resources",

@@ -8,7 +8,7 @@ import {
   InstantFetcher,
   Pagination,
 } from "@/Test";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   DataManagerImpl,
@@ -71,7 +71,7 @@ export const Basic: React.FC = () => {
   ]);
 
   return (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory
@@ -81,7 +81,7 @@ export const Basic: React.FC = () => {
           />
         </MemoryRouter>
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 };
 
@@ -106,7 +106,7 @@ export const Failed: React.FC = () => {
   const dataProvider = new DataProviderImpl([serviceInstancesHelper]);
 
   return (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory
@@ -116,6 +116,6 @@ export const Failed: React.FC = () => {
           />
         </MemoryRouter>
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 };

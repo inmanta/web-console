@@ -1,6 +1,6 @@
 import { RemoteData, ServiceInstanceIdentifier } from "@/Core";
 import React, { useContext } from "react";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyContext } from "@/UI/Dependency";
 import {
   EventsTable,
   EventsTableWrapper,
@@ -10,15 +10,14 @@ import {
 } from "@/UI/Components";
 
 import { MomentDatePresenter } from "../Presenters";
-import { TabProps } from "./ServiceInstanceDetails";
 import { words } from "@/UI/words";
 
-interface Props extends TabProps {
+interface Props {
   qualifier: ServiceInstanceIdentifier;
 }
 
-export const EventsView: React.FC<Props> = ({ qualifier }) => {
-  const { dataProvider } = useContext(ServicesContext);
+export const EventsTab: React.FC<Props> = ({ qualifier }) => {
+  const { dataProvider } = useContext(DependencyContext);
   const [data] = dataProvider.useContinuous<"Events">({
     kind: "Events",
     qualifier,

@@ -14,7 +14,7 @@ import {
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import { StoreProvider } from "easy-peasy";
 
 export default {
@@ -38,11 +38,11 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   ]);
 
   return (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
         <InventoryTable {...args} tablePresenter={tablePresenter} />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 };
 

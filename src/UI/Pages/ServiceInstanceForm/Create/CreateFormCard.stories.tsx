@@ -41,6 +41,7 @@ const serviceEntity = {
   attributes: attributes,
   environment: "env",
   lifecycle: { initialState: "start", states: [], transfers: [] },
+  config: {},
 };
 export const Success = Template.bind({});
 Success.args = {

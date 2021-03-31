@@ -7,18 +7,18 @@ import {
   InstantFetcher,
   Resources,
 } from "@/Test";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
   DataManagerImpl,
   ResourcesHookHelper,
 } from "@/UI/Data";
-import { ResourcesView } from "./ResourcesView";
+import { ResourcesTab } from "./ResourcesTab";
 
 export default {
   title: "ResourcesView",
-  component: ResourcesView,
+  component: ResourcesTab,
 };
 
 const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
@@ -41,11 +41,11 @@ const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
   };
 
   return (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
-        <ResourcesView qualifier={instance} title="" icon={<></>} />
+        <ResourcesTab qualifier={instance} />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 };
 

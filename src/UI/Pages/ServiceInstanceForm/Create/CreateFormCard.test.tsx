@@ -31,6 +31,7 @@ describe("CreateFormCard", () => {
     attributes: attributes,
     environment: "env",
     lifecycle: { initialState: "start", states: [], transfers: [] },
+    config: {},
   };
   it("Shows delete modal", async () => {
     render(

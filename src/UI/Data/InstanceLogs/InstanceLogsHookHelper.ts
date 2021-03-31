@@ -1,16 +1,11 @@
-import { SubscriptionController, DataManager } from "@/Core";
+import { DataManager } from "@/Core";
 import { identity } from "lodash";
-import { HookHelperImpl } from "../HookHelperImpl";
+import { OneTimeHookHelperImpl } from "../HookHelperImpl";
 
-export class InstanceLogsHookHelper extends HookHelperImpl<"InstanceLogs"> {
-  constructor(
-    dataManager: DataManager<"InstanceLogs">,
-    subscriptionController: SubscriptionController
-  ) {
+export class InstanceLogsHookHelper extends OneTimeHookHelperImpl<"InstanceLogs"> {
+  constructor(dataManager: DataManager<"InstanceLogs">) {
     super(
       dataManager,
-      subscriptionController,
-      (qualifier) => qualifier.id,
       (qualifier) => [qualifier.id, qualifier.service_entity],
       "InstanceLogs",
       ({ service_entity, id }) =>

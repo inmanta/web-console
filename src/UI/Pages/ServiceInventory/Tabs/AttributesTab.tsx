@@ -1,6 +1,5 @@
 import React from "react";
 import { Attributes } from "@/Core";
-import { TabProps } from "./ServiceInstanceDetails";
 import { TreeTable } from "@/UI/Components";
 import {
   AttributeHelper,
@@ -9,11 +8,11 @@ import {
   TreeTableHelper,
 } from "@/UI/Components/TreeTable/Helpers";
 
-interface Props extends TabProps {
+interface Props {
   attributes: Attributes;
 }
 
-export const AttributesView: React.FC<Props> = ({ attributes }) => (
+export const AttributesTab: React.FC<Props> = ({ attributes }) => (
   <TreeTable
     treeTableHelper={
       new TreeTableHelper(

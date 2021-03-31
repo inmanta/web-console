@@ -4,21 +4,8 @@ import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
 import { DateWithTooltip } from "@/UI/Components";
 import { AttributesSummaryView, IdWithCopy } from "./Components";
-import {
-  ServiceInstanceDetails,
-  AttributesView,
-  StatusView,
-  ResourcesView,
-  TabKey,
-  EventsView,
-} from "./ServiceInstanceDetails";
-import {
-  AutomationIcon,
-  InfoCircleIcon,
-  ListIcon,
-  PortIcon,
-} from "@patternfly/react-icons";
 import { DeploymentProgressPresenter } from "./Presenters";
+import { Tabs, TabKey } from "./Tabs";
 
 interface Props {
   row: Row;
@@ -45,13 +32,13 @@ export const InstanceRow: React.FC<Props> = ({
   shouldUseServiceIdentity,
   idDataLabel,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabKey>("Status");
+  const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Status);
   const deploymentProgressPresenter = new DeploymentProgressPresenter();
   const attributesOnClick = () => {
     if (!isExpanded) {
       onToggle();
     }
-    setActiveTab("Attributes");
+    setActiveTab(TabKey.Attributes);
   };
   return (
     <Tbody isExpanded={false}>
@@ -91,38 +78,14 @@ export const InstanceRow: React.FC<Props> = ({
       <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
         <Td colSpan={numberOfColumns}>
           <ExpandableRowContent>
-            <ServiceInstanceDetails
+            <Tabs
               activeTab={activeTab}
               setActiveTab={setActiveTab}
-            >
-              <StatusView
-                title={words("inventory.tabs.status")}
-                icon={<InfoCircleIcon />}
-                statusInfo={{
-                  instanceId: row.id.full,
-                  state: state,
-                  version: row.version,
-                  createdAt: row.createdAt.full,
-                  updatedAt: row.updatedAt.full,
-                  actions: actions,
-                }}
-              />
-              <AttributesView
-                attributes={row.attributes}
-                title={words("inventory.tabs.attributes")}
-                icon={<ListIcon />}
-              />
-              <ResourcesView
-                qualifier={serviceInstanceIdentifier}
-                title={words("inventory.tabs.resources")}
-                icon={<AutomationIcon />}
-              />
-              <EventsView
-                qualifier={serviceInstanceIdentifier}
-                title={words("events.title")}
-                icon={<PortIcon />}
-              />
-            </ServiceInstanceDetails>
+              row={row}
+              state={state}
+              actions={actions}
+              serviceInstanceIdentifier={serviceInstanceIdentifier}
+            />
           </ExpandableRowContent>
         </Td>
       </Tr>

@@ -3,7 +3,9 @@ import {
   SubscriptionController,
   DataManager,
   Query,
-  HookHelper,
+  OneTimeHookHelper,
+  ContinuousHookHelper,
+  HelperKind,
 } from "@/Core";
 import { useEffect, useState } from "react";
 
@@ -20,12 +22,10 @@ type Data<Kind extends Query.Kind> = [
   () => void
 ];
 
-export class HookHelperImpl<Kind extends Query.Kind>
-  implements HookHelper<Kind> {
+export class OneTimeHookHelperImpl<Kind extends Query.Kind>
+  implements OneTimeHookHelper<Kind> {
   constructor(
     private readonly dataManager: DataManager<Kind>,
-    private readonly subscriptionController: SubscriptionController,
-    private readonly getUnique: GetUnique<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
     private readonly getUrl: (qualifier: Query.Qualifier<Kind>) => string,
@@ -35,7 +35,7 @@ export class HookHelperImpl<Kind extends Query.Kind>
     ) => Query.UsedData<Kind>
   ) {}
 
-  useOnce(qualifier: Query.Qualifier<Kind>): Data<Kind> {
+  useOneTime(qualifier: Query.Qualifier<Kind>): Data<Kind> {
     const [url, setUrl] = useState(this.getUrl(qualifier));
 
     useEffect(() => {
@@ -56,7 +56,27 @@ export class HookHelperImpl<Kind extends Query.Kind>
     ];
   }
 
-  useSubscription(qualifier: Query.Qualifier<Kind>): Data<Kind> {
+  matches(query: Query.SubQuery<Kind>, helperKind: HelperKind): boolean {
+    return query.kind === this.kind && helperKind === "OneTime";
+  }
+}
+
+export class ContinuousHookHelperImpl<Kind extends Query.Kind>
+  implements ContinuousHookHelper<Kind> {
+  constructor(
+    private readonly dataManager: DataManager<Kind>,
+    private readonly subscriptionController: SubscriptionController,
+    private readonly getUnique: GetUnique<Kind>,
+    private readonly getDependencies: GetDependencies<Kind>,
+    private readonly kind: Kind,
+    private readonly getUrl: (qualifier: Query.Qualifier<Kind>) => string,
+    private readonly toUsed: (
+      data: Query.Data<Kind>,
+      setUrl: (url: string) => void
+    ) => Query.UsedData<Kind>
+  ) {}
+
+  useContinuous(qualifier: Query.Qualifier<Kind>): Data<Kind> {
     const [url, setUrl] = useState(this.getUrl(qualifier));
 
     useEffect(() => {
@@ -87,7 +107,7 @@ export class HookHelperImpl<Kind extends Query.Kind>
     ];
   }
 
-  matches(query: Query.SubQuery<Kind>): boolean {
-    return query.kind === this.kind;
+  matches(query: Query.SubQuery<Kind>, helperKind: HelperKind): boolean {
+    return query.kind === this.kind && helperKind === "Continuous";
   }
 }

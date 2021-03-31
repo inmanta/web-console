@@ -6,7 +6,7 @@ import {
   Outcome,
   StaticSubscriptionController,
 } from "@/Test";
-import { EventsView } from "./EventsView";
+import { EventsTab } from "./EventsTab";
 import { getStoreInstance } from "@/UI/Store";
 import {
   DataProviderImpl,
@@ -14,12 +14,12 @@ import {
   EventsHookHelper,
   EventsStateHelper,
 } from "@/UI/Data";
-import { ServicesContext } from "@/UI/ServicesContext";
+import { DependencyProvider } from "@/UI/Dependency";
 import { StoreProvider } from "easy-peasy";
 
 export default {
   title: "EventsView",
-  component: EventsView,
+  component: EventsTab,
 };
 
 const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
@@ -42,11 +42,11 @@ const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
   };
 
   return (
-    <ServicesContext.Provider value={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
-        <EventsView qualifier={instance} title="" icon={<></>} />
+        <EventsTab qualifier={instance} />
       </StoreProvider>
-    </ServicesContext.Provider>
+    </DependencyProvider>
   );
 };
 
