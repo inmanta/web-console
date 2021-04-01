@@ -15,7 +15,7 @@ type GetUnique<Kind extends Query.Kind> = (
 
 type GetDependencies<Kind extends Query.Kind> = (
   qualifier: Query.Qualifier<Kind>
-) => (string | number | boolean)[];
+) => (string | number | boolean | undefined)[];
 
 type Data<Kind extends Query.Kind> = [
   RemoteData.Type<Query.Error<Kind>, Query.UsedData<Kind>>,

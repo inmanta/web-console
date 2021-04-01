@@ -22,7 +22,7 @@ export const EventsTableWrapper: React.FC<Props> = ({
   ...props
 }) => {
   const heads = tablePresenter
-    .getColumnHeads()
+    .getColumnHeadDisplayNames()
     .map((column) => <Th key={column}>{column}</Th>);
   return (
     <TableComposable aria-label={props["aria-label"]}>

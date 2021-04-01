@@ -1,20 +1,64 @@
 import React from "react";
-import { TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
+import {
+  TableComposable,
+  Thead,
+  Tr,
+  Th,
+  OnSort,
+} from "@patternfly/react-table";
 import { Row } from "@/Core";
 import { InventoryTablePresenter } from "./Presenters";
 import { InstanceRow } from "./InstanceRow";
 import { ExpansionManager } from "./ExpansionManager";
+import { SortDirection } from "@/Core/Domain/Query";
 
 interface Props {
   rows: Row[];
   tablePresenter: InventoryTablePresenter;
+  sortColumn?: string;
+  order?: SortDirection;
+  setSortColumn?: (name?: string) => void;
+  setOrder?: (order?: SortDirection) => void;
 }
 
-export const InventoryTable: React.FC<Props> = ({ rows, tablePresenter }) => {
+export const InventoryTable: React.FC<Props> = ({
+  rows,
+  tablePresenter,
+  sortColumn,
+  order,
+  setSortColumn,
+  setOrder,
+}) => {
   const expansionManager = new ExpansionManager();
-  const heads = tablePresenter
-    .getColumnHeads()
-    .map((column) => <Th key={column}>{column}</Th>);
+
+  const onSort: OnSort = (event, index, direction) => {
+    if (setSortColumn && setOrder) {
+      setSortColumn(tablePresenter.getColumnNameForIndex(index));
+      setOrder(direction);
+    }
+  };
+  const activeSortIndex = tablePresenter.getIndexForColumnName(sortColumn);
+  const heads = tablePresenter.getColumnHeads().map((column, columnIndex) => {
+    const sortParams = tablePresenter
+      .getSortableColumnNames()
+      .includes(column.apiName)
+      ? {
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: order,
+            },
+            onSort,
+            columnIndex,
+          },
+        }
+      : {};
+    return (
+      <Th key={column.displayName} {...sortParams}>
+        {column.displayName}
+      </Th>
+    );
+  });
 
   const [expansionState, setExpansionState] = React.useState(
     expansionManager.create(rowsToIds(rows))

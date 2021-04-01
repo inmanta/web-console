@@ -1,7 +1,7 @@
 export interface TablePresenter<S, T> {
   createRows(sourceData: S[]): T[];
 
-  getColumnHeads(): string[];
+  getColumnHeadDisplayNames(): string[];
 
   getNumberOfColumns(): number;
 }

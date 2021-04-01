@@ -39,12 +39,12 @@ test("getServiceInstancesUrl returns correct url for sort & no filter", () => {
     filter: undefined,
     sort: {
       name: "state",
-      order: "ASC",
+      order: "asc",
     },
   };
 
   expect(getServiceInstancesUrl(qualifier)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&sort=state.ASC`
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&sort=state.asc`
   );
 });
 
@@ -58,11 +58,11 @@ test("getServiceInstancesUrl returns correct url for sort & filter", () => {
     },
     sort: {
       name: "state",
-      order: "ASC",
+      order: "asc",
     },
   };
 
   expect(getServiceInstancesUrl(qualifier)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating&sort=state.ASC`
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating&sort=state.asc`
   );
 });

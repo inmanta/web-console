@@ -11,7 +11,11 @@ export class ServiceInstancesHookHelper extends ContinuousHookHelperImpl<"Servic
       dataManager,
       subscriptionController,
       (qualifier) => qualifier.name,
-      (qualifier) => [qualifier.name],
+      (qualifier) => [
+        qualifier.name,
+        qualifier.sort?.name,
+        qualifier.sort?.order,
+      ],
       "ServiceInstances",
       getServiceInstancesUrl,
       ({ data, links, metadata }, setUrl) => {

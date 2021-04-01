@@ -44,6 +44,7 @@ export const InstanceRow: React.FC<Props> = ({
     <Tbody isExpanded={false}>
       <Tr id={`instance-row-${row.id.short}`}>
         <Td
+          aria-label={`expand-button-${row.id.short}`}
           expand={{
             rowIndex: index,
             isExpanded,
