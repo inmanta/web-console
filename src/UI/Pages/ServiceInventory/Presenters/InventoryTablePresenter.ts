@@ -7,6 +7,11 @@ import { ActionPresenter } from "./ActionPresenter";
 import { StatePresenter } from "./StatePresenter";
 import { TablePresenter } from "./TablePresenter";
 
+interface ColumnHead {
+  apiName: string;
+  displayName: string;
+}
+
 /**
  * The TablePresenter is responsible for formatting the domain data.
  * This class should only hold config data and pure functions.
@@ -14,7 +19,7 @@ import { TablePresenter } from "./TablePresenter";
  */
 export class InventoryTablePresenter
   implements TablePresenter<ServiceInstanceModelWithTargetStates, Row> {
-  readonly columnHeads: string[];
+  readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
   constructor(
@@ -26,12 +31,27 @@ export class InventoryTablePresenter
     private serviceIdentityDisplayName?: string
   ) {
     this.columnHeads = [
-      this.getIdColumnName(),
-      words("inventory.column.state"),
-      words("inventory.column.attributesSummary"),
-      words("inventory.collumn.deploymentProgress"),
-      words("inventory.column.createdAt"),
-      words("inventory.column.updatedAt"),
+      {
+        displayName: this.getIdColumnName(),
+        apiName: this.getIdColumnApiName(),
+      },
+      { displayName: words("inventory.column.state"), apiName: "state" },
+      {
+        displayName: words("inventory.column.attributesSummary"),
+        apiName: "attributes",
+      },
+      {
+        displayName: words("inventory.collumn.deploymentProgress"),
+        apiName: "deployment_progress",
+      },
+      {
+        displayName: words("inventory.column.createdAt"),
+        apiName: "created_at",
+      },
+      {
+        displayName: words("inventory.column.updatedAt"),
+        apiName: "last_updated",
+      },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }
@@ -44,8 +64,33 @@ export class InventoryTablePresenter
     return instances.map((instance) => this.instanceToRow(instance));
   }
 
-  public getColumnHeads(): string[] {
+  public getColumnHeadDisplayNames(): string[] {
+    return this.columnHeads.map((columnhead) => columnhead.displayName);
+  }
+
+  public getColumnHeads(): ColumnHead[] {
     return this.columnHeads;
+  }
+
+  public getColumnNameForIndex(index: number): string | undefined {
+    if (index > -1 && index < this.getNumberOfColumns()) {
+      return this.getColumnHeads()[index].apiName;
+    }
+    return undefined;
+  }
+
+  public getIndexForColumnName(columnName?: string): number {
+    return this.columnHeads.findIndex(
+      (columnHead) => columnHead.apiName === columnName
+    );
+  }
+
+  public getSortableColumnNames(): string[] {
+    const sortableColumns = ["state", "created_at", "last_updated"];
+    if (this.serviceIdentity) {
+      sortableColumns.push(this.serviceIdentity);
+    }
+    return sortableColumns;
   }
 
   public getIdColumnName(): string {
@@ -55,6 +100,14 @@ export class InventoryTablePresenter
       return this.serviceIdentity;
     } else {
       return words("inventory.column.id");
+    }
+  }
+
+  public getIdColumnApiName(): string {
+    if (this.serviceIdentity) {
+      return this.serviceIdentity;
+    } else {
+      return "id";
     }
   }
 

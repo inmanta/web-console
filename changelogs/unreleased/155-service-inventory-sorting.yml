@@ -1,0 +1,6 @@
+description: Add sorting to the Service Inventory
+issue-nr: 155
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

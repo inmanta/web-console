@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   PageSection,
   Alert,
@@ -28,6 +28,7 @@ import {
 } from "@/UI/Components";
 import { InventoryContext } from "./InventoryContext";
 import { PaginationToolbar } from "./Components";
+import { SortDirection } from "@/Core/Domain/Query";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -37,25 +38,27 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 
 export const ServiceInventoryWithProvider: React.FC<{
   match: { params: { id: string } };
-}> = ({ match }) => (
-  <EnvironmentProvider
-    Wrapper={Wrapper}
-    Dependant={({ environment }) => (
-      <ServiceProvider
-        serviceName={match.params.id}
-        environmentId={environment}
-        Wrapper={Wrapper}
-        Dependant={({ service }) => (
-          <ServiceInventory
-            service={service}
-            environmentId={environment}
-            serviceName={match.params.id}
-          />
-        )}
-      />
-    )}
-  />
-);
+}> = ({ match }) => {
+  return (
+    <EnvironmentProvider
+      Wrapper={Wrapper}
+      Dependant={({ environment }) => (
+        <ServiceProvider
+          serviceName={match.params.id}
+          environmentId={environment}
+          Wrapper={Wrapper}
+          Dependant={({ service }) => (
+            <ServiceInventory
+              service={service}
+              environmentId={environment}
+              serviceName={match.params.id}
+            />
+          )}
+        />
+      )}
+    />
+  );
+};
 
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
@@ -73,10 +76,13 @@ export const ServiceInventory: React.FunctionComponent<{
   }
 
   const { dataProvider } = useContext(DependencyContext);
-
+  const [sortColumn, setSortColumn] = useState<string | undefined>(undefined);
+  const [order, setOrder] = useState<SortDirection | undefined>(undefined);
+  const sort =
+    sortColumn && order ? { name: sortColumn, order: order } : undefined;
   const [data, retry] = dataProvider.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
-    qualifier: { name: serviceName, environment: environmentId || "" },
+    qualifier: { name: serviceName, environment: environmentId || "", sort },
   });
 
   return RemoteData.fold(
@@ -127,6 +133,10 @@ export const ServiceInventory: React.FunctionComponent<{
                 instances={instances}
                 keycloak={keycloak}
                 serviceEntity={service}
+                sortColumn={sortColumn}
+                setSortColumn={setSortColumn}
+                order={order}
+                setOrder={setOrder}
               />
             </Wrapper>
           ) : (

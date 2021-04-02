@@ -5,7 +5,17 @@ import { ServiceModel } from "@/Core";
 
 test("InventoryTableContainer is visible", async () => {
   // Arrange
-  render(<TableProvider instances={[]} serviceEntity={{} as ServiceModel} />);
+  const dummySetter = () => {
+    return;
+  };
+  render(
+    <TableProvider
+      instances={[]}
+      serviceEntity={{} as ServiceModel}
+      setSortColumn={dummySetter}
+      setOrder={dummySetter}
+    />
+  );
   // Act
   // Assert
   const container = screen.getByTestId("InventoryTableContainer");

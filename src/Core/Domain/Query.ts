@@ -99,10 +99,11 @@ interface Filter {
     | "rollback_attributes";
 }
 
-interface Sort {
+export interface Sort {
   name: string;
-  order: "ASC" | "DESC";
+  order: SortDirection;
 }
+export type SortDirection = "asc" | "desc";
 
 interface ServiceInstancesManifest {
   error: string;

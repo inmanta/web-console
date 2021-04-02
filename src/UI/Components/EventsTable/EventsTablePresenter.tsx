@@ -17,7 +17,7 @@ export class EventsTablePresenter
   ];
   readonly numberOfColumns = this.columnHeads.length + 1;
 
-  public getColumnHeads(): string[] {
+  public getColumnHeadDisplayNames(): string[] {
     return this.columnHeads;
   }
 
