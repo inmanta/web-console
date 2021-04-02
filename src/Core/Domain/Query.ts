@@ -95,8 +95,8 @@ export interface Filter {
   id?: string[];
   state?: string[];
   deleted?: boolean;
-  attribute_set_empty?: Attributes;
-  attribute_set_not_empty?: Attributes;
+  attribute_set_empty?: Attributes[];
+  attribute_set_not_empty?: Attributes[];
 }
 
 export interface Sort {
