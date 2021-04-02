@@ -209,9 +209,6 @@ const Bar: React.FC<BarProps> = ({
             />
           }
           <ToolbarGroup>
-            <ToolbarItem>{words("inventory.intro")(serviceName)}</ToolbarItem>
-          </ToolbarGroup>
-          <ToolbarGroup>
             <ToolbarItem>
               <Link
                 to={{
