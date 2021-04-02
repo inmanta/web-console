@@ -20,6 +20,10 @@ import {
 } from "@/UI/Data";
 import userEvent from "@testing-library/user-event";
 
+const dummySetter = () => {
+  return;
+};
+
 test("InventoryTable can be expanded", async () => {
   // Arrange
   const dataProvider = new DataProviderImpl([
@@ -43,7 +47,12 @@ test("InventoryTable can be expanded", async () => {
   ]);
   render(
     <DependencyProvider dependencies={{ dataProvider }}>
-      <InventoryTable rows={rows} tablePresenter={tablePresenter} />
+      <InventoryTable
+        rows={rows}
+        tablePresenter={tablePresenter}
+        setSortColumn={dummySetter}
+        setOrder={dummySetter}
+      />
     </DependencyProvider>
   );
   const testid = `details_${rows[0].id.short}`;
@@ -81,7 +90,12 @@ test("ServiceInventory can show resources for instance", async () => {
   render(
     <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
-        <InventoryTable rows={rows} tablePresenter={tablePresenter} />
+        <InventoryTable
+          rows={rows}
+          tablePresenter={tablePresenter}
+          setSortColumn={dummySetter}
+          setOrder={dummySetter}
+        />
       </StoreProvider>
     </DependencyProvider>
   );
@@ -101,7 +115,14 @@ test("ServiceInventory can show resources for instance", async () => {
 
 test("ServiceInventory shows attribute tab when clicking on attribute summary", async () => {
   // Arrange
-  render(<InventoryTable rows={rows} tablePresenter={tablePresenter} />);
+  render(
+    <InventoryTable
+      rows={rows}
+      tablePresenter={tablePresenter}
+      setSortColumn={dummySetter}
+      setOrder={dummySetter}
+    />
+  );
 
   // Act
   fireEvent.click((await screen.findAllByTestId(`attributes-summary`))[0]);
@@ -117,6 +138,8 @@ test("ServiceInventory shows service identity if it's defined", async () => {
     <InventoryTable
       rows={[rows[0]]}
       tablePresenter={tablePresenterWithIdentity}
+      setSortColumn={dummySetter}
+      setOrder={dummySetter}
     />
   );
 
@@ -126,7 +149,14 @@ test("ServiceInventory shows service identity if it's defined", async () => {
 });
 
 test("ServiceInventory shows sorting buttons for sortable columns", async () => {
-  render(<InventoryTable rows={[rows[0]]} tablePresenter={tablePresenter} />);
+  render(
+    <InventoryTable
+      rows={[rows[0]]}
+      tablePresenter={tablePresenter}
+      setSortColumn={dummySetter}
+      setOrder={dummySetter}
+    />
+  );
   expect(await screen.findByRole("button", { name: /state/i })).toBeVisible();
   expect(await screen.findByRole("button", { name: /created/i })).toBeVisible();
   expect(await screen.findByRole("button", { name: /updated/i })).toBeVisible();

@@ -17,9 +17,9 @@ export interface Props {
   serviceEntity: ServiceModel;
   keycloak?: KeycloakInstance;
   sortColumn?: string;
-  setSortColumn?: (name?: string) => void;
+  setSortColumn: (name?: string) => void;
   order?: SortDirection;
-  setOrder?: (order?: SortDirection) => void;
+  setOrder: (order?: SortDirection) => void;
 }
 
 export const TableProvider: React.FC<Props> = ({

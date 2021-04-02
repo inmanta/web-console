@@ -17,8 +17,8 @@ interface Props {
   tablePresenter: InventoryTablePresenter;
   sortColumn?: string;
   order?: SortDirection;
-  setSortColumn?: (name?: string) => void;
-  setOrder?: (order?: SortDirection) => void;
+  setSortColumn: (name?: string) => void;
+  setOrder: (order?: SortDirection) => void;
 }
 
 export const InventoryTable: React.FC<Props> = ({
@@ -32,10 +32,8 @@ export const InventoryTable: React.FC<Props> = ({
   const expansionManager = new ExpansionManager();
 
   const onSort: OnSort = (event, index, direction) => {
-    if (setSortColumn && setOrder) {
-      setSortColumn(tablePresenter.getColumnNameForIndex(index));
-      setOrder(direction);
-    }
+    setSortColumn(tablePresenter.getColumnNameForIndex(index));
+    setOrder(direction);
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sortColumn);
   const heads = tablePresenter.getColumnHeads().map((column, columnIndex) => {
