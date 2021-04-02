@@ -11,13 +11,20 @@ import {
   ToolbarContent,
   AlertGroup,
   Button,
+  Dropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownPosition,
+  ToolbarFilter,
+  Select,
+  SelectOption,
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import { Pagination, RemoteData, ServiceModel } from "@/Core";
+import { Pagination, Query, RemoteData, ServiceModel } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
-import { PlusIcon } from "@patternfly/react-icons";
+import { FilterIcon, PlusIcon } from "@patternfly/react-icons";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -28,7 +35,7 @@ import {
 } from "@/UI/Components";
 import { InventoryContext } from "./InventoryContext";
 import { PaginationToolbar } from "./Components";
-import { SortDirection } from "@/Core/Domain/Query";
+import { uniq, remove } from "lodash";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -79,12 +86,19 @@ export const ServiceInventory: React.FunctionComponent<{
   const [sortColumn, setSortColumn] = useState<string | undefined>(
     "created_at"
   );
-  const [order, setOrder] = useState<SortDirection | undefined>("desc");
+  const [order, setOrder] = useState<Query.SortDirection | undefined>("desc");
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;
+  const [filter, setFilter] = useState<Query.Filter>({});
+
   const [data, retry] = dataProvider.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
-    qualifier: { name: serviceName, environment: environmentId || "", sort },
+    qualifier: {
+      name: serviceName,
+      environment: environmentId || "",
+      sort,
+      filter,
+    },
   });
 
   return RemoteData.fold(
@@ -130,6 +144,8 @@ export const ServiceInventory: React.FunctionComponent<{
                 serviceName={serviceName}
                 handlers={handlers}
                 metadata={metadata}
+                filter={filter}
+                setFilter={setFilter}
               />
               <TableProvider
                 instances={instances}
@@ -147,6 +163,8 @@ export const ServiceInventory: React.FunctionComponent<{
                 serviceName={serviceName}
                 handlers={handlers}
                 metadata={metadata}
+                filter={filter}
+                setFilter={setFilter}
               />
               <EmptyView
                 message={words("inventory.empty.message")(serviceName)}
@@ -164,31 +182,133 @@ interface BarProps {
   serviceName: string;
   handlers: Pagination.Handlers;
   metadata: Pagination.Metadata;
+  filter: Query.Filter;
+  setFilter: (filter: Query.Filter) => void;
 }
 
-const Bar: React.FC<BarProps> = ({ serviceName, handlers, metadata }) => (
-  <CardFooter>
-    <Toolbar>
-      <ToolbarContent>
-        <ToolbarGroup>
-          <ToolbarItem>{words("inventory.intro")(serviceName)}</ToolbarItem>
-        </ToolbarGroup>
-        <ToolbarGroup>
-          <ToolbarItem>
-            <Link
-              to={{
-                pathname: `/lsm/catalog/${serviceName}/inventory/add`,
-                search: location.search,
-              }}
-            >
-              <Button id="add-instance-button">
-                <PlusIcon /> {words("inventory.addInstance.button")}
-              </Button>
-            </Link>
-          </ToolbarItem>
-        </ToolbarGroup>
-        <PaginationToolbar handlers={handlers} metadata={metadata} />
-      </ToolbarContent>
-    </Toolbar>
-  </CardFooter>
-);
+const Bar: React.FC<BarProps> = ({
+  serviceName,
+  handlers,
+  metadata,
+  filter,
+  setFilter,
+}) => {
+  return (
+    <CardFooter>
+      <Toolbar clearAllFilters={() => setFilter({})}>
+        <ToolbarContent>
+          {<FilterView filter={filter} setFilter={setFilter} />}
+          <ToolbarGroup>
+            <ToolbarItem>{words("inventory.intro")(serviceName)}</ToolbarItem>
+          </ToolbarGroup>
+          <ToolbarGroup>
+            <ToolbarItem>
+              <Link
+                to={{
+                  pathname: `/lsm/catalog/${serviceName}/inventory/add`,
+                  search: location.search,
+                }}
+              >
+                <Button id="add-instance-button">
+                  <PlusIcon /> {words("inventory.addInstance.button")}
+                </Button>
+              </Link>
+            </ToolbarItem>
+          </ToolbarGroup>
+          <PaginationToolbar handlers={handlers} metadata={metadata} />
+        </ToolbarContent>
+      </Toolbar>
+    </CardFooter>
+  );
+};
+
+interface FilterProps {
+  filter: Query.Filter;
+  setFilter: (filter: Query.Filter) => void;
+}
+
+const FilterView: React.FC<FilterProps> = ({ filter, setFilter }) => {
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [category, setCategory] = useState("State");
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const onCategorySelect = (newCategory: string) => {
+    setCategory(newCategory);
+    setIsCategoryOpen(false);
+  };
+
+  const onStateSelect = (event, selection) => {
+    setFilter({
+      ...filter,
+      state: filter.state ? uniq([...filter.state, selection]) : [selection],
+    });
+    setIsFilterOpen(false);
+  };
+
+  const filterSelector = (
+    <ToolbarItem>
+      <Dropdown
+        onSelect={(event) => {
+          onCategorySelect((event?.target as HTMLElement).innerText);
+        }}
+        position={DropdownPosition.left}
+        toggle={
+          <DropdownToggle
+            onToggle={setIsCategoryOpen}
+            style={{ width: "100%" }}
+          >
+            <FilterIcon /> {category}
+          </DropdownToggle>
+        }
+        isOpen={isCategoryOpen}
+        dropdownItems={[
+          <DropdownItem key="cat1">State</DropdownItem>,
+          <DropdownItem key="cat2">Id</DropdownItem>,
+        ]}
+        style={{ width: "100%" }}
+      ></Dropdown>
+    </ToolbarItem>
+  );
+
+  const filters = (
+    <>
+      <ToolbarFilter
+        chips={filter.state}
+        deleteChip={(cat, id) => {
+          console.log({ cat, id });
+          setFilter({
+            ...filter,
+            [cat.toString().toLowerCase()]: remove(
+              filter[cat.toString().toLowerCase()],
+              id
+            ),
+          });
+        }}
+        categoryName="State"
+        showToolbarItem={category === "State"}
+      >
+        <Select
+          aria-label="State"
+          onToggle={setIsFilterOpen}
+          onSelect={onStateSelect}
+          selections={filter.state}
+          isOpen={isFilterOpen}
+          placeholderText="Any"
+          variant="typeaheadmulti"
+          chipGroupProps={{ numChips: 0 }}
+        >
+          <SelectOption key="rejected" value="rejected" />
+          <SelectOption key="up" value="up" />
+        </Select>
+      </ToolbarFilter>
+    </>
+  );
+
+  return (
+    <ToolbarGroup variant="filter-group">
+      {filterSelector}
+      {filters}
+    </ToolbarGroup>
+  );
+};

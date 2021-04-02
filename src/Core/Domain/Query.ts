@@ -85,18 +85,18 @@ export interface ServiceInstancesQuery {
   qualifier: ServiceIdentifier & { filter?: Filter; sort?: Sort };
 }
 
-interface Filter {
+export enum Attributes {
+  Active = "active_attributes",
+  Candidate = "candidate_attributes",
+  Rollback = "rollback_attributes",
+}
+
+export interface Filter {
   id?: string[];
   state?: string[];
   deleted?: boolean;
-  attribute_set_empty?:
-    | "active_attributes"
-    | "candidate_attributes"
-    | "rollback_attributes";
-  attribute_set_not_empty?:
-    | "active_attributes"
-    | "candidate_attributes"
-    | "rollback_attributes";
+  attribute_set_empty?: Attributes;
+  attribute_set_not_empty?: Attributes;
 }
 
 export interface Sort {
