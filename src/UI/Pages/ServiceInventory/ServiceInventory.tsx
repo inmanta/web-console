@@ -18,6 +18,9 @@ import {
   ToolbarFilter,
   Select,
   SelectOption,
+  InputGroup,
+  TextInput,
+  ButtonVariant,
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
@@ -30,7 +33,7 @@ import {
 } from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
-import { FilterIcon, PlusIcon } from "@patternfly/react-icons";
+import { FilterIcon, PlusIcon, SearchIcon } from "@patternfly/react-icons";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -244,8 +247,8 @@ interface FilterProps {
 const FilterView: React.FC<FilterProps> = ({ filter, setFilter, service }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [category, setCategory] = useState("State");
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [idInput, setIdInput] = useState("");
 
   const onCategorySelect = (newCategory: string) => {
     setCategory(newCategory);
@@ -297,6 +300,20 @@ const FilterView: React.FC<FilterProps> = ({ filter, setFilter, service }) => {
     });
   };
 
+  const onIdInput = (event) => {
+    if (event.key && event.key !== "Enter") {
+      return;
+    }
+
+    setFilter({
+      ...filter,
+      id: filter.id
+        ? uniq(toggleValueInList(idInput, [...filter.id]))
+        : [idInput],
+    });
+    setIdInput("");
+  };
+
   const filters = (
     <>
       <ToolbarFilter
@@ -319,6 +336,32 @@ const FilterView: React.FC<FilterProps> = ({ filter, setFilter, service }) => {
             <SelectOption key={state} value={state} />
           ))}
         </Select>
+      </ToolbarFilter>
+      <ToolbarFilter
+        chips={filter.id}
+        deleteChip={removeChip}
+        categoryName="Id"
+        showToolbarItem={category === "Id"}
+      >
+        <InputGroup>
+          <TextInput
+            name="idInput"
+            id="idInput1"
+            type="search"
+            aria-label="id filter"
+            onChange={setIdInput}
+            value={idInput}
+            placeholder="Filter by id..."
+            onKeyDown={onIdInput}
+          />
+          <Button
+            variant={ButtonVariant.control}
+            aria-label="search button for search input"
+            onClick={onIdInput}
+          >
+            <SearchIcon />
+          </Button>
+        </InputGroup>
       </ToolbarFilter>
     </>
   );
