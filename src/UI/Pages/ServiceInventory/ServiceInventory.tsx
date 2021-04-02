@@ -35,7 +35,7 @@ import {
 } from "@/UI/Components";
 import { InventoryContext } from "./InventoryContext";
 import { PaginationToolbar } from "./Components";
-import { uniq, remove } from "lodash";
+import { uniq } from "lodash";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -146,6 +146,7 @@ export const ServiceInventory: React.FunctionComponent<{
                 metadata={metadata}
                 filter={filter}
                 setFilter={setFilter}
+                service={service}
               />
               <TableProvider
                 instances={instances}
@@ -165,6 +166,7 @@ export const ServiceInventory: React.FunctionComponent<{
                 metadata={metadata}
                 filter={filter}
                 setFilter={setFilter}
+                service={service}
               />
               <EmptyView
                 message={words("inventory.empty.message")(serviceName)}
@@ -184,6 +186,7 @@ interface BarProps {
   metadata: Pagination.Metadata;
   filter: Query.Filter;
   setFilter: (filter: Query.Filter) => void;
+  service: ServiceModel;
 }
 
 const Bar: React.FC<BarProps> = ({
@@ -192,12 +195,19 @@ const Bar: React.FC<BarProps> = ({
   metadata,
   filter,
   setFilter,
+  service,
 }) => {
   return (
     <CardFooter>
       <Toolbar clearAllFilters={() => setFilter({})}>
         <ToolbarContent>
-          {<FilterView filter={filter} setFilter={setFilter} />}
+          {
+            <FilterView
+              filter={filter}
+              setFilter={setFilter}
+              service={service}
+            />
+          }
           <ToolbarGroup>
             <ToolbarItem>{words("inventory.intro")(serviceName)}</ToolbarItem>
           </ToolbarGroup>
@@ -225,9 +235,10 @@ const Bar: React.FC<BarProps> = ({
 interface FilterProps {
   filter: Query.Filter;
   setFilter: (filter: Query.Filter) => void;
+  service: ServiceModel;
 }
 
-const FilterView: React.FC<FilterProps> = ({ filter, setFilter }) => {
+const FilterView: React.FC<FilterProps> = ({ filter, setFilter, service }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [category, setCategory] = useState("State");
 
@@ -271,20 +282,21 @@ const FilterView: React.FC<FilterProps> = ({ filter, setFilter }) => {
     </ToolbarItem>
   );
 
+  const states = service.lifecycle.states.map((state) => state.name);
+
+  const removeChip = (cat, id) => {
+    const name = cat.toString().toLowerCase();
+    setFilter({
+      ...filter,
+      [name]: filter[name].filter((a) => a !== id),
+    });
+  };
+
   const filters = (
     <>
       <ToolbarFilter
         chips={filter.state}
-        deleteChip={(cat, id) => {
-          console.log({ cat, id });
-          setFilter({
-            ...filter,
-            [cat.toString().toLowerCase()]: remove(
-              filter[cat.toString().toLowerCase()],
-              id
-            ),
-          });
-        }}
+        deleteChip={removeChip}
         categoryName="State"
         showToolbarItem={category === "State"}
       >
@@ -298,8 +310,9 @@ const FilterView: React.FC<FilterProps> = ({ filter, setFilter }) => {
           variant="typeaheadmulti"
           chipGroupProps={{ numChips: 0 }}
         >
-          <SelectOption key="rejected" value="rejected" />
-          <SelectOption key="up" value="up" />
+          {states.map((state) => (
+            <SelectOption key={state} value={state} />
+          ))}
         </Select>
       </ToolbarFilter>
     </>
