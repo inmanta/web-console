@@ -21,7 +21,13 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import { Pagination, Query, RemoteData, ServiceModel } from "@/Core";
+import {
+  Pagination,
+  Query,
+  RemoteData,
+  ServiceModel,
+  toggleValueInList,
+} from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
 import { FilterIcon, PlusIcon } from "@patternfly/react-icons";
@@ -249,7 +255,9 @@ const FilterView: React.FC<FilterProps> = ({ filter, setFilter, service }) => {
   const onStateSelect = (event, selection) => {
     setFilter({
       ...filter,
-      state: filter.state ? uniq([...filter.state, selection]) : [selection],
+      state: filter.state
+        ? uniq(toggleValueInList(selection, [...filter.state]))
+        : [selection],
     });
     setIsFilterOpen(false);
   };
