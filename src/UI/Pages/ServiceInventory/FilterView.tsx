@@ -83,7 +83,6 @@ export const FilterView: React.FC<FilterProps> = ({
   const states = service.lifecycle.states.map((state) => state.name);
 
   const removeChip = (cat, id) => {
-    console.log({ cat, id });
     const name = cat.toString().toLowerCase();
     setFilter({
       ...filter,
@@ -166,11 +165,12 @@ export const FilterView: React.FC<FilterProps> = ({
         isVisible={category === "AttributeSet"}
         emptySet={filter.attribute_set_empty || []}
         notEmptySet={filter.attribute_set_not_empty || []}
-        updateEmptySet={(set) =>
-          setFilter({ ...filter, attribute_set_empty: set })
-        }
-        updateNotEmptySet={(set) =>
-          setFilter({ ...filter, attribute_set_not_empty: set })
+        update={(emptySet, notEmptySet) =>
+          setFilter({
+            ...filter,
+            attribute_set_empty: emptySet,
+            attribute_set_not_empty: notEmptySet,
+          })
         }
       />
     </>
