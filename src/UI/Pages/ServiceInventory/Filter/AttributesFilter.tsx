@@ -1,26 +1,11 @@
 import React, { useState } from "react";
 import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
-import { Query, toggleValueInList } from "@/Core";
-import { remove } from "lodash";
+import { Query } from "@/Core";
+import { without } from "lodash";
 import { IdentifierPicker } from "./IdentifierPicker";
 import { QualityPicker, Quality } from "./QualityPicker";
 
-type PrettyIdentifier = "Active" | "Candidate" | "Rollback";
-
-function identifierToPrettyIdentifier(
-  identifier: Query.Attributes
-): PrettyIdentifier {
-  switch (identifier) {
-    case Query.Attributes.Active:
-      return "Active";
-    case Query.Attributes.Candidate:
-      return "Candidate";
-    case Query.Attributes.Rollback:
-      return "Rollback";
-  }
-}
-
-type AttributeSetSelectionKey =
+type Pretty =
   | "Active (empty)"
   | "Active (not empty)"
   | "Candidate (empty)"
@@ -28,17 +13,24 @@ type AttributeSetSelectionKey =
   | "Rollback (empty)"
   | "Rollback (not empty)";
 
-interface Props {
-  emptySet: Query.Attributes[];
-  notEmptySet: Query.Attributes[];
-  update: (empty: Query.Attributes[], notEmpty: Query.Attributes[]) => void;
+interface AttributeSets {
+  empty: Query.Attributes[];
+  notEmpty: Query.Attributes[];
+}
 
+interface Raw {
+  id: Query.Attributes;
+  quality: Quality;
+}
+
+interface Props {
+  sets: AttributeSets;
+  update: (sets: AttributeSets) => void;
   isVisible: boolean;
 }
 
 export const AttributesFilter: React.FC<Props> = ({
-  emptySet,
-  notEmptySet,
+  sets,
   update,
   isVisible,
 }) => {
@@ -46,63 +38,56 @@ export const AttributesFilter: React.FC<Props> = ({
     Query.Attributes | undefined
   >(undefined);
 
-  const onSelect = (quality: Quality) => {
+  const onQualityChange = (quality: Quality) => {
     if (typeof identifierFilter === "undefined") return;
 
-    const selection = `${identifierToPrettyIdentifier(
-      identifierFilter
-    )} (${quality})` as AttributeSetSelectionKey;
-
-    const currentEmpty = attributesListToSelection("empty", emptySet);
-    const emptyList = attributeSelectionToAttributesList(
-      "empty",
-      toggleValueInList(selection, currentEmpty)
+    update(
+      createNewSets(sets, {
+        id: identifierFilter,
+        quality,
+      })
     );
-
-    const currentNotEmpty = attributesListToSelection("not empty", notEmptySet);
-
-    const notEmptyList = attributeSelectionToAttributesList(
-      "not empty",
-      toggleValueInList(selection, currentNotEmpty)
-    );
-
-    if (quality === "empty") {
-      remove(notEmptyList, (a) => a === identifierFilter);
-    } else if (quality === "not empty") {
-      remove(emptyList, (a) => a === identifierFilter);
-    }
-
-    update(emptyList, notEmptyList);
 
     // Reset input fields
     setIdentifierFilter(undefined);
   };
 
   const removeChip = (category, value) => {
-    update(...removePrettyFromList(value, emptySet, notEmptySet));
+    const { empty, notEmpty } = sets;
+    const { id, quality } = prettyToRaw(value as Pretty);
+    if (quality === Quality.Empty) {
+      update({ notEmpty, empty: without(empty, id) });
+    } else {
+      update({ empty, notEmpty: without(notEmpty, id) });
+    }
+  };
+
+  const onIdentifierChange = (identifier: Query.Attributes) => {
+    setIdentifierFilter((current) => {
+      if (current === identifier) return undefined;
+      return identifier;
+    });
   };
 
   return (
     <>
-      <ToolbarItem>
-        <IdentifierPicker
-          identifierFilter={identifierFilter}
-          setIdentifierFilter={setIdentifierFilter}
-        />
-      </ToolbarItem>
+      {isVisible && (
+        <ToolbarItem>
+          <IdentifierPicker
+            identifier={identifierFilter}
+            onChange={onIdentifierChange}
+          />
+        </ToolbarItem>
+      )}
       <ToolbarFilter
-        chips={getChips(emptySet, notEmptySet)}
+        chips={getChips(sets)}
         deleteChip={removeChip}
         categoryName="AttributeSet"
         showToolbarItem={isVisible}
       >
         <QualityPicker
-          qualityFilter={getQualityForIdentifier(
-            identifierFilter,
-            emptySet,
-            notEmptySet
-          )}
-          setQualityFilter={onSelect}
+          quality={getQualityForIdentifier(sets, identifierFilter)}
+          onChange={onQualityChange}
           isDisabled={typeof identifierFilter === "undefined"}
         />
       </ToolbarFilter>
@@ -110,112 +95,91 @@ export const AttributesFilter: React.FC<Props> = ({
   );
 };
 
-function removePrettyFromList(
-  pretty: AttributeSetSelectionKey,
-  emptySet: Query.Attributes[],
-  notEmptySet: Query.Attributes[]
-): [Query.Attributes[], Query.Attributes[]] {
-  switch (pretty) {
-    case "Active (empty)": {
-      const l = [...emptySet];
-      remove(l, (a) => a === Query.Attributes.Active);
-      return [l, notEmptySet];
-    }
-    case "Active (not empty)": {
-      const l = [...notEmptySet];
-      remove(l, (a) => a === Query.Attributes.Active);
-      return [emptySet, l];
+function createNewSets(
+  { empty, notEmpty }: AttributeSets,
+  { id, quality }: Raw
+): AttributeSets {
+  switch (quality) {
+    case Quality.Empty: {
+      if (empty.includes(id)) {
+        return {
+          empty: without(empty, id),
+          notEmpty,
+        };
+      }
+
+      return {
+        empty: [...empty, id],
+        notEmpty: without(notEmpty, id),
+      };
     }
 
-    case "Candidate (empty)": {
-      const l = [...emptySet];
-      remove(l, (a) => a === Query.Attributes.Candidate);
-      return [l, notEmptySet];
-    }
+    case Quality.NotEmpty: {
+      if (notEmpty.includes(id)) {
+        return {
+          empty,
+          notEmpty: without(notEmpty, id),
+        };
+      }
 
-    case "Candidate (not empty)": {
-      const l = [...notEmptySet];
-      remove(l, (a) => a === Query.Attributes.Candidate);
-      return [emptySet, l];
-    }
-
-    case "Rollback (empty)": {
-      const l = [...emptySet];
-      remove(l, (a) => a === Query.Attributes.Rollback);
-      return [l, notEmptySet];
-    }
-
-    case "Rollback (not empty)": {
-      const l = [...notEmptySet];
-      remove(l, (a) => a === Query.Attributes.Rollback);
-      return [emptySet, l];
+      return {
+        empty: without(empty, id),
+        notEmpty: [...notEmpty, id],
+      };
     }
   }
 }
 
-function getChips(
-  emptySet: Query.Attributes[],
-  notEmptySet: Query.Attributes[]
-): AttributeSetSelectionKey[] {
-  return [
-    ...attributesListToSelection("empty", emptySet),
-    ...attributesListToSelection("not empty", notEmptySet),
-  ];
+function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
+  const prettyEmpty = empty
+    .map((id) => ({ id, quality: Quality.Empty }))
+    .map(rawToPretty);
+  const prettyNotEmpty = notEmpty
+    .map((id) => ({ id, quality: Quality.NotEmpty }))
+    .map(rawToPretty);
+  return [...prettyEmpty, ...prettyNotEmpty];
 }
 
-function attributesListToSelection(
-  kind: "empty" | "not empty",
-  list: Query.Attributes[]
-): AttributeSetSelectionKey[] {
-  return list.map((a) => {
-    switch (a) {
-      case Query.Attributes.Active:
-        return `Active (${kind})` as AttributeSetSelectionKey;
-      case Query.Attributes.Candidate:
-        return `Candidate (${kind})` as AttributeSetSelectionKey;
-      case Query.Attributes.Rollback:
-        return `Rollback (${kind})` as AttributeSetSelectionKey;
-    }
-  });
+function rawToPretty({ id, quality }: Raw): Pretty {
+  switch (id) {
+    case Query.Attributes.Active:
+      return quality === Quality.Empty
+        ? `Active (empty)`
+        : `Active (not empty)`;
+    case Query.Attributes.Candidate:
+      return quality === Quality.Empty
+        ? `Candidate (empty)`
+        : `Candidate (not empty)`;
+    case Query.Attributes.Rollback:
+      return quality === Quality.Empty
+        ? `Rollback (empty)`
+        : `Rollback (not empty)`;
+  }
 }
 
-function attributeSelectionToAttributesList(
-  kind: "empty" | "not empty",
-  list: AttributeSetSelectionKey[]
-): Query.Attributes[] {
-  if (list.length <= 0) return [];
-  return list
-    .map((value) => selectionToPair(value))
-    .filter(([, k]) => k === kind)
-    .map(([attr]) => attr);
-}
-
-function selectionToPair(
-  selection: AttributeSetSelectionKey
-): [Query.Attributes, "empty" | "not empty"] {
-  switch (selection) {
+function prettyToRaw(pretty: Pretty): Raw {
+  switch (pretty) {
     case "Active (empty)":
-      return [Query.Attributes.Active, "empty"];
+      return { id: Query.Attributes.Active, quality: Quality.Empty };
     case "Active (not empty)":
-      return [Query.Attributes.Active, "not empty"];
+      return { id: Query.Attributes.Active, quality: Quality.NotEmpty };
     case "Candidate (empty)":
-      return [Query.Attributes.Candidate, "empty"];
+      return { id: Query.Attributes.Candidate, quality: Quality.Empty };
     case "Candidate (not empty)":
-      return [Query.Attributes.Candidate, "not empty"];
+      return { id: Query.Attributes.Candidate, quality: Quality.NotEmpty };
     case "Rollback (empty)":
-      return [Query.Attributes.Rollback, "empty"];
+      return { id: Query.Attributes.Rollback, quality: Quality.Empty };
     case "Rollback (not empty)":
-      return [Query.Attributes.Rollback, "not empty"];
+      return { id: Query.Attributes.Rollback, quality: Quality.NotEmpty };
   }
 }
 
 function getQualityForIdentifier(
-  identifier: Query.Attributes | undefined,
-  setEmpty: Query.Attributes[],
-  setNotEmpty: Query.Attributes[]
+  { empty, notEmpty }: AttributeSets,
+  identifier: Query.Attributes | undefined
 ): Quality | undefined {
   if (typeof identifier === "undefined") return undefined;
-  if (setEmpty.includes(identifier)) return "empty";
-  if (setNotEmpty.includes(identifier)) return "not empty";
+  if (empty.includes(identifier)) return Quality.Empty;
+  if (notEmpty.includes(identifier)) return Quality.NotEmpty;
   return undefined;
 }

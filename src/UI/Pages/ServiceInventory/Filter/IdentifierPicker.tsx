@@ -2,19 +2,16 @@ import React, { useState } from "react";
 import { Query } from "@/Core";
 import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
 
-interface IdentifierSelectorProps {
-  identifierFilter: Query.Attributes | undefined;
-  setIdentifierFilter: (id: Query.Attributes) => void;
+interface Props {
+  identifier: Query.Attributes | undefined;
+  onChange: (id: Query.Attributes) => void;
 }
 
-export const IdentifierPicker: React.FC<IdentifierSelectorProps> = ({
-  identifierFilter,
-  setIdentifierFilter,
-}) => {
+export const IdentifierPicker: React.FC<Props> = ({ identifier, onChange }) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
 
   const onSelect = (event, selection) => {
-    setIdentifierFilter(selection);
+    onChange(selection);
     setFilterOpen(false);
   };
 
@@ -24,7 +21,7 @@ export const IdentifierPicker: React.FC<IdentifierSelectorProps> = ({
       aria-label="Select Identifier"
       onToggle={setFilterOpen}
       onSelect={onSelect}
-      selections={identifierFilter}
+      selections={identifier}
       isOpen={isFilterOpen}
       placeholderText="Select Identifier"
     >

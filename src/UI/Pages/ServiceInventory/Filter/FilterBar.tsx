@@ -163,13 +163,15 @@ export const FilterBar: React.FC<FilterProps> = ({
       {idFilter}
       <AttributesFilter
         isVisible={category === "AttributeSet"}
-        emptySet={filter.attribute_set_empty || []}
-        notEmptySet={filter.attribute_set_not_empty || []}
-        update={(emptySet, notEmptySet) =>
+        sets={{
+          empty: filter.attribute_set_empty || [],
+          notEmpty: filter.attribute_set_not_empty || [],
+        }}
+        update={({ empty, notEmpty }) =>
           setFilter({
             ...filter,
-            attribute_set_empty: emptySet,
-            attribute_set_not_empty: notEmptySet,
+            attribute_set_empty: empty,
+            attribute_set_not_empty: notEmpty,
           })
         }
       />
