@@ -28,7 +28,7 @@ import {
 } from "@/UI/Components";
 import { InventoryContext } from "./InventoryContext";
 import { PaginationToolbar } from "./Components";
-import { FilterView } from "./FilterView";
+import { FilterBar } from "./Filter";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -194,13 +194,7 @@ const Bar: React.FC<BarProps> = ({
     <CardFooter>
       <Toolbar clearAllFilters={() => setFilter({})}>
         <ToolbarContent>
-          {
-            <FilterView
-              filter={filter}
-              setFilter={setFilter}
-              service={service}
-            />
-          }
+          <FilterBar filter={filter} setFilter={setFilter} service={service} />
           <ToolbarGroup>
             <ToolbarItem>
               <Link

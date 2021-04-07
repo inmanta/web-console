@@ -27,7 +27,7 @@ interface FilterProps {
 
 type Category = "State" | "Id" | "AttributeSet";
 
-export const FilterView: React.FC<FilterProps> = ({
+export const FilterBar: React.FC<FilterProps> = ({
   filter,
   setFilter,
   service,
