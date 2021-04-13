@@ -1,0 +1,3 @@
+description: Add explicit default to sorting of instances
+change-type: patch
+destination-branches: [master, iso4]

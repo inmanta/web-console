@@ -76,8 +76,10 @@ export const ServiceInventory: React.FunctionComponent<{
   }
 
   const { dataProvider } = useContext(DependencyContext);
-  const [sortColumn, setSortColumn] = useState<string | undefined>(undefined);
-  const [order, setOrder] = useState<SortDirection | undefined>(undefined);
+  const [sortColumn, setSortColumn] = useState<string | undefined>(
+    "created_at"
+  );
+  const [order, setOrder] = useState<SortDirection | undefined>("desc");
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;
   const [data, retry] = dataProvider.useContinuous<"ServiceInstances">({
