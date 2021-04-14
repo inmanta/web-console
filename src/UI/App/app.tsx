@@ -24,10 +24,12 @@ export const App: React.FunctionComponent<{
 }> = (props) => {
   const [errorMessage, setErrorMessage] = React.useState("");
   const shouldAddBaseName = process.env.NODE_ENV === "production";
+  const baseName = shouldAddBaseName ? "/console" : "/";
 
   const AppWithStore = (
-    <Router basename={shouldAddBaseName ? "/console" : "/"}>
+    <Router basename={baseName}>
       <AppLayout
+        logoBaseUrl={baseName}
         keycloak={props.shouldUseAuth ? props.keycloak : undefined}
         setErrorMessage={setErrorMessage}
         shouldUseAuth={props.shouldUseAuth}

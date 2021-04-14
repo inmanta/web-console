@@ -35,6 +35,7 @@ import { fetchInmantaApi } from "@/UI/App/utils/fetchInmantaApi";
 import { ProjectModel } from "@/Core";
 
 interface IAppLayout {
+  logoBaseUrl: string;
   keycloak?: Keycloak.KeycloakInstance;
   children: React.ReactNode;
   setErrorMessage: React.Dispatch<string>;
@@ -58,13 +59,14 @@ export const getEnvironmentNamesWithSeparator = (
 };
 
 export const AppLayout: React.FunctionComponent<IAppLayout> = ({
+  logoBaseUrl,
   keycloak,
   children,
   setErrorMessage,
   shouldUseAuth,
 }) => {
   const logoProps = {
-    href: "/",
+    href: logoBaseUrl,
   };
   const projectsEndpoint = "/api/v2/project";
   const storeDispatch = useStoreDispatch();
