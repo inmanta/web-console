@@ -75,8 +75,8 @@ test("getServiceInstancesUrl returns correct url for empty filter", () => {
     filter: {
       state: [],
       id: [],
-      attribute_set_empty: [],
-      attribute_set_not_empty: [],
+      attributeSetEmpty: [],
+      attributeSetNotEmpty: [],
     },
   };
 

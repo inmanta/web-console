@@ -94,6 +94,15 @@ export enum Attributes {
 export interface Filter {
   id?: string[];
   state?: string[];
+  attributeSetEmpty?: Attributes[];
+  attributeSetNotEmpty?: Attributes[];
+  deleted?: boolean;
+  includeDeleted?: boolean;
+}
+
+export interface RawFilter {
+  id?: string[];
+  state?: string[];
   deleted?: boolean;
   attribute_set_empty?: Attributes[];
   attribute_set_not_empty?: Attributes[];

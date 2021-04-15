@@ -26,8 +26,8 @@ export const FilterBar: React.FC<Props> = ({ filter, setFilter, service }) => {
   const updateAttributes = ({ empty, notEmpty }: AttributeSets) =>
     setFilter({
       ...filter,
-      attribute_set_empty: empty,
-      attribute_set_not_empty: notEmpty,
+      attributeSetEmpty: empty,
+      attributeSetNotEmpty: notEmpty,
     });
 
   return (
@@ -47,8 +47,8 @@ export const FilterBar: React.FC<Props> = ({ filter, setFilter, service }) => {
       <AttributesFilter
         isVisible={filterKind === "AttributeSet"}
         sets={{
-          empty: filter.attribute_set_empty || [],
-          notEmpty: filter.attribute_set_not_empty || [],
+          empty: filter.attributeSetEmpty || [],
+          notEmpty: filter.attributeSetNotEmpty || [],
         }}
         update={updateAttributes}
       />
