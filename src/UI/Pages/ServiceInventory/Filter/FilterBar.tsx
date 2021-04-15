@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   ToolbarGroup,
   ToolbarItem,
-  Button,
   Dropdown,
   DropdownToggle,
   DropdownItem,
@@ -10,14 +9,12 @@ import {
   ToolbarFilter,
   Select,
   SelectOption,
-  InputGroup,
-  TextInput,
-  ButtonVariant,
 } from "@patternfly/react-core";
 import { Query, ServiceModel, toggleValueInList } from "@/Core";
-import { FilterIcon, SearchIcon } from "@patternfly/react-icons";
+import { FilterIcon } from "@patternfly/react-icons";
 import { uniq } from "lodash";
-import { AttributesFilter } from "./AttributesFilter";
+import { AttributeSets, AttributesFilter } from "./AttributesFilter";
+import { IdFilter } from "./IdFilter";
 
 interface FilterProps {
   filter: Query.Filter;
@@ -35,7 +32,6 @@ export const FilterBar: React.FC<FilterProps> = ({
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [category, setCategory] = useState<Category>("State");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [idInput, setIdInput] = useState("");
 
   const onCategorySelect = (newCategory: Category) => {
     setCategory(newCategory);
@@ -90,20 +86,6 @@ export const FilterBar: React.FC<FilterProps> = ({
     });
   };
 
-  const onIdInput = (event) => {
-    if (event.key && event.key !== "Enter") {
-      return;
-    }
-
-    setFilter({
-      ...filter,
-      id: filter.id
-        ? uniq(toggleValueInList(idInput, [...filter.id]))
-        : [idInput],
-    });
-    setIdInput("");
-  };
-
   const stateFilter = (
     <ToolbarFilter
       chips={filter.state}
@@ -128,52 +110,33 @@ export const FilterBar: React.FC<FilterProps> = ({
     </ToolbarFilter>
   );
 
-  const idFilter = (
-    <ToolbarFilter
-      chips={filter.id}
-      deleteChip={removeChip}
-      categoryName="Id"
-      showToolbarItem={category === "Id"}
-    >
-      <InputGroup>
-        <TextInput
-          name="idInput"
-          id="idInput1"
-          type="search"
-          aria-label="id filter"
-          onChange={setIdInput}
-          value={idInput}
-          placeholder="Filter by id..."
-          onKeyDown={onIdInput}
-        />
-        <Button
-          variant={ButtonVariant.control}
-          aria-label="search button for search input"
-          onClick={onIdInput}
-        >
-          <SearchIcon />
-        </Button>
-      </InputGroup>
-    </ToolbarFilter>
-  );
+  const updateId = (id?: string) =>
+    id
+      ? setFilter({ ...filter, id: [id] })
+      : setFilter({ ...filter, id: undefined });
+
+  const updateAttributes = ({ empty, notEmpty }: AttributeSets) =>
+    setFilter({
+      ...filter,
+      attribute_set_empty: empty,
+      attribute_set_not_empty: notEmpty,
+    });
 
   const filters = (
     <>
       {stateFilter}
-      {idFilter}
+      <IdFilter
+        isVisible={category === "Id"}
+        id={filter.id ? filter.id[0] : undefined}
+        update={updateId}
+      />
       <AttributesFilter
         isVisible={category === "AttributeSet"}
         sets={{
           empty: filter.attribute_set_empty || [],
           notEmpty: filter.attribute_set_not_empty || [],
         }}
-        update={({ empty, notEmpty }) =>
-          setFilter({
-            ...filter,
-            attribute_set_empty: empty,
-            attribute_set_not_empty: notEmpty,
-          })
-        }
+        update={updateAttributes}
       />
     </>
   );

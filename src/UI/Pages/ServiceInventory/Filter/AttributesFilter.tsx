@@ -13,7 +13,7 @@ type Pretty =
   | "Rollback (empty)"
   | "Rollback (not empty)";
 
-interface AttributeSets {
+export interface AttributeSets {
   empty: Query.Attributes[];
   notEmpty: Query.Attributes[];
 }
