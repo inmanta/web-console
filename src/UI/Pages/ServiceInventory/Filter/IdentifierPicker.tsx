@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { Query } from "@/Core";
+import { ServiceInstanceParams } from "@/Core";
 import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
 
 interface Props {
-  identifier: Query.Attributes | undefined;
-  onChange: (id: Query.Attributes) => void;
+  identifier: ServiceInstanceParams.Attributes | undefined;
+  onChange: (id: ServiceInstanceParams.Attributes) => void;
 }
 
 export const IdentifierPicker: React.FC<Props> = ({ identifier, onChange }) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
 
   const onSelect = (event, selection) => {
-    onChange(selection);
     setFilterOpen(false);
+    onChange(selection);
   };
 
   return (
@@ -25,13 +25,13 @@ export const IdentifierPicker: React.FC<Props> = ({ identifier, onChange }) => {
       isOpen={isFilterOpen}
       placeholderText="Select an identifier..."
     >
-      <SelectOption key={1} value={Query.Attributes.Candidate}>
+      <SelectOption key={1} value={ServiceInstanceParams.Attributes.Candidate}>
         Candidate
       </SelectOption>
-      <SelectOption key={2} value={Query.Attributes.Active}>
+      <SelectOption key={2} value={ServiceInstanceParams.Attributes.Active}>
         Active
       </SelectOption>
-      <SelectOption key={3} value={Query.Attributes.Rollback}>
+      <SelectOption key={3} value={ServiceInstanceParams.Attributes.Rollback}>
         Rollback
       </SelectOption>
     </Select>

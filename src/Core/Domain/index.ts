@@ -7,5 +7,6 @@ export * from "./ProjectModel";
 export * as Query from "./Query";
 export * from "./ResourceModel";
 export * from "./ServiceInstanceModel";
+export * as ServiceInstanceParams from "./ServiceInstanceParams";
 export * from "./ServiceModel";
 export * as Pagination from "./Pagination";

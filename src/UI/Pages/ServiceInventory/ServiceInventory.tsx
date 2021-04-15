@@ -14,7 +14,12 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import { Pagination, Query, RemoteData, ServiceModel } from "@/Core";
+import {
+  Pagination,
+  RemoteData,
+  ServiceModel,
+  ServiceInstanceParams,
+} from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { Link } from "react-router-dom";
 import { PlusIcon } from "@patternfly/react-icons";
@@ -79,10 +84,12 @@ export const ServiceInventory: React.FunctionComponent<{
   const [sortColumn, setSortColumn] = useState<string | undefined>(
     "created_at"
   );
-  const [order, setOrder] = useState<Query.SortDirection | undefined>("desc");
+  const [order, setOrder] = useState<
+    ServiceInstanceParams.SortDirection | undefined
+  >("desc");
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;
-  const [filter, setFilter] = useState<Query.Filter>({});
+  const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
 
   const [data, retry] = dataProvider.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
@@ -177,8 +184,8 @@ interface BarProps {
   serviceName: string;
   handlers: Pagination.Handlers;
   metadata: Pagination.Metadata;
-  filter: Query.Filter;
-  setFilter: (filter: Query.Filter) => void;
+  filter: ServiceInstanceParams.Filter;
+  setFilter: (filter: ServiceInstanceParams.Filter) => void;
   service: ServiceModel;
 }
 
@@ -190,11 +197,21 @@ const Bar: React.FC<BarProps> = ({
   setFilter,
   service,
 }) => {
+  const { service_identity, service_identity_display_name } = service;
+  const identityAttribute =
+    service_identity && service_identity_display_name
+      ? { key: service_identity, pretty: service_identity_display_name }
+      : undefined;
   return (
     <CardFooter>
       <Toolbar clearAllFilters={() => setFilter({})}>
         <ToolbarContent>
-          <FilterBar filter={filter} setFilter={setFilter} service={service} />
+          <FilterBar
+            filter={filter}
+            setFilter={setFilter}
+            states={service.lifecycle.states.map((state) => state.name)}
+            identityAttribute={identityAttribute}
+          />
           <ToolbarGroup>
             <ToolbarItem>
               <Link

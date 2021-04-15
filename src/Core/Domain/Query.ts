@@ -11,6 +11,7 @@ import {
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 import * as Pagination from "./Pagination";
 import { Config, Setting } from "./Config";
+import { ServiceInstanceParams } from "./ServiceInstanceParams";
 
 type Query =
   | ServicesQuery
@@ -82,38 +83,8 @@ interface ResourcesManifest {
  */
 export interface ServiceInstancesQuery {
   kind: "ServiceInstances";
-  qualifier: ServiceIdentifier & { filter?: Filter; sort?: Sort };
+  qualifier: ServiceIdentifier & ServiceInstanceParams;
 }
-
-export enum Attributes {
-  Active = "active_attributes",
-  Candidate = "candidate_attributes",
-  Rollback = "rollback_attributes",
-}
-
-export interface Filter {
-  id?: string[];
-  state?: string[];
-  attributeSetEmpty?: Attributes[];
-  attributeSetNotEmpty?: Attributes[];
-  deleted?: DeletedRule;
-}
-
-export type DeletedRule = "Include" | "Only" | undefined;
-
-export interface RawFilter {
-  id?: string[];
-  state?: string[];
-  deleted?: boolean;
-  attribute_set_empty?: Attributes[];
-  attribute_set_not_empty?: Attributes[];
-}
-
-export interface Sort {
-  name: string;
-  order: SortDirection;
-}
-export type SortDirection = "asc" | "desc";
 
 interface ServiceInstancesManifest {
   error: string;

@@ -7,49 +7,49 @@ import {
   DropdownPosition,
 } from "@patternfly/react-core";
 import { FilterIcon } from "@patternfly/react-icons";
+import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
-  filterKind: FilterKind;
-  setFilterKind: (kind: FilterKind) => void;
+  filterKind: ServiceInstanceParams.Kind | string;
+  setFilterKind: (kind: ServiceInstanceParams.Kind) => void;
+  identityAttributePretty?: string;
 }
-
-export type FilterKind = "State" | "Id" | "AttributeSet" | "Deleted";
 
 export const FilterPicker: React.FC<Props> = ({
   filterKind,
   setFilterKind,
+  identityAttributePretty,
 }) => {
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isFilterOpen, setFilterOpen] = useState(false);
 
-  const onCategorySelect = (newCategory: FilterKind) => {
-    setFilterKind(newCategory);
-    setIsCategoryOpen(false);
+  const onSelect = (kind: ServiceInstanceParams.Kind) => {
+    setFilterOpen(false);
+    setFilterKind(kind);
   };
+
+  const items = identityAttributePretty
+    ? [...ServiceInstanceParams.List, identityAttributePretty]
+    : ServiceInstanceParams.List;
 
   return (
     <ToolbarItem>
       <Dropdown
         onSelect={(event) => {
-          onCategorySelect(
-            (event?.target as HTMLElement).innerText as FilterKind
+          onSelect(
+            (event?.target as HTMLElement)
+              .innerText as ServiceInstanceParams.Kind
           );
         }}
         position={DropdownPosition.left}
         toggle={
-          <DropdownToggle
-            onToggle={setIsCategoryOpen}
-            style={{ width: "100%" }}
-          >
+          <DropdownToggle onToggle={setFilterOpen} style={{ width: "100%" }}>
             <FilterIcon /> {filterKind}
           </DropdownToggle>
         }
-        isOpen={isCategoryOpen}
-        dropdownItems={[
-          <DropdownItem key="State">State</DropdownItem>,
-          <DropdownItem key="Id">Id</DropdownItem>,
-          <DropdownItem key="AttributeSet">AttributeSet</DropdownItem>,
-          <DropdownItem key="Deleted">Deleted</DropdownItem>,
-        ]}
+        isOpen={isFilterOpen}
+        dropdownItems={items.map((kind) => (
+          <DropdownItem key={kind}>{kind}</DropdownItem>
+        ))}
         style={{ width: "100%" }}
       ></Dropdown>
     </ToolbarItem>

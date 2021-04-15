@@ -20,7 +20,7 @@ export function getServiceInstancesUrl({
 
 type Filter = NonNullable<Query.Qualifier<"ServiceInstances">["filter"]>;
 
-const filterToRaw = (filter: Filter): Query.RawFilter => {
+const filterToRaw = (filter: Filter) => {
   if (typeof filter === "undefined") return {};
   const {
     id,
@@ -28,7 +28,10 @@ const filterToRaw = (filter: Filter): Query.RawFilter => {
     deleted,
     attributeSetEmpty: attribute_set_empty,
     attributeSetNotEmpty: attribute_set_not_empty,
+    identity,
   } = filter;
+
+  const identityAttribute = identity ? { [identity.key]: identity.value } : {};
 
   return {
     id,
@@ -36,5 +39,6 @@ const filterToRaw = (filter: Filter): Query.RawFilter => {
     deleted: deleted === "Only" ? true : undefined,
     attribute_set_empty,
     attribute_set_not_empty,
+    ...identityAttribute,
   };
 };

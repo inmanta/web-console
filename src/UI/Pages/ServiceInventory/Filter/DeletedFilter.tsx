@@ -5,12 +5,12 @@ import {
   SelectVariant,
   ToolbarFilter,
 } from "@patternfly/react-core";
-import { Query } from "@/Core";
+import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
   isVisible: boolean;
-  deleted: Query.DeletedRule;
-  update: (deleted: Query.DeletedRule) => void;
+  deleted: ServiceInstanceParams.DeletedRule;
+  update: (deleted: ServiceInstanceParams.DeletedRule) => void;
 }
 
 export const DeletedFilter: React.FC<Props> = ({

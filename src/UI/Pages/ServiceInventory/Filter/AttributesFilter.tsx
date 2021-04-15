@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
-import { Query } from "@/Core";
+import { ServiceInstanceParams } from "@/Core";
 import { without } from "lodash";
 import { IdentifierPicker } from "./IdentifierPicker";
 import { AttributeRulePicker, AttributeRule } from "./AttributeRulePicker";
@@ -14,12 +14,12 @@ type Pretty =
   | "Rollback (not empty)";
 
 export interface AttributeSets {
-  empty: Query.Attributes[];
-  notEmpty: Query.Attributes[];
+  empty: ServiceInstanceParams.Attributes[];
+  notEmpty: ServiceInstanceParams.Attributes[];
 }
 
 interface Raw {
-  id: Query.Attributes;
+  id: ServiceInstanceParams.Attributes;
   rule: AttributeRule;
 }
 
@@ -35,21 +35,19 @@ export const AttributesFilter: React.FC<Props> = ({
   isVisible,
 }) => {
   const [identifierFilter, setIdentifierFilter] = useState<
-    Query.Attributes | undefined
+    ServiceInstanceParams.Attributes | undefined
   >(undefined);
 
   const onAttributeRuleChange = (rule: AttributeRule) => {
     if (typeof identifierFilter === "undefined") return;
 
+    setIdentifierFilter(undefined);
     update(
       createNewSets(sets, {
         id: identifierFilter,
         rule,
       })
     );
-
-    // Reset input fields
-    setIdentifierFilter(undefined);
   };
 
   const removeChip = (category, value) => {
@@ -62,7 +60,7 @@ export const AttributesFilter: React.FC<Props> = ({
     }
   };
 
-  const onIdentifierChange = (identifier: Query.Attributes) => {
+  const onIdentifierChange = (identifier: ServiceInstanceParams.Attributes) => {
     setIdentifierFilter((current) => {
       if (current === identifier) return undefined;
       return identifier;
@@ -142,15 +140,15 @@ function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
 
 function rawToPretty({ id, rule }: Raw): Pretty {
   switch (id) {
-    case Query.Attributes.Active:
+    case ServiceInstanceParams.Attributes.Active:
       return rule === AttributeRule.Empty
         ? `Active (empty)`
         : `Active (not empty)`;
-    case Query.Attributes.Candidate:
+    case ServiceInstanceParams.Attributes.Candidate:
       return rule === AttributeRule.Empty
         ? `Candidate (empty)`
         : `Candidate (not empty)`;
-    case Query.Attributes.Rollback:
+    case ServiceInstanceParams.Attributes.Rollback:
       return rule === AttributeRule.Empty
         ? `Rollback (empty)`
         : `Rollback (not empty)`;
@@ -160,26 +158,41 @@ function rawToPretty({ id, rule }: Raw): Pretty {
 function prettyToRaw(pretty: Pretty): Raw {
   switch (pretty) {
     case "Active (empty)":
-      return { id: Query.Attributes.Active, rule: AttributeRule.Empty };
+      return {
+        id: ServiceInstanceParams.Attributes.Active,
+        rule: AttributeRule.Empty,
+      };
     case "Active (not empty)":
-      return { id: Query.Attributes.Active, rule: AttributeRule.NotEmpty };
+      return {
+        id: ServiceInstanceParams.Attributes.Active,
+        rule: AttributeRule.NotEmpty,
+      };
     case "Candidate (empty)":
-      return { id: Query.Attributes.Candidate, rule: AttributeRule.Empty };
+      return {
+        id: ServiceInstanceParams.Attributes.Candidate,
+        rule: AttributeRule.Empty,
+      };
     case "Candidate (not empty)":
       return {
-        id: Query.Attributes.Candidate,
+        id: ServiceInstanceParams.Attributes.Candidate,
         rule: AttributeRule.NotEmpty,
       };
     case "Rollback (empty)":
-      return { id: Query.Attributes.Rollback, rule: AttributeRule.Empty };
+      return {
+        id: ServiceInstanceParams.Attributes.Rollback,
+        rule: AttributeRule.Empty,
+      };
     case "Rollback (not empty)":
-      return { id: Query.Attributes.Rollback, rule: AttributeRule.NotEmpty };
+      return {
+        id: ServiceInstanceParams.Attributes.Rollback,
+        rule: AttributeRule.NotEmpty,
+      };
   }
 }
 
 function getRuleForIdentifier(
   { empty, notEmpty }: AttributeSets,
-  identifier: Query.Attributes | undefined
+  identifier: ServiceInstanceParams.Attributes | undefined
 ): AttributeRule | undefined {
   if (typeof identifier === "undefined") return undefined;
   if (empty.includes(identifier)) return AttributeRule.Empty;
