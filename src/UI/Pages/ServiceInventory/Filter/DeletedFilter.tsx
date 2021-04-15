@@ -9,8 +9,8 @@ import { Query } from "@/Core";
 
 interface Props {
   isVisible: boolean;
-  deleted: Query.Deleted;
-  update: (deleted: Query.Deleted) => void;
+  deleted: Query.DeletedRule;
+  update: (deleted: Query.DeletedRule) => void;
 }
 
 export const DeletedFilter: React.FC<Props> = ({
@@ -43,12 +43,19 @@ export const DeletedFilter: React.FC<Props> = ({
         aria-label="Select Deleted"
         onToggle={setFilterOpen}
         onSelect={onSelect}
-        selections={deleted ? [deleted] : []}
+        selections={deleted}
         isOpen={isFilterOpen}
         placeholderText="Select a rule..."
       >
-        <SelectOption value="Include">Include</SelectOption>
-        <SelectOption value="Only">Only</SelectOption>
+        <SelectOption
+          value="Include"
+          description="Also include deleted instances"
+        >
+          Include
+        </SelectOption>
+        <SelectOption value="Only" description="Only show deleted instances">
+          Only
+        </SelectOption>
       </Select>
     </ToolbarFilter>
   );

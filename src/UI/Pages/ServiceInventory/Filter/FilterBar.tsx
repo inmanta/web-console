@@ -31,7 +31,7 @@ export const FilterBar: React.FC<Props> = ({ filter, setFilter, service }) => {
       attributeSetNotEmpty: notEmpty,
     });
 
-  const updateDeleted = (deleted: Query.Deleted) =>
+  const updateDeleted = (deleted: Query.DeletedRule) =>
     setFilter({ ...filter, deleted });
 
   return (

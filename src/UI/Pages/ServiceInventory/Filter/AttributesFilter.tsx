@@ -3,7 +3,7 @@ import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
 import { Query } from "@/Core";
 import { without } from "lodash";
 import { IdentifierPicker } from "./IdentifierPicker";
-import { QualityPicker, Quality } from "./QualityPicker";
+import { AttributeRulePicker, AttributeRule } from "./AttributeRulePicker";
 
 type Pretty =
   | "Active (empty)"
@@ -20,7 +20,7 @@ export interface AttributeSets {
 
 interface Raw {
   id: Query.Attributes;
-  quality: Quality;
+  rule: AttributeRule;
 }
 
 interface Props {
@@ -38,13 +38,13 @@ export const AttributesFilter: React.FC<Props> = ({
     Query.Attributes | undefined
   >(undefined);
 
-  const onQualityChange = (quality: Quality) => {
+  const onAttributeRuleChange = (rule: AttributeRule) => {
     if (typeof identifierFilter === "undefined") return;
 
     update(
       createNewSets(sets, {
         id: identifierFilter,
-        quality,
+        rule,
       })
     );
 
@@ -54,8 +54,8 @@ export const AttributesFilter: React.FC<Props> = ({
 
   const removeChip = (category, value) => {
     const { empty, notEmpty } = sets;
-    const { id, quality } = prettyToRaw(value as Pretty);
-    if (quality === Quality.Empty) {
+    const { id, rule } = prettyToRaw(value as Pretty);
+    if (rule === AttributeRule.Empty) {
       update({ notEmpty, empty: without(empty, id) });
     } else {
       update({ empty, notEmpty: without(notEmpty, id) });
@@ -85,9 +85,9 @@ export const AttributesFilter: React.FC<Props> = ({
         categoryName="AttributeSet"
         showToolbarItem={isVisible}
       >
-        <QualityPicker
-          quality={getQualityForIdentifier(sets, identifierFilter)}
-          onChange={onQualityChange}
+        <AttributeRulePicker
+          rule={getRuleForIdentifier(sets, identifierFilter)}
+          onChange={onAttributeRuleChange}
           isDisabled={typeof identifierFilter === "undefined"}
         />
       </ToolbarFilter>
@@ -97,10 +97,10 @@ export const AttributesFilter: React.FC<Props> = ({
 
 function createNewSets(
   { empty, notEmpty }: AttributeSets,
-  { id, quality }: Raw
+  { id, rule }: Raw
 ): AttributeSets {
-  switch (quality) {
-    case Quality.Empty: {
+  switch (rule) {
+    case AttributeRule.Empty: {
       if (empty.includes(id)) {
         return {
           empty: without(empty, id),
@@ -114,7 +114,7 @@ function createNewSets(
       };
     }
 
-    case Quality.NotEmpty: {
+    case AttributeRule.NotEmpty: {
       if (notEmpty.includes(id)) {
         return {
           empty,
@@ -132,26 +132,26 @@ function createNewSets(
 
 function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
   const prettyEmpty = empty
-    .map((id) => ({ id, quality: Quality.Empty }))
+    .map((id) => ({ id, rule: AttributeRule.Empty }))
     .map(rawToPretty);
   const prettyNotEmpty = notEmpty
-    .map((id) => ({ id, quality: Quality.NotEmpty }))
+    .map((id) => ({ id, rule: AttributeRule.NotEmpty }))
     .map(rawToPretty);
   return [...prettyEmpty, ...prettyNotEmpty];
 }
 
-function rawToPretty({ id, quality }: Raw): Pretty {
+function rawToPretty({ id, rule }: Raw): Pretty {
   switch (id) {
     case Query.Attributes.Active:
-      return quality === Quality.Empty
+      return rule === AttributeRule.Empty
         ? `Active (empty)`
         : `Active (not empty)`;
     case Query.Attributes.Candidate:
-      return quality === Quality.Empty
+      return rule === AttributeRule.Empty
         ? `Candidate (empty)`
         : `Candidate (not empty)`;
     case Query.Attributes.Rollback:
-      return quality === Quality.Empty
+      return rule === AttributeRule.Empty
         ? `Rollback (empty)`
         : `Rollback (not empty)`;
   }
@@ -160,26 +160,29 @@ function rawToPretty({ id, quality }: Raw): Pretty {
 function prettyToRaw(pretty: Pretty): Raw {
   switch (pretty) {
     case "Active (empty)":
-      return { id: Query.Attributes.Active, quality: Quality.Empty };
+      return { id: Query.Attributes.Active, rule: AttributeRule.Empty };
     case "Active (not empty)":
-      return { id: Query.Attributes.Active, quality: Quality.NotEmpty };
+      return { id: Query.Attributes.Active, rule: AttributeRule.NotEmpty };
     case "Candidate (empty)":
-      return { id: Query.Attributes.Candidate, quality: Quality.Empty };
+      return { id: Query.Attributes.Candidate, rule: AttributeRule.Empty };
     case "Candidate (not empty)":
-      return { id: Query.Attributes.Candidate, quality: Quality.NotEmpty };
+      return {
+        id: Query.Attributes.Candidate,
+        rule: AttributeRule.NotEmpty,
+      };
     case "Rollback (empty)":
-      return { id: Query.Attributes.Rollback, quality: Quality.Empty };
+      return { id: Query.Attributes.Rollback, rule: AttributeRule.Empty };
     case "Rollback (not empty)":
-      return { id: Query.Attributes.Rollback, quality: Quality.NotEmpty };
+      return { id: Query.Attributes.Rollback, rule: AttributeRule.NotEmpty };
   }
 }
 
-function getQualityForIdentifier(
+function getRuleForIdentifier(
   { empty, notEmpty }: AttributeSets,
   identifier: Query.Attributes | undefined
-): Quality | undefined {
+): AttributeRule | undefined {
   if (typeof identifier === "undefined") return undefined;
-  if (empty.includes(identifier)) return Quality.Empty;
-  if (notEmpty.includes(identifier)) return Quality.NotEmpty;
+  if (empty.includes(identifier)) return AttributeRule.Empty;
+  if (notEmpty.includes(identifier)) return AttributeRule.NotEmpty;
   return undefined;
 }

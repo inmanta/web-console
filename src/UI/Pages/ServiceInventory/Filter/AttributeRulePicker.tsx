@@ -1,19 +1,19 @@
 import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
 import React, { useState } from "react";
 
-export enum Quality {
+export enum AttributeRule {
   Empty = "empty",
   NotEmpty = "not empty",
 }
 
 interface Props {
-  quality: Quality | undefined;
-  onChange: (q: Quality) => void;
+  rule: AttributeRule | undefined;
+  onChange: (q: AttributeRule) => void;
   isDisabled: boolean;
 }
 
-export const QualityPicker: React.FC<Props> = ({
-  quality,
+export const AttributeRulePicker: React.FC<Props> = ({
+  rule,
   onChange,
   isDisabled,
 }) => {
@@ -30,7 +30,7 @@ export const QualityPicker: React.FC<Props> = ({
       aria-label="Select Quality"
       onToggle={setFilterOpen}
       onSelect={onSelect}
-      selections={quality}
+      selections={rule}
       isOpen={isFilterOpen}
       placeholderText={"Select a quality..."}
       isDisabled={isDisabled}

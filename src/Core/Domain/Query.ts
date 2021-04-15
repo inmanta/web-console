@@ -96,10 +96,10 @@ export interface Filter {
   state?: string[];
   attributeSetEmpty?: Attributes[];
   attributeSetNotEmpty?: Attributes[];
-  deleted?: Deleted;
+  deleted?: DeletedRule;
 }
 
-export type Deleted = "Include" | "Only" | undefined;
+export type DeletedRule = "Include" | "Only" | undefined;
 
 export interface RawFilter {
   id?: string[];
