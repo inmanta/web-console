@@ -32,7 +32,7 @@ export const QualityPicker: React.FC<Props> = ({
       onSelect={onSelect}
       selections={quality}
       isOpen={isFilterOpen}
-      placeholderText={"Select Quality"}
+      placeholderText={"Select a quality..."}
       isDisabled={isDisabled}
     >
       <SelectOption key={0} value="empty">

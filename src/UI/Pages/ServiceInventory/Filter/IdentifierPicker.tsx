@@ -23,7 +23,7 @@ export const IdentifierPicker: React.FC<Props> = ({ identifier, onChange }) => {
       onSelect={onSelect}
       selections={identifier}
       isOpen={isFilterOpen}
-      placeholderText="Select Identifier"
+      placeholderText="Select an identifier..."
     >
       <SelectOption key={1} value={Query.Attributes.Candidate}>
         Candidate

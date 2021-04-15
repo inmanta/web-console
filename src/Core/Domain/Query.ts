@@ -96,9 +96,10 @@ export interface Filter {
   state?: string[];
   attributeSetEmpty?: Attributes[];
   attributeSetNotEmpty?: Attributes[];
-  deleted?: boolean;
-  includeDeleted?: boolean;
+  deleted?: Deleted;
 }
+
+export type Deleted = "Include" | "Only" | undefined;
 
 export interface RawFilter {
   id?: string[];

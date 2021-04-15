@@ -13,7 +13,7 @@ interface Props {
   setFilterKind: (kind: FilterKind) => void;
 }
 
-export type FilterKind = "State" | "Id" | "AttributeSet";
+export type FilterKind = "State" | "Id" | "AttributeSet" | "Deleted";
 
 export const FilterPicker: React.FC<Props> = ({
   filterKind,
@@ -45,9 +45,10 @@ export const FilterPicker: React.FC<Props> = ({
         }
         isOpen={isCategoryOpen}
         dropdownItems={[
-          <DropdownItem key="cat1">State</DropdownItem>,
-          <DropdownItem key="cat2">Id</DropdownItem>,
-          <DropdownItem key="cat3">AttributeSet</DropdownItem>,
+          <DropdownItem key="State">State</DropdownItem>,
+          <DropdownItem key="Id">Id</DropdownItem>,
+          <DropdownItem key="AttributeSet">AttributeSet</DropdownItem>,
+          <DropdownItem key="Deleted">Deleted</DropdownItem>,
         ]}
         style={{ width: "100%" }}
       ></Dropdown>

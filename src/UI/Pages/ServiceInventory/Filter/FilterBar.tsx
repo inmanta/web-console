@@ -5,6 +5,7 @@ import { AttributeSets, AttributesFilter } from "./AttributesFilter";
 import { IdFilter } from "./IdFilter";
 import { StateFilter } from "./StateFilter";
 import { FilterKind, FilterPicker } from "./FilterPicker";
+import { DeletedFilter } from "./DeletedFilter";
 
 interface Props {
   filter: Query.Filter;
@@ -30,6 +31,9 @@ export const FilterBar: React.FC<Props> = ({ filter, setFilter, service }) => {
       attributeSetNotEmpty: notEmpty,
     });
 
+  const updateDeleted = (deleted: Query.Deleted) =>
+    setFilter({ ...filter, deleted });
+
   return (
     <ToolbarGroup variant="filter-group">
       <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />
@@ -51,6 +55,11 @@ export const FilterBar: React.FC<Props> = ({ filter, setFilter, service }) => {
           notEmpty: filter.attributeSetNotEmpty || [],
         }}
         update={updateAttributes}
+      />
+      <DeletedFilter
+        isVisible={filterKind === "Deleted"}
+        update={updateDeleted}
+        deleted={filter.deleted}
       />
     </ToolbarGroup>
   );

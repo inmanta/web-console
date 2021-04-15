@@ -40,7 +40,7 @@ export const StateFilter: React.FC<Props> = ({
         onSelect={onSelect}
         selections={selectedStates}
         isOpen={isFilterOpen}
-        placeholderText="Any"
+        placeholderText="Select a state..."
         variant="typeaheadmulti"
         chipGroupProps={{ numChips: 0 }}
       >
