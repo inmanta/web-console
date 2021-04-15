@@ -1,5 +1,5 @@
 import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
 import { DateWithTooltip } from "@/UI/Components";
@@ -33,12 +33,20 @@ export const InstanceRow: React.FC<Props> = ({
   idDataLabel,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Status);
+  const rowRef = useRef<HTMLSpanElement>(null);
   const deploymentProgressPresenter = new DeploymentProgressPresenter();
   const attributesOnClick = () => {
+    setActiveTab(TabKey.Attributes);
     if (!isExpanded) {
       onToggle();
     }
-    setActiveTab(TabKey.Attributes);
+
+    // Make sure the scroll happens after the rendering
+    setTimeout(() => {
+      if (rowRef.current !== null) {
+        rowRef.current.scrollIntoView({ block: "center" });
+      }
+    }, 0);
   };
   return (
     <Tbody isExpanded={false}>
@@ -56,13 +64,15 @@ export const InstanceRow: React.FC<Props> = ({
           {!shouldUseServiceIdentity && <IdWithCopy id={row.id} />}
         </Td>
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>
-        <Td dataLabel={words("inventory.column.attributesSummary")}>
-          <a href={`#instance-row-${row.id.short}`}>
-            <AttributesSummaryView
-              summary={row.attributesSummary}
-              onClick={attributesOnClick}
-            />
-          </a>
+        <Td
+          dataLabel={words("inventory.column.attributesSummary")}
+          id={`instance-row-summary-${row.id.short}`}
+        >
+          <span ref={rowRef} />
+          <AttributesSummaryView
+            summary={row.attributesSummary}
+            onClick={attributesOnClick}
+          />
         </Td>
         <Td dataLabel={words("inventory.collumn.deploymentProgress")}>
           {deploymentProgressPresenter.getDeploymentProgressBar(

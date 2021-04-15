@@ -10,9 +10,10 @@ import {
 
 interface Props {
   attributes: Attributes;
+  id?: string;
 }
 
-export const AttributesTab: React.FC<Props> = ({ attributes }) => (
+export const AttributesTab: React.FC<Props> = ({ attributes, id }) => (
   <TreeTable
     treeTableHelper={
       new TreeTableHelper(
@@ -22,5 +23,6 @@ export const AttributesTab: React.FC<Props> = ({ attributes }) => (
         attributes
       )
     }
+    id={id}
   />
 );

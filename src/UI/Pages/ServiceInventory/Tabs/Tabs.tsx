@@ -79,7 +79,7 @@ const attributesTab = (row: Row): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("inventory.tabs.attributes"),
   icon: <ListIcon />,
-  view: <AttributesTab attributes={row.attributes} />,
+  view: <AttributesTab attributes={row.attributes} id={row.id.short} />,
 });
 
 const resourcesTab = (
