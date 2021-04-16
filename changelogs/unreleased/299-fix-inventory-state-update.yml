@@ -1,0 +1,6 @@
+description: Fix state update when navigating the Service Inventory
+issue-nr: 299
+change-type: patch
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

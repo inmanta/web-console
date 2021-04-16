@@ -17,11 +17,14 @@ type Data = RemoteData.Type<
 /**
  * The ServiceInstancesSlice stores ServiceInstances.
  * ServicesInstances belong to a service, so they are stored by
- * their service name. So byId means by ServiceName.
+ * their service name. So byId means by Environment and ServiceName.
  */
 export interface ServiceInstancesSlice {
   byId: Record<string, Data>;
-  setData: Action<ServiceInstancesSlice, { id: string; value: Data }>;
+  setData: Action<
+    ServiceInstancesSlice,
+    { qualifier: ServiceIdentifier; value: Data }
+  >;
   instancesWithTargetStates: Computed<
     ServiceInstancesSlice,
     (
@@ -41,12 +44,13 @@ export interface ServiceInstancesSlice {
 export const serviceInstancesSlice: ServiceInstancesSlice = {
   byId: {},
   setData: action((state, payload) => {
-    state.byId[payload.id] = payload.value;
+    state.byId[injections.serviceKeyMaker.make(payload.qualifier)] =
+      payload.value;
   }),
   instancesWithTargetStates: computed(
     [(state) => state.byId, (state, storeState) => storeState],
     (byId, storeState) => (qualifier) => {
-      const data = byId[qualifier.name];
+      const data = byId[injections.serviceKeyMaker.make(qualifier)];
       if (typeof data === "undefined") return RemoteData.loading();
 
       return RemoteData.mapSuccess(({ data, ...rest }) => {
