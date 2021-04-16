@@ -224,3 +224,24 @@ test("ResourcesView fetches resources for new instance after instance update", a
     "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=4"
   );
 });
+
+test("GIVEN The Service Inventory WHEN the user filters on instance_id THEN only 1 instance is shown", async () => {
+  // Prep dependencies
+  // -> Should be a one liner that uses a utility class to prep everything
+  // ex. const {store, dataProvider, service} = TestUtils.CreateService()
+  // This uses a default service. has an env, instances,resources,
+  //
+  // Render the component
+  // Without loading
+  // select the id filter
+  // select the input field
+  // input an instance id
+  // emulate "enter"
+  // expect loading
+  //
+  // resolve request for data using TestUtils.resolve()
+  // OR
+  // The TestUtils dataProvider that was injected can respond automatically to queries and commands.z
+  //
+  // expect instance to be visible
+});
