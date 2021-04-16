@@ -14,11 +14,13 @@ interface Props {
   hrefCreator: HrefCreator;
   resources: ResourceModel[];
   "aria-label"?: string;
+  id?: string;
 }
 
 export const ResourceTable: React.FC<Props> = ({
   hrefCreator,
   resources,
+  id,
   ...props
 }) => {
   const columns = ["Resource Id", "Details", "State"];
@@ -48,7 +50,7 @@ export const ResourceTable: React.FC<Props> = ({
 
   return (
     <Table cells={columns} rows={rows} aria-label={props["aria-label"]}>
-      <TableHeader />
+      <TableHeader id={id ? `resource-table-header-${id}` : undefined} />
       <TableBody />
     </Table>
   );

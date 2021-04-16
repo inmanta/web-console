@@ -1,0 +1,6 @@
+description: Open resources tab when clicking on resource deployment progress
+issue-nr: 280
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

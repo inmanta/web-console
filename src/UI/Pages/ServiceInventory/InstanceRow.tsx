@@ -35,12 +35,11 @@ export const InstanceRow: React.FC<Props> = ({
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Status);
   const rowRef = useRef<HTMLSpanElement>(null);
   const deploymentProgressPresenter = new DeploymentProgressPresenter();
-  const attributesOnClick = () => {
-    setActiveTab(TabKey.Attributes);
+  const openTabAndScrollTo = (tab: TabKey) => () => {
+    setActiveTab(tab);
     if (!isExpanded) {
       onToggle();
     }
-
     // Make sure the scroll happens after the rendering
     setTimeout(() => {
       if (rowRef.current !== null) {
@@ -71,13 +70,18 @@ export const InstanceRow: React.FC<Props> = ({
           <span ref={rowRef} />
           <AttributesSummaryView
             summary={row.attributesSummary}
-            onClick={attributesOnClick}
+            onClick={openTabAndScrollTo(TabKey.Attributes)}
           />
         </Td>
         <Td dataLabel={words("inventory.collumn.deploymentProgress")}>
-          {deploymentProgressPresenter.getDeploymentProgressBar(
-            row.deploymentProgress
-          )}
+          <span
+            id={`instance-row-resources-${row.id.short}`}
+            onClick={openTabAndScrollTo(TabKey.Resources)}
+          >
+            {deploymentProgressPresenter.getDeploymentProgressBar(
+              row.deploymentProgress
+            )}
+          </span>
         </Td>
         <Td dataLabel={words("inventory.column.createdAt")}>
           <DateWithTooltip date={row.createdAt} />

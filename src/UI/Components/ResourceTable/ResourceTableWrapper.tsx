@@ -3,6 +3,7 @@ import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 
 interface Props {
   "aria-label"?: string;
+  id?: string;
 }
 
 export const ResourceTableWrapper: React.FC<Props> = ({
@@ -16,7 +17,9 @@ export const ResourceTableWrapper: React.FC<Props> = ({
 
   return (
     <Table cells={columns} rows={rows} aria-label={props["aria-label"]}>
-      <TableHeader />
+      <TableHeader
+        id={props.id ? `resource-table-header-${props.id}` : undefined}
+      />
       <TableBody />
     </Table>
   );

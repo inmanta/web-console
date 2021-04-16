@@ -73,7 +73,8 @@ body,
   background-color: var(--pf-global--danger-color--100);
 }
 .progress-stacked > .progress-empty {
-  opacity: .2;
+  background-color: var(--pf-global--palette--blue-50);
+  color: var(--pf-global--palette--black-900);
   width: 100%;
 }
 .ignored-transition {
