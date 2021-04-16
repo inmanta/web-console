@@ -27,12 +27,18 @@ export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
     {
       notAsked: () => null,
       loading: () => (
-        <ResourceTableWrapper aria-label="ResourceTable-Loading">
+        <ResourceTableWrapper
+          aria-label="ResourceTable-Loading"
+          id={qualifier.id}
+        >
           <LoadingView delay={500} />
         </ResourceTableWrapper>
       ),
       failed: (error) => (
-        <ResourceTableWrapper aria-label="ResourceTable-Failed">
+        <ResourceTableWrapper
+          aria-label="ResourceTable-Failed"
+          id={qualifier.id}
+        >
           <ErrorView
             title={words("inventory.resourcesTab.failed.title")}
             message={words("inventory.resourcesTab.failed.body")(error)}
@@ -41,7 +47,10 @@ export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
       ),
       success: (resources) =>
         resources.length === 0 ? (
-          <ResourceTableWrapper aria-label="ResourceTable-Empty">
+          <ResourceTableWrapper
+            aria-label="ResourceTable-Empty"
+            id={qualifier.id}
+          >
             <EmptyView
               title={words("inventory.resourcesTab.empty.title")}
               message={words("inventory.resourcesTab.empty.body")}
@@ -52,6 +61,7 @@ export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
             hrefCreator={new HrefCreatorImpl(qualifier.environment)}
             resources={resources}
             aria-label="ResourceTable-Success"
+            id={qualifier.id}
           />
         ),
     },

@@ -66,4 +66,11 @@ describe("Service inventory", function () {
     cy.get("#instance-row-summary-78ac").click();
     cy.get('[data-testid="attributes-tree-table-78ac"]').should("be.visible");
   });
+  it("Should show resources tab when clicking on resource deployment progress", function () {
+    cy.visit("/lsm/catalog/e2e_service/inventory");
+    cy.get("#instance-row-resources-78ac").click();
+    cy.get(
+      "#resource-table-header-78ac51dd-ee5b-4e22-9bf0-54bce9664b4e"
+    ).should("be.visible");
+  });
 });
