@@ -1,0 +1,6 @@
+change-type: patch
+description: '[Security] Bump ssri from 6.0.1 to 6.0.2'
+destination-branches:
+- master
+- iso4
+sections: {}
