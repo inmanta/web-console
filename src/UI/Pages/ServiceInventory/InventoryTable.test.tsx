@@ -113,26 +113,6 @@ test("ServiceInventory can show resources for instance", async () => {
   expect(screen.getByText("resource_id_1")).toBeInTheDocument();
 });
 
-test("ServiceInventory shows attribute tab when clicking on attribute summary", async () => {
-  // Arrange
-  render(
-    <InventoryTable
-      rows={rows}
-      tablePresenter={tablePresenter}
-      setSortColumn={dummySetter}
-      setOrder={dummySetter}
-    />
-  );
-
-  // Act
-  fireEvent.click((await screen.findAllByTestId(`attributes-summary`))[0]);
-
-  // Assert
-  expect(
-    await screen.findByTestId("attributes-tree-table")
-  ).toBeInTheDocument();
-});
-
 test("ServiceInventory shows service identity if it's defined", async () => {
   render(
     <InventoryTable

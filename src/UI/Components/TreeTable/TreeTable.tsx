@@ -6,9 +6,10 @@ import { TreeTableHelper } from "./Helpers";
 
 interface Props {
   treeTableHelper: TreeTableHelper;
+  id?: string;
 }
 
-export const TreeTable: React.FC<Props> = ({ treeTableHelper }) => {
+export const TreeTable: React.FC<Props> = ({ treeTableHelper, id }) => {
   const [expansionState, setExpansionState] = useState(
     treeTableHelper.getExpansionState()
   );
@@ -19,7 +20,7 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper }) => {
   return (
     <StyledTableComposable
       variant="compact"
-      data-testid={"attributes-tree-table"}
+      data-testid={id ? `attributes-tree-table-${id}` : "attributes-tree-table"}
     >
       <Thead>
         <Tr>

@@ -61,4 +61,9 @@ describe("Service inventory", function () {
     cy.get(".pf-c-alert.pf-m-danger").should("contain.text", "Bad Request");
     cy.get("[data-cy=close-alert]").click().should("not.exist");
   });
+  it("Should show attributes tab when clicking on attribute summary", function () {
+    cy.visit("/lsm/catalog/e2e_service/inventory");
+    cy.get("#instance-row-summary-78ac").click();
+    cy.get('[data-testid="attributes-tree-table-78ac"]').should("be.visible");
+  });
 });
