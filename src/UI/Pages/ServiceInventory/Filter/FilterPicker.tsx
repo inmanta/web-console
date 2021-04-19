@@ -42,7 +42,11 @@ export const FilterPicker: React.FC<Props> = ({
         }}
         position={DropdownPosition.left}
         toggle={
-          <DropdownToggle onToggle={setFilterOpen} style={{ width: "100%" }}>
+          <DropdownToggle
+            onToggle={setFilterOpen}
+            style={{ width: "100%" }}
+            aria-label="FilterPicker"
+          >
             <FilterIcon /> {filterKind}
           </DropdownToggle>
         }

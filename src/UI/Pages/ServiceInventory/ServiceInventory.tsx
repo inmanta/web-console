@@ -202,6 +202,7 @@ const Bar: React.FC<BarProps> = ({
     service_identity && service_identity_display_name
       ? { key: service_identity, pretty: service_identity_display_name }
       : undefined;
+  const states = service.lifecycle.states.map((state) => state.name).sort();
   return (
     <CardFooter>
       <Toolbar clearAllFilters={() => setFilter({})}>
@@ -209,7 +210,7 @@ const Bar: React.FC<BarProps> = ({
           <FilterBar
             filter={filter}
             setFilter={setFilter}
-            states={service.lifecycle.states.map((state) => state.name)}
+            states={states}
             identityAttribute={identityAttribute}
           />
           <ToolbarGroup>

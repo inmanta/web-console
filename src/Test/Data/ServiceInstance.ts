@@ -146,3 +146,8 @@ const base = ({
 } as unknown) as ServiceInstanceModel;
 
 export const A = base;
+export const B = {
+  ...base,
+  id: "service_instance_id_b",
+  state: "rejected",
+};
