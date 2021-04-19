@@ -22,9 +22,10 @@ export const ErrorView: React.FC<Props> = ({
   title,
   retry,
   delay,
+  ...props
 }) => (
   <Delayed delay={delay}>
-    <EmptyState>
+    <EmptyState {...props}>
       <EmptyStateIcon icon={ExclamationTriangleIcon} />
       <Title headingLevel="h4" size="lg">
         {title || words("error")}

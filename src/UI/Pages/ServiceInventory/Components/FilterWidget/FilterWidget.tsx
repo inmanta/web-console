@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { ToolbarGroup } from "@patternfly/react-core";
 import { ServiceInstanceParams } from "@/Core";
 import { AttributeSets, AttributesFilter } from "./AttributesFilter";
 import { IdFilter } from "./IdFilter";
@@ -7,6 +6,7 @@ import { StateFilter } from "./StateFilter";
 import { FilterPicker } from "./FilterPicker";
 import { DeletedFilter } from "./DeletedFilter";
 import { IdentityFilter } from "./IdentityFilter";
+import { ToolbarGroup } from "@patternfly/react-core";
 
 interface Props {
   filter: ServiceInstanceParams.Filter;
@@ -15,7 +15,7 @@ interface Props {
   identityAttribute?: { key: string; pretty: string };
 }
 
-export const FilterBar: React.FC<Props> = ({
+export const FilterWidget: React.FC<Props> = ({
   filter,
   setFilter,
   states,

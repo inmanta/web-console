@@ -83,7 +83,7 @@ test("ServiceInventory shows updated instances", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "ServiceInventory-Loading" })
+    await screen.findByRole("generic", { name: "ServiceInventory-Loading" })
   ).toBeInTheDocument();
 
   serviceInstancesFetcher.resolve(
@@ -95,7 +95,7 @@ test("ServiceInventory shows updated instances", async () => {
   );
 
   expect(
-    await screen.findByRole("region", { name: "ServiceInventory-Empty" })
+    await screen.findByRole("generic", { name: "ServiceInventory-Empty" })
   ).toBeInTheDocument();
 
   serviceInstancesSubscriptionController.executeAll();
@@ -109,7 +109,7 @@ test("ServiceInventory shows updated instances", async () => {
   );
 
   expect(
-    await screen.findByRole("region", { name: "ServiceInventory-Success" })
+    await screen.findByRole("grid", { name: "ServiceInventory-Success" })
   ).toBeInTheDocument();
 });
 
@@ -120,7 +120,7 @@ test("ServiceInventory shows error with retry", async () => {
   serviceInstancesFetcher.resolve(Either.left("fake error"));
 
   expect(
-    await screen.findByRole("region", { name: "ServiceInventory-Failed" })
+    await screen.findByRole("generic", { name: "ServiceInventory-Failed" })
   ).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Retry" }));
@@ -134,7 +134,7 @@ test("ServiceInventory shows error with retry", async () => {
   );
 
   expect(
-    await screen.findByRole("region", { name: "ServiceInventory-Success" })
+    await screen.findByRole("grid", { name: "ServiceInventory-Success" })
   ).toBeInTheDocument();
 });
 
@@ -186,7 +186,7 @@ test("ResourcesView fetches resources for new instance after instance update", a
   });
 
   expect(
-    await screen.findByRole("region", { name: "ServiceInventory-Success" })
+    await screen.findByRole("grid", { name: "ServiceInventory-Success" })
   ).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Details" }));
@@ -296,7 +296,7 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   expect(rowsAfter.length).toEqual(1);
 });
 
-test.only("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async () => {
+test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async () => {
   const store = getStoreInstance();
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
   const serviceInstancesSubscriptionController = new StaticSubscriptionController();

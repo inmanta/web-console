@@ -27,6 +27,7 @@ export const InventoryTable: React.FC<Props> = ({
   order,
   setSortColumn,
   setOrder,
+  ...props
 }) => {
   const expansionManager = new ExpansionManager();
 
@@ -70,7 +71,7 @@ export const InventoryTable: React.FC<Props> = ({
   }, [rows]);
 
   return (
-    <TableComposable>
+    <TableComposable {...props}>
       <Thead>
         <Tr>
           <Th />

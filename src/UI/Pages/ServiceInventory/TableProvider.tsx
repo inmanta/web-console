@@ -33,6 +33,7 @@ export const TableProvider: React.FC<Props> = ({
   order,
   setSortColumn,
   setOrder,
+  ...props
 }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
@@ -58,15 +59,14 @@ export const TableProvider: React.FC<Props> = ({
   const rows = tablePresenter.createRows(instances);
 
   return (
-    <div data-testid="InventoryTableContainer">
-      <InventoryTable
-        rows={rows}
-        tablePresenter={tablePresenter}
-        sortColumn={sortColumn}
-        order={order}
-        setSortColumn={setSortColumn}
-        setOrder={setOrder}
-      />
-    </div>
+    <InventoryTable
+      {...props}
+      rows={rows}
+      tablePresenter={tablePresenter}
+      sortColumn={sortColumn}
+      order={order}
+      setSortColumn={setSortColumn}
+      setOrder={setOrder}
+    />
   );
 };

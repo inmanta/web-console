@@ -3,26 +3,13 @@ import {
   PageSection,
   Alert,
   Card,
-  CardFooter,
-  Toolbar,
-  ToolbarGroup,
   AlertActionCloseButton,
-  ToolbarItem,
-  ToolbarContent,
   AlertGroup,
-  Button,
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import {
-  Pagination,
-  RemoteData,
-  ServiceModel,
-  ServiceInstanceParams,
-} from "@/Core";
+import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
 import { useKeycloak } from "react-keycloak";
-import { Link } from "react-router-dom";
-import { PlusIcon } from "@patternfly/react-icons";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -32,8 +19,7 @@ import {
   EnvironmentProvider,
 } from "@/UI/Components";
 import { InventoryContext } from "./InventoryContext";
-import { PaginationToolbar } from "./Components";
-import { FilterBar } from "./Filter";
+import { PaginationWidget, TableControls } from "./Components";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -101,135 +87,86 @@ export const ServiceInventory: React.FunctionComponent<{
     },
   });
 
-  return RemoteData.fold(
+  const paginationWidget = RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => (
-        <Wrapper aria-label="ServiceInventory-Loading">
-          <LoadingView delay={500} />
-        </Wrapper>
-      ),
-      failed: (error) => (
-        <Wrapper aria-label="ServiceInventory-Failed">
-          <ErrorView message={error} retry={retry} />
-        </Wrapper>
-      ),
-      success: ({ data: instances, handlers, metadata }) => (
-        <InventoryContext.Provider
-          value={{
-            attributes: service.attributes,
-            environmentId,
-            inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
-            setErrorMessage: setInstanceErrorMessage,
-            refresh: retry,
-          }}
-        >
-          {instanceErrorMessage && (
-            <AlertGroup isToast={true}>
-              <Alert
-                variant="danger"
-                title={instanceErrorMessage}
-                actionClose={
-                  <AlertActionCloseButton
-                    data-cy="close-alert"
-                    onClose={() => setInstanceErrorMessage("")}
-                  />
-                }
-              />
-            </AlertGroup>
-          )}
-          {instances.length > 0 ? (
-            <Wrapper aria-label="ServiceInventory-Success">
-              <Bar
-                serviceName={serviceName}
-                handlers={handlers}
-                metadata={metadata}
-                filter={filter}
-                setFilter={setFilter}
-                service={service}
-              />
-              <TableProvider
-                instances={instances}
-                keycloak={keycloak}
-                serviceEntity={service}
-                sortColumn={sortColumn}
-                setSortColumn={setSortColumn}
-                order={order}
-                setOrder={setOrder}
-              />
-            </Wrapper>
-          ) : (
-            <Wrapper aria-label="ServiceInventory-Empty">
-              <Bar
-                serviceName={serviceName}
-                handlers={handlers}
-                metadata={metadata}
-                filter={filter}
-                setFilter={setFilter}
-                service={service}
-              />
-              <EmptyView
-                message={words("inventory.empty.message")(serviceName)}
-              />
-            </Wrapper>
-          )}
-        </InventoryContext.Provider>
+      loading: () => null,
+      failed: () => null,
+      success: ({ handlers, metadata }) => (
+        <PaginationWidget handlers={handlers} metadata={metadata} />
       ),
     },
     data
   );
-};
 
-interface BarProps {
-  serviceName: string;
-  handlers: Pagination.Handlers;
-  metadata: Pagination.Metadata;
-  filter: ServiceInstanceParams.Filter;
-  setFilter: (filter: ServiceInstanceParams.Filter) => void;
-  service: ServiceModel;
-}
-
-const Bar: React.FC<BarProps> = ({
-  serviceName,
-  handlers,
-  metadata,
-  filter,
-  setFilter,
-  service,
-}) => {
-  const { service_identity, service_identity_display_name } = service;
-  const identityAttribute =
-    service_identity && service_identity_display_name
-      ? { key: service_identity, pretty: service_identity_display_name }
-      : undefined;
-  const states = service.lifecycle.states.map((state) => state.name).sort();
   return (
-    <CardFooter>
-      <Toolbar clearAllFilters={() => setFilter({})}>
-        <ToolbarContent>
-          <FilterBar
-            filter={filter}
-            setFilter={setFilter}
-            states={states}
-            identityAttribute={identityAttribute}
-          />
-          <ToolbarGroup>
-            <ToolbarItem>
-              <Link
-                to={{
-                  pathname: `/lsm/catalog/${serviceName}/inventory/add`,
-                  search: location.search,
-                }}
-              >
-                <Button id="add-instance-button">
-                  <PlusIcon /> {words("inventory.addInstance.button")}
-                </Button>
-              </Link>
-            </ToolbarItem>
-          </ToolbarGroup>
-          <PaginationToolbar handlers={handlers} metadata={metadata} />
-        </ToolbarContent>
-      </Toolbar>
-    </CardFooter>
+    <Wrapper>
+      <TableControls
+        serviceName={serviceName}
+        filter={filter}
+        setFilter={setFilter}
+        service={service}
+        paginationWidget={paginationWidget}
+      />
+      {RemoteData.fold(
+        {
+          notAsked: () => null,
+          loading: () => (
+            <LoadingView delay={500} aria-label="ServiceInventory-Loading" />
+          ),
+          failed: (error) => (
+            <ErrorView
+              message={error}
+              retry={retry}
+              aria-label="ServiceInventory-Failed"
+            />
+          ),
+          success: ({ data: instances }) => (
+            <InventoryContext.Provider
+              value={{
+                attributes: service.attributes,
+                environmentId,
+                inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
+                setErrorMessage: setInstanceErrorMessage,
+                refresh: retry,
+              }}
+            >
+              {instanceErrorMessage && (
+                <AlertGroup isToast={true}>
+                  <Alert
+                    variant="danger"
+                    title={instanceErrorMessage}
+                    actionClose={
+                      <AlertActionCloseButton
+                        data-cy="close-alert"
+                        onClose={() => setInstanceErrorMessage("")}
+                      />
+                    }
+                  />
+                </AlertGroup>
+              )}
+              {instances.length > 0 ? (
+                <TableProvider
+                  aria-label="ServiceInventory-Success"
+                  instances={instances}
+                  keycloak={keycloak}
+                  serviceEntity={service}
+                  sortColumn={sortColumn}
+                  setSortColumn={setSortColumn}
+                  order={order}
+                  setOrder={setOrder}
+                />
+              ) : (
+                <EmptyView
+                  message={words("inventory.empty.message")(serviceName)}
+                  aria-label="ServiceInventory-Empty"
+                />
+              )}
+            </InventoryContext.Provider>
+          ),
+        },
+        data
+      )}
+    </Wrapper>
   );
 };

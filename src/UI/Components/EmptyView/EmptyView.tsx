@@ -13,8 +13,8 @@ interface Props {
   title?: string;
 }
 
-export const EmptyView: React.FC<Props> = ({ title, message }) => (
-  <EmptyState>
+export const EmptyView: React.FC<Props> = ({ title, message, ...props }) => (
+  <EmptyState {...props}>
     <EmptyStateIcon icon={ExclamationCircleIcon} />
     <Title size="lg" headingLevel="h4">
       {title || words("empty.title")}
