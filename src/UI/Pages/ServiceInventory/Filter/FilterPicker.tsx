@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import {
   ToolbarItem,
-  Dropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownPosition,
+  Select,
+  SelectVariant,
+  SelectOption,
 } from "@patternfly/react-core";
-import { FilterIcon } from "@patternfly/react-icons";
 import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
@@ -22,9 +20,9 @@ export const FilterPicker: React.FC<Props> = ({
 }) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
 
-  const onSelect = (kind: ServiceInstanceParams.Kind) => {
+  const onSelect = (event, selection) => {
     setFilterOpen(false);
-    setFilterKind(kind);
+    setFilterKind(selection as ServiceInstanceParams.Kind);
   };
 
   const items = identityAttributePretty
@@ -33,29 +31,20 @@ export const FilterPicker: React.FC<Props> = ({
 
   return (
     <ToolbarItem>
-      <Dropdown
-        onSelect={(event) => {
-          onSelect(
-            (event?.target as HTMLElement)
-              .innerText as ServiceInstanceParams.Kind
-          );
-        }}
-        position={DropdownPosition.left}
-        toggle={
-          <DropdownToggle
-            onToggle={setFilterOpen}
-            style={{ width: "100%" }}
-            aria-label="FilterPicker"
-          >
-            <FilterIcon /> {filterKind}
-          </DropdownToggle>
-        }
+      <Select
+        variant={SelectVariant.single}
+        aria-label="FilterPicker"
+        onToggle={setFilterOpen}
+        onSelect={onSelect}
+        selections={filterKind}
         isOpen={isFilterOpen}
-        dropdownItems={items.map((kind) => (
-          <DropdownItem key={kind}>{kind}</DropdownItem>
+      >
+        {items.map((item) => (
+          <SelectOption key={item} value={item}>
+            {item}
+          </SelectOption>
         ))}
-        style={{ width: "100%" }}
-      ></Dropdown>
+      </Select>
     </ToolbarItem>
   );
 };

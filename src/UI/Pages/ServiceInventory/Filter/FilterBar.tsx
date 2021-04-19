@@ -55,7 +55,7 @@ export const FilterBar: React.FC<Props> = ({
   };
 
   return (
-    <ToolbarGroup variant="filter-group">
+    <ToolbarGroup variant="filter-group" aria-label="FilterBar">
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}

@@ -33,3 +33,14 @@ You can list the unused exports by running:
 ```bash
 $ yarn ts-prune
 ```
+
+## Select vs Dropdown (Patternfly)
+
+These components sort of do the same thing. But Select is more powerfull.  
+To do a selection in a dropdown, you need to use `event.target.innerText`.  
+This is not a good idea because `innerText` is not implemented in `jsdom`.  
+So code using `innerText` will not work in a test.
+
+Never use Dropdown for selection.  
+Use it for actions that after the click move away from the component.  
+Use Select for selecting stuff.

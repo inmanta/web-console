@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen, act } from "@testing-library/react";
+import { fireEvent, render, screen, act, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   StaticSubscriptionController,
@@ -22,7 +22,7 @@ import {
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
+import userEvent, { specialChars } from "@testing-library/user-event";
 
 function setup() {
   const store = getStoreInstance();
@@ -226,16 +226,8 @@ test("ResourcesView fetches resources for new instance after instance update", a
   );
 });
 
-test.only("GIVEN The Service Inventory WHEN the user filters on state=creating THEN only instance is shown", async () => {
-  // GIVEN The service inventory
-  // Prep dependencies
-  // -> Should be a one liner that uses a utility class to prep everything
-  // ex. const {store, dataProvider, service} = TestUtils.CreateService()
-  // This uses a default service. has an env, instances,resources,
-  //
-
+test("GIVEN The Service Inventory WHEN the user filters on state ('creating') THEN only that type of instance is fetched and shown", async () => {
   const store = getStoreInstance();
-
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
   const serviceInstancesSubscriptionController = new StaticSubscriptionController();
   const serviceInstancesHelper = new ServiceInstancesHookHelper(
@@ -302,29 +294,74 @@ test.only("GIVEN The Service Inventory WHEN the user filters on state=creating T
     name: "InstanceRow-Intro",
   });
   expect(rowsAfter.length).toEqual(1);
+});
 
-  // const menu = screen.getByRole("menu");
+test.only("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async () => {
+  const store = getStoreInstance();
+  const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
+  const serviceInstancesSubscriptionController = new StaticSubscriptionController();
+  const serviceInstancesHelper = new ServiceInstancesHookHelper(
+    new DataManagerImpl<"ServiceInstances">(
+      serviceInstancesFetcher,
+      new ServiceInstancesStateHelper(store)
+    ),
+    serviceInstancesSubscriptionController
+  );
 
-  // const id = within(menu).getByRole("menuitem", { name: "Id" });
+  const dataProvider = new DataProviderImpl([serviceInstancesHelper]);
 
-  // userEvent.click(id);
+  // Render the component
+  render(
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ dataProvider }}>
+        <StoreProvider store={store}>
+          <ServiceInventory
+            serviceName={Service.A.name}
+            environmentId={Service.A.environment}
+            service={Service.A}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
+  );
 
-  // const idInput = await screen.findByTestId("IdFilterInput", {
-  //   name: "IdFilterInput",
-  // });
-  // userEvent.type(idInput, ServiceInstance.A.id);
+  await act(async () => {
+    await serviceInstancesFetcher.resolve(
+      Either.right({
+        data: [ServiceInstance.A, ServiceInstance.B],
+        links: Pagination.links,
+        metadata: Pagination.metadata,
+      })
+    );
+  });
 
-  // Without loading
-  // select the id filter
-  // select the input field
-  // input an instance id
-  // emulate "enter"
-  // expect loading
-  //
-  // resolve request for data using TestUtils.resolve()
-  // OR
-  // The TestUtils dataProvider that was injected can respond automatically to queries and commands.z
-  //
-  // --> THEN only 1 instance is shown
-  // expect instance to be visible
+  const filterBar = screen.getByRole("generic", { name: "FilterBar" });
+
+  const picker = within(filterBar).getByRole("button", { name: "State" });
+  userEvent.click(picker);
+
+  const id = screen.getByRole("option", { name: "Id" });
+  userEvent.click(id);
+
+  const input = screen.getByRole("textbox", { name: "IdFilterInput" });
+  userEvent.type(input, `${ServiceInstance.A.id}${specialChars.enter}`);
+
+  expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
+    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.A.id}&sort=created_at.desc`
+  );
+
+  await act(async () => {
+    await serviceInstancesFetcher.resolve(
+      Either.right({
+        data: [ServiceInstance.A],
+        links: Pagination.links,
+        metadata: Pagination.metadata,
+      })
+    );
+  });
+
+  const rowsAfter = await screen.findAllByRole("row", {
+    name: "InstanceRow-Intro",
+  });
+  expect(rowsAfter.length).toEqual(1);
 });
