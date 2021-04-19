@@ -18,7 +18,7 @@ export class ServiceInstancesStateHelper
    * to check if the data is changed.
    */
   set(qualifier: Query.Qualifier<"ServiceInstances">, value: ApiData): void {
-    this.store.dispatch.serviceInstances.setData({ id: qualifier.name, value });
+    this.store.dispatch.serviceInstances.setData({ qualifier, value });
   }
 
   getHooked(qualifier: Query.Qualifier<"ServiceInstances">): Data {
