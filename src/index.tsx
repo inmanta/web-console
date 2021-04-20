@@ -21,7 +21,6 @@ import {
   EventsStateHelper,
   ServicesHookHelper,
   ServicesStateHelper,
-  DataManagerImpl,
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
   InstanceConfigHookHelper,
@@ -55,11 +54,6 @@ const servicesHelper = new ServicesHookHelper(
   new FetcherImpl<"Services">(baseApiHelper),
   new ServicesStateHelper(storeInstance, serviceKeyMaker),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
-);
-
-const serviceDataManager = new DataManagerImpl<"Service">(
-  new FetcherImpl<"Service">(baseApiHelper),
-  new ServiceStateHelper(storeInstance, serviceKeyMaker)
 );
 
 const serviceHelper = new ServiceHookHelper(
@@ -97,7 +91,8 @@ const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);
 const instanceConfigHelper = new InstanceConfigHookHelper(
   new FetcherImpl<"InstanceConfig">(baseApiHelper),
   instanceConfigStateHelper,
-  serviceDataManager
+  new ServiceStateHelper(storeInstance, serviceKeyMaker),
+  new FetcherImpl<"Service">(baseApiHelper)
 );
 
 const dataProvider = new DataProviderImpl([

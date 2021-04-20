@@ -1,5 +1,4 @@
 import {
-  DataManager,
   OneTimeHookHelper,
   ServiceInstanceIdentifier,
   Query,
@@ -23,7 +22,8 @@ export class InstanceConfigHookHelper
   constructor(
     private readonly fetcher: Fetcher<"InstanceConfig">,
     private readonly stateHelper: StateHelper<"InstanceConfig">,
-    private readonly serviceDataManager: DataManager<"Service">
+    private readonly serviceStateHelper: StateHelper<"Service">,
+    private readonly serviceFetcher: Fetcher<"Service">
   ) {}
 
   private getConfigUrl({
@@ -56,14 +56,26 @@ export class InstanceConfigHookHelper
     );
   }
 
+  private async updateService(
+    qualifier: Query.Qualifier<"Service">,
+    url: string
+  ): Promise<void> {
+    this.serviceStateHelper.set(
+      qualifier,
+      RemoteData.fromEither(
+        await this.serviceFetcher.getData(qualifier.environment, url)
+      )
+    );
+  }
+
   useOneTime(qualifier: ServiceInstanceIdentifier): [Data, () => void] {
     const { service_entity, environment } = qualifier;
     const serviceIdentifier = { name: service_entity, environment };
-    const serviceData = this.serviceDataManager.get(serviceIdentifier);
+    const serviceData = this.serviceStateHelper.getHooked(serviceIdentifier);
 
     useEffect(() => {
       if (!RemoteData.isSuccess(serviceData)) {
-        this.serviceDataManager.update(
+        this.updateService(
           serviceIdentifier,
           this.getServiceUrl(service_entity)
         );
@@ -78,7 +90,7 @@ export class InstanceConfigHookHelper
     return [
       this.merge(
         this.stateHelper.getHooked(qualifier),
-        this.serviceDataManager.get(serviceIdentifier)
+        this.serviceStateHelper.getHooked(serviceIdentifier)
       ),
       () => this.update(qualifier, this.getConfigUrl(qualifier)),
     ];
