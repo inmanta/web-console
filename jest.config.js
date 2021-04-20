@@ -41,7 +41,7 @@ module.exports = {
   snapshotSerializers: ["enzyme-to-json/serializer"],
 
   // The glob patterns Jest uses to detect test files
-  testMatch: ["**/*.test.(ts|tsx)"],
+  testMatch: ["**/*.(spec|test).(ts|tsx)"],
 
   // A map from regular expressions to paths to transformers
   transform: {
