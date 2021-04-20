@@ -43,4 +43,5 @@ So code using `innerText` will not work in a test.
 
 Never use Dropdown for selection.  
 Use it for actions that after the click move away from the component.  
-Use Select for selecting stuff.
+Use Select for selecting stuff.  
+See https://www.patternfly.org/v4/components/select/design-guidelines.
