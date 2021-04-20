@@ -151,3 +151,10 @@ export const B = {
   id: "service_instance_id_b",
   state: "rejected",
 };
+
+export const deleted = {
+  ...base,
+  id: "service_instance_id_deleted_a",
+  state: "terminated",
+  deleted: true,
+};

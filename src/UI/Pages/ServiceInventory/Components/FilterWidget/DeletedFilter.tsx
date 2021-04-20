@@ -50,10 +50,15 @@ export const DeletedFilter: React.FC<Props> = ({
         <SelectOption
           value="Include"
           description="Also include deleted instances"
+          aria-label="Include"
         >
           Include
         </SelectOption>
-        <SelectOption value="Only" description="Only show deleted instances">
+        <SelectOption
+          value="Only"
+          description="Only show deleted instances"
+          aria-label="Only"
+        >
           Only
         </SelectOption>
       </Select>

@@ -1,54 +1,16 @@
-import React from "react";
 import { render, screen, act, within } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
-import {
-  StaticSubscriptionController,
-  DeferredFetcher,
-  Service,
-  ServiceInstance,
-  Pagination,
-} from "@/Test";
+import { Service, ServiceInstance, Pagination } from "@/Test";
 import { Either } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
-import {
-  DataProviderImpl,
-  DataManagerImpl,
-  ServiceInstancesHookHelper,
-  ServiceInstancesStateHelper,
-} from "@/UI/Data";
-import { getStoreInstance } from "@/UI/Store";
-import { ServiceInventory } from "../ServiceInventory";
-import { MemoryRouter } from "react-router-dom";
 import userEvent, { specialChars } from "@testing-library/user-event";
+import { ServiceInventoryBuilder } from "./ServiceInventoryBuilder";
 
 test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async () => {
-  const store = getStoreInstance();
-  const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
-  const serviceInstancesSubscriptionController = new StaticSubscriptionController();
-  const serviceInstancesHelper = new ServiceInstancesHookHelper(
-    new DataManagerImpl<"ServiceInstances">(
-      serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store)
-    ),
-    serviceInstancesSubscriptionController
-  );
+  const {
+    component,
+    serviceInstancesFetcher,
+  } = new ServiceInventoryBuilder().build();
 
-  const dataProvider = new DataProviderImpl([serviceInstancesHelper]);
-
-  // Render the component
-  render(
-    <MemoryRouter>
-      <DependencyProvider dependencies={{ dataProvider }}>
-        <StoreProvider store={store}>
-          <ServiceInventory
-            serviceName={Service.A.name}
-            environmentId={Service.A.environment}
-            service={Service.A}
-          />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
-  );
+  render(component);
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(

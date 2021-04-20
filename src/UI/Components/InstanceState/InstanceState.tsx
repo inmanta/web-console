@@ -1,6 +1,6 @@
 import React from "react";
 import { State } from "@/Core";
-import { Label } from "@patternfly/react-core";
+import { Label, LabelProps } from "@patternfly/react-core";
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -9,32 +9,30 @@ import {
 } from "@patternfly/react-icons";
 
 export const InstanceState: React.FC<State> = ({ name, label }) => {
+  const visual = getVisual(label);
+  if (visual === null)
+    return <span aria-label={`InstanceState-${name}`}>{name}</span>;
+
+  return (
+    <Label {...visual} aria-label={`InstanceState-${name}`}>
+      {name}
+    </Label>
+  );
+};
+
+function getVisual(
+  label: State["label"]
+): { icon: React.ReactNode; color: LabelProps["color"] } | null {
   switch (label) {
     case "danger":
-      return (
-        <Label icon={<ExclamationCircleIcon />} color={"red"}>
-          {name}
-        </Label>
-      );
+      return { icon: <ExclamationCircleIcon />, color: "red" };
     case "warning":
-      return (
-        <Label icon={<ExclamationTriangleIcon />} color={"orange"}>
-          {name}
-        </Label>
-      );
+      return { icon: <ExclamationTriangleIcon />, color: "orange" };
     case "success":
-      return (
-        <Label icon={<CheckCircleIcon />} color={"green"}>
-          {name}
-        </Label>
-      );
+      return { icon: <CheckCircleIcon />, color: "green" };
     case "info":
-      return (
-        <Label icon={<InfoCircleIcon />} color={"blue"}>
-          {name}
-        </Label>
-      );
+      return { icon: <InfoCircleIcon />, color: "blue" };
     default:
-      return <>{name}</>;
+      return null;
   }
-};
+}
