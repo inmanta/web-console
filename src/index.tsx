@@ -95,10 +95,8 @@ const instanceLogsHelper = new InstanceLogsHookHelper(
 const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);
 
 const instanceConfigHelper = new InstanceConfigHookHelper(
-  new DataManagerImpl<"InstanceConfig">(
-    new FetcherImpl<"InstanceConfig">(baseApiHelper),
-    instanceConfigStateHelper
-  ),
+  new FetcherImpl<"InstanceConfig">(baseApiHelper),
+  instanceConfigStateHelper,
   serviceDataManager
 );
 

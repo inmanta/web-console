@@ -7,6 +7,8 @@ import {
   ServiceModel,
   Setting,
   Config,
+  Fetcher,
+  StateHelper,
 } from "@/Core";
 import { useEffect } from "react";
 import { uniq } from "lodash";
@@ -19,7 +21,8 @@ type Data = RemoteData.Type<
 export class InstanceConfigHookHelper
   implements OneTimeHookHelper<"InstanceConfig"> {
   constructor(
-    private readonly configDataManager: DataManager<"InstanceConfig">,
+    private readonly fetcher: Fetcher<"InstanceConfig">,
+    private readonly stateHelper: StateHelper<"InstanceConfig">,
     private readonly serviceDataManager: DataManager<"Service">
   ) {}
 
@@ -32,6 +35,25 @@ export class InstanceConfigHookHelper
 
   private getServiceUrl(name: string): string {
     return `/lsm/v1/service_catalog/${name}`;
+  }
+
+  private initialize(qualifier: Query.Qualifier<"InstanceConfig">): void {
+    const value = this.stateHelper.getOnce(qualifier);
+    if (RemoteData.isNotAsked(value)) {
+      this.stateHelper.set(qualifier, RemoteData.loading());
+    }
+  }
+
+  private async update(
+    qualifier: Query.Qualifier<"InstanceConfig">,
+    url: string
+  ): Promise<void> {
+    this.stateHelper.set(
+      qualifier,
+      RemoteData.fromEither(
+        await this.fetcher.getData(qualifier.environment, url)
+      )
+    );
   }
 
   useOneTime(qualifier: ServiceInstanceIdentifier): [Data, () => void] {
@@ -49,17 +71,16 @@ export class InstanceConfigHookHelper
     }, [serviceData.kind]);
 
     useEffect(() => {
-      this.configDataManager.initialize(qualifier);
-      this.configDataManager.update(qualifier, this.getConfigUrl(qualifier));
+      this.initialize(qualifier);
+      this.update(qualifier, this.getConfigUrl(qualifier));
     }, [qualifier.environment]);
 
     return [
       this.merge(
-        this.configDataManager.get(qualifier),
+        this.stateHelper.getHooked(qualifier),
         this.serviceDataManager.get(serviceIdentifier)
       ),
-      () =>
-        this.configDataManager.update(qualifier, this.getConfigUrl(qualifier)),
+      () => this.update(qualifier, this.getConfigUrl(qualifier)),
     ];
   }
 

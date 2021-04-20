@@ -38,13 +38,11 @@ function setup() {
   );
 
   const instanceConfigHelper = new InstanceConfigHookHelper(
-    new DataManagerImpl<"InstanceConfig">(
-      new InstantFetcher<"InstanceConfig">({
-        kind: "Success",
-        data: { data: { auto_creating: false } },
-      }),
-      instanceConfigStateHelper
-    ),
+    new InstantFetcher<"InstanceConfig">({
+      kind: "Success",
+      data: { data: { auto_creating: false } },
+    }),
+    instanceConfigStateHelper,
     serviceDataManager
   );
 
