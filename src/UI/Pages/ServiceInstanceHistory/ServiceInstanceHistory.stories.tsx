@@ -6,7 +6,6 @@ import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import {
-  DataManagerImpl,
   DataProviderImpl,
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
@@ -22,13 +21,11 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new InstanceLogsHookHelper(
-      new DataManagerImpl<"InstanceLogs">(
-        new InstantFetcher<"InstanceLogs">({
-          kind: "Success",
-          data: { data: logs },
-        }),
-        new InstanceLogsStateHelper(store)
-      )
+      new InstantFetcher<"InstanceLogs">({
+        kind: "Success",
+        data: { data: logs },
+      }),
+      new InstanceLogsStateHelper(store)
     ),
   ]);
 

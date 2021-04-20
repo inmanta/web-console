@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { InstantFetcher, Service, ServiceInstance } from "@/Test";
 import {
-  DataManagerImpl,
   DataProviderImpl,
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
@@ -17,13 +16,11 @@ it("ServiceInstanceHistory renders", async () => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new InstanceLogsHookHelper(
-      new DataManagerImpl<"InstanceLogs">(
-        new InstantFetcher<"InstanceLogs">({
-          kind: "Success",
-          data: { data: [] },
-        }),
-        new InstanceLogsStateHelper(store)
-      )
+      new InstantFetcher<"InstanceLogs">({
+        kind: "Success",
+        data: { data: [] },
+      }),
+      new InstanceLogsStateHelper(store)
     ),
   ]);
 

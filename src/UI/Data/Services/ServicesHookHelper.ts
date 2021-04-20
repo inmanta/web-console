@@ -1,14 +1,16 @@
-import { SubscriptionController, DataManager } from "@/Core";
+import { SubscriptionController, Fetcher, StateHelper } from "@/Core";
 import { ContinuousHookHelperImpl } from "../HookHelperImpl";
 import { identity } from "lodash";
 
 export class ServicesHookHelper extends ContinuousHookHelperImpl<"Services"> {
   constructor(
-    dataManager: DataManager<"Services">,
+    fetcher: Fetcher<"Services">,
+    stateHelper: StateHelper<"Services">,
     subscriptionController: SubscriptionController
   ) {
     super(
-      dataManager,
+      fetcher,
+      stateHelper,
       subscriptionController,
       (qualifier) => qualifier.environment,
       (qualifier) => [qualifier.environment],

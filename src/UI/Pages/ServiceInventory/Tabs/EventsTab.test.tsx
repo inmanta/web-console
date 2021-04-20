@@ -6,7 +6,6 @@ import { Either, InstanceEvent } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  DataManagerImpl,
   EventsHookHelper,
   EventsStateHelper,
 } from "@/UI/Data";
@@ -19,7 +18,8 @@ function setup() {
   const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
     new EventsHookHelper(
-      new DataManagerImpl<"Events">(apiHelper, new EventsStateHelper(store)),
+      apiHelper,
+      new EventsStateHelper(store),
       subscriptionController
     ),
   ]);

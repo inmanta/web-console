@@ -8,7 +8,6 @@ import {
   DataProviderImpl,
   ResourcesStateHelper,
   ResourcesHookHelper,
-  DataManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesTab } from "./ResourcesTab";
@@ -19,10 +18,8 @@ function setup() {
   const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        apiHelper,
-        new ResourcesStateHelper(store)
-      ),
+      apiHelper,
+      new ResourcesStateHelper(store),
       subscriptionController
     ),
   ]);

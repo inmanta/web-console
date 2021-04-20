@@ -1,11 +1,15 @@
-import { DataManager } from "@/Core";
+import { Fetcher, StateHelper } from "@/Core";
 import { identity } from "lodash";
 import { OneTimeHookHelperImpl } from "../HookHelperImpl";
 
 export class InstanceLogsHookHelper extends OneTimeHookHelperImpl<"InstanceLogs"> {
-  constructor(dataManager: DataManager<"InstanceLogs">) {
+  constructor(
+    fetcher: Fetcher<"InstanceLogs">,
+    stateHelper: StateHelper<"InstanceLogs">
+  ) {
     super(
-      dataManager,
+      fetcher,
+      stateHelper,
       (qualifier) => [qualifier.id, qualifier.service_entity],
       "InstanceLogs",
       ({ service_entity, id }) =>

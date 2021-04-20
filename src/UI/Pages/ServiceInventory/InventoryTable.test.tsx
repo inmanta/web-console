@@ -14,7 +14,6 @@ import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
   DataProviderImpl,
-  DataManagerImpl,
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
@@ -28,20 +27,18 @@ test("InventoryTable can be expanded", async () => {
   // Arrange
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        new InstantFetcher<"Resources">({
-          kind: "Success",
-          data: {
-            data: [
-              {
-                resource_id: "resource_id_1",
-                resource_state: "resource_state",
-              },
-            ],
-          },
-        }),
-        new DummyStateHelper<"Resources">()
-      ),
+      new InstantFetcher<"Resources">({
+        kind: "Success",
+        data: {
+          data: [
+            {
+              resource_id: "resource_id_1",
+              resource_state: "resource_state",
+            },
+          ],
+        },
+      }),
+      new DummyStateHelper<"Resources">(),
       new StaticSubscriptionController()
     ),
   ]);
@@ -70,20 +67,18 @@ test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        new InstantFetcher<"Resources">({
-          kind: "Success",
-          data: {
-            data: [
-              {
-                resource_id: "resource_id_1",
-                resource_state: "resource_state",
-              },
-            ],
-          },
-        }),
-        new ResourcesStateHelper(store)
-      ),
+      new InstantFetcher<"Resources">({
+        kind: "Success",
+        data: {
+          data: [
+            {
+              resource_id: "resource_id_1",
+              resource_state: "resource_state",
+            },
+          ],
+        },
+      }),
+      new ResourcesStateHelper(store),
       new StaticSubscriptionController()
     ),
   ]);

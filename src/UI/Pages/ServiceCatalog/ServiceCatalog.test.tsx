@@ -6,7 +6,6 @@ import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  DataManagerImpl,
   ServicesHookHelper,
   ServicesStateHelper,
   ServiceKeyMaker,
@@ -21,10 +20,8 @@ function setup() {
   const servicesFetcher = new DeferredFetcher<"Services">();
   const servicesSubscriptionController = new StaticSubscriptionController();
   const servicesHelper = new ServicesHookHelper(
-    new DataManagerImpl<"Services">(
-      servicesFetcher,
-      new ServicesStateHelper(store, new ServiceKeyMaker())
-    ),
+    servicesFetcher,
+    new ServicesStateHelper(store, new ServiceKeyMaker()),
     servicesSubscriptionController
   );
 

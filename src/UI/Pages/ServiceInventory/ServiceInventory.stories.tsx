@@ -11,7 +11,6 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  DataManagerImpl,
   ServiceInstancesHookHelper,
   ServiceInstancesStateHelper,
   ResourcesHookHelper,
@@ -42,10 +41,8 @@ export const Basic: React.FC = () => {
     new IntervalsDictionary()
   );
   const serviceInstancesHelper = new ServiceInstancesHookHelper(
-    new DataManagerImpl<"ServiceInstances">(
-      serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store)
-    ),
+    serviceInstancesFetcher,
+    new ServiceInstancesStateHelper(store),
     serviceInstancesSubscriptionController
   );
   const resourcesFetcher = new InstantFetcher<"Resources">({
@@ -58,10 +55,8 @@ export const Basic: React.FC = () => {
     new IntervalsDictionary()
   );
   const resourcesHelper = new ResourcesHookHelper(
-    new DataManagerImpl<"Resources">(
-      resourcesFetcher,
-      new ResourcesStateHelper(store)
-    ),
+    resourcesFetcher,
+    new ResourcesStateHelper(store),
     resourcesSubscriptionController
   );
 
@@ -96,10 +91,8 @@ export const Failed: React.FC = () => {
     new IntervalsDictionary()
   );
   const serviceInstancesHelper = new ServiceInstancesHookHelper(
-    new DataManagerImpl<"ServiceInstances">(
-      serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store)
-    ),
+    serviceInstancesFetcher,
+    new ServiceInstancesStateHelper(store),
     serviceInstancesSubscriptionController
   );
 

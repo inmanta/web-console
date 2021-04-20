@@ -13,7 +13,6 @@ import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  DataManagerImpl,
   ServiceInstancesHookHelper,
   ServiceInstancesStateHelper,
   ResourcesHookHelper,
@@ -29,20 +28,16 @@ function setup() {
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
   const serviceInstancesSubscriptionController = new StaticSubscriptionController();
   const serviceInstancesHelper = new ServiceInstancesHookHelper(
-    new DataManagerImpl<"ServiceInstances">(
-      serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store)
-    ),
+    serviceInstancesFetcher,
+    new ServiceInstancesStateHelper(store),
     serviceInstancesSubscriptionController
   );
 
   const resourcesFetcher = new DeferredFetcher<"Resources">();
   const resourcesSubscriptionController = new StaticSubscriptionController();
   const resourcesHelper = new ResourcesHookHelper(
-    new DataManagerImpl<"Resources">(
-      resourcesFetcher,
-      new ResourcesStateHelper(store)
-    ),
+    resourcesFetcher,
+    new ResourcesStateHelper(store),
     resourcesSubscriptionController
   );
 

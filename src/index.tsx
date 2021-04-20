@@ -52,10 +52,8 @@ const baseApiHelper = new BaseApiHelper(keycloak);
 const serviceKeyMaker = new ServiceKeyMaker();
 
 const servicesHelper = new ServicesHookHelper(
-  new DataManagerImpl<"Services">(
-    new FetcherImpl<"Services">(baseApiHelper),
-    new ServicesStateHelper(storeInstance, serviceKeyMaker)
-  ),
+  new FetcherImpl<"Services">(baseApiHelper),
+  new ServicesStateHelper(storeInstance, serviceKeyMaker),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
@@ -65,40 +63,33 @@ const serviceDataManager = new DataManagerImpl<"Service">(
 );
 
 const serviceHelper = new ServiceHookHelper(
-  serviceDataManager,
+  new FetcherImpl<"Service">(baseApiHelper),
+  new ServiceStateHelper(storeInstance, serviceKeyMaker),
   new LiveSubscriptionController(5000, new IntervalsDictionary()),
   serviceKeyMaker
 );
 
 const serviceInstancesHelper = new ServiceInstancesHookHelper(
-  new DataManagerImpl<"ServiceInstances">(
-    new FetcherImpl<"ServiceInstances">(baseApiHelper),
-    new ServiceInstancesStateHelper(storeInstance)
-  ),
+  new FetcherImpl<"ServiceInstances">(baseApiHelper),
+  new ServiceInstancesStateHelper(storeInstance),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
 const resourcesHelper = new ResourcesHookHelper(
-  new DataManagerImpl<"Resources">(
-    new FetcherImpl<"Resources">(baseApiHelper),
-    new ResourcesStateHelper(storeInstance)
-  ),
+  new FetcherImpl<"Resources">(baseApiHelper),
+  new ResourcesStateHelper(storeInstance),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
 const eventsHelper = new EventsHookHelper(
-  new DataManagerImpl<"Events">(
-    new FetcherImpl<"Events">(baseApiHelper),
-    new EventsStateHelper(storeInstance)
-  ),
+  new FetcherImpl<"Events">(baseApiHelper),
+  new EventsStateHelper(storeInstance),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
 const instanceLogsHelper = new InstanceLogsHookHelper(
-  new DataManagerImpl<"InstanceLogs">(
-    new FetcherImpl<"InstanceLogs">(baseApiHelper),
-    new InstanceLogsStateHelper(storeInstance)
-  )
+  new FetcherImpl<"InstanceLogs">(baseApiHelper),
+  new InstanceLogsStateHelper(storeInstance)
 );
 
 const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);

@@ -13,7 +13,6 @@ import { ServiceModel } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  DataManagerImpl,
   ResourcesHookHelper,
   ResourcesStateHelper,
 } from "@/UI/Data";
@@ -28,13 +27,11 @@ const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        new InstantFetcher<"Resources">({
-          kind: "Success",
-          data: { data: [] },
-        }),
-        new ResourcesStateHelper(store)
-      ),
+      new InstantFetcher<"Resources">({
+        kind: "Success",
+        data: { data: [] },
+      }),
+      new ResourcesStateHelper(store),
       new StaticSubscriptionController()
     ),
   ]);

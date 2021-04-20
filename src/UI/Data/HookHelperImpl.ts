@@ -1,11 +1,12 @@
 import {
   RemoteData,
   SubscriptionController,
-  DataManager,
   Query,
   OneTimeHookHelper,
   ContinuousHookHelper,
   HelperKind,
+  Fetcher,
+  StateHelper,
 } from "@/Core";
 import { useEffect, useState } from "react";
 
@@ -25,7 +26,8 @@ type Data<Kind extends Query.Kind> = [
 export class OneTimeHookHelperImpl<Kind extends Query.Kind>
   implements OneTimeHookHelper<Kind> {
   constructor(
-    private readonly dataManager: DataManager<Kind>,
+    private readonly fetcher: Fetcher<Kind>,
+    private readonly stateHelper: StateHelper<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
     private readonly getUrl: (qualifier: Query.Qualifier<Kind>) => string,
@@ -35,6 +37,22 @@ export class OneTimeHookHelperImpl<Kind extends Query.Kind>
     ) => Query.UsedData<Kind>
   ) {}
 
+  initialize(qualifier: Query.Qualifier<Kind>): void {
+    const value = this.stateHelper.getOnce(qualifier);
+    if (RemoteData.isNotAsked(value)) {
+      this.stateHelper.set(qualifier, RemoteData.loading());
+    }
+  }
+
+  async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
+    this.stateHelper.set(
+      qualifier,
+      RemoteData.fromEither(
+        await this.fetcher.getData(qualifier.environment, url)
+      )
+    );
+  }
+
   useOneTime(qualifier: Query.Qualifier<Kind>): Data<Kind> {
     const [url, setUrl] = useState(this.getUrl(qualifier));
 
@@ -43,16 +61,16 @@ export class OneTimeHookHelperImpl<Kind extends Query.Kind>
     }, this.getDependencies(qualifier));
 
     useEffect(() => {
-      this.dataManager.initialize(qualifier);
-      this.dataManager.update(qualifier, url);
+      this.initialize(qualifier);
+      this.update(qualifier, url);
     }, [url, qualifier.environment]);
 
     return [
       RemoteData.mapSuccess(
         (d) => this.toUsed(d, setUrl),
-        this.dataManager.get(qualifier)
+        this.stateHelper.getHooked(qualifier)
       ),
-      () => this.dataManager.update(qualifier, url),
+      () => this.update(qualifier, url),
     ];
   }
 
@@ -64,7 +82,8 @@ export class OneTimeHookHelperImpl<Kind extends Query.Kind>
 export class ContinuousHookHelperImpl<Kind extends Query.Kind>
   implements ContinuousHookHelper<Kind> {
   constructor(
-    private readonly dataManager: DataManager<Kind>,
+    private readonly fetcher: Fetcher<Kind>,
+    private readonly stateHelper: StateHelper<Kind>,
     private readonly subscriptionController: SubscriptionController,
     private readonly getUnique: GetUnique<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
@@ -76,6 +95,22 @@ export class ContinuousHookHelperImpl<Kind extends Query.Kind>
     ) => Query.UsedData<Kind>
   ) {}
 
+  initialize(qualifier: Query.Qualifier<Kind>): void {
+    const value = this.stateHelper.getOnce(qualifier);
+    if (RemoteData.isNotAsked(value)) {
+      this.stateHelper.set(qualifier, RemoteData.loading());
+    }
+  }
+
+  async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
+    this.stateHelper.set(
+      qualifier,
+      RemoteData.fromEither(
+        await this.fetcher.getData(qualifier.environment, url)
+      )
+    );
+  }
+
   useContinuous(qualifier: Query.Qualifier<Kind>): Data<Kind> {
     const [url, setUrl] = useState(this.getUrl(qualifier));
 
@@ -84,11 +119,11 @@ export class ContinuousHookHelperImpl<Kind extends Query.Kind>
     }, this.getDependencies(qualifier));
 
     const handler = async () => {
-      this.dataManager.update(qualifier, url);
+      this.update(qualifier, url);
     };
 
     useEffect(() => {
-      this.dataManager.initialize(qualifier);
+      this.initialize(qualifier);
       this.subscriptionController.subscribeTo(
         this.getUnique(qualifier),
         handler
@@ -101,7 +136,7 @@ export class ContinuousHookHelperImpl<Kind extends Query.Kind>
     return [
       RemoteData.mapSuccess(
         (data) => this.toUsed(data, setUrl),
-        this.dataManager.get(qualifier)
+        this.stateHelper.getHooked(qualifier)
       ),
       () => this.subscriptionController.refresh(this.getUnique(qualifier)),
     ];

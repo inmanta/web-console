@@ -1,6 +1,7 @@
 import {
   SubscriptionController,
-  DataManager,
+  Fetcher,
+  StateHelper,
   ServiceInstanceParams,
 } from "@/Core";
 import { ContinuousHookHelperImpl } from "../HookHelperImpl";
@@ -8,11 +9,13 @@ import { getServiceInstancesUrl } from "./getServiceInstancesUrl";
 
 export class ServiceInstancesHookHelper extends ContinuousHookHelperImpl<"ServiceInstances"> {
   constructor(
-    dataManager: DataManager<"ServiceInstances">,
+    fetcher: Fetcher<"ServiceInstances">,
+    stateHelper: StateHelper<"ServiceInstances">,
     subscriptionController: SubscriptionController
   ) {
     super(
-      dataManager,
+      fetcher,
+      stateHelper,
       subscriptionController,
       (qualifier) => qualifier.name,
       (qualifier) => [
