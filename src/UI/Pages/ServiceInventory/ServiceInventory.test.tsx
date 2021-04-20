@@ -149,7 +149,9 @@ test("ServiceInventory shows next page of instances", async () => {
     })
   );
 
-  expect(await screen.findByRole("cell", { name: "a" })).toBeInTheDocument();
+  expect(
+    await screen.findByRole("cell", { name: "IdCell-a" })
+  ).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Next" }));
 
@@ -161,7 +163,9 @@ test("ServiceInventory shows next page of instances", async () => {
     })
   );
 
-  expect(await screen.findByRole("cell", { name: "b" })).toBeInTheDocument();
+  expect(
+    await screen.findByRole("cell", { name: "IdCell-b" })
+  ).toBeInTheDocument();
 });
 
 test("ResourcesView fetches resources for new instance after instance update", async () => {

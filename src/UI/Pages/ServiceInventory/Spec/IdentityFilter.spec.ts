@@ -4,18 +4,21 @@ import { Either } from "@/Core";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { ServiceInventoryBuilder } from "./ServiceInventoryBuilder";
 
-test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async () => {
+test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID', '0001') THEN only 1 instance is shown", async () => {
   const {
     component,
     serviceInstancesFetcher,
-  } = new ServiceInventoryBuilder().build();
+  } = new ServiceInventoryBuilder().build(Service.withIdentity);
 
   render(component);
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [
+          { ...ServiceInstance.A, service_identity_attribute_value: "0001" },
+          { ...ServiceInstance.B, service_identity_attribute_value: "0002" },
+        ],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -23,24 +26,22 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   });
 
   const filterBar = screen.getByRole("generic", { name: "FilterBar" });
+  userEvent.click(within(filterBar).getByRole("button", { name: "State" }));
+  userEvent.click(screen.getByRole("option", { name: "Order ID" }));
 
-  const picker = within(filterBar).getByRole("button", { name: "State" });
-  userEvent.click(picker);
-
-  const id = screen.getByRole("option", { name: "Id" });
-  userEvent.click(id);
-
-  const input = screen.getByRole("searchbox", { name: "IdFilter" });
-  userEvent.type(input, `${ServiceInstance.A.id}${specialChars.enter}`);
+  const input = screen.getByRole("searchbox", { name: "IdentityFilter" });
+  userEvent.type(input, `0001${specialChars.enter}`);
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.A.id}&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.order_id=0001&sort=created_at.desc`
   );
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A],
+        data: [
+          { ...ServiceInstance.A, service_identity_attribute_value: "0001" },
+        ],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -51,4 +52,8 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
     name: "InstanceRow-Intro",
   });
   expect(rowsAfter.length).toEqual(1);
+
+  expect(
+    within(rowsAfter[0]).getByRole("cell", { name: "IdentityCell-0001" })
+  ).toBeInTheDocument();
 });

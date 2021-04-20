@@ -34,8 +34,6 @@ export const IdentityFilter: React.FC<Props> = ({
 
   const chips = identity.value ? [identity.value] : [];
 
-  console.log({ chips, identity });
-
   return (
     <ToolbarFilter
       chips={chips}
@@ -48,7 +46,7 @@ export const IdentityFilter: React.FC<Props> = ({
           name="identityInput"
           id="identityInput"
           type="search"
-          aria-label="identity filter"
+          aria-label="IdentityFilter"
           onChange={setInput}
           value={input}
           placeholder={`Filter by ${identity.pretty}...`}

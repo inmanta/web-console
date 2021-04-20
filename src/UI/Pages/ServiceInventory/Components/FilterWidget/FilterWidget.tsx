@@ -44,7 +44,6 @@ export const FilterWidget: React.FC<Props> = ({
     setFilter({ ...filter, deleted });
 
   const updateIdentity = (value?: string) => {
-    console.log({ value });
     setFilter({
       ...filter,
       identity:

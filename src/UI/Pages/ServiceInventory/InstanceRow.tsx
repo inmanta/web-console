@@ -58,10 +58,18 @@ export const InstanceRow: React.FC<Props> = ({
             onToggle,
           }}
         />
-        <Td dataLabel={idDataLabel}>
-          {shouldUseServiceIdentity && row.serviceIdentityValue}
-          {!shouldUseServiceIdentity && <IdWithCopy id={row.id} />}
-        </Td>
+        {shouldUseServiceIdentity ? (
+          <Td
+            dataLabel={idDataLabel}
+            aria-label={`IdentityCell-${row.serviceIdentityValue}`}
+          >
+            {row.serviceIdentityValue}
+          </Td>
+        ) : (
+          <Td dataLabel={idDataLabel} aria-label={`IdCell-${row.id.short}`}>
+            <IdWithCopy id={row.id} />
+          </Td>
+        )}
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>
         <Td
           dataLabel={words("inventory.column.attributesSummary")}

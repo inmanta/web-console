@@ -1,4 +1,5 @@
 import React from "react";
+import { ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
 import { StaticSubscriptionController, DeferredFetcher, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -18,7 +19,7 @@ export interface Handles {
 }
 
 export class ServiceInventoryBuilder {
-  build(): Handles {
+  build(service: ServiceModel = Service.A): Handles {
     const store = getStoreInstance();
     const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
     const serviceInstancesSubscriptionController = new StaticSubscriptionController();
@@ -32,15 +33,14 @@ export class ServiceInventoryBuilder {
 
     const dataProvider = new DataProviderImpl([serviceInstancesHelper]);
 
-    // Render the component
     const component = (
       <MemoryRouter>
         <DependencyProvider dependencies={{ dataProvider }}>
           <StoreProvider store={store}>
             <ServiceInventory
-              serviceName={Service.A.name}
-              environmentId={Service.A.environment}
-              service={Service.A}
+              serviceName={service.name}
+              environmentId={service.environment}
+              service={service}
             />
           </StoreProvider>
         </DependencyProvider>

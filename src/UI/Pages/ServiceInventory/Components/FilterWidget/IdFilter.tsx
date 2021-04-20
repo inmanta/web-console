@@ -39,8 +39,8 @@ export const IdFilter: React.FC<Props> = ({ id, isVisible, update }) => {
           data-testid="IdFilterInput"
           name="idInput"
           id="idInput1"
-          type="text"
-          aria-label="IdFilterInput"
+          type="search"
+          aria-label="IdFilter"
           onChange={setIdInput}
           value={idInput}
           placeholder="Filter by id..."

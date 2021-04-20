@@ -4,6 +4,7 @@ import {
   instances,
   InstantFetcher,
   StaticSubscriptionController,
+  Service,
 } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
 import { StoreProvider } from "easy-peasy";
@@ -17,7 +18,6 @@ import {
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { MemoryRouter } from "react-router";
-import { ServiceWithIdentity } from "@/Test/Data/Service";
 
 export default {
   title: "TableProvider",
@@ -67,5 +67,5 @@ Multiple.args = {
 export const WithIdentity = Template.bind({});
 WithIdentity.args = {
   instances,
-  serviceEntity: ServiceWithIdentity,
+  serviceEntity: Service.withIdentity,
 };
