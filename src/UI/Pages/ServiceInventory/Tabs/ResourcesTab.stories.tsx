@@ -11,7 +11,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
-  ResourcesHookHelper,
+  ResourcesDataManager,
 } from "@/UI/Data";
 import { ResourcesTab } from "./ResourcesTab";
 
@@ -23,7 +23,7 @@ export default {
 const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
+    new ResourcesDataManager(
       new InstantFetcher<"Resources">(outcome),
       new ResourcesStateHelper(store),
       new StaticSubscriptionController()

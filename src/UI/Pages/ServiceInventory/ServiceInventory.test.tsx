@@ -15,7 +15,7 @@ import {
   DataProviderImpl,
   ServiceInstancesHookHelper,
   ServiceInstancesStateHelper,
-  ResourcesHookHelper,
+  ResourcesDataManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -35,7 +35,7 @@ function setup() {
 
   const resourcesFetcher = new DeferredFetcher<"Resources">();
   const resourcesSubscriptionController = new StaticSubscriptionController();
-  const resourcesHelper = new ResourcesHookHelper(
+  const resourcesHelper = new ResourcesDataManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
     resourcesSubscriptionController

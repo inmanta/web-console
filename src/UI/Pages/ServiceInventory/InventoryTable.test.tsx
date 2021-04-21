@@ -14,7 +14,7 @@ import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
   DataProviderImpl,
-  ResourcesHookHelper,
+  ResourcesDataManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import userEvent from "@testing-library/user-event";
@@ -26,7 +26,7 @@ const dummySetter = () => {
 test("InventoryTable can be expanded", async () => {
   // Arrange
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
+    new ResourcesDataManager(
       new InstantFetcher<"Resources">({
         kind: "Success",
         data: {
@@ -66,7 +66,7 @@ test("InventoryTable can be expanded", async () => {
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
+    new ResourcesDataManager(
       new InstantFetcher<"Resources">({
         kind: "Success",
         data: {

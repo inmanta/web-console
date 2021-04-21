@@ -16,7 +16,7 @@ import {
   ServiceInstancesHookHelper,
   ServiceInstancesStateHelper,
   ResourcesStateHelper,
-  ResourcesHookHelper,
+  ResourcesDataManager,
   EventsDataManager,
   EventsStateHelper,
   ServicesHookHelper,
@@ -69,7 +69,7 @@ const serviceInstancesHelper = new ServiceInstancesHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
-const resourcesHelper = new ResourcesHookHelper(
+const resourcesHelper = new ResourcesDataManager(
   new FetcherImpl<"Resources">(baseApiHelper),
   new ResourcesStateHelper(storeInstance),
   new LiveSubscriptionController(5000, new IntervalsDictionary())

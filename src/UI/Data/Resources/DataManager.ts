@@ -2,7 +2,7 @@ import { SubscriptionController, Fetcher, StateHelper } from "@/Core";
 import { identity } from "lodash";
 import { ContinuousDataManagerImpl } from "../DataManagerImpl";
 
-export class ResourcesHookHelper extends ContinuousDataManagerImpl<"Resources"> {
+export class ResourcesDataManager extends ContinuousDataManagerImpl<"Resources"> {
   constructor(
     fetcher: Fetcher<"Resources">,
     stateHelper: StateHelper<"Resources">,

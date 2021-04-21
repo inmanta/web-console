@@ -7,7 +7,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
-  ResourcesHookHelper,
+  ResourcesDataManager,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesTab } from "./ResourcesTab";
@@ -17,7 +17,7 @@ function setup() {
   const apiHelper = new DeferredFetcher<"Resources">();
   const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
+    new ResourcesDataManager(
       apiHelper,
       new ResourcesStateHelper(store),
       subscriptionController

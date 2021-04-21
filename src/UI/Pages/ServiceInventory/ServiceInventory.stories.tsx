@@ -13,7 +13,7 @@ import {
   DataProviderImpl,
   ServiceInstancesHookHelper,
   ServiceInstancesStateHelper,
-  ResourcesHookHelper,
+  ResourcesDataManager,
   ResourcesStateHelper,
   LiveSubscriptionController,
   IntervalsDictionary,
@@ -54,7 +54,7 @@ export const Basic: React.FC = () => {
     2000,
     new IntervalsDictionary()
   );
-  const resourcesHelper = new ResourcesHookHelper(
+  const resourcesHelper = new ResourcesDataManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
     resourcesSubscriptionController

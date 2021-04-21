@@ -13,7 +13,7 @@ import { ServiceModel } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  ResourcesHookHelper,
+  ResourcesDataManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { MemoryRouter } from "react-router";
@@ -26,7 +26,7 @@ export default {
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
+    new ResourcesDataManager(
       new InstantFetcher<"Resources">({
         kind: "Success",
         data: { data: [] },
