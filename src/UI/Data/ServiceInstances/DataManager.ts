@@ -5,9 +5,9 @@ import {
   ServiceInstanceParams,
 } from "@/Core";
 import { ContinuousDataManagerImpl } from "../DataManagerImpl";
-import { getServiceInstancesUrl } from "./getServiceInstancesUrl";
+import { getUrl } from "./getUrl";
 
-export class ServiceInstancesHookHelper extends ContinuousDataManagerImpl<"ServiceInstances"> {
+export class ServiceInstancesDataManager extends ContinuousDataManagerImpl<"ServiceInstances"> {
   constructor(
     fetcher: Fetcher<"ServiceInstances">,
     stateHelper: StateHelper<"ServiceInstances">,
@@ -25,7 +25,7 @@ export class ServiceInstancesHookHelper extends ContinuousDataManagerImpl<"Servi
         qualifier.sort?.order,
       ],
       "ServiceInstances",
-      getServiceInstancesUrl,
+      getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")
           return { data: data, handlers: {}, metadata };

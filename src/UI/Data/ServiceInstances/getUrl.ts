@@ -1,7 +1,7 @@
 import { Query } from "@/Core";
 import qs from "qs";
 
-export function getServiceInstancesUrl({
+export function getUrl({
   name,
   filter,
   sort,

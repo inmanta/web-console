@@ -11,7 +11,7 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  ServiceInstancesHookHelper,
+  ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
   ResourcesDataManager,
   ResourcesStateHelper,
@@ -40,7 +40,7 @@ export const Basic: React.FC = () => {
     2000,
     new IntervalsDictionary()
   );
-  const serviceInstancesHelper = new ServiceInstancesHookHelper(
+  const serviceInstancesHelper = new ServiceInstancesDataManager(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store),
     serviceInstancesSubscriptionController
@@ -90,7 +90,7 @@ export const Failed: React.FC = () => {
     2000,
     new IntervalsDictionary()
   );
-  const serviceInstancesHelper = new ServiceInstancesHookHelper(
+  const serviceInstancesHelper = new ServiceInstancesDataManager(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store),
     serviceInstancesSubscriptionController

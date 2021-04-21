@@ -1,7 +1,7 @@
 import { Query } from "@/Core";
-import { getServiceInstancesUrl } from "./getServiceInstancesUrl";
+import { getUrl } from "./getUrl";
 
-test("getServiceInstancesUrl returns correct url for no filter & no sort", () => {
+test("getUrl returns correct url for no filter & no sort", () => {
   const name = "service_a";
   const qualifier: Query.Qualifier<"ServiceInstances"> = {
     name,
@@ -10,12 +10,12 @@ test("getServiceInstancesUrl returns correct url for no filter & no sort", () =>
     sort: undefined,
   };
 
-  expect(getServiceInstancesUrl(qualifier)).toMatch(
+  expect(getUrl(qualifier)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`
   );
 });
 
-test("getServiceInstancesUrl returns correct url for filter & no sort", () => {
+test("getUrl returns correct url for filter & no sort", () => {
   const name = "service_a";
   const qualifier: Query.Qualifier<"ServiceInstances"> = {
     name,
@@ -26,12 +26,12 @@ test("getServiceInstancesUrl returns correct url for filter & no sort", () => {
     sort: undefined,
   };
 
-  expect(getServiceInstancesUrl(qualifier)).toMatch(
+  expect(getUrl(qualifier)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating`
   );
 });
 
-test("getServiceInstancesUrl returns correct url for sort & no filter", () => {
+test("getUrl returns correct url for sort & no filter", () => {
   const name = "service_a";
   const qualifier: Query.Qualifier<"ServiceInstances"> = {
     name,
@@ -43,12 +43,12 @@ test("getServiceInstancesUrl returns correct url for sort & no filter", () => {
     },
   };
 
-  expect(getServiceInstancesUrl(qualifier)).toMatch(
+  expect(getUrl(qualifier)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&sort=state.asc`
   );
 });
 
-test("getServiceInstancesUrl returns correct url for sort & filter", () => {
+test("getUrl returns correct url for sort & filter", () => {
   const name = "service_a";
   const qualifier: Query.Qualifier<"ServiceInstances"> = {
     name,
@@ -62,12 +62,12 @@ test("getServiceInstancesUrl returns correct url for sort & filter", () => {
     },
   };
 
-  expect(getServiceInstancesUrl(qualifier)).toMatch(
+  expect(getUrl(qualifier)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating&sort=state.asc`
   );
 });
 
-test("getServiceInstancesUrl returns correct url for empty filter", () => {
+test("getUrl returns correct url for empty filter", () => {
   const name = "service_a";
   const qualifier: Query.Qualifier<"ServiceInstances"> = {
     name,
@@ -80,7 +80,7 @@ test("getServiceInstancesUrl returns correct url for empty filter", () => {
     },
   };
 
-  expect(getServiceInstancesUrl(qualifier)).toMatch(
+  expect(getUrl(qualifier)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`
   );
 });

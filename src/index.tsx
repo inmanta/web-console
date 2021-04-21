@@ -13,7 +13,7 @@ import {
   ServiceDataManager,
   ServiceKeyMaker,
   ServiceStateHelper,
-  ServiceInstancesHookHelper,
+  ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
   ResourcesStateHelper,
   ResourcesDataManager,
@@ -63,7 +63,7 @@ const serviceHelper = new ServiceDataManager(
   serviceKeyMaker
 );
 
-const serviceInstancesHelper = new ServiceInstancesHookHelper(
+const serviceInstancesHelper = new ServiceInstancesDataManager(
   new FetcherImpl<"ServiceInstances">(baseApiHelper),
   new ServiceInstancesStateHelper(storeInstance),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
