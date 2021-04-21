@@ -19,7 +19,7 @@ import {
   ResourcesDataManager,
   EventsDataManager,
   EventsStateHelper,
-  ServicesHookHelper,
+  ServicesDataManager,
   ServicesStateHelper,
   InstanceLogsDataManager,
   InstanceLogsStateHelper,
@@ -50,7 +50,7 @@ const storeInstance = getStoreInstance();
 const baseApiHelper = new BaseApiHelper(keycloak);
 const serviceKeyMaker = new ServiceKeyMaker();
 
-const servicesHelper = new ServicesHookHelper(
+const servicesHelper = new ServicesDataManager(
   new FetcherImpl<"Services">(baseApiHelper),
   new ServicesStateHelper(storeInstance, serviceKeyMaker),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
