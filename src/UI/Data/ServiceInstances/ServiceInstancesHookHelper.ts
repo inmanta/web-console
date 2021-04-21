@@ -4,10 +4,10 @@ import {
   StateHelper,
   ServiceInstanceParams,
 } from "@/Core";
-import { ContinuousHookHelperImpl } from "../HookHelperImpl";
+import { ContinuousDataManagerImpl } from "../DataManagerImpl";
 import { getServiceInstancesUrl } from "./getServiceInstancesUrl";
 
-export class ServiceInstancesHookHelper extends ContinuousHookHelperImpl<"ServiceInstances"> {
+export class ServiceInstancesHookHelper extends ContinuousDataManagerImpl<"ServiceInstances"> {
   constructor(
     fetcher: Fetcher<"ServiceInstances">,
     stateHelper: StateHelper<"ServiceInstances">,

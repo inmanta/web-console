@@ -1,5 +1,5 @@
 import {
-  OneTimeHookHelper,
+  OneTimeDataManager,
   ServiceInstanceIdentifier,
   Query,
   RemoteData,
@@ -18,7 +18,7 @@ type Data = RemoteData.Type<
 >;
 
 export class InstanceConfigHookHelper
-  implements OneTimeHookHelper<"InstanceConfig"> {
+  implements OneTimeDataManager<"InstanceConfig"> {
   constructor(
     private readonly fetcher: Fetcher<"InstanceConfig">,
     private readonly stateHelper: StateHelper<"InstanceConfig">,

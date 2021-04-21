@@ -2,9 +2,9 @@ import {
   RemoteData,
   SubscriptionController,
   Query,
-  OneTimeHookHelper,
-  ContinuousHookHelper,
-  HelperKind,
+  OneTimeDataManager,
+  ContinuousDataManager,
+  DataManagerKind,
   Fetcher,
   StateHelper,
 } from "@/Core";
@@ -23,8 +23,8 @@ type Data<Kind extends Query.Kind> = [
   () => void
 ];
 
-export class OneTimeHookHelperImpl<Kind extends Query.Kind>
-  implements OneTimeHookHelper<Kind> {
+export class OneTimeDataManagerImpl<Kind extends Query.Kind>
+  implements OneTimeDataManager<Kind> {
   constructor(
     private readonly fetcher: Fetcher<Kind>,
     private readonly stateHelper: StateHelper<Kind>,
@@ -74,13 +74,13 @@ export class OneTimeHookHelperImpl<Kind extends Query.Kind>
     ];
   }
 
-  matches(query: Query.SubQuery<Kind>, helperKind: HelperKind): boolean {
-    return query.kind === this.kind && helperKind === "OneTime";
+  matches(query: Query.SubQuery<Kind>, kind: DataManagerKind): boolean {
+    return query.kind === this.kind && kind === "OneTime";
   }
 }
 
-export class ContinuousHookHelperImpl<Kind extends Query.Kind>
-  implements ContinuousHookHelper<Kind> {
+export class ContinuousDataManagerImpl<Kind extends Query.Kind>
+  implements ContinuousDataManager<Kind> {
   constructor(
     private readonly fetcher: Fetcher<Kind>,
     private readonly stateHelper: StateHelper<Kind>,
@@ -142,7 +142,7 @@ export class ContinuousHookHelperImpl<Kind extends Query.Kind>
     ];
   }
 
-  matches(query: Query.SubQuery<Kind>, helperKind: HelperKind): boolean {
-    return query.kind === this.kind && helperKind === "Continuous";
+  matches(query: Query.SubQuery<Kind>, kind: DataManagerKind): boolean {
+    return query.kind === this.kind && kind === "Continuous";
   }
 }

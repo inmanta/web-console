@@ -5,10 +5,10 @@ import {
   Fetcher,
   StateHelper,
 } from "@/Core";
-import { ContinuousHookHelperImpl } from "../HookHelperImpl";
+import { ContinuousDataManagerImpl } from "../DataManagerImpl";
 import { identity } from "lodash";
 
-export class ServiceHookHelper extends ContinuousHookHelperImpl<"Service"> {
+export class ServiceHookHelper extends ContinuousDataManagerImpl<"Service"> {
   constructor(
     fetcher: Fetcher<"Service">,
     stateHelper: StateHelper<"Service">,

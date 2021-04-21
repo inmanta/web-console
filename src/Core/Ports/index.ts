@@ -3,7 +3,7 @@ export * from "./CommandProvider";
 export * from "./Fetcher";
 export * from "./DataProvider";
 export * from "./Dictionary";
-export * from "./HookHelper";
+export * from "./DataManager";
 export * from "./KeyMaker";
 export * from "./Poster";
 export * from "./StateHelper";
