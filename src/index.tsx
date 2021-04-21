@@ -10,7 +10,7 @@ import {
   DataProviderImpl,
   IntervalsDictionary,
   LiveSubscriptionController,
-  ServiceHookHelper,
+  ServiceDataManager,
   ServiceKeyMaker,
   ServiceStateHelper,
   ServiceInstancesHookHelper,
@@ -56,7 +56,7 @@ const servicesHelper = new ServicesHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
-const serviceHelper = new ServiceHookHelper(
+const serviceHelper = new ServiceDataManager(
   new FetcherImpl<"Service">(baseApiHelper),
   new ServiceStateHelper(storeInstance, serviceKeyMaker),
   new LiveSubscriptionController(5000, new IntervalsDictionary()),

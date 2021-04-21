@@ -8,7 +8,7 @@ import {
 import { ContinuousDataManagerImpl } from "../DataManagerImpl";
 import { identity } from "lodash";
 
-export class ServiceHookHelper extends ContinuousDataManagerImpl<"Service"> {
+export class ServiceDataManager extends ContinuousDataManagerImpl<"Service"> {
   constructor(
     fetcher: Fetcher<"Service">,
     stateHelper: StateHelper<"Service">,
