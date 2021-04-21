@@ -21,7 +21,7 @@ import {
   EventsStateHelper,
   ServicesHookHelper,
   ServicesStateHelper,
-  InstanceLogsHookHelper,
+  InstanceLogsDataManager,
   InstanceLogsStateHelper,
   InstanceConfigDataManager,
   InstanceConfigStateHelper,
@@ -81,7 +81,7 @@ const eventsDataManager = new EventsDataManager(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
-const instanceLogsHelper = new InstanceLogsHookHelper(
+const instanceLogsHelper = new InstanceLogsDataManager(
   new FetcherImpl<"InstanceLogs">(baseApiHelper),
   new InstanceLogsStateHelper(storeInstance)
 );

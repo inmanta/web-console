@@ -4,7 +4,7 @@ import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { InstantFetcher, Service, ServiceInstance } from "@/Test";
 import {
   DataProviderImpl,
-  InstanceLogsHookHelper,
+  InstanceLogsDataManager,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -15,7 +15,7 @@ it("ServiceInstanceHistory renders", async () => {
   const { id, environment } = ServiceInstance.A;
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new InstanceLogsHookHelper(
+    new InstanceLogsDataManager(
       new InstantFetcher<"InstanceLogs">({
         kind: "Success",
         data: { data: [] },
