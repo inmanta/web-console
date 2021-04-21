@@ -6,5 +6,6 @@ export * from "./Dictionary";
 export * from "./DataManager";
 export * from "./KeyMaker";
 export * from "./Poster";
+export * from "./Scheduler";
 export * from "./StateHelper";
 export * from "./SubscriptionController";
