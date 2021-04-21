@@ -23,7 +23,7 @@ import {
   ServicesStateHelper,
   InstanceLogsHookHelper,
   InstanceLogsStateHelper,
-  InstanceConfigHookHelper,
+  InstanceConfigDataManager,
   InstanceConfigStateHelper,
   CommandProviderImpl,
 } from "@/UI/Data";
@@ -88,7 +88,7 @@ const instanceLogsHelper = new InstanceLogsHookHelper(
 
 const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);
 
-const instanceConfigHelper = new InstanceConfigHookHelper(
+const instanceConfigHelper = new InstanceConfigDataManager(
   new FetcherImpl<"InstanceConfig">(baseApiHelper),
   instanceConfigStateHelper,
   new ServiceStateHelper(storeInstance, serviceKeyMaker),

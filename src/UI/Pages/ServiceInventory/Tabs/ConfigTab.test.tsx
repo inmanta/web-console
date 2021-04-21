@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import {
   CommandProviderImpl,
   DataProviderImpl,
-  InstanceConfigHookHelper,
+  InstanceConfigDataManager,
   InstanceConfigStateHelper,
   ServiceKeyMaker,
   ServiceStateHelper,
@@ -28,7 +28,7 @@ function setup() {
     storeInstance
   );
 
-  const instanceConfigHelper = new InstanceConfigHookHelper(
+  const instanceConfigHelper = new InstanceConfigDataManager(
     new InstantFetcher<"InstanceConfig">({
       kind: "Success",
       data: { data: { auto_creating: false } },

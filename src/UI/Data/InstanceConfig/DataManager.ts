@@ -17,7 +17,7 @@ type Data = RemoteData.Type<
   Query.UsedData<"InstanceConfig">
 >;
 
-export class InstanceConfigHookHelper
+export class InstanceConfigDataManager
   implements OneTimeDataManager<"InstanceConfig"> {
   constructor(
     private readonly fetcher: Fetcher<"InstanceConfig">,
