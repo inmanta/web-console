@@ -29,7 +29,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   );
   userEvent.click(screen.getByRole("option", { name: "AttributeSet" }));
   userEvent.click(
-    screen.getByRole("button", { name: "Select an identifier..." })
+    screen.getByRole("button", { name: "Select an AttributeSet..." })
   );
   userEvent.click(screen.getByRole("option", { name: "Active" }));
   userEvent.click(screen.getByRole("button", { name: "Select a quality..." }));

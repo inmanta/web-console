@@ -3,11 +3,14 @@ import { ServiceInstanceParams } from "@/Core";
 import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
 
 interface Props {
-  identifier: ServiceInstanceParams.Attributes | undefined;
-  onChange: (id: ServiceInstanceParams.Attributes) => void;
+  attributeSet: ServiceInstanceParams.AttributeSet | undefined;
+  onChange: (id: ServiceInstanceParams.AttributeSet) => void;
 }
 
-export const IdentifierPicker: React.FC<Props> = ({ identifier, onChange }) => {
+export const AttributeSetPicker: React.FC<Props> = ({
+  attributeSet,
+  onChange,
+}) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
 
   const onSelect = (event, selection) => {
@@ -18,20 +21,23 @@ export const IdentifierPicker: React.FC<Props> = ({ identifier, onChange }) => {
   return (
     <Select
       variant={SelectVariant.single}
-      aria-label="Select Identifier"
+      aria-label="Select AttributeSet"
       onToggle={setFilterOpen}
       onSelect={onSelect}
-      selections={identifier}
+      selections={attributeSet}
       isOpen={isFilterOpen}
-      placeholderText="Select an identifier..."
+      placeholderText="Select an AttributeSet..."
     >
-      <SelectOption key={1} value={ServiceInstanceParams.Attributes.Candidate}>
+      <SelectOption
+        key={1}
+        value={ServiceInstanceParams.AttributeSet.Candidate}
+      >
         Candidate
       </SelectOption>
-      <SelectOption key={2} value={ServiceInstanceParams.Attributes.Active}>
+      <SelectOption key={2} value={ServiceInstanceParams.AttributeSet.Active}>
         Active
       </SelectOption>
-      <SelectOption key={3} value={ServiceInstanceParams.Attributes.Rollback}>
+      <SelectOption key={3} value={ServiceInstanceParams.AttributeSet.Rollback}>
         Rollback
       </SelectOption>
     </Select>

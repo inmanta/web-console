@@ -3,15 +3,15 @@ export interface ServiceInstanceParams {
   sort?: Sort;
 }
 
-export enum Attributes {
+export enum AttributeSet {
   Active = "active_attributes",
   Candidate = "candidate_attributes",
   Rollback = "rollback_attributes",
 }
 
 export interface Filter {
-  attributeSetEmpty?: Attributes[];
-  attributeSetNotEmpty?: Attributes[];
+  attributeSetEmpty?: AttributeSet[];
+  attributeSetNotEmpty?: AttributeSet[];
   deleted?: DeletedRule;
   id?: string[];
   identity?: { key: string; value: string };

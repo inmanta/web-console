@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
 import { ServiceInstanceParams } from "@/Core";
 import { without } from "lodash";
-import { IdentifierPicker } from "./IdentifierPicker";
+import { AttributeSetPicker } from "./AttributeSetPicker";
 import { AttributeRulePicker, AttributeRule } from "./AttributeRulePicker";
 
 type Pretty =
@@ -14,12 +14,12 @@ type Pretty =
   | "Rollback (not empty)";
 
 export interface AttributeSets {
-  empty: ServiceInstanceParams.Attributes[];
-  notEmpty: ServiceInstanceParams.Attributes[];
+  empty: ServiceInstanceParams.AttributeSet[];
+  notEmpty: ServiceInstanceParams.AttributeSet[];
 }
 
 interface Raw {
-  id: ServiceInstanceParams.Attributes;
+  id: ServiceInstanceParams.AttributeSet;
   rule: AttributeRule;
 }
 
@@ -34,17 +34,17 @@ export const AttributesFilter: React.FC<Props> = ({
   update,
   isVisible,
 }) => {
-  const [identifierFilter, setIdentifierFilter] = useState<
-    ServiceInstanceParams.Attributes | undefined
+  const [attributeSetFilter, setAttributeSetFilter] = useState<
+    ServiceInstanceParams.AttributeSet | undefined
   >(undefined);
 
   const onAttributeRuleChange = (rule: AttributeRule) => {
-    if (typeof identifierFilter === "undefined") return;
+    if (typeof attributeSetFilter === "undefined") return;
 
-    setIdentifierFilter(undefined);
+    setAttributeSetFilter(undefined);
     update(
       createNewSets(sets, {
-        id: identifierFilter,
+        id: attributeSetFilter,
         rule,
       })
     );
@@ -60,10 +60,12 @@ export const AttributesFilter: React.FC<Props> = ({
     }
   };
 
-  const onIdentifierChange = (identifier: ServiceInstanceParams.Attributes) => {
-    setIdentifierFilter((current) => {
-      if (current === identifier) return undefined;
-      return identifier;
+  const onAttributeSetChange = (
+    attributeSet: ServiceInstanceParams.AttributeSet
+  ) => {
+    setAttributeSetFilter((current) => {
+      if (current === attributeSet) return undefined;
+      return attributeSet;
     });
   };
 
@@ -71,9 +73,9 @@ export const AttributesFilter: React.FC<Props> = ({
     <>
       {isVisible && (
         <ToolbarItem>
-          <IdentifierPicker
-            identifier={identifierFilter}
-            onChange={onIdentifierChange}
+          <AttributeSetPicker
+            attributeSet={attributeSetFilter}
+            onChange={onAttributeSetChange}
           />
         </ToolbarItem>
       )}
@@ -84,9 +86,9 @@ export const AttributesFilter: React.FC<Props> = ({
         showToolbarItem={isVisible}
       >
         <AttributeRulePicker
-          rule={getRuleForIdentifier(sets, identifierFilter)}
+          rule={getRuleForAttributeSet(sets, attributeSetFilter)}
           onChange={onAttributeRuleChange}
-          isDisabled={typeof identifierFilter === "undefined"}
+          isDisabled={typeof attributeSetFilter === "undefined"}
         />
       </ToolbarFilter>
     </>
@@ -140,15 +142,15 @@ function getChips({ empty, notEmpty }: AttributeSets): Pretty[] {
 
 function rawToPretty({ id, rule }: Raw): Pretty {
   switch (id) {
-    case ServiceInstanceParams.Attributes.Active:
+    case ServiceInstanceParams.AttributeSet.Active:
       return rule === AttributeRule.Empty
         ? `Active (empty)`
         : `Active (not empty)`;
-    case ServiceInstanceParams.Attributes.Candidate:
+    case ServiceInstanceParams.AttributeSet.Candidate:
       return rule === AttributeRule.Empty
         ? `Candidate (empty)`
         : `Candidate (not empty)`;
-    case ServiceInstanceParams.Attributes.Rollback:
+    case ServiceInstanceParams.AttributeSet.Rollback:
       return rule === AttributeRule.Empty
         ? `Rollback (empty)`
         : `Rollback (not empty)`;
@@ -159,43 +161,43 @@ function prettyToRaw(pretty: Pretty): Raw {
   switch (pretty) {
     case "Active (empty)":
       return {
-        id: ServiceInstanceParams.Attributes.Active,
+        id: ServiceInstanceParams.AttributeSet.Active,
         rule: AttributeRule.Empty,
       };
     case "Active (not empty)":
       return {
-        id: ServiceInstanceParams.Attributes.Active,
+        id: ServiceInstanceParams.AttributeSet.Active,
         rule: AttributeRule.NotEmpty,
       };
     case "Candidate (empty)":
       return {
-        id: ServiceInstanceParams.Attributes.Candidate,
+        id: ServiceInstanceParams.AttributeSet.Candidate,
         rule: AttributeRule.Empty,
       };
     case "Candidate (not empty)":
       return {
-        id: ServiceInstanceParams.Attributes.Candidate,
+        id: ServiceInstanceParams.AttributeSet.Candidate,
         rule: AttributeRule.NotEmpty,
       };
     case "Rollback (empty)":
       return {
-        id: ServiceInstanceParams.Attributes.Rollback,
+        id: ServiceInstanceParams.AttributeSet.Rollback,
         rule: AttributeRule.Empty,
       };
     case "Rollback (not empty)":
       return {
-        id: ServiceInstanceParams.Attributes.Rollback,
+        id: ServiceInstanceParams.AttributeSet.Rollback,
         rule: AttributeRule.NotEmpty,
       };
   }
 }
 
-function getRuleForIdentifier(
+function getRuleForAttributeSet(
   { empty, notEmpty }: AttributeSets,
-  identifier: ServiceInstanceParams.Attributes | undefined
+  attributeSet: ServiceInstanceParams.AttributeSet | undefined
 ): AttributeRule | undefined {
-  if (typeof identifier === "undefined") return undefined;
-  if (empty.includes(identifier)) return AttributeRule.Empty;
-  if (notEmpty.includes(identifier)) return AttributeRule.NotEmpty;
+  if (typeof attributeSet === "undefined") return undefined;
+  if (empty.includes(attributeSet)) return AttributeRule.Empty;
+  if (notEmpty.includes(attributeSet)) return AttributeRule.NotEmpty;
   return undefined;
 }
