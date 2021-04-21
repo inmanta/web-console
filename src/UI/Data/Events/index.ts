@@ -1,2 +1,2 @@
-export * from "./EventsHookHelper";
+export * from "./EventsDataManager";
 export * from "./EventsStateHelper";

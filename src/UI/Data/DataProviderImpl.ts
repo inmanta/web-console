@@ -22,11 +22,11 @@ export class DataProviderImpl implements DataProvider {
   private getOneTimeDataManager(
     query: Query.Type
   ): OneTimeDataManager<typeof query.kind> {
-    const hookHelper = this.dataManagers.find((helper) =>
+    const dataManager = this.dataManagers.find((helper) =>
       helper.matches(query, "OneTime")
     );
-    if (typeof hookHelper !== "undefined") {
-      return hookHelper as OneTimeDataManager<typeof query.kind>;
+    if (typeof dataManager !== "undefined") {
+      return dataManager as OneTimeDataManager<typeof query.kind>;
     }
     throw new Error(`Can't find OneTimeDataManager for query ${query.kind}`);
   }
@@ -39,11 +39,11 @@ export class DataProviderImpl implements DataProvider {
   private getContinuousDataManager(
     query: Query.Type
   ): ContinuousDataManager<typeof query.kind> {
-    const hookHelper = this.dataManagers.find((helper) =>
+    const dataManager = this.dataManagers.find((helper) =>
       helper.matches(query, "Continuous")
     );
-    if (typeof hookHelper !== "undefined") {
-      return hookHelper as ContinuousDataManager<typeof query.kind>;
+    if (typeof dataManager !== "undefined") {
+      return dataManager as ContinuousDataManager<typeof query.kind>;
     }
     throw new Error(`Can't find ContinuousDataManager for query ${query.kind}`);
   }

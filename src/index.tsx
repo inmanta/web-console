@@ -17,7 +17,7 @@ import {
   ServiceInstancesStateHelper,
   ResourcesStateHelper,
   ResourcesHookHelper,
-  EventsHookHelper,
+  EventsDataManager,
   EventsStateHelper,
   ServicesHookHelper,
   ServicesStateHelper,
@@ -75,7 +75,7 @@ const resourcesHelper = new ResourcesHookHelper(
   new LiveSubscriptionController(5000, new IntervalsDictionary())
 );
 
-const eventsHelper = new EventsHookHelper(
+const eventsDataManager = new EventsDataManager(
   new FetcherImpl<"Events">(baseApiHelper),
   new EventsStateHelper(storeInstance),
   new LiveSubscriptionController(5000, new IntervalsDictionary())
@@ -100,7 +100,7 @@ const dataProvider = new DataProviderImpl([
   serviceHelper,
   serviceInstancesHelper,
   resourcesHelper,
-  eventsHelper,
+  eventsDataManager,
   instanceLogsHelper,
   instanceConfigHelper,
 ]);

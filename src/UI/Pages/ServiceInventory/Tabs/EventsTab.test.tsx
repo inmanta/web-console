@@ -6,7 +6,7 @@ import { Either, InstanceEvent } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  EventsHookHelper,
+  EventsDataManager,
   EventsStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -17,7 +17,7 @@ function setup() {
   const apiHelper = new DeferredFetcher<"Events">();
   const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
-    new EventsHookHelper(
+    new EventsDataManager(
       apiHelper,
       new EventsStateHelper(store),
       subscriptionController
