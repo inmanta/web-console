@@ -5,7 +5,6 @@ import { StaticSubscriptionController, DeferredFetcher, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  DataManagerImpl,
   ServiceInstancesHookHelper,
   ServiceInstancesStateHelper,
 } from "@/UI/Data";
@@ -24,10 +23,8 @@ export class ServiceInventoryBuilder {
     const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
     const serviceInstancesSubscriptionController = new StaticSubscriptionController();
     const serviceInstancesHelper = new ServiceInstancesHookHelper(
-      new DataManagerImpl<"ServiceInstances">(
-        serviceInstancesFetcher,
-        new ServiceInstancesStateHelper(store)
-      ),
+      serviceInstancesFetcher,
+      new ServiceInstancesStateHelper(store),
       serviceInstancesSubscriptionController
     );
 
