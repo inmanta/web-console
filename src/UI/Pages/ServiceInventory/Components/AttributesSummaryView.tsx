@@ -16,18 +16,19 @@ export const AttributesSummaryView: React.FC<{
     variant={ListVariant.inline}
     onClick={onClick}
     data-testid={`attributes-summary`}
+    aria-label={`AttributesSummary`}
   >
-    <ListItem>
+    <ListItem aria-label={`Candidate-${candidate ? "NotEmpty" : "Empty"}`}>
       <Tooltip content={words("attributes.candidate")} entryDelay={200}>
         <OutlinedQuestionCircleIcon color={getColor(candidate)} />
       </Tooltip>
     </ListItem>
-    <ListItem>
+    <ListItem aria-label={`Active-${active ? "NotEmpty" : "Empty"}`}>
       <Tooltip content={words("attributes.active")} entryDelay={200}>
         <ListIcon color={getColor(active)} />
       </Tooltip>
     </ListItem>
-    <ListItem>
+    <ListItem aria-label={`Rollback-${rollback ? "NotEmpty" : "Empty"}`}>
       <Tooltip content={words("attributes.rollback")} entryDelay={200}>
         <RedoIcon color={getColor(rollback)} />
       </Tooltip>

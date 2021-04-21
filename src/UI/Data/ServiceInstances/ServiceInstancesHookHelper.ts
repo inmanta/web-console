@@ -1,4 +1,8 @@
-import { SubscriptionController, DataManager } from "@/Core";
+import {
+  SubscriptionController,
+  DataManager,
+  ServiceInstanceParams,
+} from "@/Core";
 import { ContinuousHookHelperImpl } from "../HookHelperImpl";
 import { getServiceInstancesUrl } from "./getServiceInstancesUrl";
 
@@ -13,6 +17,7 @@ export class ServiceInstancesHookHelper extends ContinuousHookHelperImpl<"Servic
       (qualifier) => qualifier.name,
       (qualifier) => [
         qualifier.name,
+        stringifyFilter(qualifier.filter),
         qualifier.sort?.name,
         qualifier.sort?.order,
       ],
@@ -32,4 +37,10 @@ export class ServiceInstancesHookHelper extends ContinuousHookHelperImpl<"Servic
       }
     );
   }
+}
+
+function stringifyFilter(
+  filter: ServiceInstanceParams.Filter | undefined
+): string {
+  return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

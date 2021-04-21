@@ -49,7 +49,7 @@ export const InstanceRow: React.FC<Props> = ({
   };
   return (
     <Tbody isExpanded={false}>
-      <Tr id={`instance-row-${row.id.short}`}>
+      <Tr id={`instance-row-${row.id.short}`} aria-label="InstanceRow-Intro">
         <Td
           aria-label={`expand-button-${row.id.short}`}
           expand={{
@@ -58,10 +58,18 @@ export const InstanceRow: React.FC<Props> = ({
             onToggle,
           }}
         />
-        <Td dataLabel={idDataLabel}>
-          {shouldUseServiceIdentity && row.serviceIdentityValue}
-          {!shouldUseServiceIdentity && <IdWithCopy id={row.id} />}
-        </Td>
+        {shouldUseServiceIdentity ? (
+          <Td
+            dataLabel={idDataLabel}
+            aria-label={`IdentityCell-${row.serviceIdentityValue}`}
+          >
+            {row.serviceIdentityValue}
+          </Td>
+        ) : (
+          <Td dataLabel={idDataLabel} aria-label={`IdCell-${row.id.short}`}>
+            <IdWithCopy id={row.id} />
+          </Td>
+        )}
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>
         <Td
           dataLabel={words("inventory.column.attributesSummary")}
@@ -90,7 +98,11 @@ export const InstanceRow: React.FC<Props> = ({
           <DateWithTooltip date={row.updatedAt} />
         </Td>
       </Tr>
-      <Tr isExpanded={isExpanded} data-testid={`details_${row.id.short}`}>
+      <Tr
+        isExpanded={isExpanded}
+        data-testid={`details_${row.id.short}`}
+        aria-label="InstanceRow-Details"
+      >
         <Td colSpan={numberOfColumns}>
           <ExpandableRowContent>
             <Tabs

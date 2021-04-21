@@ -1,15 +1,15 @@
 import React from "react";
-import { ToolbarItem, Button } from "@patternfly/react-core";
+import { Button } from "@patternfly/react-core";
 import { Pagination } from "@/Core";
 import { AngleLeftIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { Indicator } from "./Indicator";
 
-export const PaginationToolbar: React.FC<{
+export const PaginationWidget: React.FC<{
   handlers: Pagination.Handlers;
   metadata: Pagination.Metadata;
 }> = ({ handlers: { prev, next }, metadata }) => {
   return (
-    <ToolbarItem variant="pagination">
+    <>
       <Indicator metadata={metadata} />
       <Button
         variant="plain"
@@ -27,6 +27,6 @@ export const PaginationToolbar: React.FC<{
       >
         <AngleRightIcon />
       </Button>
-    </ToolbarItem>
+    </>
   );
 };

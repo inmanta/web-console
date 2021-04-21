@@ -15,3 +15,19 @@ export interface Interval {
   timerId: TimerId;
   handler: () => void;
 }
+
+/**
+ * Toggles a value in the list.
+ * - If it is present, remove it.
+ * - If it is missing, add it.
+ */
+export function toggleValueInList<T>(value: T, list: T[]): T[] {
+  const index = list.indexOf(value);
+  if (index === -1) {
+    return [...list, value];
+  }
+
+  const clone = [...list];
+  clone.splice(index, 1);
+  return clone;
+}

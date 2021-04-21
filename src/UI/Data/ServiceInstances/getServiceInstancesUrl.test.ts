@@ -66,3 +66,21 @@ test("getServiceInstancesUrl returns correct url for sort & filter", () => {
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating&sort=state.asc`
   );
 });
+
+test("getServiceInstancesUrl returns correct url for empty filter", () => {
+  const name = "service_a";
+  const qualifier: Query.Qualifier<"ServiceInstances"> = {
+    name,
+    environment: "env_a",
+    filter: {
+      state: [],
+      id: [],
+      attributeSetEmpty: [],
+      attributeSetNotEmpty: [],
+    },
+  };
+
+  expect(getServiceInstancesUrl(qualifier)).toMatch(
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`
+  );
+});

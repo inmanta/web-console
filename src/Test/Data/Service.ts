@@ -130,7 +130,7 @@ const base = ({
 
 export const A = base;
 
-export const ServiceWithIdentity = {
+export const withIdentity = {
   ...base,
   service_identity: "order_id",
   service_identity_display_name: "Order ID",

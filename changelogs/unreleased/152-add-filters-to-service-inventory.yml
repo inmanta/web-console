@@ -1,0 +1,6 @@
+description: Add filters to Service Inventory
+issue-nr: 152
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

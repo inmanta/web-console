@@ -145,4 +145,18 @@ const base = ({
   deleted: false,
 } as unknown) as ServiceInstanceModel;
 
-export const A = base;
+export const A: ServiceInstanceModel = base;
+export const B: ServiceInstanceModel = {
+  ...base,
+  id: "service_instance_id_b",
+  state: "rejected",
+  candidate_attributes: base.active_attributes,
+  active_attributes: null,
+};
+
+export const deleted: ServiceInstanceModel = {
+  ...base,
+  id: "service_instance_id_deleted_a",
+  state: "terminated",
+  deleted: true,
+};

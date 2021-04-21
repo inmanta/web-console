@@ -3,4 +3,5 @@ export * from "./AttributesList";
 export * from "./IdWithCopy";
 export * from "./InstanceActions";
 export * from "./ActionDisabledTooltip";
-export * from "./PaginationToolbar";
+export * from "./PaginationWidget";
+export * from "./TableControls";

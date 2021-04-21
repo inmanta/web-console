@@ -1,6 +1,10 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
-import { ServiceModel, ServiceInstanceModelWithTargetStates } from "@/Core";
+import {
+  ServiceModel,
+  ServiceInstanceModelWithTargetStates,
+  ServiceInstanceParams,
+} from "@/Core";
 import {
   AttributesPresenter,
   InstanceActionPresenter,
@@ -10,7 +14,6 @@ import {
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
 import { InstanceSetStateManager } from "./InstanceSetStateManager";
-import { SortDirection } from "@/Core/Domain/Query";
 
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
@@ -18,8 +21,8 @@ export interface Props {
   keycloak?: KeycloakInstance;
   sortColumn?: string;
   setSortColumn: (name?: string) => void;
-  order?: SortDirection;
-  setOrder: (order?: SortDirection) => void;
+  order?: ServiceInstanceParams.SortDirection;
+  setOrder: (order?: ServiceInstanceParams.SortDirection) => void;
 }
 
 export const TableProvider: React.FC<Props> = ({
@@ -30,6 +33,7 @@ export const TableProvider: React.FC<Props> = ({
   order,
   setSortColumn,
   setOrder,
+  ...props
 }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
@@ -55,15 +59,14 @@ export const TableProvider: React.FC<Props> = ({
   const rows = tablePresenter.createRows(instances);
 
   return (
-    <div data-testid="InventoryTableContainer">
-      <InventoryTable
-        rows={rows}
-        tablePresenter={tablePresenter}
-        sortColumn={sortColumn}
-        order={order}
-        setSortColumn={setSortColumn}
-        setOrder={setOrder}
-      />
-    </div>
+    <InventoryTable
+      {...props}
+      rows={rows}
+      tablePresenter={tablePresenter}
+      sortColumn={sortColumn}
+      order={order}
+      setSortColumn={setSortColumn}
+      setOrder={setOrder}
+    />
   );
 };

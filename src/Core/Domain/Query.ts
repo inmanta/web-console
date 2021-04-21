@@ -11,6 +11,7 @@ import {
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 import * as Pagination from "./Pagination";
 import { Config, Setting } from "./Config";
+import { ServiceInstanceParams } from "./ServiceInstanceParams";
 
 type Query =
   | ServicesQuery
@@ -82,28 +83,8 @@ interface ResourcesManifest {
  */
 export interface ServiceInstancesQuery {
   kind: "ServiceInstances";
-  qualifier: ServiceIdentifier & { filter?: Filter; sort?: Sort };
+  qualifier: ServiceIdentifier & ServiceInstanceParams;
 }
-
-interface Filter {
-  id?: string[];
-  state?: string[];
-  deleted?: boolean;
-  attribute_set_empty?:
-    | "active_attributes"
-    | "candidate_attributes"
-    | "rollback_attributes";
-  attribute_set_not_empty?:
-    | "active_attributes"
-    | "candidate_attributes"
-    | "rollback_attributes";
-}
-
-export interface Sort {
-  name: string;
-  order: SortDirection;
-}
-export type SortDirection = "asc" | "desc";
 
 interface ServiceInstancesManifest {
   error: string;
