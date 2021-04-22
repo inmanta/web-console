@@ -1,0 +1,6 @@
+description: Sync auto-updating for all components
+issue-nr: 243
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
