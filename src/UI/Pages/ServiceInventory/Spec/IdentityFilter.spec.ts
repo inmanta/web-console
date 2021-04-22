@@ -2,13 +2,13 @@ import { render, screen, act, within } from "@testing-library/react";
 import { Service, ServiceInstance, Pagination } from "@/Test";
 import { Either } from "@/Core";
 import userEvent, { specialChars } from "@testing-library/user-event";
-import { ServiceInventoryBuilder } from "./ServiceInventoryBuilder";
+import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID', '0001') THEN only 1 instance is shown", async () => {
   const {
     component,
     serviceInstancesFetcher,
-  } = new ServiceInventoryBuilder().build(Service.withIdentity);
+  } = new ServiceInventoryPrepper().build(Service.withIdentity);
 
   render(component);
 

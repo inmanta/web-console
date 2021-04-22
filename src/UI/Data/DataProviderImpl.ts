@@ -4,6 +4,7 @@ import {
   RemoteData,
   OneTimeDataManager,
   ContinuousDataManager,
+  DataManager,
 } from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
@@ -11,13 +12,8 @@ type Data<K extends Query.Kind> = RemoteData.Type<
   Query.UsedData<K>
 >;
 
-type DataManagers = (
-  | OneTimeDataManager<Query.Kind>
-  | ContinuousDataManager<Query.Kind>
-)[];
-
 export class DataProviderImpl implements DataProvider {
-  constructor(private readonly dataManagers: DataManagers) {}
+  constructor(private readonly dataManagers: DataManager[]) {}
 
   private getOneTimeDataManager(
     query: Query.Type

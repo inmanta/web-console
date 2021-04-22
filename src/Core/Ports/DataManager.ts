@@ -10,6 +10,10 @@ type Pair<K extends Query.Kind> = [Data<K>, () => void];
 
 export type DataManagerKind = "OneTime" | "Continuous";
 
+export type DataManager =
+  | OneTimeDataManager<Query.Kind>
+  | ContinuousDataManager<Query.Kind>;
+
 /**
  * The DataManager defines data hooks for a specific 'kind' of query.
  * This correlates to a specific data source.

@@ -17,7 +17,7 @@ export interface Handles {
   serviceInstancesFetcher: DeferredFetcher<"ServiceInstances">;
 }
 
-export class ServiceInventoryBuilder {
+export class ServiceInventoryPrepper {
   build(service: ServiceModel = Service.A): Handles {
     const store = getStoreInstance();
     const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();

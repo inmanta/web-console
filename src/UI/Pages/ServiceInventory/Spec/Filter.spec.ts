@@ -1,15 +1,14 @@
 import { render, screen, act } from "@testing-library/react";
 import { ServiceInstance, Pagination } from "@/Test";
 import { Either } from "@/Core";
-
 import userEvent from "@testing-library/user-event";
-import { ServiceInventoryBuilder } from "./ServiceInventoryBuilder";
+import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on something THEN a data update is triggered", async () => {
   const {
     component,
     serviceInstancesFetcher,
-  } = new ServiceInventoryBuilder().build();
+  } = new ServiceInventoryPrepper().build();
 
   render(component);
 

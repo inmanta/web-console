@@ -7,12 +7,9 @@ export class SchedulerImpl implements Scheduler {
 
   constructor(private readonly delay: number) {}
 
-  private isTaskRegistered(id: string): boolean {
-    return typeof this.tasks[id] !== "undefined";
-  }
-
-  private isTasksEmpty(): boolean {
-    return Object.keys(this.tasks).length <= 0;
+  unregister(id: string): void {
+    delete this.tasks[id];
+    this.revalidateTicker();
   }
 
   register(id: string, task: Task): void {
@@ -21,6 +18,14 @@ export class SchedulerImpl implements Scheduler {
     }
     this.tasks[id] = task;
     this.revalidateTicker();
+  }
+
+  private isTaskRegistered(id: string): boolean {
+    return typeof this.tasks[id] !== "undefined";
+  }
+
+  private isTasksEmpty(): boolean {
+    return Object.keys(this.tasks).length <= 0;
   }
 
   private async execute(): Promise<void> {
@@ -61,8 +66,7 @@ export class SchedulerImpl implements Scheduler {
     this.ongoing = true;
   }
 
-  unregister(id: string): void {
-    delete this.tasks[id];
-    this.revalidateTicker();
+  getTasks(): Record<string, Task> {
+    return this.tasks;
   }
 }
