@@ -1,11 +1,6 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
-import {
-  instances,
-  InstantFetcher,
-  StaticSubscriptionController,
-  Service,
-} from "@/Test";
+import { instances, InstantFetcher, Service, StaticScheduler } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
@@ -32,7 +27,7 @@ const Template: Story<Props> = (args) => {
         data: { data: [] },
       }),
       new ResourcesStateHelper(store),
-      new StaticSubscriptionController()
+      new StaticScheduler()
     ),
   ]);
 

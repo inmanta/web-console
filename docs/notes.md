@@ -45,3 +45,7 @@ Never use Dropdown for selection.
 Use it for actions that after the click move away from the component.  
 Use Select for selecting stuff.  
 See https://www.patternfly.org/v4/components/select/design-guidelines.
+
+## Async timers in Jest
+
+https://stackoverflow.com/questions/52177631/jest-timer-and-promise-dont-work-well-settimeout-and-async-function

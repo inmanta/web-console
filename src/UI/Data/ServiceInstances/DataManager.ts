@@ -1,9 +1,4 @@
-import {
-  SubscriptionController,
-  Fetcher,
-  StateHelper,
-  ServiceInstanceParams,
-} from "@/Core";
+import { Scheduler, Fetcher, StateHelper, ServiceInstanceParams } from "@/Core";
 import { ContinuousDataManagerImpl } from "../DataManagerImpl";
 import { getUrl } from "./getUrl";
 
@@ -11,12 +6,12 @@ export class ServiceInstancesDataManager extends ContinuousDataManagerImpl<"Serv
   constructor(
     fetcher: Fetcher<"ServiceInstances">,
     stateHelper: StateHelper<"ServiceInstances">,
-    subscriptionController: SubscriptionController
+    scheduler: Scheduler
   ) {
     super(
       fetcher,
       stateHelper,
-      subscriptionController,
+      scheduler,
       (qualifier) => qualifier.name,
       (qualifier) => [
         qualifier.name,

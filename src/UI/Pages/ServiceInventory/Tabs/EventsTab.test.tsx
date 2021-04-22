@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { StaticSubscriptionController, DeferredFetcher } from "@/Test";
+import { DeferredFetcher, StaticScheduler } from "@/Test";
 import { Either, InstanceEvent } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -14,14 +14,10 @@ import { EventsTab } from "./EventsTab";
 
 function setup() {
   const store = getStoreInstance();
+  const scheduler = new StaticScheduler();
   const apiHelper = new DeferredFetcher<"Events">();
-  const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
-    new EventsDataManager(
-      apiHelper,
-      new EventsStateHelper(store),
-      subscriptionController
-    ),
+    new EventsDataManager(apiHelper, new EventsStateHelper(store), scheduler),
   ]);
 
   const instance = {
@@ -39,7 +35,7 @@ function setup() {
     </DependencyProvider>
   );
 
-  return { component, apiHelper, subscriptionController };
+  return { component, apiHelper, scheduler };
 }
 
 test("EventsView shows empty table", async () => {
@@ -109,7 +105,7 @@ test("EventsView shows success table", async () => {
 });
 
 test("EventsView shows updated table", async () => {
-  const { component, apiHelper, subscriptionController } = setup();
+  const { component, apiHelper, scheduler } = setup();
   render(component);
 
   expect(
@@ -122,7 +118,7 @@ test("EventsView shows updated table", async () => {
     await screen.findByRole("grid", { name: "EventTable-Empty" })
   ).toBeInTheDocument();
 
-  subscriptionController.executeAll();
+  scheduler.executeAll();
 
   apiHelper.resolve(
     Either.right({

@@ -8,7 +8,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   const {
     component,
     serviceInstancesFetcher,
-  } = new ServiceInventoryPrepper().build();
+  } = new ServiceInventoryPrepper().prep();
 
   render(component);
 

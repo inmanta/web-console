@@ -1,4 +1,4 @@
-import { SubscriptionController, Fetcher, StateHelper } from "@/Core";
+import { Scheduler, Fetcher, StateHelper } from "@/Core";
 import { ContinuousDataManagerImpl } from "../DataManagerImpl";
 import { identity } from "lodash";
 
@@ -6,12 +6,12 @@ export class ServicesDataManager extends ContinuousDataManagerImpl<"Services"> {
   constructor(
     fetcher: Fetcher<"Services">,
     stateHelper: StateHelper<"Services">,
-    subscriptionController: SubscriptionController
+    scheduler: Scheduler
   ) {
     super(
       fetcher,
       stateHelper,
-      subscriptionController,
+      scheduler,
       (qualifier) => qualifier.environment,
       (qualifier) => [qualifier.environment],
       "Services",

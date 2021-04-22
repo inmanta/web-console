@@ -1,36 +1,38 @@
-import { Scheduler, Task } from "./Ports";
+import { Maybe } from "../Language";
+import { Dictionary } from "./Dictionary";
+import { DictionaryImpl } from "./DictionaryImpl";
+import { Scheduler, Task } from "./Scheduler";
 
 export class SchedulerImpl implements Scheduler {
-  private readonly tasks: Record<string, Task> = {};
-  private readonly effectResults: Record<string, unknown> = {};
+  private readonly tasks = new DictionaryImpl<Task>();
   private ongoing = false;
 
-  constructor(private readonly delay: number) {}
+  constructor(
+    private readonly delay: number,
+    private readonly taskWrapper?: (task: Task) => Task
+  ) {}
 
   unregister(id: string): void {
-    delete this.tasks[id];
+    this.tasks.drop(id);
     this.revalidateTicker();
   }
 
   register(id: string, task: Task): void {
-    if (this.isTaskRegistered(id)) {
+    if (Maybe.isSome(this.tasks.get(id))) {
       throw new Error(`Task with id ${id} is already registered`);
     }
-    this.tasks[id] = task;
+    this.tasks.set(id, this.wrapTask(task));
     this.revalidateTicker();
   }
 
-  private isTaskRegistered(id: string): boolean {
-    return typeof this.tasks[id] !== "undefined";
-  }
-
-  private isTasksEmpty(): boolean {
-    return Object.keys(this.tasks).length <= 0;
+  private wrapTask(task: Task): Task {
+    if (!this.taskWrapper) return task;
+    return this.taskWrapper(task);
   }
 
   private async execute(): Promise<void> {
-    if (this.isTasksEmpty()) return;
-    const list = Object.entries(this.tasks);
+    if (this.tasks.isEmpty()) return;
+    const list = Object.entries(this.tasks.toObject());
 
     const promises = list.map(([, task]) => task.effect());
     const results = await Promise.all(promises);
@@ -47,9 +49,7 @@ export class SchedulerImpl implements Scheduler {
       {}
     );
 
-    list.forEach(([id, task]) => {
-      task.update(resultDict[id]);
-    });
+    list.forEach(([id, task]) => task.update(resultDict[id]));
 
     window.setTimeout(() => {
       this.execute();
@@ -57,7 +57,7 @@ export class SchedulerImpl implements Scheduler {
   }
 
   private revalidateTicker(): void {
-    if (this.isTasksEmpty()) return;
+    if (this.tasks.isEmpty()) return;
     if (this.ongoing) return;
 
     window.setTimeout(() => {
@@ -66,7 +66,7 @@ export class SchedulerImpl implements Scheduler {
     this.ongoing = true;
   }
 
-  getTasks(): Record<string, Task> {
+  getTasks(): Dictionary<Task> {
     return this.tasks;
   }
 }

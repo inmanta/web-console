@@ -1,2 +1,2 @@
-export * from "./EventsDataManager";
-export * from "./EventsStateHelper";
+export * from "./DataManager";
+export * from "./StateHelper";

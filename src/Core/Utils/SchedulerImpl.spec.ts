@@ -3,8 +3,6 @@ import { SchedulerImpl } from "./SchedulerImpl";
 
 jest.useFakeTimers();
 
-// https://stackoverflow.com/questions/52177631/jest-timer-and-promise-dont-work-well-settimeout-and-async-function
-
 test("GIVEN a Scheduler WHEN registering a task after a cycle THEN executes all registered tasks", async () => {
   const scheduler = new SchedulerImpl(5000);
   const taskA = { effect: jest.fn(async () => undefined), update: jest.fn() };

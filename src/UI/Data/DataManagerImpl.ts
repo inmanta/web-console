@@ -1,12 +1,12 @@
 import {
   RemoteData,
-  SubscriptionController,
   Query,
   OneTimeDataManager,
   ContinuousDataManager,
   DataManagerKind,
   Fetcher,
   StateHelper,
+  Scheduler,
 } from "@/Core";
 import { useEffect, useState } from "react";
 
@@ -84,7 +84,7 @@ export class ContinuousDataManagerImpl<Kind extends Query.Kind>
   constructor(
     private readonly fetcher: Fetcher<Kind>,
     private readonly stateHelper: StateHelper<Kind>,
-    private readonly subscriptionController: SubscriptionController,
+    private readonly scheduler: Scheduler,
     private readonly getUnique: GetUnique<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
@@ -118,18 +118,20 @@ export class ContinuousDataManagerImpl<Kind extends Query.Kind>
       setUrl(this.getUrl(qualifier));
     }, this.getDependencies(qualifier));
 
-    const handler = async () => {
-      this.update(qualifier, url);
+    const task = {
+      effect: async () =>
+        RemoteData.fromEither(
+          await this.fetcher.getData(qualifier.environment, url)
+        ),
+      update: (data) => this.stateHelper.set(qualifier, data),
     };
 
     useEffect(() => {
       this.initialize(qualifier);
-      this.subscriptionController.subscribeTo(
-        this.getUnique(qualifier),
-        handler
-      );
+      this.update(qualifier, url);
+      this.scheduler.register(this.getUnique(qualifier), task);
       return () => {
-        this.subscriptionController.unsubscribeFrom(this.getUnique(qualifier));
+        this.scheduler.unregister(this.getUnique(qualifier));
       };
     }, [url, qualifier.environment]);
 
@@ -138,7 +140,7 @@ export class ContinuousDataManagerImpl<Kind extends Query.Kind>
         (data) => this.toUsed(data, setUrl),
         this.stateHelper.getHooked(qualifier)
       ),
-      () => this.subscriptionController.refresh(this.getUnique(qualifier)),
+      () => this.update(qualifier, url),
     ];
   }
 

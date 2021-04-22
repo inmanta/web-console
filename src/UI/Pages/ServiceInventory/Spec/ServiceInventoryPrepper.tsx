@@ -1,10 +1,12 @@
 import React from "react";
-import { ServiceModel } from "@/Core";
+import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { StaticSubscriptionController, DeferredFetcher, Service } from "@/Test";
+import { DeferredFetcher, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
+  ResourcesDataManager,
+  ResourcesStateHelper,
   ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
 } from "@/UI/Data";
@@ -14,21 +16,36 @@ import { MemoryRouter } from "react-router-dom";
 
 export interface Handles {
   component: React.ReactElement;
+  scheduler: SchedulerImpl;
   serviceInstancesFetcher: DeferredFetcher<"ServiceInstances">;
+  resourcesFetcher: DeferredFetcher<"Resources">;
 }
 
 export class ServiceInventoryPrepper {
-  build(service: ServiceModel = Service.A): Handles {
+  prep(service: ServiceModel = Service.A): Handles {
     const store = getStoreInstance();
+    const scheduler = new SchedulerImpl(5000, (task) => ({
+      effect: jest.fn(() => task.effect()),
+      update: jest.fn((result) => task.update(result)),
+    }));
     const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
-    const serviceInstancesSubscriptionController = new StaticSubscriptionController();
     const serviceInstancesHelper = new ServiceInstancesDataManager(
       serviceInstancesFetcher,
       new ServiceInstancesStateHelper(store),
-      serviceInstancesSubscriptionController
+      scheduler
     );
 
-    const dataProvider = new DataProviderImpl([serviceInstancesHelper]);
+    const resourcesFetcher = new DeferredFetcher<"Resources">();
+    const resourcesHelper = new ResourcesDataManager(
+      resourcesFetcher,
+      new ResourcesStateHelper(store),
+      scheduler
+    );
+
+    const dataProvider = new DataProviderImpl([
+      serviceInstancesHelper,
+      resourcesHelper,
+    ]);
 
     const component = (
       <MemoryRouter>
@@ -44,6 +61,6 @@ export class ServiceInventoryPrepper {
       </MemoryRouter>
     );
 
-    return { component, serviceInstancesFetcher };
+    return { component, scheduler, serviceInstancesFetcher, resourcesFetcher };
   }
 }

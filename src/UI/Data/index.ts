@@ -7,5 +7,4 @@ export * from "./ServiceInstances";
 export * from "./Services";
 export * from "./CommandProviderImpl";
 export * from "./DataProviderImpl";
-export * from "./IntervalsDictionary";
 export * from "./LiveSubscriptionController";

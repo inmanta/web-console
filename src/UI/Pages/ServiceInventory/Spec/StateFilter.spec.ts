@@ -8,7 +8,7 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   const {
     component,
     serviceInstancesFetcher,
-  } = new ServiceInventoryPrepper().build();
+  } = new ServiceInventoryPrepper().prep();
 
   render(component);
 

@@ -8,8 +8,6 @@ import { getStoreInstance, DependencyProvider } from "@/UI";
 import { BaseApiHelper, FetcherImpl, InstanceConfigPoster } from "@/Infra";
 import {
   DataProviderImpl,
-  IntervalsDictionary,
-  LiveSubscriptionController,
   ServiceDataManager,
   ServiceKeyMaker,
   ServiceStateHelper,
@@ -27,6 +25,7 @@ import {
   InstanceConfigStateHelper,
   CommandProviderImpl,
 } from "@/UI/Data";
+import { SchedulerImpl } from "./Core";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -49,36 +48,37 @@ if (externalKeycloakConf) {
 const storeInstance = getStoreInstance();
 const baseApiHelper = new BaseApiHelper(keycloak);
 const serviceKeyMaker = new ServiceKeyMaker();
+const scheduler = new SchedulerImpl(5000);
 
 const servicesHelper = new ServicesDataManager(
   new FetcherImpl<"Services">(baseApiHelper),
   new ServicesStateHelper(storeInstance, serviceKeyMaker),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+  scheduler
 );
 
 const serviceHelper = new ServiceDataManager(
   new FetcherImpl<"Service">(baseApiHelper),
   new ServiceStateHelper(storeInstance, serviceKeyMaker),
-  new LiveSubscriptionController(5000, new IntervalsDictionary()),
+  scheduler,
   serviceKeyMaker
 );
 
 const serviceInstancesHelper = new ServiceInstancesDataManager(
   new FetcherImpl<"ServiceInstances">(baseApiHelper),
   new ServiceInstancesStateHelper(storeInstance),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+  scheduler
 );
 
 const resourcesHelper = new ResourcesDataManager(
   new FetcherImpl<"Resources">(baseApiHelper),
   new ResourcesStateHelper(storeInstance),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+  scheduler
 );
 
 const eventsDataManager = new EventsDataManager(
   new FetcherImpl<"Events">(baseApiHelper),
   new EventsStateHelper(storeInstance),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+  scheduler
 );
 
 const instanceLogsHelper = new InstanceLogsDataManager(

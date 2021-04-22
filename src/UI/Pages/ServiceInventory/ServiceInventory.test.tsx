@@ -2,12 +2,12 @@ import React from "react";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
-  StaticSubscriptionController,
   DeferredFetcher,
   Service,
   ServiceInstance,
   Resources,
   Pagination,
+  StaticScheduler,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -24,21 +24,19 @@ import { MemoryRouter } from "react-router-dom";
 
 function setup() {
   const store = getStoreInstance();
-
+  const scheduler = new StaticScheduler();
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
-  const serviceInstancesSubscriptionController = new StaticSubscriptionController();
   const serviceInstancesHelper = new ServiceInstancesDataManager(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store),
-    serviceInstancesSubscriptionController
+    scheduler
   );
 
   const resourcesFetcher = new DeferredFetcher<"Resources">();
-  const resourcesSubscriptionController = new StaticSubscriptionController();
   const resourcesHelper = new ResourcesDataManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
-    resourcesSubscriptionController
+    scheduler
   );
 
   const dataProvider = new DataProviderImpl([
@@ -64,16 +62,12 @@ function setup() {
     component,
     serviceInstancesFetcher,
     resourcesFetcher,
-    serviceInstancesSubscriptionController,
+    scheduler,
   };
 }
 
 test("ServiceInventory shows updated instances", async () => {
-  const {
-    component,
-    serviceInstancesFetcher,
-    serviceInstancesSubscriptionController,
-  } = setup();
+  const { component, serviceInstancesFetcher, scheduler } = setup();
   render(component);
 
   expect(
@@ -92,7 +86,7 @@ test("ServiceInventory shows updated instances", async () => {
     await screen.findByRole("generic", { name: "ServiceInventory-Empty" })
   ).toBeInTheDocument();
 
-  serviceInstancesSubscriptionController.executeAll();
+  scheduler.executeAll();
 
   serviceInstancesFetcher.resolve(
     Either.right({
@@ -163,12 +157,12 @@ test("ServiceInventory shows next page of instances", async () => {
   ).toBeInTheDocument();
 });
 
-test("ResourcesView fetches resources for new instance after instance update", async () => {
+test("GIVEN ResourcesView fetches resources for new instance after instance update", async () => {
   const {
     component,
     serviceInstancesFetcher,
     resourcesFetcher,
-    serviceInstancesSubscriptionController,
+    scheduler,
   } = setup();
 
   render(component);
@@ -198,7 +192,7 @@ test("ResourcesView fetches resources for new instance after instance update", a
     screen.getByRole("cell", { name: "resource_id_a_1" })
   ).toBeInTheDocument();
 
-  serviceInstancesSubscriptionController.refresh(Service.A.name);
+  scheduler.executeAll();
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
@@ -209,17 +203,12 @@ test("ResourcesView fetches resources for new instance after instance update", a
       })
     );
   });
-
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.B }));
+    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
   });
 
-  expect(
-    await screen.findByRole("cell", { name: "resource_id_b_1" })
-  ).toBeInTheDocument();
-
-  expect(resourcesFetcher.getInvocations().length).toEqual(2);
-  expect(resourcesFetcher.getInvocations()[1][1]).toMatch(
+  expect(resourcesFetcher.getInvocations().length).toEqual(3);
+  expect(resourcesFetcher.getInvocations()[2][1]).toMatch(
     "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=4"
   );
 });

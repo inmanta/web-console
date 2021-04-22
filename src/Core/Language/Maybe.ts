@@ -29,3 +29,6 @@ export const some = <Value>(value: Value): Some<Value> => ({
 
 export const isSome = <Value>(maybe: Maybe<Value>): maybe is Some<Value> =>
   maybe.kind === "Some";
+
+export const orNull = <Value>(maybe: Maybe<Value>): Value | null =>
+  isNone(maybe) ? null : maybe.value;

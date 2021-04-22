@@ -8,7 +8,7 @@ test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID',
   const {
     component,
     serviceInstancesFetcher,
-  } = new ServiceInventoryPrepper().build(Service.withIdentity);
+  } = new ServiceInventoryPrepper().prep(Service.withIdentity);
 
   render(component);
 

@@ -4,7 +4,7 @@ import {
   instanceEvents,
   InstantFetcher,
   Outcome,
-  StaticSubscriptionController,
+  StaticScheduler,
 } from "@/Test";
 import { EventsTab } from "./EventsTab";
 import { getStoreInstance } from "@/UI/Store";
@@ -27,7 +27,7 @@ const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
     new EventsDataManager(
       new InstantFetcher<"Events">(outcome),
       new EventsStateHelper(store),
-      new StaticSubscriptionController()
+      new StaticScheduler()
     ),
   ]);
 

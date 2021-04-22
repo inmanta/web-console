@@ -3,11 +3,11 @@ import { render, screen, fireEvent, within } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
 import {
   DummyStateHelper,
-  StaticSubscriptionController,
   InstantFetcher,
   rows,
   tablePresenter,
   tablePresenterWithIdentity,
+  StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
@@ -39,7 +39,7 @@ test("InventoryTable can be expanded", async () => {
         },
       }),
       new DummyStateHelper<"Resources">(),
-      new StaticSubscriptionController()
+      new StaticScheduler()
     ),
   ]);
   render(
@@ -79,7 +79,7 @@ test("ServiceInventory can show resources for instance", async () => {
         },
       }),
       new ResourcesStateHelper(store),
-      new StaticSubscriptionController()
+      new StaticScheduler()
     ),
   ]);
   render(
