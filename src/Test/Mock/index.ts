@@ -6,4 +6,3 @@ export * from "./DummyStatePresenter";
 export * from "./InstantFetcher";
 export * from "./InstantPoster";
 export * from "./StaticScheduler";
-export * from "./StaticSubscriptionController";
