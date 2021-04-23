@@ -137,6 +137,7 @@ export class InventoryTablePresenter
       service_entity,
       deployment_progress,
       service_identity_attribute_value,
+      deleted,
     } = instance;
 
     return {
@@ -159,6 +160,7 @@ export class InventoryTablePresenter
       service_entity,
       deploymentProgress: deployment_progress,
       serviceIdentityValue: service_identity_attribute_value,
+      deleted,
     };
   }
 

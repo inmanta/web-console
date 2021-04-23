@@ -36,6 +36,7 @@ export interface Row {
   environment: string;
   deploymentProgress?: DeploymentProgress;
   serviceIdentityValue?: string;
+  deleted: boolean;
 }
 
 export interface State {

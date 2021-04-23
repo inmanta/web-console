@@ -1,5 +1,6 @@
-import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import React, { useRef, useState } from "react";
+import styled from "styled-components";
+import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
 import { DateWithTooltip } from "@/UI/Components";
@@ -49,7 +50,11 @@ export const InstanceRow: React.FC<Props> = ({
   };
   return (
     <Tbody isExpanded={false}>
-      <Tr id={`instance-row-${row.id.short}`} aria-label="InstanceRow-Intro">
+      <StyledRow
+        deleted={row.deleted}
+        id={`instance-row-${row.id.short}`}
+        aria-label="InstanceRow-Intro"
+      >
         <Td
           aria-label={`expand-button-${row.id.short}`}
           expand={{
@@ -97,7 +102,7 @@ export const InstanceRow: React.FC<Props> = ({
         <Td dataLabel={words("inventory.column.updatedAt")}>
           <DateWithTooltip date={row.updatedAt} />
         </Td>
-      </Tr>
+      </StyledRow>
       <Tr
         isExpanded={isExpanded}
         data-testid={`details_${row.id.short}`}
@@ -119,3 +124,8 @@ export const InstanceRow: React.FC<Props> = ({
     </Tbody>
   );
 };
+
+const StyledRow = styled(Tr)<{ deleted: boolean }>`
+  ${(p) =>
+    p.deleted ? "background-color: var(--pf-global--palette--red-50);" : ""}
+`;
