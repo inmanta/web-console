@@ -121,11 +121,11 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "@patternfly/react-core": "^4.84.4",
-    "@patternfly/react-icons": "^4.7.22",
-    "@patternfly/react-styles": "^4.7.22",
-    "@patternfly/react-table": "^4.19.45",
-    "@patternfly/react-tokens": "^4.9.22",
+    "@patternfly/react-core": "^4.115.1",
+    "@patternfly/react-icons": "^4.10.1",
+    "@patternfly/react-styles": "^4.10.1",
+    "@patternfly/react-table": "^4.26.6",
+    "@patternfly/react-tokens": "^4.11.2",
     "copy-to-clipboard": "^3.3.1",
     "dotenv-webpack": "^1.7.0",
     "easy-peasy": "^4.0.1",
