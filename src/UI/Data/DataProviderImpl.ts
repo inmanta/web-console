@@ -2,8 +2,9 @@ import {
   DataProvider,
   Query,
   RemoteData,
-  OneTimeHookHelper,
-  ContinuousHookHelper,
+  OneTimeDataManager,
+  ContinuousDataManager,
+  DataManager,
 } from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
@@ -11,45 +12,40 @@ type Data<K extends Query.Kind> = RemoteData.Type<
   Query.UsedData<K>
 >;
 
-type HookHelpers = (
-  | OneTimeHookHelper<Query.Kind>
-  | ContinuousHookHelper<Query.Kind>
-)[];
-
 export class DataProviderImpl implements DataProvider {
-  constructor(private readonly hookHelpers: HookHelpers) {}
+  constructor(private readonly dataManagers: DataManager[]) {}
 
-  private getOneTimeHelper(
+  private getOneTimeDataManager(
     query: Query.Type
-  ): OneTimeHookHelper<typeof query.kind> {
-    const hookHelper = this.hookHelpers.find((helper) =>
+  ): OneTimeDataManager<typeof query.kind> {
+    const dataManager = this.dataManagers.find((helper) =>
       helper.matches(query, "OneTime")
     );
-    if (typeof hookHelper !== "undefined") {
-      return hookHelper as OneTimeHookHelper<typeof query.kind>;
+    if (typeof dataManager !== "undefined") {
+      return dataManager as OneTimeDataManager<typeof query.kind>;
     }
-    throw new Error(`Can't find OneTimeHookHelper for query ${query.kind}`);
+    throw new Error(`Can't find OneTimeDataManager for query ${query.kind}`);
   }
 
   useOneTime(query: Query.Type): [Data<typeof query.kind>, () => void] {
-    const helper = this.getOneTimeHelper(query);
+    const helper = this.getOneTimeDataManager(query);
     return helper.useOneTime(query.qualifier);
   }
 
-  private getContinuousHelper(
+  private getContinuousDataManager(
     query: Query.Type
-  ): ContinuousHookHelper<typeof query.kind> {
-    const hookHelper = this.hookHelpers.find((helper) =>
+  ): ContinuousDataManager<typeof query.kind> {
+    const dataManager = this.dataManagers.find((helper) =>
       helper.matches(query, "Continuous")
     );
-    if (typeof hookHelper !== "undefined") {
-      return hookHelper as ContinuousHookHelper<typeof query.kind>;
+    if (typeof dataManager !== "undefined") {
+      return dataManager as ContinuousDataManager<typeof query.kind>;
     }
-    throw new Error(`Can't find ContinuousHookHelper for query ${query.kind}`);
+    throw new Error(`Can't find ContinuousDataManager for query ${query.kind}`);
   }
 
   useContinuous(query: Query.Type): [Data<typeof query.kind>, () => void] {
-    const helper = this.getContinuousHelper(query);
+    const helper = this.getContinuousDataManager(query);
     return helper.useContinuous(query.qualifier);
   }
 }

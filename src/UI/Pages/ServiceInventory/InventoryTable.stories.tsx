@@ -1,17 +1,11 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { InventoryTable } from "./InventoryTable";
-import {
-  InstantFetcher,
-  rows,
-  StaticSubscriptionController,
-  tablePresenter,
-} from "@/Test";
+import { InstantFetcher, rows, StaticScheduler, tablePresenter } from "@/Test";
 import { getStoreInstance } from "@/UI/Store";
 import {
   DataProviderImpl,
-  DataManagerImpl,
-  ResourcesHookHelper,
+  ResourcesDataManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -25,15 +19,13 @@ export default {
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        new InstantFetcher<"Resources">({
-          kind: "Success",
-          data: { data: [] },
-        }),
-        new ResourcesStateHelper(store)
-      ),
-      new StaticSubscriptionController()
+    new ResourcesDataManager(
+      new InstantFetcher<"Resources">({
+        kind: "Success",
+        data: { data: [] },
+      }),
+      new ResourcesStateHelper(store),
+      new StaticScheduler()
     ),
   ]);
 

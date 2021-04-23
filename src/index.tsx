@@ -8,26 +8,24 @@ import { getStoreInstance, DependencyProvider } from "@/UI";
 import { BaseApiHelper, FetcherImpl, InstanceConfigPoster } from "@/Infra";
 import {
   DataProviderImpl,
-  IntervalsDictionary,
-  LiveSubscriptionController,
-  ServiceHookHelper,
+  ServiceDataManager,
   ServiceKeyMaker,
   ServiceStateHelper,
-  ServiceInstancesHookHelper,
+  ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
   ResourcesStateHelper,
-  ResourcesHookHelper,
-  EventsHookHelper,
+  ResourcesDataManager,
+  EventsDataManager,
   EventsStateHelper,
-  ServicesHookHelper,
+  ServicesDataManager,
   ServicesStateHelper,
-  DataManagerImpl,
-  InstanceLogsHookHelper,
+  InstanceLogsDataManager,
   InstanceLogsStateHelper,
-  InstanceConfigHookHelper,
+  InstanceConfigDataManager,
   InstanceConfigStateHelper,
   CommandProviderImpl,
 } from "@/UI/Data";
+import { SchedulerImpl } from "./Core";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -50,65 +48,51 @@ if (externalKeycloakConf) {
 const storeInstance = getStoreInstance();
 const baseApiHelper = new BaseApiHelper(keycloak);
 const serviceKeyMaker = new ServiceKeyMaker();
+const scheduler = new SchedulerImpl(5000);
 
-const servicesHelper = new ServicesHookHelper(
-  new DataManagerImpl<"Services">(
-    new FetcherImpl<"Services">(baseApiHelper),
-    new ServicesStateHelper(storeInstance, serviceKeyMaker)
-  ),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+const servicesHelper = new ServicesDataManager(
+  new FetcherImpl<"Services">(baseApiHelper),
+  new ServicesStateHelper(storeInstance, serviceKeyMaker),
+  scheduler
 );
 
-const serviceDataManager = new DataManagerImpl<"Service">(
+const serviceHelper = new ServiceDataManager(
   new FetcherImpl<"Service">(baseApiHelper),
-  new ServiceStateHelper(storeInstance, serviceKeyMaker)
-);
-
-const serviceHelper = new ServiceHookHelper(
-  serviceDataManager,
-  new LiveSubscriptionController(5000, new IntervalsDictionary()),
+  new ServiceStateHelper(storeInstance, serviceKeyMaker),
+  scheduler,
   serviceKeyMaker
 );
 
-const serviceInstancesHelper = new ServiceInstancesHookHelper(
-  new DataManagerImpl<"ServiceInstances">(
-    new FetcherImpl<"ServiceInstances">(baseApiHelper),
-    new ServiceInstancesStateHelper(storeInstance)
-  ),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+const serviceInstancesHelper = new ServiceInstancesDataManager(
+  new FetcherImpl<"ServiceInstances">(baseApiHelper),
+  new ServiceInstancesStateHelper(storeInstance),
+  scheduler
 );
 
-const resourcesHelper = new ResourcesHookHelper(
-  new DataManagerImpl<"Resources">(
-    new FetcherImpl<"Resources">(baseApiHelper),
-    new ResourcesStateHelper(storeInstance)
-  ),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+const resourcesHelper = new ResourcesDataManager(
+  new FetcherImpl<"Resources">(baseApiHelper),
+  new ResourcesStateHelper(storeInstance),
+  scheduler
 );
 
-const eventsHelper = new EventsHookHelper(
-  new DataManagerImpl<"Events">(
-    new FetcherImpl<"Events">(baseApiHelper),
-    new EventsStateHelper(storeInstance)
-  ),
-  new LiveSubscriptionController(5000, new IntervalsDictionary())
+const eventsDataManager = new EventsDataManager(
+  new FetcherImpl<"Events">(baseApiHelper),
+  new EventsStateHelper(storeInstance),
+  scheduler
 );
 
-const instanceLogsHelper = new InstanceLogsHookHelper(
-  new DataManagerImpl<"InstanceLogs">(
-    new FetcherImpl<"InstanceLogs">(baseApiHelper),
-    new InstanceLogsStateHelper(storeInstance)
-  )
+const instanceLogsHelper = new InstanceLogsDataManager(
+  new FetcherImpl<"InstanceLogs">(baseApiHelper),
+  new InstanceLogsStateHelper(storeInstance)
 );
 
 const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);
 
-const instanceConfigHelper = new InstanceConfigHookHelper(
-  new DataManagerImpl<"InstanceConfig">(
-    new FetcherImpl<"InstanceConfig">(baseApiHelper),
-    instanceConfigStateHelper
-  ),
-  serviceDataManager
+const instanceConfigHelper = new InstanceConfigDataManager(
+  new FetcherImpl<"InstanceConfig">(baseApiHelper),
+  instanceConfigStateHelper,
+  new ServiceStateHelper(storeInstance, serviceKeyMaker),
+  new FetcherImpl<"Service">(baseApiHelper)
 );
 
 const dataProvider = new DataProviderImpl([
@@ -116,7 +100,7 @@ const dataProvider = new DataProviderImpl([
   serviceHelper,
   serviceInstancesHelper,
   resourcesHelper,
-  eventsHelper,
+  eventsDataManager,
   instanceLogsHelper,
   instanceConfigHelper,
 ]);

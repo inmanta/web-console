@@ -7,7 +7,7 @@ A component subscribes to a query and then receives data through a state hook.
 
 ## Example
 
-The `useContinuous` custom hook registers a subscription for the provided query.  
+The `useContinuous` custom hook registers a task for the provided query.  
 It then returns the data that is in the store now for that query.  
 It also returns a retry function which manually triggers the api call again.
 
@@ -37,26 +37,28 @@ interface ResourcesQuery {
 
 The `ResourcesQuery` describes a `resources` data source with its unique identifying properties.
 
-## Subscription
+## Task
 
-A subscription is a unique id coupled with a callback function.  
-When registering a subscription the callback function is invoked once immediately.  
-It is then invoked each time after the configured delay (`5000ms`).  
-The subscriptions use `setInterval` under the hood.
+A task is a unique id coupled with a effect function and an update function.  
+Registering a task will invoke the effect and update on each next tick.  
+As long as there are tasks, the ticks will execute after 5seconds.  
+Once all the data is resolved. We schedule a next tick to be executed after 5s.  
+Flow: (5s) -> execute -> wait for all to resolve -> schedule next tick -> (5s) -> execute -> ...  
+The scheduler uses nested `setTimeout`s under the hood.
 
 ## Hooks
 
 The data requirement originates from the initialisation of components.  
 So hooks are used because they are kept in sync with the component lifecycle.  
 When the component is destroyed, we can execute a cleanup callback.  
-In this cleanup callback, we cancel the subscription.
+In this cleanup callback, we unregister the task.
 
-Inside the subscription handler, we update the state.  
+Inside the task update handler, we update the state.  
 Because the components use a state hook, they are notified and rerendered with the updated state.
 
 ## Updates & Performance
 
-A lot of components will be registering subscriptions.  
+A lot of components will be registering tasks.  
 And a lot of components will be listening to the state.  
 It is important we don't trigger unneeded rerenders when updating the state.
 
@@ -67,7 +69,7 @@ Each component defines a query, and is only rerendered when data for that query 
 
 ## Stale data
 
-When a subscription is cancelled, the state in the store is not removed.  
+When a task is unregistered, the state in the store is not removed.  
 This way when a user revisits a view, he is immediately represented with data.  
 This data then gets updated again. So initially we are showing stale data.  
 This might not be an ideal strategy. We will need to see if we run into issues.

@@ -1,12 +1,13 @@
 import {
-  DataManager,
-  OneTimeHookHelper,
+  OneTimeDataManager,
   ServiceInstanceIdentifier,
   Query,
   RemoteData,
   ServiceModel,
   Setting,
   Config,
+  Fetcher,
+  StateHelper,
 } from "@/Core";
 import { useEffect } from "react";
 import { uniq } from "lodash";
@@ -16,11 +17,13 @@ type Data = RemoteData.Type<
   Query.UsedData<"InstanceConfig">
 >;
 
-export class InstanceConfigHookHelper
-  implements OneTimeHookHelper<"InstanceConfig"> {
+export class InstanceConfigDataManager
+  implements OneTimeDataManager<"InstanceConfig"> {
   constructor(
-    private readonly configDataManager: DataManager<"InstanceConfig">,
-    private readonly serviceDataManager: DataManager<"Service">
+    private readonly fetcher: Fetcher<"InstanceConfig">,
+    private readonly stateHelper: StateHelper<"InstanceConfig">,
+    private readonly serviceStateHelper: StateHelper<"Service">,
+    private readonly serviceFetcher: Fetcher<"Service">
   ) {}
 
   private getConfigUrl({
@@ -34,14 +37,45 @@ export class InstanceConfigHookHelper
     return `/lsm/v1/service_catalog/${name}`;
   }
 
+  private initialize(qualifier: Query.Qualifier<"InstanceConfig">): void {
+    const value = this.stateHelper.getOnce(qualifier);
+    if (RemoteData.isNotAsked(value)) {
+      this.stateHelper.set(qualifier, RemoteData.loading());
+    }
+  }
+
+  private async update(
+    qualifier: Query.Qualifier<"InstanceConfig">,
+    url: string
+  ): Promise<void> {
+    this.stateHelper.set(
+      qualifier,
+      RemoteData.fromEither(
+        await this.fetcher.getData(qualifier.environment, url)
+      )
+    );
+  }
+
+  private async updateService(
+    qualifier: Query.Qualifier<"Service">,
+    url: string
+  ): Promise<void> {
+    this.serviceStateHelper.set(
+      qualifier,
+      RemoteData.fromEither(
+        await this.serviceFetcher.getData(qualifier.environment, url)
+      )
+    );
+  }
+
   useOneTime(qualifier: ServiceInstanceIdentifier): [Data, () => void] {
     const { service_entity, environment } = qualifier;
     const serviceIdentifier = { name: service_entity, environment };
-    const serviceData = this.serviceDataManager.get(serviceIdentifier);
+    const serviceData = this.serviceStateHelper.getHooked(serviceIdentifier);
 
     useEffect(() => {
       if (!RemoteData.isSuccess(serviceData)) {
-        this.serviceDataManager.update(
+        this.updateService(
           serviceIdentifier,
           this.getServiceUrl(service_entity)
         );
@@ -49,17 +83,16 @@ export class InstanceConfigHookHelper
     }, [serviceData.kind]);
 
     useEffect(() => {
-      this.configDataManager.initialize(qualifier);
-      this.configDataManager.update(qualifier, this.getConfigUrl(qualifier));
+      this.initialize(qualifier);
+      this.update(qualifier, this.getConfigUrl(qualifier));
     }, [qualifier.environment]);
 
     return [
       this.merge(
-        this.configDataManager.get(qualifier),
-        this.serviceDataManager.get(serviceIdentifier)
+        this.stateHelper.getHooked(qualifier),
+        this.serviceStateHelper.getHooked(serviceIdentifier)
       ),
-      () =>
-        this.configDataManager.update(qualifier, this.getConfigUrl(qualifier)),
+      () => this.update(qualifier, this.getConfigUrl(qualifier)),
     ];
   }
 

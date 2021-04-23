@@ -2,9 +2,8 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import {
   CommandProviderImpl,
-  DataManagerImpl,
   DataProviderImpl,
-  InstanceConfigHookHelper,
+  InstanceConfigDataManager,
   InstanceConfigStateHelper,
   ServiceKeyMaker,
   ServiceStateHelper,
@@ -25,27 +24,21 @@ function setup() {
   const storeInstance = getStoreInstance();
   const serviceKeyMaker = new ServiceKeyMaker();
 
-  const serviceDataManager = new DataManagerImpl<"Service">(
-    new InstantFetcher<"Service">({
-      kind: "Success",
-      data: { data: Service.A },
-    }),
-    new ServiceStateHelper(storeInstance, serviceKeyMaker)
-  );
-
   const instanceConfigStateHelper = new InstanceConfigStateHelper(
     storeInstance
   );
 
-  const instanceConfigHelper = new InstanceConfigHookHelper(
-    new DataManagerImpl<"InstanceConfig">(
-      new InstantFetcher<"InstanceConfig">({
-        kind: "Success",
-        data: { data: { auto_creating: false } },
-      }),
-      instanceConfigStateHelper
-    ),
-    serviceDataManager
+  const instanceConfigHelper = new InstanceConfigDataManager(
+    new InstantFetcher<"InstanceConfig">({
+      kind: "Success",
+      data: { data: { auto_creating: false } },
+    }),
+    instanceConfigStateHelper,
+    new ServiceStateHelper(storeInstance, serviceKeyMaker),
+    new InstantFetcher<"Service">({
+      kind: "Success",
+      data: { data: Service.A },
+    })
   );
 
   const dataProvider = new DataProviderImpl([instanceConfigHelper]);

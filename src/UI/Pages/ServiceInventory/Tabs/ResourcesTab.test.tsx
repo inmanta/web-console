@@ -1,29 +1,26 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { StaticSubscriptionController, DeferredFetcher } from "@/Test";
+import { DeferredFetcher, StaticScheduler } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
-  ResourcesHookHelper,
-  DataManagerImpl,
+  ResourcesDataManager,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesTab } from "./ResourcesTab";
 
 function setup() {
   const store = getStoreInstance();
+  const scheduler = new StaticScheduler();
   const apiHelper = new DeferredFetcher<"Resources">();
-  const subscriptionController = new StaticSubscriptionController();
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        apiHelper,
-        new ResourcesStateHelper(store)
-      ),
-      subscriptionController
+    new ResourcesDataManager(
+      apiHelper,
+      new ResourcesStateHelper(store),
+      scheduler
     ),
   ]);
 
@@ -42,7 +39,7 @@ function setup() {
     </DependencyProvider>
   );
 
-  return { component, apiHelper, subscriptionController };
+  return { component, apiHelper, scheduler };
 }
 
 test("ResourcesView shows empty table", async () => {
@@ -95,7 +92,7 @@ test("ResourcesView shows success table", async () => {
 });
 
 test("ResourcesView shows updated table", async () => {
-  const { component, apiHelper, subscriptionController } = setup();
+  const { component, apiHelper, scheduler } = setup();
   render(component);
 
   expect(
@@ -108,7 +105,7 @@ test("ResourcesView shows updated table", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Empty" })
   ).toBeInTheDocument();
 
-  subscriptionController.executeAll();
+  scheduler.executeAll();
 
   apiHelper.resolve(
     Either.right({

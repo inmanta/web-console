@@ -1,19 +1,17 @@
-import {
-  SubscriptionController,
-  DataManager,
-  ServiceInstanceParams,
-} from "@/Core";
-import { ContinuousHookHelperImpl } from "../HookHelperImpl";
-import { getServiceInstancesUrl } from "./getServiceInstancesUrl";
+import { Scheduler, Fetcher, StateHelper, ServiceInstanceParams } from "@/Core";
+import { ContinuousDataManagerImpl } from "../DataManagerImpl";
+import { getUrl } from "./getUrl";
 
-export class ServiceInstancesHookHelper extends ContinuousHookHelperImpl<"ServiceInstances"> {
+export class ServiceInstancesDataManager extends ContinuousDataManagerImpl<"ServiceInstances"> {
   constructor(
-    dataManager: DataManager<"ServiceInstances">,
-    subscriptionController: SubscriptionController
+    fetcher: Fetcher<"ServiceInstances">,
+    stateHelper: StateHelper<"ServiceInstances">,
+    scheduler: Scheduler
   ) {
     super(
-      dataManager,
-      subscriptionController,
+      fetcher,
+      stateHelper,
+      scheduler,
       (qualifier) => qualifier.name,
       (qualifier) => [
         qualifier.name,
@@ -22,7 +20,7 @@ export class ServiceInstancesHookHelper extends ContinuousHookHelperImpl<"Servic
         qualifier.sort?.order,
       ],
       "ServiceInstances",
-      getServiceInstancesUrl,
+      getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")
           return { data: data, handlers: {}, metadata };

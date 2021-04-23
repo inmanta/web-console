@@ -7,17 +7,15 @@ import {
   Resources,
   InstantFetcher,
   Pagination,
+  StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  DataManagerImpl,
-  ServiceInstancesHookHelper,
+  ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
-  ResourcesHookHelper,
+  ResourcesDataManager,
   ResourcesStateHelper,
-  LiveSubscriptionController,
-  IntervalsDictionary,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
@@ -29,6 +27,7 @@ export default {
 
 export const Basic: React.FC = () => {
   const store = getStoreInstance();
+  const scheduler = new StaticScheduler();
   const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
     kind: "Success",
     data: {
@@ -37,32 +36,21 @@ export const Basic: React.FC = () => {
       metadata: Pagination.metadata,
     },
   });
-  const serviceInstancesSubscriptionController = new LiveSubscriptionController(
-    2000,
-    new IntervalsDictionary()
-  );
-  const serviceInstancesHelper = new ServiceInstancesHookHelper(
-    new DataManagerImpl<"ServiceInstances">(
-      serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store)
-    ),
-    serviceInstancesSubscriptionController
+
+  const serviceInstancesHelper = new ServiceInstancesDataManager(
+    serviceInstancesFetcher,
+    new ServiceInstancesStateHelper(store),
+    scheduler
   );
   const resourcesFetcher = new InstantFetcher<"Resources">({
     kind: "Success",
     data: { data: Resources.B },
   });
 
-  const resourcesSubscriptionController = new LiveSubscriptionController(
-    2000,
-    new IntervalsDictionary()
-  );
-  const resourcesHelper = new ResourcesHookHelper(
-    new DataManagerImpl<"Resources">(
-      resourcesFetcher,
-      new ResourcesStateHelper(store)
-    ),
-    resourcesSubscriptionController
+  const resourcesHelper = new ResourcesDataManager(
+    resourcesFetcher,
+    new ResourcesStateHelper(store),
+    scheduler
   );
 
   const dataProvider = new DataProviderImpl([
@@ -87,20 +75,15 @@ export const Basic: React.FC = () => {
 
 export const Failed: React.FC = () => {
   const store = getStoreInstance();
+  const scheduler = new StaticScheduler();
   const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
     kind: "Failed",
     error: "fake error message",
   });
-  const serviceInstancesSubscriptionController = new LiveSubscriptionController(
-    2000,
-    new IntervalsDictionary()
-  );
-  const serviceInstancesHelper = new ServiceInstancesHookHelper(
-    new DataManagerImpl<"ServiceInstances">(
-      serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store)
-    ),
-    serviceInstancesSubscriptionController
+  const serviceInstancesHelper = new ServiceInstancesDataManager(
+    serviceInstancesFetcher,
+    new ServiceInstancesStateHelper(store),
+    scheduler
   );
 
   const dataProvider = new DataProviderImpl([serviceInstancesHelper]);

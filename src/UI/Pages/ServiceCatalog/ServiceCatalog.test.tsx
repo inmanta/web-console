@@ -1,13 +1,12 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { StaticSubscriptionController, DeferredFetcher, Service } from "@/Test";
+import { DeferredFetcher, Service, StaticScheduler } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  DataManagerImpl,
-  ServicesHookHelper,
+  ServicesDataManager,
   ServicesStateHelper,
   ServiceKeyMaker,
 } from "@/UI/Data";
@@ -17,15 +16,13 @@ import { MemoryRouter } from "react-router-dom";
 
 function setup() {
   const store = getStoreInstance();
-
+  const scheduler = new StaticScheduler();
   const servicesFetcher = new DeferredFetcher<"Services">();
-  const servicesSubscriptionController = new StaticSubscriptionController();
-  const servicesHelper = new ServicesHookHelper(
-    new DataManagerImpl<"Services">(
-      servicesFetcher,
-      new ServicesStateHelper(store, new ServiceKeyMaker())
-    ),
-    servicesSubscriptionController
+
+  const servicesHelper = new ServicesDataManager(
+    servicesFetcher,
+    new ServicesStateHelper(store, new ServiceKeyMaker()),
+    scheduler
   );
 
   const dataProvider = new DataProviderImpl([servicesHelper]);
@@ -43,16 +40,12 @@ function setup() {
   return {
     component,
     servicesFetcher,
-    servicesSubscriptionController,
+    scheduler,
   };
 }
 
 test("ServiceCatalog shows updated services", async () => {
-  const {
-    component,
-    servicesFetcher,
-    servicesSubscriptionController,
-  } = setup();
+  const { component, servicesFetcher, scheduler } = setup();
   render(component);
 
   expect(
@@ -65,7 +58,7 @@ test("ServiceCatalog shows updated services", async () => {
     await screen.findByRole("region", { name: "ServiceCatalog-Empty" })
   ).toBeInTheDocument();
 
-  servicesSubscriptionController.executeAll();
+  scheduler.executeAll();
 
   servicesFetcher.resolve(Either.right({ data: [Service.A] }));
 
@@ -75,11 +68,7 @@ test("ServiceCatalog shows updated services", async () => {
 });
 
 test("ServiceCatalog shows updated empty", async () => {
-  const {
-    component,
-    servicesFetcher,
-    servicesSubscriptionController,
-  } = setup();
+  const { component, servicesFetcher, scheduler } = setup();
   render(component);
 
   expect(
@@ -92,7 +81,7 @@ test("ServiceCatalog shows updated empty", async () => {
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
   ).toBeInTheDocument();
 
-  servicesSubscriptionController.executeAll();
+  scheduler.executeAll();
 
   servicesFetcher.resolve(Either.right({ data: [] }));
 
@@ -126,6 +115,8 @@ test("ServiceCatalog removes service after deletion", async () => {
    * await requests. I'm not sure if jest-fetch-mock offers a way to wait
    * for the mocks to finish. But if we had a way to wait for the requests
    * to finish, we wouldn't need this hack.
+   *
+   * @TODO maybe we can use flushPromises here?
    */
   setTimeout(() => {
     servicesFetcher.resolve(Either.right({ data: [] }));

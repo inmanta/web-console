@@ -4,14 +4,13 @@ import {
   instanceEvents,
   InstantFetcher,
   Outcome,
-  StaticSubscriptionController,
+  StaticScheduler,
 } from "@/Test";
 import { EventsTab } from "./EventsTab";
 import { getStoreInstance } from "@/UI/Store";
 import {
   DataProviderImpl,
-  DataManagerImpl,
-  EventsHookHelper,
+  EventsDataManager,
   EventsStateHelper,
 } from "@/UI/Data";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -25,12 +24,10 @@ export default {
 const Template: React.FC<{ outcome: Outcome<"Events"> }> = ({ outcome }) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new EventsHookHelper(
-      new DataManagerImpl<"Events">(
-        new InstantFetcher<"Events">(outcome),
-        new EventsStateHelper(store)
-      ),
-      new StaticSubscriptionController()
+    new EventsDataManager(
+      new InstantFetcher<"Events">(outcome),
+      new EventsStateHelper(store),
+      new StaticScheduler()
     ),
   ]);
 

@@ -1,17 +1,31 @@
 import { Query } from "@/Core/Domain";
 import { RemoteData } from "@/Core/Language";
 
+type Data<K extends Query.Kind> = RemoteData.Type<
+  Query.Error<K>,
+  Query.UsedData<K>
+>;
+
+type Pair<K extends Query.Kind> = [Data<K>, () => void];
+
+export type DataManagerKind = "OneTime" | "Continuous";
+
+export type DataManager =
+  | OneTimeDataManager<Query.Kind>
+  | ContinuousDataManager<Query.Kind>;
+
 /**
- * The DataManager is responsible for managing data.
+ * The DataManager defines data hooks for a specific 'kind' of query.
+ * This correlates to a specific data source.
  *
- * This should not own any data. It is just a small
- * extra wrapper to hide details. It still uses a
- * state provider which does own the data.
+ * The matches method dictates what kind of query this helper supports.
  */
-export interface DataManager<K extends Query.Kind> {
-  initialize(qualifier: Query.Qualifier<K>): void;
-  update(qualifier: Query.Qualifier<K>, url: string): Promise<void>;
-  get(
-    qualifier: Query.Qualifier<K>
-  ): RemoteData.Type<Query.Error<K>, Query.Data<K>>;
+export interface OneTimeDataManager<K extends Query.Kind> {
+  useOneTime(qualifier: Query.Qualifier<K>): Pair<K>;
+  matches(query: Query.Type, kind: DataManagerKind): boolean;
+}
+
+export interface ContinuousDataManager<K extends Query.Kind> {
+  useContinuous(qualifier: Query.Qualifier<K>): Pair<K>;
+  matches(query: Query.Type, kind: DataManagerKind): boolean;
 }

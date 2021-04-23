@@ -1,11 +1,6 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
-import {
-  instances,
-  InstantFetcher,
-  StaticSubscriptionController,
-  Service,
-} from "@/Test";
+import { instances, InstantFetcher, Service, StaticScheduler } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
@@ -13,8 +8,7 @@ import { ServiceModel } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
-  DataManagerImpl,
-  ResourcesHookHelper,
+  ResourcesDataManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { MemoryRouter } from "react-router";
@@ -27,15 +21,13 @@ export default {
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        new InstantFetcher<"Resources">({
-          kind: "Success",
-          data: { data: [] },
-        }),
-        new ResourcesStateHelper(store)
-      ),
-      new StaticSubscriptionController()
+    new ResourcesDataManager(
+      new InstantFetcher<"Resources">({
+        kind: "Success",
+        data: { data: [] },
+      }),
+      new ResourcesStateHelper(store),
+      new StaticScheduler()
     ),
   ]);
 

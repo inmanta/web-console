@@ -3,19 +3,18 @@ import { render, screen, fireEvent, within } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
 import {
   DummyStateHelper,
-  StaticSubscriptionController,
   InstantFetcher,
   rows,
   tablePresenter,
   tablePresenterWithIdentity,
+  StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
   DataProviderImpl,
-  DataManagerImpl,
-  ResourcesHookHelper,
+  ResourcesDataManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import userEvent from "@testing-library/user-event";
@@ -27,22 +26,20 @@ const dummySetter = () => {
 test("InventoryTable can be expanded", async () => {
   // Arrange
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        new InstantFetcher<"Resources">({
-          kind: "Success",
-          data: {
-            data: [
-              {
-                resource_id: "resource_id_1",
-                resource_state: "resource_state",
-              },
-            ],
-          },
-        }),
-        new DummyStateHelper<"Resources">()
-      ),
-      new StaticSubscriptionController()
+    new ResourcesDataManager(
+      new InstantFetcher<"Resources">({
+        kind: "Success",
+        data: {
+          data: [
+            {
+              resource_id: "resource_id_1",
+              resource_state: "resource_state",
+            },
+          ],
+        },
+      }),
+      new DummyStateHelper<"Resources">(),
+      new StaticScheduler()
     ),
   ]);
   render(
@@ -69,22 +66,20 @@ test("InventoryTable can be expanded", async () => {
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        new InstantFetcher<"Resources">({
-          kind: "Success",
-          data: {
-            data: [
-              {
-                resource_id: "resource_id_1",
-                resource_state: "resource_state",
-              },
-            ],
-          },
-        }),
-        new ResourcesStateHelper(store)
-      ),
-      new StaticSubscriptionController()
+    new ResourcesDataManager(
+      new InstantFetcher<"Resources">({
+        kind: "Success",
+        data: {
+          data: [
+            {
+              resource_id: "resource_id_1",
+              resource_state: "resource_state",
+            },
+          ],
+        },
+      }),
+      new ResourcesStateHelper(store),
+      new StaticScheduler()
     ),
   ]);
   render(

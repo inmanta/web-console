@@ -1,18 +1,12 @@
 import React from "react";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
-import {
-  StaticSubscriptionController,
-  Outcome,
-  InstantFetcher,
-  Resources,
-} from "@/Test";
+import { StaticScheduler, Outcome, InstantFetcher, Resources } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ResourcesStateHelper,
-  DataManagerImpl,
-  ResourcesHookHelper,
+  ResourcesDataManager,
 } from "@/UI/Data";
 import { ResourcesTab } from "./ResourcesTab";
 
@@ -24,12 +18,10 @@ export default {
 const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
-    new ResourcesHookHelper(
-      new DataManagerImpl<"Resources">(
-        new InstantFetcher<"Resources">(outcome),
-        new ResourcesStateHelper(store)
-      ),
-      new StaticSubscriptionController()
+    new ResourcesDataManager(
+      new InstantFetcher<"Resources">(outcome),
+      new ResourcesStateHelper(store),
+      new StaticScheduler()
     ),
   ]);
 
