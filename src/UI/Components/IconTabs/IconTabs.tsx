@@ -4,8 +4,8 @@ import { Tabs, Tab, TabTitleText, TabTitleIcon } from "@patternfly/react-core";
 export interface TabDescriptor<K extends string> {
   id: K;
   title: string;
-  icon: React.ReactElement;
-  view: React.ReactElement;
+  icon: React.ReactNode;
+  view: React.ReactNode;
 }
 
 interface Props<K extends string> {

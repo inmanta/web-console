@@ -17,6 +17,14 @@ interface Props {
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
 }
 
+export const DisabledConfigTab: React.FC = () => (
+  <Card>
+    <CardBody>
+      <EmptyView message={words("config.disabled")} />
+    </CardBody>
+  </Card>
+);
+
 export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
   const { commandProvider, dataProvider } = useContext(DependencyContext);
   const [data, retry] = dataProvider.useOneTime<"InstanceConfig">({
