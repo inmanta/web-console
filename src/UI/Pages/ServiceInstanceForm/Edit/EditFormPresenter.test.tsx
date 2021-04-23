@@ -57,6 +57,7 @@ describe("EditFormPresenter", () => {
     },
     active_attributes: null,
     rollback_attributes: null,
+    deleted: false,
   };
   const expectedFormInputAttributes = [
     {

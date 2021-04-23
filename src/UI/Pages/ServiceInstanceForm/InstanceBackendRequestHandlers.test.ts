@@ -84,6 +84,7 @@ describe("Instance Update handler", () => {
     active_attributes: { attr1: "some value", attr2: "", attr3: null },
     rollback_attributes: null,
     instanceSetStateTargets: [],
+    deleted: false,
   };
   it("Calls update correctly when not setting optional attributes", () => {
     const attributes = [
