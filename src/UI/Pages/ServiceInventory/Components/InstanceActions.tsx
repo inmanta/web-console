@@ -19,6 +19,7 @@ export interface InstanceActionsProps {
   keycloak?: KeycloakInstance;
   editDisabled: boolean;
   deleteDisabled: boolean;
+  diagnoseDisabled: boolean;
   onSetInstanceState:
     | ((
         instanceId: string,
@@ -33,6 +34,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   keycloak,
   editDisabled,
   deleteDisabled,
+  diagnoseDisabled,
   onSetInstanceState,
 }) => {
   const location = useLocation();
@@ -57,6 +59,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       </DescriptionListGroup>
       <DescriptionListGroup>
         <DiagnosticsModal
+          isDisabled={diagnoseDisabled}
           serviceName={instance.service_entity}
           instance={instance}
           keycloak={keycloak}

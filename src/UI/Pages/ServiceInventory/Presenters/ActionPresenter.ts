@@ -12,6 +12,7 @@ export type ServiceInstanceForAction = Pick<
   | "rollback_attributes"
   | "environment"
   | "instanceSetStateTargets"
+  | "deleted"
 >;
 
 /**
