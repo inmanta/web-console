@@ -13,7 +13,7 @@ import { StatusTab } from "./StatusTab";
 import { AttributesTab } from "./AttributesTab";
 import { ResourcesTab } from "./ResourcesTab";
 import { EventsTab } from "./EventsTab";
-import { ConfigTab } from "./ConfigTab";
+import { ConfigTab, DisabledConfigTab } from "./ConfigTab";
 
 export enum TabKey {
   Status = "Status",
@@ -48,7 +48,7 @@ export const Tabs: React.FC<Props> = ({
       attributesTab(row),
       resourcesTab(serviceInstanceIdentifier),
       eventsTab(serviceInstanceIdentifier),
-      configTab(serviceInstanceIdentifier),
+      configTab(row.deleted, serviceInstanceIdentifier),
     ]}
   />
 );
@@ -101,10 +101,15 @@ const eventsTab = (
 });
 
 const configTab = (
+  isDisabled: boolean,
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Config,
   title: words("config.title"),
   icon: <CogIcon />,
-  view: <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />,
+  view: isDisabled ? (
+    <DisabledConfigTab />
+  ) : (
+    <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />
+  ),
 });

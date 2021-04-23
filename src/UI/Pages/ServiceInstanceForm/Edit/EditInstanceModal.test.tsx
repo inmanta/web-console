@@ -15,6 +15,7 @@ describe("EditInstanceModal", () => {
     active_attributes: { attr1: "some value" },
     rollback_attributes: null,
     instanceSetStateTargets: [],
+    deleted: false,
   };
   const attributes = [
     {

@@ -30,6 +30,7 @@ export const base: Row = {
   environment: "env",
   service_entity: "entity",
   serviceIdentityValue: "instance1",
+  deleted: false,
 };
 
 export const row2: Row = {

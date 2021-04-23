@@ -22,6 +22,7 @@ import {
   fetchInmantaApi,
   IRequestParams,
 } from "@/UI/App/utils/fetchInmantaApi";
+import { ActionDisabledTooltip } from "./Components";
 
 type PickedInstance = Pick<ServiceInstanceModel, "id" | "version">;
 
@@ -29,15 +30,24 @@ export const DiagnosticsModal: React.FunctionComponent<{
   serviceName: string;
   instance: PickedInstance;
   keycloak?: Keycloak.KeycloakInstance;
-}> = (props) => {
+  isDisabled?: boolean;
+}> = ({ isDisabled, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleModalToggle = () => {
     setIsOpen(!isOpen);
   };
   const ModalButton = () => (
-    <Button variant="tertiary" onClick={handleModalToggle} id="rca-button">
-      <ToolsIcon /> Diagnose
-    </Button>
+    <ActionDisabledTooltip isDisabled={isDisabled}>
+      <Button
+        variant="tertiary"
+        onClick={handleModalToggle}
+        id="rca-button"
+        isAriaDisabled={isDisabled}
+        style={isDisabled ? { cursor: "not-allowed" } : {}}
+      >
+        <ToolsIcon /> Diagnose
+      </Button>
+    </ActionDisabledTooltip>
   );
   return (
     <React.Fragment>

@@ -25,6 +25,7 @@ export class InstanceActionPresenter implements ActionPresenter {
       keycloak: this.keycloak,
       editDisabled: this.isTransferDisabled(id, "on_update"),
       deleteDisabled: this.isTransferDisabled(id, "on_delete"),
+      diagnoseDisabled: instance.deleted,
       onSetInstanceState: this.instanceSetStateManager.getSetInstanceStateHandler(
         instance.id
       ),

@@ -1,0 +1,6 @@
+description: Mark terminated instances in Service Inventory
+issue-nr: 159
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
