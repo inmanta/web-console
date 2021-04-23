@@ -1,6 +1,6 @@
 import React from "react";
 import { BackgroundImage } from "@patternfly/react-core";
-import filter from "@patternfly/patternfly/assets/images/background-filter.svg";
+import filter from "@patternfly/react-core/dist/styles/assets/images/background-filter.svg";
 
 export class SimpleBackgroundImage extends React.Component {
   private images = {
