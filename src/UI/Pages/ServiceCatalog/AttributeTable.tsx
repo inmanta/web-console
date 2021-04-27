@@ -2,10 +2,13 @@ import React from "react";
 import { AttributeModel } from "@/Core";
 import { Table, TableBody, TableHeader } from "@patternfly/react-table";
 
-export const AttributeTable: React.FunctionComponent<{
+interface Props {
   attributes: AttributeModel[];
-}> = (props) => {
-  const attributes = [...props.attributes];
+}
+
+export const AttributeTable: React.FunctionComponent<Props> = ({
+  attributes,
+}) => {
   if (attributes.length > 0) {
     const columns = Object.keys(attributes[0]);
     const rows = attributes.map((attribute) =>
@@ -17,10 +20,10 @@ export const AttributeTable: React.FunctionComponent<{
     );
     return (
       <Table aria-label="Attributes" cells={columns} rows={rows}>
-        <TableHeader />
-        <TableBody />
+        <TableHeader aria-label="TableHeader" />
+        <TableBody aria-label="TableBody" />
       </Table>
     );
   }
-  return <div id="no-attributes">No attributes found for the service</div>;
+  return <div>No attributes found for the service</div>;
 };

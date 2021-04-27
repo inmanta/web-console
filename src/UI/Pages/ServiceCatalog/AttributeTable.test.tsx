@@ -1,31 +1,39 @@
-import { AttributeTable } from "./AttributeTable";
 import React from "react";
-import { mount } from "enzyme";
+import { AttributeTable } from "./AttributeTable";
+import { render, screen, within } from "@testing-library/react";
+import { AttributeModel } from "@/Core";
 
-describe("Attribute Table ", () => {
-  it.each`
-    attributes                                                                     | numberOfCells
-    ${[]}                                                                          | ${0}
-    ${[{ name: "name", type: "type", description: "desc", modifier: "modifier" }]} | ${4}
-  `(
-    "Given attributes $attributes, should show $numberOfCells cells",
-    ({ attributes, numberOfCells }) => {
-      const wrapper = mount(<AttributeTable attributes={attributes} />);
-      const cells = wrapper.find("td");
-      expect(cells).toHaveLength(numberOfCells);
-    }
-  );
+const attribute1: AttributeModel = {
+  name: "order_id",
+  type: "int",
+  description: "The order ID of the service",
+  modifier: "rw",
+  default_value_set: false,
+};
 
-  it.each`
-    attributes                                                                     | showNotFoundMessage
-    ${[]}                                                                          | ${true}
-    ${[{ name: "name", type: "type", description: "desc", modifier: "modifier" }]} | ${false}
-  `(
-    "Given attributes $attributes, should show/hide ($showNotFoundMessage) not found message ",
-    ({ attributes, showNotFoundMessage }) => {
-      const wrapper = mount(<AttributeTable attributes={attributes} />);
-      const noItemsFound = wrapper.find("#no-attributes");
-      expect(noItemsFound.exists()).toBe(showNotFoundMessage);
-    }
-  );
+const attribute2: AttributeModel = {
+  name: "service_mtu",
+  type: "int",
+  description: "The MTU that must be configured at the service provider",
+  modifier: "rw",
+  default_value_set: false,
+};
+
+test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is shown", () => {
+  render(<AttributeTable attributes={[]} />);
+  expect(screen.getByText("No attributes found for the service")).toBeVisible();
+});
+
+test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", () => {
+  render(<AttributeTable attributes={[attribute1]} />);
+  const body = screen.getByRole("rowgroup", { name: "TableBody" });
+  const rows = within(body).getAllByRole("row");
+  expect(rows.length).toEqual(1);
+});
+
+test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", () => {
+  render(<AttributeTable attributes={[attribute1, attribute2]} />);
+  const body = screen.getByRole("rowgroup", { name: "TableBody" });
+  const rows = within(body).getAllByRole("row");
+  expect(rows.length).toEqual(2);
 });
