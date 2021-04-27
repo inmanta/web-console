@@ -49,3 +49,18 @@ See https://www.patternfly.org/v4/components/select/design-guidelines.
 ## Async timers in Jest
 
 https://stackoverflow.com/questions/52177631/jest-timer-and-promise-dont-work-well-settimeout-and-async-function
+
+## JSDOM & screen width
+
+Jest uses JSDOM. JSDOM defines the window innerWidth and innerHeight to be 1024 x 768.
+So during a test, the application is basically rendered in memory in a window with dimensions 1024 x 768.
+When writing a test for a component that behaves diffently based on screen width, remember the default dimensions.
+You can change the dimensions by setting the window properties and triggering a resize event.
+
+```ts
+// Change the viewport to 500px.
+window = Object.assign(window, { innerWidth: 500 });
+
+// Trigger the window resize event.
+window.dispatchEvent(new Event("resize"));
+```

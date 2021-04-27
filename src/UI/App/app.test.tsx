@@ -1,46 +1,12 @@
 import React from "react";
-import { App } from "@/UI/App/app";
-import { mount } from "enzyme";
-import { Button } from "@patternfly/react-core";
-import Keycloak from "keycloak-js";
-import { waitFor, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import Keycloak from "keycloak-js";
+import { App } from "@/UI/App/app";
 import { getStoreInstance } from "@/UI";
 
-describe("App tests", () => {
-  fetchMock.mockResponse(JSON.stringify({}));
-  let keycloak: Keycloak.KeycloakInstance;
-  beforeEach(() => {
-    keycloak = Keycloak();
-  });
-
-  it("should render a nav-toggle button", async () => {
-    const wrapper = mount(
-      <StoreProvider store={getStoreInstance()}>
-        <App keycloak={keycloak} shouldUseAuth={false} />
-      </StoreProvider>
-    );
-    const button = wrapper.find(Button);
-    await waitFor(() => undefined);
-    expect(button.exists()).toBe(true);
-  });
-
-  it("should hide the sidebar when clicking the nav-toggle button", async () => {
-    const wrapper = mount(
-      <StoreProvider store={getStoreInstance()}>
-        <App keycloak={keycloak} shouldUseAuth={false} />
-      </StoreProvider>
-    );
-    const button = wrapper.find("#nav-toggle").hostNodes();
-    expect(wrapper.find("#page-sidebar").hasClass("pf-m-expanded"));
-    button.simulate("click");
-    await waitFor(() => undefined);
-    expect(wrapper.find("#page-sidebar").hasClass("pf-m-collapsed"));
-  });
-});
-
-test("GIVEN the application WHEN showing the main page THEN the navigation toggle button should be visible", async () => {
+test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const keycloak = Keycloak();
 
@@ -55,8 +21,12 @@ test("GIVEN the application WHEN showing the main page THEN the navigation toggl
   ).toBeVisible();
 });
 
-test.skip("GIVEN the page WHEN clicking the navigation toggle THEN the sidebar should be hidden", async () => {
-  fetchMock.mockResponse(JSON.stringify({ data: [] }));
+/**
+ * The sidebar starts out 'collapsed' because of JSDOM default window dimensions.
+ * On desktop sizes it would start out 'expanded'.
+ */
+test("GIVEN the app WHEN clicking the navigation toggle THEN the sidebar should be expanded", async () => {
+  fetchMock.mockResponse(JSON.stringify({}));
   const keycloak = Keycloak();
 
   render(
@@ -65,14 +35,9 @@ test.skip("GIVEN the page WHEN clicking the navigation toggle THEN the sidebar s
     </StoreProvider>
   );
 
-  const toggle = await screen.findByRole("button", {
-    name: "Global navigation",
-  });
   const sidebar = await screen.findByRole("generic", { name: "PageSidebar" });
-  expect(sidebar).toBeVisible();
+  expect(sidebar).toHaveClass("pf-m-collapsed");
 
-  userEvent.click(toggle);
-
-  const sidebar2 = await screen.findByRole("generic", { name: "PageSidebar" });
-  expect(sidebar2).not.toBeVisible();
+  userEvent.click(screen.getByRole("button", { name: "Global navigation" }));
+  expect(sidebar).toHaveClass("pf-m-expanded");
 });
