@@ -38,7 +38,11 @@ export const PageBreadcrumb: React.FC = () => {
       );
       if (isVisible) {
         return (
-          <BreadcrumbItem key={path} isActive={isActive}>
+          <BreadcrumbItem
+            key={path}
+            isActive={isActive}
+            aria-label={`BreadcrumbItem`}
+          >
             {LinkElement}
           </BreadcrumbItem>
         );
