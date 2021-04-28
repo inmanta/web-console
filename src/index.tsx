@@ -4,30 +4,11 @@ import { App } from "@/UI/App/app";
 import keycloakConf from "@/UI/App/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance, DependencyProvider } from "@/UI";
-import { BaseApiHelper, FetcherImpl, InstanceConfigPoster } from "@/Infra";
+import { getStoreInstance } from "@/UI";
 import {
-  DataProviderImpl,
-  ServiceDataManager,
-  ServiceKeyMaker,
-  ServiceStateHelper,
-  ServiceInstancesDataManager,
-  ServiceInstancesStateHelper,
-  ResourcesStateHelper,
-  ResourcesDataManager,
-  EventsDataManager,
-  EventsStateHelper,
-  ServicesDataManager,
-  ServicesStateHelper,
-  InstanceLogsDataManager,
-  InstanceLogsStateHelper,
-  InstanceConfigDataManager,
-  InstanceConfigStateHelper,
-  CommandProviderImpl,
-  DiagnosticsStateHelper,
-  DiagnosticsDataManager,
-} from "@/UI/Data";
-import { SchedulerImpl } from "./Core";
+  DependencyManagerContext,
+  DependencyManagerImpl,
+} from "@/UI/Dependency";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -48,84 +29,13 @@ if (externalKeycloakConf) {
 }
 
 const storeInstance = getStoreInstance();
-const baseApiHelper = new BaseApiHelper(keycloak);
-const serviceKeyMaker = new ServiceKeyMaker();
-const scheduler = new SchedulerImpl(5000);
-
-const servicesHelper = new ServicesDataManager(
-  new FetcherImpl<"Services">(baseApiHelper),
-  new ServicesStateHelper(storeInstance, serviceKeyMaker),
-  scheduler
-);
-
-const serviceHelper = new ServiceDataManager(
-  new FetcherImpl<"Service">(baseApiHelper),
-  new ServiceStateHelper(storeInstance, serviceKeyMaker),
-  scheduler,
-  serviceKeyMaker
-);
-
-const serviceInstancesHelper = new ServiceInstancesDataManager(
-  new FetcherImpl<"ServiceInstances">(baseApiHelper),
-  new ServiceInstancesStateHelper(storeInstance),
-  scheduler
-);
-
-const resourcesHelper = new ResourcesDataManager(
-  new FetcherImpl<"Resources">(baseApiHelper),
-  new ResourcesStateHelper(storeInstance),
-  scheduler
-);
-
-const eventsDataManager = new EventsDataManager(
-  new FetcherImpl<"Events">(baseApiHelper),
-  new EventsStateHelper(storeInstance),
-  scheduler
-);
-
-const instanceLogsHelper = new InstanceLogsDataManager(
-  new FetcherImpl<"InstanceLogs">(baseApiHelper),
-  new InstanceLogsStateHelper(storeInstance)
-);
-
-const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);
-
-const instanceConfigHelper = new InstanceConfigDataManager(
-  new FetcherImpl<"InstanceConfig">(baseApiHelper),
-  instanceConfigStateHelper,
-  new ServiceStateHelper(storeInstance, serviceKeyMaker),
-  new FetcherImpl<"Service">(baseApiHelper)
-);
-
-const diagnosticsStateHelper = new DiagnosticsStateHelper(storeInstance);
-
-const diagnosticsHelper = new DiagnosticsDataManager(
-  new FetcherImpl<"Diagnostics">(baseApiHelper),
-  diagnosticsStateHelper,
-  scheduler
-);
-
-const dataProvider = new DataProviderImpl([
-  servicesHelper,
-  serviceHelper,
-  serviceInstancesHelper,
-  resourcesHelper,
-  eventsDataManager,
-  instanceLogsHelper,
-  instanceConfigHelper,
-  diagnosticsHelper,
-]);
-
-const commandProvider = new CommandProviderImpl(
-  new InstanceConfigPoster(baseApiHelper),
-  instanceConfigStateHelper
-);
+const dependencyManager = new DependencyManagerImpl(storeInstance, keycloak);
 
 ReactDOM.render(
-  <DependencyProvider dependencies={{ commandProvider, dataProvider }}>
+  <DependencyManagerContext.Provider value={dependencyManager}>
     <StoreProvider store={storeInstance}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
     </StoreProvider>
-  </DependencyProvider>,
+  </DependencyManagerContext.Provider>,
   document.getElementById("root") as HTMLElement
 );
