@@ -25,7 +25,8 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
         data: { data: [] },
       }),
       new ResourcesStateHelper(store),
-      new StaticScheduler()
+      new StaticScheduler(),
+      "env"
     ),
   ]);
 

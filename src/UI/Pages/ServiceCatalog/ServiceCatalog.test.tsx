@@ -22,7 +22,8 @@ function setup() {
   const servicesHelper = new ServicesDataManager(
     servicesFetcher,
     new ServicesStateHelper(store, new ServiceKeyMaker()),
-    scheduler
+    scheduler,
+    Service.A.environment
   );
 
   const dataProvider = new DataProviderImpl([servicesHelper]);

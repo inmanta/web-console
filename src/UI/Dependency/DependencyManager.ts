@@ -46,7 +46,7 @@ export class DependencyManagerImpl implements DependencyManager {
     private readonly keycloak: KeycloakInstance
   ) {}
 
-  getDependencies(): Dependencies {
+  getDependencies(environment: string): Dependencies {
     const baseApiHelper = new BaseApiHelper(this.keycloak);
     const serviceKeyMaker = new ServiceKeyMaker();
     const scheduler = new SchedulerImpl(5000);
@@ -54,37 +54,43 @@ export class DependencyManagerImpl implements DependencyManager {
     const servicesHelper = new ServicesDataManager(
       new FetcherImpl<"Services">(baseApiHelper),
       new ServicesStateHelper(this.store, serviceKeyMaker),
-      scheduler
+      scheduler,
+      environment
     );
 
     const serviceHelper = new ServiceDataManager(
       new FetcherImpl<"Service">(baseApiHelper),
       new ServiceStateHelper(this.store, serviceKeyMaker),
       scheduler,
-      serviceKeyMaker
+      serviceKeyMaker,
+      environment
     );
 
     const serviceInstancesHelper = new ServiceInstancesDataManager(
       new FetcherImpl<"ServiceInstances">(baseApiHelper),
       new ServiceInstancesStateHelper(this.store),
-      scheduler
+      scheduler,
+      environment
     );
 
     const resourcesHelper = new ResourcesDataManager(
       new FetcherImpl<"Resources">(baseApiHelper),
       new ResourcesStateHelper(this.store),
-      scheduler
+      scheduler,
+      environment
     );
 
     const eventsDataManager = new EventsDataManager(
       new FetcherImpl<"Events">(baseApiHelper),
       new EventsStateHelper(this.store),
-      scheduler
+      scheduler,
+      environment
     );
 
     const instanceLogsHelper = new InstanceLogsDataManager(
       new FetcherImpl<"InstanceLogs">(baseApiHelper),
-      new InstanceLogsStateHelper(this.store)
+      new InstanceLogsStateHelper(this.store),
+      environment
     );
 
     const instanceConfigStateHelper = new InstanceConfigStateHelper(this.store);

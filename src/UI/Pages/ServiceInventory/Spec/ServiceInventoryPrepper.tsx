@@ -32,14 +32,16 @@ export class ServiceInventoryPrepper {
     const serviceInstancesHelper = new ServiceInstancesDataManager(
       serviceInstancesFetcher,
       new ServiceInstancesStateHelper(store),
-      scheduler
+      scheduler,
+      service.environment
     );
 
     const resourcesFetcher = new DeferredFetcher<"Resources">();
     const resourcesHelper = new ResourcesDataManager(
       resourcesFetcher,
       new ResourcesStateHelper(store),
-      scheduler
+      scheduler,
+      service.environment
     );
 
     const dataProvider = new DataProviderImpl([

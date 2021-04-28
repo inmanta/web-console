@@ -20,7 +20,8 @@ it("ServiceInstanceHistory renders", async () => {
         kind: "Success",
         data: { data: [] },
       }),
-      new InstanceLogsStateHelper(store)
+      new InstanceLogsStateHelper(store),
+      Service.A.environment
     ),
   ]);
 

@@ -39,7 +39,8 @@ test("InventoryTable can be expanded", async () => {
         },
       }),
       new DummyStateHelper<"Resources">(),
-      new StaticScheduler()
+      new StaticScheduler(),
+      "env"
     ),
   ]);
   render(
@@ -79,7 +80,8 @@ test("ServiceInventory can show resources for instance", async () => {
         },
       }),
       new ResourcesStateHelper(store),
-      new StaticScheduler()
+      new StaticScheduler(),
+      "env"
     ),
   ]);
   render(

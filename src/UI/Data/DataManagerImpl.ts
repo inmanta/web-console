@@ -34,15 +34,14 @@ export class OneTimeDataManagerImpl<Kind extends Query.Kind>
     private readonly toUsed: (
       data: Query.Data<Kind>,
       setUrl: (url: string) => void
-    ) => Query.UsedData<Kind>
+    ) => Query.UsedData<Kind>,
+    private readonly environment: string
   ) {}
 
   async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       qualifier,
-      RemoteData.fromEither(
-        await this.fetcher.getData(qualifier.environment, url)
-      )
+      RemoteData.fromEither(await this.fetcher.getData(this.environment, url))
     );
   }
 
@@ -56,7 +55,7 @@ export class OneTimeDataManagerImpl<Kind extends Query.Kind>
     useEffect(() => {
       this.stateHelper.set(qualifier, RemoteData.loading());
       this.update(qualifier, url);
-    }, [url, qualifier.environment]);
+    }, [url, this.environment]);
 
     return [
       RemoteData.mapSuccess(
@@ -85,15 +84,14 @@ export class ContinuousDataManagerImpl<Kind extends Query.Kind>
     private readonly toUsed: (
       data: Query.Data<Kind>,
       setUrl: (url: string) => void
-    ) => Query.UsedData<Kind>
+    ) => Query.UsedData<Kind>,
+    private readonly environment: string
   ) {}
 
   async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       qualifier,
-      RemoteData.fromEither(
-        await this.fetcher.getData(qualifier.environment, url)
-      )
+      RemoteData.fromEither(await this.fetcher.getData(this.environment, url))
     );
   }
 
@@ -107,7 +105,7 @@ export class ContinuousDataManagerImpl<Kind extends Query.Kind>
     const task = {
       effect: async () =>
         RemoteData.fromEither(
-          await this.fetcher.getData(qualifier.environment, url)
+          await this.fetcher.getData(this.environment, url)
         ),
       update: (data) => this.stateHelper.set(qualifier, data),
     };
@@ -119,7 +117,7 @@ export class ContinuousDataManagerImpl<Kind extends Query.Kind>
       return () => {
         this.scheduler.unregister(this.getUnique(qualifier));
       };
-    }, [url, qualifier.environment]);
+    }, [url, this.environment]);
 
     return [
       RemoteData.mapSuccess(

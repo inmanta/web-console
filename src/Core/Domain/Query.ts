@@ -114,7 +114,7 @@ interface ServiceInstancesManifest {
  */
 export interface InstanceEventsQuery {
   kind: "Events";
-  qualifier: ServiceInstanceIdentifier & EventParams;
+  qualifier: Omit<ServiceInstanceIdentifier, "environment"> & EventParams;
 }
 
 interface EventsManifest {

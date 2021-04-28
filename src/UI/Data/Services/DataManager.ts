@@ -6,7 +6,8 @@ export class ServicesDataManager extends ContinuousDataManagerImpl<"Services"> {
   constructor(
     fetcher: Fetcher<"Services">,
     stateHelper: StateHelper<"Services">,
-    scheduler: Scheduler
+    scheduler: Scheduler,
+    environment: string
   ) {
     super(
       fetcher,
@@ -16,7 +17,8 @@ export class ServicesDataManager extends ContinuousDataManagerImpl<"Services"> {
       (qualifier) => [qualifier.environment],
       "Services",
       () => `/lsm/v1/service_catalog`,
-      identity
+      identity,
+      environment
     );
   }
 }

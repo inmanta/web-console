@@ -16,20 +16,20 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredFetcher<"Resources">();
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      apiHelper,
-      new ResourcesStateHelper(store),
-      scheduler
-    ),
-  ]);
-
   const instance = {
     id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
     service_entity: "vlan-assignment",
     version: 4,
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
+  const dataProvider = new DataProviderImpl([
+    new ResourcesDataManager(
+      apiHelper,
+      new ResourcesStateHelper(store),
+      scheduler,
+      instance.environment
+    ),
+  ]);
 
   const component = (
     <DependencyProvider dependencies={{ dataProvider }}>

@@ -7,7 +7,8 @@ export class ServiceDataManager extends ContinuousDataManagerImpl<"Service"> {
     fetcher: Fetcher<"Service">,
     stateHelper: StateHelper<"Service">,
     scheduler: Scheduler,
-    keyMaker: KeyMaker<Query.Qualifier<"Service">>
+    keyMaker: KeyMaker<Query.Qualifier<"Service">>,
+    environment: string
   ) {
     super(
       fetcher,
@@ -17,7 +18,8 @@ export class ServiceDataManager extends ContinuousDataManagerImpl<"Service"> {
       (qualifier) => [qualifier.name, qualifier.environment],
       "Service",
       ({ name }) => `/lsm/v1/service_catalog/${name}`,
-      identity
+      identity,
+      environment
     );
   }
 }

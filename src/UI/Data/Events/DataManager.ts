@@ -6,7 +6,8 @@ export class EventsDataManager extends ContinuousDataManagerImpl<"Events"> {
   constructor(
     fetcher: Fetcher<"Events">,
     stateHelper: StateHelper<"Events">,
-    scheduler: Scheduler
+    scheduler: Scheduler,
+    environment: string
   ) {
     super(
       fetcher,
@@ -33,7 +34,8 @@ export class EventsDataManager extends ContinuousDataManagerImpl<"Events"> {
           handlers: { prev: prevCb, next: nextCb },
           metadata,
         };
-      }
+      },
+      environment
     );
   }
 }

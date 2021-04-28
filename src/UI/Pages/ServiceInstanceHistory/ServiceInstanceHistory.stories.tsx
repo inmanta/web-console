@@ -25,7 +25,8 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
         kind: "Success",
         data: { data: logs },
       }),
-      new InstanceLogsStateHelper(store)
+      new InstanceLogsStateHelper(store),
+      Service.A.environment
     ),
   ]);
 
