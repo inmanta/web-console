@@ -1,140 +1,219 @@
 import { CatalogDataList } from "./CatalogDataList";
-import { shallow, mount } from "enzyme";
 import React from "react";
-import { DataListItem, DataListAction } from "@patternfly/react-core";
 import { MemoryRouter } from "react-router";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
-describe("Catalog Data List", () => {
-  const singleService = [
-    {
-      attributes: [],
-      description: "Description of service1",
-      environment: "env",
-      lifecycle: { initialState: "", states: [], transfers: [] },
-      name: "service1",
-      config: {},
-    },
-  ];
-  const doubleService = [
-    ...singleService,
-    {
-      attributes: [],
-      environment: "env",
-      lifecycle: { initialState: "", states: [], transfers: [] },
-      name: "otherService",
-      config: {},
-    },
-  ];
-  const serviceCatalogUrl = "/lsm/v1/service_catalog";
-  const environmentId = "env";
+const singleService = [
+  {
+    attributes: [],
+    description: "Description of service1",
+    environment: "env",
+    lifecycle: { initialState: "", states: [], transfers: [] },
+    name: "service1",
+    config: {},
+  },
+];
+const doubleService = [
+  ...singleService,
+  {
+    attributes: [],
+    environment: "env",
+    lifecycle: { initialState: "", states: [], transfers: [] },
+    name: "otherService",
+    config: {},
+  },
+];
+const serviceCatalogUrl = "/lsm/v1/service_catalog";
+const environmentId = "env";
 
-  it.each`
-    services         | numberOfItems
-    ${undefined}     | ${0}
-    ${[]}            | ${0}
-    ${singleService} | ${1}
-    ${doubleService} | ${2}
-  `(
-    "Given services $services, should render $numberOfItems items",
-    ({ services, numberOfItems }) => {
-      const wrapper = shallow(
-        <CatalogDataList
-          services={services}
-          environmentId={environmentId}
-          serviceCatalogUrl={serviceCatalogUrl}
-        />
-      );
-      const listItems = wrapper.find(DataListItem);
-      expect(listItems).toHaveLength(numberOfItems);
-    }
+test("GIVEN CatalogDataList WHEN no services ('undefined') THEN no services are shown", () => {
+  render(
+    <CatalogDataList
+      services={undefined}
+      environmentId={environmentId}
+      serviceCatalogUrl={serviceCatalogUrl}
+    />
   );
 
-  it("Should render correct links for each service", () => {
-    const wrapper = shallow(
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  expect(within(list).queryByRole("listitem")).not.toBeInTheDocument();
+});
+
+test("GIVEN CatalogDataList WHEN no services ('[]') THEN no services are shown", () => {
+  render(
+    <CatalogDataList
+      services={[]}
+      environmentId={environmentId}
+      serviceCatalogUrl={serviceCatalogUrl}
+    />
+  );
+
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  expect(within(list).queryByRole("listitem")).not.toBeInTheDocument();
+});
+
+test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", () => {
+  render(
+    <MemoryRouter>
+      <CatalogDataList
+        services={singleService}
+        environmentId={environmentId}
+        serviceCatalogUrl={serviceCatalogUrl}
+      />
+    </MemoryRouter>
+  );
+
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  expect(
+    within(list).getByRole("listitem", { name: "service1" })
+  ).toBeInTheDocument();
+});
+
+test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", () => {
+  render(
+    <MemoryRouter>
       <CatalogDataList
         services={doubleService}
         environmentId={environmentId}
         serviceCatalogUrl={serviceCatalogUrl}
       />
-    );
-    const listItems = wrapper.find(DataListItem);
-    const buttonOfFirstService = listItems
-      .first()
-      .find(DataListAction)
-      .children()
-      .first();
-    const buttonOfLastService = listItems
-      .last()
-      .find(DataListAction)
-      .children()
-      .first();
-    expect(buttonOfFirstService.props().to).toEqual({
-      pathname: "/lsm/catalog/service1/inventory",
-      search: "",
-    });
-    expect(buttonOfLastService.props().to).toEqual({
-      pathname: "/lsm/catalog/otherService/inventory",
-      search: "",
-    });
-  });
-  it.each`
-    toggles                                                     | visibleItems                                                  | hiddenItems
-    ${[]}                                                       | ${[]}                                                         | ${["section#service1-expand", "section#otherService-expand"]}
-    ${["button#service1-toggle"]}                               | ${["section#service1-expand"]}                                | ${["section#otherService-expand"]}
-    ${["button#otherService-toggle"]}                           | ${["section#otherService-expand"]}                            | ${["section#service1-expand"]}
-    ${["button#service1-toggle", "button#otherService-toggle"]} | ${["section#service1-expand", "section#otherService-expand"]} | ${[]}
-  `(
-    "When clicking on toggles $toggles, should show $visibleItems and hide $hiddenItems",
-    ({ toggles, visibleItems, hiddenItems }) => {
-      const wrapper = mount(
-        <MemoryRouter>
-          <CatalogDataList
-            services={doubleService}
-            environmentId={environmentId}
-            serviceCatalogUrl={serviceCatalogUrl}
-          />
-        </MemoryRouter>
-      );
-      toggles.map((toggle) => {
-        wrapper.find(toggle).simulate("click");
-      });
-      visibleItems.map((item: string) => {
-        expect(wrapper.find(item).props().hidden).toBeFalsy();
-      });
-      hiddenItems.map((item: string) => {
-        expect(wrapper.find(item).props().hidden).toBeTruthy();
-      });
-    }
+    </MemoryRouter>
   );
-  it("Should hide expandable, when clicked on toggle twice", () => {
-    const wrapper = mount(
-      <MemoryRouter>
-        <CatalogDataList
-          services={doubleService}
-          environmentId={environmentId}
-          serviceCatalogUrl={serviceCatalogUrl}
-        />
-      </MemoryRouter>
-    );
-    wrapper.find("button#service1-toggle").simulate("click");
-    wrapper.find("button#service1-toggle").simulate("click");
-    expect(wrapper.find("section#service1-expand").props().hidden).toBeTruthy();
+
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  expect(
+    within(list).getByRole("listitem", { name: "service1" })
+  ).toBeInTheDocument();
+  expect(
+    within(list).getByRole("listitem", { name: "otherService" })
+  ).toBeInTheDocument();
+});
+
+test("GIVEN CatalogDataList WHEN service THEN service has correct link", () => {
+  render(
+    <MemoryRouter>
+      <CatalogDataList
+        services={singleService}
+        environmentId={environmentId}
+        serviceCatalogUrl={serviceCatalogUrl}
+      />
+    </MemoryRouter>
+  );
+
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  const listItem = within(list).getByRole("listitem", { name: "service1" });
+  expect(listItem).toBeInTheDocument();
+  const link = within(listItem).getByRole("link", { name: "Inventory" });
+  expect(link).toBeInTheDocument();
+  expect(link).toHaveAttribute("href", "/lsm/catalog/service1/inventory");
+});
+
+test("GIVEN CatalogDataList WHEN description available THEN should show description", () => {
+  render(
+    <MemoryRouter>
+      <CatalogDataList
+        services={singleService}
+        environmentId={environmentId}
+        serviceCatalogUrl={serviceCatalogUrl}
+      />
+    </MemoryRouter>
+  );
+
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  const listItem = within(list).getByRole("listitem", { name: "service1" });
+  const description = within(listItem).queryByText("Description of service1");
+  expect(description).toBeVisible();
+});
+
+test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", () => {
+  render(
+    <MemoryRouter>
+      <CatalogDataList
+        services={singleService}
+        environmentId={environmentId}
+        serviceCatalogUrl={serviceCatalogUrl}
+      />
+    </MemoryRouter>
+  );
+
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  const listItem = within(list).getByRole("listitem", { name: "service1" });
+  const button = within(listItem).getByRole("button", {
+    name: "service1 Details",
+  });
+  userEvent.click(button);
+
+  const details = within(listItem).queryByRole("region", {
+    name: "Primary Content Details",
+  });
+  expect(details).toBeVisible();
+});
+
+test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hidden", () => {
+  render(
+    <MemoryRouter>
+      <CatalogDataList
+        services={singleService}
+        environmentId={environmentId}
+        serviceCatalogUrl={serviceCatalogUrl}
+      />
+    </MemoryRouter>
+  );
+
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  const listItem = within(list).getByRole("listitem", { name: "service1" });
+  const button = within(listItem).getByRole("button", {
+    name: "service1 Details",
+  });
+  userEvent.click(button);
+  userEvent.click(button);
+
+  const details = within(listItem).queryByRole("region", {
+    name: "Primary Content Details",
+  });
+  expect(details).not.toBeInTheDocument();
+});
+
+test("GIVEN CatalogDataList with 2 services WHEN user clicks on both toggles THEN both details are shown", () => {
+  render(
+    <MemoryRouter>
+      <CatalogDataList
+        services={doubleService}
+        environmentId={environmentId}
+        serviceCatalogUrl={serviceCatalogUrl}
+      />
+    </MemoryRouter>
+  );
+
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  const listItem1 = within(list).getByRole("listitem", { name: "service1" });
+  const listItem2 = within(list).getByRole("listitem", {
+    name: "otherService",
   });
 
-  it("Should show description of service entity if it's available", () => {
-    const wrapper = mount(
-      <MemoryRouter>
-        <CatalogDataList
-          services={doubleService}
-          environmentId={environmentId}
-          serviceCatalogUrl={serviceCatalogUrl}
-        />
-      </MemoryRouter>
-    );
-    const listItems = wrapper.find(DataListItem);
-    const firstDescription = listItems.first().find("#service1-description");
-    const lastDescription = listItems.last().find("#otherService-description");
-    expect(firstDescription.exists()).toBeTruthy();
-    expect(lastDescription.exists()).toBeFalsy();
+  expect(
+    screen.queryByRole("region", {
+      name: "Primary Content Details",
+    })
+  ).not.toBeInTheDocument();
+
+  const toggle1 = within(listItem1).getByRole("button", {
+    name: "service1 Details",
   });
+  const toggle2 = within(listItem2).getByRole("button", {
+    name: "otherService Details",
+  });
+
+  userEvent.click(toggle1);
+  userEvent.click(toggle2);
+
+  const details1 = within(listItem1).queryByRole("region", {
+    name: "Primary Content Details",
+  });
+  const details2 = within(listItem2).queryByRole("region", {
+    name: "Primary Content Details",
+  });
+  expect(details1).toBeVisible();
+  expect(details2).toBeVisible();
 });
