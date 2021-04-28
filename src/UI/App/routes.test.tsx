@@ -6,12 +6,11 @@ import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
 import userEvent from "@testing-library/user-event";
 
-const keycloak = Keycloak();
-
 test("GIVEN Navigation THEN shows navigation items", () => {
+  fetchMock.mockResponse(JSON.stringify({ data: [] }));
   render(
     <StoreProvider store={getStoreInstance()}>
-      <App keycloak={keycloak} shouldUseAuth={false} />
+      <App keycloak={Keycloak()} shouldUseAuth={false} />
     </StoreProvider>
   );
   const navigation = screen.getByRole("navigation", { name: "Global" });
@@ -39,9 +38,10 @@ test("GIVEN Navigation THEN shows navigation items", () => {
  * Service Inventory.
  */
 test("GIVEN Navigation WHEN user clicks on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {
+  fetchMock.mockResponse(JSON.stringify({ data: [] }));
   render(
     <StoreProvider store={getStoreInstance()}>
-      <App keycloak={keycloak} shouldUseAuth={false} />
+      <App keycloak={Keycloak()} shouldUseAuth={false} />
     </StoreProvider>
   );
   const navigation = screen.getByRole("navigation", { name: "Global" });
