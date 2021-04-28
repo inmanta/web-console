@@ -142,7 +142,7 @@ interface EventsManifest {
  */
 export interface InstanceLogsQuery {
   kind: "InstanceLogs";
-  qualifier: ServiceInstanceIdentifier;
+  qualifier: Omit<ServiceInstanceIdentifier, "environment">;
 }
 
 interface InstanceLogsManifest {

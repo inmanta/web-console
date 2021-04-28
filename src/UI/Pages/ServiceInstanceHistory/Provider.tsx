@@ -31,7 +31,6 @@ export const Provider: React.FC = () => {
               <ServiceInstanceHistory
                 service={service}
                 instanceId={instanceId}
-                environment={environment}
               />
             </Wrapper>
           )}
