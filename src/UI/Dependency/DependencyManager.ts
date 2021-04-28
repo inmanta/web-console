@@ -99,7 +99,8 @@ export class DependencyManagerImpl implements DependencyManager {
       new FetcherImpl<"InstanceConfig">(baseApiHelper),
       instanceConfigStateHelper,
       new ServiceStateHelper(this.store, serviceKeyMaker),
-      new FetcherImpl<"Service">(baseApiHelper)
+      new FetcherImpl<"Service">(baseApiHelper),
+      environment
     );
 
     const diagnosticsStateHelper = new DiagnosticsStateHelper(this.store);

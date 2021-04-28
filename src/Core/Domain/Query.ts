@@ -158,7 +158,7 @@ interface InstanceLogsManifest {
  */
 export interface InstanceConfigQuery {
   kind: "InstanceConfig";
-  qualifier: ServiceInstanceIdentifier;
+  qualifier: Omit<ServiceInstanceIdentifier, "environment">;
 }
 
 interface InstanceConfigManifest {

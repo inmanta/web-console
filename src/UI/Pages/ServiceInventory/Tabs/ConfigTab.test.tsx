@@ -28,6 +28,13 @@ function setup() {
     storeInstance
   );
 
+  const instanceIdentifier = {
+    id: ServiceInstance.A.id,
+    service_entity: Service.A.name,
+    environment: Service.A.environment,
+    version: ServiceInstance.A.version,
+  };
+
   const instanceConfigHelper = new InstanceConfigDataManager(
     new InstantFetcher<"InstanceConfig">({
       kind: "Success",
@@ -38,17 +45,11 @@ function setup() {
     new InstantFetcher<"Service">({
       kind: "Success",
       data: { data: Service.A },
-    })
+    }),
+    instanceIdentifier.environment
   );
 
   const dataProvider = new DataProviderImpl([instanceConfigHelper]);
-
-  const instanceIdentifier = {
-    id: ServiceInstance.A.id,
-    service_entity: Service.A.name,
-    environment: Service.A.environment,
-    version: ServiceInstance.A.version,
-  };
 
   return {
     storeInstance,

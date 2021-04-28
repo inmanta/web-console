@@ -1,6 +1,5 @@
 import {
   OneTimeDataManager,
-  ServiceInstanceIdentifier,
   Query,
   RemoteData,
   ServiceModel,
@@ -23,13 +22,14 @@ export class InstanceConfigDataManager
     private readonly fetcher: Fetcher<"InstanceConfig">,
     private readonly stateHelper: StateHelper<"InstanceConfig">,
     private readonly serviceStateHelper: StateHelper<"Service">,
-    private readonly serviceFetcher: Fetcher<"Service">
+    private readonly serviceFetcher: Fetcher<"Service">,
+    private readonly environment: string
   ) {}
 
   private getConfigUrl({
     service_entity,
     id,
-  }: ServiceInstanceIdentifier): string {
+  }: Query.Qualifier<"InstanceConfig">): string {
     return `/lsm/v1/service_inventory/${service_entity}/${id}/config`;
   }
 
@@ -50,9 +50,7 @@ export class InstanceConfigDataManager
   ): Promise<void> {
     this.stateHelper.set(
       qualifier,
-      RemoteData.fromEither(
-        await this.fetcher.getData(qualifier.environment, url)
-      )
+      RemoteData.fromEither(await this.fetcher.getData(this.environment, url))
     );
   }
 
@@ -68,9 +66,12 @@ export class InstanceConfigDataManager
     );
   }
 
-  useOneTime(qualifier: ServiceInstanceIdentifier): [Data, () => void] {
-    const { service_entity, environment } = qualifier;
-    const serviceIdentifier = { name: service_entity, environment };
+  useOneTime(qualifier: Query.Qualifier<"InstanceConfig">): [Data, () => void] {
+    const { service_entity } = qualifier;
+    const serviceIdentifier = {
+      name: service_entity,
+      environment: this.environment,
+    };
     const serviceData = this.serviceStateHelper.getHooked(serviceIdentifier);
 
     useEffect(() => {
@@ -85,7 +86,7 @@ export class InstanceConfigDataManager
     useEffect(() => {
       this.initialize(qualifier);
       this.update(qualifier, this.getConfigUrl(qualifier));
-    }, [qualifier.environment]);
+    }, [this.environment]);
 
     return [
       this.merge(
