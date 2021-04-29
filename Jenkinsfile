@@ -39,7 +39,7 @@ pipeline {
         always {
             junit 'web-console/junit.xml'
             cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
-            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml', 'web-console/cypress/screenshots/*', allowEmptyArchive: true, onlyIfSuccessful: false
+            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/*', allowEmptyArchive: true, onlyIfSuccessful: false
             deleteDir()
         }
     }
