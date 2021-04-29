@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
-import { DateWithTooltip } from "@/UI/Components";
+import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { AttributesSummaryView, IdWithCopy } from "./Components";
 import { DeploymentProgressPresenter } from "./Presenters";
 import { Tabs, TabKey } from "./Tabs";
@@ -63,12 +63,16 @@ export const InstanceRow: React.FC<Props> = ({
             onToggle,
           }}
         />
-        {shouldUseServiceIdentity ? (
+        {shouldUseServiceIdentity && row.serviceIdentityValue ? (
           <Td
             dataLabel={idDataLabel}
             aria-label={`IdentityCell-${row.serviceIdentityValue}`}
           >
-            {row.serviceIdentityValue}
+            <TextWithCopy
+              shortText={row.serviceIdentityValue}
+              fullText={row.serviceIdentityValue}
+              tooltipContent={words("serviceIdentity.copy")}
+            />
           </Td>
         ) : (
           <Td dataLabel={idDataLabel} aria-label={`IdCell-${row.id.short}`}>
