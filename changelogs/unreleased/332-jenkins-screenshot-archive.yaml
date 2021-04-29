@@ -1,3 +1,4 @@
 description: Archive screenshots of failed tests correctly
+issue-nr: 332
 change-type: patch
 destination-branches: [master, iso3, iso4]
