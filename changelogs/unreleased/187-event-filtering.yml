@@ -1,0 +1,6 @@
+description: Add paging, sorting and filtering to the events view
+issue-nr: 187
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

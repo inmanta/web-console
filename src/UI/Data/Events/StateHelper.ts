@@ -1,15 +1,15 @@
-import { InstanceEvent, Query, RemoteData, StateHelper } from "@/Core";
+import { Query, RemoteData, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
 
-type Data = RemoteData.Type<string, InstanceEvent[]>;
+type Data = RemoteData.Type<string, Query.Data<"Events">>;
 type ApiData = RemoteData.Type<string, Query.ApiResponse<"Events">>;
 
 export class EventsStateHelper implements StateHelper<"Events"> {
   constructor(private readonly store: Store) {}
 
   set({ id }: Query.Qualifier<"Events">, data: ApiData): void {
-    const value = RemoteData.mapSuccess((data) => data.data, data);
+    const value = RemoteData.mapSuccess((data) => data, data);
     this.store.dispatch.events.setData({ id, value });
   }
 

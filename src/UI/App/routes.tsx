@@ -12,6 +12,7 @@ import {
   ServiceCatalogWithProvider,
   ServiceInstanceHistoryWithProvider,
   ServiceInventoryWithProvider,
+  EventsWithProvider,
 } from "@/UI/Pages";
 
 let routeFocusTimer: number;
@@ -73,6 +74,15 @@ const routes: IAppRouteGroup[] = [
         label: "Service Instance History",
         path: "/catalog/:id/inventory/:instanceId/history",
         title: "Service Instance History",
+      },
+      {
+        component: EventsWithProvider,
+        exact: true,
+        hideOnSideBar: true,
+        icon: null,
+        label: "Service Instance Events",
+        path: "/catalog/:id/inventory/:instanceId/events",
+        title: "Service Instance Events",
       },
     ],
     name: "Lifecycle service management",

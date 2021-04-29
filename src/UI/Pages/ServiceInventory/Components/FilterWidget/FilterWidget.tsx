@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ServiceInstanceParams } from "@/Core";
 import { AttributeSets, AttributesFilter } from "./AttributesFilter";
 import { IdFilter } from "./IdFilter";
-import { StateFilter } from "./StateFilter";
+import { SelectOptionFilter } from "@/UI/Components/Filters";
 import { FilterPicker } from "./FilterPicker";
 import { DeletedFilter } from "./DeletedFilter";
 import { IdentityFilter } from "./IdentityFilter";
@@ -60,7 +60,7 @@ export const FilterWidget: React.FC<Props> = ({
         filterKind={filterKind}
         identityAttributePretty={identityAttribute?.pretty}
       />
-      <StateFilter
+      <SelectOptionFilter
         isVisible={filterKind === ServiceInstanceParams.Kind.State}
         possibleStates={states}
         selectedStates={filter.state ? filter.state : []}

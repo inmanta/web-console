@@ -3,7 +3,7 @@ import { KeycloakInstance } from "keycloak-js";
 import {
   ServiceModel,
   ServiceInstanceModelWithTargetStates,
-  ServiceInstanceParams,
+  SortDirection,
 } from "@/Core";
 import {
   AttributesPresenter,
@@ -21,8 +21,8 @@ export interface Props {
   keycloak?: KeycloakInstance;
   sortColumn?: string;
   setSortColumn: (name?: string) => void;
-  order?: ServiceInstanceParams.SortDirection;
-  setOrder: (order?: ServiceInstanceParams.SortDirection) => void;
+  order?: SortDirection;
+  setOrder: (order?: SortDirection) => void;
 }
 
 export const TableProvider: React.FC<Props> = ({
@@ -57,7 +57,6 @@ export const TableProvider: React.FC<Props> = ({
     serviceEntity.service_identity_display_name
   );
   const rows = tablePresenter.createRows(instances);
-
   return (
     <InventoryTable
       {...props}

@@ -8,7 +8,12 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
+import {
+  RemoteData,
+  ServiceModel,
+  ServiceInstanceParams,
+  SortDirection,
+} from "@/Core";
 import { useKeycloak } from "react-keycloak";
 import { DependencyContext } from "@/UI/Dependency";
 import {
@@ -17,9 +22,10 @@ import {
   LoadingView,
   ServiceProvider,
   EnvironmentProvider,
+  PaginationWidget,
 } from "@/UI/Components";
 import { InventoryContext } from "./InventoryContext";
-import { PaginationWidget, TableControls } from "./Components";
+import { TableControls } from "./Components";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -70,9 +76,7 @@ export const ServiceInventory: React.FunctionComponent<{
   const [sortColumn, setSortColumn] = useState<string | undefined>(
     "created_at"
   );
-  const [order, setOrder] = useState<
-    ServiceInstanceParams.SortDirection | undefined
-  >("desc");
+  const [order, setOrder] = useState<SortDirection | undefined>("desc");
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;
   const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
@@ -93,7 +97,11 @@ export const ServiceInventory: React.FunctionComponent<{
       loading: () => null,
       failed: () => null,
       success: ({ handlers, metadata }) => (
-        <PaginationWidget handlers={handlers} metadata={metadata} />
+        <PaginationWidget
+          handlers={handlers}
+          metadata={metadata}
+          pageSize={20}
+        />
       ),
     },
     data

@@ -70,6 +70,7 @@ const dict = {
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.statusTab.history": "History",
+  "inventory.statusTab.events": "Events",
   "inventory.resourcesTab.empty.title": "No resources found",
   "inventory.resourcesTab.empty.body":
     "No resources could be found for this instance",
@@ -122,7 +123,8 @@ const dict = {
   "events.column.message": "Message",
   "events.details.compileReport": "Open compile report",
   "events.empty.title": "No events found",
-  "events.empty.body": "No events could be found for this instance",
+  "events.empty.body":
+    "No events could be found for this instance and the specified filters",
   "events.details.title": "Event details",
   "events.title": "Events",
   "events.failed.title": "Something went wrong",

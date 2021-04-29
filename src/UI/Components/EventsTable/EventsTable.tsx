@@ -5,23 +5,30 @@ import { EmptyView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { EventsTableBody } from "./EventsTableBody";
 import { EventsTableWrapper } from "./EventsTableWrapper";
+import { SortDirection } from "@/Core";
 
 interface Props {
   events: InstanceEvent[];
   environmentId: string;
   tablePresenter: EventsTablePresenter;
+  order?: SortDirection;
+  setOrder?: (order: SortDirection) => void;
 }
 
 export const EventsTable: React.FC<Props> = ({
   events,
   environmentId,
   tablePresenter,
+  order,
+  setOrder,
 }) =>
   events.length === 0 ? (
     <EventsTableWrapper
       tablePresenter={tablePresenter}
       wrapInTd
       aria-label="EventTable-Empty"
+      order={order}
+      setOrder={setOrder}
     >
       <EmptyView
         title={words("events.empty.title")}
@@ -32,6 +39,8 @@ export const EventsTable: React.FC<Props> = ({
     <EventsTableWrapper
       tablePresenter={tablePresenter}
       aria-label="EventTable-Success"
+      order={order}
+      setOrder={setOrder}
     >
       <EventsTableBody
         events={events}
