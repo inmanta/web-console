@@ -3,6 +3,7 @@ import React from "react";
 import { MemoryRouter } from "react-router";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { ServiceModel } from "@/Core";
 
 const singleService = [
   {
@@ -24,45 +25,33 @@ const doubleService = [
     config: {},
   },
 ];
-const serviceCatalogUrl = "/lsm/v1/service_catalog";
-const environmentId = "env";
+
+const Component = (services?: ServiceModel[]) => (
+  <MemoryRouter>
+    <CatalogDataList
+      services={services}
+      environmentId="env"
+      serviceCatalogUrl="/lsm/v1/service_catalog"
+    />
+  </MemoryRouter>
+);
 
 test("GIVEN CatalogDataList WHEN no services ('undefined') THEN no services are shown", () => {
-  render(
-    <CatalogDataList
-      services={undefined}
-      environmentId={environmentId}
-      serviceCatalogUrl={serviceCatalogUrl}
-    />
-  );
+  render(Component(undefined));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(within(list).queryByRole("listitem")).not.toBeInTheDocument();
 });
 
 test("GIVEN CatalogDataList WHEN no services ('[]') THEN no services are shown", () => {
-  render(
-    <CatalogDataList
-      services={[]}
-      environmentId={environmentId}
-      serviceCatalogUrl={serviceCatalogUrl}
-    />
-  );
+  render(Component([]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(within(list).queryByRole("listitem")).not.toBeInTheDocument();
 });
 
 test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", () => {
-  render(
-    <MemoryRouter>
-      <CatalogDataList
-        services={singleService}
-        environmentId={environmentId}
-        serviceCatalogUrl={serviceCatalogUrl}
-      />
-    </MemoryRouter>
-  );
+  render(Component(singleService));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(
@@ -71,15 +60,7 @@ test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", () => {
 });
 
 test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", () => {
-  render(
-    <MemoryRouter>
-      <CatalogDataList
-        services={doubleService}
-        environmentId={environmentId}
-        serviceCatalogUrl={serviceCatalogUrl}
-      />
-    </MemoryRouter>
-  );
+  render(Component(doubleService));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(
@@ -91,15 +72,7 @@ test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", () => {
 });
 
 test("GIVEN CatalogDataList WHEN service THEN service has correct link", () => {
-  render(
-    <MemoryRouter>
-      <CatalogDataList
-        services={singleService}
-        environmentId={environmentId}
-        serviceCatalogUrl={serviceCatalogUrl}
-      />
-    </MemoryRouter>
-  );
+  render(Component(singleService));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem = within(list).getByRole("listitem", { name: "service1" });
@@ -110,15 +83,7 @@ test("GIVEN CatalogDataList WHEN service THEN service has correct link", () => {
 });
 
 test("GIVEN CatalogDataList WHEN description available THEN should show description", () => {
-  render(
-    <MemoryRouter>
-      <CatalogDataList
-        services={singleService}
-        environmentId={environmentId}
-        serviceCatalogUrl={serviceCatalogUrl}
-      />
-    </MemoryRouter>
-  );
+  render(Component(singleService));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem = within(list).getByRole("listitem", { name: "service1" });
@@ -127,15 +92,7 @@ test("GIVEN CatalogDataList WHEN description available THEN should show descript
 });
 
 test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", () => {
-  render(
-    <MemoryRouter>
-      <CatalogDataList
-        services={singleService}
-        environmentId={environmentId}
-        serviceCatalogUrl={serviceCatalogUrl}
-      />
-    </MemoryRouter>
-  );
+  render(Component(singleService));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem = within(list).getByRole("listitem", { name: "service1" });
@@ -151,15 +108,7 @@ test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", () 
 });
 
 test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hidden", () => {
-  render(
-    <MemoryRouter>
-      <CatalogDataList
-        services={singleService}
-        environmentId={environmentId}
-        serviceCatalogUrl={serviceCatalogUrl}
-      />
-    </MemoryRouter>
-  );
+  render(Component(singleService));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem = within(list).getByRole("listitem", { name: "service1" });
@@ -176,15 +125,7 @@ test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hid
 });
 
 test("GIVEN CatalogDataList with 2 services WHEN user clicks on both toggles THEN both details are shown", () => {
-  render(
-    <MemoryRouter>
-      <CatalogDataList
-        services={doubleService}
-        environmentId={environmentId}
-        serviceCatalogUrl={serviceCatalogUrl}
-      />
-    </MemoryRouter>
-  );
+  render(Component(doubleService));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem1 = within(list).getByRole("listitem", { name: "service1" });
