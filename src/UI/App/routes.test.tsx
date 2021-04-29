@@ -4,7 +4,6 @@ import Keycloak from "keycloak-js";
 import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
-import userEvent from "@testing-library/user-event";
 
 test("GIVEN Navigation THEN shows navigation items", () => {
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
@@ -31,13 +30,7 @@ test("GIVEN Navigation THEN shows navigation items", () => {
   ).toBeVisible();
 });
 
-/**
- * This test doesn't really verify anything because the initial page
- * is the Service Catalog. So it starts out highlighted. This should
- * be tested with a MemoryRouter with the initial page being the
- * Service Inventory.
- */
-test("GIVEN Navigation WHEN user clicks on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {
+test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
   render(
     <StoreProvider store={getStoreInstance()}>
@@ -48,6 +41,5 @@ test("GIVEN Navigation WHEN user clicks on 'Service Catalog' THEN 'Service Catal
   const link = within(navigation).getByRole("link", {
     name: "Service Catalog",
   });
-  userEvent.click(link);
   expect(link).toHaveClass("pf-m-current");
 });
