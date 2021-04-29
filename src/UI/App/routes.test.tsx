@@ -4,6 +4,7 @@ import Keycloak from "keycloak-js";
 import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
+import userEvent from "@testing-library/user-event";
 
 test("GIVEN Navigation THEN shows navigation items", () => {
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
@@ -12,6 +13,9 @@ test("GIVEN Navigation THEN shows navigation items", () => {
       <App keycloak={Keycloak()} shouldUseAuth={false} />
     </StoreProvider>
   );
+
+  userEvent.click(screen.getByRole("button", { name: "Global navigation" }));
+
   const navigation = screen.getByRole("navigation", { name: "Global" });
   expect(navigation).toBeVisible();
 
@@ -37,6 +41,7 @@ test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highl
       <App keycloak={Keycloak()} shouldUseAuth={false} />
     </StoreProvider>
   );
+  userEvent.click(screen.getByRole("button", { name: "Global navigation" }));
   const navigation = screen.getByRole("navigation", { name: "Global" });
   const link = within(navigation).getByRole("link", {
     name: "Service Catalog",
