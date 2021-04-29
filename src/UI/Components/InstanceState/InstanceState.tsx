@@ -10,14 +10,9 @@ import {
 
 export const InstanceState: React.FC<State> = ({ name, label }) => {
   const visual = getVisual(label);
-  if (visual === null)
-    return <span aria-label={`InstanceState-${name}`}>{name}</span>;
+  if (visual === null) return <span>{name}</span>;
 
-  return (
-    <Label {...visual} aria-label={`InstanceState-${name}`}>
-      {name}
-    </Label>
-  );
+  return <Label {...visual}>{name}</Label>;
 };
 
 function getVisual(

@@ -51,7 +51,7 @@ export const InstanceRow: React.FC<Props> = ({
   return (
     <Tbody isExpanded={false}>
       <StyledRow
-        deleted={row.deleted}
+        $deleted={row.deleted}
         id={`instance-row-${row.id.short}`}
         aria-label="InstanceRow-Intro"
       >
@@ -125,7 +125,7 @@ export const InstanceRow: React.FC<Props> = ({
   );
 };
 
-const StyledRow = styled(Tr)<{ deleted: boolean }>`
+const StyledRow = styled(Tr)<{ $deleted: boolean }>`
   ${(p) =>
-    p.deleted ? "background-color: var(--pf-global--palette--red-50);" : ""}
+    p.$deleted ? "background-color: var(--pf-global--palette--red-50);" : ""}
 `;

@@ -232,6 +232,7 @@ export const AppLayout: React.FunctionComponent<IAppLayout> = ({
   );
   const Sidebar = (
     <PageSidebar
+      aria-label="PageSidebar"
       nav={Navigation}
       isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
       theme="dark"

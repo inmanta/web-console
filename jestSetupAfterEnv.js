@@ -1,8 +1,4 @@
-import { configure } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
 import "@testing-library/jest-dom";
-
-configure({ adapter: new Adapter() });
 
 /**
  * Sometimes tests can take longer than the default 5000ms timeout.
