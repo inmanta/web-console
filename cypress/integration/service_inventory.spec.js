@@ -63,7 +63,7 @@ describe("Service inventory", function () {
   });
   it("Should show attributes tab when clicking on attribute summary", function () {
     cy.visit("/lsm/catalog/e2e_service/inventory");
-    cy.get("#instance-row-summary-78ac").click();
+    // cy.get("#instance-row-summary-78ac").click();
     cy.get('[data-testid="attributes-tree-table-78ac"]').should("be.visible");
   });
   it("Should show resources tab when clicking on resource deployment progress", function () {
