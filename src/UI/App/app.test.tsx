@@ -5,6 +5,8 @@ import { StoreProvider } from "easy-peasy";
 import Keycloak from "keycloak-js";
 import { App } from "@/UI/App/app";
 import { getStoreInstance } from "@/UI";
+import { AppLayout } from "./AppLayout/AppLayout";
+import { MemoryRouter } from "react-router-dom";
 
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
@@ -27,17 +29,26 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
  */
 test("GIVEN the app WHEN clicking the navigation toggle THEN the sidebar should be expanded", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
-  const keycloak = Keycloak();
 
   render(
     <StoreProvider store={getStoreInstance()}>
-      <App keycloak={keycloak} shouldUseAuth={false} />
+      <MemoryRouter>
+        <AppLayout
+          logoBaseUrl="/"
+          keycloak={undefined}
+          setErrorMessage={() => undefined}
+          shouldUseAuth={false}
+        >
+          <span></span>
+        </AppLayout>
+      </MemoryRouter>
     </StoreProvider>
   );
 
-  const sidebar = await screen.findByRole("generic", { name: "PageSidebar" });
-  expect(sidebar).toHaveClass("pf-m-collapsed");
+  expect(
+    screen.queryByRole("generic", { name: "PageSidebar" })
+  ).not.toBeInTheDocument();
 
   userEvent.click(screen.getByRole("button", { name: "Global navigation" }));
-  expect(sidebar).toHaveClass("pf-m-expanded");
+  expect(screen.queryByRole("generic", { name: "PageSidebar" })).toBeVisible();
 });
