@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { words } from "@/UI";
-import { DateWithTooltip } from "@/UI/Components";
+import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { AttributesSummaryView, IdWithCopy } from "./Components";
 import { DeploymentProgressPresenter } from "./Presenters";
 import { Tabs, TabKey } from "./Tabs";
@@ -51,7 +51,7 @@ export const InstanceRow: React.FC<Props> = ({
   return (
     <Tbody isExpanded={false}>
       <StyledRow
-        deleted={row.deleted}
+        $deleted={row.deleted}
         id={`instance-row-${row.id.short}`}
         aria-label="InstanceRow-Intro"
       >
@@ -63,12 +63,16 @@ export const InstanceRow: React.FC<Props> = ({
             onToggle,
           }}
         />
-        {shouldUseServiceIdentity ? (
+        {shouldUseServiceIdentity && row.serviceIdentityValue ? (
           <Td
             dataLabel={idDataLabel}
             aria-label={`IdentityCell-${row.serviceIdentityValue}`}
           >
-            {row.serviceIdentityValue}
+            <TextWithCopy
+              shortText={row.serviceIdentityValue}
+              fullText={row.serviceIdentityValue}
+              tooltipContent={words("serviceIdentity.copy")}
+            />
           </Td>
         ) : (
           <Td dataLabel={idDataLabel} aria-label={`IdCell-${row.id.short}`}>
@@ -125,7 +129,7 @@ export const InstanceRow: React.FC<Props> = ({
   );
 };
 
-const StyledRow = styled(Tr)<{ deleted: boolean }>`
+const StyledRow = styled(Tr)<{ $deleted: boolean }>`
   ${(p) =>
-    p.deleted ? "background-color: var(--pf-global--palette--red-50);" : ""}
+    p.$deleted ? "background-color: var(--pf-global--palette--red-50);" : ""}
 `;

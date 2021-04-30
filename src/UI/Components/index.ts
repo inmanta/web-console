@@ -16,3 +16,4 @@ export * from "./StackedProgressBar";
 export * from "./Toggle";
 export * from "./TreeTable";
 export * from "./PaginationWidget";
+export * from "./TextWithCopy";

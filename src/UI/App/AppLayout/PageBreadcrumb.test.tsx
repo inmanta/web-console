@@ -1,73 +1,80 @@
-import { PageBreadcrumb } from "./PageBreadcrumb";
-import { mount } from "enzyme";
 import React from "react";
-import { MemoryRouter, Router } from "react-router-dom";
-import { createMemoryHistory } from "history";
+import { MemoryRouter } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
+import { render, screen, within } from "@testing-library/react";
+import { PageBreadcrumb } from "./PageBreadcrumb";
 
-describe("Breadcrumbs", () => {
-  it.each`
-    entry                               | numberOfItems
-    ${"/"}                              | ${0}
-    ${"/support"}                       | ${0}
-    ${"/lsm/catalog"}                   | ${1}
-    ${"/lsm/catalog/service/inventory"} | ${2}
-  `(
-    "Should render $numberOfItems breadcrumb items for $entry",
-    ({ entry, numberOfItems }) => {
-      const wrapper = mount(
-        <MemoryRouter initialEntries={[entry]}>
-          <PageBreadcrumb />
-        </MemoryRouter>
-      );
-      const breadcrumbItems = wrapper.find(".pf-c-breadcrumb__item");
-      expect(breadcrumbItems).toHaveLength(numberOfItems);
-    }
+test("GIVEN Breadcrumbs WHEN url is '/' THEN 0 Breadcrumbs are shown", () => {
+  render(
+    <MemoryRouter initialEntries={["/"]}>
+      <PageBreadcrumb />
+    </MemoryRouter>
   );
-  it.each`
-    entry                               | activeElementIndex
-    ${"/lsm/catalog"}                   | ${0}
-    ${"/lsm/catalog/service/inventory"} | ${1}
-  `(
-    "The current element shouldn't be clickable",
-    ({ entry, activeElementIndex }) => {
-      const wrapper = mount(
-        <MemoryRouter initialEntries={[entry]}>
-          <PageBreadcrumb />
-        </MemoryRouter>
-      );
-      const breadcrumbItems = wrapper.find(".pf-c-breadcrumb__item");
-      expect(
-        breadcrumbItems.at(activeElementIndex).hasClass("active")
-      ).toBeFalsy();
-    }
+
+  expect(
+    screen.queryByRole("listitem", { name: "BreadcrumbItem" })
+  ).not.toBeInTheDocument();
+});
+
+test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog' THEN plain Catalog Breadcrumb is shown", () => {
+  render(
+    <MemoryRouter initialEntries={["/lsm/catalog"]}>
+      <PageBreadcrumb />
+    </MemoryRouter>
   );
-  it("should change the active element on navigation", () => {
-    const history = createMemoryHistory();
-    history.push("/");
-    const wrapper = mount(
-      <Router history={history}>
-        <PageBreadcrumb />
-      </Router>
-    );
-    history.push("/lsm/catalog/service/inventory");
-    wrapper.update();
-    const breadcrumbItems = wrapper.find(".pf-c-breadcrumb__item");
-    expect(breadcrumbItems.at(1).hasClass("active")).toBeFalsy();
+
+  const crumb = screen.getByRole("listitem", { name: "BreadcrumbItem" });
+  expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
+  expect(within(crumb).getByText("Service Catalog")).toBeInTheDocument();
+});
+
+test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog/service/inventory' THEN linked Catalog Breadcrumb and plain Inventory breadcrumb is shown", () => {
+  render(
+    <MemoryRouter initialEntries={["/lsm/catalog/service/inventory"]}>
+      <PageBreadcrumb />
+    </MemoryRouter>
+  );
+
+  const crumbs = screen.getAllByRole("listitem", { name: "BreadcrumbItem" });
+  expect(crumbs.length).toEqual(2);
+  const [catalogCrumb, inventoryCrumb] = crumbs;
+  expect(within(catalogCrumb).queryByRole("link")).toBeInTheDocument();
+  expect(within(inventoryCrumb).queryByRole("link")).not.toBeInTheDocument();
+  expect(
+    within(inventoryCrumb).getByText("Service Inventory")
+  ).toBeInTheDocument();
+});
+
+test("GIVEN Breadcrumbs on Inventory WHEN url contains env THEN catalog breadcrumb link also contains env", () => {
+  render(
+    <MemoryRouter initialEntries={["/lsm/catalog/service/inventory?env=env1"]}>
+      <PageBreadcrumb />
+    </MemoryRouter>
+  );
+
+  const link = screen.getByRole("link", { name: "Service Catalog" });
+  expect(link).toHaveAttribute("href", "/lsm/catalog?env=env1");
+});
+
+test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link THEN only plain catalog breadcrumb is shown", () => {
+  render(
+    <MemoryRouter initialEntries={["/lsm/catalog/service/inventory?env=env1"]}>
+      <PageBreadcrumb />
+    </MemoryRouter>
+  );
+  const crumbsBefore = screen.getAllByRole("listitem", {
+    name: "BreadcrumbItem",
   });
-  it("should keep the env query parameter on navigation", () => {
-    const history = createMemoryHistory();
-    history.push("/?env=env1");
-    const wrapper = mount(
-      <Router history={history}>
-        <PageBreadcrumb />
-      </Router>
-    );
-    history.push("/lsm/catalog/service/inventory?env=env1");
-    wrapper.update();
-    const breadcrumbItems = wrapper.find(".pf-c-breadcrumb__item");
-    expect(breadcrumbItems.at(0).children().at(0).props().to).toEqual({
-      pathname: "/lsm/catalog",
-      search: "?env=env1",
-    });
+  expect(crumbsBefore.length).toEqual(2);
+
+  const link = screen.getByRole("link", { name: "Service Catalog" });
+  userEvent.click(link);
+
+  const crumbsAfter = screen.getAllByRole("listitem", {
+    name: "BreadcrumbItem",
   });
+  expect(crumbsAfter.length).toEqual(1);
+  const crumb = crumbsAfter[0];
+  expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
+  expect(within(crumb).getByText("Service Catalog")).toBeInTheDocument();
 });

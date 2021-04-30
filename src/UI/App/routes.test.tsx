@@ -1,40 +1,50 @@
 import React from "react";
 import { App } from "@/UI/App/app";
-import { mount } from "enzyme";
 import Keycloak from "keycloak-js";
-import { waitFor } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
+import userEvent from "@testing-library/user-event";
 
-describe("Navigation", () => {
-  let keycloak: Keycloak.KeycloakInstance;
-  beforeEach(() => {
-    keycloak = Keycloak();
-  });
+test("GIVEN Navigation THEN shows navigation items", () => {
+  fetchMock.mockResponse(JSON.stringify({ data: [] }));
+  render(
+    <StoreProvider store={getStoreInstance()}>
+      <App keycloak={Keycloak()} shouldUseAuth={false} />
+    </StoreProvider>
+  );
 
-  it("should render nav groups", async () => {
-    const wrapper = mount(
-      <StoreProvider store={getStoreInstance()}>
-        <App keycloak={keycloak} shouldUseAuth={false} />
-      </StoreProvider>
-    );
-    const nav = wrapper.find("#nav-primary-simple");
-    await waitFor(() => undefined);
-    expect(nav.find(".pf-c-nav__section-title")).toHaveLength(2);
-  });
+  userEvent.click(screen.getByRole("button", { name: "Global navigation" }));
 
-  it("should navigate when clicking on link", async () => {
-    const wrapper = mount(
-      <StoreProvider store={getStoreInstance()}>
-        <App keycloak={keycloak} shouldUseAuth={false} />
-      </StoreProvider>
-    );
-    const nav = wrapper.find("#nav-primary-simple");
-    const serviceCatalogEntry = nav.find(".pf-c-nav__link").first();
-    serviceCatalogEntry.simulate("click");
-    await waitFor(() => undefined);
-    expect(serviceCatalogEntry.getElement().props.activeClassName).toEqual(
-      "pf-m-current"
-    );
+  const navigation = screen.getByRole("navigation", { name: "Global" });
+  expect(navigation).toBeVisible();
+
+  expect(within(navigation).getAllByRole("region").length).toEqual(2);
+
+  expect(
+    within(navigation).getByRole("region", {
+      name: "Lifecycle service management",
+    })
+  ).toBeVisible();
+
+  expect(
+    within(navigation).getByRole("region", {
+      name: "Other sites",
+    })
+  ).toBeVisible();
+});
+
+test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {
+  fetchMock.mockResponse(JSON.stringify({ data: [] }));
+  render(
+    <StoreProvider store={getStoreInstance()}>
+      <App keycloak={Keycloak()} shouldUseAuth={false} />
+    </StoreProvider>
+  );
+  userEvent.click(screen.getByRole("button", { name: "Global navigation" }));
+  const navigation = screen.getByRole("navigation", { name: "Global" });
+  const link = within(navigation).getByRole("link", {
+    name: "Service Catalog",
   });
+  expect(link).toHaveClass("pf-m-current");
 });

@@ -1,40 +1,54 @@
 import React from "react";
-import { App } from "@/UI/App/app";
-import { mount } from "enzyme";
-import { Button } from "@patternfly/react-core";
-import Keycloak from "keycloak-js";
-import { waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import Keycloak from "keycloak-js";
+import { App } from "@/UI/App/app";
 import { getStoreInstance } from "@/UI";
+import { AppLayout } from "./AppLayout/AppLayout";
+import { MemoryRouter } from "react-router-dom";
 
-describe("App tests", () => {
+test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
-  let keycloak: Keycloak.KeycloakInstance;
-  beforeEach(() => {
-    keycloak = Keycloak();
-  });
+  const keycloak = Keycloak();
 
-  it("should render a nav-toggle button", async () => {
-    const wrapper = mount(
-      <StoreProvider store={getStoreInstance()}>
-        <App keycloak={keycloak} shouldUseAuth={false} />
-      </StoreProvider>
-    );
-    const button = wrapper.find(Button);
-    await waitFor(() => undefined);
-    expect(button.exists()).toBe(true);
-  });
+  render(
+    <StoreProvider store={getStoreInstance()}>
+      <App keycloak={keycloak} shouldUseAuth={false} />
+    </StoreProvider>
+  );
 
-  it("should hide the sidebar when clicking the nav-toggle button", async () => {
-    const wrapper = mount(
-      <StoreProvider store={getStoreInstance()}>
-        <App keycloak={keycloak} shouldUseAuth={false} />
-      </StoreProvider>
-    );
-    const button = wrapper.find("#nav-toggle").hostNodes();
-    expect(wrapper.find("#page-sidebar").hasClass("pf-m-expanded"));
-    button.simulate("click");
-    await waitFor(() => undefined);
-    expect(wrapper.find("#page-sidebar").hasClass("pf-m-collapsed"));
-  });
+  expect(
+    await screen.findByRole("button", { name: "Global navigation" })
+  ).toBeVisible();
+});
+
+/**
+ * The sidebar starts out 'collapsed' because of JSDOM default window dimensions.
+ * On desktop sizes it would start out 'expanded'.
+ */
+test("GIVEN the app WHEN clicking the navigation toggle THEN the sidebar should be expanded", async () => {
+  fetchMock.mockResponse(JSON.stringify({}));
+
+  render(
+    <StoreProvider store={getStoreInstance()}>
+      <MemoryRouter>
+        <AppLayout
+          logoBaseUrl="/"
+          keycloak={undefined}
+          setErrorMessage={() => undefined}
+          shouldUseAuth={false}
+        >
+          <span></span>
+        </AppLayout>
+      </MemoryRouter>
+    </StoreProvider>
+  );
+
+  expect(
+    screen.queryByRole("generic", { name: "PageSidebar" })
+  ).not.toBeInTheDocument();
+
+  userEvent.click(screen.getByRole("button", { name: "Global navigation" }));
+  expect(screen.queryByRole("generic", { name: "PageSidebar" })).toBeVisible();
 });

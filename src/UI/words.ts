@@ -38,6 +38,7 @@ const dict = {
    * Inventory related text
    */
   "id.copy": "Copy full service instance id to clipboard",
+  "serviceIdentity.copy": "Copy identifier to clipboard",
   "attributes.active": "Active Attributes",
   "attributes.candidate": "Candidate Attributes",
   "attributes.rollback": "Rollback Attributes",

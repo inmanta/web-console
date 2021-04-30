@@ -1,22 +1,18 @@
 import React from "react";
-import { mount } from "enzyme";
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  InfoCircleIcon,
-} from "@patternfly/react-icons";
 import { InstanceState } from "./InstanceState";
+import { render, screen } from "@testing-library/react";
 
-describe("InstanceState shows ", () => {
-  it.each`
-    icon                             | label
-    ${(<CheckCircleIcon />)}         | ${"success"}
-    ${(<ExclamationCircleIcon />)}   | ${"danger"}
-    ${(<ExclamationTriangleIcon />)} | ${"warning"}
-    ${(<InfoCircleIcon />)}          | ${"info"}
-  `("icon $icon for label $label", ({ icon, label }) => {
-    const wrapper = mount(<InstanceState name="up" label={label} />);
-    expect(wrapper.contains(icon)).toBeTruthy();
-  });
+test("GIVEN State label WHEN (name,label) is ('up','success') THEN name is visible", async () => {
+  render(<InstanceState name="up" label="success" />);
+  expect(screen.getByText("up")).toBeVisible();
+});
+
+test("GIVEN State label WHEN (name,label) is ('rejected','warning') THEN name is visible", async () => {
+  render(<InstanceState name="rejected" label="warning" />);
+  expect(screen.getByText("rejected")).toBeVisible();
+});
+
+test("GIVEN State label WHEN (name,label) is ('ordered',undefined) THEN name is visible", async () => {
+  render(<InstanceState name="ordered" />);
+  expect(screen.getByText("ordered")).toBeVisible();
 });
