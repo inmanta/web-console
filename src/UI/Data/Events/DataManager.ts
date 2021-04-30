@@ -1,6 +1,6 @@
-import { Fetcher, StateHelper, Scheduler } from "@/Core";
-import { identity } from "lodash";
+import { Fetcher, StateHelper, Scheduler, EventParams } from "@/Core";
 import { ContinuousDataManagerImpl } from "../DataManagerImpl";
+import { getUrl } from "./getUrl";
 
 export class EventsDataManager extends ContinuousDataManagerImpl<"Events"> {
   constructor(
@@ -13,11 +13,31 @@ export class EventsDataManager extends ContinuousDataManagerImpl<"Events"> {
       stateHelper,
       scheduler,
       (qualifier) => qualifier.id,
-      (qualifier) => [qualifier.id, qualifier.service_entity],
+      (qualifier) => [
+        qualifier.id,
+        qualifier.service_entity,
+        qualifier.sort?.order,
+        stringifyFilter(qualifier.filter),
+        qualifier.pageSize,
+      ],
       "Events",
-      ({ service_entity, id }) =>
-        `/lsm/v1/service_inventory/${service_entity}/${id}/events`,
-      identity
+      getUrl,
+      ({ data, links, metadata }, setUrl) => {
+        if (typeof links === "undefined")
+          return { data: data, handlers: {}, metadata };
+        const { prev, next } = links;
+        const prevCb = prev ? () => setUrl(prev) : undefined;
+        const nextCb = next ? () => setUrl(next) : undefined;
+        return {
+          data: data,
+          handlers: { prev: prevCb, next: nextCb },
+          metadata,
+        };
+      }
     );
   }
+}
+
+function stringifyFilter(filter: EventParams.Filter | undefined): string {
+  return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

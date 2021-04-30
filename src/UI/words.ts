@@ -71,6 +71,7 @@ const dict = {
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.statusTab.history": "History",
+  "inventory.statusTab.events": "Events",
   "inventory.resourcesTab.empty.title": "No resources found",
   "inventory.resourcesTab.empty.body":
     "No resources could be found for this instance",
@@ -97,6 +98,7 @@ const dict = {
     serviceName: string
   ) =>
     `Are you sure you want to delete instance ${instanceId} of service entity ${serviceName}?`,
+  "inventory.filters.state.placeholder": "Select a state...",
 
   /**
    * Config related text
@@ -123,12 +125,17 @@ const dict = {
   "events.column.message": "Message",
   "events.details.compileReport": "Open compile report",
   "events.empty.title": "No events found",
-  "events.empty.body": "No events could be found for this instance",
+  "events.empty.body":
+    "No events could be found for this instance and the specified filters",
   "events.details.title": "Event details",
   "events.title": "Events",
   "events.failed.title": "Something went wrong",
   "events.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
+  "events.caption": (id: string) => `Showing events of instance ${id}`,
+  "events.filters.source.placeholder": "Select a source state...",
+  "events.filters.destination.placeholder": "Select a destination state...",
+  "events.filters.eventType.placeholder": "Select an Event Type...",
 
   /**
    * History related text

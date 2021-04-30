@@ -23,23 +23,24 @@ export const EventIcon: React.FC<Props> = ({ eventType }) => {
     </Tooltip>
   );
 };
+
 function getIconFor(eventType: InstanceEventType): React.ReactElement {
   switch (eventType) {
-    case "AUTO_TRANSITION":
+    case InstanceEventType.AUTO_TRANSITION:
       return <AutomationIcon />;
-    case "CREATE_TRANSITION":
+    case InstanceEventType.CREATE_TRANSITION:
       return <AddCircleOIcon />;
-    case "RESOURCE_EVENT":
+    case InstanceEventType.RESOURCE_EVENT:
       return <RunningIcon />;
-    case "RESOURCE_TRANSITION":
+    case InstanceEventType.RESOURCE_TRANSITION:
       return <ResourcesAlmostFullIcon />;
-    case "ALLOCATION_UPDATE":
+    case InstanceEventType.ALLOCATION_UPDATE:
       return <InfoCircleIcon />;
-    case "API_SET_STATE_TRANSITION":
+    case InstanceEventType.API_SET_STATE_TRANSITION:
       return <ArrowRightIcon />;
-    case "ON_UPDATE_TRANSITION":
+    case InstanceEventType.ON_UPDATE_TRANSITION:
       return <PencilAltIcon />;
-    case "ON_DELETE_TRANSITION":
+    case InstanceEventType.ON_DELETE_TRANSITION:
       return <TrashIcon />;
   }
 }

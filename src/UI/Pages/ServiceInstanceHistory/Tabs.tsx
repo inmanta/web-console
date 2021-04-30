@@ -3,8 +3,10 @@ import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
 import { DateInfo, InstanceLog } from "@/Core";
 import {
   AttributesTable,
-  EventsTable,
+  EmptyView,
+  EventsTableBody,
   EventsTablePresenter,
+  EventsTableWrapper,
   IconTabs,
   TabDescriptor,
 } from "@/UI/Components";
@@ -76,11 +78,28 @@ const eventsTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
   id: TabKey.Events,
   title: words("history.tabs.events"),
   icon: <PortIcon />,
-  view: (
-    <EventsTable
-      events={log.events}
-      environmentId={log.environment}
-      tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
-    />
-  ),
+  view:
+    log.events.length === 0 ? (
+      <EventsTableWrapper
+        tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
+        wrapInTd
+        aria-label="EventTable-Empty"
+      >
+        <EmptyView
+          title={words("events.empty.title")}
+          message={words("events.empty.body")}
+        />
+      </EventsTableWrapper>
+    ) : (
+      <EventsTableWrapper
+        tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
+        aria-label="EventTable-Success"
+      >
+        <EventsTableBody
+          events={log.events}
+          environmentId={log.environment}
+          tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
+        />
+      </EventsTableWrapper>
+    ),
 });

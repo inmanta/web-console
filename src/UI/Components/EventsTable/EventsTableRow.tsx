@@ -38,7 +38,7 @@ export const EventsTableRow: React.FC<Props> = ({
   };
   return (
     <Tbody isExpanded={false} className={getColorCodeClass(row)}>
-      <Tr id={`event-row-${row.id}`}>
+      <Tr id={`event-row-${row.id}`} aria-label="Event table row">
         <Td
           expand={{
             rowIndex: index,

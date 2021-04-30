@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, StaticScheduler } from "@/Test";
+import { DeferredFetcher, Service, StaticScheduler } from "@/Test";
 import { Either, InstanceEvent } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -10,7 +10,8 @@ import {
   EventsStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
-import { EventsTab } from "./EventsTab";
+import { Metadata } from "@/Core/Domain/Pagination";
+import { EventsPage } from "./EventsPage";
 
 function setup() {
   const store = getStoreInstance();
@@ -20,17 +21,14 @@ function setup() {
     new EventsDataManager(apiHelper, new EventsStateHelper(store), scheduler),
   ]);
 
-  const instance = {
-    id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-    service_entity: "vlan-assignment",
-    version: 4,
-    environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
-  };
-
   const component = (
     <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={store}>
-        <EventsTab qualifier={instance} />
+        <EventsPage
+          service={Service.A}
+          instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+          environment={"environment"}
+        />
       </StoreProvider>
     </DependencyProvider>
   );
@@ -46,7 +44,9 @@ test("EventsView shows empty table", async () => {
     await screen.findByRole("grid", { name: "EventTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right({ data: [] }));
+  apiHelper.resolve(
+    Either.right({ data: [], links: { self: "" }, metadata: {} as Metadata })
+  );
 
   expect(
     await screen.findByRole("grid", { name: "EventTable-Empty" })
@@ -96,6 +96,8 @@ test("EventsView shows success table", async () => {
           is_error_transition: false,
         } as InstanceEvent,
       ],
+      links: { self: "" },
+      metadata: {} as Metadata,
     })
   );
 
@@ -112,7 +114,9 @@ test("EventsView shows updated table", async () => {
     await screen.findByRole("grid", { name: "EventTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right({ data: [] }));
+  apiHelper.resolve(
+    Either.right({ data: [], links: { self: "" }, metadata: {} as Metadata })
+  );
 
   expect(
     await screen.findByRole("grid", { name: "EventTable-Empty" })
@@ -140,6 +144,8 @@ test("EventsView shows updated table", async () => {
           is_error_transition: false,
         } as InstanceEvent,
       ],
+      links: { self: "" },
+      metadata: {} as Metadata,
     })
   );
 
