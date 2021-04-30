@@ -62,6 +62,7 @@ const dict = {
   "inventory.tabs.resources": "Resources",
   "inventory.tabs.status": "Status",
   "inventory.statustab.actions": "Actions",
+  "inventory.statustab.diagnose": "Diagnose",
   "inventory.statustab.version": "Version",
   "inventory.statustab.details": "Instance Details",
   "inventory.statustab.setInstanceState": "Set state to",
@@ -138,6 +139,9 @@ const dict = {
   "history.tabs.details": "Details",
   "history.tabs.attributes": "Attributes",
   "history.tabs.events": "Events",
+
+  "diagnose.empty": (instanceId: string) =>
+    `No errors were found for instance ${instanceId}`,
 };
 
 type Key = keyof typeof dict;

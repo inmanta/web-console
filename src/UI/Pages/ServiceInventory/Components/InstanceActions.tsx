@@ -1,6 +1,5 @@
 import React from "react";
 import { KeycloakInstance } from "keycloak-js";
-import { DiagnosticsModal } from "@/UI/Pages/ServiceInventory";
 import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
 import {
   Button,
@@ -11,7 +10,7 @@ import { SetStateAction } from "./SetStateAction";
 import { EditInstanceModal } from "@/UI/Pages/ServiceInstanceForm/Edit/EditInstanceModal";
 import { DeleteModal } from "@/UI/Pages/ServiceInstanceForm/Delete/DeleteModal";
 import { Link, useLocation } from "react-router-dom";
-import { HistoryIcon } from "@patternfly/react-icons";
+import { HistoryIcon, ToolsIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 
 export interface InstanceActionsProps {
@@ -58,12 +57,21 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
         />
       </DescriptionListGroup>
       <DescriptionListGroup>
-        <DiagnosticsModal
-          isDisabled={diagnoseDisabled}
-          serviceName={instance.service_entity}
-          instance={instance}
-          keycloak={keycloak}
-        />
+        <Link
+          to={{
+            pathname: `/lsm/catalog/${instance.service_entity}/inventory/${instance.id}/diagnose`,
+            search: location.search,
+          }}
+        >
+          <Button
+            isBlock
+            variant="tertiary"
+            isDisabled={diagnoseDisabled}
+            style={diagnoseDisabled ? { cursor: "not-allowed" } : {}}
+          >
+            <ToolsIcon /> {words("inventory.statustab.diagnose")}
+          </Button>
+        </Link>
       </DescriptionListGroup>
       <DescriptionListGroup>
         <Link

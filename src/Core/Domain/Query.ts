@@ -12,6 +12,7 @@ import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 import * as Pagination from "./Pagination";
 import { Config, Setting } from "./Config";
 import { ServiceInstanceParams } from "./ServiceInstanceParams";
+import { Diagnostics } from "./Diagnostics";
 
 type Query =
   | ServicesQuery
@@ -20,7 +21,8 @@ type Query =
   | ResourcesQuery
   | InstanceEventsQuery
   | InstanceLogsQuery
-  | InstanceConfigQuery;
+  | InstanceConfigQuery
+  | DiagnosticsQuery;
 export type Type = Query;
 
 /**
@@ -154,6 +156,20 @@ interface InstanceConfigManifest {
   query: InstanceConfigQuery;
 }
 
+/** Diagnostics describe the status of an instance with regards to the diagnose call */
+export interface DiagnosticsQuery {
+  kind: "Diagnostics";
+  qualifier: ServiceInstanceIdentifier;
+}
+
+interface DiagnosticsManifest {
+  error: string;
+  apiResponse: { data: Diagnostics };
+  data: Diagnostics;
+  usedData: Diagnostics;
+  query: DiagnosticsQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -166,6 +182,7 @@ interface Manifest {
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;
   InstanceConfig: InstanceConfigManifest;
+  Diagnostics: DiagnosticsManifest;
 }
 
 /**

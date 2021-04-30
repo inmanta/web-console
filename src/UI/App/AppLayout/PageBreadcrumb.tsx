@@ -23,7 +23,10 @@ export const PageBreadcrumb: React.FC = () => {
         }
       }
 
-      if (location.pathname.endsWith("history")) {
+      if (
+        location.pathname.endsWith("history") ||
+        location.pathname.endsWith("diagnose")
+      ) {
         if (route.title === "Service Inventory") {
           pathParts[2] = location.pathname.split("/")[3];
           path = "/lsm" + pathParts.join("/");
