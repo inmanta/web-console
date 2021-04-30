@@ -15,3 +15,4 @@ export * from "./ServiceProvider";
 export * from "./StackedProgressBar";
 export * from "./Toggle";
 export * from "./TreeTable";
+export * from "./TextWithCopy";

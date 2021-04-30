@@ -11,6 +11,7 @@ import {
   FlexItem,
 } from "@patternfly/react-core";
 import { words } from "@/UI";
+import { TextWithCopy } from "@/UI/Components";
 
 interface StatusInfo {
   instanceId: string;
@@ -42,7 +43,11 @@ export const StatusTab: React.FC<Props> = ({ statusInfo }) => (
                   {words("inventory.column.id")}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
-                  {statusInfo.instanceId}
+                  <TextWithCopy
+                    shortText={statusInfo.instanceId}
+                    fullText={statusInfo.instanceId}
+                    tooltipContent={words("id.copy")}
+                  />
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
