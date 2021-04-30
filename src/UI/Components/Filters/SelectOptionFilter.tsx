@@ -4,8 +4,8 @@ import { toggleValueInList } from "@/Core";
 import { uniq } from "lodash";
 
 interface Props {
-  filterPropertyName?: string;
-  placeholder?: string;
+  filterPropertyName: string;
+  placeholder: string;
   isVisible: boolean;
   selectedStates: string[];
   possibleStates: string[];
@@ -18,8 +18,8 @@ export const SelectOptionFilter: React.FC<Props> = ({
   selectedStates,
   possibleStates,
   update,
-  filterPropertyName = "State",
-  placeholder = "Select a state...",
+  filterPropertyName,
+  placeholder,
 }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 

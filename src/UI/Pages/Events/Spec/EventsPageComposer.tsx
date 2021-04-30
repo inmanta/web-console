@@ -21,10 +21,7 @@ export interface Handles {
 export class EventsPageComposer {
   compose(service: ServiceModel = Service.A): Handles {
     const store = getStoreInstance();
-    const scheduler = new SchedulerImpl(5000, (task) => ({
-      effect: jest.fn(() => task.effect()),
-      update: jest.fn((result) => task.update(result)),
-    }));
+    const scheduler = new SchedulerImpl(5000);
     const eventsFetcher = new DeferredFetcher<"Events">();
     const eventsHelper = new EventsDataManager(
       eventsFetcher,

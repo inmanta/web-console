@@ -26,7 +26,7 @@ export const PageSizeSelector: React.FC<Props> = ({
       value={size}
       onClick={(event) => onSelect(event, size)}
     >
-      {size}{" "}
+      {size}
       {pageSize === size && <CheckIcon className="page-size-selector-icon" />}
     </DropdownItem>
   ));
@@ -38,7 +38,7 @@ export const PageSizeSelector: React.FC<Props> = ({
       dropdownItems={dropdownItems}
       toggle={
         <DropdownToggle onToggle={onToggle} toggleIndicator={null}>
-          <CaretDownIcon />{" "}
+          <CaretDownIcon />
         </DropdownToggle>
       }
     />

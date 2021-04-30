@@ -44,7 +44,7 @@ describe("Given the Events Page", () => {
       const initialRows = await screen.findAllByRole("row", {
         name: "Event table row",
       });
-      expect(initialRows.length).toEqual(14);
+      expect(initialRows).toHaveLength(14);
 
       userEvent.click(
         within(
@@ -79,7 +79,7 @@ describe("Given the Events Page", () => {
       const rowsAfter = await screen.findAllByRole("row", {
         name: "Event table row",
       });
-      expect(rowsAfter.length).toEqual(3);
+      expect(rowsAfter).toHaveLength(3);
     }
   );
   it("When using the Date filter then the events with that Date and Operator should be fetched and shown", async () => {
@@ -101,7 +101,7 @@ describe("Given the Events Page", () => {
     const initialRows = await screen.findAllByRole("row", {
       name: "Event table row",
     });
-    expect(initialRows.length).toEqual(14);
+    expect(initialRows).toHaveLength(14);
 
     userEvent.click(
       within(
@@ -133,6 +133,6 @@ describe("Given the Events Page", () => {
     const rowsAfter = await screen.findAllByRole("row", {
       name: "Event table row",
     });
-    expect(rowsAfter.length).toEqual(3);
+    expect(rowsAfter).toHaveLength(3);
   });
 });

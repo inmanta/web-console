@@ -98,6 +98,7 @@ const dict = {
     serviceName: string
   ) =>
     `Are you sure you want to delete instance ${instanceId} of service entity ${serviceName}?`,
+  "inventory.filters.state.placeholder": "Select a state...",
 
   /**
    * Config related text
@@ -132,6 +133,9 @@ const dict = {
   "events.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
   "events.caption": (id: string) => `Showing events of instance ${id}`,
+  "events.filters.source.placeholder": "Select a source state...",
+  "events.filters.destination.placeholder": "Select a destination state...",
+  "events.filters.eventType.placeholder": "Select an Event Type...",
 
   /**
    * History related text

@@ -6,6 +6,7 @@ import { SelectOptionFilter } from "@/UI/Components/Filters";
 import { VersionFilter } from "./VersionFilter";
 import { TimestampFilter } from "./TimestampFilter";
 import { TimestampOperatorFilter } from "@/Core/Domain/EventParams";
+import { words } from "@/UI";
 
 interface Props {
   filter: EventParams.Filter;
@@ -59,7 +60,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
       <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />
       <SelectOptionFilter
         filterPropertyName={EventParams.Kind.EventType}
-        placeholder="Select an Event Type..."
+        placeholder={words("events.filters.eventType.placeholder")}
         isVisible={filterKind === EventParams.Kind.EventType}
         possibleStates={eventTypes}
         selectedStates={filter.event_type ? filter.event_type : []}
@@ -67,7 +68,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
       />
       <SelectOptionFilter
         filterPropertyName={EventParams.Kind.Source}
-        placeholder="Select a source state..."
+        placeholder={words("events.filters.source.placeholder")}
         isVisible={filterKind === EventParams.Kind.Source}
         possibleStates={states}
         selectedStates={filter.source ? filter.source : []}
@@ -75,7 +76,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
       />
       <SelectOptionFilter
         filterPropertyName={EventParams.Kind.Destination}
-        placeholder="Select a destination state..."
+        placeholder={words("events.filters.destination.placeholder")}
         isVisible={filterKind === EventParams.Kind.Destination}
         possibleStates={states}
         selectedStates={filter.destination ? filter.destination : []}

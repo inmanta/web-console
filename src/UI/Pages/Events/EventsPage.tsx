@@ -63,76 +63,77 @@ export const EventsPage: React.FC<Props> = ({
     data
   );
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => (
-        <EventsTableWrapper
-          tablePresenter={tablePresenter}
-          caption={caption}
-          wrapInTd
-          aria-label="EventTable-Loading"
-          order={order}
-          setOrder={setOrder}
-        >
-          <LoadingView />
-        </EventsTableWrapper>
-      ),
-      failed: (error) => (
-        <EventsTableWrapper
-          tablePresenter={tablePresenter}
-          caption={caption}
-          wrapInTd
-          aria-label="EventTable-Failed"
-          order={order}
-          setOrder={setOrder}
-        >
-          <ErrorView
-            title={words("events.failed.title")}
-            message={words("events.failed.body")(error)}
-          />
-        </EventsTableWrapper>
-      ),
-      success: (events) => (
-        <div>
-          <EventsTableControls
-            filter={filter}
-            setFilter={setFilter}
-            states={states}
-            paginationWidget={paginationWidget}
-          />
-          {events.data.length === 0 ? (
+  return (
+    <div>
+      <EventsTableControls
+        filter={filter}
+        setFilter={setFilter}
+        states={states}
+        paginationWidget={paginationWidget}
+      />
+      {RemoteData.fold(
+        {
+          notAsked: () => null,
+          loading: () => (
             <EventsTableWrapper
               tablePresenter={tablePresenter}
               caption={caption}
               wrapInTd
-              aria-label="EventTable-Empty"
+              aria-label="EventTable-Loading"
               order={order}
               setOrder={setOrder}
             >
-              <EmptyView
-                title={words("events.empty.title")}
-                message={words("events.empty.body")}
-              />
+              <LoadingView />
             </EventsTableWrapper>
-          ) : (
+          ),
+          failed: (error) => (
             <EventsTableWrapper
               tablePresenter={tablePresenter}
               caption={caption}
-              aria-label="EventTable-Success"
+              wrapInTd
+              aria-label="EventTable-Failed"
               order={order}
               setOrder={setOrder}
             >
-              <EventsTableBody
-                events={events.data}
-                environmentId={environment}
-                tablePresenter={tablePresenter}
+              <ErrorView
+                title={words("events.failed.title")}
+                message={words("events.failed.body")(error)}
               />
             </EventsTableWrapper>
-          )}
-        </div>
-      ),
-    },
-    data
+          ),
+          success: (events) =>
+            events.data.length === 0 ? (
+              <EventsTableWrapper
+                tablePresenter={tablePresenter}
+                caption={caption}
+                wrapInTd
+                aria-label="EventTable-Empty"
+                order={order}
+                setOrder={setOrder}
+              >
+                <EmptyView
+                  title={words("events.empty.title")}
+                  message={words("events.empty.body")}
+                />
+              </EventsTableWrapper>
+            ) : (
+              <EventsTableWrapper
+                tablePresenter={tablePresenter}
+                caption={caption}
+                aria-label="EventTable-Success"
+                order={order}
+                setOrder={setOrder}
+              >
+                <EventsTableBody
+                  events={events.data}
+                  environmentId={environment}
+                  tablePresenter={tablePresenter}
+                />
+              </EventsTableWrapper>
+            ),
+        },
+        data
+      )}
+    </div>
   );
 };

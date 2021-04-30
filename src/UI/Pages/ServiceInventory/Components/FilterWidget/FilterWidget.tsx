@@ -7,6 +7,7 @@ import { FilterPicker } from "./FilterPicker";
 import { DeletedFilter } from "./DeletedFilter";
 import { IdentityFilter } from "./IdentityFilter";
 import { ToolbarGroup } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
 interface Props {
   filter: ServiceInstanceParams.Filter;
@@ -62,6 +63,8 @@ export const FilterWidget: React.FC<Props> = ({
       />
       <SelectOptionFilter
         isVisible={filterKind === ServiceInstanceParams.Kind.State}
+        filterPropertyName={ServiceInstanceParams.Kind.State}
+        placeholder={words("inventory.filters.state.placeholder")}
         possibleStates={states}
         selectedStates={filter.state ? filter.state : []}
         update={updateState}
