@@ -1,5 +1,6 @@
 import { SortDirection } from "@/Core";
 import {
+  Caption,
   OnSort,
   TableComposable,
   Tbody,
@@ -13,6 +14,7 @@ import { EventsTablePresenter } from "./EventsTablePresenter";
 
 interface Props {
   tablePresenter: EventsTablePresenter;
+  caption?: string;
   wrapInTd?: boolean;
   "aria-label"?: string;
   order?: SortDirection;
@@ -21,6 +23,7 @@ interface Props {
 
 export const EventsTableWrapper: React.FC<Props> = ({
   tablePresenter,
+  caption,
   wrapInTd,
   children,
   order,
@@ -55,6 +58,7 @@ export const EventsTableWrapper: React.FC<Props> = ({
     });
   return (
     <TableComposable aria-label={props["aria-label"]}>
+      {caption && <Caption>{caption}</Caption>}
       <Thead>
         <Tr>
           <Th />

@@ -6,7 +6,8 @@ import {
   LoadingView,
   EventsTablePresenter,
   EventsTableWrapper,
-  EventsTable,
+  EmptyView,
+  EventsTableBody,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { MomentDatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
@@ -42,6 +43,7 @@ export const EventsPage: React.FC<Props> = ({
   });
 
   const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());
+  const caption = words("events.caption")(instanceId);
 
   const states = service.lifecycle.states.map((state) => state.name).sort();
   const paginationWidget = RemoteData.fold(
@@ -67,6 +69,7 @@ export const EventsPage: React.FC<Props> = ({
       loading: () => (
         <EventsTableWrapper
           tablePresenter={tablePresenter}
+          caption={caption}
           wrapInTd
           aria-label="EventTable-Loading"
           order={order}
@@ -78,6 +81,7 @@ export const EventsPage: React.FC<Props> = ({
       failed: (error) => (
         <EventsTableWrapper
           tablePresenter={tablePresenter}
+          caption={caption}
           wrapInTd
           aria-label="EventTable-Failed"
           order={order}
@@ -97,13 +101,35 @@ export const EventsPage: React.FC<Props> = ({
             states={states}
             paginationWidget={paginationWidget}
           />
-          <EventsTable
-            events={events.data}
-            environmentId={environment}
-            tablePresenter={tablePresenter}
-            order={order}
-            setOrder={setOrder}
-          />
+          {events.data.length === 0 ? (
+            <EventsTableWrapper
+              tablePresenter={tablePresenter}
+              caption={caption}
+              wrapInTd
+              aria-label="EventTable-Empty"
+              order={order}
+              setOrder={setOrder}
+            >
+              <EmptyView
+                title={words("events.empty.title")}
+                message={words("events.empty.body")}
+              />
+            </EventsTableWrapper>
+          ) : (
+            <EventsTableWrapper
+              tablePresenter={tablePresenter}
+              caption={caption}
+              aria-label="EventTable-Success"
+              order={order}
+              setOrder={setOrder}
+            >
+              <EventsTableBody
+                events={events.data}
+                environmentId={environment}
+                tablePresenter={tablePresenter}
+              />
+            </EventsTableWrapper>
+          )}
         </div>
       ),
     },

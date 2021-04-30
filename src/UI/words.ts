@@ -131,6 +131,7 @@ const dict = {
   "events.failed.title": "Something went wrong",
   "events.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
+  "events.caption": (id: string) => `Showing events of instance ${id}`,
 
   /**
    * History related text
