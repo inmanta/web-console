@@ -43,7 +43,8 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
         },
       }),
       new EventsStateHelper(store),
-      scheduler
+      scheduler,
+      InstanceLog.A.environment
     ),
   ]);
 

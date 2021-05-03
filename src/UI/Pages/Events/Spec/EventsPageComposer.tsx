@@ -26,7 +26,8 @@ export class EventsPageComposer {
     const eventsHelper = new EventsDataManager(
       eventsFetcher,
       new EventsStateHelper(store),
-      scheduler
+      scheduler,
+      Service.A.environment
     );
 
     const dataProvider = new DataProviderImpl([eventsHelper]);

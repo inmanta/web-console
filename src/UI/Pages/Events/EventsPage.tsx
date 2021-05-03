@@ -33,7 +33,6 @@ export const EventsPage: React.FC<Props> = ({
   const [data] = dataProvider.useContinuous<"Events">({
     kind: "Events",
     qualifier: {
-      environment,
       id: instanceId,
       service_entity: service.name,
       filter,
