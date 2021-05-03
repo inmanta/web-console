@@ -20,6 +20,7 @@ pipeline {
                     sh '''yarn install --frozen-lockfile;
                     yarn lint;
                     yarn format:check;
+                    yarn tsc;
                     yarn build;
                     yarn test'''
                 }
