@@ -4,17 +4,22 @@ import { toggleValueInList } from "@/Core";
 import { uniq } from "lodash";
 
 interface Props {
+  filterPropertyName: string;
+  placeholder: string;
   isVisible: boolean;
   selectedStates: string[];
   possibleStates: string[];
   update: (state: string[]) => void;
 }
 
-export const StateFilter: React.FC<Props> = ({
+/** Selects one option from a list to be used as a filter */
+export const SelectOptionFilter: React.FC<Props> = ({
   isVisible,
   selectedStates,
   possibleStates,
   update,
+  filterPropertyName,
+  placeholder,
 }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -31,16 +36,16 @@ export const StateFilter: React.FC<Props> = ({
     <ToolbarFilter
       chips={selectedStates}
       deleteChip={removeChip}
-      categoryName="State"
+      categoryName={filterPropertyName}
       showToolbarItem={isVisible}
     >
       <Select
-        aria-label="State"
+        aria-label={filterPropertyName}
         onToggle={setIsFilterOpen}
         onSelect={onSelect}
         selections={selectedStates}
         isOpen={isFilterOpen}
-        placeholderText="Select a state..."
+        placeholderText={placeholder}
         variant="typeaheadmulti"
         chipGroupProps={{ numChips: 0 }}
       >

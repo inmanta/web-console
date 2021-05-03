@@ -6,7 +6,7 @@ import {
   Th,
   OnSort,
 } from "@patternfly/react-table";
-import { Row, ServiceInstanceParams } from "@/Core";
+import { Row, SortDirection } from "@/Core";
 import { InventoryTablePresenter } from "./Presenters";
 import { InstanceRow } from "./InstanceRow";
 import { ExpansionManager } from "./ExpansionManager";
@@ -15,9 +15,9 @@ interface Props {
   rows: Row[];
   tablePresenter: InventoryTablePresenter;
   sortColumn?: string;
-  order?: ServiceInstanceParams.SortDirection;
+  order?: SortDirection;
   setSortColumn: (name?: string) => void;
-  setOrder: (order?: ServiceInstanceParams.SortDirection) => void;
+  setOrder: (order?: SortDirection) => void;
 }
 
 export const InventoryTable: React.FC<Props> = ({

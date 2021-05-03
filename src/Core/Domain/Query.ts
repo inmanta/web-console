@@ -13,6 +13,7 @@ import * as Pagination from "./Pagination";
 import { Config, Setting } from "./Config";
 import { ServiceInstanceParams } from "./ServiceInstanceParams";
 import { Diagnostics } from "./Diagnostics";
+import { EventParams } from "./EventParams";
 
 type Query =
   | ServicesQuery
@@ -113,14 +114,26 @@ interface ServiceInstancesManifest {
  */
 export interface InstanceEventsQuery {
   kind: "Events";
-  qualifier: ServiceInstanceIdentifier;
+  qualifier: ServiceInstanceIdentifier & EventParams;
 }
 
 interface EventsManifest {
   error: string;
-  apiResponse: { data: InstanceEvent[] };
-  data: InstanceEvent[];
-  usedData: InstanceEvent[];
+  apiResponse: {
+    data: InstanceEvent[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: InstanceEvent[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: InstanceEvent[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
   query: InstanceEventsQuery;
 }
 

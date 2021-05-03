@@ -11,3 +11,5 @@ export * as ServiceInstanceParams from "./ServiceInstanceParams";
 export * from "./ServiceModel";
 export * as Pagination from "./Pagination";
 export * from "./Diagnostics";
+export * as EventParams from "./EventParams";
+export * from "./Params";

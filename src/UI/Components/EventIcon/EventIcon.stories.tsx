@@ -1,6 +1,7 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { EventIcon } from "./EventIcon";
+import { InstanceEventType } from "@/Core";
 
 export default {
   title: "EventIcon",
@@ -11,35 +12,35 @@ const EventIconCollection: React.FC = () => {
   return (
     <>
       <div>
-        <EventIcon eventType={"ALLOCATION_UPDATE"} />
+        <EventIcon eventType={InstanceEventType.ALLOCATION_UPDATE} />
         ALLOCATION_UPDATE
       </div>
       <div>
-        <EventIcon eventType={"API_SET_STATE_TRANSITION"} />
+        <EventIcon eventType={InstanceEventType.API_SET_STATE_TRANSITION} />
         API_SET_STATE_TRANSITION
       </div>
       <div>
-        <EventIcon eventType={"AUTO_TRANSITION"} />
+        <EventIcon eventType={InstanceEventType.AUTO_TRANSITION} />
         AUTO_TRANSITION
       </div>
       <div>
-        <EventIcon eventType={"CREATE_TRANSITION"} />
+        <EventIcon eventType={InstanceEventType.CREATE_TRANSITION} />
         CREATE_TRANSITION
       </div>
       <div>
-        <EventIcon eventType={"ON_DELETE_TRANSITION"} />
+        <EventIcon eventType={InstanceEventType.ON_DELETE_TRANSITION} />
         ON_DELETE_TRANSITION
       </div>
       <div>
-        <EventIcon eventType={"ON_UPDATE_TRANSITION"} />
+        <EventIcon eventType={InstanceEventType.ON_UPDATE_TRANSITION} />
         ON_UPDATE_TRANSITION
       </div>
       <div>
-        <EventIcon eventType={"RESOURCE_EVENT"} />
+        <EventIcon eventType={InstanceEventType.RESOURCE_EVENT} />
         RESOURCE_EVENT
       </div>
       <div>
-        <EventIcon eventType={"RESOURCE_TRANSITION"} />
+        <EventIcon eventType={InstanceEventType.RESOURCE_TRANSITION} />
         RESOURCE_TRANSITION
       </div>
     </>

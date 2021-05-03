@@ -1,5 +1,7 @@
 import { Action, action } from "easy-peasy";
-import { InstanceEvent, RemoteData } from "@/Core";
+import { Query, RemoteData } from "@/Core";
+
+type Data = RemoteData.Type<Query.Error<"Events">, Query.ApiResponse<"Events">>;
 
 /**
  * The eventsSlice stores events related to service instances.
@@ -7,11 +9,8 @@ import { InstanceEvent, RemoteData } from "@/Core";
  * So 'byId' means by ServiceInstance id.
  */
 export interface EventsSlice {
-  byId: Record<string, RemoteData.Type<string, InstanceEvent[]>>;
-  setData: Action<
-    EventsSlice,
-    { id: string; value: RemoteData.Type<string, InstanceEvent[]> }
-  >;
+  byId: Record<string, Data>;
+  setData: Action<EventsSlice, { id: string; value: Data }>;
 }
 
 export const eventsSlice: EventsSlice = {

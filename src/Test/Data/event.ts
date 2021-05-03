@@ -1,4 +1,4 @@
-import { InstanceEvent } from "@/Core";
+import { InstanceEvent, InstanceEventType } from "@/Core";
 
 export const instanceEvents: InstanceEvent[] = [
   {
@@ -14,7 +14,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "363cc930-d847-4e8a-b605-41b87a903248",
     severity: 20,
     id_compile_report: null,
-    event_type: "RESOURCE_TRANSITION",
+    event_type: InstanceEventType["RESOURCE_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -30,7 +30,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "363cc930-d847-4e8a-b605-41b87a903248",
     severity: 20,
     id_compile_report: "5824a731-df20-437c-915b-bb570d351808",
-    event_type: "RESOURCE_TRANSITION",
+    event_type: InstanceEventType["RESOURCE_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -46,7 +46,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "363cc930-d847-4e8a-b605-41b87a903248",
     severity: 20,
     id_compile_report: null,
-    event_type: "RESOURCE_TRANSITION",
+    event_type: InstanceEventType["RESOURCE_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -62,7 +62,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "cddfabb6-a616-4e77-8526-4d73d45cb06b",
     severity: 20,
     id_compile_report: null,
-    event_type: "AUTO_TRANSITION",
+    event_type: InstanceEventType["AUTO_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -78,7 +78,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "cddfabb6-a616-4e77-8526-4d73d45cb06b",
     severity: 20,
     id_compile_report: "ea1cdb3b-a666-4c0d-a6f9-c3d0d84d10e0",
-    event_type: "AUTO_TRANSITION",
+    event_type: InstanceEventType["AUTO_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -94,7 +94,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "99fa8491-d7bb-4e00-a26f-a725e749e2c9",
     severity: 20,
     id_compile_report: null,
-    event_type: "ALLOCATION_UPDATE",
+    event_type: InstanceEventType["ALLOCATION_UPDATE"],
     is_error_transition: false,
   },
   {
@@ -110,7 +110,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "cddfabb6-a616-4e77-8526-4d73d45cb06b",
     severity: 20,
     id_compile_report: "b38e43cb-bf5c-47b1-bc50-44c6dbef145d",
-    event_type: "AUTO_TRANSITION",
+    event_type: InstanceEventType["AUTO_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -126,7 +126,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "cddfabb6-a616-4e77-8526-4d73d45cb06b",
     severity: 20,
     id_compile_report: null,
-    event_type: "AUTO_TRANSITION",
+    event_type: InstanceEventType["AUTO_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -142,7 +142,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "3b3b0127-77b4-4679-b4b7-e47d49a666c3",
     severity: 20,
     id_compile_report: null,
-    event_type: "AUTO_TRANSITION",
+    event_type: InstanceEventType["AUTO_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -158,7 +158,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "112939b9-78d7-4541-952c-64f2d9f81fc3",
     severity: 20,
     id_compile_report: null,
-    event_type: "ALLOCATION_UPDATE",
+    event_type: InstanceEventType["ALLOCATION_UPDATE"],
     is_error_transition: false,
   },
   {
@@ -174,7 +174,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "3b3b0127-77b4-4679-b4b7-e47d49a666c3",
     severity: 20,
     id_compile_report: "2447660b-593c-4c31-ac1f-e98c82209b90",
-    event_type: "AUTO_TRANSITION",
+    event_type: InstanceEventType["AUTO_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -190,7 +190,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "3b3b0127-77b4-4679-b4b7-e47d49a666c3",
     severity: 20,
     id_compile_report: null,
-    event_type: "AUTO_TRANSITION",
+    event_type: InstanceEventType["AUTO_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -205,7 +205,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "f8a75240-d38c-41c5-8130-15920f519cb0",
     severity: 20,
     id_compile_report: null,
-    event_type: "CREATE_TRANSITION",
+    event_type: InstanceEventType["CREATE_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -221,7 +221,7 @@ export const instanceEvents: InstanceEvent[] = [
     event_correlation_id: "f8a75240-d38c-41c5-8130-15920f519cb0",
     severity: 20,
     id_compile_report: null,
-    event_type: "CREATE_TRANSITION",
+    event_type: InstanceEventType["CREATE_TRANSITION"],
     is_error_transition: false,
   },
 ];
@@ -240,7 +240,7 @@ export const ignoredErrorNormalEvents: InstanceEvent[] = [
     event_correlation_id: "3b3b0127-77b4-4679-b4b7-e47d49a666c3",
     severity: 20,
     id_compile_report: "2447660b-593c-4c31-ac1f-e98c82209b90",
-    event_type: "AUTO_TRANSITION",
+    event_type: InstanceEventType["AUTO_TRANSITION"],
     is_error_transition: true,
   },
   {
@@ -255,7 +255,7 @@ export const ignoredErrorNormalEvents: InstanceEvent[] = [
     event_correlation_id: "f8a75240-d38c-41c5-8130-15920f519cb0",
     severity: 20,
     id_compile_report: null,
-    event_type: "CREATE_TRANSITION",
+    event_type: InstanceEventType["CREATE_TRANSITION"],
     is_error_transition: false,
   },
   {
@@ -271,7 +271,7 @@ export const ignoredErrorNormalEvents: InstanceEvent[] = [
     event_correlation_id: "f8a75240-d38c-41c5-8130-15920f519cb0",
     severity: 20,
     id_compile_report: null,
-    event_type: "CREATE_TRANSITION",
+    event_type: InstanceEventType["CREATE_TRANSITION"],
     is_error_transition: false,
   },
 ];
