@@ -1,0 +1,3 @@
+description: Fix event type typescript error
+change-type: patch
+destination-branches: [master, iso4]
