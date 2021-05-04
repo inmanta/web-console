@@ -28,7 +28,7 @@ function setup() {
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
   const serviceInstancesHelper = new ServiceInstancesDataManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store),
+    new ServiceInstancesStateHelper(store, Service.A.environment),
     scheduler,
     Service.A.environment
   );

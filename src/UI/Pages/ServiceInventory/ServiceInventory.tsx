@@ -85,7 +85,6 @@ export const ServiceInventory: React.FunctionComponent<{
     kind: "ServiceInstances",
     qualifier: {
       name: serviceName,
-      environment: environmentId || "",
       sort,
       filter,
     },

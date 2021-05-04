@@ -86,7 +86,7 @@ interface ResourcesManifest {
  */
 export interface ServiceInstancesQuery {
   kind: "ServiceInstances";
-  qualifier: ServiceIdentifier & ServiceInstanceParams;
+  qualifier: Omit<ServiceIdentifier, "environment"> & ServiceInstanceParams;
 }
 
 interface ServiceInstancesManifest {

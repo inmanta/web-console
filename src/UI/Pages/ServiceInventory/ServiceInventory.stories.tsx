@@ -39,7 +39,7 @@ export const Basic: React.FC = () => {
 
   const serviceInstancesHelper = new ServiceInstancesDataManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store),
+    new ServiceInstancesStateHelper(store, Service.A.environment),
     scheduler,
     Service.A.environment
   );
@@ -84,7 +84,7 @@ export const Failed: React.FC = () => {
   });
   const serviceInstancesHelper = new ServiceInstancesDataManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store),
+    new ServiceInstancesStateHelper(store, Service.A.environment),
     scheduler,
     Service.A.environment
   );

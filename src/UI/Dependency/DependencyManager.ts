@@ -68,7 +68,7 @@ export class DependencyManagerImpl implements DependencyManager {
 
     const serviceInstancesHelper = new ServiceInstancesDataManager(
       new FetcherImpl<"ServiceInstances">(baseApiHelper),
-      new ServiceInstancesStateHelper(this.store),
+      new ServiceInstancesStateHelper(this.store, environment),
       scheduler,
       environment
     );

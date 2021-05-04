@@ -31,7 +31,7 @@ export class ServiceInventoryPrepper {
     const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
     const serviceInstancesHelper = new ServiceInstancesDataManager(
       serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store),
+      new ServiceInstancesStateHelper(store, service.environment),
       scheduler,
       service.environment
     );
