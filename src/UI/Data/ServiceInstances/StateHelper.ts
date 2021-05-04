@@ -20,7 +20,7 @@ export class ServiceInstancesStateHelper
    * rerendered anyway because the getStoreState hook is also optimized
    * to check if the data is changed.
    */
-  set(qualifier: Query.Qualifier<"ServiceInstances">, value: ApiData): void {
+  set(value: ApiData, qualifier: Query.Qualifier<"ServiceInstances">): void {
     this.store.dispatch.serviceInstances.setData({
       qualifier,
       value,

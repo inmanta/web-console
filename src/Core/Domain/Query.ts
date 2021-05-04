@@ -1,6 +1,5 @@
 import { InstanceEvent } from "./EventModel";
 import { InstanceLog } from "./InstanceLogModel";
-import { EnvironmentIdentifier } from "./ProjectModel";
 import { ResourceModel } from "./ResourceModel";
 import {
   VersionedServiceInstanceIdentifier,
@@ -31,7 +30,7 @@ export type Type = Query;
  */
 export interface ServicesQuery {
   kind: "Services";
-  qualifier: EnvironmentIdentifier;
+  qualifier: null;
 }
 
 interface ServicesManifest {

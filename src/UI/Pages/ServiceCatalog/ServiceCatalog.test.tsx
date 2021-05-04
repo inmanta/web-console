@@ -20,7 +20,7 @@ function setup() {
 
   const servicesHelper = new ServicesDataManager(
     servicesFetcher,
-    new ServicesStateHelper(store),
+    new ServicesStateHelper(store, Service.A.environment),
     scheduler,
     Service.A.environment
   );

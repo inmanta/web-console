@@ -53,7 +53,7 @@ export class DependencyManagerImpl implements DependencyManager {
 
     const servicesHelper = new ServicesDataManager(
       new FetcherImpl<"Services">(baseApiHelper),
-      new ServicesStateHelper(this.store),
+      new ServicesStateHelper(this.store, environment),
       scheduler,
       environment
     );

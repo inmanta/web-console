@@ -14,7 +14,7 @@ type ApiData = RemoteData.Type<
 export class InstanceLogsStateHelper implements StateHelper<"InstanceLogs"> {
   constructor(private readonly store: Store) {}
 
-  set(qualifier: Query.Qualifier<"InstanceLogs">, data: ApiData): void {
+  set(data: ApiData, qualifier: Query.Qualifier<"InstanceLogs">): void {
     const value = RemoteData.mapSuccess((data) => data.data, data);
     this.store.dispatch.instanceLogs.setData({ id: qualifier.id, value });
   }

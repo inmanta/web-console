@@ -15,7 +15,7 @@ export class ServiceStateHelper implements StateHelper<"Service"> {
     private readonly environment: string
   ) {}
 
-  set(qualifier: Query.Qualifier<"Service">, data: ApiData): void {
+  set(data: ApiData, qualifier: Query.Qualifier<"Service">): void {
     const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
     this.store.dispatch.services.setSingle({
       qualifier,

@@ -15,7 +15,7 @@ export class InstanceConfigStateHelper
   implements StateHelper<"InstanceConfig"> {
   constructor(private readonly store: Store) {}
 
-  set(qualifier: Query.Qualifier<"InstanceConfig">, data: ApiData): void {
+  set(data: ApiData, qualifier: Query.Qualifier<"InstanceConfig">): void {
     const value = RemoteData.mapSuccess((data) => data.data, data);
     this.store.dispatch.instanceConfig.setData({ id: qualifier.id, value });
   }

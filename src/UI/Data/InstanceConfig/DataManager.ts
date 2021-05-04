@@ -40,7 +40,7 @@ export class InstanceConfigDataManager
   private initialize(qualifier: Query.Qualifier<"InstanceConfig">): void {
     const value = this.stateHelper.getOnce(qualifier);
     if (RemoteData.isNotAsked(value)) {
-      this.stateHelper.set(qualifier, RemoteData.loading());
+      this.stateHelper.set(RemoteData.loading(), qualifier);
     }
   }
 
@@ -49,8 +49,8 @@ export class InstanceConfigDataManager
     url: string
   ): Promise<void> {
     this.stateHelper.set(
-      qualifier,
-      RemoteData.fromEither(await this.fetcher.getData(this.environment, url))
+      RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
+      qualifier
     );
   }
 
@@ -59,10 +59,10 @@ export class InstanceConfigDataManager
     url: string
   ): Promise<void> {
     this.serviceStateHelper.set(
-      qualifier,
       RemoteData.fromEither(
         await this.serviceFetcher.getData(this.environment, url)
-      )
+      ),
+      qualifier
     );
   }
 
