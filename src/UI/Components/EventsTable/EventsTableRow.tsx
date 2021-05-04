@@ -17,7 +17,6 @@ interface Props {
   onToggle: () => void;
   numberOfColumns: number;
   row: EventRow;
-  environmentId: string;
 }
 
 export const EventsTableRow: React.FC<Props> = ({
@@ -26,7 +25,6 @@ export const EventsTableRow: React.FC<Props> = ({
   isExpanded,
   onToggle,
   numberOfColumns,
-  environmentId,
 }) => {
   const getColorCodeClass = (row) => {
     if (row.isErrorTransition) {
@@ -83,10 +81,7 @@ export const EventsTableRow: React.FC<Props> = ({
                   </pre>
                 </DescriptionListDescription>
               </DescriptionListGroup>
-              <CompileReportLink
-                compileReportId={row.idCompileReport}
-                environmentId={environmentId}
-              />
+              {row.idCompileReport && <CompileReportLink />}
             </DescriptionList>
           </ExpandableRowContent>
         </Td>

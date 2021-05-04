@@ -8,7 +8,7 @@ type ApiData = RemoteData.Type<string, Query.ApiResponse<"Diagnostics">>;
 export class DiagnosticsStateHelper implements StateHelper<"Diagnostics"> {
   constructor(private readonly store: Store) {}
 
-  set({ id }: Query.Qualifier<"Diagnostics">, data: ApiData): void {
+  set(data: ApiData, { id }: Query.Qualifier<"Diagnostics">): void {
     const value = RemoteData.mapSuccess((data) => {
       return {
         failures: data.data.failures,

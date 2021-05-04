@@ -38,7 +38,6 @@ function setup() {
         <EventsPage
           service={Service.A}
           instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-          environment={"environment"}
         />
       </StoreProvider>
     </DependencyProvider>

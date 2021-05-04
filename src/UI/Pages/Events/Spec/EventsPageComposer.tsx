@@ -7,6 +7,7 @@ import {
   DataProviderImpl,
   EventsDataManager,
   EventsStateHelper,
+  UrlControllerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { EventsPage } from "../EventsPage";
@@ -31,16 +32,13 @@ export class EventsPageComposer {
     );
 
     const dataProvider = new DataProviderImpl([eventsHelper]);
+    const urlController = new UrlControllerImpl("", Service.A.environment);
 
     const component = (
       <MemoryRouter>
-        <DependencyProvider dependencies={{ dataProvider }}>
+        <DependencyProvider dependencies={{ dataProvider, urlController }}>
           <StoreProvider store={store}>
-            <EventsPage
-              environment={service.environment}
-              service={service}
-              instanceId="id1"
-            />
+            <EventsPage service={service} instanceId="id1" />
           </StoreProvider>
         </DependencyProvider>
       </MemoryRouter>

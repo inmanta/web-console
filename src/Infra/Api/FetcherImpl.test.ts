@@ -4,7 +4,7 @@ import { FetcherImpl } from "./FetcherImpl";
 import { InstanceLog } from "@/Test";
 
 test("FetcherImpl getData fetches logs (empty)", async () => {
-  const fetcher = new FetcherImpl<"InstanceLogs">(new BaseApiHelper(undefined));
+  const fetcher = new FetcherImpl<"InstanceLogs">(new BaseApiHelper());
 
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
   expect(
@@ -22,7 +22,7 @@ test("FetcherImpl getData fetches logs (empty)", async () => {
 });
 
 test("FetcherImpl getData fetches logs (1)", async () => {
-  const fetcher = new FetcherImpl<"InstanceLogs">(new BaseApiHelper(undefined));
+  const fetcher = new FetcherImpl<"InstanceLogs">(new BaseApiHelper());
 
   fetchMock.mockResponse(JSON.stringify({ data: [InstanceLog.A] }));
   expect(

@@ -23,6 +23,7 @@ import {
   CommandProviderImpl,
   DiagnosticsStateHelper,
   DiagnosticsDataManager,
+  UrlControllerImpl,
 } from "@/UI/Data";
 import { SchedulerImpl } from "@/Core";
 
@@ -47,7 +48,8 @@ export class DependencyManagerImpl implements DependencyManager {
   ) {}
 
   getDependencies(environment: string): Dependencies {
-    const baseApiHelper = new BaseApiHelper(this.keycloak);
+    const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
+    const baseApiHelper = new BaseApiHelper(baseUrl, this.keycloak);
     const serviceKeyMaker = new ServiceKeyMaker();
     const scheduler = new SchedulerImpl(5000);
 
@@ -127,6 +129,10 @@ export class DependencyManagerImpl implements DependencyManager {
       instanceConfigStateHelper
     );
 
-    return { commandProvider, dataProvider };
+    return {
+      commandProvider,
+      dataProvider,
+      urlController: new UrlControllerImpl(baseUrl, environment),
+    };
   }
 }

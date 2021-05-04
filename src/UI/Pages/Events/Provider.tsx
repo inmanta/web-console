@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { EnvironmentProvider, ServiceProvider } from "@/UI/Components";
+import { ServiceProvider } from "@/UI/Components";
 import { Card, PageSection } from "@patternfly/react-core";
 import { EventsPage } from "./EventsPage";
 
@@ -19,22 +19,13 @@ export const Provider: React.FC = () => {
   const { id, instanceId } = useParams<Params>();
 
   return (
-    <EnvironmentProvider
+    <ServiceProvider
+      serviceName={id}
       Wrapper={Wrapper}
-      Dependant={({ environment }) => (
-        <ServiceProvider
-          serviceName={id}
-          Wrapper={Wrapper}
-          Dependant={({ service }) => (
-            <Wrapper>
-              <EventsPage
-                service={service}
-                instanceId={instanceId}
-                environment={environment}
-              />
-            </Wrapper>
-          )}
-        />
+      Dependant={({ service }) => (
+        <Wrapper>
+          <EventsPage service={service} instanceId={instanceId} />
+        </Wrapper>
       )}
     />
   );

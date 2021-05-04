@@ -3,10 +3,13 @@ import { words } from "@/UI/words";
 import { KeycloakInstance } from "keycloak-js";
 
 export class BaseApiHelper implements ApiHelper {
-  constructor(private readonly keycloak: KeycloakInstance | undefined) {}
+  constructor(
+    private readonly baseUrl: string = "",
+    private readonly keycloak?: KeycloakInstance
+  ) {}
 
   getBaseUrl(): string {
-    return process.env.API_BASEURL ? process.env.API_BASEURL : "";
+    return this.baseUrl;
   }
 
   private getHeaders(environment: string): Record<string, string> {
