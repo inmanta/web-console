@@ -8,7 +8,6 @@ import {
   DataProviderImpl,
   ServicesDataManager,
   ServicesStateHelper,
-  ServiceKeyMaker,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceCatalog } from "./ServiceCatalog";
@@ -21,7 +20,7 @@ function setup() {
 
   const servicesHelper = new ServicesDataManager(
     servicesFetcher,
-    new ServicesStateHelper(store, new ServiceKeyMaker()),
+    new ServicesStateHelper(store),
     scheduler,
     Service.A.environment
   );

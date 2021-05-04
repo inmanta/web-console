@@ -61,7 +61,7 @@ export class InstanceConfigDataManager
     this.serviceStateHelper.set(
       qualifier,
       RemoteData.fromEither(
-        await this.serviceFetcher.getData(qualifier.environment, url)
+        await this.serviceFetcher.getData(this.environment, url)
       )
     );
   }

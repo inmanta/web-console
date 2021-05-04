@@ -53,14 +53,14 @@ export class DependencyManagerImpl implements DependencyManager {
 
     const servicesHelper = new ServicesDataManager(
       new FetcherImpl<"Services">(baseApiHelper),
-      new ServicesStateHelper(this.store, serviceKeyMaker),
+      new ServicesStateHelper(this.store),
       scheduler,
       environment
     );
 
     const serviceHelper = new ServiceDataManager(
       new FetcherImpl<"Service">(baseApiHelper),
-      new ServiceStateHelper(this.store, serviceKeyMaker),
+      new ServiceStateHelper(this.store, serviceKeyMaker, environment),
       scheduler,
       serviceKeyMaker,
       environment
@@ -98,7 +98,7 @@ export class DependencyManagerImpl implements DependencyManager {
     const instanceConfigHelper = new InstanceConfigDataManager(
       new FetcherImpl<"InstanceConfig">(baseApiHelper),
       instanceConfigStateHelper,
-      new ServiceStateHelper(this.store, serviceKeyMaker),
+      new ServiceStateHelper(this.store, serviceKeyMaker, environment),
       new FetcherImpl<"Service">(baseApiHelper),
       environment
     );

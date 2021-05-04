@@ -49,14 +49,14 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
   byId: {},
   setData: action((state, { qualifier, environment, value }) => {
     state.byId[
-      injections.serviceKeyMaker.make({ ...qualifier, environment })
+      injections.serviceKeyMaker.make([environment, qualifier.name])
     ] = value;
   }),
   instancesWithTargetStates: computed(
     [(state) => state.byId, (state, storeState) => storeState],
     (byId, storeState) => (qualifier, environment) => {
       const data =
-        byId[injections.serviceKeyMaker.make({ ...qualifier, environment })];
+        byId[injections.serviceKeyMaker.make([environment, qualifier.name])];
       if (typeof data === "undefined") return RemoteData.loading();
 
       return RemoteData.mapSuccess(({ data, ...rest }) => {
@@ -65,7 +65,7 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
             const instanceState = instance.state;
             const service =
               storeState.services.byNameAndEnv[
-                injections.serviceKeyMaker.make({ ...qualifier, environment })
+                injections.serviceKeyMaker.make([environment, qualifier.name])
               ];
             if (!service || service.kind !== "Success") {
               return { ...instance, instanceSetStateTargets: [] };

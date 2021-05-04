@@ -1,10 +1,5 @@
 import { Action, action } from "easy-peasy";
-import {
-  EnvironmentIdentifier,
-  RemoteData,
-  ServiceIdentifier,
-  ServiceModel,
-} from "@/Core";
+import { Query, RemoteData, ServiceModel } from "@/Core";
 import { injections } from "@/UI/Store/Injections";
 
 /**
@@ -22,7 +17,7 @@ export interface ServicesSlice {
   setList: Action<
     ServicesSlice,
     {
-      qualifier: EnvironmentIdentifier;
+      environment: string;
       data: RemoteData.Type<string, ServiceModel[]>;
     }
   >;
@@ -38,7 +33,8 @@ export interface ServicesSlice {
   setSingle: Action<
     ServicesSlice,
     {
-      qualifier: ServiceIdentifier;
+      environment: string;
+      qualifier: Query.Qualifier<"Service">;
       data: RemoteData.Type<string, ServiceModel>;
     }
   >;
@@ -46,26 +42,23 @@ export interface ServicesSlice {
 
 export const servicesSlice: ServicesSlice = {
   listByEnv: {},
-  setList: action(({ listByEnv, byNameAndEnv }, { qualifier, data }) => {
-    const { environment } = qualifier;
+  setList: action(({ listByEnv, byNameAndEnv }, { environment, data }) => {
     listByEnv[environment] = data;
     if (!RemoteData.isSuccess(data)) return;
     const { value: services } = data;
     const toDelete = Object.keys(byNameAndEnv).filter((key) =>
-      injections.serviceKeyMaker.matches({ environment, name: "" }, key)
+      injections.serviceKeyMaker.matches([environment, ""], key)
     );
     toDelete.forEach((key) => delete byNameAndEnv[key]);
     services.forEach((service) => {
-      const key = injections.serviceKeyMaker.make({
-        environment,
-        name: service.name,
-      });
+      const key = injections.serviceKeyMaker.make([environment, service.name]);
       byNameAndEnv[key] = RemoteData.success(service);
     });
   }),
   byNameAndEnv: {},
-  setSingle: action((state, payload) => {
-    state.byNameAndEnv[injections.serviceKeyMaker.make(payload.qualifier)] =
-      payload.data;
+  setSingle: action((state, { environment, qualifier, data }) => {
+    state.byNameAndEnv[
+      injections.serviceKeyMaker.make([environment, qualifier.name])
+    ] = data;
   }),
 };

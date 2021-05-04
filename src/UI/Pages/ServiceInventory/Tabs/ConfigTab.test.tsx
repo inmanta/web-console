@@ -41,7 +41,11 @@ function setup() {
       data: { data: { auto_creating: false } },
     }),
     instanceConfigStateHelper,
-    new ServiceStateHelper(storeInstance, serviceKeyMaker),
+    new ServiceStateHelper(
+      storeInstance,
+      serviceKeyMaker,
+      instanceIdentifier.environment
+    ),
     new InstantFetcher<"Service">({
       kind: "Success",
       data: { data: Service.A },
