@@ -67,7 +67,7 @@ interface ServiceManifest {
  */
 export interface ResourcesQuery {
   kind: "Resources";
-  qualifier: VersionedServiceInstanceIdentifier;
+  qualifier: Omit<VersionedServiceInstanceIdentifier, "environment">;
 }
 
 interface ResourcesManifest {
