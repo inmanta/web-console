@@ -21,7 +21,8 @@ function setup() {
     new DiagnosticsDataManager(
       apiHelper,
       new DiagnosticsStateHelper(store),
-      scheduler
+      scheduler,
+      "environment"
     ),
   ]);
 

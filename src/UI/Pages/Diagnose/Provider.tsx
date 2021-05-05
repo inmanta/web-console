@@ -23,7 +23,6 @@ export const Provider: React.FC = () => {
       Wrapper={Wrapper}
       Dependant={({ environment }) => (
         <ServiceProvider
-          environmentId={environment}
           serviceName={id}
           Wrapper={Wrapper}
           Dependant={({ service }) => (

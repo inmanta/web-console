@@ -110,7 +110,8 @@ export class DependencyManagerImpl implements DependencyManager {
     const diagnosticsHelper = new DiagnosticsDataManager(
       new FetcherImpl<"Diagnostics">(baseApiHelper),
       diagnosticsStateHelper,
-      scheduler
+      scheduler,
+      environment
     );
 
     const dataProvider = new DataProviderImpl([

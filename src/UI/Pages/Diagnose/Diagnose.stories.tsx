@@ -33,7 +33,8 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
         data: { data: diagnostics },
       }),
       new DiagnosticsStateHelper(store),
-      new StaticScheduler()
+      new StaticScheduler(),
+      environment
     ),
   ]);
 
