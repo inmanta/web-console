@@ -3,6 +3,8 @@ import { DependencyContext } from "@/UI/Dependency";
 import { RemoteData, ServiceModel } from "@/Core";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { DiagnoseCardLayout } from "./DiagnoseCardLayout";
+import { Card, CardTitle, Title } from "@patternfly/react-core";
 
 interface Props {
   service: ServiceModel;
@@ -29,8 +31,12 @@ export const Diagnose: React.FC<Props> = ({
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => <LoadingView delay={500} />,
-      failed: (error) => <ErrorView message={error} />,
+      loading: () => (
+        <LoadingView aria-label="Diagnostics-Loading" delay={500} />
+      ),
+      failed: (error) => (
+        <ErrorView aria-label="Diagnostics-Failed" message={error} />
+      ),
       success: (diagnostics) => {
         if (
           diagnostics.failures.length <= 0 &&
@@ -38,12 +44,33 @@ export const Diagnose: React.FC<Props> = ({
         ) {
           return (
             <div aria-label="Diagnostics-Empty">
+              <Card>
+                <CardTitle>
+                  <Title headingLevel="h4" size="xl">
+                    {words("diagnose.main.title")(instanceId)}
+                  </Title>
+                </CardTitle>
+              </Card>
               <EmptyView message={words("diagnose.empty")(instanceId)} />
             </div>
           );
         }
 
-        return <div aria-label="Diagnostics-Success"></div>;
+        return (
+          <div aria-label="Diagnostics-Success">
+            <Card>
+              <CardTitle>
+                <Title headingLevel="h4" size="xl">
+                  {words("diagnose.main.title")(instanceId)}
+                </Title>
+              </CardTitle>
+            </Card>
+            <DiagnoseCardLayout
+              diagnostics={diagnostics}
+              environment={environment}
+            />
+          </div>
+        );
       },
     },
     data

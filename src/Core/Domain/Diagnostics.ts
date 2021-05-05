@@ -7,10 +7,10 @@ interface CompileError {
   message: string;
 }
 
-interface Rejection {
+export interface Rejection {
   instance_version: number;
   model_version?: number;
-  compile_id?: string;
+  compile_id: string;
   errors: CompileError[];
   trace?: string;
 }
@@ -20,7 +20,7 @@ interface FailureGroup {
   failures: Failure[];
 }
 
-interface Failure {
+export interface Failure {
   instance_version: number;
   model_version: number;
   resource_id: string;

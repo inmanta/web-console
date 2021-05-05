@@ -1,0 +1,6 @@
+description: Updated UI for Diagnose feature
+issue-nr: 333
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
