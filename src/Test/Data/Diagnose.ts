@@ -41,3 +41,8 @@ export const diagnoseRejection: Diagnostics = {
     },
   ],
 };
+
+export const diagnoseFailureAndRejection: Diagnostics = {
+  failures: diagnoseFailure.failures,
+  rejections: diagnoseRejection.rejections,
+};

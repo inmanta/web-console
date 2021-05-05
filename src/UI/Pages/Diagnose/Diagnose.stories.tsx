@@ -10,7 +10,11 @@ import {
   DiagnosticsDataManager,
   DiagnosticsStateHelper,
 } from "@/UI/Data/Diagnostics";
-import { diagnoseFailure, diagnoseRejection } from "@/Test/Data/Diagnose";
+import {
+  diagnoseFailure,
+  diagnoseFailureAndRejection,
+  diagnoseRejection,
+} from "@/Test/Data/Diagnose";
 
 export default {
   title: "Diagnose",
@@ -54,4 +58,8 @@ export const Failure: React.FC = () => (
 
 export const Rejection: React.FC = () => (
   <Template diagnostics={diagnoseRejection} />
+);
+
+export const FailureAndRejection: React.FC = () => (
+  <Template diagnostics={diagnoseFailureAndRejection} />
 );
