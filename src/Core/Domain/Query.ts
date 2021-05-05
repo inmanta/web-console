@@ -59,25 +59,6 @@ interface ServiceManifest {
 }
 
 /**
- * The ResourcesQuery describes resources for a service instance.
- * We are not asking for 1 specific resource. We are asking for all the
- * resources of 1 specific service instance. So the qualifier property
- * identifies a service instance.
- */
-export interface ResourcesQuery {
-  kind: "Resources";
-  qualifier: Omit<VersionedServiceInstanceIdentifier, "environment">;
-}
-
-interface ResourcesManifest {
-  error: string;
-  apiResponse: { data: ResourceModel[] };
-  data: ResourceModel[];
-  usedData: ResourceModel[];
-  query: ResourcesQuery;
-}
-
-/**
  * The ServiceInstancesQuery describes instances of a service.
  * We are asking for all the instances of 1 unique service
  * based on its name and environment. The qualifier identifies 1
@@ -85,7 +66,7 @@ interface ResourcesManifest {
  */
 export interface ServiceInstancesQuery {
   kind: "ServiceInstances";
-  qualifier: Omit<ServiceIdentifier, "environment"> & ServiceInstanceParams;
+  qualifier: ServiceIdentifier & ServiceInstanceParams;
 }
 
 interface ServiceInstancesManifest {
@@ -109,11 +90,30 @@ interface ServiceInstancesManifest {
 }
 
 /**
+ * The ResourcesQuery describes resources for a service instance.
+ * We are not asking for 1 specific resource. We are asking for all the
+ * resources of 1 specific service instance. So the qualifier property
+ * identifies a service instance.
+ */
+export interface ResourcesQuery {
+  kind: "Resources";
+  qualifier: VersionedServiceInstanceIdentifier;
+}
+
+interface ResourcesManifest {
+  error: string;
+  apiResponse: { data: ResourceModel[] };
+  data: ResourceModel[];
+  usedData: ResourceModel[];
+  query: ResourcesQuery;
+}
+
+/**
  * The events query describes events belonging to one specific service instance
  */
 export interface InstanceEventsQuery {
   kind: "Events";
-  qualifier: Omit<ServiceInstanceIdentifier, "environment"> & EventParams;
+  qualifier: ServiceInstanceIdentifier & EventParams;
 }
 
 interface EventsManifest {
@@ -141,7 +141,7 @@ interface EventsManifest {
  */
 export interface InstanceLogsQuery {
   kind: "InstanceLogs";
-  qualifier: Omit<ServiceInstanceIdentifier, "environment">;
+  qualifier: ServiceInstanceIdentifier;
 }
 
 interface InstanceLogsManifest {
@@ -157,7 +157,7 @@ interface InstanceLogsManifest {
  */
 export interface InstanceConfigQuery {
   kind: "InstanceConfig";
-  qualifier: Omit<ServiceInstanceIdentifier, "environment">;
+  qualifier: ServiceInstanceIdentifier;
 }
 
 interface InstanceConfigManifest {
@@ -171,7 +171,7 @@ interface InstanceConfigManifest {
 /** Diagnostics describe the status of an instance with regards to the diagnose call */
 export interface DiagnosticsQuery {
   kind: "Diagnostics";
-  qualifier: Omit<ServiceInstanceIdentifier, "environment">;
+  qualifier: ServiceInstanceIdentifier;
 }
 
 interface DiagnosticsManifest {
