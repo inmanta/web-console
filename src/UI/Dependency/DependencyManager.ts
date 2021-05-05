@@ -126,7 +126,7 @@ export class DependencyManagerImpl implements DependencyManager {
     ]);
 
     const commandProvider = new CommandProviderImpl(
-      new InstanceConfigPoster(baseApiHelper),
+      new InstanceConfigPoster(baseApiHelper, environment),
       instanceConfigStateHelper
     );
 

@@ -9,7 +9,7 @@ export type Type = Command;
  */
 export interface InstanceConfigCommand {
   kind: "InstanceConfig";
-  qualifier: VersionedServiceInstanceIdentifier;
+  qualifier: Omit<VersionedServiceInstanceIdentifier, "environment">;
 }
 
 interface InstanceConfigManifest {
