@@ -9,6 +9,7 @@ import {
 } from "react-router-last-location";
 import {
   CreateInstancePageWithProvider,
+  DiagnoseWithProvider,
   ServiceCatalogWithProvider,
   ServiceInstanceHistoryWithProvider,
   ServiceInventoryWithProvider,
@@ -74,6 +75,15 @@ const routes: IAppRouteGroup[] = [
         label: "Service Instance History",
         path: "/catalog/:id/inventory/:instanceId/history",
         title: "Service Instance History",
+      },
+      {
+        component: DiagnoseWithProvider,
+        exact: true,
+        hideOnSideBar: true,
+        icon: null,
+        label: "Diagnose Service Instance",
+        path: "/catalog/:id/inventory/:instanceId/diagnose",
+        title: "Diagnose Service Instance",
       },
       {
         component: EventsWithProvider,

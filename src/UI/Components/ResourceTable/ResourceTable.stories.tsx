@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { Resources } from "@/Test";
 import { ResourceTable } from "./ResourceTable";
-import { HrefCreatorImpl } from "./HrefCreatorImpl";
+import { ResourceHrefCreatorImpl } from "../HrefCreators";
 
 export default {
   title: "ResourceTable",
@@ -15,12 +15,12 @@ const Template: Story<ComponentProps<typeof ResourceTable>> = (args) => (
 
 export const Empty = Template.bind({});
 Empty.args = {
-  hrefCreator: new HrefCreatorImpl("env-abcd"),
+  hrefCreator: new ResourceHrefCreatorImpl("env-abcd"),
   resources: [],
 };
 
 export const RealData = Template.bind({});
 RealData.args = {
-  hrefCreator: new HrefCreatorImpl("env-abcd"),
+  hrefCreator: new ResourceHrefCreatorImpl("env-abcd"),
   resources: Resources.A,
 };

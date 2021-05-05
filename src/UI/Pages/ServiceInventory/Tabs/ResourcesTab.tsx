@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
   ResourceTable,
-  HrefCreatorImpl,
+  ResourceHrefCreatorImpl,
   ResourceTableWrapper,
   EmptyView,
   LoadingView,
@@ -58,7 +58,7 @@ export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
           </ResourceTableWrapper>
         ) : (
           <ResourceTable
-            hrefCreator={new HrefCreatorImpl(qualifier.environment)}
+            hrefCreator={new ResourceHrefCreatorImpl(qualifier.environment)}
             resources={resources}
             aria-label="ResourceTable-Success"
             id={qualifier.id}

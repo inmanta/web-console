@@ -25,6 +25,7 @@ export const PageBreadcrumb: React.FC = () => {
 
       if (
         location.pathname.endsWith("history") ||
+        location.pathname.endsWith("diagnose") ||
         location.pathname.endsWith("events")
       ) {
         if (route.title === "Service Inventory") {

@@ -14,6 +14,7 @@ import {
   ServiceInstancesSlice,
 } from "./ServiceInstancesSlice";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
+import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
 
 export interface StoreModel {
   environments: EnvironmentsSlice;
@@ -29,6 +30,7 @@ export interface StoreModel {
   instanceConfig: InstanceConfigSlice;
   projects: ProjectsSlice;
   serviceInstances: ServiceInstancesSlice;
+  diagnostics: DiagnosticsSlice;
 }
 
 const fetched: StoreModel["fetched"] = action((state, payload) => {
@@ -91,4 +93,5 @@ export const storeModel: StoreModel = {
   }),
   serviceInstances: serviceInstancesSlice,
   services: servicesSlice,
+  diagnostics: diagnosticsSlice,
 };

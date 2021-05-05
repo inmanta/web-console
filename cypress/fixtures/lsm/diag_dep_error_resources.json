@@ -1,8 +1,0 @@
-{
-  "data": [
-    {
-      "resource_id": "unittest::Resource[internal,name=ad110da0-79c8-4f6d-9a31-80cbad026c9e],v=3",
-      "resource_state": "failed"
-    }
-  ]
-}
