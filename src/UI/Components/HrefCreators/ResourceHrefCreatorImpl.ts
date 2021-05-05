@@ -1,6 +1,6 @@
 import { HrefCreator } from "./HrefCreator";
 
-export class HrefCreatorImpl implements HrefCreator {
+export class ResourceHrefCreatorImpl implements HrefCreator {
   private readonly versionPrefixLength = 3;
 
   constructor(private readonly environmentId: string) {}

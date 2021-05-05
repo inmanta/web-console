@@ -62,6 +62,7 @@ const dict = {
   "inventory.tabs.resources": "Resources",
   "inventory.tabs.status": "Status",
   "inventory.statustab.actions": "Actions",
+  "inventory.statustab.diagnose": "Diagnose",
   "inventory.statustab.version": "Version",
   "inventory.statustab.details": "Instance Details",
   "inventory.statustab.setInstanceState": "Set state to",
@@ -145,6 +146,17 @@ const dict = {
   "history.tabs.details": "Details",
   "history.tabs.attributes": "Attributes",
   "history.tabs.events": "Events",
+
+  "diagnose.empty": (instanceId: string) =>
+    `No errors were found for instance ${instanceId}`,
+  "diagnose.failure.title": "Validation failure",
+  "diagnose.links.resourceDetails": "Resource Details",
+  "diagnose.links.modelVersionDetails": "Model Version Details",
+  "diagnose.links.compileReport": "Compile Report",
+  "diagnose.rejection.title": "Deployment failure",
+  "diagnose.rejection.traceback": "Show full traceback",
+  "diagnose.main.title": (instanceId: string) =>
+    `The following errors were found related to instance ${instanceId}`,
 };
 
 type Key = keyof typeof dict;

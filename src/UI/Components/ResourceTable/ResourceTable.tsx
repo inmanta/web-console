@@ -7,7 +7,7 @@ import {
   CheckSquareIcon,
   TimesCircleIcon,
 } from "@patternfly/react-icons";
-import { HrefCreator } from "./HrefCreator";
+import { HrefCreator } from "../HrefCreators";
 import { words } from "@/UI/words";
 
 interface Props {

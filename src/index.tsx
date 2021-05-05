@@ -24,6 +24,8 @@ import {
   InstanceConfigDataManager,
   InstanceConfigStateHelper,
   CommandProviderImpl,
+  DiagnosticsStateHelper,
+  DiagnosticsDataManager,
 } from "@/UI/Data";
 import { SchedulerImpl } from "./Core";
 
@@ -95,6 +97,14 @@ const instanceConfigHelper = new InstanceConfigDataManager(
   new FetcherImpl<"Service">(baseApiHelper)
 );
 
+const diagnosticsStateHelper = new DiagnosticsStateHelper(storeInstance);
+
+const diagnosticsHelper = new DiagnosticsDataManager(
+  new FetcherImpl<"Diagnostics">(baseApiHelper),
+  diagnosticsStateHelper,
+  scheduler
+);
+
 const dataProvider = new DataProviderImpl([
   servicesHelper,
   serviceHelper,
@@ -103,6 +113,7 @@ const dataProvider = new DataProviderImpl([
   eventsDataManager,
   instanceLogsHelper,
   instanceConfigHelper,
+  diagnosticsHelper,
 ]);
 
 const commandProvider = new CommandProviderImpl(
