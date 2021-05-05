@@ -1,5 +1,5 @@
 import React from "react";
-import { Diagnostics } from "@/Core";
+import { RawDiagnostics } from "@/Core";
 import { StoreProvider } from "easy-peasy";
 import { InstantFetcher, InstanceLog, Service, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -21,7 +21,9 @@ export default {
   component: Diagnose,
 };
 
-const Template: React.FC<{ diagnostics: Diagnostics }> = ({ diagnostics }) => {
+const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
+  diagnostics,
+}) => {
   const { service_instance_id, environment } = InstanceLog.A;
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([

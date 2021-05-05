@@ -1,17 +1,31 @@
+export interface RawDiagnostics {
+  rejections: RawRejection[];
+  failures: FailureGroup[];
+}
+
 export interface Diagnostics {
   rejections: Rejection[];
   failures: FailureGroup[];
 }
+
 interface CompileError {
   type: string;
   message: string;
+}
+
+export interface RawRejection {
+  instance_version: number;
+  model_version?: number;
+  compile_id: string;
+  errors: CompileError[];
+  trace?: string;
 }
 
 export interface Rejection {
   instance_version: number;
   model_version?: number;
   compile_id: string;
-  errors: CompileError[];
+  error: CompileError;
   trace?: string;
 }
 

@@ -2,12 +2,10 @@ import { Action, action } from "easy-peasy";
 import { Diagnostics, RemoteData } from "@/Core";
 
 /**
- * The DiagnosticsSlice stores the Diagnostic status for service instances.
- * For a single ServiceInstance we store its Diagnostics.
- * So 'byId' means by ServiceInstance id.
+ * The DiagnosticsSlice stores the Diagnostic status for service instances, by service instance id.
  */
 export interface DiagnosticsSlice {
-  byId: Record<string, RemoteData.Type<string, Diagnostics>>;
+  byServiceInstanceId: Record<string, RemoteData.Type<string, Diagnostics>>;
   setData: Action<
     DiagnosticsSlice,
     { id: string; value: RemoteData.Type<string, Diagnostics> }
@@ -15,8 +13,8 @@ export interface DiagnosticsSlice {
 }
 
 export const diagnosticsSlice: DiagnosticsSlice = {
-  byId: {},
+  byServiceInstanceId: {},
   setData: action((state, payload) => {
-    state.byId[payload.id] = payload.value;
+    state.byServiceInstanceId[payload.id] = payload.value;
   }),
 };

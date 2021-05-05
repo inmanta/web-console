@@ -7,16 +7,12 @@ import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
 
 SyntaxHighlighter.registerLanguage("python", python);
 
-export const Traceback: React.FC<{ trace?: string }> = ({ trace }) => {
+export const Traceback: React.FC<{ trace: string }> = ({ trace }) => {
   return (
-    <>
-      {trace && (
-        <ExpandableSection toggleText={words("diagnose.rejection.traceback")}>
-          <SyntaxHighlighter language="python" style={docco}>
-            {trace}
-          </SyntaxHighlighter>
-        </ExpandableSection>
-      )}
-    </>
+    <ExpandableSection toggleText={words("diagnose.rejection.traceback")}>
+      <SyntaxHighlighter language="python" style={docco}>
+        {trace}
+      </SyntaxHighlighter>
+    </ExpandableSection>
   );
 };

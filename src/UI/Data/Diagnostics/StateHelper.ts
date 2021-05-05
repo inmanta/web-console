@@ -1,4 +1,4 @@
-import { Diagnostics, Query, RemoteData, StateHelper } from "@/Core";
+import { Query, RemoteData, StateHelper, Diagnostics } from "@/Core";
 import { Store, useStoreState } from "@/UI/Store";
 import { isEqual } from "lodash";
 
@@ -9,13 +9,21 @@ export class DiagnosticsStateHelper implements StateHelper<"Diagnostics"> {
   constructor(private readonly store: Store) {}
 
   set({ id }: Query.Qualifier<"Diagnostics">, data: ApiData): void {
-    const value = RemoteData.mapSuccess((data) => data.data, data);
+    const value = RemoteData.mapSuccess((data) => {
+      return {
+        failures: data.data.failures,
+        rejections: data.data.rejections.map((rejection) => {
+          // The backend always returns only one error
+          return { ...rejection, error: rejection.errors[0] };
+        }),
+      };
+    }, data);
     this.store.dispatch.diagnostics.setData({ id, value });
   }
 
   getHooked({ id }: Query.Qualifier<"Diagnostics">): Data {
     return useStoreState((state) => {
-      return this.enforce(state.diagnostics.byId[id]);
+      return this.enforce(state.diagnostics.byServiceInstanceId[id]);
     }, isEqual);
   }
 
@@ -25,6 +33,8 @@ export class DiagnosticsStateHelper implements StateHelper<"Diagnostics"> {
   }
 
   getOnce({ id }: Query.Qualifier<"Diagnostics">): Data {
-    return this.enforce(this.store.getState().diagnostics.byId[id]);
+    return this.enforce(
+      this.store.getState().diagnostics.byServiceInstanceId[id]
+    );
   }
 }

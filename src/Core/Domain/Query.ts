@@ -12,7 +12,7 @@ import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 import * as Pagination from "./Pagination";
 import { Config, Setting } from "./Config";
 import { ServiceInstanceParams } from "./ServiceInstanceParams";
-import { Diagnostics } from "./Diagnostics";
+import { RawDiagnostics, Diagnostics } from "./Diagnostics";
 import { EventParams } from "./EventParams";
 
 type Query =
@@ -177,7 +177,7 @@ export interface DiagnosticsQuery {
 
 interface DiagnosticsManifest {
   error: string;
-  apiResponse: { data: Diagnostics };
+  apiResponse: { data: RawDiagnostics };
   data: Diagnostics;
   usedData: Diagnostics;
   query: DiagnosticsQuery;

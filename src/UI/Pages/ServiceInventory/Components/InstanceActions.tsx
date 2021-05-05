@@ -12,6 +12,7 @@ import { DeleteModal } from "@/UI/Pages/ServiceInstanceForm/Delete/DeleteModal";
 import { Link, useLocation } from "react-router-dom";
 import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
+import { ButtonWithCursorHandling } from "@/UI/Components";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
@@ -63,14 +64,13 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
             search: location.search,
           }}
         >
-          <Button
+          <ButtonWithCursorHandling
             isBlock
             variant="tertiary"
             isDisabled={diagnoseDisabled}
-            style={diagnoseDisabled ? { cursor: "not-allowed" } : {}}
           >
             <ToolsIcon /> {words("inventory.statustab.diagnose")}
-          </Button>
+          </ButtonWithCursorHandling>
         </Link>
       </DescriptionListGroup>
       <DescriptionListGroup>

@@ -46,8 +46,7 @@ export const RejectionCard: React.FC<Props> = ({
     );
   }
 
-  // The backend always returns only one error
-  const error = rejection.errors[0];
+  const error = rejection.error;
 
   return (
     <Card>
@@ -69,7 +68,7 @@ export const RejectionCard: React.FC<Props> = ({
       <CardTitle className="patternfly-text-gray">{error.type}</CardTitle>
       <CardBody>
         <pre>{error.message}</pre>
-        <Traceback trace={rejection.trace} />
+        {rejection.trace && <Traceback trace={rejection.trace} />}
       </CardBody>
     </Card>
   );
