@@ -47,7 +47,7 @@ interface ServicesManifest {
  */
 export interface ServiceQuery {
   kind: "Service";
-  qualifier: Omit<ServiceIdentifier, "environment">;
+  qualifier: ServiceIdentifier;
 }
 
 interface ServiceManifest {
