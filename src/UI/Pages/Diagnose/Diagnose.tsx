@@ -9,20 +9,14 @@ import { Card, CardTitle, Title } from "@patternfly/react-core";
 interface Props {
   service: ServiceModel;
   instanceId: string;
-  environment: string;
 }
 
-export const Diagnose: React.FC<Props> = ({
-  service,
-  instanceId,
-  environment,
-}) => {
+export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
   const { dataProvider } = useContext(DependencyContext);
 
   const [data] = dataProvider.useContinuous<"Diagnostics">({
     kind: "Diagnostics",
     qualifier: {
-      environment,
       id: instanceId,
       service_entity: service.name,
     },
@@ -65,10 +59,7 @@ export const Diagnose: React.FC<Props> = ({
                 </Title>
               </CardTitle>
             </Card>
-            <DiagnoseCardLayout
-              diagnostics={diagnostics}
-              environment={environment}
-            />
+            <DiagnoseCardLayout diagnostics={diagnostics} />
           </div>
         );
       },

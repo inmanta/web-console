@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ResourceModel } from "@/Core";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Button } from "@patternfly/react-core";
@@ -7,32 +7,26 @@ import {
   CheckSquareIcon,
   TimesCircleIcon,
 } from "@patternfly/react-icons";
-import { HrefCreator } from "../HrefCreators";
 import { words } from "@/UI/words";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
-  hrefCreator: HrefCreator;
   resources: ResourceModel[];
   "aria-label"?: string;
   id?: string;
 }
 
-export const ResourceTable: React.FC<Props> = ({
-  hrefCreator,
-  resources,
-  id,
-  ...props
-}) => {
+export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
+  const { urlManager } = useContext(DependencyContext);
   const columns = ["Resource Id", "Details", "State"];
   const rows = resources.map((resource) => {
-    const href = hrefCreator.create(resource.resource_id);
     const linkToDetails = (
       <Button
         component="a"
         variant="link"
         isInline={true}
         icon={<ExternalLinkAltIcon />}
-        href={href}
+        href={urlManager.getResourceUrl(resource.resource_id)}
         target="_blank"
       >
         {words("inventory.resourcesTab.detailsLink")}

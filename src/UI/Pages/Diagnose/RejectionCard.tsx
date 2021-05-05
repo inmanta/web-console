@@ -1,8 +1,5 @@
+import React, { useState, useContext } from "react";
 import { Rejection } from "@/Core";
-import {
-  CompileReportHrefCreator,
-  ModelVersionHrefCreator,
-} from "@/UI/Components";
 import { words } from "@/UI/words";
 import {
   Card,
@@ -13,25 +10,21 @@ import {
   Dropdown,
   KebabToggle,
 } from "@patternfly/react-core";
-import React, { useState } from "react";
+import { DependencyContext } from "@/UI/Dependency";
 import { DropdownExternalLink } from "./ExternalLink";
 import { Traceback } from "./Traceback";
 
 interface Props {
   rejection: Rejection;
-  environment: string;
 }
 
-export const RejectionCard: React.FC<Props> = ({
-  rejection: rejection,
-  environment,
-}) => {
+export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
+  const { urlManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems: React.ReactNode[] = [
     <DropdownExternalLink
       key="compileReportLink"
-      hrefCreator={new CompileReportHrefCreator(environment)}
-      id={rejection.compile_id}
+      url={urlManager.getCompileReportUrl()}
       linkText={words("diagnose.links.compileReport")}
     />,
   ];
@@ -39,8 +32,7 @@ export const RejectionCard: React.FC<Props> = ({
     dropdownItems.push(
       <DropdownExternalLink
         key="modelVersionLink"
-        hrefCreator={new ModelVersionHrefCreator(environment)}
-        id={rejection.model_version.toString()}
+        url={urlManager.getModelVersionUrl(rejection.model_version.toString())}
         linkText={words("diagnose.links.modelVersionDetails")}
       />
     );

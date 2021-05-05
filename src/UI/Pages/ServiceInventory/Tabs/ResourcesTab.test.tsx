@@ -8,6 +8,7 @@ import {
   DataProviderImpl,
   ResourcesStateHelper,
   ResourcesDataManager,
+  UrlManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesTab } from "./ResourcesTab";
@@ -30,9 +31,10 @@ function setup() {
       instance.environment
     ),
   ]);
+  const urlManager = new UrlManagerImpl("", instance.environment);
 
   const component = (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
       <StoreProvider store={store}>
         <ResourcesTab qualifier={instance} />
       </StoreProvider>

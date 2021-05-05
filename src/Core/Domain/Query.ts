@@ -171,7 +171,7 @@ interface InstanceConfigManifest {
 /** Diagnostics describe the status of an instance with regards to the diagnose call */
 export interface DiagnosticsQuery {
   kind: "Diagnostics";
-  qualifier: ServiceInstanceIdentifier;
+  qualifier: Omit<ServiceInstanceIdentifier, "environment">;
 }
 
 interface DiagnosticsManifest {

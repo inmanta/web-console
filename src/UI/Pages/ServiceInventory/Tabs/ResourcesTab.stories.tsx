@@ -7,11 +7,12 @@ import {
   DataProviderImpl,
   ResourcesStateHelper,
   ResourcesDataManager,
+  UrlManagerImpl,
 } from "@/UI/Data";
 import { ResourcesTab } from "./ResourcesTab";
 
 export default {
-  title: "ResourcesView",
+  title: "ResourcesTab",
   component: ResourcesTab,
 };
 
@@ -32,8 +33,10 @@ const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
     ),
   ]);
 
+  const urlManager = new UrlManagerImpl("", instance.environment);
+
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
       <StoreProvider store={store}>
         <ResourcesTab qualifier={instance} />
       </StoreProvider>

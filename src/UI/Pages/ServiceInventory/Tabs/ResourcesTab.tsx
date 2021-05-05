@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
-import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
+import { Query, RemoteData } from "@/Core";
 import {
   ResourceTable,
-  ResourceHrefCreatorImpl,
   ResourceTableWrapper,
   EmptyView,
   LoadingView,
@@ -12,7 +11,7 @@ import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
-  qualifier: VersionedServiceInstanceIdentifier;
+  qualifier: Query.Qualifier<"Resources">;
 }
 
 export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
@@ -58,7 +57,6 @@ export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
           </ResourceTableWrapper>
         ) : (
           <ResourceTable
-            hrefCreator={new ResourceHrefCreatorImpl(qualifier.environment)}
             resources={resources}
             aria-label="ResourceTable-Success"
             id={qualifier.id}

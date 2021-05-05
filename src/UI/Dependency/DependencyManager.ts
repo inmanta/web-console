@@ -23,7 +23,7 @@ import {
   CommandProviderImpl,
   DiagnosticsStateHelper,
   DiagnosticsDataManager,
-  UrlControllerImpl,
+  UrlManagerImpl,
 } from "@/UI/Data";
 import { SchedulerImpl } from "@/Core";
 
@@ -133,7 +133,7 @@ export class DependencyManagerImpl implements DependencyManager {
     return {
       commandProvider,
       dataProvider,
-      urlController: new UrlControllerImpl(baseUrl, environment),
+      urlManager: new UrlManagerImpl(baseUrl, environment),
     };
   }
 }

@@ -9,6 +9,7 @@ import {
   ResourcesStateHelper,
   ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
+  UrlManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "../ServiceInventory";
@@ -48,10 +49,11 @@ export class ServiceInventoryPrepper {
       serviceInstancesHelper,
       resourcesHelper,
     ]);
+    const urlManager = new UrlManagerImpl("", service.environment);
 
     const component = (
       <MemoryRouter>
-        <DependencyProvider dependencies={{ dataProvider }}>
+        <DependencyProvider dependencies={{ dataProvider, urlManager }}>
           <StoreProvider store={store}>
             <ServiceInventory
               serviceName={service.name}

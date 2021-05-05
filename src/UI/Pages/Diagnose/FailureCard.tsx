@@ -1,6 +1,7 @@
+import React, { useState, useContext } from "react";
 import { Failure } from "@/Core";
-import { ResourceHrefCreatorImpl } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { DependencyContext } from "@/UI/Dependency";
 import {
   Card,
   CardActions,
@@ -10,29 +11,24 @@ import {
   Dropdown,
   KebabToggle,
 } from "@patternfly/react-core";
-import React, { useState } from "react";
 import { DropdownExternalLink } from "./ExternalLink";
-import { ModelVersionHrefCreator } from "@/UI/Components";
 
 interface Props {
   failure: Failure;
-  environment: string;
 }
 
-export const FailureCard: React.FC<Props> = ({ failure, environment }) => {
+export const FailureCard: React.FC<Props> = ({ failure }) => {
+  const { urlManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
-  const hrefCreator = new ResourceHrefCreatorImpl(environment);
   const dropdownItems = [
     <DropdownExternalLink
       key="resourceDetailsLink"
-      hrefCreator={hrefCreator}
-      id={failure.resource_id}
+      url={urlManager.getResourceUrl(failure.resource_id)}
       linkText={words("diagnose.links.resourceDetails")}
     />,
     <DropdownExternalLink
       key="modelVersionLink"
-      hrefCreator={new ModelVersionHrefCreator(environment)}
-      id={failure.model_version.toString()}
+      url={urlManager.getModelVersionUrl(failure.model_version.toString())}
       linkText={words("diagnose.links.modelVersionDetails")}
     />,
   ];

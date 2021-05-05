@@ -16,6 +16,7 @@ import {
   DataProviderImpl,
   EventsDataManager,
   EventsStateHelper,
+  UrlManagerImpl,
 } from "@/UI/Data";
 
 export default {
@@ -47,9 +48,10 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
       InstanceLog.A.environment
     ),
   ]);
+  const urlManager = new UrlManagerImpl("", InstanceLog.A.environment);
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
       <StoreProvider store={store}>
         <EventsPage service={Service.A} instanceId={service_instance_id} />
       </StoreProvider>

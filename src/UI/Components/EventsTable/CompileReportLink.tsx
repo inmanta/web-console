@@ -5,14 +5,14 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 export const CompileReportLink: React.FC = () => {
-  const { urlController } = useContext(DependencyContext);
+  const { urlManager } = useContext(DependencyContext);
   return (
     <Button
       component="a"
       variant="link"
       isInline={true}
       icon={<ExternalLinkAltIcon />}
-      href={urlController.getCompileReportUrl()}
+      href={urlManager.getCompileReportUrl()}
       target="_blank"
     >
       {words("events.details.compileReport")}

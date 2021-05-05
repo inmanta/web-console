@@ -1,32 +1,32 @@
 import React, { createContext } from "react";
-import { CommandProvider, DataProvider, UrlController } from "@/Core";
+import { CommandProvider, DataProvider, UrlManager } from "@/Core";
 import { DummyCommandProvider } from "./DummyCommandProvider";
 import { DummyDataProvider } from "./DummyDataProvider";
-import { DummyUrlController } from "./DummyUrlController";
+import { DummyUrlManager } from "./DummyUrlManager";
 
 export interface Dependencies {
   commandProvider: CommandProvider;
   dataProvider: DataProvider;
-  urlController: UrlController;
+  urlManager: UrlManager;
 }
 
 export const DependencyContext = createContext<Dependencies>({
   commandProvider: new DummyCommandProvider(),
   dataProvider: new DummyDataProvider(),
-  urlController: new DummyUrlController(),
+  urlManager: new DummyUrlManager(),
 });
 
 export const DependencyProvider: React.FC<{
   dependencies: Partial<Dependencies>;
 }> = ({
-  dependencies: { commandProvider, dataProvider, urlController },
+  dependencies: { commandProvider, dataProvider, urlManager },
   children,
 }) => (
   <DependencyContext.Provider
     value={{
       commandProvider: commandProvider || new DummyCommandProvider(),
       dataProvider: dataProvider || new DummyDataProvider(),
-      urlController: urlController || new DummyUrlController(),
+      urlManager: urlManager || new DummyUrlManager(),
     }}
   >
     {children}

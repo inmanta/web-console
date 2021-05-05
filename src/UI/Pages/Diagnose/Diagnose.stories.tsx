@@ -4,7 +4,7 @@ import { StoreProvider } from "easy-peasy";
 import { InstantFetcher, InstanceLog, Service, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
-import { DataProviderImpl } from "@/UI/Data";
+import { DataProviderImpl, UrlManagerImpl } from "@/UI/Data";
 import { Diagnose } from "./Diagnose";
 import {
   DiagnosticsDataManager,
@@ -37,15 +37,12 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
       environment
     ),
   ]);
+  const urlManager = new UrlManagerImpl("", environment);
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
       <StoreProvider store={store}>
-        <Diagnose
-          service={Service.A}
-          instanceId={service_instance_id}
-          environment={environment}
-        />
+        <Diagnose service={Service.A} instanceId={service_instance_id} />
       </StoreProvider>
     </DependencyProvider>
   );

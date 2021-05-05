@@ -16,6 +16,7 @@ import {
   DataProviderImpl,
   ResourcesDataManager,
   ResourcesStateHelper,
+  UrlManagerImpl,
 } from "@/UI/Data";
 import userEvent from "@testing-library/user-event";
 
@@ -43,8 +44,9 @@ test("InventoryTable can be expanded", async () => {
       "env"
     ),
   ]);
+  const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
       <InventoryTable
         rows={rows}
         tablePresenter={tablePresenter}
@@ -84,8 +86,9 @@ test("ServiceInventory can show resources for instance", async () => {
       "env"
     ),
   ]);
+  const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
       <StoreProvider store={store}>
         <InventoryTable
           rows={rows}
