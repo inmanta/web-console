@@ -21,7 +21,7 @@
     "precypress-test": "yarn run delete:reports",
     "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'yarn cypress run'",
     "package-cleanup": "node clean_up_packages",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook --ci --port 6006",
     "build-storybook": "build-storybook"
   },
   "husky": {
