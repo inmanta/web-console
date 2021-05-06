@@ -25,7 +25,7 @@ export interface Rejection {
   instance_version: number;
   model_version?: number;
   compile_id: string;
-  error: CompileError;
+  error?: CompileError;
   trace?: string;
 }
 
