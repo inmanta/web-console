@@ -8,7 +8,7 @@ type ApiData = RemoteData.Type<string, Query.ApiResponse<"Resources">>;
 export class ResourcesStateHelper implements StateHelper<"Resources"> {
   constructor(private readonly store: Store) {}
 
-  set(qualifier: Query.Qualifier<"Resources">, data: ApiData): void {
+  set(data: ApiData, qualifier: Query.Qualifier<"Resources">): void {
     const value = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
     this.store.dispatch.resources.setData({ id: qualifier.id, value });
   }

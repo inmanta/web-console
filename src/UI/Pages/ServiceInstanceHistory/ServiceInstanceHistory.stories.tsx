@@ -17,7 +17,6 @@ export default {
 };
 
 const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
-  const { service_instance_id, environment } = InstanceLog.A;
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new InstanceLogsDataManager(
@@ -25,7 +24,8 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
         kind: "Success",
         data: { data: logs },
       }),
-      new InstanceLogsStateHelper(store)
+      new InstanceLogsStateHelper(store),
+      Service.A.environment
     ),
   ]);
 
@@ -34,8 +34,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
       <StoreProvider store={store}>
         <ServiceInstanceHistory
           service={Service.A}
-          instanceId={service_instance_id}
-          environment={environment}
+          instanceId={InstanceLog.A.service_instance_id}
         />
       </StoreProvider>
     </DependencyProvider>

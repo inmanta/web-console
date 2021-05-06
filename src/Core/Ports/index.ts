@@ -6,3 +6,4 @@ export * from "./DataManager";
 export * from "./KeyMaker";
 export * from "./Poster";
 export * from "./StateHelper";
+export * from "./UrlManager";

@@ -2,7 +2,7 @@ import { ServiceInstanceModel } from "@/Core";
 
 const base = ({
   id: "service_instance_id_a",
-  environment: "environment_a",
+  environment: "environment_id_a",
   service_entity: "service_name_a",
   version: 3,
   config: {},

@@ -1,4 +1,4 @@
-import { KeyMaker, Query, Fetcher, StateHelper, Scheduler } from "@/Core";
+import { KeyMaker, Fetcher, StateHelper, Scheduler } from "@/Core";
 import { ContinuousDataManagerImpl } from "../DataManagerImpl";
 import { identity } from "lodash";
 
@@ -7,17 +7,19 @@ export class ServiceDataManager extends ContinuousDataManagerImpl<"Service"> {
     fetcher: Fetcher<"Service">,
     stateHelper: StateHelper<"Service">,
     scheduler: Scheduler,
-    keyMaker: KeyMaker<Query.Qualifier<"Service">>
+    keyMaker: KeyMaker<[string, string]>,
+    environment: string
   ) {
     super(
       fetcher,
       stateHelper,
       scheduler,
-      (qualifier) => keyMaker.make(qualifier),
-      (qualifier) => [qualifier.name, qualifier.environment],
+      ({ name }) => keyMaker.make([environment, name]),
+      (qualifier) => [qualifier.name, environment],
       "Service",
       ({ name }) => `/lsm/v1/service_catalog/${name}`,
-      identity
+      identity,
+      environment
     );
   }
 }

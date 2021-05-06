@@ -5,7 +5,8 @@ import { OneTimeDataManagerImpl } from "../DataManagerImpl";
 export class InstanceLogsDataManager extends OneTimeDataManagerImpl<"InstanceLogs"> {
   constructor(
     fetcher: Fetcher<"InstanceLogs">,
-    stateHelper: StateHelper<"InstanceLogs">
+    stateHelper: StateHelper<"InstanceLogs">,
+    environment: string
   ) {
     super(
       fetcher,
@@ -14,7 +15,8 @@ export class InstanceLogsDataManager extends OneTimeDataManagerImpl<"InstanceLog
       "InstanceLogs",
       ({ service_entity, id }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/log`,
-      identity
+      identity,
+      environment
     );
   }
 }

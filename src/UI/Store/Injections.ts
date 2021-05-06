@@ -1,8 +1,8 @@
-import { KeyMaker, Query } from "@/Core";
+import { KeyMaker } from "@/Core";
 import { ServiceKeyMaker } from "@/UI/Data/Service";
 
 interface Injections {
-  serviceKeyMaker: KeyMaker<Query.Qualifier<"Service">>;
+  serviceKeyMaker: KeyMaker<[string, string]>;
 }
 
 /**

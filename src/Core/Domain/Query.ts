@@ -1,6 +1,5 @@
 import { InstanceEvent } from "./EventModel";
 import { InstanceLog } from "./InstanceLogModel";
-import { EnvironmentIdentifier } from "./ProjectModel";
 import { ResourceModel } from "./ResourceModel";
 import {
   VersionedServiceInstanceIdentifier,
@@ -31,7 +30,7 @@ export type Type = Query;
  */
 export interface ServicesQuery {
   kind: "Services";
-  qualifier: EnvironmentIdentifier;
+  qualifier: null;
 }
 
 interface ServicesManifest {
@@ -57,25 +56,6 @@ interface ServiceManifest {
   data: ServiceModel;
   usedData: ServiceModel;
   query: ServiceQuery;
-}
-
-/**
- * The ResourcesQuery describes resources for a service instance.
- * We are not asking for 1 specific resource. We are asking for all the
- * resources of 1 specific service instance. So the qualifier property
- * identifies a service instance.
- */
-export interface ResourcesQuery {
-  kind: "Resources";
-  qualifier: VersionedServiceInstanceIdentifier;
-}
-
-interface ResourcesManifest {
-  error: string;
-  apiResponse: { data: ResourceModel[] };
-  data: ResourceModel[];
-  usedData: ResourceModel[];
-  query: ResourcesQuery;
 }
 
 /**
@@ -107,6 +87,25 @@ interface ServiceInstancesManifest {
     metadata: Pagination.Metadata;
   };
   query: ServiceInstancesQuery;
+}
+
+/**
+ * The ResourcesQuery describes resources for a service instance.
+ * We are not asking for 1 specific resource. We are asking for all the
+ * resources of 1 specific service instance. So the qualifier property
+ * identifies a service instance.
+ */
+export interface ResourcesQuery {
+  kind: "Resources";
+  qualifier: VersionedServiceInstanceIdentifier;
+}
+
+interface ResourcesManifest {
+  error: string;
+  apiResponse: { data: ResourceModel[] };
+  data: ResourceModel[];
+  usedData: ResourceModel[];
+  query: ResourcesQuery;
 }
 
 /**

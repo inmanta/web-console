@@ -13,7 +13,6 @@ export interface DeploymentProgress {
 
 export interface ServiceInstanceIdentifier extends WithId {
   service_entity: string;
-  environment: string;
 }
 
 export interface VersionedServiceInstanceIdentifier
@@ -23,6 +22,7 @@ export interface VersionedServiceInstanceIdentifier
 
 export interface ServiceInstanceModel
   extends VersionedServiceInstanceIdentifier {
+  environment: string;
   active_attributes: InstanceAttributeModel | null;
   callback: string[];
   candidate_attributes: InstanceAttributeModel | null;

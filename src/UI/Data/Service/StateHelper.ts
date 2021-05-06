@@ -11,18 +11,25 @@ type ApiData = RemoteData.Type<
 export class ServiceStateHelper implements StateHelper<"Service"> {
   constructor(
     private readonly store: Store,
-    private readonly keyMaker: KeyMaker<Query.Qualifier<"Service">>
+    private readonly keyMaker: KeyMaker<[string, string]>,
+    private readonly environment: string
   ) {}
 
-  set(qualifier: Query.Qualifier<"Service">, data: ApiData): void {
+  set(data: ApiData, qualifier: Query.Qualifier<"Service">): void {
     const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-    this.store.dispatch.services.setSingle({ qualifier, data: unwrapped });
+    this.store.dispatch.services.setSingle({
+      qualifier,
+      data: unwrapped,
+      environment: this.environment,
+    });
   }
 
-  getHooked(qualifier: Query.Qualifier<"Service">): Data {
+  getHooked({ name }: Query.Qualifier<"Service">): Data {
     return useStoreState((state) => {
       return this.enforce(
-        state.services.byNameAndEnv[this.keyMaker.make(qualifier)]
+        state.services.byNameAndEnv[
+          this.keyMaker.make([this.environment, name])
+        ]
       );
     }, isEqual);
   }
@@ -32,9 +39,11 @@ export class ServiceStateHelper implements StateHelper<"Service"> {
     return value;
   }
 
-  getOnce(id: Query.Qualifier<"Service">): Data {
+  getOnce({ name }: Query.Qualifier<"Service">): Data {
     return this.enforce(
-      this.store.getState().services.byNameAndEnv[this.keyMaker.make(id)]
+      this.store.getState().services.byNameAndEnv[
+        this.keyMaker.make([this.environment, name])
+      ]
     );
   }
 }

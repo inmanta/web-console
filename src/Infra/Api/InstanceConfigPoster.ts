@@ -2,7 +2,10 @@ import { ApiHelper, Command, Poster } from "@/Core";
 import { Type } from "@/Core/Language/Either";
 
 export class InstanceConfigPoster implements Poster<"InstanceConfig"> {
-  constructor(private readonly apiHelper: ApiHelper) {}
+  constructor(
+    private readonly apiHelper: ApiHelper,
+    private readonly environment: string
+  ) {}
 
   private getUrl({
     service_entity,
@@ -19,6 +22,6 @@ export class InstanceConfigPoster implements Poster<"InstanceConfig"> {
     return this.apiHelper.post<
       Command.ApiData<"InstanceConfig">,
       Command.Body<"InstanceConfig">
-    >(this.getUrl(qualifier), qualifier.environment, body);
+    >(this.getUrl(qualifier), this.environment, body);
   }
 }

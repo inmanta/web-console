@@ -12,6 +12,7 @@ import {
   AlertActionCloseButton,
   Bullseye,
 } from "@patternfly/react-core";
+import { EnvironmentProvider } from "@/UI/Components";
 
 const keycloakInitConfig = {
   onLoad: "login-required",
@@ -43,7 +44,12 @@ export const App: React.FunctionComponent<{
             }
           />
         )}
-        <AppRoutes />
+        <EnvironmentProvider
+          Wrapper={({ children }) => <>{children}</>}
+          Dependant={({ environment }) => (
+            <AppRoutes environment={environment} />
+          )}
+        />
       </AppLayout>
     </Router>
   );

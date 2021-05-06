@@ -12,7 +12,6 @@ import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 
 it("ServiceInstanceHistory renders", async () => {
-  const { id, environment } = ServiceInstance.A;
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new InstanceLogsDataManager(
@@ -20,7 +19,8 @@ it("ServiceInstanceHistory renders", async () => {
         kind: "Success",
         data: { data: [] },
       }),
-      new InstanceLogsStateHelper(store)
+      new InstanceLogsStateHelper(store),
+      Service.A.environment
     ),
   ]);
 
@@ -29,8 +29,7 @@ it("ServiceInstanceHistory renders", async () => {
       <StoreProvider store={store}>
         <ServiceInstanceHistory
           service={Service.A}
-          instanceId={id}
-          environment={environment}
+          instanceId={ServiceInstance.A.id}
         />
       </StoreProvider>
     </DependencyProvider>

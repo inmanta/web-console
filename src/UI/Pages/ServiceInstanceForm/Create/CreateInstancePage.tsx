@@ -15,36 +15,23 @@ import React, { useCallback, useContext, useState } from "react";
 import { useKeycloak } from "react-keycloak";
 import { useHistory, useLocation } from "react-router-dom";
 import { words } from "@/UI/words";
-import { useStoreState } from "@/UI/Store";
 import { DependencyContext } from "@/UI/Dependency";
 import { CreateFormCard } from "./CreateFormCard";
 
 export const CreateInstancePageWithProvider: React.FunctionComponent<{
   match: { params: { id: string } };
 }> = ({ match }) => {
-  const environmentId = useStoreState(
-    (store) => store.environments.getSelectedEnvironment.id
-  );
-
-  return environmentId ? (
-    <ServiceProvider
-      serviceName={match.params.id}
-      environmentId={environmentId}
-    />
-  ) : (
-    <ErrorView error={words("error.environment.missing")} />
-  );
+  return <ServiceProvider serviceName={match.params.id} />;
 };
 
 const ServiceProvider: React.FunctionComponent<{
   serviceName: string;
-  environmentId: string;
-}> = ({ serviceName, environmentId }) => {
+}> = ({ serviceName }) => {
   const { dataProvider } = useContext(DependencyContext);
 
   const [data, retry] = dataProvider.useContinuous<"Service">({
     kind: "Service",
-    qualifier: { name: serviceName, environment: environmentId },
+    qualifier: { name: serviceName },
   });
 
   return RemoteData.fold(

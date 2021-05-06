@@ -7,7 +7,6 @@ describe("getUrl for events ", () => {
   const baseQualifier: Query.Qualifier<"Events"> = {
     service_entity: name,
     id,
-    environment: "env_a",
     filter: undefined,
     sort: undefined,
     pageSize: 20,
