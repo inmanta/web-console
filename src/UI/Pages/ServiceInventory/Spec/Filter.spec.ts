@@ -31,7 +31,11 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   userEvent.click(input);
 
   const option = await screen.findByRole("option", { name: "creating" });
-  await userEvent.click(option);
+  userEvent.click(option);
+
+  expect(
+    await screen.findByRole("generic", { name: "ServiceInventory-Loading" })
+  ).toBeInTheDocument();
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(

@@ -1,0 +1,6 @@
+description: Add loading after filter update on ServiceInventory
+issue-nr: 329
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
