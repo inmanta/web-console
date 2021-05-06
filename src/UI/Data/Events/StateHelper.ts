@@ -8,7 +8,7 @@ type ApiData = RemoteData.Type<string, Query.ApiResponse<"Events">>;
 export class EventsStateHelper implements StateHelper<"Events"> {
   constructor(private readonly store: Store) {}
 
-  set({ id }: Query.Qualifier<"Events">, data: ApiData): void {
+  set(data: ApiData, { id }: Query.Qualifier<"Events">): void {
     const value = RemoteData.mapSuccess((data) => data, data);
     this.store.dispatch.events.setData({ id, value });
   }

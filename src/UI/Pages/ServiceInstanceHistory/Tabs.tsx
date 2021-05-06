@@ -97,7 +97,6 @@ const eventsTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
       >
         <EventsTableBody
           events={log.events}
-          environmentId={log.environment}
           tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
         />
       </EventsTableWrapper>

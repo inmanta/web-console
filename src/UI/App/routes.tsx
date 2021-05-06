@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import { Route, RouteComponentProps, Switch, Redirect } from "react-router-dom";
 import { accessibleRouteChangeHandler } from "@/UI/App/utils/utils";
 import { NotFound } from "@/UI/App/NotFound/NotFound";
@@ -15,6 +15,7 @@ import {
   ServiceInventoryWithProvider,
   EventsWithProvider,
 } from "@/UI/Pages";
+import { DependencyManagerContext, DependencyProvider } from "@/UI/Dependency";
 
 let routeFocusTimer: number;
 
@@ -136,32 +137,39 @@ const PageNotFound = ({ title }: { title: string }) => {
   return <Route component={NotFound} />;
 };
 
-const AppRoutes: React.FC = () => (
-  <LastLocationProvider>
-    <Switch>
-      {routes.map((routeItem) => {
-        return routeItem.exactRoutes.map(
-          ({ path, exact, component, title, isAsync, icon }, idx) => (
-            <RouteWithTitleUpdates
-              path={routeItem.pathPrefix + path}
-              exact={exact}
-              component={component}
-              key={idx}
-              icon={icon}
-              title={title}
-              isAsync={isAsync}
-            />
-          )
-        );
-      })}
-      <Route
-        exact={true}
-        path="/"
-        component={() => <Redirect to="/lsm/catalog" />}
-      />
-      <PageNotFound title={"404 Page Not Found"} />
-    </Switch>
-  </LastLocationProvider>
-);
+const AppRoutes: React.FC<{ environment: string }> = ({ environment }) => {
+  const dependencyManager = useContext(DependencyManagerContext);
+  const dependencies = dependencyManager.getDependencies(environment);
+
+  return (
+    <DependencyProvider dependencies={dependencies}>
+      <LastLocationProvider>
+        <Switch>
+          {routes.map((routeItem) => {
+            return routeItem.exactRoutes.map(
+              ({ path, exact, component, title, isAsync, icon }, idx) => (
+                <RouteWithTitleUpdates
+                  path={routeItem.pathPrefix + path}
+                  exact={exact}
+                  component={component}
+                  key={idx}
+                  icon={icon}
+                  title={title}
+                  isAsync={isAsync}
+                />
+              )
+            );
+          })}
+          <Route
+            exact={true}
+            path="/"
+            component={() => <Redirect to="/lsm/catalog" />}
+          />
+          <PageNotFound title={"404 Page Not Found"} />
+        </Switch>
+      </LastLocationProvider>
+    </DependencyProvider>
+  );
+};
 
 export { AppRoutes, routes };

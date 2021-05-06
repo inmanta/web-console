@@ -43,10 +43,10 @@ export interface LifecycleModel {
 
 export interface ServiceIdentifier {
   name: string;
-  environment: string;
 }
 
 export interface ServiceModel extends ServiceIdentifier {
+  environment: string;
   description?: string;
   lifecycle: LifecycleModel;
   attributes: AttributeModel[];

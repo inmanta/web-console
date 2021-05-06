@@ -27,7 +27,8 @@ const Template: Story<Props> = (args) => {
         data: { data: [] },
       }),
       new ResourcesStateHelper(store),
-      new StaticScheduler()
+      new StaticScheduler(),
+      Service.A.environment
     ),
   ]);
 

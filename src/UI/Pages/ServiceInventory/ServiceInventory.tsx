@@ -42,7 +42,6 @@ export const ServiceInventoryWithProvider: React.FC<{
       Dependant={({ environment }) => (
         <ServiceProvider
           serviceName={match.params.id}
-          environmentId={environment}
           Wrapper={Wrapper}
           Dependant={({ service }) => (
             <ServiceInventory
@@ -85,7 +84,6 @@ export const ServiceInventory: React.FunctionComponent<{
     kind: "ServiceInstances",
     qualifier: {
       name: serviceName,
-      environment: environmentId || "",
       sort,
       filter,
     },

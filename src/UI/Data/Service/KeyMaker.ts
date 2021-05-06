@@ -1,11 +1,11 @@
-import { Query, KeyMaker } from "@/Core";
+import { KeyMaker } from "@/Core";
 
-export class ServiceKeyMaker implements KeyMaker<Query.Qualifier<"Service">> {
-  make({ environment, name }: Query.Qualifier<"Service">): string {
+export class ServiceKeyMaker implements KeyMaker<[string, string]> {
+  make([environment, name]: [string, string]): string {
     return `${environment}__?__${name}`;
   }
 
-  matches({ environment }: Query.Qualifier<"Service">, key: string): boolean {
+  matches([environment]: [string, string], key: string): boolean {
     return key.startsWith(environment);
   }
 }

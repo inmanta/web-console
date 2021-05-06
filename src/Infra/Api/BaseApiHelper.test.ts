@@ -2,7 +2,7 @@ import { Either } from "@/Core";
 import { BaseApiHelper } from "./BaseApiHelper";
 
 test("BaseApiHelper.get executes a GET request with correct url & env", async () => {
-  const apiHelper = new BaseApiHelper(undefined);
+  const apiHelper = new BaseApiHelper();
   const url = "/test-url";
   const env = "environment_a";
 
@@ -15,7 +15,7 @@ test("BaseApiHelper.get executes a GET request with correct url & env", async ()
 });
 
 test("BaseApiHelper.post executes a POST request with correct url & env", async () => {
-  const apiHelper = new BaseApiHelper(undefined);
+  const apiHelper = new BaseApiHelper();
   const url = "/test-url";
   const env = "environment_a";
 

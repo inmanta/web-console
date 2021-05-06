@@ -9,7 +9,7 @@ type ApiData<K extends Query.Kind> = RemoteData.Type<
 export class DummyStateHelper<K extends Query.Kind> implements StateHelper<K> {
   private state = {};
 
-  set(qualifier: Query.Qualifier<K>, value: ApiData<K>): void {
+  set(value: ApiData<K>, qualifier: Query.Qualifier<K>): void {
     this.state[getKey(qualifier)] = value;
   }
 

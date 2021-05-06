@@ -6,7 +6,8 @@ export class ServiceInstancesDataManager extends ContinuousDataManagerImpl<"Serv
   constructor(
     fetcher: Fetcher<"ServiceInstances">,
     stateHelper: StateHelper<"ServiceInstances">,
-    scheduler: Scheduler
+    scheduler: Scheduler,
+    environment: string
   ) {
     super(
       fetcher,
@@ -32,7 +33,8 @@ export class ServiceInstancesDataManager extends ContinuousDataManagerImpl<"Serv
           handlers: { prev: prevCb, next: nextCb },
           metadata,
         };
-      }
+      },
+      environment
     );
   }
 }

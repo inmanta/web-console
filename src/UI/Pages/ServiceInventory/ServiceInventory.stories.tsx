@@ -39,8 +39,9 @@ export const Basic: React.FC = () => {
 
   const serviceInstancesHelper = new ServiceInstancesDataManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store),
-    scheduler
+    new ServiceInstancesStateHelper(store, Service.A.environment),
+    scheduler,
+    Service.A.environment
   );
   const resourcesFetcher = new InstantFetcher<"Resources">({
     kind: "Success",
@@ -50,7 +51,8 @@ export const Basic: React.FC = () => {
   const resourcesHelper = new ResourcesDataManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
-    scheduler
+    scheduler,
+    Service.A.environment
   );
 
   const dataProvider = new DataProviderImpl([
@@ -82,8 +84,9 @@ export const Failed: React.FC = () => {
   });
   const serviceInstancesHelper = new ServiceInstancesDataManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store),
-    scheduler
+    new ServiceInstancesStateHelper(store, Service.A.environment),
+    scheduler,
+    Service.A.environment
   );
 
   const dataProvider = new DataProviderImpl([serviceInstancesHelper]);

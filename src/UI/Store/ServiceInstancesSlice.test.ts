@@ -10,10 +10,12 @@ describe("ServiceInstancesSlice ", () => {
 
   it("differentiates correctly between services with the same name and different environment", () => {
     const store = getStoreInstance();
-    const firstQualifier = {
-      environment: serviceInstancesFirstEnv[0].environment,
-      name: serviceInstancesFirstEnv[0].service_entity,
-    };
+    store
+      .getActions()
+      .environments.selectEnvironmentById(
+        serviceInstancesFirstEnv[0].environment
+      );
+    const firstQualifier = { name: serviceInstancesFirstEnv[0].service_entity };
     // Add instances for a service
     store.getActions().serviceInstances.setData({
       qualifier: firstQualifier,
@@ -22,12 +24,16 @@ describe("ServiceInstancesSlice ", () => {
         links: { self: "" },
         metadata: { page_size: 1, total: 1, before: 0, after: 0 },
       }),
+      environment: serviceInstancesFirstEnv[0].environment,
     });
 
     expect(
       store
         .getState()
-        .serviceInstances.instancesWithTargetStates(firstQualifier)
+        .serviceInstances.instancesWithTargetStates(
+          firstQualifier,
+          serviceInstancesFirstEnv[0].environment
+        )
     ).toEqual(
       RemoteData.success({
         data: [{ ...serviceInstancesFirstEnv[0], instanceSetStateTargets: [] }],
@@ -38,13 +44,15 @@ describe("ServiceInstancesSlice ", () => {
 
     // Check if instances for a service with the same name but different environment return loading state if they are not loaded yet
     const secondQualifier = {
-      environment: serviceInstancesSecondEnv[0].environment,
       name: serviceInstancesSecondEnv[0].service_entity,
     };
     expect(
       store
         .getState()
-        .serviceInstances.instancesWithTargetStates(secondQualifier)
+        .serviceInstances.instancesWithTargetStates(
+          secondQualifier,
+          serviceInstancesSecondEnv[0].environment
+        )
     ).toEqual(RemoteData.loading());
     // Load the instances in the second environment
     store.getActions().serviceInstances.setData({
@@ -54,12 +62,16 @@ describe("ServiceInstancesSlice ", () => {
         links: { self: "" },
         metadata: { page_size: 1, total: 1, before: 0, after: 0 },
       }),
+      environment: serviceInstancesSecondEnv[0].environment,
     });
     // Make sure the query now returns the correct instance list and not loading state
     expect(
       store
         .getState()
-        .serviceInstances.instancesWithTargetStates(secondQualifier)
+        .serviceInstances.instancesWithTargetStates(
+          secondQualifier,
+          serviceInstancesSecondEnv[0].environment
+        )
     ).toEqual(
       RemoteData.success({
         data: [

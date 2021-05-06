@@ -2,7 +2,8 @@ import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { Resources } from "@/Test";
 import { ResourceTable } from "./ResourceTable";
-import { ResourceHrefCreatorImpl } from "../HrefCreators";
+import { DependencyProvider } from "@/UI/Dependency";
+import { UrlManagerImpl } from "@/UI/Data";
 
 export default {
   title: "ResourceTable",
@@ -10,17 +11,19 @@ export default {
 };
 
 const Template: Story<ComponentProps<typeof ResourceTable>> = (args) => (
-  <ResourceTable {...args} />
+  <DependencyProvider
+    dependencies={{ urlManager: new UrlManagerImpl("", "env") }}
+  >
+    <ResourceTable {...args} />
+  </DependencyProvider>
 );
 
 export const Empty = Template.bind({});
 Empty.args = {
-  hrefCreator: new ResourceHrefCreatorImpl("env-abcd"),
   resources: [],
 };
 
 export const RealData = Template.bind({});
 RealData.args = {
-  hrefCreator: new ResourceHrefCreatorImpl("env-abcd"),
   resources: Resources.A,
 };

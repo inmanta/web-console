@@ -17,14 +17,9 @@ import { EventsTableControls } from "./EventsTableControls";
 interface Props {
   service: ServiceModel;
   instanceId: string;
-  environment: string;
 }
 
-export const EventsPage: React.FC<Props> = ({
-  environment,
-  service,
-  instanceId,
-}) => {
+export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
   const { dataProvider } = useContext(DependencyContext);
   const [order, setOrder] = useState<SortDirection>("desc");
   const sort = { name: "timestamp", order: order };
@@ -33,7 +28,6 @@ export const EventsPage: React.FC<Props> = ({
   const [data] = dataProvider.useContinuous<"Events">({
     kind: "Events",
     qualifier: {
-      environment,
       id: instanceId,
       service_entity: service.name,
       filter,
@@ -126,7 +120,6 @@ export const EventsPage: React.FC<Props> = ({
               >
                 <EventsTableBody
                   events={events.data}
-                  environmentId={environment}
                   tablePresenter={tablePresenter}
                 />
               </EventsTableWrapper>

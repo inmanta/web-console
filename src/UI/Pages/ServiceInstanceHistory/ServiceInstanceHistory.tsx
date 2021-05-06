@@ -18,20 +18,17 @@ import {
 interface Props {
   service: ServiceModel;
   instanceId: string;
-  environment: string;
 }
 
 export const ServiceInstanceHistory: React.FC<Props> = ({
   service,
   instanceId,
-  environment,
 }) => {
   const { dataProvider } = useContext(DependencyContext);
 
   const [data] = dataProvider.useOneTime<"InstanceLogs">({
     kind: "InstanceLogs",
     qualifier: {
-      environment,
       id: instanceId,
       service_entity: service.name,
     },
