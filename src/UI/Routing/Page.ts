@@ -41,14 +41,6 @@ export const InventoryPage: Page = {
   component: ServiceInventoryWithProvider,
 };
 
-export const HistoryPage: Page = {
-  kind: Kinds.History,
-  parent: Kinds.Inventory,
-  path: "/lsm/catalog/:service/inventory/:instance/history",
-  label: "Service Instance History",
-  component: ServiceInstanceHistoryWithProvider,
-};
-
 export const CreateInstancePage: Page = {
   kind: Kinds.CreateInstance,
   parent: Kinds.Inventory,
@@ -57,10 +49,18 @@ export const CreateInstancePage: Page = {
   component: CreateInstancePageWithProvider,
 };
 
+export const HistoryPage: Page = {
+  kind: Kinds.History,
+  parent: Kinds.Inventory,
+  path: "/lsm/catalog/:service/inventory/:instance/history",
+  label: "Service Instance History",
+  component: ServiceInstanceHistoryWithProvider,
+};
+
 export const DiagnosePage: Page = {
   kind: Kinds.Diagnose,
   parent: Kinds.Inventory,
-  path: "/catalog/:service/inventory/:instance/diagnose",
+  path: "/lsm/catalog/:service/inventory/:instance/diagnose",
   label: "Diagnose Service Instance",
   component: DiagnoseWithProvider,
 };
@@ -69,7 +69,7 @@ export const EventsPage: Page = {
   kind: Kinds.Events,
   parent: Kinds.Inventory,
   label: "Service Instance Events",
-  path: "/catalog/:id/inventory/:instanceId/events",
+  path: "/lsm/catalog/:service/inventory/:instance/events",
   component: EventsWithProvider,
 };
 

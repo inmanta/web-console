@@ -3,43 +3,41 @@ import {
   CreateInstancePage,
   DiagnosePage,
   EventsPage,
-  getPagesFromPage,
   HistoryPage,
   InventoryPage,
+  getPagesFromPage,
+  getPageWithParamsFromUrl,
 } from "./Page";
 
-test("GIVEN getPagesFromPage WHEN passed Catalog THEN returns 1 page ['Catalog']", () => {
-  const pages = getPagesFromPage(CatalogPage);
-  expect(pages).toHaveLength(1);
-  expect(pages).toEqual([CatalogPage]);
-});
+it.each`
+  page                  | pageTxt             | length | result                                              | resultTxt
+  ${CatalogPage}        | ${"Catalog"}        | ${1}   | ${[CatalogPage]}                                    | ${"[Catalog]"}
+  ${InventoryPage}      | ${"Inventory"}      | ${2}   | ${[CatalogPage, InventoryPage]}                     | ${"[Catalog, Inventory]"}
+  ${CreateInstancePage} | ${"CreateInstance"} | ${3}   | ${[CatalogPage, InventoryPage, CreateInstancePage]} | ${"[Catalog, Inventory, CreateInstance]"}
+  ${HistoryPage}        | ${"History"}        | ${3}   | ${[CatalogPage, InventoryPage, HistoryPage]}        | ${"[Catalog, Inventory, History]"}
+  ${EventsPage}         | ${"Events"}         | ${3}   | ${[CatalogPage, InventoryPage, EventsPage]}         | ${"[Catalog, Inventory, Events]"}
+  ${DiagnosePage}       | ${"Diagnose"}       | ${3}   | ${[CatalogPage, InventoryPage, DiagnosePage]}       | ${"[Catalog, Inventory, Diagnose]"}
+`(
+  "GIVEN getPagesFromPage WHEN passed $pageTxt THEN returns pages #$length $resultTxt",
+  ({ page, length, result }) => {
+    const pages = getPagesFromPage(page);
+    expect(pages).toHaveLength(length);
+    expect(pages).toEqual(result);
+  }
+);
 
-test("GIVEN getPagesFromPage WHEN passed Inventory THEN returns 2 pages ['Catalog', 'Inventory']", () => {
-  const pages = getPagesFromPage(InventoryPage);
-  expect(pages).toHaveLength(2);
-  expect(pages).toEqual([CatalogPage, InventoryPage]);
-});
-
-test("GIVEN getPagesFromPage WHEN passed History THEN returns 3 pages ['Catalog','Inventory','History']", () => {
-  const pages = getPagesFromPage(HistoryPage);
-  expect(pages).toHaveLength(3);
-  expect(pages).toEqual([CatalogPage, InventoryPage, HistoryPage]);
-});
-
-test("GIVEN getPagesFromPage WHEN passed Events THEN returns 3 pages ['Catalog','Inventory','Events']", () => {
-  const pages = getPagesFromPage(EventsPage);
-  expect(pages).toHaveLength(3);
-  expect(pages).toEqual([CatalogPage, InventoryPage, EventsPage]);
-});
-
-test("GIVEN getPagesFromPage WHEN passed CreateInstance THEN returns 3 pages ['Catalog','Inventory','CreateInstance']", () => {
-  const pages = getPagesFromPage(CreateInstancePage);
-  expect(pages).toHaveLength(3);
-  expect(pages).toEqual([CatalogPage, InventoryPage, CreateInstancePage]);
-});
-
-test("GIVEN getPagesFromPage WHEN passed Diagnose THEN returns 3 pages ['Catalog','Inventory','Diagnose']", () => {
-  const pages = getPagesFromPage(DiagnosePage);
-  expect(pages).toHaveLength(3);
-  expect(pages).toEqual([CatalogPage, InventoryPage, DiagnosePage]);
-});
+it.each`
+  url                                          | result                                                 | resultTxt
+  ${"/"}                                       | ${undefined}                                           | ${"undefined"}
+  ${"/lsm/catalog"}                            | ${[CatalogPage, {}]}                                   | ${"[Catalog, {}]"}
+  ${"/lsm/catalog/xyz/inventory"}              | ${[InventoryPage, { service: "xyz" }]}                 | ${"[Inventory, {service: 'xyz'}]"}
+  ${"/lsm/catalog/xyz/inventory/add"}          | ${[CreateInstancePage, { service: "xyz" }]}            | ${"[CreateInstance, {service: 'xyz'}]"}
+  ${"/lsm/catalog/xyz/inventory/123/history"}  | ${[HistoryPage, { service: "xyz", instance: "123" }]}  | ${"[History, {service: 'xyz', instance: '123'}]"}
+  ${"/lsm/catalog/xyz/inventory/123/events"}   | ${[EventsPage, { service: "xyz", instance: "123" }]}   | ${"[Events, {service: 'xyz', instance: '123'}]"}
+  ${"/lsm/catalog/xyz/inventory/123/diagnose"} | ${[DiagnosePage, { service: "xyz", instance: "123" }]} | ${"[Diagnose, {service: 'xyz', instance: '123'}]"}
+`(
+  "GIVEN getPageWithParamsFromUrl WHEN passed '$url' THEN returns $resultTxt",
+  ({ url, result }) => {
+    expect(getPageWithParamsFromUrl(url)).toEqual(result);
+  }
+);
