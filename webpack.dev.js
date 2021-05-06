@@ -21,7 +21,6 @@ module.exports = merge(common, {
     historyApiFallback: true,
     hot: true,
     overlay: true,
-    open: true,
     watchOptions: {
       ignored: /node_modules/,
     },
