@@ -119,9 +119,7 @@ export const ServiceInventory: React.FunctionComponent<{
       {RemoteData.fold(
         {
           notAsked: () => null,
-          loading: () => (
-            <LoadingView delay={500} aria-label="ServiceInventory-Loading" />
-          ),
+          loading: () => <LoadingView aria-label="ServiceInventory-Loading" />,
           failed: (error) => (
             <ErrorView
               message={error}

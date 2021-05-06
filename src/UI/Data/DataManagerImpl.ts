@@ -37,13 +37,6 @@ export class OneTimeDataManagerImpl<Kind extends Query.Kind>
     ) => Query.UsedData<Kind>
   ) {}
 
-  initialize(qualifier: Query.Qualifier<Kind>): void {
-    const value = this.stateHelper.getOnce(qualifier);
-    if (RemoteData.isNotAsked(value)) {
-      this.stateHelper.set(qualifier, RemoteData.loading());
-    }
-  }
-
   async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       qualifier,
@@ -61,7 +54,7 @@ export class OneTimeDataManagerImpl<Kind extends Query.Kind>
     }, this.getDependencies(qualifier));
 
     useEffect(() => {
-      this.initialize(qualifier);
+      this.stateHelper.set(qualifier, RemoteData.loading());
       this.update(qualifier, url);
     }, [url, qualifier.environment]);
 
@@ -95,13 +88,6 @@ export class ContinuousDataManagerImpl<Kind extends Query.Kind>
     ) => Query.UsedData<Kind>
   ) {}
 
-  initialize(qualifier: Query.Qualifier<Kind>): void {
-    const value = this.stateHelper.getOnce(qualifier);
-    if (RemoteData.isNotAsked(value)) {
-      this.stateHelper.set(qualifier, RemoteData.loading());
-    }
-  }
-
   async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       qualifier,
@@ -127,7 +113,7 @@ export class ContinuousDataManagerImpl<Kind extends Query.Kind>
     };
 
     useEffect(() => {
-      this.initialize(qualifier);
+      this.stateHelper.set(qualifier, RemoteData.loading());
       this.update(qualifier, url);
       this.scheduler.register(this.getUnique(qualifier), task);
       return () => {
