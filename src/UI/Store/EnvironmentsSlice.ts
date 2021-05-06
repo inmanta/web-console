@@ -10,7 +10,6 @@ export interface EnvironmentsSlice {
   >;
   selectedEnvironmentId: string;
   selectEnvironmentById: Action<EnvironmentsSlice, string>;
-  selectEnvironmentByName: Action<EnvironmentsSlice, string>;
 }
 
 export const environmentsSlice: EnvironmentsSlice = {
@@ -24,14 +23,6 @@ export const environmentsSlice: EnvironmentsSlice = {
   }),
   selectEnvironmentById: action((state, payload) => {
     state.selectedEnvironmentId = payload;
-  }),
-  selectEnvironmentByName: action((state, payload) => {
-    const environmentWithName = Object.values(state.byId).find(
-      (item) => item.name === payload
-    );
-    if (environmentWithName) {
-      state.selectedEnvironmentId = environmentWithName.id;
-    }
   }),
   selectedEnvironmentId: "",
 };

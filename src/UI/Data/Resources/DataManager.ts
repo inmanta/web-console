@@ -6,7 +6,8 @@ export class ResourcesDataManager extends ContinuousDataManagerImpl<"Resources">
   constructor(
     fetcher: Fetcher<"Resources">,
     stateHelper: StateHelper<"Resources">,
-    scheduler: Scheduler
+    scheduler: Scheduler,
+    environment: string
   ) {
     super(
       fetcher,
@@ -17,7 +18,8 @@ export class ResourcesDataManager extends ContinuousDataManagerImpl<"Resources">
       "Resources",
       ({ service_entity, id, version }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`,
-      identity
+      identity,
+      environment
     );
   }
 }

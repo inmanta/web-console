@@ -1,13 +1,9 @@
 import * as React from "react";
-import { NavLink } from "react-router-dom";
 import {
-  Nav,
-  NavItem,
   Page,
   PageHeader,
   PageSidebar,
   SkipToContent,
-  NavGroup,
   Avatar,
   TextContent,
   DropdownItem,
@@ -18,7 +14,6 @@ import {
   PageHeaderTools,
   PageHeaderToolsGroup,
 } from "@patternfly/react-core";
-import { routes } from "@/UI/App/routes";
 import Logo from "!react-svg-loader!@images/logo.svg";
 import AvatarImg from "!url-loader!@assets/images/img_avatar.svg";
 import {
@@ -33,6 +28,7 @@ import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 import { PageBreadcrumb } from "./PageBreadcrumb";
 import { fetchInmantaApi } from "@/UI/App/utils/fetchInmantaApi";
 import { ProjectModel } from "@/Core";
+import { Navigation } from "../Navigation";
 
 interface IAppLayout {
   logoBaseUrl: string;
@@ -189,51 +185,10 @@ export const AppLayout: React.FunctionComponent<IAppLayout> = ({
     />
   );
 
-  const Navigation = (
-    <Nav id="nav-primary-simple" theme="dark">
-      {routes.map((routeItem, idx) => {
-        return (
-          <NavGroup title={routeItem.name} key={`${routeItem.name}-${idx}`}>
-            {routeItem.exactRoutes.map((route, index) => {
-              return !route.hideOnSideBar ? (
-                <NavItem
-                  key={`${route.label}-${index}`}
-                  id={`${route.label}-${index}`}
-                >
-                  <NavLink
-                    exact={true}
-                    to={{
-                      pathname: routeItem.pathPrefix + route.path,
-                      search: location.search,
-                    }}
-                    activeClassName="pf-m-current"
-                  >
-                    {route.label}
-                  </NavLink>
-                </NavItem>
-              ) : null;
-            })}
-          </NavGroup>
-        );
-      })}
-      <NavGroup title="Other sites" key="external">
-        <li className="pf-c-nav__item">
-          <a
-            className="pf-c-nav__link"
-            href={`/dashboard/#!/environment/${selectedEnvironmentId}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Dashboard
-          </a>
-        </li>
-      </NavGroup>
-    </Nav>
-  );
   const Sidebar = (
     <PageSidebar
       aria-label="PageSidebar"
-      nav={Navigation}
+      nav={<Navigation environment={selectedEnvironmentId} />}
       isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
       theme="dark"
     />

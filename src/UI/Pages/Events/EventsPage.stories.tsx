@@ -16,6 +16,7 @@ import {
   DataProviderImpl,
   EventsDataManager,
   EventsStateHelper,
+  UrlManagerImpl,
 } from "@/UI/Data";
 
 export default {
@@ -25,7 +26,7 @@ export default {
 
 const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const scheduler = new StaticScheduler();
-  const { service_instance_id, environment } = InstanceLog.A;
+  const { service_instance_id } = InstanceLog.A;
   const store = getStoreInstance();
   const dataProvider = new DataProviderImpl([
     new EventsDataManager(
@@ -43,18 +44,16 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
         },
       }),
       new EventsStateHelper(store),
-      scheduler
+      scheduler,
+      InstanceLog.A.environment
     ),
   ]);
+  const urlManager = new UrlManagerImpl("", InstanceLog.A.environment);
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
       <StoreProvider store={store}>
-        <EventsPage
-          service={Service.A}
-          instanceId={service_instance_id}
-          environment={environment}
-        />
+        <EventsPage service={Service.A} instanceId={service_instance_id} />
       </StoreProvider>
     </DependencyProvider>
   );

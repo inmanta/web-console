@@ -28,27 +28,32 @@ function setup() {
     storeInstance
   );
 
-  const instanceConfigHelper = new InstanceConfigDataManager(
-    new InstantFetcher<"InstanceConfig">({
-      kind: "Success",
-      data: { data: { auto_creating: false } },
-    }),
-    instanceConfigStateHelper,
-    new ServiceStateHelper(storeInstance, serviceKeyMaker),
-    new InstantFetcher<"Service">({
-      kind: "Success",
-      data: { data: Service.A },
-    })
-  );
-
-  const dataProvider = new DataProviderImpl([instanceConfigHelper]);
-
   const instanceIdentifier = {
     id: ServiceInstance.A.id,
     service_entity: Service.A.name,
     environment: Service.A.environment,
     version: ServiceInstance.A.version,
   };
+
+  const instanceConfigHelper = new InstanceConfigDataManager(
+    new InstantFetcher<"InstanceConfig">({
+      kind: "Success",
+      data: { data: { auto_creating: false } },
+    }),
+    instanceConfigStateHelper,
+    new ServiceStateHelper(
+      storeInstance,
+      serviceKeyMaker,
+      instanceIdentifier.environment
+    ),
+    new InstantFetcher<"Service">({
+      kind: "Success",
+      data: { data: Service.A },
+    }),
+    instanceIdentifier.environment
+  );
+
+  const dataProvider = new DataProviderImpl([instanceConfigHelper]);
 
   return {
     storeInstance,

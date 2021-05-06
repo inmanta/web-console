@@ -6,7 +6,8 @@ export class DiagnosticsDataManager extends ContinuousDataManagerImpl<"Diagnosti
   constructor(
     fetcher: Fetcher<"Diagnostics">,
     stateHelper: StateHelper<"Diagnostics">,
-    scheduler: Scheduler
+    scheduler: Scheduler,
+    environment: string
   ) {
     super(
       fetcher,
@@ -17,7 +18,8 @@ export class DiagnosticsDataManager extends ContinuousDataManagerImpl<"Diagnosti
       "Diagnostics",
       ({ service_entity, id }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/diagnose`,
-      identity
+      identity,
+      environment
     );
   }
 }

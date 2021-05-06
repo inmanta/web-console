@@ -7,7 +7,10 @@ type ApiData = RemoteData.Type<string, Query.ApiResponse<"ServiceInstances">>;
 
 export class ServiceInstancesStateHelper
   implements StateHelper<"ServiceInstances"> {
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly store: Store,
+    private readonly environment: string
+  ) {}
 
   /**
    * We could implement a performance improvement here by first checking
@@ -17,14 +20,21 @@ export class ServiceInstancesStateHelper
    * rerendered anyway because the getStoreState hook is also optimized
    * to check if the data is changed.
    */
-  set(qualifier: Query.Qualifier<"ServiceInstances">, value: ApiData): void {
-    this.store.dispatch.serviceInstances.setData({ qualifier, value });
+  set(value: ApiData, qualifier: Query.Qualifier<"ServiceInstances">): void {
+    this.store.dispatch.serviceInstances.setData({
+      qualifier,
+      value,
+      environment: this.environment,
+    });
   }
 
   getHooked(qualifier: Query.Qualifier<"ServiceInstances">): Data {
     return useStoreState((state) => {
       return this.enforce(
-        state.serviceInstances.instancesWithTargetStates(qualifier)
+        state.serviceInstances.instancesWithTargetStates(
+          qualifier,
+          this.environment
+        )
       );
     }, isEqual);
   }
@@ -38,7 +48,7 @@ export class ServiceInstancesStateHelper
     return this.enforce(
       this.store
         .getState()
-        .serviceInstances.instancesWithTargetStates(qualifier)
+        .serviceInstances.instancesWithTargetStates(qualifier, this.environment)
     );
   }
 }

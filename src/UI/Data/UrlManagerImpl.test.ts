@@ -1,20 +1,18 @@
-import { CompileReportHrefCreator } from "./CompileReportHrefCreator";
-import { ModelVersionHrefCreator } from "./ModelVersionHrefCreator";
-import { ResourceHrefCreatorImpl } from "./ResourceHrefCreatorImpl";
+import { UrlManagerImpl } from "./UrlManagerImpl";
 
 test("Compile report href creator works correctly", () => {
-  expect(new CompileReportHrefCreator("env1").create()).toEqual(
+  expect(new UrlManagerImpl("", "env1").getCompileReportUrl()).toEqual(
     "/dashboard/#!/environment/env1/compilereport"
   );
 });
 test("Model version href creator works correctly", () => {
-  expect(new ModelVersionHrefCreator("env1").create("4")).toEqual(
+  expect(new UrlManagerImpl("", "env1").getModelVersionUrl("4")).toEqual(
     "/dashboard/#!/environment/env1/version/4"
   );
 });
 test("Resource href creator works correctly", () => {
   expect(
-    new ResourceHrefCreatorImpl("env1").create(
+    new UrlManagerImpl("", "env1").getResourceUrl(
       "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2"
     )
   ).toEqual(

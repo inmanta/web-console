@@ -32,7 +32,7 @@ type ApiData<K extends Query.Kind> = RemoteData.Type<
  * initialise data.
  */
 export interface StateHelper<K extends Query.Kind> {
-  set(qualifier: Query.Qualifier<K>, value: ApiData<K>): void;
+  set(value: ApiData<K>, qualifier: Query.Qualifier<K>): void;
   getOnce(qualifier: Query.Qualifier<K>): Data<K>;
   getHooked(qualifier: Query.Qualifier<K>): Data<K>;
 }

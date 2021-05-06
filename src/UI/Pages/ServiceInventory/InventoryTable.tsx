@@ -91,7 +91,6 @@ export const InventoryTable: React.FC<Props> = ({
           serviceInstanceIdentifier={{
             id: row.id.full,
             service_entity: row.service_entity,
-            environment: row.environment,
             version: row.version,
           }}
           shouldUseServiceIdentity={tablePresenter.shouldUseServiceIdentity()}

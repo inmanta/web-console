@@ -3,7 +3,6 @@ import {
   Query,
   Pagination,
   RemoteData,
-  ServiceIdentifier,
   ServiceInstanceModelWithTargetStates,
 } from "@/Core";
 import { StoreModel } from "@/UI/Store/Store";
@@ -23,12 +22,17 @@ export interface ServiceInstancesSlice {
   byId: Record<string, Data>;
   setData: Action<
     ServiceInstancesSlice,
-    { qualifier: ServiceIdentifier; value: Data }
+    {
+      qualifier: Query.Qualifier<"ServiceInstances">;
+      value: Data;
+      environment: string;
+    }
   >;
   instancesWithTargetStates: Computed<
     ServiceInstancesSlice,
     (
-      qualifier: ServiceIdentifier
+      qualifier: Query.Qualifier<"ServiceInstances">,
+      environment: string
     ) => RemoteData.Type<
       string,
       {
@@ -43,14 +47,16 @@ export interface ServiceInstancesSlice {
 
 export const serviceInstancesSlice: ServiceInstancesSlice = {
   byId: {},
-  setData: action((state, payload) => {
-    state.byId[injections.serviceKeyMaker.make(payload.qualifier)] =
-      payload.value;
+  setData: action((state, { qualifier, environment, value }) => {
+    state.byId[
+      injections.serviceKeyMaker.make([environment, qualifier.name])
+    ] = value;
   }),
   instancesWithTargetStates: computed(
     [(state) => state.byId, (state, storeState) => storeState],
-    (byId, storeState) => (qualifier) => {
-      const data = byId[injections.serviceKeyMaker.make(qualifier)];
+    (byId, storeState) => (qualifier, environment) => {
+      const data =
+        byId[injections.serviceKeyMaker.make([environment, qualifier.name])];
       if (typeof data === "undefined") return RemoteData.loading();
 
       return RemoteData.mapSuccess(({ data, ...rest }) => {
@@ -59,7 +65,7 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
             const instanceState = instance.state;
             const service =
               storeState.services.byNameAndEnv[
-                injections.serviceKeyMaker.make(qualifier)
+                injections.serviceKeyMaker.make([environment, qualifier.name])
               ];
             if (!service || service.kind !== "Success") {
               return { ...instance, instanceSetStateTargets: [] };

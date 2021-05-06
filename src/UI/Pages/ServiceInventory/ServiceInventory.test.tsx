@@ -17,6 +17,7 @@ import {
   ServiceInstancesStateHelper,
   ResourcesDataManager,
   ResourcesStateHelper,
+  UrlManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
@@ -28,15 +29,17 @@ function setup() {
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
   const serviceInstancesHelper = new ServiceInstancesDataManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store),
-    scheduler
+    new ServiceInstancesStateHelper(store, Service.A.environment),
+    scheduler,
+    Service.A.environment
   );
 
   const resourcesFetcher = new DeferredFetcher<"Resources">();
   const resourcesHelper = new ResourcesDataManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
-    scheduler
+    scheduler,
+    Service.A.environment
   );
 
   const dataProvider = new DataProviderImpl([
@@ -44,9 +47,11 @@ function setup() {
     resourcesHelper,
   ]);
 
+  const urlManager = new UrlManagerImpl("", Service.A.environment);
+
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ dataProvider }}>
+      <DependencyProvider dependencies={{ dataProvider, urlManager }}>
         <StoreProvider store={store}>
           <ServiceInventory
             serviceName={Service.A.name}

@@ -31,7 +31,7 @@ export const ServiceCatalog: React.FC<{ environment: string }> = ({
   const { dataProvider } = useContext(DependencyContext);
   const query: Query.SubQuery<"Services"> = {
     kind: "Services",
-    qualifier: { environment },
+    qualifier: null,
   };
   const [data, retry] = dataProvider.useContinuous<"Services">(query);
 

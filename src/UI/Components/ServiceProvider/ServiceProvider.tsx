@@ -6,14 +6,12 @@ import { ErrorView } from "@/UI/Components/ErrorView";
 
 interface Props {
   serviceName: string;
-  environmentId: string;
   Wrapper: React.FC;
   Dependant: React.FC<{ service: ServiceModel }>;
 }
 
 export const ServiceProvider: React.FunctionComponent<Props> = ({
   serviceName,
-  environmentId,
   Wrapper,
   Dependant,
 }) => {
@@ -21,7 +19,7 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
 
   const [data, retry] = dataProvider.useContinuous<"Service">({
     kind: "Service",
-    qualifier: { name: serviceName, environment: environmentId },
+    qualifier: { name: serviceName },
   });
 
   return RemoteData.fold(

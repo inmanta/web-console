@@ -34,7 +34,6 @@ export class CommandProviderImpl implements CommandProvider {
     if (!RemoteData.isSuccess(configData)) return;
 
     this.stateHelper.set(
-      qualifier,
       RemoteData.fromEither(
         await this.poster.post(qualifier, {
           values: {
@@ -42,7 +41,8 @@ export class CommandProviderImpl implements CommandProvider {
             [option]: value,
           },
         })
-      )
+      ),
+      qualifier
     );
   }
 
@@ -50,8 +50,8 @@ export class CommandProviderImpl implements CommandProvider {
     qualifier: Command.Qualifier<"InstanceConfig">
   ): Promise<void> {
     this.stateHelper.set(
-      qualifier,
-      RemoteData.fromEither(await this.poster.post(qualifier, { values: {} }))
+      RemoteData.fromEither(await this.poster.post(qualifier, { values: {} })),
+      qualifier
     );
   }
 }

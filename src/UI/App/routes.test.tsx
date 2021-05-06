@@ -36,6 +36,7 @@ test("GIVEN Navigation THEN shows navigation items", () => {
 
 test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
+  window.history.replaceState({}, "", "/lsm/catalog");
   render(
     <StoreProvider store={getStoreInstance()}>
       <App keycloak={Keycloak()} shouldUseAuth={false} />

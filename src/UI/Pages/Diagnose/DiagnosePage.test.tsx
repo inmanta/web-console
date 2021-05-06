@@ -8,6 +8,7 @@ import {
   DataProviderImpl,
   DiagnosticsDataManager,
   DiagnosticsStateHelper,
+  UrlManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { Diagnose } from "./Diagnose";
@@ -21,17 +22,18 @@ function setup() {
     new DiagnosticsDataManager(
       apiHelper,
       new DiagnosticsStateHelper(store),
-      scheduler
+      scheduler,
+      "environment"
     ),
   ]);
+  const urlManager = new UrlManagerImpl("", "environment");
 
   const component = (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
       <StoreProvider store={store}>
         <Diagnose
           service={Service.A}
           instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-          environment={"environment"}
         />
       </StoreProvider>
     </DependencyProvider>

@@ -6,20 +6,19 @@ import { RejectionCard } from "./RejectionCard";
 
 export const DiagnoseCardLayout: React.FC<{
   diagnostics: Diagnostics;
-  environment: string;
-}> = ({ diagnostics, environment }) => {
+}> = ({ diagnostics }) => {
   return (
     <Flex direction={{ default: "column" }}>
       {diagnostics.failures.map((failureGroup) =>
         failureGroup.failures.map((failure, idx) => (
           <FlexItem key={`failure-${idx}`}>
-            <FailureCard failure={failure} environment={environment} />
+            <FailureCard failure={failure} />
           </FlexItem>
         ))
       )}
       {diagnostics.rejections.map((rejection, idx) => (
         <FlexItem key={`rejection-${idx}`}>
-          <RejectionCard rejection={rejection} environment={environment} />
+          <RejectionCard rejection={rejection} />
         </FlexItem>
       ))}
     </Flex>
