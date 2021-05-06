@@ -65,9 +65,11 @@ export const RejectionCard: React.FC<Props> = ({
           />
         </CardActions>
       </CardHeader>
-      <CardTitle className="patternfly-text-gray">{error.type}</CardTitle>
+      {error && (
+        <CardTitle className="patternfly-text-gray">{error.type}</CardTitle>
+      )}
       <CardBody>
-        <pre>{error.message}</pre>
+        {error && <pre>{error.message}</pre>}
         {rejection.trace && <Traceback trace={rejection.trace} />}
       </CardBody>
     </Card>

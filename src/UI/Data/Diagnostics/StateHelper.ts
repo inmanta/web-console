@@ -13,8 +13,12 @@ export class DiagnosticsStateHelper implements StateHelper<"Diagnostics"> {
       return {
         failures: data.data.failures,
         rejections: data.data.rejections.map((rejection) => {
-          // The backend always returns only one error
-          return { ...rejection, error: rejection.errors[0] };
+          // The backend always returns maximum one error
+          return {
+            ...rejection,
+            error:
+              rejection.errors.length > 0 ? rejection.errors[0] : undefined,
+          };
         }),
       };
     }, data);
