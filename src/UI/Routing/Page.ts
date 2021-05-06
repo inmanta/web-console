@@ -7,6 +7,7 @@ import {
   ServiceInventoryWithProvider,
   EventsWithProvider,
 } from "@/UI/Pages";
+import { matchPath, match } from "react-router-dom";
 
 export enum Kinds {
   Catalog = "Catalog",
@@ -104,3 +105,20 @@ export const getPagesFromPage = (page: Page, pages: Page[] = []): Page[] => {
   }
   return [page, ...pages];
 };
+
+type Params = Record<string, string>;
+
+export function getPageWithParamsFromUrl(
+  url: string
+): [Page, Params] | undefined {
+  const pageMatchPairs = pages.map((page) => [
+    page,
+    matchPath<Params>(url, { path: page.path, exact: true }),
+  ]);
+  const pageWithMatch = pageMatchPairs.find(
+    (pair): pair is [Page, match<Params>] => pair[1] !== null
+  );
+  if (typeof pageWithMatch === "undefined") return undefined;
+  const [page, match] = pageWithMatch;
+  return [page, match.params];
+}
