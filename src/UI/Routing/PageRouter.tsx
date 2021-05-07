@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { NotFound } from "../App/NotFound/NotFound";
-import { useDocumentTitle } from "../App/utils/useDocumentTitle";
+import { NotFound } from "@/UI/Pages";
+import { useDocumentTitle } from "./useDocumentTitle";
 import { pages } from "./Page";
 import { getUrl } from "./Utils";
 
