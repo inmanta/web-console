@@ -51,9 +51,7 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
           />
         </CardActions>
       </CardHeader>
-      <CardTitle className="patternfly-text-gray">
-        {failure.resource_id}
-      </CardTitle>
+      <CardTitle className="patternfly-text-gray">{resourceId}</CardTitle>
       <CardBody>
         <pre>{failure.message}</pre>
       </CardBody>
