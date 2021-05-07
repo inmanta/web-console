@@ -1,0 +1,6 @@
+change-type: patch
+description: '[Security] Bump hosted-git-info from 2.8.8 to 2.8.9'
+destination-branches:
+- master
+- iso4
+sections: {}
