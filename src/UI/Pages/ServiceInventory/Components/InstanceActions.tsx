@@ -13,6 +13,7 @@ import { Link, useLocation } from "react-router-dom";
 import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { ButtonWithCursorHandling } from "@/UI/Components";
+import { Routing } from "@/UI/Routing";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
@@ -60,7 +61,10 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       <DescriptionListGroup>
         <Link
           to={{
-            pathname: `/lsm/catalog/${instance.service_entity}/inventory/${instance.id}/diagnose`,
+            pathname: Routing.getUrl("Diagnose", {
+              service: instance.service_entity,
+              instance: instance.id,
+            }),
             search: location.search,
           }}
         >
@@ -76,7 +80,10 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       <DescriptionListGroup>
         <Link
           to={{
-            pathname: `/lsm/catalog/${instance.service_entity}/inventory/${instance.id}/history`,
+            pathname: Routing.getUrl("History", {
+              service: instance.service_entity,
+              instance: instance.id,
+            }),
             search: location.search,
           }}
         >
@@ -88,7 +95,10 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       <DescriptionListGroup>
         <Link
           to={{
-            pathname: `/lsm/catalog/${instance.service_entity}/inventory/${instance.id}/events`,
+            pathname: Routing.getUrl("Events", {
+              service: instance.service_entity,
+              instance: instance.id,
+            }),
             search: location.search,
           }}
         >

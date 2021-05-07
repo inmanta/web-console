@@ -12,6 +12,7 @@ import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { Link } from "react-router-dom";
 import { PlusIcon } from "@patternfly/react-icons";
 import { FilterWidget } from "../FilterWidget";
+import { Routing } from "@/UI/Routing";
 
 interface Props {
   serviceName: string;
@@ -48,7 +49,9 @@ export const TableControls: React.FC<Props> = ({
             <ToolbarItem>
               <Link
                 to={{
-                  pathname: `/lsm/catalog/${serviceName}/inventory/add`,
+                  pathname: Routing.getUrl("CreateInstance", {
+                    service: serviceName,
+                  }),
                   search: location.search,
                 }}
               >

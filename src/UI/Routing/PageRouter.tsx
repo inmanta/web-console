@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { NotFound } from "../App/NotFound/NotFound";
 import { useDocumentTitle } from "../App/utils/useDocumentTitle";
 import { pages } from "./Page";
+import { getUrl } from "./Utils";
 
 export const PageRouter: React.FC = () => (
   <Switch>
@@ -12,7 +13,7 @@ export const PageRouter: React.FC = () => (
     <Route
       exact={true}
       path="/"
-      component={() => <Redirect to="/lsm/catalog" />}
+      component={() => <Redirect to={getUrl("Catalog", undefined)} />}
     />
     <PageNotFound title={"404 Page Not Found"} />
   </Switch>
