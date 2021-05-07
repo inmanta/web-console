@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ComponentType } from "react";
 import {
   CreateInstancePageWithProvider,
   DiagnoseWithProvider,
@@ -9,65 +9,75 @@ import {
 } from "@/UI/Pages";
 import { matchPath, match } from "react-router-dom";
 
-export enum Kinds {
-  Catalog = "Catalog",
-  Inventory = "Inventory",
-  CreateInstance = "CreateInstance",
-  History = "History",
-  Diagnose = "Diagnose",
-  Events = "Events",
+type Kinds =
+  | "Catalog"
+  | "Inventory"
+  | "CreateInstance"
+  | "History"
+  | "Diagnose"
+  | "Events";
+
+interface PageParamsManifest {
+  Catalog: undefined;
+  Inventory: { service: string };
+  CreateInstance: { service: string };
+  History: { service: string; instance: string };
+  Events: { service: string; instance: string };
+  Diagnose: { service: string; instance: string };
 }
+
+export type PageParams<Page extends Kinds> = PageParamsManifest[Page];
 
 export interface Page {
   kind: Kinds;
   parent?: Kinds;
   path: string;
   label: string;
-  component: ReactNode;
+  component: ComponentType;
 }
 
 export const CatalogPage: Page = {
-  kind: Kinds.Catalog,
+  kind: "Catalog",
   path: "/lsm/catalog",
   label: "Service Catalog",
   component: ServiceCatalogWithProvider,
 };
 
 export const InventoryPage: Page = {
-  kind: Kinds.Inventory,
-  parent: Kinds.Catalog,
+  kind: "Inventory",
+  parent: "Catalog",
   path: "/lsm/catalog/:service/inventory",
   label: "Service Inventory",
   component: ServiceInventoryWithProvider,
 };
 
 export const CreateInstancePage: Page = {
-  kind: Kinds.CreateInstance,
-  parent: Kinds.Inventory,
+  kind: "CreateInstance",
+  parent: "Inventory",
   path: "/lsm/catalog/:service/inventory/add",
   label: "Create Instance",
   component: CreateInstancePageWithProvider,
 };
 
 export const HistoryPage: Page = {
-  kind: Kinds.History,
-  parent: Kinds.Inventory,
+  kind: "History",
+  parent: "Inventory",
   path: "/lsm/catalog/:service/inventory/:instance/history",
   label: "Service Instance History",
   component: ServiceInstanceHistoryWithProvider,
 };
 
 export const DiagnosePage: Page = {
-  kind: Kinds.Diagnose,
-  parent: Kinds.Inventory,
+  kind: "Diagnose",
+  parent: "Inventory",
   path: "/lsm/catalog/:service/inventory/:instance/diagnose",
   label: "Diagnose Service Instance",
   component: DiagnoseWithProvider,
 };
 
 export const EventsPage: Page = {
-  kind: Kinds.Events,
-  parent: Kinds.Inventory,
+  kind: "Events",
+  parent: "Inventory",
   label: "Service Instance Events",
   path: "/lsm/catalog/:service/inventory/:instance/events",
   component: EventsWithProvider,
@@ -84,17 +94,17 @@ export const pages: Page[] = [
 
 export const getPageFromKind = (kind: Kinds): Page => {
   switch (kind) {
-    case Kinds.Catalog:
+    case "Catalog":
       return CatalogPage;
-    case Kinds.Inventory:
+    case "Inventory":
       return InventoryPage;
-    case Kinds.History:
+    case "History":
       return HistoryPage;
-    case Kinds.CreateInstance:
+    case "CreateInstance":
       return CreateInstancePage;
-    case Kinds.Diagnose:
+    case "Diagnose":
       return DiagnosePage;
-    case Kinds.Events:
+    case "Events":
       return EventsPage;
   }
 };

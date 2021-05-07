@@ -13,15 +13,15 @@ import {
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import React, { useCallback, useContext, useState } from "react";
 import { useKeycloak } from "react-keycloak";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { CreateFormCard } from "./CreateFormCard";
+import { PageParams } from "@/UI/Routing";
 
-export const CreateInstancePageWithProvider: React.FunctionComponent<{
-  match: { params: { id: string } };
-}> = ({ match }) => {
-  return <ServiceProvider serviceName={match.params.id} />;
+export const CreateInstancePageWithProvider: React.FunctionComponent = () => {
+  const { service } = useParams<PageParams<"CreateInstance">>();
+  return <ServiceProvider serviceName={service} />;
 };
 
 const ServiceProvider: React.FunctionComponent<{

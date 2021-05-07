@@ -3,11 +3,7 @@ import { useParams } from "react-router-dom";
 import { ServiceProvider } from "@/UI/Components";
 import { Card, PageSection } from "@patternfly/react-core";
 import { EventsPage } from "./EventsPage";
-
-interface Params {
-  id: string;
-  instanceId: string;
-}
+import { PageParams } from "@/UI/Routing";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -16,15 +12,15 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 export const Provider: React.FC = () => {
-  const { id, instanceId } = useParams<Params>();
+  const { service: serviceName, instance } = useParams<PageParams<"Events">>();
 
   return (
     <ServiceProvider
-      serviceName={id}
+      serviceName={serviceName}
       Wrapper={Wrapper}
       Dependant={({ service }) => (
         <Wrapper>
-          <EventsPage service={service} instanceId={instanceId} />
+          <EventsPage service={service} instanceId={instance} />
         </Wrapper>
       )}
     />

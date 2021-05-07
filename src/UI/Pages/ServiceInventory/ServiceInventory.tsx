@@ -26,6 +26,8 @@ import {
 } from "@/UI/Components";
 import { InventoryContext } from "./InventoryContext";
 import { TableControls } from "./Components";
+import { PageParams } from "@/UI/Routing";
+import { useParams } from "react-router-dom";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection className={"horizontally-scrollable"} {...props}>
@@ -33,21 +35,21 @@ const Wrapper: React.FC = ({ children, ...props }) => (
   </PageSection>
 );
 
-export const ServiceInventoryWithProvider: React.FC<{
-  match: { params: { id: string } };
-}> = ({ match }) => {
+export const ServiceInventoryWithProvider: React.FC = () => {
+  const { service: serviceName } = useParams<PageParams<"Inventory">>();
+
   return (
     <EnvironmentProvider
       Wrapper={Wrapper}
       Dependant={({ environment }) => (
         <ServiceProvider
-          serviceName={match.params.id}
+          serviceName={serviceName}
           Wrapper={Wrapper}
           Dependant={({ service }) => (
             <ServiceInventory
               service={service}
               environmentId={environment}
-              serviceName={match.params.id}
+              serviceName={serviceName}
             />
           )}
         />
