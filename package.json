@@ -126,7 +126,7 @@
     "dotenv-webpack": "^1.7.0",
     "easy-peasy": "^5.0.3",
     "keycloak-js": "6.0.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "moment": "^2.24.0",
     "qs": "^6.10.1",
     "react-keycloak": "^6.1.1",

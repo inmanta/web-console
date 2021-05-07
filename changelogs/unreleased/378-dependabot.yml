@@ -1,0 +1,6 @@
+change-type: patch
+description: '[Security] Bump lodash from 4.17.19 to 4.17.21'
+destination-branches:
+- master
+- iso4
+sections: {}
