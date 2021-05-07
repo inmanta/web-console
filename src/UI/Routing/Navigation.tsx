@@ -1,9 +1,7 @@
-// import React, { useContext } from "react";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, NavGroup } from "@patternfly/react-core";
 import { CatalogPage } from "@/UI/Routing";
-// import { DependencyContext } from "@/UI/Dependency";
 
 interface Group {
   id: string;
@@ -18,10 +16,14 @@ interface Link {
   external: boolean;
 }
 
+/**
+ * @NOTE This component still contains a hardcoded url to the dashboard.
+ * We will not move this url to a better solution because it will be
+ * removed in the future anyway.
+ */
 export const Navigation: React.FC<{ environment: string }> = ({
   environment,
 }) => {
-  // const { urlManager } = useContext(DependencyContext);
   const groups: Group[] = [
     {
       id: "LifecycleServiceManagement",
@@ -42,7 +44,6 @@ export const Navigation: React.FC<{ environment: string }> = ({
         {
           id: "Dashboard",
           label: "Dashboard",
-          // url: urlManager.getDashboardUrl(),
           url: `/dashboard/#!/environment/${environment}`,
           external: true,
         },

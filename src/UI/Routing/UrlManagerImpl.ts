@@ -28,8 +28,4 @@ export class UrlManagerImpl implements UrlManager {
       this.environment
     }/version/${version}/${encodeURI(resourceName).replace(/\//g, "~2F")}`;
   }
-
-  getDashboardUrl(): string {
-    return `/dashboard/#!/environment/${this.environment}`;
-  }
 }
