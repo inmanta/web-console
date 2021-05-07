@@ -23,9 +23,9 @@ import {
   CommandProviderImpl,
   DiagnosticsStateHelper,
   DiagnosticsDataManager,
-  UrlManagerImpl,
 } from "@/UI/Data";
 import { SchedulerImpl } from "@/Core";
+import { UrlManagerImpl } from "@/UI/Routing";
 
 interface DependencyManager {
   getDependencies(environment: string): Dependencies;

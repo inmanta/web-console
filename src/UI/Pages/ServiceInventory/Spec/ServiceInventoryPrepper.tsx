@@ -9,11 +9,11 @@ import {
   ResourcesStateHelper,
   ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
-  UrlManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "../ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
+import { UrlManagerImpl } from "@/UI/Routing";
 
 export interface Handles {
   component: React.ReactElement;

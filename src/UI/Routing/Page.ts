@@ -9,7 +9,7 @@ import {
 } from "@/UI/Pages";
 import { matchPath, match } from "react-router-dom";
 
-type Kinds =
+export type Kinds =
   | "Catalog"
   | "Inventory"
   | "CreateInstance"

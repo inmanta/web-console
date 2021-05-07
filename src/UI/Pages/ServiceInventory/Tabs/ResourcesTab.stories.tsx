@@ -7,9 +7,9 @@ import {
   DataProviderImpl,
   ResourcesStateHelper,
   ResourcesDataManager,
-  UrlManagerImpl,
 } from "@/UI/Data";
 import { ResourcesTab } from "./ResourcesTab";
+import { UrlManagerImpl } from "@/UI/Routing";
 
 export default {
   title: "ResourcesTab",

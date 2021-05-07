@@ -8,10 +8,10 @@ import {
   DataProviderImpl,
   ResourcesStateHelper,
   ResourcesDataManager,
-  UrlManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesTab } from "./ResourcesTab";
+import { UrlManagerImpl } from "@/UI/Routing";
 
 function setup() {
   const store = getStoreInstance();
