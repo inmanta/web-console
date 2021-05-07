@@ -9,12 +9,16 @@ export const DiagnoseCardLayout: React.FC<{
 }> = ({ diagnostics }) => {
   return (
     <Flex direction={{ default: "column" }}>
-      {diagnostics.failures.map((failureGroup) =>
-        failureGroup.failures.map((failure, idx) => (
-          <FlexItem key={`failure-${idx}`}>
-            <FailureCard failure={failure} />
-          </FlexItem>
-        ))
+      {diagnostics.failures.map(
+        (failureGroup, idx) =>
+          failureGroup.failures.length > 0 && (
+            <FlexItem key={`failure-${idx}`}>
+              <FailureCard
+                resourceId={failureGroup.resource_id}
+                failure={failureGroup.failures[0]}
+              />
+            </FlexItem>
+          )
       )}
       {diagnostics.rejections.map((rejection, idx) => (
         <FlexItem key={`rejection-${idx}`}>
