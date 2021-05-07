@@ -25,10 +25,9 @@ import { AngleDownIcon } from "@patternfly/react-icons";
 import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import * as _ from "lodash";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
-import { PageBreadcrumbs } from "@/UI/Routing";
+import { PageBreadcrumbs, Navigation } from "@/UI/Routing";
 import { fetchInmantaApi } from "@/UI/App/utils/fetchInmantaApi";
 import { ProjectModel } from "@/Core";
-import { Navigation } from "../Navigation";
 
 interface IAppLayout {
   logoBaseUrl: string;
