@@ -1,6 +1,4 @@
 description: Refactor Environment Selector to use the new data fetching mechanism
 issue-nr: 286
-change-type: minor
+change-type: patch
 destination-branches: [master, iso4]
-sections:
-  feature: "{{description}}"
