@@ -6,13 +6,9 @@ import { AppRoutes } from "@/UI/App/routes";
 import "@/UI/App/app.css";
 import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
-import {
-  Alert,
-  Spinner,
-  AlertActionCloseButton,
-  Bullseye,
-} from "@patternfly/react-core";
+import { Spinner, Bullseye } from "@patternfly/react-core";
 import { EnvironmentProvider } from "@/UI/Components";
+import { EnvironmentHandlerProvider } from "../Dependency/EnvironmentHandlerProvider";
 
 const keycloakInitConfig = {
   onLoad: "login-required",
@@ -23,34 +19,25 @@ export const App: React.FunctionComponent<{
   keycloak: Keycloak.KeycloakInstance;
   shouldUseAuth: boolean;
 }> = (props) => {
-  const [errorMessage, setErrorMessage] = React.useState("");
   const shouldAddBaseName = process.env.NODE_ENV === "production";
   const baseName = shouldAddBaseName ? "/console" : "/";
 
   const AppWithStore = (
     <Router basename={baseName}>
-      <AppLayout
-        logoBaseUrl={baseName}
-        keycloak={props.shouldUseAuth ? props.keycloak : undefined}
-        setErrorMessage={setErrorMessage}
-        shouldUseAuth={props.shouldUseAuth}
-      >
-        {errorMessage && (
-          <Alert
-            variant="danger"
-            title={errorMessage}
-            actionClose={
-              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-            }
+      <EnvironmentHandlerProvider>
+        <AppLayout
+          logoBaseUrl={baseName}
+          keycloak={props.shouldUseAuth ? props.keycloak : undefined}
+          shouldUseAuth={props.shouldUseAuth}
+        >
+          <EnvironmentProvider
+            Wrapper={({ children }) => <>{children}</>}
+            Dependant={({ environment }) => (
+              <AppRoutes environment={environment} />
+            )}
           />
-        )}
-        <EnvironmentProvider
-          Wrapper={({ children }) => <>{children}</>}
-          Dependant={({ environment }) => (
-            <AppRoutes environment={environment} />
-          )}
-        />
-      </AppLayout>
+        </AppLayout>
+      </EnvironmentHandlerProvider>
     </Router>
   );
   const LoadingSpinner = () => (

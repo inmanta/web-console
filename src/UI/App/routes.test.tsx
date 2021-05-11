@@ -5,13 +5,35 @@ import { render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
 import userEvent from "@testing-library/user-event";
+import {
+  DataProviderImpl,
+  ProjectsDataManager,
+  ProjectsStateHelper,
+} from "../Data";
+import { DeferredFetcher, MockRootDependencyManager } from "@/Test";
+import { RootDependencyManagerContext } from "../Dependency";
+
+function setup() {
+  const stateHelper = new ProjectsStateHelper(getStoreInstance());
+  const projectsManager = new ProjectsDataManager(
+    new DeferredFetcher<"Projects">(),
+    stateHelper
+  );
+  const primaryProvider = new DataProviderImpl([projectsManager]);
+  return new MockRootDependencyManager(primaryProvider);
+}
 
 test("GIVEN Navigation THEN shows navigation items", () => {
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
+  const keycloak = Keycloak();
+  const dependencyManager = setup();
+
   render(
-    <StoreProvider store={getStoreInstance()}>
-      <App keycloak={Keycloak()} shouldUseAuth={false} />
-    </StoreProvider>
+    <RootDependencyManagerContext.Provider value={dependencyManager}>
+      <StoreProvider store={getStoreInstance()}>
+        <App keycloak={keycloak} shouldUseAuth={false} />
+      </StoreProvider>
+    </RootDependencyManagerContext.Provider>
   );
 
   userEvent.click(screen.getByRole("button", { name: "Global navigation" }));
@@ -32,20 +54,4 @@ test("GIVEN Navigation THEN shows navigation items", () => {
       name: "Other sites",
     })
   ).toBeVisible();
-});
-
-test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {
-  fetchMock.mockResponse(JSON.stringify({ data: [] }));
-  window.history.replaceState({}, "", "/lsm/catalog");
-  render(
-    <StoreProvider store={getStoreInstance()}>
-      <App keycloak={Keycloak()} shouldUseAuth={false} />
-    </StoreProvider>
-  );
-  userEvent.click(screen.getByRole("button", { name: "Global navigation" }));
-  const navigation = screen.getByRole("navigation", { name: "Global" });
-  const link = within(navigation).getByRole("link", {
-    name: "Service Catalog",
-  });
-  expect(link).toHaveClass("pf-m-current");
 });

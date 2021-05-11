@@ -9,3 +9,4 @@ export * from "./CommandProviderImpl";
 export * from "./DataProviderImpl";
 export * from "./Diagnostics";
 export * from "./UrlManagerImpl";
+export * from "./Projects";

@@ -14,4 +14,8 @@ export interface Fetcher<Kind extends Query.Kind> {
     environment: string,
     url: string
   ): Promise<Either.Type<Query.Error<Kind>, Query.ApiResponse<Kind>>>;
+
+  getRootData(
+    url: string
+  ): Promise<Either.Type<Query.Error<Kind>, Query.ApiResponse<Kind>>>;
 }

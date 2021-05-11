@@ -8,6 +8,8 @@ import { getStoreInstance } from "@/UI";
 import {
   DependencyManagerContext,
   DependencyManagerImpl,
+  RootDependencyManagerContext,
+  RootDependencyManagerImpl,
 } from "@/UI/Dependency";
 
 if (process.env.NODE_ENV !== "production") {
@@ -29,13 +31,19 @@ if (externalKeycloakConf) {
 }
 
 const storeInstance = getStoreInstance();
+const rootDependencyManager = new RootDependencyManagerImpl(
+  storeInstance,
+  keycloak
+);
 const dependencyManager = new DependencyManagerImpl(storeInstance, keycloak);
 
 ReactDOM.render(
-  <DependencyManagerContext.Provider value={dependencyManager}>
-    <StoreProvider store={storeInstance}>
-      <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
-    </StoreProvider>
-  </DependencyManagerContext.Provider>,
+  <RootDependencyManagerContext.Provider value={rootDependencyManager}>
+    <DependencyManagerContext.Provider value={dependencyManager}>
+      <StoreProvider store={storeInstance}>
+        <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+      </StoreProvider>
+    </DependencyManagerContext.Provider>
+  </RootDependencyManagerContext.Provider>,
   document.getElementById("root") as HTMLElement
 );
