@@ -9,6 +9,7 @@ import { words } from "@/UI/words";
 import { toOptionalBoolean } from "./AttributeConverter";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { TextFormInput } from "./TextFormInput";
+import { FormHelpProvider } from "./FormHelpProvider";
 
 export interface FormInputAttribute {
   name: string;
@@ -29,12 +30,14 @@ interface Props {
   formInputAttributes: FormInputAttribute[];
   onSubmit(attributes: FormAttributeResult[]): void;
   onCancel(): void;
+  formHelpProvider: FormHelpProvider;
 }
 
 export const ServiceInstanceForm: React.FC<Props> = ({
   formInputAttributes,
   onSubmit,
   onCancel,
+  formHelpProvider,
 }) => {
   const initialState = Object.assign(
     {},
@@ -88,6 +91,10 @@ export const ServiceInstanceForm: React.FC<Props> = ({
                 isOptional={attribute.isOptional}
                 type={attribute.inputType}
                 handleInputChange={handleInputChange}
+                placeholder={formHelpProvider.getPlaceholderForType(
+                  attribute.type
+                )}
+                typeHint={formHelpProvider.getTypeHintForType(attribute.type)}
                 key={attribute.name}
               />
             );
