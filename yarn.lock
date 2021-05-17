@@ -2436,12 +2436,7 @@
   resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-4.10.2.tgz#d0659e7763364b1e73ec0f3b60e20cf9e4f067d6"
   integrity sha512-mSkBRaEFukpaAoLDyd3nI+6Cj0z2/5DgJTA2i7By/UW1wJifKnBWW8NRO2SsJQVQIUtuuAunjUrjzKHdcxs5IQ==
 
-"@patternfly/react-styles@^4.10.1":
-  version "4.10.1"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-4.10.1.tgz#551353d67c01234f08e5e1e2a2947c8865751a7e"
-  integrity sha512-nrxKeu4ftZArswT0azcZB2r6eV4d5bs4L9HrwHnElMte+6fsUmXbuaBxCVfHh/aHxZSIIxqDElEHNaOqcs7SWg==
-
-"@patternfly/react-styles@^4.10.2":
+"@patternfly/react-styles@^4.10.1", "@patternfly/react-styles@^4.10.2":
   version "4.10.2"
   resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-4.10.2.tgz#f399766ecb26e44e605355e94271da54029b5990"
   integrity sha512-cGvDFAISGrt+RAkX5NVyILCjWV1l9PCUpnMq6v4/6jBJOEHTBnRjaIGa92dw3OrLh407cBOIC0ugweRnocRmPw==
