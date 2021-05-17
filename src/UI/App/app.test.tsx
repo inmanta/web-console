@@ -4,7 +4,8 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import Keycloak from "keycloak-js";
 import { App } from "@/UI/App/app";
-import { getStoreInstance, RootDependencyManagerContext } from "@/UI";
+import { getStoreInstance } from "@/UI";
+import { RootDependencyManagerContext } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ProjectsDataManager,
