@@ -109,9 +109,9 @@ export const getPageFromKind = (kind: Kinds): Page => {
   }
 };
 
-export const getPagesFromPage = (page: Page, pages: Page[] = []): Page[] => {
+export const getLineageFromPage = (page: Page, pages: Page[] = []): Page[] => {
   if (page.parent) {
-    return getPagesFromPage(getPageFromKind(page.parent), [page, ...pages]);
+    return getLineageFromPage(getPageFromKind(page.parent), [page, ...pages]);
   }
   return [page, ...pages];
 };

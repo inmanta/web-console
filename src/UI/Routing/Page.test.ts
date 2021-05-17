@@ -5,7 +5,7 @@ import {
   EventsPage,
   HistoryPage,
   InventoryPage,
-  getPagesFromPage,
+  getLineageFromPage,
   getPageWithParamsFromUrl,
 } from "./Page";
 
@@ -18,9 +18,9 @@ it.each`
   ${EventsPage}         | ${"Events"}         | ${3}   | ${[CatalogPage, InventoryPage, EventsPage]}         | ${"[Catalog, Inventory, Events]"}
   ${DiagnosePage}       | ${"Diagnose"}       | ${3}   | ${[CatalogPage, InventoryPage, DiagnosePage]}       | ${"[Catalog, Inventory, Diagnose]"}
 `(
-  "GIVEN getPagesFromPage WHEN passed $pageTxt THEN returns pages #$length $resultTxt",
+  "GIVEN getLineageFromPage WHEN passed $pageTxt THEN returns pages #$length $resultTxt",
   ({ page, length, result }) => {
-    const pages = getPagesFromPage(page);
+    const pages = getLineageFromPage(page);
     expect(pages).toHaveLength(length);
     expect(pages).toEqual(result);
   }
