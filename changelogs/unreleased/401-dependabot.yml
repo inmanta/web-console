@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @patternfly/react-styles from 4.10.1 to 4.10.2
+destination-branches:
+- master
+- iso4
+sections: {}
