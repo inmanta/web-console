@@ -2,12 +2,12 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { render, screen, within } from "@testing-library/react";
-import { PageBreadcrumb } from "./PageBreadcrumb";
+import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 test("GIVEN Breadcrumbs WHEN url is '/' THEN 0 Breadcrumbs are shown", () => {
   render(
     <MemoryRouter initialEntries={["/"]}>
-      <PageBreadcrumb />
+      <PageBreadcrumbs />
     </MemoryRouter>
   );
 
@@ -19,7 +19,7 @@ test("GIVEN Breadcrumbs WHEN url is '/' THEN 0 Breadcrumbs are shown", () => {
 test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog' THEN plain Catalog Breadcrumb is shown", () => {
   render(
     <MemoryRouter initialEntries={["/lsm/catalog"]}>
-      <PageBreadcrumb />
+      <PageBreadcrumbs />
     </MemoryRouter>
   );
 
@@ -31,7 +31,7 @@ test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog' THEN plain Catalog Breadcrumb
 test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog/service/inventory' THEN linked Catalog Breadcrumb and plain Inventory breadcrumb is shown", () => {
   render(
     <MemoryRouter initialEntries={["/lsm/catalog/service/inventory"]}>
-      <PageBreadcrumb />
+      <PageBreadcrumbs />
     </MemoryRouter>
   );
 
@@ -48,7 +48,7 @@ test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog/service/inventory' THEN linked
 test("GIVEN Breadcrumbs on Inventory WHEN url contains env THEN catalog breadcrumb link also contains env", () => {
   render(
     <MemoryRouter initialEntries={["/lsm/catalog/service/inventory?env=env1"]}>
-      <PageBreadcrumb />
+      <PageBreadcrumbs />
     </MemoryRouter>
   );
 
@@ -59,7 +59,7 @@ test("GIVEN Breadcrumbs on Inventory WHEN url contains env THEN catalog breadcru
 test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link THEN only plain catalog breadcrumb is shown", () => {
   render(
     <MemoryRouter initialEntries={["/lsm/catalog/service/inventory?env=env1"]}>
-      <PageBreadcrumb />
+      <PageBreadcrumbs />
     </MemoryRouter>
   );
   const crumbsBefore = screen.getAllByRole("listitem", {

@@ -4,7 +4,8 @@ import { StoreProvider } from "easy-peasy";
 import { InstantFetcher, InstanceLog, Service, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
-import { DataProviderImpl, UrlManagerImpl } from "@/UI/Data";
+import { DataProviderImpl } from "@/UI/Data";
+import { UrlManagerImpl } from "@/UI/Routing";
 import { Diagnose } from "./Diagnose";
 import {
   DiagnosticsDataManager,

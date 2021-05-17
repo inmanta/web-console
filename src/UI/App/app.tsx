@@ -2,13 +2,13 @@ import * as React from "react";
 import "@patternfly/react-core/dist/styles/base.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AppLayout } from "@/UI/App/AppLayout/AppLayout";
-import { AppRoutes } from "@/UI/App/routes";
 import "@/UI/App/app.css";
 import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { EnvironmentProvider } from "@/UI/Components";
 import { EnvironmentHandlerProvider } from "../Dependency/EnvironmentHandlerProvider";
+import { PageRouterWithDependencies } from "@/UI/Routing";
 
 const keycloakInitConfig = {
   onLoad: "login-required",
@@ -33,7 +33,7 @@ export const App: React.FunctionComponent<{
           <EnvironmentProvider
             Wrapper={({ children }) => <>{children}</>}
             Dependant={({ environment }) => (
-              <AppRoutes environment={environment} />
+              <PageRouterWithDependencies environment={environment} />
             )}
           />
         </AppLayout>

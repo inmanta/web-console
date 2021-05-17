@@ -16,9 +16,9 @@ import {
   DataProviderImpl,
   ResourcesDataManager,
   ResourcesStateHelper,
-  UrlManagerImpl,
 } from "@/UI/Data";
 import userEvent from "@testing-library/user-event";
+import { UrlManagerImpl } from "@/UI/Routing";
 
 const dummySetter = () => {
   return;

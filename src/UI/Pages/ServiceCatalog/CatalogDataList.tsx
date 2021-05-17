@@ -23,6 +23,7 @@ import { CatalogContent } from "./CatalogContent";
 import { Link } from "react-router-dom";
 import { IRequestParams } from "@/UI/App/utils/fetchInmantaApi";
 import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
+import { Routing } from "@/UI/Routing";
 
 export const CatalogDataList: React.FunctionComponent<{
   services?: ServiceModel[];
@@ -94,7 +95,9 @@ export const CatalogDataList: React.FunctionComponent<{
             >
               <Link
                 to={{
-                  pathname: `/lsm/catalog/${service.name}/inventory`,
+                  pathname: Routing.getUrl("Inventory", {
+                    service: service.name,
+                  }),
                   search: location.search,
                 }}
               >

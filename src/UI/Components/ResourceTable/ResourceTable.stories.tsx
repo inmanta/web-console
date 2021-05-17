@@ -3,7 +3,7 @@ import { Story } from "@storybook/react/types-6-0";
 import { Resources } from "@/Test";
 import { ResourceTable } from "./ResourceTable";
 import { DependencyProvider } from "@/UI/Dependency";
-import { UrlManagerImpl } from "@/UI/Data";
+import { UrlManagerImpl } from "@/UI/Routing";
 
 export default {
   title: "ResourceTable",

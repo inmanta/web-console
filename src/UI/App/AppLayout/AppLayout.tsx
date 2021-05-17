@@ -16,9 +16,8 @@ import { IconDropdown } from "./Toolbar/IconDropdown";
 import { AngleDownIcon } from "@patternfly/react-icons";
 import { useStoreState } from "@/UI/Store";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
-import { PageBreadcrumb } from "./PageBreadcrumb";
-import { Navigation } from "../Navigation";
 import { EnvSelectorWithProvider } from "./Toolbar/Provider";
+import { PageBreadcrumbs, Navigation } from "@/UI/Routing";
 
 interface IAppLayout {
   logoBaseUrl: string;
@@ -118,7 +117,7 @@ export const AppLayout: React.FunctionComponent<IAppLayout> = ({
     <React.Fragment>
       <SimpleBackgroundImage />
       <Page
-        breadcrumb={<PageBreadcrumb />}
+        breadcrumb={<PageBreadcrumbs />}
         mainContainerId="primary-app-container"
         header={Header}
         sidebar={Sidebar}

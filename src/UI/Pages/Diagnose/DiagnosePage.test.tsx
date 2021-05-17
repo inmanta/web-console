@@ -8,11 +8,11 @@ import {
   DataProviderImpl,
   DiagnosticsDataManager,
   DiagnosticsStateHelper,
-  UrlManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { Diagnose } from "./Diagnose";
 import { diagnoseFailure } from "@/Test/Data/Diagnose";
+import { UrlManagerImpl } from "@/UI/Routing";
 
 function setup() {
   const store = getStoreInstance();
