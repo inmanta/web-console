@@ -14,10 +14,8 @@ export class BaseApiHelper implements ApiHelper {
 
   private getHeaders(environment?: string): Record<string, string> {
     const { keycloak } = this;
-    let baseHeaders = {};
-    baseHeaders = environment ? { "X-Inmanta-Tid": environment } : {};
     return {
-      ...baseHeaders,
+      ...(environment ? { "X-Inmanta-Tid": environment } : {}),
       ...(keycloak && keycloak.token
         ? { Authorization: `Bearer ${keycloak.token}` }
         : {}),

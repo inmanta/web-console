@@ -12,9 +12,9 @@ test("EnvironmentHandler sets default environment correctly", () => {
   environmentHandler.setDefault(RemoteData.success(testProjects), () => {
     return;
   });
-  expect(store.getState().projects.selectedEnvironmentId).toEqual("env-id");
-  expect(store.getState().projects.selectedProjectId).toEqual("project-id");
-  expect(history.location.search).toEqual("?env=env-id");
+  expect(store.getState().projects.selectedEnvironmentId).toEqual("env-id-1");
+  expect(store.getState().projects.selectedProjectId).toEqual("project-id-1");
+  expect(history.location.search).toEqual("?env=env-id-1");
 });
 
 test("EnvironmentHandler updates environment correctly", () => {
@@ -25,10 +25,10 @@ test("EnvironmentHandler updates environment correctly", () => {
   environmentHandler.setDefault(RemoteData.success(testProjects), () => {
     return;
   });
-  environmentHandler.set("project-id2", "env-id2");
-  expect(store.getState().projects.selectedEnvironmentId).toEqual("env-id2");
-  expect(store.getState().projects.selectedProjectId).toEqual("project-id2");
-  expect(history.location.search).toEqual("?env=env-id2");
+  environmentHandler.set("project-id-2", "env-id-2");
+  expect(store.getState().projects.selectedEnvironmentId).toEqual("env-id-2");
+  expect(store.getState().projects.selectedProjectId).toEqual("project-id-2");
+  expect(history.location.search).toEqual("?env=env-id-2");
 });
 
 test("EnvironmentHandler determines selected environment correctly", () => {
@@ -75,6 +75,4 @@ test("EnvironmentHandler determines selected environment correctly", () => {
   expect(
     RemoteData.isFailed(environmentHandler.determineSelected())
   ).toBeTruthy();
-
-  // TODO: add test for other new classes (data fetching?)
 });
