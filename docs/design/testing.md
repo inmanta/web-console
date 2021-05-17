@@ -22,6 +22,8 @@ We might have to consider other approaches, like performance (e.g. page load tim
 
 ## Tooling
 
-- Jest as the test runner for unit tests
-- React Testing library for rendering (partial) component trees
-- Cypress when testing the whole application (optionally with backend integration) is necessary.
+- `Jest` as the test runner for unit tests. This is one of the most popular javascript unit testing library, and the most commonly used with React.
+- `React Testing Library` for rendering (partial) component trees. It's gaining popularity among the React projects, mostly because it's a lightweight black-box testing utility (in contrast to `Enzyme`, which relies on implementation details)
+- `Cypress` when testing the whole application (optionally with backend integration) is necessary. 
+`Cypress` provides this capability in a much more stable way than `Selenium`. It's also easy to learn, 
+provides screenshot and video capture support (it also supports testing with multiple browsers, in case we need it in the future).
