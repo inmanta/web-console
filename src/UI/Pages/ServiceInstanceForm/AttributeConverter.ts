@@ -54,11 +54,19 @@ export class AttributeConverter {
     return TextInputTypes.text;
   }
 
+  private isNumberArray(type: string): boolean {
+    return (
+      ["double", "float", "int", "integer", "number"].filter((numberLike) =>
+        type.includes(`${numberLike}[]`)
+      ).length > 0
+    );
+  }
+
   private isNumberType(type: string): boolean {
     return (
       ["double", "float", "int", "integer", "number"].filter((numberLike) =>
         type.includes(numberLike)
-      ).length > 0
+      ).length > 0 && !this.isNumberArray(type)
     );
   }
 
@@ -78,8 +86,21 @@ export class AttributeConverter {
         parsedValue = toOptionalBoolean(value);
       } else if (type.includes("?") && value === "") {
         parsedValue = null;
-      } else if (this.isNumberType(type) && value === "") {
+      } else if (
+        (this.isNumberType(type) || this.isNumberArray(type)) &&
+        value === ""
+      ) {
         parsedValue = null;
+      } else if (this.isNumberArray(type)) {
+        const parts = value.split(",").map((piece) => {
+          const trimmed = piece.trim();
+          const converted = Number(trimmed);
+          if (Number.isFinite(converted)) {
+            return converted;
+          }
+          return trimmed;
+        });
+        parsedValue = parts;
       } else if (this.isNumberType(type)) {
         parsedValue = Number(value);
       } else if (type.includes("[]")) {

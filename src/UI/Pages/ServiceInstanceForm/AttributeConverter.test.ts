@@ -107,6 +107,8 @@ describe("AttributeConverter", () => {
       ${"conint"}  | ${TextInputTypes.number}
       ${"conint?"} | ${TextInputTypes.number}
       ${"string"}  | ${TextInputTypes.text}
+      ${"int[]"}   | ${TextInputTypes.text}
+      ${"float[]"} | ${TextInputTypes.text}
     `(
       "For $inmantaType inmantaType chooses $inputType input",
       ({ inmantaType, inputType }) => {
@@ -175,6 +177,9 @@ describe("AttributeConverter", () => {
       ${"false"}          | ${"bool"}     | ${false}
       ${"randomValue"}    | ${"bool"}     | ${null}
       ${true}             | ${"bool"}     | ${true}
+      ${"1,2"}            | ${"int[]"}    | ${[1, 2]}
+      ${"1, 2 ,a"}        | ${"int[]"}    | ${[1, 2, "a"]}
+      ${"1.2,3.4"}        | ${"float[]"}  | ${[1.2, 3.4]}
     `(
       "converts $value of type $type to $parsedValue",
       ({ value, type, parsedValue }) => {
