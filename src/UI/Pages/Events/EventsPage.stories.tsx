@@ -16,8 +16,8 @@ import {
   DataProviderImpl,
   EventsDataManager,
   EventsStateHelper,
-  UrlManagerImpl,
 } from "@/UI/Data";
+import { UrlManagerImpl } from "@/UI/Routing";
 
 export default {
   title: "EventsPage",

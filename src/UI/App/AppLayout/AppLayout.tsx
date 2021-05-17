@@ -25,10 +25,9 @@ import { AngleDownIcon } from "@patternfly/react-icons";
 import { useStoreState, useStoreDispatch } from "@/UI/Store";
 import * as _ from "lodash";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
-import { PageBreadcrumb } from "./PageBreadcrumb";
+import { PageBreadcrumbs, Navigation } from "@/UI/Routing";
 import { fetchInmantaApi } from "@/UI/App/utils/fetchInmantaApi";
 import { ProjectModel } from "@/Core";
-import { Navigation } from "../Navigation";
 
 interface IAppLayout {
   logoBaseUrl: string;
@@ -201,7 +200,7 @@ export const AppLayout: React.FunctionComponent<IAppLayout> = ({
       <SimpleBackgroundImage />
       {envAlert && <ToastAlertGroup />}
       <Page
-        breadcrumb={<PageBreadcrumb />}
+        breadcrumb={<PageBreadcrumbs />}
         mainContainerId="primary-app-container"
         header={Header}
         sidebar={Sidebar}

@@ -17,11 +17,11 @@ import {
   ServiceInstancesStateHelper,
   ResourcesDataManager,
   ResourcesStateHelper,
-  UrlManagerImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
+import { UrlManagerImpl } from "@/UI/Routing";
 
 function setup() {
   const store = getStoreInstance();
