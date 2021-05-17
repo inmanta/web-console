@@ -14,16 +14,17 @@ import {
 import { DropdownExternalLink } from "./ExternalLink";
 
 interface Props {
+  resourceId: string;
   failure: Failure;
 }
 
-export const FailureCard: React.FC<Props> = ({ failure }) => {
+export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
   const { urlManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems = [
     <DropdownExternalLink
       key="resourceDetailsLink"
-      url={urlManager.getResourceUrl(failure.resource_id)}
+      url={urlManager.getResourceUrl(resourceId)}
       linkText={words("diagnose.links.resourceDetails")}
     />,
     <DropdownExternalLink
@@ -50,9 +51,7 @@ export const FailureCard: React.FC<Props> = ({ failure }) => {
           />
         </CardActions>
       </CardHeader>
-      <CardTitle className="patternfly-text-gray">
-        {failure.resource_id}
-      </CardTitle>
+      <CardTitle className="patternfly-text-gray">{resourceId}</CardTitle>
       <CardBody>
         <pre>{failure.message}</pre>
       </CardBody>
