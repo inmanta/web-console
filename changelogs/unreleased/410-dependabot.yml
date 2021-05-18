@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump ts-prune from 0.8.8 to 0.9.1
+destination-branches:
+- master
+- iso4
+sections: {}
