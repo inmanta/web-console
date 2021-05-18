@@ -3,3 +3,5 @@
 - [Building blocks](./building-blocks.md)
 - [Folder Structure](./folder-structure.md)
 - [Testing guidelines](./testing.md)
+- [View Structure](./view-structure.md)
+- [Other](./other.md)

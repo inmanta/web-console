@@ -1,3 +1,5 @@
+[Index](./index.md)
+
 # Testing
 
 Focus is functional testing. General guideline is that no feature or complex logic should be left untested.

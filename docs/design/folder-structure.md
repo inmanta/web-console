@@ -1,6 +1,8 @@
+[Index](./index.md)
+
 # Folder structure
 
-The goal is to have the general guidelines about what should go where, but still leave some freedom for developers. 
+The goal is to have the general guidelines about what should go where, but still leave some freedom for developers.
 (for example adding subfolders for a group of components should still be allowed, if it helps understanding the structure)
 
 The agreement is to roughly follow the building blocks in the folder structure.
@@ -19,6 +21,5 @@ src/
     Components/ - React Components used by multiple pages
     Pages/ - Main Container components for the different views in the root
       Components/ - Components related to this view only, optionally
-    Root/ - The components that are always visible, and independent of the current page (sidebar) 
-  
+    Root/ - The components that are always visible, and independent of the current page (sidebar)
 ```
