@@ -4,13 +4,23 @@
 
 ## Keyboard support
 
-A concern was raised that keyboard support would be hard to realise with the current design.  
-The problem was that triggering an action based on a keystroke lacks context. Because this is done a global level.  
-So we would need to implement a command bus that could handle these actions lacking context.  
-Which would be different from general actions that have context because they are triggered in the component that has the data.  
-But it seems this is not really a problem because we can implement these actions lacking context in a lot of different ways.
+### Context
 
-One way would be having the component that does an action register a listener for a keystroke.  
-This way context is provided to the keyboard actions.
-Another benefit is that this creates no useless listeners when the component is not active.  
-This is better then having a lot of keystroke listeners not doing anything because the related action is not useful in that specific view.
+Actions are executed within a certain context.  
+For example, showing the next page of instances on the Inventory.  
+We need the link of this specific next page. This data is not available on a global level.  
+Only on the component level. So actions are performed on the component level.  
+But keyboard events are triggered on the global level.  
+How do we provide context to these keyboard actions?
+
+### Possible implementation: Component registers listener for keystroke
+
+A component that does an action should also register a listener for a keystroke.  
+When this keystroke is pressed, the listener is executed and the action can be performed.  
+This way we indirectly provide context to the keyboard action.
+
+### No inactive listeners
+
+Another benefit of this design is that no inactive listeners are created.  
+The listener is created when the component initiates.  
+And the listener is destroyed when the component is destroyed.
