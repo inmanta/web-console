@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @types/jest from 24.9.1 to 26.0.23
+destination-branches:
+- master
+- iso4
+sections: {}
