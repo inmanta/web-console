@@ -1,6 +1,7 @@
 # Table of Contents
 
 - [Building blocks](./building-blocks.md)
+- [Domain](./domain.md)
 - [View Data](./view-data.md)
 - [View Command](./view-command.md)
 - [Scheduler](./scheduler.md)
