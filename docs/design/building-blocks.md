@@ -26,7 +26,7 @@ The main blocks are the following:
   These are simply data structures, not full OO objects, mainly because Redux doesn't support storing full OO objects.
 
 - `Data`: The Data layer is responsible for handling communication with the backend, and data subscriptions from the View Layer.
-  There is an abstraction layer (`DataProvider`) that makes sure that the View layer doesn't need to know
+  There is an abstraction layer (`QueryResolver`) that makes sure that the View layer doesn't need to know
   the internals of the Data Layer, for example how the Redux State Store is structured,
   or what library or method is used to fetch the data to the application.
   The Data layer provides a mechanism for providing Domain Entities to the rest of the application.

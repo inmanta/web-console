@@ -17,9 +17,9 @@ These are all different entities within our design:
 - Logs
 - Config
 - Diagnostics
+- ...
 
-Each entity has a Redux state slice.  
-This is where its data is stored.
+Each entity has a Redux state slice where it is stored.
 
 Each entity has either a Query, a Command or both.
 
