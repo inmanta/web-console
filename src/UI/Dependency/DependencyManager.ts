@@ -23,8 +23,9 @@ import {
   DiagnosticsStateHelper,
   DiagnosticsDataManager,
 } from "@/UI/Data";
-import { SchedulerImpl } from "@/Core";
+import { DataProvider, SchedulerImpl } from "@/Core";
 import { UrlManagerImpl } from "@/UI/Routing";
+import { DummyDataProvider } from "./DummyDataProvider";
 
 interface DependencyManager {
   getDependencies(environment: string): Dependencies;
@@ -43,8 +44,7 @@ export const DependencyManagerContext = createContext<DependencyManager>(
 export class DependencyManagerImpl implements DependencyManager {
   constructor(
     private readonly store: Store,
-    private readonly baseApiHelper: BaseApiHelper,
-    private readonly baseUrl: string
+    private readonly baseApiHelper: BaseApiHelper
   ) {}
 
   getDependencies(environment: string): Dependencies {
@@ -131,7 +131,14 @@ export class DependencyManagerImpl implements DependencyManager {
     return {
       commandProvider,
       dataProvider,
-      urlManager: new UrlManagerImpl(this.baseUrl, environment),
+      urlManager: new UrlManagerImpl(
+        this.baseApiHelper.getBaseUrl(),
+        environment
+      ),
     };
   }
 }
+
+export const ProjectsProviderContext = createContext<DataProvider>(
+  new DummyDataProvider()
+);

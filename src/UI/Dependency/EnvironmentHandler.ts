@@ -14,6 +14,7 @@ export interface EnvironmentHandler {
     apiResponse: RemoteData.Type<string, ProjectModel[]>,
     setWarningMessage: (message: string) => void
   );
+  getProjects(): RemoteData.Type<string, ProjectModel[]>;
   getSelected(): RemoteData.Type<string, SelectedProjectAndEnvironment>;
 }
 
@@ -22,6 +23,9 @@ class DummyEnvironmentHandler implements EnvironmentHandler {
     throw new Error("Method not implemented.");
   }
   setDefault() {
+    throw new Error("Method not implemented.");
+  }
+  getProjects(): RemoteData.Type<string, ProjectModel[]> {
     throw new Error("Method not implemented.");
   }
   getSelected(): RemoteData.Type<
@@ -34,10 +38,8 @@ class DummyEnvironmentHandler implements EnvironmentHandler {
 
 export const EnvironmentHandlerContext = createContext<{
   environmentHandler: EnvironmentHandler;
-  projects: RemoteData.Type<string, ProjectModel[]>;
 }>({
   environmentHandler: new DummyEnvironmentHandler(),
-  projects: RemoteData.notAsked(),
 });
 
 export class EnvironmentHandlerImpl implements EnvironmentHandler {
@@ -102,6 +104,11 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
       this.history.push(`/lsm/catalog?${params}`);
     }
   }
+
+  public getProjects(): RemoteData.Type<string, ProjectModel[]> {
+    return this.store.getState().projects.allProjects;
+  }
+
   public getSelected(): RemoteData.Type<string, SelectedProjectAndEnvironment> {
     // Due to the caching / limitations of computed properties, these have to be accessed via the useStoreState hook
     const env = useStoreState((state) => state.projects.getSelectedEnvironment);

@@ -8,10 +8,14 @@ import { getStoreInstance } from "@/UI";
 import {
   DependencyManagerContext,
   DependencyManagerImpl,
-  RootDependencyManagerContext,
-  RootDependencyManagerImpl,
+  ProjectsProviderContext,
 } from "@/UI/Dependency";
-import { BaseApiHelper } from "./Infra";
+import { BaseApiHelper, FetcherImpl } from "./Infra";
+import {
+  DataProviderImpl,
+  ProjectsDataManager,
+  ProjectsStateHelper,
+} from "./UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -34,23 +38,24 @@ if (externalKeycloakConf) {
 const storeInstance = getStoreInstance();
 const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
 const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
-const rootDependencyManager = new RootDependencyManagerImpl(
+const stateHelper = new ProjectsStateHelper(storeInstance);
+const projectsManager = new ProjectsDataManager(
+  new FetcherImpl<"Projects">(baseApiHelper),
+  stateHelper
+);
+const projectsProvider = new DataProviderImpl([projectsManager]);
+const dependencyManager = new DependencyManagerImpl(
   storeInstance,
   baseApiHelper
 );
-const dependencyManager = new DependencyManagerImpl(
-  storeInstance,
-  baseApiHelper,
-  baseUrl
-);
 
 ReactDOM.render(
-  <RootDependencyManagerContext.Provider value={rootDependencyManager}>
+  <ProjectsProviderContext.Provider value={projectsProvider}>
     <DependencyManagerContext.Provider value={dependencyManager}>
       <StoreProvider store={storeInstance}>
         <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
       </StoreProvider>
     </DependencyManagerContext.Provider>
-  </RootDependencyManagerContext.Provider>,
+  </ProjectsProviderContext.Provider>,
   document.getElementById("root") as HTMLElement
 );

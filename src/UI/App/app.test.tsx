@@ -5,13 +5,13 @@ import { StoreProvider } from "easy-peasy";
 import Keycloak from "keycloak-js";
 import { App } from "@/UI/App/app";
 import { getStoreInstance } from "@/UI";
-import { RootDependencyManagerContext } from "@/UI/Dependency";
+import { ProjectsProviderContext } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ProjectsDataManager,
   ProjectsStateHelper,
 } from "../Data";
-import { DeferredFetcher, MockRootDependencyManager } from "@/Test";
+import { DeferredFetcher } from "@/Test";
 
 function setup() {
   const stateHelper = new ProjectsStateHelper(getStoreInstance());
@@ -19,8 +19,7 @@ function setup() {
     new DeferredFetcher<"Projects">(),
     stateHelper
   );
-  const primaryProvider = new DataProviderImpl([projectsManager]);
-  return new MockRootDependencyManager(primaryProvider);
+  return new DataProviderImpl([projectsManager]);
 }
 
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
@@ -30,11 +29,11 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
   const dependencyManager = setup();
 
   render(
-    <RootDependencyManagerContext.Provider value={dependencyManager}>
+    <ProjectsProviderContext.Provider value={dependencyManager}>
       <StoreProvider store={getStoreInstance()}>
         <App keycloak={keycloak} shouldUseAuth={false} />
       </StoreProvider>
-    </RootDependencyManagerContext.Provider>
+    </ProjectsProviderContext.Provider>
   );
 
   expect(
@@ -52,11 +51,11 @@ test("GIVEN the app WHEN clicking the navigation toggle THEN the sidebar should 
   const dependencyManager = setup();
 
   render(
-    <RootDependencyManagerContext.Provider value={dependencyManager}>
+    <ProjectsProviderContext.Provider value={dependencyManager}>
       <StoreProvider store={getStoreInstance()}>
         <App keycloak={keycloak} shouldUseAuth={false} />
       </StoreProvider>
-    </RootDependencyManagerContext.Provider>
+    </ProjectsProviderContext.Provider>
   );
 
   expect(

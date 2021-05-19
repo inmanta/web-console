@@ -2,10 +2,7 @@ import { Action, action, Computed, computed } from "easy-peasy";
 import { EnvironmentModel, ProjectModel, RemoteData } from "@/Core";
 
 export interface ProjectsSlice {
-  allIds: string[];
-  byId: Record<string, ProjectModel>;
   allProjects: RemoteData.Type<string, ProjectModel[]>;
-  getAllProjects: Computed<ProjectsSlice, ProjectModel[]>;
   getSelectedProject: Computed<
     ProjectsSlice,
     Partial<ProjectModel> | undefined
@@ -13,7 +10,6 @@ export interface ProjectsSlice {
   getSelectedEnvironment: Computed<ProjectsSlice, EnvironmentModel | undefined>;
   selectedProjectId: string;
   selectedEnvironmentId: string;
-  selectProjectById: Action<ProjectsSlice, string>;
   selectProjectAndEnvironment: Action<
     ProjectsSlice,
     { project: string; environment: string }
@@ -25,12 +21,7 @@ export interface ProjectsSlice {
 }
 
 export const projectsSlice: ProjectsSlice = {
-  allIds: [],
-  byId: {},
   allProjects: RemoteData.notAsked(),
-  getAllProjects: computed((state) => {
-    return Object.values(state.byId);
-  }),
   getSelectedProject: computed((state) => {
     if (state.allProjects.kind === "Success") {
       const selectedProject = state.allProjects.value.find(
@@ -51,9 +42,6 @@ export const projectsSlice: ProjectsSlice = {
       return selectedEnv;
     }
     return undefined;
-  }),
-  selectProjectById: action((state, payload) => {
-    state.selectedProjectId = payload;
   }),
   selectedProjectId: "",
   selectedEnvironmentId: "",

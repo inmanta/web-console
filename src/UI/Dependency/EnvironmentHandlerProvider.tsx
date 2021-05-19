@@ -1,7 +1,7 @@
 import {
   EnvironmentHandlerContext,
   EnvironmentHandlerImpl,
-  RootDependencyManagerContext,
+  ProjectsProviderContext,
 } from "@/UI/Dependency";
 import { useStore } from "@/UI/Store";
 import {
@@ -15,12 +15,11 @@ import { useHistory } from "react-router";
 
 export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
   const [envAlert, setEnvAlert] = React.useState("");
-  const dependencyManager = useContext(RootDependencyManagerContext);
-  const dependencies = dependencyManager.getEnvironmentIndependentDependencies();
+  const projectsProvider = useContext(ProjectsProviderContext);
   const history = useHistory();
   const store = useStore();
   const environmentHandler = new EnvironmentHandlerImpl(history, store);
-  const [data] = dependencies.projectsProvider.useOneTime<"Projects">({
+  const [data] = projectsProvider.useOneTime<"Projects">({
     kind: "Projects",
     qualifier: null,
   });
@@ -28,9 +27,7 @@ export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
     environmentHandler.setDefault(data, setEnvAlert);
   }, [data]);
   return (
-    <EnvironmentHandlerContext.Provider
-      value={{ environmentHandler, projects: data }}
-    >
+    <EnvironmentHandlerContext.Provider value={{ environmentHandler }}>
       <>
         {envAlert && (
           <AlertGroup isToast={true}>
