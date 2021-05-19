@@ -1,27 +1,27 @@
 import React, { useContext } from "react";
 import { PageSection } from "@patternfly/react-core";
 import { CatalogDataList } from "./CatalogDataList";
-import { useStoreState } from "@/UI/Store";
 import { useKeycloak } from "react-keycloak";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import {
+  EmptyView,
+  EnvironmentProvider,
+  ErrorView,
+  LoadingView,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { Query, RemoteData } from "@/Core";
 
 export const ServiceCatalogWithProvider: React.FC = () => {
-  const environment = useStoreState(
-    (store) => store.environments.getSelectedEnvironment.id
-  );
-
-  return environment ? (
-    <ServiceCatalog environment={environment} />
-  ) : (
-    <PageSection
-      className={"horizontally-scrollable"}
-      aria-label="ServiceCatalog-Failed"
-    >
-      <ErrorView message={words("error.environment.missing")} delay={1000} />
-    </PageSection>
+  return (
+    <EnvironmentProvider
+      Wrapper={({ children }) => (
+        <PageSection aria-label="ServiceCatalog-Failed">{children}</PageSection>
+      )}
+      Dependant={({ environment }) => (
+        <ServiceCatalog environment={environment} />
+      )}
+    />
   );
 };
 

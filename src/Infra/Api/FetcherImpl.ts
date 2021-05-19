@@ -13,4 +13,12 @@ export class FetcherImpl<Kind extends Query.Kind> implements Fetcher<Kind> {
       environment
     );
   }
+
+  async getRootData(
+    url: string
+  ): Promise<Either.Type<string, Query.ApiResponse<Kind>>> {
+    return this.baseApiHelper.getWithoutEnvironment(
+      `${this.baseApiHelper.getBaseUrl()}${url}`
+    );
+  }
 }

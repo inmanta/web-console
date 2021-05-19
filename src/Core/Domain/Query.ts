@@ -13,6 +13,7 @@ import { Config, Setting } from "./Config";
 import { ServiceInstanceParams } from "./ServiceInstanceParams";
 import { RawDiagnostics, Diagnostics } from "./Diagnostics";
 import { EventParams } from "./EventParams";
+import { ProjectModel } from "./ProjectModel";
 
 type Query =
   | ServicesQuery
@@ -22,8 +23,22 @@ type Query =
   | InstanceEventsQuery
   | InstanceLogsQuery
   | InstanceConfigQuery
-  | DiagnosticsQuery;
+  | DiagnosticsQuery
+  | ProjectsQuery;
 export type Type = Query;
+
+export interface ProjectsQuery {
+  kind: "Projects";
+  qualifier: null;
+}
+
+interface ProjectsManifest {
+  error: string;
+  apiResponse: { data: ProjectModel[] };
+  data: ProjectModel[];
+  usedData: ProjectModel[];
+  query: ProjectsQuery;
+}
 
 /**
  * The ServicesQuery describes all services beloning to an environment.
@@ -195,6 +210,7 @@ interface Manifest {
   InstanceLogs: InstanceLogsManifest;
   InstanceConfig: InstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
+  Projects: ProjectsManifest;
 }
 
 /**

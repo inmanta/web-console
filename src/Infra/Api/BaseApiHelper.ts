@@ -12,10 +12,10 @@ export class BaseApiHelper implements ApiHelper {
     return this.baseUrl;
   }
 
-  private getHeaders(environment: string): Record<string, string> {
+  private getHeaders(environment?: string): Record<string, string> {
     const { keycloak } = this;
     return {
-      "X-Inmanta-Tid": environment,
+      ...(environment ? { "X-Inmanta-Tid": environment } : {}),
       ...(keycloak && keycloak.token
         ? { Authorization: `Bearer ${keycloak.token}` }
         : {}),
@@ -61,6 +61,14 @@ export class BaseApiHelper implements ApiHelper {
   ): Promise<Either.Type<string, Data>> {
     return this.execute<Data>(url, {
       headers: this.getHeaders(environment),
+    });
+  }
+
+  async getWithoutEnvironment<Data>(
+    url: string
+  ): Promise<Either.Type<string, Data>> {
+    return this.execute<Data>(url, {
+      headers: this.getHeaders(),
     });
   }
 

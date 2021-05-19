@@ -10,11 +10,6 @@ describe("ServiceInstancesSlice ", () => {
 
   it("differentiates correctly between services with the same name and different environment", () => {
     const store = getStoreInstance();
-    store
-      .getActions()
-      .environments.selectEnvironmentById(
-        serviceInstancesFirstEnv[0].environment
-      );
     const firstQualifier = { name: serviceInstancesFirstEnv[0].service_entity };
     // Add instances for a service
     store.getActions().serviceInstances.setData({

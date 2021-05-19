@@ -1,5 +1,4 @@
 import { createContext } from "react";
-import { KeycloakInstance } from "keycloak-js";
 import { Store } from "@/UI/Store";
 import { Dependencies } from "@/UI/Dependency/Dependency";
 import { BaseApiHelper, FetcherImpl, InstanceConfigPoster } from "@/Infra";
@@ -24,8 +23,9 @@ import {
   DiagnosticsStateHelper,
   DiagnosticsDataManager,
 } from "@/UI/Data";
-import { SchedulerImpl } from "@/Core";
+import { DataProvider, SchedulerImpl } from "@/Core";
 import { UrlManagerImpl } from "@/UI/Routing";
+import { DummyDataProvider } from "./DummyDataProvider";
 
 interface DependencyManager {
   getDependencies(environment: string): Dependencies;
@@ -44,24 +44,22 @@ export const DependencyManagerContext = createContext<DependencyManager>(
 export class DependencyManagerImpl implements DependencyManager {
   constructor(
     private readonly store: Store,
-    private readonly keycloak: KeycloakInstance
+    private readonly baseApiHelper: BaseApiHelper
   ) {}
 
   getDependencies(environment: string): Dependencies {
-    const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
-    const baseApiHelper = new BaseApiHelper(baseUrl, this.keycloak);
     const serviceKeyMaker = new ServiceKeyMaker();
     const scheduler = new SchedulerImpl(5000);
 
     const servicesHelper = new ServicesDataManager(
-      new FetcherImpl<"Services">(baseApiHelper),
+      new FetcherImpl<"Services">(this.baseApiHelper),
       new ServicesStateHelper(this.store, environment),
       scheduler,
       environment
     );
 
     const serviceHelper = new ServiceDataManager(
-      new FetcherImpl<"Service">(baseApiHelper),
+      new FetcherImpl<"Service">(this.baseApiHelper),
       new ServiceStateHelper(this.store, serviceKeyMaker, environment),
       scheduler,
       serviceKeyMaker,
@@ -69,28 +67,28 @@ export class DependencyManagerImpl implements DependencyManager {
     );
 
     const serviceInstancesHelper = new ServiceInstancesDataManager(
-      new FetcherImpl<"ServiceInstances">(baseApiHelper),
+      new FetcherImpl<"ServiceInstances">(this.baseApiHelper),
       new ServiceInstancesStateHelper(this.store, environment),
       scheduler,
       environment
     );
 
     const resourcesHelper = new ResourcesDataManager(
-      new FetcherImpl<"Resources">(baseApiHelper),
+      new FetcherImpl<"Resources">(this.baseApiHelper),
       new ResourcesStateHelper(this.store),
       scheduler,
       environment
     );
 
     const eventsDataManager = new EventsDataManager(
-      new FetcherImpl<"Events">(baseApiHelper),
+      new FetcherImpl<"Events">(this.baseApiHelper),
       new EventsStateHelper(this.store),
       scheduler,
       environment
     );
 
     const instanceLogsHelper = new InstanceLogsDataManager(
-      new FetcherImpl<"InstanceLogs">(baseApiHelper),
+      new FetcherImpl<"InstanceLogs">(this.baseApiHelper),
       new InstanceLogsStateHelper(this.store),
       environment
     );
@@ -98,17 +96,17 @@ export class DependencyManagerImpl implements DependencyManager {
     const instanceConfigStateHelper = new InstanceConfigStateHelper(this.store);
 
     const instanceConfigHelper = new InstanceConfigDataManager(
-      new FetcherImpl<"InstanceConfig">(baseApiHelper),
+      new FetcherImpl<"InstanceConfig">(this.baseApiHelper),
       instanceConfigStateHelper,
       new ServiceStateHelper(this.store, serviceKeyMaker, environment),
-      new FetcherImpl<"Service">(baseApiHelper),
+      new FetcherImpl<"Service">(this.baseApiHelper),
       environment
     );
 
     const diagnosticsStateHelper = new DiagnosticsStateHelper(this.store);
 
     const diagnosticsHelper = new DiagnosticsDataManager(
-      new FetcherImpl<"Diagnostics">(baseApiHelper),
+      new FetcherImpl<"Diagnostics">(this.baseApiHelper),
       diagnosticsStateHelper,
       scheduler,
       environment
@@ -126,14 +124,21 @@ export class DependencyManagerImpl implements DependencyManager {
     ]);
 
     const commandProvider = new CommandProviderImpl(
-      new InstanceConfigPoster(baseApiHelper, environment),
+      new InstanceConfigPoster(this.baseApiHelper, environment),
       instanceConfigStateHelper
     );
 
     return {
       commandProvider,
       dataProvider,
-      urlManager: new UrlManagerImpl(baseUrl, environment),
+      urlManager: new UrlManagerImpl(
+        this.baseApiHelper.getBaseUrl(),
+        environment
+      ),
     };
   }
 }
+
+export const ProjectsProviderContext = createContext<DataProvider>(
+  new DummyDataProvider()
+);

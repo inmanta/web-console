@@ -5,17 +5,35 @@ import { StoreProvider } from "easy-peasy";
 import Keycloak from "keycloak-js";
 import { App } from "@/UI/App/app";
 import { getStoreInstance } from "@/UI";
-import { AppLayout } from "./AppLayout/AppLayout";
-import { MemoryRouter } from "react-router-dom";
+import { ProjectsProviderContext } from "@/UI/Dependency";
+import {
+  DataProviderImpl,
+  ProjectsDataManager,
+  ProjectsStateHelper,
+} from "../Data";
+import { DeferredFetcher } from "@/Test";
+
+function setup() {
+  const stateHelper = new ProjectsStateHelper(getStoreInstance());
+  const projectsManager = new ProjectsDataManager(
+    new DeferredFetcher<"Projects">(),
+    stateHelper
+  );
+  return new DataProviderImpl([projectsManager]);
+}
 
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const keycloak = Keycloak();
 
+  const dependencyManager = setup();
+
   render(
-    <StoreProvider store={getStoreInstance()}>
-      <App keycloak={keycloak} shouldUseAuth={false} />
-    </StoreProvider>
+    <ProjectsProviderContext.Provider value={dependencyManager}>
+      <StoreProvider store={getStoreInstance()}>
+        <App keycloak={keycloak} shouldUseAuth={false} />
+      </StoreProvider>
+    </ProjectsProviderContext.Provider>
   );
 
   expect(
@@ -29,20 +47,15 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
  */
 test("GIVEN the app WHEN clicking the navigation toggle THEN the sidebar should be expanded", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
+  const keycloak = Keycloak();
+  const dependencyManager = setup();
 
   render(
-    <StoreProvider store={getStoreInstance()}>
-      <MemoryRouter>
-        <AppLayout
-          logoBaseUrl="/"
-          keycloak={undefined}
-          setErrorMessage={() => undefined}
-          shouldUseAuth={false}
-        >
-          <span></span>
-        </AppLayout>
-      </MemoryRouter>
-    </StoreProvider>
+    <ProjectsProviderContext.Provider value={dependencyManager}>
+      <StoreProvider store={getStoreInstance()}>
+        <App keycloak={keycloak} shouldUseAuth={false} />
+      </StoreProvider>
+    </ProjectsProviderContext.Provider>
   );
 
   expect(

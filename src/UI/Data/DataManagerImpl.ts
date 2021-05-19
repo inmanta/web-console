@@ -26,8 +26,8 @@ type Data<Kind extends Query.Kind> = [
 export class OneTimeDataManagerImpl<Kind extends Query.Kind>
   implements OneTimeDataManager<Kind> {
   constructor(
-    private readonly fetcher: Fetcher<Kind>,
-    private readonly stateHelper: StateHelper<Kind>,
+    protected readonly fetcher: Fetcher<Kind>,
+    protected readonly stateHelper: StateHelper<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
     private readonly getUrl: (qualifier: Query.Qualifier<Kind>) => string,
