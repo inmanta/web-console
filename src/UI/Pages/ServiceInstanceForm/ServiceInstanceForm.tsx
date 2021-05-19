@@ -9,7 +9,6 @@ import { words } from "@/UI/words";
 import { toOptionalBoolean } from "./AttributeConverter";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { TextFormInput } from "./TextFormInput";
-import { FormHelpProvider } from "./FormHelpProvider";
 
 export interface FormInputAttribute {
   name: string;
@@ -30,14 +29,12 @@ interface Props {
   formInputAttributes: FormInputAttribute[];
   onSubmit(attributes: FormAttributeResult[]): void;
   onCancel(): void;
-  formHelpProvider: FormHelpProvider;
 }
 
 export const ServiceInstanceForm: React.FC<Props> = ({
   formInputAttributes,
   onSubmit,
   onCancel,
-  formHelpProvider,
 }) => {
   const initialState = Object.assign(
     {},
@@ -67,6 +64,29 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       value: state[inputAttribute.name],
     }));
   };
+  const getPlaceholderForType = (typeName: string): string | undefined => {
+    if (typeName === "int[]") {
+      return words("inventory.form.placeholder.intList");
+    } else if (typeName === "float[]") {
+      return words("inventory.form.placeholder.floatList");
+    } else if (typeName.endsWith("[]")) {
+      return words("inventory.form.placeholder.stringList");
+    } else if (typeName.includes("dict")) {
+      return words("inventory.form.placeholder.dict");
+    }
+    return undefined;
+  };
+
+  const getTypeHintForType = (typeName: string): string | undefined => {
+    if (typeName.endsWith("[]")) {
+      return words("inventory.form.typeHint.list")(
+        typeName.substring(0, typeName.indexOf("["))
+      );
+    } else if (typeName.includes("dict")) {
+      return words("inventory.form.typeHint.dict");
+    }
+    return undefined;
+  };
   return (
     <>
       <Form>
@@ -91,10 +111,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
                 isOptional={attribute.isOptional}
                 type={attribute.inputType}
                 handleInputChange={handleInputChange}
-                placeholder={formHelpProvider.getPlaceholderForType(
-                  attribute.type
-                )}
-                typeHint={formHelpProvider.getTypeHintForType(attribute.type)}
+                placeholder={getPlaceholderForType(attribute.type)}
+                typeHint={getTypeHintForType(attribute.type)}
                 key={attribute.name}
               />
             );

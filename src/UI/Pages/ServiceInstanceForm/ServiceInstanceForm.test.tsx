@@ -2,7 +2,6 @@ import { TextInputTypes } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { FormHelpProviderImpl } from "./FormHelpProvider";
 import { FormInputAttribute, ServiceInstanceForm } from "./ServiceInstanceForm";
 
 describe("ServiceInstanceForm", () => {
@@ -36,7 +35,6 @@ describe("ServiceInstanceForm", () => {
     render(
       <ServiceInstanceForm
         formInputAttributes={formInputAttributes}
-        formHelpProvider={new FormHelpProviderImpl()}
         onCancel={() => {
           return;
         }}
@@ -54,7 +52,6 @@ describe("ServiceInstanceForm", () => {
     render(
       <ServiceInstanceForm
         formInputAttributes={formInputAttributes}
-        formHelpProvider={new FormHelpProviderImpl()}
         onCancel={() => {
           return;
         }}
@@ -77,7 +74,6 @@ describe("ServiceInstanceForm", () => {
         onCancel={() => {
           return;
         }}
-        formHelpProvider={new FormHelpProviderImpl()}
         onSubmit={(attributes) => {
           expect(attributes).toEqual([
             {

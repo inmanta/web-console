@@ -8,7 +8,6 @@ import {
 } from "..";
 
 import { AttributeConverter, toOptionalBoolean } from "../AttributeConverter";
-import { FormHelpProviderImpl } from "../FormHelpProvider";
 
 export class EditFormPresenter {
   constructor(private readonly attributeConverter: AttributeConverter) {}
@@ -31,14 +30,11 @@ export class EditFormPresenter {
       onSubmit(instance, attributes);
     };
 
-    const formHelpProvider = new FormHelpProviderImpl();
-
     return (
       <ServiceInstanceForm
         formInputAttributes={formInputAttributes}
         onSubmit={onSubmitForm}
         onCancel={onCancel}
-        formHelpProvider={formHelpProvider}
       />
     );
   }

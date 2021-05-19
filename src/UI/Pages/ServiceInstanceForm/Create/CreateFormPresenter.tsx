@@ -6,7 +6,6 @@ import {
   ServiceInstanceForm,
 } from "..";
 import { AttributeConverter } from "../AttributeConverter";
-import { FormHelpProviderImpl } from "../FormHelpProvider";
 
 export class CreateFormPresenter {
   constructor(private readonly attributeConverter: AttributeConverter) {}
@@ -16,12 +15,10 @@ export class CreateFormPresenter {
     onRedirect: () => void
   ): React.ReactElement {
     const formInputAttributes = this.getFormInputsForCreateForm(attributes);
-    const formHelpProvider = new FormHelpProviderImpl();
 
     return (
       <ServiceInstanceForm
         formInputAttributes={formInputAttributes}
-        formHelpProvider={formHelpProvider}
         onSubmit={onSubmit}
         onCancel={onRedirect}
       />
