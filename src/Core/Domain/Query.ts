@@ -13,7 +13,7 @@ import { Config, Setting } from "./Config";
 import { ServiceInstanceParams } from "./ServiceInstanceParams";
 import { RawDiagnostics, Diagnostics } from "./Diagnostics";
 import { EventParams } from "./EventParams";
-import { EnvironmentModel, ProjectModel } from "./ProjectModel";
+import { ProjectModel } from "./ProjectModel";
 
 type Query =
   | ServicesQuery
@@ -24,22 +24,8 @@ type Query =
   | InstanceLogsQuery
   | InstanceConfigQuery
   | DiagnosticsQuery
-  | EnvironmentsQuery
   | ProjectsQuery;
 export type Type = Query;
-
-export interface EnvironmentsQuery {
-  kind: "Environments";
-  qualifier: null;
-}
-
-interface EnvironmentsManifest {
-  error: string;
-  apiResponse: { data: EnvironmentModel[] };
-  data: EnvironmentModel[];
-  usedData: EnvironmentModel[];
-  query: EnvironmentsQuery;
-}
 
 export interface ProjectsQuery {
   kind: "Projects";
@@ -224,7 +210,6 @@ interface Manifest {
   InstanceLogs: InstanceLogsManifest;
   InstanceConfig: InstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
-  Environments: EnvironmentsManifest;
   Projects: ProjectsManifest;
 }
 

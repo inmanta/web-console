@@ -7,7 +7,7 @@ import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { EnvironmentProvider } from "@/UI/Components";
-import { EnvironmentHandlerProvider } from "../Dependency/EnvironmentHandlerProvider";
+import { EnvironmentHandlerProvider } from "@/UI/Dependency";
 import { PageRouterWithDependencies } from "@/UI/Routing";
 
 const keycloakInitConfig = {

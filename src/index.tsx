@@ -11,6 +11,7 @@ import {
   RootDependencyManagerContext,
   RootDependencyManagerImpl,
 } from "@/UI/Dependency";
+import { BaseApiHelper } from "./Infra";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -31,11 +32,17 @@ if (externalKeycloakConf) {
 }
 
 const storeInstance = getStoreInstance();
+const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
+const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
 const rootDependencyManager = new RootDependencyManagerImpl(
   storeInstance,
-  keycloak
+  baseApiHelper
 );
-const dependencyManager = new DependencyManagerImpl(storeInstance, keycloak);
+const dependencyManager = new DependencyManagerImpl(
+  storeInstance,
+  baseApiHelper,
+  baseUrl
+);
 
 ReactDOM.render(
   <RootDependencyManagerContext.Provider value={rootDependencyManager}>

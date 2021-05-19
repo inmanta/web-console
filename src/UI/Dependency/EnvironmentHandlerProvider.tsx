@@ -27,7 +27,6 @@ export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
   useEffect(() => {
     environmentHandler.setDefault(data, setEnvAlert);
   }, [data]);
-  // The alert can be removed after the environment selector landing page is implemented
   return (
     <EnvironmentHandlerContext.Provider
       value={{ environmentHandler, projects: data }}
