@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @types/react from 16.9.32 to 17.0.6
+destination-branches:
+- master
+- iso4
+sections: {}
