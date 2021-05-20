@@ -1,4 +1,10 @@
-import { FormGroup, TextInput, TextInputTypes } from "@patternfly/react-core";
+import {
+  FormGroup,
+  Popover,
+  TextInput,
+  TextInputTypes,
+} from "@patternfly/react-core";
+import { HelpIcon } from "@patternfly/react-icons";
 import React from "react";
 
 interface Props {
@@ -7,6 +13,8 @@ interface Props {
   description?: string;
   isOptional: boolean;
   type: TextInputTypes;
+  typeHint?: string;
+  placeholder?: string;
   handleInputChange: (value, event) => void;
 }
 export const TextFormInput: React.FC<Props> = ({
@@ -15,6 +23,8 @@ export const TextFormInput: React.FC<Props> = ({
   description,
   isOptional,
   type,
+  typeHint,
+  placeholder,
   handleInputChange,
 }) => {
   return (
@@ -22,6 +32,22 @@ export const TextFormInput: React.FC<Props> = ({
       isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}
+      labelIcon={
+        typeHint ? (
+          <Popover bodyContent={<div>{typeHint}</div>}>
+            <button
+              type="button"
+              aria-label={`More info for ${attributeName} field`}
+              onClick={(e) => e.preventDefault()}
+              className="pf-c-form__group-label-help"
+            >
+              <HelpIcon noVerticalAlign />
+            </button>
+          </Popover>
+        ) : (
+          <></>
+        )
+      }
       helperText={description}
     >
       <TextInput
@@ -29,6 +55,7 @@ export const TextFormInput: React.FC<Props> = ({
         type={type}
         id={attributeName}
         name={attributeName}
+        placeholder={placeholder}
         aria-describedby={`${attributeName}-helper`}
         value={attributeValue}
         onChange={handleInputChange}

@@ -32,6 +32,22 @@ OneOfEach.args = {
       isOptional: false,
     },
     {
+      name: "Int list param",
+      defaultValue: "",
+      inputType: TextInputTypes.text,
+      description: "Description of param",
+      type: "int[]",
+      isOptional: true,
+    },
+    {
+      name: "Float list param",
+      defaultValue: "",
+      inputType: TextInputTypes.text,
+      description: "Description of param",
+      type: "float[]",
+      isOptional: true,
+    },
+    {
       name: "NumberParam",
       defaultValue: "",
       inputType: TextInputTypes.number,
