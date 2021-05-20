@@ -14,7 +14,7 @@ module.exports = {
   },
   plugins: ["testing-library", "jest-dom"],
   extends: [
-    "plugin:testing-library/recommended",
+    "plugin:testing-library/dom",
     "plugin:jest-dom/recommended",
     /**
      * Uses the recommended rules from @eslint-plugin-react
@@ -50,6 +50,12 @@ module.exports = {
       files: ["**/*webpack*", ".storybook/**/*.js"],
       rules: {
         "@typescript-eslint/no-var-requires": "off",
+      },
+    },
+    {
+      files: ["cypress/**/*"],
+      rules: {
+        "testing-library/await-async-utils": "off",
       },
     },
   ],
