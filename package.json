@@ -120,7 +120,7 @@
     "@patternfly/react-core": "^4.115.2",
     "@patternfly/react-icons": "^4.10.1",
     "@patternfly/react-styles": "^4.10.2",
-    "@patternfly/react-table": "^4.26.6",
+    "@patternfly/react-table": "^4.27.7",
     "@patternfly/react-tokens": "^4.11.2",
     "copy-to-clipboard": "^3.3.1",
     "dotenv-webpack": "^1.7.0",
