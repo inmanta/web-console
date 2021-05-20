@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @patternfly/react-table from 4.26.6 to 4.27.7
+destination-branches:
+- master
+- iso4
+sections: {}
