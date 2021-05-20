@@ -14,11 +14,11 @@ test("FetcherImpl getData fetches logs (empty)", async () => {
     )
   ).toEqual(Either.right({ data: [] }));
 
-  const [url, { headers }] = fetchMock.mock.calls[0];
+  const [url, requestInit] = fetchMock.mock.calls[0];
   expect(url).toEqual(
     "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/log"
   );
-  expect(headers).toEqual({ "X-Inmanta-Tid": "environment_a" });
+  expect(requestInit?.headers).toEqual({ "X-Inmanta-Tid": "environment_a" });
 });
 
 test("FetcherImpl getData fetches logs (1)", async () => {
@@ -32,9 +32,9 @@ test("FetcherImpl getData fetches logs (1)", async () => {
     )
   ).toEqual(Either.right({ data: [InstanceLog.A] }));
 
-  const [url, { headers }] = fetchMock.mock.calls[0];
+  const [url, requestInit] = fetchMock.mock.calls[0];
   expect(url).toEqual(
     "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/log"
   );
-  expect(headers).toEqual({ "X-Inmanta-Tid": "environment_a" });
+  expect(requestInit?.headers).toEqual({ "X-Inmanta-Tid": "environment_a" });
 });

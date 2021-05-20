@@ -45,7 +45,7 @@ describe("Instance Create handler", () => {
       }
     );
     expect(fetchMock.mock.calls).toHaveLength(1);
-    expect(fetchMock.mock.calls[0][1].method).toEqual("POST");
+    expect(fetchMock.mock.calls[0][1]?.method).toEqual("POST");
   });
   it("Calls create correctly when not setting optional attributes", () => {
     const attributes = [
@@ -64,12 +64,13 @@ describe("Instance Create handler", () => {
       }
     );
     expect(fetchMock.mock.calls).toHaveLength(1);
-    const attributesFromBody = JSON.parse(fetchMock.mock.calls[0][1].body)
-      .attributes;
+    const attributesFromBody = JSON.parse(
+      fetchMock.mock.calls[0][1]?.body as string
+    ).attributes;
     expect(attributesFromBody.string_attribute).toEqual("lorem ipsum");
     expect(attributesFromBody.opt_string_attribute).toBeUndefined();
     expect(attributesFromBody.bool_param).toBeUndefined();
-    expect(fetchMock.mock.calls[0][1].method).toEqual("POST");
+    expect(fetchMock.mock.calls[0][1]?.method).toEqual("POST");
   });
 });
 
@@ -103,12 +104,13 @@ describe("Instance Update handler", () => {
       }
     );
     expect(fetchMock.mock.calls).toHaveLength(1);
-    const attributesFromBody = JSON.parse(fetchMock.mock.calls[0][1].body)
-      .attributes;
+    const attributesFromBody = JSON.parse(
+      fetchMock.mock.calls[0][1]?.body as string
+    ).attributes;
     expect(attributesFromBody.attr1).toEqual("lorem ipsum");
     expect(attributesFromBody.attr2).toBeUndefined();
     expect(attributesFromBody.attr3).toBeUndefined();
-    expect(fetchMock.mock.calls[0][1].method).toEqual("PATCH");
+    expect(fetchMock.mock.calls[0][1]?.method).toEqual("PATCH");
   });
   it("Calls update correctly when changing optional attributes", () => {
     const attributes = [
@@ -128,12 +130,13 @@ describe("Instance Update handler", () => {
       }
     );
     expect(fetchMock.mock.calls).toHaveLength(1);
-    const attributesFromBody = JSON.parse(fetchMock.mock.calls[0][1].body)
-      .attributes;
+    const attributesFromBody = JSON.parse(
+      fetchMock.mock.calls[0][1]?.body as string
+    ).attributes;
     expect(attributesFromBody.attr1).toEqual("lorem ipsum");
     expect(attributesFromBody.attr2).toBeNull();
     expect(attributesFromBody.attr3).toBeTruthy();
     expect(attributesFromBody.attr4).toEqual(42);
-    expect(fetchMock.mock.calls[0][1].method).toEqual("PATCH");
+    expect(fetchMock.mock.calls[0][1]?.method).toEqual("PATCH");
   });
 });
