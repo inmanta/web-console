@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump webpack-dev-server from 3.11.0 to 3.11.2
+destination-branches:
+- master
+- iso4
+sections: {}
