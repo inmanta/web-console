@@ -77,7 +77,7 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-testing-library": "^3.10.1",
     "fetch-mock": "^9.11.0",
-    "file-loader": "^4.2.0",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^4.3.7",
     "imagemin": "^7.0.0",
