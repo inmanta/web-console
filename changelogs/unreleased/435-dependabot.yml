@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump eslint-plugin-testing-library from 3.10.1 to 4.5.0
+destination-branches:
+- master
+- iso4
+sections: {}
