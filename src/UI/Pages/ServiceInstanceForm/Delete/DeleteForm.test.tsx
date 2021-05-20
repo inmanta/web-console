@@ -34,5 +34,5 @@ test("GIVEN DeleteForm WHEN user clicks 'Yes' THEN closeModal and request is exe
 
   expect(closeModal).toBeCalledTimes(1);
   expect(fetchMock.mock.calls).toHaveLength(1);
-  expect(fetchMock.mock.calls[0][1].method).toEqual("DELETE");
+  expect(fetchMock.mock.calls[0][1]?.method).toEqual("DELETE");
 });

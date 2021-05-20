@@ -9,9 +9,9 @@ test("BaseApiHelper.get executes a GET request with correct url & env", async ()
   fetchMock.mockResponse(JSON.stringify({ data: [] }));
   expect(await apiHelper.get(url, env)).toEqual(Either.right({ data: [] }));
 
-  const [receivedUrl, { headers }] = fetchMock.mock.calls[0];
+  const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
   expect(receivedUrl).toEqual(url);
-  expect(headers).toEqual({ "X-Inmanta-Tid": env });
+  expect(requestInit?.headers).toEqual({ "X-Inmanta-Tid": env });
 });
 
 test("BaseApiHelper.post executes a POST request with correct url & env", async () => {
@@ -24,9 +24,9 @@ test("BaseApiHelper.post executes a POST request with correct url & env", async 
     Either.right({ data: [] })
   );
 
-  const [receivedUrl, { headers }] = fetchMock.mock.calls[0];
+  const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
   expect(receivedUrl).toEqual(url);
-  expect(headers).toEqual({
+  expect(requestInit?.headers).toEqual({
     "Content-Type": "application/json",
     "X-Inmanta-Tid": env,
   });

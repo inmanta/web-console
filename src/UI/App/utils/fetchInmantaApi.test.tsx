@@ -93,7 +93,7 @@ describe("Backend data fetching function", () => {
       };
       await fetchInmantaApi(requestParams);
       expect(fetchMock.mock.calls[0]).toHaveLength(2);
-      expect(fetchMock.mock.calls[0][1].headers).toEqual({});
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({});
     });
   });
   describe("On failed request", () => {
@@ -207,7 +207,7 @@ describe("Backend data fetching function", () => {
     it("Should add authorization header to GET requests", async () => {
       await fetchInmantaApi(requestParamsWithKeycloak);
       expect(fetchMock.mock.calls).toHaveLength(1);
-      expect(fetchMock.mock.calls[0][1].headers).toEqual({
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
         Authorization: "Bearer JWT token",
         "X-Inmanta-Tid": "env-id",
       });
@@ -215,7 +215,7 @@ describe("Backend data fetching function", () => {
     it("Should add authorization header to other requests", async () => {
       await fetchInmantaApi({ ...requestParamsWithKeycloak, method: "POST" });
       expect(fetchMock.mock.calls).toHaveLength(1);
-      expect(fetchMock.mock.calls[0][1].headers).toEqual({
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
         Authorization: "Bearer JWT token",
         "X-Inmanta-Tid": "env-id",
         "Content-Type": "application/json",
@@ -227,7 +227,7 @@ describe("Backend data fetching function", () => {
         isEnvironmentIdRequired: false,
       });
       expect(fetchMock.mock.calls).toHaveLength(1);
-      expect(fetchMock.mock.calls[0][1].headers).toEqual({
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
         Authorization: "Bearer JWT token",
       });
     });

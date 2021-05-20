@@ -21,7 +21,7 @@ test("InstanceSetStateManager prepares correct setStateHandler", async () => {
     expect(fetchMock.mock.calls[0][0]).toEqual(
       "/lsm/v1/service_inventory/cloudconnectv2/bd200aec-4f80-45e1-b2ad-137c442c68b8/state?current_version=3&target_state=acknowledged&message=Triggered from the console"
     );
-    expect(fetchMock.mock.calls[0][1].method).toEqual("POST");
+    expect(fetchMock.mock.calls[0][1]?.method).toEqual("POST");
   }
 });
 
@@ -42,7 +42,7 @@ test("InstanceSetStateManager adds username to the message when keycloak is enab
     expect(fetchMock.mock.calls[0][0]).toEqual(
       "/lsm/v1/service_inventory/cloudconnectv2/bd200aec-4f80-45e1-b2ad-137c442c68b8/state?current_version=3&target_state=acknowledged&message=Triggered from the console by inmanta"
     );
-    expect(fetchMock.mock.calls[0][1].method).toEqual("POST");
+    expect(fetchMock.mock.calls[0][1]?.method).toEqual("POST");
   }
 });
 

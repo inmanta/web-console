@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump jest-fetch-mock from 2.1.2 to 3.0.3
+destination-branches:
+- master
+- iso4
+sections: {}
