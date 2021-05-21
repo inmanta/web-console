@@ -22,6 +22,7 @@ import {
   CommandProviderImpl,
   DiagnosticsStateHelper,
   DiagnosticsDataManager,
+  InstanceConfigCommandManager,
 } from "@/UI/Data";
 import { DataProvider, SchedulerImpl } from "@/Core";
 import { UrlManagerImpl } from "@/UI/Routing";
@@ -123,10 +124,14 @@ export class DependencyManagerImpl implements DependencyManager {
       diagnosticsHelper,
     ]);
 
-    const commandProvider = new CommandProviderImpl(
+    const instanceConfigCommandManager = new InstanceConfigCommandManager(
       new InstanceConfigPoster(this.baseApiHelper, environment),
       instanceConfigStateHelper
     );
+
+    const commandProvider = new CommandProviderImpl([
+      instanceConfigCommandManager,
+    ]);
 
     return {
       commandProvider,

@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import {
   CommandProviderImpl,
   DataProviderImpl,
+  InstanceConfigCommandManager,
   InstanceConfigDataManager,
   InstanceConfigStateHelper,
   ServiceKeyMaker,
@@ -71,10 +72,12 @@ test("ConfigTab can reset all settings", async () => {
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl(
-    new InstantPoster(RemoteData.success({ data: {} })),
-    instanceConfigStateHelper
-  );
+  const commandProvider = new CommandProviderImpl([
+    new InstanceConfigCommandManager(
+      new InstantPoster(RemoteData.success({ data: {} })),
+      instanceConfigStateHelper
+    ),
+  ]);
 
   render(
     <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
@@ -106,14 +109,16 @@ test("ConfigTab can change 1 toggle", async () => {
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl(
-    new InstantPoster(
-      RemoteData.success({
-        data: { auto_creating: false, auto_designed: false },
-      })
+  const commandProvider = new CommandProviderImpl([
+    new InstanceConfigCommandManager(
+      new InstantPoster(
+        RemoteData.success({
+          data: { auto_creating: false, auto_designed: false },
+        })
+      ),
+      instanceConfigStateHelper
     ),
-    instanceConfigStateHelper
-  );
+  ]);
 
   render(
     <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
