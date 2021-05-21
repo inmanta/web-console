@@ -6,13 +6,13 @@ import {
   InstanceLog,
   Service,
   StaticScheduler,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import {
   QueryResolverImpl,
-  DiagnosticsDataManager,
+  DiagnosticsQueryManager,
   DiagnosticsStateHelper,
 } from "@/UI/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
@@ -34,8 +34,8 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   const { service_instance_id, environment } = InstanceLog.A;
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new DiagnosticsDataManager(
+    new DynamicQueryManagerResolver([
+      new DiagnosticsQueryManager(
         new InstantFetcher<"Diagnostics">({
           kind: "Success",
           data: { data: diagnostics },

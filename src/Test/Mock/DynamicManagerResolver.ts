@@ -1,6 +1,6 @@
 import { QueryManager, CommandManager, ManagerResolver } from "@/Core";
 
-export class DynamicDataManagerResolver
+export class DynamicQueryManagerResolver
   implements ManagerResolver<QueryManager>
 {
   constructor(private readonly managers: QueryManager[]) {}

@@ -1,13 +1,13 @@
 import React from "react";
 import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, DynamicDataManagerResolver, Service } from "@/Test";
+import { DeferredFetcher, DynamicQueryManagerResolver, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ResourcesDataManager,
+  ResourcesQueryManager,
   ResourcesStateHelper,
-  ServiceInstancesDataManager,
+  ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -30,7 +30,7 @@ export class ServiceInventoryPrepper {
       update: jest.fn((result) => task.update(result)),
     }));
     const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
-    const serviceInstancesHelper = new ServiceInstancesDataManager(
+    const serviceInstancesHelper = new ServiceInstancesQueryManager(
       serviceInstancesFetcher,
       new ServiceInstancesStateHelper(store, service.environment),
       scheduler,
@@ -38,7 +38,7 @@ export class ServiceInventoryPrepper {
     );
 
     const resourcesFetcher = new DeferredFetcher<"Resources">();
-    const resourcesHelper = new ResourcesDataManager(
+    const resourcesHelper = new ResourcesQueryManager(
       resourcesFetcher,
       new ResourcesStateHelper(store),
       scheduler,
@@ -46,7 +46,7 @@ export class ServiceInventoryPrepper {
     );
 
     const queryResolver = new QueryResolverImpl(
-      new DynamicDataManagerResolver([serviceInstancesHelper, resourcesHelper])
+      new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
     );
     const urlManager = new UrlManagerImpl("", service.environment);
 

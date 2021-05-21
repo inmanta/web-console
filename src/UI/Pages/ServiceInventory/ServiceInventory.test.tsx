@@ -8,15 +8,15 @@ import {
   Resources,
   Pagination,
   StaticScheduler,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ServiceInstancesDataManager,
+  ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  ResourcesDataManager,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -28,7 +28,7 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
-  const serviceInstancesHelper = new ServiceInstancesDataManager(
+  const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store, Service.A.environment),
     scheduler,
@@ -36,7 +36,7 @@ function setup() {
   );
 
   const resourcesFetcher = new DeferredFetcher<"Resources">();
-  const resourcesHelper = new ResourcesDataManager(
+  const resourcesHelper = new ResourcesQueryManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
     scheduler,
@@ -44,7 +44,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([serviceInstancesHelper, resourcesHelper])
+    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
 
   const urlManager = new UrlManagerImpl("", Service.A.environment);

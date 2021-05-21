@@ -8,14 +8,14 @@ import {
   tablePresenter,
   tablePresenterWithIdentity,
   StaticScheduler,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
   QueryResolverImpl,
-  ResourcesDataManager,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import userEvent from "@testing-library/user-event";
@@ -28,8 +28,8 @@ const dummySetter = () => {
 test("InventoryTable can be expanded", async () => {
   // Arrange
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new ResourcesDataManager(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
         new InstantFetcher<"Resources">({
           kind: "Success",
           data: {
@@ -72,8 +72,8 @@ test("InventoryTable can be expanded", async () => {
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new ResourcesDataManager(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
         new InstantFetcher<"Resources">({
           kind: "Success",
           data: {

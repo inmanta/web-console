@@ -1,8 +1,8 @@
 import { KeyMaker, Fetcher, StateHelper, Scheduler } from "@/Core";
-import { ContinuousDataManagerImpl } from "../DataManagerImpl";
+import { ContinuousQueryManagerImpl } from "../QueryManagerImpl";
 import { identity } from "lodash";
 
-export class ServiceDataManager extends ContinuousDataManagerImpl<"Service"> {
+export class ServiceQueryManager extends ContinuousQueryManagerImpl<"Service"> {
   constructor(
     fetcher: Fetcher<"Service">,
     stateHelper: StateHelper<"Service">,

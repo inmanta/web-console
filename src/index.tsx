@@ -7,7 +7,7 @@ import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI";
 import {
   CommandManagerResolver,
-  DataManagerResolver,
+  QueryManagerResolver,
   DependencyProvider,
 } from "@/UI/Dependency";
 import { BaseApiHelper } from "./Infra";
@@ -35,7 +35,7 @@ const store = getStoreInstance();
 const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
 const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
 const queryResolver = new QueryResolverImpl(
-  new DataManagerResolver(store, baseApiHelper)
+  new QueryManagerResolver(store, baseApiHelper)
 );
 const commandResolver = new CommandResolverImpl(
   new CommandManagerResolver(store, baseApiHelper)

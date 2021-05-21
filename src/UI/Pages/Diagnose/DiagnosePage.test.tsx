@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
   Service,
   StaticScheduler,
 } from "@/Test";
@@ -11,7 +11,7 @@ import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  DiagnosticsDataManager,
+  DiagnosticsQueryManager,
   DiagnosticsStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -24,8 +24,8 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredFetcher<"Diagnostics">();
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new DiagnosticsDataManager(
+    new DynamicQueryManagerResolver([
+      new DiagnosticsQueryManager(
         apiHelper,
         new DiagnosticsStateHelper(store),
         scheduler,

@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
   Service,
   StaticScheduler,
 } from "@/Test";
@@ -11,7 +11,7 @@ import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ServicesDataManager,
+  ServicesQueryManager,
   ServicesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -23,7 +23,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const servicesFetcher = new DeferredFetcher<"Services">();
 
-  const servicesHelper = new ServicesDataManager(
+  const servicesHelper = new ServicesQueryManager(
     servicesFetcher,
     new ServicesStateHelper(store, Service.A.environment),
     scheduler,
@@ -31,7 +31,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([servicesHelper])
+    new DynamicQueryManagerResolver([servicesHelper])
   );
 
   const component = (

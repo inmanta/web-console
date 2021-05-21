@@ -1,3 +1,3 @@
 export * from "./CommandManager";
-export * from "./DataManager";
+export * from "./QueryManager";
 export * from "./StateHelper";

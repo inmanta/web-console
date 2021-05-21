@@ -16,7 +16,7 @@ type Data = RemoteData.Type<
   Query.UsedData<"InstanceConfig">
 >;
 
-export class InstanceConfigDataManager
+export class InstanceConfigQueryManager
   implements OneTimeQueryManager<"InstanceConfig">
 {
   constructor(

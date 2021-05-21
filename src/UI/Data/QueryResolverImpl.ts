@@ -20,37 +20,39 @@ export class QueryResolverImpl implements QueryResolver {
     return this.managerResolver;
   }
 
-  private getOneTimeDataManager(
+  private getOneTimeQueryManager(
     query: Query.Type
   ): OneTimeQueryManager<typeof query.kind> {
-    const dataManager = this.managerResolver
+    const manager = this.managerResolver
       .get()
       .find((helper) => helper.matches(query, "OneTime"));
-    if (typeof dataManager !== "undefined") {
-      return dataManager as OneTimeQueryManager<typeof query.kind>;
+    if (typeof manager !== "undefined") {
+      return manager as OneTimeQueryManager<typeof query.kind>;
     }
-    throw new Error(`Can't find OneTimeDataManager for query ${query.kind}`);
+    throw new Error(`Can't find OneTimeQueryManager for query ${query.kind}`);
   }
 
   useOneTime(query: Query.Type): [Data<typeof query.kind>, () => void] {
-    const helper = this.getOneTimeDataManager(query);
+    const helper = this.getOneTimeQueryManager(query);
     return helper.useOneTime(query.qualifier);
   }
 
-  private getContinuousDataManager(
+  private getContinuousQueryManager(
     query: Query.Type
   ): ContinuousQueryManager<typeof query.kind> {
-    const dataManager = this.managerResolver
+    const manager = this.managerResolver
       .get()
       .find((helper) => helper.matches(query, "Continuous"));
-    if (typeof dataManager !== "undefined") {
-      return dataManager as ContinuousQueryManager<typeof query.kind>;
+    if (typeof manager !== "undefined") {
+      return manager as ContinuousQueryManager<typeof query.kind>;
     }
-    throw new Error(`Can't find ContinuousDataManager for query ${query.kind}`);
+    throw new Error(
+      `Can't find ContinuousQueryManager for query ${query.kind}`
+    );
   }
 
   useContinuous(query: Query.Type): [Data<typeof query.kind>, () => void] {
-    const helper = this.getContinuousDataManager(query);
+    const helper = this.getContinuousQueryManager(query);
     return helper.useContinuous(query.qualifier);
   }
 }

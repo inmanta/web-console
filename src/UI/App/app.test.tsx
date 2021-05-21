@@ -8,20 +8,20 @@ import { getStoreInstance } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ProjectsDataManager,
+  ProjectsQueryManager,
   ProjectsStateHelper,
-} from "../Data";
-import { DeferredFetcher, DynamicDataManagerResolver } from "@/Test";
+} from "@/UI/Data";
+import { DeferredFetcher, DynamicQueryManagerResolver } from "@/Test";
 
 function setup() {
   const stateHelper = new ProjectsStateHelper(getStoreInstance());
-  const projectsManager = new ProjectsDataManager(
+  const projectsManager = new ProjectsQueryManager(
     new DeferredFetcher<"Projects">(),
     stateHelper
   );
   return {
     queryResolver: new QueryResolverImpl(
-      new DynamicDataManagerResolver([projectsManager])
+      new DynamicQueryManagerResolver([projectsManager])
     ),
   };
 }

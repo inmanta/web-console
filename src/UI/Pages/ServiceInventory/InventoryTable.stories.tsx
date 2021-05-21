@@ -2,7 +2,7 @@ import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { InventoryTable } from "./InventoryTable";
 import {
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
   InstantFetcher,
   rows,
   StaticScheduler,
@@ -11,7 +11,7 @@ import {
 import { getStoreInstance } from "@/UI/Store";
 import {
   QueryResolverImpl,
-  ResourcesDataManager,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -25,8 +25,8 @@ export default {
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new ResourcesDataManager(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
         new InstantFetcher<"Resources">({
           kind: "Success",
           data: { data: [] },

@@ -1,7 +1,7 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
 import {
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
   instances,
   InstantFetcher,
   Service,
@@ -14,7 +14,7 @@ import { ServiceModel } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ResourcesDataManager,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { MemoryRouter } from "react-router";
@@ -27,8 +27,8 @@ export default {
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new ResourcesDataManager(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
         new InstantFetcher<"Resources">({
           kind: "Success",
           data: { data: [] },

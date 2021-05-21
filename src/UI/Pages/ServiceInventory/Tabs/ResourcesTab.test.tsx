@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
 import { Either } from "@/Core";
@@ -11,7 +11,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   ResourcesStateHelper,
-  ResourcesDataManager,
+  ResourcesQueryManager,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesTab } from "./ResourcesTab";
@@ -28,8 +28,8 @@ function setup() {
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new ResourcesDataManager(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
         apiHelper,
         new ResourcesStateHelper(store),
         scheduler,

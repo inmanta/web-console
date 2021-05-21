@@ -2,14 +2,14 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import {
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
   InstantFetcher,
   Service,
   ServiceInstance,
 } from "@/Test";
 import {
   QueryResolverImpl,
-  InstanceLogsDataManager,
+  InstanceLogsQueryManager,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -19,8 +19,8 @@ import { StoreProvider } from "easy-peasy";
 it("ServiceInstanceHistory renders", async () => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new InstanceLogsDataManager(
+    new DynamicQueryManagerResolver([
+      new InstanceLogsQueryManager(
         new InstantFetcher<"InstanceLogs">({
           kind: "Success",
           data: { data: [] },

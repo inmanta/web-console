@@ -5,14 +5,14 @@ import {
   InstantFetcher,
   InstanceLog,
   Service,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import {
   QueryResolverImpl,
-  InstanceLogsDataManager,
+  InstanceLogsQueryManager,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
 
@@ -24,8 +24,8 @@ export default {
 const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new InstanceLogsDataManager(
+    new DynamicQueryManagerResolver([
+      new InstanceLogsQueryManager(
         new InstantFetcher<"InstanceLogs">({
           kind: "Success",
           data: { data: logs },

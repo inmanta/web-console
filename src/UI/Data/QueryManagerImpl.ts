@@ -23,7 +23,7 @@ type Data<Kind extends Query.Kind> = [
   () => void
 ];
 
-export class OneTimeDataManagerImpl<Kind extends Query.Kind>
+export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
   implements OneTimeQueryManager<Kind>
 {
   constructor(
@@ -72,7 +72,7 @@ export class OneTimeDataManagerImpl<Kind extends Query.Kind>
   }
 }
 
-export class ContinuousDataManagerImpl<Kind extends Query.Kind>
+export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
   implements ContinuousQueryManager<Kind>
 {
   constructor(

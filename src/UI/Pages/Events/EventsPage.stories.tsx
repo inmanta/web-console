@@ -8,14 +8,14 @@ import {
   StaticScheduler,
   instanceEvents,
   ignoredErrorNormalEvents,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { EventsPage } from "./EventsPage";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import {
   QueryResolverImpl,
-  EventsDataManager,
+  EventsQueryManager,
   EventsStateHelper,
 } from "@/UI/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
@@ -30,8 +30,8 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const { service_instance_id } = InstanceLog.A;
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new EventsDataManager(
+    new DynamicQueryManagerResolver([
+      new EventsQueryManager(
         new InstantFetcher<"Events">({
           kind: "Success",
           data: {

@@ -4,7 +4,7 @@ import {
   CommandResolverImpl,
   QueryResolverImpl,
   InstanceConfigCommandManager,
-  InstanceConfigDataManager,
+  InstanceConfigQueryManager,
   InstanceConfigStateHelper,
   ServiceKeyMaker,
   ServiceStateHelper,
@@ -14,7 +14,7 @@ import { getStoreInstance } from "@/UI/Store";
 import { ConfigTab } from "./ConfigTab";
 import {
   DynamicCommandManagerResolver,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
   InstantFetcher,
   InstantPoster,
   Service,
@@ -38,7 +38,7 @@ function setup() {
     version: ServiceInstance.A.version,
   };
 
-  const instanceConfigHelper = new InstanceConfigDataManager(
+  const instanceConfigHelper = new InstanceConfigQueryManager(
     new InstantFetcher<"InstanceConfig">({
       kind: "Success",
       data: { data: { auto_creating: false } },
@@ -57,7 +57,7 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([instanceConfigHelper])
+    new DynamicQueryManagerResolver([instanceConfigHelper])
   );
 
   return {

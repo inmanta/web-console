@@ -6,13 +6,13 @@ import {
   Outcome,
   InstantFetcher,
   Resources,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   ResourcesStateHelper,
-  ResourcesDataManager,
+  ResourcesQueryManager,
 } from "@/UI/Data";
 import { ResourcesTab } from "./ResourcesTab";
 import { UrlManagerImpl } from "@/UI/Routing";
@@ -31,8 +31,8 @@ const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([
-      new ResourcesDataManager(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
         new InstantFetcher<"Resources">(outcome),
         new ResourcesStateHelper(store),
         new StaticScheduler(),

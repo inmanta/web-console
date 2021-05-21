@@ -8,14 +8,14 @@ import {
   InstantFetcher,
   Pagination,
   StaticScheduler,
-  DynamicDataManagerResolver,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ServiceInstancesDataManager,
+  ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  ResourcesDataManager,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -38,7 +38,7 @@ export const Basic: React.FC = () => {
     },
   });
 
-  const serviceInstancesHelper = new ServiceInstancesDataManager(
+  const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store, Service.A.environment),
     scheduler,
@@ -49,7 +49,7 @@ export const Basic: React.FC = () => {
     data: { data: Resources.B },
   });
 
-  const resourcesHelper = new ResourcesDataManager(
+  const resourcesHelper = new ResourcesQueryManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
     scheduler,
@@ -57,7 +57,7 @@ export const Basic: React.FC = () => {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([serviceInstancesHelper, resourcesHelper])
+    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
 
   return (
@@ -82,7 +82,7 @@ export const Failed: React.FC = () => {
     kind: "Failed",
     error: "fake error message",
   });
-  const serviceInstancesHelper = new ServiceInstancesDataManager(
+  const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store, Service.A.environment),
     scheduler,
@@ -90,7 +90,7 @@ export const Failed: React.FC = () => {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicDataManagerResolver([serviceInstancesHelper])
+    new DynamicQueryManagerResolver([serviceInstancesHelper])
   );
 
   return (
