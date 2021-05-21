@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump css-loader from 3.4.2 to 5.2.5
+destination-branches:
+- master
+- iso4
+sections: {}
