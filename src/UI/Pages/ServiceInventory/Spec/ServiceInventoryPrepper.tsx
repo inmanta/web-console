@@ -1,7 +1,7 @@
 import React from "react";
 import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, Service } from "@/Test";
+import { DeferredFetcher, DynamicDataManagerResolver, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
@@ -45,10 +45,9 @@ export class ServiceInventoryPrepper {
       service.environment
     );
 
-    const dataProvider = new DataProviderImpl([
-      serviceInstancesHelper,
-      resourcesHelper,
-    ]);
+    const dataProvider = new DataProviderImpl(
+      new DynamicDataManagerResolver([serviceInstancesHelper, resourcesHelper])
+    );
     const urlManager = new UrlManagerImpl("", service.environment);
 
     const component = (

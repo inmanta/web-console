@@ -1,7 +1,7 @@
 import {
   EnvironmentHandlerContext,
   EnvironmentHandlerImpl,
-  ProjectsProviderContext,
+  DependencyContext,
 } from "@/UI/Dependency";
 import { useStore } from "@/UI/Store";
 import {
@@ -15,11 +15,11 @@ import { useHistory } from "react-router";
 
 export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
   const [envAlert, setEnvAlert] = React.useState("");
-  const projectsProvider = useContext(ProjectsProviderContext);
+  const { dataProvider } = useContext(DependencyContext);
   const history = useHistory();
   const store = useStore();
   const environmentHandler = new EnvironmentHandlerImpl(history, store);
-  const [data] = projectsProvider.useOneTime<"Projects">({
+  const [data] = dataProvider.useOneTime<"Projects">({
     kind: "Projects",
     qualifier: null,
   });

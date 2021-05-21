@@ -1,7 +1,12 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, Service, StaticScheduler } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicDataManagerResolver,
+  Service,
+  StaticScheduler,
+} from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -25,7 +30,9 @@ function setup() {
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl([servicesHelper]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([servicesHelper])
+  );
 
   const component = (
     <MemoryRouter>

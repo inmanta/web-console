@@ -12,5 +12,3 @@ export interface TriggerProvider {
     command: Command.Type
   ): Command.Trigger<Kind>;
 }
-
-export type CommandProvider = TriggerProvider;

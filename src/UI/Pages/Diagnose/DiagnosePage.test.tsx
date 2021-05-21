@@ -1,7 +1,12 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, Service, StaticScheduler } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicDataManagerResolver,
+  Service,
+  StaticScheduler,
+} from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -18,14 +23,16 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredFetcher<"Diagnostics">();
-  const dataProvider = new DataProviderImpl([
-    new DiagnosticsDataManager(
-      apiHelper,
-      new DiagnosticsStateHelper(store),
-      scheduler,
-      "environment"
-    ),
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([
+      new DiagnosticsDataManager(
+        apiHelper,
+        new DiagnosticsStateHelper(store),
+        scheduler,
+        "environment"
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", "environment");
 
   const component = (

@@ -6,16 +6,12 @@ import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI";
 import {
-  DependencyManagerContext,
-  DependencyManagerImpl,
-  ProjectsProviderContext,
+  CommandManagerResolver,
+  DataManagerResolver,
+  DependencyProvider,
 } from "@/UI/Dependency";
-import { BaseApiHelper, FetcherImpl } from "./Infra";
-import {
-  DataProviderImpl,
-  ProjectsDataManager,
-  ProjectsStateHelper,
-} from "./UI/Data";
+import { BaseApiHelper } from "./Infra";
+import { CommandProviderImpl, DataProviderImpl } from "./UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -35,27 +31,21 @@ if (externalKeycloakConf) {
   keycloak = Keycloak(customKeycloakConf);
 }
 
-const storeInstance = getStoreInstance();
+const store = getStoreInstance();
 const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
 const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
-const stateHelper = new ProjectsStateHelper(storeInstance);
-const projectsManager = new ProjectsDataManager(
-  new FetcherImpl<"Projects">(baseApiHelper),
-  stateHelper
+const dataProvider = new DataProviderImpl(
+  new DataManagerResolver(store, baseApiHelper)
 );
-const projectsProvider = new DataProviderImpl([projectsManager]);
-const dependencyManager = new DependencyManagerImpl(
-  storeInstance,
-  baseApiHelper
+const commandProvider = new CommandProviderImpl(
+  new CommandManagerResolver(store, baseApiHelper)
 );
 
 ReactDOM.render(
-  <ProjectsProviderContext.Provider value={projectsProvider}>
-    <DependencyManagerContext.Provider value={dependencyManager}>
-      <StoreProvider store={storeInstance}>
-        <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
-      </StoreProvider>
-    </DependencyManagerContext.Provider>
-  </ProjectsProviderContext.Provider>,
+  <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
+    <StoreProvider store={store}>
+      <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+    </StoreProvider>
+  </DependencyProvider>,
   document.getElementById("root") as HTMLElement
 );

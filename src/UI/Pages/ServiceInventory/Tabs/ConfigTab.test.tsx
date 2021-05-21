@@ -13,6 +13,8 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { ConfigTab } from "./ConfigTab";
 import {
+  DynamicCommandManagerResolver,
+  DynamicDataManagerResolver,
   InstantFetcher,
   InstantPoster,
   Service,
@@ -54,7 +56,9 @@ function setup() {
     instanceIdentifier.environment
   );
 
-  const dataProvider = new DataProviderImpl([instanceConfigHelper]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([instanceConfigHelper])
+  );
 
   return {
     storeInstance,
@@ -72,12 +76,14 @@ test("ConfigTab can reset all settings", async () => {
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl([
-    new InstanceConfigCommandManager(
-      new InstantPoster(RemoteData.success({ data: {} })),
-      instanceConfigStateHelper
-    ),
-  ]);
+  const commandProvider = new CommandProviderImpl(
+    new DynamicCommandManagerResolver([
+      new InstanceConfigCommandManager(
+        new InstantPoster(RemoteData.success({ data: {} })),
+        instanceConfigStateHelper
+      ),
+    ])
+  );
 
   render(
     <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
@@ -109,16 +115,18 @@ test("ConfigTab can change 1 toggle", async () => {
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl([
-    new InstanceConfigCommandManager(
-      new InstantPoster(
-        RemoteData.success({
-          data: { auto_creating: false, auto_designed: false },
-        })
+  const commandProvider = new CommandProviderImpl(
+    new DynamicCommandManagerResolver([
+      new InstanceConfigCommandManager(
+        new InstantPoster(
+          RemoteData.success({
+            data: { auto_creating: false, auto_designed: false },
+          })
+        ),
+        instanceConfigStateHelper
       ),
-      instanceConfigStateHelper
-    ),
-  ]);
+    ])
+  );
 
   render(
     <DependencyProvider dependencies={{ dataProvider, commandProvider }}>

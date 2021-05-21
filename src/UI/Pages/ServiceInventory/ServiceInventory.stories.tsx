@@ -8,6 +8,7 @@ import {
   InstantFetcher,
   Pagination,
   StaticScheduler,
+  DynamicDataManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -55,10 +56,9 @@ export const Basic: React.FC = () => {
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl([
-    serviceInstancesHelper,
-    resourcesHelper,
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([serviceInstancesHelper, resourcesHelper])
+  );
 
   return (
     <DependencyProvider dependencies={{ dataProvider }}>
@@ -89,7 +89,9 @@ export const Failed: React.FC = () => {
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl([serviceInstancesHelper]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([serviceInstancesHelper])
+  );
 
   return (
     <DependencyProvider dependencies={{ dataProvider }}>

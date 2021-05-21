@@ -8,6 +8,7 @@ import {
   tablePresenter,
   tablePresenterWithIdentity,
   StaticScheduler,
+  DynamicDataManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
@@ -26,24 +27,26 @@ const dummySetter = () => {
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: {
-          data: [
-            {
-              resource_id: "resource_id_1",
-              resource_state: "resource_state",
-            },
-          ],
-        },
-      }),
-      new DummyStateHelper<"Resources">(),
-      new StaticScheduler(),
-      "env"
-    ),
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([
+      new ResourcesDataManager(
+        new InstantFetcher<"Resources">({
+          kind: "Success",
+          data: {
+            data: [
+              {
+                resource_id: "resource_id_1",
+                resource_state: "resource_state",
+              },
+            ],
+          },
+        }),
+        new DummyStateHelper<"Resources">(),
+        new StaticScheduler(),
+        "env"
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", "env");
   render(
     <DependencyProvider dependencies={{ dataProvider, urlManager }}>
@@ -68,24 +71,26 @@ test("InventoryTable can be expanded", async () => {
 
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: {
-          data: [
-            {
-              resource_id: "resource_id_1",
-              resource_state: "resource_state",
-            },
-          ],
-        },
-      }),
-      new ResourcesStateHelper(store),
-      new StaticScheduler(),
-      "env"
-    ),
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([
+      new ResourcesDataManager(
+        new InstantFetcher<"Resources">({
+          kind: "Success",
+          data: {
+            data: [
+              {
+                resource_id: "resource_id_1",
+                resource_state: "resource_state",
+              },
+            ],
+          },
+        }),
+        new ResourcesStateHelper(store),
+        new StaticScheduler(),
+        "env"
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", "env");
   render(
     <DependencyProvider dependencies={{ dataProvider, urlManager }}>

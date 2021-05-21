@@ -1,7 +1,13 @@
 import React from "react";
 import { RawDiagnostics } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { InstantFetcher, InstanceLog, Service, StaticScheduler } from "@/Test";
+import {
+  InstantFetcher,
+  InstanceLog,
+  Service,
+  StaticScheduler,
+  DynamicDataManagerResolver,
+} from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { DataProviderImpl } from "@/UI/Data";
@@ -27,17 +33,19 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
 }) => {
   const { service_instance_id, environment } = InstanceLog.A;
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new DiagnosticsDataManager(
-      new InstantFetcher<"Diagnostics">({
-        kind: "Success",
-        data: { data: diagnostics },
-      }),
-      new DiagnosticsStateHelper(store),
-      new StaticScheduler(),
-      environment
-    ),
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([
+      new DiagnosticsDataManager(
+        new InstantFetcher<"Diagnostics">({
+          kind: "Success",
+          data: { data: diagnostics },
+        }),
+        new DiagnosticsStateHelper(store),
+        new StaticScheduler(),
+        environment
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", environment);
 
   return (

@@ -5,6 +5,7 @@ import {
   OneTimeDataManager,
   ContinuousDataManager,
   DataManager,
+  ManagerResolver,
 } from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
@@ -13,14 +14,18 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 >;
 
 export class DataProviderImpl implements DataProvider {
-  constructor(private readonly dataManagers: DataManager[]) {}
+  constructor(public readonly managerResolver: ManagerResolver<DataManager>) {}
+
+  getManagerResolver(): ManagerResolver<DataManager> {
+    return this.managerResolver;
+  }
 
   private getOneTimeDataManager(
     query: Query.Type
   ): OneTimeDataManager<typeof query.kind> {
-    const dataManager = this.dataManagers.find((helper) =>
-      helper.matches(query, "OneTime")
-    );
+    const dataManager = this.managerResolver
+      .get()
+      .find((helper) => helper.matches(query, "OneTime"));
     if (typeof dataManager !== "undefined") {
       return dataManager as OneTimeDataManager<typeof query.kind>;
     }
@@ -35,9 +40,9 @@ export class DataProviderImpl implements DataProvider {
   private getContinuousDataManager(
     query: Query.Type
   ): ContinuousDataManager<typeof query.kind> {
-    const dataManager = this.dataManagers.find((helper) =>
-      helper.matches(query, "Continuous")
-    );
+    const dataManager = this.managerResolver
+      .get()
+      .find((helper) => helper.matches(query, "Continuous"));
     if (typeof dataManager !== "undefined") {
       return dataManager as ContinuousDataManager<typeof query.kind>;
     }

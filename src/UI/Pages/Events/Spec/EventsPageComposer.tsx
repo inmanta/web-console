@@ -1,7 +1,7 @@
 import React from "react";
 import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, Service } from "@/Test";
+import { DeferredFetcher, DynamicDataManagerResolver, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
@@ -31,7 +31,9 @@ export class EventsPageComposer {
       Service.A.environment
     );
 
-    const dataProvider = new DataProviderImpl([eventsHelper]);
+    const dataProvider = new DataProviderImpl(
+      new DynamicDataManagerResolver([eventsHelper])
+    );
     const urlManager = new UrlManagerImpl("", Service.A.environment);
 
     const component = (

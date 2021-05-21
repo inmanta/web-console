@@ -8,6 +8,7 @@ import {
   Resources,
   Pagination,
   StaticScheduler,
+  DynamicDataManagerResolver,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -42,10 +43,9 @@ function setup() {
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl([
-    serviceInstancesHelper,
-    resourcesHelper,
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([serviceInstancesHelper, resourcesHelper])
+  );
 
   const urlManager = new UrlManagerImpl("", Service.A.environment);
 

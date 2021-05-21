@@ -1,7 +1,12 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
-import { InstantFetcher, Service, ServiceInstance } from "@/Test";
+import {
+  DynamicDataManagerResolver,
+  InstantFetcher,
+  Service,
+  ServiceInstance,
+} from "@/Test";
 import {
   DataProviderImpl,
   InstanceLogsDataManager,
@@ -13,16 +18,18 @@ import { StoreProvider } from "easy-peasy";
 
 it("ServiceInstanceHistory renders", async () => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new InstanceLogsDataManager(
-      new InstantFetcher<"InstanceLogs">({
-        kind: "Success",
-        data: { data: [] },
-      }),
-      new InstanceLogsStateHelper(store),
-      Service.A.environment
-    ),
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([
+      new InstanceLogsDataManager(
+        new InstantFetcher<"InstanceLogs">({
+          kind: "Success",
+          data: { data: [] },
+        }),
+        new InstanceLogsStateHelper(store),
+        Service.A.environment
+      ),
+    ])
+  );
 
   render(
     <DependencyProvider dependencies={{ dataProvider }}>

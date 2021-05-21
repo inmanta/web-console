@@ -8,6 +8,7 @@ import {
   StaticScheduler,
   instanceEvents,
   ignoredErrorNormalEvents,
+  DynamicDataManagerResolver,
 } from "@/Test";
 import { EventsPage } from "./EventsPage";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -28,26 +29,28 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const scheduler = new StaticScheduler();
   const { service_instance_id } = InstanceLog.A;
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new EventsDataManager(
-      new InstantFetcher<"Events">({
-        kind: "Success",
-        data: {
-          data: events,
-          links: { self: "" },
-          metadata: {
-            total: events.length,
-            before: 0,
-            after: 0,
-            page_size: 10,
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([
+      new EventsDataManager(
+        new InstantFetcher<"Events">({
+          kind: "Success",
+          data: {
+            data: events,
+            links: { self: "" },
+            metadata: {
+              total: events.length,
+              before: 0,
+              after: 0,
+              page_size: 10,
+            },
           },
-        },
-      }),
-      new EventsStateHelper(store),
-      scheduler,
-      InstanceLog.A.environment
-    ),
-  ]);
+        }),
+        new EventsStateHelper(store),
+        scheduler,
+        InstanceLog.A.environment
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", InstanceLog.A.environment);
 
   return (

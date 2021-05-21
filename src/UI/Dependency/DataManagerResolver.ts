@@ -1,9 +1,8 @@
-import { createContext } from "react";
+import { DataManager, ManagerResolver, SchedulerImpl } from "@/Core";
+import { BaseApiHelper, FetcherImpl } from "@/Infra";
+import { ProjectsDataManager, ProjectsStateHelper } from "@/UI/Data";
 import { Store } from "@/UI/Store";
-import { Dependencies } from "@/UI/Dependency/Dependency";
-import { BaseApiHelper, FetcherImpl, InstanceConfigPoster } from "@/Infra";
 import {
-  DataProviderImpl,
   ServiceDataManager,
   ServiceKeyMaker,
   ServiceStateHelper,
@@ -19,36 +18,38 @@ import {
   InstanceLogsStateHelper,
   InstanceConfigDataManager,
   InstanceConfigStateHelper,
-  CommandProviderImpl,
   DiagnosticsStateHelper,
   DiagnosticsDataManager,
-  InstanceConfigCommandManager,
 } from "@/UI/Data";
-import { DataProvider, SchedulerImpl } from "@/Core";
-import { UrlManagerImpl } from "@/UI/Routing";
-import { DummyDataProvider } from "./DummyDataProvider";
 
-interface DependencyManager {
-  getDependencies(environment: string): Dependencies;
-}
+export class DataManagerResolver implements ManagerResolver<DataManager> {
+  private managers: DataManager[] = [];
 
-class DummyDependencyManager implements DependencyManager {
-  getDependencies(): Dependencies {
-    throw new Error("method getDependencies not implemented");
-  }
-}
-
-export const DependencyManagerContext = createContext<DependencyManager>(
-  new DummyDependencyManager()
-);
-
-export class DependencyManagerImpl implements DependencyManager {
   constructor(
     private readonly store: Store,
     private readonly baseApiHelper: BaseApiHelper
-  ) {}
+  ) {
+    this.managers = this.getIndependentManagers();
+  }
 
-  getDependencies(environment: string): Dependencies {
+  get(): DataManager[] {
+    return this.managers;
+  }
+
+  resolve(env: string): void {
+    this.managers = [...this.managers, ...this.getEnvDependentManagers(env)];
+  }
+
+  private getIndependentManagers(): DataManager[] {
+    const stateHelper = new ProjectsStateHelper(this.store);
+    const projectsManager = new ProjectsDataManager(
+      new FetcherImpl<"Projects">(this.baseApiHelper),
+      stateHelper
+    );
+    return [projectsManager];
+  }
+
+  private getEnvDependentManagers(environment: string): DataManager[] {
     const serviceKeyMaker = new ServiceKeyMaker();
     const scheduler = new SchedulerImpl(5000);
 
@@ -113,7 +114,7 @@ export class DependencyManagerImpl implements DependencyManager {
       environment
     );
 
-    const dataProvider = new DataProviderImpl([
+    return [
       servicesHelper,
       serviceHelper,
       serviceInstancesHelper,
@@ -122,28 +123,6 @@ export class DependencyManagerImpl implements DependencyManager {
       instanceLogsHelper,
       instanceConfigHelper,
       diagnosticsHelper,
-    ]);
-
-    const instanceConfigCommandManager = new InstanceConfigCommandManager(
-      new InstanceConfigPoster(this.baseApiHelper, environment),
-      instanceConfigStateHelper
-    );
-
-    const commandProvider = new CommandProviderImpl([
-      instanceConfigCommandManager,
-    ]);
-
-    return {
-      commandProvider,
-      dataProvider,
-      urlManager: new UrlManagerImpl(
-        this.baseApiHelper.getBaseUrl(),
-        environment
-      ),
-    };
+    ];
   }
 }
-
-export const ProjectsProviderContext = createContext<DataProvider>(
-  new DummyDataProvider()
-);

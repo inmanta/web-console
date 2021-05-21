@@ -8,7 +8,8 @@ import { KeycloakProvider } from "react-keycloak";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { EnvironmentProvider } from "@/UI/Components";
 import { EnvironmentHandlerProvider } from "@/UI/Dependency";
-import { PageRouterWithDependencies } from "@/UI/Routing";
+import { PageRouter } from "@/UI/Routing";
+import { DependencyResolver } from "./DependencyResolver";
 
 const keycloakInitConfig = {
   onLoad: "login-required",
@@ -33,7 +34,9 @@ export const App: React.FunctionComponent<{
           <EnvironmentProvider
             Wrapper={({ children }) => <>{children}</>}
             Dependant={({ environment }) => (
-              <PageRouterWithDependencies environment={environment} />
+              <DependencyResolver environment={environment}>
+                <PageRouter />
+              </DependencyResolver>
             )}
           />
         </AppLayout>

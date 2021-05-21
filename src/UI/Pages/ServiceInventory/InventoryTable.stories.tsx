@@ -1,7 +1,13 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { InventoryTable } from "./InventoryTable";
-import { InstantFetcher, rows, StaticScheduler, tablePresenter } from "@/Test";
+import {
+  DynamicDataManagerResolver,
+  InstantFetcher,
+  rows,
+  StaticScheduler,
+  tablePresenter,
+} from "@/Test";
 import { getStoreInstance } from "@/UI/Store";
 import {
   DataProviderImpl,
@@ -18,17 +24,19 @@ export default {
 
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: { data: [] },
-      }),
-      new ResourcesStateHelper(store),
-      new StaticScheduler(),
-      "env"
-    ),
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([
+      new ResourcesDataManager(
+        new InstantFetcher<"Resources">({
+          kind: "Success",
+          data: { data: [] },
+        }),
+        new ResourcesStateHelper(store),
+        new StaticScheduler(),
+        "env"
+      ),
+    ])
+  );
 
   return (
     <DependencyProvider dependencies={{ dataProvider }}>

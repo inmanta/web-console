@@ -1,7 +1,11 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, StaticScheduler } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicDataManagerResolver,
+  StaticScheduler,
+} from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -23,14 +27,16 @@ function setup() {
     version: 4,
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      apiHelper,
-      new ResourcesStateHelper(store),
-      scheduler,
-      instance.environment
-    ),
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([
+      new ResourcesDataManager(
+        apiHelper,
+        new ResourcesStateHelper(store),
+        scheduler,
+        instance.environment
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", instance.environment);
 
   const component = (

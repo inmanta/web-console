@@ -1,7 +1,12 @@
 import React from "react";
 import { InstanceLog as InstanceLogModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { InstantFetcher, InstanceLog, Service } from "@/Test";
+import {
+  InstantFetcher,
+  InstanceLog,
+  Service,
+  DynamicDataManagerResolver,
+} from "@/Test";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
@@ -18,16 +23,18 @@ export default {
 
 const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new InstanceLogsDataManager(
-      new InstantFetcher<"InstanceLogs">({
-        kind: "Success",
-        data: { data: logs },
-      }),
-      new InstanceLogsStateHelper(store),
-      Service.A.environment
-    ),
-  ]);
+  const dataProvider = new DataProviderImpl(
+    new DynamicDataManagerResolver([
+      new InstanceLogsDataManager(
+        new InstantFetcher<"InstanceLogs">({
+          kind: "Success",
+          data: { data: logs },
+        }),
+        new InstanceLogsStateHelper(store),
+        Service.A.environment
+      ),
+    ])
+  );
 
   return (
     <DependencyProvider dependencies={{ dataProvider }}>

@@ -5,13 +5,13 @@ import { StoreProvider } from "easy-peasy";
 import Keycloak from "keycloak-js";
 import { App } from "@/UI/App/app";
 import { getStoreInstance } from "@/UI";
-import { ProjectsProviderContext } from "@/UI/Dependency";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
   DataProviderImpl,
   ProjectsDataManager,
   ProjectsStateHelper,
 } from "../Data";
-import { DeferredFetcher } from "@/Test";
+import { DeferredFetcher, DynamicDataManagerResolver } from "@/Test";
 
 function setup() {
   const stateHelper = new ProjectsStateHelper(getStoreInstance());
@@ -19,21 +19,25 @@ function setup() {
     new DeferredFetcher<"Projects">(),
     stateHelper
   );
-  return new DataProviderImpl([projectsManager]);
+  return {
+    dataProvider: new DataProviderImpl(
+      new DynamicDataManagerResolver([projectsManager])
+    ),
+  };
 }
 
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const keycloak = Keycloak();
 
-  const dependencyManager = setup();
+  const { dataProvider } = setup();
 
   render(
-    <ProjectsProviderContext.Provider value={dependencyManager}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={getStoreInstance()}>
         <App keycloak={keycloak} shouldUseAuth={false} />
       </StoreProvider>
-    </ProjectsProviderContext.Provider>
+    </DependencyProvider>
   );
 
   expect(
@@ -48,14 +52,14 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
 test("GIVEN the app WHEN clicking the navigation toggle THEN the sidebar should be expanded", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const keycloak = Keycloak();
-  const dependencyManager = setup();
+  const { dataProvider } = setup();
 
   render(
-    <ProjectsProviderContext.Provider value={dependencyManager}>
+    <DependencyProvider dependencies={{ dataProvider }}>
       <StoreProvider store={getStoreInstance()}>
         <App keycloak={keycloak} shouldUseAuth={false} />
       </StoreProvider>
-    </ProjectsProviderContext.Provider>
+    </DependencyProvider>
   );
 
   expect(
