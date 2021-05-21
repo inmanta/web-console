@@ -28,9 +28,8 @@ export async function submitUpdate(
     dispatch: dispatch,
   };
   // Make sure correct types are used
-  const parsedAttributes = attributeConverter.parseAttributesToCorrectTypes(
-    attributeValue
-  );
+  const parsedAttributes =
+    attributeConverter.parseAttributesToCorrectTypes(attributeValue);
   // Get the correct attribute set
   const currentAttributes = attributeConverter.getCurrentAttributes(instance);
   // Only the difference should be sent
@@ -60,9 +59,8 @@ export async function submitCreate(
     dispatch: dispatch,
     keycloak: keycloak,
   };
-  const parsedAttributes = attributeConverter.parseAttributesToCorrectTypes(
-    attributes
-  );
+  const parsedAttributes =
+    attributeConverter.parseAttributesToCorrectTypes(attributes);
   // Don't set optional attributes explicitly to null on creation
   const attributesWithoutNulls = Object.entries(parsedAttributes).reduce(
     (obj, [k, v]) => (v === null ? obj : ((obj[k] = v), obj)),

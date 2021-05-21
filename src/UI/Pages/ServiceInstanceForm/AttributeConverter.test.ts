@@ -189,9 +189,8 @@ describe("AttributeConverter", () => {
     );
     it("Converts an empty array of attributes to correct types", () => {
       const attributes = [];
-      const result = attributeConverter.parseAttributesToCorrectTypes(
-        attributes
-      );
+      const result =
+        attributeConverter.parseAttributesToCorrectTypes(attributes);
       expect(result).toEqual({});
     });
     it("Converts a filled array of attributes to correct types", () => {
@@ -200,9 +199,8 @@ describe("AttributeConverter", () => {
         { name: "attribute2", value: "hi", type: "string" },
         { name: "attribute3", value: "true", type: "bool?" },
       ];
-      const result = attributeConverter.parseAttributesToCorrectTypes(
-        attributes
-      );
+      const result =
+        attributeConverter.parseAttributesToCorrectTypes(attributes);
       expect(result).toEqual({
         attribute1: 42,
         attribute2: "hi",

@@ -18,7 +18,8 @@ interface ColumnHead {
  * This class should not hold state as state should be kept in the Redux Store.
  */
 export class InventoryTablePresenter
-  implements TablePresenter<ServiceInstanceModelWithTargetStates, Row> {
+  implements TablePresenter<ServiceInstanceModelWithTargetStates, Row>
+{
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 

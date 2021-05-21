@@ -16,9 +16,8 @@ test("DeploymentProgressPresenter returns properly parametrized Progress Bar", (
   expect(stackedProgressBar?.props.success).toEqual(5);
   expect(stackedProgressBar?.props.waiting).toEqual(2);
 
-  const emptyProgressBar = progressPresenter.getDeploymentProgressBar(
-    undefined
-  );
+  const emptyProgressBar =
+    progressPresenter.getDeploymentProgressBar(undefined);
 
   expect(emptyProgressBar).toBeTruthy();
   expect(emptyProgressBar?.props.total).toEqual(0);

@@ -1,6 +1,6 @@
 import { ServiceModel } from "@/Core";
 
-const base = ({
+const base = {
   environment: "environment_id_a",
   name: "service_name_a",
   attributes: [
@@ -126,7 +126,7 @@ const base = ({
     auto_update_designed: true,
     auto_update_inprogress: true,
   },
-} as unknown) as ServiceModel;
+} as unknown as ServiceModel;
 
 export const A = base;
 

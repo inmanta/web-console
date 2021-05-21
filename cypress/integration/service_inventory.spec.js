@@ -14,8 +14,7 @@ describe("Service inventory", function () {
     });
     cy.route({
       method: "GET",
-      url:
-        "**/lsm/v1/service_inventory/e2e_service/*/resources?current_version=*",
+      url: "**/lsm/v1/service_inventory/e2e_service/*/resources?current_version=*",
       response: "fixture:lsm/resources.json",
     });
     cy.route({
@@ -50,8 +49,7 @@ describe("Service inventory", function () {
   it("Should show error message when deleting is not allowed", function () {
     cy.route({
       method: "DELETE",
-      url:
-        "**/lsm/v1/service_inventory/e2e_service/78ac51dd-ee5b-4e22-9bf0-54bce9664b4e?current_version=3",
+      url: "**/lsm/v1/service_inventory/e2e_service/78ac51dd-ee5b-4e22-9bf0-54bce9664b4e?current_version=3",
       response: {
         message:
           "Invalid request: Cannot delete service instance 78ac51dd-ee5b-4e22-9bf0-54bce9664b4e",

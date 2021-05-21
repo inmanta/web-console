@@ -163,12 +163,8 @@ test("ServiceInventory shows next page of instances", async () => {
 });
 
 test("GIVEN ResourcesView fetches resources for new instance after instance update", async () => {
-  const {
-    component,
-    serviceInstancesFetcher,
-    resourcesFetcher,
-    scheduler,
-  } = setup();
+  const { component, serviceInstancesFetcher, resourcesFetcher, scheduler } =
+    setup();
 
   render(component);
 

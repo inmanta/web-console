@@ -5,10 +5,8 @@ import { Either } from "@/Core";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN only deleted instances are shown", async () => {
-  const {
-    component,
-    serviceInstancesFetcher,
-  } = new ServiceInventoryPrepper().prep();
+  const { component, serviceInstancesFetcher } =
+    new ServiceInventoryPrepper().prep();
 
   render(component);
 
