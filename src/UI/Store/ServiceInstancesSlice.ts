@@ -48,9 +48,8 @@ export interface ServiceInstancesSlice {
 export const serviceInstancesSlice: ServiceInstancesSlice = {
   byId: {},
   setData: action((state, { qualifier, environment, value }) => {
-    state.byId[
-      injections.serviceKeyMaker.make([environment, qualifier.name])
-    ] = value;
+    state.byId[injections.serviceKeyMaker.make([environment, qualifier.name])] =
+      value;
   }),
   instancesWithTargetStates: computed(
     [(state) => state.byId, (state, storeState) => storeState],

@@ -9,9 +9,8 @@ const manager = new InstanceSetStateManager(rows, undefined);
 
 test("InstanceSetStateManager prepares correct setStateHandler", async () => {
   const instanceId = "bd200aec-4f80-45e1-b2ad-137c442c68b8";
-  const setInstanceStateHandler = manager.getSetInstanceStateHandler(
-    instanceId
-  );
+  const setInstanceStateHandler =
+    manager.getSetInstanceStateHandler(instanceId);
   expect(setInstanceStateHandler).toBeTruthy();
   if (setInstanceStateHandler) {
     await setInstanceStateHandler(instanceId, "acknowledged", () => {
@@ -30,9 +29,8 @@ test("InstanceSetStateManager adds username to the message when keycloak is enab
     profile: { username: "inmanta" },
   } as KeycloakInstance);
   const instanceId = "bd200aec-4f80-45e1-b2ad-137c442c68b8";
-  const setInstanceStateHandler = managerWithMockKeycloak.getSetInstanceStateHandler(
-    instanceId
-  );
+  const setInstanceStateHandler =
+    managerWithMockKeycloak.getSetInstanceStateHandler(instanceId);
   expect(setInstanceStateHandler).toBeTruthy();
   if (setInstanceStateHandler) {
     await setInstanceStateHandler(instanceId, "acknowledged", () => {
@@ -47,8 +45,7 @@ test("InstanceSetStateManager adds username to the message when keycloak is enab
 });
 
 test("InstanceSetStateManager returns null if id not in the rows", async () => {
-  const setInstanceStateHandler = manager.getSetInstanceStateHandler(
-    "NonExistingId"
-  );
+  const setInstanceStateHandler =
+    manager.getSetInstanceStateHandler("NonExistingId");
   expect(setInstanceStateHandler).toBeFalsy();
 });

@@ -1,6 +1,6 @@
 import { ServiceInstanceModel } from "@/Core";
 
-const base = ({
+const base = {
   id: "service_instance_id_a",
   environment: "environment_id_a",
   service_entity: "service_name_a",
@@ -143,7 +143,7 @@ const base = ({
   last_updated: "2021-01-11T12:55:52.180900",
   callback: [],
   deleted: false,
-} as unknown) as ServiceInstanceModel;
+} as unknown as ServiceInstanceModel;
 
 export const A: ServiceInstanceModel = base;
 export const B: ServiceInstanceModel = {

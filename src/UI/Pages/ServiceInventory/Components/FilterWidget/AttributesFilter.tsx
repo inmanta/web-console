@@ -34,9 +34,8 @@ export const AttributesFilter: React.FC<Props> = ({
   update,
   isVisible,
 }) => {
-  const [attributeSetFilter, setAttributeSetFilter] = useState<
-    ServiceInstanceParams.AttributeSet | undefined
-  >(undefined);
+  const [attributeSetFilter, setAttributeSetFilter] =
+    useState<ServiceInstanceParams.AttributeSet | undefined>(undefined);
 
   const onAttributeRuleChange = (rule: AttributeRule) => {
     if (typeof attributeSetFilter === "undefined") return;

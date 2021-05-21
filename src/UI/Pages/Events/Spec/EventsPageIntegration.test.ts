@@ -47,9 +47,10 @@ describe("Given the Events Page", () => {
       expect(initialRows).toHaveLength(14);
 
       userEvent.click(
-        within(
-          screen.getByRole("generic", { name: "FilterBar" })
-        ).getByRole("button", { name: "EventType" })
+        within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+          "button",
+          { name: "EventType" }
+        )
       );
       userEvent.click(screen.getByRole("option", { name: filterName }));
 
@@ -104,9 +105,10 @@ describe("Given the Events Page", () => {
     expect(initialRows).toHaveLength(14);
 
     userEvent.click(
-      within(
-        screen.getByRole("generic", { name: "FilterBar" })
-      ).getByRole("button", { name: "EventType" })
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "EventType" }
+      )
     );
     userEvent.click(screen.getByRole("option", { name: "Date" }));
 

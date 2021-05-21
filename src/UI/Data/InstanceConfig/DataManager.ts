@@ -17,7 +17,8 @@ type Data = RemoteData.Type<
 >;
 
 export class InstanceConfigDataManager
-  implements OneTimeDataManager<"InstanceConfig"> {
+  implements OneTimeDataManager<"InstanceConfig">
+{
   constructor(
     private readonly fetcher: Fetcher<"InstanceConfig">,
     private readonly stateHelper: StateHelper<"InstanceConfig">,

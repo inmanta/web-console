@@ -6,7 +6,8 @@ type Data = RemoteData.Type<string, Query.Data<"ServiceInstances">>;
 type ApiData = RemoteData.Type<string, Query.ApiResponse<"ServiceInstances">>;
 
 export class ServiceInstancesStateHelper
-  implements StateHelper<"ServiceInstances"> {
+  implements StateHelper<"ServiceInstances">
+{
   constructor(
     private readonly store: Store,
     private readonly environment: string

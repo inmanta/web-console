@@ -12,9 +12,8 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 export const Provider: React.FC = () => {
-  const { service: serviceName, instance } = useParams<
-    PageParams<"Diagnose">
-  >();
+  const { service: serviceName, instance } =
+    useParams<PageParams<"Diagnose">>();
 
   return (
     <ServiceProvider

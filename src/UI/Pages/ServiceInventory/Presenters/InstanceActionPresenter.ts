@@ -26,9 +26,8 @@ export class InstanceActionPresenter implements ActionPresenter {
       editDisabled: this.isTransferDisabled(id, "on_update"),
       deleteDisabled: this.isTransferDisabled(id, "on_delete"),
       diagnoseDisabled: instance.deleted,
-      onSetInstanceState: this.instanceSetStateManager.getSetInstanceStateHandler(
-        instance.id
-      ),
+      onSetInstanceState:
+        this.instanceSetStateManager.getSetInstanceStateHandler(instance.id),
     });
   }
 
@@ -42,9 +41,11 @@ export class InstanceActionPresenter implements ActionPresenter {
     }
     // If the action is allowed, there is a corresponding transfer in the lifecycle,
     // where the source state is the current state
-    const transfersFromCurrentSource = this.serviceEntity.lifecycle.transfers.filter(
-      (transfer) => transfer.source === instance.state && transfer[transferType]
-    );
+    const transfersFromCurrentSource =
+      this.serviceEntity.lifecycle.transfers.filter(
+        (transfer) =>
+          transfer.source === instance.state && transfer[transferType]
+      );
     return transfersFromCurrentSource.length === 0;
   }
 }

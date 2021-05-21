@@ -46,15 +46,13 @@ describe("CreateFormPresenter", () => {
     },
   ];
   it("Filters not-readonly attributes", () => {
-    const notReadOnly = createFormPresenter.getNotReadonlyAttributes(
-      attributes
-    );
+    const notReadOnly =
+      createFormPresenter.getNotReadonlyAttributes(attributes);
     expect(notReadOnly).toHaveLength(2);
   });
   it("Creates correct form input attributes", () => {
-    const formInputAttributes = createFormPresenter.getFormInputsForCreateForm(
-      attributes
-    );
+    const formInputAttributes =
+      createFormPresenter.getFormInputsForCreateForm(attributes);
     expect(formInputAttributes).toHaveLength(2);
     expect(formInputAttributes).toEqual(expectedFormInputAttributes);
   });
