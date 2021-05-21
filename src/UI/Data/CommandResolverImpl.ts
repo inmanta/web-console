@@ -1,11 +1,11 @@
 import {
-  CommandProvider,
   Command,
+  CommandResolver,
   CommandManager,
   ManagerResolver,
 } from "@/Core";
 
-export class CommandProviderImpl implements CommandProvider {
+export class CommandResolverImpl implements CommandResolver {
   constructor(
     private readonly managerResolver: ManagerResolver<CommandManager>
   ) {}

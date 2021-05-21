@@ -11,7 +11,7 @@ import {
   DependencyProvider,
 } from "@/UI/Dependency";
 import { BaseApiHelper } from "./Infra";
-import { CommandProviderImpl, QueryResolverImpl } from "./UI/Data";
+import { CommandResolverImpl, QueryResolverImpl } from "./UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -37,12 +37,12 @@ const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
 const queryResolver = new QueryResolverImpl(
   new DataManagerResolver(store, baseApiHelper)
 );
-const commandProvider = new CommandProviderImpl(
+const commandResolver = new CommandResolverImpl(
   new CommandManagerResolver(store, baseApiHelper)
 );
 
 ReactDOM.render(
-  <DependencyProvider dependencies={{ queryResolver, commandProvider }}>
+  <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
     <StoreProvider store={store}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
     </StoreProvider>

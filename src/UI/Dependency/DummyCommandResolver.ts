@@ -1,11 +1,11 @@
 import {
   Command,
   CommandManager,
-  CommandProvider,
+  CommandResolver,
   ManagerResolver,
 } from "@/Core";
 
-export class DummyCommandProvider implements CommandProvider {
+export class DummyCommandResolver implements CommandResolver {
   getManagerResolver(): ManagerResolver<CommandManager> {
     throw new Error("Method not implemented.");
   }

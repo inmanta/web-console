@@ -26,12 +26,12 @@ export const DisabledConfigTab: React.FC = () => (
 );
 
 export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
-  const { commandProvider, queryResolver } = useContext(DependencyContext);
+  const { commandResolver, queryResolver } = useContext(DependencyContext);
   const [data, retry] = queryResolver.useOneTime<"InstanceConfig">({
     kind: "InstanceConfig",
     qualifier: serviceInstanceIdentifier,
   });
-  const trigger = commandProvider.getTrigger<"InstanceConfig">({
+  const trigger = commandResolver.getTrigger<"InstanceConfig">({
     kind: "InstanceConfig",
     qualifier: serviceInstanceIdentifier,
   });

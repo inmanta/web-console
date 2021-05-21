@@ -5,9 +5,9 @@ export const DependencyResolver: React.FC<{ environment: string }> = ({
   environment,
   children,
 }) => {
-  const { queryResolver, commandProvider } = useContext(DependencyContext);
+  const { queryResolver, commandResolver } = useContext(DependencyContext);
   queryResolver.getManagerResolver().resolve(environment);
-  commandProvider.getManagerResolver().resolve(environment);
+  commandResolver.getManagerResolver().resolve(environment);
 
   return <>{children}</>;
 };

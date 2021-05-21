@@ -1,7 +1,7 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import {
-  CommandProviderImpl,
+  CommandResolverImpl,
   QueryResolverImpl,
   InstanceConfigCommandManager,
   InstanceConfigDataManager,
@@ -76,7 +76,7 @@ test("ConfigTab can reset all settings", async () => {
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl(
+  const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new InstanceConfigCommandManager(
         new InstantPoster(RemoteData.success({ data: {} })),
@@ -86,7 +86,7 @@ test("ConfigTab can reset all settings", async () => {
   );
 
   render(
-    <DependencyProvider dependencies={{ queryResolver, commandProvider }}>
+    <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>
@@ -115,7 +115,7 @@ test("ConfigTab can change 1 toggle", async () => {
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl(
+  const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new InstanceConfigCommandManager(
         new InstantPoster(
@@ -129,7 +129,7 @@ test("ConfigTab can change 1 toggle", async () => {
   );
 
   render(
-    <DependencyProvider dependencies={{ queryResolver, commandProvider }}>
+    <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>
