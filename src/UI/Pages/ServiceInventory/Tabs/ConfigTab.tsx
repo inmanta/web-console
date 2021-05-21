@@ -31,7 +31,7 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
     kind: "InstanceConfig",
     qualifier: serviceInstanceIdentifier,
   });
-  const trigger = commandProvider.getTrigger({
+  const trigger = commandProvider.getTrigger<"InstanceConfig">({
     kind: "InstanceConfig",
     qualifier: serviceInstanceIdentifier,
   });
