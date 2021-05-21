@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ToolbarFilter, Select, SelectOption } from "@patternfly/react-core";
 import { toggleValueInList } from "@/Core";
 import { uniq } from "lodash";
+import { SearchIcon } from "@patternfly/react-icons";
 
 interface Props {
   filterPropertyName: string;
@@ -47,6 +48,7 @@ export const SelectOptionFilter: React.FC<Props> = ({
         isOpen={isFilterOpen}
         placeholderText={placeholder}
         variant="typeaheadmulti"
+        toggleIcon={<SearchIcon />}
         chipGroupProps={{ numChips: 0 }}
       >
         {possibleStates.map((state) => (
