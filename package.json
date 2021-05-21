@@ -6,6 +6,7 @@
   "repository": "https://github.com/inmanta/web-console.git",
   "license": "MIT",
   "scripts": {
+    "prepare": "husky install",
     "prebuild": "yarn clean",
     "build": "webpack --config webpack.prod.js",
     "start": "webpack-dev-server --hot --color --progress --info=true --config webpack.dev.js",
@@ -23,11 +24,6 @@
     "package-cleanup": "node clean_up_packages",
     "storybook": "start-storybook --ci --port 6006",
     "build-storybook": "build-storybook"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
