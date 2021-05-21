@@ -11,7 +11,7 @@ module.exports = {
   },
   plugins: [
     new webpack.IgnorePlugin(/^\.\/config\.js$/),
-    new CopyPlugin([{ from: "src/config.js", to: "" }]),
+    new CopyPlugin({ patterns: [{ from: "src/config.js", to: "" }] }),
   ],
   module: {
     rules: [
