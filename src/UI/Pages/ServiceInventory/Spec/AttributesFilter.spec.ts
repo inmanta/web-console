@@ -5,10 +5,8 @@ import { Either } from "@/Core";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active', 'Not Empty') THEN only instances which have active attributes are shown", async () => {
-  const {
-    component,
-    serviceInstancesFetcher,
-  } = new ServiceInventoryPrepper().prep();
+  const { component, serviceInstancesFetcher } =
+    new ServiceInventoryPrepper().prep();
 
   render(component);
 
@@ -23,9 +21,10 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   });
 
   userEvent.click(
-    within(
-      screen.getByRole("generic", { name: "FilterBar" })
-    ).getByRole("button", { name: "State" })
+    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "State" }
+    )
   );
   userEvent.click(screen.getByRole("option", { name: "AttributeSet" }));
   userEvent.click(

@@ -7,12 +7,8 @@ import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 jest.useFakeTimers();
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN data is fetched immediately", async () => {
-  const {
-    component,
-    scheduler,
-    serviceInstancesFetcher,
-    resourcesFetcher,
-  } = new ServiceInventoryPrepper().prep();
+  const { component, scheduler, serviceInstancesFetcher, resourcesFetcher } =
+    new ServiceInventoryPrepper().prep();
 
   render(component);
 
@@ -50,12 +46,8 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN the Resources auto-update happens in sync with the ServiceInstances", async () => {
   const prepper = new ServiceInventoryPrepper();
-  const {
-    component,
-    scheduler,
-    serviceInstancesFetcher,
-    resourcesFetcher,
-  } = prepper.prep();
+  const { component, scheduler, serviceInstancesFetcher, resourcesFetcher } =
+    prepper.prep();
 
   render(component);
 

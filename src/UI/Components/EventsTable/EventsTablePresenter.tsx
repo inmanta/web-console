@@ -6,7 +6,8 @@ import {
 import { words } from "@/UI/words";
 
 export class EventsTablePresenter
-  implements TablePresenter<InstanceEvent, EventRow> {
+  implements TablePresenter<InstanceEvent, EventRow>
+{
   constructor(private datePresenter: DatePresenter) {}
   readonly columnHeads = [
     words("events.column.eventType"),

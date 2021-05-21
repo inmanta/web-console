@@ -44,9 +44,8 @@ export class EditFormPresenter {
     attributeModels: AttributeModel[]
   ): FormInputAttribute[] {
     const editableAttributes = this.getEditableAttributes(attributeModels);
-    const currentAttributes = this.attributeConverter.getCurrentAttributes(
-      instance
-    );
+    const currentAttributes =
+      this.attributeConverter.getCurrentAttributes(instance);
     return this.convertToEditFormInputs(currentAttributes, editableAttributes);
   }
 

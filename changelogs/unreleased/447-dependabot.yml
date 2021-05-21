@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump prettier from 2.2.1 to 2.3.0
+destination-branches:
+- master
+- iso4
+sections: {}

@@ -19,8 +19,7 @@ describe("Navigation", function () {
     });
     cy.route({
       method: "GET",
-      url:
-        "**/lsm/v1/service_inventory/e2e_service/**/resources?current_version=**",
+      url: "**/lsm/v1/service_inventory/e2e_service/**/resources?current_version=**",
       response: "fixture:lsm/resources.json",
     });
   });

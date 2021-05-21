@@ -12,7 +12,8 @@ type ApiData = RemoteData.Type<
 >;
 
 export class InstanceConfigStateHelper
-  implements StateHelper<"InstanceConfig"> {
+  implements StateHelper<"InstanceConfig">
+{
   constructor(private readonly store: Store) {}
 
   set(data: ApiData, qualifier: Query.Qualifier<"InstanceConfig">): void {

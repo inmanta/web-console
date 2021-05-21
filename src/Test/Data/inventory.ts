@@ -1,6 +1,6 @@
 import { ServiceInstanceModelWithTargetStates } from "@/Core";
 
-const base = ({
+const base = {
   id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
   environment: "621129e4-7fe8-434c-b6cb-ea31d36e1bbc",
   service_entity: "cloudconnectv2",
@@ -145,7 +145,7 @@ const base = ({
   deleted: false,
   instanceSetStateTargets: [],
   service_identity_attribute_value: "9764848531585023834",
-} as unknown) as ServiceInstanceModelWithTargetStates;
+} as unknown as ServiceInstanceModelWithTargetStates;
 
 export const instance = base;
 

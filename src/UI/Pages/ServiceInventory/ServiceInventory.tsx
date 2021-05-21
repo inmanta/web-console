@@ -74,9 +74,8 @@ export const ServiceInventory: React.FunctionComponent<{
   }
 
   const { dataProvider } = useContext(DependencyContext);
-  const [sortColumn, setSortColumn] = useState<string | undefined>(
-    "created_at"
-  );
+  const [sortColumn, setSortColumn] =
+    useState<string | undefined>("created_at");
   const [order, setOrder] = useState<SortDirection | undefined>("desc");
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;

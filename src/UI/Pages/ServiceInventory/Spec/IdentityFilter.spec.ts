@@ -5,10 +5,8 @@ import userEvent, { specialChars } from "@testing-library/user-event";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID', '0001') THEN only 1 instance is shown", async () => {
-  const {
-    component,
-    serviceInstancesFetcher,
-  } = new ServiceInventoryPrepper().prep(Service.withIdentity);
+  const { component, serviceInstancesFetcher } =
+    new ServiceInventoryPrepper().prep(Service.withIdentity);
 
   render(component);
 

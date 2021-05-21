@@ -99,9 +99,10 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
   pathParts.pop();
   const inventoryPath = pathParts.join("/").concat(location.search);
   const history = useHistory();
-  const handleRedirect = useCallback(() => history.push(`${inventoryPath}`), [
-    history,
-  ]);
+  const handleRedirect = useCallback(
+    () => history.push(`${inventoryPath}`),
+    [history]
+  );
 
   return (
     <>

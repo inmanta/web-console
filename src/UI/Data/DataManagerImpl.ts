@@ -24,7 +24,8 @@ type Data<Kind extends Query.Kind> = [
 ];
 
 export class OneTimeDataManagerImpl<Kind extends Query.Kind>
-  implements OneTimeDataManager<Kind> {
+  implements OneTimeDataManager<Kind>
+{
   constructor(
     protected readonly fetcher: Fetcher<Kind>,
     protected readonly stateHelper: StateHelper<Kind>,
@@ -72,7 +73,8 @@ export class OneTimeDataManagerImpl<Kind extends Query.Kind>
 }
 
 export class ContinuousDataManagerImpl<Kind extends Query.Kind>
-  implements ContinuousDataManager<Kind> {
+  implements ContinuousDataManager<Kind>
+{
   constructor(
     private readonly fetcher: Fetcher<Kind>,
     private readonly stateHelper: StateHelper<Kind>,

@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump copy-webpack-plugin from 5.1.2 to 6.4.1
+destination-branches:
+- master
+- iso4
+sections: {}
