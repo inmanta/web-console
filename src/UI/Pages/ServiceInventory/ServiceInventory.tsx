@@ -73,7 +73,7 @@ export const ServiceInventory: React.FunctionComponent<{
     [keycloak] = useKeycloak();
   }
 
-  const { dataProvider } = useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
   const [sortColumn, setSortColumn] =
     useState<string | undefined>("created_at");
   const [order, setOrder] = useState<SortDirection | undefined>("desc");
@@ -81,7 +81,7 @@ export const ServiceInventory: React.FunctionComponent<{
     sortColumn && order ? { name: sortColumn, order: order } : undefined;
   const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
 
-  const [data, retry] = dataProvider.useContinuous<"ServiceInstances">({
+  const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
     qualifier: {
       name: serviceName,

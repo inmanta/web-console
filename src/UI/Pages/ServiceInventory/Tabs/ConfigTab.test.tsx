@@ -2,7 +2,7 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import {
   CommandProviderImpl,
-  DataProviderImpl,
+  QueryResolverImpl,
   InstanceConfigCommandManager,
   InstanceConfigDataManager,
   InstanceConfigStateHelper,
@@ -56,13 +56,13 @@ function setup() {
     instanceIdentifier.environment
   );
 
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([instanceConfigHelper])
   );
 
   return {
     storeInstance,
-    dataProvider,
+    queryResolver,
     instanceConfigStateHelper,
     instanceIdentifier,
   };
@@ -71,7 +71,7 @@ function setup() {
 test("ConfigTab can reset all settings", async () => {
   const {
     storeInstance,
-    dataProvider,
+    queryResolver,
     instanceConfigStateHelper,
     instanceIdentifier,
   } = setup();
@@ -86,7 +86,7 @@ test("ConfigTab can reset all settings", async () => {
   );
 
   render(
-    <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
+    <DependencyProvider dependencies={{ queryResolver, commandProvider }}>
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>
@@ -110,7 +110,7 @@ test("ConfigTab can reset all settings", async () => {
 test("ConfigTab can change 1 toggle", async () => {
   const {
     storeInstance,
-    dataProvider,
+    queryResolver,
     instanceConfigStateHelper,
     instanceIdentifier,
   } = setup();
@@ -129,7 +129,7 @@ test("ConfigTab can change 1 toggle", async () => {
   );
 
   render(
-    <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
+    <DependencyProvider dependencies={{ queryResolver, commandProvider }}>
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>

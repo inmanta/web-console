@@ -1,5 +1,5 @@
 import {
-  DataProvider,
+  QueryResolver,
   Query,
   RemoteData,
   OneTimeQueryManager,
@@ -13,7 +13,7 @@ type Data<K extends Query.Kind> = RemoteData.Type<
   Query.UsedData<K>
 >;
 
-export class DataProviderImpl implements DataProvider {
+export class QueryResolverImpl implements QueryResolver {
   constructor(public readonly managerResolver: ManagerResolver<QueryManager>) {}
 
   getManagerResolver(): ManagerResolver<QueryManager> {

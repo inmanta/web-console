@@ -10,13 +10,13 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
-import { DataProviderImpl } from "@/UI/Data";
-import { UrlManagerImpl } from "@/UI/Routing";
-import { Diagnose } from "./Diagnose";
 import {
+  QueryResolverImpl,
   DiagnosticsDataManager,
   DiagnosticsStateHelper,
-} from "@/UI/Data/Diagnostics";
+} from "@/UI/Data";
+import { UrlManagerImpl } from "@/UI/Routing";
+import { Diagnose } from "./Diagnose";
 import {
   diagnoseFailure,
   diagnoseFailureAndRejection,
@@ -33,7 +33,7 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
 }) => {
   const { service_instance_id, environment } = InstanceLog.A;
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([
       new DiagnosticsDataManager(
         new InstantFetcher<"Diagnostics">({
@@ -49,7 +49,7 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   const urlManager = new UrlManagerImpl("", environment);
 
   return (
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <Diagnose service={Service.A} instanceId={service_instance_id} />
       </StoreProvider>

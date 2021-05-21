@@ -12,7 +12,7 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
   ResourcesDataManager,
@@ -56,12 +56,12 @@ export const Basic: React.FC = () => {
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory
@@ -89,12 +89,12 @@ export const Failed: React.FC = () => {
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([serviceInstancesHelper])
   );
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory

@@ -10,7 +10,7 @@ import {
 } from "@/Test";
 import { getStoreInstance } from "@/UI/Store";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ResourcesDataManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
@@ -24,7 +24,7 @@ export default {
 
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([
       new ResourcesDataManager(
         new InstantFetcher<"Resources">({
@@ -39,7 +39,7 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   );
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <InventoryTable {...args} tablePresenter={tablePresenter} />
       </StoreProvider>

@@ -14,7 +14,7 @@ import { EventsPage } from "./EventsPage";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   EventsDataManager,
   EventsStateHelper,
 } from "@/UI/Data";
@@ -29,7 +29,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const scheduler = new StaticScheduler();
   const { service_instance_id } = InstanceLog.A;
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([
       new EventsDataManager(
         new InstantFetcher<"Events">({
@@ -54,7 +54,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const urlManager = new UrlManagerImpl("", InstanceLog.A.environment);
 
   return (
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <EventsPage service={Service.A} instanceId={service_instance_id} />
       </StoreProvider>

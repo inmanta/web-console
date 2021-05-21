@@ -4,7 +4,7 @@ import { StoreProvider } from "easy-peasy";
 import { DeferredFetcher, DynamicDataManagerResolver, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ResourcesDataManager,
   ResourcesStateHelper,
   ServiceInstancesDataManager,
@@ -45,14 +45,14 @@ export class ServiceInventoryPrepper {
       service.environment
     );
 
-    const dataProvider = new DataProviderImpl(
+    const queryResolver = new QueryResolverImpl(
       new DynamicDataManagerResolver([serviceInstancesHelper, resourcesHelper])
     );
     const urlManager = new UrlManagerImpl("", service.environment);
 
     const component = (
       <MemoryRouter>
-        <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+        <DependencyProvider dependencies={{ queryResolver, urlManager }}>
           <StoreProvider store={store}>
             <ServiceInventory
               serviceName={service.name}

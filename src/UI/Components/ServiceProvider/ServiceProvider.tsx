@@ -15,9 +15,9 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
   Wrapper,
   Dependant,
 }) => {
-  const { dataProvider } = useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
 
-  const [data, retry] = dataProvider.useContinuous<"Service">({
+  const [data, retry] = queryResolver.useContinuous<"Service">({
     kind: "Service",
     qualifier: { name: serviceName },
   });

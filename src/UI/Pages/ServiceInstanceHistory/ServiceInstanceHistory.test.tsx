@@ -8,7 +8,7 @@ import {
   ServiceInstance,
 } from "@/Test";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   InstanceLogsDataManager,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
@@ -18,7 +18,7 @@ import { StoreProvider } from "easy-peasy";
 
 it("ServiceInstanceHistory renders", async () => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([
       new InstanceLogsDataManager(
         new InstantFetcher<"InstanceLogs">({
@@ -32,7 +32,7 @@ it("ServiceInstanceHistory renders", async () => {
   );
 
   render(
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
           service={Service.A}

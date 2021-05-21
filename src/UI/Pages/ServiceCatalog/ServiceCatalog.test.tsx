@@ -10,7 +10,7 @@ import {
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ServicesDataManager,
   ServicesStateHelper,
 } from "@/UI/Data";
@@ -30,13 +30,13 @@ function setup() {
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([servicesHelper])
   );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ dataProvider }}>
+      <DependencyProvider dependencies={{ queryResolver }}>
         <StoreProvider store={store}>
           <ServiceCatalog environment={Service.A.environment} />
         </StoreProvider>

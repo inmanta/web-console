@@ -9,7 +9,7 @@ import {
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ResourcesStateHelper,
   ResourcesDataManager,
 } from "@/UI/Data";
@@ -27,7 +27,7 @@ function setup() {
     version: 4,
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([
       new ResourcesDataManager(
         apiHelper,
@@ -40,7 +40,7 @@ function setup() {
   const urlManager = new UrlManagerImpl("", instance.environment);
 
   const component = (
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <ResourcesTab qualifier={instance} />
       </StoreProvider>

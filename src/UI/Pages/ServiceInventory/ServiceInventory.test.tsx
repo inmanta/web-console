@@ -13,7 +13,7 @@ import {
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ServiceInstancesDataManager,
   ServiceInstancesStateHelper,
   ResourcesDataManager,
@@ -43,7 +43,7 @@ function setup() {
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
 
@@ -51,7 +51,7 @@ function setup() {
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
         <StoreProvider store={store}>
           <ServiceInventory
             serviceName={Service.A.name}

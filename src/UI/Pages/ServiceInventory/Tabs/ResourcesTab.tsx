@@ -15,9 +15,9 @@ interface Props {
 }
 
 export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
-  const { dataProvider } = useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = dataProvider.useContinuous<"Resources">({
+  const [data] = queryResolver.useContinuous<"Resources">({
     kind: "Resources",
     qualifier,
   });

@@ -11,12 +11,12 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 type Pair<K extends Query.Kind> = [Data<K>, () => void];
 
 /**
- * The DataProvider is responsible for providing data to
+ * The QueryResolver is responsible for providing data to
  * components. This is based on hooks so that the logic is
  * attached to the component lifecycle. Data is provided
  * based on a query.
  */
-export interface DataProvider extends ManagerResolverGetter<QueryManager> {
+export interface QueryResolver extends ManagerResolverGetter<QueryManager> {
   useOneTime<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
   useContinuous<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
 }

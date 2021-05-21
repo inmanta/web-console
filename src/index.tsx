@@ -11,7 +11,7 @@ import {
   DependencyProvider,
 } from "@/UI/Dependency";
 import { BaseApiHelper } from "./Infra";
-import { CommandProviderImpl, DataProviderImpl } from "./UI/Data";
+import { CommandProviderImpl, QueryResolverImpl } from "./UI/Data";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -34,7 +34,7 @@ if (externalKeycloakConf) {
 const store = getStoreInstance();
 const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
 const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
-const dataProvider = new DataProviderImpl(
+const queryResolver = new QueryResolverImpl(
   new DataManagerResolver(store, baseApiHelper)
 );
 const commandProvider = new CommandProviderImpl(
@@ -42,7 +42,7 @@ const commandProvider = new CommandProviderImpl(
 );
 
 ReactDOM.render(
-  <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
+  <DependencyProvider dependencies={{ queryResolver, commandProvider }}>
     <StoreProvider store={store}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
     </StoreProvider>

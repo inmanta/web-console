@@ -7,7 +7,7 @@ import { App } from "@/UI/App/app";
 import { getStoreInstance } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ProjectsDataManager,
   ProjectsStateHelper,
 } from "../Data";
@@ -20,7 +20,7 @@ function setup() {
     stateHelper
   );
   return {
-    dataProvider: new DataProviderImpl(
+    queryResolver: new QueryResolverImpl(
       new DynamicDataManagerResolver([projectsManager])
     ),
   };
@@ -30,10 +30,10 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
   fetchMock.mockResponse(JSON.stringify({}));
   const keycloak = Keycloak();
 
-  const { dataProvider } = setup();
+  const { queryResolver } = setup();
 
   render(
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={getStoreInstance()}>
         <App keycloak={keycloak} shouldUseAuth={false} />
       </StoreProvider>
@@ -52,10 +52,10 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
 test("GIVEN the app WHEN clicking the navigation toggle THEN the sidebar should be expanded", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const keycloak = Keycloak();
-  const { dataProvider } = setup();
+  const { queryResolver } = setup();
 
   render(
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={getStoreInstance()}>
         <App keycloak={keycloak} shouldUseAuth={false} />
       </StoreProvider>

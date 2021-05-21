@@ -1,9 +1,9 @@
 import {
   QueryManager,
-  DataProvider,
   ManagerResolver,
   Query,
   RemoteData,
+  QueryResolver,
 } from "@/Core";
 
 type Data = RemoteData.Type<
@@ -11,7 +11,7 @@ type Data = RemoteData.Type<
   Query.UsedData<Query.Kind>
 >;
 
-export class DummyDataProvider implements DataProvider {
+export class DummyQueryResolver implements QueryResolver {
   getManagerResolver(): ManagerResolver<QueryManager> {
     throw new Error("Method not implemented.");
   }

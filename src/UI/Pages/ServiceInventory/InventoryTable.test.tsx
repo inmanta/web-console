@@ -14,7 +14,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ResourcesDataManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
@@ -27,7 +27,7 @@ const dummySetter = () => {
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([
       new ResourcesDataManager(
         new InstantFetcher<"Resources">({
@@ -49,7 +49,7 @@ test("InventoryTable can be expanded", async () => {
   );
   const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <InventoryTable
         rows={rows}
         tablePresenter={tablePresenter}
@@ -71,7 +71,7 @@ test("InventoryTable can be expanded", async () => {
 
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([
       new ResourcesDataManager(
         new InstantFetcher<"Resources">({
@@ -93,7 +93,7 @@ test("ServiceInventory can show resources for instance", async () => {
   );
   const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <InventoryTable
           rows={rows}

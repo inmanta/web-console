@@ -4,7 +4,7 @@ import { StoreProvider } from "easy-peasy";
 import { DeferredFetcher, DynamicDataManagerResolver, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   EventsDataManager,
   EventsStateHelper,
 } from "@/UI/Data";
@@ -31,14 +31,14 @@ export class EventsPageComposer {
       Service.A.environment
     );
 
-    const dataProvider = new DataProviderImpl(
+    const queryResolver = new QueryResolverImpl(
       new DynamicDataManagerResolver([eventsHelper])
     );
     const urlManager = new UrlManagerImpl("", Service.A.environment);
 
     const component = (
       <MemoryRouter>
-        <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+        <DependencyProvider dependencies={{ queryResolver, urlManager }}>
           <StoreProvider store={store}>
             <EventsPage service={service} instanceId="id1" />
           </StoreProvider>

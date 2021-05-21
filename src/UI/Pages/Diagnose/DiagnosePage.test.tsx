@@ -10,7 +10,7 @@ import {
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   DiagnosticsDataManager,
   DiagnosticsStateHelper,
 } from "@/UI/Data";
@@ -23,7 +23,7 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredFetcher<"Diagnostics">();
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([
       new DiagnosticsDataManager(
         apiHelper,
@@ -36,7 +36,7 @@ function setup() {
   const urlManager = new UrlManagerImpl("", "environment");
 
   const component = (
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <Diagnose
           service={Service.A}

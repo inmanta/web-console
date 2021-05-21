@@ -10,7 +10,7 @@ import {
 import { Either, InstanceEvent } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   EventsDataManager,
   EventsStateHelper,
 } from "@/UI/Data";
@@ -28,7 +28,7 @@ function setup() {
     version: 4,
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
-  const dataProvider = new DataProviderImpl(
+  const queryResolver = new QueryResolverImpl(
     new DynamicDataManagerResolver([
       new EventsDataManager(
         apiHelper,
@@ -40,7 +40,7 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <EventsPage
           service={Service.A}
