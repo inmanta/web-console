@@ -1,4 +1,4 @@
-import { DataManager, ManagerResolver, SchedulerImpl } from "@/Core";
+import { QueryManager, ManagerResolver, SchedulerImpl } from "@/Core";
 import { BaseApiHelper, FetcherImpl } from "@/Infra";
 import { ProjectsDataManager, ProjectsStateHelper } from "@/UI/Data";
 import { Store } from "@/UI/Store";
@@ -22,8 +22,8 @@ import {
   DiagnosticsDataManager,
 } from "@/UI/Data";
 
-export class DataManagerResolver implements ManagerResolver<DataManager> {
-  private managers: DataManager[] = [];
+export class DataManagerResolver implements ManagerResolver<QueryManager> {
+  private managers: QueryManager[] = [];
 
   constructor(
     private readonly store: Store,
@@ -32,7 +32,7 @@ export class DataManagerResolver implements ManagerResolver<DataManager> {
     this.managers = this.getIndependentManagers();
   }
 
-  get(): DataManager[] {
+  get(): QueryManager[] {
     return this.managers;
   }
 
@@ -40,7 +40,7 @@ export class DataManagerResolver implements ManagerResolver<DataManager> {
     this.managers = [...this.managers, ...this.getEnvDependentManagers(env)];
   }
 
-  private getIndependentManagers(): DataManager[] {
+  private getIndependentManagers(): QueryManager[] {
     const stateHelper = new ProjectsStateHelper(this.store);
     const projectsManager = new ProjectsDataManager(
       new FetcherImpl<"Projects">(this.baseApiHelper),
@@ -49,7 +49,7 @@ export class DataManagerResolver implements ManagerResolver<DataManager> {
     return [projectsManager];
   }
 
-  private getEnvDependentManagers(environment: string): DataManager[] {
+  private getEnvDependentManagers(environment: string): QueryManager[] {
     const serviceKeyMaker = new ServiceKeyMaker();
     const scheduler = new SchedulerImpl(5000);
 

@@ -24,7 +24,7 @@ Router -> InventoryPage
 ```
 
 Next are page components. They are dependent on a specific route and render a specific page. (ex. Inventory)  
-The page component functions as a `Provider` (not to be confused with `DataManager`).  
+The page component functions as a `Provider`.  
 It's responsible for triggering the data layer and passing data down. It does not care about visualizing the data.  
 Child components receive the data and visualize it.
 

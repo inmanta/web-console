@@ -1,5 +1,5 @@
 import {
-  OneTimeDataManager,
+  OneTimeQueryManager,
   Query,
   RemoteData,
   ServiceModel,
@@ -17,7 +17,7 @@ type Data = RemoteData.Type<
 >;
 
 export class InstanceConfigDataManager
-  implements OneTimeDataManager<"InstanceConfig">
+  implements OneTimeQueryManager<"InstanceConfig">
 {
   constructor(
     private readonly fetcher: Fetcher<"InstanceConfig">,

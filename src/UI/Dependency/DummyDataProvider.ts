@@ -1,5 +1,5 @@
 import {
-  DataManager,
+  QueryManager,
   DataProvider,
   ManagerResolver,
   Query,
@@ -12,7 +12,7 @@ type Data = RemoteData.Type<
 >;
 
 export class DummyDataProvider implements DataProvider {
-  getManagerResolver(): ManagerResolver<DataManager> {
+  getManagerResolver(): ManagerResolver<QueryManager> {
     throw new Error("Method not implemented.");
   }
   useOneTime(): [Data, () => void] {

@@ -1,10 +1,11 @@
-import { DataManager, CommandManager, ManagerResolver } from "@/Core";
+import { QueryManager, CommandManager, ManagerResolver } from "@/Core";
 
 export class DynamicDataManagerResolver
-  implements ManagerResolver<DataManager> {
-  constructor(private readonly managers: DataManager[]) {}
+  implements ManagerResolver<QueryManager>
+{
+  constructor(private readonly managers: QueryManager[]) {}
 
-  get(): DataManager[] {
+  get(): QueryManager[] {
     return this.managers;
   }
 
@@ -14,7 +15,8 @@ export class DynamicDataManagerResolver
 }
 
 export class DynamicCommandManagerResolver
-  implements ManagerResolver<CommandManager> {
+  implements ManagerResolver<CommandManager>
+{
   constructor(private readonly managers: CommandManager[]) {}
 
   get(): CommandManager[] {

@@ -2,9 +2,9 @@ import {
   DataProvider,
   Query,
   RemoteData,
-  OneTimeDataManager,
-  ContinuousDataManager,
-  DataManager,
+  OneTimeQueryManager,
+  ContinuousQueryManager,
+  QueryManager,
   ManagerResolver,
 } from "@/Core";
 
@@ -14,20 +14,20 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 >;
 
 export class DataProviderImpl implements DataProvider {
-  constructor(public readonly managerResolver: ManagerResolver<DataManager>) {}
+  constructor(public readonly managerResolver: ManagerResolver<QueryManager>) {}
 
-  getManagerResolver(): ManagerResolver<DataManager> {
+  getManagerResolver(): ManagerResolver<QueryManager> {
     return this.managerResolver;
   }
 
   private getOneTimeDataManager(
     query: Query.Type
-  ): OneTimeDataManager<typeof query.kind> {
+  ): OneTimeQueryManager<typeof query.kind> {
     const dataManager = this.managerResolver
       .get()
       .find((helper) => helper.matches(query, "OneTime"));
     if (typeof dataManager !== "undefined") {
-      return dataManager as OneTimeDataManager<typeof query.kind>;
+      return dataManager as OneTimeQueryManager<typeof query.kind>;
     }
     throw new Error(`Can't find OneTimeDataManager for query ${query.kind}`);
   }
@@ -39,12 +39,12 @@ export class DataProviderImpl implements DataProvider {
 
   private getContinuousDataManager(
     query: Query.Type
-  ): ContinuousDataManager<typeof query.kind> {
+  ): ContinuousQueryManager<typeof query.kind> {
     const dataManager = this.managerResolver
       .get()
       .find((helper) => helper.matches(query, "Continuous"));
     if (typeof dataManager !== "undefined") {
-      return dataManager as ContinuousDataManager<typeof query.kind>;
+      return dataManager as ContinuousQueryManager<typeof query.kind>;
     }
     throw new Error(`Can't find ContinuousDataManager for query ${query.kind}`);
   }

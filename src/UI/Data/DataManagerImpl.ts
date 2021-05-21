@@ -1,9 +1,9 @@
 import {
   RemoteData,
   Query,
-  OneTimeDataManager,
-  ContinuousDataManager,
-  DataManagerKind,
+  OneTimeQueryManager,
+  ContinuousQueryManager,
+  QueryManagerKind,
   Fetcher,
   StateHelper,
   Scheduler,
@@ -24,7 +24,7 @@ type Data<Kind extends Query.Kind> = [
 ];
 
 export class OneTimeDataManagerImpl<Kind extends Query.Kind>
-  implements OneTimeDataManager<Kind>
+  implements OneTimeQueryManager<Kind>
 {
   constructor(
     protected readonly fetcher: Fetcher<Kind>,
@@ -67,13 +67,13 @@ export class OneTimeDataManagerImpl<Kind extends Query.Kind>
     ];
   }
 
-  matches(query: Query.SubQuery<Kind>, kind: DataManagerKind): boolean {
+  matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
     return query.kind === this.kind && kind === "OneTime";
   }
 }
 
 export class ContinuousDataManagerImpl<Kind extends Query.Kind>
-  implements ContinuousDataManager<Kind>
+  implements ContinuousQueryManager<Kind>
 {
   constructor(
     private readonly fetcher: Fetcher<Kind>,
@@ -130,7 +130,7 @@ export class ContinuousDataManagerImpl<Kind extends Query.Kind>
     ];
   }
 
-  matches(query: Query.SubQuery<Kind>, kind: DataManagerKind): boolean {
+  matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
     return query.kind === this.kind && kind === "Continuous";
   }
 }
