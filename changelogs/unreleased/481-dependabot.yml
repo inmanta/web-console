@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump mocha from 6.2.3 to 8.4.0
+destination-branches:
+- master
+- iso4
+sections: {}
