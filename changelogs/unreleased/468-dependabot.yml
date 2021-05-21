@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump url-loader from 2.3.0 to 4.1.1
+destination-branches:
+- master
+- iso4
+sections: {}
