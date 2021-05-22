@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump mini-css-extract-plugin from 0.8.2 to 1.6.0
+destination-branches:
+- master
+- iso4
+sections: {}
