@@ -97,7 +97,7 @@
     "react-svg-loader": "^3.0.3",
     "regenerator-runtime": "^0.13.3",
     "rimraf": "^3.0.0",
-    "start-server-and-test": "^1.10.6",
+    "start-server-and-test": "^1.12.2",
     "style-loader": "^1.0.0",
     "svg-url-loader": "^7.1.1",
     "ts-jest": "^26.3.0",
