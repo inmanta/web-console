@@ -54,7 +54,7 @@
     "@types/qs": "^6.9.6",
     "@types/react": "^17.0.6",
     "@types/react-dom": "^17.0.5",
-    "@types/react-router-dom": "^5.1.0",
+    "@types/react-router-dom": "^5.1.7",
     "@types/react-syntax-highlighter": "^13.5.0",
     "@types/styled-components": "^5.1.7",
     "@types/victory": "^33.0.0",
