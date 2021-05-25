@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump react-dom from 16.13.1 to 17.0.2
+destination-branches:
+- master
+- iso4
+sections: {}
