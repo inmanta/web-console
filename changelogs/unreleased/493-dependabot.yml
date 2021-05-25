@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump webpack-merge from 4.2.2 to 5.7.3
+destination-branches:
+- master
+- iso4
+sections: {}
