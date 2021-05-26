@@ -40,7 +40,7 @@ export class InstanceConfigCommandManager implements CommandManager {
 
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.poster.post(command.qualifier, {
+        await this.poster.post(command, {
           values: {
             ...configData.value,
             [option]: value,
@@ -55,9 +55,7 @@ export class InstanceConfigCommandManager implements CommandManager {
     command: Command.SubCommand<"InstanceConfig">
   ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(
-        await this.poster.post(command.qualifier, { values: {} })
-      ),
+      RemoteData.fromEither(await this.poster.post(command, { values: {} })),
       command
     );
   }

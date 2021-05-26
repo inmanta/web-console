@@ -11,17 +11,17 @@ export class InstanceConfigPoster implements Poster<"InstanceConfig"> {
     service_entity,
     id,
     version,
-  }: Command.Qualifier<"InstanceConfig">): string {
+  }: Command.SubCommand<"InstanceConfig">): string {
     return `${this.apiHelper.getBaseUrl()}/lsm/v1/service_inventory/${service_entity}/${id}/config?current_version=${version}`;
   }
 
   post(
-    qualifier: Command.Qualifier<"InstanceConfig">,
+    command: Command.SubCommand<"InstanceConfig">,
     body: Command.Body<"InstanceConfig">
   ): Promise<Type<string, Command.ApiData<"InstanceConfig">>> {
     return this.apiHelper.post<
       Command.ApiData<"InstanceConfig">,
       Command.Body<"InstanceConfig">
-    >(this.getUrl(qualifier), this.environment, body);
+    >(this.getUrl(command), this.environment, body);
   }
 }

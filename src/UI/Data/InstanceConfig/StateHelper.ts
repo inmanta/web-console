@@ -19,14 +19,14 @@ export class InstanceConfigStateHelper
   set(data: ApiData, query: Query.SubQuery<"InstanceConfig">): void {
     const value = RemoteData.mapSuccess((data) => data.data, data);
     this.store.dispatch.instanceConfig.setData({
-      id: query.qualifier.id,
+      id: query.id,
       value,
     });
   }
 
   getHooked(query: Query.SubQuery<"InstanceConfig">): Data {
     return useStoreState((state) => {
-      return this.enforce(state.instanceConfig.byId[query.qualifier.id]);
+      return this.enforce(state.instanceConfig.byId[query.id]);
     }, isEqual);
   }
 
@@ -36,8 +36,6 @@ export class InstanceConfigStateHelper
   }
 
   getOnce(query: Query.SubQuery<"InstanceConfig">): Data {
-    return this.enforce(
-      this.store.getState().instanceConfig.byId[query.qualifier.id]
-    );
+    return this.enforce(this.store.getState().instanceConfig.byId[query.id]);
   }
 }

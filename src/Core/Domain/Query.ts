@@ -174,9 +174,9 @@ interface InstanceLogsManifest {
 /**
  * The instanceConfig query describes the config belonging to one specific service instance
  */
-export interface InstanceConfigQuery {
+export interface InstanceConfigQuery extends ServiceInstanceIdentifier {
   kind: "InstanceConfig";
-  qualifier: ServiceInstanceIdentifier;
+  qualifier: null;
 }
 
 interface InstanceConfigManifest {

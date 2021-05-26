@@ -7,9 +7,10 @@ export type Type = Command;
 /**
  * The instanceConfig command updates the config belonging to one specific service instance
  */
-export interface InstanceConfigCommand {
+export interface InstanceConfigCommand
+  extends VersionedServiceInstanceIdentifier {
   kind: "InstanceConfig";
-  qualifier: VersionedServiceInstanceIdentifier;
+  qualifier: null;
 }
 
 interface InstanceConfigManifest {

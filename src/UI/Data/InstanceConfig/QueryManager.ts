@@ -30,7 +30,7 @@ export class InstanceConfigQueryManager
   private getConfigUrl({
     service_entity,
     id,
-  }: Query.Qualifier<"InstanceConfig">): string {
+  }: Query.SubQuery<"InstanceConfig">): string {
     return `/lsm/v1/service_inventory/${service_entity}/${id}/config`;
   }
 
@@ -68,8 +68,7 @@ export class InstanceConfigQueryManager
   }
 
   useOneTime(query: Query.SubQuery<"InstanceConfig">): [Data, () => void] {
-    const { qualifier } = query;
-    const { service_entity } = qualifier;
+    const { service_entity } = query;
     const serviceQuery: Query.SubQuery<"Service"> = {
       kind: "Service",
       name: service_entity,
@@ -85,7 +84,7 @@ export class InstanceConfigQueryManager
 
     useEffect(() => {
       this.initialize(query);
-      this.update(query, this.getConfigUrl(qualifier));
+      this.update(query, this.getConfigUrl(query));
     }, [this.environment]);
 
     return [
@@ -93,7 +92,7 @@ export class InstanceConfigQueryManager
         this.stateHelper.getHooked(query),
         this.serviceStateHelper.getHooked(serviceQuery)
       ),
-      () => this.update(query, this.getConfigUrl(qualifier)),
+      () => this.update(query, this.getConfigUrl(query)),
     ];
   }
 
