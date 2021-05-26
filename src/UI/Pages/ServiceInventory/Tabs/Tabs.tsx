@@ -85,7 +85,7 @@ const resourcesTab = (
   id: TabKey.Resources,
   title: words("inventory.tabs.resources"),
   icon: <AutomationIcon />,
-  view: <ResourcesTab qualifier={serviceInstanceIdentifier} />,
+  view: <ResourcesTab serviceInstanceIdentifier={serviceInstanceIdentifier} />,
 });
 
 const configTab = (

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Query, RemoteData } from "@/Core";
+import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
   ResourceTable,
   ResourceTableWrapper,
@@ -11,33 +11,31 @@ import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
-  qualifier: Query.Qualifier<"Resources">;
+  serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
 }
 
-export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
+export const ResourcesTab: React.FC<Props> = ({
+  serviceInstanceIdentifier,
+}) => {
   const { queryResolver } = useContext(DependencyContext);
+  const { id } = serviceInstanceIdentifier;
 
   const [data] = queryResolver.useContinuous<"Resources">({
     kind: "Resources",
-    qualifier,
+    qualifier: null,
+    ...serviceInstanceIdentifier,
   });
 
   return RemoteData.fold(
     {
       notAsked: () => null,
       loading: () => (
-        <ResourceTableWrapper
-          aria-label="ResourceTable-Loading"
-          id={qualifier.id}
-        >
+        <ResourceTableWrapper aria-label="ResourceTable-Loading" id={id}>
           <LoadingView delay={500} />
         </ResourceTableWrapper>
       ),
       failed: (error) => (
-        <ResourceTableWrapper
-          aria-label="ResourceTable-Failed"
-          id={qualifier.id}
-        >
+        <ResourceTableWrapper aria-label="ResourceTable-Failed" id={id}>
           <ErrorView
             title={words("inventory.resourcesTab.failed.title")}
             message={words("inventory.resourcesTab.failed.body")(error)}
@@ -46,10 +44,7 @@ export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
       ),
       success: (resources) =>
         resources.length === 0 ? (
-          <ResourceTableWrapper
-            aria-label="ResourceTable-Empty"
-            id={qualifier.id}
-          >
+          <ResourceTableWrapper aria-label="ResourceTable-Empty" id={id}>
             <EmptyView
               title={words("inventory.resourcesTab.empty.title")}
               message={words("inventory.resourcesTab.empty.body")}
@@ -59,7 +54,7 @@ export const ResourcesTab: React.FC<Props> = ({ qualifier }) => {
           <ResourceTable
             resources={resources}
             aria-label="ResourceTable-Success"
-            id={qualifier.id}
+            id={id}
           />
         ),
     },

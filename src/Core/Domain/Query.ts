@@ -112,9 +112,9 @@ interface ServiceInstancesManifest {
  * resources of 1 specific service instance. So the qualifier property
  * identifies a service instance.
  */
-export interface ResourcesQuery {
+export interface ResourcesQuery extends VersionedServiceInstanceIdentifier {
   kind: "Resources";
-  qualifier: VersionedServiceInstanceIdentifier;
+  qualifier: null;
 }
 
 interface ResourcesManifest {

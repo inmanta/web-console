@@ -10,12 +10,12 @@ export class ResourcesStateHelper implements StateHelper<"Resources"> {
 
   set(data: ApiData, query: Query.SubQuery<"Resources">): void {
     const value = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-    this.store.dispatch.resources.setData({ id: query.qualifier.id, value });
+    this.store.dispatch.resources.setData({ id: query.id, value });
   }
 
   getHooked(query: Query.SubQuery<"Resources">): Data {
     return useStoreState((state) => {
-      return this.enforce(state.resources.byId[query.qualifier.id]);
+      return this.enforce(state.resources.byId[query.id]);
     }, isEqual);
   }
 
@@ -25,8 +25,6 @@ export class ResourcesStateHelper implements StateHelper<"Resources"> {
   }
 
   getOnce(query: Query.SubQuery<"Resources">): Data {
-    return this.enforce(
-      this.store.getState().resources.byId[query.qualifier.id]
-    );
+    return this.enforce(this.store.getState().resources.byId[query.id]);
   }
 }
