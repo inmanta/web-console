@@ -1,8 +1,8 @@
 import React from "react";
-import { screen, render, Nullish } from "@testing-library/react";
+import { screen, render } from "@testing-library/react";
 import { Indicator } from "./Indicator";
 
-function selfHasText(text: string, element: Nullish<Element>) {
+function selfHasText(text: string, element: Element | null) {
   if (!element) return false;
   const hasText = (el: Element) => el.textContent === text;
   const elementHasText = hasText(element);
