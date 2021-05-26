@@ -22,7 +22,6 @@ export const ResourcesTab: React.FC<Props> = ({
 
   const [data] = queryResolver.useContinuous<"Resources">({
     kind: "Resources",
-    qualifier: null,
     ...serviceInstanceIdentifier,
   });
 

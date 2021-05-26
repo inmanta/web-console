@@ -20,7 +20,6 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
   const [data, retry] = queryResolver.useContinuous<"Service">({
     kind: "Service",
     name: serviceName,
-    qualifier: null,
   });
 
   return RemoteData.fold(

@@ -16,7 +16,6 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
 
   const [data] = queryResolver.useContinuous<"Diagnostics">({
     kind: "Diagnostics",
-    qualifier: null,
     id: instanceId,
     service_entity: service.name,
   });

@@ -30,7 +30,6 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
     kind: "InstanceLogs",
     id: instanceId,
     service_entity: service.name,
-    qualifier: null,
   });
 
   return RemoteData.fold(

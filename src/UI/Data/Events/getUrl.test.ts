@@ -6,7 +6,6 @@ describe("getUrl for events ", () => {
   const id = "id1";
   const baseQuery: Query.SubQuery<"Events"> = {
     kind: "Events",
-    qualifier: null,
     service_entity: name,
     id,
     filter: undefined,

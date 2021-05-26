@@ -13,7 +13,6 @@ describe("ServiceInstancesSlice ", () => {
     const firstQuery: Query.SubQuery<"ServiceInstances"> = {
       kind: "ServiceInstances",
       name: serviceInstancesFirstEnv[0].service_entity,
-      qualifier: null,
     };
     // Add instances for a service
     store.getActions().serviceInstances.setData({
@@ -45,7 +44,6 @@ describe("ServiceInstancesSlice ", () => {
     const secondQuery: Query.SubQuery<"ServiceInstances"> = {
       kind: "ServiceInstances",
       name: serviceInstancesSecondEnv[0].service_entity,
-      qualifier: null,
     };
     expect(
       store

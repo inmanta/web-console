@@ -29,10 +29,7 @@ export const ServiceCatalog: React.FC<{ environment: string }> = ({
   environment,
 }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const query: Query.SubQuery<"Services"> = {
-    kind: "Services",
-    qualifier: null,
-  };
+  const query: Query.SubQuery<"Services"> = { kind: "Services" };
   const [data, retry] = queryResolver.useContinuous<"Services">(query);
 
   const shouldUseAuth =

@@ -86,7 +86,6 @@ export const ServiceInventory: React.FunctionComponent<{
     name: serviceName,
     sort,
     filter,
-    qualifier: null,
   });
 
   const paginationWidget = RemoteData.fold(

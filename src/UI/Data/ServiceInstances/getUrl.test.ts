@@ -8,7 +8,6 @@ test("getUrl returns correct url for no filter & no sort", () => {
     name,
     filter: undefined,
     sort: undefined,
-    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(
@@ -25,7 +24,6 @@ test("getUrl returns correct url for filter & no sort", () => {
       state: ["up", "creating"],
     },
     sort: undefined,
-    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(
@@ -43,7 +41,6 @@ test("getUrl returns correct url for sort & no filter", () => {
       name: "state",
       order: "asc",
     },
-    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(
@@ -63,7 +60,6 @@ test("getUrl returns correct url for sort & filter", () => {
       name: "state",
       order: "asc",
     },
-    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(
@@ -82,7 +78,6 @@ test("getUrl returns correct url for empty filter", () => {
       attributeSetEmpty: [],
       attributeSetNotEmpty: [],
     },
-    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(

@@ -32,7 +32,6 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
     filter,
     sort,
     pageSize,
-    qualifier: null,
   });
 
   const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());

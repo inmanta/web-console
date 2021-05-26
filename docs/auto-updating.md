@@ -14,7 +14,9 @@ It also returns a retry function which manually triggers the api call again.
 ```typescript
 const [data, retry] = queryResolver.useContinuous({
   kind: "Resources",
-  qualifier,
+  id: "123",
+  service_entity: "service",
+  version: 4,
 });
 ```
 
@@ -26,12 +28,9 @@ Example:
 ```typescript
 interface ResourcesQuery {
   kind: "Resources";
-  qualifier: {
-    id: string;
-    environment: string;
-    service_entity: string;
-    version: number;
-  };
+  id: string;
+  service_entity: string;
+  version: number;
 }
 ```
 

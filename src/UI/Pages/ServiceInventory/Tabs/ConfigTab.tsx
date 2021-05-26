@@ -29,13 +29,11 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
   const { commandResolver, queryResolver } = useContext(DependencyContext);
   const [data, retry] = queryResolver.useOneTime<"InstanceConfig">({
     kind: "InstanceConfig",
-    qualifier: null,
     ...serviceInstanceIdentifier,
   });
 
   const trigger = commandResolver.getTrigger<"InstanceConfig">({
     kind: "InstanceConfig",
-    qualifier: null,
     ...serviceInstanceIdentifier,
   });
 
