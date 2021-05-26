@@ -1,17 +1,17 @@
 import React from "react";
 import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, Service } from "@/Test";
+import { DeferredFetcher, DynamicQueryManagerResolver, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  ResourcesDataManager,
+  QueryResolverImpl,
+  ResourcesQueryManager,
   ResourcesStateHelper,
-  ServiceInstancesDataManager,
+  ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
-import { ServiceInventory } from "../ServiceInventory";
+import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";
 
@@ -30,7 +30,7 @@ export class ServiceInventoryPrepper {
       update: jest.fn((result) => task.update(result)),
     }));
     const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
-    const serviceInstancesHelper = new ServiceInstancesDataManager(
+    const serviceInstancesHelper = new ServiceInstancesQueryManager(
       serviceInstancesFetcher,
       new ServiceInstancesStateHelper(store, service.environment),
       scheduler,
@@ -38,22 +38,21 @@ export class ServiceInventoryPrepper {
     );
 
     const resourcesFetcher = new DeferredFetcher<"Resources">();
-    const resourcesHelper = new ResourcesDataManager(
+    const resourcesHelper = new ResourcesQueryManager(
       resourcesFetcher,
       new ResourcesStateHelper(store),
       scheduler,
       service.environment
     );
 
-    const dataProvider = new DataProviderImpl([
-      serviceInstancesHelper,
-      resourcesHelper,
-    ]);
+    const queryResolver = new QueryResolverImpl(
+      new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
+    );
     const urlManager = new UrlManagerImpl("", service.environment);
 
     const component = (
       <MemoryRouter>
-        <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+        <DependencyProvider dependencies={{ queryResolver, urlManager }}>
           <StoreProvider store={store}>
             <ServiceInventory
               serviceName={service.name}

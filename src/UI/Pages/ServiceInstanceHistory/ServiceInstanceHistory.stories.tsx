@@ -1,13 +1,18 @@
 import React from "react";
 import { InstanceLog as InstanceLogModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { InstantFetcher, InstanceLog, Service } from "@/Test";
+import {
+  InstantFetcher,
+  InstanceLog,
+  Service,
+  DynamicQueryManagerResolver,
+} from "@/Test";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import {
-  DataProviderImpl,
-  InstanceLogsDataManager,
+  QueryResolverImpl,
+  InstanceLogsQueryManager,
   InstanceLogsStateHelper,
 } from "@/UI/Data";
 
@@ -18,19 +23,21 @@ export default {
 
 const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new InstanceLogsDataManager(
-      new InstantFetcher<"InstanceLogs">({
-        kind: "Success",
-        data: { data: logs },
-      }),
-      new InstanceLogsStateHelper(store),
-      Service.A.environment
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new InstanceLogsQueryManager(
+        new InstantFetcher<"InstanceLogs">({
+          kind: "Success",
+          data: { data: logs },
+        }),
+        new InstanceLogsStateHelper(store),
+        Service.A.environment
+      ),
+    ])
+  );
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
           service={Service.A}

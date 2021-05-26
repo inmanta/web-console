@@ -1,9 +1,10 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import {
-  CommandProviderImpl,
-  DataProviderImpl,
-  InstanceConfigDataManager,
+  CommandResolverImpl,
+  QueryResolverImpl,
+  InstanceConfigCommandManager,
+  InstanceConfigQueryManager,
   InstanceConfigStateHelper,
   ServiceKeyMaker,
   ServiceStateHelper,
@@ -12,6 +13,8 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { ConfigTab } from "./ConfigTab";
 import {
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
   InstantFetcher,
   InstantPoster,
   Service,
@@ -35,7 +38,7 @@ function setup() {
     version: ServiceInstance.A.version,
   };
 
-  const instanceConfigHelper = new InstanceConfigDataManager(
+  const instanceConfigHelper = new InstanceConfigQueryManager(
     new InstantFetcher<"InstanceConfig">({
       kind: "Success",
       data: { data: { auto_creating: false } },
@@ -53,11 +56,13 @@ function setup() {
     instanceIdentifier.environment
   );
 
-  const dataProvider = new DataProviderImpl([instanceConfigHelper]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([instanceConfigHelper])
+  );
 
   return {
     storeInstance,
-    dataProvider,
+    queryResolver,
     instanceConfigStateHelper,
     instanceIdentifier,
   };
@@ -66,18 +71,22 @@ function setup() {
 test("ConfigTab can reset all settings", async () => {
   const {
     storeInstance,
-    dataProvider,
+    queryResolver,
     instanceConfigStateHelper,
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl(
-    new InstantPoster(RemoteData.success({ data: {} })),
-    instanceConfigStateHelper
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new InstanceConfigCommandManager(
+        new InstantPoster(RemoteData.success({ data: {} })),
+        instanceConfigStateHelper
+      ),
+    ])
   );
 
   render(
-    <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
+    <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>
@@ -101,22 +110,26 @@ test("ConfigTab can reset all settings", async () => {
 test("ConfigTab can change 1 toggle", async () => {
   const {
     storeInstance,
-    dataProvider,
+    queryResolver,
     instanceConfigStateHelper,
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl(
-    new InstantPoster(
-      RemoteData.success({
-        data: { auto_creating: false, auto_designed: false },
-      })
-    ),
-    instanceConfigStateHelper
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new InstanceConfigCommandManager(
+        new InstantPoster(
+          RemoteData.success({
+            data: { auto_creating: false, auto_designed: false },
+          })
+        ),
+        instanceConfigStateHelper
+      ),
+    ])
   );
 
   render(
-    <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
+    <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>

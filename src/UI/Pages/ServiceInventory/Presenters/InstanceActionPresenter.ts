@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { KeycloakInstance } from "keycloak-js";
 import { InstanceActions } from "@/UI/Pages/ServiceInventory/Components";
 import { ActionPresenter, ServiceInstanceForAction } from "./ActionPresenter";
-import { InstanceSetStateManager } from "../InstanceSetStateManager";
+import { InstanceSetStateManager } from "@/UI/Pages/ServiceInventory/InstanceSetStateManager";
 import { ServiceModel } from "@/Core";
 
 export class InstanceActionPresenter implements ActionPresenter {

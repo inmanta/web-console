@@ -8,13 +8,14 @@ import {
   tablePresenter,
   tablePresenterWithIdentity,
   StaticScheduler,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
-  DataProviderImpl,
-  ResourcesDataManager,
+  QueryResolverImpl,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import userEvent from "@testing-library/user-event";
@@ -26,27 +27,29 @@ const dummySetter = () => {
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: {
-          data: [
-            {
-              resource_id: "resource_id_1",
-              resource_state: "resource_state",
-            },
-          ],
-        },
-      }),
-      new DummyStateHelper<"Resources">(),
-      new StaticScheduler(),
-      "env"
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
+        new InstantFetcher<"Resources">({
+          kind: "Success",
+          data: {
+            data: [
+              {
+                resource_id: "resource_id_1",
+                resource_state: "resource_state",
+              },
+            ],
+          },
+        }),
+        new DummyStateHelper<"Resources">(),
+        new StaticScheduler(),
+        "env"
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <InventoryTable
         rows={rows}
         tablePresenter={tablePresenter}
@@ -68,27 +71,29 @@ test("InventoryTable can be expanded", async () => {
 
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: {
-          data: [
-            {
-              resource_id: "resource_id_1",
-              resource_state: "resource_state",
-            },
-          ],
-        },
-      }),
-      new ResourcesStateHelper(store),
-      new StaticScheduler(),
-      "env"
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
+        new InstantFetcher<"Resources">({
+          kind: "Success",
+          data: {
+            data: [
+              {
+                resource_id: "resource_id_1",
+                resource_state: "resource_state",
+              },
+            ],
+          },
+        }),
+        new ResourcesStateHelper(store),
+        new StaticScheduler(),
+        "env"
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <InventoryTable
           rows={rows}

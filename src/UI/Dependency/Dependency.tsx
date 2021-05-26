@@ -1,31 +1,31 @@
 import React, { createContext } from "react";
-import { CommandProvider, DataProvider, UrlManager } from "@/Core";
-import { DummyCommandProvider } from "./DummyCommandProvider";
-import { DummyDataProvider } from "./DummyDataProvider";
+import { CommandResolver, QueryResolver, UrlManager } from "@/Core";
+import { DummyCommandResolver } from "./DummyCommandResolver";
+import { DummyQueryResolver } from "./DummyQueryResolver";
 import { DummyUrlManager } from "./DummyUrlManager";
 
 export interface Dependencies {
-  commandProvider: CommandProvider;
-  dataProvider: DataProvider;
+  commandResolver: CommandResolver;
+  queryResolver: QueryResolver;
   urlManager: UrlManager;
 }
 
 export const DependencyContext = createContext<Dependencies>({
-  commandProvider: new DummyCommandProvider(),
-  dataProvider: new DummyDataProvider(),
+  commandResolver: new DummyCommandResolver(),
+  queryResolver: new DummyQueryResolver(),
   urlManager: new DummyUrlManager(),
 });
 
 export const DependencyProvider: React.FC<{
   dependencies: Partial<Dependencies>;
 }> = ({
-  dependencies: { commandProvider, dataProvider, urlManager },
+  dependencies: { commandResolver, queryResolver, urlManager },
   children,
 }) => (
   <DependencyContext.Provider
     value={{
-      commandProvider: commandProvider || new DummyCommandProvider(),
-      dataProvider: dataProvider || new DummyDataProvider(),
+      commandResolver: commandResolver || new DummyCommandResolver(),
+      queryResolver: queryResolver || new DummyQueryResolver(),
       urlManager: urlManager || new DummyUrlManager(),
     }}
   >

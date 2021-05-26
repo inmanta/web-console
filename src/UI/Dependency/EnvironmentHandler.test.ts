@@ -1,4 +1,4 @@
-import { getStoreInstance } from "../Store";
+import { getStoreInstance } from "@/UI/Store";
 import { createMemoryHistory } from "history";
 import { EnvironmentHandlerImpl } from ".";
 import { RemoteData } from "@/Core";

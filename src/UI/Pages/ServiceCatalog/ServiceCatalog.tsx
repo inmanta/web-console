@@ -28,12 +28,12 @@ export const ServiceCatalogWithProvider: React.FC = () => {
 export const ServiceCatalog: React.FC<{ environment: string }> = ({
   environment,
 }) => {
-  const { dataProvider } = useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
   const query: Query.SubQuery<"Services"> = {
     kind: "Services",
     qualifier: null,
   };
-  const [data, retry] = dataProvider.useContinuous<"Services">(query);
+  const [data, retry] = queryResolver.useContinuous<"Services">(query);
 
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);

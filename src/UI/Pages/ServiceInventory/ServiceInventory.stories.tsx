@@ -8,13 +8,14 @@ import {
   InstantFetcher,
   Pagination,
   StaticScheduler,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  ServiceInstancesDataManager,
+  QueryResolverImpl,
+  ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  ResourcesDataManager,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -37,7 +38,7 @@ export const Basic: React.FC = () => {
     },
   });
 
-  const serviceInstancesHelper = new ServiceInstancesDataManager(
+  const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store, Service.A.environment),
     scheduler,
@@ -48,20 +49,19 @@ export const Basic: React.FC = () => {
     data: { data: Resources.B },
   });
 
-  const resourcesHelper = new ResourcesDataManager(
+  const resourcesHelper = new ResourcesQueryManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
     scheduler,
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl([
-    serviceInstancesHelper,
-    resourcesHelper,
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
+  );
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory
@@ -82,17 +82,19 @@ export const Failed: React.FC = () => {
     kind: "Failed",
     error: "fake error message",
   });
-  const serviceInstancesHelper = new ServiceInstancesDataManager(
+  const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store, Service.A.environment),
     scheduler,
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl([serviceInstancesHelper]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([serviceInstancesHelper])
+  );
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory

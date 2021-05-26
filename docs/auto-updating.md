@@ -12,7 +12,7 @@ It then returns the data that is in the store now for that query.
 It also returns a retry function which manually triggers the api call again.
 
 ```typescript
-const [data, retry] = dataProvider.useContinuous({
+const [data, retry] = queryResolver.useContinuous({
   kind: "Resources",
   qualifier,
 });

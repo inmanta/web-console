@@ -1,8 +1,8 @@
 import { Scheduler, Fetcher, StateHelper, ServiceInstanceParams } from "@/Core";
-import { ContinuousDataManagerImpl } from "../DataManagerImpl";
+import { ContinuousQueryManagerImpl } from "@/UI/Data/QueryManagerImpl";
 import { getUrl } from "./getUrl";
 
-export class ServiceInstancesDataManager extends ContinuousDataManagerImpl<"ServiceInstances"> {
+export class ServiceInstancesQueryManager extends ContinuousQueryManagerImpl<"ServiceInstances"> {
   constructor(
     fetcher: Fetcher<"ServiceInstances">,
     stateHelper: StateHelper<"ServiceInstances">,

@@ -1,13 +1,17 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, StaticScheduler } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicQueryManagerResolver,
+  StaticScheduler,
+} from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ResourcesStateHelper,
-  ResourcesDataManager,
+  ResourcesQueryManager,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesTab } from "./ResourcesTab";
@@ -23,18 +27,20 @@ function setup() {
     version: 4,
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      apiHelper,
-      new ResourcesStateHelper(store),
-      scheduler,
-      instance.environment
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
+        apiHelper,
+        new ResourcesStateHelper(store),
+        scheduler,
+        instance.environment
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", instance.environment);
 
   const component = (
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <ResourcesTab qualifier={instance} />
       </StoreProvider>

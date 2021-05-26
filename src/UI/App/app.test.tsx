@@ -5,35 +5,39 @@ import { StoreProvider } from "easy-peasy";
 import Keycloak from "keycloak-js";
 import { App } from "@/UI/App/app";
 import { getStoreInstance } from "@/UI";
-import { ProjectsProviderContext } from "@/UI/Dependency";
+import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  ProjectsDataManager,
+  QueryResolverImpl,
+  ProjectsQueryManager,
   ProjectsStateHelper,
-} from "../Data";
-import { DeferredFetcher } from "@/Test";
+} from "@/UI/Data";
+import { DeferredFetcher, DynamicQueryManagerResolver } from "@/Test";
 
 function setup() {
   const stateHelper = new ProjectsStateHelper(getStoreInstance());
-  const projectsManager = new ProjectsDataManager(
+  const projectsManager = new ProjectsQueryManager(
     new DeferredFetcher<"Projects">(),
     stateHelper
   );
-  return new DataProviderImpl([projectsManager]);
+  return {
+    queryResolver: new QueryResolverImpl(
+      new DynamicQueryManagerResolver([projectsManager])
+    ),
+  };
 }
 
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const keycloak = Keycloak();
 
-  const dependencyManager = setup();
+  const { queryResolver } = setup();
 
   render(
-    <ProjectsProviderContext.Provider value={dependencyManager}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={getStoreInstance()}>
         <App keycloak={keycloak} shouldUseAuth={false} />
       </StoreProvider>
-    </ProjectsProviderContext.Provider>
+    </DependencyProvider>
   );
 
   expect(
@@ -48,14 +52,14 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
 test("GIVEN the app WHEN clicking the navigation toggle THEN the sidebar should be expanded", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
   const keycloak = Keycloak();
-  const dependencyManager = setup();
+  const { queryResolver } = setup();
 
   render(
-    <ProjectsProviderContext.Provider value={dependencyManager}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={getStoreInstance()}>
         <App keycloak={keycloak} shouldUseAuth={false} />
       </StoreProvider>
-    </ProjectsProviderContext.Provider>
+    </DependencyProvider>
   );
 
   expect(
