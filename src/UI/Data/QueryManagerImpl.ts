@@ -46,7 +46,8 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
     );
   }
 
-  useOneTime(qualifier: Query.Qualifier<Kind>): Data<Kind> {
+  useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
+    const { qualifier } = query;
     const [url, setUrl] = useState(this.getUrl(qualifier));
 
     useEffect(() => {
@@ -97,7 +98,8 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
     );
   }
 
-  useContinuous(qualifier: Query.Qualifier<Kind>): Data<Kind> {
+  useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
+    const { qualifier } = query;
     const [url, setUrl] = useState(this.getUrl(qualifier));
 
     useEffect(() => {

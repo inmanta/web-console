@@ -67,7 +67,8 @@ export class InstanceConfigQueryManager
     );
   }
 
-  useOneTime(qualifier: Query.Qualifier<"InstanceConfig">): [Data, () => void] {
+  useOneTime(query: Query.SubQuery<"InstanceConfig">): [Data, () => void] {
+    const { qualifier } = query;
     const { service_entity } = qualifier;
     const serviceIdentifier = {
       name: service_entity,
