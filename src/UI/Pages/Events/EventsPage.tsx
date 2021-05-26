@@ -27,13 +27,12 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
   const [pageSize, setPageSize] = useState<number>(20);
   const [data] = queryResolver.useContinuous<"Events">({
     kind: "Events",
-    qualifier: {
-      id: instanceId,
-      service_entity: service.name,
-      filter,
-      sort,
-      pageSize,
-    },
+    id: instanceId,
+    service_entity: service.name,
+    filter,
+    sort,
+    pageSize,
+    qualifier: null,
   });
 
   const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());

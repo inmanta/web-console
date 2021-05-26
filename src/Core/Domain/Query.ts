@@ -128,9 +128,11 @@ interface ResourcesManifest {
 /**
  * The events query describes events belonging to one specific service instance
  */
-export interface InstanceEventsQuery {
+export interface InstanceEventsQuery
+  extends ServiceInstanceIdentifier,
+    EventParams {
   kind: "Events";
-  qualifier: ServiceInstanceIdentifier & EventParams;
+  qualifier: null;
 }
 
 interface EventsManifest {

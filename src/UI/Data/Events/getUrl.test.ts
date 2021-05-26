@@ -4,7 +4,9 @@ import { getUrl } from "./getUrl";
 describe("getUrl for events ", () => {
   const name = "service_a";
   const id = "id1";
-  const baseQualifier: Query.Qualifier<"Events"> = {
+  const baseQuery: Query.SubQuery<"Events"> = {
+    kind: "Events",
+    qualifier: null,
     service_entity: name,
     id,
     filter: undefined,
@@ -24,13 +26,10 @@ describe("getUrl for events ", () => {
     "returns correct url $url for filter $filter sort $sort and page size $pageSize",
     ({ filter, sort, pageSize, url }) => {
       const query: Query.SubQuery<"Events"> = {
-        kind: "Events",
-        qualifier: {
-          ...baseQualifier,
-          filter,
-          sort,
-          pageSize,
-        },
+        ...baseQuery,
+        filter,
+        sort,
+        pageSize,
       };
 
       expect(getUrl(query)).toEqual(url);
