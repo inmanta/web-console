@@ -1,12 +1,17 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, Service, StaticScheduler } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicQueryManagerResolver,
+  Service,
+  StaticScheduler,
+} from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  DiagnosticsDataManager,
+  QueryResolverImpl,
+  DiagnosticsQueryManager,
   DiagnosticsStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -18,18 +23,20 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredFetcher<"Diagnostics">();
-  const dataProvider = new DataProviderImpl([
-    new DiagnosticsDataManager(
-      apiHelper,
-      new DiagnosticsStateHelper(store),
-      scheduler,
-      "environment"
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new DiagnosticsQueryManager(
+        apiHelper,
+        new DiagnosticsStateHelper(store),
+        scheduler,
+        "environment"
+      ),
+    ])
+  );
   const urlManager = new UrlManagerImpl("", "environment");
 
   const component = (
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <Diagnose
           service={Service.A}

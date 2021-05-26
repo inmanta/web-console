@@ -1,8 +1,8 @@
 import { Fetcher, StateHelper, Query, RemoteData } from "@/Core";
-import { OneTimeDataManagerImpl } from "../DataManagerImpl";
+import { OneTimeQueryManagerImpl } from "@/UI/Data/QueryManagerImpl";
 import { identity } from "lodash";
 
-export class ProjectsDataManager extends OneTimeDataManagerImpl<"Projects"> {
+export class ProjectsQueryManager extends OneTimeQueryManagerImpl<"Projects"> {
   constructor(
     fetcher: Fetcher<"Projects">,
     stateHelper: StateHelper<"Projects">

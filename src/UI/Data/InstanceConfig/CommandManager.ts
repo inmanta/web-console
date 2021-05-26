@@ -1,16 +1,21 @@
 import {
-  CommandProvider,
   Command,
   RemoteData,
   StateHelper,
   Poster,
+  CommandManager,
 } from "@/Core";
 
-export class CommandProviderImpl implements CommandProvider {
+export class InstanceConfigCommandManager implements CommandManager {
   constructor(
     private readonly poster: Poster<"InstanceConfig">,
     private readonly stateHelper: StateHelper<"InstanceConfig">
   ) {}
+
+  matches(command: Command.SubCommand<"InstanceConfig">): boolean {
+    return command.kind === "InstanceConfig";
+  }
+
   getTrigger({
     qualifier,
   }: Command.SubCommand<"InstanceConfig">): Command.Trigger<"InstanceConfig"> {

@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { PlusIcon } from "@patternfly/react-icons";
 import {
   CardFooter,
   Toolbar,
@@ -7,12 +9,10 @@ import {
   ToolbarContent,
   Button,
 } from "@patternfly/react-core";
-import { words } from "@/UI/words";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
-import { Link } from "react-router-dom";
-import { PlusIcon } from "@patternfly/react-icons";
-import { FilterWidget } from "../FilterWidget";
+import { words } from "@/UI/words";
 import { Routing } from "@/UI/Routing";
+import { FilterWidget } from "@/UI/Pages/ServiceInventory/Components/FilterWidget";
 
 interface Props {
   serviceName: string;

@@ -1,12 +1,17 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, Service, StaticScheduler } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicQueryManagerResolver,
+  Service,
+  StaticScheduler,
+} from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  ServicesDataManager,
+  QueryResolverImpl,
+  ServicesQueryManager,
   ServicesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -18,18 +23,20 @@ function setup() {
   const scheduler = new StaticScheduler();
   const servicesFetcher = new DeferredFetcher<"Services">();
 
-  const servicesHelper = new ServicesDataManager(
+  const servicesHelper = new ServicesQueryManager(
     servicesFetcher,
     new ServicesStateHelper(store, Service.A.environment),
     scheduler,
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl([servicesHelper]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([servicesHelper])
+  );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ dataProvider }}>
+      <DependencyProvider dependencies={{ queryResolver }}>
         <StoreProvider store={store}>
           <ServiceCatalog environment={Service.A.environment} />
         </StoreProvider>

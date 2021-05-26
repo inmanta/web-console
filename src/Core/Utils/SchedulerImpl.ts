@@ -1,4 +1,4 @@
-import { Maybe } from "../Language";
+import { Maybe } from "@/Core/Language";
 import { Dictionary } from "./Dictionary";
 import { DictionaryImpl } from "./DictionaryImpl";
 import { Scheduler, Task } from "./Scheduler";

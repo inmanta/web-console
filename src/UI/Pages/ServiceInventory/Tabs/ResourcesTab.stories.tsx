@@ -1,12 +1,18 @@
 import React from "react";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
-import { StaticScheduler, Outcome, InstantFetcher, Resources } from "@/Test";
+import {
+  StaticScheduler,
+  Outcome,
+  InstantFetcher,
+  Resources,
+  DynamicQueryManagerResolver,
+} from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
+  QueryResolverImpl,
   ResourcesStateHelper,
-  ResourcesDataManager,
+  ResourcesQueryManager,
 } from "@/UI/Data";
 import { ResourcesTab } from "./ResourcesTab";
 import { UrlManagerImpl } from "@/UI/Routing";
@@ -24,19 +30,21 @@ const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
     version: 4,
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">(outcome),
-      new ResourcesStateHelper(store),
-      new StaticScheduler(),
-      instance.environment
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
+        new InstantFetcher<"Resources">(outcome),
+        new ResourcesStateHelper(store),
+        new StaticScheduler(),
+        instance.environment
+      ),
+    ])
+  );
 
   const urlManager = new UrlManagerImpl("", instance.environment);
 
   return (
-    <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <ResourcesTab qualifier={instance} />
       </StoreProvider>

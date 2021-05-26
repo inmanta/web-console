@@ -1,6 +1,6 @@
 import { ServiceModel } from "@/Core";
 import { instance } from "@/Test";
-import { InstanceSetStateManager } from "../InstanceSetStateManager";
+import { InstanceSetStateManager } from "@/UI/Pages/ServiceInventory/InstanceSetStateManager";
 import { InstanceActionPresenter } from "./InstanceActionPresenter";
 
 describe("InstanceActionPresenter ", () => {

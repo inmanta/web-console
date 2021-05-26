@@ -1,4 +1,5 @@
-import { ServiceModel } from "@/Core";
+import React, { useState } from "react";
+import { KeycloakInstance } from "keycloak-js";
 import {
   Alert,
   AlertActionCloseButton,
@@ -8,14 +9,14 @@ import {
   CardFooter,
   CardHeader,
 } from "@patternfly/react-core";
-import React, { useState } from "react";
-
-import { AttributeConverter } from "../AttributeConverter";
-import { CreateFormPresenter } from "./CreateFormPresenter";
-import { submitCreate } from "../InstanceBackendRequestHandlers";
-import { FormAttributeResult } from "../ServiceInstanceForm";
+import { ServiceModel } from "@/Core";
 import { words } from "@/UI";
-import { KeycloakInstance } from "keycloak-js";
+import {
+  AttributeConverter,
+  submitCreate,
+  FormAttributeResult,
+} from "@/UI/Pages/ServiceInstanceForm";
+import { CreateFormPresenter } from "./CreateFormPresenter";
 
 interface Props {
   serviceEntity: ServiceModel;
