@@ -25,16 +25,27 @@ import { IRequestParams } from "@/UI/App/utils/fetchInmantaApi";
 import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
 import { Routing } from "@/UI/Routing";
 
-export const CatalogDataList: React.FunctionComponent<{
-  services?: ServiceModel[];
+interface Props {
+  services: Record<string, ServiceModel>;
   environmentId: string;
   serviceCatalogUrl: string;
+  onSelectDataListItem: (id: string) => void;
+  selectedDataListItemId: string;
   keycloak?: Keycloak.KeycloakInstance;
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   dispatch?: (data) => any;
-}> = (props) => {
+}
+
+export const CatalogDataList: React.FunctionComponent<Props> = ({
+  services,
+  environmentId,
+  serviceCatalogUrl,
+  keycloak,
+  dispatch,
+  onSelectDataListItem,
+  selectedDataListItemId,
+}) => {
   const [expanded, setExpanded] = useState([""]);
-  let serviceItems;
   const [errorMessage, setErrorMessage] = React.useState("");
 
   const Description = (descriptionProps) => {
@@ -51,76 +62,75 @@ export const CatalogDataList: React.FunctionComponent<{
     return <div />;
   };
 
-  if (props.services) {
-    serviceItems = props.services.map((service) => {
-      const toggleId = service.name + "-toggle";
-      const serviceKey = service.name + "-item";
-      const expandKey = service.name + "-expand";
-      const requestParams = {
-        dispatch: props.dispatch,
-        environmentId: props.environmentId,
-        isEnvironmentIdRequired: true,
-        keycloak: props.keycloak,
-        method: "DELETE",
-        setErrorMessage,
-        urlEndpoint: `${props.serviceCatalogUrl}/${service.name}`,
-      } as IRequestParams;
-      return (
-        <DataListItem
-          key={serviceKey}
-          aria-labelledby={serviceKey}
-          isExpanded={expanded.includes(toggleId)}
-        >
-          <DataListItemRow>
-            <DataListToggle
-              onClick={() => onToggle(toggleId)}
-              isExpanded={expanded.includes(toggleId)}
-              id={toggleId}
-              aria-controls={expandKey}
-            />
-            <DataListItemCells
-              dataListCells={[
-                <DataListCell key="primary content">
-                  <Title id={serviceKey} headingLevel="h2" size="xl">
-                    {service.name}
-                  </Title>
-                  <Description service={service} />
-                </DataListCell>,
-              ]}
-            />
-            <DataListAction
-              aria-labelledby={service.name + "-action"}
-              id={service.name + "-action"}
-              aria-label="Actions"
-            >
-              <Link
-                to={{
-                  pathname: Routing.getUrl("Inventory", {
-                    service: service.name,
-                  }),
-                  search: location.search,
-                }}
-              >
-                {" "}
-                <Button> Inventory </Button>
-              </Link>
-              <DeleteEntityModal
-                serviceName={service.name}
-                requestParams={requestParams}
-              />
-            </DataListAction>
-          </DataListItemRow>
-          <DataListContent
-            aria-label="Primary Content Details"
-            id={expandKey}
-            isHidden={!expanded.includes(toggleId)}
+  const serviceItems = Object.keys(services).map((serviceName) => {
+    const service = services[serviceName];
+    const toggleId = serviceName + "-toggle";
+    const serviceKey = serviceName + "-item";
+    const expandKey = serviceName + "-expand";
+    const requestParams = {
+      dispatch: dispatch,
+      environmentId: environmentId,
+      isEnvironmentIdRequired: true,
+      keycloak: keycloak,
+      method: "DELETE",
+      setErrorMessage,
+      urlEndpoint: `${serviceCatalogUrl}/${serviceName}`,
+    } as IRequestParams;
+    return (
+      <DataListItem
+        id={serviceName}
+        key={serviceKey}
+        aria-labelledby={serviceKey}
+        isExpanded={expanded.includes(toggleId)}
+      >
+        <DataListItemRow>
+          <DataListToggle
+            onClick={() => onToggle(toggleId)}
+            isExpanded={expanded.includes(toggleId)}
+            id={toggleId}
+            aria-controls={expandKey}
+          />
+          <DataListItemCells
+            dataListCells={[
+              <DataListCell key="primary content">
+                <Title id={serviceKey} headingLevel="h2" size="xl">
+                  {service.name}
+                </Title>
+                <Description service={service} />
+              </DataListCell>,
+            ]}
+          />
+          <DataListAction
+            aria-labelledby={service.name + "-action"}
+            id={service.name + "-action"}
+            aria-label="Actions"
           >
-            <CatalogContent service={service} />
-          </DataListContent>
-        </DataListItem>
-      );
-    });
-  }
+            <Link
+              to={{
+                pathname: Routing.getUrl("Inventory", {
+                  service: service.name,
+                }),
+                search: location.search,
+              }}
+            >
+              <Button> Inventory </Button>
+            </Link>
+            <DeleteEntityModal
+              serviceName={service.name}
+              requestParams={requestParams}
+            />
+          </DataListAction>
+        </DataListItemRow>
+        <DataListContent
+          aria-label="Primary Content Details"
+          id={expandKey}
+          isHidden={!expanded.includes(toggleId)}
+        >
+          <CatalogContent service={service} />
+        </DataListContent>
+      </DataListItem>
+    );
+  });
 
   const onToggle = (id) => {
     const index = expanded.indexOf(id);
@@ -137,7 +147,6 @@ export const CatalogDataList: React.FunctionComponent<{
     <React.Fragment>
       {errorMessage && (
         <AlertGroup isToast={true}>
-          {" "}
           <Alert
             variant="danger"
             title={errorMessage}
@@ -147,7 +156,13 @@ export const CatalogDataList: React.FunctionComponent<{
           />
         </AlertGroup>
       )}
-      <DataList aria-label="List of service entities">{serviceItems}</DataList>
+      <DataList
+        aria-label="List of service entities"
+        onSelectDataListItem={onSelectDataListItem}
+        selectedDataListItemId={selectedDataListItemId}
+      >
+        {serviceItems}
+      </DataList>
     </React.Fragment>
   );
 };

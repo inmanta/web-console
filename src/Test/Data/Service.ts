@@ -135,3 +135,18 @@ export const withIdentity = {
   service_identity: "order_id",
   service_identity_display_name: "Order ID",
 };
+
+export const withSummary = {
+  ...base,
+  instance_summary: {
+    by_label: {
+      no_label: 2,
+      success: 2,
+      info: 2,
+      warning: 2,
+      danger: 2,
+    },
+    by_state: {},
+    total: 10,
+  },
+};

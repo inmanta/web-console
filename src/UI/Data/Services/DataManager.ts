@@ -16,7 +16,7 @@ export class ServicesDataManager extends ContinuousDataManagerImpl<"Services"> {
       () => environment,
       () => [environment],
       "Services",
-      () => `/lsm/v1/service_catalog`,
+      () => `/lsm/v1/service_catalog?instance_summary=True`,
       identity,
       environment
     );
