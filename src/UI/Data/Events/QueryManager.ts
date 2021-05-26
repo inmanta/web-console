@@ -1,5 +1,5 @@
 import { Fetcher, StateHelper, Scheduler, EventParams } from "@/Core";
-import { ContinuousQueryManagerImpl } from "../QueryManagerImpl";
+import { ContinuousQueryManagerImpl } from "@/UI/Data/QueryManagerImpl";
 import { getUrl } from "./getUrl";
 
 export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {

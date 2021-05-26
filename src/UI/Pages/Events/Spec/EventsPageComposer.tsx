@@ -9,7 +9,7 @@ import {
   EventsStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
-import { EventsPage } from "../EventsPage";
+import { EventsPage } from "@/UI/Pages/Events/EventsPage";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";
 

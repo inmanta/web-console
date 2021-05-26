@@ -5,9 +5,9 @@ import {
   FormAttributeResult,
   FormInputAttribute,
   ServiceInstanceForm,
-} from "..";
-
-import { AttributeConverter, toOptionalBoolean } from "../AttributeConverter";
+  AttributeConverter,
+  toOptionalBoolean,
+} from "@/UI/Pages/ServiceInstanceForm";
 
 export class EditFormPresenter {
   constructor(private readonly attributeConverter: AttributeConverter) {}
