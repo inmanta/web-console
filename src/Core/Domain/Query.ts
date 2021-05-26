@@ -158,9 +158,9 @@ interface EventsManifest {
 /**
  * The instanceLogs query describes logs belonging to one specific service instance
  */
-export interface InstanceLogsQuery {
+export interface InstanceLogsQuery extends ServiceInstanceIdentifier {
   kind: "InstanceLogs";
-  qualifier: ServiceInstanceIdentifier;
+  qualifier: null;
 }
 
 interface InstanceLogsManifest {

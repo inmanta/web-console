@@ -16,12 +16,12 @@ export class InstanceLogsStateHelper implements StateHelper<"InstanceLogs"> {
 
   set(data: ApiData, query: Query.SubQuery<"InstanceLogs">): void {
     const value = RemoteData.mapSuccess((data) => data.data, data);
-    this.store.dispatch.instanceLogs.setData({ id: query.qualifier.id, value });
+    this.store.dispatch.instanceLogs.setData({ id: query.id, value });
   }
 
   getHooked(query: Query.SubQuery<"InstanceLogs">): Data {
     return useStoreState((state) => {
-      return this.enforce(state.instanceLogs.byId[query.qualifier.id]);
+      return this.enforce(state.instanceLogs.byId[query.id]);
     }, isEqual);
   }
 
@@ -31,8 +31,6 @@ export class InstanceLogsStateHelper implements StateHelper<"InstanceLogs"> {
   }
 
   getOnce(query: Query.SubQuery<"InstanceLogs">): Data {
-    return this.enforce(
-      this.store.getState().instanceLogs.byId[query.qualifier.id]
-    );
+    return this.enforce(this.store.getState().instanceLogs.byId[query.id]);
   }
 }

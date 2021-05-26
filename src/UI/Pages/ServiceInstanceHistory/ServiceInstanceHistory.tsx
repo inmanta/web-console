@@ -28,10 +28,9 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
 
   const [data] = queryResolver.useOneTime<"InstanceLogs">({
     kind: "InstanceLogs",
-    qualifier: {
-      id: instanceId,
-      service_entity: service.name,
-    },
+    id: instanceId,
+    service_entity: service.name,
+    qualifier: null,
   });
 
   return RemoteData.fold(
