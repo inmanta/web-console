@@ -165,6 +165,16 @@ const dict = {
   "diagnose.rejection.traceback": "Show full traceback",
   "diagnose.main.title": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,
+
+  /**
+   * Catalog related text
+   */
+  "catalog.drawer.title": (serviceName: string) =>
+    `Number of ${serviceName} instances by label`,
+  "catalog.drawer.summary.noLabel": "no label",
+  "catalog.drawer.summary.total": "total",
+  "catalog.drawer.summary.empty": "No instance summary found",
+  "catalog.button.inventory": "Inventory",
 };
 
 type Key = keyof typeof dict;

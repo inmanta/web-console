@@ -45,6 +45,20 @@ export interface ServiceIdentifier {
   name: string;
 }
 
+export interface InstancesByLabel {
+  danger: number;
+  warning: number;
+  success: number;
+  info: number;
+  no_label: number;
+}
+
+export interface InstanceSummary {
+  by_state: Record<string, number>;
+  by_label: InstancesByLabel;
+  total: number;
+}
+
 export interface ServiceModel extends ServiceIdentifier {
   environment: string;
   description?: string;
@@ -53,4 +67,5 @@ export interface ServiceModel extends ServiceIdentifier {
   service_identity?: string;
   service_identity_display_name?: string;
   config: Config;
+  instance_summary?: InstanceSummary;
 }

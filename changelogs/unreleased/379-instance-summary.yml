@@ -1,0 +1,6 @@
+description: Add instance summary to the catalog view
+issue-nr: 379
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
