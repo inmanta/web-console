@@ -188,9 +188,9 @@ interface InstanceConfigManifest {
 }
 
 /** Diagnostics describe the status of an instance with regards to the diagnose call */
-export interface DiagnosticsQuery {
+export interface DiagnosticsQuery extends ServiceInstanceIdentifier {
   kind: "Diagnostics";
-  qualifier: ServiceInstanceIdentifier;
+  qualifier: null;
 }
 
 interface DiagnosticsManifest {
