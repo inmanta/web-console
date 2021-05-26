@@ -1,17 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "@/UI/App/app";
-import keycloakConf from "@/UI/App/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/UI";
 import {
+  getStoreInstance,
+  UrlManagerImpl,
+  CommandResolverImpl,
+  QueryResolverImpl,
   CommandManagerResolver,
   QueryManagerResolver,
   DependencyProvider,
-} from "@/UI/Dependency";
-import { BaseApiHelper } from "./Infra";
-import { CommandResolverImpl, QueryResolverImpl } from "./UI/Data";
+} from "@/UI";
+import { App } from "@/UI/App/app";
+import keycloakConf from "@/UI/App/keycloak.json";
+import { BaseApiHelper } from "@/Infra";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -40,9 +42,12 @@ const queryResolver = new QueryResolverImpl(
 const commandResolver = new CommandResolverImpl(
   new CommandManagerResolver(store, baseApiHelper)
 );
+const urlManager = new UrlManagerImpl(baseUrl);
 
 ReactDOM.render(
-  <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+  <DependencyProvider
+    dependencies={{ queryResolver, commandResolver, urlManager }}
+  >
     <StoreProvider store={store}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
     </StoreProvider>
