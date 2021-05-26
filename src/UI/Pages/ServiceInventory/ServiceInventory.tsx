@@ -83,11 +83,10 @@ export const ServiceInventory: React.FunctionComponent<{
 
   const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
-    qualifier: {
-      name: serviceName,
-      sort,
-      filter,
-    },
+    name: serviceName,
+    sort,
+    filter,
+    qualifier: null,
   });
 
   const paginationWidget = RemoteData.fold(

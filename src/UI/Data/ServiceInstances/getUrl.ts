@@ -2,7 +2,9 @@ import { Query } from "@/Core";
 import qs from "qs";
 
 export function getUrl({
-  qualifier: { name, filter, sort },
+  name,
+  filter,
+  sort,
 }: Query.SubQuery<"ServiceInstances">): string {
   const filterParam = filter
     ? `&${qs.stringify(
@@ -16,7 +18,7 @@ export function getUrl({
   return `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20${filterParam}${sortParam}${includeDeletedParam}`;
 }
 
-type Filter = NonNullable<Query.Qualifier<"ServiceInstances">["filter"]>;
+type Filter = NonNullable<Query.SubQuery<"ServiceInstances">["filter"]>;
 
 const filterToRaw = (filter: Filter) => {
   if (typeof filter === "undefined") return {};

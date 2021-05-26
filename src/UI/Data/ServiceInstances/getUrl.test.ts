@@ -5,11 +5,10 @@ test("getUrl returns correct url for no filter & no sort", () => {
   const name = "service_a";
   const query: Query.SubQuery<"ServiceInstances"> = {
     kind: "ServiceInstances",
-    qualifier: {
-      name,
-      filter: undefined,
-      sort: undefined,
-    },
+    name,
+    filter: undefined,
+    sort: undefined,
+    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(
@@ -21,13 +20,12 @@ test("getUrl returns correct url for filter & no sort", () => {
   const name = "service_a";
   const query: Query.SubQuery<"ServiceInstances"> = {
     kind: "ServiceInstances",
-    qualifier: {
-      name,
-      filter: {
-        state: ["up", "creating"],
-      },
-      sort: undefined,
+    name,
+    filter: {
+      state: ["up", "creating"],
     },
+    sort: undefined,
+    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(
@@ -39,14 +37,13 @@ test("getUrl returns correct url for sort & no filter", () => {
   const name = "service_a";
   const query: Query.SubQuery<"ServiceInstances"> = {
     kind: "ServiceInstances",
-    qualifier: {
-      name,
-      filter: undefined,
-      sort: {
-        name: "state",
-        order: "asc",
-      },
+    name,
+    filter: undefined,
+    sort: {
+      name: "state",
+      order: "asc",
     },
+    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(
@@ -58,16 +55,15 @@ test("getUrl returns correct url for sort & filter", () => {
   const name = "service_a";
   const query: Query.SubQuery<"ServiceInstances"> = {
     kind: "ServiceInstances",
-    qualifier: {
-      name,
-      filter: {
-        state: ["up", "creating"],
-      },
-      sort: {
-        name: "state",
-        order: "asc",
-      },
+    name,
+    filter: {
+      state: ["up", "creating"],
     },
+    sort: {
+      name: "state",
+      order: "asc",
+    },
+    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(
@@ -79,15 +75,14 @@ test("getUrl returns correct url for empty filter", () => {
   const name = "service_a";
   const query: Query.SubQuery<"ServiceInstances"> = {
     kind: "ServiceInstances",
-    qualifier: {
-      name,
-      filter: {
-        state: [],
-        id: [],
-        attributeSetEmpty: [],
-        attributeSetNotEmpty: [],
-      },
+    name,
+    filter: {
+      state: [],
+      id: [],
+      attributeSetEmpty: [],
+      attributeSetNotEmpty: [],
     },
+    qualifier: null,
   };
 
   expect(getUrl(query)).toMatch(

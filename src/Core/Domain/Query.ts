@@ -79,9 +79,11 @@ interface ServiceManifest {
  * based on its name and environment. The qualifier identifies 1
  * specific service.
  */
-export interface ServiceInstancesQuery {
+export interface ServiceInstancesQuery
+  extends ServiceIdentifier,
+    ServiceInstanceParams {
   kind: "ServiceInstances";
-  qualifier: ServiceIdentifier & ServiceInstanceParams;
+  qualifier: null;
 }
 
 interface ServiceInstancesManifest {

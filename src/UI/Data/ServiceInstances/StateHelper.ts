@@ -23,7 +23,7 @@ export class ServiceInstancesStateHelper
    */
   set(value: ApiData, query: Query.SubQuery<"ServiceInstances">): void {
     this.store.dispatch.serviceInstances.setData({
-      qualifier: query.qualifier,
+      query,
       value,
       environment: this.environment,
     });
@@ -33,7 +33,7 @@ export class ServiceInstancesStateHelper
     return useStoreState((state) => {
       return this.enforce(
         state.serviceInstances.instancesWithTargetStates(
-          query.qualifier,
+          query,
           this.environment
         )
       );
@@ -49,10 +49,7 @@ export class ServiceInstancesStateHelper
     return this.enforce(
       this.store
         .getState()
-        .serviceInstances.instancesWithTargetStates(
-          query.qualifier,
-          this.environment
-        )
+        .serviceInstances.instancesWithTargetStates(query, this.environment)
     );
   }
 }
