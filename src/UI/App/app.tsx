@@ -7,9 +7,11 @@ import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { EnvironmentProvider } from "@/UI/Components";
-import { EnvironmentHandlerProvider } from "@/UI/Dependency";
+import {
+  EnvironmentHandlerProvider,
+  DependencyResolver,
+} from "@/UI/Dependency";
 import { PageRouter } from "@/UI/Routing";
-import { DependencyResolver } from "./DependencyResolver";
 
 const keycloakInitConfig = {
   onLoad: "login-required",
