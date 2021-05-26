@@ -170,10 +170,11 @@ const dict = {
    * Catalog related text
    */
   "catalog.drawer.title": (serviceName: string) =>
-    `Number of instances of ${serviceName} by label`,
+    `Number of ${serviceName} instances by label`,
   "catalog.drawer.summary.noLabel": "no label",
   "catalog.drawer.summary.total": "total",
   "catalog.drawer.summary.empty": "No instance summary found",
+  "catalog.button.inventory": "Inventory",
 };
 
 type Key = keyof typeof dict;

@@ -24,6 +24,7 @@ import { Link } from "react-router-dom";
 import { IRequestParams } from "@/UI/App/utils/fetchInmantaApi";
 import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
 import { Routing } from "@/UI/Routing";
+import { words } from "@/UI";
 
 interface Props {
   services: Record<string, ServiceModel>;
@@ -113,7 +114,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
                 search: location.search,
               }}
             >
-              <Button> Inventory </Button>
+              <Button>{words("catalog.button.inventory")}</Button>
             </Link>
             <DeleteEntityModal
               serviceName={service.name}
