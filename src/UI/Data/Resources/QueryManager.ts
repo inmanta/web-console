@@ -13,7 +13,7 @@ export class ResourcesQueryManager extends ContinuousQueryManagerImpl<"Resources
       fetcher,
       stateHelper,
       scheduler,
-      (qualifier) => qualifier.id,
+      ({ qualifier }) => qualifier.id,
       ({ qualifier }) => [qualifier.id, qualifier.version],
       "Resources",
       ({ qualifier: { service_entity, id, version } }) =>

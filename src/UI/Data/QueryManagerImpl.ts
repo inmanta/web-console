@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 
 type GetUnique<Kind extends Query.Kind> = (
-  qualifier: Query.Qualifier<Kind>
+  query: Query.SubQuery<Kind>
 ) => string;
 
 type GetDependencies<Kind extends Query.Kind> = (
@@ -98,7 +98,6 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
   }
 
   useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
-    const { qualifier } = query;
     const [url, setUrl] = useState(this.getUrl(query));
 
     useEffect(() => {
@@ -116,9 +115,9 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query);
       this.update(query, url);
-      this.scheduler.register(this.getUnique(qualifier), task);
+      this.scheduler.register(this.getUnique(query), task);
       return () => {
-        this.scheduler.unregister(this.getUnique(qualifier));
+        this.scheduler.unregister(this.getUnique(query));
       };
     }, [url, this.environment]);
 

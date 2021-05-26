@@ -13,7 +13,7 @@ export class DiagnosticsQueryManager extends ContinuousQueryManagerImpl<"Diagnos
       fetcher,
       stateHelper,
       scheduler,
-      (qualifier) => qualifier.id,
+      ({ qualifier }) => qualifier.id,
       ({ qualifier }) => [qualifier.id, qualifier.service_entity],
       "Diagnostics",
       ({ qualifier: { service_entity, id } }) =>

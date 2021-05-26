@@ -13,7 +13,7 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
       fetcher,
       stateHelper,
       scheduler,
-      (qualifier) => qualifier.id,
+      ({ qualifier }) => qualifier.id,
       ({ qualifier }) => [
         qualifier.id,
         qualifier.service_entity,
