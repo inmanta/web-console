@@ -14,10 +14,10 @@ export class ServiceQueryManager extends ContinuousQueryManagerImpl<"Service"> {
       fetcher,
       stateHelper,
       scheduler,
-      ({ qualifier: { name } }) => keyMaker.make([environment, name]),
-      ({ qualifier }) => [qualifier.name, environment],
+      ({ name }) => keyMaker.make([environment, name]),
+      ({ name }) => [name, environment],
       "Service",
-      ({ qualifier: { name } }) => `/lsm/v1/service_catalog/${name}`,
+      ({ name }) => `/lsm/v1/service_catalog/${name}`,
       identity,
       environment
     );

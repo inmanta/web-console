@@ -72,9 +72,8 @@ export class InstanceConfigQueryManager
     const { service_entity } = qualifier;
     const serviceQuery: Query.SubQuery<"Service"> = {
       kind: "Service",
-      qualifier: {
-        name: service_entity,
-      },
+      name: service_entity,
+      qualifier: null,
     };
     const serviceData = this.serviceStateHelper.getHooked(serviceQuery);
 

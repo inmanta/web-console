@@ -60,9 +60,9 @@ interface ServicesManifest {
  * The ServiceQuery describes a service. The qualifier identifies 1
  * specific service.
  */
-export interface ServiceQuery {
+export interface ServiceQuery extends ServiceIdentifier {
   kind: "Service";
-  qualifier: ServiceIdentifier;
+  qualifier: null;
 }
 
 interface ServiceManifest {
