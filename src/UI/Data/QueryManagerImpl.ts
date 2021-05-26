@@ -39,10 +39,10 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
     private readonly environment: string
   ) {}
 
-  async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
+  async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
-      qualifier
+      query.qualifier
     );
   }
 
@@ -56,7 +56,7 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), qualifier);
-      this.update(qualifier, url);
+      this.update(query, url);
     }, [url, this.environment]);
 
     return [
@@ -64,7 +64,7 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
         (d) => this.toUsed(d, setUrl),
         this.stateHelper.getHooked(qualifier)
       ),
-      () => this.update(qualifier, url),
+      () => this.update(query, url),
     ];
   }
 
@@ -91,10 +91,10 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
     private readonly environment: string
   ) {}
 
-  async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
+  async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
-      qualifier
+      query.qualifier
     );
   }
 
@@ -116,7 +116,7 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), qualifier);
-      this.update(qualifier, url);
+      this.update(query, url);
       this.scheduler.register(this.getUnique(qualifier), task);
       return () => {
         this.scheduler.unregister(this.getUnique(qualifier));
@@ -128,7 +128,7 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
         (data) => this.toUsed(data, setUrl),
         this.stateHelper.getHooked(qualifier)
       ),
-      () => this.update(qualifier, url),
+      () => this.update(query, url),
     ];
   }
 
