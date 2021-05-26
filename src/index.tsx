@@ -2,18 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import {
-  getStoreInstance,
-  UrlManagerImpl,
-  CommandResolverImpl,
-  QueryResolverImpl,
-  CommandManagerResolver,
-  QueryManagerResolver,
-  DependencyProvider,
-} from "@/UI";
-import { App } from "@/UI/App/app";
 import keycloakConf from "@/UI/App/keycloak.json";
 import { BaseApiHelper } from "@/Infra";
+import { App } from "@/UI/App/app";
+import {
+  DependencyProvider,
+  CommandManagerResolver,
+  QueryManagerResolver,
+} from "@/UI/Dependency";
+import { CommandResolverImpl, QueryResolverImpl } from "@/UI/Data";
+import { UrlManagerImpl } from "@/UI/Routing";
+import { getStoreInstance } from "@/UI/Store";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */

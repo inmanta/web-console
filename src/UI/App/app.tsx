@@ -36,9 +36,10 @@ export const App: React.FunctionComponent<{
           <EnvironmentProvider
             Wrapper={({ children }) => <>{children}</>}
             Dependant={({ environment }) => (
-              <DependencyResolver environment={environment}>
+              <>
+                <DependencyResolver environment={environment} />
                 <PageRouter />
-              </DependencyResolver>
+              </>
             )}
           />
         </AppLayout>
