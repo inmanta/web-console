@@ -23,14 +23,17 @@ describe("getUrl for events ", () => {
   `(
     "returns correct url $url for filter $filter sort $sort and page size $pageSize",
     ({ filter, sort, pageSize, url }) => {
-      const qualifier: Query.Qualifier<"Events"> = {
-        ...baseQualifier,
-        filter,
-        sort,
-        pageSize,
+      const query: Query.SubQuery<"Events"> = {
+        kind: "Events",
+        qualifier: {
+          ...baseQualifier,
+          filter,
+          sort,
+          pageSize,
+        },
       };
 
-      expect(getUrl(qualifier)).toEqual(url);
+      expect(getUrl(query)).toEqual(url);
     }
   );
 });

@@ -31,7 +31,7 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
     protected readonly stateHelper: StateHelper<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
-    private readonly getUrl: (qualifier: Query.Qualifier<Kind>) => string,
+    private readonly getUrl: (query: Query.SubQuery<Kind>) => string,
     private readonly toUsed: (
       data: Query.Data<Kind>,
       setUrl: (url: string) => void
@@ -48,10 +48,10 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
 
   useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
     const { qualifier } = query;
-    const [url, setUrl] = useState(this.getUrl(qualifier));
+    const [url, setUrl] = useState(this.getUrl(query));
 
     useEffect(() => {
-      setUrl(this.getUrl(qualifier));
+      setUrl(this.getUrl(query));
     }, this.getDependencies(qualifier));
 
     useEffect(() => {
@@ -83,7 +83,7 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
     private readonly getUnique: GetUnique<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
-    private readonly getUrl: (qualifier: Query.Qualifier<Kind>) => string,
+    private readonly getUrl: (query: Query.SubQuery<Kind>) => string,
     private readonly toUsed: (
       data: Query.Data<Kind>,
       setUrl: (url: string) => void
@@ -100,10 +100,10 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
 
   useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
     const { qualifier } = query;
-    const [url, setUrl] = useState(this.getUrl(qualifier));
+    const [url, setUrl] = useState(this.getUrl(query));
 
     useEffect(() => {
-      setUrl(this.getUrl(qualifier));
+      setUrl(this.getUrl(query));
     }, this.getDependencies(qualifier));
 
     const task = {

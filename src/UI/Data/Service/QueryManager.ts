@@ -17,7 +17,7 @@ export class ServiceQueryManager extends ContinuousQueryManagerImpl<"Service"> {
       ({ name }) => keyMaker.make([environment, name]),
       (qualifier) => [qualifier.name, environment],
       "Service",
-      ({ name }) => `/lsm/v1/service_catalog/${name}`,
+      ({ qualifier: { name } }) => `/lsm/v1/service_catalog/${name}`,
       identity,
       environment
     );

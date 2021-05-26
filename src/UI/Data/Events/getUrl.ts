@@ -3,12 +3,8 @@ import moment from "moment";
 import qs from "qs";
 
 export function getUrl({
-  service_entity,
-  id,
-  filter,
-  sort,
-  pageSize,
-}: Query.Qualifier<"Events">): string {
+  qualifier: { service_entity, id, filter, sort, pageSize },
+}: Query.SubQuery<"Events">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(

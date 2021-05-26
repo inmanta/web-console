@@ -2,10 +2,8 @@ import { Query } from "@/Core";
 import qs from "qs";
 
 export function getUrl({
-  name,
-  filter,
-  sort,
-}: Query.Qualifier<"ServiceInstances">): string {
+  qualifier: { name, filter, sort },
+}: Query.SubQuery<"ServiceInstances">): string {
   const filterParam = filter
     ? `&${qs.stringify(
         { filter: filterToRaw(filter) },
