@@ -14,7 +14,7 @@ export class DiagnosticsQueryManager extends ContinuousQueryManagerImpl<"Diagnos
       stateHelper,
       scheduler,
       (qualifier) => qualifier.id,
-      (qualifier) => [qualifier.id, qualifier.service_entity],
+      ({ qualifier }) => [qualifier.id, qualifier.service_entity],
       "Diagnostics",
       ({ qualifier: { service_entity, id } }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/diagnose`,

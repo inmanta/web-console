@@ -15,7 +15,7 @@ export class ServiceQueryManager extends ContinuousQueryManagerImpl<"Service"> {
       stateHelper,
       scheduler,
       ({ name }) => keyMaker.make([environment, name]),
-      (qualifier) => [qualifier.name, environment],
+      ({ qualifier }) => [qualifier.name, environment],
       "Service",
       ({ qualifier: { name } }) => `/lsm/v1/service_catalog/${name}`,
       identity,

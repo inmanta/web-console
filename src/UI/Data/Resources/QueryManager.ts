@@ -14,7 +14,7 @@ export class ResourcesQueryManager extends ContinuousQueryManagerImpl<"Resources
       stateHelper,
       scheduler,
       (qualifier) => qualifier.id,
-      (qualifier) => [qualifier.id, qualifier.version],
+      ({ qualifier }) => [qualifier.id, qualifier.version],
       "Resources",
       ({ qualifier: { service_entity, id, version } }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`,

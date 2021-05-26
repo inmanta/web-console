@@ -14,7 +14,7 @@ export class ServiceInstancesQueryManager extends ContinuousQueryManagerImpl<"Se
       stateHelper,
       scheduler,
       (qualifier) => qualifier.name,
-      (qualifier) => [
+      ({ qualifier }) => [
         qualifier.name,
         stringifyFilter(qualifier.filter),
         qualifier.sort?.name,

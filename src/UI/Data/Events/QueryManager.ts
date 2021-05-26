@@ -14,7 +14,7 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
       stateHelper,
       scheduler,
       (qualifier) => qualifier.id,
-      (qualifier) => [
+      ({ qualifier }) => [
         qualifier.id,
         qualifier.service_entity,
         qualifier.sort?.order,

@@ -15,7 +15,7 @@ type GetUnique<Kind extends Query.Kind> = (
 ) => string;
 
 type GetDependencies<Kind extends Query.Kind> = (
-  qualifier: Query.Qualifier<Kind>
+  query: Query.SubQuery<Kind>
 ) => (string | number | boolean | undefined)[];
 
 type Data<Kind extends Query.Kind> = [
@@ -52,7 +52,7 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
 
     useEffect(() => {
       setUrl(this.getUrl(query));
-    }, this.getDependencies(qualifier));
+    }, this.getDependencies(query));
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), qualifier);
@@ -104,7 +104,7 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
 
     useEffect(() => {
       setUrl(this.getUrl(query));
-    }, this.getDependencies(qualifier));
+    }, this.getDependencies(query));
 
     const task = {
       effect: async () =>
