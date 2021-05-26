@@ -21,7 +21,7 @@ export class ProjectsQueryManager extends OneTimeQueryManagerImpl<"Projects"> {
   async update(query: Query.SubQuery<"Projects">, url: string): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getRootData(url)),
-      query.qualifier
+      query
     );
   }
 }

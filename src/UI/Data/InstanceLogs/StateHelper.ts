@@ -14,14 +14,14 @@ type ApiData = RemoteData.Type<
 export class InstanceLogsStateHelper implements StateHelper<"InstanceLogs"> {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, qualifier: Query.Qualifier<"InstanceLogs">): void {
+  set(data: ApiData, query: Query.SubQuery<"InstanceLogs">): void {
     const value = RemoteData.mapSuccess((data) => data.data, data);
-    this.store.dispatch.instanceLogs.setData({ id: qualifier.id, value });
+    this.store.dispatch.instanceLogs.setData({ id: query.qualifier.id, value });
   }
 
-  getHooked(qualifier: Query.Qualifier<"InstanceLogs">): Data {
+  getHooked(query: Query.SubQuery<"InstanceLogs">): Data {
     return useStoreState((state) => {
-      return this.enforce(state.instanceLogs.byId[qualifier.id]);
+      return this.enforce(state.instanceLogs.byId[query.qualifier.id]);
     }, isEqual);
   }
 
@@ -30,7 +30,9 @@ export class InstanceLogsStateHelper implements StateHelper<"InstanceLogs"> {
     return value;
   }
 
-  getOnce(qualifier: Query.Qualifier<"InstanceLogs">): Data {
-    return this.enforce(this.store.getState().instanceLogs.byId[qualifier.id]);
+  getOnce(query: Query.SubQuery<"InstanceLogs">): Data {
+    return this.enforce(
+      this.store.getState().instanceLogs.byId[query.qualifier.id]
+    );
   }
 }

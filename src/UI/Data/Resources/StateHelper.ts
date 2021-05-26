@@ -8,14 +8,14 @@ type ApiData = RemoteData.Type<string, Query.ApiResponse<"Resources">>;
 export class ResourcesStateHelper implements StateHelper<"Resources"> {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, qualifier: Query.Qualifier<"Resources">): void {
+  set(data: ApiData, query: Query.SubQuery<"Resources">): void {
     const value = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-    this.store.dispatch.resources.setData({ id: qualifier.id, value });
+    this.store.dispatch.resources.setData({ id: query.qualifier.id, value });
   }
 
-  getHooked(qualifier: Query.Qualifier<"Resources">): Data {
+  getHooked(query: Query.SubQuery<"Resources">): Data {
     return useStoreState((state) => {
-      return this.enforce(state.resources.byId[qualifier.id]);
+      return this.enforce(state.resources.byId[query.qualifier.id]);
     }, isEqual);
   }
 
@@ -24,7 +24,9 @@ export class ResourcesStateHelper implements StateHelper<"Resources"> {
     return value;
   }
 
-  getOnce(qualifier: Query.Qualifier<"Resources">): Data {
-    return this.enforce(this.store.getState().resources.byId[qualifier.id]);
+  getOnce(query: Query.SubQuery<"Resources">): Data {
+    return this.enforce(
+      this.store.getState().resources.byId[query.qualifier.id]
+    );
   }
 }

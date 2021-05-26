@@ -42,12 +42,11 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
   async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
-      query.qualifier
+      query
     );
   }
 
   useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
-    const { qualifier } = query;
     const [url, setUrl] = useState(this.getUrl(query));
 
     useEffect(() => {
@@ -55,14 +54,14 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
     }, this.getDependencies(query));
 
     useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), qualifier);
+      this.stateHelper.set(RemoteData.loading(), query);
       this.update(query, url);
     }, [url, this.environment]);
 
     return [
       RemoteData.mapSuccess(
         (d) => this.toUsed(d, setUrl),
-        this.stateHelper.getHooked(qualifier)
+        this.stateHelper.getHooked(query)
       ),
       () => this.update(query, url),
     ];
@@ -94,7 +93,7 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
   async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
-      query.qualifier
+      query
     );
   }
 
@@ -111,11 +110,11 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
         RemoteData.fromEither(
           await this.fetcher.getData(this.environment, url)
         ),
-      update: (data) => this.stateHelper.set(data, qualifier),
+      update: (data) => this.stateHelper.set(data, query),
     };
 
     useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), qualifier);
+      this.stateHelper.set(RemoteData.loading(), query);
       this.update(query, url);
       this.scheduler.register(this.getUnique(qualifier), task);
       return () => {
@@ -126,7 +125,7 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
     return [
       RemoteData.mapSuccess(
         (data) => this.toUsed(data, setUrl),
-        this.stateHelper.getHooked(qualifier)
+        this.stateHelper.getHooked(query)
       ),
       () => this.update(query, url),
     ];

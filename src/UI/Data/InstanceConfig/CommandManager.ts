@@ -16,47 +16,49 @@ export class InstanceConfigCommandManager implements CommandManager {
     return command.kind === "InstanceConfig";
   }
 
-  getTrigger({
-    qualifier,
-  }: Command.SubCommand<"InstanceConfig">): Command.Trigger<"InstanceConfig"> {
+  getTrigger(
+    command: Command.SubCommand<"InstanceConfig">
+  ): Command.Trigger<"InstanceConfig"> {
     return async (payload) => {
       switch (payload.kind) {
         case "RESET":
-          this.reset(qualifier);
+          this.reset(command);
           return;
         case "UPDATE":
-          this.update(qualifier, payload.option, payload.value);
+          this.update(command, payload.option, payload.value);
       }
     };
   }
 
   private async update(
-    qualifier: Command.Qualifier<"InstanceConfig">,
+    command: Command.SubCommand<"InstanceConfig">,
     option: string,
     value: boolean
   ): Promise<void> {
-    const configData = this.stateHelper.getOnce(qualifier);
+    const configData = this.stateHelper.getOnce(command);
     if (!RemoteData.isSuccess(configData)) return;
 
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.poster.post(qualifier, {
+        await this.poster.post(command.qualifier, {
           values: {
             ...configData.value,
             [option]: value,
           },
         })
       ),
-      qualifier
+      command
     );
   }
 
   private async reset(
-    qualifier: Command.Qualifier<"InstanceConfig">
+    command: Command.SubCommand<"InstanceConfig">
   ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(await this.poster.post(qualifier, { values: {} })),
-      qualifier
+      RemoteData.fromEither(
+        await this.poster.post(command.qualifier, { values: {} })
+      ),
+      command
     );
   }
 }

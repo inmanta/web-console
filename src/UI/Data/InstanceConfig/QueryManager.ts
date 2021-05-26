@@ -38,64 +38,63 @@ export class InstanceConfigQueryManager
     return `/lsm/v1/service_catalog/${name}`;
   }
 
-  private initialize(qualifier: Query.Qualifier<"InstanceConfig">): void {
-    const value = this.stateHelper.getOnce(qualifier);
+  private initialize(query: Query.SubQuery<"InstanceConfig">): void {
+    const value = this.stateHelper.getOnce(query);
     if (RemoteData.isNotAsked(value)) {
-      this.stateHelper.set(RemoteData.loading(), qualifier);
+      this.stateHelper.set(RemoteData.loading(), query);
     }
   }
 
   private async update(
-    qualifier: Query.Qualifier<"InstanceConfig">,
+    query: Query.SubQuery<"InstanceConfig">,
     url: string
   ): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
-      qualifier
+      query
     );
   }
 
   private async updateService(
-    qualifier: Query.Qualifier<"Service">,
+    query: Query.SubQuery<"Service">,
     url: string
   ): Promise<void> {
     this.serviceStateHelper.set(
       RemoteData.fromEither(
         await this.serviceFetcher.getData(this.environment, url)
       ),
-      qualifier
+      query
     );
   }
 
   useOneTime(query: Query.SubQuery<"InstanceConfig">): [Data, () => void] {
     const { qualifier } = query;
     const { service_entity } = qualifier;
-    const serviceIdentifier = {
-      name: service_entity,
-      environment: this.environment,
+    const serviceQuery: Query.SubQuery<"Service"> = {
+      kind: "Service",
+      qualifier: {
+        name: service_entity,
+      },
     };
-    const serviceData = this.serviceStateHelper.getHooked(serviceIdentifier);
+    const serviceData = this.serviceStateHelper.getHooked(serviceQuery);
 
     useEffect(() => {
       if (!RemoteData.isSuccess(serviceData)) {
-        this.updateService(
-          serviceIdentifier,
-          this.getServiceUrl(service_entity)
-        );
+        this.updateService(serviceQuery, this.getServiceUrl(service_entity));
       }
     }, [serviceData.kind]);
 
     useEffect(() => {
-      this.initialize(qualifier);
-      this.update(qualifier, this.getConfigUrl(qualifier));
+      this.initialize(query);
+      this.update(query, this.getConfigUrl(qualifier));
     }, [this.environment]);
 
     return [
       this.merge(
-        this.stateHelper.getHooked(qualifier),
-        this.serviceStateHelper.getHooked(serviceIdentifier)
+        this.stateHelper.getHooked(query),
+        this.serviceStateHelper.getHooked(serviceQuery)
       ),
-      () => this.update(qualifier, this.getConfigUrl(qualifier)),
+      () => this.update(query, this.getConfigUrl(qualifier)),
     ];
   }
 
