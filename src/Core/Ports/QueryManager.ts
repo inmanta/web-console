@@ -20,11 +20,11 @@ export type QueryManager =
   | ContinuousQueryManager<Query.Kind>;
 
 export interface OneTimeQueryManager<K extends Query.Kind> {
-  useOneTime(qualifier: Query.Qualifier<K>): Pair<K>;
+  useOneTime(query: Query.SubQuery<K>): Pair<K>;
   matches(query: Query.Type, kind: QueryManagerKind): boolean;
 }
 
 export interface ContinuousQueryManager<K extends Query.Kind> {
-  useContinuous(qualifier: Query.Qualifier<K>): Pair<K>;
+  useContinuous(query: Query.SubQuery<K>): Pair<K>;
   matches(query: Query.Type, kind: QueryManagerKind): boolean;
 }

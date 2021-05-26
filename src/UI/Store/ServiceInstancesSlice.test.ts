@@ -1,4 +1,4 @@
-import { RemoteData, ServiceInstanceModel } from "@/Core";
+import { Query, RemoteData, ServiceInstanceModel } from "@/Core";
 import { ServiceInstance } from "@/Test";
 import { getStoreInstance } from "./Setup";
 
@@ -10,10 +10,13 @@ describe("ServiceInstancesSlice ", () => {
 
   it("differentiates correctly between services with the same name and different environment", () => {
     const store = getStoreInstance();
-    const firstQualifier = { name: serviceInstancesFirstEnv[0].service_entity };
+    const firstQuery: Query.SubQuery<"ServiceInstances"> = {
+      kind: "ServiceInstances",
+      name: serviceInstancesFirstEnv[0].service_entity,
+    };
     // Add instances for a service
     store.getActions().serviceInstances.setData({
-      qualifier: firstQualifier,
+      query: firstQuery,
       value: RemoteData.success({
         data: serviceInstancesFirstEnv,
         links: { self: "" },
@@ -26,7 +29,7 @@ describe("ServiceInstancesSlice ", () => {
       store
         .getState()
         .serviceInstances.instancesWithTargetStates(
-          firstQualifier,
+          firstQuery,
           serviceInstancesFirstEnv[0].environment
         )
     ).toEqual(
@@ -38,20 +41,21 @@ describe("ServiceInstancesSlice ", () => {
     );
 
     // Check if instances for a service with the same name but different environment return loading state if they are not loaded yet
-    const secondQualifier = {
+    const secondQuery: Query.SubQuery<"ServiceInstances"> = {
+      kind: "ServiceInstances",
       name: serviceInstancesSecondEnv[0].service_entity,
     };
     expect(
       store
         .getState()
         .serviceInstances.instancesWithTargetStates(
-          secondQualifier,
+          secondQuery,
           serviceInstancesSecondEnv[0].environment
         )
     ).toEqual(RemoteData.loading());
     // Load the instances in the second environment
     store.getActions().serviceInstances.setData({
-      qualifier: secondQualifier,
+      query: secondQuery,
       value: RemoteData.success({
         data: serviceInstancesSecondEnv,
         links: { self: "" },
@@ -64,7 +68,7 @@ describe("ServiceInstancesSlice ", () => {
       store
         .getState()
         .serviceInstances.instancesWithTargetStates(
-          secondQualifier,
+          secondQuery,
           serviceInstancesSecondEnv[0].environment
         )
     ).toEqual(

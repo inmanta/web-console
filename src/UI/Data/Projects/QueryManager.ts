@@ -18,13 +18,10 @@ export class ProjectsQueryManager extends OneTimeQueryManagerImpl<"Projects"> {
     );
   }
 
-  async update(
-    qualifier: Query.Qualifier<"Projects">,
-    url: string
-  ): Promise<void> {
+  async update(query: Query.SubQuery<"Projects">, url: string): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getRootData(url)),
-      qualifier
+      query
     );
   }
 }

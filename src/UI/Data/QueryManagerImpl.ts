@@ -11,11 +11,11 @@ import {
 import { useEffect, useState } from "react";
 
 type GetUnique<Kind extends Query.Kind> = (
-  qualifier: Query.Qualifier<Kind>
+  query: Query.SubQuery<Kind>
 ) => string;
 
 type GetDependencies<Kind extends Query.Kind> = (
-  qualifier: Query.Qualifier<Kind>
+  query: Query.SubQuery<Kind>
 ) => (string | number | boolean | undefined)[];
 
 type Data<Kind extends Query.Kind> = [
@@ -31,7 +31,7 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
     protected readonly stateHelper: StateHelper<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
-    private readonly getUrl: (qualifier: Query.Qualifier<Kind>) => string,
+    private readonly getUrl: (query: Query.SubQuery<Kind>) => string,
     private readonly toUsed: (
       data: Query.Data<Kind>,
       setUrl: (url: string) => void
@@ -39,31 +39,31 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
     private readonly environment: string
   ) {}
 
-  async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
+  async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
-      qualifier
+      query
     );
   }
 
-  useOneTime(qualifier: Query.Qualifier<Kind>): Data<Kind> {
-    const [url, setUrl] = useState(this.getUrl(qualifier));
+  useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
+    const [url, setUrl] = useState(this.getUrl(query));
 
     useEffect(() => {
-      setUrl(this.getUrl(qualifier));
-    }, this.getDependencies(qualifier));
+      setUrl(this.getUrl(query));
+    }, this.getDependencies(query));
 
     useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), qualifier);
-      this.update(qualifier, url);
+      this.stateHelper.set(RemoteData.loading(), query);
+      this.update(query, url);
     }, [url, this.environment]);
 
     return [
       RemoteData.mapSuccess(
         (d) => this.toUsed(d, setUrl),
-        this.stateHelper.getHooked(qualifier)
+        this.stateHelper.getHooked(query)
       ),
-      () => this.update(qualifier, url),
+      () => this.update(query, url),
     ];
   }
 
@@ -82,7 +82,7 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
     private readonly getUnique: GetUnique<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
-    private readonly getUrl: (qualifier: Query.Qualifier<Kind>) => string,
+    private readonly getUrl: (query: Query.SubQuery<Kind>) => string,
     private readonly toUsed: (
       data: Query.Data<Kind>,
       setUrl: (url: string) => void
@@ -90,43 +90,43 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
     private readonly environment: string
   ) {}
 
-  async update(qualifier: Query.Qualifier<Kind>, url: string): Promise<void> {
+  async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
-      qualifier
+      query
     );
   }
 
-  useContinuous(qualifier: Query.Qualifier<Kind>): Data<Kind> {
-    const [url, setUrl] = useState(this.getUrl(qualifier));
+  useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
+    const [url, setUrl] = useState(this.getUrl(query));
 
     useEffect(() => {
-      setUrl(this.getUrl(qualifier));
-    }, this.getDependencies(qualifier));
+      setUrl(this.getUrl(query));
+    }, this.getDependencies(query));
 
     const task = {
       effect: async () =>
         RemoteData.fromEither(
           await this.fetcher.getData(this.environment, url)
         ),
-      update: (data) => this.stateHelper.set(data, qualifier),
+      update: (data) => this.stateHelper.set(data, query),
     };
 
     useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), qualifier);
-      this.update(qualifier, url);
-      this.scheduler.register(this.getUnique(qualifier), task);
+      this.stateHelper.set(RemoteData.loading(), query);
+      this.update(query, url);
+      this.scheduler.register(this.getUnique(query), task);
       return () => {
-        this.scheduler.unregister(this.getUnique(qualifier));
+        this.scheduler.unregister(this.getUnique(query));
       };
     }, [url, this.environment]);
 
     return [
       RemoteData.mapSuccess(
         (data) => this.toUsed(data, setUrl),
-        this.stateHelper.getHooked(qualifier)
+        this.stateHelper.getHooked(query)
       ),
-      () => this.update(qualifier, url),
+      () => this.update(query, url),
     ];
   }
 

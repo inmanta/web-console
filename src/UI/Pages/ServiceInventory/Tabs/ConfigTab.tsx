@@ -29,11 +29,12 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
   const { commandResolver, queryResolver } = useContext(DependencyContext);
   const [data, retry] = queryResolver.useOneTime<"InstanceConfig">({
     kind: "InstanceConfig",
-    qualifier: serviceInstanceIdentifier,
+    ...serviceInstanceIdentifier,
   });
+
   const trigger = commandResolver.getTrigger<"InstanceConfig">({
     kind: "InstanceConfig",
-    qualifier: serviceInstanceIdentifier,
+    ...serviceInstanceIdentifier,
   });
 
   return RemoteData.fold(

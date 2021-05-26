@@ -21,28 +21,31 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredFetcher<"Resources">();
-  const instance = {
-    id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-    service_entity: "vlan-assignment",
-    version: 4,
-    environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
-  };
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new ResourcesQueryManager(
         apiHelper,
         new ResourcesStateHelper(store),
         scheduler,
-        instance.environment
+        "34a961ba-db3c-486e-8d85-1438d8e88909"
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", instance.environment);
+  const urlManager = new UrlManagerImpl(
+    "",
+    "34a961ba-db3c-486e-8d85-1438d8e88909"
+  );
 
   const component = (
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
-        <ResourcesTab qualifier={instance} />
+        <ResourcesTab
+          serviceInstanceIdentifier={{
+            id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+            service_entity: "vlan-assignment",
+            version: 4,
+          }}
+        />
       </StoreProvider>
     </DependencyProvider>
   );

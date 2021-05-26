@@ -8,12 +8,12 @@ type ApiData = RemoteData.Type<string, Query.ApiResponse<"Events">>;
 export class EventsStateHelper implements StateHelper<"Events"> {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, { id }: Query.Qualifier<"Events">): void {
+  set(data: ApiData, { id }: Query.SubQuery<"Events">): void {
     const value = RemoteData.mapSuccess((data) => data, data);
     this.store.dispatch.events.setData({ id, value });
   }
 
-  getHooked({ id }: Query.Qualifier<"Events">): Data {
+  getHooked({ id }: Query.SubQuery<"Events">): Data {
     return useStoreState((state) => {
       return this.enforce(state.events.byId[id]);
     }, isEqual);
@@ -24,7 +24,7 @@ export class EventsStateHelper implements StateHelper<"Events"> {
     return value;
   }
 
-  getOnce({ id }: Query.Qualifier<"Events">): Data {
+  getOnce({ id }: Query.SubQuery<"Events">): Data {
     return this.enforce(this.store.getState().events.byId[id]);
   }
 }

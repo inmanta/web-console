@@ -13,12 +13,12 @@ export class ServiceInstancesQueryManager extends ContinuousQueryManagerImpl<"Se
       fetcher,
       stateHelper,
       scheduler,
-      (qualifier) => qualifier.name,
-      (qualifier) => [
-        qualifier.name,
-        stringifyFilter(qualifier.filter),
-        qualifier.sort?.name,
-        qualifier.sort?.order,
+      ({ name }) => name,
+      ({ name, filter, sort }) => [
+        name,
+        stringifyFilter(filter),
+        sort?.name,
+        sort?.order,
       ],
       "ServiceInstances",
       getUrl,

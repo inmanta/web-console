@@ -8,7 +8,7 @@ export function getUrl({
   filter,
   sort,
   pageSize,
-}: Query.Qualifier<"Events">): string {
+}: Query.SubQuery<"Events">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
@@ -21,7 +21,7 @@ export function getUrl({
   return `/lsm/v1/service_inventory/${service_entity}/${id}/events${limitParam}${sortParam}${filterParam}`;
 }
 
-type Filter = NonNullable<Query.Qualifier<"Events">["filter"]>;
+type Filter = NonNullable<Query.SubQuery<"Events">["filter"]>;
 
 const filterToParam = (filter: Filter) => {
   if (typeof filter === "undefined") return {};

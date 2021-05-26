@@ -34,7 +34,7 @@ export interface ServicesSlice {
     ServicesSlice,
     {
       environment: string;
-      qualifier: Query.Qualifier<"Service">;
+      query: Query.SubQuery<"Service">;
       data: RemoteData.Type<string, ServiceModel>;
     }
   >;
@@ -56,9 +56,9 @@ export const servicesSlice: ServicesSlice = {
     });
   }),
   byNameAndEnv: {},
-  setSingle: action((state, { environment, qualifier, data }) => {
+  setSingle: action((state, { environment, query, data }) => {
     state.byNameAndEnv[
-      injections.serviceKeyMaker.make([environment, qualifier.name])
+      injections.serviceKeyMaker.make([environment, query.name])
     ] = data;
   }),
 };

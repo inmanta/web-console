@@ -11,7 +11,7 @@ export class InstanceLogsQueryManager extends OneTimeQueryManagerImpl<"InstanceL
     super(
       fetcher,
       stateHelper,
-      (qualifier) => [qualifier.id, qualifier.service_entity],
+      ({ id, service_entity }) => [id, service_entity],
       "InstanceLogs",
       ({ service_entity, id }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/log`,

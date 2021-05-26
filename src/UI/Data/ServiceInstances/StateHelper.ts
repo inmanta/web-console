@@ -21,19 +21,19 @@ export class ServiceInstancesStateHelper
    * rerendered anyway because the getStoreState hook is also optimized
    * to check if the data is changed.
    */
-  set(value: ApiData, qualifier: Query.Qualifier<"ServiceInstances">): void {
+  set(value: ApiData, query: Query.SubQuery<"ServiceInstances">): void {
     this.store.dispatch.serviceInstances.setData({
-      qualifier,
+      query,
       value,
       environment: this.environment,
     });
   }
 
-  getHooked(qualifier: Query.Qualifier<"ServiceInstances">): Data {
+  getHooked(query: Query.SubQuery<"ServiceInstances">): Data {
     return useStoreState((state) => {
       return this.enforce(
         state.serviceInstances.instancesWithTargetStates(
-          qualifier,
+          query,
           this.environment
         )
       );
@@ -45,11 +45,11 @@ export class ServiceInstancesStateHelper
     return value;
   }
 
-  getOnce(qualifier: Query.Qualifier<"ServiceInstances">): Data {
+  getOnce(query: Query.SubQuery<"ServiceInstances">): Data {
     return this.enforce(
       this.store
         .getState()
-        .serviceInstances.instancesWithTargetStates(qualifier, this.environment)
+        .serviceInstances.instancesWithTargetStates(query, this.environment)
     );
   }
 }

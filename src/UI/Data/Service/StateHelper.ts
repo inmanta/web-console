@@ -15,20 +15,20 @@ export class ServiceStateHelper implements StateHelper<"Service"> {
     private readonly environment: string
   ) {}
 
-  set(data: ApiData, qualifier: Query.Qualifier<"Service">): void {
+  set(data: ApiData, query: Query.SubQuery<"Service">): void {
     const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
     this.store.dispatch.services.setSingle({
-      qualifier,
+      query,
       data: unwrapped,
       environment: this.environment,
     });
   }
 
-  getHooked({ name }: Query.Qualifier<"Service">): Data {
+  getHooked(query: Query.SubQuery<"Service">): Data {
     return useStoreState((state) => {
       return this.enforce(
         state.services.byNameAndEnv[
-          this.keyMaker.make([this.environment, name])
+          this.keyMaker.make([this.environment, query.name])
         ]
       );
     }, isEqual);
@@ -39,10 +39,10 @@ export class ServiceStateHelper implements StateHelper<"Service"> {
     return value;
   }
 
-  getOnce({ name }: Query.Qualifier<"Service">): Data {
+  getOnce(query: Query.SubQuery<"Service">): Data {
     return this.enforce(
       this.store.getState().services.byNameAndEnv[
-        this.keyMaker.make([this.environment, name])
+        this.keyMaker.make([this.environment, query.name])
       ]
     );
   }

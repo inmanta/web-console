@@ -3,20 +3,22 @@ import { getUrl } from "./getUrl";
 
 test("getUrl returns correct url for no filter & no sort", () => {
   const name = "service_a";
-  const qualifier: Query.Qualifier<"ServiceInstances"> = {
+  const query: Query.SubQuery<"ServiceInstances"> = {
+    kind: "ServiceInstances",
     name,
     filter: undefined,
     sort: undefined,
   };
 
-  expect(getUrl(qualifier)).toMatch(
+  expect(getUrl(query)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`
   );
 });
 
 test("getUrl returns correct url for filter & no sort", () => {
   const name = "service_a";
-  const qualifier: Query.Qualifier<"ServiceInstances"> = {
+  const query: Query.SubQuery<"ServiceInstances"> = {
+    kind: "ServiceInstances",
     name,
     filter: {
       state: ["up", "creating"],
@@ -24,14 +26,15 @@ test("getUrl returns correct url for filter & no sort", () => {
     sort: undefined,
   };
 
-  expect(getUrl(qualifier)).toMatch(
+  expect(getUrl(query)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating`
   );
 });
 
 test("getUrl returns correct url for sort & no filter", () => {
   const name = "service_a";
-  const qualifier: Query.Qualifier<"ServiceInstances"> = {
+  const query: Query.SubQuery<"ServiceInstances"> = {
+    kind: "ServiceInstances",
     name,
     filter: undefined,
     sort: {
@@ -40,14 +43,15 @@ test("getUrl returns correct url for sort & no filter", () => {
     },
   };
 
-  expect(getUrl(qualifier)).toMatch(
+  expect(getUrl(query)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&sort=state.asc`
   );
 });
 
 test("getUrl returns correct url for sort & filter", () => {
   const name = "service_a";
-  const qualifier: Query.Qualifier<"ServiceInstances"> = {
+  const query: Query.SubQuery<"ServiceInstances"> = {
+    kind: "ServiceInstances",
     name,
     filter: {
       state: ["up", "creating"],
@@ -58,14 +62,15 @@ test("getUrl returns correct url for sort & filter", () => {
     },
   };
 
-  expect(getUrl(qualifier)).toMatch(
+  expect(getUrl(query)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating&sort=state.asc`
   );
 });
 
 test("getUrl returns correct url for empty filter", () => {
   const name = "service_a";
-  const qualifier: Query.Qualifier<"ServiceInstances"> = {
+  const query: Query.SubQuery<"ServiceInstances"> = {
+    kind: "ServiceInstances",
     name,
     filter: {
       state: [],
@@ -75,7 +80,7 @@ test("getUrl returns correct url for empty filter", () => {
     },
   };
 
-  expect(getUrl(qualifier)).toMatch(
+  expect(getUrl(query)).toMatch(
     `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`
   );
 });

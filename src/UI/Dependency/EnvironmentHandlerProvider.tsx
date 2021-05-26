@@ -19,10 +19,7 @@ export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
   const history = useHistory();
   const store = useStore();
   const environmentHandler = new EnvironmentHandlerImpl(history, store);
-  const [data] = queryResolver.useOneTime<"Projects">({
-    kind: "Projects",
-    qualifier: null,
-  });
+  const [data] = queryResolver.useOneTime<"Projects">({ kind: "Projects" });
   useEffect(() => {
     environmentHandler.setDefault(data, setEnvAlert);
   }, [data]);

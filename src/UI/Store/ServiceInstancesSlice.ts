@@ -23,7 +23,7 @@ export interface ServiceInstancesSlice {
   setData: Action<
     ServiceInstancesSlice,
     {
-      qualifier: Query.Qualifier<"ServiceInstances">;
+      query: Query.SubQuery<"ServiceInstances">;
       value: Data;
       environment: string;
     }
@@ -31,7 +31,7 @@ export interface ServiceInstancesSlice {
   instancesWithTargetStates: Computed<
     ServiceInstancesSlice,
     (
-      qualifier: Query.Qualifier<"ServiceInstances">,
+      query: Query.SubQuery<"ServiceInstances">,
       environment: string
     ) => RemoteData.Type<
       string,
@@ -47,15 +47,15 @@ export interface ServiceInstancesSlice {
 
 export const serviceInstancesSlice: ServiceInstancesSlice = {
   byId: {},
-  setData: action((state, { qualifier, environment, value }) => {
-    state.byId[injections.serviceKeyMaker.make([environment, qualifier.name])] =
+  setData: action((state, { query, environment, value }) => {
+    state.byId[injections.serviceKeyMaker.make([environment, query.name])] =
       value;
   }),
   instancesWithTargetStates: computed(
     [(state) => state.byId, (state, storeState) => storeState],
-    (byId, storeState) => (qualifier, environment) => {
+    (byId, storeState) => (query, environment) => {
       const data =
-        byId[injections.serviceKeyMaker.make([environment, qualifier.name])];
+        byId[injections.serviceKeyMaker.make([environment, query.name])];
       if (typeof data === "undefined") return RemoteData.loading();
 
       return RemoteData.mapSuccess(({ data, ...rest }) => {
@@ -64,7 +64,7 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
             const instanceState = instance.state;
             const service =
               storeState.services.byNameAndEnv[
-                injections.serviceKeyMaker.make([environment, qualifier.name])
+                injections.serviceKeyMaker.make([environment, query.name])
               ];
             if (!service || service.kind !== "Success") {
               return { ...instance, instanceSetStateTargets: [] };

@@ -34,7 +34,7 @@ export class QueryResolverImpl implements QueryResolver {
 
   useOneTime(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getOneTimeQueryManager(query);
-    return helper.useOneTime(query.qualifier);
+    return helper.useOneTime(query);
   }
 
   private getContinuousQueryManager(
@@ -53,6 +53,6 @@ export class QueryResolverImpl implements QueryResolver {
 
   useContinuous(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getContinuousQueryManager(query);
-    return helper.useContinuous(query.qualifier);
+    return helper.useContinuous(query);
   }
 }
