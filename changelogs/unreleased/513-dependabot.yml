@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @testing-library/user-event from 12.7.1 to 13.1.9
+destination-branches:
+- master
+- iso4
+sections: {}
