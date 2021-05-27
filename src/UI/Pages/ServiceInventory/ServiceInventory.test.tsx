@@ -5,7 +5,7 @@ import {
   DeferredFetcher,
   Service,
   ServiceInstance,
-  Resources,
+  Resource,
   Pagination,
   StaticScheduler,
   DynamicQueryManagerResolver,
@@ -186,11 +186,11 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   fireEvent.click(await screen.findByRole("button", { name: "Resources" }));
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(Either.right({ data: Resource.listA }));
   });
 
   expect(
-    screen.getByRole("cell", { name: "resource_id_a_1" })
+    screen.getByRole("cell", { name: Resource.listA[0].resource_id })
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -205,11 +205,11 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
     );
   });
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(Either.right({ data: Resource.listA }));
   });
 
   expect(resourcesFetcher.getInvocations().length).toEqual(3);
   expect(resourcesFetcher.getInvocations()[2][1]).toMatch(
-    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=4"
+    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`
   );
 });

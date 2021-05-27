@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import {
   Service,
   ServiceInstance,
-  Resources,
+  Resource,
   InstantFetcher,
   Pagination,
   StaticScheduler,
@@ -46,7 +46,7 @@ export const Basic: React.FC = () => {
   );
   const resourcesFetcher = new InstantFetcher<"Resources">({
     kind: "Success",
-    data: { data: Resources.B },
+    data: { data: Resource.listB },
   });
 
   const resourcesHelper = new ResourcesQueryManager(

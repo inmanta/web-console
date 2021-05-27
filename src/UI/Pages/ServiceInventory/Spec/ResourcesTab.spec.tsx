@@ -1,5 +1,5 @@
 import { render, screen, act } from "@testing-library/react";
-import { ServiceInstance, Pagination, Resources, flushPromises } from "@/Test";
+import { ServiceInstance, Pagination, Resource, flushPromises } from "@/Test";
 import { Either, Maybe } from "@/Core";
 import userEvent from "@testing-library/user-event";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
@@ -31,7 +31,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   );
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(Either.right({ data: Resource.listA }));
   });
 
   const tasks = scheduler.getTasks();
@@ -65,7 +65,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   userEvent.click(screen.getAllByRole("button", { name: "Resources" })[0]);
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(Either.right({ data: Resource.listA }));
   });
 
   const tasks = scheduler.getTasks();
@@ -87,7 +87,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     );
   });
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(Either.right({ data: Resource.listA }));
   });
 
   expect(serviceInstancesTask?.effect).toBeCalledTimes(1);

@@ -5,7 +5,7 @@ import {
   StaticScheduler,
   Outcome,
   InstantFetcher,
-  Resources,
+  Resource,
   DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -67,5 +67,5 @@ export const Failed: React.FC = () => (
 );
 
 export const Success: React.FC = () => (
-  <Template outcome={{ kind: "Success", data: { data: Resources.A } }} />
+  <Template outcome={{ kind: "Success", data: { data: Resource.listA } }} />
 );
