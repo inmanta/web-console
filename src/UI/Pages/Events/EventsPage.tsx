@@ -20,20 +20,18 @@ interface Props {
 }
 
 export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
-  const { dataProvider } = useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
   const [order, setOrder] = useState<SortDirection>("desc");
   const sort = { name: "timestamp", order: order };
   const [filter, setFilter] = useState<EventParams.Filter>({});
   const [pageSize, setPageSize] = useState<number>(20);
-  const [data] = dataProvider.useContinuous<"Events">({
+  const [data] = queryResolver.useContinuous<"Events">({
     kind: "Events",
-    qualifier: {
-      id: instanceId,
-      service_entity: service.name,
-      filter,
-      sort,
-      pageSize,
-    },
+    id: instanceId,
+    service_entity: service.name,
+    filter,
+    sort,
+    pageSize,
   });
 
   const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());

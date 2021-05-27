@@ -1,19 +1,33 @@
-import { UrlManager } from "@/Core";
+import { Maybe, UrlManager } from "@/Core";
 
 export class UrlManagerImpl implements UrlManager {
   private readonly versionPrefixLength = 3;
+  private environment: Maybe.Type<string> = Maybe.none();
 
-  constructor(
-    private readonly baseUrl: string,
-    private readonly environment: string
-  ) {}
+  constructor(private readonly baseUrl: string, environment?: string) {
+    if (typeof environment === "undefined") return;
+    this.environment = Maybe.some(environment);
+  }
+
+  setEnvironment(environment: string): void {
+    this.environment = Maybe.some(environment);
+  }
+
+  private getEnvironment(): string {
+    if (Maybe.isSome(this.environment)) return this.environment.value;
+    throw new Error("Environment not set");
+  }
 
   getCompileReportUrl(): string {
-    return `${this.baseUrl}/dashboard/#!/environment/${this.environment}/compilereport`;
+    return `${
+      this.baseUrl
+    }/dashboard/#!/environment/${this.getEnvironment()}/compilereport`;
   }
 
   getModelVersionUrl(version: string): string {
-    return `${this.baseUrl}/dashboard/#!/environment/${this.environment}/version/${version}`;
+    return `${
+      this.baseUrl
+    }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}`;
   }
 
   getResourceUrl(resourceId: string): string {
@@ -24,8 +38,10 @@ export class UrlManagerImpl implements UrlManager {
       resourceId.length
     );
 
-    return `${this.baseUrl}/dashboard/#!/environment/${
-      this.environment
-    }/version/${version}/${encodeURI(resourceName).replace(/\//g, "~2F")}`;
+    return `${
+      this.baseUrl
+    }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}/${encodeURI(
+      resourceName
+    ).replace(/\//g, "~2F")}`;
   }
 }

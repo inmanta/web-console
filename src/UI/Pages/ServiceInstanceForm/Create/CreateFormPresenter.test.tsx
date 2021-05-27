@@ -1,5 +1,5 @@
 import { TextInputTypes } from "@patternfly/react-core";
-import { AttributeConverter } from "../AttributeConverter";
+import { AttributeConverter } from "@/UI/Pages/ServiceInstanceForm";
 import { CreateFormPresenter } from "./CreateFormPresenter";
 
 describe("CreateFormPresenter", () => {

@@ -1,21 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "@/UI/App/app";
-import keycloakConf from "@/UI/App/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/UI";
+import keycloakConf from "@/UI/App/keycloak.json";
+import { BaseApiHelper } from "@/Infra";
+import { App } from "@/UI/App/app";
 import {
-  DependencyManagerContext,
-  DependencyManagerImpl,
-  ProjectsProviderContext,
+  DependencyProvider,
+  CommandManagerResolver,
+  QueryManagerResolver,
 } from "@/UI/Dependency";
-import { BaseApiHelper, FetcherImpl } from "./Infra";
-import {
-  DataProviderImpl,
-  ProjectsDataManager,
-  ProjectsStateHelper,
-} from "./UI/Data";
+import { CommandResolverImpl, QueryResolverImpl } from "@/UI/Data";
+import { UrlManagerImpl } from "@/UI/Routing";
+import { getStoreInstance } from "@/UI/Store";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -35,27 +32,24 @@ if (externalKeycloakConf) {
   keycloak = Keycloak(customKeycloakConf);
 }
 
-const storeInstance = getStoreInstance();
+const store = getStoreInstance();
 const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
 const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
-const stateHelper = new ProjectsStateHelper(storeInstance);
-const projectsManager = new ProjectsDataManager(
-  new FetcherImpl<"Projects">(baseApiHelper),
-  stateHelper
+const queryResolver = new QueryResolverImpl(
+  new QueryManagerResolver(store, baseApiHelper)
 );
-const projectsProvider = new DataProviderImpl([projectsManager]);
-const dependencyManager = new DependencyManagerImpl(
-  storeInstance,
-  baseApiHelper
+const commandResolver = new CommandResolverImpl(
+  new CommandManagerResolver(store, baseApiHelper)
 );
+const urlManager = new UrlManagerImpl(baseUrl);
 
 ReactDOM.render(
-  <ProjectsProviderContext.Provider value={projectsProvider}>
-    <DependencyManagerContext.Provider value={dependencyManager}>
-      <StoreProvider store={storeInstance}>
-        <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
-      </StoreProvider>
-    </DependencyManagerContext.Provider>
-  </ProjectsProviderContext.Provider>,
+  <DependencyProvider
+    dependencies={{ queryResolver, commandResolver, urlManager }}
+  >
+    <StoreProvider store={store}>
+      <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+    </StoreProvider>
+  </DependencyProvider>,
   document.getElementById("root") as HTMLElement
 );

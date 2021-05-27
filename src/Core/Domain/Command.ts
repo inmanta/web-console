@@ -7,9 +7,9 @@ export type Type = Command;
 /**
  * The instanceConfig command updates the config belonging to one specific service instance
  */
-export interface InstanceConfigCommand {
+export interface InstanceConfigCommand
+  extends VersionedServiceInstanceIdentifier {
   kind: "InstanceConfig";
-  qualifier: VersionedServiceInstanceIdentifier;
 }
 
 interface InstanceConfigManifest {
@@ -40,5 +40,4 @@ export type Error<K extends Kind> = Manifest[K]["error"];
 export type Body<K extends Kind> = Manifest[K]["body"];
 export type ApiData<K extends Kind> = Manifest[K]["apiData"];
 export type SubCommand<K extends Kind> = Manifest[K]["command"];
-export type Qualifier<K extends Kind> = SubCommand<K>["qualifier"];
 export type Trigger<K extends Kind> = Manifest[K]["trigger"];

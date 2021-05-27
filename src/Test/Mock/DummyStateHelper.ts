@@ -9,19 +9,19 @@ type ApiData<K extends Query.Kind> = RemoteData.Type<
 export class DummyStateHelper<K extends Query.Kind> implements StateHelper<K> {
   private state = {};
 
-  set(value: ApiData<K>, qualifier: Query.Qualifier<K>): void {
-    this.state[getKey(qualifier)] = value;
+  set(value: ApiData<K>, query: Query.SubQuery<K>): void {
+    this.state[getKey(query)] = value;
   }
 
-  getHooked(qualifier: Query.Qualifier<K>): Data<K> {
-    return this.state[getKey(qualifier)];
+  getHooked(query: Query.SubQuery<K>): Data<K> {
+    return this.state[getKey(query)];
   }
 
-  getOnce(qualifier: Query.Qualifier<K>): Data<K> {
-    return this.state[getKey(qualifier)];
+  getOnce(query: Query.SubQuery<K>): Data<K> {
+    return this.state[getKey(query)];
   }
 }
 
-function getKey(qualifier: Query.Qualifier<Query.Kind>): string {
-  return JSON.stringify(qualifier);
+function getKey(query: Query.SubQuery<Query.Kind>): string {
+  return JSON.stringify(query);
 }

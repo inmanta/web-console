@@ -1,11 +1,17 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { InventoryTable } from "./InventoryTable";
-import { InstantFetcher, rows, StaticScheduler, tablePresenter } from "@/Test";
+import {
+  DynamicQueryManagerResolver,
+  InstantFetcher,
+  rows,
+  StaticScheduler,
+  tablePresenter,
+} from "@/Test";
 import { getStoreInstance } from "@/UI/Store";
 import {
-  DataProviderImpl,
-  ResourcesDataManager,
+  QueryResolverImpl,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -18,20 +24,22 @@ export default {
 
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: { data: [] },
-      }),
-      new ResourcesStateHelper(store),
-      new StaticScheduler(),
-      "env"
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
+        new InstantFetcher<"Resources">({
+          kind: "Success",
+          data: { data: [] },
+        }),
+        new ResourcesStateHelper(store),
+        new StaticScheduler(),
+        "env"
+      ),
+    ])
+  );
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <InventoryTable {...args} tablePresenter={tablePresenter} />
       </StoreProvider>

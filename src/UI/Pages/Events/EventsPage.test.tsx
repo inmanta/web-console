@@ -1,12 +1,17 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, Service, StaticScheduler } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicQueryManagerResolver,
+  Service,
+  StaticScheduler,
+} from "@/Test";
 import { Either, InstanceEvent } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  EventsDataManager,
+  QueryResolverImpl,
+  EventsQueryManager,
   EventsStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -23,17 +28,19 @@ function setup() {
     version: 4,
     environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
   };
-  const dataProvider = new DataProviderImpl([
-    new EventsDataManager(
-      apiHelper,
-      new EventsStateHelper(store),
-      scheduler,
-      instance.environment
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new EventsQueryManager(
+        apiHelper,
+        new EventsStateHelper(store),
+        scheduler,
+        instance.environment
+      ),
+    ])
+  );
 
   const component = (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <EventsPage
           service={Service.A}

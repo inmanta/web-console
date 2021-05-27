@@ -8,7 +8,7 @@ type ApiData = RemoteData.Type<string, Query.ApiResponse<"Diagnostics">>;
 export class DiagnosticsStateHelper implements StateHelper<"Diagnostics"> {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, { id }: Query.Qualifier<"Diagnostics">): void {
+  set(data: ApiData, { id }: Query.SubQuery<"Diagnostics">): void {
     const value = RemoteData.mapSuccess((data) => {
       return {
         failures: data.data.failures,
@@ -25,7 +25,7 @@ export class DiagnosticsStateHelper implements StateHelper<"Diagnostics"> {
     this.store.dispatch.diagnostics.setData({ id, value });
   }
 
-  getHooked({ id }: Query.Qualifier<"Diagnostics">): Data {
+  getHooked({ id }: Query.SubQuery<"Diagnostics">): Data {
     return useStoreState((state) => {
       return this.enforce(state.diagnostics.byServiceInstanceId[id]);
     }, isEqual);
@@ -36,7 +36,7 @@ export class DiagnosticsStateHelper implements StateHelper<"Diagnostics"> {
     return value;
   }
 
-  getOnce({ id }: Query.Qualifier<"Diagnostics">): Data {
+  getOnce({ id }: Query.SubQuery<"Diagnostics">): Data {
     return this.enforce(
       this.store.getState().diagnostics.byServiceInstanceId[id]
     );

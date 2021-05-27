@@ -1,8 +1,8 @@
 import { Fetcher, StateHelper, Scheduler } from "@/Core";
 import { identity } from "lodash";
-import { ContinuousDataManagerImpl } from "../DataManagerImpl";
+import { ContinuousQueryManagerImpl } from "@/UI/Data/QueryManagerImpl";
 
-export class ResourcesDataManager extends ContinuousDataManagerImpl<"Resources"> {
+export class ResourcesQueryManager extends ContinuousQueryManagerImpl<"Resources"> {
   constructor(
     fetcher: Fetcher<"Resources">,
     stateHelper: StateHelper<"Resources">,
@@ -13,8 +13,8 @@ export class ResourcesDataManager extends ContinuousDataManagerImpl<"Resources">
       fetcher,
       stateHelper,
       scheduler,
-      (qualifier) => qualifier.id,
-      (qualifier) => [qualifier.id, qualifier.version],
+      ({ id }) => id,
+      ({ id, version }) => [id, version],
       "Resources",
       ({ service_entity, id, version }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`,

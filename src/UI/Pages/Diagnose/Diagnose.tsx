@@ -12,14 +12,12 @@ interface Props {
 }
 
 export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
-  const { dataProvider } = useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = dataProvider.useContinuous<"Diagnostics">({
+  const [data] = queryResolver.useContinuous<"Diagnostics">({
     kind: "Diagnostics",
-    qualifier: {
-      id: instanceId,
-      service_entity: service.name,
-    },
+    id: instanceId,
+    service_entity: service.name,
   });
 
   return RemoteData.fold(

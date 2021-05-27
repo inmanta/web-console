@@ -29,7 +29,6 @@ export type Type = Query;
 
 export interface ProjectsQuery {
   kind: "Projects";
-  qualifier: null;
 }
 
 interface ProjectsManifest {
@@ -45,7 +44,6 @@ interface ProjectsManifest {
  */
 export interface ServicesQuery {
   kind: "Services";
-  qualifier: null;
 }
 
 interface ServicesManifest {
@@ -57,12 +55,10 @@ interface ServicesManifest {
 }
 
 /**
- * The ServiceQuery describes a service. The qualifier identifies 1
- * specific service.
+ * The ServiceQuery identifies 1 specific service.
  */
-export interface ServiceQuery {
+export interface ServiceQuery extends ServiceIdentifier {
   kind: "Service";
-  qualifier: ServiceIdentifier;
 }
 
 interface ServiceManifest {
@@ -76,12 +72,12 @@ interface ServiceManifest {
 /**
  * The ServiceInstancesQuery describes instances of a service.
  * We are asking for all the instances of 1 unique service
- * based on its name and environment. The qualifier identifies 1
- * specific service.
+ * based on its name and environment.
  */
-export interface ServiceInstancesQuery {
+export interface ServiceInstancesQuery
+  extends ServiceIdentifier,
+    ServiceInstanceParams {
   kind: "ServiceInstances";
-  qualifier: ServiceIdentifier & ServiceInstanceParams;
 }
 
 interface ServiceInstancesManifest {
@@ -107,12 +103,10 @@ interface ServiceInstancesManifest {
 /**
  * The ResourcesQuery describes resources for a service instance.
  * We are not asking for 1 specific resource. We are asking for all the
- * resources of 1 specific service instance. So the qualifier property
- * identifies a service instance.
+ * resources of 1 specific service instance.
  */
-export interface ResourcesQuery {
+export interface ResourcesQuery extends VersionedServiceInstanceIdentifier {
   kind: "Resources";
-  qualifier: VersionedServiceInstanceIdentifier;
 }
 
 interface ResourcesManifest {
@@ -126,9 +120,10 @@ interface ResourcesManifest {
 /**
  * The events query describes events belonging to one specific service instance
  */
-export interface InstanceEventsQuery {
+export interface InstanceEventsQuery
+  extends ServiceInstanceIdentifier,
+    EventParams {
   kind: "Events";
-  qualifier: ServiceInstanceIdentifier & EventParams;
 }
 
 interface EventsManifest {
@@ -154,9 +149,8 @@ interface EventsManifest {
 /**
  * The instanceLogs query describes logs belonging to one specific service instance
  */
-export interface InstanceLogsQuery {
+export interface InstanceLogsQuery extends ServiceInstanceIdentifier {
   kind: "InstanceLogs";
-  qualifier: ServiceInstanceIdentifier;
 }
 
 interface InstanceLogsManifest {
@@ -170,9 +164,8 @@ interface InstanceLogsManifest {
 /**
  * The instanceConfig query describes the config belonging to one specific service instance
  */
-export interface InstanceConfigQuery {
+export interface InstanceConfigQuery extends ServiceInstanceIdentifier {
   kind: "InstanceConfig";
-  qualifier: ServiceInstanceIdentifier;
 }
 
 interface InstanceConfigManifest {
@@ -184,9 +177,8 @@ interface InstanceConfigManifest {
 }
 
 /** Diagnostics describe the status of an instance with regards to the diagnose call */
-export interface DiagnosticsQuery {
+export interface DiagnosticsQuery extends ServiceInstanceIdentifier {
   kind: "Diagnostics";
-  qualifier: ServiceInstanceIdentifier;
 }
 
 interface DiagnosticsManifest {
@@ -221,5 +213,4 @@ export type Error<K extends Kind> = Manifest[K]["error"];
 export type Data<K extends Kind> = Manifest[K]["data"];
 export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
-export type Qualifier<K extends Kind> = SubQuery<K>["qualifier"];
 export type UsedData<K extends Kind> = Manifest[K]["usedData"];

@@ -8,14 +8,15 @@ import {
   Resources,
   Pagination,
   StaticScheduler,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  ServiceInstancesDataManager,
+  QueryResolverImpl,
+  ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  ResourcesDataManager,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -27,7 +28,7 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
-  const serviceInstancesHelper = new ServiceInstancesDataManager(
+  const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
     new ServiceInstancesStateHelper(store, Service.A.environment),
     scheduler,
@@ -35,23 +36,22 @@ function setup() {
   );
 
   const resourcesFetcher = new DeferredFetcher<"Resources">();
-  const resourcesHelper = new ResourcesDataManager(
+  const resourcesHelper = new ResourcesQueryManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
     scheduler,
     Service.A.environment
   );
 
-  const dataProvider = new DataProviderImpl([
-    serviceInstancesHelper,
-    resourcesHelper,
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
+  );
 
   const urlManager = new UrlManagerImpl("", Service.A.environment);
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ dataProvider, urlManager }}>
+      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
         <StoreProvider store={store}>
           <ServiceInventory
             serviceName={Service.A.name}

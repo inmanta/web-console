@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { PageSection } from "@patternfly/react-core";
-import { CatalogDataList } from "./CatalogDataList";
 import { useKeycloak } from "react-keycloak";
 import {
   EmptyView,
@@ -11,6 +10,7 @@ import {
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { Query, RemoteData } from "@/Core";
+import { CatalogDrawer } from "./CatalogDrawer";
 
 export const ServiceCatalogWithProvider: React.FC = () => {
   return (
@@ -28,12 +28,9 @@ export const ServiceCatalogWithProvider: React.FC = () => {
 export const ServiceCatalog: React.FC<{ environment: string }> = ({
   environment,
 }) => {
-  const { dataProvider } = useContext(DependencyContext);
-  const query: Query.SubQuery<"Services"> = {
-    kind: "Services",
-    qualifier: null,
-  };
-  const [data, retry] = dataProvider.useContinuous<"Services">(query);
+  const { queryResolver } = useContext(DependencyContext);
+  const query: Query.SubQuery<"Services"> = { kind: "Services" };
+  const [data, retry] = queryResolver.useContinuous<"Services">(query);
 
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
@@ -76,7 +73,7 @@ export const ServiceCatalog: React.FC<{ environment: string }> = ({
             className="horizontally-scrollable"
             aria-label="ServiceCatalog-Success"
           >
-            <CatalogDataList
+            <CatalogDrawer
               services={services}
               environmentId={environment}
               serviceCatalogUrl={"/lsm/v1/service_catalog"}

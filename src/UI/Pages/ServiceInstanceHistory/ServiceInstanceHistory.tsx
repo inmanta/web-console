@@ -24,14 +24,12 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
   service,
   instanceId,
 }) => {
-  const { dataProvider } = useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = dataProvider.useOneTime<"InstanceLogs">({
+  const [data] = queryResolver.useOneTime<"InstanceLogs">({
     kind: "InstanceLogs",
-    qualifier: {
-      id: instanceId,
-      service_entity: service.name,
-    },
+    id: instanceId,
+    service_entity: service.name,
   });
 
   return RemoteData.fold(

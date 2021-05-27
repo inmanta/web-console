@@ -1,14 +1,20 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { instances, InstantFetcher, Service, StaticScheduler } from "@/Test";
+import {
+  DynamicQueryManagerResolver,
+  instances,
+  InstantFetcher,
+  Service,
+  StaticScheduler,
+} from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
 import { StoreProvider } from "easy-peasy";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceModel } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  ResourcesDataManager,
+  QueryResolverImpl,
+  ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/UI/Data";
 import { MemoryRouter } from "react-router";
@@ -20,20 +26,22 @@ export default {
 
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: { data: [] },
-      }),
-      new ResourcesStateHelper(store),
-      new StaticScheduler(),
-      Service.A.environment
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new ResourcesQueryManager(
+        new InstantFetcher<"Resources">({
+          kind: "Success",
+          data: { data: [] },
+        }),
+        new ResourcesStateHelper(store),
+        new StaticScheduler(),
+        Service.A.environment
+      ),
+    ])
+  );
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <MemoryRouter>
         <StoreProvider store={store}>
           <TableProvider {...args} />

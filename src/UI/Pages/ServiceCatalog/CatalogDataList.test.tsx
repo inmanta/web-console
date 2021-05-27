@@ -26,22 +26,25 @@ const doubleService = [
   },
 ];
 
-const Component = (services?: ServiceModel[]) => (
-  <MemoryRouter>
-    <CatalogDataList
-      services={services}
-      environmentId="env"
-      serviceCatalogUrl="/lsm/v1/service_catalog"
-    />
-  </MemoryRouter>
-);
-
-test("GIVEN CatalogDataList WHEN no services ('undefined') THEN no services are shown", () => {
-  render(Component(undefined));
-
-  const list = screen.getByRole("list", { name: "List of service entities" });
-  expect(within(list).queryByRole("listitem")).not.toBeInTheDocument();
-});
+const Component = (services: ServiceModel[]) => {
+  const serviceMap = services.reduce((acc, curr) => {
+    acc[curr.name] = curr;
+    return acc;
+  }, {});
+  return (
+    <MemoryRouter>
+      <CatalogDataList
+        services={serviceMap}
+        environmentId="env"
+        serviceCatalogUrl="/lsm/v1/service_catalog"
+        onSelectDataListItem={() => {
+          return;
+        }}
+        selectedDataListItemId=""
+      />
+    </MemoryRouter>
+  );
+};
 
 test("GIVEN CatalogDataList WHEN no services ('[]') THEN no services are shown", () => {
   render(Component([]));

@@ -26,14 +26,15 @@ export const DisabledConfigTab: React.FC = () => (
 );
 
 export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
-  const { commandProvider, dataProvider } = useContext(DependencyContext);
-  const [data, retry] = dataProvider.useOneTime<"InstanceConfig">({
+  const { commandResolver, queryResolver } = useContext(DependencyContext);
+  const [data, retry] = queryResolver.useOneTime<"InstanceConfig">({
     kind: "InstanceConfig",
-    qualifier: serviceInstanceIdentifier,
+    ...serviceInstanceIdentifier,
   });
-  const trigger = commandProvider.getTrigger<"InstanceConfig">({
+
+  const trigger = commandResolver.getTrigger<"InstanceConfig">({
     kind: "InstanceConfig",
-    qualifier: serviceInstanceIdentifier,
+    ...serviceInstanceIdentifier,
   });
 
   return RemoteData.fold(

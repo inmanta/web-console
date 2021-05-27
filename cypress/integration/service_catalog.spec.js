@@ -9,7 +9,7 @@ describe("Service catalog", function () {
     });
     cy.route({
       method: "GET",
-      url: "**/lsm/v1/service_catalog",
+      url: "**/lsm/v1/service_catalog**",
       response: "fixture:lsm/service_catalog.json",
     });
 
