@@ -1,9 +1,7 @@
 import { Row } from "@/Core";
 
-const Id = (id: string) => ({ full: id, short: id });
-
-export const base: Row = {
-  id: Id("0001"),
+export const a: Row = {
+  id: { full: "instance_id_a", short: "id_a" },
   attributesSummary: {
     candidate: true,
     active: false,
@@ -33,16 +31,14 @@ export const base: Row = {
   deleted: false,
 };
 
-export const row2: Row = {
-  ...base,
-  id: Id("0002"),
+export const b: Row = {
+  ...a,
+  id: { full: "instance_id_b", short: "id_b" },
   serviceIdentityValue: "instance2",
 };
 
-export const row3: Row = {
-  ...base,
-  id: Id("0003"),
+export const c: Row = {
+  ...a,
+  id: { full: "instance_id_c", short: "id_c" },
   serviceIdentityValue: "instance3",
 };
-
-export const rows = [base, row2];
