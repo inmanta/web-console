@@ -19,7 +19,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   }
 
   resolve(env: string): void {
-    this.managers = [...this.managers, ...this.getEnvDependentManagers(env)];
+    this.managers = this.getEnvDependentManagers(env);
   }
 
   private getEnvDependentManagers(environment: string): CommandManager[] {

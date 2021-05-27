@@ -37,7 +37,10 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   }
 
   resolve(env: string): void {
-    this.managers = [...this.managers, ...this.getEnvDependentManagers(env)];
+    this.managers = [
+      ...this.getIndependentManagers(),
+      ...this.getEnvDependentManagers(env),
+    ];
   }
 
   private getIndependentManagers(): QueryManager[] {
