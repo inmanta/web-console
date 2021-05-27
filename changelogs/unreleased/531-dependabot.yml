@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump moment from 2.24.0 to 2.29.1
+destination-branches:
+- master
+- iso4
+sections: {}
