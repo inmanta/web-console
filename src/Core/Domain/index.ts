@@ -1,4 +1,3 @@
-export * from "./AttributeModel";
 export * as Command from "./Command";
 export * from "./Config";
 export * from "./EventModel";

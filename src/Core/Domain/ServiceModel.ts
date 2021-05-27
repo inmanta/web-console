@@ -1,5 +1,15 @@
 import { Config } from "./Config";
-import { AttributeModel } from "./AttributeModel";
+
+export interface AttributeModel {
+  name: string;
+  type: string;
+  description: string;
+  modifier: string;
+  default_value?: string;
+  default_value_set: boolean;
+  validation_type?: string;
+  validation_parameters?: Record<string, unknown>;
+}
 
 export interface StateModel {
   deleted: boolean;
