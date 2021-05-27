@@ -1,6 +1,6 @@
 import { InstanceEvent, InstanceEventType } from "@/Core";
 
-export const instanceEvents: InstanceEvent[] = [
+export const listA: InstanceEvent[] = [
   {
     id: "049dd20f-c432-4b93-bf1c-32c572e49cc7",
     service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
@@ -226,7 +226,7 @@ export const instanceEvents: InstanceEvent[] = [
   },
 ];
 
-export const ignoredErrorNormalEvents: InstanceEvent[] = [
+export const listB: InstanceEvent[] = [
   {
     id: "067a0d7d-6df6-46fe-90c4-42d1af0df5b7",
     service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
@@ -275,5 +275,3 @@ export const ignoredErrorNormalEvents: InstanceEvent[] = [
     is_error_transition: false,
   },
 ];
-
-export const eventResponse = { data: instanceEvents };

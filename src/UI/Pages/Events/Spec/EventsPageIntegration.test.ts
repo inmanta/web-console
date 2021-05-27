@@ -1,11 +1,6 @@
 import { render, screen, act, within } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
-import {
-  Service,
-  Pagination,
-  instanceEvents,
-  ignoredErrorNormalEvents,
-} from "@/Test";
+import { Service, Pagination, Event } from "@/Test";
 import { Either } from "@/Core";
 import { EventsPageComposer } from "./EventsPageComposer";
 
@@ -34,7 +29,7 @@ describe("Given the Events Page", () => {
       await act(async () => {
         await eventsFetcher.resolve(
           Either.right({
-            data: instanceEvents,
+            data: Event.listA,
             links: Pagination.links,
             metadata: Pagination.metadata,
           })
@@ -70,7 +65,7 @@ describe("Given the Events Page", () => {
       await act(async () => {
         await eventsFetcher.resolve(
           Either.right({
-            data: ignoredErrorNormalEvents,
+            data: Event.listB,
             links: Pagination.links,
             metadata: Pagination.metadata,
           })
@@ -92,7 +87,7 @@ describe("Given the Events Page", () => {
     await act(async () => {
       await eventsFetcher.resolve(
         Either.right({
-          data: instanceEvents,
+          data: Event.listA,
           links: Pagination.links,
           metadata: Pagination.metadata,
         })
@@ -125,7 +120,7 @@ describe("Given the Events Page", () => {
     await act(async () => {
       await eventsFetcher.resolve(
         Either.right({
-          data: ignoredErrorNormalEvents,
+          data: Event.listB,
           links: Pagination.links,
           metadata: Pagination.metadata,
         })

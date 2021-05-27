@@ -6,8 +6,7 @@ import {
   InstanceLog,
   Service,
   StaticScheduler,
-  instanceEvents,
-  ignoredErrorNormalEvents,
+  Event,
   DynamicQueryManagerResolver,
 } from "@/Test";
 import { EventsPage } from "./EventsPage";
@@ -65,9 +64,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
 export const Empty: React.FC = () => <Template events={[]} />;
 
 export const MultipleSuccessful: React.FC = () => (
-  <Template events={instanceEvents} />
+  <Template events={Event.listA} />
 );
 
-export const MultipleTypes: React.FC = () => (
-  <Template events={ignoredErrorNormalEvents} />
-);
+export const MultipleTypes: React.FC = () => <Template events={Event.listB} />;

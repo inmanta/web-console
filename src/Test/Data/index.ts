@@ -1,4 +1,4 @@
-export * from "./Event";
+export * as Event from "./Event";
 export * as Diagnose from "./Diagnose";
 export * as InstanceLog from "./InstanceLog";
 export * from "./row";
