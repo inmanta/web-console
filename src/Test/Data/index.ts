@@ -1,6 +1,5 @@
 export * from "./event";
 export * as InstanceLog from "./InstanceLog";
-export * from "./inventory";
 export * from "./row";
 export * as Service from "./Service";
 export * as ServiceInstance from "./ServiceInstance";
