@@ -27,7 +27,7 @@ export default {
 const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   diagnostics,
 }) => {
-  const { service_instance_id, environment } = InstanceLog.A;
+  const { service_instance_id, environment } = InstanceLog.a;
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([

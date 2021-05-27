@@ -41,7 +41,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
       <StoreProvider store={store}>
         <ServiceInstanceHistory
           service={Service.a}
-          instanceId={InstanceLog.A.service_instance_id}
+          instanceId={InstanceLog.a.service_instance_id}
         />
       </StoreProvider>
     </DependencyProvider>
@@ -50,6 +50,6 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
 
 export const Empty: React.FC = () => <Template logs={[]} />;
 
-export const One: React.FC = () => <Template logs={[InstanceLog.A]} />;
+export const One: React.FC = () => <Template logs={[InstanceLog.a]} />;
 
-export const Multiple: React.FC = () => <Template logs={InstanceLog.list2} />;
+export const Multiple: React.FC = () => <Template logs={InstanceLog.listB} />;

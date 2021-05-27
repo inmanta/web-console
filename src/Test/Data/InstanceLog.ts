@@ -1,7 +1,7 @@
-import { InstanceLog } from "@/Core";
+import { InstanceLog, InstanceEventType } from "@/Core";
 import * as ServiceInstance from "./ServiceInstance";
 
-const base: InstanceLog = {
+export const a: InstanceLog = {
   ...ServiceInstance.a,
   version: 1,
   state: "rejected",
@@ -10,19 +10,19 @@ const base: InstanceLog = {
   timestamp: "2021-01-11T12:55:25.961567",
 };
 
-export const A = base;
-export const B = { ...base, version: 2 };
-export const C = { ...base, version: 3 };
-export const list = [A, B, C];
+export const b = { ...a, version: 2 };
 
-export const list2 = [
+export const c = { ...a, version: 3 };
+
+export const listA = [a, b, c];
+
+export const listB: InstanceLog[] = [
   {
     service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
     environment: "919f42ca-22c2-4791-9965-2b8927e93550",
     service_entity: "cbci",
     version: 3,
     timestamp: "2021-02-15T14:27:54.609061",
-    config: {},
     state: "rejected",
     candidate_attributes: null,
     active_attributes: {
@@ -55,7 +55,6 @@ export const list2 = [
     rollback_attributes: null,
     created_at: "2021-02-15T14:27:34.719859",
     last_updated: "2021-02-15T14:27:53.667393",
-    callback: [],
     deleted: false,
     events: [
       {
@@ -71,7 +70,7 @@ export const list2 = [
         event_correlation_id: "998892e0-8900-4371-be22-5b512d8cd581",
         severity: 20,
         id_compile_report: null,
-        event_type: "AUTO_TRANSITION",
+        event_type: InstanceEventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -87,7 +86,7 @@ export const list2 = [
         event_correlation_id: "998892e0-8900-4371-be22-5b512d8cd581",
         severity: 20,
         id_compile_report: "e8cf8a6c-7b4a-49a2-be3a-3613faa6426f",
-        event_type: "AUTO_TRANSITION",
+        event_type: InstanceEventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -103,7 +102,7 @@ export const list2 = [
         event_correlation_id: "998892e0-8900-4371-be22-5b512d8cd581",
         severity: 20,
         id_compile_report: "3777db4e-3250-4021-9502-b1c5bc126356",
-        event_type: "AUTO_TRANSITION",
+        event_type: InstanceEventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -119,7 +118,7 @@ export const list2 = [
         event_correlation_id: "998892e0-8900-4371-be22-5b512d8cd581",
         severity: 20,
         id_compile_report: null,
-        event_type: "AUTO_TRANSITION",
+        event_type: InstanceEventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
     ],
@@ -130,7 +129,6 @@ export const list2 = [
     service_entity: "cbci",
     version: 4,
     timestamp: "2021-02-15T14:29:18.968061",
-    config: {},
     state: "rejected",
     candidate_attributes: null,
     active_attributes: {
@@ -163,7 +161,6 @@ export const list2 = [
     rollback_attributes: null,
     created_at: "2021-02-15T14:27:34.719859",
     last_updated: "2021-02-15T14:27:53.667393",
-    callback: [],
     deleted: false,
     events: [
       {
@@ -179,7 +176,7 @@ export const list2 = [
         event_correlation_id: "560bd89c-b475-4aa2-bbde-e1cf896322a4",
         severity: 20,
         id_compile_report: null,
-        event_type: "RESOURCE_TRANSITION",
+        event_type: InstanceEventType.RESOURCE_TRANSITION,
         is_error_transition: true,
       },
       {
@@ -195,7 +192,7 @@ export const list2 = [
         event_correlation_id: "560bd89c-b475-4aa2-bbde-e1cf896322a4",
         severity: 20,
         id_compile_report: "5f1dba58-b070-422a-966b-34c9519ee7b2",
-        event_type: "RESOURCE_TRANSITION",
+        event_type: InstanceEventType.RESOURCE_TRANSITION,
         is_error_transition: true,
       },
       {
@@ -211,7 +208,7 @@ export const list2 = [
         event_correlation_id: "560bd89c-b475-4aa2-bbde-e1cf896322a4",
         severity: 20,
         id_compile_report: null,
-        event_type: "RESOURCE_TRANSITION",
+        event_type: InstanceEventType.RESOURCE_TRANSITION,
         is_error_transition: true,
       },
     ],
@@ -222,7 +219,6 @@ export const list2 = [
     service_entity: "cbci",
     version: 5,
     timestamp: "2021-02-15T14:29:38.019725",
-    config: {},
     state: "rollback",
     candidate_attributes: null,
     active_attributes: {
@@ -255,7 +251,6 @@ export const list2 = [
     rollback_attributes: null,
     created_at: "2021-02-15T14:27:34.719859",
     last_updated: "2021-02-15T14:27:53.667393",
-    callback: [],
     deleted: false,
     events: [
       {
@@ -271,7 +266,7 @@ export const list2 = [
         event_correlation_id: "40c9e012-8b1c-4308-b2ef-a495ab2b4aea",
         severity: 20,
         id_compile_report: null,
-        event_type: "RESOURCE_TRANSITION",
+        event_type: InstanceEventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -287,7 +282,7 @@ export const list2 = [
         event_correlation_id: "40c9e012-8b1c-4308-b2ef-a495ab2b4aea",
         severity: 20,
         id_compile_report: "c8ee3e84-a528-4c78-83f1-43035c11b87d",
-        event_type: "RESOURCE_TRANSITION",
+        event_type: InstanceEventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -303,7 +298,7 @@ export const list2 = [
         event_correlation_id: "40c9e012-8b1c-4308-b2ef-a495ab2b4aea",
         severity: 20,
         id_compile_report: null,
-        event_type: "RESOURCE_TRANSITION",
+        event_type: InstanceEventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
     ],
@@ -314,7 +309,6 @@ export const list2 = [
     service_entity: "cbci",
     version: 6,
     timestamp: "2021-02-15T14:30:25.915593",
-    config: {},
     state: "up",
     candidate_attributes: null,
     active_attributes: {
@@ -347,7 +341,6 @@ export const list2 = [
     rollback_attributes: null,
     created_at: "2021-02-15T14:27:34.719859",
     last_updated: "2021-02-15T14:27:53.667393",
-    callback: [],
     deleted: false,
     events: [
       {
@@ -363,7 +356,7 @@ export const list2 = [
         event_correlation_id: "573d6f9e-2d93-44b3-a868-65f42491062f",
         severity: 20,
         id_compile_report: null,
-        event_type: "RESOURCE_TRANSITION",
+        event_type: InstanceEventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -379,7 +372,7 @@ export const list2 = [
         event_correlation_id: "573d6f9e-2d93-44b3-a868-65f42491062f",
         severity: 20,
         id_compile_report: "b5b4139c-94df-48da-8ea3-f76ea02120e6",
-        event_type: "RESOURCE_TRANSITION",
+        event_type: InstanceEventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -395,7 +388,7 @@ export const list2 = [
         event_correlation_id: "573d6f9e-2d93-44b3-a868-65f42491062f",
         severity: 20,
         id_compile_report: null,
-        event_type: "RESOURCE_TRANSITION",
+        event_type: InstanceEventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
     ],
@@ -406,7 +399,6 @@ export const list2 = [
     service_entity: "cbci",
     version: 2,
     timestamp: "2021-02-15T14:27:45.928622",
-    config: {},
     state: "rejected",
     candidate_attributes: {
       vc_id: 10000,
@@ -439,7 +431,6 @@ export const list2 = [
     rollback_attributes: null,
     created_at: "2021-02-15T14:27:34.719859",
     last_updated: "2021-02-15T14:27:44.696080",
-    callback: [],
     deleted: false,
     events: [
       {
@@ -455,7 +446,7 @@ export const list2 = [
         event_correlation_id: "05b8856e-e4ab-444a-acaa-d41ad7b84470",
         severity: 20,
         id_compile_report: null,
-        event_type: "AUTO_TRANSITION",
+        event_type: InstanceEventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -471,7 +462,7 @@ export const list2 = [
         event_correlation_id: "05b8856e-e4ab-444a-acaa-d41ad7b84470",
         severity: 20,
         id_compile_report: "05ebe146-ed10-4a6b-a005-612c61efc886",
-        event_type: "AUTO_TRANSITION",
+        event_type: InstanceEventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -487,7 +478,7 @@ export const list2 = [
         event_correlation_id: "05b8856e-e4ab-444a-acaa-d41ad7b84470",
         severity: 20,
         id_compile_report: null,
-        event_type: "AUTO_TRANSITION",
+        event_type: InstanceEventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
     ],
@@ -498,7 +489,6 @@ export const list2 = [
     service_entity: "cbci",
     version: 1,
     timestamp: "2021-02-15T14:27:34.722210",
-    // config: {},
     state: "rollback",
     candidate_attributes: {
       customer: "BEL/HOMME",
@@ -513,7 +503,6 @@ export const list2 = [
     rollback_attributes: null,
     created_at: "2021-02-15T14:27:34.719859",
     last_updated: "2021-02-15T14:27:34.719859",
-    // callback: [],
     deleted: false,
     events: [
       {
@@ -528,7 +517,7 @@ export const list2 = [
         event_correlation_id: "198d8281-71e7-4288-9cf0-1b3b29077330",
         severity: 20,
         id_compile_report: null,
-        event_type: "CREATE_TRANSITION",
+        event_type: InstanceEventType.CREATE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -544,9 +533,9 @@ export const list2 = [
         event_correlation_id: "198d8281-71e7-4288-9cf0-1b3b29077330",
         severity: 20,
         id_compile_report: null,
-        event_type: "CREATE_TRANSITION",
+        event_type: InstanceEventType.CREATE_TRANSITION,
         is_error_transition: false,
       },
     ],
   },
-] as InstanceLog[];
+];

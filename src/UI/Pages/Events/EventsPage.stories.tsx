@@ -26,7 +26,7 @@ export default {
 
 const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const scheduler = new StaticScheduler();
-  const { service_instance_id } = InstanceLog.A;
+  const { service_instance_id } = InstanceLog.a;
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
@@ -46,11 +46,11 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
         }),
         new EventsStateHelper(store),
         scheduler,
-        InstanceLog.A.environment
+        InstanceLog.a.environment
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", InstanceLog.A.environment);
+  const urlManager = new UrlManagerImpl("", InstanceLog.a.environment);
 
   return (
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
