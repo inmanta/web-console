@@ -6,6 +6,7 @@ import {
   DynamicQueryManagerResolver,
   Service,
   StaticScheduler,
+  Diagnose,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -15,8 +16,7 @@ import {
   DiagnosticsStateHelper,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
-import { Diagnose } from "./Diagnose";
-import { diagnoseFailure } from "@/Test/Data/Diagnose";
+import { Diagnose as DiagnoseComponent } from "./Diagnose";
 import { UrlManagerImpl } from "@/UI/Routing";
 
 function setup() {
@@ -38,7 +38,7 @@ function setup() {
   const component = (
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
-        <Diagnose
+        <DiagnoseComponent
           service={Service.a}
           instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
         />
@@ -87,11 +87,7 @@ test("Diagnose View shows success table", async () => {
     await screen.findByRole("generic", { name: "Diagnostics-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
-    Either.right({
-      data: diagnoseFailure,
-    })
-  );
+  apiHelper.resolve(Either.right({ data: Diagnose.failure }));
 
   expect(
     await screen.findByRole("generic", { name: "Diagnostics-Success" })
@@ -114,11 +110,7 @@ test("Diagnose View shows updated table", async () => {
 
   scheduler.executeAll();
 
-  apiHelper.resolve(
-    Either.right({
-      data: diagnoseFailure,
-    })
-  );
+  apiHelper.resolve(Either.right({ data: Diagnose.failure }));
 
   expect(
     await screen.findByRole("generic", { name: "Diagnostics-Success" })

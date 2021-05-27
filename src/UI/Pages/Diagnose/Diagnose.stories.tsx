@@ -7,6 +7,7 @@ import {
   Service,
   StaticScheduler,
   DynamicQueryManagerResolver,
+  Diagnose,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
@@ -16,16 +17,11 @@ import {
   DiagnosticsStateHelper,
 } from "@/UI/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
-import { Diagnose } from "./Diagnose";
-import {
-  diagnoseFailure,
-  diagnoseFailureAndRejection,
-  diagnoseRejection,
-} from "@/Test/Data/Diagnose";
+import { Diagnose as DiagnoseComponent } from "./Diagnose";
 
 export default {
   title: "Diagnose",
-  component: Diagnose,
+  component: DiagnoseComponent,
 };
 
 const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
@@ -51,7 +47,10 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   return (
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
-        <Diagnose service={Service.a} instanceId={service_instance_id} />
+        <DiagnoseComponent
+          service={Service.a}
+          instanceId={service_instance_id}
+        />
       </StoreProvider>
     </DependencyProvider>
   );
@@ -62,13 +61,13 @@ export const Empty: React.FC = () => (
 );
 
 export const Failure: React.FC = () => (
-  <Template diagnostics={diagnoseFailure} />
+  <Template diagnostics={Diagnose.failure} />
 );
 
 export const Rejection: React.FC = () => (
-  <Template diagnostics={diagnoseRejection} />
+  <Template diagnostics={Diagnose.rejection} />
 );
 
 export const FailureAndRejection: React.FC = () => (
-  <Template diagnostics={diagnoseFailureAndRejection} />
+  <Template diagnostics={Diagnose.failureAndRejection} />
 );
