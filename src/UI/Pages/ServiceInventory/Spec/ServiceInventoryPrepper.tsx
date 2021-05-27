@@ -23,7 +23,7 @@ export interface Handles {
 }
 
 export class ServiceInventoryPrepper {
-  prep(service: ServiceModel = Service.A): Handles {
+  prep(service: ServiceModel = Service.a): Handles {
     const store = getStoreInstance();
     const scheduler = new SchedulerImpl(5000, (task) => ({
       effect: jest.fn(() => task.effect()),

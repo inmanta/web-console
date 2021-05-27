@@ -31,7 +31,7 @@ test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID',
   userEvent.type(input, `0001${specialChars.enter}`);
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.order_id=0001&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.withIdentity.name}?include_deployment_progress=True&limit=20&filter.order_id=0001&sort=created_at.desc`
   );
 
   await act(async () => {

@@ -30,9 +30,9 @@ function setup() {
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store, Service.A.environment),
+    new ServiceInstancesStateHelper(store, Service.a.environment),
     scheduler,
-    Service.A.environment
+    Service.a.environment
   );
 
   const resourcesFetcher = new DeferredFetcher<"Resources">();
@@ -40,23 +40,23 @@ function setup() {
     resourcesFetcher,
     new ResourcesStateHelper(store),
     scheduler,
-    Service.A.environment
+    Service.a.environment
   );
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
 
-  const urlManager = new UrlManagerImpl("", Service.A.environment);
+  const urlManager = new UrlManagerImpl("", Service.a.environment);
 
   const component = (
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver, urlManager }}>
         <StoreProvider store={store}>
           <ServiceInventory
-            serviceName={Service.A.name}
-            environmentId={Service.A.environment}
-            service={Service.A}
+            serviceName={Service.a.name}
+            environmentId={Service.a.environment}
+            service={Service.a}
           />
         </StoreProvider>
       </DependencyProvider>

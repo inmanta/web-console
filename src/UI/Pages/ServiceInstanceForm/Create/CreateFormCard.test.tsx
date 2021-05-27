@@ -30,7 +30,7 @@ describe("CreateFormCard", () => {
     name: "test-service",
     attributes: attributes,
     environment: "env",
-    lifecycle: { initialState: "start", states: [], transfers: [] },
+    lifecycle: { initial_state: "start", states: [], transfers: [] },
     config: {},
   };
   it("Shows delete modal", async () => {

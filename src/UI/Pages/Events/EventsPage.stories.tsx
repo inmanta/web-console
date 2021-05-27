@@ -56,7 +56,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   return (
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
-        <EventsPage service={Service.A} instanceId={service_instance_id} />
+        <EventsPage service={Service.a} instanceId={service_instance_id} />
       </StoreProvider>
     </DependencyProvider>
   );

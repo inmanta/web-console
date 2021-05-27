@@ -31,7 +31,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
           data: { data: logs },
         }),
         new InstanceLogsStateHelper(store),
-        Service.A.environment
+        Service.a.environment
       ),
     ])
   );
@@ -40,7 +40,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
     <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
-          service={Service.A}
+          service={Service.a}
           instanceId={InstanceLog.A.service_instance_id}
         />
       </StoreProvider>

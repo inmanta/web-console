@@ -25,9 +25,9 @@ function setup() {
 
   const servicesHelper = new ServicesQueryManager(
     servicesFetcher,
-    new ServicesStateHelper(store, Service.A.environment),
+    new ServicesStateHelper(store, Service.a.environment),
     scheduler,
-    Service.A.environment
+    Service.a.environment
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -38,7 +38,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver }}>
         <StoreProvider store={store}>
-          <ServiceCatalog environment={Service.A.environment} />
+          <ServiceCatalog environment={Service.a.environment} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -67,7 +67,7 @@ test("ServiceCatalog shows updated services", async () => {
 
   scheduler.executeAll();
 
-  servicesFetcher.resolve(Either.right({ data: [Service.A] }));
+  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
@@ -82,7 +82,7 @@ test("ServiceCatalog shows updated empty", async () => {
     await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
-  servicesFetcher.resolve(Either.right({ data: [Service.A] }));
+  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
@@ -105,7 +105,7 @@ test("ServiceCatalog removes service after deletion", async () => {
     await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
-  servicesFetcher.resolve(Either.right({ data: [Service.A] }));
+  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })

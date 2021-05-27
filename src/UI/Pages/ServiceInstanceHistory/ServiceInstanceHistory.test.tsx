@@ -26,7 +26,7 @@ it("ServiceInstanceHistory renders", async () => {
           data: { data: [] },
         }),
         new InstanceLogsStateHelper(store),
-        Service.A.environment
+        Service.a.environment
       ),
     ])
   );
@@ -35,7 +35,7 @@ it("ServiceInstanceHistory renders", async () => {
     <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
-          service={Service.A}
+          service={Service.a}
           instanceId={ServiceInstance.A.id}
         />
       </StoreProvider>

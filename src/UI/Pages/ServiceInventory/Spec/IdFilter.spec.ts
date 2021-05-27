@@ -32,7 +32,7 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   userEvent.type(input, `${ServiceInstance.A.id}${specialChars.enter}`);
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.A.id}&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.A.id}&sort=created_at.desc`
   );
 
   await act(async () => {

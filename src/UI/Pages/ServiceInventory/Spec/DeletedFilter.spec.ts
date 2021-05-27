@@ -37,7 +37,7 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
   userEvent.click(only);
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.deleted=true&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.deleted=true&sort=created_at.desc`
   );
 
   await act(async () => {

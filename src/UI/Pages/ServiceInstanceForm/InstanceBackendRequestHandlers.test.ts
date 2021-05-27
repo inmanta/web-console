@@ -27,7 +27,7 @@ describe("Instance Create handler", () => {
       },
     ],
     environment: "env",
-    lifecycle: { initialState: "start", states: [], transfers: [] },
+    lifecycle: { initial_state: "start", states: [], transfers: [] },
     config: {},
   };
   it("Calls post on instance url when submitted", () => {

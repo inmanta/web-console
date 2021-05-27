@@ -35,7 +35,7 @@ const Template: Story<Props> = (args) => {
         }),
         new ResourcesStateHelper(store),
         new StaticScheduler(),
-        Service.A.environment
+        Service.a.environment
       ),
     ])
   );

@@ -27,7 +27,7 @@ describe("Given the Events Page", () => {
       filterUrlName,
     }) => {
       const { component, eventsFetcher } = new EventsPageComposer().compose(
-        Service.A
+        Service.a
       );
       render(component);
 
@@ -64,7 +64,7 @@ describe("Given the Events Page", () => {
       }
 
       expect(eventsFetcher.getInvocations()[1][1]).toEqual(
-        `/lsm/v1/service_inventory/${Service.A.name}/id1/events?limit=20&sort=timestamp.desc&filter.${filterUrlName}=${filterValue}`
+        `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.${filterUrlName}=${filterValue}`
       );
 
       await act(async () => {
@@ -85,7 +85,7 @@ describe("Given the Events Page", () => {
   );
   it("When using the Date filter then the events with that Date and Operator should be fetched and shown", async () => {
     const { component, eventsFetcher } = new EventsPageComposer().compose(
-      Service.A
+      Service.a
     );
     render(component);
 
@@ -119,7 +119,7 @@ describe("Given the Events Page", () => {
     userEvent.click(screen.getByRole("option", { name: "less than" }));
 
     expect(eventsFetcher.getInvocations()[1][1]).toEqual(
-      `/lsm/v1/service_inventory/${Service.A.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=lt%3A2021-04-28%2B00%3A00%3A00`
+      `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=lt%3A2021-04-28%2B00%3A00%3A00`
     );
 
     await act(async () => {

@@ -1,17 +1,7 @@
 import { Config } from "./Config";
+import { AttributeModel } from "./AttributeModel";
 
-export interface AttributeModel {
-  name: string;
-  type: string;
-  description: string;
-  modifier: string;
-  default_value?: string;
-  default_value_set: boolean;
-  validation_type?: string;
-  validation_parameters?: Record<string, unknown>;
-}
-
-interface StateModel {
+export interface StateModel {
   deleted: boolean;
   label?: "info" | "success" | "warning" | "danger";
   export_resources: boolean;
@@ -19,24 +9,24 @@ interface StateModel {
   purge_resources: boolean;
 }
 
-interface TransferModel {
+export interface TransferModel {
   api_set_state: boolean;
   auto: boolean;
   config_name: string | null;
   description: string;
-  error: string;
-  error_operation: string;
+  error: string | null;
+  error_operation: string | null;
   on_delete: boolean;
   on_update: boolean;
   resource_based: boolean;
   source: string;
   target: string;
-  target_operation: string;
+  target_operation: string | null;
   validate: boolean;
 }
 
 export interface LifecycleModel {
-  initialState: string;
+  initial_state: string;
   states: StateModel[];
   transfers: TransferModel[];
 }

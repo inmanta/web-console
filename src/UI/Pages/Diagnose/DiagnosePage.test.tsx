@@ -39,7 +39,7 @@ function setup() {
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <Diagnose
-          service={Service.A}
+          service={Service.a}
           instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
         />
       </StoreProvider>

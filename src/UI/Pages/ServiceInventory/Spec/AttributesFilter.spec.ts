@@ -35,7 +35,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   userEvent.click(screen.getByRole("option", { name: "Not Empty" }));
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.attribute_set_not_empty=active_attributes&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.attribute_set_not_empty=active_attributes&sort=created_at.desc`
   );
 
   await act(async () => {
