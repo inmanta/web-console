@@ -12,6 +12,9 @@ module.exports = {
   plugins: [
     new webpack.IgnorePlugin({ resourceRegExp: /^\.\/config\.js$/ }),
     new CopyPlugin({ patterns: [{ from: "src/config.js", to: "" }] }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
   ],
   module: {
     rules: [
