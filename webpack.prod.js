@@ -26,6 +26,9 @@ module.exports = merge(common, {
       PUBLIC_PATH: publicPath,
       favicon: path.resolve(__dirname, "public", "images", "favicon.ico"),
     }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
   ],
   module: {
     rules: [
