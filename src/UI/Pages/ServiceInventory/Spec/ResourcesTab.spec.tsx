@@ -15,7 +15,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -36,9 +36,9 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
   const tasks = scheduler.getTasks();
   const serviceInstancesTask = Maybe.orNull(
-    tasks.get(ServiceInstance.A.service_entity)
+    tasks.get(ServiceInstance.a.service_entity)
   );
-  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.A.id));
+  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.a.id));
 
   expect(serviceInstancesTask?.effect).not.toBeCalled();
   expect(resourcesTask?.effect).not.toBeCalled();
@@ -54,7 +54,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -70,9 +70,9 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
   const tasks = scheduler.getTasks();
   const serviceInstancesTask = Maybe.orNull(
-    tasks.get(ServiceInstance.A.service_entity)
+    tasks.get(ServiceInstance.a.service_entity)
   );
-  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.A.id));
+  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.a.id));
 
   jest.advanceTimersByTime(5000);
   await flushPromises();
@@ -80,7 +80,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })

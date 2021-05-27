@@ -32,7 +32,7 @@ export const Basic: React.FC = () => {
   const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
     kind: "Success",
     data: {
-      data: [ServiceInstance.A],
+      data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
     },

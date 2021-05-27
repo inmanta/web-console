@@ -32,10 +32,10 @@ function setup() {
   );
 
   const instanceIdentifier = {
-    id: ServiceInstance.A.id,
+    id: ServiceInstance.a.id,
     service_entity: Service.a.name,
     environment: Service.a.environment,
-    version: ServiceInstance.A.version,
+    version: ServiceInstance.a.version,
   };
 
   const instanceConfigHelper = new InstanceConfigQueryManager(

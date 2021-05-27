@@ -95,7 +95,7 @@ test("ServiceInventory shows updated instances", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [ServiceInstance.A],
+      data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
     })
@@ -120,7 +120,7 @@ test("ServiceInventory shows error with retry", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [ServiceInstance.A],
+      data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
     })
@@ -137,7 +137,7 @@ test("ServiceInventory shows next page of instances", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [{ ...ServiceInstance.A, id: "a" }],
+      data: [{ ...ServiceInstance.a, id: "a" }],
       links: { ...Pagination.links, next: "fake-url" },
       metadata: Pagination.metadata,
     })
@@ -151,7 +151,7 @@ test("ServiceInventory shows next page of instances", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [{ ...ServiceInstance.A, id: "b" }],
+      data: [{ ...ServiceInstance.a, id: "b" }],
       links: Pagination.links,
       metadata: Pagination.metadata,
     })
@@ -171,7 +171,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A],
+        data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -198,7 +198,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [{ ...ServiceInstance.A, version: 4 }],
+        data: [{ ...ServiceInstance.a, version: 4 }],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })

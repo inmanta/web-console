@@ -13,7 +13,7 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })

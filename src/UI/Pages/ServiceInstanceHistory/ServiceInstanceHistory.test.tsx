@@ -36,7 +36,7 @@ it("ServiceInstanceHistory renders", async () => {
       <StoreProvider store={store}>
         <ServiceInstanceHistory
           service={Service.a}
-          instanceId={ServiceInstance.A.id}
+          instanceId={ServiceInstance.a.id}
         />
       </StoreProvider>
     </DependencyProvider>

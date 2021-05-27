@@ -2,10 +2,10 @@ import { InstanceLog } from "@/Core";
 import * as ServiceInstance from "./ServiceInstance";
 
 const base: InstanceLog = {
-  ...ServiceInstance.A,
+  ...ServiceInstance.a,
   version: 1,
   state: "rejected",
-  service_instance_id: ServiceInstance.A.id,
+  service_instance_id: ServiceInstance.a.id,
   events: [],
   timestamp: "2021-01-11T12:55:25.961567",
 };

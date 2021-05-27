@@ -14,8 +14,8 @@ test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID',
     await serviceInstancesFetcher.resolve(
       Either.right({
         data: [
-          { ...ServiceInstance.A, service_identity_attribute_value: "0001" },
-          { ...ServiceInstance.B, service_identity_attribute_value: "0002" },
+          { ...ServiceInstance.a, service_identity_attribute_value: "0001" },
+          { ...ServiceInstance.b, service_identity_attribute_value: "0002" },
         ],
         links: Pagination.links,
         metadata: Pagination.metadata,
@@ -38,7 +38,7 @@ test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID',
     await serviceInstancesFetcher.resolve(
       Either.right({
         data: [
-          { ...ServiceInstance.A, service_identity_attribute_value: "0001" },
+          { ...ServiceInstance.a, service_identity_attribute_value: "0001" },
         ],
         links: Pagination.links,
         metadata: Pagination.metadata,

@@ -15,5 +15,5 @@ const Template: Story<ComponentProps<typeof DateWithTooltip>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  date: new MomentDatePresenter().get(ServiceInstance.A.created_at),
+  date: new MomentDatePresenter().get(ServiceInstance.a.created_at),
 };
