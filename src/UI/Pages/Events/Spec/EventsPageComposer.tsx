@@ -20,7 +20,7 @@ export interface Handles {
 }
 
 export class EventsPageComposer {
-  compose(service: ServiceModel = Service.A): Handles {
+  compose(service: ServiceModel = Service.a): Handles {
     const store = getStoreInstance();
     const scheduler = new SchedulerImpl(5000);
     const eventsFetcher = new DeferredFetcher<"Events">();
@@ -28,13 +28,13 @@ export class EventsPageComposer {
       eventsFetcher,
       new EventsStateHelper(store),
       scheduler,
-      Service.A.environment
+      Service.a.environment
     );
 
     const queryResolver = new QueryResolverImpl(
       new DynamicQueryManagerResolver([eventsHelper])
     );
-    const urlManager = new UrlManagerImpl("", Service.A.environment);
+    const urlManager = new UrlManagerImpl("", Service.a.environment);
 
     const component = (
       <MemoryRouter>

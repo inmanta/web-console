@@ -3,9 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { RemoteData } from "@/Core";
-import { testProjects } from "@/Test";
-
-const projects = testProjects;
+import { Project } from "@/Test";
 
 test("GIVEN EnvironmentSelector WHEN no environments THEN error view", async () => {
   render(
@@ -26,25 +24,28 @@ test("GIVEN EnvironmentSelector WHEN no environments THEN error view", async () 
 });
 
 test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", () => {
+  const [projectA, projectB] = Project.list;
+  const [envA] = projectA.environments;
+  const [envB] = projectB.environments;
   render(
     <EnvironmentSelector
-      projects={RemoteData.success(projects)}
+      projects={RemoteData.success(Project.list)}
       onSelectEnvironment={() => {
         return;
       }}
       selectedProjectAndEnvironment={RemoteData.success({
-        environment: projects[0].environments[0],
-        project: projects[0],
+        environment: envA,
+        project: projectA,
       })}
     />
   );
 
   const toggle = screen.getByRole("button", {
-    name: "Selected Project: test-project-1 / test-environment-1",
+    name: `Selected Project: ${projectA.name} / ${envA.name}`,
   });
   userEvent.click(toggle);
   const listItem = screen.queryByRole("menuitem", {
-    name: "test-project-2 / test-environment-2",
+    name: `${projectB.name} / ${envB.name}`,
   });
 
   expect(listItem).toBeVisible();
@@ -53,26 +54,29 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
 test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", () => {
   let selectedEnv;
   let selectedProject;
+  const [projectA, projectB] = Project.list;
+  const [envA] = projectA.environments;
+  const [envB] = projectB.environments;
   render(
     <EnvironmentSelector
-      projects={RemoteData.success(projects)}
+      projects={RemoteData.success(Project.list)}
       onSelectEnvironment={(item) => {
         (selectedEnv = item.environmentId), (selectedProject = item.projectId);
       }}
       selectedProjectAndEnvironment={RemoteData.success({
-        environment: projects[0].environments[0],
-        project: projects[0],
+        environment: envA,
+        project: projectA,
       })}
     />
   );
 
   const toggle = screen.getByRole("button", {
-    name: "Selected Project: test-project-1 / test-environment-1",
+    name: `Selected Project: ${projectA.name} / ${envA.name}`,
   });
   userEvent.click(toggle);
 
   const listItem = screen.getByRole("menuitem", {
-    name: "test-project-2 / test-environment-2",
+    name: `${projectB.name} / ${envB.name}`,
   });
 
   expect(listItem).toBeVisible();
@@ -81,35 +85,38 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
 
   expect(
     screen.queryByRole("button", {
-      name: "Selected Project: test-project-2 / test-environment-2",
+      name: `Selected Project: ${projectB.name} / ${envB.name}`,
     })
   ).toBeVisible();
-  expect(selectedProject).toEqual("project-id-2");
-  expect(selectedEnv).toEqual("env-id-2");
+  expect(selectedProject).toEqual(projectB.id);
+  expect(selectedEnv).toEqual(envB.id);
 });
 
 test.each`
-  inputValue | numberOfMatchedItems
-  ${"test"}  | ${5}
-  ${"5"}     | ${1}
+  inputValue          | numberOfMatchedItems
+  ${"project_name"}   | ${5}
+  ${"project_name_a"} | ${1}
 `(
   "GIVEN EnvironmentSelector and populated store WHEN user types in '$inputValue' THEN shows $numberOfMatchedItems items",
   ({ inputValue, numberOfMatchedItems }) => {
+    const [project] = Project.list;
+    const [env] = project.environments;
+
     render(
       <EnvironmentSelector
-        projects={RemoteData.success(projects)}
+        projects={RemoteData.success(Project.list)}
         onSelectEnvironment={() => {
           return;
         }}
         selectedProjectAndEnvironment={RemoteData.success({
-          environment: projects[0].environments[0],
-          project: projects[0],
+          environment: env,
+          project,
         })}
       />
     );
 
     const toggle = screen.getByRole("button", {
-      name: "Selected Project: test-project-1 / test-environment-1",
+      name: `Selected Project: ${project.name} / ${env.name}`,
     });
     userEvent.click(toggle);
 
@@ -125,21 +132,23 @@ test.each`
 );
 
 test("GIVEN EnvironmentSelector and populated store WHEN user types in non matching text THEN shows no items", () => {
+  const [project] = Project.list;
+  const [env] = project.environments;
   render(
     <EnvironmentSelector
-      projects={RemoteData.success(projects)}
+      projects={RemoteData.success(Project.list)}
       onSelectEnvironment={() => {
         return;
       }}
       selectedProjectAndEnvironment={RemoteData.success({
-        environment: projects[0].environments[0],
-        project: projects[0],
+        environment: env,
+        project,
       })}
     />
   );
 
   const toggle = screen.getByRole("button", {
-    name: "Selected Project: test-project-1 / test-environment-1",
+    name: `Selected Project: ${project.name} / ${env.name}`,
   });
   userEvent.click(toggle);
 
@@ -147,7 +156,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user types in non match
   expect(menuItemsBefore).toHaveLength(5);
 
   const input = screen.getByRole("searchbox", { name: "Filter Projects" });
-  userEvent.type(input, "abcd");
+  userEvent.type(input, "non_existing_project_name");
 
   const menuItemsAfter = screen.queryByRole("menuitem");
   expect(menuItemsAfter).not.toBeInTheDocument();
@@ -156,20 +165,23 @@ test("GIVEN EnvironmentSelector and populated store WHEN user types in non match
 test("GIVEN EnvironmentSelector and environments with identital names WHEN user clicks on an environment THEN the correct environment is selected", () => {
   let selectedEnv;
   let selectedProject;
+  const [projectA, projectB] = Project.list;
+  const [envA] = projectA.environments;
+  const [, envB] = projectB.environments;
   render(
     <EnvironmentSelector
-      projects={RemoteData.success(projects)}
+      projects={RemoteData.success(Project.list)}
       onSelectEnvironment={(item) => {
         (selectedEnv = item.environmentId), (selectedProject = item.projectId);
       }}
       selectedProjectAndEnvironment={RemoteData.success({
-        environment: projects[0].environments[0],
-        project: projects[0],
+        environment: envA,
+        project: projectA,
       })}
     />
   );
   const toggle = screen.getByRole("button", {
-    name: "Selected Project: test-project-1 / test-environment-1",
+    name: `Selected Project: ${projectA.name} / ${envA.name}`,
   });
   userEvent.click(toggle);
 
@@ -178,10 +190,10 @@ test("GIVEN EnvironmentSelector and environments with identital names WHEN user 
 
   expect(
     screen.getByRole("button", {
-      name: "Selected Project: test-project-2 / test-environment-1",
+      name: `Selected Project: ${projectB.name} / ${envB.name}`,
     })
   );
 
-  expect(selectedProject).toEqual("project-id-2");
-  expect(selectedEnv).toEqual("env-id-3");
+  expect(selectedProject).toEqual(projectB.id);
+  expect(selectedEnv).toEqual(envB.id);
 });

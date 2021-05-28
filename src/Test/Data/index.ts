@@ -1,9 +1,9 @@
-export * from "./event";
+export * as Event from "./Event";
+export * as Diagnose from "./Diagnose";
 export * as InstanceLog from "./InstanceLog";
-export * from "./inventory";
-export * as Resources from "./Resources";
-export * from "./row";
+export * as Row from "./Row";
 export * as Service from "./Service";
 export * as ServiceInstance from "./ServiceInstance";
 export * as Pagination from "./Pagination";
-export * from "./projects";
+export * as Project from "./Project";
+export * as Resource from "./Resource";

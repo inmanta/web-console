@@ -1,11 +1,12 @@
 import { ServiceModel } from "@/Core";
-import { instance } from "@/Test";
+import { ServiceInstance } from "@/Test";
 import { InstanceSetStateManager } from "@/UI/Pages/ServiceInventory/InstanceSetStateManager";
 import { InstanceActionPresenter } from "./InstanceActionPresenter";
 
+const instances = [ServiceInstance.a];
+
 describe("InstanceActionPresenter ", () => {
   it("returns disabled for transfers which are not in the lifecycle", () => {
-    const instances = [{ ...instance, ...{ instanceSetStateTargets: [] } }];
     const partialEntity = {
       name: "cloudconnectv2",
       lifecycle: {
@@ -14,14 +15,12 @@ describe("InstanceActionPresenter ", () => {
       },
     } as ServiceModel;
     const setStateManager = new InstanceSetStateManager(instances, undefined);
-
     const actionPresenter = new InstanceActionPresenter(
       instances,
       undefined,
       setStateManager,
       partialEntity
     );
-
     const editDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
       "on_update"
@@ -38,7 +37,6 @@ describe("InstanceActionPresenter ", () => {
   });
 
   it("returns enabled for update transfers which are in the lifecycle", () => {
-    const instances = [{ ...instance, ...{ instanceSetStateTargets: [] } }];
     const partialEntity = {
       name: "cloudconnectv2",
       lifecycle: {
@@ -53,11 +51,11 @@ describe("InstanceActionPresenter ", () => {
       setStateManager,
       partialEntity
     );
-
     const editDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
       "on_update"
     );
+
     expect(editDisabled).toBeFalsy();
 
     const deleteDisabled = actionPresenter.isTransferDisabled(
@@ -68,7 +66,6 @@ describe("InstanceActionPresenter ", () => {
   });
 
   it("returns enabled for delete transfers which are in the lifecycle", () => {
-    const instances = [{ ...instance, ...{ instanceSetStateTargets: [] } }];
     const partialEntity = {
       name: "cloudconnectv2",
       lifecycle: {
@@ -83,17 +80,18 @@ describe("InstanceActionPresenter ", () => {
       setStateManager,
       partialEntity
     );
-
     const editDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
       "on_update"
     );
+
     expect(editDisabled).toBeTruthy();
 
     const deleteDisabled = actionPresenter.isTransferDisabled(
       instances[0].id,
       "on_delete"
     );
+
     expect(deleteDisabled).toBeFalsy();
   });
 });

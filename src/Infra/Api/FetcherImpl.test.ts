@@ -24,13 +24,13 @@ test("FetcherImpl getData fetches logs (empty)", async () => {
 test("FetcherImpl getData fetches logs (1)", async () => {
   const fetcher = new FetcherImpl<"InstanceLogs">(new BaseApiHelper());
 
-  fetchMock.mockResponse(JSON.stringify({ data: [InstanceLog.A] }));
+  fetchMock.mockResponse(JSON.stringify({ data: [InstanceLog.a] }));
   expect(
     await fetcher.getData(
       "environment_a",
       "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/log"
     )
-  ).toEqual(Either.right({ data: [InstanceLog.A] }));
+  ).toEqual(Either.right({ data: [InstanceLog.a] }));
 
   const [url, requestInit] = fetchMock.mock.calls[0];
   expect(url).toEqual(

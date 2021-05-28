@@ -1,24 +1,21 @@
-import { instance } from "@/Test/Data/inventory";
+import { ServiceInstance } from "@/Test";
 import { KeycloakInstance } from "keycloak-js";
 import { InstanceSetStateManager } from "./InstanceSetStateManager";
 
-const rows = [
-  { ...instance, ...{ instanceSetStateTargets: ["acknowledged", "designed"] } },
-];
+const rows = [ServiceInstance.a];
 const manager = new InstanceSetStateManager(rows, undefined);
+const { id, service_entity, version } = ServiceInstance.a;
 
 test("InstanceSetStateManager prepares correct setStateHandler", async () => {
-  const instanceId = "bd200aec-4f80-45e1-b2ad-137c442c68b8";
-  const setInstanceStateHandler =
-    manager.getSetInstanceStateHandler(instanceId);
+  const setInstanceStateHandler = manager.getSetInstanceStateHandler(id);
   expect(setInstanceStateHandler).toBeTruthy();
   if (setInstanceStateHandler) {
-    await setInstanceStateHandler(instanceId, "acknowledged", () => {
+    await setInstanceStateHandler(id, "acknowledged", () => {
       return;
     });
     expect(fetchMock.mock.calls).toHaveLength(1);
     expect(fetchMock.mock.calls[0][0]).toEqual(
-      "/lsm/v1/service_inventory/cloudconnectv2/bd200aec-4f80-45e1-b2ad-137c442c68b8/state?current_version=3&target_state=acknowledged&message=Triggered from the console"
+      `/lsm/v1/service_inventory/${service_entity}/${id}/state?current_version=${version}&target_state=acknowledged&message=Triggered from the console`
     );
     expect(fetchMock.mock.calls[0][1]?.method).toEqual("POST");
   }
@@ -28,17 +25,16 @@ test("InstanceSetStateManager adds username to the message when keycloak is enab
   const managerWithMockKeycloak = new InstanceSetStateManager(rows, {
     profile: { username: "inmanta" },
   } as KeycloakInstance);
-  const instanceId = "bd200aec-4f80-45e1-b2ad-137c442c68b8";
   const setInstanceStateHandler =
-    managerWithMockKeycloak.getSetInstanceStateHandler(instanceId);
+    managerWithMockKeycloak.getSetInstanceStateHandler(id);
   expect(setInstanceStateHandler).toBeTruthy();
   if (setInstanceStateHandler) {
-    await setInstanceStateHandler(instanceId, "acknowledged", () => {
+    await setInstanceStateHandler(id, "acknowledged", () => {
       return;
     });
     expect(fetchMock.mock.calls).toHaveLength(1);
     expect(fetchMock.mock.calls[0][0]).toEqual(
-      "/lsm/v1/service_inventory/cloudconnectv2/bd200aec-4f80-45e1-b2ad-137c442c68b8/state?current_version=3&target_state=acknowledged&message=Triggered from the console by inmanta"
+      `/lsm/v1/service_inventory/${service_entity}/${id}/state?current_version=${version}&target_state=acknowledged&message=Triggered from the console by inmanta`
     );
     expect(fetchMock.mock.calls[0][1]?.method).toEqual("POST");
   }

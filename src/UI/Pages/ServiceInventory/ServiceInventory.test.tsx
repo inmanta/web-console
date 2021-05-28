@@ -5,7 +5,7 @@ import {
   DeferredFetcher,
   Service,
   ServiceInstance,
-  Resources,
+  Resource,
   Pagination,
   StaticScheduler,
   DynamicQueryManagerResolver,
@@ -30,9 +30,9 @@ function setup() {
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store, Service.A.environment),
+    new ServiceInstancesStateHelper(store, Service.a.environment),
     scheduler,
-    Service.A.environment
+    Service.a.environment
   );
 
   const resourcesFetcher = new DeferredFetcher<"Resources">();
@@ -40,23 +40,23 @@ function setup() {
     resourcesFetcher,
     new ResourcesStateHelper(store),
     scheduler,
-    Service.A.environment
+    Service.a.environment
   );
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
 
-  const urlManager = new UrlManagerImpl("", Service.A.environment);
+  const urlManager = new UrlManagerImpl("", Service.a.environment);
 
   const component = (
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver, urlManager }}>
         <StoreProvider store={store}>
           <ServiceInventory
-            serviceName={Service.A.name}
-            environmentId={Service.A.environment}
-            service={Service.A}
+            serviceName={Service.a.name}
+            environmentId={Service.a.environment}
+            service={Service.a}
           />
         </StoreProvider>
       </DependencyProvider>
@@ -95,7 +95,7 @@ test("ServiceInventory shows updated instances", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [ServiceInstance.A],
+      data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
     })
@@ -120,7 +120,7 @@ test("ServiceInventory shows error with retry", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [ServiceInstance.A],
+      data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
     })
@@ -137,7 +137,7 @@ test("ServiceInventory shows next page of instances", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [{ ...ServiceInstance.A, id: "a" }],
+      data: [{ ...ServiceInstance.a, id: "a" }],
       links: { ...Pagination.links, next: "fake-url" },
       metadata: Pagination.metadata,
     })
@@ -151,7 +151,7 @@ test("ServiceInventory shows next page of instances", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [{ ...ServiceInstance.A, id: "b" }],
+      data: [{ ...ServiceInstance.a, id: "b" }],
       links: Pagination.links,
       metadata: Pagination.metadata,
     })
@@ -171,7 +171,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A],
+        data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -186,11 +186,11 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   fireEvent.click(await screen.findByRole("button", { name: "Resources" }));
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(Either.right({ data: Resource.listA }));
   });
 
   expect(
-    screen.getByRole("cell", { name: "resource_id_a_1" })
+    screen.getByRole("cell", { name: Resource.listA[0].resource_id })
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -198,18 +198,18 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [{ ...ServiceInstance.A, version: 4 }],
+        data: [{ ...ServiceInstance.a, version: 4 }],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
     );
   });
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(Either.right({ data: Resource.listA }));
   });
 
   expect(resourcesFetcher.getInvocations().length).toEqual(3);
   expect(resourcesFetcher.getInvocations()[2][1]).toMatch(
-    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=4"
+    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`
   );
 });

@@ -26,7 +26,7 @@ export class AttributeConverter {
   getFormDefaultValue(
     inputType: TextInputTypes | "bool",
     defaultValueSet: boolean,
-    defaultValue?: string
+    defaultValue: string | null
   ): string | null | undefined {
     if (defaultValueSet && defaultValue !== null) {
       return defaultValue;

@@ -1,15 +1,17 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import { AttributeConverter } from "@/UI/Pages/ServiceInstanceForm";
 import { EditFormPresenter } from "./EditFormPresenter";
+import { AttributeModel } from "@/Core";
 
 describe("EditFormPresenter", () => {
-  const attributes = [
+  const attributes: AttributeModel[] = [
     {
       name: "name",
       type: "string",
       description: "name",
       modifier: "rw+",
       default_value_set: false,
+      default_value: null,
     },
     {
       name: "bool_attr",
@@ -17,6 +19,7 @@ describe("EditFormPresenter", () => {
       description: "desc",
       modifier: "rw+",
       default_value_set: false,
+      default_value: null,
     },
     {
       name: "opt_string_attr",
@@ -24,6 +27,7 @@ describe("EditFormPresenter", () => {
       description: "desc",
       modifier: "rw+",
       default_value_set: false,
+      default_value: null,
     },
     {
       name: "not_editable",
@@ -31,6 +35,7 @@ describe("EditFormPresenter", () => {
       description: "a non updateable attribute",
       modifier: "rw",
       default_value_set: false,
+      default_value: null,
     },
     {
       name: "read_only",
@@ -38,6 +43,7 @@ describe("EditFormPresenter", () => {
       description: "a read-only",
       modifier: "r",
       default_value_set: false,
+      default_value: null,
     },
   ];
   const editFormPresenter = new EditFormPresenter(new AttributeConverter());

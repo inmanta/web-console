@@ -2,9 +2,9 @@ import React from "react";
 import { Story } from "@storybook/react/types-6-0";
 import {
   DynamicQueryManagerResolver,
-  instances,
   InstantFetcher,
   Service,
+  ServiceInstance,
   StaticScheduler,
 } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
@@ -35,7 +35,7 @@ const Template: Story<Props> = (args) => {
         }),
         new ResourcesStateHelper(store),
         new StaticScheduler(),
-        Service.A.environment
+        Service.a.environment
       ),
     ])
   );
@@ -53,6 +53,12 @@ const Template: Story<Props> = (args) => {
 
 export const Empty = Template.bind({});
 Empty.args = { instances: [], serviceEntity: {} as ServiceModel };
+
+const instances = [
+  { ...ServiceInstance.a, id: "10051234" },
+  { ...ServiceInstance.b, id: "20051234" },
+  { ...ServiceInstance.c, id: "30051234" },
+];
 
 export const Multiple = Template.bind({});
 Multiple.args = {

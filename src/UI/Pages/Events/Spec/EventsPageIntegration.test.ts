@@ -1,11 +1,6 @@
 import { render, screen, act, within } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
-import {
-  Service,
-  Pagination,
-  instanceEvents,
-  ignoredErrorNormalEvents,
-} from "@/Test";
+import { Service, Pagination, Event } from "@/Test";
 import { Either } from "@/Core";
 import { EventsPageComposer } from "./EventsPageComposer";
 
@@ -27,14 +22,14 @@ describe("Given the Events Page", () => {
       filterUrlName,
     }) => {
       const { component, eventsFetcher } = new EventsPageComposer().compose(
-        Service.A
+        Service.a
       );
       render(component);
 
       await act(async () => {
         await eventsFetcher.resolve(
           Either.right({
-            data: instanceEvents,
+            data: Event.listA,
             links: Pagination.links,
             metadata: Pagination.metadata,
           })
@@ -64,13 +59,13 @@ describe("Given the Events Page", () => {
       }
 
       expect(eventsFetcher.getInvocations()[1][1]).toEqual(
-        `/lsm/v1/service_inventory/${Service.A.name}/id1/events?limit=20&sort=timestamp.desc&filter.${filterUrlName}=${filterValue}`
+        `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.${filterUrlName}=${filterValue}`
       );
 
       await act(async () => {
         await eventsFetcher.resolve(
           Either.right({
-            data: ignoredErrorNormalEvents,
+            data: Event.listB,
             links: Pagination.links,
             metadata: Pagination.metadata,
           })
@@ -85,14 +80,14 @@ describe("Given the Events Page", () => {
   );
   it("When using the Date filter then the events with that Date and Operator should be fetched and shown", async () => {
     const { component, eventsFetcher } = new EventsPageComposer().compose(
-      Service.A
+      Service.a
     );
     render(component);
 
     await act(async () => {
       await eventsFetcher.resolve(
         Either.right({
-          data: instanceEvents,
+          data: Event.listA,
           links: Pagination.links,
           metadata: Pagination.metadata,
         })
@@ -119,13 +114,13 @@ describe("Given the Events Page", () => {
     userEvent.click(screen.getByRole("option", { name: "less than" }));
 
     expect(eventsFetcher.getInvocations()[1][1]).toEqual(
-      `/lsm/v1/service_inventory/${Service.A.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=lt%3A2021-04-28%2B00%3A00%3A00`
+      `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=lt%3A2021-04-28%2B00%3A00%3A00`
     );
 
     await act(async () => {
       await eventsFetcher.resolve(
         Either.right({
-          data: ignoredErrorNormalEvents,
+          data: Event.listB,
           links: Pagination.links,
           metadata: Pagination.metadata,
         })

@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import {
   Service,
   ServiceInstance,
-  Resources,
+  Resource,
   InstantFetcher,
   Pagination,
   StaticScheduler,
@@ -32,7 +32,7 @@ export const Basic: React.FC = () => {
   const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
     kind: "Success",
     data: {
-      data: [ServiceInstance.A],
+      data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
     },
@@ -40,20 +40,20 @@ export const Basic: React.FC = () => {
 
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store, Service.A.environment),
+    new ServiceInstancesStateHelper(store, Service.a.environment),
     scheduler,
-    Service.A.environment
+    Service.a.environment
   );
   const resourcesFetcher = new InstantFetcher<"Resources">({
     kind: "Success",
-    data: { data: Resources.B },
+    data: { data: Resource.listB },
   });
 
   const resourcesHelper = new ResourcesQueryManager(
     resourcesFetcher,
     new ResourcesStateHelper(store),
     scheduler,
-    Service.A.environment
+    Service.a.environment
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -65,9 +65,9 @@ export const Basic: React.FC = () => {
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory
-            serviceName={Service.A.name}
-            environmentId={Service.A.environment}
-            service={Service.A}
+            serviceName={Service.a.name}
+            environmentId={Service.a.environment}
+            service={Service.a}
           />
         </MemoryRouter>
       </StoreProvider>
@@ -84,9 +84,9 @@ export const Failed: React.FC = () => {
   });
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store, Service.A.environment),
+    new ServiceInstancesStateHelper(store, Service.a.environment),
     scheduler,
-    Service.A.environment
+    Service.a.environment
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -98,9 +98,9 @@ export const Failed: React.FC = () => {
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory
-            serviceName={Service.A.name}
-            environmentId={Service.A.environment}
-            service={Service.A}
+            serviceName={Service.a.name}
+            environmentId={Service.a.environment}
+            service={Service.a}
           />
         </MemoryRouter>
       </StoreProvider>
