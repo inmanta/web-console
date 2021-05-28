@@ -5,7 +5,8 @@ import { QueryManagerResolver } from "./QueryManagerResolver";
 it("QueryManagerResolver should replace managers when environment changes", () => {
   const queryManagerResolver = new QueryManagerResolver(
     getStoreInstance(),
-    new BaseApiHelper()
+    new BaseApiHelper(),
+    "UTC"
   );
   queryManagerResolver.resolve("env1");
   const originalLength = queryManagerResolver.get().length;
