@@ -10,8 +10,11 @@ module.exports = {
     app: path.resolve(__dirname, "src", "index.tsx"),
   },
   plugins: [
-    new webpack.IgnorePlugin(/^\.\/config\.js$/),
+    new webpack.IgnorePlugin({ resourceRegExp: /^\.\/config\.js$/ }),
     new CopyPlugin({ patterns: [{ from: "src/config.js", to: "" }] }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
   ],
   module: {
     rules: [
