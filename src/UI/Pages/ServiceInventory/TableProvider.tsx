@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { KeycloakInstance } from "keycloak-js";
 import {
   ServiceModel,
@@ -14,6 +14,7 @@ import {
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
 import { InstanceSetStateManager } from "./InstanceSetStateManager";
+import { TimezoneContext } from "@/UI/Dependency";
 
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
@@ -35,7 +36,8 @@ export const TableProvider: React.FC<Props> = ({
   setOrder,
   ...props
 }) => {
-  const datePresenter = new MomentDatePresenter();
+  const timezone = useContext(TimezoneContext);
+  const datePresenter = new MomentDatePresenter(timezone);
   const attributesPresenter = new AttributesPresenter();
   const instanceSetStatePresenter = new InstanceSetStateManager(
     instances,

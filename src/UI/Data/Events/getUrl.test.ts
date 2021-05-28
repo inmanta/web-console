@@ -31,7 +31,7 @@ describe("getUrl for events ", () => {
         pageSize,
       };
 
-      expect(getUrl(query)).toEqual(url);
+      expect(getUrl(query, "UTC")).toEqual(url);
     }
   );
 });

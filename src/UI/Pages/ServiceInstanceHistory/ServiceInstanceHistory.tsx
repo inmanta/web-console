@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DependencyContext } from "@/UI/Dependency";
+import { DependencyContext, TimezoneContext } from "@/UI/Dependency";
 import { InstanceLog, RemoteData, ServiceModel } from "@/Core";
 import {
   EmptyView,
@@ -51,7 +51,8 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
         const ids = sorted.map((log) => log.version.toString());
         const dict: Record<string, InstanceLog> = {};
         sorted.forEach((log) => (dict[log.version.toString()] = log));
-        const datePresenter = new MomentDatePresenter();
+        const timezone = useContext(TimezoneContext);
+        const datePresenter = new MomentDatePresenter(timezone);
         const attributesPresenter = new AttributesPresenter();
 
         return (

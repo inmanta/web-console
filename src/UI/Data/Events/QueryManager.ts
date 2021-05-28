@@ -7,7 +7,8 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
     fetcher: Fetcher<"Events">,
     stateHelper: StateHelper<"Events">,
     scheduler: Scheduler,
-    environment: string
+    environment: string,
+    timezone: string
   ) {
     super(
       fetcher,
@@ -22,7 +23,7 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
         pageSize,
       ],
       "Events",
-      getUrl,
+      (query) => getUrl(query, timezone),
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")
           return { data: data, handlers: {}, metadata };

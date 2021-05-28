@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { DependencyContext } from "@/UI/Dependency";
+import { DependencyContext, TimezoneContext } from "@/UI/Dependency";
 import { EventParams, RemoteData, ServiceModel, SortDirection } from "@/Core";
 import {
   ErrorView,
@@ -33,8 +33,10 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
     sort,
     pageSize,
   });
-
-  const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());
+  const timezone = useContext(TimezoneContext);
+  const tablePresenter = new EventsTablePresenter(
+    new MomentDatePresenter(timezone)
+  );
   const caption = words("events.caption")(instanceId);
 
   const states = service.lifecycle.states.map((state) => state.name).sort();

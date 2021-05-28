@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
 import { reject } from "lodash";
 import { OperatorPicker } from "./OperatorPicker";
 import { TimestampPicker } from "./TimestampPicker";
 import moment from "moment";
 import { Operator } from "@/Core";
+import { TimezoneContext } from "@/UI/Dependency";
 
 interface Raw {
   date: Date;
@@ -22,6 +23,7 @@ export const TimestampFilter: React.FC<Props> = ({
   update,
   isVisible,
 }) => {
+  const timezone = useContext(TimezoneContext);
   const [timestampFilter, setTimestampFilter] =
     useState<Date | undefined>(undefined);
 
@@ -51,6 +53,25 @@ export const TimestampFilter: React.FC<Props> = ({
 
   const onTimestampChange = (timestamp: Date) => {
     setTimestampFilter(timestamp);
+  };
+
+  const getChips = (timestampFilters: Raw[]): string[] => {
+    const prettyTimestamps = timestampFilters.map(rawToPretty);
+    return prettyTimestamps;
+  };
+
+  const rawToPretty = ({ date, operator: rule }: Raw): string => {
+    return `${moment
+      .tz(date, timezone)
+      .format("YYYY-MM-DD+HH:mm z")} | ${rule}`;
+  };
+
+  const prettyToRaw = (pretty: string): Raw => {
+    const [date, operator] = pretty.split("|");
+    return {
+      date: moment.tz(date, "YYYY-MM-DD+HH:mm z", timezone).toDate(),
+      operator: operator.trim() as Operator,
+    };
   };
 
   return (
@@ -92,21 +113,4 @@ function createNewTimestamps(
   } else {
     return [...timestampFilters, newTimestamp];
   }
-}
-
-function getChips(timestampFilters: Raw[]): string[] {
-  const prettyTimestamps = timestampFilters.map(rawToPretty);
-  return prettyTimestamps;
-}
-
-function rawToPretty({ date, operator: rule }: Raw): string {
-  return `${moment(date).format("YYYY-MM-DD+HH:mm")} | ${rule}`;
-}
-
-function prettyToRaw(pretty: string): Raw {
-  const [date, operator] = pretty.split("|");
-  return {
-    date: moment(date, "YYYY-MM-DD+HH:mm").toDate(),
-    operator: operator.trim() as Operator,
-  };
 }

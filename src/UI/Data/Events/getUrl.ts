@@ -2,17 +2,14 @@ import { Operator, Query } from "@/Core";
 import moment from "moment";
 import qs from "qs";
 
-export function getUrl({
-  service_entity,
-  id,
-  filter,
-  sort,
-  pageSize,
-}: Query.SubQuery<"Events">): string {
+export function getUrl(
+  { service_entity, id, filter, sort, pageSize }: Query.SubQuery<"Events">,
+  timezone: string
+): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
-          { filter: filterToParam(filter) },
+          { filter: filterToParam(filter, timezone) },
           { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
@@ -23,14 +20,15 @@ export function getUrl({
 
 type Filter = NonNullable<Query.SubQuery<"Events">["filter"]>;
 
-const filterToParam = (filter: Filter) => {
+const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};
   const { source, destination, version, event_type, timestamp } = filter;
   const serializedTimestampOperatorFilters = timestamp?.map(
     (timestampWithOperator) =>
-      `${operatorToParam(timestampWithOperator.operator)}:${moment(
-        timestampWithOperator.date
-      ).format("YYYY-MM-DD+HH:mm:ss")}`
+      `${operatorToParam(timestampWithOperator.operator)}:${moment
+        .tz(timestampWithOperator.date, timezone)
+        .utc()
+        .format("YYYY-MM-DD+HH:mm:ss")}`
   );
 
   return {

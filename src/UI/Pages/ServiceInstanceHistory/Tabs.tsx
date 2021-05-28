@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
 import { DateInfo, InstanceLog } from "@/Core";
 import {
@@ -13,6 +13,7 @@ import {
 import { MomentDatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 import { words } from "@/UI/words";
 import { DetailsTab } from "./DetailsTab";
+import { TimezoneContext } from "@/UI";
 
 export enum TabKey {
   Details = "Details",
@@ -35,6 +36,7 @@ export const Tabs: React.FC<Props> = ({
   activeTab,
   setActiveTab,
 }) => {
+  const timezone = useContext(TimezoneContext);
   return (
     <IconTabs
       activeTab={activeTab}
@@ -42,7 +44,7 @@ export const Tabs: React.FC<Props> = ({
       tabs={[
         detailsTab(state, log.version, timestamp.full),
         attributesTab(log),
-        eventsTab(log),
+        eventsTab(log, timezone),
       ]}
     />
   );
@@ -74,14 +76,19 @@ const attributesTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
   ),
 });
 
-const eventsTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
+const eventsTab = (
+  log: InstanceLog,
+  timezone: string
+): TabDescriptor<TabKey> => ({
   id: TabKey.Events,
   title: words("history.tabs.events"),
   icon: <PortIcon />,
   view:
     log.events.length === 0 ? (
       <EventsTableWrapper
-        tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
+        tablePresenter={
+          new EventsTablePresenter(new MomentDatePresenter(timezone))
+        }
         wrapInTd
         aria-label="EventTable-Empty"
       >
@@ -92,12 +99,16 @@ const eventsTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
       </EventsTableWrapper>
     ) : (
       <EventsTableWrapper
-        tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
+        tablePresenter={
+          new EventsTablePresenter(new MomentDatePresenter(timezone))
+        }
         aria-label="EventTable-Success"
       >
         <EventsTableBody
           events={log.events}
-          tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
+          tablePresenter={
+            new EventsTablePresenter(new MomentDatePresenter(timezone))
+          }
         />
       </EventsTableWrapper>
     ),

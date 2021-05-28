@@ -27,7 +27,8 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
 
   constructor(
     private readonly store: Store,
-    private readonly baseApiHelper: BaseApiHelper
+    private readonly baseApiHelper: BaseApiHelper,
+    private readonly timezone: string
   ) {
     this.managers = this.getIndependentManagers();
   }
@@ -83,7 +84,8 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new FetcherImpl<"Events">(this.baseApiHelper),
         new EventsStateHelper(this.store),
         scheduler,
-        environment
+        environment,
+        this.timezone
       ),
       new InstanceLogsQueryManager(
         new FetcherImpl<"InstanceLogs">(this.baseApiHelper),
