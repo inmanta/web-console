@@ -119,6 +119,7 @@ describe("AttributeConverter", () => {
             description: "name",
             modifier: "rw+",
             default_value_set: false,
+            default_value: null,
           })
         ).toEqual(inputType);
       }
@@ -131,6 +132,7 @@ describe("AttributeConverter", () => {
           description: "name",
           modifier: "rw+",
           default_value_set: false,
+          default_value: null,
         })
       ).toEqual(TextInputTypes.url);
     });

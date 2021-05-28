@@ -9,6 +9,7 @@ const attribute1: AttributeModel = {
   description: "The order ID of the service",
   modifier: "rw",
   default_value_set: false,
+  default_value: null,
 };
 
 const attribute2: AttributeModel = {
@@ -17,6 +18,7 @@ const attribute2: AttributeModel = {
   description: "The MTU that must be configured at the service provider",
   modifier: "rw",
   default_value_set: false,
+  default_value: null,
 };
 
 test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is shown", () => {

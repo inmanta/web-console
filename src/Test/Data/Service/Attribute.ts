@@ -6,6 +6,7 @@ export const a: AttributeModel = {
   modifier: "rw+",
   description: "The bandwidth of the e-line",
   default_value_set: false,
+  default_value: null,
 };
 
 export const b: AttributeModel = {
@@ -15,6 +16,7 @@ export const b: AttributeModel = {
   description:
     "A list of customer location IDS where the service should be delivered.",
   default_value_set: false,
+  default_value: null,
 };
 
 export const c: AttributeModel = {

@@ -1,7 +1,8 @@
+import { ServiceModel } from "@/Core";
 import { submitCreate, submitUpdate } from "./InstanceBackendRequestHandlers";
 
 describe("Instance Create handler", () => {
-  const serviceEntity = {
+  const serviceEntity: ServiceModel = {
     name: "test-service",
     attributes: [
       {
@@ -10,6 +11,7 @@ describe("Instance Create handler", () => {
         description: "an attribute",
         modifier: "rw",
         default_value_set: false,
+        default_value: null,
       },
       {
         name: "opt_string_attribute",
@@ -17,6 +19,7 @@ describe("Instance Create handler", () => {
         description: "an attribute",
         modifier: "rw+",
         default_value_set: false,
+        default_value: null,
       },
       {
         name: "bool_param",
@@ -24,6 +27,7 @@ describe("Instance Create handler", () => {
         description: "a boolean attribute",
         modifier: "rw+",
         default_value_set: false,
+        default_value: null,
       },
     ],
     environment: "env",
