@@ -1,4 +1,4 @@
-import { withSummary } from "@/Test/Data/Service";
+import { Service } from "@/Test";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
@@ -9,13 +9,13 @@ it("Drawer Panel is shown when an item is selected and closed on click", async (
   render(
     <MemoryRouter>
       <CatalogDrawer
-        environmentId="env1"
+        environmentId={Service.c.environment}
         serviceCatalogUrl="/"
-        services={[withSummary]}
+        services={[Service.c]}
       />
     </MemoryRouter>
   );
-  userEvent.click(await screen.findByText("service_name_a"));
+  userEvent.click(await screen.findByText(Service.c.name));
   expect(await screen.findByLabelText("InstanceSummaryPanel")).toBeVisible();
   userEvent.click(await screen.findByLabelText("CloseSummaryButton"));
   expect(

@@ -1,15 +1,17 @@
+import { AttributeModel, ServiceModel } from "@/Core";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import { CreateFormCard } from "./CreateFormCard";
 
 describe("CreateFormCard", () => {
-  const attributes = [
+  const attributes: AttributeModel[] = [
     {
       name: "name",
       type: "string?",
       description: "name",
       modifier: "rw+",
       default_value_set: false,
+      default_value: null,
     },
     {
       name: "not_editable",
@@ -17,6 +19,7 @@ describe("CreateFormCard", () => {
       description: "a non updateable attribute",
       modifier: "rw",
       default_value_set: false,
+      default_value: null,
     },
     {
       name: "read_only",
@@ -24,13 +27,14 @@ describe("CreateFormCard", () => {
       description: "a read-only",
       modifier: "r",
       default_value_set: false,
+      default_value: null,
     },
   ];
-  const serviceEntity = {
+  const serviceEntity: ServiceModel = {
     name: "test-service",
     attributes: attributes,
     environment: "env",
-    lifecycle: { initialState: "start", states: [], transfers: [] },
+    lifecycle: { initial_state: "start", states: [], transfers: [] },
     config: {},
   };
   it("Shows delete modal", async () => {

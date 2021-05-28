@@ -13,7 +13,7 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -37,13 +37,13 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
   userEvent.click(only);
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.deleted=true&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.deleted=true&sort=created_at.desc`
   );
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.deleted],
+        data: [{ ...ServiceInstance.a, state: "terminated", deleted: true }],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })

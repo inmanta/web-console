@@ -27,6 +27,7 @@ const attributes: AttributeModel[] = [
     description: "Your age",
     modifier: "rw",
     default_value_set: false,
+    default_value: null,
   },
   {
     name: "open_source",
@@ -34,13 +35,14 @@ const attributes: AttributeModel[] = [
     description: "Are you open source?",
     modifier: "rw",
     default_value_set: false,
+    default_value: null,
   },
 ];
 const serviceEntity = {
   name: "frontend-framework",
   attributes: attributes,
   environment: "env",
-  lifecycle: { initialState: "start", states: [], transfers: [] },
+  lifecycle: { initial_state: "start", states: [], transfers: [] },
   config: {},
 };
 export const Success = Template.bind({});

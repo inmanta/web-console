@@ -3,9 +3,9 @@ import { ServiceInstance } from "@/Test";
 import { getStoreInstance } from "./Setup";
 
 describe("ServiceInstancesSlice ", () => {
-  const serviceInstancesFirstEnv: ServiceInstanceModel[] = [ServiceInstance.A];
+  const serviceInstancesFirstEnv: ServiceInstanceModel[] = [ServiceInstance.a];
   const serviceInstancesSecondEnv: ServiceInstanceModel[] = [
-    { ...ServiceInstance.A, environment: "env-id" },
+    { ...ServiceInstance.a, environment: "env-id" },
   ];
 
   it("differentiates correctly between services with the same name and different environment", () => {

@@ -13,7 +13,7 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -29,16 +29,16 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   userEvent.click(id);
 
   const input = screen.getByRole("searchbox", { name: "IdFilter" });
-  userEvent.type(input, `${ServiceInstance.A.id}${specialChars.enter}`);
+  userEvent.type(input, `${ServiceInstance.a.id}${specialChars.enter}`);
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.A.id}&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.a.id}&sort=created_at.desc`
   );
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A],
+        data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })

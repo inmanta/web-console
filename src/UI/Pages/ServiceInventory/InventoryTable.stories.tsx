@@ -4,7 +4,7 @@ import { InventoryTable } from "./InventoryTable";
 import {
   DynamicQueryManagerResolver,
   InstantFetcher,
-  rows,
+  Row,
   StaticScheduler,
   tablePresenter,
 } from "@/Test";
@@ -51,4 +51,4 @@ export const Empty = Template.bind({});
 Empty.args = { rows: [] };
 
 export const Multiple = Template.bind({});
-Multiple.args = { rows };
+Multiple.args = { rows: [Row.a, Row.b] };

@@ -43,7 +43,7 @@ function setup() {
     <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <EventsPage
-          service={Service.A}
+          service={Service.a}
           instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
         />
       </StoreProvider>

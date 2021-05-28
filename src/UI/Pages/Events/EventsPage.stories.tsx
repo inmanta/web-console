@@ -6,8 +6,7 @@ import {
   InstanceLog,
   Service,
   StaticScheduler,
-  instanceEvents,
-  ignoredErrorNormalEvents,
+  Event,
   DynamicQueryManagerResolver,
 } from "@/Test";
 import { EventsPage } from "./EventsPage";
@@ -27,7 +26,7 @@ export default {
 
 const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const scheduler = new StaticScheduler();
-  const { service_instance_id } = InstanceLog.A;
+  const { service_instance_id } = InstanceLog.a;
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
@@ -47,16 +46,16 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
         }),
         new EventsStateHelper(store),
         scheduler,
-        InstanceLog.A.environment
+        InstanceLog.a.environment
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", InstanceLog.A.environment);
+  const urlManager = new UrlManagerImpl("", InstanceLog.a.environment);
 
   return (
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
-        <EventsPage service={Service.A} instanceId={service_instance_id} />
+        <EventsPage service={Service.a} instanceId={service_instance_id} />
       </StoreProvider>
     </DependencyProvider>
   );
@@ -65,9 +64,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
 export const Empty: React.FC = () => <Template events={[]} />;
 
 export const MultipleSuccessful: React.FC = () => (
-  <Template events={instanceEvents} />
+  <Template events={Event.listA} />
 );
 
-export const MultipleTypes: React.FC = () => (
-  <Template events={ignoredErrorNormalEvents} />
-);
+export const MultipleTypes: React.FC = () => <Template events={Event.listB} />;

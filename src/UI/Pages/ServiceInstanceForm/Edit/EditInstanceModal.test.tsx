@@ -3,6 +3,7 @@ import React from "react";
 import userEvent from "@testing-library/user-event";
 import { EditInstanceModal } from "./EditInstanceModal";
 import { InventoryContext } from "@/UI/Pages/ServiceInventory";
+import { AttributeModel } from "@/Core";
 
 describe("EditInstanceModal", () => {
   const instance = {
@@ -17,13 +18,14 @@ describe("EditInstanceModal", () => {
     instanceSetStateTargets: [],
     deleted: false,
   };
-  const attributes = [
+  const attributes: AttributeModel[] = [
     {
       name: "attr1",
       type: "string",
       description: "name",
       modifier: "rw+",
       default_value_set: false,
+      default_value: null,
     },
   ];
 

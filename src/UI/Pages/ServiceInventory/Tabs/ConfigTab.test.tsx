@@ -32,10 +32,10 @@ function setup() {
   );
 
   const instanceIdentifier = {
-    id: ServiceInstance.A.id,
-    service_entity: Service.A.name,
-    environment: Service.A.environment,
-    version: ServiceInstance.A.version,
+    id: ServiceInstance.a.id,
+    service_entity: Service.a.name,
+    environment: Service.a.environment,
+    version: ServiceInstance.a.version,
   };
 
   const instanceConfigHelper = new InstanceConfigQueryManager(
@@ -51,7 +51,7 @@ function setup() {
     ),
     new InstantFetcher<"Service">({
       kind: "Success",
-      data: { data: Service.A },
+      data: { data: Service.a },
     }),
     instanceIdentifier.environment
   );

@@ -7,14 +7,14 @@ describe("ServicesSlice", () => {
     {
       attributes: [],
       environment: "env-id",
-      lifecycle: { initialState: "", states: [], transfers: [] },
+      lifecycle: { initial_state: "", states: [], transfers: [] },
       name: "test_service",
       config: {},
     },
     {
       attributes: [],
       environment: "env-id",
-      lifecycle: { initialState: "", states: [], transfers: [] },
+      lifecycle: { initial_state: "", states: [], transfers: [] },
       name: "another_test_service",
       config: {},
     },

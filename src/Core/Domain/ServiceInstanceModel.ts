@@ -1,8 +1,6 @@
 import { WithId } from "@/Core/Language";
 
-export interface InstanceAttributeModel {
-  [Key: string]: string | string[] | boolean | number | null;
-}
+export type InstanceAttributeModel = Record<string, unknown>;
 
 export interface DeploymentProgress {
   total: number;

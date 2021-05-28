@@ -4,7 +4,7 @@ import { InventoryTable } from "./InventoryTable";
 import {
   DummyStateHelper,
   InstantFetcher,
-  rows,
+  Row,
   tablePresenter,
   tablePresenterWithIdentity,
   StaticScheduler,
@@ -51,17 +51,17 @@ test("InventoryTable can be expanded", async () => {
   render(
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <InventoryTable
-        rows={rows}
+        rows={[Row.a, Row.b]}
         tablePresenter={tablePresenter}
         setSortColumn={dummySetter}
         setOrder={dummySetter}
       />
     </DependencyProvider>
   );
-  const testid = `details_${rows[0].id.short}`;
+  const testid = `details_${Row.a.id.short}`;
 
   // Act
-  const expandCell = screen.getByLabelText(`expand-button-${rows[0].id.short}`);
+  const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
 
   fireEvent.click(within(expandCell).getByRole("button"));
 
@@ -96,7 +96,7 @@ test("ServiceInventory can show resources for instance", async () => {
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <InventoryTable
-          rows={rows}
+          rows={[Row.a, Row.b]}
           tablePresenter={tablePresenter}
           setSortColumn={dummySetter}
           setOrder={dummySetter}
@@ -105,7 +105,7 @@ test("ServiceInventory can show resources for instance", async () => {
     </DependencyProvider>
   );
 
-  const expandCell = screen.getByLabelText(`expand-button-${rows[0].id.short}`);
+  const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
 
   fireEvent.click(within(expandCell).getByRole("button"));
 
@@ -121,7 +121,7 @@ test("ServiceInventory can show resources for instance", async () => {
 test("ServiceInventory shows service identity if it's defined", async () => {
   render(
     <InventoryTable
-      rows={[rows[0]]}
+      rows={[Row.a]}
       tablePresenter={tablePresenterWithIdentity}
       setSortColumn={dummySetter}
       setOrder={dummySetter}
@@ -136,7 +136,7 @@ test("ServiceInventory shows service identity if it's defined", async () => {
 test("ServiceInventory shows sorting buttons for sortable columns", async () => {
   render(
     <InventoryTable
-      rows={[rows[0]]}
+      rows={[Row.a]}
       tablePresenter={tablePresenter}
       setSortColumn={dummySetter}
       setOrder={dummySetter}
@@ -155,7 +155,7 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
   let order;
   render(
     <InventoryTable
-      rows={[rows[0]]}
+      rows={[Row.a]}
       tablePresenter={tablePresenter}
       setSortColumn={(name) => (sortColumn = name)}
       setOrder={(dir) => (order = dir)}

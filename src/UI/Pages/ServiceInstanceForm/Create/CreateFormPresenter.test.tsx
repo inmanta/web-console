@@ -1,15 +1,17 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import { AttributeConverter } from "@/UI/Pages/ServiceInstanceForm";
 import { CreateFormPresenter } from "./CreateFormPresenter";
+import { AttributeModel } from "@/Core";
 
 describe("CreateFormPresenter", () => {
-  const attributes = [
+  const attributes: AttributeModel[] = [
     {
       name: "name",
       type: "string?",
       description: "name",
       modifier: "rw+",
       default_value_set: false,
+      default_value: null,
     },
     {
       name: "not_editable",
@@ -17,6 +19,7 @@ describe("CreateFormPresenter", () => {
       description: "a non updateable attribute",
       modifier: "rw",
       default_value_set: false,
+      default_value: null,
     },
     {
       name: "read_only",
@@ -24,6 +27,7 @@ describe("CreateFormPresenter", () => {
       description: "a read-only",
       modifier: "r",
       default_value_set: false,
+      default_value: null,
     },
   ];
   const createFormPresenter = new CreateFormPresenter(new AttributeConverter());

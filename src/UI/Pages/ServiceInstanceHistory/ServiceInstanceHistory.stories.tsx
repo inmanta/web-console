@@ -31,7 +31,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
           data: { data: logs },
         }),
         new InstanceLogsStateHelper(store),
-        Service.A.environment
+        Service.a.environment
       ),
     ])
   );
@@ -40,8 +40,8 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
     <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
-          service={Service.A}
-          instanceId={InstanceLog.A.service_instance_id}
+          service={Service.a}
+          instanceId={InstanceLog.a.service_instance_id}
         />
       </StoreProvider>
     </DependencyProvider>
@@ -50,6 +50,6 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
 
 export const Empty: React.FC = () => <Template logs={[]} />;
 
-export const One: React.FC = () => <Template logs={[InstanceLog.A]} />;
+export const One: React.FC = () => <Template logs={[InstanceLog.a]} />;
 
-export const Multiple: React.FC = () => <Template logs={InstanceLog.list2} />;
+export const Multiple: React.FC = () => <Template logs={InstanceLog.listB} />;

@@ -13,7 +13,7 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -32,13 +32,13 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   await userEvent.click(option);
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.state=creating&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.state=creating&sort=created_at.desc`
   );
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A],
+        data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
