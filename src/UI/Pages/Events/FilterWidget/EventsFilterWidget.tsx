@@ -7,6 +7,7 @@ import { VersionFilter } from "./VersionFilter";
 import { TimestampFilter } from "./TimestampFilter";
 import { TimestampOperatorFilter } from "@/Core/Domain/EventParams";
 import { words } from "@/UI";
+import { MomentDatePresenter } from "../../ServiceInventory/Presenters";
 
 interface Props {
   filter: EventParams.Filter;
@@ -88,6 +89,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
         update={updateVersion}
       />
       <TimestampFilter
+        datePresenter={new MomentDatePresenter()}
         isVisible={filterKind === EventParams.Kind.Date}
         timestampFilters={filter.timestamp ? filter.timestamp : []}
         update={updateTimestamp}

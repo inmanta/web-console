@@ -1,10 +1,10 @@
 import { Operator, Query } from "@/Core";
-import moment from "moment";
+import moment from "moment-timezone";
 import qs from "qs";
 
 export function getUrl(
   { service_entity, id, filter, sort, pageSize }: Query.SubQuery<"Events">,
-  timezone: string
+  timezone = moment.tz.guess()
 ): string {
   const filterParam =
     filter && Object.keys(filter).length > 0

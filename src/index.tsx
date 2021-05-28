@@ -9,12 +9,10 @@ import {
   DependencyProvider,
   CommandManagerResolver,
   QueryManagerResolver,
-  TimezoneContext,
 } from "@/UI/Dependency";
 import { CommandResolverImpl, QueryResolverImpl } from "@/UI/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
 import { getStoreInstance } from "@/UI/Store";
-import moment from "moment";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -36,10 +34,9 @@ if (externalKeycloakConf) {
 
 const store = getStoreInstance();
 const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
-const timezone = moment.tz.guess();
 const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
 const queryResolver = new QueryResolverImpl(
-  new QueryManagerResolver(store, baseApiHelper, timezone)
+  new QueryManagerResolver(store, baseApiHelper)
 );
 const commandResolver = new CommandResolverImpl(
   new CommandManagerResolver(store, baseApiHelper)
@@ -47,14 +44,12 @@ const commandResolver = new CommandResolverImpl(
 const urlManager = new UrlManagerImpl(baseUrl);
 
 ReactDOM.render(
-  <TimezoneContext.Provider value={timezone}>
-    <DependencyProvider
-      dependencies={{ queryResolver, commandResolver, urlManager }}
-    >
-      <StoreProvider store={store}>
-        <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
-      </StoreProvider>
-    </DependencyProvider>
-  </TimezoneContext.Provider>,
+  <DependencyProvider
+    dependencies={{ queryResolver, commandResolver, urlManager }}
+  >
+    <StoreProvider store={store}>
+      <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+    </StoreProvider>
+  </DependencyProvider>,
   document.getElementById("root") as HTMLElement
 );

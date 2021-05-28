@@ -3,7 +3,8 @@ import { DateInfo } from "@/Core";
 import { DatePresenter } from "./DatePresenter";
 
 export class MomentDatePresenter implements DatePresenter {
-  constructor(private readonly timezone: string) {}
+  private readonly timezone: string = moment.tz.guess();
+
   get(timestamp: string): DateInfo {
     return {
       full: this.getFull(timestamp),
@@ -20,5 +21,13 @@ export class MomentDatePresenter implements DatePresenter {
 
   getRelative(timestamp: string): string {
     return moment.utc(timestamp).tz(this.timezone).fromNow();
+  }
+
+  getShort(timestamp: Date): string {
+    return moment.tz(timestamp, this.timezone).format("YYYY-MM-DD+HH:mm z");
+  }
+
+  parseShort(timestamp: string): Date {
+    return moment.tz(timestamp, "YYYY-MM-DD+HH:mm z", this.timezone).toDate();
   }
 }

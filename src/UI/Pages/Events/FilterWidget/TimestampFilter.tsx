@@ -1,11 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
 import { reject } from "lodash";
 import { OperatorPicker } from "./OperatorPicker";
 import { TimestampPicker } from "./TimestampPicker";
-import moment from "moment";
 import { Operator } from "@/Core";
-import { TimezoneContext } from "@/UI/Dependency";
+import { DatePresenter } from "../../ServiceInventory/Presenters";
 
 interface Raw {
   date: Date;
@@ -13,17 +12,18 @@ interface Raw {
 }
 
 interface Props {
+  datePresenter: DatePresenter;
   timestampFilters: Raw[];
   update: (timestampFilters: Raw[]) => void;
   isVisible: boolean;
 }
 
 export const TimestampFilter: React.FC<Props> = ({
+  datePresenter,
   timestampFilters,
   update,
   isVisible,
 }) => {
-  const timezone = useContext(TimezoneContext);
   const [timestampFilter, setTimestampFilter] =
     useState<Date | undefined>(undefined);
 
@@ -60,16 +60,14 @@ export const TimestampFilter: React.FC<Props> = ({
     return prettyTimestamps;
   };
 
-  const rawToPretty = ({ date, operator: rule }: Raw): string => {
-    return `${moment
-      .tz(date, timezone)
-      .format("YYYY-MM-DD+HH:mm z")} | ${rule}`;
+  const rawToPretty = ({ date, operator }: Raw): string => {
+    return `${datePresenter.getShort(date)} | ${operator}`;
   };
 
   const prettyToRaw = (pretty: string): Raw => {
     const [date, operator] = pretty.split("|");
     return {
-      date: moment.tz(date, "YYYY-MM-DD+HH:mm z", timezone).toDate(),
+      date: datePresenter.parseShort(date),
       operator: operator.trim() as Operator,
     };
   };

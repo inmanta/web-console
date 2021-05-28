@@ -34,8 +34,7 @@ function setup() {
         apiHelper,
         new EventsStateHelper(store),
         scheduler,
-        instance.environment,
-        "UTC"
+        instance.environment
       ),
     ])
   );

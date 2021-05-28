@@ -14,4 +14,10 @@ export class DummyDatePresenter implements DatePresenter {
       relative: "relative",
     };
   }
+  getShort(): string {
+    return "short";
+  }
+  parseShort(): Date {
+    return new Date();
+  }
 }

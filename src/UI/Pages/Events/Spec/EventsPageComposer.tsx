@@ -28,8 +28,7 @@ export class EventsPageComposer {
       eventsFetcher,
       new EventsStateHelper(store),
       scheduler,
-      Service.A.environment,
-      "Europe/Brussels"
+      Service.A.environment
     );
 
     const queryResolver = new QueryResolverImpl(

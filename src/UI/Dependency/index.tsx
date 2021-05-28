@@ -4,4 +4,3 @@ export * from "./DependencyResolver";
 export * from "./EnvironmentHandler";
 export * from "./EnvironmentHandlerProvider";
 export * from "./QueryManagerResolver";
-export * from "./Timezone";

@@ -47,8 +47,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
         }),
         new EventsStateHelper(store),
         scheduler,
-        InstanceLog.A.environment,
-        "UTC"
+        InstanceLog.A.environment
       ),
     ])
   );
