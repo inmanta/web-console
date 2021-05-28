@@ -18,9 +18,9 @@ export const listA = [a, b, c];
 
 export const listB: InstanceLog[] = [
   {
-    service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
-    environment: "919f42ca-22c2-4791-9965-2b8927e93550",
-    service_entity: "cbci",
+    service_instance_id: ServiceInstance.a.id,
+    environment: ServiceInstance.a.environment,
+    service_entity: ServiceInstance.a.service_entity,
     version: 3,
     timestamp: "2021-02-15T14:27:54.609061",
     state: "rejected",
@@ -59,7 +59,7 @@ export const listB: InstanceLog[] = [
     events: [
       {
         id: "9abc7b8a-5964-4e16-a40b-1a9ba099046c",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 2,
         timestamp: "2021-02-15T14:27:54.641052",
         source: "allocating",
@@ -75,7 +75,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "5ac2bf61-1ea0-40d8-811b-67a2f84dbc11",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 2,
         timestamp: "2021-02-15T14:27:54.620056",
         source: "allocating",
@@ -91,7 +91,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "7a07884e-391d-4f09-b3ae-d9678d71b767",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 2,
         timestamp: "2021-02-15T14:27:45.971959",
         source: "allocating",
@@ -107,7 +107,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "96d93bf1-711f-4a61-8ede-a23fff92cc8e",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 2,
         timestamp: "2021-02-15T14:27:45.946909",
         source: "allocating",
@@ -124,9 +124,9 @@ export const listB: InstanceLog[] = [
     ],
   },
   {
-    service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
-    environment: "919f42ca-22c2-4791-9965-2b8927e93550",
-    service_entity: "cbci",
+    service_instance_id: ServiceInstance.a.id,
+    environment: ServiceInstance.a.environment,
+    service_entity: ServiceInstance.a.service_entity,
     version: 4,
     timestamp: "2021-02-15T14:29:18.968061",
     state: "rejected",
@@ -165,7 +165,7 @@ export const listB: InstanceLog[] = [
     events: [
       {
         id: "3d186ea2-bcb4-4bbc-a1e9-4a9d3c2f62a1",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 3,
         timestamp: "2021-02-15T14:29:18.997648",
         source: "creating",
@@ -181,7 +181,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "485807be-88ee-4bf5-acda-cdb683f70d85",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 3,
         timestamp: "2021-02-15T14:29:18.992382",
         source: "creating",
@@ -197,7 +197,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "ccaad662-8ecb-42b0-a13e-778f6d0bead8",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 3,
         timestamp: "2021-02-15T14:29:18.920200",
         source: "creating",
@@ -214,9 +214,9 @@ export const listB: InstanceLog[] = [
     ],
   },
   {
-    service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
-    environment: "919f42ca-22c2-4791-9965-2b8927e93550",
-    service_entity: "cbci",
+    service_instance_id: ServiceInstance.a.id,
+    environment: ServiceInstance.a.environment,
+    service_entity: ServiceInstance.a.service_entity,
     version: 5,
     timestamp: "2021-02-15T14:29:38.019725",
     state: "rollback",
@@ -255,7 +255,7 @@ export const listB: InstanceLog[] = [
     events: [
       {
         id: "818d7c55-1bd7-4862-9b51-8306855678bb",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 4,
         timestamp: "2021-02-15T14:29:38.144234",
         source: "create_failed",
@@ -271,7 +271,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "f8f6be97-57d5-4488-ba98-c7cbda0061bf",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 4,
         timestamp: "2021-02-15T14:29:38.123177",
         source: "create_failed",
@@ -287,7 +287,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "16927f9e-baf9-4df2-91d1-b8dc8a683063",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 4,
         timestamp: "2021-02-15T14:29:37.990109",
         source: "create_failed",
@@ -304,9 +304,9 @@ export const listB: InstanceLog[] = [
     ],
   },
   {
-    service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
-    environment: "919f42ca-22c2-4791-9965-2b8927e93550",
-    service_entity: "cbci",
+    service_instance_id: ServiceInstance.a.id,
+    environment: ServiceInstance.a.environment,
+    service_entity: ServiceInstance.a.service_entity,
     version: 6,
     timestamp: "2021-02-15T14:30:25.915593",
     state: "up",
@@ -345,7 +345,7 @@ export const listB: InstanceLog[] = [
     events: [
       {
         id: "efd08231-9ea4-4050-b88b-6ffd9c1a537a",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 5,
         timestamp: "2021-02-15T14:30:25.966525",
         source: "awaiting_up",
@@ -361,7 +361,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "c0bde8f7-1918-4226-8541-2908d194d8e6",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 5,
         timestamp: "2021-02-15T14:30:25.933476",
         source: "awaiting_up",
@@ -377,7 +377,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "d84edf39-0923-4f24-8a86-ea33809d9d9f",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 5,
         timestamp: "2021-02-15T14:30:25.890436",
         source: "awaiting_up",
@@ -394,9 +394,9 @@ export const listB: InstanceLog[] = [
     ],
   },
   {
-    service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
-    environment: "919f42ca-22c2-4791-9965-2b8927e93550",
-    service_entity: "cbci",
+    service_instance_id: ServiceInstance.a.id,
+    environment: ServiceInstance.a.environment,
+    service_entity: ServiceInstance.a.service_entity,
     version: 2,
     timestamp: "2021-02-15T14:27:45.928622",
     state: "rejected",
@@ -435,7 +435,7 @@ export const listB: InstanceLog[] = [
     events: [
       {
         id: "97e3ba82-223d-4367-92f5-4b771a0ec3cf",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 1,
         timestamp: "2021-02-15T14:27:45.930959",
         source: "ordered",
@@ -451,7 +451,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "d43964ee-eb4f-47dc-aa10-08e9b7485cc7",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 1,
         timestamp: "2021-02-15T14:27:34.777465",
         source: "ordered",
@@ -467,7 +467,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "611b5d8d-7e63-4357-a72c-286f3af45522",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 1,
         timestamp: "2021-02-15T14:27:34.744928",
         source: "ordered",
@@ -484,9 +484,9 @@ export const listB: InstanceLog[] = [
     ],
   },
   {
-    service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
-    environment: "919f42ca-22c2-4791-9965-2b8927e93550",
-    service_entity: "cbci",
+    service_instance_id: ServiceInstance.a.id,
+    environment: ServiceInstance.a.environment,
+    service_entity: ServiceInstance.a.service_entity,
     version: 1,
     timestamp: "2021-02-15T14:27:34.722210",
     state: "rollback",
@@ -507,7 +507,7 @@ export const listB: InstanceLog[] = [
     events: [
       {
         id: "43457a06-cf7c-4d1b-9b2a-189024d714af",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 0,
         timestamp: "2021-02-15T14:27:34.729371",
         source: null,
@@ -522,7 +522,7 @@ export const listB: InstanceLog[] = [
       },
       {
         id: "c6b691dd-2d26-43e5-8d4e-e469965b228e",
-        service_instance_id: "5537c397-3771-4713-838d-7ff14442fe0c",
+        service_instance_id: ServiceInstance.a.id,
         service_instance_version: 0,
         timestamp: "2021-02-15T14:27:34.700043",
         source: null,
