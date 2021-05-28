@@ -1,9 +1,10 @@
 import { InstanceEvent, InstanceEventType } from "@/Core";
+import * as ServiceInstance from "./ServiceInstance";
 
 export const listA: InstanceEvent[] = [
   {
     id: "049dd20f-c432-4b93-bf1c-32c572e49cc7",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 3,
     timestamp: "2021-01-11T12:56:56.205131",
     source: "creating",
@@ -19,7 +20,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "00cc19c6-3e28-45f9-bc6f-6e7d392a7890",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 3,
     timestamp: "2021-01-11T12:56:56.195110",
     source: "creating",
@@ -35,7 +36,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "0c1d6bc9-efcc-45da-9bef-92c15490e1a7",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 3,
     timestamp: "2021-01-11T12:56:56.128908",
     source: "creating",
@@ -51,7 +52,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "27567b9f-da23-4bd6-89c6-1bcec43d1d79",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 2,
     timestamp: "2021-01-11T12:55:53.136717",
     source: "allocating",
@@ -67,7 +68,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "3a087c83-f77e-4ee1-97a2-5c227bd27cee",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 2,
     timestamp: "2021-01-11T12:55:53.131606",
     source: "allocating",
@@ -83,7 +84,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "6eeb0836-2f9f-416b-80c0-713bdd00e9cb",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 2,
     timestamp: "2021-01-11T12:55:52.178059",
     source: null,
@@ -99,7 +100,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "eee12c7d-2ead-42e8-8410-3dbacbc7d863",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 2,
     timestamp: "2021-01-11T12:55:46.968672",
     source: "allocating",
@@ -115,7 +116,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "06bf2658-b5c7-4be6-b8d7-21ca9ff89c46",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 2,
     timestamp: "2021-01-11T12:55:46.959017",
     source: "allocating",
@@ -131,7 +132,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "4e83d62b-7be7-4daf-a5e3-e12200191f7b",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 1,
     timestamp: "2021-01-11T12:55:46.954145",
     source: "ordered",
@@ -147,7 +148,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "aedf5442-d5ad-465f-b74d-a760755628f8",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 1,
     timestamp: "2021-01-11T12:55:45.539494",
     source: null,
@@ -163,7 +164,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "067a0d7d-6df6-46fe-90c4-42d1af0df5b7",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 1,
     timestamp: "2021-01-11T12:55:25.998128",
     source: "ordered",
@@ -179,7 +180,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "d8f4e362-838d-4ca5-b8ba-b2c3dcc40724",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 1,
     timestamp: "2021-01-11T12:55:25.980614",
     source: "ordered",
@@ -195,7 +196,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "fc0a90ba-6da3-432b-a7ca-4c6d6978d27c",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 0,
     timestamp: "2021-01-11T12:55:25.968199",
     source: null,
@@ -210,7 +211,7 @@ export const listA: InstanceEvent[] = [
   },
   {
     id: "7160fc2a-5eb7-4c64-8920-2ce1efb6de11",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 0,
     timestamp: "2021-01-11T12:55:25.905428",
     source: null,
@@ -229,7 +230,7 @@ export const listA: InstanceEvent[] = [
 export const listB: InstanceEvent[] = [
   {
     id: "067a0d7d-6df6-46fe-90c4-42d1af0df5b7",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 1,
     timestamp: "2021-01-11T12:55:25.998128",
     source: "ordered",
@@ -245,7 +246,7 @@ export const listB: InstanceEvent[] = [
   },
   {
     id: "fc0a90ba-6da3-432b-a7ca-4c6d6978d27c",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 0,
     timestamp: "2021-01-11T12:55:25.968199",
     source: null,
@@ -260,7 +261,7 @@ export const listB: InstanceEvent[] = [
   },
   {
     id: "7160fc2a-5eb7-4c64-8920-2ce1efb6de11",
-    service_instance_id: "bd200aec-4f80-45e1-b2ad-137c442c68b8",
+    service_instance_id: ServiceInstance.a.id,
     service_instance_version: 0,
     timestamp: "2021-01-11T12:55:25.905428",
     source: null,
