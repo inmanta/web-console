@@ -33,7 +33,6 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
     sort,
     pageSize,
   });
-
   const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());
   const caption = words("events.caption")(instanceId);
 

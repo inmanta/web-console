@@ -113,8 +113,8 @@ describe("Given the Events Page", () => {
     userEvent.click(await screen.findByText("Select an operator..."));
     userEvent.click(screen.getByRole("option", { name: "less than" }));
 
-    expect(eventsFetcher.getInvocations()[1][1]).toEqual(
-      `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=lt%3A2021-04-28%2B00%3A00%3A00`
+    expect(eventsFetcher.getInvocations()[1][1]).toMatch(
+      `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=lt%3A2021-04-`
     );
 
     await act(async () => {

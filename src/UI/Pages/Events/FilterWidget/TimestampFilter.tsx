@@ -3,8 +3,8 @@ import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
 import { reject } from "lodash";
 import { OperatorPicker } from "./OperatorPicker";
 import { TimestampPicker } from "./TimestampPicker";
-import moment from "moment";
 import { Operator } from "@/Core";
+import { DatePresenter } from "../../ServiceInventory/Presenters";
 
 interface Raw {
   date: Date;
@@ -12,12 +12,14 @@ interface Raw {
 }
 
 interface Props {
+  datePresenter: DatePresenter;
   timestampFilters: Raw[];
   update: (timestampFilters: Raw[]) => void;
   isVisible: boolean;
 }
 
 export const TimestampFilter: React.FC<Props> = ({
+  datePresenter,
   timestampFilters,
   update,
   isVisible,
@@ -51,6 +53,23 @@ export const TimestampFilter: React.FC<Props> = ({
 
   const onTimestampChange = (timestamp: Date) => {
     setTimestampFilter(timestamp);
+  };
+
+  const getChips = (timestampFilters: Raw[]): string[] => {
+    const prettyTimestamps = timestampFilters.map(rawToPretty);
+    return prettyTimestamps;
+  };
+
+  const rawToPretty = ({ date, operator }: Raw): string => {
+    return `${datePresenter.getShort(date)} | ${operator}`;
+  };
+
+  const prettyToRaw = (pretty: string): Raw => {
+    const [date, operator] = pretty.split("|");
+    return {
+      date: datePresenter.parseShort(date),
+      operator: operator.trim() as Operator,
+    };
   };
 
   return (
@@ -92,21 +111,4 @@ function createNewTimestamps(
   } else {
     return [...timestampFilters, newTimestamp];
   }
-}
-
-function getChips(timestampFilters: Raw[]): string[] {
-  const prettyTimestamps = timestampFilters.map(rawToPretty);
-  return prettyTimestamps;
-}
-
-function rawToPretty({ date, operator: rule }: Raw): string {
-  return `${moment(date).format("YYYY-MM-DD+HH:mm")} | ${rule}`;
-}
-
-function prettyToRaw(pretty: string): Raw {
-  const [date, operator] = pretty.split("|");
-  return {
-    date: moment(date, "YYYY-MM-DD+HH:mm").toDate(),
-    operator: operator.trim() as Operator,
-  };
 }
