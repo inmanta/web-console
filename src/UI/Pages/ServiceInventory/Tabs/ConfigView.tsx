@@ -1,12 +1,7 @@
 import React from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { DefaultSwitch } from "@/UI/Components";
-
-interface Setting {
-  name: string;
-  value: boolean;
-  defaultValue: boolean;
-}
+import { Setting } from "@/Core";
 
 interface Props {
   settings: Setting[];
