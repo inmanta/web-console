@@ -79,7 +79,7 @@ test("ConfigTab can reset all settings", async () => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new InstanceConfigCommandManager(
-        new InstantPoster(RemoteData.success({ data: {} })),
+        new InstantPoster<"InstanceConfig">(RemoteData.success({ data: {} })),
         instanceConfigStateHelper
       ),
     ])
@@ -118,7 +118,7 @@ test("ConfigTab can change 1 toggle", async () => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new InstanceConfigCommandManager(
-        new InstantPoster(
+        new InstantPoster<"InstanceConfig">(
           RemoteData.success({
             data: { auto_creating: false, auto_designed: false },
           })

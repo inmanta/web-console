@@ -1,12 +1,14 @@
-import { ServiceModel } from "@/Core";
+import { FormAttributeResult, ServiceModel } from "@/Core";
 import {
   fetchInmantaApi,
   IRequestParams,
 } from "@/UI/App/utils/fetchInmantaApi";
 import { KeycloakInstance } from "keycloak-js";
-import { FormAttributeResult } from ".";
 import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
-import { AttributeConverter } from "./AttributeConverter";
+import {
+  AttributeResultConverter,
+  getCurrentAttributes,
+} from "./AttributeConverter";
 
 export async function submitUpdate(
   instance: ServiceInstanceForAction,
@@ -15,7 +17,7 @@ export async function submitUpdate(
   dispatch: (data) => void,
   keycloak?: KeycloakInstance
 ): Promise<void> {
-  const attributeConverter = new AttributeConverter();
+  const attributeConverter = new AttributeResultConverter();
   const inventoryUrl = `/lsm/v1/service_inventory/${instance.service_entity}`;
   const url = `${inventoryUrl}/${instance.id}?current_version=${instance.version}`;
   const requestParams: IRequestParams = {
@@ -31,7 +33,7 @@ export async function submitUpdate(
   const parsedAttributes =
     attributeConverter.parseAttributesToCorrectTypes(attributeValue);
   // Get the correct attribute set
-  const currentAttributes = attributeConverter.getCurrentAttributes(instance);
+  const currentAttributes = getCurrentAttributes(instance);
   // Only the difference should be sent
   const updatedAttributes = attributeConverter.calculateDiff(
     parsedAttributes,
@@ -48,7 +50,7 @@ export async function submitCreate(
   dispatch: () => void,
   keycloak?: KeycloakInstance
 ): Promise<void> {
-  const attributeConverter = new AttributeConverter();
+  const attributeConverter = new AttributeResultConverter();
   const url = `/lsm/v1/service_inventory/${service.name}`;
   const requestParams: IRequestParams = {
     urlEndpoint: url,

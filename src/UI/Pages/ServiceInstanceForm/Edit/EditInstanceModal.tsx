@@ -6,8 +6,10 @@ import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { EditIcon } from "@patternfly/react-icons";
 import { KeycloakInstance } from "keycloak-js";
 import React, { useState } from "react";
-import { AttributeConverter, FormAttributeResult, submitUpdate } from "..";
+import { submitUpdate } from "..";
 import { EditFormPresenter } from "./EditFormPresenter";
+import { FormAttributeResult } from "@/Core";
+import { AttributeInputConverter } from "../AttributeConverter";
 
 interface Props {
   isDisabled?: boolean;
@@ -23,7 +25,9 @@ export const EditInstanceModal: React.FC<Props> = ({
   const handleModalToggle = () => {
     setIsOpen(!isOpen);
   };
-  const editFormPresenter = new EditFormPresenter(new AttributeConverter());
+  const editFormPresenter = new EditFormPresenter(
+    new AttributeInputConverter()
+  );
   return (
     <>
       <ActionDisabledTooltip isDisabled={isDisabled}>

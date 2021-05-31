@@ -1,45 +1,22 @@
-import React, { useState } from "react";
-import { KeycloakInstance } from "keycloak-js";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-} from "@patternfly/react-core";
-import { ServiceModel } from "@/Core";
+import React from "react";
+import { Card, CardBody, CardHeader } from "@patternfly/react-core";
+import { FormAttributeResult, ServiceModel } from "@/Core";
 import { words } from "@/UI";
-import {
-  AttributeConverter,
-  submitCreate,
-  FormAttributeResult,
-} from "@/UI/Pages/ServiceInstanceForm";
 import { CreateFormPresenter } from "./CreateFormPresenter";
+import { AttributeInputConverter } from "../AttributeConverter";
 
 interface Props {
   serviceEntity: ServiceModel;
   handleRedirect: () => void;
-  keycloak?: KeycloakInstance;
+  onSubmit: (attributes: FormAttributeResult[]) => Promise<void>;
 }
 
 export const CreateFormCard: React.FC<Props> = ({
   serviceEntity,
   handleRedirect,
-  keycloak,
+  onSubmit,
 }) => {
-  const [errorMessage, setErrorMessage] = useState("");
-  const submitCreateInstance = (attributes: FormAttributeResult[]) => {
-    submitCreate(
-      serviceEntity,
-      attributes,
-      setErrorMessage,
-      handleRedirect,
-      keycloak
-    );
-  };
-  const formPresenter = new CreateFormPresenter(new AttributeConverter());
+  const formPresenter = new CreateFormPresenter(new AttributeInputConverter());
 
   return (
     <Card>
@@ -49,23 +26,10 @@ export const CreateFormCard: React.FC<Props> = ({
       <CardBody>
         {formPresenter.presentForm(
           serviceEntity.attributes,
-          submitCreateInstance,
+          onSubmit,
           handleRedirect
         )}
       </CardBody>
-      <CardFooter>
-        <AlertGroup isToast>
-          {errorMessage && (
-            <Alert
-              variant={"danger"}
-              title={errorMessage}
-              actionClose={
-                <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-              }
-            ></Alert>
-          )}
-        </AlertGroup>
-      </CardFooter>
     </Card>
   );
 };

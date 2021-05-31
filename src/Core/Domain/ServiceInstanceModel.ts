@@ -37,3 +37,9 @@ export interface ServiceInstanceModelWithTargetStates
   extends ServiceInstanceModel {
   instanceSetStateTargets: string[];
 }
+
+export interface FormAttributeResult {
+  name: string;
+  value: unknown;
+  type: string;
+}

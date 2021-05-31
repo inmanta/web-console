@@ -1,7 +1,13 @@
-import { VersionedServiceInstanceIdentifier } from "./ServiceInstanceModel";
+import {
+  FormAttributeResult,
+  InstanceAttributeModel,
+  ServiceInstanceModel,
+  VersionedServiceInstanceIdentifier,
+} from "./ServiceInstanceModel";
 import { Config } from "./Config";
+import { Either } from "../Language";
 
-type Command = InstanceConfigCommand;
+type Command = InstanceConfigCommand | CreateInstanceCommand;
 export type Type = Command;
 
 /**
@@ -24,12 +30,31 @@ interface InstanceConfigManifest {
   ) => void;
 }
 
+export interface CreateInstanceCommand {
+  kind: "CreateInstance";
+  service_entity: string;
+}
+
+interface CreateInstanceManifest {
+  error: string;
+  apiData: { data: ServiceInstanceModel };
+  body: { attributes: InstanceAttributeModel };
+  command: CreateInstanceCommand;
+  trigger: (payload: {
+    kind: "SUBMIT";
+    attributes: FormAttributeResult[];
+  }) => Promise<
+    Either.Type<Error<"CreateInstance">, ApiData<"CreateInstance">>
+  >; // TODO
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub commands.
  */
 interface Manifest {
   InstanceConfig: InstanceConfigManifest;
+  CreateInstance: CreateInstanceManifest;
 }
 
 /**

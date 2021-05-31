@@ -10,7 +10,7 @@ import { Command } from "@/Core/Domain";
  */
 export interface Poster<Kind extends Command.Kind> {
   post(
-    command: Command.SubCommand<"InstanceConfig">,
+    command: Command.SubCommand<Kind>,
     body: Command.Body<Kind>
   ): Promise<Either.Type<Command.Error<Kind>, Command.ApiData<Kind>>>;
 }

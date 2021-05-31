@@ -37,11 +37,14 @@ describe("CreateFormCard", () => {
     lifecycle: { initial_state: "start", states: [], transfers: [] },
     config: {},
   };
-  it("Shows delete modal", async () => {
+  it("Shows create form ", async () => {
     render(
       <CreateFormCard
         serviceEntity={serviceEntity}
         handleRedirect={() => {
+          return;
+        }}
+        onSubmit={async () => {
           return;
         }}
       />

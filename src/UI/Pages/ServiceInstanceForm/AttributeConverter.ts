@@ -1,13 +1,34 @@
 import {
   AttributeModel,
+  FormAttributeResult,
   InstanceAttributeModel,
   ServiceInstanceModel,
 } from "@/Core";
 import { TextInputTypes } from "@patternfly/react-core";
 import { isEmpty, isEqual } from "lodash";
-import { FormAttributeResult } from "./ServiceInstanceForm";
 
-export class AttributeConverter {
+class AttributeTypeInspector {
+  public isNumberArray(type: string): boolean {
+    return (
+      ["double", "float", "int", "integer", "number"].filter((numberLike) =>
+        type.includes(`${numberLike}[]`)
+      ).length > 0
+    );
+  }
+
+  public isNumberType(type: string): boolean {
+    return (
+      ["double", "float", "int", "integer", "number"].filter((numberLike) =>
+        type.includes(numberLike)
+      ).length > 0 && !this.isNumberArray(type)
+    );
+  }
+}
+
+export class AttributeInputConverter {
+  private readonly typeInspector: AttributeTypeInspector =
+    new AttributeTypeInspector();
+
   /**
    * Determines what kind of input should be used for a Service Attribute
    */
@@ -42,7 +63,7 @@ export class AttributeConverter {
     attributeName: string,
     type: string
   ): TextInputTypes {
-    if (this.isNumberType(type)) {
+    if (this.typeInspector.isNumberType(type)) {
       return TextInputTypes.number;
     }
     const pfInputTypeNames = Object.keys(TextInputTypes);
@@ -53,22 +74,11 @@ export class AttributeConverter {
     }
     return TextInputTypes.text;
   }
+}
 
-  private isNumberArray(type: string): boolean {
-    return (
-      ["double", "float", "int", "integer", "number"].filter((numberLike) =>
-        type.includes(`${numberLike}[]`)
-      ).length > 0
-    );
-  }
-
-  private isNumberType(type: string): boolean {
-    return (
-      ["double", "float", "int", "integer", "number"].filter((numberLike) =>
-        type.includes(numberLike)
-      ).length > 0 && !this.isNumberArray(type)
-    );
-  }
+export class AttributeResultConverter {
+  private readonly typeInspector: AttributeTypeInspector =
+    new AttributeTypeInspector();
 
   /**
    * Parses a value to the expected inmanta type. Validation errors are handled by the backend for now
@@ -87,11 +97,12 @@ export class AttributeConverter {
       } else if (type.includes("?") && value === "") {
         parsedValue = null;
       } else if (
-        (this.isNumberType(type) || this.isNumberArray(type)) &&
+        (this.typeInspector.isNumberType(type) ||
+          this.typeInspector.isNumberArray(type)) &&
         value === ""
       ) {
         parsedValue = null;
-      } else if (this.isNumberArray(type)) {
+      } else if (this.typeInspector.isNumberArray(type)) {
         const parts = value.split(",").map((piece) => {
           const trimmed = piece.trim();
           const converted = Number(trimmed);
@@ -101,7 +112,7 @@ export class AttributeConverter {
           return trimmed;
         });
         parsedValue = parts;
-      } else if (this.isNumberType(type)) {
+      } else if (this.typeInspector.isNumberType(type)) {
         parsedValue = Number(value);
       } else if (type.includes("[]")) {
         const parts = value.split(",").map((piece) => piece.trim());
@@ -135,22 +146,6 @@ export class AttributeConverter {
       })
     );
     return attributesTypeCorrect;
-  }
-
-  /**
-   * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
-   * and to the active attribute set otherwise
-   */
-  getCurrentAttributes(
-    instance: Pick<
-      ServiceInstanceModel,
-      "candidate_attributes" | "active_attributes"
-    >
-  ): InstanceAttributeModel | null {
-    return instance.candidate_attributes &&
-      !isEmpty(instance.candidate_attributes)
-      ? instance.candidate_attributes
-      : instance.active_attributes;
   }
 
   /**
@@ -199,4 +194,20 @@ export function toOptionalBoolean(
   } else {
     return null;
   }
+}
+
+/**
+ * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
+ * and to the active attribute set otherwise
+ */
+export function getCurrentAttributes(
+  instance: Pick<
+    ServiceInstanceModel,
+    "candidate_attributes" | "active_attributes"
+  >
+): InstanceAttributeModel | null {
+  return instance.candidate_attributes &&
+    !isEmpty(instance.candidate_attributes)
+    ? instance.candidate_attributes
+    : instance.active_attributes;
 }

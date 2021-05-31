@@ -9,6 +9,7 @@ import { words } from "@/UI/words";
 import { toOptionalBoolean } from "./AttributeConverter";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { TextFormInput } from "./TextFormInput";
+import { FormAttributeResult } from "@/Core";
 
 export interface FormInputAttribute {
   name: string;
@@ -16,12 +17,6 @@ export interface FormInputAttribute {
   defaultValue: unknown;
   inputType: TextInputTypes | "bool";
   isOptional: boolean;
-  type: string;
-}
-
-export interface FormAttributeResult {
-  name: string;
-  value: unknown;
   type: string;
 }
 
