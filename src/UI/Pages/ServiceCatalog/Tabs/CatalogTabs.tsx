@@ -21,6 +21,9 @@ export const CatalogTabs: React.FunctionComponent<{
       <Tab eventKey={1} title="Lifecycle States">
         <LifecycleTable lifecycle={props.service.lifecycle} />
       </Tab>
+      <Tab eventKey={1} title="Lifecycle States">
+        <LifecycleTable lifecycle={props.service.lifecycle} />
+      </Tab>
     </Tabs>
   );
 };
