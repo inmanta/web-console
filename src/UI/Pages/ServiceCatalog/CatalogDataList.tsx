@@ -54,6 +54,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
           <Text component={TextVariants.small} className="patternfly-text-gray">
             {descriptionProps.service.description}
           </Text>
+          <div className="spacer-with-padding-xs" />
         </div>
       );
     }
@@ -99,6 +100,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
                   {service.name}
                 </Title>
                 <Description service={service} />
+                <SummaryIcons summary={service.instance_summary} />
               </DataListCell>,
             ]}
           />
@@ -123,24 +125,13 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
             />
           </DataListAction>
         </DataListItemRow>
-        <DataListItemRow>
-          <DataListContent
-            aria-label="Primary Content Details"
-            id={expandKey}
-            isHidden={!expanded.includes(toggleId)}
-          >
-            <CatalogContent service={service} />
-          </DataListContent>
-        </DataListItemRow>
-        <DataListItemRow>
-          {service.instance_summary && (
-            <DataListItemCells
-              dataListCells={
-                <SummaryIcons summary={service.instance_summary} />
-              }
-            />
-          )}
-        </DataListItemRow>
+        <DataListContent
+          aria-label="Primary Content Details"
+          id={expandKey}
+          isHidden={!expanded.includes(toggleId)}
+        >
+          <CatalogContent service={service} />
+        </DataListContent>
       </DataListItem>
     );
   });
