@@ -25,13 +25,12 @@ import { IRequestParams } from "@/UI/App/utils/fetchInmantaApi";
 import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
 import { Routing } from "@/UI/Routing";
 import { words } from "@/UI";
+import { SummaryIcons } from "./SummaryIcons";
 
 interface Props {
-  services: Record<string, ServiceModel>;
+  services: ServiceModel[];
   environmentId: string;
   serviceCatalogUrl: string;
-  onSelectDataListItem: (id: string) => void;
-  selectedDataListItemId: string;
   keycloak?: Keycloak.KeycloakInstance;
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   dispatch?: (data) => any;
@@ -43,8 +42,6 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
   serviceCatalogUrl,
   keycloak,
   dispatch,
-  onSelectDataListItem,
-  selectedDataListItemId,
 }) => {
   const [expanded, setExpanded] = useState([""]);
   const [errorMessage, setErrorMessage] = React.useState("");
@@ -57,14 +54,19 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
           <Text component={TextVariants.small} className="patternfly-text-gray">
             {descriptionProps.service.description}
           </Text>
+          <div className="spacer-with-padding-xs" />
         </div>
       );
     }
     return <div />;
   };
+  const servicesById = services.reduce((acc, curr) => {
+    acc[curr.name] = curr;
+    return acc;
+  }, {});
 
-  const serviceItems = Object.keys(services).map((serviceName) => {
-    const service = services[serviceName];
+  const serviceItems = Object.keys(servicesById).map((serviceName) => {
+    const service = servicesById[serviceName];
     const toggleId = serviceName + "-toggle";
     const serviceKey = serviceName + "-item";
     const expandKey = serviceName + "-expand";
@@ -98,6 +100,9 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
                   {service.name}
                 </Title>
                 <Description service={service} />
+                {service.instance_summary && (
+                  <SummaryIcons summary={service.instance_summary} />
+                )}
               </DataListCell>,
             ]}
           />
@@ -157,13 +162,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
           />
         </AlertGroup>
       )}
-      <DataList
-        aria-label="List of service entities"
-        onSelectDataListItem={onSelectDataListItem}
-        selectedDataListItemId={selectedDataListItemId}
-      >
-        {serviceItems}
-      </DataList>
+      <DataList aria-label="List of service entities">{serviceItems}</DataList>
     </React.Fragment>
   );
 };

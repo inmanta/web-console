@@ -10,7 +10,7 @@ import {
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { Query, RemoteData } from "@/Core";
-import { CatalogDrawer } from "./CatalogDrawer";
+import { CatalogDataList } from "./CatalogDataList";
 
 export const ServiceCatalogWithProvider: React.FC = () => {
   return (
@@ -73,7 +73,7 @@ export const ServiceCatalog: React.FC<{ environment: string }> = ({
             className="horizontally-scrollable"
             aria-label="ServiceCatalog-Success"
           >
-            <CatalogDrawer
+            <CatalogDataList
               services={services}
               environmentId={environment}
               serviceCatalogUrl={"/lsm/v1/service_catalog"}

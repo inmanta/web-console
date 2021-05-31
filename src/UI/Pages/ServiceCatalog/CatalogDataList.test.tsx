@@ -7,20 +7,12 @@ import { ServiceModel } from "@/Core";
 import { Service } from "@/Test";
 
 const Component = (services: ServiceModel[]) => {
-  const serviceMap = services.reduce((acc, curr) => {
-    acc[curr.name] = curr;
-    return acc;
-  }, {});
   return (
     <MemoryRouter>
       <CatalogDataList
-        services={serviceMap}
+        services={services}
         environmentId="env"
         serviceCatalogUrl="/lsm/v1/service_catalog"
-        onSelectDataListItem={() => {
-          return;
-        }}
-        selectedDataListItemId=""
       />
     </MemoryRouter>
   );
