@@ -69,3 +69,20 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
 
   expect(screen.getByRole("generic", { name: "ServiceConfig" })).toBeVisible();
 });
+
+test.skip("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
+  const { component, servicesFetcher } = setup();
+  render(component);
+
+  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+
+  const details = await screen.findByRole("button", {
+    name: `${Service.a.name} Details`,
+  });
+  userEvent.click(details);
+
+  const configButton = screen.getByRole("button", { name: "Config" });
+  userEvent.click(configButton);
+
+  expect(screen.getByRole("generic", { name: "SettingsList" })).toBeVisible();
+});
