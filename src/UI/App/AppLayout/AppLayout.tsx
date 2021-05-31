@@ -78,7 +78,7 @@ export const AppLayout: React.FunctionComponent<IAppLayout> = ({
             <DropdownItem
               key="action2"
               component="button"
-              onClick={keycloak && keycloak.logout}
+              onClick={keycloak && (() => keycloak.logout())}
             >
               Logout
             </DropdownItem>,
