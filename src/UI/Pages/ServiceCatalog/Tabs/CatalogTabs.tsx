@@ -3,6 +3,7 @@ import { Tabs, Tab } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
 import { AttributeTable } from "./AttributeTable";
 import { LifecycleTable } from "./LifecycleTable";
+import { Config } from "./Config";
 
 export const CatalogTabs: React.FunctionComponent<{
   service: ServiceModel;
@@ -20,6 +21,9 @@ export const CatalogTabs: React.FunctionComponent<{
       </Tab>
       <Tab eventKey={1} title="Lifecycle States">
         <LifecycleTable lifecycle={props.service.lifecycle} />
+      </Tab>
+      <Tab eventKey={2} title="Config">
+        <Config serviceName={props.service.name} />
       </Tab>
     </Tabs>
   );

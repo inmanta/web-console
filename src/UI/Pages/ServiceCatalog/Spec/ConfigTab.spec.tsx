@@ -53,7 +53,7 @@ function setup() {
   };
 }
 
-test.skip("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async () => {
+test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async () => {
   const { component, servicesFetcher } = setup();
   render(component);
 
@@ -66,4 +66,6 @@ test.skip("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab",
 
   const configButton = screen.getByRole("button", { name: "Config" });
   userEvent.click(configButton);
+
+  expect(screen.getByRole("generic", { name: "ServiceConfig" })).toBeVisible();
 });
