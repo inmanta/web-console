@@ -1,5 +1,10 @@
 import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import {
+  ConfigToggleList,
+  EmptyView,
+  ErrorView,
+  LoadingView,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import {
@@ -11,7 +16,6 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import React, { useContext } from "react";
-import { ConfigView } from "./ConfigView";
 
 interface Props {
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
@@ -64,7 +68,7 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
               </CardActions>
             </CardHeader>
             <CardBody>
-              <ConfigView
+              <ConfigToggleList
                 settings={settings}
                 onChange={(option, value) =>
                   trigger({ kind: "UPDATE", option, value })

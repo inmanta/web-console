@@ -1,4 +1,6 @@
 export * from "./AttributesTable";
+export * from "./ButtonWithCursorHandling";
+export * from "./ConfigToggleList";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
 export * from "./EmptyView";

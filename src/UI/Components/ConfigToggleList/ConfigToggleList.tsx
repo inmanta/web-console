@@ -8,7 +8,7 @@ interface Props {
   onChange: (name: string, value: boolean) => void;
 }
 
-export const ConfigView: React.FC<Props> = ({ settings, onChange }) => {
+export const ConfigToggleList: React.FC<Props> = ({ settings, onChange }) => {
   if (settings.length <= 0) return null;
 
   const handleChange = (name: string) => (value: boolean) =>
