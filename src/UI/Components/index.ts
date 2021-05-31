@@ -1,6 +1,5 @@
 export * from "./AttributesTable";
 export * from "./ButtonWithCursorHandling";
-export * from "./ConfigToggleList";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
 export * from "./EmptyView";
@@ -14,6 +13,7 @@ export * from "./InstanceState";
 export * from "./LoadingView";
 export * from "./ResourceTable";
 export * from "./ServiceProvider";
+export * from "./SettingsList";
 export * from "./StackedProgressBar";
 export * from "./Toggle";
 export * from "./TreeTable";

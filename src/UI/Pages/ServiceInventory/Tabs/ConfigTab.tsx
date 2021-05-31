@@ -1,6 +1,6 @@
 import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
-  ConfigToggleList,
+  SettingsList,
   EmptyView,
   ErrorView,
   LoadingView,
@@ -68,7 +68,7 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
               </CardActions>
             </CardHeader>
             <CardBody>
-              <ConfigToggleList
+              <SettingsList
                 settings={settings}
                 onChange={(option, value) =>
                   trigger({ kind: "UPDATE", option, value })

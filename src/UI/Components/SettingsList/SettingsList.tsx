@@ -8,14 +8,14 @@ interface Props {
   onChange: (name: string, value: boolean) => void;
 }
 
-export const ConfigToggleList: React.FC<Props> = ({ settings, onChange }) => {
+export const SettingsList: React.FC<Props> = ({ settings, onChange }) => {
   if (settings.length <= 0) return null;
 
   const handleChange = (name: string) => (value: boolean) =>
     onChange(name, value);
 
   return (
-    <Flex>
+    <Flex aria-label="SettingsList">
       <Flex
         direction={{ default: "column" }}
         justifyContent={{ default: "justifyContentSpaceBetween" }}

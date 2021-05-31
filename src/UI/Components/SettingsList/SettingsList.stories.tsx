@@ -1,9 +1,9 @@
 import React from "react";
-import { ConfigToggleList } from "./ConfigToggleList";
+import { SettingsList } from "./SettingsList";
 
 export default {
-  title: "ConfigToggleList",
-  component: ConfigToggleList,
+  title: "SettingsList",
+  component: SettingsList,
 };
 
 const settings = [
@@ -14,7 +14,7 @@ const settings = [
 ];
 
 export const Default: React.FC = () => (
-  <ConfigToggleList
+  <SettingsList
     settings={settings}
     onChange={(name, value) => {
       console.log({ name, value });
