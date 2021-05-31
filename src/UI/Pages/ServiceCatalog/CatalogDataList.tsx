@@ -100,7 +100,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
                   {service.name}
                 </Title>
                 <Description service={service} />
-                <SummaryIcons summary={service.instance_summary} />
+                {service && <SummaryIcons summary={service.instance_summary} />}
               </DataListCell>,
             ]}
           />
