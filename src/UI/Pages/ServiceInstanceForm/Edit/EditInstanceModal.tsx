@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { submitUpdate } from "..";
 import { EditFormPresenter } from "./EditFormPresenter";
 import { FormAttributeResult } from "@/Core";
-import { AttributeInputConverter } from "../AttributeConverter";
+import { AttributeInputConverter } from "@/UI/Data";
 
 interface Props {
   isDisabled?: boolean;

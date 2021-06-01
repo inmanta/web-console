@@ -1,10 +1,10 @@
 import { AttributeModel, FormAttributeResult } from "@/Core";
 import React from "react";
 import {
-  AttributeInputConverter,
   FormInputAttribute,
   ServiceInstanceForm,
 } from "@/UI/Pages/ServiceInstanceForm";
+import { AttributeInputConverter } from "@/UI/Data";
 
 export class CreateFormPresenter {
   constructor(

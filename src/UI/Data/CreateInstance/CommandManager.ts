@@ -5,7 +5,7 @@ import {
   FormAttributeResult,
   Either,
 } from "@/Core";
-import { AttributeResultConverter } from "@/UI/Pages";
+import { AttributeResultConverter } from "../Common";
 
 export class CreateInstanceCommandManager implements CommandManager {
   constructor(

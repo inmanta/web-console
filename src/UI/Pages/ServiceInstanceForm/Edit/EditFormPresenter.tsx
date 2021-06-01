@@ -8,12 +8,12 @@ import React from "react";
 import {
   FormInputAttribute,
   ServiceInstanceForm,
-  toOptionalBoolean,
 } from "@/UI/Pages/ServiceInstanceForm";
 import {
   AttributeInputConverter,
   getCurrentAttributes,
-} from "../AttributeConverter";
+  toOptionalBoolean,
+} from "@/UI/Data";
 
 export class EditFormPresenter {
   constructor(

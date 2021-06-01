@@ -1,11 +1,16 @@
 import { CommandManager, ManagerResolver } from "@/Core";
-import { BaseApiHelper, InstanceConfigPoster } from "@/Infra";
-import { InstanceConfigCommandManager } from "@/UI/Data";
+import {
+  BaseApiHelper,
+  CreateInstancePoster,
+  InstanceConfigPoster,
+} from "@/Infra";
+import {
+  AttributeResultConverter,
+  CreateInstanceCommandManager,
+  InstanceConfigCommandManager,
+} from "@/UI/Data";
 import { Store } from "@/UI/Store";
 import { InstanceConfigStateHelper } from "@/UI/Data";
-import { CreateInstanceCommandManager } from "../Data/CreateInstance";
-import { CreateInstancePoster } from "@/Infra/Api/CreateInstancePoster";
-import { AttributeResultConverter } from "../Pages/ServiceInstanceForm/AttributeConverter";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];

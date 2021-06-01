@@ -9,3 +9,5 @@ export * from "./CommandResolverImpl";
 export * from "./Diagnostics";
 export * from "./Projects";
 export * from "./QueryResolverImpl";
+export * from "./CreateInstance";
+export * from "./Common";
