@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import {
+  BooleanSwitch,
   EmptyView,
   ErrorView,
   LoadingView,
@@ -37,7 +38,11 @@ export const Config: React.FC<Props> = ({ serviceName }) => {
               settings.length <= 0 ? (
                 <EmptyView message={words("config.empty")} />
               ) : (
-                <SettingsList settings={settings} onChange={update} />
+                <SettingsList
+                  settings={settings}
+                  onChange={update}
+                  Switch={BooleanSwitch}
+                />
               ),
           },
           data

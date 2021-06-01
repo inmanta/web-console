@@ -3,12 +3,14 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
+  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  InstantPoster,
   Service,
   StaticScheduler,
 } from "@/Test";
 import { ServiceCatalog } from "@/UI/Pages";
-import { Either } from "@/Core";
+import { Either, RemoteData } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
@@ -18,6 +20,8 @@ import {
   ServiceConfigStateHelper,
   ServiceStateHelper,
   ServiceKeyMaker,
+  ServiceConfigCommandManager,
+  CommandResolverImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { MemoryRouter } from "react-router-dom";
@@ -35,6 +39,7 @@ function setup() {
     Service.a.environment
   );
   const serviceConfigFetcher = new DeferredFetcher<"ServiceConfig">();
+  const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
   const serviceConfigQueryManager = new ServiceConfigQueryManager(
     serviceConfigFetcher,
     new ServiceConfigStateHelper(store),
@@ -43,13 +48,23 @@ function setup() {
     Service.a.environment
   );
 
+  const serviceConfigCommandManager = new ServiceConfigCommandManager(
+    new InstantPoster<"ServiceConfig">(
+      RemoteData.success({ data: Service.a.config })
+    ),
+    serviceConfigStateHelper
+  );
+
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([servicesHelper, serviceConfigQueryManager])
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([serviceConfigCommandManager])
   );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver }}>
+      <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
         <StoreProvider store={store}>
           <ServiceCatalog environment={Service.a.environment} />
         </StoreProvider>

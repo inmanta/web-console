@@ -1,4 +1,5 @@
 export * from "./AttributesTable";
+export * from "./BooleanSwitch";
 export * from "./ButtonWithCursorHandling";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";

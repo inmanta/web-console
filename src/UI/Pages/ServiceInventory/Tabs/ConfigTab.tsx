@@ -4,6 +4,7 @@ import {
   EmptyView,
   ErrorView,
   LoadingView,
+  DefaultSwitch,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -73,6 +74,7 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
                 onChange={(option, value) =>
                   trigger({ kind: "UPDATE", option, value })
                 }
+                Switch={DefaultSwitch}
               />
             </CardBody>
           </Card>

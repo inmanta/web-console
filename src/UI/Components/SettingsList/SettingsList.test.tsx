@@ -2,6 +2,7 @@ import React from "react";
 import { Setting } from "@/Core";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { SettingsList } from "./SettingsList";
+import { BooleanSwitch } from "@/UI/Components";
 
 test("ConfigView shows setting as toggle correctly", () => {
   const settings: Setting[] = [
@@ -9,7 +10,9 @@ test("ConfigView shows setting as toggle correctly", () => {
   ];
   const cb = jest.fn();
 
-  render(<SettingsList settings={settings} onChange={cb} />);
+  render(
+    <SettingsList settings={settings} onChange={cb} Switch={BooleanSwitch} />
+  );
 
   const toggle = screen.getByRole("checkbox", { name: "test-False" });
 
@@ -22,7 +25,9 @@ test("ConfigView handles click on toggle correctly", () => {
   ];
   const cb = jest.fn();
 
-  render(<SettingsList settings={settings} onChange={cb} />);
+  render(
+    <SettingsList settings={settings} onChange={cb} Switch={BooleanSwitch} />
+  );
 
   const toggle = screen.getByRole("checkbox", { name: "test-False" });
 

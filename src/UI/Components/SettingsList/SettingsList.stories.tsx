@@ -1,4 +1,5 @@
 import React from "react";
+import { DefaultSwitch } from "@/UI/Components";
 import { SettingsList } from "./SettingsList";
 
 export default {
@@ -19,5 +20,6 @@ export const Default: React.FC = () => (
     onChange={(name, value) => {
       console.log({ name, value });
     }}
+    Switch={DefaultSwitch}
   />
 );
