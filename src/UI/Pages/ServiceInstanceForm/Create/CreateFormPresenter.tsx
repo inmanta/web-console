@@ -1,14 +1,15 @@
-import { AttributeModel } from "@/Core";
+import { AttributeModel, FormAttributeResult } from "@/Core";
 import React from "react";
 import {
-  AttributeConverter,
-  FormAttributeResult,
   FormInputAttribute,
   ServiceInstanceForm,
 } from "@/UI/Pages/ServiceInstanceForm";
+import { AttributeInputConverter } from "@/UI/Data";
 
 export class CreateFormPresenter {
-  constructor(private readonly attributeConverter: AttributeConverter) {}
+  constructor(
+    private readonly attributeInputConverter: AttributeInputConverter
+  ) {}
   presentForm(
     attributes: AttributeModel[],
     onSubmit: (attributes: FormAttributeResult[]) => void,
@@ -34,8 +35,8 @@ export class CreateFormPresenter {
   }
   convertToFormInputs(attributeModels: AttributeModel[]): FormInputAttribute[] {
     return attributeModels.map((attributeModel) => {
-      const type = this.attributeConverter.getInputType(attributeModel);
-      const defaultValue = this.attributeConverter.getFormDefaultValue(
+      const type = this.attributeInputConverter.getInputType(attributeModel);
+      const defaultValue = this.attributeInputConverter.getFormDefaultValue(
         type,
         attributeModel.default_value_set,
         attributeModel.default_value

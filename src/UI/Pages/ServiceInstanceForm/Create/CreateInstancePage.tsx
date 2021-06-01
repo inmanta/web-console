@@ -1,6 +1,7 @@
-import { RemoteData, ServiceModel } from "@/Core";
+import { FormAttributeResult, RemoteData, ServiceModel } from "@/Core";
 import {
   Alert,
+  AlertActionCloseButton,
   AlertGroup,
   Button,
   EmptyState,
@@ -12,7 +13,6 @@ import {
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import React, { useCallback, useContext, useState } from "react";
-import { useKeycloak } from "react-keycloak";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
@@ -86,13 +86,7 @@ const PageWrapper: React.FC<{ "aria-label": string }> = ({
 export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
   serviceEntity,
 }) => {
-  const shouldUseAuth =
-    process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
-  let keycloak;
-  if (shouldUseAuth) {
-    // The value will be always true or always false during one session
-    [keycloak] = useKeycloak();
-  }
+  const { commandResolver } = useContext(DependencyContext);
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
   const pathParts = location.pathname.split("/");
@@ -104,6 +98,20 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
     [history]
   );
 
+  const trigger = commandResolver.getTrigger<"CreateInstance">({
+    kind: "CreateInstance",
+    service_entity: serviceEntity.name,
+  });
+
+  const onSubmit = async (attributes: FormAttributeResult[]) => {
+    const result = await trigger(attributes);
+    if (result.kind === "Left") {
+      setErrorMessage(result.value);
+    } else {
+      handleRedirect();
+    }
+  };
+
   return (
     <>
       {errorMessage && (
@@ -111,14 +119,16 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
           <Alert
             variant={"danger"}
             title={errorMessage}
-            actionClose={() => setErrorMessage("")}
+            actionClose={
+              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
+            }
           />
         </AlertGroup>
       )}
       <CreateFormCard
         serviceEntity={serviceEntity}
         handleRedirect={handleRedirect}
-        keycloak={keycloak}
+        onSubmit={onSubmit}
       />
     </>
   );

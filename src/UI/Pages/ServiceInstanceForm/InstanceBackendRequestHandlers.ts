@@ -1,12 +1,11 @@
-import { ServiceModel } from "@/Core";
+import { FormAttributeResult } from "@/Core";
 import {
   fetchInmantaApi,
   IRequestParams,
 } from "@/UI/App/utils/fetchInmantaApi";
 import { KeycloakInstance } from "keycloak-js";
-import { FormAttributeResult } from ".";
 import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
-import { AttributeConverter } from "./AttributeConverter";
+import { AttributeResultConverterImpl, getCurrentAttributes } from "@/UI/Data";
 
 export async function submitUpdate(
   instance: ServiceInstanceForAction,
@@ -15,7 +14,7 @@ export async function submitUpdate(
   dispatch: (data) => void,
   keycloak?: KeycloakInstance
 ): Promise<void> {
-  const attributeConverter = new AttributeConverter();
+  const attributeConverter = new AttributeResultConverterImpl();
   const inventoryUrl = `/lsm/v1/service_inventory/${instance.service_entity}`;
   const url = `${inventoryUrl}/${instance.id}?current_version=${instance.version}`;
   const requestParams: IRequestParams = {
@@ -31,41 +30,12 @@ export async function submitUpdate(
   const parsedAttributes =
     attributeConverter.parseAttributesToCorrectTypes(attributeValue);
   // Get the correct attribute set
-  const currentAttributes = attributeConverter.getCurrentAttributes(instance);
+  const currentAttributes = getCurrentAttributes(instance);
   // Only the difference should be sent
   const updatedAttributes = attributeConverter.calculateDiff(
     parsedAttributes,
     currentAttributes
   );
   requestParams.data = { attributes: updatedAttributes };
-  await fetchInmantaApi(requestParams);
-}
-
-export async function submitCreate(
-  service: ServiceModel,
-  attributes: FormAttributeResult[],
-  setErrorMessage: (message: string) => void,
-  dispatch: () => void,
-  keycloak?: KeycloakInstance
-): Promise<void> {
-  const attributeConverter = new AttributeConverter();
-  const url = `/lsm/v1/service_inventory/${service.name}`;
-  const requestParams: IRequestParams = {
-    urlEndpoint: url,
-    isEnvironmentIdRequired: true,
-    environmentId: service.environment,
-    method: "POST",
-    setErrorMessage: setErrorMessage,
-    dispatch: dispatch,
-    keycloak: keycloak,
-  };
-  const parsedAttributes =
-    attributeConverter.parseAttributesToCorrectTypes(attributes);
-  // Don't set optional attributes explicitly to null on creation
-  const attributesWithoutNulls = Object.entries(parsedAttributes).reduce(
-    (obj, [k, v]) => (v === null ? obj : ((obj[k] = v), obj)),
-    {}
-  );
-  requestParams.data = { attributes: attributesWithoutNulls };
   await fetchInmantaApi(requestParams);
 }

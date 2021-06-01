@@ -1,6 +1,14 @@
 import { CommandManager, ManagerResolver } from "@/Core";
-import { BaseApiHelper, InstanceConfigPoster } from "@/Infra";
-import { InstanceConfigCommandManager } from "@/UI/Data";
+import {
+  BaseApiHelper,
+  CreateInstancePoster,
+  InstanceConfigPoster,
+} from "@/Infra";
+import {
+  AttributeResultConverterImpl,
+  CreateInstanceCommandManager,
+  InstanceConfigCommandManager,
+} from "@/UI/Data";
 import { Store } from "@/UI/Store";
 import { InstanceConfigStateHelper } from "@/UI/Data";
 
@@ -28,6 +36,11 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new InstanceConfigStateHelper(this.store)
     );
 
-    return [instanceConfigCommandManager];
+    const createInstanceCommandManager = new CreateInstanceCommandManager(
+      new CreateInstancePoster(this.baseApiHelper, environment),
+      new AttributeResultConverterImpl()
+    );
+
+    return [instanceConfigCommandManager, createInstanceCommandManager];
   }
 }

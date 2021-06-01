@@ -1,16 +1,24 @@
-import { AttributeModel, InstanceAttributeModel } from "@/Core";
+import {
+  AttributeModel,
+  FormAttributeResult,
+  InstanceAttributeModel,
+} from "@/Core";
 import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
 import React from "react";
 import {
-  FormAttributeResult,
   FormInputAttribute,
   ServiceInstanceForm,
-  AttributeConverter,
-  toOptionalBoolean,
 } from "@/UI/Pages/ServiceInstanceForm";
+import {
+  AttributeInputConverter,
+  getCurrentAttributes,
+  toOptionalBoolean,
+} from "@/UI/Data";
 
 export class EditFormPresenter {
-  constructor(private readonly attributeConverter: AttributeConverter) {}
+  constructor(
+    private readonly attributeInputConverter: AttributeInputConverter
+  ) {}
 
   presentForm(
     instance: ServiceInstanceForAction,
@@ -44,8 +52,7 @@ export class EditFormPresenter {
     attributeModels: AttributeModel[]
   ): FormInputAttribute[] {
     const editableAttributes = this.getEditableAttributes(attributeModels);
-    const currentAttributes =
-      this.attributeConverter.getCurrentAttributes(instance);
+    const currentAttributes = getCurrentAttributes(instance);
     return this.convertToEditFormInputs(currentAttributes, editableAttributes);
   }
 
@@ -74,7 +81,7 @@ export class EditFormPresenter {
     attributeModels: AttributeModel[]
   ): FormInputAttribute[] {
     return attributeModels.map((attributeModel) => {
-      const type = this.attributeConverter.getInputType(attributeModel);
+      const type = this.attributeInputConverter.getInputType(attributeModel);
       const defaultValue = this.getCurrentAttributeValue(
         currentAttributes,
         attributeModel
