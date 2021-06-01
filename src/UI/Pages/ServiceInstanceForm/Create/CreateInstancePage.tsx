@@ -104,7 +104,7 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
   });
 
   const onSubmit = async (attributes: FormAttributeResult[]) => {
-    const result = await trigger({ kind: "SUBMIT", attributes });
+    const result = await trigger(attributes);
     if (result.kind === "Left") {
       setErrorMessage(result.value);
     } else {

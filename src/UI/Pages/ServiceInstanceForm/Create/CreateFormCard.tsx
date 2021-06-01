@@ -3,7 +3,7 @@ import { Card, CardBody, CardHeader } from "@patternfly/react-core";
 import { FormAttributeResult, ServiceModel } from "@/Core";
 import { words } from "@/UI";
 import { CreateFormPresenter } from "./CreateFormPresenter";
-import { AttributeInputConverter } from "@/UI/Data";
+import { AttributeInputConverterImpl } from "@/UI/Data";
 
 interface Props {
   serviceEntity: ServiceModel;
@@ -16,7 +16,9 @@ export const CreateFormCard: React.FC<Props> = ({
   handleRedirect,
   onSubmit,
 }) => {
-  const formPresenter = new CreateFormPresenter(new AttributeInputConverter());
+  const formPresenter = new CreateFormPresenter(
+    new AttributeInputConverterImpl()
+  );
 
   return (
     <Card>

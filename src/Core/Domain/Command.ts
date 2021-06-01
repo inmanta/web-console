@@ -5,7 +5,7 @@ import {
   VersionedServiceInstanceIdentifier,
 } from "./ServiceInstanceModel";
 import { Config } from "./Config";
-import { Either } from "../Language";
+import { Either } from "@/Core/Language";
 
 type Command = InstanceConfigCommand | CreateInstanceCommand;
 export type Type = Command;
@@ -40,12 +40,9 @@ interface CreateInstanceManifest {
   apiData: { data: ServiceInstanceModel };
   body: { attributes: InstanceAttributeModel };
   command: CreateInstanceCommand;
-  trigger: (payload: {
-    kind: "SUBMIT";
-    attributes: FormAttributeResult[];
-  }) => Promise<
-    Either.Type<Error<"CreateInstance">, ApiData<"CreateInstance">>
-  >;
+  trigger: (
+    attributes: FormAttributeResult[]
+  ) => Promise<Either.Type<Error<"CreateInstance">, ApiData<"CreateInstance">>>;
 }
 
 /**

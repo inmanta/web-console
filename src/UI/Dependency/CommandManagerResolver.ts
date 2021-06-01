@@ -5,7 +5,7 @@ import {
   InstanceConfigPoster,
 } from "@/Infra";
 import {
-  AttributeResultConverter,
+  AttributeResultConverterImpl,
   CreateInstanceCommandManager,
   InstanceConfigCommandManager,
 } from "@/UI/Data";
@@ -38,7 +38,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
 
     const createInstanceCommandManager = new CreateInstanceCommandManager(
       new CreateInstancePoster(this.baseApiHelper, environment),
-      new AttributeResultConverter()
+      new AttributeResultConverterImpl()
     );
 
     return [instanceConfigCommandManager, createInstanceCommandManager];

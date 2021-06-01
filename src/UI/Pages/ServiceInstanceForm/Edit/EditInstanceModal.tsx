@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { submitUpdate } from "..";
 import { EditFormPresenter } from "./EditFormPresenter";
 import { FormAttributeResult } from "@/Core";
-import { AttributeInputConverter } from "@/UI/Data";
+import { AttributeInputConverterImpl } from "@/UI/Data";
 
 interface Props {
   isDisabled?: boolean;
@@ -26,7 +26,7 @@ export const EditInstanceModal: React.FC<Props> = ({
     setIsOpen(!isOpen);
   };
   const editFormPresenter = new EditFormPresenter(
-    new AttributeInputConverter()
+    new AttributeInputConverterImpl()
   );
   return (
     <>

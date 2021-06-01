@@ -1,12 +1,12 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import {
-  AttributeInputConverter,
-  AttributeResultConverter,
+  AttributeInputConverterImpl,
+  AttributeResultConverterImpl,
   getCurrentAttributes,
-} from "./AttributeConverter";
+} from "./AttributeConverterImpl";
 
 describe("AttributeResultConverter ", () => {
-  const attributeResultConverter = new AttributeResultConverter();
+  const attributeResultConverter = new AttributeResultConverterImpl();
   describe("Extracts updated values correctly", () => {
     it("With a single difference", () => {
       const originalAttributes = { name: "inmanta", bool_param: false };
@@ -156,7 +156,7 @@ describe("AttributeResultConverter ", () => {
 });
 
 describe("AttributeInputConverter", () => {
-  const attributeInputConverter = new AttributeInputConverter();
+  const attributeInputConverter = new AttributeInputConverterImpl();
   describe("Chooses the correct attribute set", () => {
     it("When candidate set is null", () => {
       const instance = {

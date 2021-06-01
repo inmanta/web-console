@@ -1,19 +1,19 @@
 import { BaseApiHelper } from "@/Infra";
 import { CreateInstancePoster } from "@/Infra/Api/CreateInstancePoster";
-import { AttributeResultConverter } from "../Common";
+import { AttributeResultConverterImpl } from "../Common";
 import { CreateInstanceCommandManager } from "./CommandManager";
 
 describe("CreateInstanceManager", () => {
   const commandManager = new CreateInstanceCommandManager(
     new CreateInstancePoster(new BaseApiHelper(), "env1"),
-    new AttributeResultConverter()
+    new AttributeResultConverterImpl()
   );
   it("Calls post on instance url when submitted", () => {
     const submit = commandManager.getTrigger({
       kind: "CreateInstance",
       service_entity: "service_entity",
     });
-    submit({ kind: "SUBMIT", attributes: [] });
+    submit([]);
 
     expect(fetchMock.mock.calls).toHaveLength(1);
     expect(fetchMock.mock.calls[0][1]?.method).toEqual("POST");
@@ -28,7 +28,7 @@ describe("CreateInstanceManager", () => {
       kind: "CreateInstance",
       service_entity: "service_entity",
     });
-    submit({ kind: "SUBMIT", attributes });
+    submit(attributes);
 
     expect(fetchMock.mock.calls).toHaveLength(1);
     const attributesFromBody = JSON.parse(

@@ -5,7 +5,7 @@ import {
 } from "@/UI/App/utils/fetchInmantaApi";
 import { KeycloakInstance } from "keycloak-js";
 import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
-import { AttributeResultConverter, getCurrentAttributes } from "@/UI/Data";
+import { AttributeResultConverterImpl, getCurrentAttributes } from "@/UI/Data";
 
 export async function submitUpdate(
   instance: ServiceInstanceForAction,
@@ -14,7 +14,7 @@ export async function submitUpdate(
   dispatch: (data) => void,
   keycloak?: KeycloakInstance
 ): Promise<void> {
-  const attributeConverter = new AttributeResultConverter();
+  const attributeConverter = new AttributeResultConverterImpl();
   const inventoryUrl = `/lsm/v1/service_inventory/${instance.service_entity}`;
   const url = `${inventoryUrl}/${instance.id}?current_version=${instance.version}`;
   const requestParams: IRequestParams = {

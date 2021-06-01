@@ -20,11 +20,8 @@ export class CreateInstanceCommandManager implements CommandManager {
   getTrigger(
     command: Command.SubCommand<"CreateInstance">
   ): Command.Trigger<"CreateInstance"> {
-    return async (payload) => {
-      switch (payload.kind) {
-        case "SUBMIT":
-          return this.submit(command, payload.attributes);
-      }
+    return async (attributes) => {
+      return this.submit(command, attributes);
     };
   }
 
