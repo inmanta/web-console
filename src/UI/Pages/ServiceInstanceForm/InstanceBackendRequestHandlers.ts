@@ -1,4 +1,4 @@
-import { FormAttributeResult, ServiceModel } from "@/Core";
+import { FormAttributeResult } from "@/Core";
 import {
   fetchInmantaApi,
   IRequestParams,
@@ -37,34 +37,5 @@ export async function submitUpdate(
     currentAttributes
   );
   requestParams.data = { attributes: updatedAttributes };
-  await fetchInmantaApi(requestParams);
-}
-
-export async function submitCreate(
-  service: ServiceModel,
-  attributes: FormAttributeResult[],
-  setErrorMessage: (message: string) => void,
-  dispatch: () => void,
-  keycloak?: KeycloakInstance
-): Promise<void> {
-  const attributeConverter = new AttributeResultConverter();
-  const url = `/lsm/v1/service_inventory/${service.name}`;
-  const requestParams: IRequestParams = {
-    urlEndpoint: url,
-    isEnvironmentIdRequired: true,
-    environmentId: service.environment,
-    method: "POST",
-    setErrorMessage: setErrorMessage,
-    dispatch: dispatch,
-    keycloak: keycloak,
-  };
-  const parsedAttributes =
-    attributeConverter.parseAttributesToCorrectTypes(attributes);
-  // Don't set optional attributes explicitly to null on creation
-  const attributesWithoutNulls = Object.entries(parsedAttributes).reduce(
-    (obj, [k, v]) => (v === null ? obj : ((obj[k] = v), obj)),
-    {}
-  );
-  requestParams.data = { attributes: attributesWithoutNulls };
   await fetchInmantaApi(requestParams);
 }
