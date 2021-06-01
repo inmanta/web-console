@@ -15,7 +15,12 @@ export const CatalogTabs: React.FunctionComponent<{
   };
 
   return (
-    <Tabs title="" activeKey={activeTabKey} onSelect={handleTabClick}>
+    <Tabs
+      title=""
+      activeKey={activeTabKey}
+      onSelect={handleTabClick}
+      mountOnEnter
+    >
       <Tab eventKey={0} title="Attributes">
         <AttributeTable attributes={props.service.attributes} />
       </Tab>

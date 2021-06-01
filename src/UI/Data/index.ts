@@ -3,6 +3,7 @@ export * from "./InstanceConfig";
 export * from "./InstanceLogs";
 export * from "./Resources";
 export * from "./Service";
+export * from "./ServiceConfig";
 export * from "./ServiceInstances";
 export * from "./Services";
 export * from "./CommandResolverImpl";

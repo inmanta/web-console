@@ -1,5 +1,3 @@
-import { ServiceCatalog } from "@/UI/Pages/ServiceCatalog";
-
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
@@ -9,12 +7,17 @@ import {
   Service,
   StaticScheduler,
 } from "@/Test";
+import { ServiceCatalog } from "@/UI/Pages";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   ServicesQueryManager,
   ServicesStateHelper,
+  ServiceConfigQueryManager,
+  ServiceConfigStateHelper,
+  ServiceStateHelper,
+  ServiceKeyMaker,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { MemoryRouter } from "react-router-dom";
@@ -31,9 +34,17 @@ function setup() {
     scheduler,
     Service.a.environment
   );
+  const serviceConfigFetcher = new DeferredFetcher<"ServiceConfig">();
+  const serviceConfigQueryManager = new ServiceConfigQueryManager(
+    serviceConfigFetcher,
+    new ServiceConfigStateHelper(store),
+    new ServiceStateHelper(store, new ServiceKeyMaker(), Service.a.environment),
+    new DeferredFetcher<"Service">(),
+    Service.a.environment
+  );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([servicesHelper])
+    new DynamicQueryManagerResolver([servicesHelper, serviceConfigQueryManager])
   );
 
   const component = (
@@ -49,6 +60,7 @@ function setup() {
   return {
     component,
     servicesFetcher,
+    serviceConfigFetcher,
     scheduler,
   };
 }
@@ -67,11 +79,11 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
   const configButton = screen.getByRole("button", { name: "Config" });
   userEvent.click(configButton);
 
-  expect(screen.getByRole("generic", { name: "ServiceConfig" })).toBeVisible();
+  expect(screen.getByRole("article", { name: "ServiceConfig" })).toBeVisible();
 });
 
-test.skip("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
-  const { component, servicesFetcher } = setup();
+test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
+  const { component, servicesFetcher, serviceConfigFetcher } = setup();
   render(component);
 
   servicesFetcher.resolve(Either.right({ data: [Service.a] }));
@@ -84,5 +96,9 @@ test.skip("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsLis
   const configButton = screen.getByRole("button", { name: "Config" });
   userEvent.click(configButton);
 
-  expect(screen.getByRole("generic", { name: "SettingsList" })).toBeVisible();
+  serviceConfigFetcher.resolve(Either.right({ data: {} }));
+
+  expect(
+    await screen.findByRole("generic", { name: "SettingsList" })
+  ).toBeVisible();
 });

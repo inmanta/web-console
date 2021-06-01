@@ -19,6 +19,7 @@ type Query =
   | ServicesQuery
   | ServiceQuery
   | ServiceInstancesQuery
+  | ServiceConfigQuery
   | ResourcesQuery
   | InstanceEventsQuery
   | InstanceLogsQuery
@@ -98,6 +99,18 @@ interface ServiceInstancesManifest {
     metadata: Pagination.Metadata;
   };
   query: ServiceInstancesQuery;
+}
+
+export interface ServiceConfigQuery extends ServiceIdentifier {
+  kind: "ServiceConfig";
+}
+
+interface ServiceConfigManifest {
+  error: string;
+  apiResponse: { data: Config };
+  data: Config;
+  usedData: Setting[];
+  query: ServiceConfigQuery;
 }
 
 /**
@@ -197,6 +210,7 @@ interface Manifest {
   Services: ServicesManifest;
   Service: ServiceManifest;
   ServiceInstances: ServiceInstancesManifest;
+  ServiceConfig: ServiceConfigManifest;
   Resources: ResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;

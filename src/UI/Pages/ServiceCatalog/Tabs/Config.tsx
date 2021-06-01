@@ -1,9 +1,47 @@
-import React from "react";
+import React, { useContext } from "react";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  SettingsList,
+} from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { RemoteData } from "@/Core";
+import { words } from "@/UI/words";
+import { Card, CardBody } from "@patternfly/react-core";
 
 interface Props {
   serviceName: string;
 }
 
-export const Config: React.FC<Props> = ({ serviceName }) => (
-  <div aria-label="ServiceConfig">{serviceName}</div>
-);
+export const Config: React.FC<Props> = ({ serviceName }) => {
+  const { queryResolver } = useContext(DependencyContext);
+  const [data, retry] = queryResolver.useOneTime<"ServiceConfig">({
+    kind: "ServiceConfig",
+    name: serviceName,
+  });
+
+  return (
+    <Card aria-label="ServiceConfig">
+      <CardBody>
+        {RemoteData.fold(
+          {
+            notAsked: () => null,
+            loading: () => <LoadingView />,
+            failed: (error) => <ErrorView message={error} retry={retry} />,
+            success: (settings) =>
+              settings.length <= 0 ? (
+                <EmptyView message={words("config.empty")} />
+              ) : (
+                <SettingsList
+                  settings={settings}
+                  onChange={(option, value) => console.log({ option, value })}
+                />
+              ),
+          },
+          data
+        )}
+      </CardBody>
+    </Card>
+  );
+};

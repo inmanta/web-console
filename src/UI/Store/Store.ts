@@ -12,25 +12,28 @@ import {
 } from "./ServiceInstancesSlice";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
+import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";
 
 export interface StoreModel {
+  projects: ProjectsSlice;
+  services: ServicesSlice;
+  serviceInstances: ServiceInstancesSlice;
+  serviceConfig: ServiceConfigSlice;
   resources: ResourcesSlice;
   events: EventsSlice;
-  services: ServicesSlice;
   instanceLogs: InstanceLogsSlice;
   instanceConfig: InstanceConfigSlice;
-  projects: ProjectsSlice;
-  serviceInstances: ServiceInstancesSlice;
   diagnostics: DiagnosticsSlice;
 }
 
 export const storeModel: StoreModel = {
+  projects: projectsSlice,
+  services: servicesSlice,
+  serviceInstances: serviceInstancesSlice,
+  serviceConfig: serviceConfigSlice,
   instanceLogs: instanceLogsSlice,
   instanceConfig: instanceConfigSlice,
-  projects: projectsSlice,
   resources: resourcesSlice,
   events: eventsSlice,
-  serviceInstances: serviceInstancesSlice,
-  services: servicesSlice,
   diagnostics: diagnosticsSlice,
 };

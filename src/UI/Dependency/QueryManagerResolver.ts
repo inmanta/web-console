@@ -20,6 +20,8 @@ import {
   InstanceConfigStateHelper,
   DiagnosticsStateHelper,
   DiagnosticsQueryManager,
+  ServiceConfigQueryManager,
+  ServiceConfigStateHelper,
 } from "@/UI/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -55,6 +57,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private getEnvDependentManagers(environment: string): QueryManager[] {
     const serviceKeyMaker = new ServiceKeyMaker();
     const scheduler = new SchedulerImpl(5000);
+    const serviceStateHelper = new ServiceStateHelper(
+      this.store,
+      serviceKeyMaker,
+      environment
+    );
+    const serviceFetcher = new FetcherImpl<"Service">(this.baseApiHelper);
 
     return [
       new ServicesQueryManager(
@@ -64,8 +72,8 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new ServiceQueryManager(
-        new FetcherImpl<"Service">(this.baseApiHelper),
-        new ServiceStateHelper(this.store, serviceKeyMaker, environment),
+        serviceFetcher,
+        serviceStateHelper,
         scheduler,
         serviceKeyMaker,
         environment
@@ -74,6 +82,13 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new FetcherImpl<"ServiceInstances">(this.baseApiHelper),
         new ServiceInstancesStateHelper(this.store, environment),
         scheduler,
+        environment
+      ),
+      new ServiceConfigQueryManager(
+        new FetcherImpl<"ServiceConfig">(this.baseApiHelper),
+        new ServiceConfigStateHelper(this.store),
+        serviceStateHelper,
+        serviceFetcher,
         environment
       ),
       new ResourcesQueryManager(
