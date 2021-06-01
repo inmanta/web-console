@@ -44,11 +44,8 @@ export class CreateInstanceCommandManager implements CommandManager {
       (obj, [k, v]) => (v === null ? obj : ((obj[k] = v), obj)),
       {}
     );
-    return await this.poster
-      .post(command, { attributes: attributesWithoutNulls })
-      .then((res) => {
-        console.log(res);
-        return res;
-      });
+    return await this.poster.post(command, {
+      attributes: attributesWithoutNulls,
+    });
   }
 }
