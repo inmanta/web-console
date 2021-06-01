@@ -108,7 +108,6 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
     if (result.kind === "Left") {
       setErrorMessage(result.value);
     } else {
-      console.log("success");
       handleRedirect();
     }
   };
