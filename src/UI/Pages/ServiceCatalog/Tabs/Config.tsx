@@ -15,8 +15,12 @@ interface Props {
 }
 
 export const Config: React.FC<Props> = ({ serviceName }) => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { queryResolver, commandResolver } = useContext(DependencyContext);
   const [data, retry] = queryResolver.useOneTime<"ServiceConfig">({
+    kind: "ServiceConfig",
+    name: serviceName,
+  });
+  const update = commandResolver.getTrigger<"ServiceConfig">({
     kind: "ServiceConfig",
     name: serviceName,
   });
@@ -33,10 +37,7 @@ export const Config: React.FC<Props> = ({ serviceName }) => {
               settings.length <= 0 ? (
                 <EmptyView message={words("config.empty")} />
               ) : (
-                <SettingsList
-                  settings={settings}
-                  onChange={(option, value) => console.log({ option, value })}
-                />
+                <SettingsList settings={settings} onChange={update} />
               ),
           },
           data
