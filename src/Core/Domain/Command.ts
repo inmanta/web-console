@@ -45,7 +45,7 @@ interface CreateInstanceManifest {
     attributes: FormAttributeResult[];
   }) => Promise<
     Either.Type<Error<"CreateInstance">, ApiData<"CreateInstance">>
-  >; // TODO
+  >;
 }
 
 /**
