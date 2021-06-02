@@ -18,10 +18,12 @@ import {
   InstanceLogsStateHelper,
   InstanceConfigQueryManager,
   InstanceConfigStateHelper,
+  InstanceConfigFinalizer,
   DiagnosticsStateHelper,
   DiagnosticsQueryManager,
   ServiceConfigQueryManager,
   ServiceConfigStateHelper,
+  ServiceConfigFinalizer,
 } from "@/UI/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -87,8 +89,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new ServiceConfigQueryManager(
         new FetcherImpl<"ServiceConfig">(this.baseApiHelper),
         new ServiceConfigStateHelper(this.store),
-        serviceStateHelper,
-        serviceFetcher,
+        new ServiceConfigFinalizer(serviceStateHelper),
         environment
       ),
       new ResourcesQueryManager(
@@ -111,8 +112,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new InstanceConfigQueryManager(
         new FetcherImpl<"InstanceConfig">(this.baseApiHelper),
         new InstanceConfigStateHelper(this.store),
-        new ServiceStateHelper(this.store, serviceKeyMaker, environment),
-        new FetcherImpl<"Service">(this.baseApiHelper),
+        new InstanceConfigFinalizer(serviceStateHelper),
         environment
       ),
       new DiagnosticsQueryManager(

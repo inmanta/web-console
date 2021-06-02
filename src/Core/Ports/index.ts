@@ -1,6 +1,7 @@
 export * from "./ApiHelper";
 export * from "./CommandManager";
 export * from "./CommandResolver";
+export * from "./ConfigFinalizer";
 export * from "./Fetcher";
 export * from "./KeyMaker";
 export * from "./ManagerResolver";

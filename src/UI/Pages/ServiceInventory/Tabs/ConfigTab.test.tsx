@@ -8,6 +8,7 @@ import {
   InstanceConfigStateHelper,
   ServiceKeyMaker,
   ServiceStateHelper,
+  InstanceConfigFinalizer,
 } from "@/UI/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
@@ -26,6 +27,11 @@ import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
 function setup() {
   const storeInstance = getStoreInstance();
   const serviceKeyMaker = new ServiceKeyMaker();
+  storeInstance.dispatch.services.setSingle({
+    environment: Service.a.environment,
+    query: { kind: "Service", name: Service.a.name },
+    data: RemoteData.success(Service.a),
+  });
 
   const instanceConfigStateHelper = new InstanceConfigStateHelper(
     storeInstance
@@ -43,15 +49,13 @@ function setup() {
       data: { data: { auto_creating: false } },
     }),
     instanceConfigStateHelper,
-    new ServiceStateHelper(
-      storeInstance,
-      serviceKeyMaker,
-      Service.a.environment
+    new InstanceConfigFinalizer(
+      new ServiceStateHelper(
+        storeInstance,
+        serviceKeyMaker,
+        Service.a.environment
+      )
     ),
-    new InstantFetcher<"Service">({
-      kind: "Success",
-      data: { data: Service.a },
-    }),
     Service.a.environment
   );
 

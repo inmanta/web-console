@@ -21,6 +21,7 @@ import {
   ServiceStateHelper,
   ServiceKeyMaker,
   ServiceConfigCommandManager,
+  ServiceConfigFinalizer,
   CommandResolverImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
@@ -43,8 +44,13 @@ function setup() {
   const serviceConfigQueryManager = new ServiceConfigQueryManager(
     serviceConfigFetcher,
     new ServiceConfigStateHelper(store),
-    new ServiceStateHelper(store, new ServiceKeyMaker(), Service.a.environment),
-    new DeferredFetcher<"Service">(),
+    new ServiceConfigFinalizer(
+      new ServiceStateHelper(
+        store,
+        new ServiceKeyMaker(),
+        Service.a.environment
+      )
+    ),
     Service.a.environment
   );
 
