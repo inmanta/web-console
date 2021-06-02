@@ -38,12 +38,13 @@ export class BaseApiHelper implements ApiHelper {
   }
 
   private async execute<Data>(
+    transform: (response: Response) => Promise<Data>,
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<string, Data>> {
     try {
       const response = await fetch(...params);
       if (response.ok) {
-        const data = await response.json();
+        const data = await transform(response);
         return Either.right(data);
       }
       return Either.left(
@@ -55,29 +56,23 @@ export class BaseApiHelper implements ApiHelper {
     }
   }
 
+  private async executeJson<Data>(
+    ...params: Parameters<typeof fetch>
+  ): Promise<Either.Type<string, Data>> {
+    return this.execute<Data>((response) => response.json(), ...params);
+  }
+
   private async executeEmptyResponse(
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<string, string>> {
-    try {
-      const response = await fetch(...params);
-      if (response.ok) {
-        const textData = await response.text();
-        return Either.right(textData);
-      }
-      return Either.left(
-        this.formatError((await response.json()).message, response)
-      );
-    } catch (error) {
-      if (error.message) return Either.left(error.message);
-      return Either.left(`Error: ${error}`);
-    }
+    return this.execute((response) => response.text(), ...params);
   }
 
   async get<Data>(
     url: string,
     environment: string
   ): Promise<Either.Type<string, Data>> {
-    return this.execute<Data>(url, {
+    return this.executeJson<Data>(url, {
       headers: this.getHeaders(environment),
     });
   }
@@ -85,7 +80,7 @@ export class BaseApiHelper implements ApiHelper {
   async getWithoutEnvironment<Data>(
     url: string
   ): Promise<Either.Type<string, Data>> {
-    return this.execute<Data>(url, {
+    return this.executeJson<Data>(url, {
       headers: this.getHeaders(),
     });
   }
@@ -95,7 +90,7 @@ export class BaseApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Either.Type<string, Data>> {
-    return this.execute<Data>(url, {
+    return this.executeJson<Data>(url, {
       headers: {
         "Content-Type": "application/json",
         ...this.getHeaders(environment),

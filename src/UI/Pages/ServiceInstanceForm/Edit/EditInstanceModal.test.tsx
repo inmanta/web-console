@@ -14,18 +14,6 @@ import { DynamicCommandManagerResolver } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 
 function setup() {
-  const commandManager = new UpdateInstanceCommandManager(
-    new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
-    new AttributeResultConverterImpl()
-  );
-  return {
-    commandResolver: new CommandResolverImpl(
-      new DynamicCommandManagerResolver([commandManager])
-    ),
-  };
-}
-
-describe("EditInstanceModal", () => {
   const instance = {
     id: "id1",
     state: "up",
@@ -48,39 +36,36 @@ describe("EditInstanceModal", () => {
       default_value: null,
     },
   ];
+  const commandManager = new UpdateInstanceCommandManager(
+    new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+    new AttributeResultConverterImpl()
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([commandManager])
+  );
+  return {
+    component: (
+      <DependencyProvider dependencies={{ commandResolver }}>
+        <EditInstanceModal instance={instance} attributeModels={attributes} />
+      </DependencyProvider>
+    ),
+  };
+}
 
-  it("Shows edit modal", async () => {
-    const { commandResolver } = setup();
-    render(
-      <DependencyProvider dependencies={{ commandResolver }}>
-        <EditInstanceModal instance={instance} attributeModels={attributes} />
-      </DependencyProvider>
-    );
-    expect(await screen.findByText("Edit")).toBeVisible();
-  });
-  it("Shows form when clicking on modal button", async () => {
-    const { commandResolver } = setup();
-    render(
-      <DependencyProvider dependencies={{ commandResolver }}>
-        <EditInstanceModal instance={instance} attributeModels={attributes} />
-      </DependencyProvider>
-    );
-    const modalButton = await screen.findByText("Edit");
-    userEvent.click(modalButton);
-    expect(await screen.findByText("Confirm")).toBeVisible();
-    expect(await screen.findByText("Cancel")).toBeVisible();
-  });
-  it("Closes modal when cancelled", async () => {
-    const { commandResolver } = setup();
-    render(
-      <DependencyProvider dependencies={{ commandResolver }}>
-        <EditInstanceModal instance={instance} attributeModels={attributes} />
-      </DependencyProvider>
-    );
-    const modalButton = await screen.findByText("Edit");
-    userEvent.click(modalButton);
-    const noButton = await screen.findByText("Cancel");
-    userEvent.click(noButton);
-    expect(screen.queryByText("Confirm")).not.toBeInTheDocument();
-  });
+it("EditInstanceModal shows form when clicking on modal button", async () => {
+  const { component } = setup();
+  render(component);
+  const modalButton = await screen.findByText("Edit");
+  userEvent.click(modalButton);
+  expect(await screen.findByText("Confirm")).toBeVisible();
+  expect(await screen.findByText("Cancel")).toBeVisible();
+});
+it("EditInstanceModal closes when cancelled", async () => {
+  const { component } = setup();
+  render(component);
+  const modalButton = await screen.findByText("Edit");
+  userEvent.click(modalButton);
+  const noButton = await screen.findByText("Cancel");
+  userEvent.click(noButton);
+  expect(screen.queryByText("Confirm")).not.toBeInTheDocument();
 });
