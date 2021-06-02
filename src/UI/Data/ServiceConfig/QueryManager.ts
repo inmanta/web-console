@@ -3,7 +3,6 @@ import {
   Query,
   RemoteData,
   ServiceModel,
-  Setting,
   Config,
   Fetcher,
   StateHelper,
@@ -96,18 +95,18 @@ export class ServiceConfigQueryManager
   private merge(
     configData: RemoteData.Type<string, Config>,
     serviceData: RemoteData.Type<string, ServiceModel>
-  ): RemoteData.Type<string, Setting[]> {
+  ): RemoteData.Type<string, Config> {
     if (!RemoteData.isSuccess(configData)) return configData;
     if (!RemoteData.isSuccess(serviceData)) return serviceData;
     const config = configData.value;
     const service = serviceData.value;
     const options = getOptionsFromService(service);
-    const settings: Setting[] = options.map((option) => ({
-      name: option,
-      value: getValueForOption(config[option], service.config[option]),
-      defaultValue: service.config[option] || false,
-    }));
-    return RemoteData.success(settings);
+    const fullConfig: Config = options.reduce<Config>((acc, option) => {
+      acc[option] =
+        typeof config[option] !== "undefined" ? config[option] : false;
+      return acc;
+    }, {});
+    return RemoteData.success(fullConfig);
   }
 }
 
@@ -120,13 +119,4 @@ function getOptionsFromService(service: ServiceModel): string[] {
       .map((transfer) => transfer.config_name)
       .filter(isNotNull)
   );
-}
-
-function getValueForOption(
-  instance: boolean | undefined,
-  service: boolean | undefined
-): boolean {
-  if (typeof instance !== "undefined") return instance;
-  if (typeof service !== "undefined") return service;
-  return false;
 }

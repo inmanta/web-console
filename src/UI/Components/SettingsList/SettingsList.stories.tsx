@@ -1,25 +1,33 @@
 import React from "react";
 import { DefaultSwitch } from "@/UI/Components";
 import { SettingsList } from "./SettingsList";
+import { Config } from "@/Core";
 
 export default {
   title: "SettingsList",
   component: SettingsList,
 };
 
-const settings = [
-  { name: "auto_update_designed", value: false, defaultValue: true },
-  { name: "auto_designed", value: false, defaultValue: false },
-  { name: "auto_creating", value: true, defaultValue: false },
-  { name: "auto_update_inprogress", value: true, defaultValue: true },
-];
+const config: Config = {
+  auto_update_designed: false,
+  auto_designed: false,
+  auto_creating: true,
+  auto_update_inprogress: true,
+};
+
+const defaults: Config = {
+  auto_update_designed: false,
+  auto_designed: false,
+  auto_creating: false,
+  auto_update_inprogress: false,
+};
 
 export const Default: React.FC = () => (
   <SettingsList
-    settings={settings}
+    config={config}
     onChange={(name, value) => {
       console.log({ name, value });
     }}
-    Switch={DefaultSwitch}
+    Switch={(props) => <DefaultSwitch {...props} defaults={defaults} />}
   />
 );

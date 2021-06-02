@@ -34,12 +34,12 @@ export const Config: React.FC<Props> = ({ serviceName }) => {
             notAsked: () => null,
             loading: () => <LoadingView />,
             failed: (error) => <ErrorView message={error} retry={retry} />,
-            success: (settings) =>
-              settings.length <= 0 ? (
+            success: (config) =>
+              Object.keys(config).length <= 0 ? (
                 <EmptyView message={words("config.empty")} />
               ) : (
                 <SettingsList
-                  settings={settings}
+                  config={config}
                   onChange={update}
                   Switch={BooleanSwitch}
                 />

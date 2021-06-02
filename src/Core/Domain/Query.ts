@@ -9,7 +9,7 @@ import {
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 import * as Pagination from "./Pagination";
-import { Config, Setting } from "./Config";
+import { Config } from "./Config";
 import { ServiceInstanceParams } from "./ServiceInstanceParams";
 import { RawDiagnostics, Diagnostics } from "./Diagnostics";
 import { EventParams } from "./EventParams";
@@ -109,7 +109,7 @@ interface ServiceConfigManifest {
   error: string;
   apiResponse: { data: Config };
   data: Config;
-  usedData: Setting[];
+  usedData: Config;
   query: ServiceConfigQuery;
 }
 
@@ -185,7 +185,7 @@ interface InstanceConfigManifest {
   error: string;
   apiResponse: { data: Config };
   data: Config;
-  usedData: Setting[];
+  usedData: { config: Config; defaults: Config };
   query: InstanceConfigQuery;
 }
 

@@ -3,7 +3,6 @@ import {
   Query,
   RemoteData,
   ServiceModel,
-  Setting,
   Config,
   Fetcher,
   StateHelper,
@@ -102,18 +101,24 @@ export class InstanceConfigQueryManager
   private merge(
     configData: RemoteData.Type<string, Config>,
     serviceData: RemoteData.Type<string, ServiceModel>
-  ): RemoteData.Type<string, Setting[]> {
+  ): RemoteData.Type<string, Query.UsedData<"InstanceConfig">> {
     if (!RemoteData.isSuccess(configData)) return configData;
     if (!RemoteData.isSuccess(serviceData)) return serviceData;
     const config = configData.value;
     const service = serviceData.value;
     const options = getOptionsFromService(service);
-    const settings: Setting[] = options.map((option) => ({
-      name: option,
-      value: getValueForOption(config[option], service.config[option]),
-      defaultValue: service.config[option] || false,
-    }));
-    return RemoteData.success(settings);
+    const fullConfig = options.reduce<Config>((acc, option) => {
+      acc[option] = getValueForOption(config[option], service.config[option]);
+      return acc;
+    }, {});
+    const defaults = options.reduce<Config>((acc, option) => {
+      acc[option] =
+        typeof service.config[option] !== "undefined"
+          ? service.config[option]
+          : false;
+      return acc;
+    }, {});
+    return RemoteData.success({ config: fullConfig, defaults });
   }
 }
 

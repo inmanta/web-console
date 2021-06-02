@@ -47,8 +47,8 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
       notAsked: () => null,
       loading: () => <LoadingView />,
       failed: (error) => <ErrorView message={error} retry={retry} />,
-      success: (settings) =>
-        settings.length <= 0 ? (
+      success: ({ config, defaults }) =>
+        Object.keys(config).length <= 0 ? (
           <Card>
             <CardBody>
               <EmptyView message={words("config.empty")} />
@@ -70,11 +70,13 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
             </CardHeader>
             <CardBody>
               <SettingsList
-                settings={settings}
+                config={config}
                 onChange={(option, value) =>
                   trigger({ kind: "UPDATE", option, value })
                 }
-                Switch={DefaultSwitch}
+                Switch={(props) => (
+                  <DefaultSwitch {...props} defaults={defaults} />
+                )}
               />
             </CardBody>
           </Card>
