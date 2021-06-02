@@ -2,10 +2,18 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import userEvent from "@testing-library/user-event";
 import { EditInstanceModal } from "./EditInstanceModal";
-import { InventoryContext } from "@/UI/Pages/ServiceInventory";
 import { AttributeModel } from "@/Core";
+import { BaseApiHelper } from "@/Infra";
+import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
+import {
+  AttributeResultConverterImpl,
+  UpdateInstanceCommandManager,
+} from "@/UI";
+import { CommandResolverImpl } from "@/UI/Data";
+import { DynamicCommandManagerResolver } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 
-describe("EditInstanceModal", () => {
+function setup() {
   const instance = {
     id: "id1",
     state: "up",
@@ -28,56 +36,36 @@ describe("EditInstanceModal", () => {
       default_value: null,
     },
   ];
+  const commandManager = new UpdateInstanceCommandManager(
+    new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+    new AttributeResultConverterImpl()
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([commandManager])
+  );
+  return {
+    component: (
+      <DependencyProvider dependencies={{ commandResolver }}>
+        <EditInstanceModal instance={instance} attributeModels={attributes} />
+      </DependencyProvider>
+    ),
+  };
+}
 
-  it("Shows edit modal", async () => {
-    render(<EditInstanceModal instance={instance} />);
-    expect(await screen.findByText("Edit")).toBeVisible();
-  });
-  it("Shows form when clicking on modal button", async () => {
-    render(
-      <InventoryContext.Provider
-        value={{
-          attributes: attributes,
-          environmentId: "envId1",
-          inventoryUrl: "/inv",
-          setErrorMessage: () => {
-            return;
-          },
-          refresh: () => {
-            return;
-          },
-        }}
-      >
-        <EditInstanceModal instance={instance} />
-      </InventoryContext.Provider>
-    );
-    const modalButton = await screen.findByText("Edit");
-    userEvent.click(modalButton);
-    expect(await screen.findByText("Confirm")).toBeVisible();
-    expect(await screen.findByText("Cancel")).toBeVisible();
-  });
-  it("Closes modal when cancelled", async () => {
-    render(
-      <InventoryContext.Provider
-        value={{
-          attributes: attributes,
-          environmentId: "envId1",
-          inventoryUrl: "/inv",
-          setErrorMessage: () => {
-            return;
-          },
-          refresh: () => {
-            return;
-          },
-        }}
-      >
-        <EditInstanceModal instance={instance} />
-      </InventoryContext.Provider>
-    );
-    const modalButton = await screen.findByText("Edit");
-    userEvent.click(modalButton);
-    const noButton = await screen.findByText("Cancel");
-    userEvent.click(noButton);
-    expect(screen.queryByText("Confirm")).not.toBeInTheDocument();
-  });
+it("EditInstanceModal shows form when clicking on modal button", async () => {
+  const { component } = setup();
+  render(component);
+  const modalButton = await screen.findByText("Edit");
+  userEvent.click(modalButton);
+  expect(await screen.findByText("Confirm")).toBeVisible();
+  expect(await screen.findByText("Cancel")).toBeVisible();
+});
+it("EditInstanceModal closes when cancelled", async () => {
+  const { component } = setup();
+  render(component);
+  const modalButton = await screen.findByText("Edit");
+  userEvent.click(modalButton);
+  const noButton = await screen.findByText("Cancel");
+  userEvent.click(noButton);
+  expect(screen.queryByText("Confirm")).not.toBeInTheDocument();
 });

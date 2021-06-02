@@ -73,6 +73,21 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
     }
     return TextInputTypes.text;
   }
+  /**
+   * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
+   * and to the active attribute set otherwise
+   */
+  getCurrentAttributes(
+    instance: Pick<
+      ServiceInstanceModel,
+      "candidate_attributes" | "active_attributes"
+    >
+  ): InstanceAttributeModel | null {
+    return instance.candidate_attributes &&
+      !isEmpty(instance.candidate_attributes)
+      ? instance.candidate_attributes
+      : instance.active_attributes;
+  }
 }
 
 export class AttributeResultConverterImpl implements AttributeResultConverter {
@@ -186,20 +201,4 @@ export function toOptionalBoolean(
   } else {
     return null;
   }
-}
-
-/**
- * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
- * and to the active attribute set otherwise
- */
-export function getCurrentAttributes(
-  instance: Pick<
-    ServiceInstanceModel,
-    "candidate_attributes" | "active_attributes"
-  >
-): InstanceAttributeModel | null {
-  return instance.candidate_attributes &&
-    !isEmpty(instance.candidate_attributes)
-    ? instance.candidate_attributes
-    : instance.active_attributes;
 }

@@ -8,9 +8,11 @@ import {
   AttributeResultConverterImpl,
   CreateInstanceCommandManager,
   InstanceConfigCommandManager,
+  UpdateInstanceCommandManager,
 } from "@/UI/Data";
 import { Store } from "@/UI/Store";
 import { InstanceConfigStateHelper } from "@/UI/Data";
+import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -41,6 +43,15 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new AttributeResultConverterImpl()
     );
 
-    return [instanceConfigCommandManager, createInstanceCommandManager];
+    const updateInstanceCommandManager = new UpdateInstanceCommandManager(
+      new UpdateInstancePatcher(this.baseApiHelper, environment),
+      new AttributeResultConverterImpl()
+    );
+
+    return [
+      instanceConfigCommandManager,
+      createInstanceCommandManager,
+      updateInstanceCommandManager,
+    ];
   }
 }

@@ -3,17 +3,12 @@ import {
   FormAttributeResult,
   InstanceAttributeModel,
 } from "@/Core";
-import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
 import React from "react";
 import {
   FormInputAttribute,
   ServiceInstanceForm,
 } from "@/UI/Pages/ServiceInstanceForm";
-import {
-  AttributeInputConverter,
-  getCurrentAttributes,
-  toOptionalBoolean,
-} from "@/UI/Data";
+import { AttributeInputConverter, toOptionalBoolean } from "@/UI/Data";
 
 export class EditFormPresenter {
   constructor(
@@ -21,38 +16,30 @@ export class EditFormPresenter {
   ) {}
 
   presentForm(
-    instance: ServiceInstanceForAction,
+    currentAttributes: InstanceAttributeModel | null,
     attributeModels: AttributeModel[],
-    onSubmit: (
-      instance: ServiceInstanceForAction,
-      attributes: FormAttributeResult[]
-    ) => void,
+    onSubmit: (attributes: FormAttributeResult[]) => void,
     onCancel: () => void
   ): React.ReactElement {
     const formInputAttributes = this.getFormInputsForEditForm(
-      instance,
+      currentAttributes,
       attributeModels
     );
-
-    const onSubmitForm = (attributes) => {
-      onSubmit(instance, attributes);
-    };
 
     return (
       <ServiceInstanceForm
         formInputAttributes={formInputAttributes}
-        onSubmit={onSubmitForm}
+        onSubmit={onSubmit}
         onCancel={onCancel}
       />
     );
   }
 
   getFormInputsForEditForm(
-    instance: ServiceInstanceForAction,
+    currentAttributes: InstanceAttributeModel | null,
     attributeModels: AttributeModel[]
   ): FormInputAttribute[] {
     const editableAttributes = this.getEditableAttributes(attributeModels);
-    const currentAttributes = getCurrentAttributes(instance);
     return this.convertToEditFormInputs(currentAttributes, editableAttributes);
   }
 

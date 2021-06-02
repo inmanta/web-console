@@ -14,6 +14,7 @@ import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { ButtonWithCursorHandling } from "@/UI/Components";
 import { Routing } from "@/UI/Routing";
+import { AttributeModel } from "@/Core";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
@@ -21,6 +22,7 @@ export interface InstanceActionsProps {
   editDisabled: boolean;
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
+  attributeModels: AttributeModel[];
   onSetInstanceState:
     | ((
         instanceId: string,
@@ -34,6 +36,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   instance,
   keycloak,
   editDisabled,
+  attributeModels,
   deleteDisabled,
   diagnoseDisabled,
   onSetInstanceState,
@@ -46,7 +49,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
         <EditInstanceModal
           isDisabled={editDisabled}
           instance={instance}
-          keycloak={keycloak}
+          attributeModels={attributeModels}
         />
       </DescriptionListGroup>
       <DescriptionListGroup>
