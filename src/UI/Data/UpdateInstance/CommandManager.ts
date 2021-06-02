@@ -10,30 +10,30 @@ import { AttributeResultConverter } from "@/UI/Data/Common";
 
 export class UpdateInstanceCommandManager implements CommandManager {
   constructor(
-    private readonly patcher: Patcher<"UpdateInstance">,
+    private readonly patcher: Patcher<"TriggerInstanceUpdate">,
     private readonly attributeConverter: AttributeResultConverter
   ) {}
 
-  matches(command: Command.SubCommand<"UpdateInstance">): boolean {
-    return command.kind === "UpdateInstance";
+  matches(command: Command.SubCommand<"TriggerInstanceUpdate">): boolean {
+    return command.kind === "TriggerInstanceUpdate";
   }
 
   getTrigger(
-    command: Command.SubCommand<"UpdateInstance">
-  ): Command.Trigger<"UpdateInstance"> {
+    command: Command.SubCommand<"TriggerInstanceUpdate">
+  ): Command.Trigger<"TriggerInstanceUpdate"> {
     return async (currentAttributes, updatedAttributes) => {
       return this.submit(command, currentAttributes, updatedAttributes);
     };
   }
 
   private async submit(
-    command: Command.SubCommand<"UpdateInstance">,
+    command: Command.SubCommand<"TriggerInstanceUpdate">,
     currentAttributes: InstanceAttributeModel | null,
     updatedAttributes: FormAttributeResult[]
   ): Promise<
     Either.Type<
-      Command.Error<"UpdateInstance">,
-      Command.ApiData<"UpdateInstance">
+      Command.Error<"TriggerInstanceUpdate">,
+      Command.ApiData<"TriggerInstanceUpdate">
     >
   > {
     // Make sure correct types are used

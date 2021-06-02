@@ -10,7 +10,7 @@ import { Either } from "@/Core/Language";
 type Command =
   | InstanceConfigCommand
   | CreateInstanceCommand
-  | UpdateInstanceCommand;
+  | TriggerInstanceUpdateCommand;
 export type Type = Command;
 
 /**
@@ -48,20 +48,25 @@ interface CreateInstanceManifest {
   ) => Promise<Either.Type<Error<"CreateInstance">, ApiData<"CreateInstance">>>;
 }
 
-export interface UpdateInstanceCommand
+export interface TriggerInstanceUpdateCommand
   extends VersionedServiceInstanceIdentifier {
-  kind: "UpdateInstance";
+  kind: "TriggerInstanceUpdate";
 }
 
-interface UpdateInstanceManifest {
+interface TriggerInstanceUpdateManifest {
   error: string;
   apiData: string;
   body: { attributes: InstanceAttributeModel };
-  command: UpdateInstanceCommand;
+  command: TriggerInstanceUpdateCommand;
   trigger: (
     currentAttributes: InstanceAttributeModel | null,
     updatedAttributes: FormAttributeResult[]
-  ) => Promise<Either.Type<Error<"UpdateInstance">, ApiData<"UpdateInstance">>>;
+  ) => Promise<
+    Either.Type<
+      Error<"TriggerInstanceUpdate">,
+      ApiData<"TriggerInstanceUpdate">
+    >
+  >;
 }
 
 /**
@@ -71,7 +76,7 @@ interface UpdateInstanceManifest {
 interface Manifest {
   InstanceConfig: InstanceConfigManifest;
   CreateInstance: CreateInstanceManifest;
-  UpdateInstance: UpdateInstanceManifest;
+  TriggerInstanceUpdate: TriggerInstanceUpdateManifest;
 }
 
 /**

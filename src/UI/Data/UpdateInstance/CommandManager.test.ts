@@ -19,7 +19,7 @@ describe("UpdateInstanceManager", () => {
       { name: "attr3", value: null, type: "bool?" },
     ];
     const submit = commandManager.getTrigger({
-      kind: "UpdateInstance",
+      kind: "TriggerInstanceUpdate",
       service_entity: "service_entity",
       id: "id1",
       version: 10,
@@ -43,7 +43,7 @@ describe("UpdateInstanceManager", () => {
       { name: "attr4", value: "42", type: "int?" },
     ];
     const submit = commandManager.getTrigger({
-      kind: "UpdateInstance",
+      kind: "TriggerInstanceUpdate",
       service_entity: "service_entity",
       id: "id1",
       version: 10,

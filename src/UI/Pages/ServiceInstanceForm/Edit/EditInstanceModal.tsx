@@ -30,8 +30,8 @@ export const EditInstanceModal: React.FC<Props> = ({
   const currentAttributes =
     attributeInputConverter.getCurrentAttributes(instance);
 
-  const trigger = commandResolver.getTrigger<"UpdateInstance">({
-    kind: "UpdateInstance",
+  const trigger = commandResolver.getTrigger<"TriggerInstanceUpdate">({
+    kind: "TriggerInstanceUpdate",
     service_entity: instance.service_entity,
     id: instance.id,
     version: instance.version,
