@@ -62,10 +62,6 @@ export class BaseApiHelper implements ApiHelper {
       const response = await fetch(...params);
       if (response.ok) {
         const textData = await response.text();
-        if (textData) {
-          const data = await response.json();
-          return Either.right(data);
-        }
         return Either.right(textData);
       }
       return Either.left(
