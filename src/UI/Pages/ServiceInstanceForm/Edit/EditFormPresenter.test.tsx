@@ -49,23 +49,12 @@ describe("EditFormPresenter", () => {
   const editFormPresenter = new EditFormPresenter(
     new AttributeInputConverterImpl()
   );
-  const instance = {
-    id: "instanceId1",
-    state: "creating",
-    version: 4,
-    service_entity: "test_service",
-    environment: "env1",
-    instanceSetStateTargets: [],
-    candidate_attributes: {
-      name: "name",
-      bool_attr: "true",
-      opt_string_attr: null,
-      read_only: "read",
-      not_editable: "shouldn't be present in edit form",
-    },
-    active_attributes: null,
-    rollback_attributes: null,
-    deleted: false,
+  const currentAttributes = {
+    name: "name",
+    bool_attr: "true",
+    opt_string_attr: null,
+    read_only: "read",
+    not_editable: "shouldn't be present in edit form",
   };
   const expectedFormInputAttributes = [
     {
@@ -99,7 +88,7 @@ describe("EditFormPresenter", () => {
   });
   it("Creates correct form input attributes", () => {
     const formInputAttributes = editFormPresenter.getFormInputsForEditForm(
-      instance,
+      currentAttributes,
       attributes
     );
     expect(formInputAttributes).toHaveLength(3);
@@ -107,7 +96,7 @@ describe("EditFormPresenter", () => {
   });
   it("Presents edit instance form", () => {
     const editForm = editFormPresenter.presentForm(
-      instance,
+      currentAttributes,
       attributes,
       () => {
         return;

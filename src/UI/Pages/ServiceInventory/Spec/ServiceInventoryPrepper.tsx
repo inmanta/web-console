@@ -1,19 +1,29 @@
 import React from "react";
 import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, DynamicQueryManagerResolver, Service } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  Service,
+} from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
+  AttributeResultConverterImpl,
+  CommandResolverImpl,
   QueryResolverImpl,
   ResourcesQueryManager,
   ResourcesStateHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
+  UpdateInstanceCommandManager,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";
+import { BaseApiHelper } from "@/Infra";
+import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
 
 export interface Handles {
   component: React.ReactElement;
@@ -50,9 +60,20 @@ export class ServiceInventoryPrepper {
     );
     const urlManager = new UrlManagerImpl("", service.environment);
 
+    const commandManager = new UpdateInstanceCommandManager(
+      new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+      new AttributeResultConverterImpl()
+    );
+
+    const commandResolver = new CommandResolverImpl(
+      new DynamicCommandManagerResolver([commandManager])
+    );
+
     const component = (
       <MemoryRouter>
-        <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+        <DependencyProvider
+          dependencies={{ queryResolver, urlManager, commandResolver }}
+        >
           <StoreProvider store={store}>
             <ServiceInventory
               serviceName={service.name}

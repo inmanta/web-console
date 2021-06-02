@@ -9,6 +9,7 @@ import {
   Pagination,
   StaticScheduler,
   DynamicQueryManagerResolver,
+  DynamicCommandManagerResolver,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -18,11 +19,16 @@ import {
   ServiceInstancesStateHelper,
   ResourcesQueryManager,
   ResourcesStateHelper,
+  UpdateInstanceCommandManager,
+  AttributeResultConverterImpl,
+  CommandResolverImpl,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";
+import { BaseApiHelper } from "@/Infra";
+import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
 
 function setup() {
   const store = getStoreInstance();
@@ -49,9 +55,20 @@ function setup() {
 
   const urlManager = new UrlManagerImpl("", Service.a.environment);
 
+  const commandManager = new UpdateInstanceCommandManager(
+    new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+    new AttributeResultConverterImpl()
+  );
+
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([commandManager])
+  );
+
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <DependencyProvider
+        dependencies={{ queryResolver, urlManager, commandResolver }}
+      >
         <StoreProvider store={store}>
           <ServiceInventory
             serviceName={Service.a.name}

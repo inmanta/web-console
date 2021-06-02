@@ -2,6 +2,7 @@ import {
   AttributeModel,
   FormAttributeResult,
   InstanceAttributeModel,
+  ServiceInstanceModel,
 } from "@/Core";
 import { TextInputTypes } from "@patternfly/react-core";
 
@@ -19,6 +20,17 @@ export interface AttributeInputConverter {
     defaultValueSet: boolean,
     defaultValue: string | null
   ): string | null | undefined;
+
+  /**
+   * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
+   * and to the active attribute set otherwise
+   */
+  getCurrentAttributes(
+    instance: Pick<
+      ServiceInstanceModel,
+      "candidate_attributes" | "active_attributes"
+    >
+  ): InstanceAttributeModel | null;
 }
 
 export interface AttributeResultConverter {

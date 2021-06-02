@@ -2,8 +2,28 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import userEvent from "@testing-library/user-event";
 import { EditInstanceModal } from "./EditInstanceModal";
-import { InventoryContext } from "@/UI/Pages/ServiceInventory";
 import { AttributeModel } from "@/Core";
+import { BaseApiHelper } from "@/Infra";
+import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
+import {
+  AttributeResultConverterImpl,
+  UpdateInstanceCommandManager,
+} from "@/UI";
+import { CommandResolverImpl } from "@/UI/Data";
+import { DynamicCommandManagerResolver } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+
+function setup() {
+  const commandManager = new UpdateInstanceCommandManager(
+    new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+    new AttributeResultConverterImpl()
+  );
+  return {
+    commandResolver: new CommandResolverImpl(
+      new DynamicCommandManagerResolver([commandManager])
+    ),
+  };
+}
 
 describe("EditInstanceModal", () => {
   const instance = {
@@ -30,26 +50,20 @@ describe("EditInstanceModal", () => {
   ];
 
   it("Shows edit modal", async () => {
-    render(<EditInstanceModal instance={instance} />);
+    const { commandResolver } = setup();
+    render(
+      <DependencyProvider dependencies={{ commandResolver }}>
+        <EditInstanceModal instance={instance} attributeModels={attributes} />
+      </DependencyProvider>
+    );
     expect(await screen.findByText("Edit")).toBeVisible();
   });
   it("Shows form when clicking on modal button", async () => {
+    const { commandResolver } = setup();
     render(
-      <InventoryContext.Provider
-        value={{
-          attributes: attributes,
-          environmentId: "envId1",
-          inventoryUrl: "/inv",
-          setErrorMessage: () => {
-            return;
-          },
-          refresh: () => {
-            return;
-          },
-        }}
-      >
-        <EditInstanceModal instance={instance} />
-      </InventoryContext.Provider>
+      <DependencyProvider dependencies={{ commandResolver }}>
+        <EditInstanceModal instance={instance} attributeModels={attributes} />
+      </DependencyProvider>
     );
     const modalButton = await screen.findByText("Edit");
     userEvent.click(modalButton);
@@ -57,22 +71,11 @@ describe("EditInstanceModal", () => {
     expect(await screen.findByText("Cancel")).toBeVisible();
   });
   it("Closes modal when cancelled", async () => {
+    const { commandResolver } = setup();
     render(
-      <InventoryContext.Provider
-        value={{
-          attributes: attributes,
-          environmentId: "envId1",
-          inventoryUrl: "/inv",
-          setErrorMessage: () => {
-            return;
-          },
-          refresh: () => {
-            return;
-          },
-        }}
-      >
-        <EditInstanceModal instance={instance} />
-      </InventoryContext.Provider>
+      <DependencyProvider dependencies={{ commandResolver }}>
+        <EditInstanceModal instance={instance} attributeModels={attributes} />
+      </DependencyProvider>
     );
     const modalButton = await screen.findByText("Edit");
     userEvent.click(modalButton);

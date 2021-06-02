@@ -55,6 +55,28 @@ export class BaseApiHelper implements ApiHelper {
     }
   }
 
+  private async executeEmptyResponse(
+    ...params: Parameters<typeof fetch>
+  ): Promise<Either.Type<string, string>> {
+    try {
+      const response = await fetch(...params);
+      if (response.ok) {
+        const textData = await response.text();
+        if (textData) {
+          const data = await response.json();
+          return Either.right(data);
+        }
+        return Either.right(textData);
+      }
+      return Either.left(
+        this.formatError((await response.json()).message, response)
+      );
+    } catch (error) {
+      if (error.message) return Either.left(error.message);
+      return Either.left(`Error: ${error}`);
+    }
+  }
+
   async get<Data>(
     url: string,
     environment: string
@@ -83,6 +105,21 @@ export class BaseApiHelper implements ApiHelper {
         ...this.getHeaders(environment),
       },
       method: "POST",
+      body: JSON.stringify(body),
+    });
+  }
+
+  async patch<Body>(
+    url: string,
+    environment: string,
+    body: Body
+  ): Promise<Either.Type<string, string>> {
+    return this.executeEmptyResponse(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...this.getHeaders(environment),
+      },
+      method: "PATCH",
       body: JSON.stringify(body),
     });
   }

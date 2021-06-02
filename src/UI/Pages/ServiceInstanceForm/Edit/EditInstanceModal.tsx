@@ -1,35 +1,58 @@
-import { words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import { ActionDisabledTooltip } from "@/UI/Pages/ServiceInventory/Components";
 import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
-import { InventoryContext } from "@/UI/Pages/ServiceInventory";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { EditIcon } from "@patternfly/react-icons";
-import { KeycloakInstance } from "keycloak-js";
-import React, { useState } from "react";
-import { submitUpdate } from "..";
+import React, { useContext, useState } from "react";
 import { EditFormPresenter } from "./EditFormPresenter";
-import { FormAttributeResult } from "@/Core";
+import { AttributeModel, FormAttributeResult } from "@/Core";
 import { AttributeInputConverterImpl } from "@/UI/Data";
+import { ErrorToastAlert } from "@/UI/Components";
 
 interface Props {
   isDisabled?: boolean;
   instance: ServiceInstanceForAction;
-  keycloak?: KeycloakInstance;
+  attributeModels: AttributeModel[];
 }
 export const EditInstanceModal: React.FC<Props> = ({
   isDisabled,
   instance,
-  keycloak,
+  attributeModels,
 }) => {
+  const { commandResolver } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const handleModalToggle = () => {
     setIsOpen(!isOpen);
   };
-  const editFormPresenter = new EditFormPresenter(
-    new AttributeInputConverterImpl()
-  );
+  const attributeInputConverter = new AttributeInputConverterImpl();
+  const editFormPresenter = new EditFormPresenter(attributeInputConverter);
+  const currentAttributes =
+    attributeInputConverter.getCurrentAttributes(instance);
+
+  const trigger = commandResolver.getTrigger<"UpdateInstance">({
+    kind: "UpdateInstance",
+    service_entity: instance.service_entity,
+    id: instance.id,
+    version: instance.version,
+  });
+
+  const onSubmit = async (attributes: FormAttributeResult[]) => {
+    const result = await trigger(currentAttributes, attributes);
+    if (result.kind === "Left") {
+      setErrorMessage(result.value);
+      setIsOpen(false);
+    } else {
+      setIsOpen(false);
+    }
+  };
+
   return (
     <>
+      <ErrorToastAlert
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <ActionDisabledTooltip isDisabled={isDisabled}>
         <Button
           variant="secondary"
@@ -46,32 +69,12 @@ export const EditInstanceModal: React.FC<Props> = ({
         title={words("inventory.editInstance.title")}
         onClose={handleModalToggle}
       >
-        <InventoryContext.Consumer>
-          {({ attributes, setErrorMessage, refresh }) => {
-            const dispatch = (data) => {
-              setIsOpen(false);
-              refresh(data);
-            };
-            const onSubmit = (
-              serviceInstance: ServiceInstanceForAction,
-              formAttributes: FormAttributeResult[]
-            ) => {
-              submitUpdate(
-                serviceInstance,
-                formAttributes,
-                setErrorMessage,
-                dispatch,
-                keycloak
-              );
-            };
-            return editFormPresenter.presentForm(
-              instance,
-              attributes,
-              onSubmit,
-              () => setIsOpen(false)
-            );
-          }}
-        </InventoryContext.Consumer>
+        {editFormPresenter.presentForm(
+          currentAttributes,
+          attributeModels,
+          onSubmit,
+          () => setIsOpen(false)
+        )}
       </Modal>
     </>
   );

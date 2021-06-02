@@ -7,7 +7,10 @@ import {
 import { Config } from "./Config";
 import { Either } from "@/Core/Language";
 
-type Command = InstanceConfigCommand | CreateInstanceCommand;
+type Command =
+  | InstanceConfigCommand
+  | CreateInstanceCommand
+  | UpdateInstanceCommand;
 export type Type = Command;
 
 /**
@@ -45,6 +48,22 @@ interface CreateInstanceManifest {
   ) => Promise<Either.Type<Error<"CreateInstance">, ApiData<"CreateInstance">>>;
 }
 
+export interface UpdateInstanceCommand
+  extends VersionedServiceInstanceIdentifier {
+  kind: "UpdateInstance";
+}
+
+interface UpdateInstanceManifest {
+  error: string;
+  apiData: string;
+  body: { attributes: InstanceAttributeModel };
+  command: UpdateInstanceCommand;
+  trigger: (
+    currentAttributes: InstanceAttributeModel | null,
+    updatedAttributes: FormAttributeResult[]
+  ) => Promise<Either.Type<Error<"UpdateInstance">, ApiData<"UpdateInstance">>>;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub commands.
@@ -52,6 +71,7 @@ interface CreateInstanceManifest {
 interface Manifest {
   InstanceConfig: InstanceConfigManifest;
   CreateInstance: CreateInstanceManifest;
+  UpdateInstance: UpdateInstanceManifest;
 }
 
 /**

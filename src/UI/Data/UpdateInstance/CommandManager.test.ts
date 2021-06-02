@@ -1,34 +1,31 @@
-import { submitUpdate } from "./InstanceBackendRequestHandlers";
+import { BaseApiHelper } from "@/Infra";
+import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
+import {
+  UpdateInstanceCommandManager,
+  AttributeResultConverterImpl,
+} from "@/UI/Data";
 
-describe("Instance Update handler", () => {
-  const instance = {
-    id: "id1",
-    state: "up",
-    version: 10,
-    service_entity: "test-service",
-    environment: "env",
-    candidate_attributes: null,
-    active_attributes: { attr1: "some value", attr2: "", attr3: null },
-    rollback_attributes: null,
-    instanceSetStateTargets: [],
-    deleted: false,
-  };
+describe("UpdateInstanceManager", () => {
+  const commandManager = new UpdateInstanceCommandManager(
+    new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+    new AttributeResultConverterImpl()
+  );
+  const currentAttributes = { attr1: "some value", attr2: "", attr3: null };
+
   it("Calls update correctly when not setting optional attributes", () => {
     const attributes = [
       { name: "attr1", value: "lorem ipsum", type: "string" },
       { name: "attr2", value: "", type: "string" },
       { name: "attr3", value: null, type: "bool?" },
     ];
-    submitUpdate(
-      instance,
-      attributes,
-      () => {
-        return;
-      },
-      () => {
-        return;
-      }
-    );
+    const submit = commandManager.getTrigger({
+      kind: "UpdateInstance",
+      service_entity: "service_entity",
+      id: "id1",
+      version: 10,
+    });
+    submit(currentAttributes, attributes);
+
     expect(fetchMock.mock.calls).toHaveLength(1);
     const attributesFromBody = JSON.parse(
       fetchMock.mock.calls[0][1]?.body as string
@@ -45,16 +42,13 @@ describe("Instance Update handler", () => {
       { name: "attr3", value: true, type: "bool?" },
       { name: "attr4", value: "42", type: "int?" },
     ];
-    submitUpdate(
-      instance,
-      attributes,
-      () => {
-        return;
-      },
-      () => {
-        return;
-      }
-    );
+    const submit = commandManager.getTrigger({
+      kind: "UpdateInstance",
+      service_entity: "service_entity",
+      id: "id1",
+      version: 10,
+    });
+    submit(currentAttributes, attributes);
     expect(fetchMock.mock.calls).toHaveLength(1);
     const attributesFromBody = JSON.parse(
       fetchMock.mock.calls[0][1]?.body as string

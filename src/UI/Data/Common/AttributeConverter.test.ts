@@ -2,7 +2,6 @@ import { TextInputTypes } from "@patternfly/react-core";
 import {
   AttributeInputConverterImpl,
   AttributeResultConverterImpl,
-  getCurrentAttributes,
 } from "./AttributeConverterImpl";
 
 describe("AttributeResultConverter ", () => {
@@ -163,7 +162,7 @@ describe("AttributeInputConverter", () => {
         candidate_attributes: null,
         active_attributes: { attribute1: 1 },
       };
-      const result = getCurrentAttributes(instance);
+      const result = attributeInputConverter.getCurrentAttributes(instance);
       expect(result).toEqual(instance.active_attributes);
     });
     it("When active set is null", () => {
@@ -171,7 +170,7 @@ describe("AttributeInputConverter", () => {
         candidate_attributes: { attribute1: 1 },
         active_attributes: null,
       };
-      const result = getCurrentAttributes(instance);
+      const result = attributeInputConverter.getCurrentAttributes(instance);
       expect(result).toEqual(instance.candidate_attributes);
     });
     it("When candidate set is empty", () => {
@@ -179,7 +178,7 @@ describe("AttributeInputConverter", () => {
         candidate_attributes: {},
         active_attributes: { attribute1: 1 },
       };
-      const result = getCurrentAttributes(instance);
+      const result = attributeInputConverter.getCurrentAttributes(instance);
       expect(result).toEqual(instance.active_attributes);
     });
     it("When both active and candidate sets are filled", () => {
@@ -187,7 +186,7 @@ describe("AttributeInputConverter", () => {
         candidate_attributes: { attribute1: 1 },
         active_attributes: { attribute1: 2 },
       };
-      const result = getCurrentAttributes(instance);
+      const result = attributeInputConverter.getCurrentAttributes(instance);
       expect(result).toEqual(instance.candidate_attributes);
     });
   });
