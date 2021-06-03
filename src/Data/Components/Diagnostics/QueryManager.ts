@@ -1,6 +1,6 @@
 import { Fetcher, StateHelper, Scheduler } from "@/Core";
 import { identity } from "lodash";
-import { ContinuousQueryManagerImpl } from "@/Data/QueryManagerImpl";
+import { ContinuousQueryManagerImpl } from "@/Data/Common";
 
 export class DiagnosticsQueryManager extends ContinuousQueryManagerImpl<"Diagnostics"> {
   constructor(

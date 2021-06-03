@@ -1,5 +1,5 @@
 import { KeyMaker, Fetcher, StateHelper, Scheduler } from "@/Core";
-import { ContinuousQueryManagerImpl } from "@/Data/QueryManagerImpl";
+import { ContinuousQueryManagerImpl } from "@/Data/Common";
 import { identity } from "lodash";
 
 export class ServiceQueryManager extends ContinuousQueryManagerImpl<"Service"> {

@@ -1,5 +1,5 @@
 import { Scheduler, Fetcher, StateHelper, ServiceInstanceParams } from "@/Core";
-import { ContinuousQueryManagerImpl } from "@/Data/QueryManagerImpl";
+import { ContinuousQueryManagerImpl } from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
 export class ServiceInstancesQueryManager extends ContinuousQueryManagerImpl<"ServiceInstances"> {
