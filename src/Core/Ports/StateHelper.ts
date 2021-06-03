@@ -31,8 +31,8 @@ type ApiData<K extends Query.Kind> = RemoteData.Type<
  * without a component context. We use it in the effect callback to
  * initialise data.
  */
-export interface StateHelper<K extends Query.Kind> {
-  set(value: ApiData<K>, query: Query.SubQuery<K>): void;
-  getOnce(query: Query.SubQuery<K>): Data<K>;
-  getHooked(query: Query.SubQuery<K>): Data<K>;
+export interface StateHelper<Kind extends Query.Kind> {
+  set(value: ApiData<Kind>, query: Query.SubQuery<Kind>): void;
+  getOnce(query: Query.SubQuery<Kind>): Data<Kind>;
+  getHooked(query: Query.SubQuery<Kind>): Data<Kind>;
 }

@@ -1,7 +1,6 @@
 export * from "./DeferredFetcher";
 export * from "./DummyActionPresenter";
 export * from "./DummyDatePresenter";
-export * from "./DummyStateHelper";
 export * from "./DummyStatePresenter";
 export * from "./DynamicManagerResolver";
 export * from "./InstantFetcher";
