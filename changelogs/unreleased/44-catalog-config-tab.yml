@@ -1,0 +1,6 @@
+description: Add Config tab to Service Catalog
+issue-nr: 44
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

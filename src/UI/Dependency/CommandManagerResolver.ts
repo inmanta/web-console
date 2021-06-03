@@ -1,14 +1,15 @@
 import { CommandManager, ManagerResolver } from "@/Core";
-import {
-  BaseApiHelper,
-  CreateInstancePoster,
-  InstanceConfigPoster,
-} from "@/Infra";
+import { BaseApiHelper } from "@/Infra";
 import {
   AttributeResultConverterImpl,
   CreateInstanceCommandManager,
   InstanceConfigCommandManager,
   UpdateInstanceCommandManager,
+  ServiceConfigCommandManager,
+  CreateInstancePoster,
+  InstanceConfigPoster,
+  ServiceConfigPoster,
+  ServiceConfigStateHelper,
 } from "@/UI/Data";
 import { Store } from "@/UI/Store";
 import { InstanceConfigStateHelper } from "@/UI/Data";
@@ -33,25 +34,23 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   }
 
   private getEnvDependentManagers(environment: string): CommandManager[] {
-    const instanceConfigCommandManager = new InstanceConfigCommandManager(
-      new InstanceConfigPoster(this.baseApiHelper, environment),
-      new InstanceConfigStateHelper(this.store)
-    );
-
-    const createInstanceCommandManager = new CreateInstanceCommandManager(
-      new CreateInstancePoster(this.baseApiHelper, environment),
-      new AttributeResultConverterImpl()
-    );
-
-    const updateInstanceCommandManager = new UpdateInstanceCommandManager(
-      new UpdateInstancePatcher(this.baseApiHelper, environment),
-      new AttributeResultConverterImpl()
-    );
-
     return [
-      instanceConfigCommandManager,
-      createInstanceCommandManager,
-      updateInstanceCommandManager,
+      new ServiceConfigCommandManager(
+        new ServiceConfigPoster(this.baseApiHelper, environment),
+        new ServiceConfigStateHelper(this.store)
+      ),
+      new InstanceConfigCommandManager(
+        new InstanceConfigPoster(this.baseApiHelper, environment),
+        new InstanceConfigStateHelper(this.store)
+      ),
+      new CreateInstanceCommandManager(
+        new CreateInstancePoster(this.baseApiHelper, environment),
+        new AttributeResultConverterImpl()
+      ),
+      new UpdateInstanceCommandManager(
+        new UpdateInstancePatcher(this.baseApiHelper, environment),
+        new AttributeResultConverterImpl()
+      ),
     ];
   }
 }

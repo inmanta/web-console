@@ -1,5 +1,11 @@
 import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import {
+  SettingsList,
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  DefaultSwitch,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import {
@@ -11,7 +17,6 @@ import {
   Tooltip,
 } from "@patternfly/react-core";
 import React, { useContext } from "react";
-import { ConfigView } from "./ConfigView";
 
 interface Props {
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
@@ -42,8 +47,8 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
       notAsked: () => null,
       loading: () => <LoadingView />,
       failed: (error) => <ErrorView message={error} retry={retry} />,
-      success: (settings) =>
-        settings.length <= 0 ? (
+      success: ({ config, defaults }) =>
+        Object.keys(config).length <= 0 ? (
           <Card>
             <CardBody>
               <EmptyView message={words("config.empty")} />
@@ -64,11 +69,14 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
               </CardActions>
             </CardHeader>
             <CardBody>
-              <ConfigView
-                settings={settings}
+              <SettingsList
+                config={config}
                 onChange={(option, value) =>
                   trigger({ kind: "UPDATE", option, value })
                 }
+                Switch={(props) => (
+                  <DefaultSwitch {...props} defaults={defaults} />
+                )}
               />
             </CardBody>
           </Card>

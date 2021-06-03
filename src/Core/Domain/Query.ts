@@ -9,7 +9,7 @@ import {
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 import * as Pagination from "./Pagination";
-import { Config, Setting } from "./Config";
+import { Config } from "./Config";
 import { ServiceInstanceParams } from "./ServiceInstanceParams";
 import { RawDiagnostics, Diagnostics } from "./Diagnostics";
 import { EventParams } from "./EventParams";
@@ -19,6 +19,7 @@ type Query =
   | ServicesQuery
   | ServiceQuery
   | ServiceInstancesQuery
+  | ServiceConfigQuery
   | ResourcesQuery
   | InstanceEventsQuery
   | InstanceLogsQuery
@@ -100,6 +101,18 @@ interface ServiceInstancesManifest {
   query: ServiceInstancesQuery;
 }
 
+export interface ServiceConfigQuery extends ServiceIdentifier {
+  kind: "ServiceConfig";
+}
+
+interface ServiceConfigManifest {
+  error: string;
+  apiResponse: { data: Config };
+  data: Config;
+  usedData: Config;
+  query: ServiceConfigQuery;
+}
+
 /**
  * The ResourcesQuery describes resources for a service instance.
  * We are not asking for 1 specific resource. We are asking for all the
@@ -172,7 +185,7 @@ interface InstanceConfigManifest {
   error: string;
   apiResponse: { data: Config };
   data: Config;
-  usedData: Setting[];
+  usedData: { config: Config; defaults: Config };
   query: InstanceConfigQuery;
 }
 
@@ -197,6 +210,7 @@ interface Manifest {
   Services: ServicesManifest;
   Service: ServiceManifest;
   ServiceInstances: ServiceInstancesManifest;
+  ServiceConfig: ServiceConfigManifest;
   Resources: ResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;

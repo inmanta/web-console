@@ -12,8 +12,10 @@ const Template: React.FC<{ defaultValue: boolean }> = ({ defaultValue }) => {
 
   return (
     <DefaultSwitch
-      setting={{ name: "test", value, defaultValue }}
+      name="test"
+      value={value}
       onChange={setValue}
+      defaults={{ test: defaultValue }}
     />
   );
 };

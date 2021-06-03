@@ -8,6 +8,7 @@ import {
   InstanceConfigStateHelper,
   ServiceKeyMaker,
   ServiceStateHelper,
+  InstanceConfigFinalizer,
 } from "@/UI/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
@@ -21,20 +22,24 @@ import {
   ServiceInstance,
 } from "@/Test";
 import { StoreProvider } from "easy-peasy";
-import { RemoteData } from "@/Core";
+import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
 
 function setup() {
   const storeInstance = getStoreInstance();
   const serviceKeyMaker = new ServiceKeyMaker();
+  storeInstance.dispatch.services.setSingle({
+    environment: Service.a.environment,
+    query: { kind: "Service", name: Service.a.name },
+    data: RemoteData.success(Service.a),
+  });
 
   const instanceConfigStateHelper = new InstanceConfigStateHelper(
     storeInstance
   );
 
-  const instanceIdentifier = {
+  const instanceIdentifier: VersionedServiceInstanceIdentifier = {
     id: ServiceInstance.a.id,
     service_entity: Service.a.name,
-    environment: Service.a.environment,
     version: ServiceInstance.a.version,
   };
 
@@ -44,16 +49,14 @@ function setup() {
       data: { data: { auto_creating: false } },
     }),
     instanceConfigStateHelper,
-    new ServiceStateHelper(
-      storeInstance,
-      serviceKeyMaker,
-      instanceIdentifier.environment
+    new InstanceConfigFinalizer(
+      new ServiceStateHelper(
+        storeInstance,
+        serviceKeyMaker,
+        Service.a.environment
+      )
     ),
-    new InstantFetcher<"Service">({
-      kind: "Success",
-      data: { data: Service.a },
-    }),
-    instanceIdentifier.environment
+    Service.a.environment
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -145,6 +148,10 @@ test("ConfigTab can change 1 toggle", async () => {
   fireEvent.click(toggle);
 
   expect(
-    await screen.findByRole("checkbox", { name: "auto_creating-False" })
+    screen.getByRole("checkbox", { name: "auto_creating-False" })
+  ).toBeVisible();
+
+  expect(
+    await screen.findByRole("checkbox", { name: "auto_designed-False" })
   ).toBeVisible();
 });
