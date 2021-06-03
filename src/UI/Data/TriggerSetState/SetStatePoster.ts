@@ -1,7 +1,8 @@
-import { ApiHelper, Command, Poster } from "@/Core";
-import { Type } from "@/Core/Language/Either";
+import { ApiHelper, Command, Maybe, PosterWithoutResponse } from "@/Core";
 
-export class SetStatePoster implements Poster<"TriggerSetState"> {
+export class SetStatePoster
+  implements PosterWithoutResponse<"TriggerSetState">
+{
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly environment: string
@@ -17,8 +18,8 @@ export class SetStatePoster implements Poster<"TriggerSetState"> {
   post(
     command: Command.SubCommand<"TriggerSetState">,
     body: Command.Body<"TriggerSetState">
-  ): Promise<Type<string, Command.ApiData<"TriggerSetState">>> {
-    return this.apiHelper.postEmptyResponse<Command.Body<"TriggerSetState">>(
+  ): Promise<Maybe.Type<string>> {
+    return this.apiHelper.postWithoutResponse<Command.Body<"TriggerSetState">>(
       this.getUrl(command),
       this.environment,
       body

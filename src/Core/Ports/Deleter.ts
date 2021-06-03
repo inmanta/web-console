@@ -1,4 +1,4 @@
-import { Either } from "@/Core/Language";
+import { Maybe } from "@/Core/Language";
 import { Command } from "@/Core/Domain";
 
 /**
@@ -9,5 +9,5 @@ import { Command } from "@/Core/Domain";
 export interface Deleter<Kind extends Command.Kind> {
   delete(
     command: Command.SubCommand<Kind>
-  ): Promise<Either.Type<Command.Error<Kind>, Command.ApiData<Kind>>>;
+  ): Promise<Maybe.Type<Command.Error<Kind>>>;
 }

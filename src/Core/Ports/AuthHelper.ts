@@ -1,3 +1,3 @@
 export interface AuthHelper {
-  getLoggedInUserName(): string | null;
+  getUsername(): string | null;
 }

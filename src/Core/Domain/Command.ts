@@ -1,8 +1,9 @@
-import { Either } from "@/Core/Language";
+import { Either, Maybe } from "@/Core/Language";
 import {
   FormAttributeResult,
   InstanceAttributeModel,
   ServiceInstanceModel,
+  SetStateBody,
   VersionedServiceInstanceIdentifier,
 } from "./ServiceInstanceModel";
 import { Config } from "./Config";
@@ -77,12 +78,7 @@ interface TriggerInstanceUpdateManifest {
   trigger: (
     currentAttributes: InstanceAttributeModel | null,
     updatedAttributes: FormAttributeResult[]
-  ) => Promise<
-    Either.Type<
-      Error<"TriggerInstanceUpdate">,
-      ApiData<"TriggerInstanceUpdate">
-    >
-  >;
+  ) => Promise<Maybe.Type<Error<"TriggerInstanceUpdate">>>;
 }
 
 export interface DeleteInstanceCommand
@@ -95,9 +91,7 @@ interface DeleteInstanceManifest {
   apiData: string;
   body: null;
   command: DeleteInstanceCommand;
-  trigger: () => Promise<
-    Either.Type<Error<"DeleteInstance">, ApiData<"DeleteInstance">>
-  >;
+  trigger: () => Promise<Maybe.Type<Error<"DeleteInstance">>>;
 }
 
 export interface TriggerSetStateCommand
@@ -108,13 +102,11 @@ export interface TriggerSetStateCommand
 interface TriggerSetStateManifest {
   error: string;
   apiData: string;
-  body: { current_version: number; target_state: string; message: string };
+  body: SetStateBody;
   command: TriggerSetStateCommand;
   trigger: (
     target_state: string
-  ) => Promise<
-    Either.Type<Error<"TriggerSetState">, ApiData<"TriggerSetState">>
-  >;
+  ) => Promise<Maybe.Type<Error<"TriggerSetState">>>;
 }
 
 /**

@@ -1,5 +1,5 @@
 import { BaseApiHelper, KeycloakAuthHelper } from "@/Infra";
-import { getStoreInstance } from "../Store";
+import { getStoreInstance } from "@/UI";
 import { CommandManagerResolver } from "./CommandManagerResolver";
 
 it("CommandManagerResolver should replace managers when environment changes", () => {

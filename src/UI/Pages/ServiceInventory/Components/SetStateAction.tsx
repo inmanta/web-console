@@ -14,6 +14,7 @@ import { CaretDownIcon } from "@patternfly/react-icons";
 import { DependencyContext, words } from "@/UI";
 import { ActionDisabledTooltip } from "./ActionDisabledTooltip";
 import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { isSome } from "@/Core/Language/Maybe";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: string[] | null;
@@ -49,7 +50,7 @@ export const SetStateAction: React.FC<Props> = ({
 
   const onSubmit = async (targetState: string) => {
     const result = await trigger(targetState);
-    if (result.kind === "Left") {
+    if (isSome(result)) {
       setStateErrorMessage(result.value);
     }
   };

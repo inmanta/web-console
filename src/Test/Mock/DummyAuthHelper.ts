@@ -1,7 +1,7 @@
 import { AuthHelper } from "@/Core";
 
 export class DummyAuthHelper implements AuthHelper {
-  getLoggedInUserName(): string | null {
+  getUsername(): string | null {
     return "inmanta";
   }
 }

@@ -1,9 +1,15 @@
-import { AuthHelper, Command, CommandManager, Either, Poster } from "@/Core";
+import {
+  AuthHelper,
+  Command,
+  CommandManager,
+  Maybe,
+  PosterWithoutResponse,
+} from "@/Core";
 
 export class TriggerSetStateCommandManager implements CommandManager {
   constructor(
     private readonly authHelper: AuthHelper,
-    private readonly poster: Poster<"TriggerSetState">
+    private readonly poster: PosterWithoutResponse<"TriggerSetState">
   ) {}
 
   matches(command: Command.SubCommand<"TriggerSetState">): boolean {
@@ -19,13 +25,8 @@ export class TriggerSetStateCommandManager implements CommandManager {
   private async submit(
     command: Command.SubCommand<"TriggerSetState">,
     targetState: string
-  ): Promise<
-    Either.Type<
-      Command.Error<"TriggerSetState">,
-      Command.ApiData<"TriggerSetState">
-    >
-  > {
-    const userName = this.authHelper.getLoggedInUserName();
+  ): Promise<Maybe.Type<Command.Error<"TriggerSetState">>> {
+    const userName = this.authHelper.getUsername();
     const message = userName
       ? `Triggered from the console by ${userName}`
       : "Triggered from the console";

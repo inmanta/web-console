@@ -2,9 +2,9 @@ import {
   Command,
   CommandManager,
   FormAttributeResult,
-  Either,
   Patcher,
   InstanceAttributeModel,
+  Maybe,
 } from "@/Core";
 import { AttributeResultConverter } from "@/UI/Data/Common";
 
@@ -30,12 +30,7 @@ export class TriggerInstanceUpdateCommandManager implements CommandManager {
     command: Command.SubCommand<"TriggerInstanceUpdate">,
     currentAttributes: InstanceAttributeModel | null,
     updatedAttributes: FormAttributeResult[]
-  ): Promise<
-    Either.Type<
-      Command.Error<"TriggerInstanceUpdate">,
-      Command.ApiData<"TriggerInstanceUpdate">
-    >
-  > {
+  ): Promise<Maybe.Type<Command.Error<"TriggerInstanceUpdate">>> {
     // Make sure correct types are used
     const parsedAttributes =
       this.attributeConverter.parseAttributesToCorrectTypes(updatedAttributes);

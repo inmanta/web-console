@@ -1,14 +1,11 @@
-import { Either } from "@/Core";
+import { Either, Maybe } from "@/Core";
 
 /**
  * The ApiHelper provides basic api helper methods.
  */
 export interface ApiHelper {
   getBaseUrl(): string;
-  delete(
-    url: string,
-    environment: string
-  ): Promise<Either.Type<string, string>>;
+  delete(url: string, environment: string): Promise<Maybe.Type<string>>;
   get<Data>(
     url: string,
     environment: string
@@ -18,14 +15,14 @@ export interface ApiHelper {
     environment: string,
     body: Body
   ): Promise<Either.Type<string, Data>>;
-  postEmptyResponse<Body>(
+  postWithoutResponse<Body>(
     url: string,
     environment: string,
     body: Body
-  ): Promise<Either.Type<string, string>>;
+  ): Promise<Maybe.Type<string>>;
   patch<Body = unknown>(
     url: string,
     environment: string,
     body: Body
-  ): Promise<Either.Type<string, string>>;
+  ): Promise<Maybe.Type<string>>;
 }

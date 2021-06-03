@@ -1,5 +1,4 @@
-import { ApiHelper, Command, Patcher } from "@/Core";
-import { Type } from "@/Core/Language/Either";
+import { ApiHelper, Command, Maybe, Patcher } from "@/Core";
 
 export class TriggerInstanceUpdatePatcher
   implements Patcher<"TriggerInstanceUpdate">
@@ -20,7 +19,7 @@ export class TriggerInstanceUpdatePatcher
   patch(
     command: Command.SubCommand<"TriggerInstanceUpdate">,
     body: Command.Body<"TriggerInstanceUpdate">
-  ): Promise<Type<string, Command.ApiData<"TriggerInstanceUpdate">>> {
+  ): Promise<Maybe.Type<string>> {
     return this.apiHelper.patch<Command.Body<"TriggerInstanceUpdate">>(
       this.getUrl(command),
       this.environment,
