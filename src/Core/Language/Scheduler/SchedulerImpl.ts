@@ -1,6 +1,5 @@
-import { Maybe } from "@/Core/Language";
-import { Dictionary } from "./Dictionary";
-import { DictionaryImpl } from "./DictionaryImpl";
+import * as Maybe from "@/Core/Language/Maybe";
+import { Dictionary, DictionaryImpl } from "@/Core/Language/Dictionary";
 import { Scheduler, Task } from "./Scheduler";
 
 export class SchedulerImpl implements Scheduler {

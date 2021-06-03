@@ -11,7 +11,8 @@ The agreement is to roughly follow the building blocks in the folder structure.
 src/
   Core/
     Domain/ - Domain entities, Query/Command interfaces
-    Ports/ - interfaces for communicating with the backend
+    Contracts/ - All interfaces that represent a contract
+    Language/ - Language extensions & isolated implementations
   Data/ - Implementations for the interfaces in Ports, connecting them to Domain entities (how to fetch them) and the Store (how to store them)
     Infra/ - Handling of Fetch API
     Routing/ - Code related to routing and urls
