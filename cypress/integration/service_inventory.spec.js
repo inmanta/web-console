@@ -63,7 +63,6 @@ describe("Service inventory", function () {
     cy.contains("button", "Delete").click();
     cy.contains("button", "Yes").click();
     cy.get(".pf-c-alert.pf-m-danger").should("contain.text", "Bad Request");
-    cy.get("[data-cy=close-alert]").click().should("not.exist");
   });
   it("Should show attributes tab when clicking on attribute summary", function () {
     cy.visit(

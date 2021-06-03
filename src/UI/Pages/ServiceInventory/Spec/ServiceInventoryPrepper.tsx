@@ -11,19 +11,23 @@ import { DependencyProvider } from "@/UI/Dependency";
 import {
   AttributeResultConverterImpl,
   CommandResolverImpl,
+  DeleteInstanceCommandManager,
   QueryResolverImpl,
   ResourcesQueryManager,
   ResourcesStateHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  UpdateInstanceCommandManager,
+  TriggerInstanceUpdateCommandManager,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";
-import { BaseApiHelper } from "@/Infra";
-import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
+import {
+  BaseApiHelper,
+  InstanceDeleter,
+  TriggerInstanceUpdatePatcher,
+} from "@/Infra";
 
 export interface Handles {
   component: React.ReactElement;
@@ -60,13 +64,19 @@ export class ServiceInventoryPrepper {
     );
     const urlManager = new UrlManagerImpl("", service.environment);
 
-    const commandManager = new UpdateInstanceCommandManager(
-      new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+    const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
+      new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
       new AttributeResultConverterImpl()
+    );
+    const deleteCommandManager = new DeleteInstanceCommandManager(
+      new InstanceDeleter(new BaseApiHelper(), "env1")
     );
 
     const commandResolver = new CommandResolverImpl(
-      new DynamicCommandManagerResolver([commandManager])
+      new DynamicCommandManagerResolver([
+        triggerUpdateCommandManager,
+        deleteCommandManager,
+      ])
     );
 
     const component = (
@@ -75,11 +85,7 @@ export class ServiceInventoryPrepper {
           dependencies={{ queryResolver, urlManager, commandResolver }}
         >
           <StoreProvider store={store}>
-            <ServiceInventory
-              serviceName={service.name}
-              environmentId={service.environment}
-              service={service}
-            />
+            <ServiceInventory serviceName={service.name} service={service} />
           </StoreProvider>
         </DependencyProvider>
       </MemoryRouter>

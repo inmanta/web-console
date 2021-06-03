@@ -1,5 +1,4 @@
 import { ReactElement } from "react";
-import { KeycloakInstance } from "keycloak-js";
 import { InstanceActions } from "@/UI/Pages/ServiceInventory/Components";
 import { ActionPresenter, ServiceInstanceForAction } from "./ActionPresenter";
 import { InstanceSetStateManager } from "@/UI/Pages/ServiceInventory/InstanceSetStateManager";
@@ -8,7 +7,6 @@ import { ServiceModel } from "@/Core";
 export class InstanceActionPresenter implements ActionPresenter {
   constructor(
     private readonly instances: ServiceInstanceForAction[],
-    private readonly keycloak: KeycloakInstance | undefined,
     private readonly instanceSetStateManager: InstanceSetStateManager,
     private readonly serviceEntity: ServiceModel
   ) {}
@@ -22,7 +20,6 @@ export class InstanceActionPresenter implements ActionPresenter {
     if (typeof instance === "undefined") return null;
     return InstanceActions({
       instance,
-      keycloak: this.keycloak,
       editDisabled: this.isTransferDisabled(id, "on_update"),
       deleteDisabled: this.isTransferDisabled(id, "on_delete"),
       attributeModels: this.serviceEntity.attributes,

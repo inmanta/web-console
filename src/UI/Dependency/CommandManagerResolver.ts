@@ -1,19 +1,23 @@
 import { CommandManager, ManagerResolver } from "@/Core";
-import { BaseApiHelper } from "@/Infra";
+import {
+  BaseApiHelper,
+  InstanceDeleter,
+  TriggerInstanceUpdatePatcher,
+} from "@/Infra";
 import {
   AttributeResultConverterImpl,
   CreateInstanceCommandManager,
+  DeleteInstanceCommandManager,
   InstanceConfigCommandManager,
-  UpdateInstanceCommandManager,
-  ServiceConfigCommandManager,
+  InstanceConfigStateHelper,
+  TriggerInstanceUpdateCommandManager,
   CreateInstancePoster,
   InstanceConfigPoster,
   ServiceConfigPoster,
   ServiceConfigStateHelper,
+  ServiceConfigCommandManager,
 } from "@/UI/Data";
 import { Store } from "@/UI/Store";
-import { InstanceConfigStateHelper } from "@/UI/Data";
-import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -47,9 +51,12 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new CreateInstancePoster(this.baseApiHelper, environment),
         new AttributeResultConverterImpl()
       ),
-      new UpdateInstanceCommandManager(
-        new UpdateInstancePatcher(this.baseApiHelper, environment),
+      new TriggerInstanceUpdateCommandManager(
+        new TriggerInstanceUpdatePatcher(this.baseApiHelper, environment),
         new AttributeResultConverterImpl()
+      ),
+      new DeleteInstanceCommandManager(
+        new InstanceDeleter(this.baseApiHelper, environment)
       ),
     ];
   }

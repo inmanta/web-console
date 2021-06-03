@@ -114,4 +114,17 @@ export class BaseApiHelper implements ApiHelper {
       body: JSON.stringify(body),
     });
   }
+
+  async delete(
+    url: string,
+    environment: string
+  ): Promise<Either.Type<string, string>> {
+    return this.executeEmptyResponse(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...this.getHeaders(environment),
+      },
+      method: "DELETE",
+    });
+  }
 }

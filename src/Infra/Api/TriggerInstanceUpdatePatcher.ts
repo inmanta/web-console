@@ -1,7 +1,9 @@
 import { ApiHelper, Command, Patcher } from "@/Core";
 import { Type } from "@/Core/Language/Either";
 
-export class UpdateInstancePatcher implements Patcher<"TriggerInstanceUpdate"> {
+export class TriggerInstanceUpdatePatcher
+  implements Patcher<"TriggerInstanceUpdate">
+{
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly environment: string
