@@ -1,4 +1,6 @@
-# Table of Contents
+[Main Index](../index.md)
+
+# Design Index
 
 - [Building blocks](./building-blocks.md)
 - [Domain](./domain.md)
