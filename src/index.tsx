@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import keycloakConf from "@/UI/App/keycloak.json";
+import keycloakConf from "@/UI/Root/keycloak.json";
 import { BaseApiHelper, KeycloakAuthHelper } from "@/Infra";
-import { App } from "@/UI/App/app";
+import { App } from "@/UI/Root/app";
 import {
   DependencyProvider,
   CommandManagerResolver,

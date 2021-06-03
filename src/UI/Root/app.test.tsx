@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import Keycloak from "keycloak-js";
-import { App } from "@/UI/App/app";
+import { App } from "@/UI/Root/app";
 import { getStoreInstance } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
