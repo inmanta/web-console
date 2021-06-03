@@ -17,7 +17,6 @@ describe("InstanceActionPresenter ", () => {
     const setStateManager = new InstanceSetStateManager(instances, undefined);
     const actionPresenter = new InstanceActionPresenter(
       instances,
-      undefined,
       setStateManager,
       partialEntity
     );
@@ -47,7 +46,6 @@ describe("InstanceActionPresenter ", () => {
     const setStateManager = new InstanceSetStateManager(instances, undefined);
     const actionPresenter = new InstanceActionPresenter(
       instances,
-      undefined,
       setStateManager,
       partialEntity
     );
@@ -76,7 +74,6 @@ describe("InstanceActionPresenter ", () => {
     const setStateManager = new InstanceSetStateManager(instances, undefined);
     const actionPresenter = new InstanceActionPresenter(
       instances,
-      undefined,
       setStateManager,
       partialEntity
     );

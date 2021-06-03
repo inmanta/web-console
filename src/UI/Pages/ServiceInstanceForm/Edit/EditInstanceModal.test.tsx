@@ -4,10 +4,10 @@ import userEvent from "@testing-library/user-event";
 import { EditInstanceModal } from "./EditInstanceModal";
 import { AttributeModel } from "@/Core";
 import { BaseApiHelper } from "@/Infra";
-import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
+import { TriggerInstanceUpdatePatcher } from "@/Infra/Api/UpdateInstancePatcher";
 import {
   AttributeResultConverterImpl,
-  UpdateInstanceCommandManager,
+  TriggerInstanceUpdateCommandManager,
 } from "@/UI";
 import { CommandResolverImpl } from "@/UI/Data";
 import { DynamicCommandManagerResolver } from "@/Test";
@@ -36,8 +36,8 @@ function setup() {
       default_value: null,
     },
   ];
-  const commandManager = new UpdateInstanceCommandManager(
-    new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+  const commandManager = new TriggerInstanceUpdateCommandManager(
+    new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
     new AttributeResultConverterImpl()
   );
   const commandResolver = new CommandResolverImpl(

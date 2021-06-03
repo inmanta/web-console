@@ -11,3 +11,4 @@ export * from "./StateHelper";
 export * from "./TriggerProvider";
 export * from "./UrlManager";
 export * from "./Patcher";
+export * from "./Deleter";

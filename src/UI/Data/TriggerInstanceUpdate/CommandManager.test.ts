@@ -1,13 +1,13 @@
 import { BaseApiHelper } from "@/Infra";
-import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
+import { TriggerInstanceUpdatePatcher } from "@/Infra/Api/UpdateInstancePatcher";
 import {
-  UpdateInstanceCommandManager,
+  TriggerInstanceUpdateCommandManager,
   AttributeResultConverterImpl,
 } from "@/UI/Data";
 
-describe("UpdateInstanceManager", () => {
-  const commandManager = new UpdateInstanceCommandManager(
-    new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+describe("TriggerInstanceUpdateCommandManager ", () => {
+  const commandManager = new TriggerInstanceUpdateCommandManager(
+    new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
     new AttributeResultConverterImpl()
   );
   const currentAttributes = { attr1: "some value", attr2: "", attr3: null };

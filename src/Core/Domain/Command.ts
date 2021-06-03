@@ -10,7 +10,8 @@ import { Either } from "@/Core/Language";
 type Command =
   | InstanceConfigCommand
   | CreateInstanceCommand
-  | TriggerInstanceUpdateCommand;
+  | TriggerInstanceUpdateCommand
+  | DeleteInstanceCommand;
 export type Type = Command;
 
 /**
@@ -69,6 +70,21 @@ interface TriggerInstanceUpdateManifest {
   >;
 }
 
+export interface DeleteInstanceCommand
+  extends VersionedServiceInstanceIdentifier {
+  kind: "DeleteInstance";
+}
+
+interface DeleteInstanceManifest {
+  error: string;
+  apiData: string;
+  body: null;
+  command: DeleteInstanceCommand;
+  trigger: () => Promise<
+    Either.Type<Error<"DeleteInstance">, ApiData<"DeleteInstance">>
+  >;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub commands.
@@ -77,6 +93,7 @@ interface Manifest {
   InstanceConfig: InstanceConfigManifest;
   CreateInstance: CreateInstanceManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdateManifest;
+  DeleteInstance: DeleteInstanceManifest;
 }
 
 /**

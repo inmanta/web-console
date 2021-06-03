@@ -43,7 +43,6 @@ export const TableProvider: React.FC<Props> = ({
   );
   const actionPresenter = new InstanceActionPresenter(
     instances,
-    keycloak,
     instanceSetStatePresenter,
     serviceEntity
   );

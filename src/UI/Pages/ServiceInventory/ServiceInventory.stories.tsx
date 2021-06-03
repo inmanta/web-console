@@ -64,11 +64,7 @@ export const Basic: React.FC = () => {
     <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <MemoryRouter>
-          <ServiceInventory
-            serviceName={Service.a.name}
-            environmentId={Service.a.environment}
-            service={Service.a}
-          />
+          <ServiceInventory serviceName={Service.a.name} service={Service.a} />
         </MemoryRouter>
       </StoreProvider>
     </DependencyProvider>
@@ -97,11 +93,7 @@ export const Failed: React.FC = () => {
     <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <MemoryRouter>
-          <ServiceInventory
-            serviceName={Service.a.name}
-            environmentId={Service.a.environment}
-            service={Service.a}
-          />
+          <ServiceInventory serviceName={Service.a.name} service={Service.a} />
         </MemoryRouter>
       </StoreProvider>
     </DependencyProvider>

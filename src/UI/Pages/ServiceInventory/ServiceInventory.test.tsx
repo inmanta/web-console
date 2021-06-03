@@ -19,16 +19,20 @@ import {
   ServiceInstancesStateHelper,
   ResourcesQueryManager,
   ResourcesStateHelper,
-  UpdateInstanceCommandManager,
+  TriggerInstanceUpdateCommandManager,
   AttributeResultConverterImpl,
   CommandResolverImpl,
+  DeleteInstanceCommandManager,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";
-import { BaseApiHelper } from "@/Infra";
-import { UpdateInstancePatcher } from "@/Infra/Api/UpdateInstancePatcher";
+import {
+  BaseApiHelper,
+  InstanceDeleter,
+  TriggerInstanceUpdatePatcher,
+} from "@/Infra";
 
 function setup() {
   const store = getStoreInstance();
@@ -55,13 +59,20 @@ function setup() {
 
   const urlManager = new UrlManagerImpl("", Service.a.environment);
 
-  const commandManager = new UpdateInstanceCommandManager(
-    new UpdateInstancePatcher(new BaseApiHelper(), "env1"),
+  const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
+    new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
     new AttributeResultConverterImpl()
   );
 
+  const deleteCommandManager = new DeleteInstanceCommandManager(
+    new InstanceDeleter(new BaseApiHelper(), "env1")
+  );
+
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager])
+    new DynamicCommandManagerResolver([
+      triggerUpdateCommandManager,
+      deleteCommandManager,
+    ])
   );
 
   const component = (
@@ -70,11 +81,7 @@ function setup() {
         dependencies={{ queryResolver, urlManager, commandResolver }}
       >
         <StoreProvider store={store}>
-          <ServiceInventory
-            serviceName={Service.a.name}
-            environmentId={Service.a.environment}
-            service={Service.a}
-          />
+          <ServiceInventory serviceName={Service.a.name} service={Service.a} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

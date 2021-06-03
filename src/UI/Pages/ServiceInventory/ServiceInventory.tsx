@@ -1,11 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  PageSection,
-  Alert,
-  Card,
-  AlertActionCloseButton,
-  AlertGroup,
-} from "@patternfly/react-core";
+import { PageSection, Card } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
 import {
@@ -21,10 +15,8 @@ import {
   ErrorView,
   LoadingView,
   ServiceProvider,
-  EnvironmentProvider,
   PaginationWidget,
 } from "@/UI/Components";
-import { InventoryContext } from "./InventoryContext";
 import { TableControls } from "./Components";
 import { PageParams } from "@/UI/Routing";
 import { useParams } from "react-router-dom";
@@ -39,20 +31,11 @@ export const ServiceInventoryWithProvider: React.FC = () => {
   const { service: serviceName } = useParams<PageParams<"Inventory">>();
 
   return (
-    <EnvironmentProvider
+    <ServiceProvider
+      serviceName={serviceName}
       Wrapper={Wrapper}
-      Dependant={({ environment }) => (
-        <ServiceProvider
-          serviceName={serviceName}
-          Wrapper={Wrapper}
-          Dependant={({ service }) => (
-            <ServiceInventory
-              service={service}
-              environmentId={environment}
-              serviceName={serviceName}
-            />
-          )}
-        />
+      Dependant={({ service }) => (
+        <ServiceInventory service={service} serviceName={serviceName} />
       )}
     />
   );
@@ -60,11 +43,8 @@ export const ServiceInventoryWithProvider: React.FC = () => {
 
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
-  environmentId: string;
   service: ServiceModel;
-}> = ({ serviceName, environmentId, service }) => {
-  const [instanceErrorMessage, setInstanceErrorMessage] = React.useState("");
-
+}> = ({ serviceName, service }) => {
   const shouldUseAuth =
     process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
   let keycloak;
@@ -124,49 +104,24 @@ export const ServiceInventory: React.FunctionComponent<{
               aria-label="ServiceInventory-Failed"
             />
           ),
-          success: ({ data: instances }) => (
-            <InventoryContext.Provider
-              value={{
-                attributes: service.attributes,
-                environmentId,
-                inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
-                setErrorMessage: setInstanceErrorMessage,
-                refresh: retry,
-              }}
-            >
-              {instanceErrorMessage && (
-                <AlertGroup isToast={true}>
-                  <Alert
-                    variant="danger"
-                    title={instanceErrorMessage}
-                    actionClose={
-                      <AlertActionCloseButton
-                        data-cy="close-alert"
-                        onClose={() => setInstanceErrorMessage("")}
-                      />
-                    }
-                  />
-                </AlertGroup>
-              )}
-              {instances.length > 0 ? (
-                <TableProvider
-                  aria-label="ServiceInventory-Success"
-                  instances={instances}
-                  keycloak={keycloak}
-                  serviceEntity={service}
-                  sortColumn={sortColumn}
-                  setSortColumn={setSortColumn}
-                  order={order}
-                  setOrder={setOrder}
-                />
-              ) : (
-                <EmptyView
-                  message={words("inventory.empty.message")(serviceName)}
-                  aria-label="ServiceInventory-Empty"
-                />
-              )}
-            </InventoryContext.Provider>
-          ),
+          success: ({ data: instances }) =>
+            instances.length > 0 ? (
+              <TableProvider
+                aria-label="ServiceInventory-Success"
+                instances={instances}
+                keycloak={keycloak}
+                serviceEntity={service}
+                sortColumn={sortColumn}
+                setSortColumn={setSortColumn}
+                order={order}
+                setOrder={setOrder}
+              />
+            ) : (
+              <EmptyView
+                message={words("inventory.empty.message")(serviceName)}
+                aria-label="ServiceInventory-Empty"
+              />
+            ),
         },
         data
       )}

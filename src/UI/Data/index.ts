@@ -11,4 +11,5 @@ export * from "./Projects";
 export * from "./QueryResolverImpl";
 export * from "./CreateInstance";
 export * from "./Common";
-export * from "./UpdateInstance";
+export * from "./TriggerInstanceUpdate";
+export * from "./DeleteInstance";

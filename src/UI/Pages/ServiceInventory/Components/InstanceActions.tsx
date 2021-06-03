@@ -1,5 +1,4 @@
 import React from "react";
-import { KeycloakInstance } from "keycloak-js";
 import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
 import {
   Button,
@@ -18,7 +17,6 @@ import { AttributeModel } from "@/Core";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
-  keycloak?: KeycloakInstance;
   editDisabled: boolean;
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
@@ -34,7 +32,6 @@ export interface InstanceActionsProps {
 
 export const InstanceActions: React.FC<InstanceActionsProps> = ({
   instance,
-  keycloak,
   editDisabled,
   attributeModels,
   deleteDisabled,
@@ -58,7 +55,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
           serviceName={instance.service_entity}
           instanceId={instance.id}
           instanceVersion={instance.version}
-          keycloak={keycloak}
         />
       </DescriptionListGroup>
       <DescriptionListGroup>

@@ -21,7 +21,10 @@ import {
 import { ServiceModel } from "@/Core";
 import { CatalogContent } from "./CatalogContent";
 import { Link } from "react-router-dom";
-import { IRequestParams } from "@/UI/App/utils/fetchInmantaApi";
+import {
+  fetchInmantaApi,
+  IRequestParams,
+} from "@/UI/App/utils/fetchInmantaApi";
 import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
 import { Routing } from "@/UI/Routing";
 import { words } from "@/UI";
@@ -175,6 +178,10 @@ const DeleteEntityModal: React.FunctionComponent<{
   const handleModalToggle = () => {
     setIsOpen(!isOpen);
   };
+  const onSubmit = async () => {
+    handleModalToggle();
+    await fetchInmantaApi(props.requestParams);
+  };
   return (
     <React.Fragment>
       <Button variant="danger" onClick={handleModalToggle}>
@@ -188,10 +195,7 @@ const DeleteEntityModal: React.FunctionComponent<{
         onClose={handleModalToggle}
       >
         {`Are you sure you want to delete service entity ${props.serviceName}?`}
-        <DeleteForm
-          requestParams={props.requestParams}
-          closeModal={() => setIsOpen(false)}
-        />
+        <DeleteForm onSubmit={onSubmit} onCancel={handleModalToggle} />
       </Modal>
     </React.Fragment>
   );

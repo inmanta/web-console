@@ -8,7 +8,7 @@ import {
 } from "@/Core";
 import { AttributeResultConverter } from "@/UI/Data/Common";
 
-export class UpdateInstanceCommandManager implements CommandManager {
+export class TriggerInstanceUpdateCommandManager implements CommandManager {
   constructor(
     private readonly patcher: Patcher<"TriggerInstanceUpdate">,
     private readonly attributeConverter: AttributeResultConverter
