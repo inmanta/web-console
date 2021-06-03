@@ -14,7 +14,7 @@ import {
   QueryResolverImpl,
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 import { UrlManagerImpl } from "@/UI/Routing";

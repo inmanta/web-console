@@ -20,7 +20,7 @@ import {
   SetStatePoster,
   TriggerInstanceUpdateCommandManager,
   TriggerSetStateCommandManager,
-} from "@/UI/Data";
+} from "@/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";

@@ -11,7 +11,7 @@ import {
   QueryResolverImpl,
   InstanceLogsQueryManager,
   InstanceLogsStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";

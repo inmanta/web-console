@@ -9,7 +9,7 @@ import {
   ServiceKeyMaker,
   ServiceStateHelper,
   InstanceConfigFinalizer,
-} from "@/UI/Data";
+} from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { getStoreInstance } from "@/UI/Store";
 import { ConfigTab } from "./ConfigTab";

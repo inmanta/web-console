@@ -16,7 +16,7 @@ import {
   QueryResolverImpl,
   ResourcesQueryManager,
   ResourcesStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import userEvent from "@testing-library/user-event";
 import { UrlManagerImpl } from "@/UI/Routing";
 

@@ -6,7 +6,7 @@ import {
   InstanceAttributeModel,
   Maybe,
 } from "@/Core";
-import { AttributeResultConverter } from "@/UI/Data/Common";
+import { AttributeResultConverter } from "@/Data/Common";
 
 export class TriggerInstanceUpdateCommandManager implements CommandManager {
   constructor(

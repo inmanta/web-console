@@ -5,10 +5,10 @@ import { EditInstanceModal } from "./EditInstanceModal";
 import { AttributeModel } from "@/Core";
 import { BaseApiHelper, TriggerInstanceUpdatePatcher } from "@/Infra";
 import {
+  CommandResolverImpl,
   AttributeResultConverterImpl,
   TriggerInstanceUpdateCommandManager,
-} from "@/UI";
-import { CommandResolverImpl } from "@/UI/Data";
+} from "@/Data";
 import { DynamicCommandManagerResolver } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 

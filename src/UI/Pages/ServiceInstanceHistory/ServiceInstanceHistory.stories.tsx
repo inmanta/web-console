@@ -14,7 +14,7 @@ import {
   QueryResolverImpl,
   InstanceLogsQueryManager,
   InstanceLogsStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 
 export default {
   title: "ServiceInstanceHistory",

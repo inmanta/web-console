@@ -10,7 +10,7 @@ import {
   QueryResolverImpl,
   ProjectsQueryManager,
   ProjectsStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import { DeferredFetcher, DynamicQueryManagerResolver } from "@/Test";
 
 function setup() {

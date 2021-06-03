@@ -17,7 +17,7 @@ import {
   ServiceInstancesStateHelper,
   ResourcesQueryManager,
   ResourcesStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 

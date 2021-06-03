@@ -7,15 +7,14 @@ import {
   Service,
   StaticScheduler,
 } from "@/Test";
-import { Either, InstanceEvent } from "@/Core";
+import { Either, InstanceEvent, Pagination } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   EventsQueryManager,
   EventsStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import { getStoreInstance } from "@/UI/Store";
-import { Metadata } from "@/Core/Domain/Pagination";
 import { EventsPage } from "./EventsPage";
 
 function setup() {
@@ -62,7 +61,11 @@ test("EventsView shows empty table", async () => {
   ).toBeInTheDocument();
 
   apiHelper.resolve(
-    Either.right({ data: [], links: { self: "" }, metadata: {} as Metadata })
+    Either.right({
+      data: [],
+      links: { self: "" },
+      metadata: {} as Pagination.Metadata,
+    })
   );
 
   expect(
@@ -114,7 +117,7 @@ test("EventsView shows success table", async () => {
         } as InstanceEvent,
       ],
       links: { self: "" },
-      metadata: {} as Metadata,
+      metadata: {} as Pagination.Metadata,
     })
   );
 
@@ -132,7 +135,11 @@ test("EventsView shows updated table", async () => {
   ).toBeInTheDocument();
 
   apiHelper.resolve(
-    Either.right({ data: [], links: { self: "" }, metadata: {} as Metadata })
+    Either.right({
+      data: [],
+      links: { self: "" },
+      metadata: {} as Pagination.Metadata,
+    })
   );
 
   expect(
@@ -162,7 +169,7 @@ test("EventsView shows updated table", async () => {
         } as InstanceEvent,
       ],
       links: { self: "" },
-      metadata: {} as Metadata,
+      metadata: {} as Pagination.Metadata,
     })
   );
 

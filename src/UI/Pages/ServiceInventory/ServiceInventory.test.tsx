@@ -25,7 +25,7 @@ import {
   DeleteInstanceCommandManager,
   TriggerSetStateCommandManager,
   SetStatePoster,
-} from "@/UI/Data";
+} from "@/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";

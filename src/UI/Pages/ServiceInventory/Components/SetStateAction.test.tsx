@@ -1,10 +1,10 @@
 import { BaseApiHelper, KeycloakAuthHelper } from "@/Infra";
 import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
-import { CommandResolverImpl } from "@/UI";
 import {
   SetStatePoster,
   TriggerSetStateCommandManager,
-} from "@/UI/Data/TriggerSetState";
+  CommandResolverImpl,
+} from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { fireEvent, screen, render } from "@testing-library/react";
 import React from "react";

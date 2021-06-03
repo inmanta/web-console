@@ -1,11 +1,11 @@
-import { Fetcher, StateHelper, Scheduler, EventParams } from "@/Core";
-import { ContinuousQueryManagerImpl } from "@/UI/Data/QueryManagerImpl";
+import { Scheduler, Fetcher, StateHelper, ServiceInstanceParams } from "@/Core";
+import { ContinuousQueryManagerImpl } from "@/Data/QueryManagerImpl";
 import { getUrl } from "./getUrl";
 
-export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
+export class ServiceInstancesQueryManager extends ContinuousQueryManagerImpl<"ServiceInstances"> {
   constructor(
-    fetcher: Fetcher<"Events">,
-    stateHelper: StateHelper<"Events">,
+    fetcher: Fetcher<"ServiceInstances">,
+    stateHelper: StateHelper<"ServiceInstances">,
     scheduler: Scheduler,
     environment: string
   ) {
@@ -13,15 +13,14 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
       fetcher,
       stateHelper,
       scheduler,
-      ({ id }) => id,
-      ({ id, service_entity, sort, filter, pageSize }) => [
-        id,
-        service_entity,
-        sort?.order,
+      ({ name }) => name,
+      ({ name, filter, sort }) => [
+        name,
         stringifyFilter(filter),
-        pageSize,
+        sort?.name,
+        sort?.order,
       ],
-      "Events",
+      "ServiceInstances",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")
@@ -40,6 +39,8 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
   }
 }
 
-function stringifyFilter(filter: EventParams.Filter | undefined): string {
+function stringifyFilter(
+  filter: ServiceInstanceParams.Filter | undefined
+): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

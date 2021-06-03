@@ -3,7 +3,7 @@ import { Card, CardBody, CardHeader } from "@patternfly/react-core";
 import { FormAttributeResult, ServiceModel } from "@/Core";
 import { words } from "@/UI";
 import { CreateFormPresenter } from "./CreateFormPresenter";
-import { AttributeInputConverterImpl } from "@/UI/Data";
+import { AttributeInputConverterImpl } from "@/Data";
 
 interface Props {
   serviceEntity: ServiceModel;

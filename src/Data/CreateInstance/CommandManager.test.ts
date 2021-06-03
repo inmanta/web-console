@@ -1,5 +1,5 @@
 import { BaseApiHelper } from "@/Infra";
-import { AttributeResultConverterImpl } from "@/UI/Data/Common";
+import { AttributeResultConverterImpl } from "@/Data/Common";
 import { CreateInstancePoster } from "./Poster";
 import { CreateInstanceCommandManager } from "./CommandManager";
 

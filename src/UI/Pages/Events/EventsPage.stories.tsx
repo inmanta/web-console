@@ -16,7 +16,7 @@ import {
   QueryResolverImpl,
   EventsQueryManager,
   EventsStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
 
 export default {

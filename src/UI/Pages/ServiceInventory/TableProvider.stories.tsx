@@ -16,7 +16,7 @@ import {
   QueryResolverImpl,
   ResourcesQueryManager,
   ResourcesStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import { MemoryRouter } from "react-router";
 
 export default {

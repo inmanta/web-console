@@ -3,11 +3,8 @@ import React from "react";
 import { DeleteModal } from "./DeleteModal";
 import userEvent from "@testing-library/user-event";
 import { BaseApiHelper, InstanceDeleter } from "@/Infra";
-import {
-  CommandResolverImpl,
-  DeleteInstanceCommandManager,
-  DependencyProvider,
-} from "@/UI";
+import { CommandResolverImpl, DeleteInstanceCommandManager } from "@/Data";
+import { DependencyProvider } from "@/UI";
 import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
 
 function setup() {

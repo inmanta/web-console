@@ -15,7 +15,7 @@ import {
   QueryResolverImpl,
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 

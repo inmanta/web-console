@@ -13,7 +13,7 @@ import {
   QueryResolverImpl,
   ResourcesQueryManager,
   ResourcesStateHelper,
-} from "@/UI/Data";
+} from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { StoreProvider } from "easy-peasy";
 

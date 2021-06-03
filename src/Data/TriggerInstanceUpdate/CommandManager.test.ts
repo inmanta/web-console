@@ -2,7 +2,7 @@ import { BaseApiHelper, TriggerInstanceUpdatePatcher } from "@/Infra";
 import {
   TriggerInstanceUpdateCommandManager,
   AttributeResultConverterImpl,
-} from "@/UI/Data";
+} from "@/Data";
 
 describe("TriggerInstanceUpdateCommandManager ", () => {
   const commandManager = new TriggerInstanceUpdateCommandManager(

@@ -10,7 +10,7 @@ import {
   CommandManagerResolver,
   QueryManagerResolver,
 } from "@/UI/Dependency";
-import { CommandResolverImpl, QueryResolverImpl } from "@/UI/Data";
+import { CommandResolverImpl, QueryResolverImpl } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
 import { getStoreInstance } from "@/UI/Store";
 

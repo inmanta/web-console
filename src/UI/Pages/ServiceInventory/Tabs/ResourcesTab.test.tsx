@@ -12,7 +12,7 @@ import {
   QueryResolverImpl,
   ResourcesStateHelper,
   ResourcesQueryManager,
-} from "@/UI/Data";
+} from "@/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ResourcesTab } from "./ResourcesTab";
 import { UrlManagerImpl } from "@/UI/Routing";
