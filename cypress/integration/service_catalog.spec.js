@@ -21,7 +21,7 @@ describe("Service catalog", function () {
     cy.get("#e2e_service-expand")
       .find(".pf-c-tabs__item")
       .find(".pf-c-tabs__link")
-      .should("have.length", 2);
+      .should("have.length", 3);
     cy.get("#e2e_service-expand")
       .find(".pf-c-tabs__item")
       .find(".pf-c-tabs__link")
@@ -29,28 +29,41 @@ describe("Service catalog", function () {
         let texts = tabs.map((idx, tab) => Cypress.$(tab).text());
 
         texts = texts.get();
-        expect(texts).to.deep.eq(["Attributes", "Lifecycle States"]);
+        expect(texts).to.deep.eq(["Attributes", "Lifecycle States", "Config"]);
       });
   });
   it("Should navigate between tabs", function () {
     cy.get("#e2e_service-toggle").click();
     cy.get("#e2e_service-expand")
       .find(".pf-c-tab-content")
-      .first()
-      .should("be.visible");
+      .should("have.length", 1);
+
     cy.get("#e2e_service-expand")
       .find(".pf-c-tab-content")
-      .last()
-      .should("not.be.visible");
+      .first()
+      .should("be.visible");
+
     cy.contains("Lifecycle States").click();
+
+    cy.get("#e2e_service-expand")
+      .find(".pf-c-tab-content")
+      .should("have.length", 2);
+
     cy.get("#e2e_service-expand")
       .find(".pf-c-tab-content")
       .first()
       .should("not.be.visible");
+
     cy.get("#e2e_service-expand")
       .find(".pf-c-tab-content")
       .last()
       .should("be.visible");
+
+    cy.contains("Config").click();
+
+    cy.get("#e2e_service-expand")
+      .find(".pf-c-tab-content")
+      .should("have.length", 3);
   });
   it("Should open multiple items in data list", function () {
     cy.get("#e2e_service-toggle").click();
