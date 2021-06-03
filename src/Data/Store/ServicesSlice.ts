@@ -1,6 +1,6 @@
 import { Action, action } from "easy-peasy";
 import { Query, RemoteData, ServiceModel } from "@/Core";
-import { injections } from "@/UI/Store/Injections";
+import { injections } from "@/Data/Store/Injections";
 
 /**
  * The ServicesSlice stores Services.

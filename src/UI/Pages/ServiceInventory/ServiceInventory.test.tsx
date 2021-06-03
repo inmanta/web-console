@@ -29,8 +29,8 @@ import {
   KeycloakAuthHelper,
   TriggerSetStateCommandManager,
   SetStatePoster,
+  getStoreInstance,
 } from "@/Data";
-import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";

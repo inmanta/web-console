@@ -7,8 +7,8 @@ import {
   QueryResolverImpl,
   EventsQueryManager,
   EventsStateHelper,
+  getStoreInstance,
 } from "@/Data";
-import { getStoreInstance } from "@/UI/Store";
 import { EventsPage } from "@/UI/Pages/Events/EventsPage";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";

@@ -14,9 +14,9 @@ import {
   QueryResolverImpl,
   BaseApiHelper,
   KeycloakAuthHelper,
+  getStoreInstance,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
-import { getStoreInstance } from "@/UI/Store";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */

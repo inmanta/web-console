@@ -9,9 +9,9 @@ import {
   ServiceKeyMaker,
   ServiceStateHelper,
   InstanceConfigFinalizer,
+  getStoreInstance,
 } from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import { ConfigTab } from "./ConfigTab";
 import {
   DynamicCommandManagerResolver,

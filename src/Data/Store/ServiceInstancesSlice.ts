@@ -5,8 +5,8 @@ import {
   RemoteData,
   ServiceInstanceModelWithTargetStates,
 } from "@/Core";
-import { StoreModel } from "@/UI/Store/Store";
-import { injections } from "@/UI/Store/Injections";
+import { StoreModel } from "./Store";
+import { injections } from "./Injections";
 
 type Data = RemoteData.Type<
   Query.Error<"ServiceInstances">,

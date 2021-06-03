@@ -1,5 +1,5 @@
 import { Query, RemoteData, StateHelper } from "@/Core";
-import { Store, useStoreState } from "@/UI/Store";
+import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<string, Query.Data<"Events">>;

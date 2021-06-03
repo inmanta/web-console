@@ -10,12 +10,12 @@ import {
   DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
   QueryResolverImpl,
   ResourcesQueryManager,
   ResourcesStateHelper,
+  getStoreInstance,
 } from "@/Data";
 import userEvent from "@testing-library/user-event";
 import { UrlManagerImpl } from "@/UI/Routing";

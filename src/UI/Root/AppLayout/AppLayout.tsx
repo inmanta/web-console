@@ -14,7 +14,7 @@ import Logo from "!react-svg-loader!@images/logo.svg";
 import AvatarImg from "!url-loader!@assets/images/img_avatar.svg";
 import { IconDropdown } from "./Toolbar/IconDropdown";
 import { AngleDownIcon } from "@patternfly/react-icons";
-import { useStoreState } from "@/UI/Store";
+import { useStoreState } from "@/Data";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 import { EnvSelectorWithProvider } from "./Toolbar/Provider";
 import { PageBreadcrumbs, Navigation } from "@/UI/Routing";

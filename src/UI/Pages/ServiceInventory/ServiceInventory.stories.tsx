@@ -17,8 +17,8 @@ import {
   ServiceInstancesStateHelper,
   ResourcesQueryManager,
   ResourcesStateHelper,
+  getStoreInstance,
 } from "@/Data";
-import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "./ServiceInventory";
 
 export default {

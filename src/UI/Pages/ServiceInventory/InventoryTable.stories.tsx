@@ -8,11 +8,11 @@ import {
   StaticScheduler,
   tablePresenter,
 } from "@/Test";
-import { getStoreInstance } from "@/UI/Store";
 import {
   QueryResolverImpl,
   ResourcesQueryManager,
   ResourcesStateHelper,
+  getStoreInstance,
 } from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { StoreProvider } from "easy-peasy";

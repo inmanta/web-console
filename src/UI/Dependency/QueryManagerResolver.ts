@@ -1,5 +1,4 @@
 import { QueryManager, ManagerResolver, SchedulerImpl } from "@/Core";
-import { Store } from "@/UI/Store";
 import {
   BaseApiHelper,
   FetcherImpl,
@@ -26,6 +25,7 @@ import {
   ServiceConfigQueryManager,
   ServiceConfigStateHelper,
   ServiceConfigFinalizer,
+  Store,
 } from "@/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {

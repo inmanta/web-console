@@ -11,11 +11,11 @@ import {
 } from "@/Test";
 import { EventsPage } from "./EventsPage";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import {
   QueryResolverImpl,
   EventsQueryManager,
   EventsStateHelper,
+  getStoreInstance,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
 

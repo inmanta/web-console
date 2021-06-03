@@ -24,8 +24,8 @@ import {
   TriggerInstanceUpdatePatcher,
   TriggerSetStateCommandManager,
   KeycloakAuthHelper,
+  getStoreInstance,
 } from "@/Data";
-import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";

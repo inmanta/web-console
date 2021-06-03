@@ -3,7 +3,7 @@ import {
   EnvironmentHandlerImpl,
   DependencyContext,
 } from "@/UI/Dependency";
-import { useStore } from "@/UI/Store";
+import { useStore } from "@/Data";
 import {
   Alert,
   AlertActionCloseButton,

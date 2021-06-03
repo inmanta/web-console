@@ -1,6 +1,5 @@
 import React from "react";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/UI/Store";
 import {
   StaticScheduler,
   Outcome,
@@ -13,6 +12,7 @@ import {
   QueryResolverImpl,
   ResourcesStateHelper,
   ResourcesQueryManager,
+  getStoreInstance,
 } from "@/Data";
 import { ResourcesTab } from "./ResourcesTab";
 import { UrlManagerImpl } from "@/UI/Routing";

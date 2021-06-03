@@ -13,8 +13,8 @@ import {
   QueryResolverImpl,
   ServicesQueryManager,
   ServicesStateHelper,
+  getStoreInstance,
 } from "@/Data";
-import { getStoreInstance } from "@/UI/Store";
 import { ServiceCatalog } from "./ServiceCatalog";
 import { MemoryRouter } from "react-router-dom";
 

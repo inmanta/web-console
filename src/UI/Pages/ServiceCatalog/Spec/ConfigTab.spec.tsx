@@ -23,8 +23,8 @@ import {
   ServiceConfigCommandManager,
   ServiceConfigFinalizer,
   CommandResolverImpl,
+  getStoreInstance,
 } from "@/Data";
-import { getStoreInstance } from "@/UI/Store";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 

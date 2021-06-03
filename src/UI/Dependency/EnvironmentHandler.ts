@@ -1,7 +1,7 @@
 import { EnvironmentModel, ProjectModel, RemoteData } from "@/Core";
 import { History } from "history";
 import { createContext } from "react";
-import { Store, useStoreState } from "@/UI/Store";
+import { Store, useStoreState } from "@/Data";
 
 export interface SelectedProjectAndEnvironment {
   project: Partial<ProjectModel>;

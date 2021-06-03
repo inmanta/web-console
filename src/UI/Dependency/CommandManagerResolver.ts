@@ -16,8 +16,8 @@ import {
   ServiceConfigCommandManager,
   SetStatePoster,
   TriggerSetStateCommandManager,
+  Store,
 } from "@/Data";
-import { Store } from "@/UI/Store";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];

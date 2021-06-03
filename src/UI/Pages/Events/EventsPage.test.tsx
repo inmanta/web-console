@@ -13,8 +13,8 @@ import {
   QueryResolverImpl,
   EventsQueryManager,
   EventsStateHelper,
+  getStoreInstance,
 } from "@/Data";
-import { getStoreInstance } from "@/UI/Store";
 import { EventsPage } from "./EventsPage";
 
 function setup() {
