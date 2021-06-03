@@ -1,31 +1,38 @@
 import React from "react";
-import { Setting } from "@/Core";
-import { Switch } from "@patternfly/react-core";
+import { Config } from "@/Core";
+import { BooleanSwitch } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
-  setting: Setting;
+  name: string;
+  value: boolean;
   onChange: (value: boolean) => void;
+  defaults: Config;
 }
 
 export const DefaultSwitch: React.FC<Props> = ({
-  setting: { name, value, defaultValue },
+  name,
+  value,
   onChange,
+  defaults,
 }) => (
-  <Switch
-    id={name}
-    label={
-      value && defaultValue
-        ? words("setting.label.trueDefault")
-        : words("setting.label.true")
-    }
-    labelOff={
-      !value && !defaultValue
-        ? words("setting.label.falseDefault")
-        : words("setting.label.false")
-    }
-    isChecked={value}
+  <BooleanSwitch
+    name={name}
+    value={value}
     onChange={onChange}
-    aria-label={value ? `${name}-True` : `${name}-False`}
+    getLabel={getLabel(defaults[name])}
   />
 );
+
+const getLabel =
+  (defaultValue: boolean) =>
+  (value: boolean): string => {
+    if (value) {
+      return defaultValue
+        ? words("setting.label.trueDefault")
+        : words("setting.label.true");
+    }
+    return !defaultValue
+      ? words("setting.label.falseDefault")
+      : words("setting.label.false");
+  };

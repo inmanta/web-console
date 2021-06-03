@@ -1,6 +1,6 @@
 import { BaseApiHelper } from "@/Infra";
-import { CreateInstancePoster } from "@/Infra/Api/CreateInstancePoster";
-import { AttributeResultConverterImpl } from "../Common";
+import { AttributeResultConverterImpl } from "@/UI/Data/Common";
+import { CreateInstancePoster } from "./Poster";
 import { CreateInstanceCommandManager } from "./CommandManager";
 
 describe("CreateInstanceManager", () => {

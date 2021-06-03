@@ -19,7 +19,7 @@ import {
   AlertGroup,
 } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
-import { CatalogContent } from "./CatalogContent";
+import { CatalogTabs } from "./Tabs";
 import { Link } from "react-router-dom";
 import {
   fetchInmantaApi,
@@ -135,7 +135,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
           id={expandKey}
           isHidden={!expanded.includes(toggleId)}
         >
-          <CatalogContent service={service} />
+          <CatalogTabs service={service} />
         </DataListContent>
       </DataListItem>
     );

@@ -1,3 +1,4 @@
+import { Either } from "@/Core/Language";
 import {
   FormAttributeResult,
   InstanceAttributeModel,
@@ -5,14 +6,28 @@ import {
   VersionedServiceInstanceIdentifier,
 } from "./ServiceInstanceModel";
 import { Config } from "./Config";
-import { Either } from "@/Core/Language";
+import { ServiceIdentifier } from "./ServiceModel";
 
 type Command =
+  | ServiceConfigCommand
   | InstanceConfigCommand
   | CreateInstanceCommand
   | TriggerInstanceUpdateCommand
   | DeleteInstanceCommand;
+
 export type Type = Command;
+
+export interface ServiceConfigCommand extends ServiceIdentifier {
+  kind: "ServiceConfig";
+}
+
+interface ServiceConfigManifest {
+  error: string;
+  apiData: { data: Config };
+  body: { values: Config };
+  command: ServiceConfigCommand;
+  trigger: (option: string, value: boolean) => void;
+}
 
 /**
  * The instanceConfig command updates the config belonging to one specific service instance
@@ -90,6 +105,7 @@ interface DeleteInstanceManifest {
  * types related to all the sub commands.
  */
 interface Manifest {
+  ServiceConfig: ServiceConfigManifest;
   InstanceConfig: InstanceConfigManifest;
   CreateInstance: CreateInstanceManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdateManifest;

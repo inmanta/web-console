@@ -1,8 +1,6 @@
 import { CommandManager, ManagerResolver } from "@/Core";
 import {
   BaseApiHelper,
-  CreateInstancePoster,
-  InstanceConfigPoster,
   InstanceDeleter,
   TriggerInstanceUpdatePatcher,
 } from "@/Infra";
@@ -11,10 +9,15 @@ import {
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
   InstanceConfigCommandManager,
+  InstanceConfigStateHelper,
   TriggerInstanceUpdateCommandManager,
+  CreateInstancePoster,
+  InstanceConfigPoster,
+  ServiceConfigPoster,
+  ServiceConfigStateHelper,
+  ServiceConfigCommandManager,
 } from "@/UI/Data";
 import { Store } from "@/UI/Store";
-import { InstanceConfigStateHelper } from "@/UI/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -35,31 +38,26 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   }
 
   private getEnvDependentManagers(environment: string): CommandManager[] {
-    const instanceConfigCommandManager = new InstanceConfigCommandManager(
-      new InstanceConfigPoster(this.baseApiHelper, environment),
-      new InstanceConfigStateHelper(this.store)
-    );
-
-    const createInstanceCommandManager = new CreateInstanceCommandManager(
-      new CreateInstancePoster(this.baseApiHelper, environment),
-      new AttributeResultConverterImpl()
-    );
-
-    const triggerInstanceUpdateCommandManager =
+    return [
+      new ServiceConfigCommandManager(
+        new ServiceConfigPoster(this.baseApiHelper, environment),
+        new ServiceConfigStateHelper(this.store)
+      ),
+      new InstanceConfigCommandManager(
+        new InstanceConfigPoster(this.baseApiHelper, environment),
+        new InstanceConfigStateHelper(this.store)
+      ),
+      new CreateInstanceCommandManager(
+        new CreateInstancePoster(this.baseApiHelper, environment),
+        new AttributeResultConverterImpl()
+      ),
       new TriggerInstanceUpdateCommandManager(
         new TriggerInstanceUpdatePatcher(this.baseApiHelper, environment),
         new AttributeResultConverterImpl()
-      );
-
-    const deleteInstanceCommandManager = new DeleteInstanceCommandManager(
-      new InstanceDeleter(this.baseApiHelper, environment)
-    );
-
-    return [
-      instanceConfigCommandManager,
-      createInstanceCommandManager,
-      triggerInstanceUpdateCommandManager,
-      deleteInstanceCommandManager,
+      ),
+      new DeleteInstanceCommandManager(
+        new InstanceDeleter(this.baseApiHelper, environment)
+      ),
     ];
   }
 }
