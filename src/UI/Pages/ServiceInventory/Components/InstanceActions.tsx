@@ -52,9 +52,9 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       <DescriptionListGroup>
         <DeleteModal
           isDisabled={deleteDisabled}
-          serviceName={instance.service_entity}
-          instanceId={instance.id}
-          instanceVersion={instance.version}
+          service_entity={instance.service_entity}
+          id={instance.id}
+          version={instance.version}
         />
       </DescriptionListGroup>
       <DescriptionListGroup>

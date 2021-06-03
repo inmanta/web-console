@@ -10,8 +10,6 @@ export class DeleteInstanceCommandManager implements CommandManager {
   getTrigger(
     command: Command.SubCommand<"DeleteInstance">
   ): Command.Trigger<"DeleteInstance"> {
-    return async () => {
-      return await this.deleter.delete(command);
-    };
+    return () => this.deleter.delete(command);
   }
 }

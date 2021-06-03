@@ -1,5 +1,4 @@
-import { BaseApiHelper } from "@/Infra";
-import { TriggerInstanceUpdatePatcher } from "@/Infra/Api/UpdateInstancePatcher";
+import { BaseApiHelper, TriggerInstanceUpdatePatcher } from "@/Infra";
 import {
   TriggerInstanceUpdateCommandManager,
   AttributeResultConverterImpl,

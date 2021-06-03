@@ -8,63 +8,41 @@ import {
   DeleteInstanceCommandManager,
   DependencyProvider,
 } from "@/UI";
-import { DynamicCommandManagerResolver } from "@/Test";
+import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
 
 function setup() {
   const commandManager = new DeleteInstanceCommandManager(
-    new InstanceDeleter(new BaseApiHelper(), "env1")
+    new InstanceDeleter(new BaseApiHelper(), ServiceInstance.a.environment)
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([commandManager])
   );
   return {
-    commandResolver: new CommandResolverImpl(
-      new DynamicCommandManagerResolver([commandManager])
+    component: (
+      <DependencyProvider dependencies={{ commandResolver }}>
+        <DeleteModal
+          id={ServiceInstance.a.id}
+          version={ServiceInstance.a.version}
+          isDisabled={false}
+          service_entity={ServiceInstance.a.service_entity}
+        />
+      </DependencyProvider>
     ),
   };
 }
 
-describe("DeleteModal", () => {
-  it("Shows delete modal", async () => {
-    const { commandResolver } = setup();
-    render(
-      <DependencyProvider dependencies={{ commandResolver }}>
-        <DeleteModal
-          instanceId={"id1"}
-          instanceVersion={5}
-          isDisabled={false}
-          serviceName={"test_service"}
-        />
-      </DependencyProvider>
-    );
-    expect(await screen.findByText("Delete")).toBeVisible();
-  });
+describe("DeleteModal ", () => {
   it("Shows form when clicking on modal button", async () => {
-    const { commandResolver } = setup();
-    render(
-      <DependencyProvider dependencies={{ commandResolver }}>
-        <DeleteModal
-          instanceId={"id1"}
-          instanceVersion={5}
-          isDisabled={false}
-          serviceName={"test_service"}
-        />
-      </DependencyProvider>
-    );
+    const { component } = setup();
+    render(component);
     const modalButton = await screen.findByText("Delete");
     userEvent.click(modalButton);
     expect(await screen.findByText("Yes")).toBeVisible();
     expect(await screen.findByText("No")).toBeVisible();
   });
   it("Closes modal when cancelled", async () => {
-    const { commandResolver } = setup();
-    render(
-      <DependencyProvider dependencies={{ commandResolver }}>
-        <DeleteModal
-          instanceId={"id1"}
-          instanceVersion={5}
-          isDisabled={false}
-          serviceName={"test_service"}
-        />
-      </DependencyProvider>
-    );
+    const { component } = setup();
+    render(component);
     const modalButton = await screen.findByText("Delete");
     userEvent.click(modalButton);
     const noButton = await screen.findByText("No");
@@ -72,17 +50,8 @@ describe("DeleteModal", () => {
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
   });
   it("Sends request when submitted", async () => {
-    const { commandResolver } = setup();
-    render(
-      <DependencyProvider dependencies={{ commandResolver }}>
-        <DeleteModal
-          instanceId={"id1"}
-          instanceVersion={5}
-          isDisabled={false}
-          serviceName={"test_service"}
-        />
-      </DependencyProvider>
-    );
+    const { component } = setup();
+    render(component);
     const modalButton = await screen.findByText("Delete");
     userEvent.click(modalButton);
     const yesButton = await screen.findByText("Yes");
@@ -90,7 +59,7 @@ describe("DeleteModal", () => {
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
     const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
     expect(receivedUrl).toEqual(
-      "/lsm/v1/service_inventory/test_service/id1?current_version=5"
+      `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}?current_version=${ServiceInstance.a.version}`
     );
     expect(requestInit?.method).toEqual("DELETE");
   });

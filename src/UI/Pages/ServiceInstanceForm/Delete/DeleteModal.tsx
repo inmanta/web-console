@@ -6,19 +6,17 @@ import { words } from "@/UI/words";
 import { DeleteForm } from "./DeleteForm";
 import { DependencyContext } from "@/UI";
 import { ErrorToastAlert } from "@/UI/Components";
+import { VersionedServiceInstanceIdentifier } from "@/Core";
 
-interface Props {
+interface Props extends VersionedServiceInstanceIdentifier {
   isDisabled?: boolean;
-  instanceId: string;
-  instanceVersion: number;
-  serviceName: string;
 }
 
 export const DeleteModal: React.FC<Props> = ({
   isDisabled,
-  instanceId,
-  instanceVersion,
-  serviceName,
+  id,
+  version,
+  service_entity,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleModalToggle = () => {
@@ -28,9 +26,9 @@ export const DeleteModal: React.FC<Props> = ({
   const { commandResolver } = useContext(DependencyContext);
   const trigger = commandResolver.getTrigger<"DeleteInstance">({
     kind: "DeleteInstance",
-    service_entity: serviceName,
-    id: instanceId,
-    version: instanceVersion,
+    service_entity,
+    id,
+    version,
   });
   const onSubmit = async () => {
     setIsOpen(false);
@@ -62,7 +60,7 @@ export const DeleteModal: React.FC<Props> = ({
         variant={"small"}
         onClose={handleModalToggle}
       >
-        {words("inventory.deleteInstance.header")(instanceId, serviceName)}
+        {words("inventory.deleteInstance.header")(id, service_entity)}
         <DeleteForm onSubmit={onSubmit} onCancel={() => setIsOpen(false)} />
       </Modal>
     </>

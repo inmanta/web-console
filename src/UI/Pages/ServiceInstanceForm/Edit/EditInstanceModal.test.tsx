@@ -3,8 +3,7 @@ import React from "react";
 import userEvent from "@testing-library/user-event";
 import { EditInstanceModal } from "./EditInstanceModal";
 import { AttributeModel } from "@/Core";
-import { BaseApiHelper } from "@/Infra";
-import { TriggerInstanceUpdatePatcher } from "@/Infra/Api/UpdateInstancePatcher";
+import { BaseApiHelper, TriggerInstanceUpdatePatcher } from "@/Infra";
 import {
   AttributeResultConverterImpl,
   TriggerInstanceUpdateCommandManager,
