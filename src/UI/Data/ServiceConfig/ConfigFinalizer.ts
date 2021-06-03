@@ -14,11 +14,11 @@ export class ServiceConfigFinalizer
 
   finalize(
     configData: RemoteData.Type<string, Config>,
-    name: string
+    serviceName: string
   ): RemoteData.Type<string, Config> {
     const serviceData = this.serviceStateHelper.getHooked({
       kind: "Service",
-      name,
+      name: serviceName,
     });
     if (!RemoteData.isSuccess(configData)) return configData;
     if (!RemoteData.isSuccess(serviceData)) return serviceData;
