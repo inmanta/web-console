@@ -3,14 +3,18 @@ import ReactDOM from "react-dom";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import keycloakConf from "@/UI/Root/keycloak.json";
-import { BaseApiHelper, KeycloakAuthHelper } from "@/Infra";
 import { App } from "@/UI/Root/app";
 import {
   DependencyProvider,
   CommandManagerResolver,
   QueryManagerResolver,
 } from "@/UI/Dependency";
-import { CommandResolverImpl, QueryResolverImpl } from "@/Data";
+import {
+  CommandResolverImpl,
+  QueryResolverImpl,
+  BaseApiHelper,
+  KeycloakAuthHelper,
+} from "@/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
 import { getStoreInstance } from "@/UI/Store";
 

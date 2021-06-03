@@ -1,4 +1,4 @@
-import { BaseApiHelper } from "@/Infra";
+import { BaseApiHelper } from "@/Data/API";
 import { AttributeResultConverterImpl } from "@/Data/Common";
 import { CreateInstancePoster } from "./Poster";
 import { CreateInstanceCommandManager } from "./CommandManager";

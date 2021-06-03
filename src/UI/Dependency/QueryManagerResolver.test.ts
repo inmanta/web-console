@@ -1,5 +1,5 @@
-import { BaseApiHelper } from "@/Infra";
-import { getStoreInstance } from "../Store";
+import { BaseApiHelper } from "@/Data";
+import { getStoreInstance } from "@/UI/Store";
 import { QueryManagerResolver } from "./QueryManagerResolver";
 
 it("QueryManagerResolver should replace managers when environment changes", () => {

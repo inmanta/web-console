@@ -1,7 +1,8 @@
 import { QueryManager, ManagerResolver, SchedulerImpl } from "@/Core";
-import { BaseApiHelper, FetcherImpl } from "@/Infra";
 import { Store } from "@/UI/Store";
 import {
+  BaseApiHelper,
+  FetcherImpl,
   ProjectsQueryManager,
   ProjectsStateHelper,
   ServiceQueryManager,

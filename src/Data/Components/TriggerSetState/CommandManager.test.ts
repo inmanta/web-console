@@ -1,6 +1,5 @@
-import { BaseApiHelper } from "@/Infra";
 import { DummyAuthHelper, ServiceInstance } from "@/Test";
-import { TriggerSetStateCommandManager } from "@/Data";
+import { TriggerSetStateCommandManager, BaseApiHelper } from "@/Data";
 import { SetStatePoster } from "./SetStatePoster";
 
 test("TriggerSetStateCommandManager sends correct request with message", async () => {

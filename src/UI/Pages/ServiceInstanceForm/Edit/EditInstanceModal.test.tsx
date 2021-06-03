@@ -3,11 +3,12 @@ import React from "react";
 import userEvent from "@testing-library/user-event";
 import { EditInstanceModal } from "./EditInstanceModal";
 import { AttributeModel } from "@/Core";
-import { BaseApiHelper, TriggerInstanceUpdatePatcher } from "@/Infra";
 import {
   CommandResolverImpl,
   AttributeResultConverterImpl,
   TriggerInstanceUpdateCommandManager,
+  BaseApiHelper,
+  TriggerInstanceUpdatePatcher,
 } from "@/Data";
 import { DynamicCommandManagerResolver } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
