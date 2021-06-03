@@ -1,11 +1,12 @@
-import { BaseApiHelper } from "@/Infra";
+import { BaseApiHelper, KeycloakAuthHelper } from "@/Infra";
 import { getStoreInstance } from "../Store";
 import { CommandManagerResolver } from "./CommandManagerResolver";
 
 it("CommandManagerResolver should replace managers when environment changes", () => {
   const commandManagerResolver = new CommandManagerResolver(
     getStoreInstance(),
-    new BaseApiHelper()
+    new BaseApiHelper(),
+    new KeycloakAuthHelper()
   );
   commandManagerResolver.resolve("env1");
   const originalLength = commandManagerResolver.get().length;

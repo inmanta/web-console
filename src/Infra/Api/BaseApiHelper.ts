@@ -100,6 +100,21 @@ export class BaseApiHelper implements ApiHelper {
     });
   }
 
+  async postEmptyResponse<Body>(
+    url: string,
+    environment: string,
+    body: Body
+  ): Promise<Either.Type<string, string>> {
+    return this.executeEmptyResponse(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...this.getHeaders(environment),
+      },
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+  }
+
   async patch<Body>(
     url: string,
     environment: string,

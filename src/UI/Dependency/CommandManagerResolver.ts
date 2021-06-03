@@ -1,4 +1,4 @@
-import { CommandManager, ManagerResolver } from "@/Core";
+import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
   BaseApiHelper,
   InstanceDeleter,
@@ -16,6 +16,8 @@ import {
   ServiceConfigPoster,
   ServiceConfigStateHelper,
   ServiceConfigCommandManager,
+  SetStatePoster,
+  TriggerSetStateCommandManager,
 } from "@/UI/Data";
 import { Store } from "@/UI/Store";
 
@@ -24,7 +26,8 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
 
   constructor(
     private readonly store: Store,
-    private readonly baseApiHelper: BaseApiHelper
+    private readonly baseApiHelper: BaseApiHelper,
+    private readonly authHelper: AuthHelper
   ) {
     this.managers = [];
   }
@@ -57,6 +60,10 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new DeleteInstanceCommandManager(
         new InstanceDeleter(this.baseApiHelper, environment)
+      ),
+      new TriggerSetStateCommandManager(
+        this.authHelper,
+        new SetStatePoster(this.baseApiHelper, environment)
       ),
     ];
   }

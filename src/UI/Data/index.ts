@@ -16,3 +16,4 @@ export * from "./CreateInstance";
 export * from "./Common";
 export * from "./TriggerInstanceUpdate";
 export * from "./DeleteInstance";
+export * from "./TriggerSetState";

@@ -8,7 +8,6 @@ import {
   ServiceInstanceParams,
   SortDirection,
 } from "@/Core";
-import { useKeycloak } from "react-keycloak";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -45,14 +44,6 @@ export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
 }> = ({ serviceName, service }) => {
-  const shouldUseAuth =
-    process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
-  let keycloak;
-  if (shouldUseAuth) {
-    // The value will be always true or always false during one session
-    [keycloak] = useKeycloak();
-  }
-
   const { queryResolver } = useContext(DependencyContext);
   const [sortColumn, setSortColumn] =
     useState<string | undefined>("created_at");
@@ -109,7 +100,6 @@ export const ServiceInventory: React.FunctionComponent<{
               <TableProvider
                 aria-label="ServiceInventory-Success"
                 instances={instances}
-                keycloak={keycloak}
                 serviceEntity={service}
                 sortColumn={sortColumn}
                 setSortColumn={setSortColumn}

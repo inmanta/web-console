@@ -13,8 +13,8 @@ type Command =
   | InstanceConfigCommand
   | CreateInstanceCommand
   | TriggerInstanceUpdateCommand
-  | DeleteInstanceCommand;
-
+  | DeleteInstanceCommand
+  | TriggerSetStateCommand;
 export type Type = Command;
 
 export interface ServiceConfigCommand extends ServiceIdentifier {
@@ -100,6 +100,23 @@ interface DeleteInstanceManifest {
   >;
 }
 
+export interface TriggerSetStateCommand
+  extends VersionedServiceInstanceIdentifier {
+  kind: "TriggerSetState";
+}
+
+interface TriggerSetStateManifest {
+  error: string;
+  apiData: string;
+  body: { current_version: number; target_state: string; message: string };
+  command: TriggerSetStateCommand;
+  trigger: (
+    target_state: string
+  ) => Promise<
+    Either.Type<Error<"TriggerSetState">, ApiData<"TriggerSetState">>
+  >;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub commands.
@@ -110,6 +127,7 @@ interface Manifest {
   CreateInstance: CreateInstanceManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdateManifest;
   DeleteInstance: DeleteInstanceManifest;
+  TriggerSetState: TriggerSetStateManifest;
 }
 
 /**

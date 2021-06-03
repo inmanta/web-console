@@ -7,3 +7,4 @@ export * from "./DynamicManagerResolver";
 export * from "./InstantFetcher";
 export * from "./InstantPoster";
 export * from "./StaticScheduler";
+export * from "./DummyAuthHelper";

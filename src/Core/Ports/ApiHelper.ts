@@ -18,6 +18,11 @@ export interface ApiHelper {
     environment: string,
     body: Body
   ): Promise<Either.Type<string, Data>>;
+  postEmptyResponse<Body>(
+    url: string,
+    environment: string,
+    body: Body
+  ): Promise<Either.Type<string, string>>;
   patch<Body = unknown>(
     url: string,
     environment: string,
