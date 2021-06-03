@@ -1,5 +1,5 @@
 import { KeyMaker } from "@/Core";
-import { ServiceKeyMaker } from "@/Data/Service";
+import { ServiceKeyMaker } from "@/Data/Components/Service";
 
 interface Injections {
   serviceKeyMaker: KeyMaker<[string, string]>;
