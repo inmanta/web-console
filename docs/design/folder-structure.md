@@ -16,7 +16,7 @@ src/
   Data/ - All classes related to the Data Layer
     API/ - Classes for communicating with the REST API (based on Fetch API)
     Auth/ - Auth related classes
-    Components/ - Implementations for data contracts for each component. (how to fetch and store the Domain Entities)
+    Managers/ - Implementations for data contracts for each domain entity. (how to fetch and store the Domain Entities)
     Store/ - Redux store slices (where Domain entities are stored)
   Test/ - test data, mock implementations, testing utilities
   UI/
