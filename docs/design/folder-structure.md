@@ -10,16 +10,19 @@ The agreement is to roughly follow the building blocks in the folder structure.
 ```
 src/
   Core/
+    Contracts/ - All interfaces that represent a contract
     Domain/ - Domain entities, Query/Command interfaces
-    Ports/ - interfaces for communicating with the backend
-  Data/ - Implementations for the interfaces in Ports, connecting them to Domain entities (how to fetch them) and the Store (how to store them)
-    Infra/ - Handling of Fetch API
-    Routing/ - Code related to routing and urls
-    Store/ - EasyPeasy/Redux store models
+    Language/ - Language extensions & isolated implementations
+  Data/ - All classes related to the Data Layer
+    API/ - Classes for communicating with the REST API (based on Fetch API)
+    Auth/ - Auth related classes
+    Managers/ - Implementations for data contracts for each domain entity. (how to fetch and store the Domain Entities)
+    Store/ - Redux store slices (where Domain entities are stored)
   Test/ - test data, mock implementations, testing utilities
   UI/
     Components/ - React Components used by multiple pages
     Pages/ - Main Container components for the different views in the root
-      Components/ - Components related to this view only, optionally
+      Components/ - Components related to this page only (optional)
     Root/ - The components that are always visible, and independent of the current page (sidebar)
+    Routing/ - Code related to routing and urls
 ```

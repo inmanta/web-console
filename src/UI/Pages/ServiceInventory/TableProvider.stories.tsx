@@ -9,14 +9,14 @@ import {
 } from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/UI/Store";
 import { ServiceModel } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   ResourcesQueryManager,
   ResourcesStateHelper,
-} from "@/UI/Data";
+  getStoreInstance,
+} from "@/Data";
 import { MemoryRouter } from "react-router";
 
 export default {

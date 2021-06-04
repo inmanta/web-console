@@ -4,7 +4,7 @@ import {
   FormInputAttribute,
   ServiceInstanceForm,
 } from "@/UI/Pages/ServiceInstanceForm";
-import { AttributeInputConverter } from "@/UI/Data";
+import { AttributeInputConverter } from "@/Data";
 
 export class CreateFormPresenter {
   constructor(

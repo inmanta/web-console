@@ -8,7 +8,7 @@ import {
   FormInputAttribute,
   ServiceInstanceForm,
 } from "@/UI/Pages/ServiceInstanceForm";
-import { AttributeInputConverter, toOptionalBoolean } from "@/UI/Data";
+import { AttributeInputConverter, toOptionalBoolean } from "@/Data";
 
 export class EditFormPresenter {
   constructor(

@@ -10,12 +10,12 @@ import {
   Diagnose,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import {
   QueryResolverImpl,
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,
-} from "@/UI/Data";
+  getStoreInstance,
+} from "@/Data";
 import { UrlManagerImpl } from "@/UI/Routing";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 

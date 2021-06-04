@@ -1,8 +1,13 @@
 # Inmanta web console
 
-This project is the current frontend of for the inmanta service orchestrator. The eventual goal is to replace the current dashboard entirely.
+[Docs](./docs/index.md)
 
-The console is developed in typescript using react and redux (through [easy peasy](https://easy-peasy.now.sh/)). Testing is performed using cypress.
+## Intro
+
+This project is the current frontend of for the inmanta service orchestrator.  
+The eventual goal is to replace the current dashboard entirely.  
+The console is developed in typescript using react and redux (through [easy peasy](https://easy-peasy.now.sh/)).  
+Testing is performed using cypress.
 
 ## UX Guideliness
 
@@ -52,7 +57,3 @@ Cypress can be configured via cypress.json (or command line arguments), e.g. to 
 `husky` configures the git hooks. https://github.com/typicode/husky  
 `lint-staged` runs scripts on matched staged source files. https://github.com/okonet/lint-staged  
 There is no need to manually configure anything. Just by installing the dependencies, the git hooks are configured.
-
-## Docs
-
-The docs for this specific repository can be found under the [docs](./docs/index.md) folder.

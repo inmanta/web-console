@@ -19,18 +19,16 @@ import {
   ServiceInstancesStateHelper,
   SetStatePoster,
   TriggerInstanceUpdateCommandManager,
+  BaseApiHelper,
+  InstanceDeleter,
+  TriggerInstanceUpdatePatcher,
   TriggerSetStateCommandManager,
-} from "@/UI/Data";
-import { getStoreInstance } from "@/UI/Store";
+  KeycloakAuthHelper,
+  getStoreInstance,
+} from "@/Data";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";
-import {
-  BaseApiHelper,
-  InstanceDeleter,
-  KeycloakAuthHelper,
-  TriggerInstanceUpdatePatcher,
-} from "@/Infra";
 
 export interface Handles {
   component: React.ReactElement;

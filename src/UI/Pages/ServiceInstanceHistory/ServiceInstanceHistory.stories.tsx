@@ -9,12 +9,12 @@ import {
 } from "@/Test";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import {
   QueryResolverImpl,
   InstanceLogsQueryManager,
   InstanceLogsStateHelper,
-} from "@/UI/Data";
+  getStoreInstance,
+} from "@/Data";
 
 export default {
   title: "ServiceInstanceHistory",

@@ -23,19 +23,17 @@ import {
   AttributeResultConverterImpl,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
+  BaseApiHelper,
+  InstanceDeleter,
+  TriggerInstanceUpdatePatcher,
+  KeycloakAuthHelper,
   TriggerSetStateCommandManager,
   SetStatePoster,
-} from "@/UI/Data";
-import { getStoreInstance } from "@/UI/Store";
+  getStoreInstance,
+} from "@/Data";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Routing";
-import {
-  BaseApiHelper,
-  InstanceDeleter,
-  KeycloakAuthHelper,
-  TriggerInstanceUpdatePatcher,
-} from "@/Infra";
 
 function setup() {
   const store = getStoreInstance();

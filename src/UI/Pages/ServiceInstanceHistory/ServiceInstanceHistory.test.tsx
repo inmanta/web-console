@@ -11,9 +11,9 @@ import {
   QueryResolverImpl,
   InstanceLogsQueryManager,
   InstanceLogsStateHelper,
-} from "@/UI/Data";
+  getStoreInstance,
+} from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 
 it("ServiceInstanceHistory renders", async () => {

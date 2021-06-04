@@ -3,8 +3,6 @@ import {
   BaseApiHelper,
   InstanceDeleter,
   TriggerInstanceUpdatePatcher,
-} from "@/Infra";
-import {
   AttributeResultConverterImpl,
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
@@ -18,8 +16,8 @@ import {
   ServiceConfigCommandManager,
   SetStatePoster,
   TriggerSetStateCommandManager,
-} from "@/UI/Data";
-import { Store } from "@/UI/Store";
+  Store,
+} from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];

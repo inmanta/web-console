@@ -2,12 +2,13 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import { DeleteModal } from "./DeleteModal";
 import userEvent from "@testing-library/user-event";
-import { BaseApiHelper, InstanceDeleter } from "@/Infra";
 import {
   CommandResolverImpl,
   DeleteInstanceCommandManager,
-  DependencyProvider,
-} from "@/UI";
+  BaseApiHelper,
+  InstanceDeleter,
+} from "@/Data";
+import { DependencyProvider } from "@/UI";
 import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
 
 function setup() {

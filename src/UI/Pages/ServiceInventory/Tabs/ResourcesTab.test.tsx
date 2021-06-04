@@ -12,8 +12,8 @@ import {
   QueryResolverImpl,
   ResourcesStateHelper,
   ResourcesQueryManager,
-} from "@/UI/Data";
-import { getStoreInstance } from "@/UI/Store";
+  getStoreInstance,
+} from "@/Data";
 import { ResourcesTab } from "./ResourcesTab";
 import { UrlManagerImpl } from "@/UI/Routing";
 

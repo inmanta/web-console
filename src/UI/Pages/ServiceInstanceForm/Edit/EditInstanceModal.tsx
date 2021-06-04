@@ -6,7 +6,7 @@ import { EditIcon } from "@patternfly/react-icons";
 import React, { useContext, useState } from "react";
 import { EditFormPresenter } from "./EditFormPresenter";
 import { AttributeModel, FormAttributeResult, Maybe } from "@/Core";
-import { AttributeInputConverterImpl } from "@/UI/Data";
+import { AttributeInputConverterImpl } from "@/Data";
 import { ErrorToastAlert } from "@/UI/Components";
 
 interface Props {

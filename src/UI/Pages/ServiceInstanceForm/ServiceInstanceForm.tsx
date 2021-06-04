@@ -9,7 +9,7 @@ import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { TextFormInput } from "./TextFormInput";
 import { FormAttributeResult } from "@/Core";
-import { toOptionalBoolean } from "@/UI/Data";
+import { toOptionalBoolean } from "@/Data";
 
 export interface FormInputAttribute {
   name: string;

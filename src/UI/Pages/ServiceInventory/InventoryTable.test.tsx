@@ -2,7 +2,6 @@ import React from "react";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
 import {
-  DummyStateHelper,
   InstantFetcher,
   Row,
   tablePresenter,
@@ -11,13 +10,13 @@ import {
   DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
   QueryResolverImpl,
   ResourcesQueryManager,
   ResourcesStateHelper,
-} from "@/UI/Data";
+  getStoreInstance,
+} from "@/Data";
 import userEvent from "@testing-library/user-event";
 import { UrlManagerImpl } from "@/UI/Routing";
 
@@ -27,6 +26,7 @@ const dummySetter = () => {
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
+  const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new ResourcesQueryManager(
@@ -41,7 +41,7 @@ test("InventoryTable can be expanded", async () => {
             ],
           },
         }),
-        new DummyStateHelper<"Resources">(),
+        new ResourcesStateHelper(store),
         new StaticScheduler(),
         "env"
       ),
@@ -50,12 +50,14 @@ test("InventoryTable can be expanded", async () => {
   const urlManager = new UrlManagerImpl("", "env");
   render(
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <InventoryTable
-        rows={[Row.a, Row.b]}
-        tablePresenter={tablePresenter}
-        setSortColumn={dummySetter}
-        setOrder={dummySetter}
-      />
+      <StoreProvider store={store}>
+        <InventoryTable
+          rows={[Row.a, Row.b]}
+          tablePresenter={tablePresenter}
+          setSortColumn={dummySetter}
+          setOrder={dummySetter}
+        />
+      </StoreProvider>
     </DependencyProvider>
   );
   const testid = `details_${Row.a.id.short}`;

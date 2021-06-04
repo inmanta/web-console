@@ -1,7 +1,7 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import { CreateFormPresenter } from "./CreateFormPresenter";
 import { AttributeModel } from "@/Core";
-import { AttributeInputConverterImpl } from "@/UI/Data";
+import { AttributeInputConverterImpl } from "@/Data";
 
 describe("CreateFormPresenter", () => {
   const attributes: AttributeModel[] = [

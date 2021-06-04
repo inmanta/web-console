@@ -24,7 +24,7 @@ import { Link } from "react-router-dom";
 import {
   fetchInmantaApi,
   IRequestParams,
-} from "@/UI/App/utils/fetchInmantaApi";
+} from "@/UI/Root/utils/fetchInmantaApi";
 import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
 import { Routing } from "@/UI/Routing";
 import { words } from "@/UI";
