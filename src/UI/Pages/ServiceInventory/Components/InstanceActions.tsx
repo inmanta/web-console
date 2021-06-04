@@ -21,13 +21,6 @@ export interface InstanceActionsProps {
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
   attributeModels: AttributeModel[];
-  onSetInstanceState:
-    | ((
-        instanceId: string,
-        targetState: string,
-        setErrorMessage: (message: string) => void
-      ) => Promise<void>)
-    | null;
 }
 
 export const InstanceActions: React.FC<InstanceActionsProps> = ({
@@ -36,7 +29,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   attributeModels,
   deleteDisabled,
   diagnoseDisabled,
-  onSetInstanceState,
 }) => {
   const location = useLocation();
   if (instance.state === "terminated") return null;
@@ -108,9 +100,10 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       </DescriptionListGroup>
       <DescriptionListGroup>
         <SetStateAction
+          service_entity={instance.service_entity}
           id={instance.id}
+          version={instance.version}
           targets={instance.instanceSetStateTargets}
-          onSetInstanceState={onSetInstanceState}
         />
       </DescriptionListGroup>
     </DescriptionList>

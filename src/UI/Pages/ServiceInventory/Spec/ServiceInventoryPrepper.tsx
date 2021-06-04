@@ -17,7 +17,9 @@ import {
   ResourcesStateHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
+  SetStatePoster,
   TriggerInstanceUpdateCommandManager,
+  TriggerSetStateCommandManager,
 } from "@/UI/Data";
 import { getStoreInstance } from "@/UI/Store";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
@@ -26,6 +28,7 @@ import { UrlManagerImpl } from "@/UI/Routing";
 import {
   BaseApiHelper,
   InstanceDeleter,
+  KeycloakAuthHelper,
   TriggerInstanceUpdatePatcher,
 } from "@/Infra";
 
@@ -72,10 +75,16 @@ export class ServiceInventoryPrepper {
       new InstanceDeleter(new BaseApiHelper(), "env1")
     );
 
+    const setStateCommandManager = new TriggerSetStateCommandManager(
+      new KeycloakAuthHelper(),
+      new SetStatePoster(new BaseApiHelper(), "env1")
+    );
+
     const commandResolver = new CommandResolverImpl(
       new DynamicCommandManagerResolver([
         triggerUpdateCommandManager,
         deleteCommandManager,
+        setStateCommandManager,
       ])
     );
 

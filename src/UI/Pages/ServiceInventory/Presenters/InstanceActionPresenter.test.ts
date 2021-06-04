@@ -1,6 +1,5 @@
 import { ServiceModel } from "@/Core";
 import { ServiceInstance } from "@/Test";
-import { InstanceSetStateManager } from "@/UI/Pages/ServiceInventory/InstanceSetStateManager";
 import { InstanceActionPresenter } from "./InstanceActionPresenter";
 
 const instances = [ServiceInstance.a];
@@ -14,10 +13,8 @@ describe("InstanceActionPresenter ", () => {
         transfers: [{}],
       },
     } as ServiceModel;
-    const setStateManager = new InstanceSetStateManager(instances, undefined);
     const actionPresenter = new InstanceActionPresenter(
       instances,
-      setStateManager,
       partialEntity
     );
     const editDisabled = actionPresenter.isTransferDisabled(
@@ -43,10 +40,8 @@ describe("InstanceActionPresenter ", () => {
         transfers: [{ source: "creating", on_update: true }],
       },
     } as ServiceModel;
-    const setStateManager = new InstanceSetStateManager(instances, undefined);
     const actionPresenter = new InstanceActionPresenter(
       instances,
-      setStateManager,
       partialEntity
     );
     const editDisabled = actionPresenter.isTransferDisabled(
@@ -71,10 +66,8 @@ describe("InstanceActionPresenter ", () => {
         transfers: [{ source: "creating", on_delete: true }],
       },
     } as ServiceModel;
-    const setStateManager = new InstanceSetStateManager(instances, undefined);
     const actionPresenter = new InstanceActionPresenter(
       instances,
-      setStateManager,
       partialEntity
     );
     const editDisabled = actionPresenter.isTransferDisabled(

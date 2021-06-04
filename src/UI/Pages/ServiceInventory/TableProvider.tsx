@@ -1,5 +1,4 @@
 import React from "react";
-import { KeycloakInstance } from "keycloak-js";
 import {
   ServiceModel,
   ServiceInstanceModelWithTargetStates,
@@ -13,12 +12,10 @@ import {
   InventoryTablePresenter,
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
-import { InstanceSetStateManager } from "./InstanceSetStateManager";
 
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
   serviceEntity: ServiceModel;
-  keycloak?: KeycloakInstance;
   sortColumn?: string;
   setSortColumn: (name?: string) => void;
   order?: SortDirection;
@@ -28,7 +25,6 @@ export interface Props {
 export const TableProvider: React.FC<Props> = ({
   instances,
   serviceEntity,
-  keycloak,
   sortColumn,
   order,
   setSortColumn,
@@ -37,15 +33,7 @@ export const TableProvider: React.FC<Props> = ({
 }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
-  const instanceSetStatePresenter = new InstanceSetStateManager(
-    instances,
-    keycloak
-  );
-  const actionPresenter = new InstanceActionPresenter(
-    instances,
-    instanceSetStatePresenter,
-    serviceEntity
-  );
+  const actionPresenter = new InstanceActionPresenter(instances, serviceEntity);
   const statePresenter = new InstanceStatePresenter(instances, serviceEntity);
   const tablePresenter = new InventoryTablePresenter(
     datePresenter,
