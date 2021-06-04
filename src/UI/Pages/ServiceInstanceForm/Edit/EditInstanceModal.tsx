@@ -5,7 +5,7 @@ import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { EditIcon } from "@patternfly/react-icons";
 import React, { useContext, useState } from "react";
 import { EditFormPresenter } from "./EditFormPresenter";
-import { AttributeModel, FormAttributeResult } from "@/Core";
+import { AttributeModel, FormAttributeResult, Maybe } from "@/Core";
 import { AttributeInputConverterImpl } from "@/UI/Data";
 import { ErrorToastAlert } from "@/UI/Components";
 
@@ -39,7 +39,7 @@ export const EditInstanceModal: React.FC<Props> = ({
 
   const onSubmit = async (attributes: FormAttributeResult[]) => {
     const result = await trigger(currentAttributes, attributes);
-    if (result.kind === "Left") {
+    if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
       setIsOpen(false);
     } else {

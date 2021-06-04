@@ -1,4 +1,4 @@
-import { Either } from "@/Core/Language";
+import { Maybe } from "@/Core/Language";
 import { Command } from "@/Core/Domain";
 
 /**
@@ -11,5 +11,5 @@ export interface Patcher<Kind extends Command.Kind> {
   patch(
     command: Command.SubCommand<Kind>,
     body: Command.Body<Kind>
-  ): Promise<Either.Type<Command.Error<Kind>, Command.ApiData<Kind>>>;
+  ): Promise<Maybe.Type<Command.Error<Kind>>>;
 }

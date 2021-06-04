@@ -1,4 +1,4 @@
-import { ApiHelper, Either } from "@/Core";
+import { ApiHelper, Either, Maybe } from "@/Core";
 import { words } from "@/UI/words";
 import { KeycloakInstance } from "keycloak-js";
 
@@ -62,10 +62,11 @@ export class BaseApiHelper implements ApiHelper {
     return this.execute<Data>((response) => response.json(), ...params);
   }
 
-  private async executeEmptyResponse(
+  private async executeWithoutResponse(
     ...params: Parameters<typeof fetch>
-  ): Promise<Either.Type<string, string>> {
-    return this.execute((response) => response.text(), ...params);
+  ): Promise<Maybe.Type<string>> {
+    const result = await this.execute((response) => response.text(), ...params);
+    return Either.isLeft(result) ? Maybe.some(result.value) : Maybe.none();
   }
 
   async get<Data>(
@@ -100,12 +101,27 @@ export class BaseApiHelper implements ApiHelper {
     });
   }
 
+  async postWithoutResponse<Body>(
+    url: string,
+    environment: string,
+    body: Body
+  ): Promise<Maybe.Type<string>> {
+    return this.executeWithoutResponse(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...this.getHeaders(environment),
+      },
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+  }
+
   async patch<Body>(
     url: string,
     environment: string,
     body: Body
-  ): Promise<Either.Type<string, string>> {
-    return this.executeEmptyResponse(url, {
+  ): Promise<Maybe.Type<string>> {
+    return this.executeWithoutResponse(url, {
       headers: {
         "Content-Type": "application/json",
         ...this.getHeaders(environment),
@@ -115,11 +131,8 @@ export class BaseApiHelper implements ApiHelper {
     });
   }
 
-  async delete(
-    url: string,
-    environment: string
-  ): Promise<Either.Type<string, string>> {
-    return this.executeEmptyResponse(url, {
+  async delete(url: string, environment: string): Promise<Maybe.Type<string>> {
+    return this.executeWithoutResponse(url, {
       headers: {
         "Content-Type": "application/json",
         ...this.getHeaders(environment),

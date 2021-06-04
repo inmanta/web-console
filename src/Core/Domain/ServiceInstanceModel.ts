@@ -43,3 +43,9 @@ export interface FormAttributeResult {
   value: unknown;
   type: string;
 }
+
+export interface SetStateBody {
+  current_version: number;
+  target_state: string;
+  message: string;
+}

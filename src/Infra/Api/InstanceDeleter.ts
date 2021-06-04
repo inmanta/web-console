@@ -1,15 +1,11 @@
-import { ApiHelper, Command } from "@/Core";
-import { Type } from "@/Core/Language/Either";
-import { Deleter } from "@/Core/Ports/Deleter";
+import { ApiHelper, Command, Maybe, Deleter } from "@/Core";
 
 export class InstanceDeleter implements Deleter<"DeleteInstance"> {
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly environment: string
   ) {}
-  delete(
-    command: Command.DeleteInstanceCommand
-  ): Promise<Type<string, string>> {
+  delete(command: Command.DeleteInstanceCommand): Promise<Maybe.Type<string>> {
     return this.apiHelper.delete(this.getUrl(command), this.environment);
   }
 

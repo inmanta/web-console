@@ -1,4 +1,4 @@
-import { Either } from "@/Core";
+import { Either, Maybe } from "@/Core";
 import { BaseApiHelper } from "./BaseApiHelper";
 
 test("BaseApiHelper.get executes a GET request with correct url & env", async () => {
@@ -38,7 +38,7 @@ test("BaseApiHelper.delete executes a DELETE request with correct url & env", as
   const env = "environment_a";
 
   fetchMock.mockResponse("");
-  expect(await apiHelper.delete(url, env)).toEqual(Either.right(""));
+  expect(await apiHelper.delete(url, env)).toEqual(Maybe.none());
 
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
   expect(receivedUrl).toEqual(url);

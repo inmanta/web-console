@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import keycloakConf from "@/UI/App/keycloak.json";
-import { BaseApiHelper } from "@/Infra";
+import { BaseApiHelper, KeycloakAuthHelper } from "@/Infra";
 import { App } from "@/UI/App/app";
 import {
   DependencyProvider,
@@ -39,7 +39,11 @@ const queryResolver = new QueryResolverImpl(
   new QueryManagerResolver(store, baseApiHelper)
 );
 const commandResolver = new CommandResolverImpl(
-  new CommandManagerResolver(store, baseApiHelper)
+  new CommandManagerResolver(
+    store,
+    baseApiHelper,
+    new KeycloakAuthHelper(keycloak)
+  )
 );
 const urlManager = new UrlManagerImpl(baseUrl);
 
