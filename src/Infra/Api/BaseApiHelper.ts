@@ -1,6 +1,4 @@
 import { ApiHelper, Either, Maybe } from "@/Core";
-import { isLeft } from "@/Core/Language/Either";
-import { none, some } from "@/Core/Language/Maybe";
 import { words } from "@/UI/words";
 import { KeycloakInstance } from "keycloak-js";
 
@@ -68,7 +66,7 @@ export class BaseApiHelper implements ApiHelper {
     ...params: Parameters<typeof fetch>
   ): Promise<Maybe.Type<string>> {
     const result = await this.execute((response) => response.text(), ...params);
-    return isLeft(result) ? some(result.value) : none();
+    return Either.isLeft(result) ? Maybe.some(result.value) : Maybe.none();
   }
 
   async get<Data>(

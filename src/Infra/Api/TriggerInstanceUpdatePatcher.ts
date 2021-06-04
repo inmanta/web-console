@@ -19,7 +19,7 @@ export class TriggerInstanceUpdatePatcher
   patch(
     command: Command.SubCommand<"TriggerInstanceUpdate">,
     body: Command.Body<"TriggerInstanceUpdate">
-  ): Promise<Maybe.Type<string>> {
+  ): Promise<Maybe.Type<Command.Error<"TriggerInstanceUpdate">>> {
     return this.apiHelper.patch<Command.Body<"TriggerInstanceUpdate">>(
       this.getUrl(command),
       this.environment,

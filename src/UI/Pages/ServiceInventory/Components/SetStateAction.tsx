@@ -13,8 +13,7 @@ import {
 import { CaretDownIcon } from "@patternfly/react-icons";
 import { DependencyContext, words } from "@/UI";
 import { ActionDisabledTooltip } from "./ActionDisabledTooltip";
-import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { isSome } from "@/Core/Language/Maybe";
+import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: string[] | null;
@@ -50,7 +49,7 @@ export const SetStateAction: React.FC<Props> = ({
 
   const onSubmit = async (targetState: string) => {
     const result = await trigger(targetState);
-    if (isSome(result)) {
+    if (Maybe.isSome(result)) {
       setStateErrorMessage(result.value);
     }
   };

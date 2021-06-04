@@ -1,5 +1,4 @@
-import { ApiHelper, Command, Maybe } from "@/Core";
-import { Deleter } from "@/Core/Ports/Deleter";
+import { ApiHelper, Command, Maybe, Deleter } from "@/Core";
 
 export class InstanceDeleter implements Deleter<"DeleteInstance"> {
   constructor(

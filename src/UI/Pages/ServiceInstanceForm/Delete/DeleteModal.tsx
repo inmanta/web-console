@@ -6,8 +6,7 @@ import { words } from "@/UI/words";
 import { DeleteForm } from "./DeleteForm";
 import { DependencyContext } from "@/UI";
 import { ErrorToastAlert } from "@/UI/Components";
-import { VersionedServiceInstanceIdentifier } from "@/Core";
-import { isSome } from "@/Core/Language/Maybe";
+import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   isDisabled?: boolean;
@@ -34,7 +33,7 @@ export const DeleteModal: React.FC<Props> = ({
   const onSubmit = async () => {
     setIsOpen(false);
     const result = await trigger();
-    if (isSome(result)) {
+    if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
   };

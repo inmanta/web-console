@@ -18,7 +18,7 @@ export class SetStatePoster
   post(
     command: Command.SubCommand<"TriggerSetState">,
     body: Command.Body<"TriggerSetState">
-  ): Promise<Maybe.Type<string>> {
+  ): Promise<Maybe.Type<Command.Error<"TriggerSetState">>> {
     return this.apiHelper.postWithoutResponse<Command.Body<"TriggerSetState">>(
       this.getUrl(command),
       this.environment,
