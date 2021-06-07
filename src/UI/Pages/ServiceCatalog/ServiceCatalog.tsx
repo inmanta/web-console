@@ -3,13 +3,14 @@ import { PageSection } from "@patternfly/react-core";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
-import { Query, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
 import { CatalogDataList } from "./CatalogDataList";
 
 export const ServiceCatalog: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const query: Query.SubQuery<"Services"> = { kind: "Services" };
-  const [data, retry] = queryResolver.useContinuous<"Services">(query);
+  const [data, retry] = queryResolver.useContinuous<"Services">({
+    kind: "Services",
+  });
 
   return RemoteData.fold(
     {
