@@ -15,10 +15,6 @@ body,
   background-color: transparent;
 }
 
-.horizontally-scrollable {
-  overflow-x: auto;
-}
-
 .spacer-with-padding-xs {
   padding: var(--pf-global--spacer--xs);
 }

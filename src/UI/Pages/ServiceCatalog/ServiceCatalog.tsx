@@ -1,6 +1,10 @@
 import React, { useContext } from "react";
-import { PageSection } from "@patternfly/react-core";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  PageSectionWithHorizontalScroll,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { RemoteData } from "@/Core";
@@ -16,36 +20,24 @@ export const ServiceCatalog: React.FC = () => {
     {
       notAsked: () => null,
       loading: () => (
-        <PageSection
-          className="horizontally-scrollable"
-          aria-label="ServiceCatalog-Loading"
-        >
+        <PageSectionWithHorizontalScroll aria-label="ServiceCatalog-Loading">
           <LoadingView delay={500} />
-        </PageSection>
+        </PageSectionWithHorizontalScroll>
       ),
       failed: (error) => (
-        <PageSection
-          className="horizontally-scrollable"
-          aria-label="ServiceCatalog-Failed"
-        >
+        <PageSectionWithHorizontalScroll aria-label="ServiceCatalog-Failed">
           <ErrorView message={error} retry={retry} />
-        </PageSection>
+        </PageSectionWithHorizontalScroll>
       ),
       success: (services) =>
         services.length <= 0 ? (
-          <PageSection
-            className="horizontally-scrollable"
-            aria-label="ServiceCatalog-Empty"
-          >
+          <PageSectionWithHorizontalScroll aria-label="ServiceCatalog-Empty">
             <EmptyView message={words("catalog.empty.message")} />
-          </PageSection>
+          </PageSectionWithHorizontalScroll>
         ) : (
-          <PageSection
-            className="horizontally-scrollable"
-            aria-label="ServiceCatalog-Success"
-          >
+          <PageSectionWithHorizontalScroll aria-label="ServiceCatalog-Success">
             <CatalogDataList services={services} />
-          </PageSection>
+          </PageSectionWithHorizontalScroll>
         ),
     },
     data
