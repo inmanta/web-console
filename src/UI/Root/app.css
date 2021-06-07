@@ -8,11 +8,3 @@
   align-self: auto;
   background-color: transparent;
 }
-
-/*
-  https://www.patternfly.org/v4/components/page#pagebreadcrumb
-  https://www.patternfly.org/v4/components/breadcrumb
- */
-.pf-c-page {
-  --pf-c-page__main-breadcrumb--PaddingBottom: var(--pf-global--spacer--md);
-}

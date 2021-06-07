@@ -12,7 +12,7 @@ import {
   DependencyResolver,
 } from "@/UI/Dependency";
 import { PageRouter } from "@/UI/Routing";
-import { GlobalStyles } from "./GlobalStyles";
+import { GlobalStyles } from "@/UI/Styles";
 
 const keycloakInitConfig = {
   onLoad: "login-required",
