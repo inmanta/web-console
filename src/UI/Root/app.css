@@ -81,12 +81,3 @@ body,
   color: var(--pf-global--palette--black-900);
   width: 100%;
 }
-
-.page-size-selector-icon {
-  align-self: center;
-  width: auto;
-  padding-left: var(--pf-global--spacer--sm);
-  margin-left: auto;
-  font-size: var(--pf-global--icon--FontSize--sm);
-  color: var(--pf-global--active-color--100);
-}
