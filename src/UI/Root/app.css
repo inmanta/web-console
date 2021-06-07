@@ -50,7 +50,7 @@ body,
 }
 
 .progress-stacked {
-  background-color:var(--pf-global--BackgroundColor--100);
+  background-color: var(--pf-global--BackgroundColor--100);
   color: var(--pf-global--palette--black-100);
   box-sizing: initial;
   font-size: var(--pf-global--FontSize--sm);
@@ -81,12 +81,6 @@ body,
   color: var(--pf-global--palette--black-900);
   width: 100%;
 }
-.ignored-transition {
-  background-color: var(--pf-global--palette--black-200);
-}
-.error-transition {
-  background-color: var(--pf-global--palette--gold-50);
-}
 
 .page-size-selector-icon {
   align-self: center;
@@ -94,4 +88,5 @@ body,
   padding-left: var(--pf-global--spacer--sm);
   margin-left: auto;
   font-size: var(--pf-global--icon--FontSize--sm);
-  color: var(--pf-global--active-color--100); }
+  color: var(--pf-global--active-color--100);
+}
