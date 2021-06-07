@@ -9,14 +9,6 @@
   background-color: transparent;
 }
 
-.table-with-max-cell-width {
-  table-layout: auto;
-  --pf-c-table--cell--MaxWidth: 200px;
-}
-.patternfly-default-link-color {
-  color: var(--pf-global--link--Color);
-}
-
 /*
   https://www.patternfly.org/v4/components/page#pagebreadcrumb
   https://www.patternfly.org/v4/components/breadcrumb

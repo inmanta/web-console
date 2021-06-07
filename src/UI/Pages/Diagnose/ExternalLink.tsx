@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { DropdownItem } from "@patternfly/react-core";
 import { ExternalLinkAltIcon } from "@patternfly/react-icons";
 
@@ -8,13 +9,16 @@ interface Props {
 }
 
 export const DropdownExternalLink: React.FC<Props> = ({ url, linkText }) => (
-  <DropdownItem
+  <StyledDropdownItem
     component="a"
     icon={<ExternalLinkAltIcon />}
     href={url}
     target="_blank"
-    className="patternfly-default-link-color"
   >
     {linkText}
-  </DropdownItem>
+  </StyledDropdownItem>
 );
+
+const StyledDropdownItem = styled(DropdownItem)`
+  color: var(--pf-global--link--Color);
+`;
