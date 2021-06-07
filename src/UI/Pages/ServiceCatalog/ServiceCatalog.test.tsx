@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
+  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Service,
   StaticScheduler,
@@ -14,6 +15,10 @@ import {
   ServicesQueryManager,
   ServicesStateHelper,
   getStoreInstance,
+  DeleteServiceCommandManager,
+  BaseApiHelper,
+  ServiceDeleter,
+  CommandResolverImpl,
 } from "@/Data";
 import { ServiceCatalog } from "./ServiceCatalog";
 import { MemoryRouter } from "react-router-dom";
@@ -33,12 +38,18 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([servicesHelper])
   );
+  const commandManager = new DeleteServiceCommandManager(
+    new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([commandManager])
+  );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver }}>
+      <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
         <StoreProvider store={store}>
-          <ServiceCatalog environment={Service.a.environment} />
+          <ServiceCatalog />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -98,7 +109,7 @@ test("ServiceCatalog shows updated empty", async () => {
 });
 
 test("ServiceCatalog removes service after deletion", async () => {
-  const { component, servicesFetcher } = setup();
+  const { component, servicesFetcher, scheduler } = setup();
   render(component);
 
   expect(
@@ -113,21 +124,11 @@ test("ServiceCatalog removes service after deletion", async () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Delete" }));
 
-  fetchMock.mockResponse(JSON.stringify({}));
   fireEvent.click(screen.getByRole("button", { name: "Yes" }));
 
-  /**
-   * I believe we need to use this hack because fetch is still being used.
-   * Ideally we don't mock fetch, but we use a test class on which we can
-   * await requests. I'm not sure if jest-fetch-mock offers a way to wait
-   * for the mocks to finish. But if we had a way to wait for the requests
-   * to finish, we wouldn't need this hack.
-   *
-   * @TODO maybe we can use flushPromises here?
-   */
-  setTimeout(() => {
-    servicesFetcher.resolve(Either.right({ data: [] }));
-  }, 0);
+  scheduler.executeAll();
+
+  servicesFetcher.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Empty" })

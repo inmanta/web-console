@@ -17,6 +17,8 @@ import {
   SetStatePoster,
   TriggerSetStateCommandManager,
   Store,
+  DeleteServiceCommandManager,
+  ServiceDeleter,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -58,6 +60,9 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new DeleteInstanceCommandManager(
         new InstanceDeleter(this.baseApiHelper, environment)
+      ),
+      new DeleteServiceCommandManager(
+        new ServiceDeleter(this.baseApiHelper, environment)
       ),
       new TriggerSetStateCommandManager(
         this.authHelper,

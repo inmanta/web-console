@@ -1,5 +1,6 @@
 export * from "./CreateInstance";
 export * from "./DeleteInstance";
+export * from "./DeleteService";
 export * from "./Diagnostics";
 export * from "./Events";
 export * from "./InstanceConfig";

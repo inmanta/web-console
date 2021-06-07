@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Button,
   DataList,
@@ -9,45 +9,29 @@ import {
   DataListCell,
   DataListContent,
   DataListAction,
-  Alert,
-  AlertActionCloseButton,
   Modal,
   Text,
   Title,
   TextVariants,
   ModalVariant,
-  AlertGroup,
 } from "@patternfly/react-core";
-import { ServiceModel } from "@/Core";
+import { Maybe, ServiceModel } from "@/Core";
 import { CatalogTabs } from "./Tabs";
 import { Link } from "react-router-dom";
-import {
-  fetchInmantaApi,
-  IRequestParams,
-} from "@/UI/Root/utils/fetchInmantaApi";
 import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
 import { Routing } from "@/UI/Routing";
-import { words } from "@/UI";
+import { DependencyContext, words } from "@/UI";
 import { SummaryIcons } from "./SummaryIcons";
+import { ErrorToastAlert } from "@/UI/Components";
 
 interface Props {
   services: ServiceModel[];
-  environmentId: string;
-  serviceCatalogUrl: string;
-  keycloak?: Keycloak.KeycloakInstance;
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  dispatch?: (data) => any;
 }
 
 export const CatalogDataList: React.FunctionComponent<Props> = ({
   services,
-  environmentId,
-  serviceCatalogUrl,
-  keycloak,
-  dispatch,
 }) => {
   const [expanded, setExpanded] = useState([""]);
-  const [errorMessage, setErrorMessage] = React.useState("");
 
   const Description = (descriptionProps) => {
     if (descriptionProps.service.description) {
@@ -73,15 +57,6 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
     const toggleId = serviceName + "-toggle";
     const serviceKey = serviceName + "-item";
     const expandKey = serviceName + "-expand";
-    const requestParams = {
-      dispatch: dispatch,
-      environmentId: environmentId,
-      isEnvironmentIdRequired: true,
-      keycloak: keycloak,
-      method: "DELETE",
-      setErrorMessage,
-      urlEndpoint: `${serviceCatalogUrl}/${serviceName}`,
-    } as IRequestParams;
     return (
       <DataListItem
         id={serviceName}
@@ -124,10 +99,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
             >
               <Button>{words("catalog.button.inventory")}</Button>
             </Link>
-            <DeleteEntityModal
-              serviceName={service.name}
-              requestParams={requestParams}
-            />
+            <DeleteEntityModal serviceName={service.name} />
           </DataListAction>
         </DataListItemRow>
         <DataListContent
@@ -153,40 +125,38 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
     setExpanded(newExpanded);
   };
   return (
-    <React.Fragment>
-      {errorMessage && (
-        <AlertGroup isToast={true}>
-          <Alert
-            variant="danger"
-            title={errorMessage}
-            actionClose={
-              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-            }
-          />
-        </AlertGroup>
-      )}
-      <DataList aria-label="List of service entities">{serviceItems}</DataList>
-    </React.Fragment>
+    <DataList aria-label="List of service entities">{serviceItems}</DataList>
   );
 };
 
 const DeleteEntityModal: React.FunctionComponent<{
   serviceName: string;
-  requestParams: IRequestParams;
-}> = (props) => {
+}> = ({ serviceName }) => {
+  const { commandResolver } = useContext(DependencyContext);
+  const trigger = commandResolver.getTrigger<"DeleteService">({
+    kind: "DeleteService",
+    name: serviceName,
+  });
   const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const handleModalToggle = () => {
     setIsOpen(!isOpen);
   };
   const onSubmit = async () => {
     handleModalToggle();
-    await fetchInmantaApi(props.requestParams);
+    const result = await trigger();
+    if (Maybe.isSome(result)) {
+      setErrorMessage(result.value);
+    }
   };
   return (
-    <React.Fragment>
+    <>
+      <ErrorToastAlert
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+      />
       <Button variant="danger" onClick={handleModalToggle}>
-        {" "}
-        Delete{" "}
+        {words("delete")}
       </Button>
       <Modal
         variant={ModalVariant.small}
@@ -194,9 +164,9 @@ const DeleteEntityModal: React.FunctionComponent<{
         title="Delete Service Entity"
         onClose={handleModalToggle}
       >
-        {`Are you sure you want to delete service entity ${props.serviceName}?`}
+        {words("catalog.delete.title")(serviceName)}
         <DeleteForm onSubmit={onSubmit} onCancel={handleModalToggle} />
       </Modal>
-    </React.Fragment>
+    </>
   );
 };
