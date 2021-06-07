@@ -1,16 +1,11 @@
 /// <reference types="Cypress" />
 describe("Service catalog", function () {
   beforeEach(() => {
-    cy.server();
-    cy.route({
-      method: "GET",
-      url: "**/api/v2/project",
-      response: "fixture:environments.json",
+    cy.intercept("GET", "/api/v2/project", {
+      fixture: "environments.json",
     });
-    cy.route({
-      method: "GET",
-      url: "**/lsm/v1/service_catalog**",
-      response: "fixture:lsm/service_catalog.json",
+    cy.intercept("GET", "/lsm/v1/service_catalog**", {
+      fixture: "lsm/service_catalog.json",
     });
 
     cy.visit("/lsm/catalog");
@@ -80,14 +75,12 @@ describe("Service catalog", function () {
       .should("be.visible");
   });
   it("Should show error message when deleting is not successful", function () {
-    cy.route({
-      method: "DELETE",
-      url: "**/lsm/v1/service_catalog/e2e_service",
-      response: {
+    cy.intercept("DELETE", "/lsm/v1/service_catalog/e2e_service", {
+      statusCode: 400,
+      body: {
         message:
           "Invalid request: Cannot delete service entity e2e_service of environment 36cdbc7e-28a1-4803-b7b2-6743f52a594c because it still has service instances.",
       },
-      status: 400,
     });
     cy.get("#e2e_service-toggle").click();
     cy.get(".pf-m-expanded").contains("Delete").click();
@@ -95,15 +88,15 @@ describe("Service catalog", function () {
     cy.get(".pf-c-alert.pf-m-danger").should("contain.text", "Bad Request");
   });
   it("Should send correct network request when deleting", function () {
-    cy.route({
-      method: "DELETE",
-      url: "**/lsm/v1/service_catalog/e2e_service",
-      response: {},
-      status: 200,
+    cy.intercept("DELETE", "/lsm/v1/service_catalog/e2e_service", {
+      body: {},
+      statusCode: 200,
     }).as("deleteEntity");
     cy.get("#e2e_service-toggle").click();
     cy.get(".pf-m-expanded").contains("Delete").click();
     cy.contains("Yes").click();
-    cy.wait("@deleteEntity").should("have.property", "status", 200);
+    cy.wait("@deleteEntity").then(({ response }) => {
+      expect(response.statusCode).to.eq(200);
+    });
   });
 });
