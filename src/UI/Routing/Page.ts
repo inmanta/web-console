@@ -2,10 +2,10 @@ import { ComponentType } from "react";
 import {
   CreateInstancePageWithProvider,
   DiagnoseWithProvider,
-  ServiceCatalogWithProvider,
   ServiceInstanceHistoryWithProvider,
   ServiceInventoryWithProvider,
   EventsWithProvider,
+  ServiceCatalog,
 } from "@/UI/Pages";
 import { matchPath, match } from "react-router-dom";
 
@@ -40,7 +40,7 @@ export const CatalogPage: Page = {
   kind: "Catalog",
   path: "/lsm/catalog",
   label: "Service Catalog",
-  component: ServiceCatalogWithProvider,
+  component: ServiceCatalog,
 };
 
 export const InventoryPage: Page = {

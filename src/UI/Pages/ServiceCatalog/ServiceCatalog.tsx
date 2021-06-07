@@ -1,26 +1,10 @@
 import React, { useContext } from "react";
 import { PageSection } from "@patternfly/react-core";
-import {
-  EmptyView,
-  EnvironmentProvider,
-  ErrorView,
-  LoadingView,
-} from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { Query, RemoteData } from "@/Core";
 import { CatalogDataList } from "./CatalogDataList";
-
-export const ServiceCatalogWithProvider: React.FC = () => {
-  return (
-    <EnvironmentProvider
-      Wrapper={({ children }) => (
-        <PageSection aria-label="ServiceCatalog-Failed">{children}</PageSection>
-      )}
-      Dependant={() => <ServiceCatalog />}
-    />
-  );
-};
 
 export const ServiceCatalog: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
