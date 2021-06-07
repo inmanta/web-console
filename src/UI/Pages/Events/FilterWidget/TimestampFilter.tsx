@@ -24,8 +24,9 @@ export const TimestampFilter: React.FC<Props> = ({
   update,
   isVisible,
 }) => {
-  const [timestampFilter, setTimestampFilter] =
-    useState<Date | undefined>(undefined);
+  const [timestampFilter, setTimestampFilter] = useState<Date | undefined>(
+    undefined
+  );
 
   const onOperatorChange = (rule: Operator) => {
     if (typeof timestampFilter === "undefined") return;
