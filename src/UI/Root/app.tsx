@@ -12,6 +12,7 @@ import {
   DependencyResolver,
 } from "@/UI/Dependency";
 import { PageRouter } from "@/UI/Routing";
+import { GlobalStyles } from "./GlobalStyles";
 
 const keycloakInitConfig = {
   onLoad: "login-required",
@@ -26,25 +27,28 @@ export const App: React.FunctionComponent<{
   const baseName = shouldAddBaseName ? "/console" : "/";
 
   const AppWithStore = (
-    <Router basename={baseName}>
-      <EnvironmentHandlerProvider>
-        <AppLayout
-          logoBaseUrl={baseName}
-          keycloak={props.shouldUseAuth ? props.keycloak : undefined}
-          shouldUseAuth={props.shouldUseAuth}
-        >
-          <EnvironmentProvider
-            Wrapper={({ children }) => <>{children}</>}
-            Dependant={({ environment }) => (
-              <>
-                <DependencyResolver environment={environment} />
-                <PageRouter />
-              </>
-            )}
-          />
-        </AppLayout>
-      </EnvironmentHandlerProvider>
-    </Router>
+    <>
+      <GlobalStyles />
+      <Router basename={baseName}>
+        <EnvironmentHandlerProvider>
+          <AppLayout
+            logoBaseUrl={baseName}
+            keycloak={props.shouldUseAuth ? props.keycloak : undefined}
+            shouldUseAuth={props.shouldUseAuth}
+          >
+            <EnvironmentProvider
+              Wrapper={({ children }) => <>{children}</>}
+              Dependant={({ environment }) => (
+                <>
+                  <DependencyResolver environment={environment} />
+                  <PageRouter />
+                </>
+              )}
+            />
+          </AppLayout>
+        </EnvironmentHandlerProvider>
+      </Router>
+    </>
   );
   const LoadingSpinner = () => (
     <Bullseye>

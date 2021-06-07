@@ -1,9 +1,3 @@
-html,
-body,
-#root {
-  height: 100%;
-}
-
 /* Patternyfly React does not support page header context selector yet. We place the context selector in the nav section, 
    but this requires us to overload the page header nav styling to match the header context selector in the html version 
    References:
