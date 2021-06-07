@@ -2,6 +2,7 @@ import React from "react";
 import copy from "copy-to-clipboard";
 import { Tooltip } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 
 interface Props {
   shortText: string;
@@ -15,15 +16,22 @@ export const TextWithCopy: React.FC<Props> = ({
   tooltipContent,
 }) => {
   return (
-    <span className="only-on-hover-container">
+    <Container>
       {shortText}
       <Tooltip content={tooltipContent} entryDelay={200}>
-        <CopyIcon
-          className="only-on-hover-visible"
-          style={{ paddingLeft: 5 }}
-          onClick={() => copy(fullText)}
-        />
+        <StyledCopyIcon onClick={() => copy(fullText)} />
       </Tooltip>
-    </span>
+    </Container>
   );
 };
+
+const StyledCopyIcon = styled(CopyIcon)`
+  opacity: 0;
+  padding-left: 5px;
+`;
+
+const Container = styled.span`
+  &:hover > ${StyledCopyIcon} {
+    opacity: 1;
+  }
+`;
