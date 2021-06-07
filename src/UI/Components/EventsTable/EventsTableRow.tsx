@@ -27,7 +27,7 @@ export const EventsTableRow: React.FC<Props> = ({
   onToggle,
   numberOfColumns,
 }) => (
-  <StyledBody isExpanded={false} transition={row}>
+  <StyledBody isExpanded={false} $transition={row}>
     <Tr id={`event-row-${row.id}`} aria-label="Event table row">
       <Td
         expand={{
@@ -83,11 +83,11 @@ export const EventsTableRow: React.FC<Props> = ({
 
 type Transition = Pick<EventRow, "ignoredTransition" | "isErrorTransition">;
 
-const StyledBody = styled(Tbody)<{ transition: Transition }>`
-  ${({ transition }) =>
-    transition.isErrorTransition
+const StyledBody = styled(Tbody)<{ $transition: Transition }>`
+  ${({ $transition }) =>
+    $transition.isErrorTransition
       ? "background-color: var(--pf-global--palette--gold-50)"
-      : transition.ignoredTransition
+      : $transition.ignoredTransition
       ? "background-color: var(--pf-global--palette--black-200)"
       : ""};
 `;

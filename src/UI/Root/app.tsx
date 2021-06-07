@@ -2,7 +2,6 @@ import * as React from "react";
 import "@patternfly/react-core/dist/styles/base.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AppLayout } from "@/UI/Root/AppLayout/AppLayout";
-import "@/UI/Root/app.css";
 import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import { Spinner, Bullseye } from "@patternfly/react-core";
