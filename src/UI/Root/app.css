@@ -9,10 +9,6 @@
   background-color: transparent;
 }
 
-.patternfly-text-gray {
-  color: var(--pf-global--Color--200);
-  font-weight: 400;
-}
 .table-with-max-cell-width {
   table-layout: auto;
   --pf-c-table--cell--MaxWidth: 200px;
