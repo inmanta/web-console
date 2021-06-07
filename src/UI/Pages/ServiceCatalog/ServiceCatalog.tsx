@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { PageSection } from "@patternfly/react-core";
-import { useKeycloak } from "react-keycloak";
 import {
   EmptyView,
   EnvironmentProvider,
@@ -18,28 +17,15 @@ export const ServiceCatalogWithProvider: React.FC = () => {
       Wrapper={({ children }) => (
         <PageSection aria-label="ServiceCatalog-Failed">{children}</PageSection>
       )}
-      Dependant={({ environment }) => (
-        <ServiceCatalog environment={environment} />
-      )}
+      Dependant={() => <ServiceCatalog />}
     />
   );
 };
 
-export const ServiceCatalog: React.FC<{ environment: string }> = ({
-  environment,
-}) => {
+export const ServiceCatalog: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const query: Query.SubQuery<"Services"> = { kind: "Services" };
   const [data, retry] = queryResolver.useContinuous<"Services">(query);
-
-  const shouldUseAuth =
-    process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
-
-  let keycloak;
-  if (shouldUseAuth) {
-    // The value will be always true or always false during one session
-    [keycloak] = useKeycloak();
-  }
 
   return RemoteData.fold(
     {
@@ -73,13 +59,7 @@ export const ServiceCatalog: React.FC<{ environment: string }> = ({
             className="horizontally-scrollable"
             aria-label="ServiceCatalog-Success"
           >
-            <CatalogDataList
-              services={services}
-              environmentId={environment}
-              serviceCatalogUrl={"/lsm/v1/service_catalog"}
-              keycloak={keycloak}
-              dispatch={retry}
-            />
+            <CatalogDataList services={services} />
           </PageSection>
         ),
     },

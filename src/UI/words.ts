@@ -24,6 +24,7 @@ const dict = {
   null: "null",
   loading: "Loading",
   retry: "Retry",
+  delete: "Delete",
 
   /**
    * Error related text
@@ -175,6 +176,8 @@ const dict = {
   "catalog.drawer.summary.total": "total",
   "catalog.drawer.summary.empty": "No instance summary found",
   "catalog.button.inventory": "Inventory",
+  "catalog.delete.title": (serviceName: string) =>
+    `Are you sure you want to delete service entity ${serviceName}?`,
 };
 
 type Key = keyof typeof dict;

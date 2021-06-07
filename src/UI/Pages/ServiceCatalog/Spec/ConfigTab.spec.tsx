@@ -24,6 +24,9 @@ import {
   ServiceConfigFinalizer,
   CommandResolverImpl,
   getStoreInstance,
+  DeleteServiceCommandManager,
+  ServiceDeleter,
+  BaseApiHelper,
 } from "@/Data";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
@@ -60,19 +63,25 @@ function setup() {
     ),
     serviceConfigStateHelper
   );
+  const deleteServiceCommandManager = new DeleteServiceCommandManager(
+    new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+  );
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([servicesHelper, serviceConfigQueryManager])
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([serviceConfigCommandManager])
+    new DynamicCommandManagerResolver([
+      serviceConfigCommandManager,
+      deleteServiceCommandManager,
+    ])
   );
 
   const component = (
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
         <StoreProvider store={store}>
-          <ServiceCatalog environment={Service.a.environment} />
+          <ServiceCatalog />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
