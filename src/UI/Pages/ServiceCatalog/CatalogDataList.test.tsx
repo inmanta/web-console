@@ -14,18 +14,16 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 
 const Component = (services: ServiceModel[]) => {
-  const commandManager = new DeleteServiceCommandManager(
-    new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new DeleteServiceCommandManager(
+        new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+      ),
+    ])
   );
   return (
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          commandResolver: new CommandResolverImpl(
-            new DynamicCommandManagerResolver([commandManager])
-          ),
-        }}
-      >
+      <DependencyProvider dependencies={{ commandResolver }}>
         <CatalogDataList services={services} />
       </DependencyProvider>
     </MemoryRouter>
