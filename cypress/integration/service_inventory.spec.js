@@ -1,26 +1,17 @@
 /// <reference types="Cypress" />
 describe("Service inventory", function () {
   beforeEach(() => {
-    cy.server();
-    cy.route({
-      method: "GET",
-      url: "**/api/v2/project",
-      response: "fixture:environments.json",
+    cy.intercept("GET", "/api/v2/project", { fixture: "environments.json" });
+    cy.intercept("GET", "/lsm/v1/service_inventory/e2e_service?**", {
+      fixture: "lsm/service_inventory.json",
     });
-    cy.route({
-      method: "GET",
-      url: "**/lsm/v1/service_inventory/e2e_service?**",
-      response: "fixture:lsm/service_inventory.json",
-    });
-    cy.route({
-      method: "GET",
-      url: "**/lsm/v1/service_inventory/e2e_service/*/resources?current_version=*",
-      response: "fixture:lsm/resources.json",
-    });
-    cy.route({
-      method: "GET",
-      url: "**/lsm/v1/service_catalog/e2e_service",
-      response: "fixture:lsm/service_catalog_single.json",
+    cy.intercept(
+      "GET",
+      "/lsm/v1/service_inventory/e2e_service/*/resources?current_version=*",
+      { fixture: "lsm/resources.json" }
+    );
+    cy.intercept("GET", "/lsm/v1/service_catalog/e2e_service", {
+      fixture: "lsm/service_catalog_single.json",
     });
   });
 
@@ -47,15 +38,17 @@ describe("Service inventory", function () {
     cy.contains("Cancel").click().should("not.exist");
   });
   it("Should show error message when deleting is not allowed", function () {
-    cy.route({
-      method: "DELETE",
-      url: "**/lsm/v1/service_inventory/e2e_service/78ac51dd-ee5b-4e22-9bf0-54bce9664b4e?current_version=3",
-      response: {
-        message:
-          "Invalid request: Cannot delete service instance 78ac51dd-ee5b-4e22-9bf0-54bce9664b4e",
-      },
-      status: 400,
-    });
+    cy.intercept(
+      "DELETE",
+      "/lsm/v1/service_inventory/e2e_service/78ac51dd-ee5b-4e22-9bf0-54bce9664b4e?current_version=3",
+      {
+        statusCode: 400,
+        body: {
+          message:
+            "Invalid request: Cannot delete service instance 78ac51dd-ee5b-4e22-9bf0-54bce9664b4e",
+        },
+      }
+    );
     cy.visit(
       "/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
     );

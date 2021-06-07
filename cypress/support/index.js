@@ -16,18 +16,5 @@
 // Import commands.js using ES2015 syntax:
 import "./commands";
 
-let polyfill;
-before(() => {
-  const polyfillUrl = "https://unpkg.com/unfetch@4.1.0/dist/unfetch.umd.js";
-  cy.request(polyfillUrl).then((response) => {
-    polyfill = response.body;
-  });
-});
-
-Cypress.on("window:before:load", function (win) {
-  delete win.fetch;
-  win.eval(polyfill);
-  win.fetch = win.unfetch;
-});
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
