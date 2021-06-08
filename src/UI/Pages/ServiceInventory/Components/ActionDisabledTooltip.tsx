@@ -8,11 +8,13 @@ interface Props {
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   children?: ReactElement<any>;
   isDisabled?: boolean;
+  ariaLabel: string;
 }
 
 export const ActionDisabledTooltip: React.FC<Props> = ({
   children,
   isDisabled,
+  ariaLabel,
 }) => {
   if (isDisabled) {
     return (
@@ -20,7 +22,12 @@ export const ActionDisabledTooltip: React.FC<Props> = ({
         entryDelay={200}
         content={words("inventory.statustab.actionDisabled")}
       >
-        {children}
+        <span
+          style={isDisabled ? { cursor: "not-allowed" } : {}}
+          aria-label={ariaLabel}
+        >
+          {children}
+        </span>
       </Tooltip>
     );
   } else {

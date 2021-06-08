@@ -1,0 +1,4 @@
+description: Don't use ariaDisabled beta property
+issue-nr: 282
+change-type: patch
+destination-branches: [master, iso4]
