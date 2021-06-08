@@ -23,7 +23,8 @@
     "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'yarn cypress run'",
     "package-cleanup": "node clean_up_packages",
     "storybook": "start-storybook --ci --port 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "check-circular-deps": "madge --circular ./src/index.tsx"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
