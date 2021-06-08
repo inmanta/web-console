@@ -44,12 +44,15 @@ export const DeleteModal: React.FC<Props> = ({
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
       />
-      <ActionDisabledTooltip isDisabled={isDisabled}>
+      <ActionDisabledTooltip
+        isDisabled={isDisabled}
+        ariaLabel={words("inventory.deleteInstance.button")}
+      >
         <Button
           variant="danger"
           onClick={handleModalToggle}
-          isAriaDisabled={isDisabled}
-          style={isDisabled ? { cursor: "not-allowed" } : {}}
+          isDisabled={isDisabled}
+          isBlock
         >
           <TrashAltIcon /> {words("inventory.deleteInstance.button")}
         </Button>

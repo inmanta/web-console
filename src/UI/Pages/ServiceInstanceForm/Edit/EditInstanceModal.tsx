@@ -53,12 +53,15 @@ export const EditInstanceModal: React.FC<Props> = ({
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
       />
-      <ActionDisabledTooltip isDisabled={isDisabled}>
+      <ActionDisabledTooltip
+        isDisabled={isDisabled}
+        ariaLabel={words("inventory.editInstance.button")}
+      >
         <Button
           variant="secondary"
           onClick={handleModalToggle}
-          isAriaDisabled={isDisabled}
-          style={isDisabled ? { cursor: "not-allowed" } : {}}
+          isDisabled={isDisabled}
+          isBlock
         >
           <EditIcon /> {words("inventory.editInstance.button")}
         </Button>

@@ -72,7 +72,10 @@ export const SetStateAction: React.FC<Props> = ({
           setStateErrorMessage={setStateErrorMessage}
         />
       )}
-      <ActionDisabledTooltip isDisabled={isDisabled}>
+      <ActionDisabledTooltip
+        isDisabled={isDisabled}
+        ariaLabel={words("inventory.statustab.setInstanceState")}
+      >
         <Dropdown
           toggle={
             <DropdownToggle
@@ -87,7 +90,6 @@ export const SetStateAction: React.FC<Props> = ({
           dropdownItems={dropdownItems}
           isOpen={isDropdownOpen}
           onSelect={onSelect}
-          style={isDisabled ? { cursor: "not-allowed" } : {}}
         />
       </ActionDisabledTooltip>
       <ConfirmationModal
