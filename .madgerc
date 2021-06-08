@@ -1,0 +1,11 @@
+{
+  "fileExtensions": [
+    "js",
+    "jsx",
+    "ts",
+    "tsx"
+  ],
+  "webpackConfig": "./webpack.prod.js",
+  "tsConfig": "./tsconfig.json",
+  "layout": "dot"
+}
