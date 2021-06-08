@@ -1,14 +1,17 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { ServiceProvider } from "@/UI/Components";
+import {
+  ServiceProvider,
+  PageSectionWithHorizontalScroll,
+} from "@/UI/Components";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
-import { Card, PageSection } from "@patternfly/react-core";
+import { Card } from "@patternfly/react-core";
 import { PageParams } from "@/UI/Routing";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSection className={"horizontally-scrollable"} {...props}>
+  <PageSectionWithHorizontalScroll {...props}>
     <Card>{children}</Card>
-  </PageSection>
+  </PageSectionWithHorizontalScroll>
 );
 
 export const Provider: React.FC = () => {

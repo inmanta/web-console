@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { PageSection, Card } from "@patternfly/react-core";
+import { Card } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
 import {
@@ -15,15 +15,16 @@ import {
   LoadingView,
   ServiceProvider,
   PaginationWidget,
+  PageSectionWithHorizontalScroll,
 } from "@/UI/Components";
 import { TableControls } from "./Components";
 import { PageParams } from "@/UI/Routing";
 import { useParams } from "react-router-dom";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSection className={"horizontally-scrollable"} {...props}>
+  <PageSectionWithHorizontalScroll {...props}>
     <Card>{children}</Card>
-  </PageSection>
+  </PageSectionWithHorizontalScroll>
 );
 
 export const ServiceInventoryWithProvider: React.FC = () => {

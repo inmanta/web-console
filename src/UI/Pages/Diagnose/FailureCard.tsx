@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import styled from "styled-components";
 import { Failure } from "@/Core";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
@@ -12,6 +13,7 @@ import {
   KebabToggle,
 } from "@patternfly/react-core";
 import { DropdownExternalLink } from "./ExternalLink";
+import { greyText } from "@/UI/Styles";
 
 interface Props {
   resourceId: string;
@@ -51,10 +53,14 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
           />
         </CardActions>
       </CardHeader>
-      <CardTitle className="patternfly-text-gray">{resourceId}</CardTitle>
+      <StyledCardTitle>{resourceId}</StyledCardTitle>
       <CardBody>
         <pre>{failure.message}</pre>
       </CardBody>
     </Card>
   );
 };
+
+const StyledCardTitle = styled(CardTitle)`
+  ${greyText};
+`;

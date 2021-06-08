@@ -23,6 +23,8 @@ import { Routing } from "@/UI/Routing";
 import { DependencyContext, words } from "@/UI";
 import { SummaryIcons } from "./SummaryIcons";
 import { ErrorToastAlert } from "@/UI/Components";
+import styled from "styled-components";
+import { greyText } from "@/UI/Styles";
 
 interface Props {
   services: ServiceModel[];
@@ -37,11 +39,11 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
     if (descriptionProps.service.description) {
       return (
         <div id={`${descriptionProps.service.name}-description`}>
-          <div className="spacer-with-padding-xs" />
-          <Text component={TextVariants.small} className="patternfly-text-gray">
+          <Spacer />
+          <StyledText component={TextVariants.small}>
             {descriptionProps.service.description}
-          </Text>
-          <div className="spacer-with-padding-xs" />
+          </StyledText>
+          <Spacer />
         </div>
       );
     }
@@ -170,3 +172,11 @@ const DeleteEntityModal: React.FunctionComponent<{
     </>
   );
 };
+
+const Spacer = styled.div`
+  padding: var(--pf-global--spacer--xs);
+`;
+
+const StyledText = styled(Text)`
+  ${greyText};
+`;

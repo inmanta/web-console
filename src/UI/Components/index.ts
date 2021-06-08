@@ -12,6 +12,7 @@ export * from "./ExpandableTable";
 export * from "./IconTabs";
 export * from "./InstanceState";
 export * from "./LoadingView";
+export * from "./PageSectionWithHorizontalScroll";
 export * from "./ResourceTable";
 export * from "./ServiceProvider";
 export * from "./SettingsList";

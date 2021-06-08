@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import styled from "styled-components";
 import { Rejection } from "@/Core";
 import { words } from "@/UI/words";
 import {
@@ -13,6 +14,7 @@ import {
 import { DependencyContext } from "@/UI/Dependency";
 import { DropdownExternalLink } from "./ExternalLink";
 import { Traceback } from "./Traceback";
+import { greyText } from "@/UI/Styles";
 
 interface Props {
   rejection: Rejection;
@@ -57,9 +59,7 @@ export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
           />
         </CardActions>
       </CardHeader>
-      {error && (
-        <CardTitle className="patternfly-text-gray">{error.type}</CardTitle>
-      )}
+      {error && <StyledCardTitle>{error.type}</StyledCardTitle>}
       <CardBody>
         {error && <pre>{error.message}</pre>}
         {rejection.trace && <Traceback trace={rejection.trace} />}
@@ -67,3 +67,7 @@ export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
     </Card>
   );
 };
+
+const StyledCardTitle = styled(CardTitle)`
+  ${greyText}
+`;
