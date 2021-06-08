@@ -2,6 +2,7 @@ import { words } from "@/UI";
 import { Tooltip } from "@patternfly/react-core";
 import React from "react";
 import { ReactElement } from "react";
+import styled from "styled-components";
 
 interface Props {
   // Type of children from the Tooltip component of Patternfly
@@ -22,15 +23,16 @@ export const ActionDisabledTooltip: React.FC<Props> = ({
         entryDelay={200}
         content={words("inventory.statustab.actionDisabled")}
       >
-        <span
-          style={isDisabled ? { cursor: "not-allowed" } : {}}
-          aria-label={ariaLabel}
-        >
+        <CursorNotAllowedContainer aria-label={ariaLabel}>
           {children}
-        </span>
+        </CursorNotAllowedContainer>
       </Tooltip>
     );
   } else {
     return <>{children}</>;
   }
 };
+
+const CursorNotAllowedContainer = styled.span`
+  cursor: "not-allowed
+`;
