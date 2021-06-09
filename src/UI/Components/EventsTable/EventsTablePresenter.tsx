@@ -1,9 +1,6 @@
 import { EventRow, InstanceEvent } from "@/Core";
-import {
-  DatePresenter,
-  TablePresenter,
-} from "@/UI/Pages/ServiceInventory/Presenters";
 import { words } from "@/UI/words";
+import { TablePresenter, DatePresenter } from "@/UI/Contracts";
 
 export class EventsTablePresenter
   implements TablePresenter<InstanceEvent, EventRow>

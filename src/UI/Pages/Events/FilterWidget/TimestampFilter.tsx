@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
 import { reject } from "lodash";
+import { Operator } from "@/Core";
+import { DatePresenter } from "@/UI/Contracts";
 import { OperatorPicker } from "./OperatorPicker";
 import { TimestampPicker } from "./TimestampPicker";
-import { Operator } from "@/Core";
-import { DatePresenter } from "../../ServiceInventory/Presenters";
 
 interface Raw {
   date: Date;

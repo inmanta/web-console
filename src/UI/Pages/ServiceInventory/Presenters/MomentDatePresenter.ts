@@ -1,6 +1,6 @@
 import moment from "moment-timezone";
 import { DateInfo } from "@/Core";
-import { DatePresenter } from "./DatePresenter";
+import { DatePresenter } from "@/UI/Contracts";
 
 export class MomentDatePresenter implements DatePresenter {
   private readonly timezone: string = moment.tz.guess();

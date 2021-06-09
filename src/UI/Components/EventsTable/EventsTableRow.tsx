@@ -8,7 +8,8 @@ import {
 } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import React from "react";
-import { DateWithTooltip, EventIcon } from "@/UI/Components";
+import { EventIcon } from "@/UI/Components/EventIcon";
+import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
 import { words } from "@/UI/words";
 import { CompileReportLink } from "./CompileReportLink";
 
