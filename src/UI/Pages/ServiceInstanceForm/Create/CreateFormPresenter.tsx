@@ -3,7 +3,7 @@ import React from "react";
 import {
   FormInputAttribute,
   ServiceInstanceForm,
-} from "@/UI/Pages/ServiceInstanceForm";
+} from "@/UI/Pages/ServiceInstanceForm/ServiceInstanceForm";
 import { AttributeInputConverter } from "@/Data";
 
 export class CreateFormPresenter {
