@@ -52,7 +52,7 @@
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.2",
     "@types/qs": "^6.9.6",
-    "@types/react": "^17.0.9",
+    "@types/react": "^17.0.10",
     "@types/react-dom": "^17.0.6",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-syntax-highlighter": "^13.5.0",
@@ -113,11 +113,11 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@patternfly/react-core": "^4.115.2",
-    "@patternfly/react-icons": "^4.10.1",
+    "@patternfly/react-core": "^4.128.2",
+    "@patternfly/react-icons": "^4.10.11",
     "@patternfly/react-styles": "^4.10.2",
     "@patternfly/react-table": "^4.27.7",
-    "@patternfly/react-tokens": "^4.11.2",
+    "@patternfly/react-tokens": "^4.11.12",
     "copy-to-clipboard": "^3.3.1",
     "dotenv-webpack": "^7.0.3",
     "easy-peasy": "^5.0.3",
