@@ -6,12 +6,14 @@ import {
   ServiceInstanceModelWithTargetStates,
 } from "@/Core";
 import { StoreModel } from "./Store";
-import { injections } from "./Injections";
+import { ServiceKeyMaker } from "@/Data/Managers/Service/KeyMaker";
 
 type Data = RemoteData.Type<
   Query.Error<"ServiceInstances">,
   Query.ApiResponse<"ServiceInstances">
 >;
+
+const serviceKeyMaker = new ServiceKeyMaker();
 
 /**
  * The ServiceInstancesSlice stores ServiceInstances.
@@ -48,14 +50,12 @@ export interface ServiceInstancesSlice {
 export const serviceInstancesSlice: ServiceInstancesSlice = {
   byId: {},
   setData: action((state, { query, environment, value }) => {
-    state.byId[injections.serviceKeyMaker.make([environment, query.name])] =
-      value;
+    state.byId[serviceKeyMaker.make([environment, query.name])] = value;
   }),
   instancesWithTargetStates: computed(
     [(state) => state.byId, (state, storeState) => storeState],
     (byId, storeState) => (query, environment) => {
-      const data =
-        byId[injections.serviceKeyMaker.make([environment, query.name])];
+      const data = byId[serviceKeyMaker.make([environment, query.name])];
       if (typeof data === "undefined") return RemoteData.loading();
 
       return RemoteData.mapSuccess(({ data, ...rest }) => {
@@ -64,7 +64,7 @@ export const serviceInstancesSlice: ServiceInstancesSlice = {
             const instanceState = instance.state;
             const service =
               storeState.services.byNameAndEnv[
-                injections.serviceKeyMaker.make([environment, query.name])
+                serviceKeyMaker.make([environment, query.name])
               ];
             if (!service || service.kind !== "Success") {
               return { ...instance, instanceSetStateTargets: [] };

@@ -138,5 +138,19 @@
   "resolutions": {
     "terser-webpack-plugin": "^1.4.5",
     "selfsigned": "^1.10.8"
+  },
+  "madge": {
+    "fileExtensions": [
+      "js",
+      "jsx",
+      "ts",
+      "tsx"
+    ],
+    "webpackConfig": "./webpack.prod.js",
+    "tsConfig": "./tsconfig.json",
+    "layout": "dot",
+    "excludeRegExp": [
+      "Data/Store/ServiceInstancesSlice.ts"
+    ]
   }
 }

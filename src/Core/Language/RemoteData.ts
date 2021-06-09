@@ -1,4 +1,4 @@
-import { Either } from ".";
+import * as Either from "./Either";
 
 /**
  * The RemoteData type is a synchronous container for async data.
