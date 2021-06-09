@@ -10,7 +10,7 @@ import {
   EventsTableBody,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { MomentDatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { PaginationWidget } from "@/UI/Components";
 import { EventsTableControls } from "./EventsTableControls";
 

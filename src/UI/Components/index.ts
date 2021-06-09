@@ -4,6 +4,7 @@ export * from "./BooleanSwitch";
 export * from "./ButtonWithCursorHandling";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
+export * from "./DeleteForm";
 export * from "./EmptyView";
 export * from "./EnvironmentProvider";
 export * from "./ErrorView";

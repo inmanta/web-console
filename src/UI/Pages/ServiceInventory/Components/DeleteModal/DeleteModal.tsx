@@ -3,9 +3,12 @@ import { Button, Modal } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
-import { ErrorToastAlert, ActionDisabledTooltip } from "@/UI/Components";
+import {
+  ErrorToastAlert,
+  ActionDisabledTooltip,
+  DeleteForm,
+} from "@/UI/Components";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
-import { DeleteForm } from "./DeleteForm";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   isDisabled?: boolean;

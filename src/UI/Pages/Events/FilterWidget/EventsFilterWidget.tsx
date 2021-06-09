@@ -3,7 +3,7 @@ import { ToolbarGroup } from "@patternfly/react-core";
 import { EventParams, InstanceEventType } from "@/Core";
 import { words } from "@/UI/words";
 import { SelectOptionFilter } from "@/UI/Components/Filters";
-import { MomentDatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { TimestampOperatorFilter } from "@/Core/Domain/EventParams";
 import { FilterPicker } from "./FilterPicker";
 import { VersionFilter } from "./VersionFilter";
