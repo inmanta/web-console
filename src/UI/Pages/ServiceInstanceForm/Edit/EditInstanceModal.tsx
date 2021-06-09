@@ -1,13 +1,13 @@
-import { DependencyContext, words } from "@/UI";
-import { ActionDisabledTooltip } from "@/UI/Pages/ServiceInventory/Components";
-import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
-import { Button, Modal, ModalVariant } from "@patternfly/react-core";
-import { EditIcon } from "@patternfly/react-icons";
 import React, { useContext, useState } from "react";
-import { EditFormPresenter } from "./EditFormPresenter";
+import { EditIcon } from "@patternfly/react-icons";
+import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { AttributeModel, FormAttributeResult, Maybe } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
 import { AttributeInputConverterImpl } from "@/Data";
-import { ErrorToastAlert } from "@/UI/Components";
+import { ErrorToastAlert, ActionDisabledTooltip } from "@/UI/Components";
+import { EditFormPresenter } from "./EditFormPresenter";
 
 interface Props {
   isDisabled?: boolean;

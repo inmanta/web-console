@@ -1,13 +1,13 @@
-import { ProjectModel, RemoteData } from "@/Core";
-import { words } from "@/UI";
-import { SelectedProjectAndEnvironment } from "@/UI/Dependency";
+import React from "react";
 import {
   EmptyState,
   EmptyStateIcon,
   Spinner,
   Title,
 } from "@patternfly/react-core";
-import React from "react";
+import { ProjectModel, RemoteData } from "@/Core";
+import { words } from "@/UI/words";
+import { SelectedProjectAndEnvironment } from "@/UI/Dependency";
 import {
   EnvironmentSelectorItem,
   EnvSelectorWrapper,

@@ -1,5 +1,6 @@
 import { generatePath } from "react-router-dom";
-import { getLineageFromPage, getPageWithParamsFromUrl, Kinds } from "./Page";
+import { Kinds } from "./Page";
+import { getLineageFromPage, getPageWithParamsFromUrl } from "./Pages";
 
 interface Crumb {
   kind: Kinds;

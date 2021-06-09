@@ -1,9 +1,9 @@
 import React from "react";
 import { Card, CardBody, CardHeader } from "@patternfly/react-core";
 import { FormAttributeResult, ServiceModel } from "@/Core";
-import { words } from "@/UI";
-import { CreateFormPresenter } from "./CreateFormPresenter";
+import { words } from "@/UI/words";
 import { AttributeInputConverterImpl } from "@/Data";
+import { CreateFormPresenter } from "./CreateFormPresenter";
 
 interface Props {
   serviceEntity: ServiceModel;

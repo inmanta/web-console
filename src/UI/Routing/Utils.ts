@@ -1,5 +1,6 @@
 import { generatePath } from "react-router-dom";
-import { getPageFromKind, PageParams, Kinds } from "./Page";
+import { PageParams, Kinds } from "./Page";
+import { getPageFromKind } from "./Pages";
 
 export function getUrl(kind: Kinds, params: PageParams<typeof kind>): string {
   const page = getPageFromKind(kind);

@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { NotFound } from "@/UI/Pages";
 import { useDocumentTitle } from "./useDocumentTitle";
-import { pages } from "./Page";
+import { pages } from "./Pages";
 import { getUrl } from "./Utils";
 
 export const PageRouter: React.FC = () => (

@@ -7,7 +7,7 @@ import {
   InventoryPage,
   getLineageFromPage,
   getPageWithParamsFromUrl,
-} from "./Page";
+} from "./Pages";
 
 it.each`
   page                  | pageTxt             | length | result                                              | resultTxt

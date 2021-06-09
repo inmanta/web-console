@@ -1,3 +1,4 @@
+export * from "./ActionDisabledTooltip";
 export * from "./AttributesTable";
 export * from "./BooleanSwitch";
 export * from "./ButtonWithCursorHandling";

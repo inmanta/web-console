@@ -1,5 +1,4 @@
 import React from "react";
-import { words } from "@/UI";
 import {
   Card,
   CardBody,
@@ -8,6 +7,7 @@ import {
   DescriptionListTerm,
   DescriptionListDescription,
 } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
 interface Props {
   info: Info;

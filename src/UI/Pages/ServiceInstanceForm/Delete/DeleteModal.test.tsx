@@ -1,6 +1,5 @@
-import { render, screen } from "@testing-library/react";
 import React from "react";
-import { DeleteModal } from "./DeleteModal";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   CommandResolverImpl,
@@ -8,8 +7,9 @@ import {
   BaseApiHelper,
   InstanceDeleter,
 } from "@/Data";
-import { DependencyProvider } from "@/UI";
+import { DependencyProvider } from "@/UI/Dependency";
 import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
+import { DeleteModal } from "./DeleteModal";
 
 function setup() {
   const commandManager = new DeleteInstanceCommandManager(
