@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, NavGroup } from "@patternfly/react-core";
-import { CatalogPage } from "@/UI/Routing";
+import { CatalogPage } from "@/UI/Routing/Page";
 
 interface Group {
   id: string;
