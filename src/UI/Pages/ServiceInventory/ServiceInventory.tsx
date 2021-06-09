@@ -18,7 +18,7 @@ import {
   PageSectionWithHorizontalScroll,
 } from "@/UI/Components";
 import { TableControls } from "./Components";
-import { PageParams } from "@/UI/Routing";
+import { PageParams } from "@/UI/Routing/Page";
 import { useParams } from "react-router-dom";
 
 const Wrapper: React.FC = ({ children, ...props }) => (

@@ -5,8 +5,8 @@ import {
   PageSectionWithHorizontalScroll,
 } from "@/UI/Components";
 import { Card } from "@patternfly/react-core";
-import { EventsPage } from "./EventsPage";
 import { PageParams } from "@/UI/Routing/Page";
+import { EventsPage } from "./EventsPage";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithHorizontalScroll {...props}>

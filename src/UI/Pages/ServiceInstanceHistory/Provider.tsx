@@ -1,12 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { Card } from "@patternfly/react-core";
 import {
   ServiceProvider,
   PageSectionWithHorizontalScroll,
 } from "@/UI/Components";
+import { PageParams } from "@/UI/Routing/Page";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
-import { Card } from "@patternfly/react-core";
-import { PageParams } from "@/UI/Routing";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithHorizontalScroll {...props}>
