@@ -1,16 +1,5 @@
 import { Attributes, TreeNode } from "@/Core";
-
-type AttributeNode = TreeNode<unknown>;
-
-export type MultiAttributeNode = TreeNode<{
-  candidate: unknown;
-  active: unknown;
-  rollback: unknown;
-}>;
-
-type AttributeNodeDict = Record<string, AttributeNode>;
-
-export type MultiAttributeNodeDict = Record<string, MultiAttributeNode>;
+import { MultiAttributeNodeDict, AttributeNodeDict } from "./AttributeNode";
 
 export class AttributeHelper {
   constructor(private readonly separator: string) {}
