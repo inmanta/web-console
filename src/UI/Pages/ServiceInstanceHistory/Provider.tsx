@@ -5,7 +5,7 @@ import {
   ServiceProvider,
   PageSectionWithHorizontalScroll,
 } from "@/UI/Components";
-import { PageParams } from "@/UI/Routing/Page";
+import { Route } from "@/UI/Routing";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
@@ -15,7 +15,8 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 export const Provider: React.FC = () => {
-  const { service: serviceName, instance } = useParams<PageParams<"History">>();
+  const { service: serviceName, instance } =
+    useParams<Route.Params<"History">>();
 
   return (
     <ServiceProvider

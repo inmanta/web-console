@@ -18,7 +18,7 @@ import {
   PageSectionWithHorizontalScroll,
 } from "@/UI/Components";
 import { TableControls } from "./Components";
-import { PageParams } from "@/UI/Routing/Page";
+import { Route } from "@/UI/Routing";
 import { useParams } from "react-router-dom";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
@@ -28,7 +28,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 export const ServiceInventoryWithProvider: React.FC = () => {
-  const { service: serviceName } = useParams<PageParams<"Inventory">>();
+  const { service: serviceName } = useParams<Route.Params<"Inventory">>();
 
   return (
     <ServiceProvider

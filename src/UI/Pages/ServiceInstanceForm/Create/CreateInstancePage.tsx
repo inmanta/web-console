@@ -17,11 +17,11 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 import { FormAttributeResult, RemoteData, ServiceModel } from "@/Core";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
-import { PageParams } from "@/UI/Routing/Page";
+import { Route } from "@/UI/Routing";
 import { CreateFormCard } from "./CreateFormCard";
 
 export const CreateInstancePageWithProvider: React.FunctionComponent = () => {
-  const { service } = useParams<PageParams<"CreateInstance">>();
+  const { service } = useParams<Route.Params<"CreateInstance">>();
   return <ServiceProvider serviceName={service} />;
 };
 

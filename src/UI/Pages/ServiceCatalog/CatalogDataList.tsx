@@ -18,7 +18,7 @@ import {
   ModalVariant,
 } from "@patternfly/react-core";
 import { Maybe, ServiceModel } from "@/Core";
-import { getUrl } from "@/UI/Routing/Utils";
+import { getUrl } from "@/UI/Routing";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ErrorToastAlert, DeleteForm } from "@/UI/Components";

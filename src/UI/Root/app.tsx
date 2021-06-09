@@ -10,7 +10,7 @@ import {
   EnvironmentHandlerProvider,
   DependencyResolver,
 } from "@/UI/Dependency";
-import { PageRouter } from "@/UI/Routing";
+import { PageRouter } from "@/UI/Pages";
 import { GlobalStyles } from "@/UI/Styles";
 
 const keycloakInitConfig = {

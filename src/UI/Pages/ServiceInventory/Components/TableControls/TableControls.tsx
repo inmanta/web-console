@@ -11,7 +11,7 @@ import {
 } from "@patternfly/react-core";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { words } from "@/UI/words";
-import { getUrl } from "@/UI/Routing/Utils";
+import { getUrl } from "@/UI/Routing";
 import { FilterWidget } from "@/UI/Pages/ServiceInventory/Components/FilterWidget";
 
 interface Props {

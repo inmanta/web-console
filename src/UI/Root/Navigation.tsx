@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, NavGroup } from "@patternfly/react-core";
-import { CatalogPage } from "@/UI/Routing";
+import { Route } from "@/UI/Routing";
 
 interface Group {
   id: string;
@@ -30,9 +30,9 @@ export const Navigation: React.FC<{ environment: string }> = ({
       title: "Lifecycle Service Management",
       links: [
         {
-          id: CatalogPage.kind,
-          label: CatalogPage.label,
-          url: CatalogPage.path,
+          id: Route.Catalog.kind,
+          label: Route.Catalog.label,
+          url: Route.Catalog.path,
           external: false,
         },
       ],

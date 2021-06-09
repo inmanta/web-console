@@ -1,6 +1,4 @@
 export * from "./Crumb";
-export * from "./PageRouter";
-export * from "./Page";
-export * from "./Pages";
+export * as Route from "./Route";
 export * from "./UrlManagerImpl";
 export * from "./Utils";

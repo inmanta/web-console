@@ -8,7 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { ButtonWithCursorHandling } from "@/UI/Components";
-import { getUrl } from "@/UI/Routing/Utils";
+import { getUrl } from "@/UI/Routing";
 import { AttributeModel } from "@/Core";
 import { ServiceInstanceForAction } from "@/UI/Contracts";
 import { EditInstanceModal } from "./EditInstanceModal";
