@@ -114,7 +114,7 @@
   },
   "dependencies": {
     "@patternfly/react-core": "^4.115.2",
-    "@patternfly/react-icons": "^4.10.1",
+    "@patternfly/react-icons": "^4.10.11",
     "@patternfly/react-styles": "^4.10.2",
     "@patternfly/react-table": "^4.27.7",
     "@patternfly/react-tokens": "^4.11.2",
