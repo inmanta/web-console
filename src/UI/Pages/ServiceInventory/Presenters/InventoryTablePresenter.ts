@@ -1,9 +1,8 @@
 import { ReactElement } from "react";
 import { Id, Row, ServiceInstanceModelWithTargetStates } from "@/Core";
 import { words } from "@/UI/words";
-import { TablePresenter, DatePresenter } from "@/UI/Contracts";
+import { ActionPresenter, TablePresenter, DatePresenter } from "@/UI/Contracts";
 import { AttributesPresenter } from "./AttributesPresenter";
-import { ActionPresenter } from "./ActionPresenter";
 import { StatePresenter } from "./StatePresenter";
 
 interface ColumnHead {

@@ -1,4 +1,3 @@
-export * from "./ActionPresenter";
 export * from "./AttributesPresenter";
 export * from "./InstanceActionPresenter";
 export * from "./MomentDatePresenter";
