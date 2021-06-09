@@ -16,7 +16,7 @@ import {
   DiagnosticsStateHelper,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Routing";
+import { UrlManagerImpl } from "@/UI/Utils";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 
 export default {

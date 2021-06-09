@@ -33,7 +33,7 @@ import {
 } from "@/Data";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
-import { UrlManagerImpl } from "@/UI/Routing";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 function setup() {
   const store = getStoreInstance();

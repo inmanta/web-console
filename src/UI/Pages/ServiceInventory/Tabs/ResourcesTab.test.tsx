@@ -14,8 +14,8 @@ import {
   ResourcesQueryManager,
   getStoreInstance,
 } from "@/Data";
+import { UrlManagerImpl } from "@/UI/Utils";
 import { ResourcesTab } from "./ResourcesTab";
-import { UrlManagerImpl } from "@/UI/Routing";
 
 function setup() {
   const store = getStoreInstance();
