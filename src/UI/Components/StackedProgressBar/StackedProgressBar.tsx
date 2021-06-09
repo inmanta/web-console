@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Tooltip } from "@patternfly/react-core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 
 interface Props {
   total: number;
