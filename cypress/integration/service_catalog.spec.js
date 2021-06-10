@@ -16,7 +16,7 @@ describe("Service catalog", function () {
     cy.get("#e2e_service-expand")
       .find(".pf-c-tabs__item")
       .find(".pf-c-tabs__link")
-      .should("have.length", 3);
+      .should("have.length", 4);
     cy.get("#e2e_service-expand")
       .find(".pf-c-tabs__item")
       .find(".pf-c-tabs__link")
@@ -24,7 +24,12 @@ describe("Service catalog", function () {
         let texts = tabs.map((idx, tab) => Cypress.$(tab).text());
 
         texts = texts.get();
-        expect(texts).to.deep.eq(["Attributes", "Lifecycle States", "Config"]);
+        expect(texts).to.deep.eq([
+          "Details",
+          "Attributes",
+          "Lifecycle States",
+          "Config",
+        ]);
       });
   });
   it("Should navigate between tabs", function () {

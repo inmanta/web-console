@@ -33,5 +33,5 @@ export const ActionDisabledTooltip: React.FC<Props> = ({
 };
 
 const CursorNotAllowedContainer = styled.span`
-  cursor: "not-allowed
+  cursor: not-allowed;
 `;
