@@ -1,16 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import {
-  ServiceProvider,
-  PageSectionWithHorizontalScroll,
-} from "@/UI/Components";
-import { Diagnose } from "./Diagnose";
+import { PageSection } from "@patternfly/react-core";
+import { ServiceProvider } from "@/UI/Components";
 import { Route } from "@/UI/Routing";
+import { Diagnose } from "./Diagnose";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithHorizontalScroll {...props}>
-    {children}
-  </PageSectionWithHorizontalScroll>
+  <PageSection {...props}>{children}</PageSection>
 );
 
 export const Provider: React.FC = () => {
