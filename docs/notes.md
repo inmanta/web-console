@@ -64,3 +64,8 @@ window = Object.assign(window, { innerWidth: 500 });
 // Trigger the window resize event.
 window.dispatchEvent(new Event("resize"));
 ```
+
+## Minimum browser versions
+
+We decided to use the latest 2 versions of some major browsers (for details see the browserslist in `package.json`),
+to improve security and to keep up to date with the new developments of the browser APIs.
