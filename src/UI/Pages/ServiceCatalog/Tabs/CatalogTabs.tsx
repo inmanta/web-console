@@ -4,10 +4,11 @@ import { ServiceModel } from "@/Core";
 import { AttributeTable } from "./AttributeTable";
 import { LifecycleTable } from "./LifecycleTable";
 import { Config } from "./Config";
+import { Details } from "./Details";
 
 export const CatalogTabs: React.FunctionComponent<{
   service: ServiceModel;
-}> = (props) => {
+}> = ({ service }) => {
   const [activeTabKey, setActiveTabKey] = useState(0);
 
   const handleTabClick = (event, tabIndex) => {
@@ -21,14 +22,20 @@ export const CatalogTabs: React.FunctionComponent<{
       onSelect={handleTabClick}
       mountOnEnter
     >
-      <Tab eventKey={0} title="Attributes">
-        <AttributeTable attributes={props.service.attributes} />
+      <Tab eventKey={0} title="Details">
+        <Details
+          serviceName={service.name}
+          instanceSummary={service.instance_summary}
+        />
       </Tab>
-      <Tab eventKey={1} title="Lifecycle States">
-        <LifecycleTable lifecycle={props.service.lifecycle} />
+      <Tab eventKey={1} title="Attributes">
+        <AttributeTable attributes={service.attributes} />
       </Tab>
-      <Tab eventKey={2} title="Config">
-        <Config serviceName={props.service.name} />
+      <Tab eventKey={2} title="Lifecycle States">
+        <LifecycleTable lifecycle={service.lifecycle} />
+      </Tab>
+      <Tab eventKey={3} title="Config">
+        <Config serviceName={service.name} />
       </Tab>
     </Tabs>
   );

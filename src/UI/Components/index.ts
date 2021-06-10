@@ -23,3 +23,4 @@ export * from "./PaginationWidget";
 export * from "./TextWithCopy";
 export * from "./ButtonWithCursorHandling";
 export * from "./ErrorToastAlert";
+export * from "./Spacer";

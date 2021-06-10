@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   DataList,
@@ -9,22 +9,19 @@ import {
   DataListCell,
   DataListContent,
   DataListAction,
-  Modal,
   Text,
   Title,
   TextVariants,
-  ModalVariant,
 } from "@patternfly/react-core";
-import { Maybe, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { CatalogTabs } from "./Tabs";
 import { Link } from "react-router-dom";
-import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
 import { Routing } from "@/UI/Routing";
-import { DependencyContext, words } from "@/UI";
 import { SummaryIcons } from "./SummaryIcons";
-import { ErrorToastAlert } from "@/UI/Components";
 import styled from "styled-components";
 import { greyText } from "@/UI/Styles";
+import { words } from "@/UI";
+import { Spacer } from "@/UI/Components";
 
 interface Props {
   services: ServiceModel[];
@@ -101,7 +98,6 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
             >
               <Button>{words("catalog.button.inventory")}</Button>
             </Link>
-            <DeleteEntityModal serviceName={service.name} />
           </DataListAction>
         </DataListItemRow>
         <DataListContent
@@ -130,52 +126,6 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
     <DataList aria-label="List of service entities">{serviceItems}</DataList>
   );
 };
-
-const DeleteEntityModal: React.FunctionComponent<{
-  serviceName: string;
-}> = ({ serviceName }) => {
-  const { commandResolver } = useContext(DependencyContext);
-  const trigger = commandResolver.getTrigger<"DeleteService">({
-    kind: "DeleteService",
-    name: serviceName,
-  });
-  const [isOpen, setIsOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const handleModalToggle = () => {
-    setIsOpen(!isOpen);
-  };
-  const onSubmit = async () => {
-    handleModalToggle();
-    const result = await trigger();
-    if (Maybe.isSome(result)) {
-      setErrorMessage(result.value);
-    }
-  };
-  return (
-    <>
-      <ErrorToastAlert
-        errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
-      />
-      <Button variant="danger" onClick={handleModalToggle}>
-        {words("delete")}
-      </Button>
-      <Modal
-        variant={ModalVariant.small}
-        isOpen={isOpen}
-        title="Delete Service Entity"
-        onClose={handleModalToggle}
-      >
-        {words("catalog.delete.title")(serviceName)}
-        <DeleteForm onSubmit={onSubmit} onCancel={handleModalToggle} />
-      </Modal>
-    </>
-  );
-};
-
-const Spacer = styled.div`
-  padding: var(--pf-global--spacer--xs);
-`;
 
 const StyledText = styled(Text)`
   ${greyText};
