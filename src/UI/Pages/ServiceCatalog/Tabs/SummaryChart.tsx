@@ -1,5 +1,5 @@
 import { InstancesByLabel } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { ChartDonut } from "@patternfly/react-charts";
 import {
   global_danger_color_100,

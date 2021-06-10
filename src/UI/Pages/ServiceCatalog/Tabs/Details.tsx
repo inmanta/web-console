@@ -1,6 +1,6 @@
 import { InstanceSummary } from "@/Core";
 import React from "react";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { SummaryChart } from "./SummaryChart";
 import { Flex, FlexItem, Title } from "@patternfly/react-core";
 import { DeleteEntityModal } from "../DeleteEntityModal";
