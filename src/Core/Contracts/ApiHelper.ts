@@ -1,4 +1,4 @@
-import { Either, Maybe } from "@/Core";
+import { Either, Maybe } from "@/Core/Language";
 
 /**
  * The ApiHelper provides basic api helper methods.

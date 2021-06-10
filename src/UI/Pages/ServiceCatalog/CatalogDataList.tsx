@@ -1,4 +1,6 @@
 import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 import {
   Button,
   DataList,
@@ -16,15 +18,13 @@ import {
   ModalVariant,
 } from "@patternfly/react-core";
 import { Maybe, ServiceModel } from "@/Core";
-import { CatalogTabs } from "./Tabs";
-import { Link } from "react-router-dom";
-import { DeleteForm } from "@/UI/Pages/ServiceInstanceForm/Delete";
-import { Routing } from "@/UI/Routing";
-import { DependencyContext, words } from "@/UI";
-import { SummaryIcons } from "./SummaryIcons";
-import { ErrorToastAlert } from "@/UI/Components";
-import styled from "styled-components";
+import { getUrl } from "@/UI/Routing";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { ErrorToastAlert, DeleteForm } from "@/UI/Components";
 import { greyText } from "@/UI/Styles";
+import { CatalogTabs } from "./Tabs";
+import { SummaryIcons } from "./SummaryIcons";
 
 interface Props {
   services: ServiceModel[];
@@ -93,7 +93,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
           >
             <Link
               to={{
-                pathname: Routing.getUrl("Inventory", {
+                pathname: getUrl("Inventory", {
                   service: service.name,
                 }),
                 search: location.search,

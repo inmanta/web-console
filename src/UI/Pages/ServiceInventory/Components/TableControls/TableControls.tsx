@@ -11,7 +11,7 @@ import {
 } from "@patternfly/react-core";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { words } from "@/UI/words";
-import { Routing } from "@/UI/Routing";
+import { getUrl } from "@/UI/Routing";
 import { FilterWidget } from "@/UI/Pages/ServiceInventory/Components/FilterWidget";
 
 interface Props {
@@ -50,7 +50,7 @@ export const TableControls: React.FC<Props> = ({
             <ToolbarItem>
               <Link
                 to={{
-                  pathname: Routing.getUrl("CreateInstance", {
+                  pathname: getUrl("CreateInstance", {
                     service: serviceName,
                   }),
                   search: location.search,

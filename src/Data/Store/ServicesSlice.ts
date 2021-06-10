@@ -1,6 +1,8 @@
 import { Action, action } from "easy-peasy";
 import { Query, RemoteData, ServiceModel } from "@/Core";
-import { injections } from "@/Data/Store/Injections";
+import { ServiceKeyMaker } from "@/Data/Managers/Service/KeyMaker";
+
+const serviceKeyMaker = new ServiceKeyMaker();
 
 /**
  * The ServicesSlice stores Services.
@@ -47,18 +49,16 @@ export const servicesSlice: ServicesSlice = {
     if (!RemoteData.isSuccess(data)) return;
     const { value: services } = data;
     const toDelete = Object.keys(byNameAndEnv).filter((key) =>
-      injections.serviceKeyMaker.matches([environment, ""], key)
+      serviceKeyMaker.matches([environment, ""], key)
     );
     toDelete.forEach((key) => delete byNameAndEnv[key]);
     services.forEach((service) => {
-      const key = injections.serviceKeyMaker.make([environment, service.name]);
+      const key = serviceKeyMaker.make([environment, service.name]);
       byNameAndEnv[key] = RemoteData.success(service);
     });
   }),
   byNameAndEnv: {},
   setSingle: action((state, { environment, query, data }) => {
-    state.byNameAndEnv[
-      injections.serviceKeyMaker.make([environment, query.name])
-    ] = data;
+    state.byNameAndEnv[serviceKeyMaker.make([environment, query.name])] = data;
   }),
 };

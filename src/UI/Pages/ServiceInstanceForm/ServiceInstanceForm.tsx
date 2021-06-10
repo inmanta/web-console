@@ -1,15 +1,15 @@
+import React, { useState } from "react";
 import {
   ActionGroup,
   Button,
   Form,
   TextInputTypes,
 } from "@patternfly/react-core";
-import React, { useState } from "react";
 import { words } from "@/UI/words";
-import { BooleanFormInput } from "./BooleanFormInput";
-import { TextFormInput } from "./TextFormInput";
 import { FormAttributeResult } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
+import { BooleanFormInput } from "./BooleanFormInput";
+import { TextFormInput } from "./TextFormInput";
 
 export interface FormInputAttribute {
   name: string;

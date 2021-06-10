@@ -1,6 +1,6 @@
-import { Form, ActionGroup, Button } from "@patternfly/react-core";
 import React from "react";
-import { words } from "@/UI";
+import { Form, ActionGroup, Button } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
 export const DeleteForm: React.FunctionComponent<{
   onSubmit: () => void;

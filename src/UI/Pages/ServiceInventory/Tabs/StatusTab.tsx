@@ -10,7 +10,7 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { TextWithCopy } from "@/UI/Components";
 
 interface StatusInfo {

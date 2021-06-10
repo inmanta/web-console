@@ -11,7 +11,7 @@ import {
 } from "@/Data";
 import { EventsPage } from "@/UI/Pages/Events/EventsPage";
 import { MemoryRouter } from "react-router-dom";
-import { UrlManagerImpl } from "@/UI/Routing";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 export interface Handles {
   component: React.ReactElement;

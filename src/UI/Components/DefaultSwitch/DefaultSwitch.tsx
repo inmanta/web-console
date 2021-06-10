@@ -1,6 +1,6 @@
 import React from "react";
 import { Config } from "@/Core";
-import { BooleanSwitch } from "@/UI/Components";
+import { BooleanSwitch } from "@/UI/Components/BooleanSwitch";
 import { words } from "@/UI/words";
 
 interface Props {

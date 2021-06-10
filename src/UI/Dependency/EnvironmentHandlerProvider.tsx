@@ -1,8 +1,8 @@
 import {
   EnvironmentHandlerContext,
   EnvironmentHandlerImpl,
-  DependencyContext,
-} from "@/UI/Dependency";
+} from "./EnvironmentHandler";
+import { DependencyContext } from "./Dependency";
 import { useStore } from "@/Data";
 import {
   Alert,

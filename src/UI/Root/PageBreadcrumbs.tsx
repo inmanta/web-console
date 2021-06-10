@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
 import React from "react";
 import { useLocation, NavLink } from "react-router-dom";
-import { getCrumbs } from "./Crumb";
+import { getCrumbs } from "@/UI/Routing";
 
 export const PageBreadcrumbs: React.FC = () => {
   const { pathname, search } = useLocation();

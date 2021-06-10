@@ -18,7 +18,7 @@ import {
   getStoreInstance,
 } from "@/Data";
 import userEvent from "@testing-library/user-event";
-import { UrlManagerImpl } from "@/UI/Routing";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 const dummySetter = () => {
   return;

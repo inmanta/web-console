@@ -10,7 +10,7 @@ import {
   IconTabs,
   TabDescriptor,
 } from "@/UI/Components";
-import { MomentDatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { DetailsTab } from "./DetailsTab";
 

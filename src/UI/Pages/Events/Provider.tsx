@@ -5,8 +5,8 @@ import {
   PageSectionWithHorizontalScroll,
 } from "@/UI/Components";
 import { Card } from "@patternfly/react-core";
+import { Route } from "@/UI/Routing";
 import { EventsPage } from "./EventsPage";
-import { PageParams } from "@/UI/Routing";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithHorizontalScroll {...props}>
@@ -15,7 +15,8 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 export const Provider: React.FC = () => {
-  const { service: serviceName, instance } = useParams<PageParams<"Events">>();
+  const { service: serviceName, instance } =
+    useParams<Route.Params<"Events">>();
 
   return (
     <ServiceProvider

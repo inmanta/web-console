@@ -1,5 +1,6 @@
 import { generatePath } from "react-router-dom";
-import { getLineageFromPage, getPageWithParamsFromUrl, Kinds } from "./Page";
+import { Kinds } from "./Route";
+import { getRouteWithParamsFromUrl, getLineageFromRoute } from "./Utils";
 
 interface Crumb {
   kind: Kinds;
@@ -9,10 +10,10 @@ interface Crumb {
 }
 
 export function getCrumbs(url: string): Crumb[] {
-  const pageWithParams = getPageWithParamsFromUrl(url);
-  if (typeof pageWithParams === "undefined") return [];
-  const [page, params] = pageWithParams;
-  const lineage = getLineageFromPage(page);
+  const routeWithParams = getRouteWithParamsFromUrl(url);
+  if (typeof routeWithParams === "undefined") return [];
+  const [route, params] = routeWithParams;
+  const lineage = getLineageFromRoute(route);
   return lineage.map(({ kind, label, path }, idx) => ({
     kind,
     label,

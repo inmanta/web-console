@@ -28,7 +28,7 @@ import {
 } from "@/Data";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
-import { UrlManagerImpl } from "@/UI/Routing";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 export interface Handles {
   component: React.ReactElement;

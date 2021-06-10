@@ -9,11 +9,9 @@ import {
   InstanceState,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { InstanceLogRow } from "./InstanceLogRow";
-import {
-  AttributesPresenter,
-  MomentDatePresenter,
-} from "@/UI/Pages/ServiceInventory/Presenters";
+import { AttributesPresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 
 interface Props {
   service: ServiceModel;

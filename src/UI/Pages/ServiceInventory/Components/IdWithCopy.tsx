@@ -1,6 +1,6 @@
 import React from "react";
 import { Id } from "@/Core";
-import { words } from "@/UI";
+import { words } from "@/UI/words";
 import { TextWithCopy } from "@/UI/Components";
 
 interface Props {
