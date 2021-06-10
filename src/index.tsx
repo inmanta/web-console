@@ -16,7 +16,7 @@ import {
   KeycloakAuthHelper,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Routing";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */

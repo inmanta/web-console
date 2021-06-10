@@ -17,7 +17,7 @@ import {
   EventsStateHelper,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Routing";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 export default {
   title: "EventsPage",

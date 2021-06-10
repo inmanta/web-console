@@ -5,7 +5,7 @@ import {
   PageSectionWithHorizontalScroll,
 } from "@/UI/Components";
 import { Diagnose } from "./Diagnose";
-import { PageParams } from "@/UI/Routing";
+import { Route } from "@/UI/Routing";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithHorizontalScroll {...props}>
@@ -15,7 +15,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 
 export const Provider: React.FC = () => {
   const { service: serviceName, instance } =
-    useParams<PageParams<"Diagnose">>();
+    useParams<Route.Params<"Diagnose">>();
 
   return (
     <ServiceProvider

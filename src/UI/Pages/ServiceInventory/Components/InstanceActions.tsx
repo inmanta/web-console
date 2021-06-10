@@ -1,19 +1,19 @@
 import React from "react";
-import { ServiceInstanceForAction } from "@/UI/Pages/ServiceInventory/Presenters";
+import { Link, useLocation } from "react-router-dom";
+import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import {
   Button,
   DescriptionList,
   DescriptionListGroup,
 } from "@patternfly/react-core";
-import { SetStateAction } from "./SetStateAction";
-import { EditInstanceModal } from "@/UI/Pages/ServiceInstanceForm/Edit/EditInstanceModal";
-import { DeleteModal } from "@/UI/Pages/ServiceInstanceForm/Delete/DeleteModal";
-import { Link, useLocation } from "react-router-dom";
-import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { ButtonWithCursorHandling } from "@/UI/Components";
-import { Routing } from "@/UI/Routing";
+import { getUrl } from "@/UI/Routing";
 import { AttributeModel } from "@/Core";
+import { ServiceInstanceForAction } from "@/UI/Presenters";
+import { EditInstanceModal } from "./EditInstanceModal";
+import { DeleteModal } from "./DeleteModal";
+import { SetStateAction } from "./SetStateAction";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
@@ -52,7 +52,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       <DescriptionListGroup>
         <Link
           to={{
-            pathname: Routing.getUrl("Diagnose", {
+            pathname: getUrl("Diagnose", {
               service: instance.service_entity,
               instance: instance.id,
             }),
@@ -71,7 +71,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       <DescriptionListGroup>
         <Link
           to={{
-            pathname: Routing.getUrl("History", {
+            pathname: getUrl("History", {
               service: instance.service_entity,
               instance: instance.id,
             }),
@@ -86,7 +86,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       <DescriptionListGroup>
         <Link
           to={{
-            pathname: Routing.getUrl("Events", {
+            pathname: getUrl("Events", {
               service: instance.service_entity,
               instance: instance.id,
             }),

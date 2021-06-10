@@ -1,4 +1,4 @@
-import { Maybe } from "@/Core/Language";
+import * as Maybe from "@/Core/Language/Maybe";
 
 /**
  * The Dictionary stores key-value data.

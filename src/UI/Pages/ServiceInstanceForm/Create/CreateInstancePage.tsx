@@ -1,4 +1,5 @@
-import { FormAttributeResult, RemoteData, ServiceModel } from "@/Core";
+import React, { useCallback, useContext, useState } from "react";
+
 import {
   Alert,
   AlertActionCloseButton,
@@ -12,15 +13,15 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
-import React, { useCallback, useContext, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import { FormAttributeResult, RemoteData, ServiceModel } from "@/Core";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
+import { Route } from "@/UI/Routing";
 import { CreateFormCard } from "./CreateFormCard";
-import { PageParams } from "@/UI/Routing";
 
 export const CreateInstancePageWithProvider: React.FunctionComponent = () => {
-  const { service } = useParams<PageParams<"CreateInstance">>();
+  const { service } = useParams<Route.Params<"CreateInstance">>();
   return <ServiceProvider serviceName={service} />;
 };
 

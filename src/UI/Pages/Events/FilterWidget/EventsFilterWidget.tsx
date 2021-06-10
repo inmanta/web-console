@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { EventParams, InstanceEventType } from "@/Core";
-import { FilterPicker } from "./FilterPicker";
 import { ToolbarGroup } from "@patternfly/react-core";
+import { EventParams, InstanceEventType } from "@/Core";
+import { words } from "@/UI/words";
 import { SelectOptionFilter } from "@/UI/Components/Filters";
+import { MomentDatePresenter } from "@/UI/Utils";
+import { TimestampOperatorFilter } from "@/Core/Domain/EventParams";
+import { FilterPicker } from "./FilterPicker";
 import { VersionFilter } from "./VersionFilter";
 import { TimestampFilter } from "./TimestampFilter";
-import { TimestampOperatorFilter } from "@/Core/Domain/EventParams";
-import { words } from "@/UI";
-import { MomentDatePresenter } from "../../ServiceInventory/Presenters";
 
 interface Props {
   filter: EventParams.Filter;

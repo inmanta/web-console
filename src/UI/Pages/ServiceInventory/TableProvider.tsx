@@ -4,11 +4,11 @@ import {
   ServiceInstanceModelWithTargetStates,
   SortDirection,
 } from "@/Core";
+import { MomentDatePresenter } from "@/UI/Utils";
 import {
   AttributesPresenter,
   InstanceActionPresenter,
   InstanceStatePresenter,
-  MomentDatePresenter,
   InventoryTablePresenter,
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";

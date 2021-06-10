@@ -17,7 +17,7 @@ import {
   getStoreInstance,
 } from "@/Data";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
-import { UrlManagerImpl } from "@/UI/Routing";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 function setup() {
   const store = getStoreInstance();

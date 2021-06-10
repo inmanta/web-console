@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 import {
   Button,
   DataList,
@@ -14,14 +16,12 @@ import {
   TextVariants,
 } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
-import { CatalogTabs } from "./Tabs";
-import { Link } from "react-router-dom";
-import { Routing } from "@/UI/Routing";
-import { SummaryIcons } from "./SummaryIcons";
-import styled from "styled-components";
-import { greyText } from "@/UI/Styles";
-import { words } from "@/UI";
+import { getUrl } from "@/UI/Routing";
+import { words } from "@/UI/words";
 import { Spacer } from "@/UI/Components";
+import { greyText } from "@/UI/Styles";
+import { CatalogTabs } from "./Tabs";
+import { SummaryIcons } from "./SummaryIcons";
 
 interface Props {
   services: ServiceModel[];
@@ -90,7 +90,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
           >
             <Link
               to={{
-                pathname: Routing.getUrl("Inventory", {
+                pathname: getUrl("Inventory", {
                   service: service.name,
                 }),
                 search: location.search,

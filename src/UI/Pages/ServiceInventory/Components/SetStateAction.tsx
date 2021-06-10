@@ -11,9 +11,10 @@ import {
   ModalVariant,
 } from "@patternfly/react-core";
 import { CaretDownIcon } from "@patternfly/react-icons";
-import { DependencyContext, words } from "@/UI";
-import { ActionDisabledTooltip } from "./ActionDisabledTooltip";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
+import { words } from "@/UI/words";
+import { DependencyContext } from "@/UI/Dependency";
+import { ActionDisabledTooltip } from "@/UI/Components";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: string[] | null;

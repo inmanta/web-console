@@ -1,5 +1,4 @@
-import { InstanceSummary } from "@/Core";
-import { words } from "@/UI";
+import React, { ReactElement } from "react";
 import { Label, FlexItem, Flex, Tooltip } from "@patternfly/react-core";
 import {
   CheckCircleIcon,
@@ -9,7 +8,8 @@ import {
   InfoCircleIcon,
   OutlinedCircleIcon,
 } from "@patternfly/react-icons";
-import React, { ReactElement } from "react";
+import { InstanceSummary } from "@/Core";
+import { words } from "@/UI/words";
 
 interface Props {
   summary: InstanceSummary;

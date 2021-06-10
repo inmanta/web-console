@@ -1,6 +1,3 @@
-export * from "./PageBreadcrumbs";
-export * from "./PageRouter";
-export * from "./Page";
-export * from "./UrlManagerImpl";
-export * from "./Navigation";
-export * as Routing from "./Utils";
+export * from "./Crumb";
+export * as Route from "./Route";
+export * from "./Utils";

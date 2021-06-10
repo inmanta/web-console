@@ -21,6 +21,7 @@ pipeline {
                     yarn lint;
                     yarn format:check;
                     yarn tsc;
+                    yarn check-circular-deps;
                     yarn build;
                     yarn test'''
                 }

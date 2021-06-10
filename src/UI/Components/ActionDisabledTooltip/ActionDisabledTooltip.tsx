@@ -1,8 +1,7 @@
-import { words } from "@/UI";
-import { Tooltip } from "@patternfly/react-core";
-import React from "react";
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 import styled from "styled-components";
+import { Tooltip } from "@patternfly/react-core";
+import { words } from "@/UI/words";
 
 interface Props {
   // Type of children from the Tooltip component of Patternfly

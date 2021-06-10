@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
-import { words } from "@/UI";
+import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
+import { words } from "@/UI/words";
 import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { AttributesSummaryView, IdWithCopy } from "./Components";
 import { DeploymentProgressPresenter } from "./Presenters";
