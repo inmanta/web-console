@@ -1,6 +1,6 @@
 import { EventRow, InstanceEvent } from "@/Core";
 import { words } from "@/UI/words";
-import { TablePresenter, DatePresenter } from "@/UI/Contracts";
+import { TablePresenter, DatePresenter } from "@/UI/Presenters";
 
 export class EventsTablePresenter
   implements TablePresenter<InstanceEvent, EventRow>

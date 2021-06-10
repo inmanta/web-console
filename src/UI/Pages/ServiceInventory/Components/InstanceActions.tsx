@@ -10,7 +10,7 @@ import { words } from "@/UI/words";
 import { ButtonWithCursorHandling } from "@/UI/Components";
 import { getUrl } from "@/UI/Routing";
 import { AttributeModel } from "@/Core";
-import { ServiceInstanceForAction } from "@/UI/Contracts";
+import { ServiceInstanceForAction } from "@/UI/Presenters";
 import { EditInstanceModal } from "./EditInstanceModal";
 import { DeleteModal } from "./DeleteModal";
 import { SetStateAction } from "./SetStateAction";

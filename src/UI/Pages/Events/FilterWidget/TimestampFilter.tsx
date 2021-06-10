@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
 import { reject } from "lodash";
 import { Operator } from "@/Core";
-import { DatePresenter } from "@/UI/Contracts";
+import { DatePresenter } from "@/UI/Presenters";
 import { OperatorPicker } from "./OperatorPicker";
 import { TimestampPicker } from "./TimestampPicker";
 

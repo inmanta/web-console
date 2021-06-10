@@ -4,7 +4,7 @@ import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { AttributeModel, FormAttributeResult, Maybe } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { ServiceInstanceForAction } from "@/UI/Contracts";
+import { ServiceInstanceForAction } from "@/UI/Presenters";
 import { AttributeInputConverterImpl } from "@/Data";
 import { ErrorToastAlert, ActionDisabledTooltip } from "@/UI/Components";
 import { EditFormPresenter } from "./EditFormPresenter";

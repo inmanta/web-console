@@ -1,6 +1,6 @@
 import React from "react";
 import { EventRow, InstanceEvent } from "@/Core";
-import { TablePresenter } from "@/UI/Contracts";
+import { TablePresenter } from "@/UI/Presenters";
 import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 import { EventsTableRow } from "./EventsTableRow";
 
