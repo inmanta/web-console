@@ -170,14 +170,14 @@ const dict = {
   /**
    * Catalog related text
    */
-  "catalog.drawer.title": (serviceName: string) =>
-    `Number of ${serviceName} instances by label`,
-  "catalog.drawer.summary.noLabel": "no label",
-  "catalog.drawer.summary.total": "total",
-  "catalog.drawer.summary.empty": "No instance summary found",
+  "catalog.summary.title": `Number of instances by label`,
+  "catalog.summary.noLabel": "no label",
+  "catalog.summary.total": "total",
+  "catalog.summary.empty": "No instance summary found",
   "catalog.button.inventory": "Inventory",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
+  "catalog.instances": "Instances",
 };
 
 type Key = keyof typeof dict;

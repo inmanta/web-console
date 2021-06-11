@@ -122,6 +122,10 @@ test("ServiceCatalog removes service after deletion", async () => {
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
   ).toBeInTheDocument();
 
+  fireEvent.click(
+    screen.getByRole("button", { name: `${Service.a.name} Details` })
+  );
+
   fireEvent.click(screen.getByRole("button", { name: "Delete" }));
 
   fireEvent.click(screen.getByRole("button", { name: "Yes" }));

@@ -24,7 +24,7 @@ export const SummaryIcons: React.FC<Props> = ({ summary }) => {
             content={
               labelName !== "no_label"
                 ? labelName
-                : words("catalog.drawer.summary.noLabel")
+                : words("catalog.summary.noLabel")
             }
             entryDelay={200}
           >
@@ -32,11 +32,8 @@ export const SummaryIcons: React.FC<Props> = ({ summary }) => {
           </Tooltip>
         </FlexItem>
       ))}
-      <FlexItem key={words("catalog.drawer.summary.total")}>
-        <Tooltip
-          content={words("catalog.drawer.summary.total")}
-          entryDelay={200}
-        >
+      <FlexItem key={words("catalog.summary.total")}>
+        <Tooltip content={words("catalog.summary.total")} entryDelay={200}>
           <Label icon={<CubesIcon />} color="cyan">
             {summary.total}
           </Label>

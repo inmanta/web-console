@@ -1,0 +1,6 @@
+description: Add details tab to the catalog view
+issue-nr: 384
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
