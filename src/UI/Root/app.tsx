@@ -11,7 +11,6 @@ import {
   DependencyResolver,
 } from "@/UI/Dependency";
 import { PageRouter } from "@/UI/Pages";
-import { GlobalStyles } from "@/UI/Styles";
 
 const keycloakInitConfig = {
   onLoad: "login-required",
@@ -27,7 +26,6 @@ export const App: React.FunctionComponent<{
 
   const AppWithStore = (
     <>
-      <GlobalStyles />
       <Router basename={baseName}>
         <EnvironmentHandlerProvider>
           <AppLayout
