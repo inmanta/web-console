@@ -67,5 +67,9 @@ window.dispatchEvent(new Event("resize"));
 
 ## Minimum browser versions
 
-We decided to use the latest 2 versions of some major browsers (for details see the browserslist in `package.json`),
-to improve security and to keep up to date with the new developments of the browser APIs.
+We decided to use the last 2 versions of the following browsers: Chrome, Firefox, Safari, Edge.
+The main reasons for this are:
+
+- Patternfly, the component library we use also only supports these browsers
+- improving security
+- keeping up to date with the new developments of the browser APIs
