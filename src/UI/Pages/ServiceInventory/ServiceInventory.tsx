@@ -14,19 +14,19 @@ import {
   LoadingView,
   PageTitle,
   PaginationWidget,
-  PageSectionWithHorizontalScroll,
   ServiceProvider,
   SummaryChart,
 } from "@/UI/Components";
 import { TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
 import { useParams } from "react-router-dom";
+import { PageSection } from "@patternfly/react-core";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithHorizontalScroll {...props} variant="light">
+  <PageSection {...props} variant="light">
     <PageTitle>{words("inventory.title")}</PageTitle>
     {children}
-  </PageSectionWithHorizontalScroll>
+  </PageSection>
 );
 
 export const ServiceInventoryWithProvider: React.FC = () => {

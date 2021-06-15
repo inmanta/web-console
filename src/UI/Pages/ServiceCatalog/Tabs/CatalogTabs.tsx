@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { Tabs, Tab } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
 import { AttributeTable } from "./AttributeTable";
@@ -23,20 +24,32 @@ export const CatalogTabs: React.FunctionComponent<{
       mountOnEnter
     >
       <Tab eventKey={0} title="Details">
-        <Details
-          serviceName={service.name}
-          instanceSummary={service.instance_summary}
-        />
+        <TabContainer>
+          <Details
+            serviceName={service.name}
+            instanceSummary={service.instance_summary}
+          />
+        </TabContainer>
       </Tab>
       <Tab eventKey={1} title="Attributes">
-        <AttributeTable attributes={service.attributes} />
+        <TabContainer>
+          <AttributeTable attributes={service.attributes} />
+        </TabContainer>
       </Tab>
       <Tab eventKey={2} title="Lifecycle States">
-        <LifecycleTable lifecycle={service.lifecycle} />
+        <TabContainer>
+          <LifecycleTable lifecycle={service.lifecycle} />
+        </TabContainer>
       </Tab>
       <Tab eventKey={3} title="Config">
-        <Config serviceName={service.name} />
+        <TabContainer>
+          <Config serviceName={service.name} />
+        </TabContainer>
       </Tab>
     </Tabs>
   );
 };
+
+const TabContainer = styled.div`
+  overflow-x: auto;
+`;

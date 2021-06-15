@@ -16,6 +16,7 @@ import { AngleDownIcon } from "@patternfly/react-icons";
 import { useStoreState } from "@/Data";
 import { PageBreadcrumbs } from "@/UI/Root/PageBreadcrumbs";
 import { Navigation } from "@/UI/Root/Navigation";
+import { GlobalStyles } from "@/UI/Styles";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 import { IconDropdown } from "./Toolbar/IconDropdown";
 import { EnvSelectorWithProvider } from "./Toolbar/Provider";
@@ -116,6 +117,7 @@ export const AppLayout: React.FunctionComponent<IAppLayout> = ({
   );
   return (
     <React.Fragment>
+      <GlobalStyles />
       <SimpleBackgroundImage />
       <Page
         breadcrumb={<PageBreadcrumbs />}
