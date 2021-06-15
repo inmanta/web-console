@@ -35,15 +35,15 @@ import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Utils";
 
-function setup() {
+function setup(service = Service.a) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store, Service.a.environment),
+    new ServiceInstancesStateHelper(store, service.environment),
     scheduler,
-    Service.a.environment
+    service.environment
   );
 
   const resourcesFetcher = new DeferredFetcher<"Resources">();
@@ -51,14 +51,14 @@ function setup() {
     resourcesFetcher,
     new ResourcesStateHelper(store),
     scheduler,
-    Service.a.environment
+    service.environment
   );
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
 
-  const urlManager = new UrlManagerImpl("", Service.a.environment);
+  const urlManager = new UrlManagerImpl("", service.environment);
 
   const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
     new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
@@ -88,7 +88,7 @@ function setup() {
         dependencies={{ queryResolver, urlManager, commandResolver }}
       >
         <StoreProvider store={store}>
-          <ServiceInventory serviceName={Service.a.name} service={Service.a} />
+          <ServiceInventory serviceName={service.name} service={service} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -243,4 +243,13 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   expect(resourcesFetcher.getInvocations()[2][1]).toMatch(
     `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`
   );
+});
+
+test("ServiceInventory shows instance summary chart", async () => {
+  const { component } = setup(Service.withInstanceSummary);
+  render(component);
+
+  expect(
+    await screen.findByRole("img", { name: "Number of instances by label" })
+  ).toBeInTheDocument();
 });

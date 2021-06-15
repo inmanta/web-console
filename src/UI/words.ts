@@ -50,6 +50,7 @@ const dict = {
   "catalog.empty.message": "No services found",
   "empty.title": "There is nothing here",
   "inventory.intro": (service: string) => `Showing instances of ${service}`,
+  "inventory.title": "Service Inventory",
   "inventory.empty.message": (service: string) =>
     `No instances found for service ${service}`,
   "inventory.column.id": "Id",

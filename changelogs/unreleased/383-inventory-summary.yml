@@ -1,0 +1,6 @@
+description: Add summary chart and title to inventory page
+issue-nr: 383
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

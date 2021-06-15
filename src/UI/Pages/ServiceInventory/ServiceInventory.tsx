@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { Card } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
 import {
@@ -13,17 +12,20 @@ import {
   EmptyView,
   ErrorView,
   LoadingView,
-  ServiceProvider,
+  PageTitle,
   PaginationWidget,
   PageSectionWithHorizontalScroll,
+  ServiceProvider,
+  SummaryChart,
 } from "@/UI/Components";
 import { TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
 import { useParams } from "react-router-dom";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithHorizontalScroll {...props}>
-    <Card>{children}</Card>
+  <PageSectionWithHorizontalScroll {...props} variant="light">
+    <PageTitle>{words("inventory.title")}</PageTitle>
+    {children}
   </PageSectionWithHorizontalScroll>
 );
 
@@ -79,6 +81,14 @@ export const ServiceInventory: React.FunctionComponent<{
 
   return (
     <Wrapper>
+      {service.instance_summary && (
+        <div style={{ height: "230px", width: "350px" }}>
+          <SummaryChart
+            by_label={service.instance_summary.by_label}
+            total={service.instance_summary.total}
+          />
+        </div>
+      )}
       <TableControls
         serviceName={serviceName}
         filter={filter}
