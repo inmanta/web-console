@@ -21,6 +21,7 @@ import { TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
 import { useParams } from "react-router-dom";
 import { PageSection } from "@patternfly/react-core";
+import styled from "styled-components";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSection {...props} variant="light">
@@ -82,12 +83,12 @@ export const ServiceInventory: React.FunctionComponent<{
   return (
     <Wrapper>
       {service.instance_summary && (
-        <div style={{ height: "230px", width: "350px" }}>
+        <ChartContainer>
           <SummaryChart
             by_label={service.instance_summary.by_label}
             total={service.instance_summary.total}
           />
-        </div>
+        </ChartContainer>
       )}
       <TableControls
         serviceName={serviceName}
@@ -130,3 +131,8 @@ export const ServiceInventory: React.FunctionComponent<{
     </Wrapper>
   );
 };
+
+const ChartContainer = styled.div`
+  height: 230px;
+  width: 350px;
+`;
