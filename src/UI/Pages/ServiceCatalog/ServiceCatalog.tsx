@@ -1,10 +1,20 @@
 import React, { useContext } from "react";
-import { PageSection } from "@patternfly/react-core";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  PageSectionWithTitle,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { RemoteData } from "@/Core";
 import { CatalogDataList } from "./CatalogDataList";
+
+const Wrapper: React.FC = ({ children, ...props }) => (
+  <PageSectionWithTitle {...props} title={words("catalog.title")}>
+    {children}
+  </PageSectionWithTitle>
+);
 
 export const ServiceCatalog: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
@@ -16,24 +26,24 @@ export const ServiceCatalog: React.FC = () => {
     {
       notAsked: () => null,
       loading: () => (
-        <PageSection aria-label="ServiceCatalog-Loading">
+        <Wrapper aria-label="ServiceCatalog-Loading">
           <LoadingView delay={500} />
-        </PageSection>
+        </Wrapper>
       ),
       failed: (error) => (
-        <PageSection aria-label="ServiceCatalog-Failed">
+        <Wrapper aria-label="ServiceCatalog-Failed">
           <ErrorView message={error} retry={retry} />
-        </PageSection>
+        </Wrapper>
       ),
       success: (services) =>
         services.length <= 0 ? (
-          <PageSection aria-label="ServiceCatalog-Empty">
+          <Wrapper aria-label="ServiceCatalog-Empty">
             <EmptyView message={words("catalog.empty.message")} />
-          </PageSection>
+          </Wrapper>
         ) : (
-          <PageSection aria-label="ServiceCatalog-Success">
+          <Wrapper aria-label="ServiceCatalog-Success">
             <CatalogDataList services={services} />
-          </PageSection>
+          </Wrapper>
         ),
     },
     data

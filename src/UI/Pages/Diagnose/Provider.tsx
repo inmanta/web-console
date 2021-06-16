@@ -1,12 +1,14 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { PageSection } from "@patternfly/react-core";
-import { ServiceProvider } from "@/UI/Components";
+import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
 import { Route } from "@/UI/Routing";
 import { Diagnose } from "./Diagnose";
+import { words } from "@/UI/words";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSection {...props}>{children}</PageSection>
+  <PageSectionWithTitle {...props} title={words("diagnose.title")}>
+    {children}
+  </PageSectionWithTitle>
 );
 
 export const Provider: React.FC = () => {

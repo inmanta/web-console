@@ -1,14 +1,15 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Card, PageSection } from "@patternfly/react-core";
-import { ServiceProvider } from "@/UI/Components";
+import { Card } from "@patternfly/react-core";
+import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
 import { Route } from "@/UI/Routing";
 import { EventsPage } from "./EventsPage";
+import { words } from "@/UI/words";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSection {...props}>
+  <PageSectionWithTitle {...props} title={words("events.title")}>
     <Card>{children}</Card>
-  </PageSection>
+  </PageSectionWithTitle>
 );
 
 export const Provider: React.FC = () => {

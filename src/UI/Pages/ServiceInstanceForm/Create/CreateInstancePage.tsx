@@ -8,7 +8,6 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
-  PageSection,
   Spinner,
   Title,
 } from "@patternfly/react-core";
@@ -19,6 +18,7 @@ import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { Route } from "@/UI/Routing";
 import { CreateFormCard } from "./CreateFormCard";
+import { PageSectionWithTitle } from "@/UI/Components";
 
 export const CreateInstancePageWithProvider: React.FunctionComponent = () => {
   const { service } = useParams<Route.Params<"CreateInstance">>();
@@ -82,7 +82,14 @@ const ErrorView: React.FC<{ error: string; retry?: () => void }> = ({
 const PageWrapper: React.FC<{ "aria-label": string }> = ({
   children,
   ...props
-}) => <PageSection aria-label={props["aria-label"]}>{children}</PageSection>;
+}) => (
+  <PageSectionWithTitle
+    {...props}
+    title={words("inventory.createInstance.title")}
+  >
+    {children}
+  </PageSectionWithTitle>
+);
 
 export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
   serviceEntity,

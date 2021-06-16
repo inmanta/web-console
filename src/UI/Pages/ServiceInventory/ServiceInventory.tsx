@@ -12,7 +12,7 @@ import {
   EmptyView,
   ErrorView,
   LoadingView,
-  PageTitle,
+  PageSectionWithTitle,
   PaginationWidget,
   ServiceProvider,
   SummaryChart,
@@ -20,14 +20,12 @@ import {
 import { TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
 import { useParams } from "react-router-dom";
-import { PageSection } from "@patternfly/react-core";
 import styled from "styled-components";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSection {...props} variant="light">
-    <PageTitle>{words("inventory.title")}</PageTitle>
+  <PageSectionWithTitle {...props} title={words("inventory.title")}>
     {children}
-  </PageSection>
+  </PageSectionWithTitle>
 );
 
 export const ServiceInventoryWithProvider: React.FC = () => {
