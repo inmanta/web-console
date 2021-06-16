@@ -90,6 +90,7 @@ const dict = {
   "inventory.addInstance.title": (serviceName: string) =>
     `Create a new instance of ${serviceName} with the following parameters`,
   "inventory.addInstance.button": "Add instance",
+  "inventory.createInstance.title": "Create instance",
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
   "inventory.editInstance.header": (instanceId: string) =>
@@ -139,7 +140,7 @@ const dict = {
   "events.empty.body":
     "No events could be found for this instance and the specified filters",
   "events.details.title": "Event details",
-  "events.title": "Events",
+  "events.title": "Service Instance Events",
   "events.failed.title": "Something went wrong",
   "events.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
@@ -151,6 +152,7 @@ const dict = {
   /**
    * History related text
    */
+  "history.title": "Service Instance History",
   "history.missing": (instanceId: string) =>
     `No history could be found for instance ${instanceId}`,
   "history.tabs.details": "Details",
@@ -165,12 +167,14 @@ const dict = {
   "diagnose.links.compileReport": "Compile Report",
   "diagnose.rejection.title": "Deployment failure",
   "diagnose.rejection.traceback": "Show full traceback",
-  "diagnose.main.title": (instanceId: string) =>
+  "diagnose.main.subtitle": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,
+  "diagnose.title": "Diagnose Service Instance",
 
   /**
    * Catalog related text
    */
+  "catalog.title": "Service Catalog",
   "catalog.summary.title": `Number of instances by label`,
   "catalog.summary.noLabel": "no label",
   "catalog.summary.total": "total",
