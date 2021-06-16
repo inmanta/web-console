@@ -14,7 +14,7 @@ export const CellValueWithCopy: React.FC<Props> = ({ value }) => (
     tooltip={
       (
         <>
-          {value}{" "}
+          {value}
           <CopyIcon
             aria-label="Copy to clipboard"
             onClick={() => copy(value)}
