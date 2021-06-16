@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump postcss from 7.0.35 to 7.0.36'
+destination-branches:
+- master
+- iso4
+sections: {}
