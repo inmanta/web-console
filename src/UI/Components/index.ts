@@ -25,3 +25,5 @@ export * from "./TextWithCopy";
 export * from "./ButtonWithCursorHandling";
 export * from "./ErrorToastAlert";
 export * from "./Spacer";
+export * from "./SummaryChart";
+export * from "./PageTitle";

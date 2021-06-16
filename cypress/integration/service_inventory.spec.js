@@ -10,7 +10,7 @@ describe("Service inventory", function () {
       "/lsm/v1/service_inventory/e2e_service/*/resources?current_version=*",
       { fixture: "lsm/resources.json" }
     );
-    cy.intercept("GET", "/lsm/v1/service_catalog/e2e_service", {
+    cy.intercept("GET", "/lsm/v1/service_catalog/e2e_service?**", {
       fixture: "lsm/service_catalog_single.json",
     });
   });
