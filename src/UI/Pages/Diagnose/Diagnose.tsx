@@ -4,7 +4,7 @@ import { RemoteData, ServiceModel } from "@/Core";
 import { EmptyView, ErrorView, LoadingView, Spacer } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DiagnoseCardLayout } from "./DiagnoseCardLayout";
-import { Title } from "@patternfly/react-core";
+import { Text, TextVariants, TextContent } from "@patternfly/react-core";
 
 interface Props {
   service: ServiceModel;
@@ -36,9 +36,11 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
         ) {
           return (
             <div aria-label="Diagnostics-Empty">
-              <Title headingLevel="h5" size="lg">
-                {words("diagnose.main.subtitle")(instanceId)}
-              </Title>
+              <TextContent>
+                <Text component={TextVariants.small}>
+                  {words("diagnose.main.subtitle")(instanceId)}
+                </Text>
+              </TextContent>
               <EmptyView message={words("diagnose.empty")(instanceId)} />
             </div>
           );
@@ -46,9 +48,11 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
 
         return (
           <div aria-label="Diagnostics-Success">
-            <Title headingLevel="h5" size="lg">
-              {words("diagnose.main.subtitle")(instanceId)}
-            </Title>
+            <TextContent>
+              <Text component={TextVariants.small}>
+                {words("diagnose.main.subtitle")(instanceId)}
+              </Text>
+            </TextContent>
             <Spacer />
             <DiagnoseCardLayout diagnostics={diagnostics} />
           </div>
