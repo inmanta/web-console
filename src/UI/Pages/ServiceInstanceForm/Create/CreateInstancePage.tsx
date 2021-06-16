@@ -1,33 +1,19 @@
 import React, { useCallback, useContext, useState } from "react";
-
 import {
   Alert,
   AlertActionCloseButton,
   AlertGroup,
-  Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  Spinner,
-  Title,
 } from "@patternfly/react-core";
-import { ExclamationCircleIcon } from "@patternfly/react-icons";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { FormAttributeResult, RemoteData, ServiceModel } from "@/Core";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { Route } from "@/UI/Routing";
 import { CreateFormCard } from "./CreateFormCard";
-import { PageSectionWithTitle } from "@/UI/Components";
+import { PageSectionWithTitle, ErrorView, LoadingView } from "@/UI/Components";
 
-export const CreateInstancePageWithProvider: React.FunctionComponent = () => {
-  const { service } = useParams<Route.Params<"CreateInstance">>();
-  return <ServiceProvider serviceName={service} />;
-};
-
-const ServiceProvider: React.FunctionComponent<{
-  serviceName: string;
-}> = ({ serviceName }) => {
+export const CreateInstancePageWithProvider: React.FC = () => {
+  const { service: serviceName } = useParams<Route.Params<"CreateInstance">>();
   const { queryResolver } = useContext(DependencyContext);
 
   const [data, retry] = queryResolver.useContinuous<"Service">({
@@ -38,8 +24,16 @@ const ServiceProvider: React.FunctionComponent<{
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => <LoadingView />,
-      failed: (error) => <ErrorView error={error} retry={retry} />,
+      loading: () => (
+        <PageWrapper aria-label="AddInstance-Loading">
+          <LoadingView />
+        </PageWrapper>
+      ),
+      failed: (error) => (
+        <PageWrapper aria-label="AddInstance-Failed">
+          <ErrorView message={error} retry={retry} />
+        </PageWrapper>
+      ),
       success: (service) => (
         <PageWrapper aria-label="AddInstance-Success">
           <CreateInstancePage serviceEntity={service} />
@@ -49,35 +43,6 @@ const ServiceProvider: React.FunctionComponent<{
     data
   );
 };
-
-const LoadingView: React.FC = () => (
-  <PageWrapper aria-label="AddInstance-Loading">
-    <EmptyState>
-      <EmptyStateIcon variant="container" component={Spinner} />
-      <Title size="lg" headingLevel="h4">
-        {words("loading")}
-      </Title>
-    </EmptyState>
-  </PageWrapper>
-);
-
-const ErrorView: React.FC<{ error: string; retry?: () => void }> = ({
-  error,
-  retry,
-}) => (
-  <PageWrapper aria-label="AddInstance-Failed">
-    <EmptyState>
-      <EmptyStateIcon icon={ExclamationCircleIcon} />
-      <Title headingLevel="h4" size="lg">
-        {words("error")}
-      </Title>
-      <EmptyStateBody>{error}</EmptyStateBody>
-      <Button variant="primary" onClick={retry}>
-        {words("retry")}
-      </Button>
-    </EmptyState>
-  </PageWrapper>
-);
 
 const PageWrapper: React.FC<{ "aria-label": string }> = ({
   children,
