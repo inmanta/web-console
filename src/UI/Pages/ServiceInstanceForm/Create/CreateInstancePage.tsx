@@ -4,11 +4,11 @@ import {
   AlertActionCloseButton,
   AlertGroup,
 } from "@patternfly/react-core";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { FormAttributeResult, RemoteData, ServiceModel } from "@/Core";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
-import { Route } from "@/UI/Routing";
+import { getUrl, Route } from "@/UI/Routing";
 import { CreateFormCard } from "./CreateFormCard";
 import { PageSectionWithTitle, ErrorView, LoadingView } from "@/UI/Components";
 
@@ -61,15 +61,11 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
 }) => {
   const { commandResolver } = useContext(DependencyContext);
   const [errorMessage, setErrorMessage] = useState("");
-  const location = useLocation();
-  const pathParts = location.pathname.split("/");
-  pathParts.pop();
-  const inventoryPath = pathParts.join("/").concat(location.search);
   const history = useHistory();
-  const handleRedirect = useCallback(
-    () => history.push(`${inventoryPath}`),
-    [history]
-  );
+  const url = `${getUrl("Inventory", { service: serviceEntity.name })}?env=${
+    serviceEntity.environment
+  }`;
+  const handleRedirect = useCallback(() => history.push(url), [history]);
 
   const trigger = commandResolver.getTrigger<"CreateInstance">({
     kind: "CreateInstance",
