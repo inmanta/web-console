@@ -3,6 +3,7 @@ import { Tr, Td } from "@patternfly/react-table";
 import { TreeRow, isRowOfMultipleValues } from "./TreeRow";
 import { Toggle } from "@/UI/Components/Toggle";
 import { Indent } from "./Indent";
+import { CellValueWithCopy } from "./CellValueWithCopy";
 
 interface RowProps {
   row: TreeRow;
@@ -24,7 +25,7 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
               key={label}
               dataLabel={label}
             >
-              {value}
+              <CellValueWithCopy value={value} />
             </Td>
           ))}
         </Tr>
@@ -75,7 +76,7 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
               key={label}
               dataLabel={label}
             >
-              {value}
+              <CellValueWithCopy value={value} />
             </Td>
           ))}
         </Tr>
