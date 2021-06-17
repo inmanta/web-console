@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import copy from "copy-to-clipboard";
 import { Tooltip } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 
 interface Props {
-  shortText: string;
+  shortText: ReactNode;
   fullText: string;
   tooltipContent: string;
 }
