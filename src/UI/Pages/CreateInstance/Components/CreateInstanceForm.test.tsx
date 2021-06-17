@@ -1,9 +1,9 @@
 import { AttributeModel, ServiceModel } from "@/Core";
 import { render, screen } from "@testing-library/react";
 import React from "react";
-import { CreateFormCard } from "./CreateFormCard";
+import { CreateInstanceForm } from "./CreateInstanceForm";
 
-describe("CreateFormCard", () => {
+describe("CreateInstanceForm", () => {
   const attributes: AttributeModel[] = [
     {
       name: "name",
@@ -39,7 +39,7 @@ describe("CreateFormCard", () => {
   };
   it("Shows create form ", async () => {
     render(
-      <CreateFormCard
+      <CreateInstanceForm
         serviceEntity={serviceEntity}
         handleRedirect={() => {
           return;

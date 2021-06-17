@@ -4,10 +4,7 @@ import {
   InstanceAttributeModel,
 } from "@/Core";
 import React from "react";
-import {
-  FormInputAttribute,
-  ServiceInstanceForm,
-} from "@/UI/Pages/ServiceInstanceForm";
+import { FormInputAttribute, ServiceInstanceForm } from "@/UI/Components";
 import { AttributeInputConverter, toOptionalBoolean } from "@/Data";
 
 export class EditFormPresenter {

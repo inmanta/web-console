@@ -2,15 +2,15 @@ import { AttributeModel } from "@/Core";
 import { Story } from "@storybook/react/types-6-0";
 import React from "react";
 import { ComponentProps } from "react";
-import { CreateFormCard } from "./CreateFormCard";
+import { CreateInstanceForm } from "./CreateInstanceForm";
 
 export default {
-  title: "CreateFormCard",
-  component: CreateFormCard,
+  title: "CreateInstanceForm",
+  component: CreateInstanceForm,
 };
 
-const Template: Story<ComponentProps<typeof CreateFormCard>> = (args) => (
-  <CreateFormCard {...args} />
+const Template: Story<ComponentProps<typeof CreateInstanceForm>> = (args) => (
+  <CreateInstanceForm {...args} />
 );
 const attributes: AttributeModel[] = [
   {

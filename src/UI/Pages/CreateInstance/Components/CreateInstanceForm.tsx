@@ -11,7 +11,7 @@ interface Props {
   onSubmit: (attributes: FormAttributeResult[]) => Promise<void>;
 }
 
-export const CreateFormCard: React.FC<Props> = ({
+export const CreateInstanceForm: React.FC<Props> = ({
   serviceEntity,
   handleRedirect,
   onSubmit,

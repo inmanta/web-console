@@ -1,6 +1,6 @@
 import { ComponentType } from "react";
 import { Route } from "@/UI/Routing";
-import { CreateInstancePageWithProvider } from "@/UI/Pages/ServiceInstanceForm";
+import { CreateInstancePageProvider } from "@/UI/Pages/CreateInstance";
 import { DiagnoseWithProvider } from "@/UI/Pages/Diagnose";
 import { ServiceInstanceHistoryWithProvider } from "@/UI/Pages/ServiceInstanceHistory";
 import { ServiceInventoryWithProvider } from "@/UI/Pages/ServiceInventory";
@@ -24,7 +24,7 @@ export const InventoryPage: Page = {
 
 export const CreateInstancePage: Page = {
   ...Route.CreateInstance,
-  component: CreateInstancePageWithProvider,
+  component: CreateInstancePageProvider,
 };
 
 export const HistoryPage: Page = {
