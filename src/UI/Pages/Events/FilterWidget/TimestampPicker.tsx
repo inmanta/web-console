@@ -10,10 +10,21 @@ import moment from "moment";
 interface Props {
   timestamp: Date | undefined;
   onChange: (timestamp: Date) => void;
+  isDisabled?: boolean;
+  from: Date | undefined;
+  datePickerLabel: string;
+  timePickerLabel: string;
 }
 
 /** Both the Date and the Time Picker from Patternfly are in beta stage, e.g. validation doesn't work as expected */
-export const TimestampPicker: React.FC<Props> = ({ timestamp, onChange }) => {
+export const TimestampPicker: React.FC<Props> = ({
+  timestamp,
+  onChange,
+  isDisabled,
+  from,
+  datePickerLabel,
+  timePickerLabel,
+}) => {
   const onDateChange = (inputDate, newDate) => {
     if (
       timestamp &&
@@ -42,11 +53,13 @@ export const TimestampPicker: React.FC<Props> = ({ timestamp, onChange }) => {
   return (
     <>
       <DatePicker
+        isDisabled={isDisabled}
         value={
           timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""
         }
         onChange={onDateChange}
-        aria-label="Date picker"
+        rangeStart={from}
+        aria-label={datePickerLabel}
       />
       <TimePicker
         style={{ width: "150px" }}
@@ -57,8 +70,8 @@ export const TimestampPicker: React.FC<Props> = ({ timestamp, onChange }) => {
             : undefined
         }
         is24Hour
-        isDisabled={timestamp && !isValidDate(timestamp)}
-        aria-label="Time picker"
+        isDisabled={!timestamp || !isValidDate(timestamp)}
+        aria-label={timePickerLabel}
       />
     </>
   );

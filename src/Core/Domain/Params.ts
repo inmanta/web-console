@@ -6,8 +6,6 @@ export interface Sort {
 export type SortDirection = "asc" | "desc";
 
 export enum Operator {
-  GreaterOrEqual = "greater than or equal to",
-  Greater = "greater than",
-  LessOrEqual = "less than or equal to",
-  Less = "less than",
+  From = "from",
+  To = "to",
 }

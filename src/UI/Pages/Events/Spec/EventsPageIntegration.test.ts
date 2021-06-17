@@ -107,14 +107,17 @@ describe("Given the Events Page", () => {
     );
     userEvent.click(screen.getByRole("option", { name: "Date" }));
 
-    const input = await screen.findByLabelText("Date picker");
-    userEvent.click(input);
-    userEvent.type(input, `2021-04-28`);
-    userEvent.click(await screen.findByText("Select an operator..."));
-    userEvent.click(screen.getByRole("option", { name: "less than" }));
+    const fromDatePicker = await screen.findByLabelText("From Date Picker");
+    userEvent.click(fromDatePicker);
+    userEvent.type(fromDatePicker, `2021-04-28`);
+    const toDatePicker = await screen.findByLabelText("To Date Picker");
+    userEvent.click(toDatePicker);
+    userEvent.type(toDatePicker, `2021-04-30`);
+
+    userEvent.click(await screen.findByLabelText("Apply date filter"));
 
     expect(eventsFetcher.getInvocations()[1][1]).toMatch(
-      `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=lt%3A2021-04-`
+      `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=ge%3A2021-04-`
     );
 
     await act(async () => {

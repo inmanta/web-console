@@ -42,13 +42,9 @@ const filterToParam = (filter: Filter, timezone: string) => {
 
 const operatorToParam = (operator: Operator): string => {
   switch (operator) {
-    case Operator.Greater:
-      return "gt";
-    case Operator.GreaterOrEqual:
+    case Operator.From:
       return "ge";
-    case Operator.Less:
-      return "lt";
-    case Operator.LessOrEqual:
+    case Operator.To:
       return "le";
   }
 };
