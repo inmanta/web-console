@@ -10,6 +10,8 @@ import { Operator } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
 import { TimestampPicker } from "./TimestampPicker";
 import { SearchIcon } from "@patternfly/react-icons";
+import { reject } from "lodash";
+import { words } from "@/UI/words";
 
 interface Raw {
   date: Date;
@@ -33,22 +35,27 @@ export const TimestampFilter: React.FC<Props> = ({
   const [to, setTo] = useState<Date | undefined>();
 
   const onApply = () => {
-    if (from && to) {
-      update([
-        {
-          date: from,
-          operator: Operator.From,
-        },
-        {
-          date: to,
-          operator: Operator.To,
-        },
-      ]);
-    }
+    const withNewFrom = insertNewTimestamp(
+      timestampFilters,
+      from,
+      Operator.From
+    );
+    const withNewTo = insertNewTimestamp(withNewFrom, to, Operator.To);
+    update(withNewTo);
+    setFrom(undefined);
+    setTo(undefined);
   };
 
-  const removeChip = () => {
-    update([]);
+  const removeChip = (category, value) => {
+    const raw = prettyToRaw(value);
+    update(
+      reject(
+        timestampFilters,
+        (element) =>
+          element.date.getTime() === raw.date.getTime() &&
+          element.operator == raw.operator
+      )
+    );
   };
   const onFromDateChange = (timestamp: Date) => {
     setFrom(timestamp);
@@ -59,20 +66,18 @@ export const TimestampFilter: React.FC<Props> = ({
   };
 
   const getChips = (timestampFilters: Raw[]): string[] => {
-    if (timestampFilters.length === 2) {
-      const [fromTimestamp, toTimestamp] = timestampFilters;
-      return [rawToPretty(fromTimestamp, toTimestamp)];
-    }
-    return [];
+    return timestampFilters.map(rawToPretty);
   };
 
-  const rawToPretty = (
-    { date: fromDate, operator: fromOperator }: Raw,
-    { date: toDate, operator: toOperator }: Raw
-  ): string => {
-    return `${fromOperator} ${datePresenter.getShort(
-      fromDate
-    )} ${toOperator} ${datePresenter.getShort(toDate)}`;
+  const rawToPretty = ({ date, operator }: Raw): string => {
+    return `${operator} | ${datePresenter.getShort(date)}`;
+  };
+  const prettyToRaw = (pretty: string): Raw => {
+    const [operator, date] = pretty.split("|");
+    return {
+      date: datePresenter.parseShort(date),
+      operator: operator.trim() as Operator,
+    };
   };
 
   return (
@@ -91,14 +96,13 @@ export const TimestampFilter: React.FC<Props> = ({
             </ToolbarItem>
           </FlexItem>
           <FlexItem>
-            <ToolbarItem>to</ToolbarItem>
+            <ToolbarItem>{words("events.filters.date.to")}</ToolbarItem>
           </FlexItem>
           <FlexItem>
             <ToolbarItem>
               <TimestampPicker
                 timestamp={to}
                 onChange={onToDateChange}
-                isDisabled={!from}
                 from={from}
                 datePickerLabel="To Date Picker"
                 timePickerLabel="To Time Picker"
@@ -116,7 +120,7 @@ export const TimestampFilter: React.FC<Props> = ({
         >
           <Button
             onClick={onApply}
-            isDisabled={!(from && to)}
+            isDisabled={!(from || to)}
             aria-label="Apply date filter"
             variant="tertiary"
           >
@@ -127,3 +131,17 @@ export const TimestampFilter: React.FC<Props> = ({
     </Flex>
   );
 };
+
+function insertNewTimestamp(
+  timestampFilters: Raw[],
+  date: Date | undefined,
+  operator: Operator
+): Raw[] {
+  if (date) {
+    return [
+      ...reject(timestampFilters, (ts) => ts.operator === operator),
+      { date, operator },
+    ];
+  }
+  return timestampFilters;
+}

@@ -10,7 +10,6 @@ import moment from "moment";
 interface Props {
   timestamp: Date | undefined;
   onChange: (timestamp: Date) => void;
-  isDisabled?: boolean;
   from: Date | undefined;
   datePickerLabel: string;
   timePickerLabel: string;
@@ -20,7 +19,6 @@ interface Props {
 export const TimestampPicker: React.FC<Props> = ({
   timestamp,
   onChange,
-  isDisabled,
   from,
   datePickerLabel,
   timePickerLabel,
@@ -53,7 +51,6 @@ export const TimestampPicker: React.FC<Props> = ({
   return (
     <>
       <DatePicker
-        isDisabled={isDisabled}
         value={
           timestamp && isValidDate(timestamp) ? yyyyMMddFormat(timestamp) : ""
         }
