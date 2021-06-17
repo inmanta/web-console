@@ -177,7 +177,6 @@ const dict = {
   "catalog.title": "Service Catalog",
   "catalog.summary.title": `Number of instances by label`,
   "catalog.summary.noLabel": "no label",
-  "catalog.summary.total": "total",
   "catalog.summary.empty": "No instance summary found",
   "catalog.button.inventory": "Inventory",
   "catalog.delete.title": (serviceName: string) =>

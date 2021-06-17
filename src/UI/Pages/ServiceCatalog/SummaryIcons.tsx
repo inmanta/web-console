@@ -2,7 +2,6 @@ import React, { ReactElement } from "react";
 import { Label, FlexItem, Flex, Tooltip } from "@patternfly/react-core";
 import {
   CheckCircleIcon,
-  CubesIcon,
   ExclamationCircleIcon,
   ExclamationTriangleIcon,
   InfoCircleIcon,
@@ -16,9 +15,12 @@ interface Props {
 }
 
 export const SummaryIcons: React.FC<Props> = ({ summary }) => {
+  const nonZeroSummaryEntries = Object.entries(summary.by_label).filter(
+    ([, value]) => value > 0
+  );
   return (
     <Flex aria-label="Number of instances by label">
-      {Object.entries(summary.by_label).map(([labelName, value]) => (
+      {nonZeroSummaryEntries.map(([labelName, value]) => (
         <FlexItem key={labelName}>
           <Tooltip
             content={
@@ -32,13 +34,6 @@ export const SummaryIcons: React.FC<Props> = ({ summary }) => {
           </Tooltip>
         </FlexItem>
       ))}
-      <FlexItem key={words("catalog.summary.total")}>
-        <Tooltip content={words("catalog.summary.total")} entryDelay={200}>
-          <Label icon={<CubesIcon />} color="cyan">
-            {summary.total}
-          </Label>
-        </Tooltip>
-      </FlexItem>
     </Flex>
   );
 };
