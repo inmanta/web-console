@@ -15,24 +15,25 @@ interface Props {
 }
 
 export const SummaryIcons: React.FC<Props> = ({ summary }) => {
+  const nonZeroSummaryEntries = Object.entries(summary.by_label).filter(
+    ([, value]) => value > 0
+  );
   return (
     <Flex aria-label="Number of instances by label">
-      {Object.entries(summary.by_label).map(([labelName, value]) =>
-        value > 0 ? (
-          <FlexItem key={labelName}>
-            <Tooltip
-              content={
-                labelName !== "no_label"
-                  ? labelName
-                  : words("catalog.summary.noLabel")
-              }
-              entryDelay={200}
-            >
-              {getLabelforName(labelName, value)}
-            </Tooltip>
-          </FlexItem>
-        ) : undefined
-      )}
+      {nonZeroSummaryEntries.map(([labelName, value]) => (
+        <FlexItem key={labelName}>
+          <Tooltip
+            content={
+              labelName !== "no_label"
+                ? labelName
+                : words("catalog.summary.noLabel")
+            }
+            entryDelay={200}
+          >
+            {getLabelforName(labelName, value)}
+          </Tooltip>
+        </FlexItem>
+      ))}
     </Flex>
   );
 };
