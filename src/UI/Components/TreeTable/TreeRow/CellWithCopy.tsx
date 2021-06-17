@@ -4,6 +4,7 @@ import { Td } from "@patternfly/react-table";
 import { CopyIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
 import { words } from "@/UI/words";
+import styled from "styled-components";
 
 interface Props {
   className: string;
@@ -35,18 +36,19 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
 
   return wrapWithPopover ? (
     <Popover
-      bodyContent={value}
-      footerContent={
-        <Tooltip content={words("attribute.value.copy")} entryDelay={200}>
-          <Button variant="plain">
-            <CopyIcon
-              aria-label="Copy to clipboard"
-              onClick={() => copy(value)}
-            />
-          </Button>
-        </Tooltip>
+      bodyContent={
+        <>
+          {value}
+          <Tooltip content={words("attribute.value.copy")} entryDelay={200}>
+            <StyledButton variant="plain">
+              <CopyIcon
+                aria-label="Copy to clipboard"
+                onClick={() => copy(value)}
+              />
+            </StyledButton>
+          </Tooltip>
+        </>
       }
-      showClose={false}
     >
       {cell}
     </Popover>
@@ -54,3 +56,8 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
     cell
   );
 };
+
+const StyledButton = styled(Button)`
+  position: absolute;
+  right: var(--pf-c-popover--c-button--Right);
+`;
