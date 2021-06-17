@@ -38,7 +38,8 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
     <Popover
       bodyContent={
         <>
-          {value}
+          <StyledPopoverBody>{value}</StyledPopoverBody>
+
           <Tooltip content={words("attribute.value.copy")} entryDelay={200}>
             <StyledButton variant="plain">
               <CopyIcon
@@ -49,6 +50,7 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
           </Tooltip>
         </>
       }
+      showClose={false}
     >
       {cell}
     </Popover>
@@ -57,7 +59,12 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
   );
 };
 
+const StyledPopoverBody = styled.div`
+  padding-right: var(--pf-c-popover--c-button--sibling--PaddingRight);
+`;
+
 const StyledButton = styled(Button)`
   position: absolute;
+  top: var(--pf-c-popover--c-button--Top);
   right: var(--pf-c-popover--c-button--Right);
 `;
