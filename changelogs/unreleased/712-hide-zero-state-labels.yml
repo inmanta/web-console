@@ -1,0 +1,6 @@
+description: Hide state labels that are 0 and remove the total
+issue-nr: 712
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
