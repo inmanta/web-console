@@ -47,6 +47,7 @@ const dict = {
   "attributesTab.active": "Active",
   "attributesTab.candidate": "Candidate",
   "attributesTab.rollback": "Rollback",
+  "attribute.value.copy": "Copy full value to clipboard",
   "catalog.empty.message": "No services found",
   "empty.title": "There is nothing here",
   "inventory.intro": (service: string) => `Showing instances of ${service}`,
@@ -178,7 +179,6 @@ const dict = {
   "catalog.title": "Service Catalog",
   "catalog.summary.title": `Number of instances by label`,
   "catalog.summary.noLabel": "no label",
-  "catalog.summary.total": "total",
   "catalog.summary.empty": "No instance summary found",
   "catalog.button.inventory": "Inventory",
   "catalog.delete.title": (serviceName: string) =>
