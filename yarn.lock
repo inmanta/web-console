@@ -4380,12 +4380,12 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-base64-js@1.3.1, base64-js@^1.0.2:
+base64-js@1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
   integrity sha512-mLQ4i2QO1ytvGWFWmcngKO//JXAQueZvwEKtjgQFM4jIK0kU+ytMfplL8j+n5mspOfjHwoAg+9yhb7BwAHm36g==
 
-base64-js@^1.3.1:
+base64-js@^1.0.2, base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
@@ -9959,10 +9959,10 @@ junk@^3.1.0:
   resolved "https://registry.yarnpkg.com/junk/-/junk-3.1.0.tgz#31499098d902b7e98c5d9b9c80f43457a88abfa1"
   integrity sha512-pBxcB3LFc8QVgdggvZWyeys+hnrNWg4OcZIU/1X59k5jQdLBlCsYGRQaz234SqoRLTCgMH00fY0xRJH+F9METQ==
 
-keycloak-js@13.0.1:
-  version "13.0.1"
-  resolved "https://registry.yarnpkg.com/keycloak-js/-/keycloak-js-13.0.1.tgz#4aae6a8fe1301aa3d7a12b2de6227a23b42f275d"
-  integrity sha512-S9mFX8HHlgw+i2HAIhteccrkffQmUn4CpYcU8ViGnODSBcnaf2YTtLhiiRH/a6SaOBpxmJTN3XVIZbE9d/HyXQ==
+keycloak-js@14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/keycloak-js/-/keycloak-js-14.0.0.tgz#6d880eb3cd24afef39626f66ca4747d7267eef05"
+  integrity sha512-35olMBg+Fwr1b3hu3BmyYj4PBn2uoDn7OOO0C1f+4axZhaOhvv47zq7nHG8R3g2QZcHFG5SymdEU6obrahEdJQ==
   dependencies:
     base64-js "1.3.1"
     js-sha256 "0.9.0"
