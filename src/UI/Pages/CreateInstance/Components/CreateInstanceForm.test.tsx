@@ -49,10 +49,6 @@ describe("CreateInstanceForm", () => {
         }}
       />
     );
-    expect(
-      await screen.findByText(
-        "Create a new instance of test-service with the following parameters"
-      )
-    ).toBeVisible();
+    expect(screen.getByRole("textbox", { name: "name" })).toBeVisible();
   });
 });
