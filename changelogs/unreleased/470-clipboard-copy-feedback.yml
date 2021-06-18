@@ -1,0 +1,6 @@
+description: Add feedback to clicking clipboard copy button
+issue-nr: 470
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

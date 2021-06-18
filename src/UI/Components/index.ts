@@ -28,3 +28,4 @@ export * from "./Spacer";
 export * from "./SummaryChart";
 export * from "./PageTitle";
 export * from "./PageSectionWithTitle";
+export * from "./ClipboardCopyButton";
