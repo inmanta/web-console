@@ -8,6 +8,7 @@ import {
   EventsTableWrapper,
   EmptyView,
   EventsTableBody,
+  Description,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -34,7 +35,6 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
     pageSize,
   });
   const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());
-  const caption = words("events.caption")(instanceId);
 
   const states = service.lifecycle.states.map((state) => state.name).sort();
   const paginationWidget = RemoteData.fold(
@@ -56,6 +56,8 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
 
   return (
     <div>
+      <Description>{words("events.caption")(instanceId)}</Description>
+
       <EventsTableControls
         filter={filter}
         setFilter={setFilter}
@@ -68,7 +70,6 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
           loading: () => (
             <EventsTableWrapper
               tablePresenter={tablePresenter}
-              caption={caption}
               wrapInTd
               aria-label="EventTable-Loading"
               order={order}
@@ -80,7 +81,6 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
           failed: (error) => (
             <EventsTableWrapper
               tablePresenter={tablePresenter}
-              caption={caption}
               wrapInTd
               aria-label="EventTable-Failed"
               order={order}
@@ -96,7 +96,6 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
             events.data.length === 0 ? (
               <EventsTableWrapper
                 tablePresenter={tablePresenter}
-                caption={caption}
                 wrapInTd
                 aria-label="EventTable-Empty"
                 order={order}
@@ -110,7 +109,6 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
             ) : (
               <EventsTableWrapper
                 tablePresenter={tablePresenter}
-                caption={caption}
                 aria-label="EventTable-Success"
                 order={order}
                 setOrder={setOrder}

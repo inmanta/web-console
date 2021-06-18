@@ -1,6 +1,6 @@
 import { render, screen, act, within } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
-import { Service, Pagination, Event } from "@/Test";
+import { Service, Pagination, Event as InstanceEvent } from "@/Test";
 import { Either } from "@/Core";
 import { EventsPageComposer } from "./EventsPageComposer";
 
@@ -29,7 +29,7 @@ describe("Given the Events Page", () => {
       await act(async () => {
         await eventsFetcher.resolve(
           Either.right({
-            data: Event.listA,
+            data: InstanceEvent.listA,
             links: Pagination.links,
             metadata: Pagination.metadata,
           })
@@ -65,7 +65,7 @@ describe("Given the Events Page", () => {
       await act(async () => {
         await eventsFetcher.resolve(
           Either.right({
-            data: Event.listB,
+            data: InstanceEvent.listB,
             links: Pagination.links,
             metadata: Pagination.metadata,
           })
@@ -78,7 +78,7 @@ describe("Given the Events Page", () => {
       expect(rowsAfter).toHaveLength(3);
     }
   );
-  it("When using the Date filter then the events with that Date and Operator should be fetched and shown", async () => {
+  it("When using the Date filter then the events with from and to the events in the range should be fetched and shown", async () => {
     const { component, eventsFetcher } = new EventsPageComposer().compose(
       Service.a
     );
@@ -87,7 +87,7 @@ describe("Given the Events Page", () => {
     await act(async () => {
       await eventsFetcher.resolve(
         Either.right({
-          data: Event.listA,
+          data: InstanceEvent.listA,
           links: Pagination.links,
           metadata: Pagination.metadata,
         })
@@ -107,20 +107,23 @@ describe("Given the Events Page", () => {
     );
     userEvent.click(screen.getByRole("option", { name: "Date" }));
 
-    const input = await screen.findByLabelText("Date picker");
-    userEvent.click(input);
-    userEvent.type(input, `2021-04-28`);
-    userEvent.click(await screen.findByText("Select an operator..."));
-    userEvent.click(screen.getByRole("option", { name: "less than" }));
+    const fromDatePicker = await screen.findByLabelText("From Date Picker");
+    userEvent.click(fromDatePicker);
+    userEvent.type(fromDatePicker, `2021-04-28`);
+    const toDatePicker = await screen.findByLabelText("To Date Picker");
+    userEvent.click(toDatePicker);
+    userEvent.type(toDatePicker, `2021-04-30`);
+
+    userEvent.click(await screen.findByLabelText("Apply date filter"));
 
     expect(eventsFetcher.getInvocations()[1][1]).toMatch(
-      `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=lt%3A2021-04-`
+      `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=ge%3A2021-04-`
     );
 
     await act(async () => {
       await eventsFetcher.resolve(
         Either.right({
-          data: Event.listB,
+          data: InstanceEvent.listB,
           links: Pagination.links,
           metadata: Pagination.metadata,
         })
@@ -131,5 +134,90 @@ describe("Given the Events Page", () => {
       name: "Event table row",
     });
     expect(rowsAfter).toHaveLength(3);
+
+    // The chips are hidden in small windows, so resize it
+    window = Object.assign(window, { innerWidth: 1200 });
+    window.dispatchEvent(new Event("resize"));
+    expect(
+      await screen.findByText("from | 2021-04-28+00:00", { exact: false })
+    ).toBeVisible();
+    expect(
+      await screen.findByText("to | 2021-04-30+00:00", { exact: false })
+    ).toBeVisible();
   });
+
+  it.each`
+    filterType | value           | operator | chip
+    ${"From"}  | ${"2021-05-30"} | ${"ge"}  | ${"from | 2021-05-30+00:00"}
+    ${"To"}    | ${"2021-05-30"} | ${"le"}  | ${"to | 2021-05-30+00:00"}
+  `(
+    "When using the Date filter then the events with only $filterType filter, the matching should be fetched and a chip shown",
+    async ({ filterType, value, operator, chip }) => {
+      const { component, eventsFetcher } = new EventsPageComposer().compose(
+        Service.a
+      );
+      render(component);
+
+      await act(async () => {
+        await eventsFetcher.resolve(
+          Either.right({
+            data: InstanceEvent.listA,
+            links: Pagination.links,
+            metadata: Pagination.metadata,
+          })
+        );
+      });
+
+      const initialRows = await screen.findAllByRole("row", {
+        name: "Event table row",
+      });
+      expect(initialRows).toHaveLength(14);
+
+      userEvent.click(
+        within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+          "button",
+          { name: "EventType" }
+        )
+      );
+      userEvent.click(screen.getByRole("option", { name: "Date" }));
+
+      const toDatePicker = await screen.findByLabelText(
+        `${filterType} Date Picker`
+      );
+      userEvent.click(toDatePicker);
+      userEvent.type(toDatePicker, value);
+
+      userEvent.click(await screen.findByLabelText("Apply date filter"));
+
+      expect(eventsFetcher.getInvocations()[1][1]).toMatch(
+        `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=${operator}%3A2021-05-`
+      );
+
+      await act(async () => {
+        await eventsFetcher.resolve(
+          Either.right({
+            data: InstanceEvent.listB,
+            links: Pagination.links,
+            metadata: Pagination.metadata,
+          })
+        );
+      });
+
+      const rowsAfter = await screen.findAllByRole("row", {
+        name: "Event table row",
+      });
+      expect(rowsAfter).toHaveLength(3);
+
+      // The chips are hidden in small windows, so resize it
+      window = Object.assign(window, { innerWidth: 1200 });
+      window.dispatchEvent(new Event("resize"));
+
+      expect(await screen.findByText(chip, { exact: false })).toBeVisible();
+      userEvent.click(await screen.findByLabelText("close"));
+
+      expect(eventsFetcher.getInvocations()[2][1]).toMatch(
+        `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc`
+      );
+    }
+  );
 });

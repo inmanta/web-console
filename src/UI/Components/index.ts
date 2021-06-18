@@ -5,6 +5,7 @@ export * from "./ButtonWithCursorHandling";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
 export * from "./DeleteForm";
+export * from "./Description";
 export * from "./EmptyView";
 export * from "./EnvironmentProvider";
 export * from "./ErrorView";

@@ -149,6 +149,7 @@ const dict = {
   "events.filters.source.placeholder": "Select a source state...",
   "events.filters.destination.placeholder": "Select a destination state...",
   "events.filters.eventType.placeholder": "Select an Event Type...",
+  "events.filters.date.to": "to",
 
   /**
    * History related text

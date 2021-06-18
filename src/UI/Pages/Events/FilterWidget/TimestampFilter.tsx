@@ -1,10 +1,17 @@
 import React, { useState } from "react";
-import { ToolbarFilter, ToolbarItem } from "@patternfly/react-core";
-import { reject } from "lodash";
+import {
+  Button,
+  ToolbarFilter,
+  ToolbarItem,
+  Flex,
+  FlexItem,
+} from "@patternfly/react-core";
 import { Operator } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
-import { OperatorPicker } from "./OperatorPicker";
 import { TimestampPicker } from "./TimestampPicker";
+import { SearchIcon } from "@patternfly/react-icons";
+import { reject } from "lodash";
+import { words } from "@/UI/words";
 
 interface Raw {
   date: Date;
@@ -24,20 +31,19 @@ export const TimestampFilter: React.FC<Props> = ({
   update,
   isVisible,
 }) => {
-  const [timestampFilter, setTimestampFilter] = useState<Date | undefined>(
-    undefined
-  );
+  const [from, setFrom] = useState<Date | undefined>();
+  const [to, setTo] = useState<Date | undefined>();
 
-  const onOperatorChange = (rule: Operator) => {
-    if (typeof timestampFilter === "undefined") return;
-
-    setTimestampFilter(undefined);
-    update(
-      createNewTimestamps(timestampFilters, {
-        date: timestampFilter,
-        operator: Operator[rule],
-      })
+  const onApply = () => {
+    const withNewFrom = insertNewTimestamp(
+      timestampFilters,
+      from,
+      Operator.From
     );
+    const withNewTo = insertNewTimestamp(withNewFrom, to, Operator.To);
+    update(withNewTo);
+    setFrom(undefined);
+    setTo(undefined);
   };
 
   const removeChip = (category, value) => {
@@ -51,22 +57,23 @@ export const TimestampFilter: React.FC<Props> = ({
       )
     );
   };
+  const onFromDateChange = (timestamp: Date) => {
+    setFrom(timestamp);
+  };
 
-  const onTimestampChange = (timestamp: Date) => {
-    setTimestampFilter(timestamp);
+  const onToDateChange = (timestamp: Date) => {
+    setTo(timestamp);
   };
 
   const getChips = (timestampFilters: Raw[]): string[] => {
-    const prettyTimestamps = timestampFilters.map(rawToPretty);
-    return prettyTimestamps;
+    return timestampFilters.map(rawToPretty);
   };
 
   const rawToPretty = ({ date, operator }: Raw): string => {
-    return `${datePresenter.getShort(date)} | ${operator}`;
+    return `${operator} | ${datePresenter.getShort(date)}`;
   };
-
   const prettyToRaw = (pretty: string): Raw => {
-    const [date, operator] = pretty.split("|");
+    const [operator, date] = pretty.split("|");
     return {
       date: datePresenter.parseShort(date),
       operator: operator.trim() as Operator,
@@ -74,42 +81,67 @@ export const TimestampFilter: React.FC<Props> = ({
   };
 
   return (
-    <>
+    <Flex>
       {isVisible && (
-        <ToolbarItem>
-          <TimestampPicker
-            timestamp={timestampFilter}
-            onChange={onTimestampChange}
-          />
-        </ToolbarItem>
+        <>
+          <FlexItem>
+            <ToolbarItem>
+              <TimestampPicker
+                timestamp={from}
+                onChange={onFromDateChange}
+                from={undefined}
+                datePickerLabel="From Date Picker"
+                timePickerLabel="From Time Picker"
+              />
+            </ToolbarItem>
+          </FlexItem>
+          <FlexItem>
+            <ToolbarItem>{words("events.filters.date.to")}</ToolbarItem>
+          </FlexItem>
+          <FlexItem>
+            <ToolbarItem>
+              <TimestampPicker
+                timestamp={to}
+                onChange={onToDateChange}
+                from={from}
+                datePickerLabel="To Date Picker"
+                timePickerLabel="To Time Picker"
+              />
+            </ToolbarItem>
+          </FlexItem>
+        </>
       )}
-      <ToolbarFilter
-        chips={getChips(timestampFilters)}
-        deleteChip={removeChip}
-        categoryName="Date"
-        showToolbarItem={isVisible}
-      >
-        <OperatorPicker
-          onChange={onOperatorChange}
-          isDisabled={typeof timestampFilter === "undefined"}
-        />
-      </ToolbarFilter>
-    </>
+      <FlexItem>
+        <ToolbarFilter
+          chips={getChips(timestampFilters)}
+          deleteChip={removeChip}
+          categoryName="Date"
+          showToolbarItem={isVisible}
+        >
+          <Button
+            onClick={onApply}
+            isDisabled={!(from || to)}
+            aria-label="Apply date filter"
+            variant="tertiary"
+          >
+            <SearchIcon />
+          </Button>
+        </ToolbarFilter>
+      </FlexItem>
+    </Flex>
   );
 };
 
-function createNewTimestamps(
+function insertNewTimestamp(
   timestampFilters: Raw[],
-  newTimestamp: Raw
+  date: Date | undefined,
+  operator: Operator
 ): Raw[] {
-  if (timestampFilters.includes(newTimestamp)) {
-    return reject(
-      timestampFilters,
-      (element) =>
-        element.date.getTime() === newTimestamp.date.getTime() &&
-        element.operator == newTimestamp.operator
-    );
-  } else {
-    return [...timestampFilters, newTimestamp];
+  if (date) {
+    return [
+      ...reject(timestampFilters, (ts) => ts.operator === operator),
+      { date, operator },
+    ];
   }
+  return timestampFilters;
 }

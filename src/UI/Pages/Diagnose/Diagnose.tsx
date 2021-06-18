@@ -1,10 +1,15 @@
 import React, { useContext } from "react";
 import { DependencyContext } from "@/UI/Dependency";
 import { RemoteData, ServiceModel } from "@/Core";
-import { EmptyView, ErrorView, LoadingView, Spacer } from "@/UI/Components";
+import {
+  Description,
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  Spacer,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DiagnoseCardLayout } from "./DiagnoseCardLayout";
-import { Text, TextVariants, TextContent } from "@patternfly/react-core";
 
 interface Props {
   service: ServiceModel;
@@ -36,11 +41,9 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
         ) {
           return (
             <div aria-label="Diagnostics-Empty">
-              <TextContent>
-                <Text component={TextVariants.small}>
-                  {words("diagnose.main.subtitle")(instanceId)}
-                </Text>
-              </TextContent>
+              <Description>
+                {words("diagnose.main.subtitle")(instanceId)}
+              </Description>
               <EmptyView message={words("diagnose.empty")(instanceId)} />
             </div>
           );
@@ -48,11 +51,9 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
 
         return (
           <div aria-label="Diagnostics-Success">
-            <TextContent>
-              <Text component={TextVariants.small}>
-                {words("diagnose.main.subtitle")(instanceId)}
-              </Text>
-            </TextContent>
+            <Description>
+              {words("diagnose.main.subtitle")(instanceId)}
+            </Description>
             <Spacer />
             <DiagnoseCardLayout diagnostics={diagnostics} />
           </div>
