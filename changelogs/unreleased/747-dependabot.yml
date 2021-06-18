@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump keycloak-js from 13.0.1 to 14.0.0'
+destination-branches:
+- master
+- iso4
+sections: {}
