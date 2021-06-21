@@ -40,6 +40,7 @@ const dict = {
    */
   "id.copy": "Copy full service instance id to clipboard",
   "serviceIdentity.copy": "Copy identifier to clipboard",
+  "copy.feedback": "Copied to clipboard",
   "attributes.active": "Active Attributes",
   "attributes.candidate": "Candidate Attributes",
   "attributes.rollback": "Rollback Attributes",

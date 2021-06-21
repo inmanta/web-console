@@ -1,8 +1,6 @@
 import React, { ReactNode } from "react";
-import copy from "copy-to-clipboard";
-import { Tooltip } from "@patternfly/react-core";
-import { CopyIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
+import { ClipboardCopyButton } from "../ClipboardCopyButton";
 
 interface Props {
   shortText: ReactNode;
@@ -18,14 +16,12 @@ export const TextWithCopy: React.FC<Props> = ({
   return (
     <Container>
       {shortText}
-      <Tooltip content={tooltipContent} entryDelay={200}>
-        <StyledCopyIcon onClick={() => copy(fullText)} />
-      </Tooltip>
+      <StyledCopyIcon fullText={fullText} tooltipContent={tooltipContent} />
     </Container>
   );
 };
 
-const StyledCopyIcon = styled(CopyIcon)`
+const StyledCopyIcon = styled(ClipboardCopyButton)`
   opacity: 0;
   padding-left: 5px;
 `;
