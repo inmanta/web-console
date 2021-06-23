@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump optimize-css-assets-webpack-plugin from 6.0.0
+    to 6.0.1'
+destination-branches:
+- master
+- iso4
+sections: {}
