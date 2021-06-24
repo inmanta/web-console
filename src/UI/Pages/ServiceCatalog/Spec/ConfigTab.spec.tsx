@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
@@ -124,7 +124,9 @@ test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", a
   userEvent.click(details);
 
   const configButton = screen.getByRole("button", { name: "Config" });
-  userEvent.click(configButton);
+  await act(async () => {
+    userEvent.click(configButton);
+  });
 
   serviceConfigFetcher.resolve(Either.right({ data: {} }));
 
