@@ -12,11 +12,17 @@ test("GIVEN Navigation THEN shows navigation items", () => {
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
   expect(navigation).toBeVisible();
-  expect(within(navigation).getAllByRole("region").length).toEqual(2);
+  expect(within(navigation).getAllByRole("region").length).toEqual(3);
 
   expect(
     within(navigation).getByRole("region", {
-      name: "Lifecycle Service Management",
+      name: "Lifecycle Service Manager",
+    })
+  ).toBeVisible();
+
+  expect(
+    within(navigation).getByRole("region", {
+      name: "Resource Manager",
     })
   ).toBeVisible();
 
