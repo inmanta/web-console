@@ -185,6 +185,12 @@ const dict = {
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
   "catalog.instances": "Instances",
+
+  /**
+   * Navigation related text
+   */
+  "navigation.lifecycleServiceManager": "Lifecycle Service Manager",
+  "navigation.resourceManager": "Resource Manager",
 };
 
 type Key = keyof typeof dict;

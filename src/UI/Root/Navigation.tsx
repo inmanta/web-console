@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, NavGroup } from "@patternfly/react-core";
 import { Route } from "@/UI/Routing";
+import { words } from "@/UI/words";
 
 interface Group {
   id: string;
@@ -27,7 +28,7 @@ export const Navigation: React.FC<{ environment: string }> = ({
   const groups: Group[] = [
     {
       id: "LifecycleServiceManager",
-      title: "Lifecycle Service Manager",
+      title: words("navigation.lifecycleServiceManager"),
       links: [
         {
           id: Route.Catalog.kind,
@@ -39,7 +40,7 @@ export const Navigation: React.FC<{ environment: string }> = ({
     },
     {
       id: "ResourceManager",
-      title: "Resource Manager",
+      title: words("navigation.resourceManager"),
       links: [
         {
           id: Route.Resources.kind,

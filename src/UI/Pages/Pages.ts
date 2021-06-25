@@ -6,7 +6,7 @@ import { ServiceInstanceHistoryWithProvider } from "@/UI/Pages/ServiceInstanceHi
 import { ServiceInventoryWithProvider } from "@/UI/Pages/ServiceInventory";
 import { EventsWithProvider } from "@/UI/Pages/Events";
 import { ServiceCatalog } from "@/UI/Pages/ServiceCatalog";
-import { ResourcesView } from "./ResourceManager/Resources";
+import { ResourcesView } from "@/UI/Pages/Resources";
 
 interface Page extends Route.Route {
   component: ComponentType;
