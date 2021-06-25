@@ -26,13 +26,25 @@ export const Navigation: React.FC<{ environment: string }> = ({
 }) => {
   const groups: Group[] = [
     {
-      id: "LifecycleServiceManagement",
-      title: "Lifecycle Service Management",
+      id: "LifecycleServiceManager",
+      title: "Lifecycle Service Manager",
       links: [
         {
           id: Route.Catalog.kind,
           label: Route.Catalog.label,
           url: Route.Catalog.path,
+          external: false,
+        },
+      ],
+    },
+    {
+      id: "ResourceManager",
+      title: "Resource Manager",
+      links: [
+        {
+          id: Route.Resources.kind,
+          label: Route.Resources.label,
+          url: Route.Resources.path,
           external: false,
         },
       ],

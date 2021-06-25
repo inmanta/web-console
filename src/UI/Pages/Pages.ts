@@ -6,6 +6,7 @@ import { ServiceInstanceHistoryWithProvider } from "@/UI/Pages/ServiceInstanceHi
 import { ServiceInventoryWithProvider } from "@/UI/Pages/ServiceInventory";
 import { EventsWithProvider } from "@/UI/Pages/Events";
 import { ServiceCatalog } from "@/UI/Pages/ServiceCatalog";
+import { ResourcesView } from "./ResourceManager/Resources";
 
 interface Page extends Route.Route {
   component: ComponentType;
@@ -41,6 +42,11 @@ export const EventsPage: Page = {
   component: EventsWithProvider,
 };
 
+export const ResourcesPage: Page = {
+  ...Route.Resources,
+  component: ResourcesView,
+};
+
 export const pages: Page[] = [
   CatalogPage,
   InventoryPage,
@@ -48,4 +54,5 @@ export const pages: Page[] = [
   HistoryPage,
   DiagnosePage,
   EventsPage,
+  ResourcesPage,
 ];

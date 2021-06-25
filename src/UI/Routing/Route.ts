@@ -4,7 +4,8 @@ export type Kinds =
   | "CreateInstance"
   | "History"
   | "Diagnose"
-  | "Events";
+  | "Events"
+  | "Resources";
 
 interface ParamsManifest {
   Catalog: undefined;
@@ -13,6 +14,7 @@ interface ParamsManifest {
   History: { service: string; instance: string };
   Events: { service: string; instance: string };
   Diagnose: { service: string; instance: string };
+  Resources: undefined;
 }
 
 export type Params<R extends Kinds> = ParamsManifest[R];
@@ -65,6 +67,12 @@ export const Events: Route = {
   path: "/lsm/catalog/:service/inventory/:instance/events",
 };
 
+export const Resources: Route = {
+  kind: "Resources",
+  path: "/resources",
+  label: "Resources",
+};
+
 export const allRoutes: Route[] = [
   Catalog,
   Inventory,
@@ -72,6 +80,7 @@ export const allRoutes: Route[] = [
   History,
   Diagnose,
   Events,
+  Resources,
 ];
 
 export const getRouteFromKind = (kind: Kinds): Route => {
@@ -88,5 +97,7 @@ export const getRouteFromKind = (kind: Kinds): Route => {
       return Diagnose;
     case "Events":
       return Events;
+    case "Resources":
+      return Resources;
   }
 };
