@@ -1,6 +1,6 @@
 import { TextInputTypes } from "@patternfly/react-core";
 
-export type Field = FlatField | NestedField;
+export type Field = FlatField | NestedField | DictListField;
 
 export interface FlatField {
   kind: "Flat";
@@ -16,7 +16,15 @@ export const isFlatField = (field: Field): field is FlatField =>
   field.kind === "Flat";
 
 export interface NestedField {
-  kind: "Nested" | "DictList";
+  kind: "Nested";
+  name: string;
+  description: string;
+  isOptional: boolean;
+  fields: Field[];
+}
+
+export interface DictListField {
+  kind: "DictList";
   name: string;
   description: string;
   isOptional: boolean;
