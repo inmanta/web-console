@@ -36,6 +36,7 @@ describe("CreateInstanceForm", () => {
     environment: "env",
     lifecycle: { initial_state: "start", states: [], transfers: [] },
     config: {},
+    embedded_entities: [],
   };
   it("Shows create form ", async () => {
     render(

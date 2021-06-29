@@ -44,10 +44,11 @@ const serviceEntity = {
   environment: "env",
   lifecycle: { initial_state: "start", states: [], transfers: [] },
   config: {},
+  embedded_entities: [],
 };
 export const Success = Template.bind({});
 Success.args = {
-  serviceEntity: serviceEntity,
+  serviceEntity,
   handleRedirect: () => {
     return;
   },

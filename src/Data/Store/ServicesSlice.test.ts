@@ -10,6 +10,7 @@ describe("ServicesSlice", () => {
       lifecycle: { initial_state: "", states: [], transfers: [] },
       name: "test_service",
       config: {},
+      embedded_entities: [],
     },
     {
       attributes: [],
@@ -17,6 +18,7 @@ describe("ServicesSlice", () => {
       lifecycle: { initial_state: "", states: [], transfers: [] },
       name: "another_test_service",
       config: {},
+      embedded_entities: [],
     },
   ];
 

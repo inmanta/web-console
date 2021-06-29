@@ -31,3 +31,6 @@ export function toggleValueInList<T>(value: T, list: T[]): T[] {
   clone.splice(index, 1);
   return clone;
 }
+
+export const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
+  value !== null;

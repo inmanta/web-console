@@ -7,8 +7,8 @@ export interface AttributeModel {
   modifier: string;
   default_value: string | null;
   default_value_set: boolean;
-  validation_type?: string;
-  validation_parameters?: Record<string, unknown>;
+  validation_type?: string | null;
+  validation_parameters?: Record<string, unknown> | null;
 }
 
 export interface StateModel {
@@ -68,4 +68,15 @@ export interface ServiceModel extends ServiceIdentifier {
   service_identity_display_name?: string;
   config: Config;
   instance_summary?: InstanceSummary;
+  embedded_entities: EmbeddedEntity[];
+}
+
+export interface EmbeddedEntity {
+  name: string;
+  description: string;
+  modifier: string;
+  lower_limit: number;
+  upper_limit: number;
+  attributes: AttributeModel[];
+  embedded_entities: EmbeddedEntity[];
 }
