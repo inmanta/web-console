@@ -1,39 +1,27 @@
 import React, { useState } from "react";
-import {
-  ActionGroup,
-  Button,
-  Form,
-  TextInputTypes,
-} from "@patternfly/react-core";
+import { ActionGroup, Button, Form } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { FormAttributeResult } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { TextFormInput } from "./TextFormInput";
-
-export interface FormInputAttribute {
-  name: string;
-  description?: string;
-  defaultValue: unknown;
-  inputType: TextInputTypes | "bool";
-  isOptional: boolean;
-  type: string;
-}
+import { Field, isFlatField } from "./Field";
 
 interface Props {
-  formInputAttributes: FormInputAttribute[];
+  fields: Field[];
   onSubmit(attributes: FormAttributeResult[]): void;
   onCancel(): void;
 }
 
 export const ServiceInstanceForm: React.FC<Props> = ({
-  formInputAttributes,
+  fields: allFields,
   onSubmit,
   onCancel,
 }) => {
+  const fields = allFields.filter(isFlatField);
   const initialState = Object.assign(
     {},
-    ...formInputAttributes.map((attribute) => ({
+    ...fields.map((attribute) => ({
       [attribute.name]: attribute.defaultValue,
     }))
   );
@@ -53,7 +41,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     });
   };
   const formStateToAttributeArray = (state): FormAttributeResult[] => {
-    return formInputAttributes.map((inputAttribute) => ({
+    return fields.map((inputAttribute) => ({
       name: inputAttribute.name,
       type: inputAttribute.type,
       value: state[inputAttribute.name],
@@ -85,7 +73,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   return (
     <>
       <Form>
-        {formInputAttributes.map((attribute) => {
+        {fields.map((attribute) => {
           if (attribute.inputType === "bool") {
             return (
               <BooleanFormInput

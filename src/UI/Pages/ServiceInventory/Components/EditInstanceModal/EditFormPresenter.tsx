@@ -4,7 +4,7 @@ import {
   InstanceAttributeModel,
 } from "@/Core";
 import React from "react";
-import { FormInputAttribute, ServiceInstanceForm } from "@/UI/Components";
+import { Field, ServiceInstanceForm } from "@/UI/Components";
 import { AttributeInputConverter, toOptionalBoolean } from "@/Data";
 
 export class EditFormPresenter {
@@ -18,26 +18,21 @@ export class EditFormPresenter {
     onSubmit: (attributes: FormAttributeResult[]) => void,
     onCancel: () => void
   ): React.ReactElement {
-    const formInputAttributes = this.getFormInputsForEditForm(
-      currentAttributes,
-      attributeModels
-    );
-
     return (
       <ServiceInstanceForm
-        formInputAttributes={formInputAttributes}
+        fields={this.getFieldsForEditForm(currentAttributes, attributeModels)}
         onSubmit={onSubmit}
         onCancel={onCancel}
       />
     );
   }
 
-  getFormInputsForEditForm(
+  getFieldsForEditForm(
     currentAttributes: InstanceAttributeModel | null,
     attributeModels: AttributeModel[]
-  ): FormInputAttribute[] {
+  ): Field[] {
     const editableAttributes = this.getEditableAttributes(attributeModels);
-    return this.convertToEditFormInputs(currentAttributes, editableAttributes);
+    return this.convertToEditFields(currentAttributes, editableAttributes);
   }
 
   getCurrentAttributeValue(
@@ -60,10 +55,10 @@ export class EditFormPresenter {
     return "";
   }
 
-  convertToEditFormInputs(
+  convertToEditFields(
     currentAttributes: InstanceAttributeModel | null,
     attributeModels: AttributeModel[]
-  ): FormInputAttribute[] {
+  ): Field[] {
     return attributeModels.map((attributeModel) => {
       const type = this.attributeInputConverter.getInputType(attributeModel);
       const defaultValue = this.getCurrentAttributeValue(
@@ -71,6 +66,7 @@ export class EditFormPresenter {
         attributeModel
       );
       return {
+        kind: "Flat",
         name: attributeModel.name,
         defaultValue: defaultValue,
         inputType: type,

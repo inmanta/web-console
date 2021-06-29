@@ -2,6 +2,7 @@ import { TextInputTypes } from "@patternfly/react-core";
 import { EditFormPresenter } from "./EditFormPresenter";
 import { AttributeModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
+import { Field } from "@/UI/Components";
 
 describe("EditFormPresenter", () => {
   const attributes: AttributeModel[] = [
@@ -56,8 +57,9 @@ describe("EditFormPresenter", () => {
     read_only: "read",
     not_editable: "shouldn't be present in edit form",
   };
-  const expectedFormInputAttributes = [
+  const expectedFields: Field[] = [
     {
+      kind: "Flat",
       name: "name",
       isOptional: false,
       defaultValue: "name",
@@ -66,6 +68,7 @@ describe("EditFormPresenter", () => {
       description: "name",
     },
     {
+      kind: "Flat",
       name: "bool_attr",
       isOptional: false,
       defaultValue: true,
@@ -74,6 +77,7 @@ describe("EditFormPresenter", () => {
       description: "desc",
     },
     {
+      kind: "Flat",
       name: "opt_string_attr",
       isOptional: true,
       defaultValue: "",
@@ -87,12 +91,12 @@ describe("EditFormPresenter", () => {
     expect(editable).toHaveLength(3);
   });
   it("Creates correct form input attributes", () => {
-    const formInputAttributes = editFormPresenter.getFormInputsForEditForm(
+    const fields = editFormPresenter.getFieldsForEditForm(
       currentAttributes,
       attributes
     );
-    expect(formInputAttributes).toHaveLength(3);
-    expect(formInputAttributes).toEqual(expectedFormInputAttributes);
+    expect(fields).toHaveLength(3);
+    expect(fields).toEqual(expectedFields);
   });
   it("Presents edit instance form", () => {
     const editForm = editFormPresenter.presentForm(
@@ -105,8 +109,6 @@ describe("EditFormPresenter", () => {
         return;
       }
     );
-    expect(editForm.props.formInputAttributes).toEqual(
-      expectedFormInputAttributes
-    );
+    expect(editForm.props.fields).toEqual(expectedFields);
   });
 });

@@ -1,6 +1,6 @@
 import { AttributeModel, FormAttributeResult } from "@/Core";
 import React from "react";
-import { FormInputAttribute, ServiceInstanceForm } from "@/UI/Components";
+import { Field, ServiceInstanceForm } from "@/UI/Components";
 import { AttributeInputConverter } from "@/Data";
 
 export class CreateFormPresenter {
@@ -12,25 +12,19 @@ export class CreateFormPresenter {
     onSubmit: (attributes: FormAttributeResult[]) => void,
     onRedirect: () => void
   ): React.ReactElement {
-    const formInputAttributes = this.getFormInputsForCreateForm(attributes);
-
     return (
       <ServiceInstanceForm
-        formInputAttributes={formInputAttributes}
+        fields={this.getFieldsForCreateForm(attributes)}
         onSubmit={onSubmit}
         onCancel={onRedirect}
       />
     );
   }
 
-  getFormInputsForCreateForm(
-    attributeModels: AttributeModel[]
-  ): FormInputAttribute[] {
-    return this.convertToFormInputs(
-      this.getNotReadonlyAttributes(attributeModels)
-    );
+  getFieldsForCreateForm(attributeModels: AttributeModel[]): Field[] {
+    return this.convertToFields(this.getNotReadonlyAttributes(attributeModels));
   }
-  convertToFormInputs(attributeModels: AttributeModel[]): FormInputAttribute[] {
+  convertToFields(attributeModels: AttributeModel[]): Field[] {
     return attributeModels.map((attributeModel) => {
       const type = this.attributeInputConverter.getInputType(attributeModel);
       const defaultValue = this.attributeInputConverter.getFormDefaultValue(
@@ -39,6 +33,7 @@ export class CreateFormPresenter {
         attributeModel.default_value
       );
       return {
+        kind: "Flat",
         name: attributeModel.name,
         defaultValue: defaultValue,
         inputType: type,

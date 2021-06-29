@@ -1,17 +1,19 @@
-import { EmbeddedEntity, isNotNull, ServiceModel } from "@/Core";
-import { CreateFormPresenter } from "./Components/CreateFormPresenter";
+import {
+  AttributeModel,
+  EmbeddedEntity,
+  isNotNull,
+  ServiceModel,
+} from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
 import { Field } from "./Field";
 
 export class FieldCreator {
-  presenter = new CreateFormPresenter(new AttributeInputConverterImpl());
-
   create(
     service: Pick<ServiceModel, "attributes" | "embedded_entities">
   ): Field[] {
-    const fieldsFromAttributes: Field[] = this.presenter
-      .convertToFormInputs(service.attributes)
-      .map((value) => ({ kind: "Flat", ...value }));
+    const fieldsFromAttributes: Field[] = attributestToFields(
+      service.attributes
+    );
 
     if (service.embedded_entities.length <= 0) {
       return fieldsFromAttributes;
@@ -35,9 +37,9 @@ export class FieldCreator {
   embeddedEntityToField(entity: EmbeddedEntity): Field | null {
     if (entity.modifier === "r") return null;
 
-    const fieldsFromAttributes: Field[] = this.presenter
-      .convertToFormInputs(entity.attributes)
-      .map((value) => ({ kind: "Flat", ...value }));
+    const fieldsFromAttributes: Field[] = attributestToFields(
+      entity.attributes
+    );
 
     const fieldsFromEmbeddedEntities = entity.embedded_entities
       .map((entity) => this.embeddedEntityToField(entity))
@@ -51,4 +53,25 @@ export class FieldCreator {
       fields: [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities],
     };
   }
+}
+
+function attributestToFields(attributes: AttributeModel[]): Field[] {
+  const converter = new AttributeInputConverterImpl();
+  return attributes.map((attributeModel) => {
+    const type = converter.getInputType(attributeModel);
+    const defaultValue = converter.getFormDefaultValue(
+      type,
+      attributeModel.default_value_set,
+      attributeModel.default_value
+    );
+    return {
+      kind: "Flat",
+      name: attributeModel.name,
+      defaultValue: defaultValue,
+      inputType: type,
+      description: attributeModel.description,
+      type: attributeModel.type,
+      isOptional: attributeModel.type.includes("?"),
+    };
+  });
 }

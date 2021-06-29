@@ -2,11 +2,13 @@ import { TextInputTypes } from "@patternfly/react-core";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { FormInputAttribute, ServiceInstanceForm } from "./ServiceInstanceForm";
+import { ServiceInstanceForm } from "./ServiceInstanceForm";
+import { Field } from "./Field";
 
 describe("ServiceInstanceForm", () => {
-  const formInputAttributes = [
+  const fields: Field[] = [
     {
+      kind: "Flat",
       name: "name",
       isOptional: true,
       defaultValue: "",
@@ -15,6 +17,7 @@ describe("ServiceInstanceForm", () => {
       description: "desc",
     },
     {
+      kind: "Flat",
       name: "not_editable",
       isOptional: false,
       defaultValue: "",
@@ -23,18 +26,19 @@ describe("ServiceInstanceForm", () => {
       description: "a non updateable attribute",
     },
     {
+      kind: "Flat",
       name: "boolean",
       isOptional: true,
       defaultValue: null,
       inputType: "bool",
       type: "bool?",
       description: "desc",
-    } as FormInputAttribute,
+    },
   ];
   it("Renders form", async () => {
     render(
       <ServiceInstanceForm
-        formInputAttributes={formInputAttributes}
+        fields={fields}
         onCancel={() => {
           return;
         }}
@@ -51,7 +55,7 @@ describe("ServiceInstanceForm", () => {
   it("Handles form user inputs", async () => {
     render(
       <ServiceInstanceForm
-        formInputAttributes={formInputAttributes}
+        fields={fields}
         onCancel={() => {
           return;
         }}
@@ -70,7 +74,7 @@ describe("ServiceInstanceForm", () => {
   it("Handles form submission", async () => {
     render(
       <ServiceInstanceForm
-        formInputAttributes={formInputAttributes}
+        fields={fields}
         onCancel={() => {
           return;
         }}

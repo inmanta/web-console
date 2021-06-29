@@ -2,7 +2,7 @@ import React from "react";
 import { ServiceModel } from "@/Core";
 import { data as service } from "./service.json";
 import { FieldView } from "./FieldView";
-import { FieldCreator } from "./FieldCreator";
+import { FieldCreator } from "../../Components/ServiceInstanceForm/FieldCreator";
 
 export default {
   title: "FieldView",

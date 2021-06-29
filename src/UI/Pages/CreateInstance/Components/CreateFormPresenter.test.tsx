@@ -2,6 +2,7 @@ import { TextInputTypes } from "@patternfly/react-core";
 import { CreateFormPresenter } from "./CreateFormPresenter";
 import { AttributeModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
+import { Field } from "@/UI/Components";
 
 describe("CreateFormPresenter", () => {
   const attributes: AttributeModel[] = [
@@ -33,8 +34,9 @@ describe("CreateFormPresenter", () => {
   const createFormPresenter = new CreateFormPresenter(
     new AttributeInputConverterImpl()
   );
-  const expectedFormInputAttributes = [
+  const expectedFields: Field[] = [
     {
+      kind: "Flat",
       name: "name",
       isOptional: true,
       defaultValue: "",
@@ -43,6 +45,7 @@ describe("CreateFormPresenter", () => {
       description: "name",
     },
     {
+      kind: "Flat",
       name: "not_editable",
       isOptional: false,
       defaultValue: "",
@@ -57,10 +60,9 @@ describe("CreateFormPresenter", () => {
     expect(notReadOnly).toHaveLength(2);
   });
   it("Creates correct form input attributes", () => {
-    const formInputAttributes =
-      createFormPresenter.getFormInputsForCreateForm(attributes);
-    expect(formInputAttributes).toHaveLength(2);
-    expect(formInputAttributes).toEqual(expectedFormInputAttributes);
+    const fields = createFormPresenter.getFieldsForCreateForm(attributes);
+    expect(fields).toHaveLength(2);
+    expect(fields).toEqual(expectedFields);
   });
   it("Presents create instance form", () => {
     const createForm = createFormPresenter.presentForm(
@@ -72,8 +74,6 @@ describe("CreateFormPresenter", () => {
         return;
       }
     );
-    expect(createForm.props.formInputAttributes).toEqual(
-      expectedFormInputAttributes
-    );
+    expect(createForm.props.fields).toEqual(expectedFields);
   });
 });

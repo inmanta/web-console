@@ -15,8 +15,9 @@ const Template: Story<ComponentProps<typeof ServiceInstanceForm>> = (args) => (
 
 export const OneOfEach = Template.bind({});
 OneOfEach.args = {
-  formInputAttributes: [
+  fields: [
     {
+      kind: "Flat",
       name: "BoolParam",
       defaultValue: false,
       inputType: "bool",
@@ -24,6 +25,7 @@ OneOfEach.args = {
       isOptional: true,
     },
     {
+      kind: "Flat",
       name: "TextParam",
       defaultValue: "",
       inputType: TextInputTypes.text,
@@ -32,6 +34,7 @@ OneOfEach.args = {
       isOptional: false,
     },
     {
+      kind: "Flat",
       name: "Int list param",
       defaultValue: "",
       inputType: TextInputTypes.text,
@@ -40,6 +43,7 @@ OneOfEach.args = {
       isOptional: true,
     },
     {
+      kind: "Flat",
       name: "Float list param",
       defaultValue: "",
       inputType: TextInputTypes.text,
@@ -48,6 +52,7 @@ OneOfEach.args = {
       isOptional: true,
     },
     {
+      kind: "Flat",
       name: "NumberParam",
       defaultValue: "",
       inputType: TextInputTypes.number,
