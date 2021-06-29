@@ -14,6 +14,10 @@ import { ServiceInstanceParams } from "./ServiceInstanceParams";
 import { RawDiagnostics, Diagnostics } from "./Diagnostics";
 import { EventParams } from "./EventParams";
 import { ProjectModel } from "./ProjectModel";
+import {
+  LatestReleasedResource,
+  RawLatestReleasedResource,
+} from "./LatestReleasedResource";
 
 type Query =
   | ServicesQuery
@@ -25,7 +29,9 @@ type Query =
   | InstanceLogsQuery
   | InstanceConfigQuery
   | DiagnosticsQuery
-  | ProjectsQuery;
+  | ProjectsQuery
+  | LatestReleasedResourcesQuery;
+
 export type Type = Query;
 
 export interface ProjectsQuery {
@@ -202,6 +208,19 @@ interface DiagnosticsManifest {
   query: DiagnosticsQuery;
 }
 
+/** LatestReleasedResources represent the latest version of resources according to the model version number. */
+export interface LatestReleasedResourcesQuery {
+  kind: "LatestReleasedResources";
+}
+
+interface LatestReleasedResourcesManifest {
+  error: string;
+  apiResponse: { data: RawLatestReleasedResource[] };
+  data: LatestReleasedResource[];
+  usedData: LatestReleasedResource[];
+  query: LatestReleasedResourcesQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -217,6 +236,7 @@ interface Manifest {
   InstanceConfig: InstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
   Projects: ProjectsManifest;
+  LatestReleasedResources: LatestReleasedResourcesManifest;
 }
 
 /**
