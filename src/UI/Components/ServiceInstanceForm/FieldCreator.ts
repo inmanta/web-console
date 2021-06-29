@@ -1,6 +1,7 @@
 import {
   AttributeModel,
   EmbeddedEntity,
+  InstanceAttributeModel,
   isNotNull,
   ServiceModel,
 } from "@/Core";
@@ -11,7 +12,7 @@ export class FieldCreator {
   create(
     service: Pick<ServiceModel, "attributes" | "embedded_entities">
   ): Field[] {
-    const fieldsFromAttributes: Field[] = attributestToFields(
+    const fieldsFromAttributes: Field[] = attributesToFields(
       service.attributes
     );
 
@@ -37,9 +38,7 @@ export class FieldCreator {
   embeddedEntityToField(entity: EmbeddedEntity): Field | null {
     if (entity.modifier === "r") return null;
 
-    const fieldsFromAttributes: Field[] = attributestToFields(
-      entity.attributes
-    );
+    const fieldsFromAttributes: Field[] = attributesToFields(entity.attributes);
 
     const fieldsFromEmbeddedEntities = entity.embedded_entities
       .map((entity) => this.embeddedEntityToField(entity))
@@ -55,7 +54,28 @@ export class FieldCreator {
   }
 }
 
-function attributestToFields(attributes: AttributeModel[]): Field[] {
+export function createEmptyFromFields(fields: Field[]): InstanceAttributeModel {
+  return fields.reduce((acc, curr) => {
+    switch (curr.kind) {
+      case "Flat": {
+        acc[curr.name] = curr.defaultValue;
+        return acc;
+      }
+
+      case "Nested": {
+        acc[curr.name] = createEmptyFromFields(curr.fields);
+        return acc;
+      }
+
+      case "DictList": {
+        acc[curr.name] = [];
+        return acc;
+      }
+    }
+  }, {});
+}
+
+function attributesToFields(attributes: AttributeModel[]): Field[] {
   const converter = new AttributeInputConverterImpl();
   return attributes.map((attributeModel) => {
     const type = converter.getInputType(attributeModel);

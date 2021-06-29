@@ -6,6 +6,7 @@ import { toOptionalBoolean } from "@/Data";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { TextFormInput } from "./TextFormInput";
 import { Field, isFlatField } from "./Field";
+import { createEmptyFromFields } from "./FieldCreator";
 
 interface Props {
   fields: Field[];
@@ -19,12 +20,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   onCancel,
 }) => {
   const fields = allFields.filter(isFlatField);
-  const initialState = Object.assign(
-    {},
-    ...fields.map((attribute) => ({
-      [attribute.name]: attribute.defaultValue,
-    }))
-  );
+  const initialState = createEmptyFromFields(fields);
   const [formState, setFormState] = useState(initialState);
   const handleInputChange = (value, event) => {
     const target = event.target;
@@ -79,7 +75,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
               <BooleanFormInput
                 attributeName={attribute.name}
                 isOptional={attribute.isOptional}
-                isChecked={formState[attribute.name]}
+                isChecked={formState[attribute.name] as boolean}
                 handleInputChange={handleInputChange}
                 description={attribute.description}
                 key={attribute.name}
@@ -89,7 +85,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             return (
               <TextFormInput
                 attributeName={attribute.name}
-                attributeValue={formState[attribute.name]}
+                attributeValue={formState[attribute.name] as string}
                 description={attribute.description}
                 isOptional={attribute.isOptional}
                 type={attribute.inputType}
