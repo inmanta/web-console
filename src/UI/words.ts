@@ -187,6 +187,16 @@ const dict = {
   "catalog.instances": "Instances",
 
   /**
+   * Latest released resource view
+   */
+  "resources.empty.message": "No resources found",
+  "resources.column.type": "Type",
+  "resources.column.agent": "Agent",
+  "resources.column.value": "Value",
+  "resources.column.numberOfDependencies": "Number of dependencies",
+  "resources.column.deployState": "Deploy State",
+
+  /**
    * Navigation related text
    */
   "navigation.lifecycleServiceManager": "Lifecycle Service Manager",

@@ -27,6 +27,10 @@ import {
   ServiceConfigFinalizer,
   Store,
 } from "@/Data";
+import {
+  LatestReleasedResourcesQueryManager,
+  LatestReleasedResourcesStateHelper,
+} from "@/Data/Managers/LatestReleasedResources";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];
@@ -120,6 +124,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new DiagnosticsQueryManager(
         new FetcherImpl<"Diagnostics">(this.baseApiHelper),
         new DiagnosticsStateHelper(this.store),
+        scheduler,
+        environment
+      ),
+      new LatestReleasedResourcesQueryManager(
+        new FetcherImpl<"LatestReleasedResources">(this.baseApiHelper),
+        new LatestReleasedResourcesStateHelper(this.store, environment),
         scheduler,
         environment
       ),
