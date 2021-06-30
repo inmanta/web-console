@@ -16,6 +16,7 @@ import { EventParams } from "./EventParams";
 import { ProjectModel } from "./ProjectModel";
 import {
   LatestReleasedResource,
+  LatestReleasedResourceParams,
   RawLatestReleasedResource,
 } from "./LatestReleasedResource";
 
@@ -209,15 +210,28 @@ interface DiagnosticsManifest {
 }
 
 /** LatestReleasedResources represent the latest version of resources according to the model version number. */
-export interface LatestReleasedResourcesQuery {
+export interface LatestReleasedResourcesQuery
+  extends LatestReleasedResourceParams {
   kind: "LatestReleasedResources";
 }
 
 interface LatestReleasedResourcesManifest {
   error: string;
-  apiResponse: { data: RawLatestReleasedResource[] };
-  data: LatestReleasedResource[];
-  usedData: LatestReleasedResource[];
+  apiResponse: {
+    data: RawLatestReleasedResource[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: LatestReleasedResource[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: LatestReleasedResource[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
   query: LatestReleasedResourcesQuery;
 }
 

@@ -41,3 +41,7 @@ export interface LatestReleasedResourceRow {
   deployState: ResourceStatus;
   id: string;
 }
+
+export interface LatestReleasedResourceParams {
+  pageSize: number;
+}

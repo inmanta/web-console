@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
@@ -55,6 +55,8 @@ test("ResourcesView shows empty table", async () => {
   apiHelper.resolve(
     Either.right({
       data: [],
+      metadata: { total: 0, before: 0, after: 0, page_size: 10 },
+      links: { self: "" },
     })
   );
 
@@ -86,13 +88,46 @@ test("ResourcesView shows success table", async () => {
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
+  apiHelper.resolve(Either.right(LatestReleasedResource.response));
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourcesView-Success" })
+  ).toBeInTheDocument();
+});
+
+test("ResourcesView shows next page of resources", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
   apiHelper.resolve(
     Either.right({
-      data: LatestReleasedResource.list,
+      data: LatestReleasedResource.response.data.slice(0, 3),
+      links: { ...LatestReleasedResource.response.links, next: "/fake-link" },
+      metadata: LatestReleasedResource.response.metadata,
     })
   );
 
   expect(
-    await screen.findByRole("grid", { name: "ResourcesView-Success" })
+    await screen.findByRole("cell", {
+      name: LatestReleasedResource.response.data[0].id_details
+        .resource_id_value,
+    })
+  ).toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole("button", { name: "Next" }));
+
+  apiHelper.resolve(
+    Either.right({
+      data: LatestReleasedResource.response.data.slice(3),
+      links: { ...LatestReleasedResource.response.links, next: "/fake-link" },
+      metadata: LatestReleasedResource.response.metadata,
+    })
+  );
+
+  expect(
+    await screen.findByRole("cell", {
+      name: LatestReleasedResource.response.data[3].id_details
+        .resource_id_value,
+    })
   ).toBeInTheDocument();
 });

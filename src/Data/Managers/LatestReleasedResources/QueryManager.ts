@@ -1,6 +1,6 @@
 import { Scheduler, Fetcher, StateHelper } from "@/Core";
 import { ContinuousQueryManagerImpl } from "@/Data/Common";
-import { identity } from "lodash";
+import { getUrl } from "./getUrl";
 
 export class LatestReleasedResourcesQueryManager extends ContinuousQueryManagerImpl<"LatestReleasedResources"> {
   constructor(
@@ -14,10 +14,21 @@ export class LatestReleasedResourcesQueryManager extends ContinuousQueryManagerI
       stateHelper,
       scheduler,
       () => environment,
-      () => [environment],
+      ({ pageSize }) => [environment, pageSize],
       "LatestReleasedResources",
-      () => `/api/v2/resource`,
-      identity,
+      getUrl,
+      ({ data, links, metadata }, setUrl) => {
+        if (typeof links === "undefined")
+          return { data: data, handlers: {}, metadata };
+        const { prev, next } = links;
+        const prevCb = prev ? () => setUrl(prev) : undefined;
+        const nextCb = next ? () => setUrl(next) : undefined;
+        return {
+          data: data,
+          handlers: { prev: prevCb, next: nextCb },
+          metadata,
+        };
+      },
       environment
     );
   }
