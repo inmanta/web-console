@@ -21,11 +21,13 @@ export class LatestReleasedResourcesStateHelper
 
   set(data: ApiData): void {
     const unwrapped = RemoteData.mapSuccess(
-      (wrapped) =>
-        wrapped.data.map((resource) => ({
+      (wrapped) => ({
+        ...wrapped,
+        data: wrapped.data.map((resource) => ({
           ...resource,
           status: resource.status as ResourceStatus,
         })),
+      }),
       data
     );
     this.store.dispatch.latestReleasedResources.setList({
