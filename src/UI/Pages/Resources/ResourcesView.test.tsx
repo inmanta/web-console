@@ -138,9 +138,9 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
   render(component);
   apiHelper.resolve(Either.right(LatestReleasedResource.response));
   expect(await screen.findByRole("button", { name: /type/i })).toBeVisible();
-  expect(await screen.findByRole("button", { name: /agent/i })).toBeVisible();
-  expect(await screen.findByRole("button", { name: /value/i })).toBeVisible();
-  expect(screen.queryByRole("button", { name: /Deploy state/i })).toBeVisible();
+  expect(screen.getByRole("button", { name: /agent/i })).toBeVisible();
+  expect(screen.getByRole("button", { name: /value/i })).toBeVisible();
+  expect(screen.getByRole("button", { name: /Deploy state/i })).toBeVisible();
 });
 
 test("ResourcesView sets sorting parameters correctly on click", async () => {
