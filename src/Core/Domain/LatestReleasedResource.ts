@@ -1,3 +1,5 @@
+import { Sort } from "./Params";
+
 export interface LatestReleasedResource {
   resource_id: string;
   requires: string[];
@@ -43,5 +45,6 @@ export interface LatestReleasedResourceRow {
 }
 
 export interface LatestReleasedResourceParams {
+  sort?: Sort;
   pageSize: number;
 }

@@ -1,19 +1,32 @@
 import { LatestReleasedResource, LatestReleasedResourceRow } from "@/Core";
-import { TablePresenter } from "@/UI/Presenters";
+import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 
 export class ResourcesTablePresenter
   implements TablePresenter<LatestReleasedResource, LatestReleasedResourceRow>
 {
-  readonly columnHeads: string[];
+  readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
   constructor() {
     this.columnHeads = [
-      "Type",
-      "Agent",
-      "Value",
-      "Number of dependencies",
-      "Deploy state",
+      { displayName: words("resources.column.type"), apiName: "resource_type" },
+      {
+        displayName: words("resources.column.agent"),
+        apiName: "agent",
+      },
+      {
+        displayName: words("resources.column.value"),
+        apiName: "resource_id_value",
+      },
+      {
+        displayName: words("resources.column.numberOfDependencies"),
+        apiName: "requires",
+      },
+      {
+        displayName: words("resources.column.deployState"),
+        apiName: "status",
+      },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }
@@ -31,8 +44,36 @@ export class ResourcesTablePresenter
     }));
   }
   getColumnHeadDisplayNames(): string[] {
+    return this.columnHeads.map((columnHead) => columnHead.displayName);
+  }
+
+  public getColumnHeads(): ColumnHead[] {
     return this.columnHeads;
   }
+
+  public getColumnNameForIndex(index: number): string | undefined {
+    if (index > -1 && index < this.getNumberOfColumns()) {
+      return this.getColumnHeads()[index].apiName;
+    }
+    return undefined;
+  }
+
+  public getIndexForColumnName(columnName?: string): number {
+    return this.columnHeads.findIndex(
+      (columnHead) => columnHead.apiName === columnName
+    );
+  }
+
+  public getSortableColumnNames(): string[] {
+    const sortableColumns = [
+      "resource_type",
+      "agent",
+      "resource_id_value",
+      "status",
+    ];
+    return sortableColumns;
+  }
+
   getNumberOfColumns(): number {
     return this.numberOfColumns;
   }

@@ -5,14 +5,10 @@ import {
   ActionPresenter,
   TablePresenter,
   DatePresenter,
+  ColumnHead,
 } from "@/UI/Presenters";
 import { AttributesPresenter } from "./AttributesPresenter";
 import { StatePresenter } from "./StatePresenter";
-
-interface ColumnHead {
-  apiName: string;
-  displayName: string;
-}
 
 /**
  * The TablePresenter is responsible for formatting the domain data.

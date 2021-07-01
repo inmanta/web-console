@@ -1,4 +1,4 @@
-import { RemoteData } from "@/Core";
+import { RemoteData, SortDirection } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -21,8 +21,15 @@ export const Wrapper: React.FC = ({ children }) => (
 export const ResourcesView: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useState(20);
+  const [sortColumn, setSortColumn] = useState<string | undefined>(
+    "resource_type"
+  );
+  const [order, setOrder] = useState<SortDirection | undefined>("asc");
+  const sort =
+    sortColumn && order ? { name: sortColumn, order: order } : undefined;
   const [data, retry] = queryResolver.useContinuous<"LatestReleasedResources">({
     kind: "LatestReleasedResources",
+    sort,
     pageSize,
   });
 
@@ -51,7 +58,7 @@ export const ResourcesView: React.FC = () => {
       notAsked: () => null,
       loading: () => (
         <Wrapper>
-          <LoadingView delay={500} aria-label="ResourcesView-Loading" />
+          <LoadingView aria-label="ResourcesView-Loading" />
         </Wrapper>
       ),
       failed: (error) => (
@@ -75,6 +82,10 @@ export const ResourcesView: React.FC = () => {
           <Wrapper>
             {tableControls}
             <ResourcesTableProvider
+              order={order}
+              setOrder={setOrder}
+              sortColumn={sortColumn}
+              setSortColumn={setSortColumn}
               resources={resources.data}
               aria-label="ResourcesView-Success"
             />

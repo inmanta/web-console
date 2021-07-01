@@ -14,7 +14,7 @@ export class LatestReleasedResourcesQueryManager extends ContinuousQueryManagerI
       stateHelper,
       scheduler,
       () => environment,
-      ({ pageSize }) => [environment, pageSize],
+      ({ sort, pageSize }) => [environment, pageSize, sort?.name, sort?.order],
       "LatestReleasedResources",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
