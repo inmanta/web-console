@@ -16,6 +16,7 @@ import {
   LatestReleasedResourcesStateHelper,
 } from "@/Data";
 import { ResourcesView } from "./ResourcesView";
+import userEvent from "@testing-library/user-event";
 
 function setup() {
   const store = getStoreInstance();
@@ -130,4 +131,24 @@ test("ResourcesView shows next page of resources", async () => {
         .resource_id_value,
     })
   ).toBeInTheDocument();
+});
+
+test("ResourcesView shows sorting buttons for sortable columns", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  apiHelper.resolve(Either.right(LatestReleasedResource.response));
+  expect(await screen.findByRole("button", { name: /type/i })).toBeVisible();
+  expect(screen.getByRole("button", { name: /agent/i })).toBeVisible();
+  expect(screen.getByRole("button", { name: /value/i })).toBeVisible();
+  expect(screen.getByRole("button", { name: /Deploy state/i })).toBeVisible();
+});
+
+test("ResourcesView sets sorting parameters correctly on click", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  apiHelper.resolve(Either.right(LatestReleasedResource.response));
+  const stateButton = await screen.findByRole("button", { name: /agent/i });
+  expect(stateButton).toBeVisible();
+  userEvent.click(stateButton);
+  expect(apiHelper.getInvocations()[1][1]).toContain("&sort=agent.asc");
 });
