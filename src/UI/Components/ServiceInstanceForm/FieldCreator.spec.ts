@@ -1,6 +1,6 @@
-import { FieldCreator } from "./FieldCreator";
+import { NestedField } from "@/Core";
 import { Service } from "@/Test";
-import { NestedField } from "./Field";
+import { FieldCreator } from "./FieldCreator";
 
 test("GIVEN FieldCreator.create WHEN provided with a service THEN returns correct fields", () => {
   const fields = new FieldCreator().create(Service.a);

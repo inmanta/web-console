@@ -1,2 +1,2 @@
 export * from "./ServiceInstanceForm";
-export * from "./Field";
+export * from "./FieldCreator";

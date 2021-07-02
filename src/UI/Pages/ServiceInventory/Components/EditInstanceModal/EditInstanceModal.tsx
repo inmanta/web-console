@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { EditIcon } from "@patternfly/react-icons";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
-import { AttributeModel, FormAttributeResult, Maybe } from "@/Core";
+import { AttributeModel, Field, InstanceAttributeModel, Maybe } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
@@ -37,8 +37,11 @@ export const EditInstanceModal: React.FC<Props> = ({
     version: instance.version,
   });
 
-  const onSubmit = async (attributes: FormAttributeResult[]) => {
-    const result = await trigger(currentAttributes, attributes);
+  const onSubmit = async (
+    fields: Field[],
+    attributes: InstanceAttributeModel
+  ) => {
+    const result = await trigger(fields, currentAttributes, attributes);
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
       setIsOpen(false);

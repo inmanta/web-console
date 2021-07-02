@@ -1,4 +1,5 @@
 import { AttributeModel, ServiceModel } from "@/Core";
+import { FieldCreator } from "@/UI/Components";
 import { render, screen } from "@testing-library/react";
 import React from "react";
 import { CreateInstanceForm } from "./CreateInstanceForm";
@@ -41,7 +42,7 @@ describe("CreateInstanceForm", () => {
   it("Shows create form ", async () => {
     render(
       <CreateInstanceForm
-        serviceEntity={serviceEntity}
+        fields={new FieldCreator().create(serviceEntity)}
         handleRedirect={() => {
           return;
         }}

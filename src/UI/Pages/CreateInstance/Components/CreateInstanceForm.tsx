@@ -1,16 +1,19 @@
 import React from "react";
-import { FormAttributeResult, ServiceModel } from "@/Core";
+import { Field, InstanceAttributeModel } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
 import { CreateFormPresenter } from "./CreateFormPresenter";
 
 interface Props {
-  serviceEntity: ServiceModel;
+  fields: Field[];
   handleRedirect: () => void;
-  onSubmit: (attributes: FormAttributeResult[]) => Promise<void>;
+  onSubmit: (
+    fields: Field[],
+    attributes: InstanceAttributeModel
+  ) => Promise<void>;
 }
 
 export const CreateInstanceForm: React.FC<Props> = ({
-  serviceEntity,
+  fields,
   handleRedirect,
   onSubmit,
 }) => {
@@ -18,9 +21,5 @@ export const CreateInstanceForm: React.FC<Props> = ({
     new AttributeInputConverterImpl()
   );
 
-  return formPresenter.presentForm(
-    serviceEntity.attributes,
-    onSubmit,
-    handleRedirect
-  );
+  return formPresenter.presentForm(fields, onSubmit, handleRedirect);
 };

@@ -8,11 +8,12 @@ import {
   TextVariants,
 } from "@patternfly/react-core";
 import { useHistory } from "react-router-dom";
-import { FormAttributeResult, ServiceModel } from "@/Core";
+import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "@/UI/Routing";
 import { CreateInstanceForm } from "./Components";
 import { words } from "@/UI/words";
+import { FieldCreator } from "@/UI/Components";
 
 export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
   serviceEntity,
@@ -30,8 +31,11 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
     service_entity: serviceEntity.name,
   });
 
-  const onSubmit = async (attributes: FormAttributeResult[]) => {
-    const result = await trigger(attributes);
+  const onSubmit = async (
+    fields: Field[],
+    attributes: InstanceAttributeModel
+  ) => {
+    const result = await trigger(fields, attributes);
     if (result.kind === "Left") {
       setErrorMessage(result.value);
     } else {
@@ -58,7 +62,7 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
         </Text>
       </TextContent>
       <CreateInstanceForm
-        serviceEntity={serviceEntity}
+        fields={new FieldCreator().create(serviceEntity)}
         handleRedirect={handleRedirect}
         onSubmit={onSubmit}
       />

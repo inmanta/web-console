@@ -1,10 +1,6 @@
-import {
-  AttributeModel,
-  FormAttributeResult,
-  InstanceAttributeModel,
-} from "@/Core";
+import { AttributeModel, Field, InstanceAttributeModel } from "@/Core";
 import React from "react";
-import { Field, ServiceInstanceForm } from "@/UI/Components";
+import { ServiceInstanceForm } from "@/UI/Components";
 import { AttributeInputConverter, toOptionalBoolean } from "@/Data";
 
 export class EditFormPresenter {
@@ -15,7 +11,7 @@ export class EditFormPresenter {
   presentForm(
     currentAttributes: InstanceAttributeModel | null,
     attributeModels: AttributeModel[],
-    onSubmit: (attributes: FormAttributeResult[]) => void,
+    onSubmit: (fields: Field[], attributes: InstanceAttributeModel) => void,
     onCancel: () => void
   ): React.ReactElement {
     return (

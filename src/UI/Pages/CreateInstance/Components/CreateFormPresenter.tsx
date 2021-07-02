@@ -1,6 +1,6 @@
-import { AttributeModel, FormAttributeResult } from "@/Core";
+import { AttributeModel, InstanceAttributeModel, Field } from "@/Core";
 import React from "react";
-import { Field, ServiceInstanceForm } from "@/UI/Components";
+import { ServiceInstanceForm } from "@/UI/Components";
 import { AttributeInputConverter } from "@/Data";
 
 export class CreateFormPresenter {
@@ -8,13 +8,13 @@ export class CreateFormPresenter {
     private readonly attributeInputConverter: AttributeInputConverter
   ) {}
   presentForm(
-    attributes: AttributeModel[],
-    onSubmit: (attributes: FormAttributeResult[]) => void,
+    fields: Field[],
+    onSubmit: (fields: Field[], formState: InstanceAttributeModel) => void,
     onRedirect: () => void
   ): React.ReactElement {
     return (
       <ServiceInstanceForm
-        fields={this.getFieldsForCreateForm(attributes)}
+        fields={fields}
         onSubmit={onSubmit}
         onCancel={onRedirect}
       />

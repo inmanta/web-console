@@ -1,4 +1,5 @@
 import { AttributeModel } from "@/Core";
+import { FieldCreator } from "@/UI/Components";
 import { Story } from "@storybook/react/types-6-0";
 import React from "react";
 import { ComponentProps } from "react";
@@ -48,7 +49,7 @@ const serviceEntity = {
 };
 export const Success = Template.bind({});
 Success.args = {
-  serviceEntity,
+  fields: new FieldCreator().create(serviceEntity),
   handleRedirect: () => {
     return;
   },

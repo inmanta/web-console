@@ -12,9 +12,6 @@ export interface FlatField {
   type: string;
 }
 
-export const isFlatField = (field: Field): field is FlatField =>
-  field.kind === "Flat";
-
 export interface NestedField {
   kind: "Nested";
   name: string;
@@ -29,4 +26,6 @@ export interface DictListField {
   description: string;
   isOptional: boolean;
   fields: Field[];
+  min: number;
+  max: number;
 }

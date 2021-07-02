@@ -8,33 +8,30 @@ import {
   FormFieldGroupHeader,
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
-import { FormAttributeResult, InstanceAttributeModel } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { TextFormInput } from "./TextFormInput";
 import {
+  InstanceAttributeModel,
   DictListField,
   Field,
   FlatField,
-  isFlatField,
   NestedField,
-} from "./Field";
-import { createEmptyFromFields } from "./FieldCreator";
+} from "@/Core";
+import { fieldsToFormState } from "./FieldCreator";
 
 interface Props {
   fields: Field[];
-  onSubmit(attributes: FormAttributeResult[]): void;
+  onSubmit(fields: Field[], formState: InstanceAttributeModel): void;
   onCancel(): void;
 }
 
 export const ServiceInstanceForm: React.FC<Props> = ({
-  fields: allFields,
+  fields,
   onSubmit,
   onCancel,
 }) => {
-  const fields = allFields.filter(isFlatField);
-  const initialState = createEmptyFromFields(fields);
-  const [formState, setFormState] = useState(initialState);
+  const [formState, setFormState] = useState(fieldsToFormState(fields));
   const getChangeHandler = (path: string) => (_, event) => {
     const target = event.target;
     let val;
@@ -48,13 +45,6 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       const clone = { ...prev };
       return set(clone, path, val);
     });
-  };
-  const formStateToAttributeArray = (state): FormAttributeResult[] => {
-    return fields.map((inputAttribute) => ({
-      name: inputAttribute.name,
-      type: inputAttribute.type,
-      value: state[inputAttribute.name],
-    }));
   };
 
   return (
@@ -71,10 +61,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         ))}
 
         <ActionGroup>
-          <Button
-            variant="primary"
-            onClick={() => onSubmit(formStateToAttributeArray(formState))}
-          >
+          <Button variant="primary" onClick={() => onSubmit(fields, formState)}>
             {words("confirm")}
           </Button>
           <Button variant="link" onClick={onCancel}>
@@ -95,6 +82,9 @@ interface FieldProps {
   path: string | null;
 }
 
+const makePath = (path: string | null, next: string): string =>
+  path === null ? next : `${path}.${next}`;
+
 const FieldInput: React.FC<FieldProps> = ({
   field,
   formState,
@@ -106,13 +96,8 @@ const FieldInput: React.FC<FieldProps> = ({
       return (
         <FlatFieldInput
           field={field}
-          value={get(
-            formState,
-            path === null ? field.name : `${path}.${field.name}`
-          )}
-          changeHandler={getChangeHandler(
-            path === null ? field.name : `${path}.${field.name}`
-          )}
+          value={get(formState, makePath(path, field.name))}
+          changeHandler={getChangeHandler(makePath(path, field.name))}
         />
       );
     case "Nested":
@@ -121,7 +106,7 @@ const FieldInput: React.FC<FieldProps> = ({
           field={field}
           formState={formState}
           getChangeHandler={getChangeHandler}
-          path={`${path}.${field.name}`}
+          path={path}
         />
       );
     case "DictList":
@@ -130,7 +115,7 @@ const FieldInput: React.FC<FieldProps> = ({
           field={field}
           formState={formState}
           getChangeHandler={getChangeHandler}
-          path={`${path}.${field.name}`}
+          path={path}
         />
       );
   }
@@ -194,7 +179,7 @@ interface NestedProps {
   field: NestedField;
   formState: InstanceAttributeModel;
   getChangeHandler: GetChangeHandler;
-  path: string;
+  path: string | null;
 }
 
 const NestedFieldInput: React.FC<NestedProps> = ({
@@ -230,7 +215,7 @@ interface DictListProps {
   field: DictListField;
   formState: InstanceAttributeModel;
   getChangeHandler: GetChangeHandler;
-  path: string;
+  path: string | null;
 }
 
 const DictListFieldInput: React.FC<DictListProps> = ({
@@ -238,32 +223,63 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   formState,
   getChangeHandler,
   path,
-}) => (
-  <FormFieldGroupExpandable
-    header={
-      <FormFieldGroupHeader
-        titleText={{
-          text: field.name,
-          id: "field-group1-titleText-id",
-        }}
-        titleDescription={field.description}
-        actions={
-          <>
-            <Button variant="link">Delete all</Button>
-            <Button variant="secondary">Create</Button>
-          </>
-        }
-      />
-    }
-  >
-    {field.fields.map((field) => (
-      <FieldInput
-        field={field}
-        key={field.name}
-        formState={formState}
-        getChangeHandler={getChangeHandler}
-        path={`${path}.${field.name}`}
-      />
-    ))}
-  </FormFieldGroupExpandable>
-);
+}) => {
+  const [list, setList] = useState(get(formState, makePath(path, field.name)));
+
+  const onCreate = () => {
+    if (!Array.isArray(list)) return;
+    setList([...list, fieldsToFormState(field.fields)]);
+  };
+
+  const onDelete = () => {
+    setList([]);
+  };
+
+  return (
+    <FormFieldGroupExpandable
+      header={
+        <FormFieldGroupHeader
+          titleText={{
+            text: field.name,
+            id: "field-group1-titleText-id",
+          }}
+          titleDescription={field.description}
+          actions={
+            <>
+              <Button variant="link" onClick={onDelete}>
+                Delete all
+              </Button>
+              <Button variant="secondary" onClick={onCreate}>
+                Create
+              </Button>
+            </>
+          }
+        />
+      }
+    >
+      {list.map((item, index) => (
+        <FormFieldGroupExpandable
+          key={makePath(path, `${field.name}.${index}`)}
+          header={
+            <FormFieldGroupHeader
+              titleText={{
+                text: index,
+                id: "nested-field-group1-titleText-id",
+              }}
+            />
+          }
+        >
+          {field.fields.map((field) => (
+            <FieldInput
+              field={field}
+              key={makePath(path, `${field.name}.${index}`)}
+              formState={formState}
+              getChangeHandler={getChangeHandler}
+              path={makePath(path, `${field.name}.${index}`)}
+            />
+          ))}
+        </FormFieldGroupExpandable>
+      ))}
+    </FormFieldGroupExpandable>
+  );
+};

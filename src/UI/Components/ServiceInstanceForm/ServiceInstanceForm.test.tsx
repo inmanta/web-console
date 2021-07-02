@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
-import { Field } from "./Field";
+import { Field } from "@/Core";
 
 describe("ServiceInstanceForm", () => {
   const fields: Field[] = [

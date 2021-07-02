@@ -13,22 +13,22 @@ describe("CreateInstanceManager", () => {
       kind: "CreateInstance",
       service_entity: "service_entity",
     });
-    submit([]);
+    submit([], {});
 
     expect(fetchMock.mock.calls).toHaveLength(1);
     expect(fetchMock.mock.calls[0][1]?.method).toEqual("POST");
   });
   it("Calls create correctly when not setting optional attributes", () => {
-    const attributes = [
-      { name: "string_attribute", value: "lorem ipsum", type: "string" },
-      { name: "opt_string_attribute", value: "", type: "string?" },
-      { name: "bool_param", value: null, type: "bool?" },
-    ];
+    const attributes = {
+      string_attribute: "lorem ipsum",
+      opt_string_attribute: "",
+      bool_param: null,
+    };
     const submit = commandManager.getTrigger({
       kind: "CreateInstance",
       service_entity: "service_entity",
     });
-    submit(attributes);
+    submit([], attributes);
 
     expect(fetchMock.mock.calls).toHaveLength(1);
     const attributesFromBody = JSON.parse(

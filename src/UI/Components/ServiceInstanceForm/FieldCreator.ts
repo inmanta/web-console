@@ -4,9 +4,9 @@ import {
   InstanceAttributeModel,
   isNotNull,
   ServiceModel,
+  Field,
 } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
-import { Field } from "./Field";
 
 export class FieldCreator {
   create(
@@ -44,8 +44,19 @@ export class FieldCreator {
       .map((entity) => this.embeddedEntityToField(entity))
       .filter(isNotNull);
 
+    if (this.isList(entity))
+      return {
+        kind: "DictList",
+        name: entity.name,
+        description: entity.description,
+        isOptional: this.isOptional(entity),
+        fields: [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities],
+        min: entity.lower_limit,
+        max: entity.upper_limit,
+      };
+
     return {
-      kind: this.isList(entity) ? "DictList" : "Nested",
+      kind: "Nested",
       name: entity.name,
       description: entity.description,
       isOptional: this.isOptional(entity),
@@ -54,7 +65,7 @@ export class FieldCreator {
   }
 }
 
-export function createEmptyFromFields(fields: Field[]): InstanceAttributeModel {
+export function fieldsToFormState(fields: Field[]): InstanceAttributeModel {
   return fields.reduce((acc, curr) => {
     switch (curr.kind) {
       case "Flat": {
@@ -63,12 +74,12 @@ export function createEmptyFromFields(fields: Field[]): InstanceAttributeModel {
       }
 
       case "Nested": {
-        acc[curr.name] = createEmptyFromFields(curr.fields);
+        acc[curr.name] = fieldsToFormState(curr.fields);
         return acc;
       }
 
       case "DictList": {
-        acc[curr.name] = [];
+        acc[curr.name] = [fieldsToFormState(curr.fields)];
         return acc;
       }
     }
@@ -77,21 +88,24 @@ export function createEmptyFromFields(fields: Field[]): InstanceAttributeModel {
 
 function attributesToFields(attributes: AttributeModel[]): Field[] {
   const converter = new AttributeInputConverterImpl();
-  return attributes.map((attributeModel) => {
-    const type = converter.getInputType(attributeModel);
-    const defaultValue = converter.getFormDefaultValue(
-      type,
-      attributeModel.default_value_set,
-      attributeModel.default_value
-    );
-    return {
-      kind: "Flat",
-      name: attributeModel.name,
-      defaultValue: defaultValue,
-      inputType: type,
-      description: attributeModel.description,
-      type: attributeModel.type,
-      isOptional: attributeModel.type.includes("?"),
-    };
-  });
+  return attributes
+    .filter((attribute) => attribute.modifier !== "r")
+    .map((attribute) => {
+      const type = converter.getInputType(attribute);
+      const defaultValue = converter.getFormDefaultValue(
+        type,
+        attribute.default_value_set,
+        attribute.default_value
+      );
+
+      return {
+        kind: "Flat",
+        name: attribute.name,
+        defaultValue: defaultValue,
+        inputType: type,
+        description: attribute.description,
+        type: attribute.type,
+        isOptional: attribute.type.includes("?"),
+      };
+    });
 }

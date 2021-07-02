@@ -2,8 +2,9 @@ import {
   Command,
   Poster,
   CommandManager,
-  FormAttributeResult,
   Either,
+  InstanceAttributeModel,
+  Field,
 } from "@/Core";
 import { AttributeResultConverter } from "@/Data/Common";
 
@@ -20,24 +21,25 @@ export class CreateInstanceCommandManager implements CommandManager {
   getTrigger(
     command: Command.SubCommand<"CreateInstance">
   ): Command.Trigger<"CreateInstance"> {
-    return async (attributes) => {
-      return this.submit(command, attributes);
+    return async (fields, attributes) => {
+      return this.submit(command, fields, attributes);
     };
   }
 
   private async submit(
     command: Command.SubCommand<"CreateInstance">,
-    attributes: FormAttributeResult[]
+    fields: Field[],
+    attributes: InstanceAttributeModel
   ): Promise<
     Either.Type<
       Command.Error<"CreateInstance">,
       Command.ApiData<"CreateInstance">
     >
   > {
-    const parsedAttributes =
-      this.attributeConverter.parseAttributesToCorrectTypes(attributes);
+    // const parsedAttributes =
+    // this.attributeConverter.parseAttributesToCorrectTypes(attributes);
     // Don't set optional attributes explicitly to null on creation
-    const attributesWithoutNulls = Object.entries(parsedAttributes).reduce(
+    const attributesWithoutNulls = Object.entries(attributes).reduce(
       (obj, [k, v]) => (v === null ? obj : ((obj[k] = v), obj)),
       {}
     );

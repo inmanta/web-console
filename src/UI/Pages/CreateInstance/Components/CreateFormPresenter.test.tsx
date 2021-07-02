@@ -1,8 +1,7 @@
 import { TextInputTypes } from "@patternfly/react-core";
 import { CreateFormPresenter } from "./CreateFormPresenter";
-import { AttributeModel } from "@/Core";
+import { AttributeModel, Field } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
-import { Field } from "@/UI/Components";
 
 describe("CreateFormPresenter", () => {
   const attributes: AttributeModel[] = [
@@ -66,7 +65,7 @@ describe("CreateFormPresenter", () => {
   });
   it("Presents create instance form", () => {
     const createForm = createFormPresenter.presentForm(
-      attributes,
+      createFormPresenter.getFieldsForCreateForm(attributes),
       () => {
         return;
       },

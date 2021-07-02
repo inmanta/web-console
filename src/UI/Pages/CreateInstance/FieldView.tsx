@@ -7,7 +7,7 @@ import {
   FormGroup,
   TextInput,
 } from "@patternfly/react-core";
-import { Field } from "../../Components/ServiceInstanceForm/Field";
+import { Field } from "@/Core";
 
 interface Props {
   fields: Field[];
