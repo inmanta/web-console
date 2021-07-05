@@ -195,6 +195,10 @@ const dict = {
   "resources.column.value": "Value",
   "resources.column.numberOfDependencies": "Number of dependencies",
   "resources.column.deployState": "Deploy State",
+  "resources.filters.status.placeholder": "Select a Deploy State...",
+  "resources.filters.agent.placeholder": "Search for an agent...",
+  "resources.filters.value.placeholder": "Search for a value...",
+  "resources.filters.type.placeholder": "Search for a type...",
 
   /**
    * Navigation related text

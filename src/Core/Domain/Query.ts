@@ -16,9 +16,9 @@ import { EventParams } from "./EventParams";
 import { ProjectModel } from "./ProjectModel";
 import {
   LatestReleasedResource,
-  LatestReleasedResourceParams,
   RawLatestReleasedResource,
 } from "./LatestReleasedResource";
+import { LatestReleasedResourceParams } from "./LatestReleasedResourceParams";
 
 type Query =
   | ServicesQuery

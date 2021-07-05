@@ -14,3 +14,4 @@ export * from "./Diagnostics";
 export * as EventParams from "./EventParams";
 export * from "./Params";
 export * from "./LatestReleasedResource";
+export * as LatestReleasedResourceParams from "./LatestReleasedResourceParams";

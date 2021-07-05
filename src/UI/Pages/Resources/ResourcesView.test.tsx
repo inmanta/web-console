@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
@@ -16,7 +16,7 @@ import {
   LatestReleasedResourcesStateHelper,
 } from "@/Data";
 import { ResourcesView } from "./ResourcesView";
-import userEvent from "@testing-library/user-event";
+import userEvent, { specialChars } from "@testing-library/user-event";
 
 function setup() {
   const store = getStoreInstance();
@@ -152,3 +152,68 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   userEvent.click(stateButton);
   expect(apiHelper.getInvocations()[1][1]).toContain("&sort=agent.asc");
 });
+
+it.each`
+  filterName  | filterType  | filterValue   | placeholderText               | filterUrlName
+  ${"Status"} | ${"select"} | ${"deployed"} | ${"Select a Deploy State..."} | ${"status"}
+  ${"Agent"}  | ${"search"} | ${"agent2"}   | ${"Search for an agent..."}   | ${"agent"}
+  ${"Type"}   | ${"search"} | ${"File"}     | ${"Search for a type..."}     | ${"resource_type"}
+  ${"Value"}  | ${"search"} | ${"tmp"}      | ${"Search for a value..."}    | ${"resource_id_value"}
+`(
+  "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
+  async ({
+    filterName,
+    filterType,
+    filterValue,
+    placeholderText,
+    filterUrlName,
+  }) => {
+    const { component, apiHelper } = setup();
+    render(component);
+
+    await act(async () => {
+      await apiHelper.resolve(Either.right(LatestReleasedResource.response));
+    });
+
+    const initialRows = await screen.findAllByRole("row", {
+      name: "Resource Table Row",
+    });
+    expect(initialRows).toHaveLength(6);
+
+    userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "Status" }
+      )
+    );
+    userEvent.click(screen.getByRole("option", { name: filterName }));
+
+    const input = await screen.findByPlaceholderText(placeholderText);
+    userEvent.click(input);
+    if (filterType === "select") {
+      const option = await screen.findByRole("option", { name: filterValue });
+      userEvent.click(option);
+    } else {
+      userEvent.type(input, `${filterValue}${specialChars.enter}`);
+    }
+
+    expect(apiHelper.getInvocations()[1][1]).toEqual(
+      `/api/v2/resource?limit=20&filter.${filterUrlName}=${filterValue}&sort=resource_type.asc`
+    );
+
+    await act(async () => {
+      await apiHelper.resolve(
+        Either.right({
+          data: LatestReleasedResource.response.data.slice(4),
+          links: LatestReleasedResource.response.links,
+          metadata: LatestReleasedResource.response.metadata,
+        })
+      );
+    });
+
+    const rowsAfter = await screen.findAllByRole("row", {
+      name: "Resource Table Row",
+    });
+    expect(rowsAfter).toHaveLength(2);
+  }
+);

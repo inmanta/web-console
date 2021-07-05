@@ -9,7 +9,7 @@ interface Props {
 
 export const ResourceRow: React.FC<Props> = ({ row }) => (
   <Tbody isExpanded={false}>
-    <Tr aria-label="ResourceRow-Intro">
+    <Tr aria-label="Resource Table Row">
       <Td dataLabel={words("resources.column.type")}>{row.type}</Td>
       <Td dataLabel={words("resources.column.agent")}>{row.agent}</Td>
       <Td dataLabel={words("resources.column.value")}>{row.value}</Td>

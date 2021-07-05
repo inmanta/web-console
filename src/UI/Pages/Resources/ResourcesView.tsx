@@ -1,4 +1,8 @@
-import { RemoteData, SortDirection } from "@/Core";
+import {
+  LatestReleasedResourceParams,
+  RemoteData,
+  SortDirection,
+} from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -21,6 +25,7 @@ export const Wrapper: React.FC = ({ children }) => (
 export const ResourcesView: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useState(20);
+  const [filter, setFilter] = useState<LatestReleasedResourceParams.Filter>({});
   const [sortColumn, setSortColumn] = useState<string | undefined>(
     "resource_type"
   );
@@ -30,6 +35,7 @@ export const ResourcesView: React.FC = () => {
   const [data, retry] = queryResolver.useContinuous<"LatestReleasedResources">({
     kind: "LatestReleasedResources",
     sort,
+    filter,
     pageSize,
   });
 
@@ -50,48 +56,46 @@ export const ResourcesView: React.FC = () => {
     data
   );
   const tableControls = (
-    <ResourceTableControls paginationWidget={paginationWidget} />
+    <ResourceTableControls
+      paginationWidget={paginationWidget}
+      filter={filter}
+      setFilter={setFilter}
+    />
   );
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => (
-        <Wrapper>
-          <LoadingView aria-label="ResourcesView-Loading" />
-        </Wrapper>
-      ),
-      failed: (error) => (
-        <Wrapper>
-          <ErrorView
-            message={error}
-            retry={retry}
-            aria-label="ResourcesView-Failed"
-          />
-        </Wrapper>
-      ),
-      success: (resources) =>
-        resources.data.length <= 0 ? (
-          <Wrapper>
-            <EmptyView
-              message={words("resources.empty.message")}
-              aria-label="ResourcesView-Empty"
+  return (
+    <Wrapper>
+      {tableControls}
+      {RemoteData.fold(
+        {
+          notAsked: () => null,
+          loading: () => <LoadingView aria-label="ResourcesView-Loading" />,
+          failed: (error) => (
+            <ErrorView
+              message={error}
+              retry={retry}
+              aria-label="ResourcesView-Failed"
             />
-          </Wrapper>
-        ) : (
-          <Wrapper>
-            {tableControls}
-            <ResourcesTableProvider
-              order={order}
-              setOrder={setOrder}
-              sortColumn={sortColumn}
-              setSortColumn={setSortColumn}
-              resources={resources.data}
-              aria-label="ResourcesView-Success"
-            />
-          </Wrapper>
-        ),
-    },
-    data
+          ),
+          success: (resources) =>
+            resources.data.length <= 0 ? (
+              <EmptyView
+                message={words("resources.empty.message")}
+                aria-label="ResourcesView-Empty"
+              />
+            ) : (
+              <ResourcesTableProvider
+                order={order}
+                setOrder={setOrder}
+                sortColumn={sortColumn}
+                setSortColumn={setSortColumn}
+                resources={resources.data}
+                aria-label="ResourcesView-Success"
+              />
+            ),
+        },
+        data
+      )}
+    </Wrapper>
   );
 };
