@@ -33,20 +33,14 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   onCancel,
 }) => {
   const [formState, setFormState] = useState(fieldsToFormState(fields));
-  const getChangeHandler = (path: string) => (_, event) => {
-    const target = event.target;
-    let val;
-    if (target.type === "radio") {
-      val = toOptionalBoolean(event.target.value);
-    } else {
-      val = event.target.value;
-    }
 
-    setFormState((prev) => {
-      const clone = { ...prev };
-      return set(clone, path, val);
-    });
-  };
+  const getUpdate =
+    (path: string) =>
+    (value: unknown): void =>
+      setFormState((prev) => {
+        const clone = { ...prev };
+        return set(clone, path, value);
+      });
 
   return (
     <>
@@ -56,7 +50,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
             key={field.name}
             field={field}
             formState={formState}
-            getChangeHandler={getChangeHandler}
+            getUpdate={getUpdate}
             path={null}
           />
         ))}
@@ -73,13 +67,14 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     </>
   );
 };
-type ChangeHandler = (_, event) => void;
-type GetChangeHandler = (path: string) => ChangeHandler;
+
+type Update = (value: unknown) => void;
+type GetUpdate = (path: string) => Update;
 
 interface FieldProps {
   field: Field;
   formState: InstanceAttributeModel;
-  getChangeHandler: GetChangeHandler;
+  getUpdate: GetUpdate;
   path: string | null;
 }
 
@@ -89,7 +84,7 @@ const makePath = (path: string | null, next: string): string =>
 const FieldInput: React.FC<FieldProps> = ({
   field,
   formState,
-  getChangeHandler,
+  getUpdate,
   path,
 }) => {
   switch (field.kind) {
@@ -98,7 +93,7 @@ const FieldInput: React.FC<FieldProps> = ({
         <FlatFieldInput
           field={field}
           value={get(formState, makePath(path, field.name))}
-          changeHandler={getChangeHandler(makePath(path, field.name))}
+          update={getUpdate(makePath(path, field.name))}
         />
       );
     case "Nested":
@@ -106,7 +101,7 @@ const FieldInput: React.FC<FieldProps> = ({
         <NestedFieldInput
           field={field}
           formState={formState}
-          getChangeHandler={getChangeHandler}
+          getUpdate={getUpdate}
           path={path}
         />
       );
@@ -115,7 +110,7 @@ const FieldInput: React.FC<FieldProps> = ({
         <DictListFieldInput
           field={field}
           formState={formState}
-          getChangeHandler={getChangeHandler}
+          getUpdate={getUpdate}
           path={path}
         />
       );
@@ -149,11 +144,23 @@ const getTypeHintForType = (typeName: string): string | undefined => {
 interface FlatProps {
   field: FlatField;
   value: unknown;
-  changeHandler: ChangeHandler;
+  update: Update;
 }
 
-const FlatFieldInput: React.FC<FlatProps> = ({ field, changeHandler, value }) =>
-  field.inputType === "bool" ? (
+const FlatFieldInput: React.FC<FlatProps> = ({ field, value, update }) => {
+  const changeHandler = (_, event) => {
+    const target = event.target;
+    let val;
+    if (target.type === "radio") {
+      val = toOptionalBoolean(event.target.value);
+    } else {
+      val = event.target.value;
+    }
+
+    update(val);
+  };
+
+  return field.inputType === "bool" ? (
     <BooleanFormInput
       attributeName={field.name}
       isOptional={field.isOptional}
@@ -175,18 +182,19 @@ const FlatFieldInput: React.FC<FlatProps> = ({ field, changeHandler, value }) =>
       key={field.name}
     />
   );
+};
 
 interface NestedProps {
   field: NestedField;
   formState: InstanceAttributeModel;
-  getChangeHandler: GetChangeHandler;
+  getUpdate: GetUpdate;
   path: string | null;
 }
 
 const NestedFieldInput: React.FC<NestedProps> = ({
   field,
   formState,
-  getChangeHandler,
+  getUpdate,
   path,
 }) => (
   <FormFieldGroupExpandable
@@ -205,7 +213,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
         field={childField}
         key={makePath(path, `${field.name}.${childField.name}`)}
         formState={formState}
-        getChangeHandler={getChangeHandler}
+        getUpdate={getUpdate}
         path={makePath(path, field.name)}
       />
     ))}
@@ -215,39 +223,29 @@ const NestedFieldInput: React.FC<NestedProps> = ({
 interface DictListProps {
   field: DictListField;
   formState: InstanceAttributeModel;
-  getChangeHandler: GetChangeHandler;
+  getUpdate: GetUpdate;
   path: string | null;
 }
 
 const DictListFieldInput: React.FC<DictListProps> = ({
   field,
   formState,
-  getChangeHandler,
+  getUpdate,
   path,
 }) => {
   const list = get(formState, makePath(path, field.name));
 
-  const onAdd = () => {
-    const handler = getChangeHandler(makePath(path, field.name));
-    const event = {
-      target: {
-        type: "text",
-        value: [...list, fieldsToFormState(field.fields)],
-      },
-    };
-    handler(undefined, event);
-  };
+  const onAdd = () =>
+    getUpdate(makePath(path, field.name))([
+      ...list,
+      fieldsToFormState(field.fields),
+    ]);
 
-  const getOnDelete = (index: number) => () => {
-    const handler = getChangeHandler(makePath(path, field.name));
-    const event = {
-      target: {
-        type: "text",
-        value: [...list.slice(0, index), ...list.slice(index + 1, list.length)],
-      },
-    };
-    handler(undefined, event);
-  };
+  const getOnDelete = (index: number) => () =>
+    getUpdate(makePath(path, field.name))([
+      ...list.slice(0, index),
+      ...list.slice(index + 1, list.length),
+    ]);
 
   return (
     <FormFieldGroupExpandable
@@ -288,7 +286,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               field={childField}
               key={makePath(path, `${field.name}.${index}.${childField.name}`)}
               formState={formState}
-              getChangeHandler={getChangeHandler}
+              getUpdate={getUpdate}
               path={makePath(path, `${field.name}.${index}`)}
             />
           ))}
