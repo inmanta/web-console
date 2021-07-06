@@ -200,13 +200,13 @@ const NestedFieldInput: React.FC<NestedProps> = ({
       />
     }
   >
-    {field.fields.map((field) => (
+    {field.fields.map((childField) => (
       <FieldInput
-        field={field}
-        key={field.name}
+        field={childField}
+        key={makePath(path, `${field.name}.${childField.name}`)}
         formState={formState}
         getChangeHandler={getChangeHandler}
-        path={`${path}.${field.name}`}
+        path={makePath(path, field.name)}
       />
     ))}
   </FormFieldGroupExpandable>
@@ -270,10 +270,10 @@ const DictListFieldInput: React.FC<DictListProps> = ({
             />
           }
         >
-          {field.fields.map((field) => (
+          {field.fields.map((childField) => (
             <FieldInput
-              field={field}
-              key={makePath(path, `${field.name}.${index}`)}
+              field={childField}
+              key={makePath(path, `${field.name}.${index}.${childField.name}`)}
               formState={formState}
               getChangeHandler={getChangeHandler}
               path={makePath(path, `${field.name}.${index}`)}
