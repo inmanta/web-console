@@ -225,15 +225,28 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   getChangeHandler,
   path,
 }) => {
-  const [list, setList] = useState(get(formState, makePath(path, field.name)));
+  const list = get(formState, makePath(path, field.name));
 
   const onAdd = () => {
-    if (!Array.isArray(list)) return;
-    setList([...list, fieldsToFormState(field.fields)]);
+    const handler = getChangeHandler(makePath(path, field.name));
+    const event = {
+      target: {
+        type: "text",
+        value: [...list, fieldsToFormState(field.fields)],
+      },
+    };
+    handler(undefined, event);
   };
 
   const getOnDelete = (index: number) => () => {
-    setList([...list.slice(0, index), ...list.slice(index + 1, list.length)]);
+    const handler = getChangeHandler(makePath(path, field.name));
+    const event = {
+      target: {
+        type: "text",
+        value: [...list.slice(0, index), ...list.slice(index + 1, list.length)],
+      },
+    };
+    handler(undefined, event);
   };
 
   return (
