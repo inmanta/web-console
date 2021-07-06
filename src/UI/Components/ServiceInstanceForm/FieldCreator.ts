@@ -79,7 +79,7 @@ export function fieldsToFormState(fields: Field[]): InstanceAttributeModel {
       }
 
       case "DictList": {
-        acc[curr.name] = [fieldsToFormState(curr.fields)];
+        acc[curr.name] = [];
         return acc;
       }
     }

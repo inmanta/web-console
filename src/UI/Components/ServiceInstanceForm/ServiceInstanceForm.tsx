@@ -7,6 +7,7 @@ import {
   FormFieldGroupExpandable,
   FormFieldGroupHeader,
 } from "@patternfly/react-core";
+import { PlusIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { toOptionalBoolean } from "@/Data";
 import { BooleanFormInput } from "./BooleanFormInput";
@@ -226,13 +227,13 @@ const DictListFieldInput: React.FC<DictListProps> = ({
 }) => {
   const [list, setList] = useState(get(formState, makePath(path, field.name)));
 
-  const onCreate = () => {
+  const onAdd = () => {
     if (!Array.isArray(list)) return;
     setList([...list, fieldsToFormState(field.fields)]);
   };
 
-  const onDelete = () => {
-    setList([]);
+  const getOnDelete = (index: number) => () => {
+    setList([...list.slice(0, index), ...list.slice(index + 1, list.length)]);
   };
 
   return (
@@ -245,14 +246,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
           }}
           titleDescription={field.description}
           actions={
-            <>
-              <Button variant="link" onClick={onDelete}>
-                Delete all
-              </Button>
-              <Button variant="secondary" onClick={onCreate}>
-                Create
-              </Button>
-            </>
+            <Button variant="link" icon={<PlusIcon />} onClick={onAdd}>
+              Add
+            </Button>
           }
         />
       }
@@ -266,6 +262,11 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                 text: index,
                 id: "nested-field-group1-titleText-id",
               }}
+              actions={
+                <Button variant="link" onClick={getOnDelete(index)}>
+                  Delete
+                </Button>
+              }
             />
           }
         >
