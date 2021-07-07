@@ -5,7 +5,7 @@ export * from "./InstanceLogModel";
 export * from "./InventoryTable";
 export * from "./ProjectModel";
 export * as Query from "./Query";
-export * from "./ResourceModel";
+export * from "./InstanceResourceModel";
 export * from "./ServiceInstanceModel";
 export * as ServiceInstanceParams from "./ServiceInstanceParams";
 export * from "./ServiceModel";

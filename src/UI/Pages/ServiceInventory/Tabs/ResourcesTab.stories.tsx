@@ -4,14 +4,14 @@ import {
   StaticScheduler,
   Outcome,
   InstantFetcher,
-  Resource,
+  InstanceResource,
   DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ResourcesStateHelper,
-  ResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  InstanceResourcesQueryManager,
   getStoreInstance,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
@@ -22,13 +22,15 @@ export default {
   component: ResourcesTab,
 };
 
-const Template: React.FC<{ outcome: Outcome<"Resources"> }> = ({ outcome }) => {
+const Template: React.FC<{ outcome: Outcome<"InstanceResources"> }> = ({
+  outcome,
+}) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ResourcesQueryManager(
-        new InstantFetcher<"Resources">(outcome),
-        new ResourcesStateHelper(store),
+      new InstanceResourcesQueryManager(
+        new InstantFetcher<"InstanceResources">(outcome),
+        new InstanceResourcesStateHelper(store),
         new StaticScheduler(),
         "34a961ba-db3c-486e-8d85-1438d8e88909"
       ),
@@ -67,5 +69,7 @@ export const Failed: React.FC = () => (
 );
 
 export const Success: React.FC = () => (
-  <Template outcome={{ kind: "Success", data: { data: Resource.listA } }} />
+  <Template
+    outcome={{ kind: "Success", data: { data: InstanceResource.listA } }}
+  />
 );

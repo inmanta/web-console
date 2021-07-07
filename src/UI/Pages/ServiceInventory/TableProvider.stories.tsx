@@ -13,8 +13,8 @@ import { ServiceModel } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
   getStoreInstance,
 } from "@/Data";
 import { MemoryRouter } from "react-router";
@@ -28,12 +28,12 @@ const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ResourcesQueryManager(
-        new InstantFetcher<"Resources">({
+      new InstanceResourcesQueryManager(
+        new InstantFetcher<"InstanceResources">({
           kind: "Success",
           data: { data: [] },
         }),
-        new ResourcesStateHelper(store),
+        new InstanceResourcesStateHelper(store),
         new StaticScheduler(),
         Service.a.environment
       ),

@@ -13,8 +13,8 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { StoreProvider } from "easy-peasy";
 import {
   QueryResolverImpl,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
   getStoreInstance,
 } from "@/Data";
 import userEvent from "@testing-library/user-event";
@@ -29,8 +29,8 @@ test("InventoryTable can be expanded", async () => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ResourcesQueryManager(
-        new InstantFetcher<"Resources">({
+      new InstanceResourcesQueryManager(
+        new InstantFetcher<"InstanceResources">({
           kind: "Success",
           data: {
             data: [
@@ -41,7 +41,7 @@ test("InventoryTable can be expanded", async () => {
             ],
           },
         }),
-        new ResourcesStateHelper(store),
+        new InstanceResourcesStateHelper(store),
         new StaticScheduler(),
         "env"
       ),
@@ -75,8 +75,8 @@ test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ResourcesQueryManager(
-        new InstantFetcher<"Resources">({
+      new InstanceResourcesQueryManager(
+        new InstantFetcher<"InstanceResources">({
           kind: "Success",
           data: {
             data: [
@@ -87,7 +87,7 @@ test("ServiceInventory can show resources for instance", async () => {
             ],
           },
         }),
-        new ResourcesStateHelper(store),
+        new InstanceResourcesStateHelper(store),
         new StaticScheduler(),
         "env"
       ),

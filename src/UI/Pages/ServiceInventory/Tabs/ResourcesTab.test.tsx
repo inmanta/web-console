@@ -10,8 +10,8 @@ import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ResourcesStateHelper,
-  ResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  InstanceResourcesQueryManager,
   getStoreInstance,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
@@ -20,12 +20,12 @@ import { ResourcesTab } from "./ResourcesTab";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"Resources">();
+  const apiHelper = new DeferredFetcher<"InstanceResources">();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ResourcesQueryManager(
+      new InstanceResourcesQueryManager(
         apiHelper,
-        new ResourcesStateHelper(store),
+        new InstanceResourcesStateHelper(store),
         scheduler,
         "34a961ba-db3c-486e-8d85-1438d8e88909"
       ),

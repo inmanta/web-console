@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ResourceModel } from "@/Core";
+import { InstanceResourceModel } from "@/Core";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Button } from "@patternfly/react-core";
 import {
@@ -11,7 +11,7 @@ import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
-  resources: ResourceModel[];
+  resources: InstanceResourceModel[];
   "aria-label"?: string;
   id?: string;
 }

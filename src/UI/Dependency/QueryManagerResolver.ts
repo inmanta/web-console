@@ -9,8 +9,8 @@ import {
   ServiceStateHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  ResourcesStateHelper,
-  ResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  InstanceResourcesQueryManager,
   EventsQueryManager,
   EventsStateHelper,
   ServicesQueryManager,
@@ -98,9 +98,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new ServiceConfigFinalizer(serviceStateHelper),
         environment
       ),
-      new ResourcesQueryManager(
-        new FetcherImpl<"Resources">(this.baseApiHelper),
-        new ResourcesStateHelper(this.store),
+      new InstanceResourcesQueryManager(
+        new FetcherImpl<"InstanceResources">(this.baseApiHelper),
+        new InstanceResourcesStateHelper(this.store),
         scheduler,
         environment
       ),

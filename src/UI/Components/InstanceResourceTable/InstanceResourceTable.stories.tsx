@@ -1,7 +1,7 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { Resource } from "@/Test";
-import { ResourceTable } from "./ResourceTable";
+import { InstanceResource } from "@/Test";
+import { ResourceTable } from "./InstanceResourceTable";
 import { DependencyProvider } from "@/UI/Dependency";
 import { UrlManagerImpl } from "@/UI/Utils";
 
@@ -25,5 +25,5 @@ Empty.args = {
 
 export const RealData = Template.bind({});
 RealData.args = {
-  resources: Resource.listA,
+  resources: InstanceResource.listA,
 };

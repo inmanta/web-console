@@ -6,7 +6,7 @@ export * from "./Events";
 export * from "./InstanceConfig";
 export * from "./InstanceLogs";
 export * from "./Projects";
-export * from "./Resources";
+export * from "./InstanceResources";
 export * from "./Service";
 export * from "./ServiceConfig";
 export * from "./ServiceInstances";

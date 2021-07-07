@@ -13,8 +13,8 @@ import {
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   QueryResolverImpl,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
   SetStatePoster,
@@ -34,7 +34,7 @@ export interface Handles {
   component: React.ReactElement;
   scheduler: SchedulerImpl;
   serviceInstancesFetcher: DeferredFetcher<"ServiceInstances">;
-  resourcesFetcher: DeferredFetcher<"Resources">;
+  resourcesFetcher: DeferredFetcher<"InstanceResources">;
 }
 
 export class ServiceInventoryPrepper {
@@ -52,10 +52,10 @@ export class ServiceInventoryPrepper {
       service.environment
     );
 
-    const resourcesFetcher = new DeferredFetcher<"Resources">();
-    const resourcesHelper = new ResourcesQueryManager(
+    const resourcesFetcher = new DeferredFetcher<"InstanceResources">();
+    const resourcesHelper = new InstanceResourcesQueryManager(
       resourcesFetcher,
-      new ResourcesStateHelper(store),
+      new InstanceResourcesStateHelper(store),
       scheduler,
       service.environment
     );

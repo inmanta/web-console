@@ -1,6 +1,6 @@
 import { InstanceEvent } from "./EventModel";
 import { InstanceLog } from "./InstanceLogModel";
-import { ResourceModel } from "./ResourceModel";
+import { InstanceResourceModel as InstanceResourceModel } from "./InstanceResourceModel";
 import {
   VersionedServiceInstanceIdentifier,
   ServiceInstanceModel,
@@ -25,7 +25,7 @@ type Query =
   | ServiceQuery
   | ServiceInstancesQuery
   | ServiceConfigQuery
-  | ResourcesQuery
+  | InstanceResourcesQuery
   | InstanceEventsQuery
   | InstanceLogsQuery
   | InstanceConfigQuery
@@ -125,16 +125,17 @@ interface ServiceConfigManifest {
  * We are not asking for 1 specific resource. We are asking for all the
  * resources of 1 specific service instance.
  */
-export interface ResourcesQuery extends VersionedServiceInstanceIdentifier {
-  kind: "Resources";
+export interface InstanceResourcesQuery
+  extends VersionedServiceInstanceIdentifier {
+  kind: "InstanceResources";
 }
 
-interface ResourcesManifest {
+interface InstanceResourcesManifest {
   error: string;
-  apiResponse: { data: ResourceModel[] };
-  data: ResourceModel[];
-  usedData: ResourceModel[];
-  query: ResourcesQuery;
+  apiResponse: { data: InstanceResourceModel[] };
+  data: InstanceResourceModel[];
+  usedData: InstanceResourceModel[];
+  query: InstanceResourcesQuery;
 }
 
 /**
@@ -244,7 +245,7 @@ interface Manifest {
   Service: ServiceManifest;
   ServiceInstances: ServiceInstancesManifest;
   ServiceConfig: ServiceConfigManifest;
-  Resources: ResourcesManifest;
+  InstanceResources: InstanceResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;
   InstanceConfig: InstanceConfigManifest;
