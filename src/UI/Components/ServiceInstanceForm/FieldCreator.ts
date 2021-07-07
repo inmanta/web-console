@@ -1,3 +1,4 @@
+import { times } from "lodash";
 import {
   AttributeModel,
   EmbeddedEntity,
@@ -79,7 +80,12 @@ export function fieldsToFormState(fields: Field[]): InstanceAttributeModel {
       }
 
       case "DictList": {
-        acc[curr.name] = [];
+        if (curr.min <= 0) {
+          acc[curr.name] = [];
+        } else {
+          acc[curr.name] = times(curr.min, fieldsToFormState(curr.fields));
+        }
+
         return acc;
       }
     }

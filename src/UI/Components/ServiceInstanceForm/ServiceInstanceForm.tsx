@@ -235,11 +235,13 @@ const DictListFieldInput: React.FC<DictListProps> = ({
 }) => {
   const list = get(formState, makePath(path, field.name));
 
-  const onAdd = () =>
+  const onAdd = () => {
+    if (list.length >= field.max) return;
     getUpdate(makePath(path, field.name))([
       ...list,
       fieldsToFormState(field.fields),
     ]);
+  };
 
   const getOnDelete = (index: number) => () =>
     getUpdate(makePath(path, field.name))([
@@ -252,12 +254,17 @@ const DictListFieldInput: React.FC<DictListProps> = ({
       header={
         <FormFieldGroupHeader
           titleText={{
-            text: field.name,
+            text: `${field.name} (${list.length})`,
             id: "field-group1-titleText-id",
           }}
           titleDescription={field.description}
           actions={
-            <Button variant="link" icon={<PlusIcon />} onClick={onAdd}>
+            <Button
+              variant="link"
+              icon={<PlusIcon />}
+              onClick={onAdd}
+              isDisabled={list.length >= field.max}
+            >
               Add
             </Button>
           }
@@ -270,11 +277,15 @@ const DictListFieldInput: React.FC<DictListProps> = ({
           header={
             <FormFieldGroupHeader
               titleText={{
-                text: index,
+                text: index + 1,
                 id: "nested-field-group1-titleText-id",
               }}
               actions={
-                <Button variant="link" onClick={getOnDelete(index)}>
+                <Button
+                  variant="link"
+                  onClick={getOnDelete(index)}
+                  isDisabled={field.min > index}
+                >
                   Delete
                 </Button>
               }
