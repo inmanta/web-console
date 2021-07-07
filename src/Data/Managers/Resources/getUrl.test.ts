@@ -2,8 +2,8 @@ import { Query } from "@/Core";
 import { getUrl } from "./getUrl";
 
 describe("getUrl for latest released resources ", () => {
-  const baseQuery: Query.SubQuery<"LatestReleasedResources"> = {
-    kind: "LatestReleasedResources",
+  const baseQuery: Query.SubQuery<"Resources"> = {
+    kind: "Resources",
     pageSize: 20,
   };
   it.each`
@@ -16,7 +16,7 @@ describe("getUrl for latest released resources ", () => {
   `(
     "returns correct url $url page size $pageSize",
     ({ filter, sort, pageSize, url }) => {
-      const query: Query.SubQuery<"LatestReleasedResources"> = {
+      const query: Query.SubQuery<"Resources"> = {
         ...baseQuery,
         pageSize,
         filter,

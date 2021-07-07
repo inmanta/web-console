@@ -14,11 +14,8 @@ import { ServiceInstanceParams } from "./ServiceInstanceParams";
 import { RawDiagnostics, Diagnostics } from "./Diagnostics";
 import { EventParams } from "./EventParams";
 import { ProjectModel } from "./ProjectModel";
-import {
-  LatestReleasedResource,
-  RawLatestReleasedResource,
-} from "./LatestReleasedResource";
-import { LatestReleasedResourceParams } from "./LatestReleasedResourceParams";
+import { Resource, RawResource } from "./Resource";
+import { ResourceParams as ResourceParams } from "./ResourceParams";
 
 type Query =
   | ServicesQuery
@@ -31,7 +28,7 @@ type Query =
   | InstanceConfigQuery
   | DiagnosticsQuery
   | ProjectsQuery
-  | LatestReleasedResourcesQuery;
+  | ResourcesQuery;
 
 export type Type = Query;
 
@@ -210,30 +207,28 @@ interface DiagnosticsManifest {
   query: DiagnosticsQuery;
 }
 
-/** LatestReleasedResources represent the latest version of resources according to the model version number. */
-export interface LatestReleasedResourcesQuery
-  extends LatestReleasedResourceParams {
-  kind: "LatestReleasedResources";
+export interface ResourcesQuery extends ResourceParams {
+  kind: "Resources";
 }
 
-interface LatestReleasedResourcesManifest {
+interface ResourcesManifest {
   error: string;
   apiResponse: {
-    data: RawLatestReleasedResource[];
+    data: RawResource[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   data: {
-    data: LatestReleasedResource[];
+    data: Resource[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   usedData: {
-    data: LatestReleasedResource[];
+    data: Resource[];
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: LatestReleasedResourcesQuery;
+  query: ResourcesQuery;
 }
 
 /**
@@ -251,7 +246,7 @@ interface Manifest {
   InstanceConfig: InstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
   Projects: ProjectsManifest;
-  LatestReleasedResources: LatestReleasedResourcesManifest;
+  Resources: ResourcesManifest;
 }
 
 /**

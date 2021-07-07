@@ -5,12 +5,12 @@ import {
   SelectVariant,
   SelectOption,
 } from "@patternfly/react-core";
-import { LatestReleasedResourceParams } from "@/Core";
+import { ResourceParams } from "@/Core";
 import { FilterIcon } from "@patternfly/react-icons";
 
 interface Props {
-  filterKind: LatestReleasedResourceParams.Kind | string;
-  setFilterKind: (kind: LatestReleasedResourceParams.Kind) => void;
+  filterKind: ResourceParams.Kind | string;
+  setFilterKind: (kind: ResourceParams.Kind) => void;
 }
 
 export const FilterPicker: React.FC<Props> = ({
@@ -21,10 +21,10 @@ export const FilterPicker: React.FC<Props> = ({
 
   const onSelect = (event, selection) => {
     setFilterOpen(false);
-    setFilterKind(selection as LatestReleasedResourceParams.Kind);
+    setFilterKind(selection as ResourceParams.Kind);
   };
 
-  const items = LatestReleasedResourceParams.List;
+  const items = ResourceParams.List;
 
   return (
     <ToolbarItem>

@@ -1,7 +1,7 @@
-import { ResourceStatus } from "./LatestReleasedResource";
+import { ResourceStatus } from "./Resource";
 import { Sort } from "./Params";
 
-export interface LatestReleasedResourceParams {
+export interface ResourceParams {
   sort?: Sort;
   filter?: Filter;
   pageSize: number;

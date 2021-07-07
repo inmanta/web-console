@@ -4,7 +4,7 @@ import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
   DynamicQueryManagerResolver,
-  LatestReleasedResource,
+  Resource,
   StaticScheduler,
 } from "@/Test";
 import { Either } from "@/Core";
@@ -12,8 +12,8 @@ import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  LatestReleasedResourcesQueryManager,
-  LatestReleasedResourcesStateHelper,
+  ResourcesQueryManager,
+  ResourcesStateHelper,
 } from "@/Data";
 import { ResourcesView } from "./ResourcesView";
 import userEvent, { specialChars } from "@testing-library/user-event";
@@ -21,13 +21,13 @@ import userEvent, { specialChars } from "@testing-library/user-event";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"LatestReleasedResources">();
+  const apiHelper = new DeferredFetcher<"Resources">();
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new LatestReleasedResourcesQueryManager(
+      new ResourcesQueryManager(
         apiHelper,
-        new LatestReleasedResourcesStateHelper(store, environment),
+        new ResourcesStateHelper(store, environment),
         scheduler,
         environment
       ),
@@ -89,7 +89,7 @@ test("ResourcesView shows success table", async () => {
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right(LatestReleasedResource.response));
+  apiHelper.resolve(Either.right(Resource.response));
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
@@ -102,16 +102,15 @@ test("ResourcesView shows next page of resources", async () => {
 
   apiHelper.resolve(
     Either.right({
-      data: LatestReleasedResource.response.data.slice(0, 3),
-      links: { ...LatestReleasedResource.response.links, next: "/fake-link" },
-      metadata: LatestReleasedResource.response.metadata,
+      data: Resource.response.data.slice(0, 3),
+      links: { ...Resource.response.links, next: "/fake-link" },
+      metadata: Resource.response.metadata,
     })
   );
 
   expect(
     await screen.findByRole("cell", {
-      name: LatestReleasedResource.response.data[0].id_details
-        .resource_id_value,
+      name: Resource.response.data[0].id_details.resource_id_value,
     })
   ).toBeInTheDocument();
 
@@ -119,16 +118,15 @@ test("ResourcesView shows next page of resources", async () => {
 
   apiHelper.resolve(
     Either.right({
-      data: LatestReleasedResource.response.data.slice(3),
-      links: { ...LatestReleasedResource.response.links, next: "/fake-link" },
-      metadata: LatestReleasedResource.response.metadata,
+      data: Resource.response.data.slice(3),
+      links: { ...Resource.response.links, next: "/fake-link" },
+      metadata: Resource.response.metadata,
     })
   );
 
   expect(
     await screen.findByRole("cell", {
-      name: LatestReleasedResource.response.data[3].id_details
-        .resource_id_value,
+      name: Resource.response.data[3].id_details.resource_id_value,
     })
   ).toBeInTheDocument();
 });
@@ -136,7 +134,7 @@ test("ResourcesView shows next page of resources", async () => {
 test("ResourcesView shows sorting buttons for sortable columns", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right(LatestReleasedResource.response));
+  apiHelper.resolve(Either.right(Resource.response));
   expect(await screen.findByRole("button", { name: /type/i })).toBeVisible();
   expect(screen.getByRole("button", { name: /agent/i })).toBeVisible();
   expect(screen.getByRole("button", { name: /value/i })).toBeVisible();
@@ -146,7 +144,7 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
 test("ResourcesView sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right(LatestReleasedResource.response));
+  apiHelper.resolve(Either.right(Resource.response));
   const stateButton = await screen.findByRole("button", { name: /agent/i });
   expect(stateButton).toBeVisible();
   userEvent.click(stateButton);
@@ -172,7 +170,7 @@ it.each`
     render(component);
 
     await act(async () => {
-      await apiHelper.resolve(Either.right(LatestReleasedResource.response));
+      await apiHelper.resolve(Either.right(Resource.response));
     });
 
     const initialRows = await screen.findAllByRole("row", {
@@ -204,9 +202,9 @@ it.each`
     await act(async () => {
       await apiHelper.resolve(
         Either.right({
-          data: LatestReleasedResource.response.data.slice(4),
-          links: LatestReleasedResource.response.links,
-          metadata: LatestReleasedResource.response.metadata,
+          data: Resource.response.data.slice(4),
+          links: Resource.response.links,
+          metadata: Resource.response.metadata,
         })
       );
     });

@@ -1,12 +1,12 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { LatestReleasedResourceParams } from "@/Core";
+import { ResourceParams } from "@/Core";
 import { FilterWidget } from "./FilterWidget";
 
 interface Props {
   paginationWidget: React.ReactNode;
-  filter: LatestReleasedResourceParams.Filter;
-  setFilter: (filter: LatestReleasedResourceParams.Filter) => void;
+  filter: ResourceParams.Filter;
+  setFilter: (filter: ResourceParams.Filter) => void;
 }
 
 export const ResourceTableControls: React.FC<Props> = ({

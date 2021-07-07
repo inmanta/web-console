@@ -1,16 +1,11 @@
-import {
-  Scheduler,
-  Fetcher,
-  StateHelper,
-  LatestReleasedResourceParams,
-} from "@/Core";
+import { Scheduler, Fetcher, StateHelper, ResourceParams } from "@/Core";
 import { ContinuousQueryManagerImpl } from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
-export class LatestReleasedResourcesQueryManager extends ContinuousQueryManagerImpl<"LatestReleasedResources"> {
+export class ResourcesQueryManager extends ContinuousQueryManagerImpl<"Resources"> {
   constructor(
-    fetcher: Fetcher<"LatestReleasedResources">,
-    stateHelper: StateHelper<"LatestReleasedResources">,
+    fetcher: Fetcher<"Resources">,
+    stateHelper: StateHelper<"Resources">,
     scheduler: Scheduler,
     environment: string
   ) {
@@ -26,7 +21,7 @@ export class LatestReleasedResourcesQueryManager extends ContinuousQueryManagerI
         sort?.order,
         stringifyFilter(filter),
       ],
-      "LatestReleasedResources",
+      "Resources",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")
@@ -45,8 +40,6 @@ export class LatestReleasedResourcesQueryManager extends ContinuousQueryManagerI
   }
 }
 
-function stringifyFilter(
-  filter: LatestReleasedResourceParams.Filter | undefined
-): string {
+function stringifyFilter(filter: ResourceParams.Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

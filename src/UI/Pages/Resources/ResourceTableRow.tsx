@@ -1,13 +1,13 @@
 import React from "react";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { LatestReleasedResourceRow } from "@/Core";
+import { ResourceRow } from "@/Core";
 import { words } from "@/UI/words";
 
 interface Props {
-  row: LatestReleasedResourceRow;
+  row: ResourceRow;
 }
 
-export const ResourceRow: React.FC<Props> = ({ row }) => (
+export const ResourceTableRow: React.FC<Props> = ({ row }) => (
   <Tbody isExpanded={false}>
     <Tr aria-label="Resource Table Row">
       <Td dataLabel={words("resources.column.type")}>{row.type}</Td>

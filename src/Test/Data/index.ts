@@ -7,4 +7,4 @@ export * as ServiceInstance from "./ServiceInstance";
 export * as Pagination from "./Pagination";
 export * as Project from "./Project";
 export * as InstanceResource from "./InstanceResource";
-export * as LatestReleasedResource from "./LatestReleasedResource";
+export * as Resource from "./Resource";

@@ -13,5 +13,5 @@ export * as Pagination from "./Pagination";
 export * from "./Diagnostics";
 export * as EventParams from "./EventParams";
 export * from "./Params";
-export * from "./LatestReleasedResource";
-export * as LatestReleasedResourceParams from "./LatestReleasedResourceParams";
+export * from "./Resource";
+export * as ResourceParams from "./ResourceParams";

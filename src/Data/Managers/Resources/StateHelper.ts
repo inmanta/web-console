@@ -2,18 +2,13 @@ import { Query, RemoteData, ResourceStatus, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
-type Data = RemoteData.Type<
-  Query.Error<"LatestReleasedResources">,
-  Query.Data<"LatestReleasedResources">
->;
+type Data = RemoteData.Type<Query.Error<"Resources">, Query.Data<"Resources">>;
 type ApiData = RemoteData.Type<
-  Query.Error<"LatestReleasedResources">,
-  Query.ApiResponse<"LatestReleasedResources">
+  Query.Error<"Resources">,
+  Query.ApiResponse<"Resources">
 >;
 
-export class LatestReleasedResourcesStateHelper
-  implements StateHelper<"LatestReleasedResources">
-{
+export class ResourcesStateHelper implements StateHelper<"Resources"> {
   constructor(
     private readonly store: Store,
     private readonly environment: string
@@ -30,7 +25,7 @@ export class LatestReleasedResourcesStateHelper
       }),
       data
     );
-    this.store.dispatch.latestReleasedResources.setList({
+    this.store.dispatch.resources.setList({
       environment: this.environment,
       data: unwrapped,
     });
@@ -38,8 +33,7 @@ export class LatestReleasedResourcesStateHelper
 
   getHooked(): Data {
     return useStoreState(
-      (state) =>
-        this.enforce(state.latestReleasedResources.listByEnv[this.environment]),
+      (state) => this.enforce(state.resources.listByEnv[this.environment]),
       isEqual
     );
   }
@@ -51,7 +45,7 @@ export class LatestReleasedResourcesStateHelper
 
   getOnce(): Data {
     return this.enforce(
-      this.store.getState().latestReleasedResources.listByEnv[this.environment]
+      this.store.getState().resources.listByEnv[this.environment]
     );
   }
 }

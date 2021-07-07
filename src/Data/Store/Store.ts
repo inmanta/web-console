@@ -16,10 +16,7 @@ import {
 import { EventsSlice, eventsSlice } from "./EventsSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
 import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";
-import {
-  latestReleasedResourcesSlice,
-  LatestReleasedResourcesSlice,
-} from "./LatestReleasedResourcesSlice";
+import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 
 export interface StoreModel {
   projects: ProjectsSlice;
@@ -31,7 +28,7 @@ export interface StoreModel {
   instanceLogs: InstanceLogsSlice;
   instanceConfig: InstanceConfigSlice;
   diagnostics: DiagnosticsSlice;
-  latestReleasedResources: LatestReleasedResourcesSlice;
+  resources: ResourcesSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -44,5 +41,5 @@ export const storeModel: StoreModel = {
   instanceResources: instanceResourcesSlice,
   events: eventsSlice,
   diagnostics: diagnosticsSlice,
-  latestReleasedResources: latestReleasedResourcesSlice,
+  resources: resourcesSlice,
 };

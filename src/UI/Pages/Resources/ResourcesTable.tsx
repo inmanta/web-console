@@ -1,4 +1,4 @@
-import { LatestReleasedResourceRow, SortDirection } from "@/Core";
+import { ResourceRow, SortDirection } from "@/Core";
 import {
   OnSort,
   TableComposable,
@@ -7,11 +7,11 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import React from "react";
-import { ResourceRow } from "./ResourceRow";
+import { ResourceTableRow } from "./ResourceTableRow";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 
 interface Props {
-  rows: LatestReleasedResourceRow[];
+  rows: ResourceRow[];
   tablePresenter: ResourcesTablePresenter;
   sortColumn?: string;
   order?: SortDirection;
@@ -61,7 +61,7 @@ export const ResourcesTable: React.FC<Props> = ({
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
-        <ResourceRow row={row} key={row.id} />
+        <ResourceTableRow row={row} key={row.id} />
       ))}
     </TableComposable>
   );

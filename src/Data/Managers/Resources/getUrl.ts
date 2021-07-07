@@ -5,7 +5,7 @@ export function getUrl({
   filter,
   pageSize,
   sort,
-}: Query.SubQuery<"LatestReleasedResources">): string {
+}: Query.SubQuery<"Resources">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(

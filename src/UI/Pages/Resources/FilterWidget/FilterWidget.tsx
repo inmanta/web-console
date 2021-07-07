@@ -1,4 +1,4 @@
-import { LatestReleasedResourceParams, ResourceStatus } from "@/Core";
+import { ResourceParams, ResourceStatus } from "@/Core";
 import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 import { ToolbarGroup } from "@patternfly/react-core";
@@ -6,14 +6,13 @@ import React, { useState } from "react";
 import { FilterPicker } from "./FilterPicker";
 
 interface Props {
-  filter: LatestReleasedResourceParams.Filter;
-  setFilter: (filter: LatestReleasedResourceParams.Filter) => void;
+  filter: ResourceParams.Filter;
+  setFilter: (filter: ResourceParams.Filter) => void;
 }
 export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
-  const [filterKind, setFilterKind] =
-    useState<LatestReleasedResourceParams.Kind>(
-      LatestReleasedResourceParams.Kind.Status
-    );
+  const [filterKind, setFilterKind] = useState<ResourceParams.Kind>(
+    ResourceParams.Kind.Status
+  );
 
   const updateStatus = (statuses: string[]) =>
     setFilter({
@@ -37,7 +36,7 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
     <ToolbarGroup variant="filter-group" aria-label="FilterBar">
       <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />
       <SelectOptionFilter
-        isVisible={filterKind === LatestReleasedResourceParams.Kind.Status}
+        isVisible={filterKind === ResourceParams.Kind.Status}
         filterPropertyName={words("resources.column.deployState")}
         placeholder={words("resources.filters.status.placeholder")}
         possibleStates={Object.keys(ResourceStatus).map(
@@ -47,23 +46,23 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
         update={updateStatus}
       />
       <FreeTextFilter
-        isVisible={filterKind === LatestReleasedResourceParams.Kind.Agent}
+        isVisible={filterKind === ResourceParams.Kind.Agent}
         searchEntries={filter.agent}
-        filterPropertyName={LatestReleasedResourceParams.Kind.Agent}
+        filterPropertyName={ResourceParams.Kind.Agent}
         placeholder={words("resources.filters.agent.placeholder")}
         update={updateAgent}
       />
       <FreeTextFilter
-        isVisible={filterKind === LatestReleasedResourceParams.Kind.Type}
+        isVisible={filterKind === ResourceParams.Kind.Type}
         searchEntries={filter.type}
-        filterPropertyName={LatestReleasedResourceParams.Kind.Type}
+        filterPropertyName={ResourceParams.Kind.Type}
         placeholder={words("resources.filters.type.placeholder")}
         update={updateType}
       />
       <FreeTextFilter
-        isVisible={filterKind === LatestReleasedResourceParams.Kind.Value}
+        isVisible={filterKind === ResourceParams.Kind.Value}
         searchEntries={filter.value}
-        filterPropertyName={LatestReleasedResourceParams.Kind.Value}
+        filterPropertyName={ResourceParams.Kind.Value}
         placeholder={words("resources.filters.value.placeholder")}
         update={updateValue}
       />
