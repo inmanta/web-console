@@ -1,22 +1,41 @@
-import { Query, RemoteData, ResourceModel, StateHelper } from "@/Core";
+import { Query, RemoteData, ResourceStatus, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
-type Data = RemoteData.Type<string, ResourceModel[]>;
-type ApiData = RemoteData.Type<string, Query.ApiResponse<"Resources">>;
+type Data = RemoteData.Type<Query.Error<"Resources">, Query.Data<"Resources">>;
+type ApiData = RemoteData.Type<
+  Query.Error<"Resources">,
+  Query.ApiResponse<"Resources">
+>;
 
 export class ResourcesStateHelper implements StateHelper<"Resources"> {
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly store: Store,
+    private readonly environment: string
+  ) {}
 
-  set(data: ApiData, query: Query.SubQuery<"Resources">): void {
-    const value = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-    this.store.dispatch.resources.setData({ id: query.id, value });
+  set(data: ApiData): void {
+    const unwrapped = RemoteData.mapSuccess(
+      (wrapped) => ({
+        ...wrapped,
+        data: wrapped.data.map((resource) => ({
+          ...resource,
+          status: resource.status as ResourceStatus,
+        })),
+      }),
+      data
+    );
+    this.store.dispatch.resources.setList({
+      environment: this.environment,
+      data: unwrapped,
+    });
   }
 
-  getHooked(query: Query.SubQuery<"Resources">): Data {
-    return useStoreState((state) => {
-      return this.enforce(state.resources.byId[query.id]);
-    }, isEqual);
+  getHooked(): Data {
+    return useStoreState(
+      (state) => this.enforce(state.resources.listByEnv[this.environment]),
+      isEqual
+    );
   }
 
   private enforce(value: undefined | Data): Data {
@@ -24,7 +43,9 @@ export class ResourcesStateHelper implements StateHelper<"Resources"> {
     return value;
   }
 
-  getOnce(query: Query.SubQuery<"Resources">): Data {
-    return this.enforce(this.store.getState().resources.byId[query.id]);
+  getOnce(): Data {
+    return this.enforce(
+      this.store.getState().resources.listByEnv[this.environment]
+    );
   }
 }

@@ -1,22 +1,31 @@
 import { Action, action } from "easy-peasy";
-import { RemoteData, ResourceModel } from "@/Core";
+import { RemoteData, Query } from "@/Core";
+
+type Data = RemoteData.Type<Query.Error<"Resources">, Query.Data<"Resources">>;
 
 /**
- * The resourcesSlice stores resources.
- * For a single ServiceInstance we store its list of resources.
- * So 'byId' means by ServiceInstance id.
+ * The ResourcesSlice stores Resources.
  */
 export interface ResourcesSlice {
-  byId: Record<string, RemoteData.Type<string, ResourceModel[]>>;
-  setData: Action<
+  /**
+   * Stores the full list of resources by their environment.
+   */
+  listByEnv: Record<string, Data>;
+  /**
+   * Sets the resources in the listByEnv record.
+   */
+  setList: Action<
     ResourcesSlice,
-    { id: string; value: RemoteData.Type<string, ResourceModel[]> }
+    {
+      environment: string;
+      data: Data;
+    }
   >;
 }
 
 export const resourcesSlice: ResourcesSlice = {
-  byId: {},
-  setData: action((state, payload) => {
-    state.byId[payload.id] = payload.value;
+  listByEnv: {},
+  setList: action(({ listByEnv }, { environment, data }) => {
+    listByEnv[environment] = data;
   }),
 };

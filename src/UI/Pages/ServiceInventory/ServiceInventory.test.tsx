@@ -5,7 +5,7 @@ import {
   DeferredFetcher,
   Service,
   ServiceInstance,
-  Resource,
+  InstanceResource,
   Pagination,
   StaticScheduler,
   DynamicQueryManagerResolver,
@@ -17,8 +17,8 @@ import {
   QueryResolverImpl,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
   TriggerInstanceUpdateCommandManager,
   AttributeResultConverterImpl,
   CommandResolverImpl,
@@ -46,10 +46,10 @@ function setup(service = Service.a) {
     service.environment
   );
 
-  const resourcesFetcher = new DeferredFetcher<"Resources">();
-  const resourcesHelper = new ResourcesQueryManager(
+  const resourcesFetcher = new DeferredFetcher<"InstanceResources">();
+  const resourcesHelper = new InstanceResourcesQueryManager(
     resourcesFetcher,
-    new ResourcesStateHelper(store),
+    new InstanceResourcesStateHelper(store),
     scheduler,
     service.environment
   );
@@ -217,11 +217,13 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   fireEvent.click(await screen.findByRole("button", { name: "Resources" }));
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resource.listA }));
+    await resourcesFetcher.resolve(
+      Either.right({ data: InstanceResource.listA })
+    );
   });
 
   expect(
-    screen.getByRole("cell", { name: Resource.listA[0].resource_id })
+    screen.getByRole("cell", { name: InstanceResource.listA[0].resource_id })
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -236,7 +238,9 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
     );
   });
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resource.listA }));
+    await resourcesFetcher.resolve(
+      Either.right({ data: InstanceResource.listA })
+    );
   });
 
   expect(resourcesFetcher.getInvocations().length).toEqual(3);

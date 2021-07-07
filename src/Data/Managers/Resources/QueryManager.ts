@@ -1,6 +1,6 @@
-import { Fetcher, StateHelper, Scheduler } from "@/Core";
-import { identity } from "lodash";
+import { Scheduler, Fetcher, StateHelper, ResourceParams } from "@/Core";
 import { ContinuousQueryManagerImpl } from "@/Data/Common";
+import { getUrl } from "./getUrl";
 
 export class ResourcesQueryManager extends ContinuousQueryManagerImpl<"Resources"> {
   constructor(
@@ -13,13 +13,33 @@ export class ResourcesQueryManager extends ContinuousQueryManagerImpl<"Resources
       fetcher,
       stateHelper,
       scheduler,
-      ({ id }) => id,
-      ({ id, version }) => [id, version],
+      () => environment,
+      ({ filter, sort, pageSize }) => [
+        environment,
+        pageSize,
+        sort?.name,
+        sort?.order,
+        stringifyFilter(filter),
+      ],
       "Resources",
-      ({ service_entity, id, version }) =>
-        `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`,
-      identity,
+      getUrl,
+      ({ data, links, metadata }, setUrl) => {
+        if (typeof links === "undefined")
+          return { data: data, handlers: {}, metadata };
+        const { prev, next } = links;
+        const prevCb = prev ? () => setUrl(prev) : undefined;
+        const nextCb = next ? () => setUrl(next) : undefined;
+        return {
+          data: data,
+          handlers: { prev: prevCb, next: nextCb },
+          metadata,
+        };
+      },
       environment
     );
   }
+}
+
+function stringifyFilter(filter: ResourceParams.Filter | undefined): string {
+  return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

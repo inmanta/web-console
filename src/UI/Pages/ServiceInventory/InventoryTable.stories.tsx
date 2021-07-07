@@ -10,8 +10,8 @@ import {
 } from "@/Test";
 import {
   QueryResolverImpl,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
   getStoreInstance,
 } from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -26,12 +26,12 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ResourcesQueryManager(
-        new InstantFetcher<"Resources">({
+      new InstanceResourcesQueryManager(
+        new InstantFetcher<"InstanceResources">({
           kind: "Success",
           data: { data: [] },
         }),
-        new ResourcesStateHelper(store),
+        new InstanceResourcesStateHelper(store),
         new StaticScheduler(),
         "env"
       ),

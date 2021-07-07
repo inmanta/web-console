@@ -1,10 +1,10 @@
-import { LatestReleasedResource, SortDirection } from "@/Core";
+import { Resource, SortDirection } from "@/Core";
 import React from "react";
 import { ResourcesTable } from "./ResourcesTable";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 
 interface Props {
-  resources: LatestReleasedResource[];
+  resources: Resource[];
   sortColumn?: string;
   order?: SortDirection;
   setSortColumn: (name?: string) => void;

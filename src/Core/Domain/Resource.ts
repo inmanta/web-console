@@ -1,6 +1,4 @@
-import { Sort } from "./Params";
-
-export interface LatestReleasedResource {
+export interface Resource {
   resource_id: string;
   requires: string[];
   status: ResourceStatus;
@@ -28,23 +26,18 @@ export enum ResourceStatus {
   orphaned = "orphaned",
 }
 
-export interface RawLatestReleasedResource {
+export interface RawResource {
   resource_id: string;
   requires: string[];
   status: string;
   id_details: ResourceIdDetails;
 }
 
-export interface LatestReleasedResourceRow {
+export interface ResourceRow {
   type: string;
   agent: string;
   value: string;
   numberOfDependencies: number;
   deployState: ResourceStatus;
   id: string;
-}
-
-export interface LatestReleasedResourceParams {
-  sort?: Sort;
-  pageSize: number;
 }

@@ -5,7 +5,10 @@ import {
 } from "./InstanceConfigSlice";
 import { ProjectsSlice, projectsSlice } from "./ProjectsSlice";
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
-import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
+import {
+  instanceResourcesSlice,
+  InstanceResourcesSlice,
+} from "./InstanceResourcesSlice";
 import {
   serviceInstancesSlice,
   ServiceInstancesSlice,
@@ -13,22 +16,19 @@ import {
 import { EventsSlice, eventsSlice } from "./EventsSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
 import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";
-import {
-  latestReleasedResourcesSlice,
-  LatestReleasedResourcesSlice,
-} from "./LatestReleasedResourcesSlice";
+import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 
 export interface StoreModel {
   projects: ProjectsSlice;
   services: ServicesSlice;
   serviceInstances: ServiceInstancesSlice;
   serviceConfig: ServiceConfigSlice;
-  resources: ResourcesSlice;
+  instanceResources: InstanceResourcesSlice;
   events: EventsSlice;
   instanceLogs: InstanceLogsSlice;
   instanceConfig: InstanceConfigSlice;
   diagnostics: DiagnosticsSlice;
-  latestReleasedResources: LatestReleasedResourcesSlice;
+  resources: ResourcesSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -38,8 +38,8 @@ export const storeModel: StoreModel = {
   serviceConfig: serviceConfigSlice,
   instanceLogs: instanceLogsSlice,
   instanceConfig: instanceConfigSlice,
-  resources: resourcesSlice,
+  instanceResources: instanceResourcesSlice,
   events: eventsSlice,
   diagnostics: diagnosticsSlice,
-  latestReleasedResources: latestReleasedResourcesSlice,
+  resources: resourcesSlice,
 };

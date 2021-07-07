@@ -1,6 +1,6 @@
 import { InstanceEvent } from "./EventModel";
 import { InstanceLog } from "./InstanceLogModel";
-import { ResourceModel } from "./ResourceModel";
+import { InstanceResourceModel as InstanceResourceModel } from "./InstanceResourceModel";
 import {
   VersionedServiceInstanceIdentifier,
   ServiceInstanceModel,
@@ -14,24 +14,21 @@ import { ServiceInstanceParams } from "./ServiceInstanceParams";
 import { RawDiagnostics, Diagnostics } from "./Diagnostics";
 import { EventParams } from "./EventParams";
 import { ProjectModel } from "./ProjectModel";
-import {
-  LatestReleasedResource,
-  LatestReleasedResourceParams,
-  RawLatestReleasedResource,
-} from "./LatestReleasedResource";
+import { Resource, RawResource } from "./Resource";
+import { ResourceParams as ResourceParams } from "./ResourceParams";
 
 type Query =
   | ServicesQuery
   | ServiceQuery
   | ServiceInstancesQuery
   | ServiceConfigQuery
-  | ResourcesQuery
+  | InstanceResourcesQuery
   | InstanceEventsQuery
   | InstanceLogsQuery
   | InstanceConfigQuery
   | DiagnosticsQuery
   | ProjectsQuery
-  | LatestReleasedResourcesQuery;
+  | ResourcesQuery;
 
 export type Type = Query;
 
@@ -125,16 +122,17 @@ interface ServiceConfigManifest {
  * We are not asking for 1 specific resource. We are asking for all the
  * resources of 1 specific service instance.
  */
-export interface ResourcesQuery extends VersionedServiceInstanceIdentifier {
-  kind: "Resources";
+export interface InstanceResourcesQuery
+  extends VersionedServiceInstanceIdentifier {
+  kind: "InstanceResources";
 }
 
-interface ResourcesManifest {
+interface InstanceResourcesManifest {
   error: string;
-  apiResponse: { data: ResourceModel[] };
-  data: ResourceModel[];
-  usedData: ResourceModel[];
-  query: ResourcesQuery;
+  apiResponse: { data: InstanceResourceModel[] };
+  data: InstanceResourceModel[];
+  usedData: InstanceResourceModel[];
+  query: InstanceResourcesQuery;
 }
 
 /**
@@ -209,30 +207,28 @@ interface DiagnosticsManifest {
   query: DiagnosticsQuery;
 }
 
-/** LatestReleasedResources represent the latest version of resources according to the model version number. */
-export interface LatestReleasedResourcesQuery
-  extends LatestReleasedResourceParams {
-  kind: "LatestReleasedResources";
+export interface ResourcesQuery extends ResourceParams {
+  kind: "Resources";
 }
 
-interface LatestReleasedResourcesManifest {
+interface ResourcesManifest {
   error: string;
   apiResponse: {
-    data: RawLatestReleasedResource[];
+    data: RawResource[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   data: {
-    data: LatestReleasedResource[];
+    data: Resource[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   usedData: {
-    data: LatestReleasedResource[];
+    data: Resource[];
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: LatestReleasedResourcesQuery;
+  query: ResourcesQuery;
 }
 
 /**
@@ -244,13 +240,13 @@ interface Manifest {
   Service: ServiceManifest;
   ServiceInstances: ServiceInstancesManifest;
   ServiceConfig: ServiceConfigManifest;
-  Resources: ResourcesManifest;
+  InstanceResources: InstanceResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;
   InstanceConfig: InstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
   Projects: ProjectsManifest;
-  LatestReleasedResources: LatestReleasedResourcesManifest;
+  Resources: ResourcesManifest;
 }
 
 /**
