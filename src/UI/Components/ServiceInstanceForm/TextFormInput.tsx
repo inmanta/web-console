@@ -26,9 +26,11 @@ export const TextFormInput: React.FC<Props> = ({
   typeHint,
   placeholder,
   handleInputChange,
+  ...props
 }) => {
   return (
     <FormGroup
+      {...props}
       isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}

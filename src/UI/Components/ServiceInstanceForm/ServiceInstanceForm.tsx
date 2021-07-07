@@ -162,6 +162,7 @@ const FlatFieldInput: React.FC<FlatProps> = ({ field, value, update }) => {
 
   return field.inputType === "bool" ? (
     <BooleanFormInput
+      aria-label={`FlatFieldInput-${field.name}`}
       attributeName={field.name}
       isOptional={field.isOptional}
       isChecked={value as boolean}
@@ -171,6 +172,7 @@ const FlatFieldInput: React.FC<FlatProps> = ({ field, value, update }) => {
     />
   ) : (
     <TextFormInput
+      aria-label={`FlatFieldInput-${field.name}`}
       attributeName={field.name}
       attributeValue={value as string}
       description={field.description}
@@ -198,11 +200,12 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   path,
 }) => (
   <FormFieldGroupExpandable
+    aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
     header={
       <FormFieldGroupHeader
         titleText={{
           text: field.name,
-          id: "nested-field-group1-titleText-id",
+          id: `NestedFieldInput-${makePath(path, field.name)}`,
         }}
         titleDescription={field.description}
       />
@@ -251,13 +254,16 @@ const DictListFieldInput: React.FC<DictListProps> = ({
 
   return (
     <FormFieldGroupExpandable
+      aria-label={`DictListFieldInput-${makePath(path, field.name)}`}
       header={
         <FormFieldGroupHeader
           titleText={{
-            text: `${field.name} (${list.length})`,
-            id: "field-group1-titleText-id",
+            text: field.name,
+            id: `DictListFieldInput-${makePath(path, field.name)}`,
           }}
-          titleDescription={field.description}
+          titleDescription={`${field.description} (${words(
+            "inventory.createInstance.items"
+          )(list.length)})`}
           actions={
             <Button
               variant="link"
@@ -273,12 +279,19 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     >
       {list.map((item, index) => (
         <FormFieldGroupExpandable
+          aria-label={`DictListFieldInputItem-${makePath(
+            path,
+            `${field.name}.${index + 1}`
+          )}`}
           key={makePath(path, `${field.name}.${index}`)}
           header={
             <FormFieldGroupHeader
               titleText={{
                 text: index + 1,
-                id: "nested-field-group1-titleText-id",
+                id: `DictListFieldInputItem-${makePath(
+                  path,
+                  `${field.name}.${index + 1}`
+                )}`,
               }}
               actions={
                 <Button
