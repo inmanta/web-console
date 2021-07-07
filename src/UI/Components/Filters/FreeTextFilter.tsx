@@ -30,17 +30,14 @@ export const FreeTextFilter: React.FC<Props> = ({
 
   const onTextInput = (event) => {
     if (event.key && event.key !== "Enter") return;
-    if (textInput.length > 0) {
-      update(searchEntries ? [...searchEntries, textInput] : [textInput]);
-      setTextInput("");
-    }
+    if (textInput.length <= 0) return;
+    update(searchEntries ? [...searchEntries, textInput] : [textInput]);
+    setTextInput("");
   };
-
-  const chips = searchEntries ? searchEntries : [];
 
   return (
     <ToolbarFilter
-      chips={chips}
+      chips={searchEntries ? searchEntries : []}
       deleteChip={removeChip}
       categoryName={filterPropertyName}
       showToolbarItem={isVisible}
