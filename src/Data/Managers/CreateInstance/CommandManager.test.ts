@@ -2,6 +2,7 @@ import { BaseApiHelper } from "@/Data/API";
 import { AttributeResultConverterImpl } from "@/Data/Common";
 import { CreateInstancePoster } from "./Poster";
 import { CreateInstanceCommandManager } from "./CommandManager";
+import { Field } from "@/Test";
 
 describe("CreateInstanceManager", () => {
   const commandManager = new CreateInstanceCommandManager(
@@ -19,6 +20,11 @@ describe("CreateInstanceManager", () => {
     expect(fetchMock.mock.calls[0][1]?.method).toEqual("POST");
   });
   it("Calls create correctly when not setting optional attributes", () => {
+    const fields = [
+      { ...Field.text, name: "string_attribute", isOptional: false },
+      { ...Field.text, name: "opt_string_attribute" },
+      { ...Field.bool, name: "bool_param" },
+    ];
     const attributes = {
       string_attribute: "lorem ipsum",
       opt_string_attribute: "",
@@ -28,7 +34,7 @@ describe("CreateInstanceManager", () => {
       kind: "CreateInstance",
       service_entity: "service_entity",
     });
-    submit([], attributes);
+    submit(fields, attributes);
 
     expect(fetchMock.mock.calls).toHaveLength(1);
     const attributesFromBody = JSON.parse(

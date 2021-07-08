@@ -18,8 +18,6 @@ export function sanitizeAttributes(
   const converter = new AttributeResultConverterImpl();
   const sanitized = { ...formState };
 
-  console.log(JSON.stringify({ fields, sanitized }, null, 4));
-
   fields.forEach((field) => {
     switch (field.kind) {
       case "Flat": {
@@ -45,9 +43,13 @@ export function sanitizeAttributes(
         const list = formState[field.name];
         if (!Array.isArray(list)) return;
         if (list.length > field.max) {
-          sanitized[field.name] = list.slice(0, field.max + 1);
+          sanitized[field.name] = list
+            .slice(0, field.max + 1)
+            .map((item) => sanitizeAttributes(field.fields, item));
         } else {
-          sanitized[field.name] = list;
+          sanitized[field.name] = list.map((item) =>
+            sanitizeAttributes(field.fields, item)
+          );
         }
         return;
       }

@@ -4,6 +4,7 @@ import {
   TriggerInstanceUpdateCommandManager,
   AttributeResultConverterImpl,
 } from "@/Data";
+import { Field } from "@/Test";
 
 describe("TriggerInstanceUpdateCommandManager ", () => {
   const commandManager = new TriggerInstanceUpdateCommandManager(
@@ -36,6 +37,12 @@ describe("TriggerInstanceUpdateCommandManager ", () => {
     expect(fetchMock.mock.calls[0][1]?.method).toEqual("PATCH");
   });
   it("Calls update correctly when changing optional attributes", () => {
+    const fields = [
+      { ...Field.text, name: "attr1" },
+      { ...Field.text, name: "attr2" },
+      { ...Field.bool, name: "attr3" },
+      { ...Field.number, name: "attr4" },
+    ];
     const attributes = {
       attr1: "lorem ipsum",
       attr2: null,
@@ -48,7 +55,7 @@ describe("TriggerInstanceUpdateCommandManager ", () => {
       id: "id1",
       version: 10,
     });
-    submit([], currentAttributes, attributes);
+    submit(fields, currentAttributes, attributes);
     expect(fetchMock.mock.calls).toHaveLength(1);
     const attributesFromBody = JSON.parse(
       fetchMock.mock.calls[0][1]?.body as string

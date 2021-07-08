@@ -1,45 +1,25 @@
-import { TextInputTypes } from "@patternfly/react-core";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import { Field } from "@/Core";
-
-const flatFieldText: Field = {
-  kind: "Flat",
-  name: "flat_field_text",
-  description: "description",
-  isOptional: true,
-  defaultValue: "",
-  inputType: TextInputTypes.text,
-  type: "string?",
-};
-
-const flatFieldBool: Field = {
-  kind: "Flat",
-  name: "flat_field_boolean",
-  isOptional: true,
-  defaultValue: null,
-  inputType: "bool",
-  type: "bool?",
-  description: "desc",
-};
+import * as Test from "@/Test";
 
 test("GIVEN ServiceInstanceForm WHEN passed a FlatField (text) THEN shows that field", () => {
   render(
     <ServiceInstanceForm
-      fields={[flatFieldText]}
+      fields={[Test.Field.text]}
       onCancel={jest.fn()}
       onSubmit={jest.fn()}
     />
   );
   expect(
     screen.getByRole("generic", {
-      name: `FlatFieldInput-${flatFieldText.name}`,
+      name: `FlatFieldInput-${Test.Field.text.name}`,
     })
   ).toBeVisible();
 
-  const textBox = screen.getByRole("textbox", { name: flatFieldText.name });
+  const textBox = screen.getByRole("textbox", { name: Test.Field.text.name });
   const value = "test text";
   expect(textBox).toBeVisible();
   userEvent.type(textBox, value);
@@ -49,14 +29,14 @@ test("GIVEN ServiceInstanceForm WHEN passed a FlatField (text) THEN shows that f
 test("GIVEN ServiceInstanceForm WHEN passed a FlatField (boolean) THEN shows that field", () => {
   render(
     <ServiceInstanceForm
-      fields={[flatFieldBool]}
+      fields={[Test.Field.bool]}
       onCancel={jest.fn()}
       onSubmit={jest.fn()}
     />
   );
   expect(
     screen.getByRole("generic", {
-      name: `FlatFieldInput-${flatFieldBool.name}`,
+      name: `FlatFieldInput-${Test.Field.bool.name}`,
     })
   ).toBeVisible();
 
@@ -74,7 +54,7 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
       name: "nested_field",
       description: "description",
       isOptional: true,
-      fields: [flatFieldText],
+      fields: [Test.Field.text],
     },
   ];
 
@@ -93,11 +73,11 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
   expect(group).toBeVisible();
 
   expect(
-    screen.queryByRole("textbox", { name: flatFieldText.name })
+    screen.queryByRole("textbox", { name: Test.Field.text.name })
   ).not.toBeInTheDocument();
   userEvent.click(within(group).getByRole("button", { name: "nested_field" }));
   expect(
-    screen.getByRole("textbox", { name: flatFieldText.name })
+    screen.getByRole("textbox", { name: Test.Field.text.name })
   ).toBeVisible();
 });
 
@@ -110,7 +90,7 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
       isOptional: true,
       min: 1,
       max: 2,
-      fields: [flatFieldText],
+      fields: [Test.Field.text],
     },
   ];
 
@@ -129,7 +109,7 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   expect(group).toBeVisible();
 
   expect(
-    screen.queryByRole("textbox", { name: flatFieldText.name })
+    screen.queryByRole("textbox", { name: Test.Field.text.name })
   ).not.toBeInTheDocument();
   userEvent.click(
     within(group).getByRole("button", {
@@ -138,12 +118,12 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   );
   userEvent.click(within(group).getByRole("button", { name: "1" }));
   expect(
-    screen.getByRole("textbox", { name: flatFieldText.name })
+    screen.getByRole("textbox", { name: Test.Field.text.name })
   ).toBeVisible();
 });
 
 test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with fields & formState", () => {
-  const fields: Field[] = [flatFieldText, flatFieldBool];
+  const fields: Field[] = [Test.Field.text, Test.Field.bool];
   const submitCb = jest.fn();
 
   render(
@@ -163,7 +143,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   userEvent.click(screen.getByRole("button", { name: "Confirm" }));
   expect(submitCb).toBeCalled();
   expect(submitCb).toHaveBeenCalledWith(fields, {
-    [flatFieldText.name]: "test text",
-    [flatFieldBool.name]: true,
+    [Test.Field.text.name]: "test text",
+    [Test.Field.bool.name]: true,
   });
 });

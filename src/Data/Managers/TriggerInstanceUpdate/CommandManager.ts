@@ -6,7 +6,7 @@ import {
   Maybe,
   Field,
 } from "@/Core";
-import { AttributeResultConverter } from "@/Data/Common";
+import { AttributeResultConverter, sanitizeAttributes } from "@/Data/Common";
 
 export class TriggerInstanceUpdateCommandManager implements CommandManager {
   constructor(
@@ -33,11 +33,10 @@ export class TriggerInstanceUpdateCommandManager implements CommandManager {
     updatedAttributes: InstanceAttributeModel
   ): Promise<Maybe.Type<Command.Error<"TriggerInstanceUpdate">>> {
     // Make sure correct types are used
-    // const parsedAttributes =
-    // this.attributeConverter.parseAttributesToCorrectTypes(updatedAttributes);
+    const parsedAttributes = sanitizeAttributes(fields, updatedAttributes);
     // Only the difference should be sent
     const attributeDiff = this.attributeConverter.calculateDiff(
-      updatedAttributes,
+      parsedAttributes,
       currentAttributes
     );
     return await this.patcher.patch(command, {
