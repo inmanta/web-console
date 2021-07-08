@@ -14,6 +14,11 @@ describe("TriggerInstanceUpdateCommandManager ", () => {
   const currentAttributes = { attr1: "some value", attr2: "", attr3: null };
 
   it("Calls update correctly when not setting optional attributes", () => {
+    const fields = [
+      { ...Field.text, name: "attr1", isOptional: false, type: "string" },
+      { ...Field.text, name: "attr2", isOptional: false, type: "string" },
+      { ...Field.bool, name: "attr3", isOptional: true, type: "bool?" },
+    ];
     const attributes = {
       attr1: "lorem ipsum",
       attr2: "",
@@ -25,7 +30,7 @@ describe("TriggerInstanceUpdateCommandManager ", () => {
       id: "id1",
       version: 10,
     });
-    submit([], currentAttributes, attributes);
+    submit(fields, currentAttributes, attributes);
 
     expect(fetchMock.mock.calls).toHaveLength(1);
     const attributesFromBody = JSON.parse(
@@ -38,10 +43,10 @@ describe("TriggerInstanceUpdateCommandManager ", () => {
   });
   it("Calls update correctly when changing optional attributes", () => {
     const fields = [
-      { ...Field.text, name: "attr1" },
-      { ...Field.text, name: "attr2" },
-      { ...Field.bool, name: "attr3" },
-      { ...Field.number, name: "attr4" },
+      { ...Field.text, name: "attr1", isOptional: false, type: "string" },
+      { ...Field.text, name: "attr2", isOptional: true, type: "string?" },
+      { ...Field.bool, name: "attr3", isOptional: true, type: "bool?" },
+      { ...Field.number, name: "attr4", isOptional: true, type: "int?" },
     ];
     const attributes = {
       attr1: "lorem ipsum",
