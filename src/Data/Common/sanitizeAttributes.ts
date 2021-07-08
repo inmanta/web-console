@@ -3,12 +3,9 @@ import { AttributeResultConverterImpl } from "@/Data";
 
 /**
  * Creates a type-correct object based on the fields and form values.
- * This object can be send to the backend.
  *
- * @note Optional attributes with a value of null should be removed
- * @todo Implement function
  * @param fields Rules for each attribute
- * @param attributes form values
+ * @param formState values of each form field
  * @returns the sanitized attribute values
  */
 export function sanitizeAttributes(
@@ -36,9 +33,6 @@ export function sanitizeAttributes(
         return;
       }
 
-      /**
-       * @todo sanitize properties in list
-       */
       case "DictList": {
         const list = formState[field.name];
         if (!Array.isArray(list)) return;

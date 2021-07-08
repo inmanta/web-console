@@ -1,8 +1,6 @@
-import { times } from "lodash";
 import {
   AttributeModel,
   EmbeddedEntity,
-  InstanceAttributeModel,
   isNotNull,
   ServiceModel,
   Field,
@@ -64,34 +62,6 @@ export class FieldCreator {
       fields: [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities],
     };
   }
-}
-
-export function fieldsToFormState(fields: Field[]): InstanceAttributeModel {
-  return fields.reduce((acc, curr) => {
-    switch (curr.kind) {
-      case "Flat": {
-        acc[curr.name] = curr.defaultValue;
-        return acc;
-      }
-
-      case "Nested": {
-        acc[curr.name] = fieldsToFormState(curr.fields);
-        return acc;
-      }
-
-      case "DictList": {
-        if (curr.min <= 0) {
-          acc[curr.name] = [];
-        } else {
-          acc[curr.name] = times(curr.min, () =>
-            fieldsToFormState(curr.fields)
-          );
-        }
-
-        return acc;
-      }
-    }
-  }, {});
 }
 
 function attributesToFields(attributes: AttributeModel[]): Field[] {

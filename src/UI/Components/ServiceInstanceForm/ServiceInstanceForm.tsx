@@ -19,7 +19,7 @@ import {
   FlatField,
   NestedField,
 } from "@/Core";
-import { fieldsToFormState } from "./FieldCreator";
+import { createFormState } from "./createFormState";
 
 interface Props {
   fields: Field[];
@@ -32,7 +32,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   onSubmit,
   onCancel,
 }) => {
-  const [formState, setFormState] = useState(fieldsToFormState(fields));
+  const [formState, setFormState] = useState(createFormState(fields));
 
   const getUpdate =
     (path: string) =>
@@ -242,7 +242,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     if (list.length >= field.max) return;
     getUpdate(makePath(path, field.name))([
       ...list,
-      fieldsToFormState(field.fields),
+      createFormState(field.fields),
     ]);
   };
 

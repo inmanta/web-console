@@ -11,9 +11,8 @@ import { useHistory } from "react-router-dom";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "@/UI/Routing";
-import { CreateInstanceForm } from "./Components";
 import { words } from "@/UI/words";
-import { FieldCreator } from "@/UI/Components";
+import { FieldCreator, ServiceInstanceForm } from "@/UI/Components";
 
 export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
   serviceEntity,
@@ -61,10 +60,10 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
           {words("inventory.addInstance.title")(serviceEntity.name)}
         </Text>
       </TextContent>
-      <CreateInstanceForm
+      <ServiceInstanceForm
         fields={new FieldCreator().create(serviceEntity)}
-        handleRedirect={handleRedirect}
         onSubmit={onSubmit}
+        onCancel={handleRedirect}
       />
     </>
   );
