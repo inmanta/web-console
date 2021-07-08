@@ -83,7 +83,9 @@ export function fieldsToFormState(fields: Field[]): InstanceAttributeModel {
         if (curr.min <= 0) {
           acc[curr.name] = [];
         } else {
-          acc[curr.name] = times(curr.min, fieldsToFormState(curr.fields));
+          acc[curr.name] = times(curr.min, () =>
+            fieldsToFormState(curr.fields)
+          );
         }
 
         return acc;
