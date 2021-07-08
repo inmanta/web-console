@@ -2,7 +2,6 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
-import { Field } from "@/Core";
 import * as Test from "@/Test";
 
 test("GIVEN ServiceInstanceForm WHEN passed a FlatField (text) THEN shows that field", () => {
@@ -101,7 +100,13 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
 });
 
 test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with fields & formState", () => {
-  const fields: Field[] = [Test.Field.text, Test.Field.bool];
+  const nestedField = Test.Field.nested([
+    { ...Test.Field.text, name: "flat_field_text_2" },
+  ]);
+  const dictListField = Test.Field.dictList([
+    { ...Test.Field.text, name: "flat_field_text_3" },
+  ]);
+  const fields = [Test.Field.text, Test.Field.bool, nestedField, dictListField];
   const submitCb = jest.fn();
 
   render(
@@ -113,15 +118,30 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   );
 
   userEvent.type(
-    screen.getByRole("textbox", { name: "flat_field_text" }),
+    screen.getByRole("textbox", { name: fields[0].name }),
     "test text"
   );
   userEvent.click(screen.getByRole("radio", { name: "True" }));
+
+  userEvent.click(screen.getByRole("button", { name: nestedField.name }));
+  userEvent.type(
+    screen.getByRole("textbox", { name: nestedField.fields[0].name }),
+    "test text 2"
+  );
+
+  userEvent.click(screen.getByRole("button", { name: dictListField.name }));
+  userEvent.click(screen.getByRole("button", { name: "1" }));
+  userEvent.type(
+    screen.getByRole("textbox", { name: dictListField.fields[0].name }),
+    "test text 3"
+  );
 
   userEvent.click(screen.getByRole("button", { name: "Confirm" }));
   expect(submitCb).toBeCalled();
   expect(submitCb).toHaveBeenCalledWith(fields, {
     [Test.Field.text.name]: "test text",
     [Test.Field.bool.name]: true,
+    [nestedField.name]: { [nestedField.fields[0].name]: "test text 2" },
+    [dictListField.name]: [{ [dictListField.fields[0].name]: "test text 3" }],
   });
 });
