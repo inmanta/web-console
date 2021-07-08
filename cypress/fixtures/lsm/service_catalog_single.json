@@ -1,6 +1,5 @@
 {
-  "data":
-  {
+  "data": {
     "environment": "36cdbc7e-28a1-4803-b7b2-6743f52a594c",
     "name": "e2e_service",
     "attributes": [
@@ -41,6 +40,7 @@
         "description": "A readonly attribute"
       }
     ],
+    "embedded_entities": [],
     "lifecycle": {
       "states": [
         {

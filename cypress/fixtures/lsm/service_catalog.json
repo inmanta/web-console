@@ -29,6 +29,7 @@
           "description": "The network address to use for the lan"
         }
       ],
+      "embedded_entities": [],
       "lifecycle": {
         "states": [
           {
@@ -710,6 +711,7 @@
           "description": "The network address to use for the lan"
         }
       ],
+      "embedded_entities": [],
       "lifecycle": {
         "states": [
           {
