@@ -53,7 +53,7 @@
     "@types/jest": "^26.0.24",
     "@types/node": "^16.0.0",
     "@types/qs": "^6.9.7",
-    "@types/react": "^17.0.13",
+    "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-syntax-highlighter": "^13.5.2",
