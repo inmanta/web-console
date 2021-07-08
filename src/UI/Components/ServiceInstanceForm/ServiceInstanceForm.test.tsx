@@ -48,19 +48,9 @@ test("GIVEN ServiceInstanceForm WHEN passed a FlatField (boolean) THEN shows tha
 });
 
 test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN the nested FlatField is shown", () => {
-  const fields: Field[] = [
-    {
-      kind: "Nested",
-      name: "nested_field",
-      description: "description",
-      isOptional: true,
-      fields: [Test.Field.text],
-    },
-  ];
-
   render(
     <ServiceInstanceForm
-      fields={fields}
+      fields={[Test.Field.nested([Test.Field.text])]}
       onCancel={jest.fn()}
       onSubmit={jest.fn()}
     />
@@ -82,21 +72,9 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
 });
 
 test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", () => {
-  const fields: Field[] = [
-    {
-      kind: "DictList",
-      name: "dict_list_field",
-      description: "description",
-      isOptional: true,
-      min: 1,
-      max: 2,
-      fields: [Test.Field.text],
-    },
-  ];
-
   render(
     <ServiceInstanceForm
-      fields={fields}
+      fields={[Test.Field.dictList([Test.Field.text])]}
       onCancel={jest.fn()}
       onSubmit={jest.fn()}
     />
