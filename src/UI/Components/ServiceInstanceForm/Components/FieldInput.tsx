@@ -8,8 +8,8 @@ import {
 import { PlusIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { toOptionalBoolean } from "@/Data";
-import { BooleanFormInput } from "../../BooleanFormInput";
-import { TextFormInput } from "../../TextFormInput";
+import { BooleanFormInput } from "./BooleanFormInput";
+import { TextFormInput } from "./TextFormInput";
 import {
   InstanceAttributeModel,
   DictListField,
@@ -18,7 +18,6 @@ import {
   NestedField,
 } from "@/Core";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
-import { Update, GetUpdate } from "./Update";
 
 interface Props {
   field: Field;
@@ -26,6 +25,9 @@ interface Props {
   getUpdate: GetUpdate;
   path: string | null;
 }
+
+type Update = (value: unknown) => void;
+type GetUpdate = (path: string) => Update;
 
 const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
