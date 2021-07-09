@@ -51,7 +51,7 @@
     "@testing-library/user-event": "^13.1.9",
     "@types/fetch-mock": "^7.3.5",
     "@types/jest": "^26.0.24",
-    "@types/node": "^16.0.1",
+    "@types/node": "^16.3.0",
     "@types/qs": "^6.9.7",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
