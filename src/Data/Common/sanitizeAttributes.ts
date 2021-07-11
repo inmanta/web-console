@@ -1,5 +1,5 @@
 import { Field, InstanceAttributeModel } from "@/Core";
-import { AttributeResultConverterImpl } from "@/Data";
+import { AttributeResultConverterImpl } from "./AttributeConverter";
 
 /**
  * Creates a type-correct object based on the fields and form values.
