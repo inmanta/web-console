@@ -234,7 +234,7 @@ it.each`
   }
 );
 
-test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN data is fetched immediately", async () => {
+test("GIVEN The Resources table WHEN the user clicks on the details THEN data is fetched immediately", async () => {
   const { component, resourcesApiHelper, resourceDetailsFetcher } = setup();
 
   render(component);
@@ -245,7 +245,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
   userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
 
-  expect(resourceDetailsFetcher.getInvocations().length).toEqual(1);
+  expect(resourceDetailsFetcher.getInvocations()).toHaveLength(1);
   expect(resourceDetailsFetcher.getInvocations()[0][1]).toEqual(
     "/api/v2/resource/std%3A%3AFile%5Bagent2%2Cpath%3D%2Ftmp%2Ffile4%5D"
   );

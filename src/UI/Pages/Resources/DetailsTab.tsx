@@ -25,17 +25,14 @@ export const DetailsTab: React.FC<Props> = ({ id }) => {
     {
       notAsked: () => null,
       loading: () => (
-        <ResourceContentWrapper aria-label="ResourceDetails-Loading">
-          <LoadingView delay={500} />
-        </ResourceContentWrapper>
+        <LoadingView delay={500} aria-label="ResourceDetails-Loading" />
       ),
       failed: (error) => (
-        <ResourceContentWrapper aria-label="ResourceDetails-Failed">
-          <ErrorView
-            title={words("resources.details.failed.title")}
-            message={words("resources.details.failed.body")(error)}
-          />
-        </ResourceContentWrapper>
+        <ErrorView
+          aria-label="ResourceDetails-Failed"
+          title={words("resources.details.failed.title")}
+          message={words("resources.details.failed.body")(error)}
+        />
       ),
       success: (resourceDetails) => (
         <ResourceDetailsContent
@@ -68,10 +65,4 @@ export const DetailsTab: React.FC<Props> = ({ id }) => {
     },
     data
   );
-};
-
-const ResourceContentWrapper: React.FC<{
-  "aria-label"?: string;
-}> = ({ children, ...props }) => {
-  return <div aria-label={props["aria-label"]}>{children}</div>;
 };
