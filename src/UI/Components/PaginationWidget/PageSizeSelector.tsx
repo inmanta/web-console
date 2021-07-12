@@ -37,7 +37,11 @@ export const PageSizeSelector: React.FC<Props> = ({
       isPlain
       dropdownItems={dropdownItems}
       toggle={
-        <DropdownToggle onToggle={onToggle} toggleIndicator={null}>
+        <DropdownToggle
+          onToggle={onToggle}
+          toggleIndicator={null}
+          aria-label="Page Size Selector dropdown"
+        >
           <CaretDownIcon />
         </DropdownToggle>
       }

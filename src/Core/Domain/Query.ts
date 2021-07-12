@@ -14,8 +14,14 @@ import { ServiceInstanceParams } from "./ServiceInstanceParams";
 import { RawDiagnostics, Diagnostics } from "./Diagnostics";
 import { EventParams } from "./EventParams";
 import { ProjectModel } from "./ProjectModel";
-import { Resource, RawResource } from "./Resource";
+import {
+  Resource,
+  RawResource,
+  RawResourceDetails,
+  ResourceDetails,
+} from "./Resource";
 import { ResourceParams as ResourceParams } from "./ResourceParams";
+import { WithId } from "../Language";
 
 type Query =
   | ServicesQuery
@@ -28,7 +34,8 @@ type Query =
   | InstanceConfigQuery
   | DiagnosticsQuery
   | ProjectsQuery
-  | ResourcesQuery;
+  | ResourcesQuery
+  | ResourceDetailsQuery;
 
 export type Type = Query;
 
@@ -231,6 +238,20 @@ interface ResourcesManifest {
   query: ResourcesQuery;
 }
 
+export interface ResourceDetailsQuery extends WithId {
+  kind: "ResourceDetails";
+}
+
+interface ResourceDetailsManifest {
+  error: string;
+  apiResponse: {
+    data: RawResourceDetails;
+  };
+  data: ResourceDetails;
+  usedData: ResourceDetails;
+  query: ResourceDetailsQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -247,6 +268,7 @@ interface Manifest {
   Diagnostics: DiagnosticsManifest;
   Projects: ProjectsManifest;
   Resources: ResourcesManifest;
+  ResourceDetails: ResourceDetailsManifest;
 }
 
 /**

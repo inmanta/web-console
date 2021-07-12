@@ -1,0 +1,6 @@
+description: Add resource details tab to resource table
+issue-nr: 738
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

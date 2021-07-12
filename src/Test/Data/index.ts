@@ -9,3 +9,4 @@ export * as Pagination from "./Pagination";
 export * as Project from "./Project";
 export * as InstanceResource from "./InstanceResource";
 export * as Resource from "./Resource";
+export * as ResourceDetails from "./ResourceDetails";

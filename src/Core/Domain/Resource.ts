@@ -41,3 +41,31 @@ export interface ResourceRow {
   deployState: ResourceStatus;
   id: string;
 }
+
+export interface ResourceDetails {
+  resource_id: string;
+  resource_type: string;
+  agent: string;
+  id_attribute: string;
+  id_attribute_value: string;
+  status: ResourceStatus;
+  last_deploy?: string;
+  first_generated_time: string;
+  first_generated_version: number;
+  attributes: Record<string, unknown>;
+  requires_status: Record<string, ResourceStatus>;
+}
+
+export interface RawResourceDetails {
+  resource_id: string;
+  resource_type: string;
+  agent: string;
+  id_attribute: string;
+  id_attribute_value: string;
+  status: string;
+  last_deploy?: string;
+  first_generated_time: string;
+  first_generated_version: number;
+  attributes: Record<string, unknown>;
+  requires_status: Record<string, string>;
+}

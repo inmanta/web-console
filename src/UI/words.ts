@@ -201,6 +201,14 @@ const dict = {
   "resources.filters.agent.placeholder": "Search for an agent...",
   "resources.filters.value.placeholder": "Search for a value...",
   "resources.filters.type.placeholder": "Search for a type...",
+  "resources.details.title": "Details",
+  "resources.details.id": "Id",
+  "resources.details.lastDeploy": "Last Deploy",
+  "resources.details.firstTime": "Created",
+  "resources.details.versionLink": "Open model version details",
+  "resources.details.failed.title": "Something went wrong",
+  "resources.details.failed.body": (error: string) =>
+    `There was an error retrieving data: ${error}`,
 
   /**
    * Navigation related text

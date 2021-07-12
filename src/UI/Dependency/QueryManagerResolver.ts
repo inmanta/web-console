@@ -28,6 +28,8 @@ import {
   ResourcesQueryManager,
   ResourcesStateHelper,
   Store,
+  ResourceDetailsQueryManager,
+  ResourceDetailsStateHelper,
 } from "@/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -128,6 +130,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new ResourcesQueryManager(
         new FetcherImpl<"Resources">(this.baseApiHelper),
         new ResourcesStateHelper(this.store, environment),
+        scheduler,
+        environment
+      ),
+      new ResourceDetailsQueryManager(
+        new FetcherImpl<"ResourceDetails">(this.baseApiHelper),
+        new ResourceDetailsStateHelper(this.store),
         scheduler,
         environment
       ),
