@@ -73,7 +73,7 @@ export interface ServiceModel extends ServiceIdentifier {
 
 export interface EmbeddedEntity {
   name: string;
-  description: string;
+  description?: string;
   modifier: string;
   lower_limit: number;
   upper_limit: number;

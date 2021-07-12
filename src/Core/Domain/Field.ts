@@ -15,7 +15,7 @@ export interface FlatField {
 export interface NestedField {
   kind: "Nested";
   name: string;
-  description: string;
+  description?: string;
   isOptional: boolean;
   fields: Field[];
 }
@@ -23,7 +23,7 @@ export interface NestedField {
 export interface DictListField {
   kind: "DictList";
   name: string;
-  description: string;
+  description?: string;
   isOptional: boolean;
   fields: Field[];
   min: number;

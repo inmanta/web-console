@@ -28,7 +28,7 @@ export const number: FlatField = {
   isOptional: true,
   defaultValue: "",
   inputType: TextInputTypes.number,
-  type: "float",
+  type: "float?",
 };
 
 export const nested = (fields?: Field[]): NestedField => ({
