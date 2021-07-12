@@ -5,6 +5,7 @@ import {
   DeferredFetcher,
   DynamicQueryManagerResolver,
   Resource,
+  ResourceDetails,
   StaticScheduler,
 } from "@/Test";
 import { Either } from "@/Core";
@@ -14,20 +15,30 @@ import {
   getStoreInstance,
   ResourcesQueryManager,
   ResourcesStateHelper,
+  ResourceDetailsQueryManager,
+  ResourceDetailsStateHelper,
 } from "@/Data";
 import { ResourcesView } from "./ResourcesView";
 import userEvent, { specialChars } from "@testing-library/user-event";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"Resources">();
+  const resourcesApiHelper = new DeferredFetcher<"Resources">();
+  const resourceDetailsFetcher = new DeferredFetcher<"ResourceDetails">();
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new ResourcesQueryManager(
-        apiHelper,
+        resourcesApiHelper,
         new ResourcesStateHelper(store, environment),
+        scheduler,
+        environment
+      ),
+      new ResourceDetailsQueryManager(
+        resourceDetailsFetcher,
+        new ResourceDetailsStateHelper(store),
         scheduler,
         environment
       ),
@@ -35,25 +46,30 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver }}>
+    <DependencyProvider
+      dependencies={{
+        queryResolver,
+        urlManager: new UrlManagerImpl("", environment),
+      }}
+    >
       <StoreProvider store={store}>
         <ResourcesView />
       </StoreProvider>
     </DependencyProvider>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component, resourcesApiHelper, scheduler, resourceDetailsFetcher };
 }
 
 test("ResourcesView shows empty table", async () => {
-  const { component, apiHelper } = setup();
+  const { component, resourcesApiHelper } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
+  resourcesApiHelper.resolve(
     Either.right({
       data: [],
       metadata: { total: 0, before: 0, after: 0, page_size: 10 },
@@ -67,14 +83,14 @@ test("ResourcesView shows empty table", async () => {
 });
 
 test("ResourcesView shows failed table", async () => {
-  const { component, apiHelper } = setup();
+  const { component, resourcesApiHelper } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.left("error"));
+  resourcesApiHelper.resolve(Either.left("error"));
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Failed" })
@@ -82,14 +98,14 @@ test("ResourcesView shows failed table", async () => {
 });
 
 test("ResourcesView shows success table", async () => {
-  const { component, apiHelper } = setup();
+  const { component, resourcesApiHelper } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right(Resource.response));
+  resourcesApiHelper.resolve(Either.right(Resource.response));
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
@@ -97,10 +113,10 @@ test("ResourcesView shows success table", async () => {
 });
 
 test("ResourcesView shows next page of resources", async () => {
-  const { component, apiHelper } = setup();
+  const { component, resourcesApiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(
+  resourcesApiHelper.resolve(
     Either.right({
       data: Resource.response.data.slice(0, 3),
       links: { ...Resource.response.links, next: "/fake-link" },
@@ -116,7 +132,7 @@ test("ResourcesView shows next page of resources", async () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Next" }));
 
-  apiHelper.resolve(
+  resourcesApiHelper.resolve(
     Either.right({
       data: Resource.response.data.slice(3),
       links: { ...Resource.response.links, next: "/fake-link" },
@@ -132,9 +148,9 @@ test("ResourcesView shows next page of resources", async () => {
 });
 
 test("ResourcesView shows sorting buttons for sortable columns", async () => {
-  const { component, apiHelper } = setup();
+  const { component, resourcesApiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right(Resource.response));
+  resourcesApiHelper.resolve(Either.right(Resource.response));
   expect(await screen.findByRole("button", { name: /type/i })).toBeVisible();
   expect(screen.getByRole("button", { name: /agent/i })).toBeVisible();
   expect(screen.getByRole("button", { name: /value/i })).toBeVisible();
@@ -142,13 +158,15 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
 });
 
 test("ResourcesView sets sorting parameters correctly on click", async () => {
-  const { component, apiHelper } = setup();
+  const { component, resourcesApiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right(Resource.response));
+  resourcesApiHelper.resolve(Either.right(Resource.response));
   const stateButton = await screen.findByRole("button", { name: /agent/i });
   expect(stateButton).toBeVisible();
   userEvent.click(stateButton);
-  expect(apiHelper.getInvocations()[1][1]).toContain("&sort=agent.asc");
+  expect(resourcesApiHelper.getInvocations()[1][1]).toContain(
+    "&sort=agent.asc"
+  );
 });
 
 it.each`
@@ -166,11 +184,11 @@ it.each`
     placeholderText,
     filterUrlName,
   }) => {
-    const { component, apiHelper } = setup();
+    const { component, resourcesApiHelper } = setup();
     render(component);
 
     await act(async () => {
-      await apiHelper.resolve(Either.right(Resource.response));
+      await resourcesApiHelper.resolve(Either.right(Resource.response));
     });
 
     const initialRows = await screen.findAllByRole("row", {
@@ -195,12 +213,12 @@ it.each`
       userEvent.type(input, `${filterValue}${specialChars.enter}`);
     }
 
-    expect(apiHelper.getInvocations()[1][1]).toEqual(
+    expect(resourcesApiHelper.getInvocations()[1][1]).toEqual(
       `/api/v2/resource?limit=20&filter.${filterUrlName}=${filterValue}&sort=resource_type.asc`
     );
 
     await act(async () => {
-      await apiHelper.resolve(
+      await resourcesApiHelper.resolve(
         Either.right({
           data: Resource.response.data.slice(4),
           links: Resource.response.links,
@@ -215,3 +233,30 @@ it.each`
     expect(rowsAfter).toHaveLength(2);
   }
 );
+
+test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN data is fetched immediately", async () => {
+  const { component, resourcesApiHelper, resourceDetailsFetcher } = setup();
+
+  render(component);
+
+  await act(async () => {
+    await resourcesApiHelper.resolve(Either.right(Resource.response));
+  });
+
+  userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
+
+  expect(resourceDetailsFetcher.getInvocations().length).toEqual(1);
+  expect(resourceDetailsFetcher.getInvocations()[0][1]).toEqual(
+    "/api/v2/resource/std%3A%3AFile%5Bagent2%2Cpath%3D%2Ftmp%2Ffile4%5D"
+  );
+
+  await act(async () => {
+    await resourceDetailsFetcher.resolve(
+      Either.right({ data: ResourceDetails.a })
+    );
+  });
+
+  expect(
+    await screen.findByText("std::File[agent2,path=/tmp/file4]")
+  ).toBeVisible();
+});
