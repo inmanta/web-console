@@ -16,6 +16,7 @@ export * from "./IconTabs";
 export * from "./InstanceState";
 export * from "./LoadingView";
 export * from "./InstanceResourceTable";
+export * from "./ServiceInstanceForm";
 export * from "./ServiceProvider";
 export * from "./SettingsList";
 export * from "./StackedProgressBar";

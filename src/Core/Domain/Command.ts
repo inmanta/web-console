@@ -1,6 +1,5 @@
 import { Either, Maybe } from "@/Core/Language";
 import {
-  FormAttributeResult,
   InstanceAttributeModel,
   ServiceInstanceModel,
   SetStateBody,
@@ -8,6 +7,7 @@ import {
 } from "./ServiceInstanceModel";
 import { Config } from "./Config";
 import { ServiceIdentifier } from "./ServiceModel";
+import { Field } from "./Field";
 
 type Command =
   | ServiceConfigCommand
@@ -62,7 +62,8 @@ interface CreateInstanceManifest {
   body: { attributes: InstanceAttributeModel };
   command: CreateInstanceCommand;
   trigger: (
-    attributes: FormAttributeResult[]
+    fields: Field[],
+    formState: InstanceAttributeModel
   ) => Promise<Either.Type<Error<"CreateInstance">, ApiData<"CreateInstance">>>;
 }
 
@@ -77,8 +78,9 @@ interface TriggerInstanceUpdateManifest {
   body: { attributes: InstanceAttributeModel };
   command: TriggerInstanceUpdateCommand;
   trigger: (
+    fields: Field[],
     currentAttributes: InstanceAttributeModel | null,
-    updatedAttributes: FormAttributeResult[]
+    formState: InstanceAttributeModel
   ) => Promise<Maybe.Type<Error<"TriggerInstanceUpdate">>>;
 }
 

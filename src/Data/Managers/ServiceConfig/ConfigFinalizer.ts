@@ -4,6 +4,7 @@ import {
   ServiceModel,
   ConfigFinalizer,
   StateHelper,
+  isNotNull,
 } from "@/Core";
 import { uniq } from "lodash";
 
@@ -33,9 +34,6 @@ export class ServiceConfigFinalizer
     return RemoteData.success(fullConfig);
   }
 }
-
-const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
-  value !== null;
 
 function getOptionsFromService(service: ServiceModel): string[] {
   return uniq(

@@ -93,6 +93,8 @@ const dict = {
     `Create a new instance of ${serviceName} with the following parameters`,
   "inventory.addInstance.button": "Add instance",
   "inventory.createInstance.title": "Create instance",
+  "inventory.createInstance.items": (amount: number) =>
+    amount === 1 ? "1 item" : `${amount} items`,
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
   "inventory.editInstance.header": (instanceId: string) =>

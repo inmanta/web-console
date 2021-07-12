@@ -1,0 +1,6 @@
+description: Add support for nested attributes to Instance Form
+issue-nr: 696
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

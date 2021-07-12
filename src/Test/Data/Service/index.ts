@@ -1,6 +1,7 @@
 import { ServiceModel } from "@/Core";
 import * as Environment from "@/Test/Data/Environment";
 import * as Attribute from "./Attribute";
+import * as EmbeddedEntity from "./EmbeddedEntity";
 import * as State from "./State";
 import * as Transfer from "./Transfer";
 import * as InstanceSummary from "./InstanceSummary";
@@ -21,6 +22,7 @@ export const a: ServiceModel = {
     auto_update_designed: true,
     auto_update_inprogress: true,
   },
+  embedded_entities: EmbeddedEntity.list,
 };
 
 export const b: ServiceModel = {

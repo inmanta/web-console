@@ -16,10 +16,12 @@ export const BooleanFormInput: React.FC<Props> = ({
   attributeName,
   description,
   handleInputChange,
+  ...props
 }) => {
   return (
     <>
       <FormGroup
+        {...props}
         fieldId={attributeName}
         key={attributeName}
         label={attributeName}
