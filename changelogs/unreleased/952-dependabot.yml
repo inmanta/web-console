@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump lint-staged from 11.0.0 to 11.0.1'
+destination-branches:
+- master
+- iso4
+sections: {}
