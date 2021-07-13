@@ -1,11 +1,8 @@
-export type Kinds =
-  | "Catalog"
-  | "Inventory"
-  | "CreateInstance"
-  | "History"
-  | "Diagnose"
-  | "Events"
-  | "Resources";
+import { BaseUrlFinder } from "./BaseUrlFinder";
+import { paths } from "./Paths";
+import { Kinds } from "./Kinds";
+
+const BASE_URL = new BaseUrlFinder().getUrl(location.pathname);
 
 interface ParamsManifest {
   Catalog: undefined;
@@ -28,35 +25,35 @@ export interface Route {
 
 export const Catalog: Route = {
   kind: "Catalog",
-  path: "/lsm/catalog",
+  path: `${BASE_URL}${paths.Catalog}`,
   label: "Service Catalog",
 };
 
 export const Inventory: Route = {
   kind: "Inventory",
   parent: "Catalog",
-  path: "/lsm/catalog/:service/inventory",
+  path: `${BASE_URL}${paths.Inventory}`,
   label: "Service Inventory",
 };
 
 export const CreateInstance: Route = {
   kind: "CreateInstance",
   parent: "Inventory",
-  path: "/lsm/catalog/:service/inventory/add",
+  path: `${BASE_URL}${paths.CreateInstance}`,
   label: "Create Instance",
 };
 
 export const History: Route = {
   kind: "History",
   parent: "Inventory",
-  path: "/lsm/catalog/:service/inventory/:instance/history",
+  path: `${BASE_URL}${paths.History}`,
   label: "Service Instance History",
 };
 
 export const Diagnose: Route = {
   kind: "Diagnose",
   parent: "Inventory",
-  path: "/lsm/catalog/:service/inventory/:instance/diagnose",
+  path: `${BASE_URL}${paths.Diagnose}`,
   label: "Diagnose Service Instance",
 };
 
@@ -64,12 +61,12 @@ export const Events: Route = {
   kind: "Events",
   parent: "Inventory",
   label: "Service Instance Events",
-  path: "/lsm/catalog/:service/inventory/:instance/events",
+  path: `${BASE_URL}${paths.Events}`,
 };
 
 export const Resources: Route = {
   kind: "Resources",
-  path: "/resources",
+  path: `${BASE_URL}${paths.Resources}`,
   label: "Resources",
 };
 
