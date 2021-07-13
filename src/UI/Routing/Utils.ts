@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { matchPath, match, generatePath } from "react-router-dom";
-import { Route, Kinds, Params, getRouteFromKind, allRoutes } from "./Route";
+import { Route, Params, getRouteFromKind, allRoutes } from "./Route";
+import { Kinds } from "./Kinds";
 
 export const getLineageFromRoute = (
   route: Route,

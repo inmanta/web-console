@@ -1,5 +1,6 @@
 import { BaseUrlFinder } from "./BaseUrlFinder";
-import { paths, Kinds } from "./Paths";
+import { paths } from "./Paths";
+import { Kinds } from "./Kinds";
 
 const BASE_URL = new BaseUrlFinder().getUrl(location.pathname);
 

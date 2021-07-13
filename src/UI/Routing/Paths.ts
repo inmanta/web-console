@@ -1,11 +1,4 @@
-export type Kinds =
-  | "Catalog"
-  | "Inventory"
-  | "CreateInstance"
-  | "History"
-  | "Diagnose"
-  | "Events"
-  | "Resources";
+import { Kinds } from "./Kinds";
 
 type Paths = Record<Kinds, string>;
 
