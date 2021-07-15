@@ -1,5 +1,5 @@
-import { CheckSquareIcon, TimesCircleIcon } from "@patternfly/react-icons";
 import React from "react";
+import { CheckSquareIcon, TimesCircleIcon } from "@patternfly/react-icons";
 
 export const ResourceStatusCell: React.FC<{ state: string }> = ({ state }) => {
   switch (state) {

@@ -1,8 +1,8 @@
+import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import React, { useContext } from "react";
 import { RequiresTable } from "./RequiresTable";
 
 interface Props {
@@ -39,7 +39,6 @@ export const RequiresTab: React.FC<Props> = ({ id }) => {
         ) : (
           <RequiresTable
             aria-label="ResourceRequires-Success"
-            id={id}
             requiresStatus={resourceDetails.requires_status}
           />
         ),

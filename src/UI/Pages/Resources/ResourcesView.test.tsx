@@ -285,8 +285,6 @@ test("GIVEN The Resources table WHEN the user clicks on the requires tab THEN th
   });
 
   expect(
-    await screen.findByTestId(
-      "requires-table-header-std::File[agent2,path=/tmp/file4]"
-    )
+    await screen.findByRole("grid", { name: "ResourceRequires-Success" })
   ).toBeVisible();
 });

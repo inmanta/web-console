@@ -3,6 +3,7 @@ import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { ResourceRow } from "@/Core";
 import { words } from "@/UI/words";
 import { TabKey, Tabs } from "./Tabs";
+import { scrollRowIntoView } from "@/UI/Utils";
 
 interface Props {
   row: ResourceRow;
@@ -26,12 +27,7 @@ export const ResourceTableRow: React.FC<Props> = ({
     if (!isExpanded) {
       onToggle();
     }
-    // Make sure the scroll happens after the rendering
-    setTimeout(() => {
-      if (rowRef.current !== null) {
-        rowRef.current.scrollIntoView({ block: "center" });
-      }
-    }, 0);
+    scrollRowIntoView(rowRef);
   };
   return (
     <Tbody isExpanded={false}>

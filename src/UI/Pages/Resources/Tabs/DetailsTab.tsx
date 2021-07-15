@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -5,7 +6,6 @@ import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { Button } from "@patternfly/react-core";
 import { ExternalLinkAltIcon } from "@patternfly/react-icons";
-import React, { useContext } from "react";
 import { ResourceDetailsContent } from "./ResourceDetailsContent";
 
 interface Props {

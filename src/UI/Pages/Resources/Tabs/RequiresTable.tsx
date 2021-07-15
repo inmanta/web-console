@@ -1,3 +1,4 @@
+import React from "react";
 import { ResourceStatus } from "@/Core";
 import { ResourceStatusCell } from "@/UI/Components";
 import { words } from "@/UI/words";
@@ -7,15 +8,12 @@ import {
   TableHeader,
   TableVariant,
 } from "@patternfly/react-table";
-import React from "react";
 
 interface Props {
   requiresStatus: Record<string, ResourceStatus>;
   "aria-label"?: string;
-  id: string;
 }
 export const RequiresTable: React.FC<Props> = ({
-  id,
   requiresStatus,
   ...props
 }) => {
@@ -33,9 +31,7 @@ export const RequiresTable: React.FC<Props> = ({
       aria-label={props["aria-label"]}
       variant={TableVariant.compact}
     >
-      <TableHeader
-        data-testid={id ? `requires-table-header-${id}` : undefined}
-      />
+      <TableHeader />
       <TableBody />
     </Table>
   );
