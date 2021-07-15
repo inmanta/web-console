@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { ResourceRow } from "@/Core";
 import { words } from "@/UI/words";
@@ -20,6 +20,19 @@ export const ResourceTableRow: React.FC<Props> = ({
   numberOfColumns,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Details);
+  const rowRef = useRef<HTMLSpanElement>(null);
+  const openTabAndScrollTo = (tab: TabKey) => () => {
+    setActiveTab(tab);
+    if (!isExpanded) {
+      onToggle();
+    }
+    // Make sure the scroll happens after the rendering
+    setTimeout(() => {
+      if (rowRef.current !== null) {
+        rowRef.current.scrollIntoView({ block: "center" });
+      }
+    }, 0);
+  };
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label="Resource Table Row">
@@ -33,7 +46,11 @@ export const ResourceTableRow: React.FC<Props> = ({
         <Td dataLabel={words("resources.column.type")}>{row.type}</Td>
         <Td dataLabel={words("resources.column.agent")}>{row.agent}</Td>
         <Td dataLabel={words("resources.column.value")}>{row.value}</Td>
-        <Td dataLabel={words("resources.column.numberOfDependencies")}>
+        <Td
+          dataLabel={words("resources.column.numberOfDependencies")}
+          onClick={openTabAndScrollTo(TabKey.Requires)}
+        >
+          <span ref={rowRef} />
           {row.numberOfDependencies}
         </Td>
         <Td dataLabel={words("resources.column.deployState")}>

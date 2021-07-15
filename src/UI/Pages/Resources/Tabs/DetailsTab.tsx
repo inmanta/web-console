@@ -59,7 +59,7 @@ export const DetailsTab: React.FC<Props> = ({ id }) => {
               {words("resources.details.versionLink")}
             </Button>
           }
-          aria-label="ResourceTable-Success"
+          aria-label="ResourceDetails-Success"
         />
       ),
     },

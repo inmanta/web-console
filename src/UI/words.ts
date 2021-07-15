@@ -209,6 +209,13 @@ const dict = {
   "resources.details.failed.title": "Something went wrong",
   "resources.details.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
+  "resources.requires.title": "Requires",
+  "resources.requires.empty.message": "No requirements found",
+  "resources.requires.failed.title": "Something went wrong",
+  "resources.requires.failed.body": (error: string) =>
+    `There was an error retrieving data: ${error}`,
+  "resources.requires.resourceId": "Resource Id",
+  "resources.requires.deployState": "Deploy State",
 
   /**
    * Navigation related text
