@@ -1,11 +1,13 @@
 import React from "react";
-import { InfoCircleIcon } from "@patternfly/react-icons";
+import { InfoCircleIcon, ModuleIcon } from "@patternfly/react-icons";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DetailsTab } from "./DetailsTab";
+import { RequiresTab } from "./RequiresTab";
 
 export enum TabKey {
   Details = "Details",
+  Requires = "Requires",
 }
 
 interface Props {
@@ -19,7 +21,7 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab }) => {
     <IconTabs
       activeTab={activeTab}
       onChange={setActiveTab}
-      tabs={[detailsTab(id)]}
+      tabs={[detailsTab(id), requiresTab(id)]}
     />
   );
 };
@@ -29,4 +31,11 @@ const detailsTab = (id: string): TabDescriptor<TabKey> => ({
   title: words("resources.details.title"),
   icon: <InfoCircleIcon />,
   view: <DetailsTab id={id} />,
+});
+
+const requiresTab = (id: string): TabDescriptor<TabKey> => ({
+  id: TabKey.Requires,
+  title: words("resources.requires.title"),
+  icon: <ModuleIcon />,
+  view: <RequiresTab id={id} />,
 });
