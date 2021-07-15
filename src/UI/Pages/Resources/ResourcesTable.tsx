@@ -2,6 +2,7 @@ import { ResourceRow, SortDirection } from "@/Core";
 import {
   OnSort,
   TableComposable,
+  TableVariant,
   Th,
   Thead,
   Tr,
@@ -71,7 +72,7 @@ export const ResourcesTable: React.FC<Props> = ({
   }, [rows]);
 
   return (
-    <TableComposable {...props}>
+    <TableComposable {...props} variant={TableVariant.compact}>
       <Thead>
         <Tr>
           <Th />
