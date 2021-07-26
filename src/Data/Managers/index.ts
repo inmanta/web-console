@@ -15,3 +15,4 @@ export * from "./TriggerInstanceUpdate";
 export * from "./TriggerSetState";
 export * from "./Resources";
 export * from "./ResourceDetails";
+export * from "./ResourceHistory";

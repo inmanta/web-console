@@ -21,6 +21,7 @@ import {
 import { ResourcesView } from "./ResourcesView";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { MemoryRouter } from "react-router-dom";
 
 function setup() {
   const store = getStoreInstance();
@@ -46,16 +47,18 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider
-      dependencies={{
-        queryResolver,
-        urlManager: new UrlManagerImpl("", environment),
-      }}
-    >
-      <StoreProvider store={store}>
-        <ResourcesView />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{
+          queryResolver,
+          urlManager: new UrlManagerImpl("", environment),
+        }}
+      >
+        <StoreProvider store={store}>
+          <ResourcesView />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, resourcesApiHelper, scheduler, resourceDetailsFetcher };

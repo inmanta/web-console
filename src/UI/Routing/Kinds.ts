@@ -5,4 +5,5 @@ export type Kinds =
   | "History"
   | "Diagnose"
   | "Events"
-  | "Resources";
+  | "Resources"
+  | "ResourceHistory";
