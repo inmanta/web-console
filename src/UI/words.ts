@@ -205,7 +205,7 @@ const dict = {
   "resources.details.id": "Id",
   "resources.details.lastDeploy": "Last Deploy",
   "resources.details.firstTime": "Created",
-  "resources.details.versionLink": "Open model version details",
+  "resources.details.versionLink": "Open resource version details",
   "resources.details.failed.title": "Something went wrong",
   "resources.details.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
