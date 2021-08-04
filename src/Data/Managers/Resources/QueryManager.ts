@@ -16,7 +16,7 @@ export class ResourcesQueryManager extends ContinuousQueryManagerImpl<"Resources
       () => environment,
       ({ filter, sort, pageSize }) => [
         environment,
-        pageSize,
+        pageSize.value,
         sort?.name,
         sort?.order,
         stringifyFilter(filter),

@@ -1,4 +1,4 @@
-import { ResourceParams, RemoteData, SortDirection } from "@/Core";
+import { ResourceParams, RemoteData, SortDirection, PageSize } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -20,7 +20,7 @@ export const Wrapper: React.FC = ({ children }) => (
 
 export const ResourcesView: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(PageSize.initial);
   const [filter, setFilter] = useState<ResourceParams.Filter>({});
   const [sortColumn, setSortColumn] = useState<string | undefined>(
     "resource_type"

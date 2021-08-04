@@ -1,6 +1,12 @@
 import React, { useContext, useState } from "react";
 import { DependencyContext } from "@/UI/Dependency";
-import { EventParams, RemoteData, ServiceModel, SortDirection } from "@/Core";
+import {
+  EventParams,
+  PageSize,
+  RemoteData,
+  ServiceModel,
+  SortDirection,
+} from "@/Core";
 import {
   ErrorView,
   LoadingView,
@@ -25,7 +31,7 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
   const [order, setOrder] = useState<SortDirection>("desc");
   const sort = { name: "timestamp", order: order };
   const [filter, setFilter] = useState<EventParams.Filter>({});
-  const [pageSize, setPageSize] = useState<number>(20);
+  const [pageSize, setPageSize] = useState(PageSize.initial);
   const [data] = queryResolver.useContinuous<"Events">({
     kind: "Events",
     id: instanceId,

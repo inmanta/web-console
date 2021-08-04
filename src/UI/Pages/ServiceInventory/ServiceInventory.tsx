@@ -1,4 +1,6 @@
 import React, { useContext, useState } from "react";
+import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
 import {
@@ -6,6 +8,7 @@ import {
   ServiceModel,
   ServiceInstanceParams,
   SortDirection,
+  PageSize,
 } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
@@ -19,8 +22,6 @@ import {
 } from "@/UI/Components";
 import { TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("inventory.title")}>
@@ -71,7 +72,7 @@ export const ServiceInventory: React.FunctionComponent<{
         <PaginationWidget
           handlers={handlers}
           metadata={metadata}
-          pageSize={20}
+          pageSize={PageSize.pageSizeOf(20)}
         />
       ),
     },

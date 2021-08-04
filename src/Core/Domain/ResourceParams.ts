@@ -1,10 +1,11 @@
 import { ResourceStatus } from "./Resource";
 import { Sort } from "./Params";
+import { PageSize } from ".";
 
 export interface ResourceParams {
   sort?: Sort;
   filter?: Filter;
-  pageSize: number;
+  pageSize: PageSize.Type;
 }
 
 export interface Filter {
