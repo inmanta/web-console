@@ -14,7 +14,7 @@ describe("getUrl for latest released resources ", () => {
     ({ filter, sort, size, url }) => {
       const query: Query.SubQuery<"Resources"> = {
         kind: "Resources",
-        pageSize: PageSize.pageSizeOf(size),
+        pageSize: PageSize.from(size),
         filter,
         sort,
       };

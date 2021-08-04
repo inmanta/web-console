@@ -72,7 +72,7 @@ export const ServiceInventory: React.FunctionComponent<{
         <PaginationWidget
           handlers={handlers}
           metadata={metadata}
-          pageSize={PageSize.pageSizeOf(20)}
+          pageSize={PageSize.initial}
         />
       ),
     },

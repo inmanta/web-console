@@ -25,7 +25,7 @@ describe("getUrl for events ", () => {
         id,
         filter,
         sort,
-        pageSize: PageSize.pageSizeOf(size),
+        pageSize: PageSize.from(size),
       };
 
       expect(getUrl(query, "Europe/Brussels")).toEqual(url);
