@@ -44,4 +44,11 @@ export class UrlManagerImpl implements UrlManager {
       resourceName
     ).replace(/\//g, "~2F")}`;
   }
+  getVersionedResourceUrl(resourceId: string, version: string): string {
+    return `${
+      this.baseUrl
+    }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}/${encodeURI(
+      resourceId
+    ).replace(/\//g, "~2F")}`;
+  }
 }

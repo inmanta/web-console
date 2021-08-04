@@ -7,6 +7,9 @@ export class DummyUrlManager implements UrlManager {
   getResourceUrl(): string {
     throw new Error("Method not implemented.");
   }
+  getVersionedResourceUrl(): string {
+    throw new Error("Method not implemented.");
+  }
   getModelVersionUrl(): string {
     throw new Error("Method not implemented.");
   }
