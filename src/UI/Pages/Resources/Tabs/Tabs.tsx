@@ -4,12 +4,12 @@ import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { DetailsTab } from "./DetailsTab";
 import { RequiresTab } from "./RequiresTab";
-import { DesiredStateTab } from "./DesiredStateTab";
+import { AttributesTab } from "./AttributesTab";
 
 export enum TabKey {
   Details = "Details",
   Requires = "Requires",
-  DesiredState = "DesiredState",
+  Attributes = "Attributes",
 }
 
 interface Props {
@@ -23,7 +23,7 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab }) => {
     <IconTabs
       activeTab={activeTab}
       onChange={setActiveTab}
-      tabs={[detailsTab(id), requiresTab(id), desiredStateTab(id)]}
+      tabs={[detailsTab(id), requiresTab(id), attributesTab(id)]}
     />
   );
 };
@@ -42,9 +42,9 @@ const requiresTab = (id: string): TabDescriptor<TabKey> => ({
   view: <RequiresTab id={id} />,
 });
 
-const desiredStateTab = (id: string): TabDescriptor<TabKey> => ({
-  id: TabKey.DesiredState,
-  title: words("resources.desiredState.title"),
+const attributesTab = (id: string): TabDescriptor<TabKey> => ({
+  id: TabKey.Attributes,
+  title: words("resources.attributes.title"),
   icon: <ListIcon />,
-  view: <DesiredStateTab id={id} />,
+  view: <AttributesTab id={id} />,
 });
