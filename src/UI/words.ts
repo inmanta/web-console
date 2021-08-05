@@ -216,6 +216,7 @@ const dict = {
     `There was an error retrieving data: ${error}`,
   "resources.requires.resourceId": "Resource Id",
   "resources.requires.deployState": "Deploy State",
+  "resources.desiredState.title": "Desired State",
 
   /**
    * Navigation related text
