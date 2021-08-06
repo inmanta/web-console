@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { CodeHighlighter } from "@/UI/Components";
+import { CodeHighlighter, TextWithCopy } from "@/UI/Components";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -45,7 +45,11 @@ const AttributeGroup: React.FC<{ attribute: ClassifiedAttribute }> = ({
         <DescriptionListGroup>
           <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
           <DescriptionListDescription>
-            {attribute.value}
+            <TextWithCopy
+              shortText={attribute.value}
+              fullText={attribute.value}
+              tooltipContent="Copy to clipboard"
+            />
           </DescriptionListDescription>
         </DescriptionListGroup>
       );
