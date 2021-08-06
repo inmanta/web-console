@@ -3,6 +3,9 @@ import { RemoteData } from "@/Core";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { AttributeClassifier } from "./AttributeClassifier";
+import { AttributeList } from "./AttributeList";
+import { Card, CardBody } from "@patternfly/react-core";
 
 interface Props {
   id: string;
@@ -15,6 +18,11 @@ export const AttributesTab: React.FC<Props> = ({ id }) => {
     kind: "ResourceDetails",
     id,
   });
+
+  const classifiedAttributes = RemoteData.mapSuccess(
+    (resource) => new AttributeClassifier().classify(resource.attributes),
+    data
+  );
 
   return RemoteData.fold(
     {
@@ -29,12 +37,14 @@ export const AttributesTab: React.FC<Props> = ({ id }) => {
           message={words("error.fetch")(error)}
         />
       ),
-      success: ({ attributes }) => (
-        <pre>
-          <code>{JSON.stringify(attributes, null, 4)}</code>
-        </pre>
+      success: (attributes) => (
+        <Card>
+          <CardBody>
+            <AttributeList attributes={attributes} />
+          </CardBody>
+        </Card>
       ),
     },
-    data
+    classifiedAttributes
   );
 };
