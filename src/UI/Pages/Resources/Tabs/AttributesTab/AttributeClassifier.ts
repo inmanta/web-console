@@ -1,7 +1,12 @@
-import { Maybe } from "@/Core";
+import { Maybe, Formatter } from "@/Core";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 
 export class AttributeClassifier {
+  constructor(
+    private readonly jsonFormatter: Formatter<unknown>,
+    private readonly xmlFormatter: Formatter
+  ) {}
+
   classify(attributesObject: Record<string, unknown>): ClassifiedAttribute[] {
     return Object.entries(attributesObject)
       .map(([key, value]) => this.classifyKeyValue(key, value))
@@ -28,7 +33,11 @@ export class AttributeClassifier {
       return Maybe.some({ kind: "File", key, value: value as string });
     } else if (this.isString(value)) {
       if (this.isXml(value)) {
-        return Maybe.some({ kind: "Xml", key, value });
+        return Maybe.some({
+          kind: "Xml",
+          key,
+          value: this.xmlFormatter.format(value),
+        });
       } else if (this.isMultiLine(value)) {
         return Maybe.some({ kind: "MultiLine", key, value });
       }
@@ -37,7 +46,7 @@ export class AttributeClassifier {
       return Maybe.some({
         kind: "Json",
         key,
-        value: JSON.stringify(value, null, 4),
+        value: this.jsonFormatter.format(value),
       });
     }
 

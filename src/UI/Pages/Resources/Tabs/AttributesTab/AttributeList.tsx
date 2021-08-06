@@ -7,8 +7,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { QuestionCircleIcon } from "@patternfly/react-icons";
-
+import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 
 interface Props {
@@ -32,7 +31,7 @@ const AttributeGroup: React.FC<{ attribute: ClassifiedAttribute }> = ({
         <DescriptionListGroup>
           <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
           <DescriptionListDescription>
-            <QuestionCircleIcon /> undefined
+            <OutlinedQuestionCircleIcon /> undefined
           </DescriptionListDescription>
         </DescriptionListGroup>
       );
@@ -78,4 +77,5 @@ const AttributeGroup: React.FC<{ attribute: ClassifiedAttribute }> = ({
 
 const StyledDescriptionList = styled(DescriptionList)`
   --pf-c-description-list--m-horizontal__term--width: 24ch;
+  --pf-c-description-list--RowGap: 0;
 `;

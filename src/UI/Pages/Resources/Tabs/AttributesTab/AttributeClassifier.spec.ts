@@ -1,8 +1,12 @@
+import { JsonFormatter, XmlFormatter } from "@/Data";
 import { AttributeClassifier } from "./AttributeClassifier";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
 
 test("GIVEN AttributeClassifier WHEN provided with a mixed attributes object THEN returns the correct list of ClassifiedAttributes", () => {
-  const classifier = new AttributeClassifier();
+  const classifier = new AttributeClassifier(
+    new JsonFormatter(),
+    new XmlFormatter()
+  );
   const attributes = {
     a: 123,
     aa: false,

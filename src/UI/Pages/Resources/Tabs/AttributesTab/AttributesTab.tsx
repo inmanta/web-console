@@ -6,6 +6,7 @@ import { words } from "@/UI/words";
 import { AttributeClassifier } from "./AttributeClassifier";
 import { AttributeList } from "./AttributeList";
 import { Card, CardBody } from "@patternfly/react-core";
+import { JsonFormatter, XmlFormatter } from "@/Data";
 
 interface Props {
   id: string;
@@ -19,8 +20,17 @@ export const AttributesTab: React.FC<Props> = ({ id }) => {
     id,
   });
 
+  const classifier = new AttributeClassifier(
+    new JsonFormatter(),
+    new XmlFormatter()
+  );
+
   const classifiedAttributes = RemoteData.mapSuccess(
-    (resource) => new AttributeClassifier().classify(resource.attributes),
+    (resource) =>
+      classifier.classify({
+        ...resource.attributes,
+        fake_xml: `<note><to>Tove</to><from>Jani</from></note>`,
+      }),
     data
   );
 
@@ -38,7 +48,7 @@ export const AttributesTab: React.FC<Props> = ({ id }) => {
         />
       ),
       success: (attributes) => (
-        <Card>
+        <Card isCompact>
           <CardBody>
             <AttributeList attributes={attributes} />
           </CardBody>
