@@ -17,7 +17,9 @@ interface Props {
 
 export const AttributeList: React.FC<Props> = ({ attributes }) => (
   <StyledDescriptionList isHorizontal isAutoColumnWidths>
-    {attributes.map((attribute) => AttributeGroup({ attribute }))}
+    {attributes.map((attribute) => (
+      <AttributeGroup key={attribute.key} attribute={attribute} />
+    ))}
   </StyledDescriptionList>
 );
 
