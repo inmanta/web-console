@@ -25,13 +25,13 @@ export const AttributesTab: React.FC<Props> = ({ id }) => {
       failed: (error) => (
         <ErrorView
           aria-label="ResourceAttributes-Failed"
-          title={words("resources.details.failed.title")}
-          message={words("resources.details.failed.body")(error)}
+          title={words("error")}
+          message={words("error.fetch")(error)}
         />
       ),
-      success: (resource) => (
+      success: ({ attributes }) => (
         <pre>
-          <code>{JSON.stringify(resource, null, 4)}</code>
+          <code>{JSON.stringify(attributes, null, 4)}</code>
         </pre>
       ),
     },
