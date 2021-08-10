@@ -6,3 +6,6 @@ updates:
       interval: "daily"
     allow:
       - dependency-type: "direct"
+    # Serialize all Dependabot PRs to prevent merge conflicts
+    # on the package.json and yarn.lock files
+    open-pull-requests-limit: 1
