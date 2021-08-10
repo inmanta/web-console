@@ -26,11 +26,7 @@ export const AttributesTab: React.FC<Props> = ({ id }) => {
   );
 
   const classifiedAttributes = RemoteData.mapSuccess(
-    (resource) =>
-      classifier.classify({
-        ...resource.attributes,
-        fake_xml: `<note><to>Tove</to><from>Jani</from><from>Jani</from><from>Jani</from><from>Jani</from><from>Jani</from></note>`,
-      }),
+    (resource) => classifier.classify(resource.attributes),
     data
   );
 
