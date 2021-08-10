@@ -27,7 +27,7 @@ export class AttributeClassifier {
       return Maybe.some({
         kind: "Password",
         key,
-        value: this.obscure(value as string),
+        value: "****",
       });
     } else if (this.isFile(key)) {
       return Maybe.some({ kind: "File", key, value: value as string });
@@ -83,9 +83,5 @@ export class AttributeClassifier {
 
   private isXml(value: string): boolean {
     return value.startsWith("<");
-  }
-
-  private obscure(value: string): string {
-    return "*".repeat(value.length);
   }
 }

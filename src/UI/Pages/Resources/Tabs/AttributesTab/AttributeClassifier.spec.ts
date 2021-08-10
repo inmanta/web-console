@@ -20,7 +20,7 @@ test("GIVEN AttributeClassifier WHEN provided with a mixed attributes object THE
     f: "This text has a length longer than 80. abcdefghijklmnopqrstvuwxyz abcdefghijklmnopqrstvuwxyz",
     ff: "This text contains a newline.\nblablabla...",
     hash: "filehash",
-    some_password: "abcd",
+    some_password: "abcde",
   };
 
   const classifiedAttributes: ClassifiedAttribute[] = [
@@ -31,9 +31,13 @@ test("GIVEN AttributeClassifier WHEN provided with a mixed attributes object THE
     {
       kind: "Xml",
       key: "c",
-      value: `<note><to>Tove</to><from>Jani</from></note>`,
+      value: `<note>\n    <to>Tove</to>\n    <from>Jani</from>\n</note>`,
     },
-    { kind: "Json", key: "d", value: '{"key":"value"}' },
+    {
+      kind: "Json",
+      key: "d",
+      value: `{\n    "key": "value"\n}`,
+    },
     { kind: "Undefined", key: "e" },
     {
       kind: "MultiLine",
@@ -54,7 +58,7 @@ test("GIVEN AttributeClassifier WHEN provided with a mixed attributes object THE
     {
       kind: "Password",
       key: "some_password",
-      value: "abcd",
+      value: "****",
     },
   ];
 
