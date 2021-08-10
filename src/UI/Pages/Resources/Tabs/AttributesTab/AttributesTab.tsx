@@ -29,7 +29,7 @@ export const AttributesTab: React.FC<Props> = ({ id }) => {
     (resource) =>
       classifier.classify({
         ...resource.attributes,
-        fake_xml: `<note><to>Tove</to><from>Jani</from></note>`,
+        fake_xml: `<note><to>Tove</to><from>Jani</from><from>Jani</from><from>Jani</from><from>Jani</from><from>Jani</from></note>`,
       }),
     data
   );
