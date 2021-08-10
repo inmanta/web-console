@@ -1,0 +1,4 @@
+---
+description: Added `open-pull-requests-limit` to Dependabot config to prevent merge conflicts on the package.json and yarn.lock files
+change-type: patch
+destination-branches: [master]
