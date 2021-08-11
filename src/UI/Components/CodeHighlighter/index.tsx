@@ -52,7 +52,7 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language }) => {
   );
 
   return (
-    <CodeBlock actions={actions}>
+    <StyledCodeBlock actions={actions}>
       <CodeBlockCode>
         <SyntaxHighlighter
           language={language}
@@ -62,21 +62,27 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language }) => {
           {code}
         </SyntaxHighlighter>
       </CodeBlockCode>
-      <StyledExpandableSectionToggle
-        isExpanded={expanded}
-        onToggle={() => setExpanded(!expanded)}
-        contentId="code-block-expand"
-        direction="up"
-      >
-        {expanded ? "Show Less" : "Show More"}
-      </StyledExpandableSectionToggle>
-    </CodeBlock>
+      {needsExpansion(code) && (
+        <StyledExpandableSectionToggle
+          isExpanded={expanded}
+          onToggle={() => setExpanded(!expanded)}
+          contentId="code-block-expand"
+          direction="up"
+        >
+          {expanded ? "Show Less" : "Show More"}
+        </StyledExpandableSectionToggle>
+      )}
+    </StyledCodeBlock>
   );
 };
 
 function needsExpansion(value: string): boolean {
   return value.split("\n").length > 3;
 }
+
+const StyledCodeBlock = styled(CodeBlock)`
+  margin-bottom: 4px;
+`;
 
 const StyledExpandableSectionToggle = styled(ExpandableSectionToggle)`
   --pf-c-expandable-section__toggle--PaddingTop: 0.5rem;
