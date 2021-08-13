@@ -6,6 +6,7 @@ import { AttributeTable } from "./AttributeTable";
 import { LifecycleTable } from "./LifecycleTable";
 import { Config } from "./Config";
 import { Details } from "./Details";
+import { CallbacksTable } from "./CallbacksTable";
 
 export const CatalogTabs: React.FunctionComponent<{
   service: ServiceModel;
@@ -44,6 +45,11 @@ export const CatalogTabs: React.FunctionComponent<{
       <Tab eventKey={3} title="Config">
         <TabContainer>
           <Config serviceName={service.name} />
+        </TabContainer>
+      </Tab>
+      <Tab eventKey={4} title="Callbacks">
+        <TabContainer>
+          <CallbacksTable serviceName={service.name} />
         </TabContainer>
       </Tab>
     </Tabs>
