@@ -25,7 +25,7 @@ export const InstanceLogRow: React.FC<Props> = ({
   state,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Details);
-  const rowRef = useRef<HTMLSpanElement>(null);
+  const rowRef = useRef<HTMLTableDataCellElement>(null);
   const attributesOnClick = () => {
     if (!isExpanded) {
       onToggle();
@@ -49,8 +49,7 @@ export const InstanceLogRow: React.FC<Props> = ({
           <DateWithTooltip date={timestamp} />
         </Td>
         <Td dataLabel={"state"}>{state}</Td>
-        <Td dataLabel={"Attributes"}>
-          <span ref={rowRef} />
+        <Td dataLabel={"Attributes"} ref={rowRef}>
           <AttributesSummaryView
             summary={attributesSummary}
             onClick={attributesOnClick}
