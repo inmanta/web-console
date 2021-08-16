@@ -1,8 +1,9 @@
 import { AttributesSummary, DateInfo, InstanceLog } from "@/Core";
 import { DateWithTooltip, ExpandableRowProps } from "@/UI/Components";
 import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
+import { scrollRowIntoView } from "@/UI/Utils";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Tabs, TabKey } from "./Tabs";
 
 interface Props extends ExpandableRowProps {
@@ -24,9 +25,13 @@ export const InstanceLogRow: React.FC<Props> = ({
   state,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Details);
+  const rowRef = useRef<HTMLTableDataCellElement>(null);
   const attributesOnClick = () => {
-    if (!isExpanded) onToggle();
+    if (!isExpanded) {
+      onToggle();
+    }
     setActiveTab(TabKey.Attributes);
+    scrollRowIntoView(rowRef);
   };
 
   return (
@@ -44,13 +49,11 @@ export const InstanceLogRow: React.FC<Props> = ({
           <DateWithTooltip date={timestamp} />
         </Td>
         <Td dataLabel={"state"}>{state}</Td>
-        <Td dataLabel={"Attributes"}>
-          <a href={`#instance-row-${id}`}>
-            <AttributesSummaryView
-              summary={attributesSummary}
-              onClick={attributesOnClick}
-            />
-          </a>
+        <Td dataLabel={"Attributes"} ref={rowRef}>
+          <AttributesSummaryView
+            summary={attributesSummary}
+            onClick={attributesOnClick}
+          />
         </Td>
       </Tr>
       <Tr isExpanded={isExpanded} data-testid={`details_${id}`}>
