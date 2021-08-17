@@ -2,34 +2,39 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Dropdown, DropdownItem, DropdownToggle } from "@patternfly/react-core";
 import { CaretDownIcon, CheckIcon } from "@patternfly/react-icons";
+import { PageSize } from "@/Core";
 
 interface Props {
-  pageSize: number;
-  setPageSize: (pageSize: number) => void;
+  currentPageSize: PageSize.Type;
+  setPageSize: (pageSize: PageSize.Type) => void;
 }
+
 export const PageSizeSelector: React.FC<Props> = ({
-  pageSize,
+  currentPageSize,
   setPageSize,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const onSelect = (event, selection) => {
-    setPageSize(selection);
+  const onSelect = (pageSize: PageSize.Type) => {
+    setPageSize(pageSize);
     setIsOpen(false);
   };
-  const onToggle = (isOpen) => {
+
+  const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);
   };
-  const dropdownItems = [5, 10, 20, 50, 100].map((size) => (
+
+  const dropdownItems = PageSize.list.map((pageSize) => (
     <DropdownItem
-      key={size}
-      value={size}
-      onClick={(event) => onSelect(event, size)}
+      key={pageSize.value}
+      value={pageSize.value}
+      onClick={() => onSelect(pageSize)}
     >
-      {size}
-      {pageSize === size && <StyledCheckIcon />}
+      {pageSize}
+      {PageSize.equals(currentPageSize, pageSize) && <StyledCheckIcon />}
     </DropdownItem>
   ));
+
   return (
     <Dropdown
       isOpen={isOpen}

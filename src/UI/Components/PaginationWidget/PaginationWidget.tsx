@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
-import { Pagination } from "@/Core";
+import { Pagination, PageSize } from "@/Core";
 import { AngleLeftIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { Indicator } from "./Indicator";
 import { PageSizeSelector } from "./PageSizeSelector";
@@ -8,14 +8,17 @@ import { PageSizeSelector } from "./PageSizeSelector";
 export const PaginationWidget: React.FC<{
   handlers: Pagination.Handlers;
   metadata: Pagination.Metadata;
-  pageSize: number;
-  setPageSize?: (pageSize: number) => void;
+  pageSize: PageSize.Type;
+  setPageSize?: (pageSize: PageSize.Type) => void;
 }> = ({ handlers: { prev, next }, metadata, pageSize, setPageSize }) => {
   return (
     <>
       <Indicator metadata={metadata} />
       {setPageSize && (
-        <PageSizeSelector pageSize={pageSize} setPageSize={setPageSize} />
+        <PageSizeSelector
+          currentPageSize={pageSize}
+          setPageSize={setPageSize}
+        />
       )}
       <Button
         variant="plain"

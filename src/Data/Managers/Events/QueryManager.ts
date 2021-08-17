@@ -19,7 +19,7 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
         service_entity,
         sort?.order,
         stringifyFilter(filter),
-        pageSize,
+        pageSize.value,
       ],
       "Events",
       getUrl,

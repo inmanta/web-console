@@ -10,6 +10,7 @@ export * from "./InstanceResourceModel";
 export * from "./ServiceInstanceModel";
 export * as ServiceInstanceParams from "./ServiceInstanceParams";
 export * from "./ServiceModel";
+export * as PageSize from "./PageSize";
 export * as Pagination from "./Pagination";
 export * from "./Diagnostics";
 export * as EventParams from "./EventParams";
