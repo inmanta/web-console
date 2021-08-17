@@ -9,6 +9,7 @@ import {
 } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";
+import { FileBlock } from "./FileBlock";
 
 interface Props {
   attributes: ClassifiedAttribute[];
@@ -17,65 +18,64 @@ interface Props {
 export const AttributeList: React.FC<Props> = ({ attributes }) => (
   <StyledDescriptionList isHorizontal isAutoColumnWidths>
     {attributes.map((attribute) => (
-      <AttributeGroup key={attribute.key} attribute={attribute} />
+      <DescriptionListGroup key={attribute.key}>
+        <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
+        <DescriptionListDescription>
+          <AttributeValue attribute={attribute} />
+        </DescriptionListDescription>
+      </DescriptionListGroup>
     ))}
   </StyledDescriptionList>
 );
 
-const AttributeGroup: React.FC<{ attribute: ClassifiedAttribute }> = ({
+const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
   attribute,
 }) => {
   switch (attribute.kind) {
     case "Undefined":
       return (
-        <DescriptionListGroup>
-          <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
-          <DescriptionListDescription>
-            <OutlinedQuestionCircleIcon /> undefined
-          </DescriptionListDescription>
-        </DescriptionListGroup>
+        <>
+          <OutlinedQuestionCircleIcon /> undefined
+        </>
       );
+
+    case "Password":
+      return <span>{attribute.value}</span>;
 
     case "SingleLine":
-    case "MultiLine":
-    case "File":
-    case "Password":
       return (
-        <DescriptionListGroup>
-          <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
-          <DescriptionListDescription>
-            <TextWithCopy
-              shortText={attribute.value}
-              fullText={attribute.value}
-              tooltipContent="Copy to clipboard"
-            />
-          </DescriptionListDescription>
-        </DescriptionListGroup>
+        <TextWithCopy
+          shortText={attribute.value}
+          fullText={attribute.value}
+          tooltipContent="Copy to clipboard"
+        />
       );
+
+    case "MultiLine":
+      return (
+        <MultiTextWithCopy
+          shortText={attribute.value}
+          fullText={attribute.value}
+          tooltipContent="Copy to clipboard"
+        />
+      );
+
+    case "File":
+      return <FileBlock hash={attribute.value} />;
 
     case "Json":
-      return (
-        <DescriptionListGroup>
-          <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
-          <DescriptionListDescription>
-            <CodeHighlighter code={attribute.value} language="json" />
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-      );
+      return <CodeHighlighter code={attribute.value} language="json" />;
 
     case "Xml":
-      return (
-        <DescriptionListGroup>
-          <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
-          <DescriptionListDescription>
-            <CodeHighlighter code={attribute.value} language="xml" />
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-      );
+      return <CodeHighlighter code={attribute.value} language="xml" />;
   }
 };
 
 const StyledDescriptionList = styled(DescriptionList)`
   --pf-c-description-list--m-horizontal__term--width: 24ch;
   --pf-c-description-list--RowGap: 0;
+`;
+
+const MultiTextWithCopy = styled(TextWithCopy)`
+  white-space: pre-wrap;
 `;

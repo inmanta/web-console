@@ -12,9 +12,10 @@ export const TextWithCopy: React.FC<Props> = ({
   shortText,
   fullText,
   tooltipContent,
+  ...props
 }) => {
   return (
-    <Container>
+    <Container {...props}>
       {shortText}
       <StyledCopyIcon fullText={fullText} tooltipContent={tooltipContent} />
     </Container>

@@ -5,6 +5,7 @@ import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
 import xml from "react-syntax-highlighter/dist/esm/languages/hljs/xml";
 import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
 import {
+  Button,
   ClipboardCopyButton,
   CodeBlock,
   CodeBlockAction,
@@ -12,16 +13,18 @@ import {
   ExpandableSectionToggle,
 } from "@patternfly/react-core";
 import copy from "copy-to-clipboard";
+import { CloseIcon } from "@patternfly/react-icons";
 
 SyntaxHighlighter.registerLanguage("json", json);
 SyntaxHighlighter.registerLanguage("xml", xml);
 
 interface Props {
   code: string;
-  language: "json" | "xml";
+  language: "json" | "xml" | "text";
+  close?: () => void;
 }
 
-export const CodeHighlighter: React.FC<Props> = ({ code, language }) => {
+export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
@@ -36,19 +39,28 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language }) => {
   const styles = needsExpansion(code) && !expanded ? { height: "60px" } : {};
 
   const actions = (
-    <CodeBlockAction>
-      <ClipboardCopyButton
-        id="copy-button"
-        textId="code-content"
-        aria-label="Copy to clipboard"
-        onClick={onCopy}
-        exitDelay={600}
-        maxWidth="110px"
-        variant="plain"
-      >
-        {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
-      </ClipboardCopyButton>
-    </CodeBlockAction>
+    <>
+      <CodeBlockAction>
+        <ClipboardCopyButton
+          id="copy-button"
+          textId="code-content"
+          aria-label="Copy to clipboard"
+          onClick={onCopy}
+          exitDelay={600}
+          maxWidth="110px"
+          variant="plain"
+        >
+          {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
+        </ClipboardCopyButton>
+      </CodeBlockAction>
+      {close && (
+        <CodeBlockAction>
+          <Button variant="plain" aria-label="Close icon" onClick={close}>
+            <CloseIcon />
+          </Button>
+        </CodeBlockAction>
+      )}
+    </>
   );
 
   return (
