@@ -10,7 +10,7 @@ import {
 import { words } from "@/UI/words";
 import React, { useContext, useState } from "react";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
-import { ResourceTableControls } from "./ResourceTableControls";
+import { ResourceTableControls } from "./TableControls";
 
 export const Wrapper: React.FC = ({ children }) => (
   <PageSectionWithTitle title={words("inventory.tabs.resources")}>
