@@ -2,6 +2,8 @@ import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { AttributeList } from "./AttributeList";
 import { classified } from "./Data";
+import { DependencyProvider } from "@/UI/Dependency";
+import { InstantFileFetcher } from "@/Test";
 
 export default {
   title: "AttributeList",
@@ -9,7 +11,9 @@ export default {
 };
 
 const Template: Story<ComponentProps<typeof AttributeList>> = (args) => (
-  <AttributeList {...args} />
+  <DependencyProvider dependencies={{ fileFetcher: new InstantFileFetcher() }}>
+    <AttributeList {...args} />
+  </DependencyProvider>
 );
 
 export const Default = Template.bind({});

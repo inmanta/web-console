@@ -4,6 +4,7 @@ export * from "./CommandManager";
 export * from "./CommandResolver";
 export * from "./ConfigFinalizer";
 export * from "./Fetcher";
+export * from "./FileFetcher";
 export * from "./Formatter";
 export * from "./KeyMaker";
 export * from "./ManagerResolver";

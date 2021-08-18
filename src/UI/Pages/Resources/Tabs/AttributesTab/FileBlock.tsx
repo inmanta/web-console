@@ -1,15 +1,27 @@
-import React from "react";
-// import React, { useState } from "react";
-import { TextWithCopy } from "@/UI/Components";
-// import { CodeHighlighter, TextWithCopy } from "@/UI/Components";
-// import { Button } from "@patternfly/react-core";
-// import { DownloadIcon } from "@patternfly/react-icons";
+import React, { useState, useContext } from "react";
+import {
+  Alert,
+  AlertActionCloseButton,
+  Button,
+  Spinner,
+} from "@patternfly/react-core";
+import { DownloadIcon } from "@patternfly/react-icons";
+import { RemoteData } from "@/Core";
+import { CodeHighlighter, TextWithCopy } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { Delayed } from "@/UI/Utils";
 
 export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
-  // const [fileContent, setFileContent] = useState<null | string>(null);
+  const { fileFetcher } = useContext(DependencyContext);
+  const [fileContent, setFileContent] = useState<
+    RemoteData.Type<string, string>
+  >(RemoteData.notAsked());
 
-  // const getFile = async () => setFileContent("test");
-  // const close = () => setFileContent(null);
+  const getFile = async () => {
+    setFileContent(RemoteData.loading());
+    setFileContent(RemoteData.fromEither(await fileFetcher.get(hash)));
+  };
+  const close = () => setFileContent(RemoteData.notAsked);
 
   return (
     <>
@@ -18,17 +30,42 @@ export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
         fullText={hash}
         tooltipContent="Copy to clipboard"
       />
-      {/* <Button
+      <Button
         variant="link"
         icon={<DownloadIcon />}
         onClick={getFile}
-        isDisabled={fileContent !== null}
+        isDisabled={
+          RemoteData.isSuccess(fileContent) || RemoteData.isLoading(fileContent)
+        }
       >
         Get File
       </Button>
-      {fileContent && (
-        <CodeHighlighter code={fileContent} language="text" close={close} />
-      )} */}
+      {RemoteData.fold(
+        {
+          notAsked: () => null,
+          loading: () => (
+            <Delayed delay={500}>
+              <div>
+                <Spinner isSVG size="md" />
+              </div>
+            </Delayed>
+          ),
+          failed: (message) => (
+            <Alert
+              variant="danger"
+              isInline
+              title="Something went wrong with fetching the file content"
+              actionClose={<AlertActionCloseButton onClose={close} />}
+            >
+              {message}
+            </Alert>
+          ),
+          success: (content) => (
+            <CodeHighlighter code={content} language="text" close={close} />
+          ),
+        },
+        fileContent
+      )}
     </>
   );
 };

@@ -77,5 +77,7 @@ const StyledDescriptionList = styled(DescriptionList)`
 `;
 
 const MultiTextWithCopy = styled(TextWithCopy)`
+  display: block;
+  max-width: 80ch;
   white-space: pre-wrap;
 `;
