@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Tbody, Tr, Td } from "@patternfly/react-table";
+import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import { ResourceRow } from "@/Core";
 import { words } from "@/UI/words";
 import { TabKey, Tabs } from "./Tabs";
@@ -56,11 +56,13 @@ export const ResourceTableRow: React.FC<Props> = ({
       {isExpanded && (
         <Tr isExpanded={isExpanded} data-testid={`details_${row.id}`}>
           <Td colSpan={numberOfColumns}>
-            <Tabs
-              id={row.id}
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-            />
+            <ExpandableRowContent>
+              <Tabs
+                id={row.id}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+              />
+            </ExpandableRowContent>
           </Td>
         </Tr>
       )}

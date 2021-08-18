@@ -1,0 +1,68 @@
+import { FileFetcher, Either, Maybe } from "@/Core";
+import { BaseApiHelper } from "./BaseApiHelper";
+
+interface RawResponse {
+  data?: {
+    content: string;
+  };
+  message?: string;
+}
+
+export class FileFetcherImpl implements FileFetcher {
+  private environment: Maybe.Type<string> = Maybe.none();
+
+  constructor(
+    private readonly baseApiHelper: BaseApiHelper,
+    environment?: string
+  ) {
+    if (typeof environment === "undefined") return;
+    this.environment = Maybe.some(environment);
+  }
+
+  private getEnvironment(): string {
+    if (Maybe.isSome(this.environment)) return this.environment.value;
+    throw new Error("Environment not set");
+  }
+
+  setEnvironment(environment: string): void {
+    this.environment = Maybe.some(environment);
+  }
+
+  private sanitizeFileId(fileId): string {
+    return window.encodeURIComponent(fileId);
+  }
+
+  private getUrl(fileId: string): string {
+    return `/api/v1/file/${this.sanitizeFileId(fileId)}`;
+  }
+
+  async get(fileId: string): Promise<Either.Type<string, string>> {
+    return this.unpack(
+      await this.baseApiHelper.get<RawResponse>(
+        `${this.baseApiHelper.getBaseUrl()}${this.getUrl(fileId)}`,
+        this.getEnvironment()
+      )
+    );
+  }
+
+  private unpack(
+    either: Either.Type<string, RawResponse>
+  ): Either.Type<string, string> {
+    if (Either.isRight(either)) {
+      const response = either.value;
+      if (typeof response.message !== "undefined") {
+        return Either.left(response.message);
+      }
+      if (
+        typeof response.data !== "undefined" &&
+        typeof response.data.content !== "undefined"
+      ) {
+        return Either.right(response.data.content);
+      }
+
+      return Either.left("No data");
+    }
+
+    return either;
+  }
+}

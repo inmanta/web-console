@@ -4,6 +4,7 @@ export * from "./DummyDatePresenter";
 export * from "./DummyStatePresenter";
 export * from "./DynamicManagerResolver";
 export * from "./InstantFetcher";
+export * from "./InstantFileFetcher";
 export * from "./InstantPoster";
 export * from "./StaticScheduler";
 export * from "./DummyAuthHelper";

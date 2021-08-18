@@ -34,6 +34,8 @@ const dict = {
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
   "error.authorizationFailed": "Authorization failed, please log in",
+  "error.fetch": (error: string) =>
+    `There was an error retrieving data: ${error}`,
 
   /**
    * Inventory related text
@@ -216,6 +218,7 @@ const dict = {
     `There was an error retrieving data: ${error}`,
   "resources.requires.resourceId": "Resource Id",
   "resources.requires.deployState": "Deploy State",
+  "resources.attributes.title": "Desired State",
 
   /**
    * Navigation related text
