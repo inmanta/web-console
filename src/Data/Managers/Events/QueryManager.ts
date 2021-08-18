@@ -1,5 +1,8 @@
 import { Fetcher, StateHelper, Scheduler, EventParams } from "@/Core";
-import { ContinuousQueryManagerImpl } from "@/Data/Common";
+import {
+  ContinuousQueryManagerImpl,
+  getPaginationHandlers,
+} from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
 export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
@@ -24,14 +27,12 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
       "Events",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
-        if (typeof links === "undefined")
+        if (typeof links === "undefined") {
           return { data: data, handlers: {}, metadata };
-        const { prev, next } = links;
-        const prevCb = prev ? () => setUrl(prev) : undefined;
-        const nextCb = next ? () => setUrl(next) : undefined;
+        }
         return {
           data: data,
-          handlers: { prev: prevCb, next: nextCb },
+          handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
       },
