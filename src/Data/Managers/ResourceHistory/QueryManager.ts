@@ -14,7 +14,12 @@ export class ResourceHistoryQueryManager extends ContinuousQueryManagerImpl<"Res
       stateHelper,
       scheduler,
       () => environment,
-      ({ sort, pageSize }) => [environment, pageSize, sort?.name, sort?.order],
+      ({ sort, pageSize }) => [
+        environment,
+        pageSize.value,
+        sort?.name,
+        sort?.order,
+      ],
       "ResourceHistory",
       getUrl,
       ({ data, links, metadata }, setUrl) => {

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { RemoteData, SortDirection } from "@/Core";
+import { PageSize, RemoteData, SortDirection } from "@/Core";
 import { ResourceHistoryTablePresenter } from "./TablePresenter";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { ResourceHistoryTable } from "./ResourceHistoryTable";
@@ -19,7 +19,7 @@ interface Props {
 
 export const ResourceHistoryView: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(PageSize.initial);
   const [order, setOrder] = useState<SortDirection>("desc");
   const sort = order ? { name: "date", order: order } : undefined;
   const [data, retry] = queryResolver.useContinuous<"ResourceHistory">({

@@ -221,7 +221,7 @@ const dict = {
   "resources.requires.deployState": "Deploy State",
   "resources.history.column.numberOfDependencies": "Number of dependencies",
   "resources.history.column.date": "Date",
-  "resources.history.tabs.attributes": "Attributes",
+  "resources.history.tabs.attributes": "Desired State",
   "resources.history.tabs.requires": "Requires",
   "resources.history.empty.message": "No requirements found",
   "resources.history.failed.title": "Something went wrong",

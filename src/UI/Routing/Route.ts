@@ -73,6 +73,7 @@ export const Resources: Route = {
 
 export const ResourceHistory: Route = {
   kind: "ResourceHistory",
+  parent: "Resources",
   path: `${BASE_URL}${paths.ResourceHistory}`,
   label: "Resource History",
 };

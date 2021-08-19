@@ -24,6 +24,7 @@ import { ResourceParams as ResourceParams } from "./ResourceParams";
 import { WithId } from "../Language";
 import { ResourceHistory } from "./ResourceHistory";
 import { Sort } from "./Params";
+import { PageSize } from "./PageSize";
 
 type Query =
   | ServicesQuery
@@ -258,7 +259,7 @@ interface ResourceDetailsManifest {
 export interface ResourceHistoryQuery extends WithId {
   kind: "ResourceHistory";
   sort?: Sort;
-  pageSize: number;
+  pageSize: PageSize;
 }
 
 interface ResourceHistoryManifest {

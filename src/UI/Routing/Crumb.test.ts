@@ -54,3 +54,22 @@ test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be 
     },
   ]);
 });
+
+test("GIVEN '/resources/123/history' THEN breadcrumbs should be ['Resources', 'Resource History']", () => {
+  const crumbs = getCrumbs("/resources/123/history");
+  expect(crumbs).toHaveLength(2);
+  expect(crumbs).toEqual([
+    {
+      kind: "Resources",
+      label: "Resources",
+      url: "/resources",
+      active: false,
+    },
+    {
+      kind: "ResourceHistory",
+      label: "Resource History",
+      url: "/resources/123/history",
+      active: true,
+    },
+  ]);
+});

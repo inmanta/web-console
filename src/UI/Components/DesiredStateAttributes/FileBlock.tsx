@@ -7,9 +7,10 @@ import {
 } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
 import { RemoteData } from "@/Core";
-import { CodeHighlighter, TextWithCopy } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { Delayed } from "@/UI/Utils";
+import { CodeHighlighter } from "@/UI/Components/CodeHighlighter";
+import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 
 export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
   const { fileFetcher } = useContext(DependencyContext);

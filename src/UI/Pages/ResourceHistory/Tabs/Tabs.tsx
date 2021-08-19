@@ -1,8 +1,15 @@
 import React from "react";
 import { Table, TableBody, TableHeader } from "@patternfly/react-table";
-import { InfoCircleIcon, ModuleIcon } from "@patternfly/react-icons";
-import { IconTabs, TabDescriptor } from "@/UI/Components";
+import { Card, CardBody } from "@patternfly/react-core";
+import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
+import {
+  AttributeClassifier,
+  AttributeList,
+  IconTabs,
+  TabDescriptor,
+} from "@/UI/Components";
 import { words } from "@/UI/words";
+import { JsonFormatter, XmlFormatter } from "@/Data";
 
 export enum TabKey {
   Attributes = "Attributes",
@@ -36,7 +43,7 @@ const attributesTab = (
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.history.tabs.attributes"),
-  icon: <InfoCircleIcon />,
+  icon: <ListIcon />,
   view: <AttributesTab attributes={attributes} />,
 });
 
@@ -50,12 +57,24 @@ const requiresTab = (requires: string[]): TabDescriptor<TabKey> => ({
 const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({
   attributes,
 }) => {
-  return <>{JSON.stringify(attributes)}</>;
+  const classifier = new AttributeClassifier(
+    new JsonFormatter(),
+    new XmlFormatter()
+  );
+  const classifiedAttributes = classifier.classify(attributes);
+  return (
+    <Card isCompact>
+      <CardBody>
+        <AttributeList attributes={classifiedAttributes} />
+      </CardBody>
+    </Card>
+  );
 };
 
 const RequiresTab: React.FC<{ requires: string[] }> = ({ requires }) => (
   <Table
     cells={[words("resources.history.tabs.requires")]}
+    aria-label={words("resources.history.tabs.requires")}
     rows={requires.map((req) => [req])}
   >
     <TableHeader />
