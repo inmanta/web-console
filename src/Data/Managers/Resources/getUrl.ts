@@ -20,7 +20,6 @@ export function getUrl({
           { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
-  const limitParam = pageSize ? `?limit=${pageSize}` : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  return `/api/v2/resource${limitParam}${filterParam}${sortParam}`;
+  return `/api/v2/resource?limit=${pageSize.value}${filterParam}${sortParam}`;
 }

@@ -51,7 +51,8 @@ export const DetailsTab: React.FC<Props> = ({ id }) => {
               variant="link"
               isInline={true}
               icon={<ExternalLinkAltIcon />}
-              href={urlManager.getModelVersionUrl(
+              href={urlManager.getVersionedResourceUrl(
+                resourceDetails.resource_id,
                 resourceDetails.first_generated_version.toString()
               )}
               target="_blank"

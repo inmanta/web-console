@@ -34,6 +34,8 @@ const dict = {
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
   "error.authorizationFailed": "Authorization failed, please log in",
+  "error.fetch": (error: string) =>
+    `There was an error retrieving data: ${error}`,
 
   /**
    * Inventory related text
@@ -206,7 +208,7 @@ const dict = {
   "resources.details.lastDeploy": "Last Deploy",
   "resources.details.firstTime": "Created",
   "resources.details.history": "History",
-  "resources.details.versionLink": "Open model version details",
+  "resources.details.versionLink": "Open resource version details",
   "resources.details.failed.title": "Something went wrong",
   "resources.details.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
@@ -225,6 +227,7 @@ const dict = {
   "resources.history.failed.title": "Something went wrong",
   "resources.history.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
+  "resources.attributes.title": "Desired State",
 
   /**
    * Navigation related text

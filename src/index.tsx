@@ -15,6 +15,7 @@ import {
   BaseApiHelper,
   KeycloakAuthHelper,
   getStoreInstance,
+  FileFetcherImpl,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
 
@@ -50,10 +51,11 @@ const commandResolver = new CommandResolverImpl(
   )
 );
 const urlManager = new UrlManagerImpl(baseUrl);
+const fileFetcher = new FileFetcherImpl(baseApiHelper);
 
 ReactDOM.render(
   <DependencyProvider
-    dependencies={{ queryResolver, commandResolver, urlManager }}
+    dependencies={{ queryResolver, commandResolver, urlManager, fileFetcher }}
   >
     <StoreProvider store={store}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />

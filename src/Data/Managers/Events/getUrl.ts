@@ -14,8 +14,7 @@ export function getUrl(
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  const limitParam = pageSize ? `?limit=${pageSize}` : "";
-  return `/lsm/v1/service_inventory/${service_entity}/${id}/events${limitParam}${sortParam}${filterParam}`;
+  return `/lsm/v1/service_inventory/${service_entity}/${id}/events?limit=${pageSize.value}${sortParam}${filterParam}`;
 }
 
 type Filter = NonNullable<Query.SubQuery<"Events">["filter"]>;

@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump react-syntax-highlighter from 15.4.3 to 15.4.4'
+destination-branches:
+- master
+- iso4
+sections: {}

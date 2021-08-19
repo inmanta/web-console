@@ -1,0 +1,102 @@
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
+import xml from "react-syntax-highlighter/dist/esm/languages/hljs/xml";
+import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
+import {
+  Button,
+  ClipboardCopyButton,
+  CodeBlock,
+  CodeBlockAction,
+  CodeBlockCode,
+  ExpandableSectionToggle,
+} from "@patternfly/react-core";
+import copy from "copy-to-clipboard";
+import { CloseIcon } from "@patternfly/react-icons";
+
+SyntaxHighlighter.registerLanguage("json", json);
+SyntaxHighlighter.registerLanguage("xml", xml);
+
+interface Props {
+  code: string;
+  language: "json" | "xml" | "text";
+  close?: () => void;
+}
+
+export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
+  const [copied, setCopied] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+
+  const onCopy = () => {
+    copy(code);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  };
+
+  const styles = needsExpansion(code) && !expanded ? { height: "60px" } : {};
+
+  const actions = (
+    <>
+      <CodeBlockAction>
+        <ClipboardCopyButton
+          id="copy-button"
+          textId="code-content"
+          aria-label="Copy to clipboard"
+          onClick={onCopy}
+          exitDelay={600}
+          maxWidth="110px"
+          variant="plain"
+        >
+          {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
+        </ClipboardCopyButton>
+      </CodeBlockAction>
+      {close && (
+        <CodeBlockAction>
+          <Button variant="plain" aria-label="Close icon" onClick={close}>
+            <CloseIcon />
+          </Button>
+        </CodeBlockAction>
+      )}
+    </>
+  );
+
+  return (
+    <StyledCodeBlock actions={actions}>
+      <CodeBlockCode>
+        <SyntaxHighlighter
+          language={language}
+          style={docco}
+          customStyle={{ padding: 0, backgroundColor: "initial", ...styles }}
+        >
+          {code}
+        </SyntaxHighlighter>
+      </CodeBlockCode>
+      {needsExpansion(code) && (
+        <StyledExpandableSectionToggle
+          isExpanded={expanded}
+          onToggle={() => setExpanded(!expanded)}
+          contentId="code-block-expand"
+          direction="up"
+        >
+          {expanded ? "Show Less" : "Show More"}
+        </StyledExpandableSectionToggle>
+      )}
+    </StyledCodeBlock>
+  );
+};
+
+function needsExpansion(value: string): boolean {
+  return value.split("\n").length > 3;
+}
+
+const StyledCodeBlock = styled(CodeBlock)`
+  margin-bottom: 4px;
+`;
+
+const StyledExpandableSectionToggle = styled(ExpandableSectionToggle)`
+  --pf-c-expandable-section__toggle--PaddingTop: 0.5rem;
+  --pf-c-expandable-section__toggle--PaddingBottom: 0;
+`;

@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump regenerator-runtime from 0.13.7 to 0.13.9'
+destination-branches:
+- master
+- iso4
+sections: {}
