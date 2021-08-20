@@ -219,6 +219,7 @@ const dict = {
     `There was an error retrieving data: ${error}`,
   "resources.requires.resourceId": "Resource Id",
   "resources.requires.deployState": "Deploy State",
+  "resources.history.title": "Resource History",
   "resources.history.column.numberOfDependencies": "Number of dependencies",
   "resources.history.column.date": "Date",
   "resources.history.tabs.attributes": "Desired State",

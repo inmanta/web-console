@@ -6,7 +6,7 @@ import { words } from "@/UI/words";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithTitle {...props} title={words("history.title")}>
+  <PageSectionWithTitle {...props} title={words("resources.history.title")}>
     {children}
   </PageSectionWithTitle>
 );
