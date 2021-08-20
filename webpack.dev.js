@@ -13,16 +13,19 @@ module.exports = merge(common, {
   mode: "development",
   devtool: "eval-source-map",
   devServer: {
-    contentBase: "./dist",
     host: HOST,
     port: PORT,
     compress: true,
-    inline: true,
     historyApiFallback: true,
     hot: true,
-    overlay: true,
-    watchOptions: {
-      ignored: /node_modules/,
+    client: {
+      overlay: true,
+    },
+    static: {
+      directory: path.resolve(__dirname, "dist"),
+      watch: {
+        ignored: /node_modules/,
+      },
     },
   },
   plugins: [
