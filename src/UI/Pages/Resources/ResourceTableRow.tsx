@@ -46,8 +46,9 @@ export const ResourceTableRow: React.FC<Props> = ({
           dataLabel={words("resources.column.numberOfDependencies")}
           onClick={openTabAndScrollTo(TabKey.Requires)}
         >
-          <span ref={rowRef} />
-          {row.numberOfDependencies}
+          <span ref={rowRef} style={{ cursor: "pointer" }}>
+            {row.numberOfDependencies}
+          </span>
         </Td>
         <Td dataLabel={words("resources.column.deployState")}>
           {row.deployState}
