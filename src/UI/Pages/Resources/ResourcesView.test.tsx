@@ -1,5 +1,5 @@
 import React from "react";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredFetcher,
@@ -170,20 +170,14 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
 });
 
 it.each`
-  filterName  | filterType  | filterValue   | placeholderText               | filterUrlName
-  ${"Status"} | ${"select"} | ${"deployed"} | ${"Select a Deploy State..."} | ${"status"}
-  ${"Agent"}  | ${"search"} | ${"agent2"}   | ${"Search for an agent..."}   | ${"agent"}
-  ${"Type"}   | ${"search"} | ${"File"}     | ${"Search for a type..."}     | ${"resource_type"}
-  ${"Value"}  | ${"search"} | ${"tmp"}      | ${"Search for a value..."}    | ${"resource_id_value"}
+  filterType  | filterValue   | placeholderText      | filterUrlName
+  ${"select"} | ${"deployed"} | ${"Deploy State..."} | ${"status"}
+  ${"search"} | ${"agent2"}   | ${"Agent..."}        | ${"agent"}
+  ${"search"} | ${"File"}     | ${"Type..."}         | ${"resource_type"}
+  ${"search"} | ${"tmp"}      | ${"Value..."}        | ${"resource_id_value"}
 `(
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
-  async ({
-    filterName,
-    filterType,
-    filterValue,
-    placeholderText,
-    filterUrlName,
-  }) => {
+  async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
     const { component, resourcesApiHelper } = setup();
     render(component);
 
@@ -195,14 +189,6 @@ it.each`
       name: "Resource Table Row",
     });
     expect(initialRows).toHaveLength(6);
-
-    userEvent.click(
-      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-        "button",
-        { name: "Status" }
-      )
-    );
-    userEvent.click(screen.getByRole("option", { name: filterName }));
 
     const input = await screen.findByPlaceholderText(placeholderText);
     userEvent.click(input);
