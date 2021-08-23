@@ -48,8 +48,9 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
           dataLabel={words("resources.history.column.numberOfDependencies")}
           onClick={openTabAndScrollTo(TabKey.Requires)}
         >
-          <span ref={rowRef} />
-          {row.numberOfDependencies}
+          <span ref={rowRef} style={{ cursor: "pointer" }}>
+            {row.numberOfDependencies}
+          </span>
         </Td>
       </Tr>
       {isExpanded && (
