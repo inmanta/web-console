@@ -61,7 +61,7 @@
     "@types/victory": "^33.1.5",
     "@types/webpack": "^5.28.0",
     "@types/xml-formatter": "^2.1.1",    
-    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^9.0.1",
