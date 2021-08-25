@@ -1,11 +1,9 @@
 const path = require("path");
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common.js");
-const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const publicPath = "";
 
 module.exports = merge(common, {
   mode: "production",
@@ -18,12 +16,8 @@ module.exports = merge(common, {
       filename: "[name].css",
       chunkFilename: "[name].bundle.css",
     }),
-    new webpack.EnvironmentPlugin({
-      PUBLIC_PATH: publicPath,
-    }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src", "index.html"),
-      PUBLIC_PATH: publicPath,
       favicon: path.resolve(__dirname, "public", "images", "favicon.ico"),
     }),
   ],
@@ -62,6 +56,6 @@ module.exports = merge(common, {
     ],
   },
   output: {
-    publicPath: publicPath,
+    publicPath: "",
   },
 });
