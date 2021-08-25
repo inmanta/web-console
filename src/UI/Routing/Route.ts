@@ -2,7 +2,7 @@ import { BaseUrlFinder } from "./BaseUrlFinder";
 import { paths } from "./Paths";
 import { Kinds } from "./Kinds";
 
-const BASE_URL = new BaseUrlFinder().getUrl(location.pathname);
+export const BASE_URL = new BaseUrlFinder().getUrl(location.pathname);
 
 interface ParamsManifest {
   Catalog: undefined;
@@ -88,6 +88,9 @@ export const allRoutes: Route[] = [
   Resources,
   ResourceHistory,
 ];
+
+export const DashboardUrl = (environment: string): string =>
+  `${BASE_URL.replace("/console", "/dashboard")}/#!/environment/${environment}`;
 
 export const getRouteFromKind = (kind: Kinds): Route => {
   switch (kind) {

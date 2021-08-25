@@ -57,7 +57,7 @@ export const Navigation: React.FC<{ environment: string }> = ({
         {
           id: "Dashboard",
           label: "Dashboard",
-          url: `/dashboard/#!/environment/${environment}`,
+          url: Route.DashboardUrl(environment),
           external: true,
         },
       ],
