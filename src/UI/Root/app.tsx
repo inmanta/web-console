@@ -26,7 +26,6 @@ export const App: React.FunctionComponent<{
       <Router>
         <EnvironmentHandlerProvider>
           <AppLayout
-            logoBaseUrl={""}
             keycloak={props.shouldUseAuth ? props.keycloak : undefined}
             shouldUseAuth={props.shouldUseAuth}
           >

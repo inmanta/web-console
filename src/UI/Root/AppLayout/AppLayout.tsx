@@ -20,23 +20,19 @@ import { GlobalStyles } from "@/UI/Styles";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 import { IconDropdown } from "./Toolbar/IconDropdown";
 import { EnvSelectorWithProvider } from "./Toolbar/Provider";
+import { Route } from "@/UI/Routing";
 
 interface IAppLayout {
-  logoBaseUrl: string;
   keycloak?: Keycloak.KeycloakInstance;
   children: React.ReactNode;
   shouldUseAuth: boolean;
 }
 
 export const AppLayout: React.FunctionComponent<IAppLayout> = ({
-  logoBaseUrl,
   keycloak,
   children,
   shouldUseAuth,
 }) => {
-  const logoProps = {
-    href: logoBaseUrl,
-  };
   React.useEffect(() => {
     if (keycloak && !keycloak.profile) {
       keycloak.loadUserProfile();
@@ -94,7 +90,7 @@ export const AppLayout: React.FunctionComponent<IAppLayout> = ({
   const Header = (
     <PageHeader
       logo={inmantaLogo}
-      logoProps={logoProps}
+      logoProps={{ href: Route.Catalog.path }}
       headerTools={shouldUseAuth ? <Profile /> : undefined}
       showNavToggle={true}
       topNav={<EnvSelectorWithProvider />}
