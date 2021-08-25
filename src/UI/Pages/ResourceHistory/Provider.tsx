@@ -5,18 +5,12 @@ import { Route } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
-const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithTitle {...props} title={words("resources.history.title")}>
-    {children}
-  </PageSectionWithTitle>
-);
-
 export const Provider: React.FC = () => {
   const { resourceId } = useParams<Route.Params<"ResourceHistory">>();
 
   return (
-    <Wrapper>
+    <PageSectionWithTitle title={words("resources.history.title")}>
       <ResourceHistoryView resourceId={resourceId} />
-    </Wrapper>
+    </PageSectionWithTitle>
   );
 };

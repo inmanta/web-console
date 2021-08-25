@@ -1,5 +1,8 @@
 import { Scheduler, Fetcher, StateHelper } from "@/Core";
-import { ContinuousQueryManagerImpl } from "@/Data/Common";
+import {
+  ContinuousQueryManagerImpl,
+  getPaginationHandlers,
+} from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
 export class ResourceHistoryQueryManager extends ContinuousQueryManagerImpl<"ResourceHistory"> {
@@ -25,12 +28,9 @@ export class ResourceHistoryQueryManager extends ContinuousQueryManagerImpl<"Res
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")
           return { data: data, handlers: {}, metadata };
-        const { prev, next } = links;
-        const prevCb = prev ? () => setUrl(prev) : undefined;
-        const nextCb = next ? () => setUrl(next) : undefined;
         return {
           data: data,
-          handlers: { prev: prevCb, next: nextCb },
+          handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
       },
