@@ -5,7 +5,7 @@ const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const publicPath = "/console/";
+const publicPath = "";
 
 module.exports = merge(common, {
   mode: "production",

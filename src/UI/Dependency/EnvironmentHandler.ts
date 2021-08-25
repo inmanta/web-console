@@ -2,6 +2,7 @@ import { EnvironmentModel, ProjectModel, RemoteData } from "@/Core";
 import { History } from "history";
 import { createContext } from "react";
 import { Store, useStoreState } from "@/Data";
+import { Route } from "../Routing";
 
 export interface SelectedProjectAndEnvironment {
   project: Partial<ProjectModel>;
@@ -51,7 +52,7 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
     const params = new URLSearchParams(this.history.location.search);
     if (params.get("env") !== environmentId) {
       params.set("env", environmentId);
-      this.history.push(`/lsm/catalog?${params}`);
+      this.history.push(`${Route.Catalog.path}?${params}`);
     }
     this.store.dispatch.projects.selectProjectAndEnvironment({
       project: projectId,
@@ -101,7 +102,7 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
       });
       const params = new URLSearchParams(this.history.location.search);
       params.set("env", value[0].environments[0].id);
-      this.history.push(`/lsm/catalog?${params}`);
+      this.history.push(`${Route.Catalog.path}?${params}`);
     }
   }
 

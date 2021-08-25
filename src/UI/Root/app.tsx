@@ -21,15 +21,12 @@ export const App: React.FunctionComponent<{
   keycloak: Keycloak.KeycloakInstance;
   shouldUseAuth: boolean;
 }> = (props) => {
-  const shouldAddBaseName = process.env.NODE_ENV === "production";
-  const baseName = shouldAddBaseName ? "/console" : "/";
-
   const AppWithStore = (
     <>
-      <Router basename={baseName}>
+      <Router>
         <EnvironmentHandlerProvider>
           <AppLayout
-            logoBaseUrl={baseName}
+            logoBaseUrl={""}
             keycloak={props.shouldUseAuth ? props.keycloak : undefined}
             shouldUseAuth={props.shouldUseAuth}
           >

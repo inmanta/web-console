@@ -7,7 +7,7 @@ type MatchedParams = Record<string, string>;
 export class BaseUrlFinder {
   getUrl(url: string): string {
     const result = this.find(url);
-    if (Maybe.isNone(result)) return "";
+    if (Maybe.isNone(result)) return this.santitizeUrl(url);
     return result.value;
   }
 
@@ -22,5 +22,9 @@ export class BaseUrlFinder {
 
   getPaths(): string[] {
     return [...Object.values(paths).map((path) => `*${path}`)];
+  }
+
+  santitizeUrl(url: string): string {
+    return url.endsWith("/") ? url.substring(0, url.length - 1) : url;
   }
 }
