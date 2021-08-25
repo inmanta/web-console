@@ -18,6 +18,7 @@ import {
   FileFetcherImpl,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { Route } from "./UI/Routing";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -38,7 +39,9 @@ if (externalKeycloakConf) {
 }
 
 const store = getStoreInstance();
-const baseUrl = process.env.API_BASEURL ? process.env.API_BASEURL : "";
+const baseUrl = process.env.API_BASEURL
+  ? process.env.API_BASEURL
+  : `${Route.BASE_URL.replace("/console", "")}`;
 const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
 const queryResolver = new QueryResolverImpl(
   new QueryManagerResolver(store, baseApiHelper)
