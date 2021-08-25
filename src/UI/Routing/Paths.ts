@@ -10,4 +10,5 @@ export const paths: Paths = {
   Diagnose: "/lsm/catalog/:service/inventory/:instance/diagnose",
   Events: "/lsm/catalog/:service/inventory/:instance/events",
   Resources: "/resources",
+  ResourceHistory: "/resources/:resourceId/history",
 };

@@ -1,10 +1,13 @@
 import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import {
+  AttributeClassifier,
+  AttributeList,
+  ErrorView,
+  LoadingView,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { AttributeClassifier } from "./AttributeClassifier";
-import { AttributeList } from "./AttributeList";
 import { Card, CardBody } from "@patternfly/react-core";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 

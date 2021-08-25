@@ -1,5 +1,7 @@
+import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -8,7 +10,9 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
+import { HistoryIcon } from "@patternfly/react-icons";
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface Props {
   id: string;
@@ -50,6 +54,20 @@ export const ResourceDetailsContent: React.FC<Props> = ({
             <DescriptionListDescription>
               {firstGeneratedTime}
             </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <Link
+              to={{
+                pathname: getUrl("ResourceHistory", {
+                  resourceId: id,
+                }),
+                search: location.search,
+              }}
+            >
+              <Button isBlock>
+                <HistoryIcon /> {words("inventory.statusTab.history")}
+              </Button>
+            </Link>
           </DescriptionListGroup>
         </DescriptionList>
       </CardBody>

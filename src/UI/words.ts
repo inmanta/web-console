@@ -207,6 +207,7 @@ const dict = {
   "resources.details.id": "Id",
   "resources.details.lastDeploy": "Last Deploy",
   "resources.details.firstTime": "Created",
+  "resources.details.history": "History",
   "resources.details.versionLink": "Open resource version details",
   "resources.details.failed.title": "Something went wrong",
   "resources.details.failed.body": (error: string) =>
@@ -218,6 +219,15 @@ const dict = {
     `There was an error retrieving data: ${error}`,
   "resources.requires.resourceId": "Resource Id",
   "resources.requires.deployState": "Deploy State",
+  "resources.history.title": "Resource History",
+  "resources.history.column.numberOfDependencies": "Number of dependencies",
+  "resources.history.column.date": "Date",
+  "resources.history.tabs.attributes": "Desired State",
+  "resources.history.tabs.requires": "Requires",
+  "resources.history.empty.message": "No requirements found",
+  "resources.history.failed.title": "Something went wrong",
+  "resources.history.failed.body": (error: string) =>
+    `There was an error retrieving data: ${error}`,
   "resources.attributes.title": "Desired State",
 
   /**

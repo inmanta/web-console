@@ -10,3 +10,4 @@ export * as Project from "./Project";
 export * as InstanceResource from "./InstanceResource";
 export * as Resource from "./Resource";
 export * as ResourceDetails from "./ResourceDetails";
+export * as ResourceHistory from "./ResourceHistory";

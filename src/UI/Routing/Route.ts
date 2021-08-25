@@ -12,6 +12,7 @@ interface ParamsManifest {
   Events: { service: string; instance: string };
   Diagnose: { service: string; instance: string };
   Resources: undefined;
+  ResourceHistory: { resourceId: string };
 }
 
 export type Params<R extends Kinds> = ParamsManifest[R];
@@ -70,6 +71,13 @@ export const Resources: Route = {
   label: "Resources",
 };
 
+export const ResourceHistory: Route = {
+  kind: "ResourceHistory",
+  parent: "Resources",
+  path: `${BASE_URL}${paths.ResourceHistory}`,
+  label: "Resource History",
+};
+
 export const allRoutes: Route[] = [
   Catalog,
   Inventory,
@@ -78,6 +86,7 @@ export const allRoutes: Route[] = [
   Diagnose,
   Events,
   Resources,
+  ResourceHistory,
 ];
 
 export const getRouteFromKind = (kind: Kinds): Route => {
@@ -96,5 +105,7 @@ export const getRouteFromKind = (kind: Kinds): Route => {
       return Events;
     case "Resources":
       return Resources;
+    case "ResourceHistory":
+      return ResourceHistory;
   }
 };

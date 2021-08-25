@@ -30,7 +30,7 @@ export const PageSizeSelector: React.FC<Props> = ({
       value={pageSize.value}
       onClick={() => onSelect(pageSize)}
     >
-      {pageSize}
+      {pageSize.value}
       {PageSize.equals(currentPageSize, pageSize) && <StyledCheckIcon />}
     </DropdownItem>
   ));

@@ -22,6 +22,9 @@ import {
 } from "./Resource";
 import { ResourceParams as ResourceParams } from "./ResourceParams";
 import { WithId } from "../Language";
+import { ResourceHistory } from "./ResourceHistory";
+import { Sort } from "./Params";
+import { PageSize } from "./PageSize";
 
 type Query =
   | ServicesQuery
@@ -35,7 +38,8 @@ type Query =
   | DiagnosticsQuery
   | ProjectsQuery
   | ResourcesQuery
-  | ResourceDetailsQuery;
+  | ResourceDetailsQuery
+  | ResourceHistoryQuery;
 
 export type Type = Query;
 
@@ -252,6 +256,32 @@ interface ResourceDetailsManifest {
   query: ResourceDetailsQuery;
 }
 
+export interface ResourceHistoryQuery extends WithId {
+  kind: "ResourceHistory";
+  sort?: Sort;
+  pageSize: PageSize;
+}
+
+interface ResourceHistoryManifest {
+  error: string;
+  apiResponse: {
+    data: ResourceHistory[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: ResourceHistory[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: ResourceHistory[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
+  query: ResourceHistoryQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -269,6 +299,7 @@ interface Manifest {
   Projects: ProjectsManifest;
   Resources: ResourcesManifest;
   ResourceDetails: ResourceDetailsManifest;
+  ResourceHistory: ResourceHistoryManifest;
 }
 
 /**
