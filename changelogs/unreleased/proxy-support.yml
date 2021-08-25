@@ -1,5 +1,3 @@
 description: Extend proxy support
 change-type: minor
 destination-branches: [master, iso4]
-sections:
-  feature: "{{description}}"
