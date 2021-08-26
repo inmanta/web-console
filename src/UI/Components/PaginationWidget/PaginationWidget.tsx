@@ -9,17 +9,12 @@ export const PaginationWidget: React.FC<{
   handlers: Pagination.Handlers;
   metadata: Pagination.Metadata;
   pageSize: PageSize.Type;
-  setPageSize?: (pageSize: PageSize.Type) => void;
+  setPageSize: (pageSize: PageSize.Type) => void;
 }> = ({ handlers: { prev, next }, metadata, pageSize, setPageSize }) => {
   return (
     <>
       <Indicator metadata={metadata} />
-      {setPageSize && (
-        <PageSizeSelector
-          currentPageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      )}
+      <PageSizeSelector currentPageSize={pageSize} setPageSize={setPageSize} />
       <Button
         variant="plain"
         onClick={prev}
