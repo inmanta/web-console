@@ -1,0 +1,6 @@
+description: Add page size selector to inventory table
+issue-nr: 644
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

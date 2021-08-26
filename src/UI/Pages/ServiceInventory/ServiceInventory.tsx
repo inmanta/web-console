@@ -51,6 +51,7 @@ export const ServiceInventory: React.FunctionComponent<{
   const [sortColumn, setSortColumn] = useState<string | undefined>(
     "created_at"
   );
+  const [pageSize, setPageSize] = useState(PageSize.initial);
   const [order, setOrder] = useState<SortDirection | undefined>("desc");
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;
@@ -61,6 +62,7 @@ export const ServiceInventory: React.FunctionComponent<{
     name: serviceName,
     sort,
     filter,
+    pageSize,
   });
 
   const paginationWidget = RemoteData.fold(
@@ -72,7 +74,8 @@ export const ServiceInventory: React.FunctionComponent<{
         <PaginationWidget
           handlers={handlers}
           metadata={metadata}
-          pageSize={PageSize.initial}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
         />
       ),
     },

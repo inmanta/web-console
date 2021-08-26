@@ -1,4 +1,4 @@
-import { Query, RemoteData, ServiceInstanceModel } from "@/Core";
+import { PageSize, Query, RemoteData, ServiceInstanceModel } from "@/Core";
 import { ServiceInstance } from "@/Test";
 import { getStoreInstance } from "./Setup";
 
@@ -13,6 +13,7 @@ describe("ServiceInstancesSlice ", () => {
     const firstQuery: Query.SubQuery<"ServiceInstances"> = {
       kind: "ServiceInstances",
       name: serviceInstancesFirstEnv[0].service_entity,
+      pageSize: PageSize.initial,
     };
     // Add instances for a service
     store.getActions().serviceInstances.setData({
@@ -44,6 +45,7 @@ describe("ServiceInstancesSlice ", () => {
     const secondQuery: Query.SubQuery<"ServiceInstances"> = {
       kind: "ServiceInstances",
       name: serviceInstancesSecondEnv[0].service_entity,
+      pageSize: PageSize.initial,
     };
     expect(
       store

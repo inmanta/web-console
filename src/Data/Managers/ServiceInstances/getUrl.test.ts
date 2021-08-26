@@ -1,4 +1,4 @@
-import { Query } from "@/Core";
+import { PageSize, Query } from "@/Core";
 import { getUrl } from "./getUrl";
 
 test("getUrl returns correct url for no filter & no sort", () => {
@@ -8,6 +8,7 @@ test("getUrl returns correct url for no filter & no sort", () => {
     name,
     filter: undefined,
     sort: undefined,
+    pageSize: PageSize.initial,
   };
 
   expect(getUrl(query)).toMatch(
@@ -24,10 +25,11 @@ test("getUrl returns correct url for filter & no sort", () => {
       state: ["up", "creating"],
     },
     sort: undefined,
+    pageSize: PageSize.from(10),
   };
 
   expect(getUrl(query)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating`
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=10&filter.state=up&filter.state=creating`
   );
 });
 
@@ -41,6 +43,7 @@ test("getUrl returns correct url for sort & no filter", () => {
       name: "state",
       order: "asc",
     },
+    pageSize: PageSize.initial,
   };
 
   expect(getUrl(query)).toMatch(
@@ -60,6 +63,7 @@ test("getUrl returns correct url for sort & filter", () => {
       name: "state",
       order: "asc",
     },
+    pageSize: PageSize.initial,
   };
 
   expect(getUrl(query)).toMatch(
@@ -78,9 +82,10 @@ test("getUrl returns correct url for empty filter", () => {
       attributeSetEmpty: [],
       attributeSetNotEmpty: [],
     },
+    pageSize: PageSize.from(50),
   };
 
   expect(getUrl(query)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=50`
   );
 });
