@@ -1920,16 +1920,16 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@patternfly/react-charts@^6.15.14":
-  version "6.15.14"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-charts/-/react-charts-6.15.14.tgz#450fb9fc6328bdc3a3cbef89c348d200a359dc8e"
-  integrity sha512-bwAnqK1QxxWQaXnwlTgRCk/QqrMq1Z5C5iqeVgX0FWyVM5YtBJRwvh9JOEhKQW9B7ed4ttxOhI4spMPOP14+tg==
+"@patternfly/react-charts@^6.15.20":
+  version "6.15.20"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-charts/-/react-charts-6.15.20.tgz#c0abcef10c61793ac61a5fcfdb118ccc2ea8d21e"
+  integrity sha512-aoHrANVAirdMs42rCSZuu2X+Sfa7jtePeoaN23p3ige3PitN4fbTsSCzu0o1jfdVKa8q56PHxxLtWa+rIWZieA==
   dependencies:
-    "@patternfly/react-styles" "^4.11.8"
-    "@patternfly/react-tokens" "^4.12.9"
+    "@patternfly/react-styles" "^4.11.13"
+    "@patternfly/react-tokens" "^4.12.15"
     hoist-non-react-statics "^3.3.0"
     lodash "^4.17.19"
-    tslib "1.13.0"
+    tslib "^2.0.0"
     victory-area "^35.9.0"
     victory-axis "^35.9.0"
     victory-bar "^35.9.0"
@@ -10905,10 +10905,10 @@ mocha-junit-reporter@^2.0.0:
     strip-ansi "^4.0.0"
     xml "^1.0.0"
 
-mocha@^9.1.0:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/mocha/-/mocha-9.1.0.tgz#0a7aa6fc4f59d1015d4e11747d9104b752553c67"
-  integrity sha512-Kjg/XxYOFFUi0h/FwMOeb6RoroiZ+P1yOfya6NK7h3dNhahrJx1r2XIT3ge4ZQvJM86mdjNA+W5phqRQh7DwCg==
+mocha@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/mocha/-/mocha-9.1.1.tgz#33df2eb9c6262434630510c5f4283b36efda9b61"
+  integrity sha512-0wE74YMgOkCgBUj8VyIDwmLUjTsS13WV1Pg7l0SHea2qzZzlq7MDnfbPsHKcELBRk3+izEVkRofjmClpycudCA==
   dependencies:
     "@ungap/promise-all-settled" "1.1.2"
     ansi-colors "4.1.1"
@@ -14850,7 +14850,7 @@ tsconfig-paths@^3.9.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@1.13.0, tslib@^1.8.1, tslib@^1.9.0:
+tslib@^1.8.1, tslib@^1.9.0:
   version "1.13.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
   integrity sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
