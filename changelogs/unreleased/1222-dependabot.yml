@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump cypress from 8.3.0 to 8.3.1'
+destination-branches:
+- master
+- iso4
+sections: {}
