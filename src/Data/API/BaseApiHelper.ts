@@ -1,4 +1,4 @@
-import { ApiHelper, Either, Maybe } from "@/Core";
+import { ApiHelper, Either, Maybe, objectHasKey, isObject } from "@/Core";
 import { words } from "@/UI/words";
 import { KeycloakInstance } from "keycloak-js";
 
@@ -51,9 +51,15 @@ export class BaseApiHelper implements ApiHelper {
         this.formatError((await response.json()).message, response)
       );
     } catch (error) {
-      if (error.message) return Either.left(error.message);
+      if (this.errorHasMessage(error)) return Either.left(error.message);
       return Either.left(`Error: ${error}`);
     }
+  }
+
+  private errorHasMessage(error: unknown): error is { message: string } {
+    if (!isObject(error)) return false;
+    if (!objectHasKey(error, "message")) return false;
+    return typeof error.message === "string";
   }
 
   private async executeJson<Data>(
