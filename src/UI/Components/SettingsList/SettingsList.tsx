@@ -9,7 +9,9 @@ interface Props {
     name: string;
     value: boolean;
     onChange: (value: boolean) => void;
+    isDisabled?: boolean;
   }>;
+  isDisabled?: boolean;
 }
 
 interface Setting {
@@ -17,7 +19,12 @@ interface Setting {
   value: boolean;
 }
 
-export const SettingsList: React.FC<Props> = ({ config, onChange, Switch }) => {
+export const SettingsList: React.FC<Props> = ({
+  config,
+  onChange,
+  Switch,
+  isDisabled,
+}) => {
   const settings = configToSettings(config);
   if (settings.length <= 0) return null;
 
@@ -38,7 +45,12 @@ export const SettingsList: React.FC<Props> = ({ config, onChange, Switch }) => {
       <Flex direction={{ default: "column" }}>
         {settings.map(({ name, value }) => (
           <FlexItem key={name}>
-            <Switch name={name} value={value} onChange={handleChange(name)} />
+            <Switch
+              name={name}
+              value={value}
+              onChange={handleChange(name)}
+              isDisabled={isDisabled}
+            />
           </FlexItem>
         ))}
       </Flex>

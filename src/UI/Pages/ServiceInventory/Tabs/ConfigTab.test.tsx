@@ -18,6 +18,7 @@ import {
   DynamicQueryManagerResolver,
   InstantFetcher,
   InstantPoster,
+  MockEnvironmentModifier,
   Service,
   ServiceInstance,
 } from "@/Test";
@@ -89,7 +90,13 @@ test("ConfigTab can reset all settings", async () => {
   );
 
   render(
-    <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+    <DependencyProvider
+      dependencies={{
+        queryResolver,
+        commandResolver,
+        environmentModifier: new MockEnvironmentModifier(),
+      }}
+    >
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>
@@ -132,7 +139,13 @@ test("ConfigTab can change 1 toggle", async () => {
   );
 
   render(
-    <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+    <DependencyProvider
+      dependencies={{
+        queryResolver,
+        commandResolver,
+        environmentModifier: new MockEnvironmentModifier(),
+      }}
+    >
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>

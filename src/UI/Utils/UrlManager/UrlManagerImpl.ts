@@ -51,4 +51,8 @@ export class UrlManagerImpl implements UrlManager {
       resourceId
     ).replace(/\//g, "~2F")}`;
   }
+
+  getServerStatusUrl(): string {
+    return `${this.baseUrl}/dashboard/#!/serverstatus`;
+  }
 }

@@ -7,16 +7,19 @@ import {
 } from "@/Core";
 import {
   DummyCommandResolver,
+  DummyEnvironmentModifier,
   DummyFileFetcher,
   DummyQueryResolver,
   DummyUrlManager,
 } from "./Dummy";
+import { EnvironmentModifier } from "./EnvironmentModifier";
 
 export interface Dependencies {
   commandResolver: CommandResolver;
   queryResolver: QueryResolver;
   urlManager: UrlManager;
   fileFetcher: FileFetcher;
+  environmentModifier: EnvironmentModifier;
 }
 
 export const DependencyContext = createContext<Dependencies>({
@@ -24,12 +27,19 @@ export const DependencyContext = createContext<Dependencies>({
   queryResolver: new DummyQueryResolver(),
   urlManager: new DummyUrlManager(),
   fileFetcher: new DummyFileFetcher(),
+  environmentModifier: new DummyEnvironmentModifier(),
 });
 
 export const DependencyProvider: React.FC<{
   dependencies: Partial<Dependencies>;
 }> = ({
-  dependencies: { commandResolver, queryResolver, urlManager, fileFetcher },
+  dependencies: {
+    commandResolver,
+    queryResolver,
+    urlManager,
+    fileFetcher,
+    environmentModifier,
+  },
   children,
 }) => (
   <DependencyContext.Provider
@@ -38,6 +48,8 @@ export const DependencyProvider: React.FC<{
       queryResolver: queryResolver || new DummyQueryResolver(),
       urlManager: urlManager || new DummyUrlManager(),
       fileFetcher: fileFetcher || new DummyFileFetcher(),
+      environmentModifier:
+        environmentModifier || new DummyEnvironmentModifier(),
     }}
   >
     {children}

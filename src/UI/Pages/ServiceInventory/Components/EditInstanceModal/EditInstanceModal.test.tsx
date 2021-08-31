@@ -10,7 +10,7 @@ import {
   BaseApiHelper,
   TriggerInstanceUpdatePatcher,
 } from "@/Data";
-import { DynamicCommandManagerResolver } from "@/Test";
+import { DynamicCommandManagerResolver, MockEnvironmentModifier } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 
 function setup() {
@@ -45,7 +45,12 @@ function setup() {
   );
   return {
     component: (
-      <DependencyProvider dependencies={{ commandResolver }}>
+      <DependencyProvider
+        dependencies={{
+          commandResolver,
+          environmentModifier: new MockEnvironmentModifier(),
+        }}
+      >
         <EditInstanceModal instance={instance} attributeModels={attributes} />
       </DependencyProvider>
     ),

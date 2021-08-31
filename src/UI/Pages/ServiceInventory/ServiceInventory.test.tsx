@@ -10,6 +10,7 @@ import {
   StaticScheduler,
   DynamicQueryManagerResolver,
   DynamicCommandManagerResolver,
+  MockEnvironmentModifier,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -85,7 +86,12 @@ function setup(service = Service.a) {
   const component = (
     <MemoryRouter>
       <DependencyProvider
-        dependencies={{ queryResolver, urlManager, commandResolver }}
+        dependencies={{
+          queryResolver,
+          urlManager,
+          commandResolver,
+          environmentModifier: new MockEnvironmentModifier(),
+        }}
       >
         <StoreProvider store={store}>
           <ServiceInventory serviceName={service.name} service={service} />

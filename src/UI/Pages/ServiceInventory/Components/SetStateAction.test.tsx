@@ -1,4 +1,8 @@
-import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
+import {
+  DynamicCommandManagerResolver,
+  MockEnvironmentModifier,
+  ServiceInstance,
+} from "@/Test";
 import {
   SetStatePoster,
   TriggerSetStateCommandManager,
@@ -26,7 +30,12 @@ function setupComponent() {
   const { commandResolver } = setup();
   return {
     component: (
-      <DependencyProvider dependencies={{ commandResolver }}>
+      <DependencyProvider
+        dependencies={{
+          commandResolver,
+          environmentModifier: new MockEnvironmentModifier(),
+        }}
+      >
         <SetStateAction
           id={ServiceInstance.a.id}
           service_entity={ServiceInstance.a.service_entity}
@@ -42,7 +51,12 @@ test("SetStateAction dropdown is disabled when no targets are found", async () =
   const id = ServiceInstance.b.id;
   const { commandResolver } = setup();
   render(
-    <DependencyProvider dependencies={{ commandResolver }}>
+    <DependencyProvider
+      dependencies={{
+        commandResolver,
+        environmentModifier: new MockEnvironmentModifier(),
+      }}
+    >
       <SetStateAction
         id={ServiceInstance.b.id}
         service_entity={ServiceInstance.b.service_entity}

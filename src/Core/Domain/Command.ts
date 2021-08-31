@@ -16,7 +16,9 @@ type Command =
   | TriggerInstanceUpdateCommand
   | DeleteInstanceCommand
   | TriggerSetStateCommand
-  | DeleteServiceCommand;
+  | DeleteServiceCommand
+  | HaltEnvironmentCommand
+  | ResumeEnvironmentCommand;
 export type Type = Command;
 
 export interface ServiceConfigCommand extends ServiceIdentifier {
@@ -124,6 +126,30 @@ interface DeleteServiceManifest {
   trigger: () => Promise<Maybe.Type<Error<"DeleteService">>>;
 }
 
+export interface HaltEnvironmentCommand {
+  kind: "HaltEnvironment";
+}
+
+interface HaltEnvironmentManifest {
+  error: string;
+  apiData: string;
+  body: null;
+  command: HaltEnvironmentCommand;
+  trigger: () => Promise<Maybe.Type<Error<"HaltEnvironment">>>;
+}
+
+export interface ResumeEnvironmentCommand {
+  kind: "ResumeEnvironment";
+}
+
+interface ResumeEnvironmentManifest {
+  error: string;
+  apiData: string;
+  body: null;
+  command: ResumeEnvironmentCommand;
+  trigger: () => Promise<Maybe.Type<Error<"ResumeEnvironment">>>;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub commands.
@@ -136,6 +162,8 @@ interface Manifest {
   DeleteInstance: DeleteInstanceManifest;
   TriggerSetState: TriggerSetStateManifest;
   DeleteService: DeleteServiceManifest;
+  HaltEnvironment: HaltEnvironmentManifest;
+  ResumeEnvironment: ResumeEnvironmentManifest;
 }
 
 /**

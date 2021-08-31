@@ -25,4 +25,7 @@ export const GlobalStyles = createGlobalStyle`
   .pf-c-page {
     --pf-c-page__main-breadcrumb--PaddingBottom: var(--pf-global--spacer--md);
   }
+  .pf-c-page__sidebar-body {
+    height: 100%;
+  }
 `;

@@ -19,6 +19,7 @@ import {
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { Route } from "./UI/Routing";
+import { EnvironmentModifierImpl } from "./UI/Dependency/EnvironmentModifier";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -55,10 +56,17 @@ const commandResolver = new CommandResolverImpl(
 );
 const urlManager = new UrlManagerImpl(baseUrl);
 const fileFetcher = new FileFetcherImpl(baseApiHelper);
+const environmentModifier = new EnvironmentModifierImpl();
 
 ReactDOM.render(
   <DependencyProvider
-    dependencies={{ queryResolver, commandResolver, urlManager, fileFetcher }}
+    dependencies={{
+      queryResolver,
+      commandResolver,
+      urlManager,
+      fileFetcher,
+      environmentModifier,
+    }}
   >
     <StoreProvider store={store}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />

@@ -25,6 +25,10 @@ import {
   resourceHistorySlice,
   ResourceHistorySlice,
 } from "./ResourceHistorySlice";
+import {
+  environmentDetailsSlice,
+  EnvironmentDetailsSlice,
+} from "./EnvironmentDetailsSlice";
 
 export interface StoreModel {
   projects: ProjectsSlice;
@@ -39,6 +43,7 @@ export interface StoreModel {
   resources: ResourcesSlice;
   resourceDetails: ResourceDetailsSlice;
   resourceHistory: ResourceHistorySlice;
+  environmentDetails: EnvironmentDetailsSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -54,4 +59,5 @@ export const storeModel: StoreModel = {
   resources: resourcesSlice,
   resourceDetails: resourceDetailsSlice,
   resourceHistory: resourceHistorySlice,
+  environmentDetails: environmentDetailsSlice,
 };
