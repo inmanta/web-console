@@ -89,7 +89,7 @@
     "mocha-junit-reporter": "^2.0.0",
     "mochawesome": "^6.2.2",
     "mochawesome-report-generator": "^5.2.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.0.0",
     "optimize-css-assets-webpack-plugin": "^6.0.1",
     "prettier": "^2.3.2",
     "prop-types": "^15.6.1",
@@ -112,7 +112,7 @@
     "webpack": "^5.51.1",
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.0.0",
+    "webpack-dev-server": "^4.1.0",
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {

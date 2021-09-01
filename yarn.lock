@@ -6039,6 +6039,11 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+data-uri-to-buffer@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-3.0.1.tgz#594b8973938c5bc2c33046535785341abc4f3636"
+  integrity sha512-WboRycPNsVw3B3TL559F7kuBUM4d8CgMEvk6xEJlOp7OBPjt6G7z8WMWlD2rOFZLk6OYfFIUGsCOWzcQH9K2og==
+
 data-urls@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/data-urls/-/data-urls-2.0.0.tgz#156485a72963a970f5d5821aaf642bef2bf2db9b"
@@ -7510,6 +7515,13 @@ fd-slicer@~1.1.0:
   integrity sha1-JcfInLH5B3+IkbvmHY85Dq4lbx4=
   dependencies:
     pend "~1.2.0"
+
+fetch-blob@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/fetch-blob/-/fetch-blob-3.1.2.tgz#6bc438675f3851ecea51758ac91f6a1cd1bacabd"
+  integrity sha512-hunJbvy/6OLjCD0uuhLdp0mMPzP/yd2ssd1t2FCJsaA7wkWhpbp9xfuNVpv7Ll4jFhzp6T4LAupSiV9uOeg0VQ==
+  dependencies:
+    web-streams-polyfill "^3.0.3"
 
 fetch-mock@^9.11.0:
   version "9.11.0"
@@ -11124,6 +11136,14 @@ node-fetch@2.6.1, node-fetch@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
+
+node-fetch@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.0.0.tgz#79da7146a520036f2c5f644e4a26095f17e411ea"
+  integrity sha512-bKMI+C7/T/SPU1lKnbQbwxptpCrG9ashG+VkytmXCPZyuM9jB6VU+hY0oi4lC8LxTtAeWdckNCTa3nrGsAdA3Q==
+  dependencies:
+    data-uri-to-buffer "^3.0.1"
+    fetch-blob "^3.1.2"
 
 node-forge@^0.10.0:
   version "0.10.0"
@@ -15631,6 +15651,11 @@ web-namespaces@^1.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-1.1.4.tgz#bc98a3de60dadd7faefc403d1076d529f5e030ec"
   integrity sha512-wYxSGajtmoP4WxfejAPIr4l0fVh+jeMXZb08wNc0tMg6xsfZXj3cECqIK0G7ZAqUq0PP8WlMDtaOGVBTAWztNw==
 
+web-streams-polyfill@^3.0.3:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.1.0.tgz#86f983b4f44745502b0d8563d9ef3afc609d4465"
+  integrity sha512-wO9r1YnYe7kFBLHyyVEhV1H8VRWoNiNnuP+v/HUUmSTaRF8F93Kmd3JMrETx0f11GXxRek6OcL2QtjFIdc5WYw==
+
 webidl-conversions@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
@@ -15703,10 +15728,10 @@ webpack-dev-middleware@^5.0.0:
     range-parser "^1.2.1"
     schema-utils "^3.0.0"
 
-webpack-dev-server@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.0.0.tgz#fb4906e91182154bba54a66e6e06f84c1e3c0a80"
-  integrity sha512-ya5cjoBSf3LqrshZn2HMaRZQx8YRNBE+tx+CQNFGaLLHrvs4Y1aik0sl5SFhLz2cW1O9/NtyaZhthc+8UiuvkQ==
+webpack-dev-server@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.1.0.tgz#1c7a7b77bdafec334a8b81d26c586f793001b5ca"
+  integrity sha512-PnnoCHuLKxH3vYff2EbORntD0Pd+MKclDIO8AcKsDVRToqY9/oeIwwUs5alA2B5OPgXJhaDNkBJAmb0OaWZFJA==
   dependencies:
     ansi-html "^0.0.7"
     bonjour "^3.5.0"
