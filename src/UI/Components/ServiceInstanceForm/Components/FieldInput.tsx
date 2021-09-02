@@ -187,7 +187,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   getUpdate,
   path,
 }) => {
-  const list = get(formState, makePath(path, field.name));
+  const list = get(formState, makePath(path, field.name)) as Array<unknown>;
 
   const onAdd = () => {
     if (list.length >= field.max) return;
