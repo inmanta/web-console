@@ -1,4 +1,4 @@
-import { Command, CommandManager, Maybe, PosterWithoutResponse } from "@/Core";
+import { Command, CommandManager, PosterWithoutResponse } from "@/Core";
 
 export class HaltEnvironmentCommandManager implements CommandManager {
   constructor(
@@ -12,12 +12,6 @@ export class HaltEnvironmentCommandManager implements CommandManager {
   getTrigger(
     command: Command.SubCommand<"HaltEnvironment">
   ): Command.Trigger<"HaltEnvironment"> {
-    return () => this.submit(command);
-  }
-
-  private async submit(
-    command: Command.SubCommand<"HaltEnvironment">
-  ): Promise<Maybe.Type<Command.Error<"HaltEnvironment">>> {
-    return await this.poster.post(command, null);
+    return () => this.poster.post(command, null);
   }
 }
