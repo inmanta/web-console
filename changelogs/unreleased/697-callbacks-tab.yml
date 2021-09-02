@@ -1,5 +1,5 @@
 description: Add Callbacks tab to ServiceCatalog
-issue-nr: 679
+issue-nr: 697
 change-type: minor
 destination-branches: [master, iso4]
 sections:
