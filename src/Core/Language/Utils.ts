@@ -57,4 +57,4 @@ export const isObject = (value: unknown): value is Record<string, unknown> => {
 };
 
 export const stringifyList = (items: string[]): string =>
-  items.reduce((acc, curr) => `${acc}, ${curr}`, "");
+  items.length <= 0 ? "" : items.reduce((acc, curr) => `${acc}, ${curr}`);
