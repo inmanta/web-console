@@ -1,36 +1,26 @@
-export class ResourceId {
+import { Maybe } from "@/Core";
+
+export interface ResourceId {
+  entityType: string;
+  agentName: string;
+  attribute: string;
+  attributeValue: string;
+}
+
+export class ResourceIdParser {
   private static readonly parseIdRegex =
     /^(?<id>(?<type>(?<ns>[\w-]+(::[\w-]+)*)::(?<class>[\w-]+))\[(?<hostname>[^,]+),(?<attr>[^=]+)=(?<value>[^\]]+)\])(,v=(?<version>[0-9]+))?$/;
 
-  public static parse(idStr: string): ResourceId | null {
-    const groups = idStr.match(ResourceId.parseIdRegex)?.groups;
+  public static parse(idStr: string): Maybe.Type<ResourceId> {
+    const groups = idStr.match(ResourceIdParser.parseIdRegex)?.groups;
     if (!groups) {
-      return null;
+      return Maybe.none();
     }
-    return new ResourceId(
-      groups.type,
-      groups.hostname,
-      groups.attr,
-      groups.value
-    );
-  }
-
-  constructor(
-    private readonly entityType: string,
-    private readonly agentName: string,
-    private readonly attribute: string,
-    private readonly attributeValue: string
-  ) {}
-  public getEntityType(): string {
-    return this.entityType;
-  }
-  public getAgentName(): string {
-    return this.agentName;
-  }
-  public getAttribute(): string {
-    return this.attribute;
-  }
-  public getAttributeValue(): string {
-    return this.attributeValue;
+    return Maybe.some({
+      entityType: groups.type,
+      agentName: groups.hostname,
+      attribute: groups.attr,
+      attributeValue: groups.value,
+    });
   }
 }

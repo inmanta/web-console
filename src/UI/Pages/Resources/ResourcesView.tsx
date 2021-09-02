@@ -11,7 +11,7 @@ import { words } from "@/UI/words";
 import React, { useContext, useState } from "react";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { ResourceTableControls } from "./TableControls";
-import { ResourceId } from "./ResourceId";
+import { ResourceFilterContext } from "./ResourceFilterContext";
 
 export const Wrapper: React.FC = ({ children }) => (
   <PageSectionWithTitle title={words("inventory.tabs.resources")}>
@@ -59,50 +59,42 @@ export const ResourcesView: React.FC = () => {
       setFilter={setFilter}
     />
   );
-  const requiresOnClick = (resourceId: string) => {
-    const parsedId = ResourceId.parse(resourceId);
-    if (!parsedId) return;
-    setFilter({
-      agent: [parsedId.getAgentName()],
-      type: [parsedId.getEntityType()],
-      value: [parsedId.getAttributeValue()],
-    });
-  };
 
   return (
     <Wrapper>
-      {tableControls}
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView aria-label="ResourcesView-Loading" />,
-          failed: (error) => (
-            <ErrorView
-              message={error}
-              retry={retry}
-              aria-label="ResourcesView-Failed"
-            />
-          ),
-          success: (resources) =>
-            resources.data.length <= 0 ? (
-              <EmptyView
-                message={words("resources.empty.message")}
-                aria-label="ResourcesView-Empty"
-              />
-            ) : (
-              <ResourcesTableProvider
-                order={order}
-                setOrder={setOrder}
-                sortColumn={sortColumn}
-                setSortColumn={setSortColumn}
-                resources={resources.data}
-                aria-label="ResourcesView-Success"
-                requiresOnClick={requiresOnClick}
+      <ResourceFilterContext.Provider value={{ setFilter }}>
+        {tableControls}
+        {RemoteData.fold(
+          {
+            notAsked: () => null,
+            loading: () => <LoadingView aria-label="ResourcesView-Loading" />,
+            failed: (error) => (
+              <ErrorView
+                message={error}
+                retry={retry}
+                aria-label="ResourcesView-Failed"
               />
             ),
-        },
-        data
-      )}
+            success: (resources) =>
+              resources.data.length <= 0 ? (
+                <EmptyView
+                  message={words("resources.empty.message")}
+                  aria-label="ResourcesView-Empty"
+                />
+              ) : (
+                <ResourcesTableProvider
+                  order={order}
+                  setOrder={setOrder}
+                  sortColumn={sortColumn}
+                  setSortColumn={setSortColumn}
+                  resources={resources.data}
+                  aria-label="ResourcesView-Success"
+                />
+              ),
+          },
+          data
+        )}
+      </ResourceFilterContext.Provider>
     </Wrapper>
   );
 };

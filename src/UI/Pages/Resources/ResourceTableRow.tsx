@@ -11,7 +11,6 @@ interface Props {
   onToggle: () => void;
   numberOfColumns: number;
   index: number;
-  requiresOnClick: (resourceId: string) => void;
 }
 
 export const ResourceTableRow: React.FC<Props> = ({
@@ -20,7 +19,6 @@ export const ResourceTableRow: React.FC<Props> = ({
   index,
   onToggle,
   numberOfColumns,
-  requiresOnClick,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Details);
   const rowRef = useRef<HTMLSpanElement>(null);
@@ -64,7 +62,6 @@ export const ResourceTableRow: React.FC<Props> = ({
                 id={row.id}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
-                requiresOnClick={requiresOnClick}
               />
             </ExpandableRowContent>
           </Td>
