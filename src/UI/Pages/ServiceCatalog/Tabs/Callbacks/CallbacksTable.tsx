@@ -28,7 +28,7 @@ export const CallbacksTable: React.FC<Props> = ({
   }, [callbacks]);
 
   return (
-    <TableComposable>
+    <TableComposable aria-label="CallbacksTable">
       <Thead>
         <Tr>
           <Th />
