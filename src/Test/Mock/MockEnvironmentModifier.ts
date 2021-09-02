@@ -1,4 +1,4 @@
-import { EnvironmentModifier } from "@/UI/Dependency/EnvironmentModifier";
+import { EnvironmentModifier } from "@/Core";
 
 export class MockEnvironmentModifier implements EnvironmentModifier {
   isHalted(): boolean {

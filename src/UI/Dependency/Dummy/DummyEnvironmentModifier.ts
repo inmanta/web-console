@@ -1,4 +1,4 @@
-import { EnvironmentModifier } from "../EnvironmentModifier";
+import { EnvironmentModifier } from "@/Core";
 
 export class DummyEnvironmentModifier implements EnvironmentModifier {
   setEnvironment(): void {

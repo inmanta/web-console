@@ -4,6 +4,7 @@ import {
   FileFetcher,
   QueryResolver,
   UrlManager,
+  EnvironmentModifier,
 } from "@/Core";
 import {
   DummyCommandResolver,
@@ -12,7 +13,6 @@ import {
   DummyQueryResolver,
   DummyUrlManager,
 } from "./Dummy";
-import { EnvironmentModifier } from "./EnvironmentModifier";
 
 export interface Dependencies {
   commandResolver: CommandResolver;
