@@ -78,3 +78,31 @@ test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link TH
   expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
   expect(within(crumb).getByText("Service Catalog")).toBeInTheDocument();
 });
+
+test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb link THEN Add instance breadcrumb is removed", () => {
+  render(
+    <MemoryRouter
+      initialEntries={["/lsm/catalog/service/inventory/add?env=env1"]}
+    >
+      <PageBreadcrumbs />
+    </MemoryRouter>
+  );
+  const crumbsBefore = screen.getAllByRole("listitem", {
+    name: "BreadcrumbItem",
+  });
+  expect(crumbsBefore.length).toEqual(3);
+
+  const link = screen.getByRole("link", { name: "Service Inventory" });
+  userEvent.click(link);
+
+  const crumbsAfter = screen.getAllByRole("listitem", {
+    name: "BreadcrumbItem",
+  });
+  expect(crumbsAfter.length).toEqual(2);
+  expect(
+    within(crumbsAfter[0]).getByText("Service Catalog")
+  ).toBeInTheDocument();
+  expect(
+    within(crumbsAfter[1]).getByText("Service Inventory")
+  ).toBeInTheDocument();
+});
