@@ -3,10 +3,13 @@ import { ResourceStatus } from "@/Core";
 import { ResourceStatusCell } from "@/UI/Components";
 import { words } from "@/UI/words";
 import {
-  Table,
-  TableBody,
-  TableHeader,
+  Tbody,
+  TableComposable,
   TableVariant,
+  Th,
+  Thead,
+  Tr,
+  Td,
 } from "@patternfly/react-table";
 
 interface Props {
@@ -17,22 +20,27 @@ export const RequiresTable: React.FC<Props> = ({
   requiresStatus,
   ...props
 }) => {
-  const columns = [
-    words("resources.requires.resourceId"),
-    words("resources.requires.deployState"),
-  ];
-  const rows = Object.entries(requiresStatus).map(([resource_id, status]) => ({
-    cells: [resource_id, { title: <ResourceStatusCell state={status} /> }],
-  }));
   return (
-    <Table
-      cells={columns}
-      rows={rows}
+    <TableComposable
       aria-label={props["aria-label"]}
       variant={TableVariant.compact}
     >
-      <TableHeader />
-      <TableBody />
-    </Table>
+      <Thead>
+        <Tr>
+          <Th>{words("resources.requires.resourceId")}</Th>
+          <Th width={15}>{words("resources.requires.deployState")}</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {Object.entries(requiresStatus).map(([resource_id, status], idx) => (
+          <Tr key={idx}>
+            <Td>{resource_id}</Td>
+            <Td width={15}>
+              <ResourceStatusCell state={status} />
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </TableComposable>
   );
 };
