@@ -1,7 +1,7 @@
 import * as React from "react";
 import "@patternfly/react-core/dist/styles/base.css";
 import { BrowserRouter as Router } from "react-router-dom";
-import { AppHeader } from "@/UI/Root/AppLayout/AppHeader";
+import { AppWrapper } from "@/UI/Root/AppLayout/AppWrapper";
 import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import { Spinner, Bullseye, Page, PageSidebar } from "@patternfly/react-core";
@@ -26,18 +26,20 @@ export const App: React.FunctionComponent<{
   const [isNavOpen, setIsNavOpen] = React.useState(true);
   const [isMobileView, setIsMobileView] = React.useState(false);
   const [isNavOpenMobile, setIsNavOpenMobile] = React.useState(false);
+  const onPageResize = (props: { mobileView: boolean; windowSize: number }) => {
+    setIsMobileView(props.mobileView);
+  };
   const AppWithStore = (
     <>
       <Router>
         <EnvironmentHandlerProvider>
-          <AppHeader
+          <AppWrapper
             keycloak={props.shouldUseAuth ? props.keycloak : undefined}
             shouldUseAuth={props.shouldUseAuth}
             isNavOpen={isNavOpen}
             isMobileView={isMobileView}
             isNavOpenMobile={isNavOpenMobile}
             setIsNavOpen={setIsNavOpen}
-            setIsMobileView={setIsMobileView}
             setIsNavOpenMobile={setIsNavOpenMobile}
           >
             <EnvironmentProvider
@@ -47,6 +49,7 @@ export const App: React.FunctionComponent<{
                   <DependencyResolver environment={environment} />
                   <Page
                     breadcrumb={<PageBreadcrumbs />}
+                    onPageResize={onPageResize}
                     sidebar={
                       <PageSidebar
                         aria-label="PageSidebar"
@@ -62,7 +65,7 @@ export const App: React.FunctionComponent<{
                 </>
               )}
             />
-          </AppHeader>
+          </AppWrapper>
         </EnvironmentHandlerProvider>
       </Router>
     </>

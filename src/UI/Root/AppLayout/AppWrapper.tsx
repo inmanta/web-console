@@ -1,8 +1,6 @@
 import * as React from "react";
 import {
-  Page,
   PageHeader,
-  SkipToContent,
   Avatar,
   TextContent,
   DropdownItem,
@@ -17,6 +15,7 @@ import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 import { IconDropdown } from "./Toolbar/IconDropdown";
 import { EnvSelectorWithProvider } from "./Toolbar/Provider";
 import { Route } from "@/UI/Routing";
+import styled from "styled-components";
 
 interface Props {
   keycloak?: Keycloak.KeycloakInstance;
@@ -25,19 +24,17 @@ interface Props {
   isNavOpen: boolean;
   setIsNavOpen: (navOpen: boolean) => void;
   isMobileView: boolean;
-  setIsMobileView: (mobileView: boolean) => void;
   isNavOpenMobile: boolean;
   setIsNavOpenMobile: (navOpenMobile: boolean) => void;
 }
 
-export const AppHeader: React.FunctionComponent<Props> = ({
+export const AppWrapper: React.FunctionComponent<Props> = ({
   keycloak,
   children,
   shouldUseAuth,
   isNavOpen,
   setIsNavOpen,
   isMobileView,
-  setIsMobileView,
   isNavOpenMobile,
   setIsNavOpenMobile,
 }) => {
@@ -52,9 +49,6 @@ export const AppHeader: React.FunctionComponent<Props> = ({
   };
   const onNavToggle = () => {
     setIsNavOpen(!isNavOpen);
-  };
-  const onPageResize = (props: { mobileView: boolean; windowSize: number }) => {
-    setIsMobileView(props.mobileView);
   };
 
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
@@ -101,22 +95,21 @@ export const AppHeader: React.FunctionComponent<Props> = ({
     />
   );
 
-  const PageSkipToContent = (
-    <SkipToContent href="#primary-app-container">Skip to Content</SkipToContent>
-  );
   return (
     <React.Fragment>
       <GlobalStyles />
       <SimpleBackgroundImage />
-      <Page
-        mainContainerId="primary-app-container"
-        header={Header}
-        onPageResize={onPageResize}
-        skipToContent={PageSkipToContent}
-        style={{ backgroundColor: "transparent" }}
-      >
+      <PageWrapper className="pf-c-page">
+        {Header}
         {children}
-      </Page>
+      </PageWrapper>
     </React.Fragment>
   );
 };
+
+const PageWrapper = styled.div`
+  grid-template-areas:
+    "header header"
+    "mainpage mainpage";
+  background-color: transparent;
+`;
