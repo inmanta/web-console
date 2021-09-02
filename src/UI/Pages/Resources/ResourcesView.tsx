@@ -11,6 +11,7 @@ import { words } from "@/UI/words";
 import React, { useContext, useState } from "react";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { ResourceTableControls } from "./TableControls";
+import { ResourceId } from "./ResourceId";
 
 export const Wrapper: React.FC = ({ children }) => (
   <PageSectionWithTitle title={words("inventory.tabs.resources")}>
@@ -58,6 +59,15 @@ export const ResourcesView: React.FC = () => {
       setFilter={setFilter}
     />
   );
+  const requiresOnClick = (resourceId: string) => {
+    const parsedId = ResourceId.parse(resourceId);
+    if (!parsedId) return;
+    setFilter({
+      agent: [parsedId.getAgentName()],
+      type: [parsedId.getEntityType()],
+      value: [parsedId.getAttributeValue()],
+    });
+  };
 
   return (
     <Wrapper>
@@ -87,6 +97,7 @@ export const ResourcesView: React.FC = () => {
                 setSortColumn={setSortColumn}
                 resources={resources.data}
                 aria-label="ResourcesView-Success"
+                requiresOnClick={requiresOnClick}
               />
             ),
         },

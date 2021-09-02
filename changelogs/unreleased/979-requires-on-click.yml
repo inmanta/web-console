@@ -1,0 +1,6 @@
+description: Select resource when clicking on its id in the requires tab
+issue-nr: 979
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

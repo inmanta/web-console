@@ -7,9 +7,10 @@ import { RequiresTable } from "./RequiresTable";
 
 interface Props {
   id: string;
+  requiresOnClick: (resourceId: string) => void;
 }
 
-export const RequiresTab: React.FC<Props> = ({ id }) => {
+export const RequiresTab: React.FC<Props> = ({ id, requiresOnClick }) => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [data] = queryResolver.useContinuous<"ResourceDetails">({
@@ -40,6 +41,7 @@ export const RequiresTab: React.FC<Props> = ({ id }) => {
           <RequiresTable
             aria-label="ResourceRequires-Success"
             requiresStatus={resourceDetails.requires_status}
+            requiresOnClick={requiresOnClick}
           />
         ),
     },

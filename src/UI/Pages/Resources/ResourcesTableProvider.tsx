@@ -9,6 +9,7 @@ interface Props {
   order?: SortDirection;
   setSortColumn: (name?: string) => void;
   setOrder: (order?: SortDirection) => void;
+  requiresOnClick: (resourceId: string) => void;
 }
 
 export const ResourcesTableProvider: React.FC<Props> = ({

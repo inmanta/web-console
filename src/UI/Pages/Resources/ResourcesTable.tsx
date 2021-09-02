@@ -19,6 +19,7 @@ interface Props {
   order?: SortDirection;
   setSortColumn: (name?: string) => void;
   setOrder: (order?: SortDirection) => void;
+  requiresOnClick: (resourceId: string) => void;
 }
 export const ResourcesTable: React.FC<Props> = ({
   rows,
@@ -27,6 +28,7 @@ export const ResourcesTable: React.FC<Props> = ({
   setSortColumn,
   sortColumn,
   order,
+  requiresOnClick,
   ...props
 }) => {
   const onSort: OnSort = (event, index, direction) => {
@@ -87,6 +89,7 @@ export const ResourcesTable: React.FC<Props> = ({
           isExpanded={expansionState[row.id]}
           onToggle={handleExpansionToggle(row.id)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
+          requiresOnClick={requiresOnClick}
         />
       ))}
     </TableComposable>

@@ -16,14 +16,24 @@ interface Props {
   id: string;
   activeTab: TabKey;
   setActiveTab: (tab: TabKey) => void;
+  requiresOnClick: (resourceId: string) => void;
 }
 
-export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab }) => {
+export const Tabs: React.FC<Props> = ({
+  id,
+  activeTab,
+  setActiveTab,
+  requiresOnClick,
+}) => {
   return (
     <IconTabs
       activeTab={activeTab}
       onChange={setActiveTab}
-      tabs={[detailsTab(id), requiresTab(id), attributesTab(id)]}
+      tabs={[
+        detailsTab(id),
+        requiresTab(id, requiresOnClick),
+        attributesTab(id),
+      ]}
     />
   );
 };
@@ -35,11 +45,14 @@ const detailsTab = (id: string): TabDescriptor<TabKey> => ({
   view: <DetailsTab id={id} />,
 });
 
-const requiresTab = (id: string): TabDescriptor<TabKey> => ({
+const requiresTab = (
+  id: string,
+  requiresOnClick: (resourceId: string) => void
+): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
   title: words("resources.requires.title"),
   icon: <ModuleIcon />,
-  view: <RequiresTab id={id} />,
+  view: <RequiresTab id={id} requiresOnClick={requiresOnClick} />,
 });
 
 const attributesTab = (id: string): TabDescriptor<TabKey> => ({

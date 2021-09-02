@@ -15,9 +15,11 @@ import {
 interface Props {
   requiresStatus: Record<string, ResourceStatus>;
   "aria-label"?: string;
+  requiresOnClick: (resourceId: string) => void;
 }
 export const RequiresTable: React.FC<Props> = ({
   requiresStatus,
+  requiresOnClick,
   ...props
 }) => {
   return (
@@ -34,7 +36,12 @@ export const RequiresTable: React.FC<Props> = ({
       <Tbody>
         {Object.entries(requiresStatus).map(([resource_id, status], idx) => (
           <Tr key={idx}>
-            <Td>{resource_id}</Td>
+            <Td
+              onClick={() => requiresOnClick(resource_id)}
+              style={{ cursor: "pointer" }}
+            >
+              {resource_id}
+            </Td>
             <Td width={15}>
               <ResourceStatusCell state={status} />
             </Td>
