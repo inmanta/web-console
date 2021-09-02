@@ -21,7 +21,7 @@ export const ConfirmationDialog: React.FC<Props> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalToggle = () => setIsModalOpen(!isModalOpen);
-  modalButton.props.onClick;
+
   return (
     <React.Fragment>
       {React.cloneElement(modalButton, { onClick: handleModalToggle })}
