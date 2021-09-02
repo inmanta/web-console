@@ -14,16 +14,21 @@ export class CallbacksStateHelper implements StateHelper<"Callbacks"> {
     private readonly environment: string
   ) {}
 
-  set(data: ApiData, { service_entity }: Query.SubQuery<"Callbacks">): void {
-    const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-    const sorted = RemoteData.mapSuccess(
-      (callbacks) => sortBy(callbacks, ["url"]),
-      unwrapped
+  private sanitize(data: ApiData, service_entity: string): Data {
+    if (!RemoteData.isSuccess(data)) return data;
+    const allCallbacks = data.value.data;
+    const serviceCallbacks = allCallbacks.filter(
+      (cb) => cb.service_entity === service_entity
     );
+    const sortedCallbacks = sortBy(serviceCallbacks, ["url"]);
+    return RemoteData.success(sortedCallbacks);
+  }
+
+  set(data: ApiData, { service_entity }: Query.SubQuery<"Callbacks">): void {
     this.store.dispatch.callbacks.setData({
       environment: this.environment,
       service_entity,
-      value: sorted,
+      value: this.sanitize(data, service_entity),
     });
   }
 
