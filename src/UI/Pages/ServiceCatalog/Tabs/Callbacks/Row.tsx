@@ -2,6 +2,7 @@ import React from "react";
 import { Callback } from "@/Core";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
 import { DeleteButton } from "./DeleteButton";
+import { Details } from "./Details";
 
 interface Props {
   callback: Callback;
@@ -39,7 +40,12 @@ export const Row: React.FC<Props> = ({
       {isExpanded && (
         <Tr isExpanded={isExpanded}>
           <Td colSpan={numberOfColumns}>
-            <ExpandableRowContent>test</ExpandableRowContent>
+            <ExpandableRowContent>
+              <Details
+                minimal_log_level={callback.minimal_log_level}
+                event_types={callback.event_types}
+              />
+            </ExpandableRowContent>
           </Td>
         </Tr>
       )}

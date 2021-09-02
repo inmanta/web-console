@@ -3,8 +3,8 @@ export interface Callback {
   url: string;
   environment: string;
   service_entity: string;
-  event_types: string[];
-  minimal_log_level: string;
+  event_types: string[] | null;
+  minimal_log_level: string | null;
 }
 
 export interface CreateCallbackBody {

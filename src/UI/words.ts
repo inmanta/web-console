@@ -191,6 +191,8 @@ const dict = {
   "catalog.instances": "Instances",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
+  "catalog.callbacks.minimalLogLevel": "Minimal Log Level",
+  "catalog.callbacks.eventTypes": "Event Types",
 
   /**
    * Environment controls
