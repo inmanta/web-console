@@ -23,6 +23,13 @@ import {
   HaltEnvironmentPoster,
   ResumeEnvironmentCommandManager,
   ResumeEnvironmentPoster,
+  DeleteCallbackCommandManager,
+  CallbackDeleter,
+  FetcherImpl,
+  CallbacksStateHelper,
+  CallbacksUpdater,
+  CreateCallbackCommandManager,
+  CallbackPoster,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -77,6 +84,22 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new ResumeEnvironmentCommandManager(
         new ResumeEnvironmentPoster(this.baseApiHelper, environment)
+      ),
+      new DeleteCallbackCommandManager(
+        new CallbackDeleter(this.baseApiHelper, environment),
+        new CallbacksUpdater(
+          new CallbacksStateHelper(this.store, environment),
+          new FetcherImpl<"Callbacks">(this.baseApiHelper),
+          environment
+        )
+      ),
+      new CreateCallbackCommandManager(
+        new CallbackPoster(this.baseApiHelper, environment),
+        new CallbacksUpdater(
+          new CallbacksStateHelper(this.store, environment),
+          new FetcherImpl<"Callbacks">(this.baseApiHelper),
+          environment
+        )
       ),
     ];
   }

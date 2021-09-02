@@ -34,6 +34,8 @@ import {
   ResourceHistoryQueryManager,
   EnvironmentDetailsQueryManager,
   EnvironmentDetailsStateHelper,
+  CallbacksQueryManager,
+  CallbacksStateHelper,
 } from "@/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -153,6 +155,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new FetcherImpl<"EnvironmentDetails">(this.baseApiHelper),
         new EnvironmentDetailsStateHelper(this.store, environment),
         scheduler,
+        environment
+      ),
+      new CallbacksQueryManager(
+        new FetcherImpl<"Callbacks">(this.baseApiHelper),
+        new CallbacksStateHelper(this.store, environment),
         environment
       ),
     ];
