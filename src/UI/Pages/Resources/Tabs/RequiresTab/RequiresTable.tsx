@@ -57,7 +57,6 @@ export const RequiresTable: React.FC<Props> = ({
           </Tr>
         ))}
       </Tbody>
-      )
     </TableComposable>
   );
 };
