@@ -11,6 +11,7 @@ import { words } from "@/UI/words";
 import React, { useContext, useState } from "react";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { ResourceTableControls } from "./TableControls";
+import { ResourceFilterContext } from "./ResourceFilterContext";
 
 export const Wrapper: React.FC = ({ children }) => (
   <PageSectionWithTitle title={words("inventory.tabs.resources")}>
@@ -61,37 +62,39 @@ export const ResourcesView: React.FC = () => {
 
   return (
     <Wrapper>
-      {tableControls}
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView aria-label="ResourcesView-Loading" />,
-          failed: (error) => (
-            <ErrorView
-              message={error}
-              retry={retry}
-              aria-label="ResourcesView-Failed"
-            />
-          ),
-          success: (resources) =>
-            resources.data.length <= 0 ? (
-              <EmptyView
-                message={words("resources.empty.message")}
-                aria-label="ResourcesView-Empty"
-              />
-            ) : (
-              <ResourcesTableProvider
-                order={order}
-                setOrder={setOrder}
-                sortColumn={sortColumn}
-                setSortColumn={setSortColumn}
-                resources={resources.data}
-                aria-label="ResourcesView-Success"
+      <ResourceFilterContext.Provider value={{ setFilter }}>
+        {tableControls}
+        {RemoteData.fold(
+          {
+            notAsked: () => null,
+            loading: () => <LoadingView aria-label="ResourcesView-Loading" />,
+            failed: (error) => (
+              <ErrorView
+                message={error}
+                retry={retry}
+                aria-label="ResourcesView-Failed"
               />
             ),
-        },
-        data
-      )}
+            success: (resources) =>
+              resources.data.length <= 0 ? (
+                <EmptyView
+                  message={words("resources.empty.message")}
+                  aria-label="ResourcesView-Empty"
+                />
+              ) : (
+                <ResourcesTableProvider
+                  order={order}
+                  setOrder={setOrder}
+                  sortColumn={sortColumn}
+                  setSortColumn={setSortColumn}
+                  resources={resources.data}
+                  aria-label="ResourcesView-Success"
+                />
+              ),
+          },
+          data
+        )}
+      </ResourceFilterContext.Provider>
     </Wrapper>
   );
 };
