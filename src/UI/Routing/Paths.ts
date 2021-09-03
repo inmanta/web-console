@@ -14,4 +14,5 @@ export const paths: Paths = {
   ResourceHistory: "/resources/:resourceId/history",
   CompileReports: "/compilereports",
   CompileDetails: "/compilereports/:id",
+  ResourceActions: "/resources/:resourceId/actions",
 };

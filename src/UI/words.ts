@@ -243,6 +243,7 @@ const dict = {
   "resources.requires.resourceId": "Resource Id",
   "resources.requires.deployState": "Deploy State",
   "resources.history.title": "Resource History",
+  "resources.history.linkTitle": "History",
   "resources.history.column.numberOfDependencies": "Number of dependencies",
   "resources.history.column.date": "Date",
   "resources.history.tabs.attributes": "Desired State",
@@ -252,6 +253,8 @@ const dict = {
   "resources.history.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
   "resources.attributes.title": "Desired State",
+  "resources.actions.title": "Resource Actions",
+  "resources.actions.linkTitle": "Actions",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",

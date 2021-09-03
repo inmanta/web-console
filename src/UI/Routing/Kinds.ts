@@ -9,4 +9,5 @@ export type Kinds =
   | "Resources"
   | "ResourceHistory"
   | "CompileReports"
-  | "CompileDetails";
+  | "CompileDetails"
+  | "ResourceActions";

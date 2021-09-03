@@ -11,6 +11,7 @@ import { ResourceHistoryWithProvider } from "@/UI/Pages/ResourceHistory";
 import { EditInstancePageProvider } from "@/UI/Pages/EditInstance";
 import { CompileReports } from "@/UI/Pages/CompileReports";
 import { CompileDetailsWithProvider } from "./CompileDetails";
+import { ResourceActionsWithProvider } from "@/UI/Pages/ResourceActions";
 
 interface Page extends Route.Route {
   component: ComponentType;
@@ -71,6 +72,11 @@ export const CompileDetailsPage: Page = {
   component: CompileDetailsWithProvider,
 };
 
+export const ResourceActionsPage: Page = {
+  ...Route.ResourceActions,
+  component: ResourceActionsWithProvider,
+};
+
 export const pages: Page[] = [
   CatalogPage,
   InventoryPage,
@@ -83,4 +89,5 @@ export const pages: Page[] = [
   ResourceHistoryPage,
   CompileReportsPage,
   CompileDetailsPage,
+  ResourceActionsPage,
 ];
