@@ -2,6 +2,7 @@ import React from "react";
 import { ResourceAction } from "@/Core";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
 import { Details } from "./Details";
+import moment from "moment";
 
 interface Props {
   action: ResourceAction;
@@ -28,7 +29,7 @@ export const Row: React.FC<Props> = ({
             onToggle,
           }}
         />
-        <Td>{action.messages[0].timestamp}</Td>
+        <Td>{presentDate(action.messages[0].timestamp)}</Td>
         <Td>{action.action}</Td>
         <Td>{action.messages[0].level}</Td>
         <Td>{presentShortMessage(action.messages[0].msg)}</Td>
@@ -48,3 +49,10 @@ export const Row: React.FC<Props> = ({
 
 const presentShortMessage = (message: string): string =>
   message.length <= 40 ? message : message.slice(0, 40) + "...";
+
+const presentDate = (timestamp: string): string => {
+  return moment
+    .utc(timestamp)
+    .tz(moment.tz.guess())
+    .format("DD/MM/YYYY HH:MM:SS");
+};
