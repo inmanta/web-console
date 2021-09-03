@@ -19,12 +19,12 @@ export const View: React.FC<Props> = ({ resourceId }) => {
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => <LoadingView aria-label="ResourceHistory-Loading" />,
+      loading: () => <LoadingView aria-label="ResourceActions-Loading" />,
       failed: (error) => (
         <ErrorView
           retry={retry}
-          title={words("resources.history.failed.title")}
-          message={words("resources.history.failed.body")(error)}
+          title={words("resources.actions.failed.title")}
+          message={words("resources.actions.failed.body")(error)}
           aria-label="ResourceHistory-Failed"
         />
       ),
@@ -32,8 +32,8 @@ export const View: React.FC<Props> = ({ resourceId }) => {
         if (response.data.length <= 0) {
           return (
             <EmptyView
-              message={words("resources.history.empty.message")}
-              aria-label="ResourceHistory-Empty"
+              message={words("resources.actions.empty.message")}
+              aria-label="ResourceActions-Empty"
             />
           );
         }

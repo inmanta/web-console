@@ -255,6 +255,10 @@ const dict = {
   "resources.attributes.title": "Desired State",
   "resources.actions.title": "Resource Actions",
   "resources.actions.linkTitle": "Actions",
+  "resources.actions.empty.message": "No actions found",
+  "resources.actions.failed.title": "Something went wrong",
+  "resources.actions.failed.body": (error: string) =>
+    `There was an error retrieving data: ${error}`,
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
