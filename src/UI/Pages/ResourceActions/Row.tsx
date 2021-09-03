@@ -1,8 +1,15 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { ResourceAction } from "@/Core";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
 import { Details } from "./Details";
 import moment from "moment";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownPosition,
+  KebabToggle,
+} from "@patternfly/react-core";
 
 interface Props {
   action: ResourceAction;
@@ -60,13 +67,6 @@ const presentDate = (timestamp: string): string => {
     .format("DD/MM/YYYY HH:MM:SS");
 };
 
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownPosition,
-  KebabToggle,
-} from "@patternfly/react-core";
-
 const Options: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems = [
@@ -78,7 +78,10 @@ const Options: React.FC = () => {
       position={DropdownPosition.right}
       onSelect={() => setIsOpen(false)}
       toggle={
-        <KebabToggle onToggle={() => setIsOpen(!isOpen)} id="toggle-id-6" />
+        <StyledKebabToggle
+          onToggle={() => setIsOpen(!isOpen)}
+          id="toggle-id-6"
+        />
       }
       isOpen={isOpen}
       isPlain
@@ -86,3 +89,8 @@ const Options: React.FC = () => {
     />
   );
 };
+
+const StyledKebabToggle = styled(KebabToggle)`
+  padding-top: 0;
+  padding-bottom: 0;
+`;
