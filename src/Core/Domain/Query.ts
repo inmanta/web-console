@@ -19,6 +19,7 @@ import {
   RawResource,
   RawResourceDetails,
   ResourceDetails,
+  ResourceIdDetails,
 } from "./Resource";
 import { ResourceParams as ResourceParams } from "./ResourceParams";
 import { WithId } from "../Language";
@@ -30,6 +31,7 @@ import { Callback } from "./Callback";
 import { CompileReport } from "./CompileReport";
 import { CompileReportParams } from "./CompileReportParams";
 import { CompileDetails } from "./CompileDetails";
+import { ResourceAction } from "./ResourceAction";
 
 type Query =
   | ServicesQuery
@@ -49,7 +51,8 @@ type Query =
   | EnvironmentDetailsQuery
   | CallbacksQuery
   | CompileReportsQuery
-  | CompileDetailsQuery;
+  | CompileDetailsQuery
+  | ResourceActionsQuery;
 
 export type Type = Query;
 
@@ -367,6 +370,24 @@ interface CompileDetailsManifest {
   query: CompileDetailsQuery;
 }
 
+export interface ResourceActionsQuery extends ResourceIdDetails {
+  kind: "ResourceActions";
+}
+
+interface ResourceActionsManifest {
+  error: string;
+  apiResponse: {
+    data: ResourceAction[];
+  };
+  data: {
+    data: ResourceAction[];
+  };
+  usedData: {
+    data: ResourceAction[];
+  };
+  query: ResourceActionsQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -390,6 +411,7 @@ interface Manifest {
   Callbacks: CallbacksManifest;
   CompileReports: CompileReportsManifest;
   CompileDetails: CompileDetailsManifest;
+  ResourceActions: ResourceActionsManifest;
 }
 
 /**

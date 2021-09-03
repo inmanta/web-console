@@ -42,6 +42,10 @@ import {
   compileDetailsSlice,
   CompileDetailsSlice,
 } from "./CompileDetailsSlice";
+import {
+  resourceActionsSlice,
+  ResourceActionsSlice,
+} from "./ResourceActionsSlice";
 
 export interface StoreModel {
   projects: ProjectsSlice;
@@ -61,6 +65,7 @@ export interface StoreModel {
   callbacks: CallbacksSlice;
   compileReports: CompileReportsSlice;
   compileDetails: CompileDetailsSlice;
+  resourceActions: ResourceActionsSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -81,4 +86,5 @@ export const storeModel: StoreModel = {
   callbacks: callbacksSlice,
   compileReports: compileReportsSlice,
   compileDetails: compileDetailsSlice,
+  resourceActions: resourceActionsSlice,
 };

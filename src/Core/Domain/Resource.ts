@@ -69,3 +69,28 @@ export interface RawResourceDetails {
   attributes: Record<string, unknown>;
   requires_status: Record<string, string>;
 }
+
+export const resourceIdFromDetails = ({
+  resource_type,
+  agent,
+  attribute,
+  resource_id_value,
+}: ResourceIdDetails): string =>
+  `${resource_type}[${agent},${attribute}=${resource_id_value}]`;
+
+export const resourceIdToDetails = (resourceId: string): ResourceIdDetails => {
+  const splits1 = resourceId.split("[");
+  const resource_type = splits1[0];
+  const splits2 = splits1[1].replace("]", "").split(",");
+  const agent = splits2[0];
+  const splits3 = splits2[1].split("=");
+  const attribute = splits3[0];
+  const resource_id_value = splits3[1];
+
+  return {
+    resource_type,
+    agent,
+    attribute,
+    resource_id_value,
+  };
+};

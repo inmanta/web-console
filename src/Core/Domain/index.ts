@@ -19,6 +19,7 @@ export * from "./Diagnostics";
 export * as EventParams from "./EventParams";
 export * from "./Params";
 export * from "./Resource";
+export * from "./ResourceAction";
 export * as ResourceParams from "./ResourceParams";
 export * from "./ResourceHistory";
 export * from "./EnvironmentDetailsModel";
