@@ -4,10 +4,7 @@ import { Button, Modal } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
 import React, { useContext, useState } from "react";
 
-interface Props {
-  environment: string;
-}
-export const HaltDialog: React.FC<Props> = ({ environment }) => {
+export const HaltDialog: React.FC = () => {
   const { commandResolver } = useContext(DependencyContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalToggle = () => setIsModalOpen(!isModalOpen);
@@ -41,7 +38,7 @@ export const HaltDialog: React.FC<Props> = ({ environment }) => {
           </Button>,
         ]}
       >
-        {words("environment.halt.details")(environment)}
+        {words("environment.halt.details")}
       </Modal>
     </>
   );

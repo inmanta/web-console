@@ -11,7 +11,7 @@ export const Sidebar: React.FC<{ environment: string }> = ({ environment }) => {
       </StackItem>
       <StackItem isFilled></StackItem>
       <StackItem>
-        <EnvironmentControls environment={environment} />
+        <EnvironmentControls />
       </StackItem>
     </Stack>
   );

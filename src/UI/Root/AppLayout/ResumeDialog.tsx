@@ -5,11 +5,7 @@ import { PlayIcon } from "@patternfly/react-icons";
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 
-interface Props {
-  environment: string;
-}
-
-export const ResumeDialog: React.FC<Props> = ({ environment }) => {
+export const ResumeDialog: React.FC = () => {
   const { commandResolver } = useContext(DependencyContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalToggle = () => setIsModalOpen(!isModalOpen);
@@ -44,7 +40,7 @@ export const ResumeDialog: React.FC<Props> = ({ environment }) => {
           </Button>,
         ]}
       >
-        {words("environment.resume.details")(environment)}
+        {words("environment.resume.details")}
       </Modal>
     </>
   );

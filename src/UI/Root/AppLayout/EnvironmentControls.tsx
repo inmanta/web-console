@@ -20,11 +20,7 @@ import { LoadingView } from "@/UI/Components";
 import { ResumeDialog } from "./ResumeDialog";
 import { HaltDialog } from "./HaltDialog";
 
-interface Props {
-  environment: string;
-}
-
-export const EnvironmentControls: React.FC<Props> = ({ environment }) => {
+export const EnvironmentControls: React.FC = () => {
   const { queryResolver, urlManager } = useContext(DependencyContext);
   const [data] = queryResolver.useContinuous<"EnvironmentDetails">({
     kind: "EnvironmentDetails",
@@ -76,11 +72,7 @@ export const EnvironmentControls: React.FC<Props> = ({ environment }) => {
                   />
                 </FlexItem>
                 <FlexItem>
-                  {data.halted ? (
-                    <ResumeDialog environment={environment} />
-                  ) : (
-                    <HaltDialog environment={environment} />
-                  )}
+                  {data.halted ? <ResumeDialog /> : <HaltDialog />}
                 </FlexItem>
               </Flex>
             </StackItem>

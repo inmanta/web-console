@@ -71,7 +71,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <EnvironmentControls environment={EnvironmentDetails.a.id} />
+          <EnvironmentControls />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
