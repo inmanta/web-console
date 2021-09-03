@@ -58,7 +58,7 @@ export const App: React.FunctionComponent<{
                         theme="dark"
                       />
                     }
-                    style={{ gridArea: "mainpage" }}
+                    style={{ gridArea: "mainpage", overflow: "hidden" }}
                   >
                     <PageRouter />
                   </Page>
