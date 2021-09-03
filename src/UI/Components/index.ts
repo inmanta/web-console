@@ -34,4 +34,3 @@ export * from "./PageTitle";
 export * from "./PageSectionWithTitle";
 export * from "./ResourceStatusCell";
 export * from "./DesiredStateAttributes";
-export * from "./ConfirmationDialog";

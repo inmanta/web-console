@@ -1,31 +1,48 @@
-import { ConfirmationDialog } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Button } from "@patternfly/react-core";
+import { Button, Modal } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 interface Props {
   environment: string;
 }
 export const HaltDialog: React.FC<Props> = ({ environment }) => {
   const { commandResolver } = useContext(DependencyContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleModalToggle = () => setIsModalOpen(!isModalOpen);
 
   const haltEnvironmentTrigger = commandResolver.getTrigger<"HaltEnvironment">({
     kind: "HaltEnvironment",
   });
   return (
-    <ConfirmationDialog
-      modalButton={
-        <Button variant="danger" icon={<StopIcon />}>
-          {words("environment.halt.button")}
-        </Button>
-      }
-      onConfirm={haltEnvironmentTrigger}
-      modalContent={words("environment.halt.details")(environment)}
-      title={words("environment.halt.title")}
-      confirmText={words("yes")}
-      cancelText={words("no")}
-    />
+    <>
+      <Button variant="danger" icon={<StopIcon />} onClick={handleModalToggle}>
+        {words("environment.halt.button")}
+      </Button>
+      <Modal
+        variant="small"
+        title={words("environment.halt.title")}
+        isOpen={isModalOpen}
+        onClose={handleModalToggle}
+        actions={[
+          <Button
+            key="confirm"
+            variant="primary"
+            onClick={() => {
+              haltEnvironmentTrigger();
+              handleModalToggle();
+            }}
+          >
+            {words("yes")}
+          </Button>,
+          <Button key="cancel" variant="link" onClick={handleModalToggle}>
+            {words("no")}
+          </Button>,
+        ]}
+      >
+        {words("environment.halt.details")(environment)}
+      </Modal>
+    </>
   );
 };
