@@ -29,6 +29,7 @@ export const ResourceActionsTable: React.FC<Props> = ({ actions }) => {
           <Th>Action Type</Th>
           <Th>Log Level</Th>
           <Th>Message</Th>
+          <Th>Options</Th>
         </Tr>
       </Thead>
       {actions.map((action, index) => (

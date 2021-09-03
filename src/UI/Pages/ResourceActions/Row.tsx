@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ResourceAction } from "@/Core";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
 import { Details } from "./Details";
@@ -33,6 +33,9 @@ export const Row: React.FC<Props> = ({
         <Td>{action.action}</Td>
         <Td>{action.messages[0].level}</Td>
         <Td>{presentShortMessage(action.messages[0].msg)}</Td>
+        <Td>
+          <Options />
+        </Td>
       </Tr>
       {isExpanded && (
         <Tr isExpanded={isExpanded}>
@@ -55,4 +58,31 @@ const presentDate = (timestamp: string): string => {
     .utc(timestamp)
     .tz(moment.tz.guess())
     .format("DD/MM/YYYY HH:MM:SS");
+};
+
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownPosition,
+  KebabToggle,
+} from "@patternfly/react-core";
+
+const Options: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownItems = [
+    <DropdownItem key="link">Show messages from this action</DropdownItem>,
+  ];
+
+  return (
+    <Dropdown
+      position={DropdownPosition.right}
+      onSelect={() => setIsOpen(false)}
+      toggle={
+        <KebabToggle onToggle={() => setIsOpen(!isOpen)} id="toggle-id-6" />
+      }
+      isOpen={isOpen}
+      isPlain
+      dropdownItems={dropdownItems}
+    />
+  );
 };

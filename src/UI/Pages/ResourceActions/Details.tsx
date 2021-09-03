@@ -17,7 +17,14 @@ export const Details: React.FC<Props> = ({ action }) => {
       <DescriptionListGroup>
         <DescriptionListTerm>Message</DescriptionListTerm>
         <DescriptionListDescription>
-          {action.messages[0].msg}
+          <pre
+            style={{
+              whiteSpace: "pre-wrap",
+              fontFamily: "Liberation Mono",
+            }}
+          >
+            <code>{action.messages[0].msg}</code>
+          </pre>
         </DescriptionListDescription>
       </DescriptionListGroup>
       <DescriptionListGroup>
