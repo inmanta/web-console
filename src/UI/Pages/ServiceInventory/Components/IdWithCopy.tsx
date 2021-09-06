@@ -9,10 +9,8 @@ interface Props {
 
 export const IdWithCopy: React.FC<Props> = ({ id }) => {
   return (
-    <TextWithCopy
-      shortText={id.short}
-      fullText={id.full}
-      tooltipContent={words("id.copy")}
-    />
+    <TextWithCopy value={id.full} tooltipContent={words("id.copy")}>
+      {id.short}
+    </TextWithCopy>
   );
 };
