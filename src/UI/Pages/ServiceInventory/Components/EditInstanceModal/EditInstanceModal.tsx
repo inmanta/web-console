@@ -19,7 +19,8 @@ export const EditInstanceModal: React.FC<Props> = ({
   instance,
   attributeModels,
 }) => {
-  const { commandResolver } = useContext(DependencyContext);
+  const { commandResolver, environmentModifier } =
+    useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const handleModalToggle = () => {
@@ -57,13 +58,18 @@ export const EditInstanceModal: React.FC<Props> = ({
         setErrorMessage={setErrorMessage}
       />
       <ActionDisabledTooltip
-        isDisabled={isDisabled}
+        isDisabled={isDisabled || environmentModifier.isHalted()}
         ariaLabel={words("inventory.editInstance.button")}
+        tooltipContent={
+          environmentModifier.isHalted()
+            ? words("environment.halt.tooltip")
+            : words("inventory.statustab.actionDisabled")
+        }
       >
         <Button
           variant="secondary"
           onClick={handleModalToggle}
-          isDisabled={isDisabled}
+          isDisabled={isDisabled || environmentModifier.isHalted()}
           isBlock
         >
           <EditIcon /> {words("inventory.editInstance.button")}

@@ -9,19 +9,18 @@ interface Props {
   children?: ReactElement<any>;
   isDisabled?: boolean;
   ariaLabel: string;
+  tooltipContent?: string;
 }
 
 export const ActionDisabledTooltip: React.FC<Props> = ({
   children,
   isDisabled,
   ariaLabel,
+  tooltipContent = words("inventory.statustab.actionDisabled"),
 }) => {
   if (isDisabled) {
     return (
-      <Tooltip
-        entryDelay={200}
-        content={words("inventory.statustab.actionDisabled")}
-      >
+      <Tooltip entryDelay={200} content={tooltipContent}>
         <CursorNotAllowedContainer aria-label={ariaLabel}>
           {children}
         </CursorNotAllowedContainer>

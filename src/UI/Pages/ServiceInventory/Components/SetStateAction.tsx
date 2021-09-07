@@ -40,7 +40,8 @@ export const SetStateAction: React.FC<Props> = ({
     </DropdownItem>
   ));
   const isDisabled = !dropdownItems || dropdownItems.length === 0;
-  const { commandResolver } = useContext(DependencyContext);
+  const { commandResolver, environmentModifier } =
+    useContext(DependencyContext);
   const trigger = commandResolver.getTrigger<"TriggerSetState">({
     kind: "TriggerSetState",
     service_entity,
@@ -74,8 +75,13 @@ export const SetStateAction: React.FC<Props> = ({
         />
       )}
       <ActionDisabledTooltip
-        isDisabled={isDisabled}
+        isDisabled={isDisabled || environmentModifier.isHalted()}
         ariaLabel={words("inventory.statustab.setInstanceState")}
+        tooltipContent={
+          environmentModifier.isHalted()
+            ? words("environment.halt.tooltip")
+            : words("inventory.statustab.actionDisabled")
+        }
       >
         <Dropdown
           toggle={
@@ -83,7 +89,7 @@ export const SetStateAction: React.FC<Props> = ({
               data-testid={`${id}-set-state-toggle`}
               onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
               toggleIndicator={CaretDownIcon}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || environmentModifier.isHalted()}
             >
               {words("inventory.statustab.setInstanceState")}
             </DropdownToggle>

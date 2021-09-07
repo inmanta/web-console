@@ -5,6 +5,7 @@ import {
   DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  MockEnvironmentModifier,
   Service,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -89,7 +90,12 @@ export class ServiceInventoryPrepper {
     const component = (
       <MemoryRouter>
         <DependencyProvider
-          dependencies={{ queryResolver, urlManager, commandResolver }}
+          dependencies={{
+            queryResolver,
+            urlManager,
+            commandResolver,
+            environmentModifier: new MockEnvironmentModifier(),
+          }}
         >
           <StoreProvider store={store}>
             <ServiceInventory serviceName={service.name} service={service} />

@@ -1,9 +1,6 @@
 import * as React from "react";
 import {
-  Page,
   PageHeader,
-  PageSidebar,
-  SkipToContent,
   Avatar,
   TextContent,
   DropdownItem,
@@ -13,25 +10,33 @@ import {
 import Logo from "!react-svg-loader!@images/logo.svg";
 import AvatarImg from "!url-loader!@assets/images/img_avatar.svg";
 import { AngleDownIcon } from "@patternfly/react-icons";
-import { useStoreState } from "@/Data";
-import { PageBreadcrumbs } from "@/UI/Root/PageBreadcrumbs";
-import { Navigation } from "@/UI/Root/Navigation";
 import { GlobalStyles } from "@/UI/Styles";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 import { IconDropdown } from "./Toolbar/IconDropdown";
 import { EnvSelectorWithProvider } from "./Toolbar/Provider";
 import { Route } from "@/UI/Routing";
+import styled from "styled-components";
 
-interface IAppLayout {
+interface Props {
   keycloak?: Keycloak.KeycloakInstance;
   children: React.ReactNode;
   shouldUseAuth: boolean;
+  isNavOpen: boolean;
+  setIsNavOpen: (navOpen: boolean) => void;
+  isMobileView: boolean;
+  isNavOpenMobile: boolean;
+  setIsNavOpenMobile: (navOpenMobile: boolean) => void;
 }
 
-export const AppLayout: React.FunctionComponent<IAppLayout> = ({
+export const AppWrapper: React.FunctionComponent<Props> = ({
   keycloak,
   children,
   shouldUseAuth,
+  isNavOpen,
+  setIsNavOpen,
+  isMobileView,
+  isNavOpenMobile,
+  setIsNavOpenMobile,
 }) => {
   React.useEffect(() => {
     if (keycloak && !keycloak.profile) {
@@ -39,24 +44,14 @@ export const AppLayout: React.FunctionComponent<IAppLayout> = ({
     }
   }, [keycloak?.authenticated]);
 
-  const [isNavOpen, setIsNavOpen] = React.useState(true);
-  const [isMobileView, setIsMobileView] = React.useState(true);
-  const [isNavOpenMobile, setIsNavOpenMobile] = React.useState(false);
   const onNavToggleMobile = () => {
     setIsNavOpenMobile(!isNavOpenMobile);
   };
   const onNavToggle = () => {
     setIsNavOpen(!isNavOpen);
   };
-  const onPageResize = (props: { mobileView: boolean; windowSize: number }) => {
-    setIsMobileView(props.mobileView);
-  };
 
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
-  const selectedEnvironmentId = useStoreState(
-    (state) => state.projects.selectedEnvironmentId
-  );
-
   const Login = () => {
     const [name, setName] = React.useState("inmanta2");
     if (keycloak && keycloak.profile && keycloak.profile.username !== name) {
@@ -100,32 +95,21 @@ export const AppLayout: React.FunctionComponent<IAppLayout> = ({
     />
   );
 
-  const Sidebar = (
-    <PageSidebar
-      aria-label="PageSidebar"
-      nav={<Navigation environment={selectedEnvironmentId} />}
-      isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
-      theme="dark"
-    />
-  );
-  const PageSkipToContent = (
-    <SkipToContent href="#primary-app-container">Skip to Content</SkipToContent>
-  );
   return (
     <React.Fragment>
       <GlobalStyles />
       <SimpleBackgroundImage />
-      <Page
-        breadcrumb={<PageBreadcrumbs />}
-        mainContainerId="primary-app-container"
-        header={Header}
-        sidebar={Sidebar}
-        onPageResize={onPageResize}
-        skipToContent={PageSkipToContent}
-        style={{ backgroundColor: "transparent" }}
-      >
+      <PageWrapper className="pf-c-page">
+        {Header}
         {children}
-      </Page>
+      </PageWrapper>
     </React.Fragment>
   );
 };
+
+const PageWrapper = styled.div`
+  grid-template-areas:
+    "header header"
+    "mainpage mainpage";
+  background-color: transparent;
+`;
