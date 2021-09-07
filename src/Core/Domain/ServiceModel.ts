@@ -3,7 +3,7 @@ import { Config } from "./Config";
 export interface AttributeModel {
   name: string;
   type: string;
-  description: string;
+  description?: string;
   modifier: string;
   default_value: string | null;
   default_value_set: boolean;
@@ -14,9 +14,12 @@ export interface AttributeModel {
 export interface StateModel {
   deleted: boolean;
   label?: "info" | "success" | "warning" | "danger";
+  validate_self?: "candidate" | "active" | null;
+  validate_others?: "candidate" | "active" | null;
   export_resources: boolean;
   name: string;
   purge_resources: boolean;
+  values?: Record<string, unknown>;
 }
 
 export interface TransferModel {
@@ -37,6 +40,7 @@ export interface TransferModel {
 
 export interface LifecycleModel {
   initial_state: string;
+  name?: string;
   states: StateModel[];
   transfers: TransferModel[];
 }
@@ -67,7 +71,7 @@ export interface ServiceModel extends ServiceIdentifier {
   service_identity?: string;
   service_identity_display_name?: string;
   config: Config;
-  instance_summary?: InstanceSummary;
+  instance_summary?: InstanceSummary | null;
   embedded_entities: EmbeddedEntity[];
 }
 
@@ -76,7 +80,7 @@ export interface EmbeddedEntity {
   description?: string;
   modifier: string;
   lower_limit: number;
-  upper_limit: number;
+  upper_limit?: number;
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
 }

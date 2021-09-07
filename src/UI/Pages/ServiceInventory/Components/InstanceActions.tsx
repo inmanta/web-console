@@ -9,7 +9,7 @@ import {
 import { words } from "@/UI/words";
 import { ButtonWithCursorHandling } from "@/UI/Components";
 import { getUrl } from "@/UI/Routing";
-import { AttributeModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
 import { EditInstanceModal } from "./EditInstanceModal";
 import { DeleteModal } from "./DeleteModal";
@@ -20,13 +20,13 @@ export interface InstanceActionsProps {
   editDisabled: boolean;
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
-  attributeModels: AttributeModel[];
+  serviceEntity: ServiceModel;
 }
 
 export const InstanceActions: React.FC<InstanceActionsProps> = ({
   instance,
   editDisabled,
-  attributeModels,
+  serviceEntity,
   deleteDisabled,
   diagnoseDisabled,
 }) => {
@@ -38,7 +38,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
         <EditInstanceModal
           isDisabled={editDisabled}
           instance={instance}
-          attributeModels={attributeModels}
+          serviceEntity={serviceEntity}
         />
       </DescriptionListGroup>
       <DescriptionListGroup>

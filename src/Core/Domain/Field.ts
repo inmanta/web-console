@@ -27,5 +27,5 @@ export interface DictListField {
   isOptional: boolean;
   fields: Field[];
   min: number;
-  max: number;
+  max?: number;
 }

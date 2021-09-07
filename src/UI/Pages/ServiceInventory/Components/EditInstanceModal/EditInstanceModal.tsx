@@ -1,23 +1,23 @@
 import React, { useContext, useState } from "react";
 import { EditIcon } from "@patternfly/react-icons";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
-import { AttributeModel, Field, InstanceAttributeModel, Maybe } from "@/Core";
+import { Field, InstanceAttributeModel, Maybe, ServiceModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
 import { AttributeInputConverterImpl } from "@/Data";
 import { ErrorToastAlert, ActionDisabledTooltip } from "@/UI/Components";
-import { EditFormPresenter } from "./EditFormPresenter";
+import { EditForm } from "./EditForm";
 
 interface Props {
   isDisabled?: boolean;
   instance: ServiceInstanceForAction;
-  attributeModels: AttributeModel[];
+  serviceEntity: ServiceModel;
 }
 export const EditInstanceModal: React.FC<Props> = ({
   isDisabled,
   instance,
-  attributeModels,
+  serviceEntity,
 }) => {
   const { commandResolver } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +26,6 @@ export const EditInstanceModal: React.FC<Props> = ({
     setIsOpen(!isOpen);
   };
   const attributeInputConverter = new AttributeInputConverterImpl();
-  const editFormPresenter = new EditFormPresenter(attributeInputConverter);
   const currentAttributes =
     attributeInputConverter.getCurrentAttributes(instance);
 
@@ -75,12 +74,12 @@ export const EditInstanceModal: React.FC<Props> = ({
         title={words("inventory.editInstance.title")}
         onClose={handleModalToggle}
       >
-        {editFormPresenter.presentForm(
-          currentAttributes,
-          attributeModels,
-          onSubmit,
-          () => setIsOpen(false)
-        )}
+        <EditForm
+          currentAttributes={currentAttributes}
+          serviceEntity={serviceEntity}
+          onSubmit={onSubmit}
+          onCancel={() => setIsOpen(false)}
+        />
       </Modal>
     </>
   );

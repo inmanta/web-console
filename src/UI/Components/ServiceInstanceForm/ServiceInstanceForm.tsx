@@ -10,14 +10,18 @@ interface Props {
   fields: Field[];
   onSubmit(fields: Field[], formState: InstanceAttributeModel): void;
   onCancel(): void;
+  originalAttributes?: InstanceAttributeModel;
 }
 
 export const ServiceInstanceForm: React.FC<Props> = ({
   fields,
   onSubmit,
   onCancel,
+  originalAttributes,
 }) => {
-  const [formState, setFormState] = useState(createFormState(fields));
+  const [formState, setFormState] = useState(
+    createFormState(fields, originalAttributes)
+  );
 
   const getUpdate =
     (path: string) =>

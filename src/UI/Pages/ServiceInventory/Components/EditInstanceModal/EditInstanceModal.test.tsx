@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import React from "react";
 import userEvent from "@testing-library/user-event";
 import { EditInstanceModal } from "./EditInstanceModal";
-import { AttributeModel } from "@/Core";
 import {
   CommandResolverImpl,
   AttributeResultConverterImpl,
@@ -10,7 +9,7 @@ import {
   BaseApiHelper,
   TriggerInstanceUpdatePatcher,
 } from "@/Data";
-import { DynamicCommandManagerResolver } from "@/Test";
+import { DynamicCommandManagerResolver, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 
 function setup() {
@@ -26,16 +25,6 @@ function setup() {
     instanceSetStateTargets: [],
     deleted: false,
   };
-  const attributes: AttributeModel[] = [
-    {
-      name: "attr1",
-      type: "string",
-      description: "name",
-      modifier: "rw+",
-      default_value_set: false,
-      default_value: null,
-    },
-  ];
   const commandManager = new TriggerInstanceUpdateCommandManager(
     new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
     new AttributeResultConverterImpl()
@@ -46,7 +35,10 @@ function setup() {
   return {
     component: (
       <DependencyProvider dependencies={{ commandResolver }}>
-        <EditInstanceModal instance={instance} attributeModels={attributes} />
+        <EditInstanceModal
+          instance={instance}
+          serviceEntity={Service.nestedEditable}
+        />
       </DependencyProvider>
     ),
   };

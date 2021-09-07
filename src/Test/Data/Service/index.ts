@@ -47,3 +47,23 @@ export const withInstanceSummary: ServiceModel = {
   name: "service_name_e",
   instance_summary: InstanceSummary.a,
 };
+
+export const nestedEditable: ServiceModel = {
+  attributes: Attribute.nestedEditable,
+  embedded_entities: EmbeddedEntity.nestedEditable,
+  environment: "36d188da-a30d-411b-892f-35808ad9b6e1",
+  name: "test_service",
+  description: "Description of test service",
+  lifecycle: {
+    states: State.nestedEditable,
+    transfers: Transfer.nestedEditable,
+    initial_state: "a",
+    name: "testservice",
+  },
+  config: {},
+  instance_summary: {
+    by_state: { b: 0, a: 1 },
+    by_label: { no_label: 0, info: 0, success: 0, danger: 0, warning: 0 },
+    total: 1,
+  },
+};
