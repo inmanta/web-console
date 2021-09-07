@@ -17,3 +17,4 @@ export * from "./UrlManager";
 export * from "./Patcher";
 export * from "./Deleter";
 export * from "./PosterWithoutResponse";
+export * from "./EnvironmentModifier";

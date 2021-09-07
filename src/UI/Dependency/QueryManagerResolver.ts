@@ -32,6 +32,8 @@ import {
   ResourceDetailsStateHelper,
   ResourceHistoryStateHelper,
   ResourceHistoryQueryManager,
+  EnvironmentDetailsQueryManager,
+  EnvironmentDetailsStateHelper,
 } from "@/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -144,6 +146,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new ResourceHistoryQueryManager(
         new FetcherImpl<"ResourceHistory">(this.baseApiHelper),
         new ResourceHistoryStateHelper(this.store),
+        scheduler,
+        environment
+      ),
+      new EnvironmentDetailsQueryManager(
+        new FetcherImpl<"EnvironmentDetails">(this.baseApiHelper),
+        new EnvironmentDetailsStateHelper(this.store, environment),
         scheduler,
         environment
       ),

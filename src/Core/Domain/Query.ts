@@ -25,6 +25,7 @@ import { WithId } from "../Language";
 import { ResourceHistory } from "./ResourceHistory";
 import { Sort } from "./Params";
 import { PageSize } from "./PageSize";
+import { EnvironmentDetails } from "./EnvironmentDetailsModel";
 
 type Query =
   | ServicesQuery
@@ -39,7 +40,8 @@ type Query =
   | ProjectsQuery
   | ResourcesQuery
   | ResourceDetailsQuery
-  | ResourceHistoryQuery;
+  | ResourceHistoryQuery
+  | EnvironmentDetailsQuery;
 
 export type Type = Query;
 
@@ -53,6 +55,18 @@ interface ProjectsManifest {
   data: ProjectModel[];
   usedData: ProjectModel[];
   query: ProjectsQuery;
+}
+
+export interface EnvironmentDetailsQuery {
+  kind: "EnvironmentDetails";
+}
+
+interface EnvironmentDetailsManifest {
+  error: string;
+  apiResponse: { data: EnvironmentDetails };
+  data: EnvironmentDetails;
+  usedData: EnvironmentDetails;
+  query: EnvironmentDetailsQuery;
 }
 
 /**
@@ -300,6 +314,7 @@ interface Manifest {
   Resources: ResourcesManifest;
   ResourceDetails: ResourceDetailsManifest;
   ResourceHistory: ResourceHistoryManifest;
+  EnvironmentDetails: EnvironmentDetailsManifest;
 }
 
 /**

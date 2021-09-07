@@ -8,7 +8,11 @@ import {
   InstanceDeleter,
 } from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
-import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
+import {
+  DynamicCommandManagerResolver,
+  MockEnvironmentModifier,
+  ServiceInstance,
+} from "@/Test";
 import { DeleteModal } from "./DeleteModal";
 
 function setup() {
@@ -20,7 +24,12 @@ function setup() {
   );
   return {
     component: (
-      <DependencyProvider dependencies={{ commandResolver }}>
+      <DependencyProvider
+        dependencies={{
+          commandResolver,
+          environmentModifier: new MockEnvironmentModifier(),
+        }}
+      >
         <DeleteModal
           id={ServiceInstance.a.id}
           version={ServiceInstance.a.version}

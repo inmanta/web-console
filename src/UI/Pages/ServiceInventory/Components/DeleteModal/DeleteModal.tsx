@@ -25,7 +25,8 @@ export const DeleteModal: React.FC<Props> = ({
     setIsOpen(!isOpen);
   };
   const [errorMessage, setErrorMessage] = useState("");
-  const { commandResolver } = useContext(DependencyContext);
+  const { commandResolver, environmentModifier } =
+    useContext(DependencyContext);
   const trigger = commandResolver.getTrigger<"DeleteInstance">({
     kind: "DeleteInstance",
     service_entity,
@@ -47,13 +48,18 @@ export const DeleteModal: React.FC<Props> = ({
         setErrorMessage={setErrorMessage}
       />
       <ActionDisabledTooltip
-        isDisabled={isDisabled}
+        isDisabled={isDisabled || environmentModifier.isHalted()}
         ariaLabel={words("inventory.deleteInstance.button")}
+        tooltipContent={
+          environmentModifier.isHalted()
+            ? words("environment.halt.tooltip")
+            : words("inventory.statustab.actionDisabled")
+        }
       >
         <Button
           variant="danger"
           onClick={handleModalToggle}
-          isDisabled={isDisabled}
+          isDisabled={isDisabled || environmentModifier.isHalted()}
           isBlock
         >
           <TrashAltIcon /> {words("inventory.deleteInstance.button")}

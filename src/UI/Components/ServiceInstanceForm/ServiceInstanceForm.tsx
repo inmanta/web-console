@@ -5,12 +5,14 @@ import { words } from "@/UI/words";
 import { InstanceAttributeModel, Field } from "@/Core";
 import { createFormState } from "./Helpers";
 import { FieldInput } from "./Components";
+import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 
 interface Props {
   fields: Field[];
   onSubmit(fields: Field[], formState: InstanceAttributeModel): void;
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
+  isSubmitDisabled?: boolean;
 }
 
 export const ServiceInstanceForm: React.FC<Props> = ({
@@ -18,6 +20,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   onSubmit,
   onCancel,
   originalAttributes,
+  isSubmitDisabled,
 }) => {
   const [formState, setFormState] = useState(
     createFormState(fields, originalAttributes)
@@ -45,9 +48,20 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         ))}
 
         <ActionGroup>
-          <Button variant="primary" onClick={() => onSubmit(fields, formState)}>
-            {words("confirm")}
-          </Button>
+          <ActionDisabledTooltip
+            isDisabled={isSubmitDisabled}
+            ariaLabel={words("confirm")}
+            tooltipContent={words("environment.halt.tooltip")}
+          >
+            <Button
+              variant="primary"
+              onClick={() => onSubmit(fields, formState)}
+              isDisabled={isSubmitDisabled}
+            >
+              {words("confirm")}
+            </Button>
+          </ActionDisabledTooltip>
+
           <Button variant="link" onClick={onCancel}>
             {words("cancel")}
           </Button>

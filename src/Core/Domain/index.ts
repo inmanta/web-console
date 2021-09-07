@@ -18,3 +18,4 @@ export * from "./Params";
 export * from "./Resource";
 export * as ResourceParams from "./ResourceParams";
 export * from "./ResourceHistory";
+export * from "./EnvironmentDetailsModel";

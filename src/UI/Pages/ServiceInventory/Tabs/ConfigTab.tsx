@@ -31,7 +31,8 @@ export const DisabledConfigTab: React.FC = () => (
 );
 
 export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
-  const { commandResolver, queryResolver } = useContext(DependencyContext);
+  const { commandResolver, queryResolver, environmentModifier } =
+    useContext(DependencyContext);
   const [data, retry] = queryResolver.useOneTime<"InstanceConfig">({
     kind: "InstanceConfig",
     ...serviceInstanceIdentifier,
@@ -77,6 +78,7 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
                 Switch={(props) => (
                   <DefaultSwitch {...props} defaults={defaults} />
                 )}
+                isDisabled={environmentModifier.isHalted()}
               />
             </CardBody>
           </Card>

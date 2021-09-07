@@ -16,3 +16,6 @@ export * from "./TriggerSetState";
 export * from "./Resources";
 export * from "./ResourceDetails";
 export * from "./ResourceHistory";
+export * from "./HaltEnvironment";
+export * from "./ResumeEnvironment";
+export * from "./EnvironmentDetails";

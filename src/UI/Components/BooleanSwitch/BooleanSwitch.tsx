@@ -7,6 +7,7 @@ interface Props {
   value: boolean;
   onChange: (value: boolean) => void;
   getLabel?(value: boolean): string;
+  isDisabled?: boolean;
 }
 
 export const BooleanSwitch: React.FC<Props> = ({
@@ -14,6 +15,7 @@ export const BooleanSwitch: React.FC<Props> = ({
   value,
   onChange,
   getLabel,
+  isDisabled,
 }) => (
   <Switch
     id={name}
@@ -22,5 +24,6 @@ export const BooleanSwitch: React.FC<Props> = ({
     isChecked={value}
     onChange={onChange}
     aria-label={value ? `${name}-True` : `${name}-False`}
+    isDisabled={isDisabled}
   />
 );

@@ -16,7 +16,8 @@ interface Props {
 }
 
 export const Config: React.FC<Props> = ({ serviceName }) => {
-  const { queryResolver, commandResolver } = useContext(DependencyContext);
+  const { queryResolver, commandResolver, environmentModifier } =
+    useContext(DependencyContext);
   const [data, retry] = queryResolver.useOneTime<"ServiceConfig">({
     kind: "ServiceConfig",
     name: serviceName,
@@ -42,6 +43,7 @@ export const Config: React.FC<Props> = ({ serviceName }) => {
                   config={config}
                   onChange={update}
                   Switch={BooleanSwitch}
+                  isDisabled={environmentModifier.isHalted()}
                 />
               ),
           },

@@ -1,4 +1,5 @@
-global.fetch = require("node-fetch");
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
 // Get a list of packageVersionIds
 async function getDevVersions() {

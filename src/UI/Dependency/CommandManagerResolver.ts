@@ -19,6 +19,10 @@ import {
   Store,
   DeleteServiceCommandManager,
   ServiceDeleter,
+  HaltEnvironmentCommandManager,
+  HaltEnvironmentPoster,
+  ResumeEnvironmentCommandManager,
+  ResumeEnvironmentPoster,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -67,6 +71,12 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new TriggerSetStateCommandManager(
         this.authHelper,
         new SetStatePoster(this.baseApiHelper, environment)
+      ),
+      new HaltEnvironmentCommandManager(
+        new HaltEnvironmentPoster(this.baseApiHelper, environment)
+      ),
+      new ResumeEnvironmentCommandManager(
+        new ResumeEnvironmentPoster(this.baseApiHelper, environment)
       ),
     ];
   }

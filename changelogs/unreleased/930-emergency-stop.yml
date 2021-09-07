@@ -1,0 +1,6 @@
+description: Add emergency stop button
+issue-nr: 930
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
