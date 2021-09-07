@@ -1,9 +1,5 @@
 import { DeploymentProgress } from "./ServiceInstanceModel";
-
-export interface Id {
-  full: string;
-  short: string;
-}
+import { Uuid } from "./Uuid";
 
 export interface DateInfo {
   full: string;
@@ -25,7 +21,7 @@ export interface Attributes {
 }
 
 export interface Row {
-  id: Id;
+  id: Uuid;
   attributesSummary: AttributesSummary;
   attributes: Attributes;
   createdAt: DateInfo;

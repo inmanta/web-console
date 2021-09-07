@@ -5,32 +5,25 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  List,
+  ListItem,
 } from "@patternfly/react-core";
-import { Callback, stringifyList } from "@/Core";
+import { EventTypesList } from "@/Core";
 import styled from "styled-components";
 
-type Props = Pick<Callback, "minimal_log_level" | "event_types">;
+interface Props {
+  event_types: string[];
+}
 
-export const Details: React.FC<Props> = ({
-  minimal_log_level,
-  event_types,
-}) => {
+export const Details: React.FC<Props> = ({ event_types }) => {
   return (
-    <StyledDescriptionList isHorizontal isAutoColumnWidths>
-      <DescriptionListGroup>
-        <DescriptionListTerm>
-          {words("catalog.callbacks.minimalLogLevel")}
-        </DescriptionListTerm>
-        <DescriptionListDescription>
-          {minimal_log_level}
-        </DescriptionListDescription>
-      </DescriptionListGroup>
+    <StyledDescriptionList>
       <DescriptionListGroup>
         <DescriptionListTerm>
           {words("catalog.callbacks.eventTypes")}
         </DescriptionListTerm>
         <DescriptionListDescription>
-          {stringifyList(event_types || [])}
+          <CheckedList all={EventTypesList} available={event_types} />
         </DescriptionListDescription>
       </DescriptionListGroup>
     </StyledDescriptionList>
@@ -39,4 +32,24 @@ export const Details: React.FC<Props> = ({
 
 const StyledDescriptionList = styled(DescriptionList)`
   --pf-c-description-list--m-horizontal__term--width: 20ch;
+`;
+
+const CheckedList: React.FC<{ all: string[]; available: string[] }> = ({
+  all,
+  available,
+}) => (
+  <List isPlain>
+    {all.map((item) =>
+      available.includes(item) ? (
+        <ListItem key={item}>{item}</ListItem>
+      ) : (
+        <StyledListItemStriked key={item}>{item}</StyledListItemStriked>
+      )
+    )}
+  </List>
+);
+
+const StyledListItemStriked = styled(ListItem)`
+  text-decoration: line-through;
+  opacity: 0.4;
 `;

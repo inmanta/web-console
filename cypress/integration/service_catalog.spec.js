@@ -16,7 +16,7 @@ describe("Service catalog", function () {
     cy.get("#e2e_service-expand")
       .find(".pf-c-tabs__item")
       .find(".pf-c-tabs__link")
-      .should("have.length", 4);
+      .should("have.length", 5);
     cy.get("#e2e_service-expand")
       .find(".pf-c-tabs__item")
       .find(".pf-c-tabs__link")
@@ -29,6 +29,7 @@ describe("Service catalog", function () {
           "Attributes",
           "Lifecycle States",
           "Config",
+          "Callbacks",
         ]);
       });
   });

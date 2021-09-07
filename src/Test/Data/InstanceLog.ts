@@ -1,4 +1,4 @@
-import { InstanceLog, InstanceEventType } from "@/Core";
+import { InstanceLog, EventType } from "@/Core";
 import * as ServiceInstance from "./ServiceInstance";
 
 export const a: InstanceLog = {
@@ -70,7 +70,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "998892e0-8900-4371-be22-5b512d8cd581",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.AUTO_TRANSITION,
+        event_type: EventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -86,7 +86,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "998892e0-8900-4371-be22-5b512d8cd581",
         severity: 20,
         id_compile_report: "e8cf8a6c-7b4a-49a2-be3a-3613faa6426f",
-        event_type: InstanceEventType.AUTO_TRANSITION,
+        event_type: EventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -102,7 +102,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "998892e0-8900-4371-be22-5b512d8cd581",
         severity: 20,
         id_compile_report: "3777db4e-3250-4021-9502-b1c5bc126356",
-        event_type: InstanceEventType.AUTO_TRANSITION,
+        event_type: EventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -118,7 +118,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "998892e0-8900-4371-be22-5b512d8cd581",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.AUTO_TRANSITION,
+        event_type: EventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
     ],
@@ -176,7 +176,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "560bd89c-b475-4aa2-bbde-e1cf896322a4",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.RESOURCE_TRANSITION,
+        event_type: EventType.RESOURCE_TRANSITION,
         is_error_transition: true,
       },
       {
@@ -192,7 +192,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "560bd89c-b475-4aa2-bbde-e1cf896322a4",
         severity: 20,
         id_compile_report: "5f1dba58-b070-422a-966b-34c9519ee7b2",
-        event_type: InstanceEventType.RESOURCE_TRANSITION,
+        event_type: EventType.RESOURCE_TRANSITION,
         is_error_transition: true,
       },
       {
@@ -208,7 +208,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "560bd89c-b475-4aa2-bbde-e1cf896322a4",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.RESOURCE_TRANSITION,
+        event_type: EventType.RESOURCE_TRANSITION,
         is_error_transition: true,
       },
     ],
@@ -266,7 +266,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "40c9e012-8b1c-4308-b2ef-a495ab2b4aea",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.RESOURCE_TRANSITION,
+        event_type: EventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -282,7 +282,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "40c9e012-8b1c-4308-b2ef-a495ab2b4aea",
         severity: 20,
         id_compile_report: "c8ee3e84-a528-4c78-83f1-43035c11b87d",
-        event_type: InstanceEventType.RESOURCE_TRANSITION,
+        event_type: EventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -298,7 +298,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "40c9e012-8b1c-4308-b2ef-a495ab2b4aea",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.RESOURCE_TRANSITION,
+        event_type: EventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
     ],
@@ -356,7 +356,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "573d6f9e-2d93-44b3-a868-65f42491062f",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.RESOURCE_TRANSITION,
+        event_type: EventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -372,7 +372,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "573d6f9e-2d93-44b3-a868-65f42491062f",
         severity: 20,
         id_compile_report: "b5b4139c-94df-48da-8ea3-f76ea02120e6",
-        event_type: InstanceEventType.RESOURCE_TRANSITION,
+        event_type: EventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -388,7 +388,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "573d6f9e-2d93-44b3-a868-65f42491062f",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.RESOURCE_TRANSITION,
+        event_type: EventType.RESOURCE_TRANSITION,
         is_error_transition: false,
       },
     ],
@@ -446,7 +446,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "05b8856e-e4ab-444a-acaa-d41ad7b84470",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.AUTO_TRANSITION,
+        event_type: EventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -462,7 +462,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "05b8856e-e4ab-444a-acaa-d41ad7b84470",
         severity: 20,
         id_compile_report: "05ebe146-ed10-4a6b-a005-612c61efc886",
-        event_type: InstanceEventType.AUTO_TRANSITION,
+        event_type: EventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -478,7 +478,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "05b8856e-e4ab-444a-acaa-d41ad7b84470",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.AUTO_TRANSITION,
+        event_type: EventType.AUTO_TRANSITION,
         is_error_transition: false,
       },
     ],
@@ -517,7 +517,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "198d8281-71e7-4288-9cf0-1b3b29077330",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.CREATE_TRANSITION,
+        event_type: EventType.CREATE_TRANSITION,
         is_error_transition: false,
       },
       {
@@ -533,7 +533,7 @@ export const listB: InstanceLog[] = [
         event_correlation_id: "198d8281-71e7-4288-9cf0-1b3b29077330",
         severity: 20,
         id_compile_report: null,
-        event_type: InstanceEventType.CREATE_TRANSITION,
+        event_type: EventType.CREATE_TRANSITION,
         is_error_transition: false,
       },
     ],

@@ -21,11 +21,19 @@ export class CreateCallbackCommandManager implements CommandManager {
     command: Command.SubCommand<"CreateCallback">
   ): Command.Trigger<"CreateCallback"> {
     return async () => {
-      const { callback_url, callback_id, service_entity } = command;
+      const {
+        callback_url,
+        callback_id,
+        service_entity,
+        minimal_log_level,
+        event_types,
+      } = command;
       const result = await this.poster.post(command, {
         callback_url,
         callback_id,
         service_entity,
+        minimal_log_level,
+        event_types,
       });
       if (Either.isLeft(result)) {
         return Maybe.some(result.value);

@@ -193,6 +193,8 @@ const dict = {
     `Are you sure you want to delete callback with url "${url}"?`,
   "catalog.callbacks.minimalLogLevel": "Minimal Log Level",
   "catalog.callbacks.eventTypes": "Event Types",
+  "catalog.callbacks.uuid.copy": "Copy full callback id to clipboard",
+  "catalog.callbacks.add": "Add",
 
   /**
    * Environment controls

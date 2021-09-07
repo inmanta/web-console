@@ -26,29 +26,29 @@ export const CallbacksTable: React.FC<Props> = ({
       expansionManager.merge(expansionState, getIds(callbacks))
     );
   }, [callbacks]);
-
   return (
     <TableComposable aria-label="CallbacksTable">
       <Thead>
         <Tr>
-          <Th />
           <Th>Url</Th>
           <Th>Id</Th>
+          <Th>Minimal Log Level</Th>
+          <Th>Event Types</Th>
           <Th>Actions</Th>
         </Tr>
       </Thead>
-      {callbacks.map((cb, index) => (
+      <CreateCallbackForm service_entity={service_entity} numberOfColumns={5} />
+
+      {callbacks.map((cb) => (
         <Row
-          index={index}
           onToggle={handleExpansionToggle(cb.callback_id)}
           isExpanded={expansionState[cb.callback_id]}
           key={cb.callback_id}
           callback={cb}
           service_entity={service_entity}
-          numberOfColumns={4}
+          numberOfColumns={5}
         />
       ))}
-      <CreateCallbackForm service_entity={service_entity} numberOfColumns={4} />
     </TableComposable>
   );
 };

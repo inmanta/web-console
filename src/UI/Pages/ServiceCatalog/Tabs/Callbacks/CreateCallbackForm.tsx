@@ -7,8 +7,16 @@ import {
   AlertActionCloseButton,
 } from "@patternfly/react-core";
 import inlineStyles from "@patternfly/react-styles/css/components/InlineEdit/inline-edit";
-import { Maybe } from "@/Core";
+import {
+  Maybe,
+  LogLevelsList,
+  EventTypesList,
+  LogLevelString,
+  EventType,
+} from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { MultiTextSelect, SingleTextSelect } from "@/UI/Components";
 
 interface Props {
   service_entity: string;
@@ -19,37 +27,44 @@ export const CreateCallbackForm: React.FC<Props> = ({
   service_entity,
   numberOfColumns,
 }) => {
-  const [url, setUrl] = useState("");
-  const [id, setId] = useState("");
-  const [error, setError] = useState("");
-
+  const [url, setUrl] = useState<string | null>(null);
+  const [id, setId] = useState<string | null>(null);
+  const [logLevel, setLogLevel] = useState<string | null>(null);
+  const [eventTypes, setEventTypes] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const { commandResolver } = useContext(DependencyContext);
+
   const create = commandResolver.getTrigger<"CreateCallback">({
     kind: "CreateCallback",
-    callback_url: url,
-    callback_id: id.length > 0 ? id : undefined,
+    callback_url: url || "",
+    callback_id: id || undefined,
     service_entity,
+    minimal_log_level:
+      logLevel === null ? undefined : (logLevel as LogLevelString),
+    event_types:
+      eventTypes.length <= 0 ? undefined : (eventTypes as EventType[]),
   });
 
   const onCreate = async () => {
-    setError("");
+    setError(null);
     const error = await create();
     if (Maybe.isSome(error)) {
       setError(error.value);
     } else {
-      setUrl("");
-      setId("");
+      setUrl(null);
+      setId(null);
+      setLogLevel(null);
+      setEventTypes([]);
     }
   };
 
   return (
     <Tbody>
       <Tr>
-        <Td />
         <Td className={inlineStyles.inlineEditInput}>
           <TextInput
             aria-label="callbackUrl"
-            value={url}
+            value={url || ""}
             type="text"
             onChange={setUrl}
           />
@@ -57,18 +72,32 @@ export const CreateCallbackForm: React.FC<Props> = ({
         <Td className={inlineStyles.inlineEditInput}>
           <TextInput
             aria-label="callbackId"
-            value={id}
+            value={id || undefined}
             type="text"
             onChange={setId}
           />
         </Td>
+        <Td className={inlineStyles.inlineEditInput}>
+          <SingleTextSelect
+            options={LogLevelsList}
+            selected={logLevel}
+            setSelected={setLogLevel}
+          />
+        </Td>
+        <Td className={inlineStyles.inlineEditInput}>
+          <MultiTextSelect
+            options={EventTypesList}
+            selected={eventTypes}
+            setSelected={setEventTypes}
+          />
+        </Td>
         <Td>
           <Button variant="secondary" onClick={onCreate}>
-            Save
+            {words("catalog.callbacks.add")}
           </Button>
         </Td>
       </Tr>
-      {!!error && (
+      {error && (
         <Tr isExpanded={!!error}>
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>

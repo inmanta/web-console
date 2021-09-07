@@ -1,5 +1,5 @@
 import { PageSize } from "./PageSize";
-import { InstanceEventType } from "./EventModel";
+import { EventType } from "./EventType";
 import { Operator, Sort } from "./Params";
 
 export interface EventParams {
@@ -15,7 +15,7 @@ export enum AttributeSet {
 }
 
 export interface Filter {
-  event_type?: InstanceEventType[];
+  event_type?: EventType[];
   version?: string[];
   source?: string[];
   destination?: string[];

@@ -71,7 +71,7 @@ export const InstanceRow: React.FC<Props> = ({
           </Td>
         ) : (
           <Td dataLabel={idDataLabel} aria-label={`IdCell-${row.id.short}`}>
-            <IdWithCopy id={row.id} />
+            <IdWithCopy uuid={row.id} />
           </Td>
         )}
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>
