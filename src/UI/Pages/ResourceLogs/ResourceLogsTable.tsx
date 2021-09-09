@@ -39,7 +39,7 @@ export const ResourceLogsTable: React.FC<Props> = ({ logs }) => {
           isExpanded={expansionState[log.action_id]}
           key={log.action_id}
           log={log}
-          numberOfColumns={4}
+          numberOfColumns={6}
         />
       ))}
     </TableComposable>

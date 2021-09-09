@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ResourceLog } from "@/Core";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
 import { Details } from "./Details";
@@ -28,7 +28,7 @@ export const Row: React.FC<Props> = ({
   numberOfColumns,
 }) => {
   return (
-    <Tbody isExpanded={false}>
+    <StyledTbody isExpanded={false} $level={log.level}>
       <Tr>
         <Td
           expand={{
@@ -56,8 +56,28 @@ export const Row: React.FC<Props> = ({
           </Td>
         </Tr>
       )}
-    </Tbody>
+    </StyledTbody>
   );
+};
+
+const StyledTbody = styled(Tbody)<{ $level: string }>`
+  ${(p) => getStyleForLevel(p.$level)};
+`;
+
+const getStyleForLevel = (level: string) => {
+  switch (level) {
+    case "WARNING":
+      return css`
+        background-color: var(--pf-global--palette--gold-50);
+      `;
+    case "ERROR":
+    case "CRITICAL":
+      return css`
+        background-color: var(--pf-global--palette--red-50);
+      `;
+    default:
+      return "";
+  }
 };
 
 const presentShortMessage = (message: string): string =>
