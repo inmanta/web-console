@@ -19,11 +19,11 @@ import {
   RawResource,
   RawResourceDetails,
   ResourceDetails,
-  ResourceIdDetails,
 } from "./Resource";
 import { ResourceParams as ResourceParams } from "./ResourceParams";
 import { WithId } from "../Language";
 import { ResourceHistory } from "./ResourceHistory";
+import { ResourceLog } from "./ResourceLog";
 import { Sort } from "./Params";
 import { PageSize } from "./PageSize";
 import { EnvironmentDetails } from "./EnvironmentDetailsModel";
@@ -31,7 +31,6 @@ import { Callback } from "./Callback";
 import { CompileReport } from "./CompileReport";
 import { CompileReportParams } from "./CompileReportParams";
 import { CompileDetails } from "./CompileDetails";
-import { ResourceAction } from "./ResourceAction";
 
 type Query =
   | ServicesQuery
@@ -48,11 +47,11 @@ type Query =
   | ResourcesQuery
   | ResourceDetailsQuery
   | ResourceHistoryQuery
+  | ResourceLogsQuery
   | EnvironmentDetailsQuery
   | CallbacksQuery
   | CompileReportsQuery
-  | CompileDetailsQuery
-  | ResourceActionsQuery;
+  | CompileDetailsQuery;
 
 export type Type = Query;
 
@@ -370,22 +369,30 @@ interface CompileDetailsManifest {
   query: CompileDetailsQuery;
 }
 
-export interface ResourceActionsQuery extends ResourceIdDetails {
-  kind: "ResourceActions";
+export interface ResourceLogsQuery extends WithId {
+  kind: "ResourceLogs";
+  sort?: Sort;
+  pageSize: PageSize;
 }
 
-interface ResourceActionsManifest {
+interface ResourceLogsManifest {
   error: string;
   apiResponse: {
-    data: ResourceAction[];
+    data: ResourceLog[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
   };
   data: {
-    data: ResourceAction[];
+    data: ResourceLog[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
   };
   usedData: {
-    data: ResourceAction[];
+    data: ResourceLog[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
   };
-  query: ResourceActionsQuery;
+  query: ResourceLogsQuery;
 }
 
 /**
@@ -407,11 +414,11 @@ interface Manifest {
   Resources: ResourcesManifest;
   ResourceDetails: ResourceDetailsManifest;
   ResourceHistory: ResourceHistoryManifest;
+  ResourceLogs: ResourceLogsManifest;
   EnvironmentDetails: EnvironmentDetailsManifest;
   Callbacks: CallbacksManifest;
   CompileReports: CompileReportsManifest;
   CompileDetails: CompileDetailsManifest;
-  ResourceActions: ResourceActionsManifest;
 }
 
 /**

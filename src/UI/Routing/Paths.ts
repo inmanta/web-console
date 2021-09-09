@@ -12,7 +12,7 @@ export const paths: Paths = {
   Events: "/lsm/catalog/:service/inventory/:instance/events",
   Resources: "/resources",
   ResourceHistory: "/resources/:resourceId/history",
+  ResourceLogs: "/resources/:resourceId/logs",
   CompileReports: "/compilereports",
   CompileDetails: "/compilereports/:id",
-  ResourceActions: "/resources/:resourceId/actions",
 };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ResourceAction } from "@/Core";
+import { ResourceLog } from "@/Core";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
 import { Details } from "./Details";
 import moment from "moment";
@@ -12,7 +12,7 @@ import {
 } from "@patternfly/react-core";
 
 interface Props {
-  action: ResourceAction;
+  log: ResourceLog;
   isExpanded: boolean;
   onToggle: () => void;
   numberOfColumns: number;
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const Row: React.FC<Props> = ({
-  action,
+  log,
   isExpanded,
   index,
   onToggle,
@@ -36,10 +36,10 @@ export const Row: React.FC<Props> = ({
             onToggle,
           }}
         />
-        <Td>{presentDate(action.messages[0].timestamp)}</Td>
-        <Td>{action.action}</Td>
-        <Td>{action.messages[0].level}</Td>
-        <Td>{presentShortMessage(action.messages[0].msg)}</Td>
+        <Td>{presentDate(log.timestamp)}</Td>
+        <Td>{log.action}</Td>
+        <Td>{log.level}</Td>
+        <Td>{presentShortMessage(log.msg)}</Td>
         <Td>
           <Options />
         </Td>
@@ -48,7 +48,7 @@ export const Row: React.FC<Props> = ({
         <Tr isExpanded={isExpanded}>
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
-              <Details action={action} />
+              <Details log={log} />
             </ExpandableRowContent>
           </Td>
         </Tr>

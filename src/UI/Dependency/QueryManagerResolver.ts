@@ -42,8 +42,8 @@ import {
   CompileReportsStateHelper,
   CompileDetailsQueryManager,
   CompileDetailsStateHelper,
-  ResourceActionsQueryManager,
-  ResourceActionsStateHelper,
+  ResourceLogsQueryManager,
+  ResourceLogsStateHelper,
 } from "@/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -188,9 +188,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         scheduler,
         environment
       ),
-      new ResourceActionsQueryManager(
-        new FetcherImpl<"ResourceActions">(this.baseApiHelper),
-        new ResourceActionsStateHelper(this.store),
+      new ResourceLogsQueryManager(
+        new FetcherImpl<"ResourceLogs">(this.baseApiHelper),
+        new ResourceLogsStateHelper(this.store),
         scheduler,
         environment
       ),

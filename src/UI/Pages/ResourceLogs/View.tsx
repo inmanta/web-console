@@ -1,9 +1,9 @@
-import { RemoteData, resourceIdToDetails } from "@/Core";
+import { PageSize, RemoteData } from "@/Core";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import React, { useContext } from "react";
-import { ResourceActionsTable } from "./ResourceActionsTable";
+import React, { useContext, useState } from "react";
+import { ResourceLogsTable } from "./ResourceLogsTable";
 
 interface Props {
   resourceId: string;
@@ -11,20 +11,22 @@ interface Props {
 
 export const View: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data, retry] = queryResolver.useContinuous<"ResourceActions">({
-    kind: "ResourceActions",
-    ...resourceIdToDetails(resourceId),
+  const [pageSize] = useState(PageSize.initial);
+  const [data, retry] = queryResolver.useContinuous<"ResourceLogs">({
+    kind: "ResourceLogs",
+    id: resourceId,
+    pageSize,
   });
 
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => <LoadingView aria-label="ResourceActions-Loading" />,
+      loading: () => <LoadingView aria-label="ResourceLogs-Loading" />,
       failed: (error) => (
         <ErrorView
           retry={retry}
-          title={words("resources.actions.failed.title")}
-          message={words("resources.actions.failed.body")(error)}
+          title={words("resources.logs.failed.title")}
+          message={words("resources.logs.failed.body")(error)}
           aria-label="ResourceHistory-Failed"
         />
       ),
@@ -32,15 +34,15 @@ export const View: React.FC<Props> = ({ resourceId }) => {
         if (response.data.length <= 0) {
           return (
             <EmptyView
-              message={words("resources.actions.empty.message")}
-              aria-label="ResourceActions-Empty"
+              message={words("resources.logs.empty.message")}
+              aria-label="ResourceLogs-Empty"
             />
           );
         }
         return (
-          <ResourceActionsTable
+          <ResourceLogsTable
             aria-label="ResourceHistory-Success"
-            actions={response.data}
+            logs={response.data}
           />
         );
       },

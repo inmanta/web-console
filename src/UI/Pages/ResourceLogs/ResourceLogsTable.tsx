@@ -1,24 +1,24 @@
 import React from "react";
-import { ResourceAction } from "@/Core";
+import { ResourceLog } from "@/Core";
 import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
 import { Row } from "./Row";
 import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 
 interface Props {
-  actions: ResourceAction[];
+  logs: ResourceLog[];
 }
 
-export const ResourceActionsTable: React.FC<Props> = ({ actions }) => {
+export const ResourceLogsTable: React.FC<Props> = ({ logs }) => {
   const expansionManager = new ExpansionManager();
   const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(getIds(actions))
+    expansionManager.create(getIds(logs))
   );
   const handleExpansionToggle = (id: string) => () => {
     setExpansionState(expansionManager.toggle(expansionState, id));
   };
   React.useEffect(() => {
-    setExpansionState(expansionManager.merge(expansionState, getIds(actions)));
-  }, [actions]);
+    setExpansionState(expansionManager.merge(expansionState, getIds(logs)));
+  }, [logs]);
 
   return (
     <TableComposable aria-label="CallbacksTable" variant="compact">
@@ -32,13 +32,13 @@ export const ResourceActionsTable: React.FC<Props> = ({ actions }) => {
           <Th>Options</Th>
         </Tr>
       </Thead>
-      {actions.map((action, index) => (
+      {logs.map((log, index) => (
         <Row
           index={index}
-          onToggle={handleExpansionToggle(action.action_id)}
-          isExpanded={expansionState[action.action_id]}
-          key={action.action_id}
-          action={action}
+          onToggle={handleExpansionToggle(log.action_id)}
+          isExpanded={expansionState[log.action_id]}
+          key={log.action_id}
+          log={log}
           numberOfColumns={4}
         />
       ))}
@@ -46,6 +46,6 @@ export const ResourceActionsTable: React.FC<Props> = ({ actions }) => {
   );
 };
 
-function getIds(callbacks: ResourceAction[]): string[] {
-  return callbacks.map((action) => action.action_id);
+function getIds(logs: ResourceLog[]): string[] {
+  return logs.map((log) => log.action_id);
 }

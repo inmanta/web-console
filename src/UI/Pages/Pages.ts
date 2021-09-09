@@ -8,10 +8,10 @@ import { EventsWithProvider } from "@/UI/Pages/Events";
 import { ServiceCatalog } from "@/UI/Pages/ServiceCatalog";
 import { ResourcesView } from "@/UI/Pages/Resources";
 import { ResourceHistoryWithProvider } from "@/UI/Pages/ResourceHistory";
+import { ResourceLogsWithProvider } from "@/UI/Pages/ResourceLogs";
 import { EditInstancePageProvider } from "@/UI/Pages/EditInstance";
 import { CompileReports } from "@/UI/Pages/CompileReports";
 import { CompileDetailsWithProvider } from "./CompileDetails";
-import { ResourceActionsWithProvider } from "@/UI/Pages/ResourceActions";
 
 interface Page extends Route.Route {
   component: ComponentType;
@@ -72,9 +72,9 @@ export const CompileDetailsPage: Page = {
   component: CompileDetailsWithProvider,
 };
 
-export const ResourceActionsPage: Page = {
-  ...Route.ResourceActions,
-  component: ResourceActionsWithProvider,
+export const ResourceLogsPage: Page = {
+  ...Route.ResourceLogs,
+  component: ResourceLogsWithProvider,
 };
 
 export const pages: Page[] = [
@@ -87,7 +87,7 @@ export const pages: Page[] = [
   EventsPage,
   ResourcesPage,
   ResourceHistoryPage,
+  ResourceLogsPage,
   CompileReportsPage,
   CompileDetailsPage,
-  ResourceActionsPage,
 ];

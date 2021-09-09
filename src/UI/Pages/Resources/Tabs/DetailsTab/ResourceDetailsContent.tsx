@@ -84,12 +84,12 @@ const Actions: React.FC<{ resourceId: string }> = ({ resourceId }) => (
     <ActionListItem>
       <Link
         to={{
-          pathname: getUrl("ResourceActions", { resourceId }),
+          pathname: getUrl("ResourceLogs", { resourceId }),
           search: location.search,
         }}
       >
         <Button isBlock variant="tertiary">
-          <ListIcon /> {words("resources.actions.linkTitle")}
+          <ListIcon /> {words("resources.logs.linkTitle")}
         </Button>
       </Link>
     </ActionListItem>

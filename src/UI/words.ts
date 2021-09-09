@@ -253,11 +253,11 @@ const dict = {
   "resources.history.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
   "resources.attributes.title": "Desired State",
-  "resources.actions.title": "Resource Actions",
-  "resources.actions.linkTitle": "Logs",
-  "resources.actions.empty.message": "No actions found",
-  "resources.actions.failed.title": "Something went wrong",
-  "resources.actions.failed.body": (error: string) =>
+  "resources.logs.title": "Resource Logs",
+  "resources.logs.linkTitle": "Logs",
+  "resources.logs.empty.message": "No logs found",
+  "resources.logs.failed.title": "Something went wrong",
+  "resources.logs.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
 
   /** Compile report related text */

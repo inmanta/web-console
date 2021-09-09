@@ -6,10 +6,10 @@ import { words } from "@/UI/words";
 import { View } from "./View";
 
 export const Provider: React.FC = () => {
-  const { resourceId } = useParams<Route.Params<"ResourceHistory">>();
+  const { resourceId } = useParams<Route.Params<"ResourceLogs">>();
 
   return (
-    <PageSectionWithTitle title={words("resources.actions.title")}>
+    <PageSectionWithTitle title={words("resources.logs.title")}>
       <View resourceId={resourceId} />
     </PageSectionWithTitle>
   );

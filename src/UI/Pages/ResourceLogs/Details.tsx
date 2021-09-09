@@ -1,5 +1,5 @@
 import React from "react";
-import { ResourceAction } from "@/Core";
+import { ResourceLog } from "@/Core";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -8,10 +8,10 @@ import {
 } from "@patternfly/react-core";
 
 interface Props {
-  action: ResourceAction;
+  log: ResourceLog;
 }
 
-export const Details: React.FC<Props> = ({ action }) => {
+export const Details: React.FC<Props> = ({ log }) => {
   return (
     <DescriptionList>
       <DescriptionListGroup>
@@ -23,7 +23,7 @@ export const Details: React.FC<Props> = ({ action }) => {
               fontFamily: "Liberation Mono",
             }}
           >
-            <code>{action.messages[0].msg}</code>
+            <code>{log.msg}</code>
           </pre>
         </DescriptionListDescription>
       </DescriptionListGroup>
@@ -36,7 +36,7 @@ export const Details: React.FC<Props> = ({ action }) => {
               fontFamily: "Liberation Mono",
             }}
           >
-            <code>{JSON.stringify(action.messages[0].kwargs, null, 2)}</code>
+            <code>{JSON.stringify(log.kwargs, null, 2)}</code>
           </pre>
         </DescriptionListDescription>
       </DescriptionListGroup>
