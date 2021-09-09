@@ -9,6 +9,7 @@ import {
   Service,
   StaticScheduler,
   Callback,
+  DeferredApiHelper,
 } from "@/Test";
 import { ServiceCatalog } from "@/UI/Pages";
 import { Either, RemoteData } from "@/Core";
@@ -35,7 +36,6 @@ import userEvent from "@testing-library/user-event";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const baseApiHelper = new BaseApiHelper();
   const environment = Service.a.environment;
   const servicesFetcher = new DeferredFetcher<"Services">();
 
@@ -64,11 +64,13 @@ function setup() {
     new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
   );
 
+  const apiHelper = new DeferredApiHelper();
+  const callbackDeleter = new CallbackDeleter(apiHelper, environment);
   const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
-    new CallbackDeleter(baseApiHelper, environment),
+    callbackDeleter,
     new CallbacksUpdater(
       new CallbacksStateHelper(store, environment),
-      new DeferredFetcher<"Callbacks">(),
+      callbacksFetcher,
       environment
     )
   );
@@ -106,6 +108,7 @@ function setup() {
     component,
     servicesFetcher,
     callbacksFetcher,
+    apiHelper,
   };
 }
 
@@ -134,4 +137,6 @@ test("GIVEN ServiceCatalog WHEN click on callbacks tab THEN shows callbacks tab"
   expect(
     await screen.findByRole("grid", { name: "CallbacksTable" })
   ).toBeVisible();
+
+  expect(screen.getByRole("row", { name: "CallbackRow-79e7" })).toBeVisible();
 });

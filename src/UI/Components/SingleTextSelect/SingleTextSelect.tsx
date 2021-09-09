@@ -12,6 +12,7 @@ export const SingleTextSelect: React.FC<Props> = ({
   selected,
   setSelected,
   options,
+  ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,11 +34,11 @@ export const SingleTextSelect: React.FC<Props> = ({
   return (
     <Select
       variant="single"
-      aria-label="Select Input"
       onToggle={onToggle}
       onSelect={onSelect}
       selections={[selected]}
       isOpen={isOpen}
+      {...props}
     >
       {newOptions.map((value) => (
         <SelectOption key={value} value={value} />

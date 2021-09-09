@@ -32,8 +32,12 @@ export const CallbacksTable: React.FC<Props> = ({
         <Tr>
           <Th>Url</Th>
           <Th>Id</Th>
-          <Th>Minimal Log Level</Th>
-          <Th>Event Types</Th>
+          <Th id="MinimalLogLevelHeader" aria-label="MinimalLogLevel">
+            Minimal Log Level
+          </Th>
+          <Th id="EventTypesHeader" aria-label="EventTypes">
+            Event Types
+          </Th>
           <Th>Actions</Th>
         </Tr>
       </Thead>

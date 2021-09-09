@@ -14,6 +14,7 @@ interface DeleteProps {
 export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
   service_entity,
   callback,
+  ...props
 }) => {
   const { commandResolver } = useContext(DependencyContext);
   const onDelete = commandResolver.getTrigger<"DeleteCallback">({
@@ -52,6 +53,7 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
         isDanger
         icon={<TrashAltIcon />}
         onClick={() => setIsOpen(true)}
+        {...props}
       />
     </>
   );

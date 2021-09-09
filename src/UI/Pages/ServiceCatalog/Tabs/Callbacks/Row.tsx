@@ -24,16 +24,17 @@ export const Row: React.FC<Props> = ({
   onToggle,
   numberOfColumns,
 }) => {
+  const shortUuid = getShortUuidFromRaw(callback.callback_id);
   return (
     <Tbody isExpanded={false}>
-      <Tr>
+      <Tr aria-label={`CallbackRow-${shortUuid}`}>
         <Td>{callback.url}</Td>
         <Td>
           <TextWithCopy
             value={callback.callback_id}
             tooltipContent={words("catalog.callbacks.uuid.copy")}
           >
-            {getShortUuidFromRaw(callback.callback_id)}
+            {shortUuid}
           </TextWithCopy>
         </Td>
         <Td>{callback.minimal_log_level}</Td>
@@ -47,7 +48,11 @@ export const Row: React.FC<Props> = ({
           )}
         </Td>
         <Td>
-          <DeleteButton callback={callback} service_entity={service_entity} />
+          <DeleteButton
+            callback={callback}
+            service_entity={service_entity}
+            aria-label={`DeleteCallback-${shortUuid}`}
+          />
         </Td>
       </Tr>
       {isExpanded && callback.event_types && (

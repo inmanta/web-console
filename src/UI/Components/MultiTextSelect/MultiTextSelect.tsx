@@ -14,6 +14,7 @@ export const MultiTextSelect: React.FC<Props> = ({
   selected,
   setSelected,
   options,
+  ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -38,6 +39,7 @@ export const MultiTextSelect: React.FC<Props> = ({
       onSelect={onSelect}
       selections={selected}
       isOpen={isOpen}
+      {...props}
     >
       {options.map((value, index) => (
         <SelectOption key={index} value={value} />

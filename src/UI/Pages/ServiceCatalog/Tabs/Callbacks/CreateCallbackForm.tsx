@@ -82,6 +82,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
             options={LogLevelsList}
             selected={logLevel}
             setSelected={setLogLevel}
+            aria-labelledby="MinimalLogLevelHeader"
           />
         </Td>
         <Td className={inlineStyles.inlineEditInput}>
@@ -89,6 +90,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
             options={EventTypesList}
             selected={eventTypes}
             setSelected={setEventTypes}
+            aria-labelledby="EventTypesHeader"
           />
         </Td>
         <Td>
