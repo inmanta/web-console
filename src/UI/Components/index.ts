@@ -4,6 +4,7 @@ export * from "./BooleanSwitch";
 export * from "./ButtonWithCursorHandling";
 export * from "./ClipboardCopyButton";
 export * from "./CodeHighlighter";
+export * from "./CodeText";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
 export * from "./DeleteForm";

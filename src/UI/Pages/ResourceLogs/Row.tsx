@@ -10,6 +10,7 @@ import {
   DropdownPosition,
   KebabToggle,
 } from "@patternfly/react-core";
+import { CodeText } from "@/UI/Components";
 
 interface Props {
   log: ResourceLog;
@@ -39,7 +40,9 @@ export const Row: React.FC<Props> = ({
         <Td>{presentDate(log.timestamp)}</Td>
         <Td>{log.action}</Td>
         <Td>{log.level}</Td>
-        <Td>{presentShortMessage(log.msg)}</Td>
+        <Td>
+          <CodeText singleLine>{presentShortMessage(log.msg)}</CodeText>
+        </Td>
         <Td>
           <Options />
         </Td>
