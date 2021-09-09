@@ -254,7 +254,7 @@ const dict = {
     `There was an error retrieving data: ${error}`,
   "resources.attributes.title": "Desired State",
   "resources.actions.title": "Resource Actions",
-  "resources.actions.linkTitle": "Deployment Log",
+  "resources.actions.linkTitle": "Logs",
   "resources.actions.empty.message": "No actions found",
   "resources.actions.failed.title": "Something went wrong",
   "resources.actions.failed.body": (error: string) =>
