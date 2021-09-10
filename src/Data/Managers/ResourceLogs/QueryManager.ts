@@ -17,7 +17,7 @@ export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"Resour
       stateHelper,
       scheduler,
       () => environment,
-      () => [environment],
+      ({ pageSize }) => [environment, pageSize.value],
       "ResourceLogs",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
