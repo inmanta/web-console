@@ -1,4 +1,5 @@
 import { Scheduler, Fetcher, StateHelper } from "@/Core";
+import { ResourceLogFilter } from "@/Core/Domain/Query";
 import {
   ContinuousQueryManagerImpl,
   getPaginationHandlers,
@@ -17,7 +18,11 @@ export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"Resour
       stateHelper,
       scheduler,
       () => environment,
-      ({ pageSize }) => [environment, pageSize.value],
+      ({ pageSize, filter }) => [
+        environment,
+        pageSize.value,
+        stringifyFilter(filter),
+      ],
       "ResourceLogs",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
@@ -32,4 +37,8 @@ export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"Resour
       environment
     );
   }
+}
+
+function stringifyFilter(filter: ResourceLogFilter | undefined): string {
+  return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

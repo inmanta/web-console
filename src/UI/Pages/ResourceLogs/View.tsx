@@ -1,4 +1,5 @@
 import { PageSize, RemoteData } from "@/Core";
+import { ResourceLogFilter } from "@/Core/Domain/Query";
 import {
   EmptyView,
   ErrorView,
@@ -18,10 +19,12 @@ interface Props {
 export const View: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useState(PageSize.initial);
+  const [filter, setFilter] = useState<ResourceLogFilter>({});
   const [data, retry] = queryResolver.useContinuous<"ResourceLogs">({
     kind: "ResourceLogs",
     id: resourceId,
     pageSize,
+    filter,
   });
 
   const paginationWidget = RemoteData.fold(
@@ -43,7 +46,11 @@ export const View: React.FC<Props> = ({ resourceId }) => {
 
   return (
     <>
-      <Controls paginationWidget={paginationWidget} />
+      <Controls
+        paginationWidget={paginationWidget}
+        filter={filter}
+        setFilter={setFilter}
+      />
       {RemoteData.fold(
         {
           notAsked: () => null,

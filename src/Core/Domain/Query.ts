@@ -371,8 +371,13 @@ interface CompileDetailsManifest {
 
 export interface ResourceLogsQuery extends WithId {
   kind: "ResourceLogs";
-  sort?: Sort;
+  filter?: ResourceLogFilter;
   pageSize: PageSize;
+}
+
+export interface ResourceLogFilter {
+  minimal_log_level?: string;
+  action?: string[];
 }
 
 interface ResourceLogsManifest {
