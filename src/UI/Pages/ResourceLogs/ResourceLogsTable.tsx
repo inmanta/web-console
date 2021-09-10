@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { ResourceLog } from "@/Core";
 import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
 import { Row } from "./Row";
@@ -26,8 +27,8 @@ export const ResourceLogsTable: React.FC<Props> = ({ logs }) => {
         <Tr>
           <Th />
           <Th>Timestamp</Th>
-          <Th>Action Type</Th>
-          <Th>Log Level</Th>
+          <ActionTypeTh>Action Type</ActionTypeTh>
+          <LogLevelTh>Log Level</LogLevelTh>
           <Th>Message</Th>
           <Th>Options</Th>
         </Tr>
@@ -49,3 +50,11 @@ export const ResourceLogsTable: React.FC<Props> = ({ logs }) => {
 function getIds(logs: ResourceLog[]): string[] {
   return logs.map((log) => log.action_id);
 }
+
+const LogLevelTh = styled(Th)`
+  --pf-c-table--cell--MinWidth: 10ch;
+`;
+
+const ActionTypeTh = styled(Th)`
+  --pf-c-table--cell--MinWidth: 12ch;
+`;
