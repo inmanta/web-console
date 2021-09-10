@@ -11,6 +11,7 @@ import {
   KebabToggle,
 } from "@patternfly/react-core";
 import { CodeText } from "@/UI/Components";
+import { ResourceLogFilter } from "@/Core/Domain/Query";
 
 interface Props {
   log: ResourceLog;
@@ -18,6 +19,8 @@ interface Props {
   onToggle: () => void;
   numberOfColumns: number;
   index: number;
+  filter: ResourceLogFilter;
+  setFilter: (filter: ResourceLogFilter) => void;
 }
 
 export const Row: React.FC<Props> = ({
@@ -26,6 +29,8 @@ export const Row: React.FC<Props> = ({
   index,
   onToggle,
   numberOfColumns,
+  filter,
+  setFilter,
 }) => {
   return (
     <StyledTbody isExpanded={false} $level={log.level}>
@@ -44,7 +49,7 @@ export const Row: React.FC<Props> = ({
           <CodeText singleLine>{presentShortMessage(log.msg)}</CodeText>
         </Td>
         <Td>
-          <Options />
+          <Options setFilter={setFilter} filter={filter} action={log.action} />
         </Td>
       </Tr>
       {isExpanded && (
@@ -90,10 +95,23 @@ const presentDate = (timestamp: string): string => {
     .format("DD/MM/YYYY HH:MM:SS");
 };
 
-const Options: React.FC = () => {
+const Options: React.FC<{
+  setFilter: (filter: ResourceLogFilter) => void;
+  filter: ResourceLogFilter;
+  action: string;
+}> = ({ filter, setFilter, action }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const update = () =>
+    setFilter({
+      ...filter,
+      action: [action],
+    });
+
   const dropdownItems = [
-    <DropdownItem key="link">Show messages from this action</DropdownItem>,
+    <DropdownItem key="link" onClick={update}>
+      Show messages from this action
+    </DropdownItem>,
   ];
 
   return (

@@ -9,6 +9,7 @@ import {
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import React, { useContext, useState } from "react";
+import styled from "styled-components";
 import { Controls } from "./Controls";
 import { ResourceLogsTable } from "./ResourceLogsTable";
 
@@ -30,7 +31,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
   const paginationWidget = RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => null,
+      loading: () => <Filler />,
       failed: () => null,
       success: ({ handlers, metadata }) => (
         <PaginationWidget
@@ -76,6 +77,8 @@ export const View: React.FC<Props> = ({ resourceId }) => {
               <ResourceLogsTable
                 aria-label="ResourceHistory-Success"
                 logs={response.data}
+                filter={filter}
+                setFilter={setFilter}
               />
             );
           },
@@ -85,3 +88,8 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     </>
   );
 };
+
+const Filler = styled.div`
+  height: 36px;
+  width: 100px;
+`;
