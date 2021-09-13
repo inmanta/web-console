@@ -9,9 +9,7 @@ import {
 import { words } from "@/UI/words";
 import { ButtonWithCursorHandling } from "@/UI/Components";
 import { getUrl } from "@/UI/Routing";
-import { ServiceModel } from "@/Core";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
-import { EditInstanceModal } from "./EditInstanceModal";
 import { DeleteModal } from "./DeleteModal";
 import { SetStateAction } from "./SetStateAction";
 
@@ -20,13 +18,11 @@ export interface InstanceActionsProps {
   editDisabled: boolean;
   deleteDisabled: boolean;
   diagnoseDisabled: boolean;
-  serviceEntity: ServiceModel;
 }
 
 export const InstanceActions: React.FC<InstanceActionsProps> = ({
   instance,
   editDisabled,
-  serviceEntity,
   deleteDisabled,
   diagnoseDisabled,
 }) => {
@@ -35,11 +31,23 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   return (
     <DescriptionList>
       <DescriptionListGroup>
-        <EditInstanceModal
-          isDisabled={editDisabled}
-          instance={instance}
-          serviceEntity={serviceEntity}
-        />
+        <Link
+          to={{
+            pathname: getUrl("EditInstance", {
+              service: instance.service_entity,
+              instance: instance.id,
+            }),
+            search: location.search,
+          }}
+        >
+          <ButtonWithCursorHandling
+            isBlock
+            variant="secondary"
+            isDisabled={editDisabled}
+          >
+            <ToolsIcon /> {words("inventory.editInstance.button")}
+          </ButtonWithCursorHandling>
+        </Link>
       </DescriptionListGroup>
       <DescriptionListGroup>
         <DeleteModal

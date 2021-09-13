@@ -31,6 +31,7 @@ test("GIVEN BaseUrlFinder WHEN getPaths THEN returns paths with wildcard", () =>
     "*/lsm/catalog",
     "*/lsm/catalog/:service/inventory",
     "*/lsm/catalog/:service/inventory/add",
+    "*/lsm/catalog/:service/inventory/:instance/edit",
     "*/lsm/catalog/:service/inventory/:instance/history",
     "*/lsm/catalog/:service/inventory/:instance/diagnose",
     "*/lsm/catalog/:service/inventory/:instance/events",
