@@ -4,6 +4,7 @@ import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
 import { Row } from "./Row";
 import { CreateCallbackForm } from "./CreateCallbackForm";
 import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
+import { words } from "@/UI/words";
 
 interface Props {
   callbacks: Callback[];
@@ -30,19 +31,18 @@ export const CallbacksTable: React.FC<Props> = ({
     <TableComposable aria-label="CallbacksTable">
       <Thead>
         <Tr>
-          <Th>Url</Th>
-          <Th>Id</Th>
+          <Th>{words("catalog.callbacks.url")}</Th>
+          <Th>{words("catalog.callbacks.id")}</Th>
           <Th id="MinimalLogLevelHeader" aria-label="MinimalLogLevel">
-            Minimal Log Level
+            {words("catalog.callbacks.minimalLogLevel")}
           </Th>
           <Th id="EventTypesHeader" aria-label="EventTypes">
-            Event Types
+            {words("catalog.callbacks.eventTypes")}
           </Th>
-          <Th>Actions</Th>
+          <Th>{words("catalog.callbacks.actions")}</Th>
         </Tr>
       </Thead>
       <CreateCallbackForm service_entity={service_entity} numberOfColumns={5} />
-
       {callbacks.map((cb) => (
         <Row
           onToggle={handleExpansionToggle(cb.callback_id)}
