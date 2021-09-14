@@ -25,6 +25,7 @@ import {
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { EditInstancePage } from "./EditInstancePage";
+import userEvent from "@testing-library/user-event";
 
 function setup() {
   const store = getStoreInstance();
@@ -101,4 +102,14 @@ test("EditInstance View shows success form", async () => {
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Success" })
   ).toBeInTheDocument();
+  const bandwidthField = await screen.findByText("bandwidth");
+  expect(bandwidthField).toBeVisible();
+  userEvent.type(bandwidthField, "2");
+  userEvent.click(await screen.findByText("Confirm"));
+  expect(fetchMock.mock.calls).toHaveLength(1);
+  const [, requestInit] = fetchMock.mock.calls[0];
+  expect(requestInit?.body).toBeTruthy();
+  expect(
+    JSON.parse(requestInit?.body as string)["attributes"]["bandwidth"]
+  ).toEqual("2");
 });
