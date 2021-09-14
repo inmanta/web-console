@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
-import { EventParams, InstanceEventType } from "@/Core";
+import { EventParams, EventType } from "@/Core";
 import { words } from "@/UI/words";
 import { SelectOptionFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -32,16 +32,14 @@ export const EventsFilterWidget: React.FC<Props> = ({
       ...filter,
       destination: destinations.length > 0 ? destinations : undefined,
     });
-  const eventTypes = Object.keys(InstanceEventType).map(
-    (k) => InstanceEventType[k]
-  );
+  const eventTypes = Object.keys(EventType).map((k) => EventType[k]);
 
   const updateEventType = (eventTypes: string[]) =>
     setFilter({
       ...filter,
       event_type:
         eventTypes.length > 0
-          ? eventTypes.map((eventType) => InstanceEventType[eventType])
+          ? eventTypes.map((eventType) => EventType[eventType])
           : undefined,
     });
 

@@ -1,23 +1,22 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import styled from "styled-components";
 import { ClipboardCopyButton } from "../ClipboardCopyButton";
 
 interface Props {
-  shortText: ReactNode;
-  fullText: string;
+  value: string;
   tooltipContent: string;
 }
 
 export const TextWithCopy: React.FC<Props> = ({
-  shortText,
-  fullText,
+  value,
   tooltipContent,
+  children,
   ...props
 }) => {
   return (
     <Container {...props}>
-      {shortText}
-      <StyledCopyIcon fullText={fullText} tooltipContent={tooltipContent} />
+      {children || value}
+      <StyledCopyIcon fullText={value} tooltipContent={tooltipContent} />
     </Container>
   );
 };

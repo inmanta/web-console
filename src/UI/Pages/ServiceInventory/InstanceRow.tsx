@@ -65,14 +65,13 @@ export const InstanceRow: React.FC<Props> = ({
             aria-label={`IdentityCell-${row.serviceIdentityValue}`}
           >
             <TextWithCopy
-              shortText={row.serviceIdentityValue}
-              fullText={row.serviceIdentityValue}
+              value={row.serviceIdentityValue}
               tooltipContent={words("serviceIdentity.copy")}
             />
           </Td>
         ) : (
           <Td dataLabel={idDataLabel} aria-label={`IdCell-${row.id.short}`}>
-            <IdWithCopy id={row.id} />
+            <IdWithCopy uuid={row.id} />
           </Td>
         )}
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>

@@ -1,4 +1,4 @@
-import { InstanceEventType } from "@/Core";
+import { EventType } from "@/Core";
 import { Tooltip } from "@patternfly/react-core";
 import {
   AddCircleOIcon,
@@ -14,7 +14,7 @@ import {
 import React from "react";
 
 interface Props {
-  eventType: InstanceEventType;
+  eventType: EventType;
 }
 export const EventIcon: React.FC<Props> = ({ eventType }) => {
   return (
@@ -24,23 +24,23 @@ export const EventIcon: React.FC<Props> = ({ eventType }) => {
   );
 };
 
-function getIconFor(eventType: InstanceEventType): React.ReactElement {
+function getIconFor(eventType: EventType): React.ReactElement {
   switch (eventType) {
-    case InstanceEventType.AUTO_TRANSITION:
+    case EventType.AUTO_TRANSITION:
       return <AutomationIcon />;
-    case InstanceEventType.CREATE_TRANSITION:
+    case EventType.CREATE_TRANSITION:
       return <AddCircleOIcon />;
-    case InstanceEventType.RESOURCE_EVENT:
+    case EventType.RESOURCE_EVENT:
       return <RunningIcon />;
-    case InstanceEventType.RESOURCE_TRANSITION:
+    case EventType.RESOURCE_TRANSITION:
       return <ResourcesAlmostFullIcon />;
-    case InstanceEventType.ALLOCATION_UPDATE:
+    case EventType.ALLOCATION_UPDATE:
       return <InfoCircleIcon />;
-    case InstanceEventType.API_SET_STATE_TRANSITION:
+    case EventType.API_SET_STATE_TRANSITION:
       return <ArrowRightIcon />;
-    case InstanceEventType.ON_UPDATE_TRANSITION:
+    case EventType.ON_UPDATE_TRANSITION:
       return <PencilAltIcon />;
-    case InstanceEventType.ON_DELETE_TRANSITION:
+    case EventType.ON_DELETE_TRANSITION:
       return <TrashIcon />;
   }
 }

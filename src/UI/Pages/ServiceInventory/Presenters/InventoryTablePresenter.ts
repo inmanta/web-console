@@ -1,5 +1,9 @@
 import { ReactElement } from "react";
-import { Id, Row, ServiceInstanceModelWithTargetStates } from "@/Core";
+import {
+  Row,
+  ServiceInstanceModelWithTargetStates,
+  getUuidFromRaw,
+} from "@/Core";
 import { words } from "@/UI/words";
 import {
   ActionPresenter,
@@ -140,7 +144,7 @@ export class InventoryTablePresenter
     } = instance;
 
     return {
-      id: this.getId(id),
+      id: getUuidFromRaw(id),
       attributesSummary: this.attributesPresenter.getSummary(
         candidate_attributes,
         active_attributes,
@@ -161,9 +165,5 @@ export class InventoryTablePresenter
       serviceIdentityValue: service_identity_attribute_value,
       deleted,
     };
-  }
-
-  private getId(full: string): Id {
-    return { full, short: full.substring(0, 4) };
   }
 }

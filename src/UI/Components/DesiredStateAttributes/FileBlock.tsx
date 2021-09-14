@@ -26,11 +26,7 @@ export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
 
   return (
     <>
-      <TextWithCopy
-        shortText={hash}
-        fullText={hash}
-        tooltipContent="Copy to clipboard"
-      />
+      <TextWithCopy value={hash} tooltipContent="Copy to clipboard" />
       <Button
         variant="link"
         icon={<DownloadIcon />}
