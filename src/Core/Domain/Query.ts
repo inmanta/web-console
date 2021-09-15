@@ -31,6 +31,7 @@ import { Callback } from "./Callback";
 type Query =
   | ServicesQuery
   | ServiceQuery
+  | ServiceInstanceQuery
   | ServiceInstancesQuery
   | ServiceConfigQuery
   | InstanceResourcesQuery
@@ -130,6 +131,18 @@ interface ServiceInstancesManifest {
     metadata: Pagination.Metadata;
   };
   query: ServiceInstancesQuery;
+}
+
+export interface ServiceInstanceQuery extends ServiceInstanceIdentifier {
+  kind: "ServiceInstance";
+}
+
+interface ServiceInstanceManifest {
+  error: string;
+  apiResponse: { data: ServiceInstanceModel };
+  data: ServiceInstanceModel;
+  usedData: ServiceInstanceModel;
+  query: ServiceInstanceQuery;
 }
 
 export interface ServiceConfigQuery extends ServiceIdentifier {
@@ -318,6 +331,7 @@ interface CallbacksManifest {
 interface Manifest {
   Services: ServicesManifest;
   Service: ServiceManifest;
+  ServiceInstance: ServiceInstanceManifest;
   ServiceInstances: ServiceInstancesManifest;
   ServiceConfig: ServiceConfigManifest;
   InstanceResources: InstanceResourcesManifest;

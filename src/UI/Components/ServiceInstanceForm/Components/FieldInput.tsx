@@ -190,7 +190,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   const list = get(formState, makePath(path, field.name)) as Array<unknown>;
 
   const onAdd = () => {
-    if (list.length >= field.max) return;
+    if (field.max && list.length >= field.max) return;
     getUpdate(makePath(path, field.name))([
       ...list,
       createFormState(field.fields),
@@ -220,7 +220,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               variant="link"
               icon={<PlusIcon />}
               onClick={onAdd}
-              isDisabled={list.length >= field.max}
+              isDisabled={!!field.max && list.length >= field.max}
             >
               Add
             </Button>

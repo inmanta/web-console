@@ -8,6 +8,7 @@ import { EventsWithProvider } from "@/UI/Pages/Events";
 import { ServiceCatalog } from "@/UI/Pages/ServiceCatalog";
 import { ResourcesView } from "@/UI/Pages/Resources";
 import { ResourceHistoryWithProvider } from "@/UI/Pages/ResourceHistory";
+import { EditInstancePageProvider } from "@/UI/Pages/EditInstance";
 
 interface Page extends Route.Route {
   component: ComponentType;
@@ -26,6 +27,11 @@ export const InventoryPage: Page = {
 export const CreateInstancePage: Page = {
   ...Route.CreateInstance,
   component: CreateInstancePageProvider,
+};
+
+export const EditInstancePage: Page = {
+  ...Route.EditInstance,
+  component: EditInstancePageProvider,
 };
 
 export const HistoryPage: Page = {
@@ -57,6 +63,7 @@ export const pages: Page[] = [
   CatalogPage,
   InventoryPage,
   CreateInstancePage,
+  EditInstancePage,
   HistoryPage,
   DiagnosePage,
   EventsPage,

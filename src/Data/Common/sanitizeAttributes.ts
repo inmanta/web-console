@@ -36,7 +36,7 @@ export function sanitizeAttributes(
       case "DictList": {
         const list = formState[field.name];
         if (!Array.isArray(list)) return;
-        if (list.length > field.max) {
+        if (field.max && list.length > field.max) {
           sanitized[field.name] = list
             .slice(0, field.max + 1)
             .map((item) => sanitizeAttributes(field.fields, item));

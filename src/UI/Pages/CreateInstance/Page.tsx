@@ -12,7 +12,11 @@ import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { FieldCreator, ServiceInstanceForm } from "@/UI/Components";
+import {
+  CreateModifierHandler,
+  FieldCreator,
+  ServiceInstanceForm,
+} from "@/UI/Components";
 
 export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
   serviceEntity,
@@ -62,7 +66,9 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
         </Text>
       </TextContent>
       <ServiceInstanceForm
-        fields={new FieldCreator().create(serviceEntity)}
+        fields={new FieldCreator(new CreateModifierHandler()).create(
+          serviceEntity
+        )}
         onSubmit={onSubmit}
         onCancel={handleRedirect}
         isSubmitDisabled={environmentModifier.isHalted()}

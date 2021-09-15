@@ -6,12 +6,15 @@ import {
   Field,
 } from "@/Core";
 import { AttributeInputConverterImpl } from "@/Data";
+import { ModifierHandler } from "./ModifierHandler";
 
 export class FieldCreator {
+  constructor(private readonly fieldModifierHandler: ModifierHandler) {}
   create(
     service: Pick<ServiceModel, "attributes" | "embedded_entities">
   ): Field[] {
     const fieldsFromAttributes: Field[] = attributesToFields(
+      this.fieldModifierHandler,
       service.attributes
     );
 
@@ -31,13 +34,17 @@ export class FieldCreator {
   }
 
   isList(entity: Pick<EmbeddedEntity, "upper_limit">): boolean {
-    return entity.upper_limit > 1;
+    return !entity.upper_limit || entity.upper_limit > 1;
   }
 
   embeddedEntityToField(entity: EmbeddedEntity): Field | null {
-    if (entity.modifier === "r") return null;
+    if (!this.fieldModifierHandler.validateModifier(entity.modifier))
+      return null;
 
-    const fieldsFromAttributes: Field[] = attributesToFields(entity.attributes);
+    const fieldsFromAttributes: Field[] = attributesToFields(
+      this.fieldModifierHandler,
+      entity.attributes
+    );
 
     const fieldsFromEmbeddedEntities = entity.embedded_entities
       .map((entity) => this.embeddedEntityToField(entity))
@@ -64,10 +71,15 @@ export class FieldCreator {
   }
 }
 
-function attributesToFields(attributes: AttributeModel[]): Field[] {
+function attributesToFields(
+  fieldModifierHandler: ModifierHandler,
+  attributes: AttributeModel[]
+): Field[] {
   const converter = new AttributeInputConverterImpl();
   return attributes
-    .filter((attribute) => attribute.modifier !== "r")
+    .filter((attribute) =>
+      fieldModifierHandler.validateModifier(attribute.modifier)
+    )
     .map((attribute) => {
       const type = converter.getInputType(attribute);
       const defaultValue = converter.getFormDefaultValue(

@@ -65,3 +65,36 @@ export const d: TransferModel = {
 };
 
 export const list = [a, b, c, d];
+
+export const nestedEditable = [
+  {
+    source: "a",
+    target: "b",
+    error: null,
+    on_update: true,
+    on_delete: false,
+    api_set_state: false,
+    resource_based: false,
+    auto: false,
+    validate: false,
+    config_name: null,
+    description: "desc",
+    target_operation: null,
+    error_operation: null,
+  },
+  {
+    source: "b",
+    target: "c",
+    error: null,
+    on_update: true,
+    on_delete: false,
+    api_set_state: false,
+    resource_based: false,
+    auto: false,
+    validate: false,
+    config_name: null,
+    description: "desc",
+    target_operation: null,
+    error_operation: null,
+  },
+];

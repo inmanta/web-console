@@ -9,8 +9,8 @@ import {
 } from "@patternfly/react-core";
 import {
   CheckIcon,
-  CrossIcon,
   ExclamationTriangleIcon,
+  TimesIcon,
 } from "@patternfly/react-icons";
 import React, { useContext } from "react";
 import styled from "styled-components";
@@ -37,7 +37,7 @@ export const EnvironmentControls: React.FC = () => {
                 <Button
                   variant="danger"
                   aria-label="Server status"
-                  icon={<CrossIcon />}
+                  icon={<TimesIcon />}
                   component="a"
                   href={urlManager.getServerStatusUrl()}
                   target="_blank"

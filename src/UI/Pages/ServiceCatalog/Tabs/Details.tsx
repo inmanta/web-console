@@ -7,7 +7,7 @@ import { EmptyView, Spacer, SummaryChart } from "@/UI/Components";
 
 interface Props {
   serviceName: string;
-  instanceSummary?: InstanceSummary;
+  instanceSummary?: InstanceSummary | null;
 }
 
 export const Details: React.FC<Props> = ({ serviceName, instanceSummary }) => {

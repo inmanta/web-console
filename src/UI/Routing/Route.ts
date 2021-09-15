@@ -8,6 +8,7 @@ interface ParamsManifest {
   Catalog: undefined;
   Inventory: { service: string };
   CreateInstance: { service: string };
+  EditInstance: { service: string; instance: string };
   History: { service: string; instance: string };
   Events: { service: string; instance: string };
   Diagnose: { service: string; instance: string };
@@ -42,6 +43,13 @@ export const CreateInstance: Route = {
   parent: "Inventory",
   path: `${BASE_URL}${paths.CreateInstance}`,
   label: "Create Instance",
+};
+
+export const EditInstance: Route = {
+  kind: "EditInstance",
+  parent: "Inventory",
+  path: `${BASE_URL}${paths.EditInstance}`,
+  label: "Edit Instance",
 };
 
 export const History: Route = {
@@ -82,6 +90,7 @@ export const allRoutes: Route[] = [
   Catalog,
   Inventory,
   CreateInstance,
+  EditInstance,
   History,
   Diagnose,
   Events,
@@ -102,6 +111,8 @@ export const getRouteFromKind = (kind: Kinds): Route => {
       return History;
     case "CreateInstance":
       return CreateInstance;
+    case "EditInstance":
+      return EditInstance;
     case "Diagnose":
       return Diagnose;
     case "Events":

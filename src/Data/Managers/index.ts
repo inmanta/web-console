@@ -20,3 +20,4 @@ export * from "./ResourceHistory";
 export * from "./HaltEnvironment";
 export * from "./ResumeEnvironment";
 export * from "./EnvironmentDetails";
+export * from "./GetInstance";

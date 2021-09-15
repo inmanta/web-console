@@ -29,3 +29,36 @@ export const c: AttributeModel = {
 };
 
 export const list = [a, b, c];
+
+export const nestedEditable: AttributeModel[] = [
+  {
+    name: "id_attr",
+    description: "desc",
+    modifier: "rw+",
+    type: "string",
+    default_value: "id",
+    default_value_set: true,
+    validation_type: null,
+    validation_parameters: null,
+  },
+  {
+    name: "other_attr1",
+    description: "desc",
+    modifier: "rw+",
+    type: "string?",
+    default_value: "test",
+    default_value_set: true,
+    validation_type: null,
+    validation_parameters: null,
+  },
+  {
+    name: "other_attr2",
+    description: "desc",
+    modifier: "rw+",
+    type: "dict?",
+    default_value: null,
+    default_value_set: true,
+    validation_type: null,
+    validation_parameters: null,
+  },
+];
