@@ -3,7 +3,7 @@ import { set } from "lodash";
 import { ActionGroup, Button, Form } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { InstanceAttributeModel, Field } from "@/Core";
-import { createFormState } from "./Helpers";
+import { createEditFormState, createFormState } from "./Helpers";
 import { FieldInput } from "./Components";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 
@@ -23,7 +23,9 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   isSubmitDisabled,
 }) => {
   const [formState, setFormState] = useState(
-    createFormState(fields, originalAttributes)
+    originalAttributes
+      ? createEditFormState(fields, originalAttributes)
+      : createFormState(fields)
   );
 
   const getUpdate =

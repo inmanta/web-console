@@ -1,4 +1,4 @@
-import { createFormState } from "./createFormState";
+import { createEditFormState, createFormState } from "./createFormState";
 import { Field, ServiceInstance } from "@/Test";
 
 test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState correctly", () => {
@@ -14,7 +14,7 @@ test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState
 });
 
 test("Given fieldsToFormState WHEN passed editable nested fields and current state THEN creates formState correctly", () => {
-  const formState = createFormState(
+  const formState = createEditFormState(
     Field.nestedEditable,
     ServiceInstance.nestedEditable.candidate_attributes
   );
