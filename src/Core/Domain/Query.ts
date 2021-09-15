@@ -26,6 +26,7 @@ import { ResourceHistory } from "./ResourceHistory";
 import { Sort } from "./Params";
 import { PageSize } from "./PageSize";
 import { EnvironmentDetails } from "./EnvironmentDetailsModel";
+import { Callback } from "./Callback";
 
 type Query =
   | ServicesQuery
@@ -42,7 +43,8 @@ type Query =
   | ResourcesQuery
   | ResourceDetailsQuery
   | ResourceHistoryQuery
-  | EnvironmentDetailsQuery;
+  | EnvironmentDetailsQuery
+  | CallbacksQuery;
 
 export type Type = Query;
 
@@ -309,6 +311,19 @@ interface ResourceHistoryManifest {
   query: ResourceHistoryQuery;
 }
 
+export interface CallbacksQuery {
+  kind: "Callbacks";
+  service_entity: string;
+}
+
+interface CallbacksManifest {
+  error: string;
+  apiResponse: { data: Callback[] };
+  data: Callback[];
+  usedData: Callback[];
+  query: CallbacksQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -329,6 +344,7 @@ interface Manifest {
   ResourceDetails: ResourceDetailsManifest;
   ResourceHistory: ResourceHistoryManifest;
   EnvironmentDetails: EnvironmentDetailsManifest;
+  Callbacks: CallbacksManifest;
 }
 
 /**

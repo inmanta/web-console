@@ -46,8 +46,7 @@ const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
     case "SingleLine":
       return (
         <TextWithCopy
-          shortText={attribute.value}
-          fullText={attribute.value}
+          value={attribute.value}
           tooltipContent="Copy to clipboard"
         />
       );
@@ -55,8 +54,7 @@ const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
     case "MultiLine":
       return (
         <MultiTextWithCopy
-          shortText={attribute.value}
-          fullText={attribute.value}
+          value={attribute.value}
           tooltipContent="Copy to clipboard"
         />
       );

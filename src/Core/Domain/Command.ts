@@ -8,6 +8,7 @@ import {
 import { Config } from "./Config";
 import { ServiceIdentifier } from "./ServiceModel";
 import { Field } from "./Field";
+import { CreateCallbackBody } from "./Callback";
 
 type Command =
   | ServiceConfigCommand
@@ -18,7 +19,10 @@ type Command =
   | TriggerSetStateCommand
   | DeleteServiceCommand
   | HaltEnvironmentCommand
-  | ResumeEnvironmentCommand;
+  | ResumeEnvironmentCommand
+  | DeleteCallbackCommand
+  | CreateCallbackCommand;
+
 export type Type = Command;
 
 export interface ServiceConfigCommand extends ServiceIdentifier {
@@ -150,6 +154,32 @@ interface ResumeEnvironmentManifest {
   trigger: () => Promise<Maybe.Type<Error<"ResumeEnvironment">>>;
 }
 
+export interface DeleteCallbackCommand {
+  kind: "DeleteCallback";
+  callbackId: string;
+  service_entity: string;
+}
+
+interface DeleteCallbackManifest {
+  error: string;
+  apiData: string;
+  body: null;
+  command: DeleteCallbackCommand;
+  trigger: () => Promise<Maybe.Type<Error<"DeleteCallback">>>;
+}
+
+export interface CreateCallbackCommand extends CreateCallbackBody {
+  kind: "CreateCallback";
+}
+
+interface CreateCallbackManifest {
+  error: string;
+  apiData: { data: string };
+  body: CreateCallbackBody;
+  command: CreateCallbackCommand;
+  trigger: () => Promise<Maybe.Type<Error<"CreateCallback">>>;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub commands.
@@ -164,6 +194,8 @@ interface Manifest {
   DeleteService: DeleteServiceManifest;
   HaltEnvironment: HaltEnvironmentManifest;
   ResumeEnvironment: ResumeEnvironmentManifest;
+  DeleteCallback: DeleteCallbackManifest;
+  CreateCallback: CreateCallbackManifest;
 }
 
 /**

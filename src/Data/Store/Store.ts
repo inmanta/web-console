@@ -1,3 +1,4 @@
+import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
 import { InstanceLogsSlice, instanceLogsSlice } from "./InstanceLogsSlice";
 import {
   InstanceConfigSlice,
@@ -49,6 +50,7 @@ export interface StoreModel {
   resourceDetails: ResourceDetailsSlice;
   resourceHistory: ResourceHistorySlice;
   environmentDetails: EnvironmentDetailsSlice;
+  callbacks: CallbacksSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -66,4 +68,5 @@ export const storeModel: StoreModel = {
   resourceDetails: resourceDetailsSlice,
   resourceHistory: resourceHistorySlice,
   environmentDetails: environmentDetailsSlice,
+  callbacks: callbacksSlice,
 };
