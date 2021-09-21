@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump tmpl from 1.0.4 to 1.0.5'
+destination-branches:
+- master
+- iso4
+sections: {}
