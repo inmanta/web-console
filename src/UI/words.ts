@@ -253,11 +253,15 @@ const dict = {
     `There was an error retrieving data: ${error}`,
   "resources.attributes.title": "Desired State",
 
+  /** Compile report related text */
+  "compileReports.title": "Compile Reports",
+
   /**
    * Navigation related text
    */
   "navigation.lifecycleServiceManager": "Lifecycle Service Manager",
   "navigation.resourceManager": "Resource Manager",
+  "navigation.orchestrationEngine": "Orchestration Engine",
 };
 
 type Key = keyof typeof dict;
