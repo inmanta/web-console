@@ -39,6 +39,18 @@ export const Navigation: React.FC<{ environment: string }> = ({
       ],
     },
     {
+      id: "OrchestrationEngine",
+      title: words("navigation.orchestrationEngine"),
+      links: [
+        {
+          id: Route.CompileReports.kind,
+          label: Route.CompileReports.label,
+          url: Route.CompileReports.path,
+          external: false,
+        },
+      ],
+    },
+    {
       id: "ResourceManager",
       title: words("navigation.resourceManager"),
       links: [

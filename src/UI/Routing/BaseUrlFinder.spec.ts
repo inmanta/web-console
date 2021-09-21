@@ -37,5 +37,6 @@ test("GIVEN BaseUrlFinder WHEN getPaths THEN returns paths with wildcard", () =>
     "*/lsm/catalog/:service/inventory/:instance/events",
     "*/resources",
     "*/resources/:resourceId/history",
+    "*/compilereports",
   ]);
 });
