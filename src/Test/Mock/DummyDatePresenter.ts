@@ -2,6 +2,9 @@ import { DateInfo } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
 
 export class DummyDatePresenter implements DatePresenter {
+  diff(): string {
+    return "10 seconds";
+  }
   getFull(): string {
     return "full";
   }

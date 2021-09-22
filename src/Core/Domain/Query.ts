@@ -27,6 +27,7 @@ import { Sort } from "./Params";
 import { PageSize } from "./PageSize";
 import { EnvironmentDetails } from "./EnvironmentDetailsModel";
 import { Callback } from "./Callback";
+import { CompileReport } from "./CompileReport";
 
 type Query =
   | ServicesQuery
@@ -44,7 +45,8 @@ type Query =
   | ResourceDetailsQuery
   | ResourceHistoryQuery
   | EnvironmentDetailsQuery
-  | CallbacksQuery;
+  | CallbacksQuery
+  | CompileReportsQuery;
 
 export type Type = Query;
 
@@ -324,6 +326,30 @@ interface CallbacksManifest {
   query: CallbacksQuery;
 }
 
+export interface CompileReportsQuery {
+  kind: "CompileReports";
+}
+
+interface CompileReportsManifest {
+  error: string;
+  apiResponse: {
+    data: CompileReport[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: CompileReport[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: CompileReport[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
+  query: CompileReportsQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -345,6 +371,7 @@ interface Manifest {
   ResourceHistory: ResourceHistoryManifest;
   EnvironmentDetails: EnvironmentDetailsManifest;
   Callbacks: CallbacksManifest;
+  CompileReports: CompileReportsManifest;
 }
 
 /**

@@ -38,6 +38,8 @@ import {
   ServiceInstanceStateHelper,
   CallbacksQueryManager,
   CallbacksStateHelper,
+  CompileReportsQueryManager,
+  CompileReportsStateHelper,
 } from "@/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -168,6 +170,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new CallbacksQueryManager(
         new FetcherImpl<"Callbacks">(this.baseApiHelper),
         new CallbacksStateHelper(this.store, environment),
+        environment
+      ),
+      new CompileReportsQueryManager(
+        new FetcherImpl<"CompileReports">(this.baseApiHelper),
+        new CompileReportsStateHelper(this.store, environment),
+        scheduler,
         environment
       ),
     ];

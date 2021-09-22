@@ -1,0 +1,6 @@
+description: Add table to compile reports view
+issue-nr: 972
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
