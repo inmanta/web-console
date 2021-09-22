@@ -13,3 +13,4 @@ export * as ResourceDetails from "./ResourceDetails";
 export * as ResourceHistory from "./ResourceHistory";
 export * as EnvironmentDetails from "./EnvironmentDetails";
 export * as Callback from "./Callback";
+export * as CompileReportsData from "./CompileReports";

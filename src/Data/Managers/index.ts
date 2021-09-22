@@ -21,3 +21,4 @@ export * from "./HaltEnvironment";
 export * from "./ResumeEnvironment";
 export * from "./EnvironmentDetails";
 export * from "./GetInstance";
+export * from "./CompileReports";

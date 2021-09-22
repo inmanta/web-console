@@ -6,4 +6,5 @@ export interface DatePresenter {
   get(timestamp: string): DateInfo;
   getShort(timestamp: Date): string;
   parseShort(timestamp: string): Date;
+  diff(timestamp1: string, timestamp2: string): string;
 }

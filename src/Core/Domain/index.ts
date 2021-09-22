@@ -23,3 +23,4 @@ export * as ResourceParams from "./ResourceParams";
 export * from "./ResourceHistory";
 export * from "./EnvironmentDetailsModel";
 export * from "./Uuid";
+export * from "./CompileReport";
