@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
 import {
   EmptyView,
@@ -7,15 +8,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-
-import React, { useContext } from "react";
 import { TableProvider } from "./TableProvider";
-
-const Wrapper: React.FC = ({ children }) => (
-  <PageSectionWithTitle title={words("compileReports.title")}>
-    {children}
-  </PageSectionWithTitle>
-);
 
 export const CompileReports: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
@@ -23,7 +16,7 @@ export const CompileReports: React.FC = () => {
     kind: "CompileReports",
   });
   return (
-    <Wrapper>
+    <PageSectionWithTitle title={words("compileReports.title")}>
       {RemoteData.fold(
         {
           notAsked: () => null,
@@ -52,6 +45,6 @@ export const CompileReports: React.FC = () => {
         },
         data
       )}
-    </Wrapper>
+    </PageSectionWithTitle>
   );
 };
