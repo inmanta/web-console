@@ -44,7 +44,7 @@ describe("Given the Events Page", () => {
       userEvent.click(
         within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
           "button",
-          { name: "EventType" }
+          { name: "FilterPicker" }
         )
       );
       userEvent.click(screen.getByRole("option", { name: filterName }));
@@ -102,7 +102,7 @@ describe("Given the Events Page", () => {
     userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "EventType" }
+        { name: "FilterPicker" }
       )
     );
     userEvent.click(screen.getByRole("option", { name: "Date" }));
@@ -176,7 +176,7 @@ describe("Given the Events Page", () => {
       userEvent.click(
         within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
           "button",
-          { name: "EventType" }
+          { name: "FilterPicker" }
         )
       );
       userEvent.click(screen.getByRole("option", { name: "Date" }));
