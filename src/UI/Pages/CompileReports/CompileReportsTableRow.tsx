@@ -35,7 +35,12 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
           {row.compileTime}
         </Td>
         <Td dataLabel={words("compileReports.columns.actions")}>
-          <Button variant="secondary" isSmall icon={<InfoCircleIcon />}>
+          <Button
+            variant="secondary"
+            isSmall
+            icon={<InfoCircleIcon />}
+            isDisabled
+          >
             {words("compileReports.links.details")}
           </Button>
         </Td>
