@@ -6,12 +6,14 @@ interface Props {
   setSelected: (selected: string | null) => void;
   options: string[];
   isDisabled?: boolean;
+  toggleAriaLabel?: string;
 }
 
 export const SingleTextSelect: React.FC<Props> = ({
   selected,
   setSelected,
   options,
+  toggleAriaLabel,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +40,7 @@ export const SingleTextSelect: React.FC<Props> = ({
       onSelect={onSelect}
       selections={[selected]}
       isOpen={isOpen}
+      toggleAriaLabel={toggleAriaLabel}
       {...props}
     >
       {newOptions.map((value) => (
