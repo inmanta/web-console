@@ -8,12 +8,14 @@ interface Props {
   ) => void;
   options: string[];
   isDisabled?: boolean;
+  toggleAriaLabel?: string;
 }
 
 export const MultiTextSelect: React.FC<Props> = ({
   selected,
   setSelected,
   options,
+  toggleAriaLabel,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,11 +36,11 @@ export const MultiTextSelect: React.FC<Props> = ({
   return (
     <Select
       variant="checkbox"
-      aria-label="Select Input"
       onToggle={onToggle}
       onSelect={onSelect}
       selections={selected}
       isOpen={isOpen}
+      toggleAriaLabel={toggleAriaLabel}
       {...props}
     >
       {options.map((value, index) => (

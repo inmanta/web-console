@@ -34,7 +34,7 @@ export const FilterPicker: React.FC<Props> = ({
     <ToolbarItem>
       <Select
         variant={SelectVariant.single}
-        aria-label="FilterPicker"
+        toggleAriaLabel="FilterPicker"
         onToggle={setFilterOpen}
         onSelect={onSelect}
         toggleIcon={<FilterIcon />}

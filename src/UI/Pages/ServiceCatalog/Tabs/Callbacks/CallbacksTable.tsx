@@ -33,12 +33,8 @@ export const CallbacksTable: React.FC<Props> = ({
         <Tr>
           <Th>{words("catalog.callbacks.url")}</Th>
           <Th>{words("catalog.callbacks.id")}</Th>
-          <Th id="MinimalLogLevelHeader" aria-label="MinimalLogLevel">
-            {words("catalog.callbacks.minimalLogLevel")}
-          </Th>
-          <Th id="EventTypesHeader" aria-label="EventTypes">
-            {words("catalog.callbacks.eventTypes")}
-          </Th>
+          <Th>{words("catalog.callbacks.minimalLogLevel")}</Th>
+          <Th>{words("catalog.callbacks.eventTypes")}</Th>
           <Th>{words("catalog.callbacks.actions")}</Th>
         </Tr>
       </Thead>

@@ -22,14 +22,16 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
 
   const filterBar = screen.getByRole("generic", { name: "FilterBar" });
 
-  const picker = within(filterBar).getByRole("button", { name: "State" });
+  const picker = within(filterBar).getByRole("button", {
+    name: "FilterPicker",
+  });
   userEvent.click(picker);
 
   const id = screen.getByRole("option", { name: "Deleted" });
   userEvent.click(id);
 
   const rule = within(filterBar).getByRole("button", {
-    name: "Select a rule...",
+    name: "Select Deleted",
   });
   userEvent.click(rule);
 

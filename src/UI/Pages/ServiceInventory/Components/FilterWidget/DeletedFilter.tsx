@@ -40,7 +40,7 @@ export const DeletedFilter: React.FC<Props> = ({
     >
       <Select
         variant={SelectVariant.single}
-        aria-label="Select Deleted"
+        toggleAriaLabel="Select Deleted"
         onToggle={setFilterOpen}
         onSelect={onSelect}
         selections={deleted}
