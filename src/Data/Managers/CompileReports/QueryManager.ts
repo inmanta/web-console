@@ -3,6 +3,7 @@ import {
   ContinuousQueryManagerImpl,
   getPaginationHandlers,
 } from "@/Data/Common";
+import { getUrl } from "./getUrl";
 
 export class CompileReportsQueryManager extends ContinuousQueryManagerImpl<"CompileReports"> {
   constructor(
@@ -16,9 +17,14 @@ export class CompileReportsQueryManager extends ContinuousQueryManagerImpl<"Comp
       stateHelper,
       scheduler,
       () => environment,
-      () => [environment],
+      ({ pageSize, sort }) => [
+        environment,
+        pageSize.value,
+        sort?.name,
+        sort?.order,
+      ],
       "CompileReports",
-      () => `/api/v2/compilereport`,
+      getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
           return { data: data, handlers: {}, metadata };

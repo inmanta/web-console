@@ -1,6 +1,7 @@
 import React from "react";
-import { CompileReport, CompileReportRow } from "@/Core";
+import { CompileReport, CompileReportRow, SortDirection } from "@/Core";
 import {
+  OnSort,
   TableComposable,
   TableVariant,
   Th,
@@ -13,16 +14,46 @@ import { TablePresenter } from "@/UI/Presenters";
 interface Props {
   tablePresenter: TablePresenter<CompileReport, CompileReportRow>;
   rows: CompileReportRow[];
+  order: SortDirection;
+  setOrder: (order: SortDirection) => void;
 }
 
 export const CompileReportsTable: React.FC<Props> = ({
   tablePresenter,
   rows,
+  order,
+  setOrder,
   ...props
 }) => {
-  const heads = tablePresenter.getColumnHeadDisplayNames().map((column) => {
-    return <Th key={column}>{column}</Th>;
-  });
+  // const heads = tablePresenter.getColumnHeadDisplayNames().map((column) => {
+  //   return <Th key={column}>{column}</Th>;
+  // });
+  const onSort: OnSort = (event, index, direction) => {
+    setOrder(direction);
+  };
+  // The compile reports table is only sortable by one column
+  const heads = tablePresenter
+    .getColumnHeadDisplayNames()
+    .map((column, columnIndex) => {
+      const sortParams =
+        columnIndex == 0
+          ? {
+              sort: {
+                sortBy: {
+                  index: 0,
+                  direction: order,
+                },
+                onSort,
+                columnIndex,
+              },
+            }
+          : {};
+      return (
+        <Th key={column} {...sortParams}>
+          {column}
+        </Th>
+      );
+    });
 
   return (
     <TableComposable {...props} variant={TableVariant.compact}>
