@@ -24,7 +24,9 @@ test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID',
   });
 
   const filterBar = screen.getByRole("generic", { name: "FilterBar" });
-  userEvent.click(within(filterBar).getByRole("button", { name: "State" }));
+  userEvent.click(
+    within(filterBar).getByRole("button", { name: "FilterPicker" })
+  );
   userEvent.click(screen.getByRole("option", { name: "Order ID" }));
 
   const input = screen.getByRole("searchbox", { name: "IdentityFilter" });
