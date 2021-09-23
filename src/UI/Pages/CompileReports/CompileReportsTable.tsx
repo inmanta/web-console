@@ -25,9 +25,6 @@ export const CompileReportsTable: React.FC<Props> = ({
   setOrder,
   ...props
 }) => {
-  // const heads = tablePresenter.getColumnHeadDisplayNames().map((column) => {
-  //   return <Th key={column}>{column}</Th>;
-  // });
   const onSort: OnSort = (event, index, direction) => {
     setOrder(direction);
   };
