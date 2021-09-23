@@ -23,15 +23,13 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
-      { name: "State" }
+      { name: "FilterPicker" }
     )
   );
   userEvent.click(screen.getByRole("option", { name: "AttributeSet" }));
-  userEvent.click(
-    screen.getByRole("button", { name: "Select an AttributeSet..." })
-  );
+  userEvent.click(screen.getByRole("button", { name: "Select AttributeSet" }));
   userEvent.click(screen.getByRole("option", { name: "Active" }));
-  userEvent.click(screen.getByRole("button", { name: "Select a quality..." }));
+  userEvent.click(screen.getByRole("button", { name: "Select Quality" }));
   userEvent.click(screen.getByRole("option", { name: "Not Empty" }));
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
