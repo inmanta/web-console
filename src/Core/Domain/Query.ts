@@ -28,6 +28,7 @@ import { PageSize } from "./PageSize";
 import { EnvironmentDetails } from "./EnvironmentDetailsModel";
 import { Callback } from "./Callback";
 import { CompileReport } from "./CompileReport";
+import { CompileReportParams } from "./CompileReportParams";
 
 type Query =
   | ServicesQuery
@@ -326,7 +327,7 @@ interface CallbacksManifest {
   query: CallbacksQuery;
 }
 
-export interface CompileReportsQuery {
+export interface CompileReportsQuery extends CompileReportParams {
   kind: "CompileReports";
 }
 

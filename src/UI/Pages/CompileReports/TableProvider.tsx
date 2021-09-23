@@ -1,11 +1,13 @@
 import React from "react";
-import { CompileReport } from "@/Core";
+import { CompileReport, SortDirection } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { CompileReportsTable } from "./CompileReportsTable";
 import { CompileReportsTablePresenter } from "./CompileReportsTablePresenter";
 
 interface Props {
   compileReports: CompileReport[];
+  order: SortDirection;
+  setOrder: (order: SortDirection) => void;
 }
 
 export const TableProvider: React.FC<Props> = ({
