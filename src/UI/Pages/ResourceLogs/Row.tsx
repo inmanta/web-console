@@ -92,7 +92,7 @@ const presentDate = (timestamp: string): string => {
   return moment
     .utc(timestamp)
     .tz(moment.tz.guess())
-    .format("DD/MM/YYYY HH:MM:SS");
+    .format("DD/MM/YYYY HH:mm:ss.SSS");
 };
 
 const Options: React.FC<{
