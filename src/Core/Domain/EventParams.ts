@@ -1,6 +1,6 @@
 import { PageSize } from "./PageSize";
 import { EventType } from "./EventType";
-import { Operator, Sort } from "./Params";
+import { Sort, TimestampOperatorFilter } from "./Params";
 
 export interface EventParams {
   filter?: Filter;
@@ -20,11 +20,6 @@ export interface Filter {
   source?: string[];
   destination?: string[];
   timestamp?: TimestampOperatorFilter[];
-}
-
-export interface TimestampOperatorFilter {
-  date: Date;
-  operator: Operator;
 }
 
 export enum Kind {

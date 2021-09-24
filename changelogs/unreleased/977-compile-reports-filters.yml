@@ -1,0 +1,6 @@
+description: Add filters to compile reports table
+issue-nr: 977
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

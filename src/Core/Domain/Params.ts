@@ -9,3 +9,8 @@ export enum Operator {
   From = "from",
   To = "to",
 }
+
+export interface TimestampOperatorFilter {
+  date: Date;
+  operator: Operator;
+}
