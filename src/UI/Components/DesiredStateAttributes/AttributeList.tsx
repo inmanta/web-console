@@ -63,10 +63,14 @@ const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
       return <FileBlock hash={attribute.value} />;
 
     case "Json":
-      return <CodeHighlighter code={attribute.value} language="json" />;
+      return (
+        <CodeHighlighter code={attribute.value} language="json" withExpansion />
+      );
 
     case "Xml":
-      return <CodeHighlighter code={attribute.value} language="xml" />;
+      return (
+        <CodeHighlighter code={attribute.value} language="xml" withExpansion />
+      );
   }
 };
 

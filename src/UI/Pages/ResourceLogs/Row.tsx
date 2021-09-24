@@ -74,11 +74,17 @@ const getStyleForLevel = (level: string) => {
     case "WARNING":
       return css`
         background-color: var(--pf-global--palette--gold-50);
+        --pf-c-table__expandable-row--after--BorderColor: var(
+          --pf-global--palette--gold-100
+        );
       `;
     case "ERROR":
     case "CRITICAL":
       return css`
         background-color: var(--pf-global--palette--red-50);
+        --pf-c-table__expandable-row--after--BorderColor: var(
+          --pf-global--palette--red-100
+        );
       `;
     default:
       return "";

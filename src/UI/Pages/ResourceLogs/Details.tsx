@@ -1,12 +1,13 @@
 import React from "react";
-import { ResourceLog } from "@/Core";
+import { ResourceLog, isObjectEmpty } from "@/Core";
 import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { CodeText } from "@/UI/Components";
+import { CodeHighlighter, CodeText } from "@/UI/Components";
+import { JsonFormatter } from "@/Data";
 
 interface Props {
   log: ResourceLog;
@@ -21,12 +22,17 @@ export const Details: React.FC<Props> = ({ log }) => {
           <CodeText>{log.msg}</CodeText>
         </DescriptionListDescription>
       </DescriptionListGroup>
-      <DescriptionListGroup>
-        <DescriptionListTerm>kwargs</DescriptionListTerm>
-        <DescriptionListDescription>
-          <CodeText>{JSON.stringify(log.kwargs, null, 2)}</CodeText>
-        </DescriptionListDescription>
-      </DescriptionListGroup>
+      {!isObjectEmpty(log.kwargs) && (
+        <DescriptionListGroup>
+          <DescriptionListTerm>kwargs</DescriptionListTerm>
+          <DescriptionListDescription>
+            <CodeHighlighter
+              code={new JsonFormatter().format(log.kwargs)}
+              language="json"
+            />
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+      )}
     </DescriptionList>
   );
 };

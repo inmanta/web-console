@@ -58,3 +58,7 @@ export const isObject = (value: unknown): value is Record<string, unknown> => {
 
 export const stringifyList = (items: string[]): string =>
   items.length <= 0 ? "" : items.reduce((acc, curr) => `${acc}, ${curr}`);
+
+export const isObjectEmpty = (
+  obj: Record<string, unknown>
+): obj is Record<string, never> => Object.entries(obj).length <= 0;

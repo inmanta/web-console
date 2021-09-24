@@ -19,13 +19,15 @@ export const ResourceLogsTable: React.FC<Props> = ({
 }) => {
   const expansionManager = new ExpansionManager();
   const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(getIds(logs))
+    expansionManager.create(getUniqueIds(logs))
   );
   const handleExpansionToggle = (id: string) => () => {
     setExpansionState(expansionManager.toggle(expansionState, id));
   };
   React.useEffect(() => {
-    setExpansionState(expansionManager.merge(expansionState, getIds(logs)));
+    setExpansionState(
+      expansionManager.merge(expansionState, getUniqueIds(logs))
+    );
   }, [logs]);
 
   return (
@@ -43,9 +45,9 @@ export const ResourceLogsTable: React.FC<Props> = ({
       {logs.map((log, index) => (
         <Row
           index={index}
-          onToggle={handleExpansionToggle(log.action_id)}
-          isExpanded={expansionState[log.action_id]}
-          key={log.action_id}
+          onToggle={handleExpansionToggle(getUniqueId(log, index))}
+          isExpanded={expansionState[getUniqueId(log, index)]}
+          key={getUniqueId(log, index)}
           log={log}
           numberOfColumns={6}
           filter={filter}
@@ -56,8 +58,12 @@ export const ResourceLogsTable: React.FC<Props> = ({
   );
 };
 
-function getIds(logs: ResourceLog[]): string[] {
-  return logs.map((log) => log.action_id);
+function getUniqueIds(logs: ResourceLog[]): string[] {
+  return logs.map(getUniqueId);
+}
+
+function getUniqueId(log: ResourceLog, index: number): string {
+  return `${log.action_id}_${log.timestamp}_${index}`;
 }
 
 const LogLevelTh = styled(Th)`
