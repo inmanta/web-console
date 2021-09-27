@@ -8,6 +8,7 @@ import {
 import { ActionFilter } from "./ActionFilter";
 import { ResourceLogFilter } from "@/Core";
 import { LogLevelFilter } from "./LogLevelFilter";
+import { MessageFilter } from "./MessageFilter";
 
 interface Props {
   paginationWidget: React.ReactNode;
@@ -35,6 +36,9 @@ export const Controls: React.FC<Props> = ({
         </ToolbarItem>
         <ToolbarItem>
           <LogLevelFilter filter={filter} setFilter={setFilter} />
+        </ToolbarItem>
+        <ToolbarItem>
+          <MessageFilter filter={filter} setFilter={setFilter} />
         </ToolbarItem>
       </ToolbarContent>
     </Toolbar>

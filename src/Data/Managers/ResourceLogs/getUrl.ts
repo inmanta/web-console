@@ -13,6 +13,7 @@ export function getUrl({
             filter: {
               minimal_log_level: filter.minimal_log_level,
               action: filter.action,
+              message: filter.message,
             },
           },
           { allowDots: true, arrayFormat: "repeat" }

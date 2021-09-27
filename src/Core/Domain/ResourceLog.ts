@@ -14,4 +14,5 @@ export interface ResourceLog {
 export interface ResourceLogFilter {
   minimal_log_level?: string;
   action?: string[];
+  message?: string[];
 }
