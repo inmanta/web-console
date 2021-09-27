@@ -1,11 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { LogLevelsList, ResourceLogFilter } from "@/Core";
-import {
-  Select,
-  SelectOption,
-  SelectVariant,
-  ToolbarFilter,
-} from "@patternfly/react-core";
+import { ToolbarFilter } from "@patternfly/react-core";
+import { SingleTextSelect } from "@/UI/Components";
 
 interface Props {
   filter: ResourceLogFilter;
@@ -19,11 +15,8 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
       minimal_log_level: filter.minimal_log_level === level ? undefined : level,
     });
 
-  const [isFilterOpen, setFilterOpen] = useState(false);
-
-  const onSelect = (event, selection) => {
-    update(selection);
-    setFilterOpen(false);
+  const onSelect = (selection) => {
+    update(selection === null ? undefined : selection);
   };
 
   const deleteChip = () =>
@@ -38,21 +31,13 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
       deleteChip={deleteChip}
       categoryName="Minimal Log Level"
     >
-      <Select
-        variant={SelectVariant.single}
-        aria-label="Select Deleted"
-        onToggle={setFilterOpen}
-        onSelect={onSelect}
-        selections={filter.minimal_log_level ? [filter.minimal_log_level] : []}
-        isOpen={isFilterOpen}
+      <SingleTextSelect
+        options={LogLevelsList}
+        selected={filter.minimal_log_level || null}
+        setSelected={onSelect}
+        toggleAriaLabel="MinimalLogLevel"
         placeholderText="Minimal Log Level..."
-      >
-        {LogLevelsList.map((value) => (
-          <SelectOption key={value} value={value}>
-            {value}
-          </SelectOption>
-        ))}
-      </Select>
+      />
     </ToolbarFilter>
   );
 };
