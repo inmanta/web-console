@@ -1,12 +1,11 @@
-/**
- * @TODO replace logLevel type with LogLevel
- */
+import { LogLevelString } from "./LogLevel";
+
 export interface ResourceLog {
-  level: string;
+  level: LogLevelString;
   msg: string;
   args: [];
   kwargs: Record<string, string>;
-  timestamp: string; // timestamp
+  timestamp: string;
   action_id: string;
   action: string;
 }
