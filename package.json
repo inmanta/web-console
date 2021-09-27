@@ -51,7 +51,7 @@
     "@testing-library/user-event": "^13.2.1",
     "@types/fetch-mock": "^7.3.5",
     "@types/jest": "^27.0.2",
-    "@types/lodash": "^4.14.173",
+    "@types/lodash": "^4.14.174",
     "@types/node": "^16.9.6",
     "@types/qs": "^6.9.7",
     "@types/react": "^17.0.24",
@@ -113,7 +113,7 @@
     "webpack": "^5.54.0",
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.2.1",
+    "webpack-dev-server": "^4.3.0",
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
