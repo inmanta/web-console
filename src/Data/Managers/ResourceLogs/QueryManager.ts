@@ -1,5 +1,4 @@
-import { Scheduler, Fetcher, StateHelper } from "@/Core";
-import { ResourceLogFilter } from "@/Core/Domain/Query";
+import { Scheduler, Fetcher, StateHelper, ResourceLogFilter } from "@/Core";
 import {
   ContinuousQueryManagerImpl,
   getPaginationHandlers,

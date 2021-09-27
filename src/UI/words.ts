@@ -259,6 +259,8 @@ const dict = {
   "resources.logs.failed.title": "Something went wrong",
   "resources.logs.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
+  "resources.logs.filterOnAction": (actionType: string) =>
+    `Filter on '${actionType}'`,
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",

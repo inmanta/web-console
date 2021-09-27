@@ -1,17 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import styled, { css } from "styled-components";
 import { ResourceLog } from "@/Core";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
 import { Details } from "./Details";
 import moment from "moment";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownPosition,
-  KebabToggle,
-} from "@patternfly/react-core";
 import { CodeText } from "@/UI/Components";
-import { ResourceLogFilter } from "@/Core/Domain/Query";
+import { RowOptions, ToggleActionType } from "./RowOptions";
 
 interface Props {
   log: ResourceLog;
@@ -19,8 +13,7 @@ interface Props {
   onToggle: () => void;
   numberOfColumns: number;
   index: number;
-  filter: ResourceLogFilter;
-  setFilter: (filter: ResourceLogFilter) => void;
+  toggleActionType: ToggleActionType;
 }
 
 export const Row: React.FC<Props> = ({
@@ -29,8 +22,7 @@ export const Row: React.FC<Props> = ({
   index,
   onToggle,
   numberOfColumns,
-  filter,
-  setFilter,
+  toggleActionType,
 }) => {
   return (
     <StyledTbody isExpanded={false} $level={log.level}>
@@ -49,7 +41,7 @@ export const Row: React.FC<Props> = ({
           <CodeText singleLine>{presentShortMessage(log.msg)}</CodeText>
         </Td>
         <Td>
-          <Options setFilter={setFilter} filter={filter} action={log.action} />
+          <RowOptions toggleActionType={toggleActionType} action={log.action} />
         </Td>
       </Tr>
       {isExpanded && (
@@ -100,44 +92,3 @@ const presentDate = (timestamp: string): string => {
     .tz(moment.tz.guess())
     .format("DD/MM/YYYY HH:mm:ss.SSS");
 };
-
-const Options: React.FC<{
-  setFilter: (filter: ResourceLogFilter) => void;
-  filter: ResourceLogFilter;
-  action: string;
-}> = ({ filter, setFilter, action }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const update = () =>
-    setFilter({
-      ...filter,
-      action: [action],
-    });
-
-  const dropdownItems = [
-    <DropdownItem key="link" onClick={update}>
-      Show messages from this action
-    </DropdownItem>,
-  ];
-
-  return (
-    <Dropdown
-      position={DropdownPosition.right}
-      onSelect={() => setIsOpen(false)}
-      toggle={
-        <StyledKebabToggle
-          onToggle={() => setIsOpen(!isOpen)}
-          id="toggle-id-6"
-        />
-      }
-      isOpen={isOpen}
-      isPlain
-      dropdownItems={dropdownItems}
-    />
-  );
-};
-
-const StyledKebabToggle = styled(KebabToggle)`
-  padding-top: 0;
-  padding-bottom: 0;
-`;

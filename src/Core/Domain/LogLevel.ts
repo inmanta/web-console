@@ -5,7 +5,6 @@ export enum LogLevelNumber {
   INFO = 20,
   DEBUG = 10,
   TRACE = 3,
-  NOTSET = 0,
 }
 
 export enum LogLevelString {
@@ -15,7 +14,6 @@ export enum LogLevelString {
   INFO = "INFO",
   DEBUG = "DEBUG",
   TRACE = "TRACE",
-  NOTSET = "NOTSET",
 }
 
 export const LogLevelsList = Object.values(LogLevelString);

@@ -6,7 +6,7 @@ import {
   Divider,
 } from "@patternfly/react-core";
 import { ActionFilter } from "./ActionFilter";
-import { ResourceLogFilter } from "@/Core/Domain/Query";
+import { ResourceLogFilter } from "@/Core";
 import { LogLevelFilter } from "./LogLevelFilter";
 
 interface Props {

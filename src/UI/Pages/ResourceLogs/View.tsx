@@ -1,5 +1,9 @@
-import { PageSize, RemoteData } from "@/Core";
-import { ResourceLogFilter } from "@/Core/Domain/Query";
+import {
+  PageSize,
+  RemoteData,
+  ResourceLogFilter,
+  toggleValueInList,
+} from "@/Core";
 import {
   EmptyView,
   ErrorView,
@@ -45,6 +49,15 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     data
   );
 
+  const toggleActionType = (action: string) => {
+    const list = toggleValueInList(action, filter.action || []);
+
+    setFilter({
+      ...filter,
+      action: list.length <= 0 ? undefined : list,
+    });
+  };
+
   return (
     <>
       <Controls
@@ -77,8 +90,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
               <ResourceLogsTable
                 aria-label="ResourceHistory-Success"
                 logs={response.data}
-                filter={filter}
-                setFilter={setFilter}
+                toggleActionType={toggleActionType}
               />
             );
           },

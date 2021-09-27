@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ResourceLogFilter } from "@/Core/Domain/Query";
+import { LogLevelsList, ResourceLogFilter } from "@/Core";
 import {
   Select,
   SelectOption,
@@ -47,7 +47,7 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
         isOpen={isFilterOpen}
         placeholderText="Minimal Log Level..."
       >
-        {values.map((value) => (
+        {LogLevelsList.map((value) => (
           <SelectOption key={value} value={value}>
             {value}
           </SelectOption>
@@ -56,13 +56,3 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
     </ToolbarFilter>
   );
 };
-
-const values = [
-  "CRITICAL",
-  "ERROR",
-  "WARNING",
-  "INFO",
-  "DEBUG",
-  "TRACE",
-  "NOTSET",
-];

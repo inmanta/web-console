@@ -23,7 +23,7 @@ import {
 import { ResourceParams as ResourceParams } from "./ResourceParams";
 import { WithId } from "../Language";
 import { ResourceHistory } from "./ResourceHistory";
-import { ResourceLog } from "./ResourceLog";
+import { ResourceLog, ResourceLogFilter } from "./ResourceLog";
 import { Sort } from "./Params";
 import { PageSize } from "./PageSize";
 import { EnvironmentDetails } from "./EnvironmentDetailsModel";
@@ -373,11 +373,6 @@ export interface ResourceLogsQuery extends WithId {
   kind: "ResourceLogs";
   filter?: ResourceLogFilter;
   pageSize: PageSize;
-}
-
-export interface ResourceLogFilter {
-  minimal_log_level?: string;
-  action?: string[];
 }
 
 interface ResourceLogsManifest {

@@ -4,18 +4,16 @@ import { ResourceLog } from "@/Core";
 import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
 import { Row } from "./Row";
 import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
-import { ResourceLogFilter } from "@/Core/Domain/Query";
+import { ToggleActionType } from "./RowOptions";
 
 interface Props {
   logs: ResourceLog[];
-  filter: ResourceLogFilter;
-  setFilter: (filter: ResourceLogFilter) => void;
+  toggleActionType: ToggleActionType;
 }
 
 export const ResourceLogsTable: React.FC<Props> = ({
   logs,
-  setFilter,
-  filter,
+  toggleActionType,
 }) => {
   const expansionManager = new ExpansionManager();
   const [expansionState, setExpansionState] = React.useState(
@@ -50,8 +48,7 @@ export const ResourceLogsTable: React.FC<Props> = ({
           key={getUniqueId(log, index)}
           log={log}
           numberOfColumns={6}
-          filter={filter}
-          setFilter={setFilter}
+          toggleActionType={toggleActionType}
         />
       ))}
     </TableComposable>

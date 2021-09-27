@@ -10,3 +10,8 @@ export interface ResourceLog {
   action_id: string;
   action: string;
 }
+
+export interface ResourceLogFilter {
+  minimal_log_level?: string;
+  action?: string[];
+}
