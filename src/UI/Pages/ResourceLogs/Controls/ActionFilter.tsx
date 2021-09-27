@@ -1,5 +1,5 @@
 import React from "react";
-import { ResourceLogFilter } from "@/Core";
+import { actionTypes, ResourceLogFilter } from "@/Core";
 import { SelectOptionFilter } from "@/UI/Components/Filters";
 
 interface Props {
@@ -19,19 +19,9 @@ export const ActionFilter: React.FC<Props> = ({ filter, setFilter }) => {
       isVisible={true}
       filterPropertyName="Action Type"
       placeholder="Action Type..."
-      possibleStates={values}
+      possibleStates={actionTypes}
       selectedStates={filter.action ? filter.action : []}
       update={update}
     />
   );
 };
-
-const values = [
-  "store",
-  "push",
-  "pull",
-  "deploy",
-  "dryrun",
-  "getfact",
-  "other",
-];
