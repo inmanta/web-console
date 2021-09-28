@@ -263,6 +263,10 @@ const dict = {
   "compileReports.columns.actions": "Actions",
   "compileReports.columns.inProgress": "In Progress",
   "compileReports.links.details": "Details",
+  "compileReports.filters.status.placeholder": "Select compile status...",
+  "compileReports.filters.result.placeholder": "Select result...",
+  "compileReports.filters.result.success": "Successful",
+  "compileReports.filters.result.failed": "Failed",
 
   /** Compile details related text */
   "compileDetails.title": "Compile Details",

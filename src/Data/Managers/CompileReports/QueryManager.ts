@@ -1,4 +1,4 @@
-import { Scheduler, Fetcher, StateHelper } from "@/Core";
+import { Scheduler, Fetcher, StateHelper, CompileReportParams } from "@/Core";
 import {
   ContinuousQueryManagerImpl,
   getPaginationHandlers,
@@ -17,11 +17,12 @@ export class CompileReportsQueryManager extends ContinuousQueryManagerImpl<"Comp
       stateHelper,
       scheduler,
       () => environment,
-      ({ pageSize, sort }) => [
+      ({ pageSize, sort, filter }) => [
         environment,
         pageSize.value,
         sort?.name,
         sort?.order,
+        stringifyFilter(filter),
       ],
       "CompileReports",
       getUrl,
@@ -38,4 +39,10 @@ export class CompileReportsQueryManager extends ContinuousQueryManagerImpl<"Comp
       environment
     );
   }
+}
+
+function stringifyFilter(
+  filter: CompileReportParams.Filter | undefined
+): string {
+  return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }
