@@ -30,7 +30,17 @@ const filterToParam = (filter: Filter, timezone: string) => {
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
   );
-  let combinedFilters = {};
+
+  const combinedFilters = combineStatusFilters(status);
+
+  return {
+    ...combinedFilters,
+    success,
+    requested: serializedTimestampOperatorFilters,
+  };
+};
+
+function combineStatusFilters(status?: CompileReportParams.CompileStatus[]) {
   if (status && status.length > 0) {
     const processedFilters = status.map((state) => {
       switch (state) {
@@ -42,7 +52,7 @@ const filterToParam = (filter: Filter, timezone: string) => {
           return { started: false };
       }
     });
-    combinedFilters = processedFilters.reduce((acc, curr) => {
+    const combinedFilters = processedFilters.reduce((acc, curr) => {
       if (curr.completed !== undefined) {
         if (acc["completed"] !== undefined) {
           acc = omit(acc, "completed");
@@ -59,14 +69,10 @@ const filterToParam = (filter: Filter, timezone: string) => {
       }
       return acc;
     }, {});
+    return combinedFilters;
   }
-
-  return {
-    ...combinedFilters,
-    success,
-    requested: serializedTimestampOperatorFilters,
-  };
-};
+  return {};
+}
 
 const operatorToParam = (operator: Operator): string => {
   switch (operator) {
