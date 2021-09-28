@@ -38,6 +38,10 @@ import {
   compileReportsSlice,
   CompileReportsSlice,
 } from "./CompileReportsSlice";
+import {
+  compileDetailsSlice,
+  CompileDetailsSlice,
+} from "./CompileDetailsSlice";
 
 export interface StoreModel {
   projects: ProjectsSlice;
@@ -56,6 +60,7 @@ export interface StoreModel {
   environmentDetails: EnvironmentDetailsSlice;
   callbacks: CallbacksSlice;
   compileReports: CompileReportsSlice;
+  compileDetails: CompileDetailsSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -75,4 +80,5 @@ export const storeModel: StoreModel = {
   environmentDetails: environmentDetailsSlice,
   callbacks: callbacksSlice,
   compileReports: compileReportsSlice,
+  compileDetails: compileDetailsSlice,
 };

@@ -264,6 +264,20 @@ const dict = {
   "compileReports.columns.inProgress": "In Progress",
   "compileReports.links.details": "Details",
 
+  /** Compile details related text */
+  "compileDetails.title": "Compile Details",
+  "compileDetails.info.title": "Details",
+  "compileDetails.errors.title": "Errors",
+  "compileDetails.stages.title": "Stages",
+  "compileDetails.stages.columns.name": "Name",
+  "compileDetails.stages.columns.command": "Command",
+  "compileDetails.stages.columns.delay": "Stage start delay",
+  "compileDetails.stages.columns.duration": "Duration",
+  "compileDetails.stages.columns.returnCode": "Return Code",
+  "compileDetails.stages.columns.outstream": "Output Stream",
+  "compileDetails.stages.columns.errstream": "Error Stream",
+  "compileDetails.stages.copy": "Copy full command to clipboard",
+
   /**
    * Navigation related text
    */

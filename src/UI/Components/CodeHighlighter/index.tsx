@@ -20,7 +20,7 @@ SyntaxHighlighter.registerLanguage("xml", xml);
 
 interface Props {
   code: string;
-  language: "json" | "xml" | "text";
+  language: "json" | "xml" | "text" | "python";
   close?: () => void;
 }
 

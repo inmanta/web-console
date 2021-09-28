@@ -1,3 +1,5 @@
+import { CompileError } from "./CompileError";
+
 export interface RawDiagnostics {
   rejections: RawRejection[];
   failures: FailureGroup[];
@@ -6,11 +8,6 @@ export interface RawDiagnostics {
 export interface Diagnostics {
   rejections: Rejection[];
   failures: FailureGroup[];
-}
-
-interface CompileError {
-  type: string;
-  message: string;
 }
 
 export interface RawRejection {

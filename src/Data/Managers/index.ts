@@ -22,3 +22,4 @@ export * from "./ResumeEnvironment";
 export * from "./EnvironmentDetails";
 export * from "./GetInstance";
 export * from "./CompileReports";
+export * from "./CompileDetails";
