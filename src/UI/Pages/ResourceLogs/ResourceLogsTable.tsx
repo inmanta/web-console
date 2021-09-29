@@ -29,7 +29,7 @@ export const ResourceLogsTable: React.FC<Props> = ({
   }, [logs]);
 
   return (
-    <TableComposable aria-label="CallbacksTable" variant="compact">
+    <TableComposable aria-label="ResourceLogsTable" variant="compact">
       <Thead>
         <Tr>
           <Th />

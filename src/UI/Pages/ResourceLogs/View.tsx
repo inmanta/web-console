@@ -74,7 +74,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
               retry={retry}
               title={words("resources.logs.failed.title")}
               message={words("resources.logs.failed.body")(error)}
-              aria-label="ResourceHistory-Failed"
+              aria-label="ResourceLogs-Failed"
             />
           ),
           success: (response) => {
@@ -88,7 +88,6 @@ export const View: React.FC<Props> = ({ resourceId }) => {
             }
             return (
               <ResourceLogsTable
-                aria-label="ResourceHistory-Success"
                 logs={response.data}
                 toggleActionType={toggleActionType}
               />

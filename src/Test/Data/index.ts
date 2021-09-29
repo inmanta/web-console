@@ -11,6 +11,7 @@ export * as InstanceResource from "./InstanceResource";
 export * as Resource from "./Resource";
 export * as ResourceDetails from "./ResourceDetails";
 export * as ResourceHistory from "./ResourceHistory";
+export * as ResourceLogs from "./ResourceLogs";
 export * as EnvironmentDetails from "./EnvironmentDetails";
 export * as Callback from "./Callback";
 export * as CompileReportsData from "./CompileReports";

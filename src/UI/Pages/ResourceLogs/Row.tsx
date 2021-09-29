@@ -25,7 +25,11 @@ export const Row: React.FC<Props> = ({
   toggleActionType,
 }) => {
   return (
-    <StyledTbody isExpanded={false} $level={log.level}>
+    <StyledTbody
+      isExpanded={false}
+      $level={log.level}
+      aria-label="ResourceLogRow"
+    >
       <Tr>
         <Td
           expand={{
