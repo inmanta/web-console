@@ -1,0 +1,6 @@
+description: Add Resource Action Log
+issue-nr: 741
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
