@@ -74,7 +74,9 @@ export const EventsTableRow: React.FC<Props> = ({
                 </pre>
               </DescriptionListDescription>
             </DescriptionListGroup>
-            {row.idCompileReport && <CompileReportLink />}
+            {row.idCompileReport && (
+              <CompileReportLink compileId={row.idCompileReport} />
+            )}
           </DescriptionList>
         </ExpandableRowContent>
       </Td>
