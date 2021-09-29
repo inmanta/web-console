@@ -9,6 +9,7 @@ import { ActionFilter } from "./ActionFilter";
 import { ResourceLogFilter } from "@/Core";
 import { LogLevelFilter } from "./LogLevelFilter";
 import { MessageFilter } from "./MessageFilter";
+import { TimestampFilter } from "./TimestampFilter";
 
 interface Props {
   paginationWidget: React.ReactNode;
@@ -24,9 +25,9 @@ export const Controls: React.FC<Props> = ({
   <>
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
-        {/* <ToolbarItem>
-          <DeployStateFilter filter={filter} setFilter={setFilter} />
-        </ToolbarItem> */}
+        <ToolbarItem>
+          <TimestampFilter filter={filter} setFilter={setFilter} />
+        </ToolbarItem>
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
       <Divider />

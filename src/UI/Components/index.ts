@@ -15,6 +15,7 @@ export * from "./ErrorView";
 export * from "./EventIcon";
 export * from "./EventsTable";
 export * from "./ExpandableTable";
+export * from "./Filters";
 export * from "./IconTabs";
 export * from "./InstanceState";
 export * from "./LoadingView";
