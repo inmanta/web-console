@@ -1,4 +1,5 @@
 import { CompileDetails } from "@/Core";
+import { Timeline } from "@/UI/Components/Timeline";
 import { words } from "@/UI/words";
 import {
   CodeBlock,
@@ -7,6 +8,8 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Flex,
+  FlexItem,
 } from "@patternfly/react-core";
 import {
   CheckCircleIcon,
@@ -16,13 +19,32 @@ import React from "react";
 import styled from "styled-components";
 
 interface Props {
-  compileDetails: CompileDetails;
+  compileDetails: Pick<
+    CompileDetails,
+    | "completed"
+    | "started"
+    | "requested"
+    | "do_export"
+    | "force_update"
+    | "success"
+    | "metadata"
+    | "environment_variables"
+  >;
 }
+
 export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
   return (
     <>
-      TimeLine
-      <DescriptionList isHorizontal columnModifier={{ default: "2Col" }}>
+      <Flex justifyContent={{ default: "justifyContentCenter" }}>
+        <FlexItem>
+          <Timeline
+            requested={compileDetails.requested}
+            started={compileDetails.started}
+            completed={compileDetails.completed}
+          />
+        </FlexItem>
+      </Flex>
+      <StyledList isHorizontal columnModifier={{ default: "2Col" }}>
         <DescriptionListGroup>
           <DescriptionListTerm>
             {words("compileDetails.status.export")}
@@ -71,8 +93,8 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             </DescriptionListDescription>
           </DescriptionListGroup>
         )}
-      </DescriptionList>
-      <EnvVarList>
+      </StyledList>
+      <StyledList>
         <DescriptionListGroup>
           <DescriptionListTerm>
             {words("compileDetails.status.envVars")}
@@ -85,12 +107,12 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             </CodeBlock>
           </DescriptionListDescription>
         </DescriptionListGroup>
-      </EnvVarList>
+      </StyledList>
     </>
   );
 };
 
-const EnvVarList = styled(DescriptionList)`
+const StyledList = styled(DescriptionList)`
   padding-top: 1em;
 `;
 

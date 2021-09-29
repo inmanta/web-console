@@ -3,7 +3,7 @@ import { CompileDetails } from "@/Core";
 import { PageSectionWithTitle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { CompileStageReportTable } from "./CompileStageReportTable";
-import { CompileErrors } from "./CompileErrors";
+import { CompileErrorsSection } from "./CompileErrorsSection";
 import { StatusSection } from "./StatusSection";
 
 interface Props {
@@ -22,7 +22,7 @@ export const CompileDetailsSections: React.FC<Props> = ({
       {compileDetails.compile_data &&
         compileDetails.compile_data.errors.length > 0 && (
           <PageSectionWithTitle title={words("compileDetails.errors.title")}>
-            <CompileErrors errors={compileDetails.compile_data.errors} />
+            <CompileErrorsSection errors={compileDetails.compile_data.errors} />
           </PageSectionWithTitle>
         )}
       <PageSectionWithTitle title={words("compileDetails.stages.title")}>

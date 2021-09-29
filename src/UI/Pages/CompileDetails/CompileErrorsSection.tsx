@@ -12,7 +12,7 @@ interface Props {
   errors: CompileError[];
 }
 
-export const CompileErrors: React.FC<Props> = ({ errors }) => (
+export const CompileErrorsSection: React.FC<Props> = ({ errors }) => (
   <DescriptionList isHorizontal>
     {errors.map((compileError, idx) => (
       <>
