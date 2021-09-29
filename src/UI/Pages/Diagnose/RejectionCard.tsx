@@ -9,12 +9,15 @@ import {
   CardHeader,
   CardTitle,
   Dropdown,
+  DropdownItem,
   KebabToggle,
 } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
 import { DropdownExternalLink } from "./ExternalLink";
 import { Traceback } from "./Traceback";
 import { greyText } from "@/UI/Styles";
+import { getUrl } from "@/UI/Routing";
+import { Link } from "react-router-dom";
 
 interface Props {
   rejection: Rejection;
@@ -24,11 +27,22 @@ export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
   const { urlManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems: React.ReactNode[] = [
-    <DropdownExternalLink
+    <DropdownItem
       key="compileReportLink"
-      url={urlManager.getCompileReportUrl()}
-      linkText={words("diagnose.links.compileReport")}
-    />,
+      component={
+        <Link
+          to={{
+            pathname: getUrl("CompileDetails", {
+              id: rejection.compile_id,
+            }),
+            search: location.search,
+          }}
+        >
+          {" "}
+          {words("diagnose.links.compileReport")}
+        </Link>
+      }
+    ></DropdownItem>,
   ];
   if (rejection.model_version) {
     dropdownItems.push(
