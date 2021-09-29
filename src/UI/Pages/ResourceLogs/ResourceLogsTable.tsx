@@ -1,7 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { ResourceLog } from "@/Core";
-import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
+import { ResourceLog, SortDirection } from "@/Core";
+import {
+  OnSort,
+  TableComposable,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 import { Row } from "./Row";
 import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 import { ToggleActionType } from "./RowOptions";
@@ -9,11 +15,15 @@ import { ToggleActionType } from "./RowOptions";
 interface Props {
   logs: ResourceLog[];
   toggleActionType: ToggleActionType;
+  order: SortDirection;
+  setOrder: (order: SortDirection) => void;
 }
 
 export const ResourceLogsTable: React.FC<Props> = ({
   logs,
   toggleActionType,
+  order,
+  setOrder,
 }) => {
   const expansionManager = new ExpansionManager();
   const [expansionState, setExpansionState] = React.useState(
@@ -28,12 +38,24 @@ export const ResourceLogsTable: React.FC<Props> = ({
     );
   }, [logs]);
 
+  const onSort: OnSort = (event, index, direction) => {
+    setOrder(direction);
+  };
+
   return (
     <TableComposable aria-label="ResourceLogsTable" variant="compact">
       <Thead>
         <Tr>
           <Th />
-          <Th>Timestamp</Th>
+          <Th
+            sort={{
+              sortBy: { index: 0, direction: order },
+              onSort,
+              columnIndex: 0,
+            }}
+          >
+            Timestamp
+          </Th>
           <ActionTypeTh>Action Type</ActionTypeTh>
           <LogLevelTh>Log Level</LogLevelTh>
           <Th>Message</Th>

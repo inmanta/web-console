@@ -4,6 +4,7 @@ import qs from "qs";
 
 export function getUrl({
   id,
+  sort,
   filter,
   pageSize,
 }: Query.SubQuery<"ResourceLogs">): string {
@@ -21,7 +22,8 @@ export function getUrl({
           { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
-  return `/api/v2/resource/${id}/logs?limit=${pageSize.value}${filterParam}`;
+  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
+  return `/api/v2/resource/${id}/logs?limit=${pageSize.value}${filterParam}${sortParam}`;
 }
 
 const operatorToParam = (operator: Operator): string => {

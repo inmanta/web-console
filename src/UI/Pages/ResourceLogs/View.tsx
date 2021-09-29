@@ -2,6 +2,7 @@ import {
   PageSize,
   RemoteData,
   ResourceLogFilter,
+  SortDirection,
   toggleValueInList,
 } from "@/Core";
 import {
@@ -24,12 +25,15 @@ interface Props {
 export const View: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useState(PageSize.initial);
+  const [order, setOrder] = useState<SortDirection>("desc");
+  const sort = order ? { name: "timestamp", order } : undefined;
   const [filter, setFilter] = useState<ResourceLogFilter>({});
   const [data, retry] = queryResolver.useContinuous<"ResourceLogs">({
     kind: "ResourceLogs",
     id: resourceId,
     pageSize,
     filter,
+    sort,
   });
 
   const paginationWidget = RemoteData.fold(
@@ -90,6 +94,8 @@ export const View: React.FC<Props> = ({ resourceId }) => {
               <ResourceLogsTable
                 logs={response.data}
                 toggleActionType={toggleActionType}
+                order={order}
+                setOrder={setOrder}
               />
             );
           },

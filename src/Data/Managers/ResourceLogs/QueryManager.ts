@@ -17,10 +17,12 @@ export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"Resour
       stateHelper,
       scheduler,
       () => environment,
-      ({ pageSize, filter }) => [
+      ({ pageSize, filter, sort }) => [
         environment,
         pageSize.value,
         stringifyFilter(filter),
+        sort?.name,
+        sort?.order,
       ],
       "ResourceLogs",
       getUrl,
