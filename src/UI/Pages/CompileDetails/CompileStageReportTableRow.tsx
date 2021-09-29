@@ -58,7 +58,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
       </Tr>
       <Tr isExpanded={isExpanded}>
         <Td colSpan={numberOfColumns}>
-          <DescriptionList isHorizontal>
+          <PaddedDescriptionList isHorizontal>
             <DescriptionListGroup>
               <DescriptionListTerm>
                 {words("compileDetails.stages.columns.command")}
@@ -93,10 +93,12 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.errstream")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                <CodeHighlighter code={row.errstream} language="python" />
+                {row.errstream && (
+                  <CodeHighlighter code={row.errstream} language="python" />
+                )}
               </DescriptionListDescription>
             </DescriptionListGroup>
-          </DescriptionList>
+          </PaddedDescriptionList>
         </Td>
       </Tr>
     </StyledBody>
@@ -108,4 +110,8 @@ const StyledBody = styled(Tbody)<{
 }>`
   ${({ $failed }) =>
     $failed ? "background-color: var(--pf-global--palette--red-50)" : ""};
+`;
+
+const PaddedDescriptionList = styled(DescriptionList)`
+  padding-bottom: 1em;
 `;

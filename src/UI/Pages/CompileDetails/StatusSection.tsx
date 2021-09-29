@@ -35,7 +35,7 @@ interface Props {
 export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
   return (
     <>
-      <Flex justifyContent={{ default: "justifyContentCenter" }}>
+      <StyledFlex justifyContent={{ default: "justifyContentCenter" }}>
         <FlexItem>
           <Timeline
             requested={compileDetails.requested}
@@ -43,7 +43,7 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             completed={compileDetails.completed}
           />
         </FlexItem>
-      </Flex>
+      </StyledFlex>
       <StyledList isHorizontal columnModifier={{ default: "2Col" }}>
         <DescriptionListGroup>
           <DescriptionListTerm>
@@ -111,6 +111,10 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
     </>
   );
 };
+
+const StyledFlex = styled(Flex)`
+  padding-bottom: 2em;
+`;
 
 const StyledList = styled(DescriptionList)`
   padding-top: 1em;
