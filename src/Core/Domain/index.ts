@@ -1,3 +1,4 @@
+export * from "./ActionTypes";
 export * from "./Callback";
 export * as Command from "./Command";
 export * from "./Config";
@@ -19,6 +20,7 @@ export * from "./Diagnostics";
 export * as EventParams from "./EventParams";
 export * from "./Params";
 export * from "./Resource";
+export * from "./ResourceLog";
 export * as ResourceParams from "./ResourceParams";
 export * from "./ResourceHistory";
 export * from "./EnvironmentDetailsModel";

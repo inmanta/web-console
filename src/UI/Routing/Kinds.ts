@@ -8,5 +8,6 @@ export type Kinds =
   | "Events"
   | "Resources"
   | "ResourceHistory"
+  | "ResourceLogs"
   | "CompileReports"
   | "CompileDetails";

@@ -26,6 +26,7 @@ import {
   resourceHistorySlice,
   ResourceHistorySlice,
 } from "./ResourceHistorySlice";
+import { resourceLogsSlice, ResourceLogsSlice } from "./ResourceLogsSlice";
 import {
   environmentDetailsSlice,
   EnvironmentDetailsSlice,
@@ -57,6 +58,7 @@ export interface StoreModel {
   resources: ResourcesSlice;
   resourceDetails: ResourceDetailsSlice;
   resourceHistory: ResourceHistorySlice;
+  resourceLogs: ResourceLogsSlice;
   environmentDetails: EnvironmentDetailsSlice;
   callbacks: CallbacksSlice;
   compileReports: CompileReportsSlice;
@@ -77,6 +79,7 @@ export const storeModel: StoreModel = {
   resources: resourcesSlice,
   resourceDetails: resourceDetailsSlice,
   resourceHistory: resourceHistorySlice,
+  resourceLogs: resourceLogsSlice,
   environmentDetails: environmentDetailsSlice,
   callbacks: callbacksSlice,
   compileReports: compileReportsSlice,

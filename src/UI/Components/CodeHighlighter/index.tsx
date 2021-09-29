@@ -22,9 +22,15 @@ interface Props {
   code: string;
   language: "json" | "xml" | "text" | "python";
   close?: () => void;
+  withExpansion?: boolean;
 }
 
-export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
+export const CodeHighlighter: React.FC<Props> = ({
+  code,
+  language,
+  close,
+  withExpansion,
+}) => {
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
@@ -36,7 +42,10 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
     }, 1000);
   };
 
-  const styles = needsExpansion(code) && !expanded ? { height: "60px" } : {};
+  const styles =
+    withExpansion && needsExpansion(code) && !expanded
+      ? { height: "60px" }
+      : {};
 
   const actions = (
     <>
@@ -74,7 +83,7 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
           {code}
         </SyntaxHighlighter>
       </CodeBlockCode>
-      {needsExpansion(code) && (
+      {withExpansion && needsExpansion(code) && (
         <StyledExpandableSectionToggle
           isExpanded={expanded}
           onToggle={() => setExpanded(!expanded)}

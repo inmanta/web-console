@@ -23,6 +23,7 @@ import {
 import { ResourceParams as ResourceParams } from "./ResourceParams";
 import { WithId } from "../Language";
 import { ResourceHistory } from "./ResourceHistory";
+import { ResourceLog, ResourceLogFilter } from "./ResourceLog";
 import { Sort } from "./Params";
 import { PageSize } from "./PageSize";
 import { EnvironmentDetails } from "./EnvironmentDetailsModel";
@@ -46,6 +47,7 @@ type Query =
   | ResourcesQuery
   | ResourceDetailsQuery
   | ResourceHistoryQuery
+  | ResourceLogsQuery
   | EnvironmentDetailsQuery
   | CallbacksQuery
   | CompileReportsQuery
@@ -367,6 +369,33 @@ interface CompileDetailsManifest {
   query: CompileDetailsQuery;
 }
 
+export interface ResourceLogsQuery extends WithId {
+  kind: "ResourceLogs";
+  filter?: ResourceLogFilter;
+  sort?: Sort;
+  pageSize: PageSize;
+}
+
+interface ResourceLogsManifest {
+  error: string;
+  apiResponse: {
+    data: ResourceLog[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: ResourceLog[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: ResourceLog[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
+  query: ResourceLogsQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -386,6 +415,7 @@ interface Manifest {
   Resources: ResourcesManifest;
   ResourceDetails: ResourceDetailsManifest;
   ResourceHistory: ResourceHistoryManifest;
+  ResourceLogs: ResourceLogsManifest;
   EnvironmentDetails: EnvironmentDetailsManifest;
   Callbacks: CallbacksManifest;
   CompileReports: CompileReportsManifest;

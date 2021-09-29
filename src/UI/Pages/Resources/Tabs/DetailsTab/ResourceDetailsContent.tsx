@@ -1,6 +1,8 @@
 import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import {
+  ActionList,
+  ActionListItem,
   Button,
   Card,
   CardBody,
@@ -10,7 +12,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { HistoryIcon } from "@patternfly/react-icons";
+import { HistoryIcon, ListIcon } from "@patternfly/react-icons";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -56,18 +58,7 @@ export const ResourceDetailsContent: React.FC<Props> = ({
             </DescriptionListDescription>
           </DescriptionListGroup>
           <DescriptionListGroup>
-            <Link
-              to={{
-                pathname: getUrl("ResourceHistory", {
-                  resourceId: id,
-                }),
-                search: location.search,
-              }}
-            >
-              <Button isBlock>
-                <HistoryIcon /> {words("inventory.statusTab.history")}
-              </Button>
-            </Link>
+            <Actions resourceId={id} />
           </DescriptionListGroup>
         </DescriptionList>
       </CardBody>
@@ -75,3 +66,32 @@ export const ResourceDetailsContent: React.FC<Props> = ({
     </Card>
   );
 };
+
+const Actions: React.FC<{ resourceId: string }> = ({ resourceId }) => (
+  <ActionList>
+    <ActionListItem>
+      <Link
+        to={{
+          pathname: getUrl("ResourceHistory", { resourceId }),
+          search: location.search,
+        }}
+      >
+        <Button isBlock variant="primary">
+          <HistoryIcon /> {words("resources.history.linkTitle")}
+        </Button>
+      </Link>
+    </ActionListItem>
+    <ActionListItem>
+      <Link
+        to={{
+          pathname: getUrl("ResourceLogs", { resourceId }),
+          search: location.search,
+        }}
+      >
+        <Button isBlock variant="tertiary">
+          <ListIcon /> {words("resources.logs.linkTitle")}
+        </Button>
+      </Link>
+    </ActionListItem>
+  </ActionList>
+);

@@ -8,6 +8,7 @@ import { EventsWithProvider } from "@/UI/Pages/Events";
 import { ServiceCatalog } from "@/UI/Pages/ServiceCatalog";
 import { ResourcesView } from "@/UI/Pages/Resources";
 import { ResourceHistoryWithProvider } from "@/UI/Pages/ResourceHistory";
+import { ResourceLogsWithProvider } from "@/UI/Pages/ResourceLogs";
 import { EditInstancePageProvider } from "@/UI/Pages/EditInstance";
 import { CompileReports } from "@/UI/Pages/CompileReports";
 import { CompileDetailsWithProvider } from "./CompileDetails";
@@ -71,6 +72,11 @@ export const CompileDetailsPage: Page = {
   component: CompileDetailsWithProvider,
 };
 
+export const ResourceLogsPage: Page = {
+  ...Route.ResourceLogs,
+  component: ResourceLogsWithProvider,
+};
+
 export const pages: Page[] = [
   CatalogPage,
   InventoryPage,
@@ -81,6 +87,7 @@ export const pages: Page[] = [
   EventsPage,
   ResourcesPage,
   ResourceHistoryPage,
+  ResourceLogsPage,
   CompileReportsPage,
   CompileDetailsPage,
 ];

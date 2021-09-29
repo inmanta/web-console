@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import styled from "styled-components";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import {
   TextInput,
@@ -85,14 +86,14 @@ export const CreateCallbackForm: React.FC<Props> = ({
             toggleAriaLabel="MinimalLogLevel"
           />
         </Td>
-        <Td className={inlineStyles.inlineEditInput}>
+        <StyledTd className={inlineStyles.inlineEditInput}>
           <MultiTextSelect
             options={EventTypesList}
             selected={eventTypes}
             setSelected={setEventTypes}
             toggleAriaLabel="EventTypes"
           />
-        </Td>
+        </StyledTd>
         <Td>
           <Button variant="secondary" onClick={onCreate}>
             {words("catalog.callbacks.add")}
@@ -120,3 +121,9 @@ export const CreateCallbackForm: React.FC<Props> = ({
     </Tbody>
   );
 };
+
+const StyledTd = styled(Td)`
+  &&& {
+    vertical-align: inherit;
+  }
+`;

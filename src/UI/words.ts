@@ -243,6 +243,7 @@ const dict = {
   "resources.requires.resourceId": "Resource Id",
   "resources.requires.deployState": "Deploy State",
   "resources.history.title": "Resource History",
+  "resources.history.linkTitle": "History",
   "resources.history.column.numberOfDependencies": "Number of dependencies",
   "resources.history.column.date": "Date",
   "resources.history.tabs.attributes": "Desired State",
@@ -252,6 +253,22 @@ const dict = {
   "resources.history.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
   "resources.attributes.title": "Desired State",
+  "resources.logs.title": "Resource Logs",
+  "resources.logs.linkTitle": "Logs",
+  "resources.logs.empty.message": "No logs found",
+  "resources.logs.failed.title": "Something went wrong",
+  "resources.logs.failed.body": (error: string) =>
+    `There was an error retrieving data: ${error}`,
+  "resources.logs.filterOnAction": (actionType: string) =>
+    `Filter on '${actionType}'`,
+  "resources.logs.timestamp": "Timestamp",
+  "resources.logs.actionType": "Action Type",
+  "resources.logs.actionType.placeholder": "Action Type...",
+  "resources.logs.logLevel": "Log Level",
+  "resources.logs.logLevel.placeholder": "Minimal Log Level...",
+  "resources.logs.message": "Message",
+  "resources.logs.message.placeholder": "Message...",
+  "resources.logs.options": "Options",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",

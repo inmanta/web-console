@@ -7,6 +7,7 @@ interface Props {
   options: string[];
   isDisabled?: boolean;
   toggleAriaLabel?: string;
+  placeholderText?: string;
 }
 
 export const SingleTextSelect: React.FC<Props> = ({
@@ -14,6 +15,7 @@ export const SingleTextSelect: React.FC<Props> = ({
   setSelected,
   options,
   toggleAriaLabel,
+  placeholderText,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,19 +33,18 @@ export const SingleTextSelect: React.FC<Props> = ({
     setIsOpen(isExpanded);
   };
 
-  const newOptions = selected === null ? ["", ...options] : options;
-
   return (
     <Select
-      variant="single"
+      variant="typeahead"
       onToggle={onToggle}
       onSelect={onSelect}
       selections={[selected]}
       isOpen={isOpen}
       toggleAriaLabel={toggleAriaLabel}
+      placeholderText={placeholderText || " "}
       {...props}
     >
-      {newOptions.map((value) => (
+      {options.map((value) => (
         <SelectOption key={value} value={value} />
       ))}
     </Select>
