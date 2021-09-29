@@ -2,7 +2,7 @@ import { CompileError } from "./CompileError";
 import { CompileReport } from "./CompileReport";
 
 export interface CompileDetails extends CompileReport {
-  compile_data?: CompileData;
+  compile_data?: CompileData | null;
   reports?: CompileStageReport[];
 }
 
@@ -18,7 +18,7 @@ export interface CompileStageReport {
   name: string;
   errstream: string;
   outstream: string;
-  returncode?: number;
+  returncode?: number | null;
 }
 
 export interface CompileStageReportRow {
@@ -32,5 +32,5 @@ export interface CompileStageReportRow {
   duration?: string;
   errstream: string;
   outstream: string;
-  returncode?: number;
+  returncode?: number | null;
 }

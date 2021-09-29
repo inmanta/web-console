@@ -3,12 +3,8 @@ import { CompileDetails } from "@/Core";
 import { PageSectionWithTitle } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { CompileStageReportTable } from "./CompileStageReportTable";
-import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-} from "@patternfly/react-core";
+import { CompileErrors } from "./CompileErrors";
+import { StatusSection } from "./StatusSection";
 
 interface Props {
   compileDetails: CompileDetails;
@@ -20,39 +16,13 @@ export const CompileDetailsSections: React.FC<Props> = ({
 }) => {
   return (
     <div {...props}>
-      <PageSectionWithTitle title={words("compileDetails.info.title")}>
-        TODO
+      <PageSectionWithTitle title={words("compileDetails.status.title")}>
+        <StatusSection compileDetails={compileDetails} />
       </PageSectionWithTitle>
       {compileDetails.compile_data &&
         compileDetails.compile_data.errors.length > 0 && (
           <PageSectionWithTitle title={words("compileDetails.errors.title")}>
-            <DescriptionList isHorizontal>
-              {compileDetails.compile_data.errors.map((compileError, idx) => {
-                return (
-                  <>
-                    <DescriptionListGroup key={`type-${idx}`}>
-                      <DescriptionListTerm key={`type-${idx}`}>
-                        type
-                      </DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {" "}
-                        {compileError.type}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-
-                    <DescriptionListGroup key={`message-${idx}`}>
-                      <DescriptionListTerm key={`message-${idx}`}>
-                        message
-                      </DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {" "}
-                        {compileError.message}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                  </>
-                );
-              })}
-            </DescriptionList>
+            <CompileErrors errors={compileDetails.compile_data.errors} />
           </PageSectionWithTitle>
         )}
       <PageSectionWithTitle title={words("compileDetails.stages.title")}>

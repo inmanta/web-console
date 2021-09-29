@@ -270,8 +270,16 @@ const dict = {
 
   /** Compile details related text */
   "compileDetails.title": "Compile Details",
-  "compileDetails.info.title": "Details",
+  "compileDetails.status.title": "Status",
+  "compileDetails.status.export": "Export",
+  "compileDetails.status.update": "Update",
+  "compileDetails.status.success": "Success",
+  "compileDetails.status.message": "Message",
+  "compileDetails.status.trigger": "Trigger",
+  "compileDetails.status.envVars": "Environment Variables",
   "compileDetails.errors.title": "Errors",
+  "compileDetails.errors.type": "Type",
+  "compileDetails.errors.message": "Message",
   "compileDetails.stages.title": "Stages",
   "compileDetails.stages.columns.name": "Name",
   "compileDetails.stages.columns.command": "Command",

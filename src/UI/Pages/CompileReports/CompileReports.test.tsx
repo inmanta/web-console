@@ -18,6 +18,7 @@ import {
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { CompileReports } from "./CompileReports";
+import { MemoryRouter } from "react-router-dom";
 
 function setup() {
   const store = getStoreInstance();
@@ -36,11 +37,13 @@ function setup() {
   const urlManager = new UrlManagerImpl("", "environment");
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <CompileReports />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+        <StoreProvider store={store}>
+          <CompileReports />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };
