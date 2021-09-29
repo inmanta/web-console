@@ -22,6 +22,7 @@ import {
 } from "@/UI/Components";
 import { TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
+import { useUrlState } from "@/Data";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("inventory.title")}>
@@ -51,7 +52,15 @@ export const ServiceInventory: React.FunctionComponent<{
   const [sortColumn, setSortColumn] = useState<string | undefined>(
     "created_at"
   );
-  const [pageSize, setPageSize] = useState(PageSize.initial);
+  // const [pageSize, setPageSize] = useState(PageSize.initial);
+  const [pageSize, setPageSize] = useUrlState({
+    default: PageSize.initial,
+    key: "pageSize",
+    validator: PageSize.is,
+    serialize: PageSize.serialize,
+    parse: PageSize.parse,
+    equals: PageSize.equals,
+  });
   const [order, setOrder] = useState<SortDirection | undefined>("desc");
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;

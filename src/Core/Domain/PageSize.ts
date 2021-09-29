@@ -1,3 +1,5 @@
+import { isObject } from "@/Core";
+
 type Value = 5 | 10 | 20 | 50 | 100;
 
 export interface PageSize {
@@ -23,3 +25,21 @@ export const initial = from(20);
 
 export const equals = (a: PageSize, b: PageSize): boolean =>
   a.value === b.value;
+
+export const is = (value: unknown): value is PageSize => {
+  if (!isObject(value)) return false;
+  return (
+    value.kind === "PageSize" &&
+    typeof value.value === "number" &&
+    valueIsValid(value.value)
+  );
+};
+
+export const serialize = (pageSize: PageSize): string =>
+  pageSize.value.toString();
+
+export const parse = (value: string): PageSize | null => {
+  const candidate = parseInt(value);
+  if (isNaN(candidate)) return null;
+  return from(candidate);
+};
