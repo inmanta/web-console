@@ -1,6 +1,7 @@
 import React from "react";
 import { ResourceLogFilter } from "@/Core";
 import { FreeTextFilter } from "@/UI/Components/Filters";
+import { words } from "@/UI/words";
 
 interface Props {
   filter: ResourceLogFilter;
@@ -20,7 +21,7 @@ export const MessageFilter: React.FC<Props> = ({ filter, setFilter }) => {
       isVisible
       searchEntries={filter.message}
       filterPropertyName={"Message"}
-      placeholder={"Message..."}
+      placeholder={words("resources.logs.message.placeholder")}
       update={update}
     />
   );

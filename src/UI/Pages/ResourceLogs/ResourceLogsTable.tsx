@@ -11,6 +11,7 @@ import {
 import { Row } from "./Row";
 import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 import { ToggleActionType } from "./RowOptions";
+import { words } from "@/UI/words";
 
 interface Props {
   logs: ResourceLog[];
@@ -54,12 +55,12 @@ export const ResourceLogsTable: React.FC<Props> = ({
               columnIndex: 0,
             }}
           >
-            Timestamp
+            {words("resources.logs.timestamp")}
           </Th>
-          <ActionTypeTh>Action Type</ActionTypeTh>
-          <LogLevelTh>Log Level</LogLevelTh>
-          <Th>Message</Th>
-          <Th>Options</Th>
+          <ActionTypeTh>{words("resources.logs.actionType")}</ActionTypeTh>
+          <LogLevelTh>{words("resources.logs.logLevel")}</LogLevelTh>
+          <Th>{words("resources.logs.message")}</Th>
+          <Th>{words("resources.logs.options")}</Th>
         </Tr>
       </Thead>
       {logs.map((log, index) => (

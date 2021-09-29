@@ -2,6 +2,7 @@ import React from "react";
 import { LogLevelsList, ResourceLogFilter } from "@/Core";
 import { ToolbarFilter } from "@patternfly/react-core";
 import { SingleTextSelect } from "@/UI/Components";
+import { words } from "@/UI/words";
 
 interface Props {
   filter: ResourceLogFilter;
@@ -36,7 +37,7 @@ export const LogLevelFilter: React.FC<Props> = ({ filter, setFilter }) => {
         selected={filter.minimal_log_level || null}
         setSelected={onSelect}
         toggleAriaLabel="MinimalLogLevel"
-        placeholderText="Minimal Log Level..."
+        placeholderText={words("resources.logs.logLevel.placeholder")}
       />
     </ToolbarFilter>
   );

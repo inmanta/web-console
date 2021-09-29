@@ -261,6 +261,14 @@ const dict = {
     `There was an error retrieving data: ${error}`,
   "resources.logs.filterOnAction": (actionType: string) =>
     `Filter on '${actionType}'`,
+  "resources.logs.timestamp": "Timestamp",
+  "resources.logs.actionType": "Action Type",
+  "resources.logs.actionType.placeholder": "Action Type...",
+  "resources.logs.logLevel": "Log Level",
+  "resources.logs.logLevel.placeholder": "Minimal Log Level...",
+  "resources.logs.message": "Message",
+  "resources.logs.message.placeholder": "Message...",
+  "resources.logs.options": "Options",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",

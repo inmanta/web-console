@@ -1,6 +1,7 @@
 import React from "react";
 import { actionTypes, ResourceLogFilter } from "@/Core";
 import { SelectOptionFilter } from "@/UI/Components/Filters";
+import { words } from "@/UI/words";
 
 interface Props {
   filter: ResourceLogFilter;
@@ -18,7 +19,7 @@ export const ActionFilter: React.FC<Props> = ({ filter, setFilter }) => {
     <SelectOptionFilter
       isVisible={true}
       filterPropertyName="Action Type"
-      placeholder="Action Type..."
+      placeholder={words("resources.logs.actionType.placeholder")}
       possibleStates={actionTypes}
       selectedStates={filter.action ? filter.action : []}
       update={update}
