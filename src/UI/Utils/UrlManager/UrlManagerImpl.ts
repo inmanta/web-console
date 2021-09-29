@@ -18,12 +18,6 @@ export class UrlManagerImpl implements UrlManager {
     throw new Error("Environment not set");
   }
 
-  getCompileReportUrl(): string {
-    return `${
-      this.baseUrl
-    }/dashboard/#!/environment/${this.getEnvironment()}/compilereport`;
-  }
-
   getModelVersionUrl(version: string): string {
     return `${
       this.baseUrl

@@ -13,9 +13,6 @@ export class DummyUrlManager implements UrlManager {
   getModelVersionUrl(): string {
     throw new Error("Method not implemented.");
   }
-  getCompileReportUrl(): string {
-    throw new Error("Method not implemented.");
-  }
   getServerStatusUrl(): string {
     throw new Error("Method not implemented.");
   }

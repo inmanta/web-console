@@ -38,7 +38,6 @@ export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
             search: location.search,
           }}
         >
-          {" "}
           {words("diagnose.links.compileReport")}
         </Link>
       }

@@ -1,10 +1,5 @@
 import { UrlManagerImpl } from "./UrlManagerImpl";
 
-test("Compile report href creator works correctly", () => {
-  expect(new UrlManagerImpl("", "env1").getCompileReportUrl()).toEqual(
-    "/dashboard/#!/environment/env1/compilereport"
-  );
-});
 test("Model version href creator works correctly", () => {
   expect(new UrlManagerImpl("", "env1").getModelVersionUrl("4")).toEqual(
     "/dashboard/#!/environment/env1/version/4"
