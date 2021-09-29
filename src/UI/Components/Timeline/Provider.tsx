@@ -4,8 +4,8 @@ import { Timeline } from "./Timeline";
 
 interface Props {
   requested: string;
-  started?: string;
-  completed?: string;
+  started?: string | null;
+  completed?: string | null;
 }
 
 export const Provider: React.FC<Props> = ({

@@ -25,3 +25,5 @@ export * from "./EnvironmentDetailsModel";
 export * from "./Uuid";
 export * from "./CompileReport";
 export * as CompileReportParams from "./CompileReportParams";
+export * from "./CompileDetails";
+export * from "./CompileError";

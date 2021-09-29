@@ -29,6 +29,7 @@ import { EnvironmentDetails } from "./EnvironmentDetailsModel";
 import { Callback } from "./Callback";
 import { CompileReport } from "./CompileReport";
 import { CompileReportParams } from "./CompileReportParams";
+import { CompileDetails } from "./CompileDetails";
 
 type Query =
   | ServicesQuery
@@ -47,7 +48,8 @@ type Query =
   | ResourceHistoryQuery
   | EnvironmentDetailsQuery
   | CallbacksQuery
-  | CompileReportsQuery;
+  | CompileReportsQuery
+  | CompileDetailsQuery;
 
 export type Type = Query;
 
@@ -351,6 +353,20 @@ interface CompileReportsManifest {
   query: CompileReportsQuery;
 }
 
+export interface CompileDetailsQuery extends WithId {
+  kind: "CompileDetails";
+}
+
+interface CompileDetailsManifest {
+  error: string;
+  apiResponse: {
+    data: CompileDetails;
+  };
+  data: CompileDetails;
+  usedData: CompileDetails;
+  query: CompileDetailsQuery;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
@@ -373,6 +389,7 @@ interface Manifest {
   EnvironmentDetails: EnvironmentDetailsManifest;
   Callbacks: CallbacksManifest;
   CompileReports: CompileReportsManifest;
+  CompileDetails: CompileDetailsManifest;
 }
 
 /**

@@ -15,6 +15,7 @@ interface ParamsManifest {
   Resources: undefined;
   ResourceHistory: { resourceId: string };
   CompileReports: undefined;
+  CompileDetails: { id: string };
 }
 
 export type Params<R extends Kinds> = ParamsManifest[R];
@@ -93,6 +94,13 @@ export const CompileReports: Route = {
   label: "Compile Reports",
 };
 
+export const CompileDetails: Route = {
+  kind: "CompileDetails",
+  parent: "CompileReports",
+  path: `${BASE_URL}${paths.CompileDetails}`,
+  label: "Compile Details",
+};
+
 export const allRoutes: Route[] = [
   Catalog,
   Inventory,
@@ -104,6 +112,7 @@ export const allRoutes: Route[] = [
   Resources,
   ResourceHistory,
   CompileReports,
+  CompileDetails,
 ];
 
 export const DashboardUrl = (environment: string): string =>
@@ -131,5 +140,7 @@ export const getRouteFromKind = (kind: Kinds): Route => {
       return ResourceHistory;
     case "CompileReports":
       return CompileReports;
+    case "CompileDetails":
+      return CompileDetails;
   }
 };

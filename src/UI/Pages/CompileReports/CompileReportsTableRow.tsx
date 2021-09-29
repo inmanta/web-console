@@ -6,6 +6,8 @@ import { words } from "@/UI/words";
 import { Button, Spinner } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { InfoCircleIcon } from "@patternfly/react-icons";
+import { Link } from "react-router-dom";
+import { getUrl } from "@/UI/Routing";
 
 interface Props {
   row: CompileReportRow;
@@ -35,14 +37,18 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
           {row.compileTime}
         </Td>
         <Td dataLabel={words("compileReports.columns.actions")}>
-          <Button
-            variant="secondary"
-            isSmall
-            icon={<InfoCircleIcon />}
-            isDisabled
+          <Link
+            to={{
+              pathname: getUrl("CompileDetails", {
+                id: row.id,
+              }),
+              search: location.search,
+            }}
           >
-            {words("compileReports.links.details")}
-          </Button>
+            <Button variant="secondary" isSmall icon={<InfoCircleIcon />}>
+              {words("compileReports.links.details")}
+            </Button>
+          </Link>
         </Td>
       </Tr>
     </StyledBody>
