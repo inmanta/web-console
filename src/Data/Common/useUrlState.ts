@@ -24,7 +24,7 @@ export interface Location {
 }
 
 export interface History {
-  push(to: string): void;
+  replace(to: string): void;
 }
 
 export function useUrlState<Data>(
@@ -73,7 +73,7 @@ export function handleUrlState<Data>(
       ? config.serialize(newValue)
       : newValue;
 
-    history.push(
+    history.replace(
       `${location.pathname}${getSearchFromState(
         {
           ...state,
