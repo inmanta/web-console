@@ -60,9 +60,11 @@ export function handleUrlState<Data>(
   };
 
   const setValue = (newValue: Data) => {
-    console.log({
+    if (areEqual(newValue, currentValue)) return;
+
+    console.log("setValue", config.key, {
       newValue,
-      def: config.default,
+      default: config.default,
       equal: areEqual(newValue, config.default),
     });
     const correctValue = areEqual(newValue, config.default)
@@ -70,6 +72,7 @@ export function handleUrlState<Data>(
       : config.serialize
       ? config.serialize(newValue)
       : newValue;
+
     history.push(
       `${location.pathname}${getSearchFromState(
         {

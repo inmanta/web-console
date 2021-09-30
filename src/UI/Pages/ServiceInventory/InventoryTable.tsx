@@ -6,10 +6,10 @@ import {
   Th,
   OnSort,
 } from "@patternfly/react-table";
-import { Row, Sort } from "@/Core";
+import { Row, Sort, toggleValueInList } from "@/Core";
 import { InventoryTablePresenter } from "./Presenters";
 import { InstanceRow } from "./InstanceRow";
-import { ExpansionManager } from "./ExpansionManager";
+import { useUrlState } from "@/Data";
 
 interface Props {
   rows: Row[];
@@ -25,8 +25,6 @@ export const InventoryTable: React.FC<Props> = ({
   setSort,
   ...props
 }) => {
-  const expansionManager = new ExpansionManager();
-
   const onSort: OnSort = (event, index, direction) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as string,
@@ -56,17 +54,22 @@ export const InventoryTable: React.FC<Props> = ({
     );
   });
 
-  const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(rowsToIds(rows))
-  );
+  const [expandedKeys, setExpandedKeys] = useUrlState<string[]>({
+    default: [],
+    key: "expandedKeys",
+    validator: (v: unknown): v is string[] => Array.isArray(v),
+    equals: (a, b) => a.length === b.length,
+  });
 
   const handleExpansionToggle = (id: string) => () => {
-    setExpansionState(expansionManager.toggle(expansionState, id));
+    setExpandedKeys(toggleValueInList(id, expandedKeys));
   };
 
   React.useEffect(() => {
-    setExpansionState(expansionManager.merge(expansionState, rowsToIds(rows)));
-  }, [rows]);
+    setExpandedKeys(
+      getIdentitiesForRows(rows).filter((v) => expandedKeys.includes(v))
+    );
+  }, getIdentitiesForRows(rows));
 
   return (
     <TableComposable {...props}>
@@ -81,8 +84,8 @@ export const InventoryTable: React.FC<Props> = ({
           index={index}
           key={row.id.full}
           row={row}
-          isExpanded={expansionState[row.id.full]}
-          onToggle={handleExpansionToggle(row.id.full)}
+          isExpanded={expandedKeys.includes(getIdentityForRow(row))}
+          onToggle={handleExpansionToggle(getIdentityForRow(row))}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
           actions={tablePresenter.getActionsFor(row.id.full)}
           state={tablePresenter.getStateFor(row.id.full)}
@@ -99,6 +102,7 @@ export const InventoryTable: React.FC<Props> = ({
   );
 };
 
-function rowsToIds(rows: Row[]): string[] {
-  return rows.map((row) => row.id.full);
-}
+const getIdentityForRow = (row: Row): string => row.id.full;
+
+const getIdentitiesForRows = (rows: Row[]): string[] =>
+  rows.map(getIdentityForRow);

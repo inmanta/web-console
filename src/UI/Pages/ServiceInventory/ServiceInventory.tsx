@@ -1,4 +1,4 @@
-import React, { useContext, useState, ReactElement } from "react";
+import React, { useContext, ReactElement } from "react";
 import { useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
@@ -8,6 +8,7 @@ import {
   ServiceInstanceParams,
   PageSize,
   Sort,
+  isObject,
 } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
@@ -55,19 +56,7 @@ export const ServiceInventory: React.FunctionComponent<{
   service: ServiceModel;
   intro?: ReactElement | null;
 }> = ({ serviceName, service, intro }) => {
-  // Hook 1
   const { queryResolver } = useContext(DependencyContext);
-
-  // Hook 2
-  // const [sortColumn, setSortColumn] = useState<string | undefined>(
-  //   "created_at"
-  // );
-
-  // const [sortColumn, setSortColumn] = useUrlState<string | undefined>({
-  //   default: "created_at",
-  //   key: "sortColumn",
-  //   validator: (v): v is string => typeof v === "string",
-  // });
 
   const [sort, setSort] = useUrlState<Sort.Type>({
     default: { name: "created_at", direction: "desc" },
@@ -78,9 +67,6 @@ export const ServiceInventory: React.FunctionComponent<{
     equals: Sort.equals,
   });
 
-  // const [pageSize, setPageSize] = useState(PageSize.initial);
-
-  // Hook 3 & 4
   const [pageSize, setPageSize] = useUrlState({
     default: PageSize.initial,
     key: "pageSize",
@@ -89,21 +75,13 @@ export const ServiceInventory: React.FunctionComponent<{
     parse: PageSize.parse,
     equals: PageSize.equals,
   });
-  // Hook 5
-  // const [order, setOrder] = useState<SortDirection | undefined>("desc");
-  // const [order, setOrder] = useUrlState<SortDirection | undefined>({
-  //   default: "desc",
-  //   key: "order",
-  //   validator: (v): v is SortDirection => typeof v === "string",
-  // });
 
-  // const sort =
-  //   sortColumn && order ? { name: sortColumn, order: order } : undefined;
+  const [filter, setFilter] = useUrlState<ServiceInstanceParams.Filter>({
+    default: {},
+    key: "filter",
+    validator: (v: unknown): v is ServiceInstanceParams.Filter => isObject(v),
+  });
 
-  // Hook 6
-  const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
-
-  // Hook 7 - 15
   const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
     name: serviceName,
