@@ -57,6 +57,7 @@ export const InventoryTable: React.FC<Props> = ({
   const [expandedKeys, setExpandedKeys] = useUrlState<string[]>({
     default: [],
     key: "expandedKeys",
+    route: "Inventory",
     validator: (v: unknown): v is string[] => Array.isArray(v),
     equals: (a, b) => a.length === b.length,
   });

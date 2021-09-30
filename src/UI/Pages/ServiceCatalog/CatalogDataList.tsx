@@ -34,6 +34,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
   const [expanded, setExpanded] = useUrlState<string[]>({
     default: [],
     key: "catalogExpandedKeys",
+    route: "Catalog",
     validator: (v: unknown): v is string[] => Array.isArray(v),
   });
 

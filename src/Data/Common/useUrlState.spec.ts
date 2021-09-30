@@ -5,6 +5,7 @@ test("handleUrlState", () => {
   const config: StateConfig<PageSize.Type> = {
     default: PageSize.initial,
     key: "pageSize",
+    route: "Inventory",
     validator: PageSize.is,
   };
   const location: Location = {
@@ -13,7 +14,7 @@ test("handleUrlState", () => {
     hash: "",
   };
   const history: History = {
-    push() {
+    replace() {
       return undefined;
     },
   };

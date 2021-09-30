@@ -61,6 +61,7 @@ export const ServiceInventory: React.FunctionComponent<{
   const [sort, setSort] = useUrlState<Sort.Type>({
     default: { name: "created_at", direction: "desc" },
     key: "sort",
+    route: "Inventory",
     validator: Sort.is,
     serialize: Sort.serialize,
     parse: Sort.parse,
@@ -70,6 +71,7 @@ export const ServiceInventory: React.FunctionComponent<{
   const [pageSize, setPageSize] = useUrlState({
     default: PageSize.initial,
     key: "pageSize",
+    route: "Inventory",
     validator: PageSize.is,
     serialize: PageSize.serialize,
     parse: PageSize.parse,
@@ -79,6 +81,7 @@ export const ServiceInventory: React.FunctionComponent<{
   const [filter, setFilter] = useUrlState<ServiceInstanceParams.Filter>({
     default: {},
     key: "filter",
+    route: "Inventory",
     validator: (v: unknown): v is ServiceInstanceParams.Filter => isObject(v),
   });
 

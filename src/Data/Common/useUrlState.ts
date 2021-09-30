@@ -1,12 +1,14 @@
 import { useHistory, useLocation } from "react-router-dom";
 import { UrlHelper } from "./UrlHelper";
 import { isObject } from "@/Core";
+import { Kinds } from "@/UI";
 
 const urlHelper = new UrlHelper();
 
 export interface StateConfig<Data> {
   default: Data;
   key: string;
+  route: Kinds;
   validator: Validator<Data>;
   serialize?: (data: Data) => string;
   parse?: (value: string) => Data | null;
