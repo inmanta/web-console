@@ -36,25 +36,15 @@ export const ResourcesView: React.FC = () => {
     pageSize,
   });
 
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
+  const tableControls = (
+    <ResourceTableControls
+      paginationWidget={
         <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
+          data={data}
           pageSize={pageSize}
           setPageSize={setPageSize}
         />
-      ),
-    },
-    data
-  );
-  const tableControls = (
-    <ResourceTableControls
-      paginationWidget={paginationWidget}
+      }
       filter={filter}
       setFilter={setFilter}
     />

@@ -14,7 +14,6 @@ import {
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
 import { Controls } from "./Controls";
 import { ResourceLogsTable } from "./ResourceLogsTable";
 
@@ -36,23 +35,6 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     sort,
   });
 
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <Filler />,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
-        <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      ),
-    },
-    data
-  );
-
   const toggleActionType = (action: string) => {
     const list = toggleValueInList(action, filter.action || []);
 
@@ -65,7 +47,13 @@ export const View: React.FC<Props> = ({ resourceId }) => {
   return (
     <>
       <Controls
-        paginationWidget={paginationWidget}
+        paginationWidget={
+          <PaginationWidget
+            data={data}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
         filter={filter}
         setFilter={setFilter}
       />
@@ -105,8 +93,3 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     </>
   );
 };
-
-const Filler = styled.div`
-  height: 36px;
-  width: 100px;
-`;

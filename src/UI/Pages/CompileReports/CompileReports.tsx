@@ -30,28 +30,18 @@ export const CompileReports: React.FC = () => {
     pageSize,
   });
 
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
-        <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      ),
-    },
-    data
-  );
   return (
     <PageSectionWithTitle title={words("compileReports.title")}>
       <CompileReportsTableControls
         filter={filter}
         setFilter={setFilter}
-        paginationWidget={paginationWidget}
+        paginationWidget={
+          <PaginationWidget
+            data={data}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
       />
       {RemoteData.fold(
         {

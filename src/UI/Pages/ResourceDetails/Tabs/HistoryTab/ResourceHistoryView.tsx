@@ -29,27 +29,17 @@ export const ResourceHistoryView: React.FC<Props> = ({ resourceId }) => {
     pageSize,
   });
 
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
-        <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      ),
-    },
-    data
-  );
   return (
     <>
       <Toolbar>
         <ToolbarContent>
-          <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+          <ToolbarItem variant="pagination">
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+            />
+          </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
       {RemoteData.fold(

@@ -1,5 +1,4 @@
 import React, { useContext, useState, ReactElement } from "react";
-import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
@@ -18,9 +17,8 @@ import {
   PageSectionWithTitle,
   PaginationWidget,
   ServiceProvider,
-  SummaryChart,
 } from "@/UI/Components";
-import { TableControls } from "./Components";
+import { Chart, TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
 import { useUrlState } from "@/Data";
 
@@ -41,16 +39,7 @@ export const ServiceInventoryWithProvider: React.FC = () => {
         <ServiceInventory
           service={service}
           serviceName={serviceName}
-          intro={
-            service.instance_summary ? (
-              <ChartContainer>
-                <SummaryChart
-                  by_label={service.instance_summary.by_label}
-                  total={service.instance_summary.total}
-                />
-              </ChartContainer>
-            ) : null
-          }
+          intro={<Chart summary={service.instance_summary} />}
         />
       )}
     />
@@ -60,7 +49,7 @@ export const ServiceInventoryWithProvider: React.FC = () => {
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
-  intro: ReactElement | null;
+  intro?: ReactElement | null;
 }> = ({ serviceName, service, intro }) => {
   // Hook 1
   const { queryResolver } = useContext(DependencyContext);
@@ -105,23 +94,6 @@ export const ServiceInventory: React.FunctionComponent<{
     pageSize,
   });
 
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
-        <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      ),
-    },
-    data
-  );
-
   return (
     <Wrapper>
       {intro}
@@ -130,7 +102,13 @@ export const ServiceInventory: React.FunctionComponent<{
         filter={filter}
         setFilter={setFilter}
         service={service}
-        paginationWidget={paginationWidget}
+        paginationWidget={
+          <PaginationWidget
+            data={data}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
       />
       {RemoteData.fold(
         {
@@ -166,8 +144,3 @@ export const ServiceInventory: React.FunctionComponent<{
     </Wrapper>
   );
 };
-
-const ChartContainer = styled.div`
-  height: 230px;
-  width: 350px;
-`;

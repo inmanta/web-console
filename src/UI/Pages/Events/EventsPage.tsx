@@ -15,10 +15,10 @@ import {
   EmptyView,
   EventsTableBody,
   Description,
+  PaginationWidget,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { PaginationWidget } from "@/UI/Components";
 import { EventsTableControls } from "./EventsTableControls";
 
 interface Props {
@@ -43,22 +43,6 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
   const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());
 
   const states = service.lifecycle.states.map((state) => state.name).sort();
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
-        <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      ),
-    },
-    data
-  );
 
   return (
     <div>
@@ -68,7 +52,13 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
         filter={filter}
         setFilter={setFilter}
         states={states}
-        paginationWidget={paginationWidget}
+        paginationWidget={
+          <PaginationWidget
+            data={data}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
       />
       {RemoteData.fold(
         {
