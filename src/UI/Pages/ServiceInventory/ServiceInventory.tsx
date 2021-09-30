@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, ReactElement } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { words } from "@/UI/words";
@@ -38,7 +38,20 @@ export const ServiceInventoryWithProvider: React.FC = () => {
       serviceName={serviceName}
       Wrapper={Wrapper}
       Dependant={({ service }) => (
-        <ServiceInventory service={service} serviceName={serviceName} />
+        <ServiceInventory
+          service={service}
+          serviceName={serviceName}
+          intro={
+            service.instance_summary ? (
+              <ChartContainer>
+                <SummaryChart
+                  by_label={service.instance_summary.by_label}
+                  total={service.instance_summary.total}
+                />
+              </ChartContainer>
+            ) : null
+          }
+        />
       )}
     />
   );
@@ -47,12 +60,25 @@ export const ServiceInventoryWithProvider: React.FC = () => {
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
-}> = ({ serviceName, service }) => {
+  intro: ReactElement | null;
+}> = ({ serviceName, service, intro }) => {
+  // Hook 1
   const { queryResolver } = useContext(DependencyContext);
+
+  // Hook 2
   const [sortColumn, setSortColumn] = useState<string | undefined>(
     "created_at"
   );
+
+  // const [sortColumn, setSortColumn] = useUrlState<string | undefined>({
+  //   default: "created_at",
+  //   key: "sortColumn",
+  //   validator: (v): v is string => typeof v === "string",
+  // });
+
   // const [pageSize, setPageSize] = useState(PageSize.initial);
+
+  // Hook 3 & 4
   const [pageSize, setPageSize] = useUrlState({
     default: PageSize.initial,
     key: "pageSize",
@@ -61,11 +87,16 @@ export const ServiceInventory: React.FunctionComponent<{
     parse: PageSize.parse,
     equals: PageSize.equals,
   });
+  // Hook 5
   const [order, setOrder] = useState<SortDirection | undefined>("desc");
+  console.log({ order });
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;
+
+  // Hook 6
   const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
 
+  // Hook 7 - 15
   const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
     name: serviceName,
@@ -93,14 +124,7 @@ export const ServiceInventory: React.FunctionComponent<{
 
   return (
     <Wrapper>
-      {service.instance_summary && (
-        <ChartContainer>
-          <SummaryChart
-            by_label={service.instance_summary.by_label}
-            total={service.instance_summary.total}
-          />
-        </ChartContainer>
-      )}
+      {intro}
       <TableControls
         serviceName={serviceName}
         filter={filter}
