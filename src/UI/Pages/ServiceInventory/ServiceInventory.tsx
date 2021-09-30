@@ -35,16 +35,20 @@ export const ServiceInventoryWithProvider: React.FC = () => {
     <ServiceProvider
       serviceName={serviceName}
       Wrapper={Wrapper}
-      Dependant={({ service }) => (
-        <ServiceInventory
-          service={service}
-          serviceName={serviceName}
-          intro={<Chart summary={service.instance_summary} />}
-        />
-      )}
+      Dependant={PreppedServiceInventory}
     />
   );
 };
+
+const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
+  service,
+}) => (
+  <ServiceInventory
+    service={service}
+    serviceName={service.name}
+    intro={<Chart summary={service.instance_summary} />}
+  />
+);
 
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
@@ -55,15 +59,15 @@ export const ServiceInventory: React.FunctionComponent<{
   const { queryResolver } = useContext(DependencyContext);
 
   // Hook 2
-  const [sortColumn, setSortColumn] = useState<string | undefined>(
-    "created_at"
-  );
+  // const [sortColumn, setSortColumn] = useState<string | undefined>(
+  //   "created_at"
+  // );
 
-  // const [sortColumn, setSortColumn] = useUrlState<string | undefined>({
-  //   default: "created_at",
-  //   key: "sortColumn",
-  //   validator: (v): v is string => typeof v === "string",
-  // });
+  const [sortColumn, setSortColumn] = useUrlState<string | undefined>({
+    default: "created_at",
+    key: "sortColumn",
+    validator: (v): v is string => typeof v === "string",
+  });
 
   // const [pageSize, setPageSize] = useState(PageSize.initial);
 
@@ -78,7 +82,7 @@ export const ServiceInventory: React.FunctionComponent<{
   });
   // Hook 5
   const [order, setOrder] = useState<SortDirection | undefined>("desc");
-  console.log({ order });
+
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;
 
