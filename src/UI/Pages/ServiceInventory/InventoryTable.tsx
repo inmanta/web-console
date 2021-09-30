@@ -6,7 +6,7 @@ import {
   Th,
   OnSort,
 } from "@patternfly/react-table";
-import { Row, SortDirection } from "@/Core";
+import { Row, Sort } from "@/Core";
 import { InventoryTablePresenter } from "./Presenters";
 import { InstanceRow } from "./InstanceRow";
 import { ExpansionManager } from "./ExpansionManager";
@@ -14,28 +14,26 @@ import { ExpansionManager } from "./ExpansionManager";
 interface Props {
   rows: Row[];
   tablePresenter: InventoryTablePresenter;
-  sortColumn?: string;
-  order?: SortDirection;
-  setSortColumn: (name?: string) => void;
-  setOrder: (order?: SortDirection) => void;
+  sort: Sort.Type;
+  setSort: (sort: Sort.Type) => void;
 }
 
 export const InventoryTable: React.FC<Props> = ({
   rows,
   tablePresenter,
-  sortColumn,
-  order,
-  setSortColumn,
-  setOrder,
+  sort,
+  setSort,
   ...props
 }) => {
   const expansionManager = new ExpansionManager();
 
   const onSort: OnSort = (event, index, direction) => {
-    setSortColumn(tablePresenter.getColumnNameForIndex(index));
-    setOrder(direction);
+    setSort({
+      name: tablePresenter.getColumnNameForIndex(index) as string,
+      direction,
+    });
   };
-  const activeSortIndex = tablePresenter.getIndexForColumnName(sortColumn);
+  const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
   const heads = tablePresenter.getColumnHeads().map((column, columnIndex) => {
     const sortParams = tablePresenter
       .getSortableColumnNames()
@@ -44,7 +42,7 @@ export const InventoryTable: React.FC<Props> = ({
           sort: {
             sortBy: {
               index: activeSortIndex,
-              direction: order,
+              direction: sort.direction,
             },
             onSort,
             columnIndex,

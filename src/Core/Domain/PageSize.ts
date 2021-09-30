@@ -1,4 +1,4 @@
-import { isObject } from "@/Core";
+import { isObject } from "@/Core/Language";
 
 type Value = 5 | 10 | 20 | 50 | 100;
 

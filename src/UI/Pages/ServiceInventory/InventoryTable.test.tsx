@@ -54,8 +54,8 @@ test("InventoryTable can be expanded", async () => {
         <InventoryTable
           rows={[Row.a, Row.b]}
           tablePresenter={tablePresenter}
-          setSortColumn={dummySetter}
-          setOrder={dummySetter}
+          setSort={dummySetter}
+          sort={{ name: "created_at", direction: "desc" }}
         />
       </StoreProvider>
     </DependencyProvider>
@@ -100,8 +100,8 @@ test("ServiceInventory can show resources for instance", async () => {
         <InventoryTable
           rows={[Row.a, Row.b]}
           tablePresenter={tablePresenter}
-          setSortColumn={dummySetter}
-          setOrder={dummySetter}
+          setSort={dummySetter}
+          sort={{ name: "created_at", direction: "desc" }}
         />
       </StoreProvider>
     </DependencyProvider>
@@ -125,8 +125,8 @@ test("ServiceInventory shows service identity if it's defined", async () => {
     <InventoryTable
       rows={[Row.a]}
       tablePresenter={tablePresenterWithIdentity}
-      setSortColumn={dummySetter}
-      setOrder={dummySetter}
+      setSort={dummySetter}
+      sort={{ name: "created_at", direction: "desc" }}
     />
   );
 
@@ -140,8 +140,8 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
     <InventoryTable
       rows={[Row.a]}
       tablePresenter={tablePresenter}
-      setSortColumn={dummySetter}
-      setOrder={dummySetter}
+      setSort={dummySetter}
+      sort={{ name: "created_at", direction: "desc" }}
     />
   );
   expect(await screen.findByRole("button", { name: /state/i })).toBeVisible();
@@ -153,19 +153,18 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
 });
 
 test("ServiceInventory sets sorting parameters correctly on click", async () => {
-  let sortColumn;
-  let order;
+  let sort;
   render(
     <InventoryTable
       rows={[Row.a]}
       tablePresenter={tablePresenter}
-      setSortColumn={(name) => (sortColumn = name)}
-      setOrder={(dir) => (order = dir)}
+      setSort={(v) => (sort = v)}
+      sort={{ name: "created_at", direction: "desc" }}
     />
   );
   const stateButton = await screen.findByRole("button", { name: /state/i });
   expect(stateButton).toBeVisible();
   userEvent.click(stateButton);
-  expect(sortColumn).toEqual("state");
-  expect(order).toEqual("asc");
+  expect(sort.name).toEqual("state");
+  expect(sort.direction).toEqual("asc");
 });

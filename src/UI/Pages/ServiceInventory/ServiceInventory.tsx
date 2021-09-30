@@ -6,8 +6,8 @@ import {
   RemoteData,
   ServiceModel,
   ServiceInstanceParams,
-  SortDirection,
   PageSize,
+  Sort,
 } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
@@ -63,10 +63,19 @@ export const ServiceInventory: React.FunctionComponent<{
   //   "created_at"
   // );
 
-  const [sortColumn, setSortColumn] = useUrlState<string | undefined>({
-    default: "created_at",
-    key: "sortColumn",
-    validator: (v): v is string => typeof v === "string",
+  // const [sortColumn, setSortColumn] = useUrlState<string | undefined>({
+  //   default: "created_at",
+  //   key: "sortColumn",
+  //   validator: (v): v is string => typeof v === "string",
+  // });
+
+  const [sort, setSort] = useUrlState<Sort.Type>({
+    default: { name: "created_at", direction: "desc" },
+    key: "sort",
+    validator: Sort.is,
+    serialize: Sort.serialize,
+    parse: Sort.parse,
+    equals: Sort.equals,
   });
 
   // const [pageSize, setPageSize] = useState(PageSize.initial);
@@ -81,10 +90,15 @@ export const ServiceInventory: React.FunctionComponent<{
     equals: PageSize.equals,
   });
   // Hook 5
-  const [order, setOrder] = useState<SortDirection | undefined>("desc");
+  // const [order, setOrder] = useState<SortDirection | undefined>("desc");
+  // const [order, setOrder] = useUrlState<SortDirection | undefined>({
+  //   default: "desc",
+  //   key: "order",
+  //   validator: (v): v is SortDirection => typeof v === "string",
+  // });
 
-  const sort =
-    sortColumn && order ? { name: sortColumn, order: order } : undefined;
+  // const sort =
+  //   sortColumn && order ? { name: sortColumn, order: order } : undefined;
 
   // Hook 6
   const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
@@ -93,7 +107,7 @@ export const ServiceInventory: React.FunctionComponent<{
   const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
     name: serviceName,
-    sort,
+    sort: { name: sort.name, order: sort.direction },
     filter,
     pageSize,
   });
@@ -131,10 +145,8 @@ export const ServiceInventory: React.FunctionComponent<{
                 aria-label="ServiceInventory-Success"
                 instances={instances}
                 serviceEntity={service}
-                sortColumn={sortColumn}
-                setSortColumn={setSortColumn}
-                order={order}
-                setOrder={setOrder}
+                sort={sort}
+                setSort={setSort}
               />
             ) : (
               <EmptyView

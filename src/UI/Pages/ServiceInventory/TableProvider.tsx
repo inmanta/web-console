@@ -2,7 +2,7 @@ import React from "react";
 import {
   ServiceModel,
   ServiceInstanceModelWithTargetStates,
-  SortDirection,
+  Sort,
 } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
 import {
@@ -16,19 +16,15 @@ import { InventoryTable } from "./InventoryTable";
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
   serviceEntity: ServiceModel;
-  sortColumn?: string;
-  setSortColumn: (name?: string) => void;
-  order?: SortDirection;
-  setOrder: (order?: SortDirection) => void;
+  sort: Sort.Type;
+  setSort: (sort: Sort.Type) => void;
 }
 
 export const TableProvider: React.FC<Props> = ({
   instances,
   serviceEntity,
-  sortColumn,
-  order,
-  setSortColumn,
-  setOrder,
+  sort,
+  setSort,
   ...props
 }) => {
   const datePresenter = new MomentDatePresenter();
@@ -49,10 +45,8 @@ export const TableProvider: React.FC<Props> = ({
       {...props}
       rows={rows}
       tablePresenter={tablePresenter}
-      sortColumn={sortColumn}
-      order={order}
-      setSortColumn={setSortColumn}
-      setOrder={setOrder}
+      sort={sort}
+      setSort={setSort}
     />
   );
 };
