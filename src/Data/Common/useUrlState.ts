@@ -42,11 +42,10 @@ export function handleUrlState<Data>(
   location: Location,
   history: History
 ): [Data, Update<Data>] {
-  const sanitizedSearch = urlHelper.sanitize(location.search);
-  const parsedSearch = urlHelper.parse(sanitizedSearch);
-  const candidateState = parsedSearch.state;
-  const state = isObject(candidateState) ? candidateState : {};
-  const candidateValue = state[config.key];
+  const parsedSearch = parseSearch(location.search);
+  const state = getKeyOrEmpty(parsedSearch, "state");
+  const routeState = getKeyOrEmpty(state, config.route);
+  const candidateValue = routeState[config.key];
 
   const parsed =
     config.parse && typeof candidateValue !== "undefined"
@@ -79,7 +78,10 @@ export function handleUrlState<Data>(
       `${location.pathname}${getSearchFromState(
         {
           ...state,
-          [config.key]: correctValue,
+          [config.route]: {
+            ...routeState,
+            [config.key]: correctValue,
+          },
         },
         parsedSearch
       )}${location.hash}`
@@ -93,4 +95,14 @@ const getSearchFromState = (
   search: Record<string, unknown>
 ): string => {
   return `?${urlHelper.stringify({ ...search, state })}`;
+};
+
+const parseSearch = (search: string) => {
+  const sanitizedSearch = urlHelper.sanitize(search);
+  return urlHelper.parse(sanitizedSearch);
+};
+
+const getKeyOrEmpty = (obj: Record<string, unknown>, key: string) => {
+  const candidate = obj[key];
+  return isObject(candidate) ? candidate : {};
 };
