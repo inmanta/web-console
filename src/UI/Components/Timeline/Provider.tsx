@@ -40,4 +40,6 @@ const getTime = (timestamp: string): string =>
   moment.utc(timestamp).tz(moment.tz.guess()).format("HH:mm:ss.SSS");
 
 const getDiff = (timestampA: string, timestampB: string): string =>
-  moment.duration(moment(timestampA).diff(timestampB)).humanize({ ss: 4 });
+  moment
+    .duration(moment.utc(timestampA).diff(moment.utc(timestampB)))
+    .humanize({ ss: 4 });
