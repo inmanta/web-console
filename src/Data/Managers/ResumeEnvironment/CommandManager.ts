@@ -1,8 +1,17 @@
-import { Command, CommandManager, PosterWithoutResponse } from "@/Core";
+import {
+  Command,
+  CommandManager,
+  PosterWithoutResponse,
+  RemoteData,
+  StateHelper,
+  Updater,
+} from "@/Core";
 
 export class ResumeEnvironmentCommandManager implements CommandManager {
   constructor(
-    private readonly poster: PosterWithoutResponse<"ResumeEnvironment">
+    private readonly poster: PosterWithoutResponse<"ResumeEnvironment">,
+    private readonly stateHelper: StateHelper<"EnvironmentDetails">,
+    private readonly updater: Updater<"EnvironmentDetails">
   ) {}
 
   matches(command: Command.SubCommand<"ResumeEnvironment">): boolean {
@@ -12,6 +21,15 @@ export class ResumeEnvironmentCommandManager implements CommandManager {
   getTrigger(
     command: Command.SubCommand<"ResumeEnvironment">
   ): Command.Trigger<"ResumeEnvironment"> {
-    return () => this.poster.post(command, null);
+    return async () => {
+      this.stateHelper.set(RemoteData.loading(), {
+        kind: "EnvironmentDetails",
+      });
+      const result = await this.poster.post(command, null);
+      await this.updater.update({
+        kind: "EnvironmentDetails",
+      });
+      return result;
+    };
   }
 }

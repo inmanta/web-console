@@ -4,6 +4,7 @@ import {
   CommandResolverImpl,
   EnvironmentDetailsQueryManager,
   EnvironmentDetailsStateHelper,
+  EnvironmentDetailsUpdater,
   getStoreInstance,
   HaltEnvironmentCommandManager,
   HaltEnvironmentPoster,
@@ -32,9 +33,13 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const environmentDetailsFetcher = new DeferredFetcher<"EnvironmentDetails">();
+  const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
+    store,
+    EnvironmentDetails.a.id
+  );
   const environmentDetailsQueryManager = new EnvironmentDetailsQueryManager(
     environmentDetailsFetcher,
-    new EnvironmentDetailsStateHelper(store, EnvironmentDetails.a.id),
+    environmentDetailsStateHelper,
     scheduler,
     EnvironmentDetails.a.id
   );
@@ -46,11 +51,23 @@ function setup() {
   const urlManager = new UrlManagerImpl("", EnvironmentDetails.a.id);
 
   const haltEnvironmentManager = new HaltEnvironmentCommandManager(
-    new HaltEnvironmentPoster(new BaseApiHelper(), EnvironmentDetails.a.id)
+    new HaltEnvironmentPoster(new BaseApiHelper(), EnvironmentDetails.a.id),
+    environmentDetailsStateHelper,
+    new EnvironmentDetailsUpdater(
+      environmentDetailsStateHelper,
+      new DeferredFetcher<"EnvironmentDetails">(),
+      EnvironmentDetails.a.id
+    )
   );
 
   const resumeEnvironmentManager = new ResumeEnvironmentCommandManager(
-    new ResumeEnvironmentPoster(new BaseApiHelper(), EnvironmentDetails.a.id)
+    new ResumeEnvironmentPoster(new BaseApiHelper(), EnvironmentDetails.a.id),
+    environmentDetailsStateHelper,
+    new EnvironmentDetailsUpdater(
+      environmentDetailsStateHelper,
+      new DeferredFetcher<"EnvironmentDetails">(),
+      EnvironmentDetails.a.id
+    )
   );
 
   const commandResolver = new CommandResolverImpl(
