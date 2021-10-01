@@ -159,3 +159,9 @@ export const getRouteFromKind = (kind: Kinds): Route => {
       return ResourceDetails;
   }
 };
+
+export const getChildrenKindsFromKind = (kind: Kinds): Kinds[] => {
+  return allRoutes
+    .filter((route) => route.parent === kind)
+    .map((route) => route.kind);
+};
