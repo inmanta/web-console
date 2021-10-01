@@ -20,6 +20,9 @@ export const ResourceTableControls: React.FC<Props> = ({
   <>
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
+        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+      </ToolbarContent>
+      <ToolbarContent>
         <ToolbarItem>
           <TypeFilter filter={filter} setFilter={setFilter} />
         </ToolbarItem>
@@ -32,7 +35,6 @@ export const ResourceTableControls: React.FC<Props> = ({
         <ToolbarItem>
           <DeployStateFilter filter={filter} setFilter={setFilter} />
         </ToolbarItem>
-        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
     </Toolbar>
   </>
