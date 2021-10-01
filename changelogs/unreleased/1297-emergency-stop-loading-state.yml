@@ -1,0 +1,4 @@
+description: Add loading state to emergency stop
+issue-nr: 1297
+change-type: minor
+destination-branches: [master, iso4]

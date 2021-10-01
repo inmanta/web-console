@@ -30,6 +30,8 @@ import {
   CallbacksUpdater,
   CreateCallbackCommandManager,
   CallbackPoster,
+  EnvironmentDetailsUpdater,
+  EnvironmentDetailsStateHelper,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -52,6 +54,10 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   }
 
   private getEnvDependentManagers(environment: string): CommandManager[] {
+    const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
+      this.store,
+      environment
+    );
     return [
       new ServiceConfigCommandManager(
         new ServiceConfigPoster(this.baseApiHelper, environment),
@@ -80,10 +86,22 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new SetStatePoster(this.baseApiHelper, environment)
       ),
       new HaltEnvironmentCommandManager(
-        new HaltEnvironmentPoster(this.baseApiHelper, environment)
+        new HaltEnvironmentPoster(this.baseApiHelper, environment),
+        environmentDetailsStateHelper,
+        new EnvironmentDetailsUpdater(
+          environmentDetailsStateHelper,
+          new FetcherImpl<"EnvironmentDetails">(this.baseApiHelper),
+          environment
+        )
       ),
       new ResumeEnvironmentCommandManager(
-        new ResumeEnvironmentPoster(this.baseApiHelper, environment)
+        new ResumeEnvironmentPoster(this.baseApiHelper, environment),
+        environmentDetailsStateHelper,
+        new EnvironmentDetailsUpdater(
+          environmentDetailsStateHelper,
+          new FetcherImpl<"EnvironmentDetails">(this.baseApiHelper),
+          environment
+        )
       ),
       new DeleteCallbackCommandManager(
         new CallbackDeleter(this.baseApiHelper, environment),
