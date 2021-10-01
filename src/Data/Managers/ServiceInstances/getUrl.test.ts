@@ -25,7 +25,7 @@ test("getUrl returns correct url for filter & no sort", () => {
       state: ["up", "creating"],
     },
     sort: undefined,
-    pageSize: PageSize.from(10),
+    pageSize: PageSize.from("10"),
   };
 
   expect(getUrl(query)).toMatch(
@@ -82,7 +82,7 @@ test("getUrl returns correct url for empty filter", () => {
       attributeSetEmpty: [],
       attributeSetNotEmpty: [],
     },
-    pageSize: PageSize.from(50),
+    pageSize: PageSize.from("50"),
   };
 
   expect(getUrl(query)).toMatch(

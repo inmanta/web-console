@@ -70,7 +70,7 @@ export const InventoryTable: React.FC<Props> = ({
     setExpandedKeys(
       getIdentitiesForRows(rows).filter((v) => expandedKeys.includes(v))
     );
-  }, getIdentitiesForRows(rows));
+  }, [`${getIdentitiesForRows(rows)}`]);
 
   return (
     <TableComposable {...props}>
