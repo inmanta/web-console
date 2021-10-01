@@ -34,10 +34,10 @@ export const Provider: React.FC<Props> = ({
 };
 
 const getDay = (timestamp: string): string =>
-  moment.tz(timestamp, moment.tz.guess()).format("DD/MM/YYYY");
+  moment.utc(timestamp).tz(moment.tz.guess()).format("DD/MM/YYYY");
 
 const getTime = (timestamp: string): string =>
-  moment.tz(timestamp, moment.tz.guess()).format("HH:mm:ss.SSS");
+  moment.utc(timestamp).tz(moment.tz.guess()).format("HH:mm:ss.SSS");
 
 const getDiff = (timestampA: string, timestampB: string): string =>
   moment.duration(moment(timestampA).diff(timestampB)).humanize({ ss: 4 });
