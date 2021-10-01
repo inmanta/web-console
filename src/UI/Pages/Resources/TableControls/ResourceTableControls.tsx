@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Toolbar,
-  ToolbarItem,
-  ToolbarContent,
-  Divider,
-} from "@patternfly/react-core";
+import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
 import { ResourceParams } from "@/Core";
 import { DeployStateFilter } from "./DeployStateFilter";
 import { TypeFilter } from "./TypeFilter";
@@ -26,13 +21,6 @@ export const ResourceTableControls: React.FC<Props> = ({
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
         <ToolbarItem>
-          <DeployStateFilter filter={filter} setFilter={setFilter} />
-        </ToolbarItem>
-        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-      </ToolbarContent>
-      <Divider />
-      <ToolbarContent>
-        <ToolbarItem>
           <TypeFilter filter={filter} setFilter={setFilter} />
         </ToolbarItem>
         <ToolbarItem>
@@ -41,6 +29,10 @@ export const ResourceTableControls: React.FC<Props> = ({
         <ToolbarItem>
           <ValueFilter filter={filter} setFilter={setFilter} />
         </ToolbarItem>
+        <ToolbarItem>
+          <DeployStateFilter filter={filter} setFilter={setFilter} />
+        </ToolbarItem>
+        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
     </Toolbar>
   </>
