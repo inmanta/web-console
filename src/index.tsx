@@ -20,6 +20,7 @@ import {
 import { UrlManagerImpl } from "@/UI/Utils";
 import { Route } from "./UI/Routing";
 import { EnvironmentModifierImpl } from "./UI/Dependency/EnvironmentModifier";
+import { BrowserRouter as Router } from "react-router-dom";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -69,7 +70,9 @@ ReactDOM.render(
     }}
   >
     <StoreProvider store={store}>
-      <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+      <Router>
+        <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
+      </Router>
     </StoreProvider>
   </DependencyProvider>,
   document.getElementById("root") as HTMLElement

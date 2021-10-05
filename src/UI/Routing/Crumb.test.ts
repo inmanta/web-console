@@ -1,9 +1,15 @@
 import { getCrumbs } from "./Crumb";
 
-test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Catalog']", () => {
+test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Home','Catalog']", () => {
   const crumbs = getCrumbs("/lsm/catalog");
-  expect(crumbs).toHaveLength(1);
+  expect(crumbs).toHaveLength(2);
   expect(crumbs[0]).toEqual({
+    kind: "Home",
+    label: "Home",
+    url: "/",
+    active: false,
+  });
+  expect(crumbs[1]).toEqual({
     kind: "Catalog",
     label: "Service Catalog",
     url: "/lsm/catalog",
@@ -11,10 +17,16 @@ test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Catalog']", () => {
   });
 });
 
-test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Catalog', 'Inventory']", () => {
+test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Home', 'Catalog', 'Inventory']", () => {
   const crumbs = getCrumbs("/lsm/catalog/xyz/inventory");
-  expect(crumbs).toHaveLength(2);
+  expect(crumbs).toHaveLength(3);
   expect(crumbs).toEqual([
+    {
+      kind: "Home",
+      label: "Home",
+      url: "/",
+      active: false,
+    },
     {
       kind: "Catalog",
       label: "Service Catalog",
@@ -30,10 +42,16 @@ test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Catalog', 
   ]);
 });
 
-test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be ['Catalog', 'Inventory', 'History']", () => {
+test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be ['Home','Catalog', 'Inventory', 'History']", () => {
   const crumbs = getCrumbs("/lsm/catalog/xyz/inventory/123/history");
-  expect(crumbs).toHaveLength(3);
+  expect(crumbs).toHaveLength(4);
   expect(crumbs).toEqual([
+    {
+      kind: "Home",
+      label: "Home",
+      url: "/",
+      active: false,
+    },
     {
       kind: "Catalog",
       label: "Service Catalog",
@@ -55,10 +73,16 @@ test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be 
   ]);
 });
 
-test("GIVEN '/resources/123/history' THEN breadcrumbs should be ['Resources', 'Resource History']", () => {
+test("GIVEN '/resources/123/history' THEN breadcrumbs should be ['Home','Resources', 'Resource History']", () => {
   const crumbs = getCrumbs("/resources/123/history");
-  expect(crumbs).toHaveLength(2);
+  expect(crumbs).toHaveLength(3);
   expect(crumbs).toEqual([
+    {
+      kind: "Home",
+      label: "Home",
+      url: "/",
+      active: false,
+    },
     {
       kind: "Resources",
       label: "Resources",

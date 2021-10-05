@@ -14,18 +14,16 @@ import { GlobalStyles } from "@/UI/Styles";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 import { IconDropdown } from "./Toolbar/IconDropdown";
 import { EnvSelectorWithProvider } from "./Toolbar/Provider";
-import { Route } from "@/UI/Routing";
+import { getUrl } from "@/UI/Routing";
 import styled from "styled-components";
 
 interface Props {
   keycloak?: Keycloak.KeycloakInstance;
   children: React.ReactNode;
   shouldUseAuth: boolean;
-  isNavOpen: boolean;
-  setIsNavOpen: (navOpen: boolean) => void;
-  isMobileView: boolean;
-  isNavOpenMobile: boolean;
-  setIsNavOpenMobile: (navOpenMobile: boolean) => void;
+  isNavOpen?: boolean;
+  onToggle?: () => void;
+  withEnvSelector?: boolean;
 }
 
 export const AppWrapper: React.FunctionComponent<Props> = ({
@@ -33,23 +31,14 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
   children,
   shouldUseAuth,
   isNavOpen,
-  setIsNavOpen,
-  isMobileView,
-  isNavOpenMobile,
-  setIsNavOpenMobile,
+  withEnvSelector,
+  onToggle,
 }) => {
   React.useEffect(() => {
     if (keycloak && !keycloak.profile) {
       keycloak.loadUserProfile();
     }
   }, [keycloak?.authenticated]);
-
-  const onNavToggleMobile = () => {
-    setIsNavOpenMobile(!isNavOpenMobile);
-  };
-  const onNavToggle = () => {
-    setIsNavOpen(!isNavOpen);
-  };
 
   const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
   const Login = () => {
@@ -85,12 +74,12 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
   const Header = (
     <PageHeader
       logo={inmantaLogo}
-      logoProps={{ href: Route.Catalog.path }}
+      logoProps={{ href: getUrl("Home", undefined) }}
       headerTools={shouldUseAuth ? <Profile /> : undefined}
-      showNavToggle={true}
-      topNav={<EnvSelectorWithProvider />}
+      showNavToggle={withEnvSelector}
+      topNav={withEnvSelector ? <EnvSelectorWithProvider /> : undefined}
       isNavOpen={isNavOpen}
-      onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
+      onNavToggle={onToggle}
       style={{ backgroundColor: "transparent" }}
     />
   );

@@ -11,9 +11,9 @@ test("GIVEN Breadcrumbs WHEN url is '/' THEN 0 Breadcrumbs are shown", () => {
     </MemoryRouter>
   );
 
-  expect(
-    screen.queryByRole("listitem", { name: "BreadcrumbItem" })
-  ).not.toBeInTheDocument();
+  const crumb = screen.getByRole("listitem", { name: "BreadcrumbItem" });
+  expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
+  expect(within(crumb).getByText("Home")).toBeInTheDocument();
 });
 
 test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog' THEN plain Catalog Breadcrumb is shown", () => {
@@ -23,9 +23,11 @@ test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog' THEN plain Catalog Breadcrumb
     </MemoryRouter>
   );
 
-  const crumb = screen.getByRole("listitem", { name: "BreadcrumbItem" });
-  expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
-  expect(within(crumb).getByText("Service Catalog")).toBeInTheDocument();
+  const crumbs = screen.getAllByRole("listitem", { name: "BreadcrumbItem" });
+  expect(crumbs.length).toEqual(2);
+  const [homeCrumb, catalogCrumb] = crumbs;
+  expect(within(homeCrumb).queryByRole("link")).toBeInTheDocument();
+  expect(within(catalogCrumb).getByText("Service Catalog")).toBeInTheDocument();
 });
 
 test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog/service/inventory' THEN linked Catalog Breadcrumb and plain Inventory breadcrumb is shown", () => {
@@ -36,8 +38,8 @@ test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog/service/inventory' THEN linked
   );
 
   const crumbs = screen.getAllByRole("listitem", { name: "BreadcrumbItem" });
-  expect(crumbs.length).toEqual(2);
-  const [catalogCrumb, inventoryCrumb] = crumbs;
+  expect(crumbs.length).toEqual(3);
+  const [, catalogCrumb, inventoryCrumb] = crumbs;
   expect(within(catalogCrumb).queryByRole("link")).toBeInTheDocument();
   expect(within(inventoryCrumb).queryByRole("link")).not.toBeInTheDocument();
   expect(
@@ -65,7 +67,7 @@ test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link TH
   const crumbsBefore = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",
   });
-  expect(crumbsBefore.length).toEqual(2);
+  expect(crumbsBefore.length).toEqual(3);
 
   const link = screen.getByRole("link", { name: "Service Catalog" });
   userEvent.click(link);
@@ -73,8 +75,8 @@ test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link TH
   const crumbsAfter = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",
   });
-  expect(crumbsAfter.length).toEqual(1);
-  const crumb = crumbsAfter[0];
+  expect(crumbsAfter.length).toEqual(2);
+  const crumb = crumbsAfter[1];
   expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
   expect(within(crumb).getByText("Service Catalog")).toBeInTheDocument();
 });
@@ -90,7 +92,7 @@ test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb li
   const crumbsBefore = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",
   });
-  expect(crumbsBefore.length).toEqual(3);
+  expect(crumbsBefore.length).toEqual(4);
 
   const link = screen.getByRole("link", { name: "Service Inventory" });
   userEvent.click(link);
@@ -98,11 +100,11 @@ test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb li
   const crumbsAfter = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",
   });
-  expect(crumbsAfter.length).toEqual(2);
+  expect(crumbsAfter.length).toEqual(3);
   expect(
-    within(crumbsAfter[0]).getByText("Service Catalog")
+    within(crumbsAfter[1]).getByText("Service Catalog")
   ).toBeInTheDocument();
   expect(
-    within(crumbsAfter[1]).getByText("Service Inventory")
+    within(crumbsAfter[2]).getByText("Service Inventory")
   ).toBeInTheDocument();
 });

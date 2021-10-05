@@ -10,4 +10,5 @@ export type Kinds =
   | "ResourceHistory"
   | "ResourceLogs"
   | "CompileReports"
-  | "CompileDetails";
+  | "CompileDetails"
+  | "Home";

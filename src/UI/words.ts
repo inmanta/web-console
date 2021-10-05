@@ -307,6 +307,10 @@ const dict = {
   "compileDetails.stages.columns.errstream": "Error Stream",
   "compileDetails.stages.copy": "Copy full command to clipboard",
 
+  "home.title": "Home",
+  "home.navigation": "Go to overview page",
+  "home.empty.message": "No environments found",
+
   /**
    * Navigation related text
    */

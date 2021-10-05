@@ -1,5 +1,17 @@
-import { ContextSelector, ContextSelectorItem } from "@patternfly/react-core";
+import { words } from "@/UI";
+import { getUrl } from "@/UI/Routing";
+import {
+  Button,
+  ContextSelector,
+  ContextSelectorFooter,
+  ContextSelectorItem,
+  Flex,
+  FlexItem,
+  Tooltip,
+} from "@patternfly/react-core";
+import { ThLargeIcon } from "@patternfly/react-icons";
 import React, { ReactNode } from "react";
+import { Link } from "react-router-dom";
 
 interface Props {
   searchValue: string;
@@ -30,6 +42,19 @@ export const EnvSelector: React.FC<Props> = ({
       onSelect={onSelect}
       screenReaderLabel="Selected Project:"
       searchButtonAriaLabel="Filter Projects"
+      footer={
+        <ContextSelectorFooter>
+          <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
+            <FlexItem>
+              <Tooltip content={words("home.navigation")}>
+                <Link to={getUrl("Home", undefined)}>
+                  <Button icon={<ThLargeIcon />} variant="control" />
+                </Link>
+              </Tooltip>
+            </FlexItem>
+          </Flex>
+        </ContextSelectorFooter>
+      }
     >
       {items.map((item, index) => (
         <ContextSelectorItem {...{ role: "menuitem" }} key={index}>
