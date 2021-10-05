@@ -25,6 +25,7 @@ const dict = {
   loading: "Loading",
   retry: "Retry",
   delete: "Delete",
+  empty: "Empty",
 
   /**
    * Error related text
