@@ -55,8 +55,8 @@ test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be 
   ]);
 });
 
-test("GIVEN '/resources/123/history' THEN breadcrumbs should be ['Resources', 'Resource History']", () => {
-  const crumbs = getCrumbs("/resources/123/history");
+test("GIVEN '/resources/123' THEN breadcrumbs should be ['Resources', 'Resource Details']", () => {
+  const crumbs = getCrumbs("/resources/123");
   expect(crumbs).toHaveLength(2);
   expect(crumbs).toEqual([
     {
@@ -66,9 +66,9 @@ test("GIVEN '/resources/123/history' THEN breadcrumbs should be ['Resources', 'R
       active: false,
     },
     {
-      kind: "ResourceHistory",
-      label: "Resource History",
-      url: "/resources/123/history",
+      kind: "ResourceDetails",
+      label: "Resource Details",
+      url: "/resources/123",
       active: true,
     },
   ]);
