@@ -39,7 +39,7 @@
     "dist/"
   ],
   "devDependencies": {
-    "@babel/core": "^7.15.5",
+    "@babel/core": "^7.15.8",
     "@babel/plugin-transform-typescript": "^7.15.8",
     "@storybook/addon-actions": "^v6.3.9",
     "@storybook/addon-essentials": "^v6.3.10",
