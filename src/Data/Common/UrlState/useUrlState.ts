@@ -17,7 +17,7 @@ export interface StateConfig<Data> {
 
 type Validator<Data> = (value: unknown) => value is Data;
 
-type Update<Data> = (data: Data) => void;
+export type Update<Data> = (data: Data) => void;
 
 export interface Location {
   pathname: string;

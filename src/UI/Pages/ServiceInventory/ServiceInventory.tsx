@@ -6,8 +6,6 @@ import {
   RemoteData,
   ServiceModel,
   ServiceInstanceParams,
-  PageSize,
-  Sort,
   isObject,
 } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
@@ -21,7 +19,11 @@ import {
 } from "@/UI/Components";
 import { Chart, TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
-import { useUrlState } from "@/Data";
+import {
+  useUrlState,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("inventory.title")}>
@@ -58,24 +60,13 @@ export const ServiceInventory: React.FunctionComponent<{
 }> = ({ serviceName, service, intro }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [sort, setSort] = useUrlState<Sort.Type>({
+  const [sort, setSort] = useUrlStateWithSort({
     default: { name: "created_at", direction: "desc" },
-    key: "sort",
     route: "Inventory",
-    validator: Sort.is,
-    serialize: Sort.serialize,
-    parse: Sort.parse,
-    equals: Sort.equals,
   });
 
-  const [pageSize, setPageSize] = useUrlState({
-    default: PageSize.initial,
-    key: "pageSize",
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Inventory",
-    validator: PageSize.is,
-    serialize: PageSize.serialize,
-    parse: PageSize.parse,
-    equals: PageSize.equals,
   });
 
   const [filter, setFilter] = useUrlState<ServiceInstanceParams.Filter>({
