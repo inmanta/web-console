@@ -5,6 +5,5 @@ export * from "./JsonFormatter";
 export * from "./QueryManagerImpl";
 export * from "./QueryResolverImpl";
 export * from "./sanitizeAttributes";
-export * from "./UrlHelper";
-export * from "./useUrlState";
+export * from "./UrlState";
 export * from "./XmlFormatter";

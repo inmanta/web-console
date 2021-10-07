@@ -1,9 +1,9 @@
 import { useHistory, useLocation } from "react-router-dom";
-import { UrlHelper } from "./UrlHelper";
-import { isObject } from "@/Core";
-import { Kind } from "@/UI/Routing";
 
-const urlHelper = new UrlHelper();
+import { isObject } from "@/Core";
+import { Kind, SearchHelper } from "@/UI/Routing";
+
+const searchHelper = new SearchHelper();
 
 export interface StateConfig<Data> {
   default: Data;
@@ -42,7 +42,7 @@ export function handleUrlState<Data>(
   location: Location,
   history: History
 ): [Data, Update<Data>] {
-  const parsedSearch = parseSearch(location.search);
+  const parsedSearch = searchHelper.parse(location.search);
   const state = getKeyOrEmpty(parsedSearch, "state");
   const routeState = getKeyOrEmpty(state, config.route);
   const candidateValue = routeState[config.key];
@@ -69,33 +69,21 @@ export function handleUrlState<Data>(
       ? config.serialize(newValue)
       : newValue;
 
-    history.replace(
-      `${location.pathname}${getSearchFromState(
-        {
-          ...state,
-          [config.route]: {
-            ...routeState,
-            [config.key]: correctValue,
-          },
+    const newSearch = searchHelper.stringify({
+      ...parsedSearch,
+      state: {
+        ...state,
+        [config.route]: {
+          ...routeState,
+          [config.key]: correctValue,
         },
-        parsedSearch
-      )}${location.hash}`
-    );
+      },
+    });
+
+    history.replace(`${location.pathname}${newSearch}${location.hash}`);
   };
   return [currentValue, setValue];
 }
-
-const getSearchFromState = (
-  state: Record<string, unknown>,
-  search: Record<string, unknown>
-): string => {
-  return `?${urlHelper.stringify({ ...search, state })}`;
-};
-
-const parseSearch = (search: string) => {
-  const sanitizedSearch = urlHelper.sanitize(search);
-  return urlHelper.parse(sanitizedSearch);
-};
 
 const getKeyOrEmpty = (obj: Record<string, unknown>, key: string) => {
   const candidate = obj[key];

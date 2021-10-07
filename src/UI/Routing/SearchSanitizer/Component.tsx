@@ -2,10 +2,9 @@ import { getRouteWithParamsFromUrl } from "@/UI/Routing/Utils";
 import { Kind } from "@/UI/Routing/Kind";
 import React, { useEffect } from "react";
 import { useHistory, useLocation } from "react-router";
-import { PageStateSanitizer } from "../PageStateSanitizer";
 import { SearchSanitizer } from "./SearchSanitizer";
 
-const sanitizer = new SearchSanitizer(new PageStateSanitizer());
+const sanitizer = new SearchSanitizer();
 
 export const Component: React.FC = ({ children }) => {
   const { pathname, search, hash } = useLocation();

@@ -1,7 +1,6 @@
 import { SearchSanitizer } from "./SearchSanitizer";
-import { PageStateSanitizer } from "../PageStateSanitizer";
 
-const sanitizer = new SearchSanitizer(new PageStateSanitizer());
+const sanitizer = new SearchSanitizer();
 
 test("GIVEN sanitizer.isSanitized WHEN clean string THEN returns true", () => {
   const search = "?state.Catalog.x=abc&env=123";

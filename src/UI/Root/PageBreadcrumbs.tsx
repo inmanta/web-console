@@ -1,9 +1,9 @@
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
 import React from "react";
 import { useLocation, NavLink } from "react-router-dom";
-import { getCrumbs, SearchSanitizer, PageStateSanitizer } from "@/UI/Routing";
+import { getCrumbs, SearchSanitizer } from "@/UI/Routing";
 
-const sanitizer = new SearchSanitizer.Sanitizer(new PageStateSanitizer());
+const sanitizer = new SearchSanitizer.Sanitizer();
 
 export const PageBreadcrumbs: React.FC = () => {
   const { pathname, search } = useLocation();
