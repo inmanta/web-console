@@ -1,6 +1,6 @@
 import { BaseUrlFinder } from "./BaseUrlFinder";
 import { paths } from "./Paths";
-import { Kinds } from "./Kinds";
+import { Kind } from "./Kind";
 
 export const BASE_URL = new BaseUrlFinder().getUrl(location.pathname);
 
@@ -21,11 +21,11 @@ interface ParamsManifest {
   ResourceDetails: { resourceId: string };
 }
 
-export type Params<R extends Kinds> = ParamsManifest[R];
+export type Params<R extends Kind> = ParamsManifest[R];
 
 export interface Route {
-  kind: Kinds;
-  parent?: Kinds;
+  kind: Kind;
+  parent?: Kind;
   path: string;
   label: string;
 }
@@ -131,7 +131,7 @@ export const allRoutes: Route[] = [
 export const DashboardUrl = (environment: string): string =>
   `${BASE_URL.replace("/console", "/dashboard")}/#!/environment/${environment}`;
 
-export const getRouteFromKind = (kind: Kinds): Route => {
+export const getRouteFromKind = (kind: Kind): Route => {
   switch (kind) {
     case "Catalog":
       return Catalog;
@@ -160,7 +160,7 @@ export const getRouteFromKind = (kind: Kinds): Route => {
   }
 };
 
-export const getChildrenKindsFromKind = (kind: Kinds): Kinds[] => {
+export const getChildrenKindsFromKind = (kind: Kind): Kind[] => {
   return allRoutes
     .filter((route) => route.parent === kind)
     .map((route) => route.kind);

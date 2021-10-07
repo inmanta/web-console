@@ -1,6 +1,6 @@
-import { Kinds } from "./Kinds";
+import { Kind } from "./Kind";
 
-type Paths = Record<Kinds, string>;
+type Paths = Record<Kind, string>;
 
 export const paths: Paths = {
   Catalog: "/lsm/catalog",

@@ -5,6 +5,7 @@ import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { Home as HomeRoute } from "@/UI/Routing/Route";
+import { SearchSanitizer } from "@/UI/Routing";
 import { HomeLayout } from "./HomeLayout";
 import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
 
@@ -18,7 +19,7 @@ export const App: React.FunctionComponent<{
   shouldUseAuth: boolean;
 }> = ({ keycloak, shouldUseAuth }) => {
   const AppWithStore = (
-    <>
+    <SearchSanitizer.Component>
       <Switch>
         <Route exact path={HomeRoute.path}>
           <HomeLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
@@ -30,7 +31,7 @@ export const App: React.FunctionComponent<{
           />
         </Route>
       </Switch>
-    </>
+    </SearchSanitizer.Component>
   );
   const LoadingSpinner = () => (
     <Bullseye>

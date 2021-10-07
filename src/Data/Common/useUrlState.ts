@@ -1,14 +1,14 @@
 import { useHistory, useLocation } from "react-router-dom";
 import { UrlHelper } from "./UrlHelper";
 import { isObject } from "@/Core";
-import { Kinds } from "@/UI";
+import { Kind } from "@/UI/Routing";
 
 const urlHelper = new UrlHelper();
 
 export interface StateConfig<Data> {
   default: Data;
   key: string;
-  route: Kinds;
+  route: Kind;
   validator: Validator<Data>;
   serialize?: (data: Data) => string;
   parse?: (value: string) => Data | null;
@@ -63,11 +63,6 @@ export function handleUrlState<Data>(
   const setValue = (newValue: Data) => {
     if (areEqual(newValue, currentValue)) return;
 
-    console.log("setValue", config.key, {
-      newValue,
-      default: config.default,
-      equal: areEqual(newValue, config.default),
-    });
     const correctValue = areEqual(newValue, config.default)
       ? undefined
       : config.serialize
