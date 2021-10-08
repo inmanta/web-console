@@ -23,7 +23,12 @@ import {
   ServiceInstance,
 } from "@/Test";
 import { StoreProvider } from "easy-peasy";
-import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
+import {
+  EnvironmentDetails,
+  RemoteData,
+  VersionedServiceInstanceIdentifier,
+} from "@/Core";
+import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
 
 function setup() {
   const storeInstance = getStoreInstance();
@@ -167,4 +172,53 @@ test("ConfigTab can change 1 toggle", async () => {
   expect(
     await screen.findByRole("checkbox", { name: "auto_designed-False" })
   ).toBeVisible();
+});
+
+test("ConfigTab handles hooks with environment modifier correctly", async () => {
+  const {
+    storeInstance,
+    queryResolver,
+    instanceConfigStateHelper,
+    instanceIdentifier,
+  } = setup();
+
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new InstanceConfigCommandManager(
+        new InstantPoster<"InstanceConfig">(
+          RemoteData.success({
+            data: { auto_creating: false, auto_designed: false },
+          })
+        ),
+        instanceConfigStateHelper
+      ),
+    ])
+  );
+  storeInstance.dispatch.environmentDetails.setData({
+    id: Service.a.environment,
+    value: RemoteData.success({ halted: true } as EnvironmentDetails),
+  });
+  const environmentModifier = new EnvironmentModifierImpl();
+  environmentModifier.setEnvironment(Service.a.environment);
+
+  render(
+    <DependencyProvider
+      dependencies={{
+        queryResolver,
+        commandResolver,
+        environmentModifier,
+      }}
+    >
+      <StoreProvider store={storeInstance}>
+        <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
+      </StoreProvider>
+    </DependencyProvider>
+  );
+
+  const toggle = await screen.findByRole("checkbox", {
+    name: "auto_designed-True",
+  });
+
+  expect(toggle).toBeVisible();
+  expect(toggle).toBeDisabled();
 });
