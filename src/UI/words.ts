@@ -37,6 +37,9 @@ const dict = {
   "error.fetch": (error: string) =>
     `There was an error retrieving data: ${error}`,
 
+  "notFound.title": "404: We couldn't find that page",
+  "notFound.back": "Go back",
+
   /**
    * Inventory related text
    */

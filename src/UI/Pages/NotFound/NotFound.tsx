@@ -1,15 +1,27 @@
 import * as React from "react";
-import { NavLink } from "react-router-dom";
-import { Alert, PageSection } from "@patternfly/react-core";
+import { useHistory } from "react-router-dom";
+import {
+  Button,
+  EmptyState,
+  EmptyStateIcon,
+  PageSection,
+  Title,
+} from "@patternfly/react-core";
+import { ExclamationTriangleIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 export const NotFound: React.FunctionComponent = () => {
+  const history = useHistory();
+
   return (
-    <PageSection>
-      <Alert variant="danger" title="404! This view hasn't been created yet." />
-      <br />
-      <NavLink to="/" className="pf-c-nav__link">
-        Take me home
-      </NavLink>
+    <PageSection variant="light">
+      <EmptyState>
+        <EmptyStateIcon icon={ExclamationTriangleIcon} />
+        <Title headingLevel="h3" size="lg">
+          {words("notFound.title")}
+        </Title>
+        <Button onClick={() => history.go(-1)}>{words("notFound.back")}</Button>
+      </EmptyState>
     </PageSection>
   );
 };
