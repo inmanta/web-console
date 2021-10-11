@@ -17,6 +17,7 @@ interface ParamsManifest {
   ResourceLogs: { resourceId: string };
   CompileReports: undefined;
   CompileDetails: { id: string };
+  ResourceDetails: { resourceId: string };
 }
 
 export type Params<R extends Kinds> = ParamsManifest[R];
@@ -82,13 +83,6 @@ export const Resources: Route = {
   label: "Resources",
 };
 
-export const ResourceHistory: Route = {
-  kind: "ResourceHistory",
-  parent: "Resources",
-  path: `${BASE_URL}${paths.ResourceHistory}`,
-  label: "Resource History",
-};
-
 export const CompileReports: Route = {
   kind: "CompileReports",
   path: `${BASE_URL}${paths.CompileReports}`,
@@ -102,11 +96,11 @@ export const CompileDetails: Route = {
   label: "Compile Details",
 };
 
-export const ResourceLogs: Route = {
-  kind: "ResourceLogs",
+export const ResourceDetails: Route = {
+  kind: "ResourceDetails",
   parent: "Resources",
-  path: `${BASE_URL}${paths.ResourceLogs}`,
-  label: "Resource Actions",
+  path: `${BASE_URL}${paths.ResourceDetails}`,
+  label: "Resource Details",
 };
 
 export const allRoutes: Route[] = [
@@ -118,10 +112,9 @@ export const allRoutes: Route[] = [
   Diagnose,
   Events,
   Resources,
-  ResourceHistory,
   CompileReports,
   CompileDetails,
-  ResourceLogs,
+  ResourceDetails,
 ];
 
 export const DashboardUrl = (environment: string): string =>
@@ -145,13 +138,11 @@ export const getRouteFromKind = (kind: Kinds): Route => {
       return Events;
     case "Resources":
       return Resources;
-    case "ResourceHistory":
-      return ResourceHistory;
-    case "ResourceLogs":
-      return ResourceLogs;
     case "CompileReports":
       return CompileReports;
     case "CompileDetails":
       return CompileDetails;
+    case "ResourceDetails":
+      return ResourceDetails;
   }
 };
