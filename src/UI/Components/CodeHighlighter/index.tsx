@@ -11,9 +11,11 @@ import {
   CodeBlockAction,
   CodeBlockCode,
   ExpandableSectionToggle,
+  Label,
 } from "@patternfly/react-core";
 import copy from "copy-to-clipboard";
-import { CloseIcon } from "@patternfly/react-icons";
+import { CloseIcon, InfoCircleIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 SyntaxHighlighter.registerLanguage("json", json);
 SyntaxHighlighter.registerLanguage("xml", xml);
@@ -72,7 +74,7 @@ export const CodeHighlighter: React.FC<Props> = ({
     </>
   );
 
-  return (
+  return code ? (
     <StyledCodeBlock actions={actions}>
       <CodeBlockCode>
         <SyntaxHighlighter
@@ -94,6 +96,10 @@ export const CodeHighlighter: React.FC<Props> = ({
         </StyledExpandableSectionToggle>
       )}
     </StyledCodeBlock>
+  ) : (
+    <Label variant="outline" icon={<InfoCircleIcon />}>
+      <pre>{words("empty")}</pre>
+    </Label>
   );
 };
 

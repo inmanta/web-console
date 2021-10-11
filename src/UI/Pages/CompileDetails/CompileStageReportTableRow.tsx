@@ -85,7 +85,11 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.outstream")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                <CodeHighlighter code={row.outstream} language="python" />
+                <CodeHighlighter
+                  code={row.outstream}
+                  language="python"
+                  withExpansion
+                />
               </DescriptionListDescription>
             </DescriptionListGroup>
             <DescriptionListGroup>
@@ -93,9 +97,11 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.errstream")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                {row.errstream && (
-                  <CodeHighlighter code={row.errstream} language="python" />
-                )}
+                <CodeHighlighter
+                  code={row.errstream}
+                  language="python"
+                  withExpansion
+                />
               </DescriptionListDescription>
             </DescriptionListGroup>
           </PaddedDescriptionList>
@@ -114,4 +120,5 @@ const StyledBody = styled(Tbody)<{
 
 const PaddedDescriptionList = styled(DescriptionList)`
   padding-bottom: 1em;
+  padding-top: 1em;
 `;
