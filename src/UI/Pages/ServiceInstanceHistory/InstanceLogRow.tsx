@@ -1,12 +1,17 @@
 import { AttributesSummary, DateInfo, InstanceLog } from "@/Core";
-import { DateWithTooltip, ExpandableRowProps } from "@/UI/Components";
+import { DateWithTooltip } from "@/UI/Components";
 import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import React, { useRef, useState } from "react";
 import { Tabs, TabKey } from "./Tabs";
 
-interface Props extends ExpandableRowProps {
+interface Props {
+  id: string;
+  index: number;
+  isExpanded: boolean;
+  onToggle: () => void;
+  numberOfColumns: number;
   log: InstanceLog;
   timestamp: DateInfo;
   attributesSummary: AttributesSummary;
@@ -25,7 +30,7 @@ export const InstanceLogRow: React.FC<Props> = ({
   state,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Details);
-  const rowRef = useRef<HTMLTableDataCellElement>(null);
+  const rowRef = useRef<HTMLTableCellElement>(null);
   const attributesOnClick = () => {
     if (!isExpanded) {
       onToggle();
