@@ -8,6 +8,7 @@ interface Props {
   value: boolean;
   onChange: (value: boolean) => void;
   defaults: Config;
+  isDisabled?: boolean;
 }
 
 export const DefaultSwitch: React.FC<Props> = ({
@@ -15,12 +16,14 @@ export const DefaultSwitch: React.FC<Props> = ({
   value,
   onChange,
   defaults,
+  isDisabled,
 }) => (
   <BooleanSwitch
     name={name}
     value={value}
     onChange={onChange}
     getLabel={getLabel(defaults[name])}
+    isDisabled={isDisabled}
   />
 );
 

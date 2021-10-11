@@ -9,9 +9,11 @@ import {
   ClipboardCopyButton,
   Flex,
   FlexItem,
+  Label,
 } from "@patternfly/react-core";
 import copy from "copy-to-clipboard";
-import { CloseIcon } from "@patternfly/react-icons";
+import { CloseIcon, InfoCircleIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 SyntaxHighlighter.registerLanguage("json", json);
 SyntaxHighlighter.registerLanguage("xml", xml);
@@ -56,7 +58,13 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
 
   return (
     <>
-      {code && code.length > 2 ? (
+      {isEmpty(code) ? (
+        <Label variant="outline" icon={<InfoCircleIcon />}>
+          <pre>{words("empty")}</pre>
+        </Label>
+      ) : isSingleLine(code) ? (
+        <pre>{code}</pre>
+      ) : (
         <BorderedArea>
           <Flex flexWrap={{ default: "nowrap" }}>
             <FlexItemWithOverflow grow={{ default: "grow" }}>
@@ -79,12 +87,18 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
             <SmallFlexItem>{actions}</SmallFlexItem>
           </Flex>
         </BorderedArea>
-      ) : (
-        <pre>{code}</pre>
       )}
     </>
   );
 };
+
+function isEmpty(code: string) {
+  return !(code && code.length > 0);
+}
+
+function isSingleLine(code: string) {
+  return !code.includes("\n");
+}
 
 const FlexItemWithOverflow = styled(FlexItem)`
   margin-right: 0;
