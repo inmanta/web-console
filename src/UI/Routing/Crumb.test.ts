@@ -3,18 +3,20 @@ import { getCrumbs } from "./Crumb";
 test("GIVEN '/lsm/catalog' THEN breadcrumbs should be ['Home','Catalog']", () => {
   const crumbs = getCrumbs("/lsm/catalog");
   expect(crumbs).toHaveLength(2);
-  expect(crumbs[0]).toEqual({
-    kind: "Home",
-    label: "Home",
-    url: "/",
-    active: false,
-  });
-  expect(crumbs[1]).toEqual({
-    kind: "Catalog",
-    label: "Service Catalog",
-    url: "/lsm/catalog",
-    active: true,
-  });
+  expect(crumbs).toEqual([
+    {
+      kind: "Home",
+      label: "Home",
+      url: "/",
+      active: false,
+    },
+    {
+      kind: "Catalog",
+      label: "Service Catalog",
+      url: "/lsm/catalog",
+      active: true,
+    },
+  ]);
 });
 
 test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Home', 'Catalog', 'Inventory']", () => {

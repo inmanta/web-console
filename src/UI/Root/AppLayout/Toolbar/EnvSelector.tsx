@@ -9,7 +9,7 @@ import {
   FlexItem,
   Tooltip,
 } from "@patternfly/react-core";
-import { ThLargeIcon } from "@patternfly/react-icons";
+import { HomeIcon } from "@patternfly/react-icons";
 import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
@@ -48,7 +48,7 @@ export const EnvSelector: React.FC<Props> = ({
             <FlexItem>
               <Tooltip content={words("home.navigation")}>
                 <Link to={getUrl("Home", undefined)}>
-                  <Button icon={<ThLargeIcon />} variant="control" />
+                  <Button icon={<HomeIcon />} variant="link" />
                 </Link>
               </Tooltip>
             </FlexItem>
