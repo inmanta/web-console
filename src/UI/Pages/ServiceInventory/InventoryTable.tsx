@@ -9,7 +9,7 @@ import {
 import { Row, Sort, toggleValueInList } from "@/Core";
 import { InventoryTablePresenter } from "./Presenters";
 import { InstanceRow } from "./InstanceRow";
-import { useUrlState } from "@/Data";
+import { useUrlStateWithExpansion } from "@/Data";
 
 interface Props {
   rows: Row[];
@@ -54,12 +54,8 @@ export const InventoryTable: React.FC<Props> = ({
     );
   });
 
-  const [expandedKeys, setExpandedKeys] = useUrlState<string[]>({
-    default: [],
-    key: "expandedKeys",
+  const [expandedKeys, setExpandedKeys] = useUrlStateWithExpansion({
     route: "Inventory",
-    validator: (v: unknown): v is string[] => Array.isArray(v),
-    equals: (a, b) => a.length === b.length,
   });
 
   const handleExpansionToggle = (id: string) => () => {
