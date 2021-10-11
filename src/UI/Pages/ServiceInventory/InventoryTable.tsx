@@ -25,10 +25,10 @@ export const InventoryTable: React.FC<Props> = ({
   setSort,
   ...props
 }) => {
-  const onSort: OnSort = (event, index, direction) => {
+  const onSort: OnSort = (event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as string,
-      direction,
+      order,
     });
   };
   const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
@@ -40,7 +40,7 @@ export const InventoryTable: React.FC<Props> = ({
           sort: {
             sortBy: {
               index: activeSortIndex,
-              direction: sort.direction,
+              direction: sort.order,
             },
             onSort,
             columnIndex,

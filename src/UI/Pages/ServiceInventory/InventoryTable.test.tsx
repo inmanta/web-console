@@ -57,7 +57,7 @@ test("InventoryTable can be expanded", async () => {
             rows={[Row.a, Row.b]}
             tablePresenter={tablePresenter}
             setSort={dummySetter}
-            sort={{ name: "created_at", direction: "desc" }}
+            sort={{ name: "created_at", order: "desc" }}
           />
         </StoreProvider>
       </DependencyProvider>
@@ -105,7 +105,7 @@ test("ServiceInventory can show resources for instance", async () => {
             rows={[Row.a, Row.b]}
             tablePresenter={tablePresenter}
             setSort={dummySetter}
-            sort={{ name: "created_at", direction: "desc" }}
+            sort={{ name: "created_at", order: "desc" }}
           />
         </StoreProvider>
       </DependencyProvider>
@@ -132,7 +132,7 @@ test("ServiceInventory shows service identity if it's defined", async () => {
         rows={[Row.a]}
         tablePresenter={tablePresenterWithIdentity}
         setSort={dummySetter}
-        sort={{ name: "created_at", direction: "desc" }}
+        sort={{ name: "created_at", order: "desc" }}
       />
     </MemoryRouter>
   );
@@ -149,7 +149,7 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
         rows={[Row.a]}
         tablePresenter={tablePresenter}
         setSort={dummySetter}
-        sort={{ name: "created_at", direction: "desc" }}
+        sort={{ name: "created_at", order: "desc" }}
       />
     </MemoryRouter>
   );
@@ -169,7 +169,7 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
         rows={[Row.a]}
         tablePresenter={tablePresenter}
         setSort={(v) => (sort = v)}
-        sort={{ name: "created_at", direction: "desc" }}
+        sort={{ name: "created_at", order: "desc" }}
       />
     </MemoryRouter>
   );
@@ -177,5 +177,5 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
   expect(stateButton).toBeVisible();
   userEvent.click(stateButton);
   expect(sort.name).toEqual("state");
-  expect(sort.direction).toEqual("asc");
+  expect(sort.order).toEqual("asc");
 });

@@ -61,7 +61,7 @@ export const ServiceInventory: React.FunctionComponent<{
   const { queryResolver } = useContext(DependencyContext);
 
   const [sort, setSort] = useUrlStateWithSort({
-    default: { name: "created_at", direction: "desc" },
+    default: { name: "created_at", order: "desc" },
     route: "Inventory",
   });
 
@@ -79,7 +79,7 @@ export const ServiceInventory: React.FunctionComponent<{
   const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
     name: serviceName,
-    sort: { name: sort.name, order: sort.direction },
+    sort,
     filter,
     pageSize,
   });

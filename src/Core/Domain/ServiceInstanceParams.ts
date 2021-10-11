@@ -1,5 +1,5 @@
 import { PageSize } from "./PageSize";
-import { Sort } from "./Params";
+import { Sort } from "./Sort";
 
 export interface ServiceInstanceParams {
   filter?: Filter;
