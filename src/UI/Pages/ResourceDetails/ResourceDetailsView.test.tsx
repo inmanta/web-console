@@ -59,8 +59,6 @@ test("GIVEN The Resource details view WHEN the user clicks on the info tab THEN 
 
   render(component);
 
-  userEvent.click(screen.getAllByRole("button", { name: "Info" })[0]);
-
   expect(resourceDetailsFetcher.getInvocations()).toHaveLength(1);
   expect(resourceDetailsFetcher.getInvocations()[0][1]).toEqual(
     "/api/v2/resource/std::File[agent2,path=/tmp/file4]"
@@ -82,7 +80,6 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
 
   render(component);
 
-  userEvent.click(screen.getAllByRole("button", { name: "Info" })[0]);
   userEvent.click(screen.getAllByRole("button", { name: "Requires" })[0]);
 
   expect(resourceDetailsFetcher.getInvocations()).toHaveLength(2);
