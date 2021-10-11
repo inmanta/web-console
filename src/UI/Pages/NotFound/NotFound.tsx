@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Button,
   EmptyState,
@@ -10,18 +10,16 @@ import {
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 
-export const NotFound: React.FunctionComponent = () => {
-  const history = useHistory();
-
-  return (
-    <PageSection variant="light">
-      <EmptyState>
-        <EmptyStateIcon icon={ExclamationTriangleIcon} />
-        <Title headingLevel="h3" size="lg">
-          {words("notFound.title")}
-        </Title>
-        <Button onClick={() => history.go(-1)}>{words("notFound.back")}</Button>
-      </EmptyState>
-    </PageSection>
-  );
-};
+export const NotFound: React.FunctionComponent = () => (
+  <PageSection variant="light">
+    <EmptyState>
+      <EmptyStateIcon icon={ExclamationTriangleIcon} />
+      <Title headingLevel="h3" size="lg">
+        {words("notFound.title")}
+      </Title>
+      <Link to={{ pathname: "/", search: location.search }}>
+        <Button>{words("notFound.back")}</Button>
+      </Link>
+    </EmptyState>
+  </PageSection>
+);
