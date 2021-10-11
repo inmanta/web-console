@@ -16,6 +16,7 @@ import {
   getStoreInstance,
 } from "@/Data";
 import { EventsPage } from "./EventsPage";
+import { MemoryRouter } from "react-router";
 
 function setup() {
   const store = getStoreInstance();
@@ -39,14 +40,16 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver }}>
-      <StoreProvider store={store}>
-        <EventsPage
-          service={Service.a}
-          instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver }}>
+        <StoreProvider store={store}>
+          <EventsPage
+            service={Service.a}
+            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };
@@ -57,7 +60,7 @@ test("EventsView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("grid", { name: "EventTable-Loading" })
+    await screen.findByRole("generic", { name: "EventTable-Loading" })
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -69,7 +72,7 @@ test("EventsView shows empty table", async () => {
   );
 
   expect(
-    await screen.findByRole("grid", { name: "EventTable-Empty" })
+    await screen.findByRole("generic", { name: "EventTable-Empty" })
   ).toBeInTheDocument();
 });
 
@@ -78,13 +81,13 @@ test("EventsView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("grid", { name: "EventTable-Loading" })
+    await screen.findByRole("generic", { name: "EventTable-Loading" })
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("grid", { name: "EventTable-Failed" })
+    await screen.findByRole("generic", { name: "EventTable-Failed" })
   ).toBeInTheDocument();
 });
 
@@ -93,7 +96,7 @@ test("EventsView shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("grid", { name: "EventTable-Loading" })
+    await screen.findByRole("generic", { name: "EventTable-Loading" })
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -131,7 +134,7 @@ test("EventsView shows updated table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("grid", { name: "EventTable-Loading" })
+    await screen.findByRole("generic", { name: "EventTable-Loading" })
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -143,7 +146,7 @@ test("EventsView shows updated table", async () => {
   );
 
   expect(
-    await screen.findByRole("grid", { name: "EventTable-Empty" })
+    await screen.findByRole("generic", { name: "EventTable-Empty" })
   ).toBeInTheDocument();
 
   scheduler.executeAll();
