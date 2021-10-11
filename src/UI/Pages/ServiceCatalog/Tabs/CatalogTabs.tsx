@@ -14,7 +14,7 @@ export const CatalogTabs: React.FunctionComponent<{
 }> = ({ service }) => {
   const [activeTabKey, setActiveTabKey] = useUrlState({
     default: "details",
-    key: "tab",
+    key: `tab-${service.name}`,
     route: "Catalog",
     validator: (v: unknown): v is string => typeof v === "string",
   });
