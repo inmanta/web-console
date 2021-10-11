@@ -62,7 +62,7 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
         <Label variant="outline" icon={<InfoCircleIcon />}>
           <pre>{words("empty")}</pre>
         </Label>
-      ) : isSingleLine(code) ? (
+      ) : isShortSingleLine(code) ? (
         <pre>{code}</pre>
       ) : (
         <BorderedArea>
@@ -96,8 +96,8 @@ function isEmpty(code: string) {
   return !(code && code.length > 0);
 }
 
-function isSingleLine(code: string) {
-  return !code.includes("\n");
+function isShortSingleLine(code: string) {
+  return !code.includes("\n") && code.length < 60;
 }
 
 const FlexItemWithOverflow = styled(FlexItem)`

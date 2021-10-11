@@ -85,7 +85,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.outstream")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                <CodeHighlighter code={row.outstream} language="python" />
+                <CodeHighlighter code={row.outstream} language="text" />
               </DescriptionListDescription>
             </DescriptionListGroup>
             <DescriptionListGroup>
