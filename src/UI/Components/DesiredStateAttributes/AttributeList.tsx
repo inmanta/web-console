@@ -72,7 +72,7 @@ const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
 
 const StyledDescriptionList = styled(DescriptionList)`
   --pf-c-description-list--m-horizontal__term--width: 24ch;
-  --pf-c-description-list--RowGap: 1rem;
+  --pf-c-description-list--RowGap: 0.5rem;
 `;
 
 const MultiTextWithCopy = styled(TextWithCopy)`
