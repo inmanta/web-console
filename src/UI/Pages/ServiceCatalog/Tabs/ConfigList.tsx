@@ -16,6 +16,7 @@ export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
     kind: "ServiceConfig",
     name: serviceName,
   });
+  const isHalted = environmentModifier.useIsHalted();
   return Object.keys(config).length <= 0 ? (
     <EmptyView message={words("config.empty")} />
   ) : (
@@ -23,7 +24,7 @@ export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
       config={config}
       onChange={update}
       Switch={BooleanSwitch}
-      isDisabled={environmentModifier.isHalted()}
+      isDisabled={isHalted}
     />
   );
 };

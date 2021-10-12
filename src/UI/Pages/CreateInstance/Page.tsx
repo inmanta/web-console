@@ -24,6 +24,7 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
   const [errorMessage, setErrorMessage] = useState("");
+  const isHalted = environmentModifier.useIsHalted();
   const history = useHistory();
   const url = `${getUrl("Inventory", { service: serviceEntity.name })}?env=${
     serviceEntity.environment
@@ -71,7 +72,7 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
         )}
         onSubmit={onSubmit}
         onCancel={handleRedirect}
-        isSubmitDisabled={environmentModifier.isHalted()}
+        isSubmitDisabled={isHalted}
       />
     </>
   );

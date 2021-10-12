@@ -33,6 +33,7 @@ export const DeleteModal: React.FC<Props> = ({
     id,
     version,
   });
+  const isHalted = environmentModifier.useIsHalted();
   const onSubmit = async () => {
     setIsOpen(false);
     const result = await trigger();
@@ -40,7 +41,6 @@ export const DeleteModal: React.FC<Props> = ({
       setErrorMessage(result.value);
     }
   };
-
   return (
     <>
       <ErrorToastAlert
@@ -48,10 +48,10 @@ export const DeleteModal: React.FC<Props> = ({
         setErrorMessage={setErrorMessage}
       />
       <ActionDisabledTooltip
-        isDisabled={isDisabled || environmentModifier.isHalted()}
+        isDisabled={isDisabled || isHalted}
         ariaLabel={words("inventory.deleteInstance.button")}
         tooltipContent={
-          environmentModifier.isHalted()
+          isHalted
             ? words("environment.halt.tooltip")
             : words("inventory.statustab.actionDisabled")
         }
@@ -59,7 +59,7 @@ export const DeleteModal: React.FC<Props> = ({
         <Button
           variant="danger"
           onClick={handleModalToggle}
-          isDisabled={isDisabled || environmentModifier.isHalted()}
+          isDisabled={isDisabled || isHalted}
           isBlock
         >
           <TrashAltIcon /> {words("inventory.deleteInstance.button")}

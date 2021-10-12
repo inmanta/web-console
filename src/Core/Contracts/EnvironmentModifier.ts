@@ -1,4 +1,4 @@
 export interface EnvironmentModifier {
-  isHalted(): boolean;
+  useIsHalted(): boolean;
   setEnvironment(environment: string): void;
 }
