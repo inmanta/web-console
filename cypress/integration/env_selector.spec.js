@@ -13,8 +13,8 @@ describe("Environment selector", function () {
       texts = texts.get();
       expect(texts).to.have.length(2);
       expect(texts).to.deep.eq([
-        "End-to-end Service Orchestration Demo / demo",
-        "End-to-end Service Orchestration Demo / live",
+        "demo (End-to-end Service Orchestration Demo)",
+        "live (End-to-end Service Orchestration Demo)",
       ]);
     });
   });

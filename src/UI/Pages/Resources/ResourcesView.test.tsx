@@ -5,7 +5,6 @@ import {
   DeferredFetcher,
   DynamicQueryManagerResolver,
   Resource,
-  ResourceDetails,
   StaticScheduler,
 } from "@/Test";
 import { Either } from "@/Core";
@@ -15,8 +14,6 @@ import {
   getStoreInstance,
   ResourcesQueryManager,
   ResourcesStateHelper,
-  ResourceDetailsQueryManager,
-  ResourceDetailsStateHelper,
 } from "@/Data";
 import { ResourcesView } from "./ResourcesView";
 import userEvent, { specialChars } from "@testing-library/user-event";
@@ -34,12 +31,6 @@ function setup() {
       new ResourcesQueryManager(
         resourcesApiHelper,
         new ResourcesStateHelper(store, environment),
-        scheduler,
-        environment
-      ),
-      new ResourceDetailsQueryManager(
-        resourceDetailsFetcher,
-        new ResourceDetailsStateHelper(store),
         scheduler,
         environment
       ),
@@ -222,58 +213,3 @@ it.each`
     expect(rowsAfter).toHaveLength(2);
   }
 );
-
-test("GIVEN The Resources table WHEN the user clicks on the details THEN data is fetched immediately", async () => {
-  const { component, resourcesApiHelper, resourceDetailsFetcher } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await resourcesApiHelper.resolve(Either.right(Resource.response));
-  });
-
-  userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
-
-  expect(resourceDetailsFetcher.getInvocations()).toHaveLength(1);
-  expect(resourceDetailsFetcher.getInvocations()[0][1]).toEqual(
-    "/api/v2/resource/std%3A%3AFile%5Bagent2%2Cpath%3D%2Ftmp%2Ffile4%5D"
-  );
-
-  await act(async () => {
-    await resourceDetailsFetcher.resolve(
-      Either.right({ data: ResourceDetails.a })
-    );
-  });
-
-  expect(
-    await screen.findByText("std::File[agent2,path=/tmp/file4]")
-  ).toBeVisible();
-});
-
-test("GIVEN The Resources table WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {
-  const { component, resourcesApiHelper, resourceDetailsFetcher } = setup();
-
-  render(component);
-
-  await act(async () => {
-    await resourcesApiHelper.resolve(Either.right(Resource.response));
-  });
-
-  userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
-  userEvent.click(screen.getAllByRole("button", { name: "Requires" })[0]);
-
-  expect(resourceDetailsFetcher.getInvocations()).toHaveLength(2);
-  expect(resourceDetailsFetcher.getInvocations()[1][1]).toEqual(
-    "/api/v2/resource/std%3A%3AFile%5Bagent2%2Cpath%3D%2Ftmp%2Ffile4%5D"
-  );
-
-  await act(async () => {
-    await resourceDetailsFetcher.resolve(
-      Either.right({ data: ResourceDetails.a })
-    );
-  });
-
-  expect(
-    await screen.findByRole("grid", { name: "ResourceRequires-Success" })
-  ).toBeVisible();
-});

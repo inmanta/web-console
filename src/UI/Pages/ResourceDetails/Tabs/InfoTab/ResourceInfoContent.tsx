@@ -1,9 +1,5 @@
-import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import {
-  ActionList,
-  ActionListItem,
-  Button,
   Card,
   CardBody,
   CardFooter,
@@ -12,9 +8,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { HistoryIcon, ListIcon } from "@patternfly/react-icons";
 import React from "react";
-import { Link } from "react-router-dom";
 
 interface Props {
   id: string;
@@ -23,7 +17,7 @@ interface Props {
   versionLink: React.ReactElement;
 }
 
-export const ResourceDetailsContent: React.FC<Props> = ({
+export const ResourceInfoContent: React.FC<Props> = ({
   id,
   lastDeploy,
   firstGeneratedTime,
@@ -35,14 +29,14 @@ export const ResourceDetailsContent: React.FC<Props> = ({
         <DescriptionList isHorizontal>
           <DescriptionListGroup>
             <DescriptionListTerm>
-              {words("resources.details.id")}
+              {words("resources.info.id")}
             </DescriptionListTerm>
             <DescriptionListDescription>{id}</DescriptionListDescription>
           </DescriptionListGroup>
 
           <DescriptionListGroup>
             <DescriptionListTerm>
-              {words("resources.details.lastDeploy")}
+              {words("resources.info.lastDeploy")}
             </DescriptionListTerm>
             <DescriptionListDescription>
               {lastDeploy}
@@ -51,14 +45,11 @@ export const ResourceDetailsContent: React.FC<Props> = ({
 
           <DescriptionListGroup>
             <DescriptionListTerm>
-              {words("resources.details.firstTime")}
+              {words("resources.info.firstTime")}
             </DescriptionListTerm>
             <DescriptionListDescription>
               {firstGeneratedTime}
             </DescriptionListDescription>
-          </DescriptionListGroup>
-          <DescriptionListGroup>
-            <Actions resourceId={id} />
           </DescriptionListGroup>
         </DescriptionList>
       </CardBody>
@@ -66,32 +57,3 @@ export const ResourceDetailsContent: React.FC<Props> = ({
     </Card>
   );
 };
-
-const Actions: React.FC<{ resourceId: string }> = ({ resourceId }) => (
-  <ActionList>
-    <ActionListItem>
-      <Link
-        to={{
-          pathname: getUrl("ResourceHistory", { resourceId }),
-          search: location.search,
-        }}
-      >
-        <Button isBlock variant="primary">
-          <HistoryIcon /> {words("resources.history.linkTitle")}
-        </Button>
-      </Link>
-    </ActionListItem>
-    <ActionListItem>
-      <Link
-        to={{
-          pathname: getUrl("ResourceLogs", { resourceId }),
-          search: location.search,
-        }}
-      >
-        <Button isBlock variant="tertiary">
-          <ListIcon /> {words("resources.logs.linkTitle")}
-        </Button>
-      </Link>
-    </ActionListItem>
-  </ActionList>
-);

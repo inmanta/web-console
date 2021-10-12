@@ -12,6 +12,7 @@ export const attributes = {
   e: "<<undefined>>",
   f: "This text has a length longer than 80. abcdefghijklmnopqrstvuwxyz abcdefghijklmnopqrstvuwxyz",
   ff: "This text contains a newline.\nblablabla...",
+  g: {},
   hash: "filehash",
   some_password: "abcde",
 };
@@ -43,6 +44,7 @@ export const classified: ClassifiedAttribute[] = [
     key: "ff",
     value: "This text contains a newline.\nblablabla...",
   },
+  { kind: "Json", key: "g", value: "{}" },
   {
     kind: "File",
     key: "hash",

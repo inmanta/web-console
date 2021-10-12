@@ -7,13 +7,13 @@ import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
 import {
   Button,
   ClipboardCopyButton,
-  CodeBlock,
-  CodeBlockAction,
-  CodeBlockCode,
-  ExpandableSectionToggle,
+  Flex,
+  FlexItem,
+  Label,
 } from "@patternfly/react-core";
 import copy from "copy-to-clipboard";
-import { CloseIcon } from "@patternfly/react-icons";
+import { CloseIcon, InfoCircleIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 SyntaxHighlighter.registerLanguage("json", json);
 SyntaxHighlighter.registerLanguage("xml", xml);
@@ -22,17 +22,10 @@ interface Props {
   code: string;
   language: "json" | "xml" | "text" | "python";
   close?: () => void;
-  withExpansion?: boolean;
 }
 
-export const CodeHighlighter: React.FC<Props> = ({
-  code,
-  language,
-  close,
-  withExpansion,
-}) => {
+export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
   const [copied, setCopied] = useState(false);
-  const [expanded, setExpanded] = useState(false);
 
   const onCopy = () => {
     copy(code);
@@ -42,70 +35,80 @@ export const CodeHighlighter: React.FC<Props> = ({
     }, 1000);
   };
 
-  const styles =
-    withExpansion && needsExpansion(code) && !expanded
-      ? { height: "60px" }
-      : {};
-
   const actions = (
     <>
-      <CodeBlockAction>
-        <ClipboardCopyButton
-          id="copy-button"
-          textId="code-content"
-          aria-label="Copy to clipboard"
-          onClick={onCopy}
-          exitDelay={600}
-          maxWidth="110px"
-          variant="plain"
-        >
-          {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
-        </ClipboardCopyButton>
-      </CodeBlockAction>
+      <ClipboardCopyButton
+        id="copy-button"
+        textId="code-content"
+        aria-label="Copy to clipboard"
+        onClick={onCopy}
+        exitDelay={600}
+        maxWidth="110px"
+        variant="plain"
+      >
+        {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
+      </ClipboardCopyButton>
       {close && (
-        <CodeBlockAction>
-          <Button variant="plain" aria-label="Close icon" onClick={close}>
-            <CloseIcon />
-          </Button>
-        </CodeBlockAction>
+        <Button variant="plain" aria-label="Close icon" onClick={close}>
+          <CloseIcon />
+        </Button>
       )}
     </>
   );
 
   return (
-    <StyledCodeBlock actions={actions}>
-      <CodeBlockCode>
-        <SyntaxHighlighter
-          language={language}
-          style={docco}
-          customStyle={{ padding: 0, backgroundColor: "initial", ...styles }}
-        >
-          {code}
-        </SyntaxHighlighter>
-      </CodeBlockCode>
-      {withExpansion && needsExpansion(code) && (
-        <StyledExpandableSectionToggle
-          isExpanded={expanded}
-          onToggle={() => setExpanded(!expanded)}
-          contentId="code-block-expand"
-          direction="up"
-        >
-          {expanded ? "Show Less" : "Show More"}
-        </StyledExpandableSectionToggle>
+    <>
+      {isEmpty(code) ? (
+        <Label variant="outline" icon={<InfoCircleIcon />}>
+          <pre>{words("empty")}</pre>
+        </Label>
+      ) : isShortSingleLine(code) ? (
+        <pre>{code}</pre>
+      ) : (
+        <BorderedArea>
+          <Flex flexWrap={{ default: "nowrap" }}>
+            <FlexItemWithOverflow grow={{ default: "grow" }}>
+              <SyntaxHighlighter
+                language={language}
+                style={docco}
+                customStyle={{
+                  backgroundColor: "initial",
+                  maxWidth: "50em",
+                  height: "6em",
+                  minHeight: "4.5em",
+                  overflow: "auto",
+                  resize: "vertical",
+                  borderRight: "1px solid var(--pf-global--BorderColor--100)",
+                }}
+              >
+                {code}
+              </SyntaxHighlighter>
+            </FlexItemWithOverflow>
+            <SmallFlexItem>{actions}</SmallFlexItem>
+          </Flex>
+        </BorderedArea>
       )}
-    </StyledCodeBlock>
+    </>
   );
 };
 
-function needsExpansion(value: string): boolean {
-  return value.split("\n").length > 3;
+function isEmpty(code: string) {
+  return !(code && code.length > 0);
 }
 
-const StyledCodeBlock = styled(CodeBlock)`
-  margin-bottom: 4px;
+function isShortSingleLine(code: string) {
+  return !code.includes("\n") && code.length < 60;
+}
+
+const FlexItemWithOverflow = styled(FlexItem)`
+  margin-right: 0;
+  overflow: auto;
 `;
 
-const StyledExpandableSectionToggle = styled(ExpandableSectionToggle)`
-  --pf-c-expandable-section__toggle--PaddingTop: 0.5rem;
-  --pf-c-expandable-section__toggle--PaddingBottom: 0;
+const SmallFlexItem = styled(FlexItem)`
+  width: 3em;
+`;
+
+const BorderedArea = styled.div`
+  border: 1px solid var(--pf-global--BorderColor--100);
 `;

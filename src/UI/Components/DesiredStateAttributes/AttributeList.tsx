@@ -63,20 +63,16 @@ const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
       return <FileBlock hash={attribute.value} />;
 
     case "Json":
-      return (
-        <CodeHighlighter code={attribute.value} language="json" withExpansion />
-      );
+      return <CodeHighlighter code={attribute.value} language="json" />;
 
     case "Xml":
-      return (
-        <CodeHighlighter code={attribute.value} language="xml" withExpansion />
-      );
+      return <CodeHighlighter code={attribute.value} language="xml" />;
   }
 };
 
 const StyledDescriptionList = styled(DescriptionList)`
   --pf-c-description-list--m-horizontal__term--width: 24ch;
-  --pf-c-description-list--RowGap: 0;
+  --pf-c-description-list--RowGap: 0.5rem;
 `;
 
 const MultiTextWithCopy = styled(TextWithCopy)`

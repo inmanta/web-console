@@ -23,7 +23,9 @@ export class CompileStageReportTablePresenter
         name: report.name,
         id: report.id,
         command: report.command,
-        shortCommand: `${report.command.substr(0, 80)}...`,
+        shortCommand: report.command
+          ? `${report.command.substr(0, 80)}...`
+          : "",
         completed: report.completed,
         errstream: report.errstream,
         outstream: report.outstream,

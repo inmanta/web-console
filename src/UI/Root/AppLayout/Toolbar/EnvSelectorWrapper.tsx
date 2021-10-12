@@ -26,7 +26,7 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
   const selectorItems = flatMap(projects, (project) => {
     return project.environments.map((environment) => {
       const envSelectorItem: EnvironmentSelectorItem = {
-        displayName: `${project.name} / ${environment.name}`,
+        displayName: `${environment.name} (${project.name})`,
         projectId: project.id,
         environmentId: environment.id,
       };

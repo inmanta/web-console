@@ -6,13 +6,13 @@ import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { Button } from "@patternfly/react-core";
 import { ExternalLinkAltIcon } from "@patternfly/react-icons";
-import { ResourceDetailsContent } from "./ResourceDetailsContent";
+import { ResourceInfoContent } from "./ResourceInfoContent";
 
 interface Props {
   id: string;
 }
 
-export const DetailsTab: React.FC<Props> = ({ id }) => {
+export const InfoTab: React.FC<Props> = ({ id }) => {
   const { queryResolver, urlManager } = useContext(DependencyContext);
 
   const [data] = queryResolver.useContinuous<"ResourceDetails">({
@@ -35,7 +35,7 @@ export const DetailsTab: React.FC<Props> = ({ id }) => {
         />
       ),
       success: (resourceDetails) => (
-        <ResourceDetailsContent
+        <ResourceInfoContent
           id={resourceDetails.resource_id}
           lastDeploy={
             resourceDetails.last_deploy
@@ -57,7 +57,7 @@ export const DetailsTab: React.FC<Props> = ({ id }) => {
               )}
               target="_blank"
             >
-              {words("resources.details.versionLink")}
+              {words("resources.info.versionLink")}
             </Button>
           }
           aria-label="ResourceDetails-Success"

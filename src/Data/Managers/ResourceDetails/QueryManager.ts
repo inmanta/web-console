@@ -16,7 +16,7 @@ export class ResourceDetailsQueryManager extends ContinuousQueryManagerImpl<"Res
       ({ id }) => id,
       ({ id }) => [id],
       "ResourceDetails",
-      ({ id }) => `/api/v2/resource/${encodeURIComponent(id)}`,
+      ({ id }) => `/api/v2/resource/${id}`,
       identity,
       environment
     );

@@ -27,6 +27,10 @@ export class ResourcesTablePresenter
         displayName: words("resources.column.deployState"),
         apiName: "status",
       },
+      {
+        displayName: words("compileReports.columns.actions"),
+        apiName: "",
+      },
     ];
     this.numberOfColumns = this.columnHeads.length + 1;
   }

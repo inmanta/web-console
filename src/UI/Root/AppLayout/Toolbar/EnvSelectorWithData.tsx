@@ -47,7 +47,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
               />
             ),
             success: (selected) => {
-              const defaultToggleText = `${selected.project.name} / ${selected.environment.name}`;
+              const defaultToggleText = `${selected.environment.name} (${selected.project.name})`;
 
               return (
                 <EnvSelectorWrapper

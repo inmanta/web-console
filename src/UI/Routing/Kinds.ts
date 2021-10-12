@@ -7,7 +7,6 @@ export type Kinds =
   | "Diagnose"
   | "Events"
   | "Resources"
-  | "ResourceHistory"
-  | "ResourceLogs"
   | "CompileReports"
-  | "CompileDetails";
+  | "CompileDetails"
+  | "ResourceDetails";
