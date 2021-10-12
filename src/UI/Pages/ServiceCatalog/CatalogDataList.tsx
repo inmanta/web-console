@@ -22,7 +22,7 @@ import { Spacer } from "@/UI/Components";
 import { greyText } from "@/UI/Styles";
 import { CatalogTabs } from "./Tabs";
 import { SummaryIcons } from "./SummaryIcons";
-import { useUrlState } from "@/Data";
+import { useUrlStateWithExpansion } from "@/Data";
 
 interface Props {
   services: ServiceModel[];
@@ -31,11 +31,8 @@ interface Props {
 export const CatalogDataList: React.FunctionComponent<Props> = ({
   services,
 }) => {
-  const [expanded, setExpanded] = useUrlState<string[]>({
-    default: [],
-    key: "expansion",
+  const [expanded, setExpanded] = useUrlStateWithExpansion({
     route: "Catalog",
-    validator: (v: unknown): v is string[] => Array.isArray(v),
   });
 
   const onToggle = (id: string) => setExpanded(toggleValueInList(id, expanded));
@@ -54,6 +51,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
     }
     return <div />;
   };
+
   const servicesById = services.reduce((acc, curr) => {
     acc[curr.name] = curr;
     return acc;

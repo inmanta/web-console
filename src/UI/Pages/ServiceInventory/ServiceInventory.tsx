@@ -2,12 +2,7 @@ import React, { useContext, ReactElement } from "react";
 import { useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import {
-  RemoteData,
-  ServiceModel,
-  ServiceInstanceParams,
-  isObject,
-} from "@/Core";
+import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -20,7 +15,7 @@ import {
 import { Chart, TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
 import {
-  useUrlState,
+  useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
@@ -69,12 +64,8 @@ export const ServiceInventory: React.FunctionComponent<{
     route: "Inventory",
   });
 
-  const [filter, setFilter] = useUrlState<ServiceInstanceParams.Filter>({
-    default: {},
-    key: "filter",
-    route: "Inventory",
-    validator: (v: unknown): v is ServiceInstanceParams.Filter => isObject(v),
-  });
+  const [filter, setFilter] =
+    useUrlStateWithFilter<ServiceInstanceParams.Filter>({ route: "Inventory" });
 
   const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",

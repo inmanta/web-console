@@ -1,5 +1,5 @@
 import { LogLevelString } from "./LogLevel";
-import { TimestampOperatorFilter } from "./Params";
+import { DateRange } from "./DateRange";
 
 export interface ResourceLog {
   level: LogLevelString;
@@ -15,5 +15,5 @@ export interface ResourceLogFilter {
   minimal_log_level?: string;
   action?: string[];
   message?: string[];
-  timestamp?: TimestampOperatorFilter[];
+  timestamp?: DateRange[];
 }

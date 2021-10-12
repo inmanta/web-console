@@ -6,7 +6,9 @@ test("handleUrlState", () => {
     default: PageSize.initial,
     key: "pageSize",
     route: "Inventory",
-    validator: PageSize.is,
+    serialize: PageSize.serialize,
+    parse: PageSize.parse,
+    equals: PageSize.equals,
   };
   const location: Location = {
     pathname: "",

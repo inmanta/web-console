@@ -35,6 +35,10 @@ export function toggleValueInList<T>(value: T, list: T[]): T[] {
 export const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
   value !== null;
 
+export const isNotUndefined = <T>(
+  value: T | undefined
+): value is NonNullable<T> => typeof value !== "undefined";
+
 export type ValueObject<T> = Readonly<{
   type: string;
   value: T;

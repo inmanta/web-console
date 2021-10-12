@@ -8,7 +8,6 @@ export function useUrlStateWithPageSize(
     default: PageSize.initial,
     key: "pageSize",
     route: config.route,
-    validator: PageSize.is,
     serialize: PageSize.serialize,
     parse: PageSize.parse,
     equals: PageSize.equals,

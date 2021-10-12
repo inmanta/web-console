@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { DependencyContext } from "@/UI/Dependency";
 import { EventParams, RemoteData, ServiceModel } from "@/Core";
 import {
@@ -14,7 +14,11 @@ import {
 import { words } from "@/UI/words";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { EventsTableControls } from "./EventsTableControls";
-import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 
 interface Props {
   service: ServiceModel;
@@ -27,8 +31,10 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
     default: { name: "timestamp", order: "desc" },
     route: "Events",
   });
-
-  const [filter, setFilter] = useState<EventParams.Filter>({});
+  const [filter, setFilter] = useUrlStateWithFilter<EventParams.Filter>({
+    route: "Events",
+    filters: { timestamp: "DateRange" },
+  });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: "Events" });
   const [data] = queryResolver.useContinuous<"Events">({
     kind: "Events",
@@ -39,7 +45,6 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
     pageSize,
   });
   const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());
-
   const states = service.lifecycle.states.map((state) => state.name).sort();
 
   return (

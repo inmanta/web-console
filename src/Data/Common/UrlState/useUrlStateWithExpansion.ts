@@ -1,4 +1,4 @@
-import { isEqual } from "lodash";
+import { isEqual, identity } from "lodash";
 import { useUrlState, StateConfig, Update } from "./useUrlState";
 
 export function useUrlStateWithExpansion(
@@ -8,7 +8,8 @@ export function useUrlStateWithExpansion(
     default: [],
     key: "expansion",
     route: config.route,
-    validator: (v: unknown): v is string[] => Array.isArray(v),
+    serialize: identity,
+    parse: identity,
     equals: isEqual,
   });
 }

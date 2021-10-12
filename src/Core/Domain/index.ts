@@ -30,3 +30,4 @@ export * from "./CompileReport";
 export * as CompileReportParams from "./CompileReportParams";
 export * from "./CompileDetails";
 export * from "./CompileError";
+export * as DateRange from "./DateRange";

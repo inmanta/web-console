@@ -7,16 +7,15 @@ import { LifecycleTable } from "./LifecycleTable";
 import { Config } from "./Config";
 import { Details } from "./Details";
 import { CallbacksView } from "./Callbacks";
-import { useUrlState } from "@/Data";
+import { useUrlStateWithString } from "@/Data";
 
 export const CatalogTabs: React.FunctionComponent<{
   service: ServiceModel;
 }> = ({ service }) => {
-  const [activeTabKey, setActiveTabKey] = useUrlState({
+  const [activeTabKey, setActiveTabKey] = useUrlStateWithString({
     default: "details",
     key: `tab-${service.name}`,
     route: "Catalog",
-    validator: (v: unknown): v is string => typeof v === "string",
   });
 
   const handleTabClick = (event, tabIndex) => {

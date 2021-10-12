@@ -1,5 +1,4 @@
 import { useHistory, useLocation } from "react-router-dom";
-
 import { isObject } from "@/Core";
 import { Kind, SearchHelper } from "@/UI/Routing";
 
@@ -9,13 +8,10 @@ export interface StateConfig<Data> {
   default: Data;
   key: string;
   route: Kind;
-  validator: Validator<Data>;
-  serialize?: (data: Data) => string;
-  parse?: (value: string) => Data | null;
-  equals?: (a: Data, b: Data) => boolean;
+  serialize: (data: Data) => string | Data;
+  parse: (value: unknown) => Data | undefined;
+  equals: (a: Data, b: Data) => boolean;
 }
-
-type Validator<Data> = (value: unknown) => value is Data;
 
 export type Update<Data> = (data: Data) => void;
 
@@ -47,41 +43,36 @@ export function handleUrlState<Data>(
   const routeState = getKeyOrEmpty(state, config.route);
   const candidateValue = routeState[config.key];
 
-  const parsed =
-    config.parse && typeof candidateValue !== "undefined"
-      ? config.parse(candidateValue as string)
+  const parsedValue =
+    typeof candidateValue !== "undefined"
+      ? config.parse(candidateValue)
       : candidateValue;
-  const currentValue = config.validator(parsed) ? parsed : config.default;
 
-  const areEqual = (a: Data, b: Data): boolean => {
-    if (config.equals) {
-      return config.equals(a, b);
-    }
-    return a === b;
-  };
+  const currentValue =
+    typeof parsedValue !== "undefined" ? parsedValue : config.default;
+
+  const areEqual = (a: Data, b: Data): boolean => config.equals(a, b);
+
+  const getSerializedValue = (value: Data) =>
+    areEqual(value, config.default) ? undefined : config.serialize(value);
 
   const setValue = (newValue: Data) => {
     if (areEqual(newValue, currentValue)) return;
-
-    const correctValue = areEqual(newValue, config.default)
-      ? undefined
-      : config.serialize
-      ? config.serialize(newValue)
-      : newValue;
-
+    const serialized = getSerializedValue(newValue);
     const newSearch = searchHelper.stringify({
       ...parsedSearch,
       state: {
         ...state,
         [config.route]: {
           ...routeState,
-          [config.key]: correctValue,
+          [config.key]: serialized,
         },
       },
     });
 
     history.replace(`${location.pathname}${newSearch}${location.hash}`);
   };
+
   return [currentValue, setValue];
 }
 

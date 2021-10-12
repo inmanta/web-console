@@ -8,7 +8,6 @@ export function useUrlStateWithSort(
     default: config.default,
     key: "sort",
     route: config.route,
-    validator: Sort.is,
     serialize: Sort.serialize,
     parse: Sort.parse,
     equals: Sort.equals,

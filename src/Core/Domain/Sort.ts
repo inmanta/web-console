@@ -1,5 +1,3 @@
-import { isObject } from "@/Core/Language";
-
 export interface Sort {
   name: string;
   order: Order;
@@ -15,19 +13,11 @@ const orderIsValid = (value: string): value is Order =>
 export const equals = (a: Sort, b: Sort): boolean =>
   a.name === b.name && a.order === b.order;
 
-export const is = (value: unknown): value is Sort => {
-  if (!isObject(value)) return false;
-  return (
-    typeof value.name === "string" &&
-    typeof value.order === "string" &&
-    orderIsValid(value.order)
-  );
-};
-
 export const serialize = (sort: Sort): string => `${sort.name}.${sort.order}`;
 
-export const parse = (value: string): Sort | null => {
+export const parse = (value: unknown): Sort | undefined => {
+  if (typeof value !== "string") return undefined;
   const [name, order] = value.split(".");
-  if (!orderIsValid(order)) return null;
+  if (!orderIsValid(order)) return undefined;
   return { name, order };
 };
