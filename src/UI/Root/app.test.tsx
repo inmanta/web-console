@@ -11,6 +11,7 @@ import {
   getStoreInstance,
 } from "@/Data";
 import { DeferredFetcher, DynamicQueryManagerResolver } from "@/Test";
+import { MemoryRouter } from "react-router";
 
 function setup() {
   const stateHelper = new ProjectsStateHelper(getStoreInstance());
@@ -32,11 +33,13 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
   const { queryResolver } = setup();
 
   render(
-    <DependencyProvider dependencies={{ queryResolver }}>
-      <StoreProvider store={getStoreInstance()}>
-        <App keycloak={keycloak} shouldUseAuth={false} />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter initialEntries={["/lsm/catalog"]}>
+      <DependencyProvider dependencies={{ queryResolver }}>
+        <StoreProvider store={getStoreInstance()}>
+          <App keycloak={keycloak} shouldUseAuth={false} />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   expect(

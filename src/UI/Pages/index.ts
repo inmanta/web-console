@@ -8,4 +8,5 @@ export * from "./ServiceInstanceHistory";
 export * from "./ServiceInventory";
 export * from "./PageRouter";
 export * from "./CompileReports";
+export * from "./Home";
 export * from "./ResourceDetails";

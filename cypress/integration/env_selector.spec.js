@@ -4,7 +4,7 @@ describe("Environment selector", function () {
     cy.intercept("GET", "**/api/v2/project", {
       fixture: "environments.json",
     });
-    cy.visit("/");
+    cy.visit("/lsm/catalog");
     cy.get(".pf-c-context-selector__toggle").click();
 
     cy.get(".pf-c-context-selector__menu-list-item").should((items) => {

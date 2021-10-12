@@ -4,18 +4,21 @@ import userEvent from "@testing-library/user-event";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { RemoteData } from "@/Core";
 import { Project } from "@/Test";
+import { MemoryRouter } from "react-router";
 
 test("GIVEN EnvironmentSelector WHEN no environments THEN error view", async () => {
   render(
-    <EnvironmentSelector
-      projects={RemoteData.success([])}
-      onSelectEnvironment={() => {
-        return;
-      }}
-      selectedProjectAndEnvironment={RemoteData.failed(
-        "No environments were found"
-      )}
-    />
+    <MemoryRouter>
+      <EnvironmentSelector
+        projects={RemoteData.success([])}
+        onSelectEnvironment={() => {
+          return;
+        }}
+        selectedProjectAndEnvironment={RemoteData.failed(
+          "No environments were found"
+        )}
+      />
+    </MemoryRouter>
   );
 
   expect(
@@ -28,16 +31,18 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   const [envA] = projectA.environments;
   const [envB] = projectB.environments;
   render(
-    <EnvironmentSelector
-      projects={RemoteData.success(Project.list)}
-      onSelectEnvironment={() => {
-        return;
-      }}
-      selectedProjectAndEnvironment={RemoteData.success({
-        environment: envA,
-        project: projectA,
-      })}
-    />
+    <MemoryRouter>
+      <EnvironmentSelector
+        projects={RemoteData.success(Project.list)}
+        onSelectEnvironment={() => {
+          return;
+        }}
+        selectedProjectAndEnvironment={RemoteData.success({
+          environment: envA,
+          project: projectA,
+        })}
+      />
+    </MemoryRouter>
   );
 
   const toggle = screen.getByRole("button", {
@@ -58,16 +63,19 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   const [envA] = projectA.environments;
   const [envB] = projectB.environments;
   render(
-    <EnvironmentSelector
-      projects={RemoteData.success(Project.list)}
-      onSelectEnvironment={(item) => {
-        (selectedEnv = item.environmentId), (selectedProject = item.projectId);
-      }}
-      selectedProjectAndEnvironment={RemoteData.success({
-        environment: envA,
-        project: projectA,
-      })}
-    />
+    <MemoryRouter>
+      <EnvironmentSelector
+        projects={RemoteData.success(Project.list)}
+        onSelectEnvironment={(item) => {
+          (selectedEnv = item.environmentId),
+            (selectedProject = item.projectId);
+        }}
+        selectedProjectAndEnvironment={RemoteData.success({
+          environment: envA,
+          project: projectA,
+        })}
+      />
+    </MemoryRouter>
   );
 
   const toggle = screen.getByRole("button", {
@@ -103,16 +111,18 @@ test.each`
     const [env] = project.environments;
 
     render(
-      <EnvironmentSelector
-        projects={RemoteData.success(Project.list)}
-        onSelectEnvironment={() => {
-          return;
-        }}
-        selectedProjectAndEnvironment={RemoteData.success({
-          environment: env,
-          project,
-        })}
-      />
+      <MemoryRouter>
+        <EnvironmentSelector
+          projects={RemoteData.success(Project.list)}
+          onSelectEnvironment={() => {
+            return;
+          }}
+          selectedProjectAndEnvironment={RemoteData.success({
+            environment: env,
+            project,
+          })}
+        />
+      </MemoryRouter>
     );
 
     const toggle = screen.getByRole("button", {
@@ -135,16 +145,18 @@ test("GIVEN EnvironmentSelector and populated store WHEN user types in non match
   const [project] = Project.list;
   const [env] = project.environments;
   render(
-    <EnvironmentSelector
-      projects={RemoteData.success(Project.list)}
-      onSelectEnvironment={() => {
-        return;
-      }}
-      selectedProjectAndEnvironment={RemoteData.success({
-        environment: env,
-        project,
-      })}
-    />
+    <MemoryRouter>
+      <EnvironmentSelector
+        projects={RemoteData.success(Project.list)}
+        onSelectEnvironment={() => {
+          return;
+        }}
+        selectedProjectAndEnvironment={RemoteData.success({
+          environment: env,
+          project,
+        })}
+      />
+    </MemoryRouter>
   );
 
   const toggle = screen.getByRole("button", {
@@ -169,16 +181,19 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   const [envA] = projectA.environments;
   const [, envB] = projectB.environments;
   render(
-    <EnvironmentSelector
-      projects={RemoteData.success(Project.list)}
-      onSelectEnvironment={(item) => {
-        (selectedEnv = item.environmentId), (selectedProject = item.projectId);
-      }}
-      selectedProjectAndEnvironment={RemoteData.success({
-        environment: envA,
-        project: projectA,
-      })}
-    />
+    <MemoryRouter>
+      <EnvironmentSelector
+        projects={RemoteData.success(Project.list)}
+        onSelectEnvironment={(item) => {
+          (selectedEnv = item.environmentId),
+            (selectedProject = item.projectId);
+        }}
+        selectedProjectAndEnvironment={RemoteData.success({
+          environment: envA,
+          project: projectA,
+        })}
+      />
+    </MemoryRouter>
   );
   const toggle = screen.getByRole("button", {
     name: `Selected Project: ${envA.name} (${projectA.name})`,

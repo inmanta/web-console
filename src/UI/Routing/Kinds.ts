@@ -9,4 +9,5 @@ export type Kinds =
   | "Resources"
   | "CompileReports"
   | "CompileDetails"
+  | "Home"
   | "ResourceDetails";

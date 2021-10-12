@@ -5,10 +5,10 @@ const finder = new BaseUrlFinder();
 
 test.each`
   fullUrl                                                         | returnText                         | returnValue
-  ${""}                                                           | ${"Maybe.none()"}                  | ${Maybe.none()}
-  ${"/"}                                                          | ${"Maybe.none()"}                  | ${Maybe.none()}
-  ${"/sub1"}                                                      | ${"Maybe.none()"}                  | ${Maybe.none()}
-  ${"/sub1/"}                                                     | ${"Maybe.none()"}                  | ${Maybe.none()}
+  ${""}                                                           | ${"Maybe.some()"}                  | ${Maybe.some("")}
+  ${"/"}                                                          | ${"Maybe.some()"}                  | ${Maybe.some("/")}
+  ${"/sub1"}                                                      | ${"Maybe.some()"}                  | ${Maybe.some("/sub1")}
+  ${"/sub1/"}                                                     | ${"Maybe.some()"}                  | ${Maybe.some("/sub1/")}
   ${"/sub1/lsm/catalog"}                                          | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
   ${"/sub1/lsm/catalog"}                                          | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
   ${"/sub1/lsm/catalog/cloudconnect/inventory"}                   | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
@@ -39,5 +39,6 @@ test("GIVEN BaseUrlFinder WHEN getPaths THEN returns paths with wildcard", () =>
     "*/resources/:resourceId",
     "*/compilereports",
     "*/compilereports/:id",
+    "*/",
   ]);
 });

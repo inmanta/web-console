@@ -8,7 +8,7 @@ export class BaseUrlFinder {
   getUrl(url: string): string {
     const result = this.find(url);
     if (Maybe.isNone(result)) return this.santitizeUrl(url);
-    return result.value;
+    return this.santitizeUrl(result.value);
   }
 
   find(fullUrl: string): Maybe.Type<string> {
