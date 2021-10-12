@@ -48,6 +48,7 @@ export const SetStateAction: React.FC<Props> = ({
     id,
     version,
   });
+  const isHalted = environmentModifier.useIsHalted();
 
   const onSubmit = async (targetState: string) => {
     const result = await trigger(targetState);
@@ -64,7 +65,7 @@ export const SetStateAction: React.FC<Props> = ({
     );
     handleModalToggle();
   };
-  const isHalted = environmentModifier.useIsHalted();
+
   return (
     <>
       {stateErrorMessage && (
