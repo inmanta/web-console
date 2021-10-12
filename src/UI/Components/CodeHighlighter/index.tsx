@@ -73,11 +73,10 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
                 style={docco}
                 customStyle={{
                   backgroundColor: "initial",
-                  maxWidth: "50em",
                   height: "6em",
                   minHeight: "4.5em",
                   overflow: "auto",
-                  resize: "vertical",
+                  resize: "both",
                   borderRight: "1px solid var(--pf-global--BorderColor--100)",
                 }}
               >
