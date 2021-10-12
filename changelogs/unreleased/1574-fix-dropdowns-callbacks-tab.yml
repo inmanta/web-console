@@ -1,0 +1,4 @@
+description: Fix dropdowns on callbacks tab
+issue-nr: 1574
+change-type: patch
+destination-branches: [master, iso4]
