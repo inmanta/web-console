@@ -1,15 +1,25 @@
 import * as React from "react";
-import { NavLink } from "react-router-dom";
-import { Alert, PageSection } from "@patternfly/react-core";
+import { Link } from "react-router-dom";
+import {
+  Button,
+  EmptyState,
+  EmptyStateIcon,
+  PageSection,
+  Title,
+} from "@patternfly/react-core";
+import { ExclamationTriangleIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
-export const NotFound: React.FunctionComponent = () => {
-  return (
-    <PageSection>
-      <Alert variant="danger" title="404! This view hasn't been created yet." />
-      <br />
-      <NavLink to="/" className="pf-c-nav__link">
-        Take me home
-      </NavLink>
-    </PageSection>
-  );
-};
+export const NotFound: React.FunctionComponent = () => (
+  <PageSection variant="light">
+    <EmptyState>
+      <EmptyStateIcon icon={ExclamationTriangleIcon} />
+      <Title headingLevel="h3" size="lg">
+        {words("notFound.title")}
+      </Title>
+      <Link to={{ pathname: "/", search: location.search }}>
+        <Button>{words("notFound.back")}</Button>
+      </Link>
+    </EmptyState>
+  </PageSection>
+);

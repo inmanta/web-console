@@ -10,7 +10,6 @@ import {
 import React from "react";
 import { ResourceTableRow } from "./ResourceTableRow";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
-import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 
 interface Props {
   rows: ResourceRow[];
@@ -57,42 +56,15 @@ export const ResourcesTable: React.FC<Props> = ({
         </Th>
       );
     });
-  const expansionManager = new ExpansionManager();
-
-  const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(rowsToIds(rows))
-  );
-
-  const handleExpansionToggle = (id: string) => () => {
-    setExpansionState(expansionManager.toggle(expansionState, id));
-  };
-
-  React.useEffect(() => {
-    setExpansionState(expansionManager.merge(expansionState, rowsToIds(rows)));
-  }, [rows]);
 
   return (
     <TableComposable {...props} variant={TableVariant.compact}>
       <Thead>
-        <Tr>
-          <Th />
-          {heads}
-        </Tr>
+        <Tr>{heads}</Tr>
       </Thead>
-      {rows.map((row, idx) => (
-        <ResourceTableRow
-          row={row}
-          key={row.id}
-          index={idx}
-          isExpanded={expansionState[row.id]}
-          onToggle={handleExpansionToggle(row.id)}
-          numberOfColumns={tablePresenter.getNumberOfColumns()}
-        />
+      {rows.map((row) => (
+        <ResourceTableRow row={row} key={row.id} />
       ))}
     </TableComposable>
   );
 };
-
-function rowsToIds(rows: ResourceRow[]): string[] {
-  return rows.map((row) => row.id);
-}

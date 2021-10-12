@@ -58,12 +58,7 @@ export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
             </Alert>
           ),
           success: (content) => (
-            <CodeHighlighter
-              code={content}
-              language="text"
-              close={close}
-              withExpansion
-            />
+            <CodeHighlighter code={content} language="text" close={close} />
           ),
         },
         fileContent

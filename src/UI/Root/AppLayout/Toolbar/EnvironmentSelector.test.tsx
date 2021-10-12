@@ -46,11 +46,11 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   );
 
   const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${projectA.name} / ${envA.name}`,
+    name: `Selected Project: ${envA.name} (${projectA.name})`,
   });
   userEvent.click(toggle);
   const listItem = screen.queryByRole("menuitem", {
-    name: `${projectB.name} / ${envB.name}`,
+    name: `${envB.name} (${projectB.name})`,
   });
 
   expect(listItem).toBeVisible();
@@ -79,12 +79,12 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   );
 
   const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${projectA.name} / ${envA.name}`,
+    name: `Selected Project: ${envA.name} (${projectA.name})`,
   });
   userEvent.click(toggle);
 
   const listItem = screen.getByRole("menuitem", {
-    name: `${projectB.name} / ${envB.name}`,
+    name: `${envB.name} (${projectB.name})`,
   });
 
   expect(listItem).toBeVisible();
@@ -93,7 +93,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
 
   expect(
     screen.queryByRole("button", {
-      name: `Selected Project: ${projectB.name} / ${envB.name}`,
+      name: `Selected Project: ${envB.name} (${projectB.name})`,
     })
   ).toBeVisible();
   expect(selectedProject).toEqual(projectB.id);
@@ -126,7 +126,7 @@ test.each`
     );
 
     const toggle = screen.getByRole("button", {
-      name: `Selected Project: ${project.name} / ${env.name}`,
+      name: `Selected Project: ${env.name} (${project.name})`,
     });
     userEvent.click(toggle);
 
@@ -160,7 +160,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user types in non match
   );
 
   const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${project.name} / ${env.name}`,
+    name: `Selected Project: ${env.name} (${project.name})`,
   });
   userEvent.click(toggle);
 
@@ -174,7 +174,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user types in non match
   expect(menuItemsAfter).not.toBeInTheDocument();
 });
 
-test("GIVEN EnvironmentSelector and environments with identital names WHEN user clicks on an environment THEN the correct environment is selected", () => {
+test("GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected", () => {
   let selectedEnv;
   let selectedProject;
   const [projectA, projectB] = Project.list;
@@ -196,7 +196,7 @@ test("GIVEN EnvironmentSelector and environments with identital names WHEN user 
     </MemoryRouter>
   );
   const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${projectA.name} / ${envA.name}`,
+    name: `Selected Project: ${envA.name} (${projectA.name})`,
   });
   userEvent.click(toggle);
 
@@ -205,7 +205,7 @@ test("GIVEN EnvironmentSelector and environments with identital names WHEN user 
 
   expect(
     screen.getByRole("button", {
-      name: `Selected Project: ${projectB.name} / ${envB.name}`,
+      name: `Selected Project: ${envB.name} (${projectB.name})`,
     })
   );
 

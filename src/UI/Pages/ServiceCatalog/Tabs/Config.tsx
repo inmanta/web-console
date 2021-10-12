@@ -1,28 +1,17 @@
 import React, { useContext } from "react";
-import {
-  BooleanSwitch,
-  EmptyView,
-  ErrorView,
-  LoadingView,
-  SettingsList,
-} from "@/UI/Components";
+import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { RemoteData } from "@/Core";
-import { words } from "@/UI/words";
 import { Card, CardBody } from "@patternfly/react-core";
+import { ConfigList } from "./ConfigList";
 
 interface Props {
   serviceName: string;
 }
 
 export const Config: React.FC<Props> = ({ serviceName }) => {
-  const { queryResolver, commandResolver, environmentModifier } =
-    useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
   const [data, retry] = queryResolver.useOneTime<"ServiceConfig">({
-    kind: "ServiceConfig",
-    name: serviceName,
-  });
-  const update = commandResolver.getTrigger<"ServiceConfig">({
     kind: "ServiceConfig",
     name: serviceName,
   });
@@ -35,17 +24,9 @@ export const Config: React.FC<Props> = ({ serviceName }) => {
             notAsked: () => null,
             loading: () => <LoadingView />,
             failed: (error) => <ErrorView message={error} retry={retry} />,
-            success: (config) =>
-              Object.keys(config).length <= 0 ? (
-                <EmptyView message={words("config.empty")} />
-              ) : (
-                <SettingsList
-                  config={config}
-                  onChange={update}
-                  Switch={BooleanSwitch}
-                  isDisabled={environmentModifier.isHalted()}
-                />
-              ),
+            success: (config) => (
+              <ConfigList config={config} serviceName={serviceName} />
+            ),
           },
           data
         )}
