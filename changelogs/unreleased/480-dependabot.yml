@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @types/webpack from 4.41.10 to 5.28.0
+destination-branches:
+- master
+- iso4
+sections: {}

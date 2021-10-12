@@ -1,36 +1,42 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
-import { InstantFetcher, Service, ServiceInstance } from "@/Test";
 import {
-  DataProviderImpl,
-  InstanceLogsDataManager,
+  DynamicQueryManagerResolver,
+  InstantFetcher,
+  Service,
+  ServiceInstance,
+} from "@/Test";
+import {
+  QueryResolverImpl,
+  InstanceLogsQueryManager,
   InstanceLogsStateHelper,
-} from "@/UI/Data";
+  getStoreInstance,
+} from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 
 it("ServiceInstanceHistory renders", async () => {
-  const { id, environment } = ServiceInstance.A;
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new InstanceLogsDataManager(
-      new InstantFetcher<"InstanceLogs">({
-        kind: "Success",
-        data: { data: [] },
-      }),
-      new InstanceLogsStateHelper(store)
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new InstanceLogsQueryManager(
+        new InstantFetcher<"InstanceLogs">({
+          kind: "Success",
+          data: { data: [] },
+        }),
+        new InstanceLogsStateHelper(store),
+        Service.a.environment
+      ),
+    ])
+  );
 
   render(
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <StoreProvider store={store}>
         <ServiceInstanceHistory
-          service={Service.A}
-          instanceId={id}
-          environment={environment}
+          service={Service.a}
+          instanceId={ServiceInstance.a.id}
         />
       </StoreProvider>
     </DependencyProvider>

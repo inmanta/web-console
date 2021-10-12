@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump mini-css-extract-plugin from 1.6.1 to 1.6.2'
+destination-branches:
+- master
+- iso4
+sections: {}

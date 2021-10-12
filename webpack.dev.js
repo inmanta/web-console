@@ -1,5 +1,5 @@
 const path = require("path");
-const merge = require("webpack-merge");
+const { merge } = require("webpack-merge");
 const common = require("./webpack.common.js");
 const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
@@ -13,17 +13,19 @@ module.exports = merge(common, {
   mode: "development",
   devtool: "eval-source-map",
   devServer: {
-    contentBase: "./dist",
     host: HOST,
     port: PORT,
     compress: true,
-    inline: true,
     historyApiFallback: true,
     hot: true,
-    overlay: true,
-    open: true,
-    watchOptions: {
-      ignored: /node_modules/,
+    client: {
+      overlay: true,
+    },
+    static: {
+      directory: path.resolve(__dirname, "dist"),
+      watch: {
+        ignored: /node_modules/,
+      },
     },
   },
   plugins: [

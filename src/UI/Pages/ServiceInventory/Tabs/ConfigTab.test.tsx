@@ -1,58 +1,77 @@
 import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import {
-  CommandProviderImpl,
-  DataProviderImpl,
-  InstanceConfigDataManager,
+  CommandResolverImpl,
+  QueryResolverImpl,
+  InstanceConfigCommandManager,
+  InstanceConfigQueryManager,
   InstanceConfigStateHelper,
   ServiceKeyMaker,
   ServiceStateHelper,
-} from "@/UI/Data";
+  InstanceConfigFinalizer,
+  getStoreInstance,
+} from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import { ConfigTab } from "./ConfigTab";
 import {
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
   InstantFetcher,
   InstantPoster,
+  MockEnvironmentModifier,
   Service,
   ServiceInstance,
 } from "@/Test";
 import { StoreProvider } from "easy-peasy";
-import { RemoteData } from "@/Core";
+import {
+  EnvironmentDetails,
+  RemoteData,
+  VersionedServiceInstanceIdentifier,
+} from "@/Core";
+import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
 
 function setup() {
   const storeInstance = getStoreInstance();
   const serviceKeyMaker = new ServiceKeyMaker();
+  storeInstance.dispatch.services.setSingle({
+    environment: Service.a.environment,
+    query: { kind: "Service", name: Service.a.name },
+    data: RemoteData.success(Service.a),
+  });
 
   const instanceConfigStateHelper = new InstanceConfigStateHelper(
     storeInstance
   );
 
-  const instanceConfigHelper = new InstanceConfigDataManager(
+  const instanceIdentifier: VersionedServiceInstanceIdentifier = {
+    id: ServiceInstance.a.id,
+    service_entity: Service.a.name,
+    version: ServiceInstance.a.version,
+  };
+
+  const instanceConfigHelper = new InstanceConfigQueryManager(
     new InstantFetcher<"InstanceConfig">({
       kind: "Success",
       data: { data: { auto_creating: false } },
     }),
     instanceConfigStateHelper,
-    new ServiceStateHelper(storeInstance, serviceKeyMaker),
-    new InstantFetcher<"Service">({
-      kind: "Success",
-      data: { data: Service.A },
-    })
+    new InstanceConfigFinalizer(
+      new ServiceStateHelper(
+        storeInstance,
+        serviceKeyMaker,
+        Service.a.environment
+      )
+    ),
+    Service.a.environment
   );
 
-  const dataProvider = new DataProviderImpl([instanceConfigHelper]);
-
-  const instanceIdentifier = {
-    id: ServiceInstance.A.id,
-    service_entity: Service.A.name,
-    environment: Service.A.environment,
-    version: ServiceInstance.A.version,
-  };
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([instanceConfigHelper])
+  );
 
   return {
     storeInstance,
-    dataProvider,
+    queryResolver,
     instanceConfigStateHelper,
     instanceIdentifier,
   };
@@ -61,18 +80,28 @@ function setup() {
 test("ConfigTab can reset all settings", async () => {
   const {
     storeInstance,
-    dataProvider,
+    queryResolver,
     instanceConfigStateHelper,
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl(
-    new InstantPoster(RemoteData.success({ data: {} })),
-    instanceConfigStateHelper
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new InstanceConfigCommandManager(
+        new InstantPoster<"InstanceConfig">(RemoteData.success({ data: {} })),
+        instanceConfigStateHelper
+      ),
+    ])
   );
 
   render(
-    <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
+    <DependencyProvider
+      dependencies={{
+        queryResolver,
+        commandResolver,
+        environmentModifier: new MockEnvironmentModifier(),
+      }}
+    >
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>
@@ -96,22 +125,32 @@ test("ConfigTab can reset all settings", async () => {
 test("ConfigTab can change 1 toggle", async () => {
   const {
     storeInstance,
-    dataProvider,
+    queryResolver,
     instanceConfigStateHelper,
     instanceIdentifier,
   } = setup();
 
-  const commandProvider = new CommandProviderImpl(
-    new InstantPoster(
-      RemoteData.success({
-        data: { auto_creating: false, auto_designed: false },
-      })
-    ),
-    instanceConfigStateHelper
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new InstanceConfigCommandManager(
+        new InstantPoster<"InstanceConfig">(
+          RemoteData.success({
+            data: { auto_creating: false, auto_designed: false },
+          })
+        ),
+        instanceConfigStateHelper
+      ),
+    ])
   );
 
   render(
-    <DependencyProvider dependencies={{ dataProvider, commandProvider }}>
+    <DependencyProvider
+      dependencies={{
+        queryResolver,
+        commandResolver,
+        environmentModifier: new MockEnvironmentModifier(),
+      }}
+    >
       <StoreProvider store={storeInstance}>
         <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
       </StoreProvider>
@@ -127,6 +166,59 @@ test("ConfigTab can change 1 toggle", async () => {
   fireEvent.click(toggle);
 
   expect(
-    await screen.findByRole("checkbox", { name: "auto_creating-False" })
+    screen.getByRole("checkbox", { name: "auto_creating-False" })
   ).toBeVisible();
+
+  expect(
+    await screen.findByRole("checkbox", { name: "auto_designed-False" })
+  ).toBeVisible();
+});
+
+test("ConfigTab handles hooks with environment modifier correctly", async () => {
+  const {
+    storeInstance,
+    queryResolver,
+    instanceConfigStateHelper,
+    instanceIdentifier,
+  } = setup();
+
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new InstanceConfigCommandManager(
+        new InstantPoster<"InstanceConfig">(
+          RemoteData.success({
+            data: { auto_creating: false, auto_designed: false },
+          })
+        ),
+        instanceConfigStateHelper
+      ),
+    ])
+  );
+  storeInstance.dispatch.environmentDetails.setData({
+    id: Service.a.environment,
+    value: RemoteData.success({ halted: true } as EnvironmentDetails),
+  });
+  const environmentModifier = new EnvironmentModifierImpl();
+  environmentModifier.setEnvironment(Service.a.environment);
+
+  render(
+    <DependencyProvider
+      dependencies={{
+        queryResolver,
+        commandResolver,
+        environmentModifier,
+      }}
+    >
+      <StoreProvider store={storeInstance}>
+        <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
+      </StoreProvider>
+    </DependencyProvider>
+  );
+
+  const toggle = await screen.findByRole("checkbox", {
+    name: "auto_designed-True",
+  });
+
+  expect(toggle).toBeVisible();
+  expect(toggle).toBeDisabled();
 });

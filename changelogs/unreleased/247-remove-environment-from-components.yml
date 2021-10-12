@@ -1,0 +1,6 @@
+description: Remove environment from components
+issue-nr: 247
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

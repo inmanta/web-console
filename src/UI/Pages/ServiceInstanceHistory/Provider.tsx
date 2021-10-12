@@ -1,41 +1,29 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { EnvironmentProvider, ServiceProvider } from "@/UI/Components";
+import { Card } from "@patternfly/react-core";
+import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
+import { Route } from "@/UI/Routing";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
-import { Card, PageSection } from "@patternfly/react-core";
-
-interface Params {
-  id: string;
-  instanceId: string;
-}
+import { words } from "@/UI/words";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSection className={"horizontally-scrollable"} {...props}>
+  <PageSectionWithTitle {...props} title={words("history.title")}>
     <Card>{children}</Card>
-  </PageSection>
+  </PageSectionWithTitle>
 );
 
 export const Provider: React.FC = () => {
-  const { id, instanceId } = useParams<Params>();
+  const { service: serviceName, instance } =
+    useParams<Route.Params<"History">>();
 
   return (
-    <EnvironmentProvider
+    <ServiceProvider
+      serviceName={serviceName}
       Wrapper={Wrapper}
-      Dependant={({ environment }) => (
-        <ServiceProvider
-          environmentId={environment}
-          serviceName={id}
-          Wrapper={Wrapper}
-          Dependant={({ service }) => (
-            <Wrapper>
-              <ServiceInstanceHistory
-                service={service}
-                instanceId={instanceId}
-                environment={environment}
-              />
-            </Wrapper>
-          )}
-        />
+      Dependant={({ service }) => (
+        <Wrapper>
+          <ServiceInstanceHistory service={service} instanceId={instance} />
+        </Wrapper>
       )}
     />
   );

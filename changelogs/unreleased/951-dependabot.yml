@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @typescript-eslint/parser from 4.28.2 to 4.28.3'
+destination-branches:
+- master
+- iso4
+sections: {}

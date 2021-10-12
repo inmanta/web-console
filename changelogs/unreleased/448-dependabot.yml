@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump cypress-multi-reporters from 1.2.4 to 1.5.0
+destination-branches:
+- master
+- iso4
+sections: {}

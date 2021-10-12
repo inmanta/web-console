@@ -1,7 +1,8 @@
-import React from "react";
-import { useStoreState } from "@/UI/Store";
+import React, { useContext } from "react";
 import { words } from "@/UI/words";
 import { ErrorView } from "@/UI/Components/ErrorView";
+import { RemoteData } from "@/Core";
+import { EnvironmentHandlerContext } from "@/UI/Dependency";
 
 interface Props {
   Wrapper: React.FC;
@@ -12,15 +13,24 @@ export const EnvironmentProvider: React.FunctionComponent<Props> = ({
   Wrapper,
   Dependant,
 }) => {
-  const environmentId = useStoreState(
-    (store) => store.environments.getSelectedEnvironment.id
-  );
+  const { environmentHandler } = useContext(EnvironmentHandlerContext);
 
-  return environmentId ? (
-    <Dependant environment={environmentId} />
-  ) : (
-    <Wrapper aria-label="EnvironmentProvider-Failed">
-      <ErrorView message={words("error.environment.missing")} delay={500} />
-    </Wrapper>
+  const environment = environmentHandler.getSelected();
+  return RemoteData.fold(
+    {
+      notAsked: () => null,
+      loading: () => null,
+      failed: () => {
+        return (
+          <Wrapper aria-label="EnvironmentProvider-Failed">
+            <ErrorView message={words("error.environment.missing")} />
+          </Wrapper>
+        );
+      },
+      success: (data) => {
+        return <Dependant environment={data.environment.id} />;
+      },
+    },
+    environment
   );
 };

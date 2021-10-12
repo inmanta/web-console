@@ -1,7 +1,7 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { TreeTable } from "./TreeTable";
-import { instance } from "@/Test/Data";
+import { ServiceInstance } from "@/Test";
 import {
   AttributeHelper,
   PathHelper,
@@ -64,9 +64,9 @@ RealData.args = {
     new TreeExpansionManager("$"),
     new AttributeHelper("$"),
     {
-      candidate: instance.candidate_attributes,
-      active: instance.active_attributes,
-      rollback: instance.rollback_attributes,
+      candidate: null,
+      active: ServiceInstance.a.active_attributes,
+      rollback: null,
     }
   ),
 };

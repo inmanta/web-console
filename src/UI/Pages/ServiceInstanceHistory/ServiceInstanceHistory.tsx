@@ -9,32 +9,25 @@ import {
   InstanceState,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { InstanceLogRow } from "./InstanceLogRow";
-import {
-  AttributesPresenter,
-  MomentDatePresenter,
-} from "@/UI/Pages/ServiceInventory/Presenters";
+import { AttributesPresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 
 interface Props {
   service: ServiceModel;
   instanceId: string;
-  environment: string;
 }
 
 export const ServiceInstanceHistory: React.FC<Props> = ({
   service,
   instanceId,
-  environment,
 }) => {
-  const { dataProvider } = useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = dataProvider.useOneTime<"InstanceLogs">({
+  const [data] = queryResolver.useOneTime<"InstanceLogs">({
     kind: "InstanceLogs",
-    qualifier: {
-      environment,
-      id: instanceId,
-      service_entity: service.name,
-    },
+    id: instanceId,
+    service_entity: service.name,
   });
 
   return RemoteData.fold(

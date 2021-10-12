@@ -5,17 +5,15 @@ import { Either } from "@/Core";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active', 'Not Empty') THEN only instances which have active attributes are shown", async () => {
-  const {
-    component,
-    serviceInstancesFetcher,
-  } = new ServiceInventoryPrepper().prep();
+  const { component, serviceInstancesFetcher } =
+    new ServiceInventoryPrepper().prep();
 
   render(component);
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -23,26 +21,25 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   });
 
   userEvent.click(
-    within(
-      screen.getByRole("generic", { name: "FilterBar" })
-    ).getByRole("button", { name: "State" })
+    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" }
+    )
   );
   userEvent.click(screen.getByRole("option", { name: "AttributeSet" }));
-  userEvent.click(
-    screen.getByRole("button", { name: "Select an AttributeSet..." })
-  );
+  userEvent.click(screen.getByRole("button", { name: "Select AttributeSet" }));
   userEvent.click(screen.getByRole("option", { name: "Active" }));
-  userEvent.click(screen.getByRole("button", { name: "Select a quality..." }));
+  userEvent.click(screen.getByRole("button", { name: "Select Quality" }));
   userEvent.click(screen.getByRole("option", { name: "Not Empty" }));
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.attribute_set_not_empty=active_attributes&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.attribute_set_not_empty=active_attributes&sort=created_at.desc`
   );
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A],
+        data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })

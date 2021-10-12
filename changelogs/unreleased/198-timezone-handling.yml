@@ -1,0 +1,6 @@
+description: Show timestamps with the browser's timezone
+issue-nr: 198
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

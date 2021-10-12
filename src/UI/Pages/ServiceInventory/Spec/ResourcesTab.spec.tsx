@@ -1,25 +1,21 @@
 import { render, screen, act } from "@testing-library/react";
-import { ServiceInstance, Pagination, Resources, flushPromises } from "@/Test";
+import { ServiceInstance, Pagination, InstanceResource } from "@/Test";
 import { Either, Maybe } from "@/Core";
 import userEvent from "@testing-library/user-event";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
-jest.useFakeTimers();
+jest.useFakeTimers("modern");
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN data is fetched immediately", async () => {
-  const {
-    component,
-    scheduler,
-    serviceInstancesFetcher,
-    resourcesFetcher,
-  } = new ServiceInventoryPrepper().prep();
+  const { component, scheduler, serviceInstancesFetcher, resourcesFetcher } =
+    new ServiceInventoryPrepper().prep();
 
   render(component);
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -27,7 +23,9 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   });
 
   userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
-  userEvent.click(screen.getAllByRole("button", { name: "Resources" })[0]);
+  await act(async () => {
+    userEvent.click(screen.getAllByRole("button", { name: "Resources" })[0]);
+  });
 
   expect(resourcesFetcher.getInvocations().length).toEqual(1);
   expect(resourcesFetcher.getInvocations()[0][1]).toEqual(
@@ -35,14 +33,16 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   );
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(
+      Either.right({ data: InstanceResource.listA })
+    );
   });
 
   const tasks = scheduler.getTasks();
   const serviceInstancesTask = Maybe.orNull(
-    tasks.get(ServiceInstance.A.service_entity)
+    tasks.get(ServiceInstance.a.service_entity)
   );
-  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.A.id));
+  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.a.id));
 
   expect(serviceInstancesTask?.effect).not.toBeCalled();
   expect(resourcesTask?.effect).not.toBeCalled();
@@ -50,19 +50,15 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN the Resources auto-update happens in sync with the ServiceInstances", async () => {
   const prepper = new ServiceInventoryPrepper();
-  const {
-    component,
-    scheduler,
-    serviceInstancesFetcher,
-    resourcesFetcher,
-  } = prepper.prep();
+  const { component, scheduler, serviceInstancesFetcher, resourcesFetcher } =
+    prepper.prep();
 
   render(component);
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -70,32 +66,37 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   });
 
   userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
-  userEvent.click(screen.getAllByRole("button", { name: "Resources" })[0]);
+  await act(async () => {
+    userEvent.click(screen.getAllByRole("button", { name: "Resources" })[0]);
+  });
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(
+      Either.right({ data: InstanceResource.listA })
+    );
   });
 
   const tasks = scheduler.getTasks();
   const serviceInstancesTask = Maybe.orNull(
-    tasks.get(ServiceInstance.A.service_entity)
+    tasks.get(ServiceInstance.a.service_entity)
   );
-  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.A.id));
+  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.a.id));
 
   jest.advanceTimersByTime(5000);
-  await flushPromises();
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
     );
   });
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(
+      Either.right({ data: InstanceResource.listA })
+    );
   });
 
   expect(serviceInstancesTask?.effect).toBeCalledTimes(1);

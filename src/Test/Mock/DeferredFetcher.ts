@@ -21,6 +21,16 @@ export class DeferredFetcher<K extends Query.Kind> implements Fetcher<K> {
     return promise;
   }
 
+  getRootData(
+    url: string
+  ): Promise<Either.Type<Query.Error<K>, Query.ApiResponse<K>>> {
+    this.invocations.push(["", url]);
+    const promise: Promise<Data<K>> = new Promise((resolve) => {
+      this.handlers = { resolve, promise };
+    });
+    return promise;
+  }
+
   resolve(data: Data<K>): Promise<Data<K>> {
     if (this.handlers === null) throw new Error("No available handlers");
     const { resolve, promise } = this.handlers;

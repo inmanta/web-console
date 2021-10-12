@@ -48,7 +48,8 @@ See https://www.patternfly.org/v4/components/select/design-guidelines.
 
 ## Async timers in Jest
 
-https://stackoverflow.com/questions/52177631/jest-timer-and-promise-dont-work-well-settimeout-and-async-function
+- https://stackoverflow.com/questions/52177631/jest-timer-and-promise-dont-work-well-settimeout-and-async-function
+- https://github.com/facebook/jest/issues/2157
 
 ## JSDOM & screen width
 
@@ -64,3 +65,12 @@ window = Object.assign(window, { innerWidth: 500 });
 // Trigger the window resize event.
 window.dispatchEvent(new Event("resize"));
 ```
+
+## Minimum browser versions
+
+We decided to use the last 2 versions of the following browsers: Chrome, Firefox, Safari, Edge.
+The main reasons for this are:
+
+- Patternfly, the component library we use also only supports these browsers
+- improving security
+- keeping up to date with the new developments of the browser APIs

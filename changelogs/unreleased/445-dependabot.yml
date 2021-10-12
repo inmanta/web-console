@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump husky from 4.3.7 to 6.0.0
+destination-branches:
+- master
+- iso4
+sections: {}

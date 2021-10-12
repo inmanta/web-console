@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump normalize-url from 4.5.0 to 4.5.1'
+destination-branches:
+- master
+- iso4
+sections: {}

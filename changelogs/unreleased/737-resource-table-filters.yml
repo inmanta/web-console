@@ -1,0 +1,6 @@
+description: Add filters to resource table
+issue-nr: 737
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

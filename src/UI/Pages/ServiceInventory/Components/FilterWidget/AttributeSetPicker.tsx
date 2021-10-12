@@ -21,7 +21,7 @@ export const AttributeSetPicker: React.FC<Props> = ({
   return (
     <Select
       variant={SelectVariant.single}
-      aria-label="Select AttributeSet"
+      toggleAriaLabel="Select AttributeSet"
       onToggle={setFilterOpen}
       onSelect={onSelect}
       selections={attributeSet}

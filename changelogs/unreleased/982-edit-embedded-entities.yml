@@ -1,0 +1,6 @@
+description: Support editing instance with complex nested attributes
+issue-nr: 982
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

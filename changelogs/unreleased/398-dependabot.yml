@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump fetch-mock from 7.7.3 to 9.11.0
+destination-branches:
+- master
+- iso4
+sections: {}

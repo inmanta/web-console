@@ -6,6 +6,7 @@ import {
   SelectOption,
 } from "@patternfly/react-core";
 import { ServiceInstanceParams } from "@/Core";
+import { FilterIcon } from "@patternfly/react-icons";
 
 interface Props {
   filterKind: ServiceInstanceParams.Kind | string;
@@ -33,9 +34,10 @@ export const FilterPicker: React.FC<Props> = ({
     <ToolbarItem>
       <Select
         variant={SelectVariant.single}
-        aria-label="FilterPicker"
+        toggleAriaLabel="FilterPicker"
         onToggle={setFilterOpen}
         onSelect={onSelect}
+        toggleIcon={<FilterIcon />}
         selections={filterKind}
         isOpen={isFilterOpen}
       >

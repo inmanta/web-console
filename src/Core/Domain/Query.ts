@@ -1,7 +1,6 @@
 import { InstanceEvent } from "./EventModel";
 import { InstanceLog } from "./InstanceLogModel";
-import { EnvironmentIdentifier } from "./ProjectModel";
-import { ResourceModel } from "./ResourceModel";
+import { InstanceResourceModel as InstanceResourceModel } from "./InstanceResourceModel";
 import {
   VersionedServiceInstanceIdentifier,
   ServiceInstanceModel,
@@ -10,25 +9,81 @@ import {
 } from "./ServiceInstanceModel";
 import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
 import * as Pagination from "./Pagination";
-import { Config, Setting } from "./Config";
+import { Config } from "./Config";
 import { ServiceInstanceParams } from "./ServiceInstanceParams";
+import { RawDiagnostics, Diagnostics } from "./Diagnostics";
+import { EventParams } from "./EventParams";
+import { ProjectModel } from "./ProjectModel";
+import {
+  Resource,
+  RawResource,
+  RawResourceDetails,
+  ResourceDetails,
+} from "./Resource";
+import { ResourceParams as ResourceParams } from "./ResourceParams";
+import { WithId } from "../Language";
+import { ResourceHistory } from "./ResourceHistory";
+import { ResourceLog, ResourceLogFilter } from "./ResourceLog";
+import { Sort } from "./Params";
+import { PageSize } from "./PageSize";
+import { EnvironmentDetails } from "./EnvironmentDetailsModel";
+import { Callback } from "./Callback";
+import { CompileReport } from "./CompileReport";
+import { CompileReportParams } from "./CompileReportParams";
+import { CompileDetails } from "./CompileDetails";
 
 type Query =
   | ServicesQuery
   | ServiceQuery
+  | ServiceInstanceQuery
   | ServiceInstancesQuery
-  | ResourcesQuery
+  | ServiceConfigQuery
+  | InstanceResourcesQuery
   | InstanceEventsQuery
   | InstanceLogsQuery
-  | InstanceConfigQuery;
+  | InstanceConfigQuery
+  | DiagnosticsQuery
+  | ProjectsQuery
+  | ResourcesQuery
+  | ResourceDetailsQuery
+  | ResourceHistoryQuery
+  | ResourceLogsQuery
+  | EnvironmentDetailsQuery
+  | CallbacksQuery
+  | CompileReportsQuery
+  | CompileDetailsQuery;
+
 export type Type = Query;
+
+export interface ProjectsQuery {
+  kind: "Projects";
+}
+
+interface ProjectsManifest {
+  error: string;
+  apiResponse: { data: ProjectModel[] };
+  data: ProjectModel[];
+  usedData: ProjectModel[];
+  query: ProjectsQuery;
+}
+
+export interface EnvironmentDetailsQuery {
+  kind: "EnvironmentDetails";
+}
+
+interface EnvironmentDetailsManifest {
+  error: string;
+  apiResponse: { data: EnvironmentDetails };
+  data: EnvironmentDetails;
+  usedData: EnvironmentDetails;
+  query: EnvironmentDetailsQuery;
+}
 
 /**
  * The ServicesQuery describes all services beloning to an environment.
  */
 export interface ServicesQuery {
   kind: "Services";
-  qualifier: EnvironmentIdentifier;
 }
 
 interface ServicesManifest {
@@ -40,12 +95,10 @@ interface ServicesManifest {
 }
 
 /**
- * The ServiceQuery describes a service. The qualifier identifies 1
- * specific service.
+ * The ServiceQuery identifies 1 specific service.
  */
-export interface ServiceQuery {
+export interface ServiceQuery extends ServiceIdentifier {
   kind: "Service";
-  qualifier: ServiceIdentifier;
 }
 
 interface ServiceManifest {
@@ -57,33 +110,14 @@ interface ServiceManifest {
 }
 
 /**
- * The ResourcesQuery describes resources for a service instance.
- * We are not asking for 1 specific resource. We are asking for all the
- * resources of 1 specific service instance. So the qualifier property
- * identifies a service instance.
- */
-export interface ResourcesQuery {
-  kind: "Resources";
-  qualifier: VersionedServiceInstanceIdentifier;
-}
-
-interface ResourcesManifest {
-  error: string;
-  apiResponse: { data: ResourceModel[] };
-  data: ResourceModel[];
-  usedData: ResourceModel[];
-  query: ResourcesQuery;
-}
-
-/**
  * The ServiceInstancesQuery describes instances of a service.
  * We are asking for all the instances of 1 unique service
- * based on its name and environment. The qualifier identifies 1
- * specific service.
+ * based on its name and environment.
  */
-export interface ServiceInstancesQuery {
+export interface ServiceInstancesQuery
+  extends ServiceIdentifier,
+    ServiceInstanceParams {
   kind: "ServiceInstances";
-  qualifier: ServiceIdentifier & ServiceInstanceParams;
 }
 
 interface ServiceInstancesManifest {
@@ -106,28 +140,82 @@ interface ServiceInstancesManifest {
   query: ServiceInstancesQuery;
 }
 
+export interface ServiceInstanceQuery extends ServiceInstanceIdentifier {
+  kind: "ServiceInstance";
+}
+
+interface ServiceInstanceManifest {
+  error: string;
+  apiResponse: { data: ServiceInstanceModel };
+  data: ServiceInstanceModel;
+  usedData: ServiceInstanceModel;
+  query: ServiceInstanceQuery;
+}
+
+export interface ServiceConfigQuery extends ServiceIdentifier {
+  kind: "ServiceConfig";
+}
+
+interface ServiceConfigManifest {
+  error: string;
+  apiResponse: { data: Config };
+  data: Config;
+  usedData: Config;
+  query: ServiceConfigQuery;
+}
+
+/**
+ * The ResourcesQuery describes resources for a service instance.
+ * We are not asking for 1 specific resource. We are asking for all the
+ * resources of 1 specific service instance.
+ */
+export interface InstanceResourcesQuery
+  extends VersionedServiceInstanceIdentifier {
+  kind: "InstanceResources";
+}
+
+interface InstanceResourcesManifest {
+  error: string;
+  apiResponse: { data: InstanceResourceModel[] };
+  data: InstanceResourceModel[];
+  usedData: InstanceResourceModel[];
+  query: InstanceResourcesQuery;
+}
+
 /**
  * The events query describes events belonging to one specific service instance
  */
-export interface InstanceEventsQuery {
+export interface InstanceEventsQuery
+  extends ServiceInstanceIdentifier,
+    EventParams {
   kind: "Events";
-  qualifier: ServiceInstanceIdentifier;
 }
 
 interface EventsManifest {
   error: string;
-  apiResponse: { data: InstanceEvent[] };
-  data: InstanceEvent[];
-  usedData: InstanceEvent[];
+  apiResponse: {
+    data: InstanceEvent[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: InstanceEvent[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: InstanceEvent[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
   query: InstanceEventsQuery;
 }
 
 /**
  * The instanceLogs query describes logs belonging to one specific service instance
  */
-export interface InstanceLogsQuery {
+export interface InstanceLogsQuery extends ServiceInstanceIdentifier {
   kind: "InstanceLogs";
-  qualifier: ServiceInstanceIdentifier;
 }
 
 interface InstanceLogsManifest {
@@ -141,17 +229,171 @@ interface InstanceLogsManifest {
 /**
  * The instanceConfig query describes the config belonging to one specific service instance
  */
-export interface InstanceConfigQuery {
+export interface InstanceConfigQuery extends ServiceInstanceIdentifier {
   kind: "InstanceConfig";
-  qualifier: ServiceInstanceIdentifier;
 }
 
 interface InstanceConfigManifest {
   error: string;
   apiResponse: { data: Config };
   data: Config;
-  usedData: Setting[];
+  usedData: { config: Config; defaults: Config };
   query: InstanceConfigQuery;
+}
+
+/** Diagnostics describe the status of an instance with regards to the diagnose call */
+export interface DiagnosticsQuery extends ServiceInstanceIdentifier {
+  kind: "Diagnostics";
+}
+
+interface DiagnosticsManifest {
+  error: string;
+  apiResponse: { data: RawDiagnostics };
+  data: Diagnostics;
+  usedData: Diagnostics;
+  query: DiagnosticsQuery;
+}
+
+export interface ResourcesQuery extends ResourceParams {
+  kind: "Resources";
+}
+
+interface ResourcesManifest {
+  error: string;
+  apiResponse: {
+    data: RawResource[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: Resource[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: Resource[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
+  query: ResourcesQuery;
+}
+
+export interface ResourceDetailsQuery extends WithId {
+  kind: "ResourceDetails";
+}
+
+interface ResourceDetailsManifest {
+  error: string;
+  apiResponse: {
+    data: RawResourceDetails;
+  };
+  data: ResourceDetails;
+  usedData: ResourceDetails;
+  query: ResourceDetailsQuery;
+}
+
+export interface ResourceHistoryQuery extends WithId {
+  kind: "ResourceHistory";
+  sort?: Sort;
+  pageSize: PageSize;
+}
+
+interface ResourceHistoryManifest {
+  error: string;
+  apiResponse: {
+    data: ResourceHistory[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: ResourceHistory[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: ResourceHistory[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
+  query: ResourceHistoryQuery;
+}
+
+export interface CallbacksQuery {
+  kind: "Callbacks";
+  service_entity: string;
+}
+
+interface CallbacksManifest {
+  error: string;
+  apiResponse: { data: Callback[] };
+  data: Callback[];
+  usedData: Callback[];
+  query: CallbacksQuery;
+}
+
+export interface CompileReportsQuery extends CompileReportParams {
+  kind: "CompileReports";
+}
+
+interface CompileReportsManifest {
+  error: string;
+  apiResponse: {
+    data: CompileReport[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: CompileReport[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: CompileReport[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
+  query: CompileReportsQuery;
+}
+
+export interface CompileDetailsQuery extends WithId {
+  kind: "CompileDetails";
+}
+
+interface CompileDetailsManifest {
+  error: string;
+  apiResponse: {
+    data: CompileDetails;
+  };
+  data: CompileDetails;
+  usedData: CompileDetails;
+  query: CompileDetailsQuery;
+}
+
+export interface ResourceLogsQuery extends WithId {
+  kind: "ResourceLogs";
+  filter?: ResourceLogFilter;
+  sort?: Sort;
+  pageSize: PageSize;
+}
+
+interface ResourceLogsManifest {
+  error: string;
+  apiResponse: {
+    data: ResourceLog[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  data: {
+    data: ResourceLog[];
+    links: Pagination.Links;
+    metadata: Pagination.Metadata;
+  };
+  usedData: {
+    data: ResourceLog[];
+    handlers: Pagination.Handlers;
+    metadata: Pagination.Metadata;
+  };
+  query: ResourceLogsQuery;
 }
 
 /**
@@ -161,11 +403,23 @@ interface InstanceConfigManifest {
 interface Manifest {
   Services: ServicesManifest;
   Service: ServiceManifest;
+  ServiceInstance: ServiceInstanceManifest;
   ServiceInstances: ServiceInstancesManifest;
-  Resources: ResourcesManifest;
+  ServiceConfig: ServiceConfigManifest;
+  InstanceResources: InstanceResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;
   InstanceConfig: InstanceConfigManifest;
+  Diagnostics: DiagnosticsManifest;
+  Projects: ProjectsManifest;
+  Resources: ResourcesManifest;
+  ResourceDetails: ResourceDetailsManifest;
+  ResourceHistory: ResourceHistoryManifest;
+  ResourceLogs: ResourceLogsManifest;
+  EnvironmentDetails: EnvironmentDetailsManifest;
+  Callbacks: CallbacksManifest;
+  CompileReports: CompileReportsManifest;
+  CompileDetails: CompileDetailsManifest;
 }
 
 /**
@@ -176,5 +430,4 @@ export type Error<K extends Kind> = Manifest[K]["error"];
 export type Data<K extends Kind> = Manifest[K]["data"];
 export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
-export type Qualifier<K extends Kind> = SubQuery<K>["qualifier"];
 export type UsedData<K extends Kind> = Manifest[K]["usedData"];

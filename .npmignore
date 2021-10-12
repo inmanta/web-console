@@ -66,8 +66,11 @@ cypress/videos/
 cypress/screenshots/
 
 # Result of build is included in the npm package but not in the sources in git
-# dist 
+# dist
 yarn-error.log
 stats.json
 coverage
 junit.xml
+
+# Do not pakage change log files
+changelogs

@@ -1,17 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { PlusIcon } from "@patternfly/react-icons";
 import {
-  CardFooter,
   Toolbar,
   ToolbarGroup,
   ToolbarItem,
   ToolbarContent,
   Button,
 } from "@patternfly/react-core";
-import { words } from "@/UI/words";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
-import { Link } from "react-router-dom";
-import { PlusIcon } from "@patternfly/react-icons";
-import { FilterWidget } from "../FilterWidget";
+import { words } from "@/UI/words";
+import { getUrl } from "@/UI/Routing";
+import { FilterWidget } from "@/UI/Pages/ServiceInventory/Components/FilterWidget";
 
 interface Props {
   serviceName: string;
@@ -35,32 +35,33 @@ export const TableControls: React.FC<Props> = ({
       : undefined;
   const states = service.lifecycle.states.map((state) => state.name).sort();
   return (
-    <CardFooter>
-      <Toolbar clearAllFilters={() => setFilter({})}>
-        <ToolbarContent>
-          <FilterWidget
-            filter={filter}
-            setFilter={setFilter}
-            states={states}
-            identityAttribute={identityAttribute}
-          />
-          <ToolbarGroup>
-            <ToolbarItem>
-              <Link
-                to={{
-                  pathname: `/lsm/catalog/${serviceName}/inventory/add`,
-                  search: location.search,
-                }}
-              >
-                <Button id="add-instance-button">
-                  <PlusIcon /> {words("inventory.addInstance.button")}
-                </Button>
-              </Link>
-            </ToolbarItem>
-          </ToolbarGroup>
-          <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-    </CardFooter>
+    <Toolbar clearAllFilters={() => setFilter({})}>
+      <ToolbarContent>
+        <FilterWidget
+          filter={filter}
+          setFilter={setFilter}
+          states={states}
+          identityAttribute={identityAttribute}
+        />
+        <ToolbarItem variant="separator" />
+        <ToolbarGroup>
+          <ToolbarItem>
+            <Link
+              to={{
+                pathname: getUrl("CreateInstance", {
+                  service: serviceName,
+                }),
+                search: location.search,
+              }}
+            >
+              <Button id="add-instance-button">
+                <PlusIcon /> {words("inventory.addInstance.button")}
+              </Button>
+            </Link>
+          </ToolbarItem>
+        </ToolbarGroup>
+        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
   );
 };

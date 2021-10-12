@@ -31,3 +31,34 @@ export function toggleValueInList<T>(value: T, list: T[]): T[] {
   clone.splice(index, 1);
   return clone;
 }
+
+export const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
+  value !== null;
+
+export type ValueObject<T> = Readonly<{
+  type: string;
+  value: T;
+}>;
+
+export const objectHasKey = <
+  X extends Record<string, unknown>,
+  Y extends PropertyKey
+>(
+  obj: X,
+  prop: Y
+): obj is X & Record<Y, unknown> => prop in obj;
+
+export const isObject = (value: unknown): value is Record<string, unknown> => {
+  if (typeof value !== "object") return false;
+  if (Array.isArray(value)) return false;
+  if (value === null) return false;
+  if (Object.keys(value).length <= 0) return false;
+  return true;
+};
+
+export const stringifyList = (items: string[]): string =>
+  items.length <= 0 ? "" : items.reduce((acc, curr) => `${acc}, ${curr}`);
+
+export const isObjectEmpty = (
+  obj: Record<string, unknown>
+): obj is Record<string, never> => Object.entries(obj).length <= 0;

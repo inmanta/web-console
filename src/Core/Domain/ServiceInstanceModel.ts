@@ -1,8 +1,6 @@
 import { WithId } from "@/Core/Language";
 
-export interface InstanceAttributeModel {
-  [Key: string]: string | string[] | boolean | number | null;
-}
+export type InstanceAttributeModel = Record<string, unknown>;
 
 export interface DeploymentProgress {
   total: number;
@@ -13,7 +11,6 @@ export interface DeploymentProgress {
 
 export interface ServiceInstanceIdentifier extends WithId {
   service_entity: string;
-  environment: string;
 }
 
 export interface VersionedServiceInstanceIdentifier
@@ -23,6 +20,7 @@ export interface VersionedServiceInstanceIdentifier
 
 export interface ServiceInstanceModel
   extends VersionedServiceInstanceIdentifier {
+  environment: string;
   active_attributes: InstanceAttributeModel | null;
   callback: string[];
   candidate_attributes: InstanceAttributeModel | null;
@@ -38,4 +36,16 @@ export interface ServiceInstanceModel
 export interface ServiceInstanceModelWithTargetStates
   extends ServiceInstanceModel {
   instanceSetStateTargets: string[];
+}
+
+export interface FormAttributeResult {
+  name: string;
+  value: unknown;
+  type: string;
+}
+
+export interface SetStateBody {
+  current_version: number;
+  target_state: string;
+  message: string;
 }

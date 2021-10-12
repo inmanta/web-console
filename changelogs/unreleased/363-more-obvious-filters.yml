@@ -1,0 +1,6 @@
+description: Make filters more obvious by adding icons
+issue-nr: 363
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

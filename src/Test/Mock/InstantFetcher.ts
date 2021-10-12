@@ -28,4 +28,25 @@ export class InstantFetcher<K extends Query.Kind> implements Fetcher<K> {
         });
     }
   }
+
+  getRootData(): Promise<Either.Type<Query.Error<K>, Query.ApiResponse<K>>> {
+    const { outcome } = this;
+
+    switch (outcome.kind) {
+      case "Loading":
+        return new Promise(() => {
+          undefined;
+        });
+
+      case "Failed":
+        return new Promise((resolve) => {
+          resolve(Either.left(outcome.error));
+        });
+
+      case "Success":
+        return new Promise((resolve) => {
+          resolve(Either.right(outcome.data));
+        });
+    }
+  }
 }

@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @testing-library/dom from 7.29.4 to 7.31.0
+destination-branches:
+- master
+- iso4
+sections: {}

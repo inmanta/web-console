@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @types/react-router-dom from 5.1.7 to 5.1.8'
+destination-branches:
+- master
+- iso4
+sections: {}

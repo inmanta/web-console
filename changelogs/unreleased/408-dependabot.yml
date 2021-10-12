@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump eslint-plugin-jest-dom from 3.6.5 to 3.9.0
+destination-branches:
+- master
+- iso4
+sections: {}

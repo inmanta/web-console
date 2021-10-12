@@ -5,17 +5,15 @@ import { Either } from "@/Core";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on state ('creating') THEN only that type of instance is fetched and shown", async () => {
-  const {
-    component,
-    serviceInstancesFetcher,
-  } = new ServiceInventoryPrepper().prep();
+  const { component, serviceInstancesFetcher } =
+    new ServiceInventoryPrepper().prep();
 
   render(component);
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -34,13 +32,13 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   await userEvent.click(option);
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.state=creating&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.state=creating&sort=created_at.desc`
   );
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A],
+        data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
