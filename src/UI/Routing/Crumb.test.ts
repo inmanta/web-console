@@ -75,7 +75,7 @@ test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be 
   ]);
 });
 
-test("GIVEN '/resources/123' THEN breadcrumbs should be ['Resources', 'Resource Details']", () => {
+test("GIVEN '/resources/123' THEN breadcrumbs should be ['Home', 'Resources', 'Resource Details']", () => {
   const crumbs = getCrumbs("/resources/123");
   expect(crumbs).toHaveLength(3);
   expect(crumbs).toEqual([
