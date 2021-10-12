@@ -79,6 +79,7 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
                   resize: "both",
                   borderRight: "1px solid var(--pf-global--BorderColor--100)",
                 }}
+                wrapLongLines
               >
                 {code}
               </SyntaxHighlighter>
