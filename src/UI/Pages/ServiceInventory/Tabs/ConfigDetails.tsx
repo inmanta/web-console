@@ -29,6 +29,7 @@ export const ConfigDetails: React.FC<Props> = ({
     kind: "InstanceConfig",
     ...serviceInstanceIdentifier,
   });
+  const isHalted = environmentModifier.useIsHalted();
 
   return Object.keys(config).length <= 0 ? (
     <Card>
@@ -54,7 +55,7 @@ export const ConfigDetails: React.FC<Props> = ({
             trigger({ kind: "UPDATE", option, value })
           }
           Switch={(props) => <DefaultSwitch {...props} defaults={defaults} />}
-          isDisabled={environmentModifier.isHalted()}
+          isDisabled={isHalted}
         />
       </CardBody>
     </Card>

@@ -36,6 +36,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const fields = new FieldCreator(new EditModifierHandler()).create(
     serviceEntity
   );
+  const isHalted = environmentModifier.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
   const url = `${getUrl("Inventory", { service: serviceEntity.name })}?env=${
@@ -86,7 +87,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         fields={fields}
         onSubmit={onSubmit}
         onCancel={handleRedirect}
-        isSubmitDisabled={environmentModifier.isHalted()}
+        isSubmitDisabled={isHalted}
         originalAttributes={currentAttributes ? currentAttributes : undefined}
       />
     </>
