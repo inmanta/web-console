@@ -7,11 +7,10 @@ export class EnvironmentModifierImpl implements EnvironmentModifier {
     this.environment = Maybe.some(environment);
   }
 
-  isHalted(): boolean {
+  useIsHalted(): boolean {
+    const storeState = useStoreState((state) => state.environmentDetails.byEnv);
     if (Maybe.isSome(this.environment)) {
-      const state = useStoreState((state) => state.environmentDetails.byEnv)[
-        this.environment.value
-      ];
+      const state = storeState[this.environment.value];
       if (RemoteData.isSuccess(state)) {
         return state.value.halted;
       }

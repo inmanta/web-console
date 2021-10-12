@@ -64,7 +64,7 @@ export const SetStateAction: React.FC<Props> = ({
     );
     handleModalToggle();
   };
-
+  const isHalted = environmentModifier.useIsHalted();
   return (
     <>
       {stateErrorMessage && (
@@ -75,10 +75,10 @@ export const SetStateAction: React.FC<Props> = ({
         />
       )}
       <ActionDisabledTooltip
-        isDisabled={isDisabled || environmentModifier.isHalted()}
+        isDisabled={isDisabled || isHalted}
         ariaLabel={words("inventory.statustab.setInstanceState")}
         tooltipContent={
-          environmentModifier.isHalted()
+          isHalted
             ? words("environment.halt.tooltip")
             : words("inventory.statustab.actionDisabled")
         }
@@ -89,7 +89,7 @@ export const SetStateAction: React.FC<Props> = ({
               data-testid={`${id}-set-state-toggle`}
               onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
               toggleIndicator={CaretDownIcon}
-              isDisabled={isDisabled || environmentModifier.isHalted()}
+              isDisabled={isDisabled || isHalted}
             >
               {words("inventory.statustab.setInstanceState")}
             </DropdownToggle>
