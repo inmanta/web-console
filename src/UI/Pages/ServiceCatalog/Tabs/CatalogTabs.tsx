@@ -25,37 +25,31 @@ export const CatalogTabs: React.FunctionComponent<{
       mountOnEnter
     >
       <Tab eventKey={0} title="Details">
-        <TabContainer>
-          <Details
-            serviceName={service.name}
-            instanceSummary={service.instance_summary}
-          />
-        </TabContainer>
+        <Details
+          serviceName={service.name}
+          instanceSummary={service.instance_summary}
+        />
       </Tab>
       <Tab eventKey={1} title="Attributes">
-        <TabContainer>
+        <OverflowContainer>
           <AttributeTable attributes={service.attributes} />
-        </TabContainer>
+        </OverflowContainer>
       </Tab>
       <Tab eventKey={2} title="Lifecycle States">
-        <TabContainer>
+        <OverflowContainer>
           <LifecycleTable lifecycle={service.lifecycle} />
-        </TabContainer>
+        </OverflowContainer>
       </Tab>
       <Tab eventKey={3} title="Config">
-        <TabContainer>
-          <Config serviceName={service.name} />
-        </TabContainer>
+        <Config serviceName={service.name} />
       </Tab>
       <Tab eventKey={4} title="Callbacks">
-        <TabContainer>
-          <CallbacksView service_entity={service.name} />
-        </TabContainer>
+        <CallbacksView service_entity={service.name} />
       </Tab>
     </Tabs>
   );
 };
 
-const TabContainer = styled.div`
+const OverflowContainer = styled.div`
   overflow-x: auto;
 `;
