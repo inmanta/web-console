@@ -1,9 +1,10 @@
 import { AttributesSummary, DateInfo, InstanceLog } from "@/Core";
+import { useUrlStateWithString } from "@/Data";
 import { DateWithTooltip } from "@/UI/Components";
 import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Tabs, TabKey } from "./Tabs";
 
 interface Props {
@@ -29,7 +30,11 @@ export const InstanceLogRow: React.FC<Props> = ({
   attributesSummary,
   state,
 }) => {
-  const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Details);
+  const [activeTab, setActiveTab] = useUrlStateWithString<TabKey>({
+    default: TabKey.Details,
+    key: `tab-${id}`,
+    route: "History",
+  });
   const rowRef = useRef<HTMLTableCellElement>(null);
   const attributesOnClick = () => {
     if (!isExpanded) {

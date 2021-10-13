@@ -89,6 +89,7 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
                 setSort={setSort}
               >
                 <EventsTableBody
+                  route="Events"
                   events={events.data}
                   tablePresenter={tablePresenter}
                 />

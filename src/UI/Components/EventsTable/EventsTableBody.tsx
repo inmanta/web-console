@@ -1,33 +1,31 @@
 import React from "react";
-import { EventRow, InstanceEvent } from "@/Core";
+import { EventRow, InstanceEvent, toggleValueInList } from "@/Core";
 import { TablePresenter } from "@/UI/Presenters";
-import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 import { EventsTableRow } from "./EventsTableRow";
+import { useUrlStateWithExpansion } from "@/Data";
+import { Kind } from "@/UI/Routing";
 
 interface Props {
   events: InstanceEvent[];
   tablePresenter: TablePresenter<InstanceEvent, EventRow>;
+  route: Kind;
 }
 
 export const EventsTableBody: React.FC<Props> = ({
   events,
   tablePresenter,
+  route,
 }) => {
-  const expansionManager = new ExpansionManager();
-
-  const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(rowsToIds(events))
-  );
+  const [expandedKeys, setExpandedKeys] = useUrlStateWithExpansion({ route });
 
   const handleExpansionToggle = (id: string) => () => {
-    setExpansionState(expansionManager.toggle(expansionState, id));
+    setExpandedKeys(toggleValueInList(id, expandedKeys));
   };
 
   React.useEffect(() => {
-    setExpansionState(
-      expansionManager.merge(expansionState, rowsToIds(events))
-    );
-  }, [events]);
+    setExpandedKeys(rowsToIds(events).filter((v) => expandedKeys.includes(v)));
+  }, [`${rowsToIds(events)}`]);
+
   const rows = tablePresenter.createRows(events);
   return (
     <>
@@ -35,7 +33,7 @@ export const EventsTableBody: React.FC<Props> = ({
         <EventsTableRow
           index={index}
           key={row.id}
-          isExpanded={expansionState[row.id]}
+          isExpanded={expandedKeys.includes(row.id)}
           onToggle={handleExpansionToggle(row.id)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
           row={row}

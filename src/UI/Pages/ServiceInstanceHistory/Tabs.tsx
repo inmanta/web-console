@@ -91,6 +91,7 @@ const eventsTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
         aria-label="EventTable-Success"
       >
         <EventsTableBody
+          route="History"
           events={log.events}
           tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
         />
