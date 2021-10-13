@@ -24,7 +24,10 @@ export class SearchHelper {
    * If there are no search params, the search string will be empty.
    */
   stringify(value: Record<string, unknown>): string {
-    const params = qs.stringify(value, { allowDots: true });
+    const params = qs.stringify(value, {
+      allowDots: true,
+      encodeValuesOnly: true,
+    });
     return params.length > 0 ? `?${params}` : "";
   }
 

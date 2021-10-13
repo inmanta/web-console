@@ -1,37 +1,10 @@
-import { useHistory, useLocation } from "react-router-dom";
 import { isObject } from "@/Core";
-import { Kind, SearchHelper } from "@/UI/Routing";
+import { SearchHelper } from "@/UI/Routing";
+import { provide, Location, History, Update, StateConfig } from "./helpers";
 
 const searchHelper = new SearchHelper();
 
-export interface StateConfig<Data> {
-  default: Data;
-  key: string;
-  route: Kind;
-  serialize: (data: Data) => string | Data;
-  parse: (value: unknown) => Data | undefined;
-  equals: (a: Data, b: Data) => boolean;
-}
-
-export type Update<Data> = (data: Data) => void;
-
-export interface Location {
-  pathname: string;
-  search: string;
-  hash: string;
-}
-
-export interface History {
-  replace(to: string): void;
-}
-
-export function useUrlState<Data>(
-  config: StateConfig<Data>
-): [Data, Update<Data>] {
-  const location = useLocation();
-  const history = useHistory();
-  return handleUrlState(config, location, history);
-}
+export const useUrlState = provide(handleUrlState);
 
 export function handleUrlState<Data>(
   config: StateConfig<Data>,

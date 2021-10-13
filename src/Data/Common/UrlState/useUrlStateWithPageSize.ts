@@ -1,15 +1,24 @@
 import { PageSize } from "@/Core";
-import { useUrlState, StateConfig, Update } from "./useUrlState";
+import { provide, Location, History, StateConfig, Update } from "./helpers";
+import { handleUrlState } from "./useUrlState";
 
-export function useUrlStateWithPageSize(
-  config: Pick<StateConfig<PageSize.Type>, "route">
+export const useUrlStateWithPageSize = provide(handleUrlStateWithPageSize);
+
+export function handleUrlStateWithPageSize(
+  config: Pick<StateConfig<PageSize.Type>, "route">,
+  location: Location,
+  history: History
 ): [PageSize.Type, Update<PageSize.Type>] {
-  return useUrlState({
-    default: PageSize.initial,
-    key: "pageSize",
-    route: config.route,
-    serialize: PageSize.serialize,
-    parse: PageSize.parse,
-    equals: PageSize.equals,
-  });
+  return handleUrlState<PageSize.Type>(
+    {
+      default: PageSize.initial,
+      key: "pageSize",
+      route: config.route,
+      serialize: PageSize.serialize,
+      parse: PageSize.parse,
+      equals: PageSize.equals,
+    },
+    location,
+    history
+  );
 }

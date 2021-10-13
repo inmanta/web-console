@@ -1,6 +1,7 @@
 import { isObject, DateRange, isNotUndefined } from "@/Core";
 import { isEqual, pickBy } from "lodash";
-import { useUrlState, StateConfig, Update } from "./useUrlState";
+import { handleUrlState } from "./useUrlState";
+import { provide, Location, History, StateConfig, Update } from "./helpers";
 
 type Config = "DateRange";
 
@@ -22,8 +23,12 @@ const getParser = (config: Config) => {
   }
 };
 
-export function useUrlStateWithFilter<Data>(
-  config: Pick<StateConfig<Data>, "route"> & ExtraConfig
+export const useUrlStateWithFilter = provide(handleUrlStateWithFilter);
+
+export function handleUrlStateWithFilter<Data>(
+  config: Pick<StateConfig<Data>, "route"> & ExtraConfig,
+  location: Location,
+  history: History
 ): [Data, Update<Data>] {
   const serialize = (data: Data): string | Data => {
     if (!config.filters) return data;
@@ -42,16 +47,20 @@ export function useUrlStateWithFilter<Data>(
     }, value as Data);
   };
 
-  return useUrlState<Data>({
-    default: {} as Data,
-    key: "filter",
-    route: config.route,
-    equals: (a: Data, b: Data): boolean =>
-      isEqual(
-        pickBy(a as Record<string, unknown>, isNotUndefined),
-        pickBy(b as Record<string, unknown>, isNotUndefined)
-      ),
-    serialize,
-    parse,
-  });
+  return handleUrlState<Data>(
+    {
+      default: {} as Data,
+      key: "filter",
+      route: config.route,
+      equals: (a: Data, b: Data): boolean =>
+        isEqual(
+          pickBy(a as Record<string, unknown>, isNotUndefined),
+          pickBy(b as Record<string, unknown>, isNotUndefined)
+        ),
+      serialize,
+      parse,
+    },
+    location,
+    history
+  );
 }

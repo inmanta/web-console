@@ -1,15 +1,24 @@
 import { identity } from "lodash";
-import { useUrlState, StateConfig, Update } from "./useUrlState";
+import { handleUrlState } from "./useUrlState";
+import { provide, Location, History, StateConfig, Update } from "./helpers";
 
-export function useUrlStateWithString<Data extends string>(
-  config: Pick<StateConfig<Data>, "default" | "key" | "route">
+export const useUrlStateWithString = provide(handleUrlStateWithString);
+
+export function handleUrlStateWithString<Data extends string>(
+  config: Pick<StateConfig<Data>, "default" | "key" | "route">,
+  location: Location,
+  history: History
 ): [Data, Update<Data>] {
-  return useUrlState({
-    default: config.default,
-    key: config.key,
-    route: config.route,
-    serialize: identity,
-    parse: identity,
-    equals: (a: Data, b: Data) => a === b,
-  });
+  return handleUrlState<Data>(
+    {
+      default: config.default,
+      key: config.key,
+      route: config.route,
+      serialize: identity,
+      parse: identity,
+      equals: (a: Data, b: Data) => a === b,
+    },
+    location,
+    history
+  );
 }
