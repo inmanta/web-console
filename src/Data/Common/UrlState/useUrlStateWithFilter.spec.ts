@@ -20,7 +20,7 @@ test.each`
   ${from.search}                              | ${"timestamp=from"}    | ${{ timestamp: from.value }}      | ${"timestamp=from"}
   ${fromAndTo.search}                         | ${"timestamp=from&to"} | ${{ timestamp: fromAndTo.value }} | ${"timestamp=from"}
 `(
-  "GIVEN handleUrlState with String WHEN search is $searchText THEN returns $valueText",
+  "GIVEN handleUrlState with Filter WHEN search is $searchText THEN returns $valueText",
   async ({ search, expectedValue }) => {
     const [value] = handleUrlStateWithFilter(
       { route: "Inventory" },
