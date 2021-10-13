@@ -8,11 +8,15 @@ import {
   PaginationWidget,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { ResourceTableControls } from "./TableControls";
 import { ResourceFilterContext } from "./ResourceFilterContext";
-import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 
 export const Wrapper: React.FC = ({ children }) => (
   <PageSectionWithTitle title={words("inventory.tabs.resources")}>
@@ -25,7 +29,9 @@ export const ResourcesView: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Resources",
   });
-  const [filter, setFilter] = useState<ResourceParams.Filter>({});
+  const [filter, setFilter] = useUrlStateWithFilter<ResourceParams.Filter>({
+    route: "Resources",
+  });
   const [sort, setSort] = useUrlStateWithSort({
     default: { name: "resource_type", order: "asc" },
     route: "Resources",
