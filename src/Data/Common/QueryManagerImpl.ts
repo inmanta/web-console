@@ -98,10 +98,8 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
   }
 
   useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
-    // Hook 1
     const [url, setUrl] = useState(this.getUrl(query));
 
-    // Hook 2
     useEffect(() => {
       setUrl(this.getUrl(query));
     }, this.getDependencies(query));
@@ -114,7 +112,6 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
       update: (data) => this.stateHelper.set(data, query),
     };
 
-    // Hook 3
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query);
       this.update(query, url);
@@ -127,7 +124,6 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
     return [
       RemoteData.mapSuccess(
         (data) => this.toUsed(data, setUrl),
-        // Hook 4, 5, 6, 7, 8, 9
         this.stateHelper.getHooked(query)
       ),
       () => this.update(query, url),
