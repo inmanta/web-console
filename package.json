@@ -125,7 +125,7 @@
     "@patternfly/react-tokens": "^4.12.18",
     "copy-to-clipboard": "^3.3.1",
     "dotenv-webpack": "^7.0.3",
-    "easy-peasy": "^5.0.3",
+    "easy-peasy": "^5.0.4",
     "history": "5.0.1",
     "keycloak-js": "15.0.2",
     "lodash": "^4.17.21",
