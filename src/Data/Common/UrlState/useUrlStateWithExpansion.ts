@@ -5,12 +5,15 @@ import { useUrlState, StateConfig } from "./useUrlState";
 type IsExpanded = (id: string) => boolean;
 type OnExpansion = (id: string) => () => void;
 
+type Config = Pick<StateConfig<string[]>, "route"> &
+  Partial<Pick<StateConfig<string[]>, "key">>;
+
 export function useUrlStateWithExpansion(
-  config: Pick<StateConfig<string[]>, "route">
+  config: Config
 ): [IsExpanded, OnExpansion] {
   const [expandedKeys, setExpandedKeys] = useUrlState<string[]>({
     default: [],
-    key: "expansion",
+    key: config.key || "expansion",
     route: config.route,
     serialize: identity,
     parse: identity,

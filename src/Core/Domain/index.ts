@@ -18,7 +18,6 @@ export * as PageSize from "./PageSize";
 export * as Pagination from "./Pagination";
 export * from "./Diagnostics";
 export * as EventParams from "./EventParams";
-export * from "./Params";
 export * from "./Resource";
 export * from "./ResourceLog";
 export * as ResourceParams from "./ResourceParams";

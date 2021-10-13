@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { ResourceLog, SortDirection } from "@/Core";
+import { ResourceLog, Sort } from "@/Core";
 import {
   OnSort,
   TableComposable,
@@ -9,38 +9,30 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import { Row } from "./Row";
-import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 import { ToggleActionType } from "./RowOptions";
 import { words } from "@/UI/words";
+import { useUrlStateWithExpansion } from "@/Data";
 
 interface Props {
   logs: ResourceLog[];
   toggleActionType: ToggleActionType;
-  order: SortDirection;
-  setOrder: (order: SortDirection) => void;
+  sort: Sort.Type;
+  setSort: (sort: Sort.Type) => void;
 }
 
 export const ResourceLogsTable: React.FC<Props> = ({
   logs,
   toggleActionType,
-  order,
-  setOrder,
+  sort,
+  setSort,
 }) => {
-  const expansionManager = new ExpansionManager();
-  const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(getUniqueIds(logs))
-  );
-  const handleExpansionToggle = (id: string) => () => {
-    setExpansionState(expansionManager.toggle(expansionState, id));
-  };
-  React.useEffect(() => {
-    setExpansionState(
-      expansionManager.merge(expansionState, getUniqueIds(logs))
-    );
-  }, [logs]);
+  const [isExpanded, onExpansion] = useUrlStateWithExpansion({
+    key: "logs-expansion",
+    route: "ResourceDetails",
+  });
 
-  const onSort: OnSort = (event, index, direction) => {
-    setOrder(direction);
+  const onSort: OnSort = (event, index, order) => {
+    setSort({ ...sort, order });
   };
 
   return (
@@ -50,7 +42,7 @@ export const ResourceLogsTable: React.FC<Props> = ({
           <Th />
           <Th
             sort={{
-              sortBy: { index: 0, direction: order },
+              sortBy: { index: 0, direction: sort.order },
               onSort,
               columnIndex: 0,
             }}
@@ -66,8 +58,8 @@ export const ResourceLogsTable: React.FC<Props> = ({
       {logs.map((log, index) => (
         <Row
           index={index}
-          onToggle={handleExpansionToggle(getUniqueId(log, index))}
-          isExpanded={expansionState[getUniqueId(log, index)]}
+          onToggle={onExpansion(getUniqueId(log, index))}
+          isExpanded={isExpanded(getUniqueId(log, index))}
           key={getUniqueId(log, index)}
           log={log}
           numberOfColumns={6}
@@ -77,10 +69,6 @@ export const ResourceLogsTable: React.FC<Props> = ({
     </TableComposable>
   );
 };
-
-function getUniqueIds(logs: ResourceLog[]): string[] {
-  return logs.map(getUniqueId);
-}
 
 function getUniqueId(log: ResourceLog, index: number): string {
   return `${log.action_id}_${log.timestamp}_${index}`;

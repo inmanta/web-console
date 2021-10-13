@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { PageSize, RemoteData, SortDirection } from "@/Core";
+import React, { useContext } from "react";
+import { RemoteData } from "@/Core";
 import { ResourceHistoryTablePresenter } from "./TablePresenter";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { ResourceHistoryTable } from "./ResourceHistoryTable";
@@ -12,6 +12,7 @@ import {
 } from "@/UI/Components";
 import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { words } from "@/UI/words";
+import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 
 interface Props {
   resourceId: string;
@@ -19,9 +20,13 @@ interface Props {
 
 export const ResourceHistoryView: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [pageSize, setPageSize] = useState(PageSize.initial);
-  const [order, setOrder] = useState<SortDirection>("desc");
-  const sort = order ? { name: "date", order: order } : undefined;
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
+    route: "ResourceDetails",
+  });
+  const [sort, setSort] = useUrlStateWithSort({
+    default: { name: "date", order: "desc" },
+    route: "ResourceDetails",
+  });
   const [data, retry] = queryResolver.useContinuous<"ResourceHistory">({
     kind: "ResourceHistory",
     id: resourceId,
@@ -71,8 +76,8 @@ export const ResourceHistoryView: React.FC<Props> = ({ resourceId }) => {
               <ResourceHistoryTable
                 aria-label="ResourceHistory-Success"
                 rows={rows}
-                order={order}
-                setOrder={setOrder}
+                sort={sort}
+                setSort={setSort}
                 tablePresenter={tablePresenter}
               />
             );

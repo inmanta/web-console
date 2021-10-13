@@ -1,6 +1,6 @@
 import { PageSize } from "./PageSize";
 import { EventType } from "./EventType";
-import { Sort } from "./Params";
+import { Sort } from "./Sort";
 import { DateRange } from "./DateRange";
 
 export interface EventParams {

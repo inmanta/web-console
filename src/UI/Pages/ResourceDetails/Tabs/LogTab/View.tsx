@@ -1,10 +1,10 @@
+import React, { useContext } from "react";
+import { RemoteData, ResourceLogFilter, toggleValueInList } from "@/Core";
 import {
-  PageSize,
-  RemoteData,
-  ResourceLogFilter,
-  SortDirection,
-  toggleValueInList,
-} from "@/Core";
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 import {
   EmptyView,
   ErrorView,
@@ -13,7 +13,6 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import React, { useContext, useState } from "react";
 import { Controls } from "./Controls";
 import { ResourceLogsTable } from "./ResourceLogsTable";
 
@@ -23,10 +22,17 @@ interface Props {
 
 export const View: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [pageSize, setPageSize] = useState(PageSize.initial);
-  const [order, setOrder] = useState<SortDirection>("desc");
-  const sort = order ? { name: "timestamp", order } : undefined;
-  const [filter, setFilter] = useState<ResourceLogFilter>({});
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
+    route: "ResourceDetails",
+  });
+  const [sort, setSort] = useUrlStateWithSort({
+    default: { name: "timestamp", order: "desc" },
+    route: "ResourceDetails",
+  });
+  const [filter, setFilter] = useUrlStateWithFilter<ResourceLogFilter>({
+    route: "ResourceDetails",
+    filters: { timestamp: "DateRange" },
+  });
   const [data, retry] = queryResolver.useContinuous<"ResourceLogs">({
     kind: "ResourceLogs",
     id: resourceId,
@@ -82,8 +88,8 @@ export const View: React.FC<Props> = ({ resourceId }) => {
               <ResourceLogsTable
                 logs={response.data}
                 toggleActionType={toggleActionType}
-                order={order}
-                setOrder={setOrder}
+                sort={sort}
+                setSort={setSort}
               />
             );
           },
