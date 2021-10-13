@@ -6,7 +6,7 @@ import { SearchSanitizer } from "./SearchSanitizer";
 
 const sanitizer = new SearchSanitizer();
 
-export const Component: React.FC = ({ children }) => {
+export const Provider: React.FC = ({ children }) => {
   const { pathname, search, hash } = useLocation();
   const history = useHistory();
 

@@ -19,7 +19,7 @@ export const App: React.FunctionComponent<{
   shouldUseAuth: boolean;
 }> = ({ keycloak, shouldUseAuth }) => {
   const AppWithStore = (
-    <SearchSanitizer.Component>
+    <SearchSanitizer.Provider>
       <Switch>
         <Route exact path={HomeRoute.path}>
           <HomeLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
@@ -31,7 +31,7 @@ export const App: React.FunctionComponent<{
           />
         </Route>
       </Switch>
-    </SearchSanitizer.Component>
+    </SearchSanitizer.Provider>
   );
   const LoadingSpinner = () => (
     <Bullseye>

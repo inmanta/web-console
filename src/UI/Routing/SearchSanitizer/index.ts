@@ -1,4 +1,4 @@
-import { Component } from "./Component";
+import { Provider } from "./Provider";
 import { SearchSanitizer as Sanitizer } from "./SearchSanitizer";
 
-export const SearchSanitizer = { Component, Sanitizer };
+export const SearchSanitizer = { Provider, Sanitizer };
