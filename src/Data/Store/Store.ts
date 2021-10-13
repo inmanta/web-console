@@ -43,9 +43,11 @@ import {
   compileDetailsSlice,
   CompileDetailsSlice,
 } from "./CompileDetailsSlice";
+import { serverStatusSlice, ServerStatusSlice } from "./ServerStatusSlice";
 
 export interface StoreModel {
   projects: ProjectsSlice;
+  serverStatus: ServerStatusSlice;
   services: ServicesSlice;
   serviceInstances: ServiceInstancesSlice;
   serviceInstance: ServiceInstanceSlice;
@@ -67,6 +69,7 @@ export interface StoreModel {
 
 export const storeModel: StoreModel = {
   projects: projectsSlice,
+  serverStatus: serverStatusSlice,
   services: servicesSlice,
   serviceInstances: serviceInstancesSlice,
   serviceInstance: serviceInstanceSlice,
