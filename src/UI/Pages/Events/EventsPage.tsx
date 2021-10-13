@@ -33,7 +33,7 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
   });
   const [filter, setFilter] = useUrlStateWithFilter<EventParams.Filter>({
     route: "Events",
-    filters: { timestamp: "DateRange" },
+    dateRangeKey: "timestamp",
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: "Events" });
   const [data] = queryResolver.useContinuous<"Events">({

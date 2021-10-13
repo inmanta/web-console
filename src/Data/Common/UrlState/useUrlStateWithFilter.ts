@@ -3,48 +3,30 @@ import { isEqual, pickBy } from "lodash";
 import { handleUrlState } from "./useUrlState";
 import { provide, Location, History, StateConfig, Update } from "./helpers";
 
-type Config = "DateRange";
-
-interface ExtraConfig {
-  filters?: Record<string, Config>;
-}
-
-const getSerializer = (config: Config) => {
-  switch (config) {
-    case "DateRange":
-      return DateRange.serializeList;
-  }
-};
-
-const getParser = (config: Config) => {
-  switch (config) {
-    case "DateRange":
-      return DateRange.parseList;
-  }
-};
-
 export const useUrlStateWithFilter = provide(handleUrlStateWithFilter);
 
 export function handleUrlStateWithFilter<Data>(
-  config: Pick<StateConfig<Data>, "route"> & ExtraConfig,
+  config: Pick<StateConfig<Data>, "route"> & { dateRangeKey?: string },
   location: Location,
   history: History
 ): [Data, Update<Data>] {
   const serialize = (data: Data): string | Data => {
-    if (!config.filters) return data;
-    return Object.entries(config.filters).reduce((acc, [key, category]) => {
-      acc[key] = getSerializer(category)(data[key] || []);
-      return acc;
-    }, data);
+    if (!config.dateRangeKey) return data;
+    return {
+      ...data,
+      [config.dateRangeKey]: DateRange.serializeList(
+        data[config.dateRangeKey] || []
+      ),
+    };
   };
 
   const parse = (value: unknown): Data | undefined => {
-    if (!config.filters) return value as Data;
+    if (!config.dateRangeKey) return value as Data;
     if (!isObject(value)) return undefined;
-    return Object.entries(config.filters).reduce((acc, [key, category]) => {
-      acc[key] = getParser(category)(value[key]);
-      return acc;
-    }, value as Data);
+    return {
+      ...(value as Data),
+      [config.dateRangeKey]: DateRange.parseList(value[config.dateRangeKey]),
+    };
   };
 
   return handleUrlState<Data>(

@@ -31,7 +31,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
   });
   const [filter, setFilter] = useUrlStateWithFilter<ResourceLogFilter>({
     route: "ResourceDetails",
-    filters: { timestamp: "DateRange" },
+    dateRangeKey: "timestamp",
   });
   const [data, retry] = queryResolver.useContinuous<"ResourceLogs">({
     kind: "ResourceLogs",
