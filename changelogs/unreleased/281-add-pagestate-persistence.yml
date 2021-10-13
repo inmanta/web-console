@@ -1,0 +1,6 @@
+description: Add page state persistence to url for all pages
+issue-nr: 281
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
