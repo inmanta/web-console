@@ -1,10 +1,14 @@
 import { isEqual, identity } from "lodash";
-import { useUrlState, StateConfig, Update } from "./useUrlState";
+import { toggleValueInList } from "@/Core";
+import { useUrlState, StateConfig } from "./useUrlState";
+
+type IsExpanded = (id: string) => boolean;
+type OnExpansion = (id: string) => () => void;
 
 export function useUrlStateWithExpansion(
   config: Pick<StateConfig<string[]>, "route">
-): [string[], Update<string[]>] {
-  return useUrlState<string[]>({
+): [IsExpanded, OnExpansion] {
+  const [expandedKeys, setExpandedKeys] = useUrlState<string[]>({
     default: [],
     key: "expansion",
     route: config.route,
@@ -12,4 +16,11 @@ export function useUrlStateWithExpansion(
     parse: identity,
     equals: isEqual,
   });
+
+  return [
+    (id: string) => expandedKeys.includes(id),
+    (id: string) => () => {
+      setExpandedKeys(toggleValueInList(id, expandedKeys));
+    },
+  ];
 }

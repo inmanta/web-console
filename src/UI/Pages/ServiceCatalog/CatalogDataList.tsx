@@ -15,7 +15,7 @@ import {
   Title,
   TextVariants,
 } from "@patternfly/react-core";
-import { ServiceModel, toggleValueInList } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Spacer } from "@/UI/Components";
@@ -31,11 +31,9 @@ interface Props {
 export const CatalogDataList: React.FunctionComponent<Props> = ({
   services,
 }) => {
-  const [expanded, setExpanded] = useUrlStateWithExpansion({
+  const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     route: "Catalog",
   });
-
-  const onToggle = (id: string) => setExpanded(toggleValueInList(id, expanded));
 
   const Description = (descriptionProps) => {
     if (descriptionProps.service.description) {
@@ -52,27 +50,21 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
     return <div />;
   };
 
-  const servicesById = services.reduce((acc, curr) => {
-    acc[curr.name] = curr;
-    return acc;
-  }, {});
-
-  const serviceItems = Object.keys(servicesById).map((serviceName) => {
-    const service = servicesById[serviceName];
-    const serviceKey = serviceName + "-item";
-    const expandKey = serviceName + "-expand";
+  const serviceItems = services.map((service) => {
+    const serviceKey = service.name + "-item";
+    const expandKey = service.name + "-expand";
     return (
       <DataListItem
-        id={serviceName}
+        id={service.name}
         key={serviceKey}
         aria-labelledby={serviceKey}
-        isExpanded={expanded.includes(serviceName)}
+        isExpanded={isExpanded(service.name)}
       >
         <DataListItemRow>
           <DataListToggle
-            onClick={() => onToggle(serviceName)}
-            isExpanded={expanded.includes(serviceName)}
-            id={`${serviceName}-toggle`}
+            onClick={onExpansion(service.name)}
+            isExpanded={isExpanded(service.name)}
+            id={`${service.name}-toggle`}
             aria-controls={expandKey}
           />
           <DataListItemCells
@@ -108,7 +100,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
         <DataListContent
           aria-label="Primary Content Details"
           id={expandKey}
-          isHidden={!expanded.includes(serviceName)}
+          isHidden={!isExpanded(service.name)}
         >
           <CatalogTabs service={service} />
         </DataListContent>

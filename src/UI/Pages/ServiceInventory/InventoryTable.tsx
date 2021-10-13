@@ -6,7 +6,7 @@ import {
   Th,
   OnSort,
 } from "@patternfly/react-table";
-import { Row, Sort, toggleValueInList } from "@/Core";
+import { Row, Sort } from "@/Core";
 import { InventoryTablePresenter } from "./Presenters";
 import { InstanceRow } from "./InstanceRow";
 import { useUrlStateWithExpansion } from "@/Data";
@@ -25,6 +25,9 @@ export const InventoryTable: React.FC<Props> = ({
   setSort,
   ...props
 }) => {
+  const [isExpanded, onExpansion] = useUrlStateWithExpansion({
+    route: "Inventory",
+  });
   const onSort: OnSort = (event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as string,
@@ -54,20 +57,6 @@ export const InventoryTable: React.FC<Props> = ({
     );
   });
 
-  const [expandedKeys, setExpandedKeys] = useUrlStateWithExpansion({
-    route: "Inventory",
-  });
-
-  const handleExpansionToggle = (id: string) => () => {
-    setExpandedKeys(toggleValueInList(id, expandedKeys));
-  };
-
-  React.useEffect(() => {
-    setExpandedKeys(
-      getIdentitiesForRows(rows).filter((v) => expandedKeys.includes(v))
-    );
-  }, [`${getIdentitiesForRows(rows)}`]);
-
   return (
     <TableComposable {...props}>
       <Thead>
@@ -81,8 +70,8 @@ export const InventoryTable: React.FC<Props> = ({
           index={index}
           key={row.id.full}
           row={row}
-          isExpanded={expandedKeys.includes(getIdentityForRow(row))}
-          onToggle={handleExpansionToggle(getIdentityForRow(row))}
+          isExpanded={isExpanded(getIdentityForRow(row))}
+          onToggle={onExpansion(getIdentityForRow(row))}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
           actions={tablePresenter.getActionsFor(row.id.full)}
           state={tablePresenter.getStateFor(row.id.full)}
@@ -100,6 +89,3 @@ export const InventoryTable: React.FC<Props> = ({
 };
 
 const getIdentityForRow = (row: Row): string => row.id.full;
-
-const getIdentitiesForRows = (rows: Row[]): string[] =>
-  rows.map(getIdentityForRow);

@@ -1,5 +1,5 @@
 import React from "react";
-import { InstanceLog, ServiceModel, toggleValueInList } from "@/Core";
+import { InstanceLog, ServiceModel } from "@/Core";
 import { InstanceState } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { InstanceLogRow } from "./InstanceLogRow";
@@ -21,17 +21,9 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
 
-  const [expandedKeys, setExpandedKeys] = useUrlStateWithExpansion({
+  const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     route: "History",
   });
-
-  const handleExpansionToggle = (id: string) => () => {
-    setExpandedKeys(toggleValueInList(id, expandedKeys));
-  };
-
-  React.useEffect(() => {
-    setExpandedKeys(ids.filter((v) => expandedKeys.includes(v)));
-  }, [`${ids}`]);
 
   return (
     <div aria-label="ServiceInstanceHistory-Success">
@@ -50,8 +42,8 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
             key={id}
             index={index}
             numberOfColumns={columnHeads.length + 1}
-            onToggle={handleExpansionToggle(id)}
-            isExpanded={expandedKeys.includes(id)}
+            onToggle={onExpansion(id)}
+            isExpanded={isExpanded(id)}
             log={dict[id]}
             timestamp={datePresenter.get(dict[id].timestamp)}
             attributesSummary={attributesPresenter.getSummary(
