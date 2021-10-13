@@ -312,6 +312,11 @@ const dict = {
   "home.title": "Home",
   "home.navigation": "Go to overview page",
   "home.empty.message": "No environments found",
+  "home.create.env.desciption": "Create new environment",
+  "home.create.env.link": "Create environment",
+  "home.environment.select": "Select this environment",
+  "home.filters.project.placeholder": "Filter by project",
+  "home.filters.env.placeholder": "Filter by name",
 
   /**
    * Navigation related text

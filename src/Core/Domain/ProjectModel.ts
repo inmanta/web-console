@@ -13,3 +13,7 @@ export interface EnvironmentModel extends WithId {
   name: string;
   projectId: string;
 }
+
+export interface FlatEnvironment extends EnvironmentModel {
+  projectName: string;
+}
