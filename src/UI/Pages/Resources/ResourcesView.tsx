@@ -1,4 +1,4 @@
-import { ResourceParams, RemoteData, SortDirection, PageSize } from "@/Core";
+import { ResourceParams, RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -12,6 +12,7 @@ import React, { useContext, useState } from "react";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { ResourceTableControls } from "./TableControls";
 import { ResourceFilterContext } from "./ResourceFilterContext";
+import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 
 export const Wrapper: React.FC = ({ children }) => (
   <PageSectionWithTitle title={words("inventory.tabs.resources")}>
@@ -21,14 +22,15 @@ export const Wrapper: React.FC = ({ children }) => (
 
 export const ResourcesView: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const [pageSize, setPageSize] = useState(PageSize.initial);
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
+    route: "Resources",
+  });
   const [filter, setFilter] = useState<ResourceParams.Filter>({});
-  const [sortColumn, setSortColumn] = useState<string | undefined>(
-    "resource_type"
-  );
-  const [order, setOrder] = useState<SortDirection | undefined>("asc");
-  const sort =
-    sortColumn && order ? { name: sortColumn, order: order } : undefined;
+  const [sort, setSort] = useUrlStateWithSort({
+    default: { name: "resource_type", order: "asc" },
+    route: "Resources",
+  });
+
   const [data, retry] = queryResolver.useContinuous<"Resources">({
     kind: "Resources",
     sort,
@@ -73,10 +75,8 @@ export const ResourcesView: React.FC = () => {
                 />
               ) : (
                 <ResourcesTableProvider
-                  order={order}
-                  setOrder={setOrder}
-                  sortColumn={sortColumn}
-                  setSortColumn={setSortColumn}
+                  sort={sort}
+                  setSort={setSort}
                   resources={resources.data}
                   aria-label="ResourcesView-Success"
                 />
