@@ -1,6 +1,8 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { MemoryRouter } from "react-router";
 import {
   DeferredFetcher,
   DynamicQueryManagerResolver,
@@ -14,7 +16,6 @@ import {
   ResourceHistoryQueryManager,
   ResourceHistoryStateHelper,
 } from "@/Data";
-import userEvent from "@testing-library/user-event";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 import { ResourceHistory } from "@/Test/Data";
@@ -36,18 +37,20 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider
-      dependencies={{
-        queryResolver,
-        urlManager: new UrlManagerImpl("", environment),
-      }}
-    >
-      <StoreProvider store={store}>
-        <ResourceHistoryView
-          resourceId={ResourceHistory.response.data[0].resource_id}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{
+          queryResolver,
+          urlManager: new UrlManagerImpl("", environment),
+        }}
+      >
+        <StoreProvider store={store}>
+          <ResourceHistoryView
+            resourceId={ResourceHistory.response.data[0].resource_id}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, resourceHistoryFetcher, scheduler };
