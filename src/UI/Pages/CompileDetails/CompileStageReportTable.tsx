@@ -1,4 +1,5 @@
-import { CompileStageReport, CompileStageReportRow } from "@/Core";
+import { CompileStageReport } from "@/Core";
+import { useExpansion } from "@/Data";
 import { MomentDatePresenter } from "@/UI/Utils";
 import {
   TableComposable,
@@ -8,7 +9,6 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import React from "react";
-import { ExpansionManager } from "../ServiceInventory/ExpansionManager";
 import { CompileStageReportTablePresenter } from "./CompileStageReportTablePresenter";
 import { CompileStageReportTableRow } from "./CompileStageReportTableRow";
 
@@ -31,19 +31,7 @@ export const CompileStageReportTable: React.FC<Props> = ({
     .getColumnHeadDisplayNames()
     .map((columnName) => <Th key={columnName}>{columnName}</Th>);
 
-  const expansionManager = new ExpansionManager();
-
-  const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(rowsToIds(rows))
-  );
-
-  const handleExpansionToggle = (id: string) => () => {
-    setExpansionState(expansionManager.toggle(expansionState, id));
-  };
-
-  React.useEffect(() => {
-    setExpansionState(expansionManager.merge(expansionState, rowsToIds(rows)));
-  }, [reports]);
+  const [isExpanded, onExpansion] = useExpansion();
 
   return (
     <TableComposable {...props} variant={TableVariant.compact}>
@@ -58,15 +46,11 @@ export const CompileStageReportTable: React.FC<Props> = ({
           row={row}
           key={row.id}
           index={idx}
-          isExpanded={expansionState[row.id]}
-          onToggle={handleExpansionToggle(row.id)}
+          isExpanded={isExpanded(row.id)}
+          onToggle={onExpansion(row.id)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
         />
       ))}
     </TableComposable>
   );
 };
-
-function rowsToIds(rows: CompileStageReportRow[]): string[] {
-  return rows.map((row) => row.id);
-}
