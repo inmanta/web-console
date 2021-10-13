@@ -1,10 +1,5 @@
-import React, { useContext, useState } from "react";
-import {
-  CompileReportParams,
-  PageSize,
-  RemoteData,
-  SortDirection,
-} from "@/Core";
+import React, { useContext } from "react";
+import { CompileReportParams, RemoteData } from "@/Core";
 import {
   EmptyView,
   ErrorView,
@@ -16,13 +11,24 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
 import { CompileReportsTableControls } from "./CompileReportsTableControls";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 
 export const CompileReports: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const [pageSize, setPageSize] = useState(PageSize.initial);
-  const [order, setOrder] = useState<SortDirection>("desc");
-  const [filter, setFilter] = useState<CompileReportParams.Filter>({});
-  const sort = order ? { name: "requested", order: order } : undefined;
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
+    route: "CompileReports",
+  });
+  const [filter, setFilter] = useUrlStateWithFilter<CompileReportParams.Filter>(
+    { route: "CompileReports", filters: { requested: "DateRange" } }
+  );
+  const [sort, setSort] = useUrlStateWithSort({
+    default: { name: "requested", order: "desc" },
+    route: "CompileReports",
+  });
   const [data, retry] = queryResolver.useContinuous<"CompileReports">({
     kind: "CompileReports",
     filter,
@@ -66,8 +72,8 @@ export const CompileReports: React.FC = () => {
               <TableProvider
                 compileReports={compileReports.data}
                 aria-label="CompileReportsView-Success"
-                order={order}
-                setOrder={setOrder}
+                sort={sort}
+                setSort={setSort}
               />
             ),
         },
