@@ -1,19 +1,9 @@
 import * as React from "react";
-import {
-  PageHeader,
-  Avatar,
-  TextContent,
-  DropdownItem,
-  PageHeaderTools,
-  PageHeaderToolsGroup,
-} from "@patternfly/react-core";
+import { PageHeader, PageHeaderTools } from "@patternfly/react-core";
 import Logo from "!react-svg-loader!@images/logo.svg";
-import AvatarImg from "!url-loader!@assets/images/img_avatar.svg";
-import { AngleDownIcon } from "@patternfly/react-icons";
 import { GlobalStyles } from "@/UI/Styles";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
-import { IconDropdown } from "./Toolbar/IconDropdown";
-import { EnvSelectorWithProvider } from "./Toolbar/Provider";
+import { Profile, SettingsButton, EnvSelectorWithProvider } from "./Toolbar";
 import { getUrl } from "@/UI/Routing";
 import styled from "styled-components";
 
@@ -23,7 +13,7 @@ interface Props {
   shouldUseAuth: boolean;
   isNavOpen?: boolean;
   onToggle?: () => void;
-  withEnvSelector?: boolean;
+  withEnv?: boolean;
 }
 
 export const AppWrapper: React.FunctionComponent<Props> = ({
@@ -31,7 +21,7 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
   children,
   shouldUseAuth,
   isNavOpen,
-  withEnvSelector,
+  withEnv,
   onToggle,
 }) => {
   React.useEffect(() => {
@@ -40,44 +30,18 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
     }
   }, [keycloak?.authenticated]);
 
-  const inmantaLogo = <Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />;
-  const Login = () => {
-    const [name, setName] = React.useState("inmanta2");
-    if (keycloak && keycloak.profile && keycloak.profile.username !== name) {
-      setName(keycloak.profile.username as string);
-    }
-
-    return <TextContent>{name}</TextContent>;
-  };
-
-  const Profile = () => (
-    <PageHeaderTools>
-      <PageHeaderToolsGroup>
-        <Login />
-        <IconDropdown
-          icon={AngleDownIcon}
-          dropdownItems={[
-            <DropdownItem
-              key="action2"
-              component="button"
-              onClick={keycloak && (() => keycloak.logout())}
-            >
-              Logout
-            </DropdownItem>,
-          ]}
-        />
-        <Avatar src={AvatarImg} alt="Avatar image" />
-      </PageHeaderToolsGroup>
-    </PageHeaderTools>
-  );
-
   const Header = (
     <PageHeader
-      logo={inmantaLogo}
+      logo={<Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />}
       logoProps={{ href: getUrl("Home", undefined) }}
-      headerTools={shouldUseAuth ? <Profile /> : undefined}
-      showNavToggle={withEnvSelector}
-      topNav={withEnvSelector ? <EnvSelectorWithProvider /> : undefined}
+      headerTools={
+        <PageHeaderTools>
+          <SettingsButton isDisabled={!withEnv} />
+          {shouldUseAuth && <Profile keycloak={keycloak} />}
+        </PageHeaderTools>
+      }
+      showNavToggle={withEnv}
+      topNav={withEnv ? <EnvSelectorWithProvider /> : undefined}
       isNavOpen={isNavOpen}
       onNavToggle={onToggle}
       style={{ backgroundColor: "transparent" }}

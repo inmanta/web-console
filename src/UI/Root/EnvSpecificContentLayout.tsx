@@ -39,7 +39,7 @@ export const EnvSpecificContentLayout: React.FC<Props> = ({
         shouldUseAuth={shouldUseAuth}
         isNavOpen={isNavOpen}
         onToggle={onToggle}
-        withEnvSelector
+        withEnv
       >
         <EnvironmentProvider
           Wrapper={({ children }) => <>{children}</>}

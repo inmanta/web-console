@@ -324,6 +324,14 @@ const dict = {
   "navigation.lifecycleServiceManager": "Lifecycle Service Manager",
   "navigation.resourceManager": "Resource Manager",
   "navigation.orchestrationEngine": "Orchestration Engine",
+
+  /**
+   * Settings
+   */
+  "settings.title": "Settings",
+  "settings.tabs.environment": "Environment",
+  "settings.tabs.configuration": "Configuration",
+  "settings.tabs.tokens": "Tokens",
 };
 
 type Key = keyof typeof dict;

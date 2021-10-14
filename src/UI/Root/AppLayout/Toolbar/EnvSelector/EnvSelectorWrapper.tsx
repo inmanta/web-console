@@ -1,7 +1,6 @@
-import { ProjectModel } from "@/Core";
+import React, { ReactNode, useState } from "react";
 import { flatMap } from "lodash";
-import React, { ReactNode } from "react";
-import { useState } from "react";
+import { ProjectModel } from "@/Core";
 import { EnvSelector } from "./EnvSelector";
 
 interface Props {
