@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, NavGroup } from "@patternfly/react-core";
 import { Route, SearchHelper } from "@/UI/Routing";
 import { words } from "@/UI/words";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Group {
   id: string;
@@ -10,72 +11,16 @@ interface Group {
   links: Link[];
 }
 
-interface Link {
-  id: string;
-  label: string;
-  url: string;
-  external: boolean;
-}
-
-/**
- * @NOTE This component still contains a hardcoded url to the dashboard.
- * We will not move this url to a better solution because it will be
- * removed in the future anyway.
- */
 export const Navigation: React.FC<{ environment: string }> = ({
   environment,
 }) => {
+  const { featureManager } = useContext(DependencyContext);
   const groups: Group[] = [
-    {
-      id: "LifecycleServiceManager",
-      title: words("navigation.lifecycleServiceManager"),
-      links: [
-        {
-          id: Route.Catalog.kind,
-          label: Route.Catalog.label,
-          url: Route.Catalog.path,
-          external: false,
-        },
-      ],
-    },
-    {
-      id: "OrchestrationEngine",
-      title: words("navigation.orchestrationEngine"),
-      links: [
-        {
-          id: Route.CompileReports.kind,
-          label: Route.CompileReports.label,
-          url: Route.CompileReports.path,
-          external: false,
-        },
-      ],
-    },
-    {
-      id: "ResourceManager",
-      title: words("navigation.resourceManager"),
-      links: [
-        {
-          id: Route.Resources.kind,
-          label: Route.Resources.label,
-          url: Route.Resources.path,
-          external: false,
-        },
-      ],
-    },
-    {
-      id: "OtherSites",
-      title: "Other Sites",
-      links: [
-        {
-          id: "Dashboard",
-          label: "Dashboard",
-          url: Route.DashboardUrl(environment),
-          external: true,
-        },
-      ],
-    },
+    ...(featureManager.isLsmEnabled() ? [lifecycleServiceManager] : []),
+    orchestrationEngine,
+    resourceManager,
+    otherSites(environment),
   ];
-
   return (
     <Nav theme="dark">
       {groups.map(({ id, title, links }) => (
@@ -86,6 +31,13 @@ export const Navigation: React.FC<{ environment: string }> = ({
     </Nav>
   );
 };
+
+interface Link {
+  id: string;
+  label: string;
+  url: string;
+  external: boolean;
+}
 
 const Item: React.FC<Link> = ({ id, label, url, external }) => (
   <NavItem key={id}>
@@ -107,3 +59,55 @@ const Item: React.FC<Link> = ({ id, label, url, external }) => (
     )}
   </NavItem>
 );
+
+const lifecycleServiceManager: Group = {
+  id: "LifecycleServiceManager",
+  title: words("navigation.lifecycleServiceManager"),
+  links: [
+    {
+      id: Route.Catalog.kind,
+      label: Route.Catalog.label,
+      url: Route.Catalog.path,
+      external: false,
+    },
+  ],
+};
+
+const orchestrationEngine: Group = {
+  id: "OrchestrationEngine",
+  title: words("navigation.orchestrationEngine"),
+  links: [
+    {
+      id: Route.CompileReports.kind,
+      label: Route.CompileReports.label,
+      url: Route.CompileReports.path,
+      external: false,
+    },
+  ],
+};
+
+const resourceManager: Group = {
+  id: "ResourceManager",
+  title: words("navigation.resourceManager"),
+  links: [
+    {
+      id: Route.Resources.kind,
+      label: Route.Resources.label,
+      url: Route.Resources.path,
+      external: false,
+    },
+  ],
+};
+
+const otherSites = (env: string): Group => ({
+  id: "OtherSites",
+  title: "Other Sites",
+  links: [
+    {
+      id: "Dashboard",
+      label: "Dashboard",
+      url: Route.DashboardUrl(env),
+      external: true,
+    },
+  ],
+});

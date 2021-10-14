@@ -10,3 +10,4 @@ export * from "./InstantPoster";
 export * from "./StaticScheduler";
 export * from "./DummyAuthHelper";
 export * from "./MockEnvironmentModifier";
+export * from "./MockFeatureManager";

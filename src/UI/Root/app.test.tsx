@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import Keycloak from "keycloak-js";
 import { App } from "@/UI/Root/app";
@@ -9,40 +9,64 @@ import {
   ProjectsQueryManager,
   ProjectsStateHelper,
   getStoreInstance,
+  GetServerStatusQueryManager,
+  GetServerStatusStateHelper,
+  PrimaryFeatureManager,
 } from "@/Data";
-import { DeferredFetcher, DynamicQueryManagerResolver } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicQueryManagerResolver,
+  ServerStatus,
+} from "@/Test";
 import { MemoryRouter } from "react-router";
+import { Either } from "@/Core";
 
 function setup() {
-  const stateHelper = new ProjectsStateHelper(getStoreInstance());
+  const store = getStoreInstance();
   const projectsManager = new ProjectsQueryManager(
     new DeferredFetcher<"Projects">(),
-    stateHelper
+    new ProjectsStateHelper(store)
+  );
+
+  const getServerStatusFetcher = new DeferredFetcher<"GetServerStatus">();
+  const getServerStatusManager = new GetServerStatusQueryManager(
+    getServerStatusFetcher,
+    new GetServerStatusStateHelper(store)
+  );
+  const featureManager = new PrimaryFeatureManager();
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([projectsManager, getServerStatusManager])
   );
   return {
-    queryResolver: new QueryResolverImpl(
-      new DynamicQueryManagerResolver([projectsManager])
-    ),
+    featureManager,
+    queryResolver,
+    getServerStatusFetcher,
+    store,
   };
 }
 
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
-  const keycloak = Keycloak();
-
-  const { queryResolver } = setup();
+  const { store, queryResolver, featureManager, getServerStatusFetcher } =
+    setup();
 
   render(
     <MemoryRouter initialEntries={["/lsm/catalog"]}>
-      <DependencyProvider dependencies={{ queryResolver }}>
-        <StoreProvider store={getStoreInstance()}>
-          <App keycloak={keycloak} shouldUseAuth={false} />
+      <DependencyProvider dependencies={{ queryResolver, featureManager }}>
+        <StoreProvider store={store}>
+          <App keycloak={Keycloak()} shouldUseAuth={false} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
   );
 
+  await act(async () => {
+    await getServerStatusFetcher.resolve(
+      Either.right({ data: ServerStatus.withLsm })
+    );
+  });
+
   expect(
-    await screen.findByRole("button", { name: "Global navigation" })
+    screen.getByRole("button", { name: "Global navigation" })
   ).toBeVisible();
 });

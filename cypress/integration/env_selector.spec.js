@@ -1,9 +1,12 @@
 /// <reference types="Cypress" />
 describe("Environment selector", function () {
-  it("Has multiple entries based on backend response", function () {
-    cy.intercept("GET", "**/api/v2/project", {
-      fixture: "environments.json",
+  beforeEach(() => {
+    cy.intercept("GET", "/api/v2/project", { fixture: "environments.json" });
+    cy.intercept("GET", "**/api/v1/serverstatus", {
+      fixture: "serverstatus.json",
     });
+  });
+  it("Has multiple entries based on backend response", function () {
     cy.visit("/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c");
     cy.get(".pf-c-context-selector__toggle").click();
 
@@ -19,7 +22,6 @@ describe("Environment selector", function () {
     });
   });
   it("Has correct entry selected when env parameter is set", function () {
-    cy.intercept("GET", "/api/v2/project", { fixture: "environments.json" });
     cy.visit("/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c");
     cy.get(".pf-c-context-selector__toggle-text").should(
       "contain.text",

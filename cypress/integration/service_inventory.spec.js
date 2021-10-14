@@ -2,6 +2,9 @@
 describe("Service inventory", function () {
   beforeEach(() => {
     cy.intercept("GET", "/api/v2/project", { fixture: "environments.json" });
+    cy.intercept("GET", "**/api/v1/serverstatus", {
+      fixture: "serverstatus.json",
+    });
     cy.intercept("GET", "/lsm/v1/service_inventory/e2e_service?**", {
       fixture: "lsm/service_inventory.json",
     });
