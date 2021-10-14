@@ -1,4 +1,4 @@
-import { Operator, Query, TimestampOperatorFilter } from "@/Core";
+import { Query, DateRange } from "@/Core";
 import moment from "moment";
 import qs from "qs";
 
@@ -26,22 +26,13 @@ export function getUrl({
   return `/api/v2/resource/${id}/logs?limit=${pageSize.value}${filterParam}${sortParam}`;
 }
 
-const operatorToParam = (operator: Operator): string => {
-  switch (operator) {
-    case Operator.From:
-      return "ge";
-    case Operator.To:
-      return "le";
-  }
-};
-
 const serializeTimestampFilter = (
-  filter?: TimestampOperatorFilter[]
+  filter?: DateRange.Type[]
 ): string[] | undefined => {
   if (typeof filter === "undefined") return undefined;
   return filter.map(
     (timestampWithOperator) =>
-      `${operatorToParam(timestampWithOperator.operator)}:${moment
+      `${DateRange.serializeOperator(timestampWithOperator.operator)}:${moment
         .tz(timestampWithOperator.date, moment.tz.guess())
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`

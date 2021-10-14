@@ -1,12 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { DependencyContext } from "@/UI/Dependency";
-import {
-  EventParams,
-  PageSize,
-  RemoteData,
-  ServiceModel,
-  SortDirection,
-} from "@/Core";
+import { EventParams, RemoteData, ServiceModel } from "@/Core";
 import {
   ErrorView,
   LoadingView,
@@ -15,11 +9,16 @@ import {
   EmptyView,
   EventsTableBody,
   Description,
+  PaginationWidget,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { PaginationWidget } from "@/UI/Components";
 import { EventsTableControls } from "./EventsTableControls";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 
 interface Props {
   service: ServiceModel;
@@ -28,10 +27,15 @@ interface Props {
 
 export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [order, setOrder] = useState<SortDirection>("desc");
-  const sort = { name: "timestamp", order: order };
-  const [filter, setFilter] = useState<EventParams.Filter>({});
-  const [pageSize, setPageSize] = useState(PageSize.initial);
+  const [sort, setSort] = useUrlStateWithSort({
+    default: { name: "timestamp", order: "desc" },
+    route: "Events",
+  });
+  const [filter, setFilter] = useUrlStateWithFilter<EventParams.Filter>({
+    route: "Events",
+    dateRangeKey: "timestamp",
+  });
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: "Events" });
   const [data] = queryResolver.useContinuous<"Events">({
     kind: "Events",
     id: instanceId,
@@ -41,24 +45,7 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
     pageSize,
   });
   const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());
-
   const states = service.lifecycle.states.map((state) => state.name).sort();
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
-        <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      ),
-    },
-    data
-  );
 
   return (
     <div>
@@ -68,58 +55,41 @@ export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
         filter={filter}
         setFilter={setFilter}
         states={states}
-        paginationWidget={paginationWidget}
+        paginationWidget={
+          <PaginationWidget
+            data={data}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
       />
       {RemoteData.fold(
         {
           notAsked: () => null,
-          loading: () => (
-            <EventsTableWrapper
-              tablePresenter={tablePresenter}
-              wrapInTd
-              aria-label="EventTable-Loading"
-              order={order}
-              setOrder={setOrder}
-            >
-              <LoadingView />
-            </EventsTableWrapper>
-          ),
+          loading: () => <LoadingView aria-label="EventTable-Loading" />,
           failed: (error) => (
-            <EventsTableWrapper
-              tablePresenter={tablePresenter}
-              wrapInTd
+            <ErrorView
+              title={words("events.failed.title")}
+              message={words("events.failed.body")(error)}
               aria-label="EventTable-Failed"
-              order={order}
-              setOrder={setOrder}
-            >
-              <ErrorView
-                title={words("events.failed.title")}
-                message={words("events.failed.body")(error)}
-              />
-            </EventsTableWrapper>
+            />
           ),
           success: (events) =>
             events.data.length === 0 ? (
-              <EventsTableWrapper
-                tablePresenter={tablePresenter}
-                wrapInTd
+              <EmptyView
+                title={words("events.empty.title")}
+                message={words("events.empty.body")}
                 aria-label="EventTable-Empty"
-                order={order}
-                setOrder={setOrder}
-              >
-                <EmptyView
-                  title={words("events.empty.title")}
-                  message={words("events.empty.body")}
-                />
-              </EventsTableWrapper>
+              />
             ) : (
               <EventsTableWrapper
                 tablePresenter={tablePresenter}
                 aria-label="EventTable-Success"
-                order={order}
-                setOrder={setOrder}
+                sort={sort}
+                setSort={setSort}
               >
                 <EventsTableBody
+                  route="Events"
                   events={events.data}
                   tablePresenter={tablePresenter}
                 />

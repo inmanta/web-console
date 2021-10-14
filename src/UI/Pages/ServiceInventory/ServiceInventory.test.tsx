@@ -35,6 +35,7 @@ import {
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { Chart } from "./Components";
 
 function setup(service = Service.a) {
   const store = getStoreInstance();
@@ -94,7 +95,11 @@ function setup(service = Service.a) {
         }}
       >
         <StoreProvider store={store}>
-          <ServiceInventory serviceName={service.name} service={service} />
+          <ServiceInventory
+            serviceName={service.name}
+            service={service}
+            intro={<Chart summary={service.instance_summary} />}
+          />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

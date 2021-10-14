@@ -35,6 +35,10 @@ export function toggleValueInList<T>(value: T, list: T[]): T[] {
 export const isNotNull = <T>(value: T | null): value is NonNullable<T> =>
   value !== null;
 
+export const isNotUndefined = <T>(
+  value: T | undefined
+): value is NonNullable<T> => typeof value !== "undefined";
+
 export type ValueObject<T> = Readonly<{
   type: string;
   value: T;
@@ -62,3 +66,26 @@ export const stringifyList = (items: string[]): string =>
 export const isObjectEmpty = (
   obj: Record<string, unknown>
 ): obj is Record<string, never> => Object.entries(obj).length <= 0;
+
+/**
+ * Get the keys of the provided object excluding the provided keys.
+ */
+export const getKeysExcluding = (
+  excludedKeys: string[],
+  object: Record<string, unknown>
+): string[] => Object.keys(object).filter((key) => !excludedKeys.includes(key));
+
+/**
+ * Create a new object based on the provided object with only the provided keys.
+ * The original order of the keys is preserved.
+ */
+export const keepKeys = (
+  keys: string[],
+  object: Record<string, unknown>
+): Record<string, unknown> =>
+  Object.keys(object).reduce((acc, cur) => {
+    if (keys.includes(cur)) {
+      acc[cur] = object[cur];
+    }
+    return acc;
+  }, {});

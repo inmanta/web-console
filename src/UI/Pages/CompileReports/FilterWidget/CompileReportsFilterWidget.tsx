@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
-import { CompileReportParams, TimestampOperatorFilter } from "@/Core";
+import { CompileReportParams, DateRange } from "@/Core";
 import { words } from "@/UI/words";
 import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -40,7 +40,7 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({
           : undefined,
     });
 
-  const updateRequested = (timestampFilters: TimestampOperatorFilter[]) =>
+  const updateRequested = (timestampFilters: DateRange.Type[]) =>
     setFilter({
       ...filter,
       requested: timestampFilters.length > 0 ? timestampFilters : undefined,

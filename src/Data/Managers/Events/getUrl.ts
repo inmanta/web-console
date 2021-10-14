@@ -1,4 +1,4 @@
-import { Operator, Query } from "@/Core";
+import { DateRange, Query } from "@/Core";
 import moment from "moment-timezone";
 import qs from "qs";
 
@@ -24,7 +24,7 @@ const filterToParam = (filter: Filter, timezone: string) => {
   const { source, destination, version, event_type, timestamp } = filter;
   const serializedTimestampOperatorFilters = timestamp?.map(
     (timestampWithOperator) =>
-      `${operatorToParam(timestampWithOperator.operator)}:${moment
+      `${DateRange.serializeOperator(timestampWithOperator.operator)}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
@@ -37,13 +37,4 @@ const filterToParam = (filter: Filter, timezone: string) => {
     event_type,
     timestamp: serializedTimestampOperatorFilters,
   };
-};
-
-const operatorToParam = (operator: Operator): string => {
-  switch (operator) {
-    case Operator.From:
-      return "ge";
-    case Operator.To:
-      return "le";
-  }
 };

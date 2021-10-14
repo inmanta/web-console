@@ -1,4 +1,4 @@
-import { Query } from "@/Core";
+import { Query, Sort } from "@/Core";
 import qs from "qs";
 
 export function getUrl({
@@ -13,7 +13,7 @@ export function getUrl({
         { allowDots: true, arrayFormat: "repeat" }
       )}`
     : "";
-  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
+  const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
   const includeDeletedParam =
     filter?.deleted === "Include" ? "&include_deleted=true" : "";
   return `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=${pageSize.value}${filterParam}${sortParam}${includeDeletedParam}`;

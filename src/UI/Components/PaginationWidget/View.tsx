@@ -5,7 +5,7 @@ import { AngleLeftIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { Indicator } from "./Indicator";
 import { PageSizeSelector } from "./PageSizeSelector";
 
-export const PaginationWidget: React.FC<{
+export const View: React.FC<{
   handlers: Pagination.Handlers;
   metadata: Pagination.Metadata;
   pageSize: PageSize.Type;

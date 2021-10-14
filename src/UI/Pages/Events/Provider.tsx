@@ -4,6 +4,7 @@ import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
 import { Route } from "@/UI/Routing";
 import { EventsPage } from "./EventsPage";
 import { words } from "@/UI/words";
+import { ServiceModel } from "@/Core";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("events.title")}>
@@ -11,19 +12,23 @@ const Wrapper: React.FC = ({ children, ...props }) => (
   </PageSectionWithTitle>
 );
 
+const Wrapped: React.FC<{ service: ServiceModel }> = ({ service }) => {
+  const { instance } = useParams<Route.Params<"Events">>();
+  return (
+    <Wrapper>
+      <EventsPage service={service} instanceId={instance} />
+    </Wrapper>
+  );
+};
+
 export const Provider: React.FC = () => {
-  const { service: serviceName, instance } =
-    useParams<Route.Params<"Events">>();
+  const { service: serviceName } = useParams<Route.Params<"Events">>();
 
   return (
     <ServiceProvider
       serviceName={serviceName}
       Wrapper={Wrapper}
-      Dependant={({ service }) => (
-        <Wrapper>
-          <EventsPage service={service} instanceId={instance} />
-        </Wrapper>
-      )}
+      Dependant={Wrapped}
     />
   );
 };

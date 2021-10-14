@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -22,6 +22,7 @@ import { Spacer } from "@/UI/Components";
 import { greyText } from "@/UI/Styles";
 import { CatalogTabs } from "./Tabs";
 import { SummaryIcons } from "./SummaryIcons";
+import { useUrlStateWithExpansion } from "@/Data";
 
 interface Props {
   services: ServiceModel[];
@@ -30,7 +31,9 @@ interface Props {
 export const CatalogDataList: React.FunctionComponent<Props> = ({
   services,
 }) => {
-  const [expanded, setExpanded] = useState([""]);
+  const [isExpanded, onExpansion] = useUrlStateWithExpansion({
+    route: "Catalog",
+  });
 
   const Description = (descriptionProps) => {
     if (descriptionProps.service.description) {
@@ -46,28 +49,22 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
     }
     return <div />;
   };
-  const servicesById = services.reduce((acc, curr) => {
-    acc[curr.name] = curr;
-    return acc;
-  }, {});
 
-  const serviceItems = Object.keys(servicesById).map((serviceName) => {
-    const service = servicesById[serviceName];
-    const toggleId = serviceName + "-toggle";
-    const serviceKey = serviceName + "-item";
-    const expandKey = serviceName + "-expand";
+  const serviceItems = services.map((service) => {
+    const serviceKey = service.name + "-item";
+    const expandKey = service.name + "-expand";
     return (
       <DataListItem
-        id={serviceName}
+        id={service.name}
         key={serviceKey}
         aria-labelledby={serviceKey}
-        isExpanded={expanded.includes(toggleId)}
+        isExpanded={isExpanded(service.name)}
       >
         <DataListItemRow>
           <DataListToggle
-            onClick={() => onToggle(toggleId)}
-            isExpanded={expanded.includes(toggleId)}
-            id={toggleId}
+            onClick={onExpansion(service.name)}
+            isExpanded={isExpanded(service.name)}
+            id={`${service.name}-toggle`}
             aria-controls={expandKey}
           />
           <DataListItemCells
@@ -103,7 +100,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
         <DataListContent
           aria-label="Primary Content Details"
           id={expandKey}
-          isHidden={!expanded.includes(toggleId)}
+          isHidden={!isExpanded(service.name)}
         >
           <CatalogTabs service={service} />
         </DataListContent>
@@ -111,17 +108,6 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
     );
   });
 
-  const onToggle = (id) => {
-    const index = expanded.indexOf(id);
-    const newExpanded =
-      index >= 0
-        ? [
-            ...expanded.slice(0, index),
-            ...expanded.slice(index + 1, expanded.length),
-          ]
-        : [...expanded, id];
-    setExpanded(newExpanded);
-  };
   return (
     <DataList aria-label="List of service entities">{serviceItems}</DataList>
   );

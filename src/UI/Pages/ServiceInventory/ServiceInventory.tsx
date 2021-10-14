@@ -1,15 +1,8 @@
-import React, { useContext, useState } from "react";
-import styled from "styled-components";
+import React, { useContext, ReactElement } from "react";
 import { useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import {
-  RemoteData,
-  ServiceModel,
-  ServiceInstanceParams,
-  SortDirection,
-  PageSize,
-} from "@/Core";
+import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -18,10 +11,14 @@ import {
   PageSectionWithTitle,
   PaginationWidget,
   ServiceProvider,
-  SummaryChart,
 } from "@/UI/Components";
-import { TableControls } from "./Components";
+import { Chart, TableControls } from "./Components";
 import { Route } from "@/UI/Routing";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("inventory.title")}>
@@ -36,26 +33,39 @@ export const ServiceInventoryWithProvider: React.FC = () => {
     <ServiceProvider
       serviceName={serviceName}
       Wrapper={Wrapper}
-      Dependant={({ service }) => (
-        <ServiceInventory service={service} serviceName={serviceName} />
-      )}
+      Dependant={PreppedServiceInventory}
     />
   );
 };
 
+const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
+  service,
+}) => (
+  <ServiceInventory
+    service={service}
+    serviceName={service.name}
+    intro={<Chart summary={service.instance_summary} />}
+  />
+);
+
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
   service: ServiceModel;
-}> = ({ serviceName, service }) => {
+  intro?: ReactElement | null;
+}> = ({ serviceName, service, intro }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [sortColumn, setSortColumn] = useState<string | undefined>(
-    "created_at"
-  );
-  const [pageSize, setPageSize] = useState(PageSize.initial);
-  const [order, setOrder] = useState<SortDirection | undefined>("desc");
-  const sort =
-    sortColumn && order ? { name: sortColumn, order: order } : undefined;
-  const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
+
+  const [sort, setSort] = useUrlStateWithSort({
+    default: { name: "created_at", order: "desc" },
+    route: "Inventory",
+  });
+
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
+    route: "Inventory",
+  });
+
+  const [filter, setFilter] =
+    useUrlStateWithFilter<ServiceInstanceParams.Filter>({ route: "Inventory" });
 
   const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
@@ -65,39 +75,21 @@ export const ServiceInventory: React.FunctionComponent<{
     pageSize,
   });
 
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
-        <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      ),
-    },
-    data
-  );
-
   return (
     <Wrapper>
-      {service.instance_summary && (
-        <ChartContainer>
-          <SummaryChart
-            by_label={service.instance_summary.by_label}
-            total={service.instance_summary.total}
-          />
-        </ChartContainer>
-      )}
+      {intro}
       <TableControls
         serviceName={serviceName}
         filter={filter}
         setFilter={setFilter}
         service={service}
-        paginationWidget={paginationWidget}
+        paginationWidget={
+          <PaginationWidget
+            data={data}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
       />
       {RemoteData.fold(
         {
@@ -116,10 +108,8 @@ export const ServiceInventory: React.FunctionComponent<{
                 aria-label="ServiceInventory-Success"
                 instances={instances}
                 serviceEntity={service}
-                sortColumn={sortColumn}
-                setSortColumn={setSortColumn}
-                order={order}
-                setOrder={setOrder}
+                sort={sort}
+                setSort={setSort}
               />
             ) : (
               <EmptyView
@@ -133,8 +123,3 @@ export const ServiceInventory: React.FunctionComponent<{
     </Wrapper>
   );
 };
-
-const ChartContainer = styled.div`
-  height: 230px;
-  width: 350px;
-`;

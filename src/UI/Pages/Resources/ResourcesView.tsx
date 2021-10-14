@@ -1,4 +1,4 @@
-import { ResourceParams, RemoteData, SortDirection, PageSize } from "@/Core";
+import { ResourceParams, RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -8,10 +8,15 @@ import {
   PaginationWidget,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { ResourceTableControls } from "./TableControls";
 import { ResourceFilterContext } from "./ResourceFilterContext";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 
 export const Wrapper: React.FC = ({ children }) => (
   <PageSectionWithTitle title={words("inventory.tabs.resources")}>
@@ -21,14 +26,17 @@ export const Wrapper: React.FC = ({ children }) => (
 
 export const ResourcesView: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const [pageSize, setPageSize] = useState(PageSize.initial);
-  const [filter, setFilter] = useState<ResourceParams.Filter>({});
-  const [sortColumn, setSortColumn] = useState<string | undefined>(
-    "resource_type"
-  );
-  const [order, setOrder] = useState<SortDirection | undefined>("asc");
-  const sort =
-    sortColumn && order ? { name: sortColumn, order: order } : undefined;
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
+    route: "Resources",
+  });
+  const [filter, setFilter] = useUrlStateWithFilter<ResourceParams.Filter>({
+    route: "Resources",
+  });
+  const [sort, setSort] = useUrlStateWithSort({
+    default: { name: "resource_type", order: "asc" },
+    route: "Resources",
+  });
+
   const [data, retry] = queryResolver.useContinuous<"Resources">({
     kind: "Resources",
     sort,
@@ -36,25 +44,15 @@ export const ResourcesView: React.FC = () => {
     pageSize,
   });
 
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => null,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
+  const tableControls = (
+    <ResourceTableControls
+      paginationWidget={
         <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
+          data={data}
           pageSize={pageSize}
           setPageSize={setPageSize}
         />
-      ),
-    },
-    data
-  );
-  const tableControls = (
-    <ResourceTableControls
-      paginationWidget={paginationWidget}
+      }
       filter={filter}
       setFilter={setFilter}
     />
@@ -83,10 +81,8 @@ export const ResourcesView: React.FC = () => {
                 />
               ) : (
                 <ResourcesTableProvider
-                  order={order}
-                  setOrder={setOrder}
-                  sortColumn={sortColumn}
-                  setSortColumn={setSortColumn}
+                  sort={sort}
+                  setSort={setSort}
                   resources={resources.data}
                   aria-label="ResourcesView-Success"
                 />

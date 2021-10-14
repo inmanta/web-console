@@ -1,5 +1,5 @@
 import { ResourceStatus } from "./Resource";
-import { Sort } from "./Params";
+import { Sort } from "./Sort";
 import { PageSize } from "./PageSize";
 
 export interface ResourceParams {

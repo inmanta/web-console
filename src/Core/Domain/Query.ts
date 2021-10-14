@@ -24,7 +24,7 @@ import { ResourceParams as ResourceParams } from "./ResourceParams";
 import { WithId } from "../Language";
 import { ResourceHistory } from "./ResourceHistory";
 import { ResourceLog, ResourceLogFilter } from "./ResourceLog";
-import { Sort } from "./Params";
+import { Sort } from "./Sort";
 import { PageSize } from "./PageSize";
 import { EnvironmentDetails } from "./EnvironmentDetailsModel";
 import { Callback } from "./Callback";

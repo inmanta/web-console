@@ -1,9 +1,9 @@
 import { generatePath } from "react-router-dom";
-import { Kinds } from "./Kinds";
+import { Kind } from "./Kind";
 import { getRouteWithParamsFromUrl, getLineageFromRoute } from "./Utils";
 
 interface Crumb {
-  kind: Kinds;
+  kind: Kind;
   label: string;
   url: string;
   active: boolean;

@@ -1,4 +1,4 @@
-import { CompileReportParams, Operator, Query } from "@/Core";
+import { CompileReportParams, DateRange, Query } from "@/Core";
 import { omit } from "lodash";
 import moment from "moment";
 import qs from "qs";
@@ -25,7 +25,7 @@ const filterToParam = (filter: Filter, timezone: string) => {
   const { status, success, requested } = filter;
   const serializedTimestampOperatorFilters = requested?.map(
     (timestampWithOperator) =>
-      `${operatorToParam(timestampWithOperator.operator)}:${moment
+      `${DateRange.serializeOperator(timestampWithOperator.operator)}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
@@ -73,12 +73,3 @@ function combineStatusFilters(status?: CompileReportParams.CompileStatus[]) {
   }
   return {};
 }
-
-const operatorToParam = (operator: Operator): string => {
-  switch (operator) {
-    case Operator.From:
-      return "ge";
-    case Operator.To:
-      return "le";
-  }
-};

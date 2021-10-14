@@ -19,6 +19,7 @@ import {
 } from "@/Data";
 import userEvent from "@testing-library/user-event";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { MemoryRouter } from "react-router";
 
 const dummySetter = () => {
   return;
@@ -49,16 +50,18 @@ test("InventoryTable can be expanded", async () => {
   );
   const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <InventoryTable
-          rows={[Row.a, Row.b]}
-          tablePresenter={tablePresenter}
-          setSortColumn={dummySetter}
-          setOrder={dummySetter}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+        <StoreProvider store={store}>
+          <InventoryTable
+            rows={[Row.a, Row.b]}
+            tablePresenter={tablePresenter}
+            setSort={dummySetter}
+            sort={{ name: "created_at", order: "desc" }}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
   const testid = `details_${Row.a.id.short}`;
 
@@ -95,16 +98,18 @@ test("ServiceInventory can show resources for instance", async () => {
   );
   const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <InventoryTable
-          rows={[Row.a, Row.b]}
-          tablePresenter={tablePresenter}
-          setSortColumn={dummySetter}
-          setOrder={dummySetter}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+        <StoreProvider store={store}>
+          <InventoryTable
+            rows={[Row.a, Row.b]}
+            tablePresenter={tablePresenter}
+            setSort={dummySetter}
+            sort={{ name: "created_at", order: "desc" }}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
@@ -122,12 +127,14 @@ test("ServiceInventory can show resources for instance", async () => {
 
 test("ServiceInventory shows service identity if it's defined", async () => {
   render(
-    <InventoryTable
-      rows={[Row.a]}
-      tablePresenter={tablePresenterWithIdentity}
-      setSortColumn={dummySetter}
-      setOrder={dummySetter}
-    />
+    <MemoryRouter>
+      <InventoryTable
+        rows={[Row.a]}
+        tablePresenter={tablePresenterWithIdentity}
+        setSort={dummySetter}
+        sort={{ name: "created_at", order: "desc" }}
+      />
+    </MemoryRouter>
   );
 
   expect(await screen.findByText("Order ID")).toBeVisible();
@@ -137,12 +144,14 @@ test("ServiceInventory shows service identity if it's defined", async () => {
 
 test("ServiceInventory shows sorting buttons for sortable columns", async () => {
   render(
-    <InventoryTable
-      rows={[Row.a]}
-      tablePresenter={tablePresenter}
-      setSortColumn={dummySetter}
-      setOrder={dummySetter}
-    />
+    <MemoryRouter>
+      <InventoryTable
+        rows={[Row.a]}
+        tablePresenter={tablePresenter}
+        setSort={dummySetter}
+        sort={{ name: "created_at", order: "desc" }}
+      />
+    </MemoryRouter>
   );
   expect(await screen.findByRole("button", { name: /state/i })).toBeVisible();
   expect(await screen.findByRole("button", { name: /created/i })).toBeVisible();
@@ -153,19 +162,20 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
 });
 
 test("ServiceInventory sets sorting parameters correctly on click", async () => {
-  let sortColumn;
-  let order;
+  let sort;
   render(
-    <InventoryTable
-      rows={[Row.a]}
-      tablePresenter={tablePresenter}
-      setSortColumn={(name) => (sortColumn = name)}
-      setOrder={(dir) => (order = dir)}
-    />
+    <MemoryRouter>
+      <InventoryTable
+        rows={[Row.a]}
+        tablePresenter={tablePresenter}
+        setSort={(v) => (sort = v)}
+        sort={{ name: "created_at", order: "desc" }}
+      />
+    </MemoryRouter>
   );
   const stateButton = await screen.findByRole("button", { name: /state/i });
   expect(stateButton).toBeVisible();
   userEvent.click(stateButton);
-  expect(sortColumn).toEqual("state");
-  expect(order).toEqual("asc");
+  expect(sort.name).toEqual("state");
+  expect(sort.order).toEqual("asc");
 });
