@@ -1,26 +1,30 @@
-import { FlatEnvironment } from "@/Core";
-import { DependencyContext } from "@/UI";
-import { getUrl } from "@/UI/Routing";
-import { words } from "@/UI/words";
+import React, { useContext, useState } from "react";
 import {
   Bullseye,
   Button,
   Card,
+  CardActions,
   CardBody,
   CardFooter,
   CardHeader,
   CardTitle,
+  Dropdown,
+  DropdownItem,
   EmptyState,
   EmptyStateIcon,
   EmptyStateSecondaryActions,
   EmptyStateVariant,
   Gallery,
+  KebabToggle,
   PageSection,
   Title,
 } from "@patternfly/react-core";
-import { PlusCircleIcon } from "@patternfly/react-icons";
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { PencilAltIcon, PlusCircleIcon } from "@patternfly/react-icons";
+import { FlatEnvironment } from "@/Core";
+import { DependencyContext } from "@/UI";
+import { getUrl } from "@/UI/Routing";
+import { words } from "@/UI/words";
+import { Link } from "@/UI/Components";
 
 interface Props {
   environments: FlatEnvironment[];
@@ -78,10 +82,11 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   <Card isHoverable isCompact aria-label={"Environment card"}>
     <CardHeader>
       <CardTitle>{environment.name}</CardTitle>
+      <Actions environmentId={environment.id} />
     </CardHeader>
     <CardBody>
       <Bullseye>
-        <Link to={{ pathname, search: `env=${environment.id}` }}>
+        <Link pathname={pathname} search={`env=${environment.id}`}>
           <Button variant="secondary">
             {words("home.environment.select")}
           </Button>
@@ -91,3 +96,33 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
     <CardFooter style={{ color: "gray" }}>{environment.projectName}</CardFooter>
   </Card>
 );
+
+const Actions: React.FC<{ environmentId: string }> = ({ environmentId }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <CardActions>
+      <Dropdown
+        onSelect={() => setIsOpen((value) => !value)}
+        toggle={<KebabToggle onToggle={() => setIsOpen((value) => !value)} />}
+        isOpen={isOpen}
+        isPlain
+        dropdownItems={[
+          <DropdownItem
+            key="settings"
+            component={
+              <Link
+                pathname={getUrl("Settings", undefined)}
+                search={`env=${environmentId}`}
+              >
+                <Button variant="link" icon={<PencilAltIcon />}>
+                  {words("home.environment.edit")}
+                </Button>
+              </Link>
+            }
+          />,
+        ]}
+        position={"right"}
+      />
+    </CardActions>
+  );
+};

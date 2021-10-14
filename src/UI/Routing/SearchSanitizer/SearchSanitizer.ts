@@ -2,6 +2,7 @@ import { Kind } from "@/UI/Routing/Kind";
 import { getKeysExcluding, isObject, keepKeys } from "@/Core";
 import { PageStateSanitizer } from "@/UI/Routing/PageStateSanitizer";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
+import { getRouteFromKind } from "@/UI/Routing/Route";
 
 /**
  * SearchSanitizer has utilities to sanitize the search string.
@@ -10,7 +11,7 @@ import { SearchHelper } from "@/UI/Routing/SearchHelper";
  * But also pageState of child pages we no longer need.
  */
 export class SearchSanitizer {
-  validKeys = ["env", "state"];
+  private readonly validKeys = ["env", "state"];
   searchHelper: SearchHelper;
   pageStateSanitizer: PageStateSanitizer;
 
@@ -19,13 +20,22 @@ export class SearchSanitizer {
     this.pageStateSanitizer = new PageStateSanitizer();
   }
 
+  private getValidKeys(routeKind: Kind): string[] {
+    const route = getRouteFromKind(routeKind);
+    if (route.clearEnv) return this.validKeys.filter((k) => k !== "env");
+    return this.validKeys;
+  }
+
   /**
    * Sanitizes the search string.
    * This maintains the original order of the search params.
    */
   sanitize(routeKind: Kind, search: string): string {
     const parsedSearch = this.searchHelper.parse(search);
-    const sanitizedSearch = keepKeys(this.validKeys, parsedSearch);
+    const sanitizedSearch = keepKeys(
+      this.getValidKeys(routeKind),
+      parsedSearch
+    );
     const { state } = sanitizedSearch;
     if (typeof state === "undefined")
       return this.searchHelper.stringify(sanitizedSearch);
@@ -44,7 +54,8 @@ export class SearchSanitizer {
    */
   isSanitized(routeKind: Kind, search: string): boolean {
     const parsedSearch = this.searchHelper.parse(search);
-    if (getKeysExcluding(this.validKeys, parsedSearch).length > 0) return false;
+    if (getKeysExcluding(this.getValidKeys(routeKind), parsedSearch).length > 0)
+      return false;
     const { state } = parsedSearch;
     if (typeof state === "undefined") return true;
     if (!isObject(state)) return false;
