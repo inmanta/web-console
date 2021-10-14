@@ -1,33 +1,25 @@
 import React from "react";
 import { EventRow, InstanceEvent } from "@/Core";
 import { TablePresenter } from "@/UI/Presenters";
-import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 import { EventsTableRow } from "./EventsTableRow";
+import { useUrlStateWithExpansion } from "@/Data";
+import { Kind } from "@/UI/Routing";
 
 interface Props {
   events: InstanceEvent[];
   tablePresenter: TablePresenter<InstanceEvent, EventRow>;
+  route: Kind;
 }
 
 export const EventsTableBody: React.FC<Props> = ({
   events,
   tablePresenter,
+  route,
 }) => {
-  const expansionManager = new ExpansionManager();
+  const [isExpanded, onExpansion] = useUrlStateWithExpansion({
+    route,
+  });
 
-  const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(rowsToIds(events))
-  );
-
-  const handleExpansionToggle = (id: string) => () => {
-    setExpansionState(expansionManager.toggle(expansionState, id));
-  };
-
-  React.useEffect(() => {
-    setExpansionState(
-      expansionManager.merge(expansionState, rowsToIds(events))
-    );
-  }, [events]);
   const rows = tablePresenter.createRows(events);
   return (
     <>
@@ -35,8 +27,8 @@ export const EventsTableBody: React.FC<Props> = ({
         <EventsTableRow
           index={index}
           key={row.id}
-          isExpanded={expansionState[row.id]}
-          onToggle={handleExpansionToggle(row.id)}
+          isExpanded={isExpanded(row.id)}
+          onToggle={onExpansion(row.id)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
           row={row}
         />
@@ -44,6 +36,3 @@ export const EventsTableBody: React.FC<Props> = ({
     </>
   );
 };
-function rowsToIds(rows: InstanceEvent[]): string[] {
-  return rows.map((row) => row.id);
-}

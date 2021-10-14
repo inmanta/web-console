@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { matchPath, match, generatePath } from "react-router-dom";
 import { Route, Params, getRouteFromKind, allRoutes } from "./Route";
-import { Kinds } from "./Kinds";
+import { Kind } from "./Kind";
 
 export const getLineageFromRoute = (
   route: Route,
@@ -33,7 +33,7 @@ export function getRouteWithParamsFromUrl(
   return [page, match.params];
 }
 
-export function getUrl(kind: Kinds, params: Params<typeof kind>): string {
+export function getUrl(kind: Kind, params: Params<typeof kind>): string {
   const route = getRouteFromKind(kind);
   return generatePath(route.path, params);
 }

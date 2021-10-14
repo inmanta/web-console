@@ -1,5 +1,6 @@
 import { PageSize } from "./PageSize";
-import { Sort, TimestampOperatorFilter } from "./Params";
+import { Sort } from "./Sort";
+import { DateRange } from "./DateRange";
 
 export interface CompileReportParams {
   filter?: Filter;
@@ -8,7 +9,7 @@ export interface CompileReportParams {
 }
 
 export interface Filter {
-  requested?: TimestampOperatorFilter[];
+  requested?: DateRange[];
   success?: boolean;
   status?: CompileStatus[];
 }

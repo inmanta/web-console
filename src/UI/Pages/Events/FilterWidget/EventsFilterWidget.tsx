@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
-import { EventParams, EventType, TimestampOperatorFilter } from "@/Core";
+import { EventParams, EventType, DateRange } from "@/Core";
 import { words } from "@/UI/words";
 import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -47,7 +47,7 @@ export const EventsFilterWidget: React.FC<Props> = ({
       version: versions.length > 0 ? versions : undefined,
     });
 
-  const updateTimestamp = (timestampFilters: TimestampOperatorFilter[]) =>
+  const updateTimestamp = (timestampFilters: DateRange.Type[]) =>
     setFilter({
       ...filter,
       timestamp: timestampFilters.length > 0 ? timestampFilters : undefined,

@@ -80,22 +80,18 @@ const eventsTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
   icon: <PortIcon />,
   view:
     log.events.length === 0 ? (
-      <EventsTableWrapper
-        tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
-        wrapInTd
+      <EmptyView
+        title={words("events.empty.title")}
+        message={words("events.empty.body")}
         aria-label="EventTable-Empty"
-      >
-        <EmptyView
-          title={words("events.empty.title")}
-          message={words("events.empty.body")}
-        />
-      </EventsTableWrapper>
+      />
     ) : (
       <EventsTableWrapper
         tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
         aria-label="EventTable-Success"
       >
         <EventsTableBody
+          route="History"
           events={log.events}
           tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
         />

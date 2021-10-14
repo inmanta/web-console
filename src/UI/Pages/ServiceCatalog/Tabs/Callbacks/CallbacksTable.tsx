@@ -3,8 +3,8 @@ import { Callback } from "@/Core";
 import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
 import { Row } from "./Row";
 import { CreateCallbackForm } from "./CreateCallbackForm";
-import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 import { words } from "@/UI/words";
+import { useUrlStateWithExpansion } from "@/Data";
 
 interface Props {
   callbacks: Callback[];
@@ -15,18 +15,11 @@ export const CallbacksTable: React.FC<Props> = ({
   callbacks,
   service_entity,
 }) => {
-  const expansionManager = new ExpansionManager();
-  const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(getIds(callbacks))
-  );
-  const handleExpansionToggle = (id: string) => () => {
-    setExpansionState(expansionManager.toggle(expansionState, id));
-  };
-  React.useEffect(() => {
-    setExpansionState(
-      expansionManager.merge(expansionState, getIds(callbacks))
-    );
-  }, [callbacks]);
+  const [isExpanded, onExpansion] = useUrlStateWithExpansion({
+    key: "callbacks-expansion",
+    route: "Catalog",
+  });
+
   return (
     <TableComposable aria-label="CallbacksTable">
       <Thead>
@@ -41,8 +34,8 @@ export const CallbacksTable: React.FC<Props> = ({
       <CreateCallbackForm service_entity={service_entity} numberOfColumns={5} />
       {callbacks.map((cb) => (
         <Row
-          onToggle={handleExpansionToggle(cb.callback_id)}
-          isExpanded={expansionState[cb.callback_id]}
+          onToggle={onExpansion(cb.callback_id)}
+          isExpanded={isExpanded(cb.callback_id)}
           key={cb.callback_id}
           callback={cb}
           service_entity={service_entity}
@@ -52,7 +45,3 @@ export const CallbacksTable: React.FC<Props> = ({
     </TableComposable>
   );
 };
-
-function getIds(callbacks: Callback[]): string[] {
-  return callbacks.map((callback) => callback.callback_id);
-}

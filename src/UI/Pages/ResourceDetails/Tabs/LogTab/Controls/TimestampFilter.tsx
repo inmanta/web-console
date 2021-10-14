@@ -1,5 +1,5 @@
 import React from "react";
-import { ResourceLogFilter, TimestampOperatorFilter } from "@/Core";
+import { ResourceLogFilter, DateRange } from "@/Core";
 import { TimestampFilter as TimestampFilterWidget } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
 
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const TimestampFilter: React.FC<Props> = ({ filter, setFilter }) => {
-  const update = (timestampFilters: TimestampOperatorFilter[]) =>
+  const update = (timestampFilters: DateRange.Type[]) =>
     setFilter({
       ...filter,
       timestamp: timestampFilters.length > 0 ? timestampFilters : undefined,

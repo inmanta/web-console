@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { Rejection } from "@/Core";
-import { words } from "@/UI/words";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardActions,
@@ -12,12 +11,14 @@ import {
   DropdownItem,
   KebabToggle,
 } from "@patternfly/react-core";
+import { Rejection } from "@/Core";
+import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
-import { DropdownExternalLink } from "./ExternalLink";
-import { Traceback } from "./Traceback";
 import { greyText } from "@/UI/Styles";
 import { getUrl } from "@/UI/Routing";
-import { Link } from "react-router-dom";
+import { DropdownExternalLink } from "./ExternalLink";
+import { Traceback } from "./Traceback";
+import { Pre } from "./Pre";
 
 interface Props {
   rejection: Rejection;
@@ -74,7 +75,7 @@ export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
       </CardHeader>
       {error && <StyledCardTitle>{error.type}</StyledCardTitle>}
       <CardBody>
-        {error && <pre>{error.message}</pre>}
+        {error && <Pre>{error.message}</Pre>}
         {rejection.trace && <Traceback trace={rejection.trace} />}
       </CardBody>
     </Card>

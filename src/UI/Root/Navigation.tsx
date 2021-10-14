@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, NavGroup } from "@patternfly/react-core";
-import { Route } from "@/UI/Routing";
+import { Route, SearchHelper } from "@/UI/Routing";
 import { words } from "@/UI/words";
 
 interface Group {
@@ -96,7 +96,10 @@ const Item: React.FC<Link> = ({ id, label, url, external }) => (
     ) : (
       <NavLink
         exact={true}
-        to={{ pathname: url, search: location.search }}
+        to={{
+          pathname: url,
+          search: new SearchHelper().keepEnvOnly(location.search),
+        }}
         activeClassName="pf-m-current"
       >
         {label}

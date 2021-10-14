@@ -1,4 +1,4 @@
-type Value = 5 | 10 | 20 | 50 | 100;
+type Value = "5" | "10" | "20" | "50" | "100";
 
 export interface PageSize {
   kind: "PageSize";
@@ -7,19 +7,25 @@ export interface PageSize {
 
 export type Type = PageSize;
 
-const listOfValues = [5, 10, 20, 50, 100];
+const listOfValues: string[] = ["5", "10", "20", "50", "100"];
 
-const valueIsValid = (value: number): value is Value =>
-  listOfValues.includes(value);
+const valueIsValid = (value: unknown): value is Value =>
+  typeof value === "string" && listOfValues.includes(value);
 
-export const from = (value: number): PageSize => {
-  if (!valueIsValid(value)) return { kind: "PageSize", value: 20 };
+export const from = (value: string): PageSize => {
+  if (!valueIsValid(value)) return initial;
   return { kind: "PageSize", value };
 };
 
-export const list = [5, 10, 20, 50, 100].map(from);
+export const list = listOfValues.map(from);
 
-export const initial = from(20);
+export const initial = from("20");
 
 export const equals = (a: PageSize, b: PageSize): boolean =>
   a.value === b.value;
+
+export const serialize = (pageSize: PageSize): string => pageSize.value;
+
+export const parse = (candidate: unknown): PageSize | undefined => {
+  return valueIsValid(candidate) ? from(candidate) : undefined;
+};

@@ -1,6 +1,8 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { MemoryRouter } from "react-router";
 import {
   DeferredFetcher,
   DynamicCommandManagerResolver,
@@ -25,7 +27,6 @@ import {
   CallbackDeleter,
   CallbacksUpdater,
 } from "@/Data";
-import userEvent from "@testing-library/user-event";
 
 function setup() {
   const store = getStoreInstance();
@@ -70,11 +71,13 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
-      <StoreProvider store={store}>
-        <CallbacksView service_entity={Service.a.name} />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+        <StoreProvider store={store}>
+          <CallbacksView service_entity={Service.a.name} />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return {

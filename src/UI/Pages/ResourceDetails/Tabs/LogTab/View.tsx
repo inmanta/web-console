@@ -1,10 +1,10 @@
+import React, { useContext } from "react";
+import { RemoteData, ResourceLogFilter, toggleValueInList } from "@/Core";
 import {
-  PageSize,
-  RemoteData,
-  ResourceLogFilter,
-  SortDirection,
-  toggleValueInList,
-} from "@/Core";
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 import {
   EmptyView,
   ErrorView,
@@ -13,8 +13,6 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import React, { useContext, useState } from "react";
-import styled from "styled-components";
 import { Controls } from "./Controls";
 import { ResourceLogsTable } from "./ResourceLogsTable";
 
@@ -24,10 +22,17 @@ interface Props {
 
 export const View: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [pageSize, setPageSize] = useState(PageSize.initial);
-  const [order, setOrder] = useState<SortDirection>("desc");
-  const sort = order ? { name: "timestamp", order } : undefined;
-  const [filter, setFilter] = useState<ResourceLogFilter>({});
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
+    route: "ResourceDetails",
+  });
+  const [sort, setSort] = useUrlStateWithSort({
+    default: { name: "timestamp", order: "desc" },
+    route: "ResourceDetails",
+  });
+  const [filter, setFilter] = useUrlStateWithFilter<ResourceLogFilter>({
+    route: "ResourceDetails",
+    dateRangeKey: "timestamp",
+  });
   const [data, retry] = queryResolver.useContinuous<"ResourceLogs">({
     kind: "ResourceLogs",
     id: resourceId,
@@ -35,23 +40,6 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     filter,
     sort,
   });
-
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <Filler />,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
-        <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      ),
-    },
-    data
-  );
 
   const toggleActionType = (action: string) => {
     const list = toggleValueInList(action, filter.action || []);
@@ -65,7 +53,13 @@ export const View: React.FC<Props> = ({ resourceId }) => {
   return (
     <>
       <Controls
-        paginationWidget={paginationWidget}
+        paginationWidget={
+          <PaginationWidget
+            data={data}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
         filter={filter}
         setFilter={setFilter}
       />
@@ -94,8 +88,8 @@ export const View: React.FC<Props> = ({ resourceId }) => {
               <ResourceLogsTable
                 logs={response.data}
                 toggleActionType={toggleActionType}
-                order={order}
-                setOrder={setOrder}
+                sort={sort}
+                setSort={setSort}
               />
             );
           },
@@ -105,8 +99,3 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     </>
   );
 };
-
-const Filler = styled.div`
-  height: 36px;
-  width: 100px;
-`;

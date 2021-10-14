@@ -1,4 +1,4 @@
-import { ResourceRow, SortDirection } from "@/Core";
+import { ResourceRow, Sort } from "@/Core";
 import {
   OnSort,
   TableComposable,
@@ -14,25 +14,23 @@ import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 interface Props {
   rows: ResourceRow[];
   tablePresenter: ResourcesTablePresenter;
-  sortColumn?: string;
-  order?: SortDirection;
-  setSortColumn: (name?: string) => void;
-  setOrder: (order?: SortDirection) => void;
+  sort: Sort.Type;
+  setSort: (sort: Sort.Type) => void;
 }
 export const ResourcesTable: React.FC<Props> = ({
   rows,
   tablePresenter,
-  setOrder,
-  setSortColumn,
-  sortColumn,
-  order,
+  sort,
+  setSort,
   ...props
 }) => {
-  const onSort: OnSort = (event, index, direction) => {
-    setSortColumn(tablePresenter.getColumnNameForIndex(index));
-    setOrder(direction);
+  const onSort: OnSort = (event, index, order) => {
+    setSort({
+      name: tablePresenter.getColumnNameForIndex(index) as string,
+      order,
+    });
   };
-  const activeSortIndex = tablePresenter.getIndexForColumnName(sortColumn);
+  const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
   const heads = tablePresenter
     .getColumnHeads()
     .map(({ apiName, displayName }, columnIndex) => {
@@ -43,7 +41,7 @@ export const ResourcesTable: React.FC<Props> = ({
             sort: {
               sortBy: {
                 index: activeSortIndex,
-                direction: order,
+                direction: sort.order,
               },
               onSort,
               columnIndex,

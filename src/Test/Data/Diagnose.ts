@@ -13,7 +13,7 @@ export const failure: RawDiagnostics = {
             "unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2",
           time: new Date("2021-05-03T13:10:05.978048"),
           message:
-            "An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation())",
+            "An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation()) An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation()) An error occurred during deployment of unittest::Resource[internal,name=0a5ec450-5f3e-4dab-81cd-60c158ffb66f],v=2 (exception: InvalidOperation())",
         },
       ],
     },
