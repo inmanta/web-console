@@ -29,6 +29,7 @@ export interface Route {
   parent?: Kind;
   path: string;
   label: string;
+  clearEnv?: boolean;
 }
 
 export const Catalog: Route = {
@@ -112,6 +113,7 @@ export const Home: Route = {
   kind: "Home",
   path: `${BASE_URL}${paths.Home}`,
   label: "Home",
+  clearEnv: true,
 };
 
 export const Settings: Route = {

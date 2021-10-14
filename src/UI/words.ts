@@ -315,6 +315,7 @@ const dict = {
   "home.create.env.desciption": "Create new environment",
   "home.create.env.link": "Create environment",
   "home.environment.select": "Select this environment",
+  "home.environment.edit": "Edit environment",
   "home.filters.project.placeholder": "Filter by project",
   "home.filters.env.placeholder": "Filter by name",
 
