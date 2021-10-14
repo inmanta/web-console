@@ -2,7 +2,7 @@ import { EnvironmentModel, ProjectModel, RemoteData } from "@/Core";
 import { History } from "history";
 import { createContext } from "react";
 import { Store, useStoreState } from "@/Data";
-import { Route } from "../Routing";
+import { getUrl, Route } from "@/UI/Routing";
 
 export interface SelectedProjectAndEnvironment {
   project: Partial<ProjectModel>;
@@ -11,10 +11,7 @@ export interface SelectedProjectAndEnvironment {
 
 export interface EnvironmentHandler {
   set(projectId: string, environmentId: string): void;
-  setDefault(
-    apiResponse: RemoteData.Type<string, ProjectModel[]>,
-    setWarningMessage: (message: string) => void
-  );
+  setDefault(apiResponse: RemoteData.Type<string, ProjectModel[]>);
   getProjects(): RemoteData.Type<string, ProjectModel[]>;
   getSelected(): RemoteData.Type<string, SelectedProjectAndEnvironment>;
 }
@@ -59,51 +56,36 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
       environment: environmentId,
     });
   }
-  public setDefault(
-    data: RemoteData.Type<string, ProjectModel[]>,
-    setWarningMessage: (message: string) => void
-  ): void {
+  public setDefault(data: RemoteData.Type<string, ProjectModel[]>): void {
     if (data.kind === "Success") {
       const params = new URLSearchParams(this.history.location.search);
       const envFromUrl = params.get("env");
-      if (envFromUrl) {
-        const matchingProject = data.value.find((project) =>
-          project.environments.find((env) => env.id === envFromUrl)
-        );
-        const matchingEnv = matchingProject?.environments.find(
-          (env) => env.id === envFromUrl
-        );
-        if (
-          envFromUrl !== this.store.getState().projects.selectedEnvironmentId &&
-          matchingProject &&
-          matchingEnv
-        ) {
-          this.store.dispatch.projects.selectProjectAndEnvironment({
-            project: matchingProject.id,
-            environment: matchingEnv.id,
-          });
-        } else if (!matchingProject && !matchingEnv) {
-          setWarningMessage(
-            `Environment with id ${envFromUrl} not found, another was selected by default`
-          );
-          this.selectFirstFromList(data.value);
-        }
-      } else {
-        this.selectFirstFromList(data.value);
+      if (!envFromUrl) {
+        this.redirectToHomePage();
+      }
+      const matchingProject = data.value.find((project) =>
+        project.environments.find((env) => env.id === envFromUrl)
+      );
+      const matchingEnv = matchingProject?.environments.find(
+        (env) => env.id === envFromUrl
+      );
+      if (
+        envFromUrl !== this.store.getState().projects.selectedEnvironmentId &&
+        matchingProject &&
+        matchingEnv
+      ) {
+        this.store.dispatch.projects.selectProjectAndEnvironment({
+          project: matchingProject.id,
+          environment: matchingEnv.id,
+        });
+      } else if (!matchingProject && !matchingEnv) {
+        this.redirectToHomePage();
       }
     }
   }
 
-  private selectFirstFromList(value: ProjectModel[]): void {
-    if (value.length > 0 && value[0].environments.length > 0) {
-      this.store.dispatch.projects.selectProjectAndEnvironment({
-        project: value[0].id,
-        environment: value[0].environments[0].id,
-      });
-      const params = new URLSearchParams(this.history.location.search);
-      params.set("env", value[0].environments[0].id);
-      this.history.push(`${Route.Catalog.path}?${params}`);
-    }
+  private redirectToHomePage(): void {
+    this.history.push({ pathname: getUrl("Home", undefined), search: "" });
   }
 
   public getProjects(): RemoteData.Type<string, ProjectModel[]> {
@@ -131,6 +113,7 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
       ) {
         return RemoteData.loading();
       } else {
+        this.redirectToHomePage();
         return RemoteData.failed("No environments were found");
       }
     } else {

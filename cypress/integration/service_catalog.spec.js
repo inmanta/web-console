@@ -11,7 +11,7 @@ describe("Service catalog", function () {
       fixture: "lsm/service_catalog.json",
     });
 
-    cy.visit("/lsm/catalog");
+    cy.visit("/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c");
   });
   it("Has multiple entries based on backend response", function () {
     cy.get(".pf-c-data-list__item").should("have.length", 2);
