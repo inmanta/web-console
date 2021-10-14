@@ -31,6 +31,7 @@ import { Callback } from "./Callback";
 import { CompileReport } from "./CompileReport";
 import { CompileReportParams } from "./CompileReportParams";
 import { CompileDetails } from "./CompileDetails";
+import { ServerStatus } from "./ServerStatus";
 
 type Query =
   | ServicesQuery
@@ -51,7 +52,8 @@ type Query =
   | EnvironmentDetailsQuery
   | CallbacksQuery
   | CompileReportsQuery
-  | CompileDetailsQuery;
+  | CompileDetailsQuery
+  | GetServerStatus;
 
 export type Type = Query;
 
@@ -65,6 +67,18 @@ interface ProjectsManifest {
   data: ProjectModel[];
   usedData: ProjectModel[];
   query: ProjectsQuery;
+}
+
+export interface GetServerStatus {
+  kind: "GetServerStatus";
+}
+
+export interface GetServerStatusManifest {
+  error: string;
+  apiResponse: { data: ServerStatus };
+  data: ServerStatus;
+  usedData: ServerStatus;
+  query: GetServerStatus;
 }
 
 export interface EnvironmentDetailsQuery {
@@ -412,6 +426,7 @@ interface Manifest {
   InstanceConfig: InstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
   Projects: ProjectsManifest;
+  GetServerStatus: GetServerStatusManifest;
   Resources: ResourcesManifest;
   ResourceDetails: ResourceDetailsManifest;
   ResourceHistory: ResourceHistoryManifest;

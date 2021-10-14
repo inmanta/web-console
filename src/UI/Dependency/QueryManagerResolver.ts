@@ -44,6 +44,8 @@ import {
   CompileDetailsStateHelper,
   ResourceLogsQueryManager,
   ResourceLogsStateHelper,
+  GetServerStatusQueryManager,
+  GetServerStatusStateHelper,
 } from "@/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -68,12 +70,16 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   }
 
   private getIndependentManagers(): QueryManager[] {
-    const stateHelper = new ProjectsStateHelper(this.store);
-    const projectsManager = new ProjectsQueryManager(
-      new FetcherImpl<"Projects">(this.baseApiHelper),
-      stateHelper
-    );
-    return [projectsManager];
+    return [
+      new ProjectsQueryManager(
+        new FetcherImpl<"Projects">(this.baseApiHelper),
+        new ProjectsStateHelper(this.store)
+      ),
+      new GetServerStatusQueryManager(
+        new FetcherImpl<"GetServerStatus">(this.baseApiHelper),
+        new GetServerStatusStateHelper(this.store)
+      ),
+    ];
   }
 
   private getEnvDependentManagers(environment: string): QueryManager[] {
