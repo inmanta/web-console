@@ -1,35 +1,32 @@
-import { words } from "@/UI";
-import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components";
+import React from "react";
 import {
   Toolbar,
   ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
 } from "@patternfly/react-core";
-import React from "react";
+import { words } from "@/UI";
+import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components";
 
 interface Props {
-  projectFilter: string[];
-  setProjectFilter: (projectFilter: string[]) => void;
+  projectFilter?: string[];
+  setProjectFilter: (projectFilter?: string[]) => void;
   projectNames: string[];
-  environmentFilter: string[];
-  setEnvironmentFilter: (environmentFilter: string[]) => void;
+  environmentFilter?: string[];
+  setEnvironmentFilter: (environmentFilter?: string[]) => void;
+  clearFilters: () => void;
 }
 
 export const FilterToolbar: React.FC<Props> = ({
   projectNames,
   projectFilter,
-  setProjectFilter,
   environmentFilter,
   setEnvironmentFilter,
+  setProjectFilter,
+  clearFilters,
 }) => {
   return (
-    <Toolbar
-      clearAllFilters={() => {
-        setProjectFilter([]);
-        setEnvironmentFilter([]);
-      }}
-    >
+    <Toolbar clearAllFilters={clearFilters}>
       <ToolbarContent>
         <ToolbarGroup variant="filter-group" aria-label="FilterBar">
           <ToolbarItem variant="search-filter">
@@ -45,7 +42,7 @@ export const FilterToolbar: React.FC<Props> = ({
             <SelectOptionFilter
               isVisible={true}
               possibleStates={projectNames}
-              selectedStates={projectFilter}
+              selectedStates={projectFilter ? projectFilter : []}
               filterPropertyName={"project"}
               update={setProjectFilter}
               placeholder={words("home.filters.project.placeholder")}

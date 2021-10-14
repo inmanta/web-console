@@ -1,10 +1,16 @@
+import React from "react";
 import { FlatEnvironment, ProjectModel } from "@/Core";
-import React, { useState } from "react";
+import { useUrlStateWithFilter } from "@/Data";
 import { CardView } from "./CardView";
 import { FilterToolbar } from "./FilterToolbar";
 
 interface Props {
   projects: ProjectModel[];
+}
+
+export interface Filters {
+  projectFilter?: string[];
+  environmentFilter?: string[];
 }
 
 export const EnvironmentsOverview: React.FC<Props> = ({
@@ -17,9 +23,16 @@ export const EnvironmentsOverview: React.FC<Props> = ({
       projectName: project.name,
     })),
   ]);
-  const [projectFilter, setProjectFilter] = useState<string[]>([]);
   const projectNames = projects.map((project) => project.name);
-  const [environmentFilter, setEnvironmentFilter] = useState<string[]>([]);
+  const [filter, setFilter] = useUrlStateWithFilter<Filters>({ route: "Home" });
+  const setProjectFilter = (projectFilter?: string[]) =>
+    setFilter({ ...filter, projectFilter });
+  const projectFilter = filter.projectFilter ? filter.projectFilter : [];
+  const setEnvironmentFilter = (environmentFilter?: string[]) =>
+    setFilter({ ...filter, environmentFilter });
+  const environmentFilter = filter.environmentFilter
+    ? filter.environmentFilter
+    : [];
   const filteredByProjectName = filterByProject(
     filterableEnvironments,
     projectFilter
@@ -36,6 +49,9 @@ export const EnvironmentsOverview: React.FC<Props> = ({
         setProjectFilter={setProjectFilter}
         environmentFilter={environmentFilter}
         setEnvironmentFilter={setEnvironmentFilter}
+        clearFilters={() =>
+          setFilter({ projectFilter: undefined, environmentFilter: undefined })
+        }
       />
       <CardView environments={filteredByEnvName} {...props} />
     </>
