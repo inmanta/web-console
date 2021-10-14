@@ -19,12 +19,17 @@ import {
   PageSection,
   Title,
 } from "@patternfly/react-core";
-import { PencilAltIcon, PlusCircleIcon } from "@patternfly/react-icons";
+import {
+  PencilAltIcon,
+  PlusCircleIcon,
+  TrashAltIcon,
+} from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { getUrl } from "@/UI/Routing";
+import { getUrl, useGoTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Link } from "@/UI/Components";
+import { DeleteModal } from "./Components";
 
 interface Props {
   environments: FlatEnvironment[];
@@ -82,7 +87,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   <Card isHoverable isCompact aria-label={"Environment card"}>
     <CardHeader>
       <CardTitle>{environment.name}</CardTitle>
-      <Actions environmentId={environment.id} />
+      <Actions environment={environment} />
     </CardHeader>
     <CardBody>
       <Bullseye>
@@ -97,32 +102,50 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   </Card>
 );
 
-const Actions: React.FC<{ environmentId: string }> = ({ environmentId }) => {
-  const [isOpen, setIsOpen] = useState(false);
+interface ActionsProps {
+  environment: Pick<FlatEnvironment, "id" | "name">;
+}
+
+const Actions: React.FC<ActionsProps> = ({ environment }) => {
+  const [isToggleOpen, setIsToggleOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const goTo = useGoTo();
   return (
-    <CardActions>
-      <Dropdown
-        onSelect={() => setIsOpen((value) => !value)}
-        toggle={<KebabToggle onToggle={() => setIsOpen((value) => !value)} />}
-        isOpen={isOpen}
-        isPlain
-        dropdownItems={[
-          <DropdownItem
-            key="settings"
-            component={
-              <Link
-                pathname={getUrl("Settings", undefined)}
-                search={`env=${environmentId}`}
-              >
-                <Button variant="link" icon={<PencilAltIcon />}>
-                  {words("home.environment.edit")}
-                </Button>
-              </Link>
-            }
-          />,
-        ]}
-        position={"right"}
+    <>
+      <DeleteModal
+        environmentName={environment.name}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
       />
-    </CardActions>
+      <CardActions>
+        <Dropdown
+          onSelect={() => setIsToggleOpen((value) => !value)}
+          toggle={
+            <KebabToggle onToggle={() => setIsToggleOpen((value) => !value)} />
+          }
+          isOpen={isToggleOpen}
+          isPlain
+          dropdownItems={[
+            <DropdownItem
+              key="edit environment"
+              icon={<PencilAltIcon />}
+              onClick={() =>
+                goTo("Settings", undefined, `env=${environment.id}`)
+              }
+            >
+              {words("home.environment.edit")}
+            </DropdownItem>,
+            <DropdownItem
+              key="delete environment"
+              icon={<TrashAltIcon />}
+              onClick={() => setIsModalOpen(true)}
+            >
+              {words("home.environment.delete")}
+            </DropdownItem>,
+          ]}
+          position={"right"}
+        />
+      </CardActions>
+    </>
   );
 };

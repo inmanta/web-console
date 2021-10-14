@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { matchPath, match, generatePath } from "react-router-dom";
+import { useHistory, useLocation } from "react-router";
 import { Route, Params, getRouteFromKind, allRoutes } from "./Route";
 import { Kind } from "./Kind";
 
@@ -37,6 +38,21 @@ export function getUrl(kind: Kind, params: Params<typeof kind>): string {
   const route = getRouteFromKind(kind);
   return generatePath(route.path, params);
 }
+
+type GoTo = (kind: Kind, params: Params<typeof kind>, search?: string) => void;
+
+/**
+ * The useGoto hook returns a goTo function which navigates to a route.
+ */
+export const useGoTo = (): GoTo => {
+  const { search } = useLocation();
+  const history = useHistory();
+
+  return (routeKind, params, newSearch) => {
+    const pathname = getUrl(routeKind, params);
+    history.push(`${pathname}?${newSearch || search}`);
+  };
+};
 
 /**
  * A custom hook for setting the page title
