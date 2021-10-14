@@ -2,6 +2,7 @@ export * from "./Callbacks";
 export * from "./CompileDetails";
 export * from "./CompileReports";
 export * from "./CreateInstance";
+export * from "./DeleteEnvironment";
 export * from "./DeleteInstance";
 export * from "./DeleteService";
 export * from "./Diagnostics";

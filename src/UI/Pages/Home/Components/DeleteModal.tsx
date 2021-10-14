@@ -1,29 +1,45 @@
+import { EnvironmentModel, Maybe } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { words } from "@/UI/words";
-import { Button, Modal, TextInput } from "@patternfly/react-core";
-import React, { useState } from "react";
+import { Alert, Button, Modal, TextInput } from "@patternfly/react-core";
+import React, { useContext, useState } from "react";
 
 interface Props {
-  environmentName: string;
+  environment: Pick<EnvironmentModel, "id" | "name">;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const DeleteModal: React.FC<Props> = ({
-  environmentName,
+  environment,
   isOpen,
   onClose,
 }) => {
+  const { commandResolver } = useContext(DependencyContext);
   const [candidateEnv, setCandidateEnv] = useState("");
-  const validated = environmentName === candidateEnv ? "success" : "default";
+  const [errorMessage, setErrorMessage] = useState<null | string>(null);
   const [isBusy, setIsBusy] = useState(false);
+  const trigger = commandResolver.getTrigger<"DeleteEnvironment">({
+    kind: "DeleteEnvironment",
+    id: environment.id,
+  });
+  const validated = environment.name === candidateEnv ? "success" : "default";
 
   const onCloseWithClear = () => {
     setCandidateEnv("");
     onClose();
   };
 
-  const onDelete = () => {
+  const onDelete = async () => {
     setIsBusy(true);
+    setErrorMessage(null);
+    const error = await trigger();
+    setIsBusy(false);
+    if (Maybe.isNone(error)) {
+      onClose();
+    } else {
+      setErrorMessage(error.value);
+    }
   };
 
   return (
@@ -31,9 +47,10 @@ export const DeleteModal: React.FC<Props> = ({
       variant="small"
       aria-label="Delete Environment Modal"
       title="Delete Environment"
+      titleIconVariant="danger"
       isOpen={isOpen}
       onClose={onCloseWithClear}
-      description={words("home.environment.delete.warning")(environmentName)}
+      description={words("home.environment.delete.warning")(environment.name)}
       actions={[
         <Button
           key="confirm"
@@ -54,6 +71,11 @@ export const DeleteModal: React.FC<Props> = ({
         validated={validated}
         onChange={setCandidateEnv}
       />
+      {errorMessage && (
+        <Alert variant="danger" isInline title="Danger inline alert title">
+          <p>{errorMessage}</p>
+        </Alert>
+      )}
     </Modal>
   );
 };

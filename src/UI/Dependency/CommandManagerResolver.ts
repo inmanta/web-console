@@ -32,6 +32,10 @@ import {
   CallbackPoster,
   EnvironmentDetailsUpdater,
   EnvironmentDetailsStateHelper,
+  DeleteEnvironmentCommandManager,
+  EnvironmentDeleter,
+  ProjectsUpdater,
+  ProjectsStateHelper,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -42,7 +46,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     private readonly baseApiHelper: BaseApiHelper,
     private readonly authHelper: AuthHelper
   ) {
-    this.managers = [];
+    this.managers = this.getIndependentManagers();
   }
 
   get(): CommandManager[] {
@@ -50,7 +54,22 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   }
 
   resolve(env: string): void {
-    this.managers = this.getEnvDependentManagers(env);
+    this.managers = [
+      ...this.getIndependentManagers(),
+      ...this.getEnvDependentManagers(env),
+    ];
+  }
+
+  private getIndependentManagers(): CommandManager[] {
+    return [
+      new DeleteEnvironmentCommandManager(
+        new EnvironmentDeleter(this.baseApiHelper),
+        new ProjectsUpdater(
+          new ProjectsStateHelper(this.store),
+          new FetcherImpl<"Projects">(this.baseApiHelper)
+        )
+      ),
+    ];
   }
 
   private getEnvDependentManagers(environment: string): CommandManager[] {

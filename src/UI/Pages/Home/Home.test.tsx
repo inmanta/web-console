@@ -3,13 +3,19 @@ import { MemoryRouter } from "react-router";
 import { StoreProvider } from "easy-peasy";
 import { render, screen } from "@testing-library/react";
 import {
+  BaseApiHelper,
+  CommandResolverImpl,
+  DeleteEnvironmentCommandManager,
+  EnvironmentDeleter,
   getStoreInstance,
   ProjectsQueryManager,
   ProjectsStateHelper,
+  ProjectsUpdater,
   QueryResolverImpl,
 } from "@/Data";
 import {
   DeferredFetcher,
+  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   MockFeatureManger,
   Project,
@@ -21,18 +27,30 @@ import { Either } from "@/Core";
 
 function setup() {
   const store = getStoreInstance();
+  const apiHelper = new BaseApiHelper();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"Projects">();
+  const projectsFetcher = new DeferredFetcher<"Projects">();
+  const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ProjectsQueryManager(apiHelper, new ProjectsStateHelper(store)),
+      new ProjectsQueryManager(projectsFetcher, projectsStateHelper),
+    ])
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new DeleteEnvironmentCommandManager(
+        new EnvironmentDeleter(apiHelper),
+        new ProjectsUpdater(projectsStateHelper, projectsFetcher)
+      ),
     ])
   );
   const featureManager = new MockFeatureManger();
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, featureManager }}>
+      <DependencyProvider
+        dependencies={{ queryResolver, commandResolver, featureManager }}
+      >
         <StoreProvider store={store}>
           <Home />
         </StoreProvider>
@@ -40,18 +58,18 @@ function setup() {
     </MemoryRouter>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component, projectsFetcher, scheduler };
 }
 
 test("Home view shows failed table", async () => {
-  const { component, apiHelper } = setup();
+  const { component, projectsFetcher } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "Overview-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.left("error"));
+  projectsFetcher.resolve(Either.left("error"));
 
   expect(
     await screen.findByRole("generic", { name: "Overview-Failed" })
@@ -59,14 +77,14 @@ test("Home view shows failed table", async () => {
 });
 
 test("Home View shows success table", async () => {
-  const { component, apiHelper } = setup();
+  const { component, projectsFetcher } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "Overview-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
+  projectsFetcher.resolve(
     Either.right({
       data: Project.filterable,
     })

@@ -3,14 +3,40 @@ import { render, screen } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
-import { MockFeatureManger, Project } from "@/Test";
+import {
+  DeferredFetcher,
+  DynamicCommandManagerResolver,
+  MockFeatureManger,
+  Project,
+} from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import {
+  BaseApiHelper,
+  CommandResolverImpl,
+  DeleteEnvironmentCommandManager,
+  EnvironmentDeleter,
+  getStoreInstance,
+  ProjectsStateHelper,
+  ProjectsUpdater,
+} from "@/Data";
 
 function setup() {
+  const store = getStoreInstance();
   const featureManager = new MockFeatureManger();
+  const apiHelper = new BaseApiHelper();
+  const projectsFetcher = new DeferredFetcher<"Projects">();
+  const projectsStateHelper = new ProjectsStateHelper(store);
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new DeleteEnvironmentCommandManager(
+        new EnvironmentDeleter(apiHelper),
+        new ProjectsUpdater(projectsStateHelper, projectsFetcher)
+      ),
+    ])
+  );
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ featureManager }}>
+      <DependencyProvider dependencies={{ featureManager, commandResolver }}>
         <EnvironmentsOverview projects={Project.filterable} />
       </DependencyProvider>
     </MemoryRouter>
