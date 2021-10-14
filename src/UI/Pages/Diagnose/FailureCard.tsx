@@ -1,8 +1,5 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { Failure } from "@/Core";
-import { words } from "@/UI/words";
-import { DependencyContext } from "@/UI/Dependency";
 import {
   Card,
   CardActions,
@@ -12,8 +9,12 @@ import {
   Dropdown,
   KebabToggle,
 } from "@patternfly/react-core";
-import { DropdownExternalLink } from "./ExternalLink";
+import { Failure } from "@/Core";
+import { words } from "@/UI/words";
+import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
+import { DropdownExternalLink } from "./ExternalLink";
+import { Pre } from "./Pre";
 
 interface Props {
   resourceId: string;
@@ -55,7 +56,7 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
       </CardHeader>
       <StyledCardTitle>{resourceId}</StyledCardTitle>
       <CardBody>
-        <pre>{failure.message}</pre>
+        <Pre>{failure.message}</Pre>
       </CardBody>
     </Card>
   );
