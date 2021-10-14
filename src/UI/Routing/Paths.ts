@@ -15,4 +15,5 @@ export const paths: Paths = {
   CompileReports: "/compilereports",
   CompileDetails: "/compilereports/:id",
   Home: "/",
+  Settings: "/settings",
 };

@@ -11,6 +11,7 @@ const kinds = [
   "CompileReports",
   "CompileDetails",
   "ResourceDetails",
+  "Settings",
 ] as const;
 
 export type Kind = typeof kinds[number];

@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
-export const EnvSelectorWithProvider: React.FC = () => {
+export const Provider: React.FC = () => {
   const { environmentHandler } = useContext(EnvironmentHandlerContext);
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
     environmentHandler.set(item.projectId, item.environmentId);

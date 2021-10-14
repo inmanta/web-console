@@ -11,47 +11,48 @@ import { EditInstancePageProvider } from "@/UI/Pages/EditInstance";
 import { CompileReports } from "@/UI/Pages/CompileReports";
 import { CompileDetailsWithProvider } from "./CompileDetails";
 import { ResourceDetailsWithProvider } from "@/UI/Pages/ResourceDetails";
+import { SettingsPage } from "./Settings";
 
 interface Page extends Route.Route {
   component: ComponentType;
 }
 
-export const CatalogPage: Page = {
+export const Catalog: Page = {
   ...Route.Catalog,
   component: ServiceCatalog,
 };
 
-export const InventoryPage: Page = {
+export const Inventory: Page = {
   ...Route.Inventory,
   component: ServiceInventoryWithProvider,
 };
 
-export const CreateInstancePage: Page = {
+export const CreateInstance: Page = {
   ...Route.CreateInstance,
   component: CreateInstancePageProvider,
 };
 
-export const EditInstancePage: Page = {
+export const EditInstance: Page = {
   ...Route.EditInstance,
   component: EditInstancePageProvider,
 };
 
-export const HistoryPage: Page = {
+export const History: Page = {
   ...Route.History,
   component: ServiceInstanceHistoryWithProvider,
 };
 
-export const DiagnosePage: Page = {
+export const Diagnose: Page = {
   ...Route.Diagnose,
   component: DiagnoseWithProvider,
 };
 
-export const EventsPage: Page = {
+export const Events: Page = {
   ...Route.Events,
   component: EventsWithProvider,
 };
 
-export const ResourcesPage: Page = {
+export const Resources: Page = {
   ...Route.Resources,
   component: ResourcesView,
 };
@@ -61,26 +62,32 @@ export const CompileReportsPage: Page = {
   component: CompileReports,
 };
 
-export const CompileDetailsPage: Page = {
+export const CompileDetails: Page = {
   ...Route.CompileDetails,
   component: CompileDetailsWithProvider,
 };
 
-export const ResourceDetailsPage: Page = {
+export const ResourceDetails: Page = {
   ...Route.ResourceDetails,
   component: ResourceDetailsWithProvider,
 };
 
+export const Settings: Page = {
+  ...Route.Settings,
+  component: SettingsPage,
+};
+
 export const pages: Page[] = [
-  CatalogPage,
-  InventoryPage,
-  CreateInstancePage,
-  EditInstancePage,
-  HistoryPage,
-  DiagnosePage,
-  EventsPage,
-  ResourcesPage,
+  Catalog,
+  Inventory,
+  CreateInstance,
+  EditInstance,
+  History,
+  Diagnose,
+  Events,
+  Resources,
   CompileReportsPage,
-  CompileDetailsPage,
-  ResourceDetailsPage,
+  CompileDetails,
+  ResourceDetails,
+  Settings,
 ];
