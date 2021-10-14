@@ -1,0 +1,6 @@
+description: Add edit toggle to environment card
+issue-nr: 1475
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
