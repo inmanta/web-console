@@ -12,7 +12,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageSectionWithTitle title={words("inventory.title")}>
+    <PageSectionWithTitle title={words("settings.title")}>
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
     </PageSectionWithTitle>
   );
