@@ -17,6 +17,7 @@ export * from "./EventsTable";
 export * from "./Filters";
 export * from "./IconTabs";
 export * from "./InstanceState";
+export * from "./Link";
 export * from "./LoadingView";
 export * from "./MultiTextSelect";
 export * from "./InstanceResourceTable";

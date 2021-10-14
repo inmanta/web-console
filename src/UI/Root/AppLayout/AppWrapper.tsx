@@ -13,7 +13,7 @@ interface Props {
   shouldUseAuth: boolean;
   isNavOpen?: boolean;
   onToggle?: () => void;
-  withEnvSelector?: boolean;
+  withEnv?: boolean;
 }
 
 export const AppWrapper: React.FunctionComponent<Props> = ({
@@ -21,7 +21,7 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
   children,
   shouldUseAuth,
   isNavOpen,
-  withEnvSelector,
+  withEnv,
   onToggle,
 }) => {
   React.useEffect(() => {
@@ -36,12 +36,12 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
       logoProps={{ href: getUrl("Home", undefined) }}
       headerTools={
         <PageHeaderTools>
-          <SettingsButton />
+          <SettingsButton isDisabled={!withEnv} />
           {shouldUseAuth && <Profile keycloak={keycloak} />}
         </PageHeaderTools>
       }
-      showNavToggle={withEnvSelector}
-      topNav={withEnvSelector ? <EnvSelectorWithProvider /> : undefined}
+      showNavToggle={withEnv}
+      topNav={withEnv ? <EnvSelectorWithProvider /> : undefined}
       isNavOpen={isNavOpen}
       onNavToggle={onToggle}
       style={{ backgroundColor: "transparent" }}

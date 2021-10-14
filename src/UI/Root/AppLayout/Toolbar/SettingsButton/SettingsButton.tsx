@@ -1,18 +1,30 @@
-import { getUrl } from "@/UI/Routing";
+import React from "react";
 import {
   Button,
   PageHeaderToolsGroup,
   PageHeaderToolsItem,
 } from "@patternfly/react-core";
 import { CogIcon } from "@patternfly/react-icons";
-import React from "react";
-import { Link } from "react-router-dom";
+import { getUrl } from "@/UI/Routing";
+import { Link } from "@/UI/Components";
 
-export const SettingsButton: React.FC = () => (
+interface Props {
+  isDisabled?: boolean;
+}
+
+export const SettingsButton: React.FC<Props> = ({ isDisabled }) => (
   <PageHeaderToolsGroup>
     <PageHeaderToolsItem>
-      <Link to={getUrl("Settings", undefined)}>
-        <Button aria-label="Settings actions" variant="plain">
+      <Link
+        pathname={getUrl("Settings", undefined)}
+        isDisabled={isDisabled}
+        envOnly
+      >
+        <Button
+          aria-label="Settings actions"
+          variant="plain"
+          isDisabled={isDisabled}
+        >
           <CogIcon />
         </Button>
       </Link>

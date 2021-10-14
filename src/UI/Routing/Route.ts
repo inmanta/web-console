@@ -116,6 +116,7 @@ export const Home: Route = {
 
 export const Settings: Route = {
   kind: "Settings",
+  parent: "Home",
   path: `${BASE_URL}${paths.Settings}`,
   label: "Settings",
 };
@@ -131,9 +132,9 @@ export const allRoutes: Route[] = [
   Resources,
   CompileReports,
   CompileDetails,
-  Home,
   ResourceDetails,
   Settings,
+  Home,
 ];
 
 export const DashboardUrl = (environment: string): string =>
