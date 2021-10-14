@@ -30,8 +30,5 @@ describe("Environment selector", function () {
     cy.intercept("GET", "**/api/v2/project", { fixture: "environments.json" });
     cy.visit("/lsm/catalog?env=nope");
     cy.get("h1").contains("Home").should("be.visible");
-    // cy.get("#env-warning-alert").should("exist");
-    // cy.get("#close-env-warning-button").click();
-    // cy.get("#env-warning-alert").should("not.exist");
   });
 });
