@@ -3,7 +3,20 @@ import { render, screen } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
-import { Project } from "@/Test";
+import { MockFeatureManger, Project } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+
+function setup() {
+  const featureManager = new MockFeatureManger();
+  const component = (
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ featureManager }}>
+        <EnvironmentsOverview projects={Project.filterable} />
+      </DependencyProvider>
+    </MemoryRouter>
+  );
+  return { component };
+}
 
 it.each`
   filterValue   | numberOfResults
@@ -13,11 +26,8 @@ it.each`
 `(
   "Given the environment overview When filtering by name $filterValue Then $numberOfResults results should be rendered",
   async ({ filterValue, numberOfResults }) => {
-    render(
-      <MemoryRouter>
-        <EnvironmentsOverview projects={Project.filterable} />
-      </MemoryRouter>
-    );
+    const { component } = setup();
+    render(component);
     const initialCards = await screen.findAllByRole("article", {
       name: "Environment card",
     });
@@ -34,11 +44,8 @@ it.each`
 );
 
 test("Given environments overview When filtering by project Then only the matching environments should be rendered", async () => {
-  render(
-    <MemoryRouter>
-      <EnvironmentsOverview projects={Project.filterable} />
-    </MemoryRouter>
-  );
+  const { component } = setup();
+  render(component);
   const initialCards = await screen.findAllByRole("article", {
     name: "Environment card",
   });
@@ -55,11 +62,8 @@ test("Given environments overview When filtering by project Then only the matchi
 });
 
 test("Given environments overview When filtering by multiple names Then the environments that match any of them should be rendered", async () => {
-  render(
-    <MemoryRouter>
-      <EnvironmentsOverview projects={Project.filterable} />
-    </MemoryRouter>
-  );
+  const { component } = setup();
+  render(component);
   const initialCards = await screen.findAllByRole("article", {
     name: "Environment card",
   });
@@ -77,11 +81,8 @@ test("Given environments overview When filtering by multiple names Then the envi
 });
 
 test("Given environments overview When filtering by name and project Then only the environments that match both should be rendered", async () => {
-  render(
-    <MemoryRouter>
-      <EnvironmentsOverview projects={Project.filterable} />
-    </MemoryRouter>
-  );
+  const { component } = setup();
+  render(component);
   const initialCards = await screen.findAllByRole("article", {
     name: "Environment card",
   });

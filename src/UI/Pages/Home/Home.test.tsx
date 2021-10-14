@@ -11,6 +11,7 @@ import {
 import {
   DeferredFetcher,
   DynamicQueryManagerResolver,
+  MockFeatureManger,
   Project,
   StaticScheduler,
 } from "@/Test";
@@ -27,10 +28,11 @@ function setup() {
       new ProjectsQueryManager(apiHelper, new ProjectsStateHelper(store)),
     ])
   );
+  const featureManager = new MockFeatureManger();
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver }}>
+      <DependencyProvider dependencies={{ queryResolver, featureManager }}>
         <StoreProvider store={store}>
           <Home />
         </StoreProvider>
