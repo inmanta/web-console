@@ -16,6 +16,7 @@ import {
   KeycloakAuthHelper,
   getStoreInstance,
   FileFetcherImpl,
+  PrimaryFeatureManager,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { Route } from "./UI/Routing";
@@ -58,6 +59,7 @@ const commandResolver = new CommandResolverImpl(
 const urlManager = new UrlManagerImpl(baseUrl);
 const fileFetcher = new FileFetcherImpl(baseApiHelper);
 const environmentModifier = new EnvironmentModifierImpl();
+const featureManager = new PrimaryFeatureManager();
 
 ReactDOM.render(
   <DependencyProvider
@@ -67,6 +69,7 @@ ReactDOM.render(
       urlManager,
       fileFetcher,
       environmentModifier,
+      featureManager,
     }}
   >
     <StoreProvider store={store}>

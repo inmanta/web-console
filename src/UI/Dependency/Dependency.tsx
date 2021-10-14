@@ -5,10 +5,12 @@ import {
   QueryResolver,
   UrlManager,
   EnvironmentModifier,
+  FeatureManager,
 } from "@/Core";
 import {
   DummyCommandResolver,
   DummyEnvironmentModifier,
+  DummyFeatureManager,
   DummyFileFetcher,
   DummyQueryResolver,
   DummyUrlManager,
@@ -20,6 +22,7 @@ export interface Dependencies {
   urlManager: UrlManager;
   fileFetcher: FileFetcher;
   environmentModifier: EnvironmentModifier;
+  featureManager: FeatureManager;
 }
 
 export const DependencyContext = createContext<Dependencies>({
@@ -28,6 +31,7 @@ export const DependencyContext = createContext<Dependencies>({
   urlManager: new DummyUrlManager(),
   fileFetcher: new DummyFileFetcher(),
   environmentModifier: new DummyEnvironmentModifier(),
+  featureManager: new DummyFeatureManager(),
 });
 
 export const DependencyProvider: React.FC<{
@@ -39,6 +43,7 @@ export const DependencyProvider: React.FC<{
     urlManager,
     fileFetcher,
     environmentModifier,
+    featureManager,
   },
   children,
 }) => (
@@ -50,6 +55,7 @@ export const DependencyProvider: React.FC<{
       fileFetcher: fileFetcher || new DummyFileFetcher(),
       environmentModifier:
         environmentModifier || new DummyEnvironmentModifier(),
+      featureManager: featureManager || new DummyFeatureManager(),
     }}
   >
     {children}
