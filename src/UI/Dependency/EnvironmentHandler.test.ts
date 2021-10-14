@@ -4,31 +4,40 @@ import { EnvironmentHandlerImpl } from ".";
 import { RemoteData } from "@/Core";
 import { Project } from "@/Test";
 
-test("EnvironmentHandler sets default environment correctly", () => {
+test("EnvironmentHandler redirects to home page when no environment is selected", () => {
   const history = createMemoryHistory();
   const store = getStoreInstance();
-  const [project] = Project.list;
-  const [env] = project.environments;
 
   const environmentHandler = new EnvironmentHandlerImpl(history, store);
-  environmentHandler.setDefault(RemoteData.success(Project.list), () => {
-    return;
+  environmentHandler.setDefault(RemoteData.success(Project.list));
+
+  expect(history.location.pathname).toEqual("/");
+  expect(history.location.search).toEqual("");
+});
+
+test("EnvironmentHandler redirects to home page when the selected environment doesn't exist", () => {
+  const history = createMemoryHistory({
+    initialEntries: ["/resources?env=doesnotexist"],
   });
-  expect(store.getState().projects.selectedEnvironmentId).toEqual(env.id);
-  expect(store.getState().projects.selectedProjectId).toEqual(project.id);
-  expect(history.location.search).toEqual(`?env=${env.id}`);
+  const store = getStoreInstance();
+
+  const environmentHandler = new EnvironmentHandlerImpl(history, store);
+  environmentHandler.setDefault(RemoteData.success(Project.list));
+
+  expect(history.location.pathname).toEqual("/");
+  expect(history.location.search).toEqual("");
 });
 
 test("EnvironmentHandler updates environment correctly", () => {
-  const history = createMemoryHistory();
+  const history = createMemoryHistory({
+    initialEntries: ["/resources?env=123"],
+  });
   const store = getStoreInstance();
   const [, project] = Project.list;
   const [env] = project.environments;
 
   const environmentHandler = new EnvironmentHandlerImpl(history, store);
-  environmentHandler.setDefault(RemoteData.success(Project.list), () => {
-    return;
-  });
+  environmentHandler.setDefault(RemoteData.success(Project.list));
   environmentHandler.set(project.id, env.id);
   expect(store.getState().projects.selectedEnvironmentId).toEqual(env.id);
   expect(store.getState().projects.selectedProjectId).toEqual(project.id);

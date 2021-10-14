@@ -10,7 +10,7 @@ describe("Navigation", function () {
     });
   });
   it("Button and breadcrumb navigation should change the url", function () {
-    cy.visit("/lsm/catalog");
+    cy.visit("/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c");
     cy.get(".pf-c-data-list__item-action")
       .first()
       .find(".pf-m-primary")
