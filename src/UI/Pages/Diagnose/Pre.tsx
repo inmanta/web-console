@@ -6,5 +6,5 @@ export const Pre: React.FC = ({ children }) => (
 );
 
 const Container = styled.pre`
-  overflow: auto;
+  white-space: pre-wrap;
 `;
