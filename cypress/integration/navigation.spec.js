@@ -2,6 +2,9 @@
 describe("Navigation", function () {
   beforeEach(() => {
     cy.intercept("GET", "/api/v2/project", { fixture: "environments.json" });
+    cy.intercept("GET", "**/api/v1/serverstatus", {
+      fixture: "serverstatus.json",
+    });
     cy.intercept("GET", "/lsm/v1/service_catalog**", {
       fixture: "lsm/service_catalog.json",
     });
