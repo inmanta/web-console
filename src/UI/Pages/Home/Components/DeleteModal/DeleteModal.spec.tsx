@@ -1,5 +1,5 @@
 import React from "react";
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DependencyProvider } from "@/UI";
 import {
@@ -114,16 +114,19 @@ test("GIVEN DeleteModal WHEN correct env & delete button pressed THEN delete exe
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
 
-// test.only("GIVEN DeleteModal WHEN delete executed and error THEN error is shown", async () => {
-//   const { component, apiHelper } = setup();
-//   render(component);
-//   const input = screen.getByRole<HTMLInputElement>("textbox", {
-//     name: "Delete Environment Check",
-//   });
-//   const deleteButton = screen.getByRole("button", { name: "Delete" });
-//   userEvent.type(input, "connect");
-//   userEvent.click(deleteButton);
-//   await act(async () => {
-//     await apiHelper.resolve(Maybe.some("error message"));
-//   });
-// });
+test("GIVEN DeleteModal WHEN delete executed and error THEN error is shown", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  const input = screen.getByRole<HTMLInputElement>("textbox", {
+    name: "Delete Environment Check",
+  });
+  userEvent.type(input, "connect");
+  userEvent.click(screen.getByRole("button", { name: "Delete" }));
+  await act(async () => {
+    await apiHelper.resolve(Maybe.some("error message"));
+  });
+  const errorAlert = screen.getByRole("generic", {
+    name: "Environment Error Alert",
+  });
+  expect(within(errorAlert).getByText("error message")).toBeVisible();
+});

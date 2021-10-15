@@ -1,9 +1,17 @@
 import { EnvironmentModel, Maybe } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { words } from "@/UI/words";
-import { Alert, Button, Modal, TextInput } from "@patternfly/react-core";
+import {
+  Alert,
+  Button,
+  Form,
+  FormAlert,
+  FormGroup,
+  Modal,
+  TextInput,
+} from "@patternfly/react-core";
+import { TagIcon } from "@patternfly/react-icons";
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
 
 interface Props {
   environment: Pick<EnvironmentModel, "id" | "name">;
@@ -66,23 +74,41 @@ export const DeleteModal: React.FC<Props> = ({
         </Button>,
       ]}
     >
-      <EnvironmentName>{environment.name}</EnvironmentName>
-      <TextInput
-        aria-label="Delete Environment Check"
-        value={candidateEnv}
-        validated={validated}
-        onChange={setCandidateEnv}
-      />
-      {errorMessage && (
-        <Alert variant="danger" isInline title="Danger inline alert title">
-          <p>{errorMessage}</p>
-        </Alert>
-      )}
+      <Form>
+        <EnvironmentName name={environment.name} />
+        {errorMessage && (
+          <FormAlert>
+            <Alert
+              variant="danger"
+              title="Something went wrong"
+              isInline
+              aria-label="Environment Error Alert"
+            >
+              {errorMessage}
+            </Alert>
+          </FormAlert>
+        )}
+        <FormGroup
+          label="Environment Name"
+          type="text"
+          fieldId="environmentName"
+          validated={validated}
+        >
+          <TextInput
+            id="environmentName"
+            aria-label="Delete Environment Check"
+            value={candidateEnv}
+            validated={validated}
+            onChange={setCandidateEnv}
+          />
+        </FormGroup>
+      </Form>
     </Modal>
   );
 };
 
-const EnvironmentName = styled.p`
-  padding-bottom: 8px;
-  font-weight: bold;
-`;
+const EnvironmentName: React.FC<{ name: string }> = ({ name }) => (
+  <p>
+    <TagIcon /> <b>{name}</b>
+  </p>
+);
