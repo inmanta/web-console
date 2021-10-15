@@ -1,30 +1,27 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   Bullseye,
   Button,
   Card,
-  CardActions,
   CardBody,
   CardFooter,
   CardHeader,
   CardTitle,
-  Dropdown,
-  DropdownItem,
   EmptyState,
   EmptyStateIcon,
   EmptyStateSecondaryActions,
   EmptyStateVariant,
   Gallery,
-  KebabToggle,
   PageSection,
   Title,
 } from "@patternfly/react-core";
-import { PencilAltIcon, PlusCircleIcon } from "@patternfly/react-icons";
+import { PlusCircleIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Link } from "@/UI/Components";
+import { Actions } from "./Components";
 
 interface Props {
   environments: FlatEnvironment[];
@@ -82,7 +79,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   <Card isHoverable isCompact aria-label={"Environment card"}>
     <CardHeader>
       <CardTitle>{environment.name}</CardTitle>
-      <Actions environmentId={environment.id} />
+      <Actions environment={environment} />
     </CardHeader>
     <CardBody>
       <Bullseye>
@@ -96,33 +93,3 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
     <CardFooter style={{ color: "gray" }}>{environment.projectName}</CardFooter>
   </Card>
 );
-
-const Actions: React.FC<{ environmentId: string }> = ({ environmentId }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <CardActions>
-      <Dropdown
-        onSelect={() => setIsOpen((value) => !value)}
-        toggle={<KebabToggle onToggle={() => setIsOpen((value) => !value)} />}
-        isOpen={isOpen}
-        isPlain
-        dropdownItems={[
-          <DropdownItem
-            key="settings"
-            component={
-              <Link
-                pathname={getUrl("Settings", undefined)}
-                search={`env=${environmentId}`}
-              >
-                <Button variant="link" icon={<PencilAltIcon />}>
-                  {words("home.environment.edit")}
-                </Button>
-              </Link>
-            }
-          />,
-        ]}
-        position={"right"}
-      />
-    </CardActions>
-  );
-};

@@ -21,7 +21,8 @@ type Command =
   | HaltEnvironmentCommand
   | ResumeEnvironmentCommand
   | DeleteCallbackCommand
-  | CreateCallbackCommand;
+  | CreateCallbackCommand
+  | DeleteEnvironment;
 
 export type Type = Command;
 
@@ -180,6 +181,19 @@ interface CreateCallbackManifest {
   trigger: () => Promise<Maybe.Type<Error<"CreateCallback">>>;
 }
 
+export interface DeleteEnvironment {
+  kind: "DeleteEnvironment";
+  id: string;
+}
+
+interface DeleteEnvironmentManifest {
+  error: string;
+  apiData: string;
+  body: null;
+  command: DeleteEnvironment;
+  trigger: () => Promise<Maybe.Type<Error<"DeleteEnvironment">>>;
+}
+
 /**
  * The Manifest is just a utility that collects all the different
  * types related to all the sub commands.
@@ -196,6 +210,7 @@ interface Manifest {
   ResumeEnvironment: ResumeEnvironmentManifest;
   DeleteCallback: DeleteCallbackManifest;
   CreateCallback: CreateCallbackManifest;
+  DeleteEnvironment: DeleteEnvironmentManifest;
 }
 
 /**
