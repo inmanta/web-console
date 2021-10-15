@@ -1,8 +1,7 @@
-import { Fetcher, Either, Query } from "@/Core";
-import { BaseApiHelper } from "./BaseApiHelper";
+import { ApiHelper, Fetcher, Either, Query } from "@/Core";
 
 export class FetcherImpl<Kind extends Query.Kind> implements Fetcher<Kind> {
-  constructor(private readonly baseApiHelper: BaseApiHelper) {}
+  constructor(private readonly baseApiHelper: ApiHelper) {}
 
   async getData(
     environment: string,

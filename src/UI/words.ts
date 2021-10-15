@@ -316,6 +316,9 @@ const dict = {
   "home.create.env.link": "Create environment",
   "home.environment.select": "Select this environment",
   "home.environment.edit": "Edit environment",
+  "home.environment.delete": "Delete environment",
+  "home.environment.delete.warning":
+    "Deleting an environment is dangerous. Are you sure you want to delete this environment? Type the environment name as an extra verification that you are sure.",
   "home.filters.project.placeholder": "Filter by project",
   "home.filters.env.placeholder": "Filter by name",
 

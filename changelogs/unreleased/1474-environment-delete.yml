@@ -1,0 +1,6 @@
+description: Add delete action and modal to environment card
+issue-nr: 1474
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
