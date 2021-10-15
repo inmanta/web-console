@@ -39,12 +39,16 @@ export function getUrl(kind: Kind, params: Params<typeof kind>): string {
   return generatePath(route.path, params);
 }
 
-type GoTo = (kind: Kind, params: Params<typeof kind>, search?: string) => void;
+type NavigateTo = (
+  kind: Kind,
+  params: Params<typeof kind>,
+  search?: string
+) => void;
 
 /**
- * The useGoto hook returns a goTo function which navigates to a route.
+ * The useNavigateTo hook returns a navigateTo function which navigates to a route.
  */
-export const useNavigateTo = (): GoTo => {
+export const useNavigateTo = (): NavigateTo => {
   const { search } = useLocation();
   const history = useHistory();
 
