@@ -12,7 +12,7 @@ interface WithMethod<Method extends string> {
 
 interface UrlAndEnv {
   url: string;
-  environment: string;
+  environment?: string;
 }
 
 interface WithBody {
@@ -26,8 +26,8 @@ interface PendingRequest {
 }
 
 export class DeferredApiHelper implements ApiHelper {
-  private readonly pendingRequests: PendingRequest[] = [];
-  private readonly resolvedRequests: Request[] = [];
+  readonly pendingRequests: PendingRequest[] = [];
+  readonly resolvedRequests: Request[] = [];
 
   resolve(data: unknown): Promise<unknown> {
     if (this.pendingRequests.length <= 0) {
@@ -66,6 +66,18 @@ export class DeferredApiHelper implements ApiHelper {
     const promise = new Promise((resolve) => {
       this.pendingRequests.push({
         request: { method: "GET", url, environment },
+        resolve,
+        promise,
+      });
+    });
+
+    return promise as Promise<Either.Type<string, Data>>;
+  }
+
+  getWithoutEnvironment<Data>(url: string): Promise<Either.Type<string, Data>> {
+    const promise = new Promise((resolve) => {
+      this.pendingRequests.push({
+        request: { method: "GET", url },
         resolve,
         promise,
       });
