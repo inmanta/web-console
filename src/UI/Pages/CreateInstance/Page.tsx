@@ -29,7 +29,10 @@ export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
   const url = `${getUrl("Inventory", { service: serviceEntity.name })}?env=${
     serviceEntity.environment
   }`;
-  const handleRedirect = useCallback(() => history.push(url), [history]);
+  const handleRedirect = useCallback(
+    () => history.push(url),
+    [history] /* eslint-disable-line react-hooks/exhaustive-deps */
+  );
 
   const trigger = commandResolver.getTrigger<"CreateInstance">({
     kind: "CreateInstance",

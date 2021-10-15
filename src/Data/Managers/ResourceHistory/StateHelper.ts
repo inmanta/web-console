@@ -25,6 +25,7 @@ export class ResourceHistoryStateHelper
   }
 
   getHooked(query: Query.SubQuery<"ResourceHistory">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) => this.enforce(state.resourceHistory.byId[query.id]),
       isEqual

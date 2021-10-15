@@ -20,6 +20,7 @@ module.exports = {
      * Uses the recommended rules from @eslint-plugin-react
      */
     "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     /**
      * Uses the recommended rules from the @typescript-eslint/eslint-plugin
      */

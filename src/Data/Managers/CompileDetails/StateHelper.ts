@@ -16,6 +16,7 @@ export class CompileDetailsStateHelper
   }
 
   getHooked({ id }: Query.SubQuery<"CompileDetails">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.compileDetails.byId[id]);
     }, isEqual);

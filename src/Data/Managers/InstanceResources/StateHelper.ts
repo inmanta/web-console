@@ -16,6 +16,7 @@ export class InstanceResourcesStateHelper
   }
 
   getHooked(query: Query.SubQuery<"InstanceResources">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.instanceResources.byId[query.id]);
     }, isEqual);

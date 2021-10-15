@@ -1,3 +1,10 @@
+/**
+ * @DANGER Disabling these hooks rules is dangerous for an entire file.
+ * When you edit this file, turn the rule off so you know you are not missing anything.
+ */
+
+/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+
 import {
   RemoteData,
   Query,
@@ -47,6 +54,7 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
   }
 
   useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
+    const { environment } = this;
     const [url, setUrl] = useState(this.getUrl(query));
 
     useEffect(() => {
@@ -56,7 +64,7 @@ export class OneTimeQueryManagerImpl<Kind extends Query.Kind>
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query);
       this.update(query, url);
-    }, [url, this.environment]);
+    }, [url, environment]);
 
     return [
       RemoteData.mapSuccess(
@@ -98,6 +106,7 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
   }
 
   useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
+    const { environment } = this;
     const [url, setUrl] = useState(this.getUrl(query));
 
     useEffect(() => {
@@ -119,7 +128,7 @@ export class ContinuousQueryManagerImpl<Kind extends Query.Kind>
       return () => {
         this.scheduler.unregister(this.getUnique(query));
       };
-    }, [url, this.environment]);
+    }, [url, environment]);
 
     return [
       RemoteData.mapSuccess(

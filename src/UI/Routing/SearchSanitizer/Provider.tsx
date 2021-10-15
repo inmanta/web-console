@@ -10,16 +10,16 @@ export const Provider: React.FC = ({ children }) => {
   const { pathname, search, hash } = useLocation();
   const history = useHistory();
 
-  const result = getSearchResult(pathname, search);
-  useEffect(() => {
-    if (result !== null) {
-      history.replace(`${pathname}${result[0]}${hash}`);
-    }
-  }, [result !== null ? result[0] : null]);
+  const [sanitizedSearch, routeKind] = getSearchResult(pathname, search);
 
-  if (result !== null) {
-    const [, kind] = result;
-    return sanitizer.isSanitized(kind, search) ? <>{children}</> : null;
+  useEffect(() => {
+    if (sanitizedSearch !== null && sanitizedSearch !== search) {
+      history.replace(`${pathname}${sanitizedSearch}${hash}`);
+    }
+  }, [history, hash, pathname, sanitizedSearch, search]);
+
+  if (routeKind !== null) {
+    return sanitizer.isSanitized(routeKind, search) ? <>{children}</> : null;
   }
   return <>{children}</>;
 };
@@ -27,9 +27,9 @@ export const Provider: React.FC = ({ children }) => {
 const getSearchResult = (
   pathname: string,
   search: string
-): [string, Kind] | null => {
+): [string | null, Kind | null] => {
   const match = getRouteWithParamsFromUrl(pathname);
-  if (typeof match === "undefined") return null;
+  if (typeof match === "undefined") return [null, null];
   const [route] = match;
   return [sanitizer.sanitize(route.kind, search), route.kind];
 };

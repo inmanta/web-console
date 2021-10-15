@@ -17,6 +17,7 @@ export class ProjectsStateHelper implements StateHelper<"Projects"> {
   }
 
   getHooked(): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) => this.enforce(state.projects.allProjects),
       isEqual
