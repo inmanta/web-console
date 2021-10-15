@@ -70,6 +70,7 @@ export const DeleteModal: React.FC<Props> = ({
       onClose={onCloseWithClear}
       actions={[
         <Button
+          aria-label="Delete"
           key="confirm"
           variant="danger"
           onClick={onDelete}
