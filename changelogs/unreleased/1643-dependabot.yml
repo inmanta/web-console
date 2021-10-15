@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump @patternfly/react-core from 4.157.3 to 4.162.3'
+destination-branches:
+- master
+- iso4
+sections: {}
