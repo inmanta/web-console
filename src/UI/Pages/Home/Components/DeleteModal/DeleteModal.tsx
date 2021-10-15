@@ -3,6 +3,7 @@ import { DependencyContext } from "@/UI";
 import { words } from "@/UI/words";
 import { Alert, Button, Modal, TextInput } from "@patternfly/react-core";
 import React, { useContext, useState } from "react";
+import styled from "styled-components";
 
 interface Props {
   environment: Pick<EnvironmentModel, "id" | "name">;
@@ -50,7 +51,7 @@ export const DeleteModal: React.FC<Props> = ({
       titleIconVariant="danger"
       isOpen={isOpen}
       onClose={onCloseWithClear}
-      description={words("home.environment.delete.warning")(environment.name)}
+      description={words("home.environment.delete.warning")}
       actions={[
         <Button
           key="confirm"
@@ -65,6 +66,7 @@ export const DeleteModal: React.FC<Props> = ({
         </Button>,
       ]}
     >
+      <EnvironmentName>{environment.name}</EnvironmentName>
       <TextInput
         aria-label="Delete Environment Check"
         value={candidateEnv}
@@ -79,3 +81,8 @@ export const DeleteModal: React.FC<Props> = ({
     </Modal>
   );
 };
+
+const EnvironmentName = styled.p`
+  padding-bottom: 8px;
+  font-weight: bold;
+`;

@@ -9,7 +9,6 @@ import { PencilAltIcon, TrashAltIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { useGoTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
-
 import { DeleteModal } from "./DeleteModal";
 
 interface ActionsProps {
