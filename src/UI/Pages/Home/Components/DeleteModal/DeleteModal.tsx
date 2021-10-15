@@ -1,3 +1,5 @@
+import React, { useContext, useState } from "react";
+import styled from "styled-components";
 import { EnvironmentModel, Maybe } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { words } from "@/UI/words";
@@ -10,8 +12,6 @@ import {
   Modal,
   TextInput,
 } from "@patternfly/react-core";
-import { TagIcon } from "@patternfly/react-icons";
-import React, { useContext, useState } from "react";
 
 interface Props {
   environment: Pick<EnvironmentModel, "id" | "name">;
@@ -19,6 +19,9 @@ interface Props {
   onClose: () => void;
 }
 
+/**
+ * @TODO Replace content once we support markdown in the words module
+ */
 export const DeleteModal: React.FC<Props> = ({
   environment,
   isOpen,
@@ -55,11 +58,16 @@ export const DeleteModal: React.FC<Props> = ({
     <Modal
       variant="small"
       aria-label="Delete Environment Modal"
-      title="Delete Environment"
+      title={words("home.environment.delete.warning")}
+      description={
+        <p>
+          This action cannot be undone. This will permanently delete the{" "}
+          <b>{environment.name}</b> environment.
+        </p>
+      }
       titleIconVariant="danger"
       isOpen={isOpen}
       onClose={onCloseWithClear}
-      description={words("home.environment.delete.warning")}
       actions={[
         <Button
           key="confirm"
@@ -67,7 +75,7 @@ export const DeleteModal: React.FC<Props> = ({
           onClick={onDelete}
           isDisabled={validated !== "success" || isBusy}
         >
-          Delete
+          {words("home.environment.delete.warning.action")}
         </Button>,
         <Button key="cancel" variant="plain" onClick={onCloseWithClear}>
           Cancel
@@ -75,7 +83,6 @@ export const DeleteModal: React.FC<Props> = ({
       ]}
     >
       <Form>
-        <EnvironmentName name={environment.name} />
         {errorMessage && (
           <FormAlert>
             <Alert
@@ -89,7 +96,11 @@ export const DeleteModal: React.FC<Props> = ({
           </FormAlert>
         )}
         <FormGroup
-          label="Environment Name"
+          label={
+            <CustomLabel>
+              Please type <b>{environment.name}</b> to confirm
+            </CustomLabel>
+          }
           type="text"
           fieldId="environmentName"
           validated={validated}
@@ -107,8 +118,6 @@ export const DeleteModal: React.FC<Props> = ({
   );
 };
 
-const EnvironmentName: React.FC<{ name: string }> = ({ name }) => (
-  <p>
-    <TagIcon /> <b>{name}</b>
-  </p>
-);
+const CustomLabel = styled.p`
+  font-weight: normal;
+`;
