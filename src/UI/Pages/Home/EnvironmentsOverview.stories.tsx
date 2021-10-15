@@ -1,4 +1,5 @@
-import { Project } from "@/Test";
+import { MockFeatureManger, Project } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { Story } from "@storybook/react/types-6-0";
 import React, { ComponentProps } from "react";
 import { MemoryRouter } from "react-router";
@@ -12,7 +13,11 @@ export default {
 const Template: Story<ComponentProps<typeof EnvironmentsOverview>> = (args) => {
   return (
     <MemoryRouter>
-      <EnvironmentsOverview {...args} />
+      <DependencyProvider
+        dependencies={{ featureManager: new MockFeatureManger() }}
+      >
+        <EnvironmentsOverview {...args} />
+      </DependencyProvider>
     </MemoryRouter>
   );
 };

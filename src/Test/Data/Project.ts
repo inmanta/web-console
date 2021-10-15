@@ -32,16 +32,40 @@ export const filterable: ProjectModel[] = [
     name: "default",
     id: "1",
     environments: [
-      { id: "123", name: "test-env1", projectId: "1" },
-      { id: "456", name: "dev-env2", projectId: "1" },
+      {
+        id: "123",
+        name: "test-env1",
+        projectId: "1",
+        repo_branch: "master",
+        repo_url: "github.com/test",
+      },
+      {
+        id: "456",
+        name: "dev-env2",
+        projectId: "1",
+        repo_branch: "master",
+        repo_url: "github.com/test2",
+      },
     ],
   },
   {
     name: "prod",
     id: "444",
     environments: [
-      { id: "789", name: "test-env1", projectId: "444" },
-      { id: "101", name: "env2", projectId: "444" },
+      {
+        id: "789",
+        name: "test-env1",
+        projectId: "444",
+        repo_branch: "master",
+        repo_url: "gitlab.com/test",
+      },
+      {
+        id: "101",
+        name: "env2",
+        projectId: "444",
+        repo_branch: "master",
+        repo_url: "gitlab.com/test123",
+      },
     ],
   },
 ];
