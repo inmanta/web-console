@@ -77,7 +77,7 @@
     "eslint-plugin-testing-library": "^4.12.4",
     "fetch-mock": "^9.11.0",
     "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.3.2",
+    "html-webpack-plugin": "^5.4.0",
     "husky": "^7.0.2",
     "imagemin": "^8.0.1",
     "jest": "^27.2.5",
@@ -137,7 +137,7 @@
     "react-router-dom": "^5.3.0",
     "react-syntax-highlighter": "^15.4.4",
     "styled-components": "^5.3.1",
-    "xml-formatter": "^2.4.1"
+    "xml-formatter": "^2.5.0"
   },
   "resolutions": {
     "terser-webpack-plugin": "^1.4.5",
