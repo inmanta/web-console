@@ -1,0 +1,6 @@
+description: Improve content in delete env modal
+issue-nr: 1652
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"
