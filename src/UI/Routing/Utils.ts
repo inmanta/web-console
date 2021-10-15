@@ -44,7 +44,7 @@ type GoTo = (kind: Kind, params: Params<typeof kind>, search?: string) => void;
 /**
  * The useGoto hook returns a goTo function which navigates to a route.
  */
-export const useGoTo = (): GoTo => {
+export const useNavigateTo = (): GoTo => {
   const { search } = useLocation();
   const history = useHistory();
 

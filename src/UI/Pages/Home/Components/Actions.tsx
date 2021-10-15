@@ -7,7 +7,7 @@ import {
 } from "@patternfly/react-core";
 import { PencilAltIcon, TrashAltIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
-import { useGoTo } from "@/UI/Routing";
+import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { DeleteModal } from "./DeleteModal";
 
@@ -18,7 +18,7 @@ interface ActionsProps {
 export const Actions: React.FC<ActionsProps> = ({ environment }) => {
   const [isToggleOpen, setIsToggleOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const goTo = useGoTo();
+  const navigateTo = useNavigateTo();
   return (
     <>
       <DeleteModal
@@ -39,7 +39,7 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
               key="edit environment"
               icon={<PencilAltIcon />}
               onClick={() =>
-                goTo("Settings", undefined, `env=${environment.id}`)
+                navigateTo("Settings", undefined, `env=${environment.id}`)
               }
             >
               {words("home.environment.edit")}
