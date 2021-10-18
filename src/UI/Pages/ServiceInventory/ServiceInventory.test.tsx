@@ -27,7 +27,6 @@ import {
   DeleteInstanceCommandManager,
   BaseApiHelper,
   InstanceDeleter,
-  TriggerInstanceUpdatePatcher,
   KeycloakAuthHelper,
   TriggerSetStateCommandManager,
   SetStatePoster,
@@ -64,8 +63,9 @@ function setup(service = Service.a) {
   const urlManager = new UrlManagerImpl("", service.environment);
 
   const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
-    new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
-    new AttributeResultConverterImpl()
+    new BaseApiHelper(),
+    new AttributeResultConverterImpl(),
+    "env1"
   );
 
   const deleteCommandManager = new DeleteInstanceCommandManager(

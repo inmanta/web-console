@@ -2,7 +2,6 @@ import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
   BaseApiHelper,
   InstanceDeleter,
-  TriggerInstanceUpdatePatcher,
   AttributeResultConverterImpl,
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
@@ -91,8 +90,9 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new AttributeResultConverterImpl()
       ),
       new TriggerInstanceUpdateCommandManager(
-        new TriggerInstanceUpdatePatcher(this.baseApiHelper, environment),
-        new AttributeResultConverterImpl()
+        this.baseApiHelper,
+        new AttributeResultConverterImpl(),
+        environment
       ),
       new DeleteInstanceCommandManager(
         new InstanceDeleter(this.baseApiHelper, environment)

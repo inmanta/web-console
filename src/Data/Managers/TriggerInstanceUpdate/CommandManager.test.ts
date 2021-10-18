@@ -1,6 +1,5 @@
 import {
   BaseApiHelper,
-  TriggerInstanceUpdatePatcher,
   TriggerInstanceUpdateCommandManager,
   AttributeResultConverterImpl,
 } from "@/Data";
@@ -8,8 +7,9 @@ import { Field } from "@/Test";
 
 describe("TriggerInstanceUpdateCommandManager ", () => {
   const commandManager = new TriggerInstanceUpdateCommandManager(
-    new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
-    new AttributeResultConverterImpl()
+    new BaseApiHelper(),
+    new AttributeResultConverterImpl(),
+    "env1"
   );
   const currentAttributes = { attr1: "some value", attr2: "", attr3: null };
 
