@@ -7,14 +7,12 @@ import {
   DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
-  InstantPoster,
   Service,
   Callback,
   DeferredApiHelper,
-  flushPromises,
 } from "@/Test";
 import { CallbacksView } from "@/UI/Pages/ServiceCatalog/Tabs/Callbacks";
-import { Either, Maybe, RemoteData } from "@/Core";
+import { Either, Maybe } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
@@ -56,10 +54,9 @@ function setup() {
   );
 
   const createCallbackCommandManager = new CreateCallbackCommandManager(
-    new InstantPoster<"CreateCallback">(
-      RemoteData.success({ data: Callback.a.callback_id })
-    ),
-    callbacksUpdater
+    apiHelper,
+    callbacksUpdater,
+    environment
   );
 
   const commandResolver = new CommandResolverImpl(
@@ -126,7 +123,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
 });
 
 test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback is created", async () => {
-  const { component, callbacksFetcher } = setup();
+  const { component, callbacksFetcher, apiHelper } = setup();
   render(component);
 
   await act(async () => {
@@ -164,7 +161,12 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   });
   userEvent.click(addButton);
 
-  await flushPromises();
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0].url).toMatch("/lsm/v1/callbacks");
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: "callbackId" }));
+  });
 
   await act(async () => {
     await callbacksFetcher.resolve(

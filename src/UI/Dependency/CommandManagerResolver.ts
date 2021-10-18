@@ -28,7 +28,6 @@ import {
   CallbacksStateHelper,
   CallbacksUpdater,
   CreateCallbackCommandManager,
-  CallbackPoster,
   EnvironmentDetailsUpdater,
   EnvironmentDetailsStateHelper,
   DeleteEnvironmentCommandManager,
@@ -133,12 +132,13 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environment
       ),
       new CreateCallbackCommandManager(
-        new CallbackPoster(this.baseApiHelper, environment),
+        this.baseApiHelper,
         new CallbacksUpdater(
           new CallbacksStateHelper(this.store, environment),
           new FetcherImpl<"Callbacks">(this.baseApiHelper),
           environment
-        )
+        ),
+        environment
       ),
       new ModifyEnvironmentCommandManager(
         new ModifyEnvironmentPoster(this.baseApiHelper, environment),

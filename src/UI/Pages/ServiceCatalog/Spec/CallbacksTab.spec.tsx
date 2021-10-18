@@ -5,14 +5,13 @@ import {
   DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
-  InstantPoster,
   Service,
   StaticScheduler,
   Callback,
   DeferredApiHelper,
 } from "@/Test";
 import { ServiceCatalog } from "@/UI/Pages";
-import { Either, RemoteData } from "@/Core";
+import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
@@ -75,14 +74,13 @@ function setup() {
   );
 
   const createCallbackCommandManager = new CreateCallbackCommandManager(
-    new InstantPoster<"CreateCallback">(
-      RemoteData.success({ data: Callback.a.callback_id })
-    ),
+    apiHelper,
     new CallbacksUpdater(
       new CallbacksStateHelper(store, environment),
       new DeferredFetcher<"Callbacks">(),
       environment
-    )
+    ),
+    environment
   );
 
   const commandResolver = new CommandResolverImpl(
