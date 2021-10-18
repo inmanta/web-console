@@ -23,6 +23,7 @@ export class ServiceConfigStateHelper implements StateHelper<"ServiceConfig"> {
   }
 
   getHooked(query: Query.SubQuery<"ServiceConfig">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.serviceConfig.byName[query.name]);
     }, isEqual);

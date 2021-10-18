@@ -23,6 +23,7 @@ export class ServicesStateHelper implements StateHelper<"Services"> {
   }
 
   getHooked(): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) => this.enforce(state.services.listByEnv[this.environment]),
       isEqual

@@ -16,6 +16,7 @@ export class ServiceInstanceStateHelper
   }
 
   getHooked(query: Query.SubQuery<"ServiceInstance">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.serviceInstance.byId[query.id]);
     }, isEqual);

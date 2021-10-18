@@ -33,6 +33,7 @@ export class CallbacksStateHelper implements StateHelper<"Callbacks"> {
   }
 
   getHooked({ service_entity }: Query.SubQuery<"Callbacks">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) =>
         this.enforce(state.callbacks.byEnv[this.environment]?.[service_entity]),

@@ -26,6 +26,7 @@ export class DiagnosticsStateHelper implements StateHelper<"Diagnostics"> {
   }
 
   getHooked({ id }: Query.SubQuery<"Diagnostics">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.diagnostics.byServiceInstanceId[id]);
     }, isEqual);

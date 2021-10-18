@@ -25,6 +25,7 @@ export class InstanceConfigStateHelper
   }
 
   getHooked(query: Query.SubQuery<"InstanceConfig">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.instanceConfig.byId[query.id]);
     }, isEqual);

@@ -25,6 +25,7 @@ export class ServiceStateHelper implements StateHelper<"Service"> {
   }
 
   getHooked(query: Query.SubQuery<"Service">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(
         state.services.byNameAndEnv[

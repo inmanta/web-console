@@ -45,12 +45,14 @@ export class ServiceConfigQueryManager
   }
 
   useOneTime(query: Query.SubQuery<"ServiceConfig">): [Data, () => void] {
+    const { environment } = this;
     const { name } = query;
 
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     useEffect(() => {
       this.initialize(query);
       this.update(query, this.getConfigUrl(query));
-    }, [this.environment]);
+    }, [environment]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     return [
       this.configFinalizer.finalize(this.stateHelper.getHooked(query), name),

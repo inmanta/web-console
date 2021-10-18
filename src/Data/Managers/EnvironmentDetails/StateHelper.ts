@@ -28,6 +28,7 @@ export class EnvironmentDetailsStateHelper
   }
 
   getHooked(): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) => this.enforce(state.environmentDetails.byEnv[this.environment]),
       isEqual

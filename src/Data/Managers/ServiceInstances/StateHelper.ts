@@ -30,6 +30,7 @@ export class ServiceInstancesStateHelper
   }
 
   getHooked(query: Query.SubQuery<"ServiceInstances">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(
         state.serviceInstances.instancesWithTargetStates(
