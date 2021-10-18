@@ -27,11 +27,11 @@ import { ResourceLog, ResourceLogFilter } from "./ResourceLog";
 import { Sort } from "./Sort";
 import { PageSize } from "./PageSize";
 import { EnvironmentDetails } from "./EnvironmentDetailsModel";
-import { Callback } from "./Callback";
 import { CompileReport } from "./CompileReport";
 import { CompileReportParams } from "./CompileReportParams";
 import { CompileDetails } from "./CompileDetails";
 import { ServerStatus } from "./ServerStatus";
+import { Operation, OperationManifest } from "@/Core/Operations";
 
 type Query =
   | ServicesQuery
@@ -50,10 +50,10 @@ type Query =
   | ResourceHistoryQuery
   | ResourceLogsQuery
   | EnvironmentDetailsQuery
-  | GetCallbacks
   | CompileReportsQuery
   | CompileDetailsQuery
-  | GetServerStatus;
+  | GetServerStatus
+  | Operation;
 
 export type Type = Query;
 
@@ -332,19 +332,6 @@ interface ResourceHistoryManifest {
   query: ResourceHistoryQuery;
 }
 
-export interface GetCallbacks {
-  kind: "GetCallbacks";
-  service_entity: string;
-}
-
-interface GetCallbacksManifest {
-  error: string;
-  apiResponse: { data: Callback[] };
-  data: Callback[];
-  usedData: Callback[];
-  query: GetCallbacks;
-}
-
 export interface CompileReportsQuery extends CompileReportParams {
   kind: "CompileReports";
 }
@@ -414,7 +401,7 @@ interface ResourceLogsManifest {
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
  */
-interface Manifest {
+interface Manifest extends OperationManifest {
   Services: ServicesManifest;
   Service: ServiceManifest;
   ServiceInstance: ServiceInstanceManifest;
@@ -432,7 +419,6 @@ interface Manifest {
   ResourceHistory: ResourceHistoryManifest;
   ResourceLogs: ResourceLogsManifest;
   EnvironmentDetails: EnvironmentDetailsManifest;
-  GetCallbacks: GetCallbacksManifest;
   CompileReports: CompileReportsManifest;
   CompileDetails: CompileDetailsManifest;
 }
