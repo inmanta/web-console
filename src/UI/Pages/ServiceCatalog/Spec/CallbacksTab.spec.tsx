@@ -25,7 +25,6 @@ import {
   CallbacksQueryManager,
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
-  CallbackDeleter,
   CallbacksUpdater,
   DeleteServiceCommandManager,
   ServiceDeleter,
@@ -65,14 +64,14 @@ function setup() {
   );
 
   const apiHelper = new DeferredApiHelper();
-  const callbackDeleter = new CallbackDeleter(apiHelper, environment);
   const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
-    callbackDeleter,
+    apiHelper,
     new CallbacksUpdater(
       new CallbacksStateHelper(store, environment),
       callbacksFetcher,
       environment
-    )
+    ),
+    environment
   );
 
   const createCallbackCommandManager = new CreateCallbackCommandManager(

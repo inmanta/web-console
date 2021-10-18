@@ -24,7 +24,6 @@ import {
   ResumeEnvironmentCommandManager,
   ResumeEnvironmentPoster,
   DeleteCallbackCommandManager,
-  CallbackDeleter,
   FetcherImpl,
   CallbacksStateHelper,
   CallbacksUpdater,
@@ -125,12 +124,13 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         )
       ),
       new DeleteCallbackCommandManager(
-        new CallbackDeleter(this.baseApiHelper, environment),
+        this.baseApiHelper,
         new CallbacksUpdater(
           new CallbacksStateHelper(this.store, environment),
           new FetcherImpl<"Callbacks">(this.baseApiHelper),
           environment
-        )
+        ),
+        environment
       ),
       new CreateCallbackCommandManager(
         new CallbackPoster(this.baseApiHelper, environment),
