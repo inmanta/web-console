@@ -16,15 +16,19 @@ import {
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { ResourcesTab } from "./ResourcesTab";
+import { Query } from "@/Core";
 
 export default {
   title: "ResourcesTab",
   component: ResourcesTab,
 };
 
-const Template: React.FC<{ outcome: Outcome<"InstanceResources"> }> = ({
-  outcome,
-}) => {
+const Template: React.FC<{
+  outcome: Outcome.Type<
+    Query.Error<"InstanceResources">,
+    Query.ApiResponse<"InstanceResources">
+  >;
+}> = ({ outcome }) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([

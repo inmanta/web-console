@@ -9,7 +9,7 @@ export class ResumeEnvironmentPoster
   ) {}
 
   private getUrl(): string {
-    return `${this.apiHelper.getBaseUrl()}/api/v2/actions/environment/resume`;
+    return `/api/v2/actions/environment/resume`;
   }
 
   post(

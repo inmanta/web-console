@@ -18,6 +18,7 @@ import {
   getStoreInstance,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { MemoryRouter } from "react-router";
 
 export default {
   title: "EventsPage",
@@ -53,11 +54,13 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const urlManager = new UrlManagerImpl("", InstanceLog.a.environment);
 
   return (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <EventsPage service={Service.a} instanceId={service_instance_id} />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+        <StoreProvider store={store}>
+          <EventsPage service={Service.a} instanceId={service_instance_id} />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 };
 

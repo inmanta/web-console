@@ -9,7 +9,7 @@ export class HaltEnvironmentPoster
   ) {}
 
   private getUrl(): string {
-    return `${this.apiHelper.getBaseUrl()}/api/v2/actions/environment/halt`;
+    return `/api/v2/actions/environment/halt`;
   }
 
   post(

@@ -9,6 +9,10 @@ import {
   Pagination,
   StaticScheduler,
   DynamicQueryManagerResolver,
+  InstantApiHelper,
+  DynamicCommandManagerResolver,
+  MockEnvironmentModifier,
+  MockCommandManager,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -18,6 +22,7 @@ import {
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
   getStoreInstance,
+  CommandResolverImpl,
 } from "@/Data";
 import { ServiceInventory } from "./ServiceInventory";
 
@@ -29,17 +34,15 @@ export default {
 export const Basic: React.FC = () => {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
-    kind: "Success",
-    data: {
-      data: [ServiceInstance.a],
-      links: Pagination.links,
-      metadata: Pagination.metadata,
-    },
-  });
-
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
-    serviceInstancesFetcher,
+    new InstantApiHelper({
+      kind: "Success",
+      data: {
+        data: [ServiceInstance.a],
+        links: Pagination.links,
+        metadata: Pagination.metadata,
+      },
+    }),
     new ServiceInstancesStateHelper(store, Service.a.environment),
     scheduler,
     Service.a.environment
@@ -56,12 +59,24 @@ export const Basic: React.FC = () => {
     Service.a.environment
   );
 
+  const catchAllCommandManager = new MockCommandManager();
+
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([catchAllCommandManager])
+  );
+
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
 
   return (
-    <DependencyProvider dependencies={{ queryResolver }}>
+    <DependencyProvider
+      dependencies={{
+        queryResolver,
+        commandResolver,
+        environmentModifier: new MockEnvironmentModifier(),
+      }}
+    >
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory serviceName={Service.a.name} service={Service.a} />
@@ -74,12 +89,11 @@ export const Basic: React.FC = () => {
 export const Failed: React.FC = () => {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const serviceInstancesFetcher = new InstantFetcher<"ServiceInstances">({
-    kind: "Failed",
-    error: "fake error message",
-  });
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
-    serviceInstancesFetcher,
+    new InstantApiHelper({
+      kind: "Failed",
+      error: "fake error message",
+    }),
     new ServiceInstancesStateHelper(store, Service.a.environment),
     scheduler,
     Service.a.environment

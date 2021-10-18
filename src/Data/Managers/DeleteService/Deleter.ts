@@ -10,6 +10,6 @@ export class ServiceDeleter implements Deleter<"DeleteService"> {
   }
 
   private getUrl({ name }: Command.SubCommand<"DeleteService">): string {
-    return `${this.apiHelper.getBaseUrl()}/lsm/v1/service_catalog/${name}`;
+    return `/lsm/v1/service_catalog/${name}`;
   }
 }

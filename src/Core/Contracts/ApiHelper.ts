@@ -4,8 +4,6 @@ import { Either, Maybe } from "@/Core/Language";
  * The ApiHelper provides basic api helper methods.
  */
 export interface ApiHelper {
-  getBaseUrl(): string;
-  delete(url: string, environment: string): Promise<Maybe.Type<string>>;
   get<Data>(
     url: string,
     environment: string
@@ -26,4 +24,5 @@ export interface ApiHelper {
     environment: string,
     body: Body
   ): Promise<Maybe.Type<string>>;
+  delete(url: string, environment: string): Promise<Maybe.Type<string>>;
 }

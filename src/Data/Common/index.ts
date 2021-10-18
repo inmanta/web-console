@@ -9,3 +9,4 @@ export * from "./sanitizeAttributes";
 export * from "./UrlState";
 export * from "./useExpansion";
 export * from "./XmlFormatter";
+export * from "./PrimaryContinuousQueryManager";

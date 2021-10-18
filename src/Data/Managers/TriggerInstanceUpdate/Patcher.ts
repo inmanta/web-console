@@ -13,7 +13,7 @@ export class TriggerInstanceUpdatePatcher
     id,
     version,
   }: Command.SubCommand<"TriggerInstanceUpdate">): string {
-    return `${this.apiHelper.getBaseUrl()}/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`;
+    return `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`;
   }
 
   patch(

@@ -7,13 +7,13 @@ import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 jest.useFakeTimers("modern");
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN data is fetched immediately", async () => {
-  const { component, scheduler, serviceInstancesFetcher, resourcesFetcher } =
+  const { component, scheduler, apiHelper, resourcesFetcher } =
     new ServiceInventoryPrepper().prep();
 
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
@@ -50,13 +50,12 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN the Resources auto-update happens in sync with the ServiceInstances", async () => {
   const prepper = new ServiceInventoryPrepper();
-  const { component, scheduler, serviceInstancesFetcher, resourcesFetcher } =
-    prepper.prep();
+  const { component, scheduler, apiHelper, resourcesFetcher } = prepper.prep();
 
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
@@ -85,7 +84,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   jest.advanceTimersByTime(5000);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,

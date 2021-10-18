@@ -11,6 +11,6 @@ export class CallbackDeleter implements Deleter<"DeleteCallback"> {
   }
 
   private getUrl({ callbackId }: Command.SubCommand<"DeleteCallback">): string {
-    return `${this.apiHelper.getBaseUrl()}/lsm/v1/callbacks/${callbackId}`;
+    return `/lsm/v1/callbacks/${callbackId}`;
   }
 }
