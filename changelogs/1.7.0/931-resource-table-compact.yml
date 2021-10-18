@@ -1,0 +1,6 @@
+description: Use compact view for the resource table
+issue-nr: 931
+change-type: patch
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

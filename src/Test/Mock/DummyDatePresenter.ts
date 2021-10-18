@@ -1,7 +1,10 @@
 import { DateInfo } from "@/Core";
-import { DatePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
+import { DatePresenter } from "@/UI/Presenters";
 
 export class DummyDatePresenter implements DatePresenter {
+  diff(): string {
+    return "10 seconds";
+  }
   getFull(): string {
     return "full";
   }
@@ -13,5 +16,11 @@ export class DummyDatePresenter implements DatePresenter {
       full: "full",
       relative: "relative",
     };
+  }
+  getShort(): string {
+    return "short";
+  }
+  parseShort(): Date {
+    return new Date();
   }
 }

@@ -1,0 +1,6 @@
+description: Change event date filters to use from/to
+issue-nr: 355
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump webpack-bundle-analyzer from 3.6.1 to 4.4.2
+destination-branches:
+- master
+- iso4
+sections: {}

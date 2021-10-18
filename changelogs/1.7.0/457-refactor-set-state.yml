@@ -1,0 +1,4 @@
+description: Refactor setting the state of a service instance
+issue-nr: 457
+change-type: patch
+destination-branches: [master, iso4]

@@ -1,0 +1,6 @@
+description: Add resource manager and resource view
+issue-nr: 725
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

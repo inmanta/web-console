@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Alert,
   AlertActionCloseButton,
@@ -11,25 +11,20 @@ import {
   ModalVariant,
 } from "@patternfly/react-core";
 import { CaretDownIcon } from "@patternfly/react-icons";
-import { words } from "@/UI";
-import { ActionDisabledTooltip } from "./ActionDisabledTooltip";
+import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
+import { words } from "@/UI/words";
+import { DependencyContext } from "@/UI/Dependency";
+import { ActionDisabledTooltip } from "@/UI/Components";
 
-interface Props {
-  id: string;
+interface Props extends VersionedServiceInstanceIdentifier {
   targets: string[] | null;
-  onSetInstanceState:
-    | ((
-        id: string,
-        targetState: string,
-        setErrorMessage: (message: string) => void
-      ) => Promise<void>)
-    | null;
 }
 
 export const SetStateAction: React.FC<Props> = ({
+  service_entity,
   id,
+  version,
   targets,
-  onSetInstanceState,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -45,6 +40,22 @@ export const SetStateAction: React.FC<Props> = ({
     </DropdownItem>
   ));
   const isDisabled = !dropdownItems || dropdownItems.length === 0;
+  const { commandResolver, environmentModifier } =
+    useContext(DependencyContext);
+  const trigger = commandResolver.getTrigger<"TriggerSetState">({
+    kind: "TriggerSetState",
+    service_entity,
+    id,
+    version,
+  });
+  const isHalted = environmentModifier.useIsHalted();
+
+  const onSubmit = async (targetState: string) => {
+    const result = await trigger(targetState);
+    if (Maybe.isSome(result)) {
+      setStateErrorMessage(result.value);
+    }
+  };
 
   const onSelect = (event) => {
     setIsDropdownOpen(false);
@@ -64,14 +75,22 @@ export const SetStateAction: React.FC<Props> = ({
           setStateErrorMessage={setStateErrorMessage}
         />
       )}
-      <ActionDisabledTooltip isDisabled={isDisabled}>
+      <ActionDisabledTooltip
+        isDisabled={isDisabled || isHalted}
+        ariaLabel={words("inventory.statustab.setInstanceState")}
+        tooltipContent={
+          isHalted
+            ? words("environment.halt.tooltip")
+            : words("inventory.statustab.actionDisabled")
+        }
+      >
         <Dropdown
           toggle={
             <DropdownToggle
               data-testid={`${id}-set-state-toggle`}
               onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
               toggleIndicator={CaretDownIcon}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isHalted}
             >
               {words("inventory.statustab.setInstanceState")}
             </DropdownToggle>
@@ -79,21 +98,17 @@ export const SetStateAction: React.FC<Props> = ({
           dropdownItems={dropdownItems}
           isOpen={isDropdownOpen}
           onSelect={onSelect}
-          style={isDisabled ? { cursor: "not-allowed" } : {}}
         />
       </ActionDisabledTooltip>
-
-      {onSetInstanceState && (
-        <ConfirmationModal
-          confirmationText={confirmationText}
-          onSetInstanceState={onSetInstanceState}
-          id={id}
-          targetState={targetState}
-          isModalOpen={isModalOpen}
-          setIsModalOpen={handleModalToggle}
-          setErrorMessage={setStateErrorMessage}
-        />
-      )}
+      <ConfirmationModal
+        confirmationText={confirmationText}
+        onSetInstanceState={onSubmit}
+        id={id}
+        targetState={targetState}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={handleModalToggle}
+        setErrorMessage={setStateErrorMessage}
+      />
     </>
   );
 };
@@ -102,11 +117,7 @@ interface ModalProps {
   confirmationText: string;
   id: string;
   targetState: string;
-  onSetInstanceState: (
-    id: string,
-    targetState: string,
-    setErrorMessage: (message: string) => void
-  ) => Promise<void>;
+  onSetInstanceState: (targetState: string) => Promise<void>;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   setErrorMessage: (message: string) => void;
@@ -119,14 +130,13 @@ const ConfirmationModal: React.FC<ModalProps> = ({
   setIsModalOpen,
   id,
   targetState,
-  setErrorMessage,
 }) => {
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
   const handleConfirm = async () => {
     handleModalToggle();
-    await onSetInstanceState(id, targetState, setErrorMessage);
+    await onSetInstanceState(targetState);
   };
 
   return (

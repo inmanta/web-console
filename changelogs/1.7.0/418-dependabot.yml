@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump optimize-css-assets-webpack-plugin from 5.0.3 to 6.0.0
+destination-branches:
+- master
+- iso4
+sections: {}

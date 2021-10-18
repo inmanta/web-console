@@ -1,7 +1,7 @@
 import { InventoryTablePresenter } from "./InventoryTablePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
 import {
-  instance,
+  ServiceInstance,
   DummyActionPresenter,
   DummyDatePresenter,
   tablePresenter,
@@ -14,7 +14,7 @@ const presenter = new InventoryTablePresenter(
   new DummyActionPresenter(),
   new DummyStatePresenter()
 );
-const rows = presenter.createRows([instance]);
+const rows = presenter.createRows([ServiceInstance.a]);
 
 test("TablePresenter short id", () => {
   expect(rows[0].id.short.length).toBe(4);

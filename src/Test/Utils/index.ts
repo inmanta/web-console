@@ -1,3 +1,3 @@
 export function flushPromises(): Promise<void> {
-  return new Promise((resolve) => setImmediate(resolve));
+  return new Promise((resolve) => process.nextTick(resolve));
 }

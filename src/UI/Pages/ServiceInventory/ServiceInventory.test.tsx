@@ -5,54 +5,96 @@ import {
   DeferredFetcher,
   Service,
   ServiceInstance,
-  Resources,
+  InstanceResource,
   Pagination,
   StaticScheduler,
+  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolver,
+  MockEnvironmentModifier,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  ServiceInstancesDataManager,
+  QueryResolverImpl,
+  ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  ResourcesDataManager,
-  ResourcesStateHelper,
-} from "@/UI/Data";
-import { getStoreInstance } from "@/UI/Store";
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  TriggerInstanceUpdateCommandManager,
+  AttributeResultConverterImpl,
+  CommandResolverImpl,
+  DeleteInstanceCommandManager,
+  BaseApiHelper,
+  InstanceDeleter,
+  TriggerInstanceUpdatePatcher,
+  KeycloakAuthHelper,
+  TriggerSetStateCommandManager,
+  SetStatePoster,
+  getStoreInstance,
+} from "@/Data";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
+import { UrlManagerImpl } from "@/UI/Utils";
 
-function setup() {
+function setup(service = Service.a) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
-  const serviceInstancesHelper = new ServiceInstancesDataManager(
+  const serviceInstancesHelper = new ServiceInstancesQueryManager(
     serviceInstancesFetcher,
-    new ServiceInstancesStateHelper(store),
-    scheduler
+    new ServiceInstancesStateHelper(store, service.environment),
+    scheduler,
+    service.environment
   );
 
-  const resourcesFetcher = new DeferredFetcher<"Resources">();
-  const resourcesHelper = new ResourcesDataManager(
+  const resourcesFetcher = new DeferredFetcher<"InstanceResources">();
+  const resourcesHelper = new InstanceResourcesQueryManager(
     resourcesFetcher,
-    new ResourcesStateHelper(store),
-    scheduler
+    new InstanceResourcesStateHelper(store),
+    scheduler,
+    service.environment
   );
 
-  const dataProvider = new DataProviderImpl([
-    serviceInstancesHelper,
-    resourcesHelper,
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
+  );
+
+  const urlManager = new UrlManagerImpl("", service.environment);
+
+  const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
+    new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
+    new AttributeResultConverterImpl()
+  );
+
+  const deleteCommandManager = new DeleteInstanceCommandManager(
+    new InstanceDeleter(new BaseApiHelper(), "env1")
+  );
+
+  const setStateCommandManager = new TriggerSetStateCommandManager(
+    new KeycloakAuthHelper(),
+    new SetStatePoster(new BaseApiHelper(), "env1")
+  );
+
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      triggerUpdateCommandManager,
+      deleteCommandManager,
+      setStateCommandManager,
+    ])
+  );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ dataProvider }}>
+      <DependencyProvider
+        dependencies={{
+          queryResolver,
+          urlManager,
+          commandResolver,
+          environmentModifier: new MockEnvironmentModifier(),
+        }}
+      >
         <StoreProvider store={store}>
-          <ServiceInventory
-            serviceName={Service.A.name}
-            environmentId={Service.A.environment}
-            service={Service.A}
-          />
+          <ServiceInventory serviceName={service.name} service={service} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -90,7 +132,7 @@ test("ServiceInventory shows updated instances", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [ServiceInstance.A],
+      data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
     })
@@ -115,7 +157,7 @@ test("ServiceInventory shows error with retry", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [ServiceInstance.A],
+      data: [ServiceInstance.a],
       links: Pagination.links,
       metadata: Pagination.metadata,
     })
@@ -132,7 +174,7 @@ test("ServiceInventory shows next page of instances", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [{ ...ServiceInstance.A, id: "a" }],
+      data: [{ ...ServiceInstance.a, id: "a" }],
       links: { ...Pagination.links, next: "fake-url" },
       metadata: Pagination.metadata,
     })
@@ -146,7 +188,7 @@ test("ServiceInventory shows next page of instances", async () => {
 
   serviceInstancesFetcher.resolve(
     Either.right({
-      data: [{ ...ServiceInstance.A, id: "b" }],
+      data: [{ ...ServiceInstance.a, id: "b" }],
       links: Pagination.links,
       metadata: Pagination.metadata,
     })
@@ -158,19 +200,15 @@ test("ServiceInventory shows next page of instances", async () => {
 });
 
 test("GIVEN ResourcesView fetches resources for new instance after instance update", async () => {
-  const {
-    component,
-    serviceInstancesFetcher,
-    resourcesFetcher,
-    scheduler,
-  } = setup();
+  const { component, serviceInstancesFetcher, resourcesFetcher, scheduler } =
+    setup();
 
   render(component);
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A],
+        data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -185,11 +223,13 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   fireEvent.click(await screen.findByRole("button", { name: "Resources" }));
 
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(
+      Either.right({ data: InstanceResource.listA })
+    );
   });
 
   expect(
-    screen.getByRole("cell", { name: "resource_id_a_1" })
+    screen.getByRole("cell", { name: InstanceResource.listA[0].resource_id })
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -197,18 +237,29 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [{ ...ServiceInstance.A, version: 4 }],
+        data: [{ ...ServiceInstance.a, version: 4 }],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
     );
   });
   await act(async () => {
-    await resourcesFetcher.resolve(Either.right({ data: Resources.A }));
+    await resourcesFetcher.resolve(
+      Either.right({ data: InstanceResource.listA })
+    );
   });
 
   expect(resourcesFetcher.getInvocations().length).toEqual(3);
   expect(resourcesFetcher.getInvocations()[2][1]).toMatch(
-    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=4"
+    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`
   );
+});
+
+test("ServiceInventory shows instance summary chart", async () => {
+  const { component } = setup(Service.withInstanceSummary);
+  render(component);
+
+  expect(
+    await screen.findByRole("img", { name: "Number of instances by label" })
+  ).toBeInTheDocument();
 });

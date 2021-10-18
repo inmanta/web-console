@@ -10,8 +10,11 @@ module.exports = {
     app: path.resolve(__dirname, "src", "index.tsx"),
   },
   plugins: [
-    new webpack.IgnorePlugin(/^\.\/config\.js$/),
-    new CopyPlugin([{ from: "src/config.js", to: "" }]),
+    new webpack.IgnorePlugin({ resourceRegExp: /^\.\/config\.js$/ }),
+    new CopyPlugin({ patterns: [{ from: "src/config.js", to: "" }] }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
   ],
   module: {
     rules: [
@@ -137,7 +140,6 @@ module.exports = {
             loader: "url-loader",
             options: {
               limit: 5000,
-              outputPath: "images",
               name: "[name].[ext]",
             },
           },

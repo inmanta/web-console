@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump ts-loader from 6.2.2 to 9.2.2
+destination-branches:
+- master
+- iso4
+sections: {}

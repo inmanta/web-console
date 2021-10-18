@@ -26,4 +26,7 @@ module.exports = {
      */
     plugins: ["@babel/plugin-transform-typescript"],
   }),
+  typescript: {
+    reactDocgen: "none",
+  },
 };

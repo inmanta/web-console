@@ -1,51 +1,43 @@
 import React, { useContext, useState } from "react";
-import {
-  PageSection,
-  Alert,
-  Card,
-  AlertActionCloseButton,
-  AlertGroup,
-} from "@patternfly/react-core";
+import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
-import { useKeycloak } from "react-keycloak";
+import {
+  RemoteData,
+  ServiceModel,
+  ServiceInstanceParams,
+  SortDirection,
+  PageSize,
+} from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
   ErrorView,
   LoadingView,
+  PageSectionWithTitle,
+  PaginationWidget,
   ServiceProvider,
-  EnvironmentProvider,
+  SummaryChart,
 } from "@/UI/Components";
-import { InventoryContext } from "./InventoryContext";
-import { PaginationWidget, TableControls } from "./Components";
+import { TableControls } from "./Components";
+import { Route } from "@/UI/Routing";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSection className={"horizontally-scrollable"} {...props}>
-    <Card>{children}</Card>
-  </PageSection>
+  <PageSectionWithTitle {...props} title={words("inventory.title")}>
+    {children}
+  </PageSectionWithTitle>
 );
 
-export const ServiceInventoryWithProvider: React.FC<{
-  match: { params: { id: string } };
-}> = ({ match }) => {
+export const ServiceInventoryWithProvider: React.FC = () => {
+  const { service: serviceName } = useParams<Route.Params<"Inventory">>();
+
   return (
-    <EnvironmentProvider
+    <ServiceProvider
+      serviceName={serviceName}
       Wrapper={Wrapper}
-      Dependant={({ environment }) => (
-        <ServiceProvider
-          serviceName={match.params.id}
-          environmentId={environment}
-          Wrapper={Wrapper}
-          Dependant={({ service }) => (
-            <ServiceInventory
-              service={service}
-              environmentId={environment}
-              serviceName={match.params.id}
-            />
-          )}
-        />
+      Dependant={({ service }) => (
+        <ServiceInventory service={service} serviceName={serviceName} />
       )}
     />
   );
@@ -53,38 +45,24 @@ export const ServiceInventoryWithProvider: React.FC<{
 
 export const ServiceInventory: React.FunctionComponent<{
   serviceName: string;
-  environmentId: string;
   service: ServiceModel;
-}> = ({ serviceName, environmentId, service }) => {
-  const [instanceErrorMessage, setInstanceErrorMessage] = React.useState("");
-
-  const shouldUseAuth =
-    process.env.SHOULD_USE_AUTH === "true" || (globalThis && globalThis.auth);
-  let keycloak;
-  if (shouldUseAuth) {
-    // The value will be always true or always false during one session
-    [keycloak] = useKeycloak();
-  }
-
-  const { dataProvider } = useContext(DependencyContext);
+}> = ({ serviceName, service }) => {
+  const { queryResolver } = useContext(DependencyContext);
   const [sortColumn, setSortColumn] = useState<string | undefined>(
     "created_at"
   );
-  const [order, setOrder] = useState<
-    ServiceInstanceParams.SortDirection | undefined
-  >("desc");
+  const [pageSize, setPageSize] = useState(PageSize.initial);
+  const [order, setOrder] = useState<SortDirection | undefined>("desc");
   const sort =
     sortColumn && order ? { name: sortColumn, order: order } : undefined;
   const [filter, setFilter] = useState<ServiceInstanceParams.Filter>({});
 
-  const [data, retry] = dataProvider.useContinuous<"ServiceInstances">({
+  const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
     kind: "ServiceInstances",
-    qualifier: {
-      name: serviceName,
-      environment: environmentId || "",
-      sort,
-      filter,
-    },
+    name: serviceName,
+    sort,
+    filter,
+    pageSize,
   });
 
   const paginationWidget = RemoteData.fold(
@@ -93,7 +71,12 @@ export const ServiceInventory: React.FunctionComponent<{
       loading: () => null,
       failed: () => null,
       success: ({ handlers, metadata }) => (
-        <PaginationWidget handlers={handlers} metadata={metadata} />
+        <PaginationWidget
+          handlers={handlers}
+          metadata={metadata}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+        />
       ),
     },
     data
@@ -101,6 +84,14 @@ export const ServiceInventory: React.FunctionComponent<{
 
   return (
     <Wrapper>
+      {service.instance_summary && (
+        <ChartContainer>
+          <SummaryChart
+            by_label={service.instance_summary.by_label}
+            total={service.instance_summary.total}
+          />
+        </ChartContainer>
+      )}
       <TableControls
         serviceName={serviceName}
         filter={filter}
@@ -111,9 +102,7 @@ export const ServiceInventory: React.FunctionComponent<{
       {RemoteData.fold(
         {
           notAsked: () => null,
-          loading: () => (
-            <LoadingView delay={500} aria-label="ServiceInventory-Loading" />
-          ),
+          loading: () => <LoadingView aria-label="ServiceInventory-Loading" />,
           failed: (error) => (
             <ErrorView
               message={error}
@@ -121,52 +110,31 @@ export const ServiceInventory: React.FunctionComponent<{
               aria-label="ServiceInventory-Failed"
             />
           ),
-          success: ({ data: instances }) => (
-            <InventoryContext.Provider
-              value={{
-                attributes: service.attributes,
-                environmentId,
-                inventoryUrl: `/lsm/v1/service_inventory/${serviceName}`,
-                setErrorMessage: setInstanceErrorMessage,
-                refresh: retry,
-              }}
-            >
-              {instanceErrorMessage && (
-                <AlertGroup isToast={true}>
-                  <Alert
-                    variant="danger"
-                    title={instanceErrorMessage}
-                    actionClose={
-                      <AlertActionCloseButton
-                        data-cy="close-alert"
-                        onClose={() => setInstanceErrorMessage("")}
-                      />
-                    }
-                  />
-                </AlertGroup>
-              )}
-              {instances.length > 0 ? (
-                <TableProvider
-                  aria-label="ServiceInventory-Success"
-                  instances={instances}
-                  keycloak={keycloak}
-                  serviceEntity={service}
-                  sortColumn={sortColumn}
-                  setSortColumn={setSortColumn}
-                  order={order}
-                  setOrder={setOrder}
-                />
-              ) : (
-                <EmptyView
-                  message={words("inventory.empty.message")(serviceName)}
-                  aria-label="ServiceInventory-Empty"
-                />
-              )}
-            </InventoryContext.Provider>
-          ),
+          success: ({ data: instances }) =>
+            instances.length > 0 ? (
+              <TableProvider
+                aria-label="ServiceInventory-Success"
+                instances={instances}
+                serviceEntity={service}
+                sortColumn={sortColumn}
+                setSortColumn={setSortColumn}
+                order={order}
+                setOrder={setOrder}
+              />
+            ) : (
+              <EmptyView
+                message={words("inventory.empty.message")(serviceName)}
+                aria-label="ServiceInventory-Empty"
+              />
+            ),
         },
         data
       )}
     </Wrapper>
   );
 };
+
+const ChartContainer = styled.div`
+  height: 230px;
+  width: 350px;
+`;

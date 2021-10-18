@@ -1,0 +1,4 @@
+description: Fix diagnose ui when a rejection doesn't have error information
+issue-nr: 333
+change-type: patch
+destination-branches: [master, iso4]

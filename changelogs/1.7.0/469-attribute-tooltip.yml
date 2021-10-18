@@ -1,0 +1,6 @@
+description: Show full attribute and clipboard copy in tooltip when value is ellipsed
+issue-nr: 469
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

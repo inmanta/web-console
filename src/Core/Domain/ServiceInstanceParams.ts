@@ -1,6 +1,10 @@
+import { PageSize } from "./PageSize";
+import { Sort } from "./Params";
+
 export interface ServiceInstanceParams {
   filter?: Filter;
   sort?: Sort;
+  pageSize: PageSize;
 }
 
 export enum AttributeSet {
@@ -19,12 +23,6 @@ export interface Filter {
 }
 
 export type DeletedRule = "Include" | "Only" | undefined;
-
-export interface Sort {
-  name: string;
-  order: SortDirection;
-}
-export type SortDirection = "asc" | "desc";
 
 export enum Kind {
   State = "State",

@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump @babel/plugin-transform-typescript from 7.12.1 to 7.14.3
+destination-branches:
+- master
+- iso4
+sections: {}

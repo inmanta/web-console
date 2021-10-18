@@ -1,31 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "@/UI/App/app";
-import keycloakConf from "@/UI/App/keycloak.json";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance, DependencyProvider } from "@/UI";
-import { BaseApiHelper, FetcherImpl, InstanceConfigPoster } from "@/Infra";
+import keycloakConf from "@/UI/Root/keycloak.json";
+import { App } from "@/UI/Root/app";
 import {
-  DataProviderImpl,
-  ServiceDataManager,
-  ServiceKeyMaker,
-  ServiceStateHelper,
-  ServiceInstancesDataManager,
-  ServiceInstancesStateHelper,
-  ResourcesStateHelper,
-  ResourcesDataManager,
-  EventsDataManager,
-  EventsStateHelper,
-  ServicesDataManager,
-  ServicesStateHelper,
-  InstanceLogsDataManager,
-  InstanceLogsStateHelper,
-  InstanceConfigDataManager,
-  InstanceConfigStateHelper,
-  CommandProviderImpl,
-} from "@/UI/Data";
-import { SchedulerImpl } from "./Core";
+  DependencyProvider,
+  CommandManagerResolver,
+  QueryManagerResolver,
+} from "@/UI/Dependency";
+import {
+  CommandResolverImpl,
+  QueryResolverImpl,
+  BaseApiHelper,
+  KeycloakAuthHelper,
+  getStoreInstance,
+  FileFetcherImpl,
+} from "@/Data";
+import { UrlManagerImpl } from "@/UI/Utils";
+import { Route } from "./UI/Routing";
+import { EnvironmentModifierImpl } from "./UI/Dependency/EnvironmentModifier";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -45,74 +39,36 @@ if (externalKeycloakConf) {
   keycloak = Keycloak(customKeycloakConf);
 }
 
-const storeInstance = getStoreInstance();
-const baseApiHelper = new BaseApiHelper(keycloak);
-const serviceKeyMaker = new ServiceKeyMaker();
-const scheduler = new SchedulerImpl(5000);
-
-const servicesHelper = new ServicesDataManager(
-  new FetcherImpl<"Services">(baseApiHelper),
-  new ServicesStateHelper(storeInstance, serviceKeyMaker),
-  scheduler
+const store = getStoreInstance();
+const baseUrl = process.env.API_BASEURL
+  ? process.env.API_BASEURL
+  : `${Route.BASE_URL.replace("/console", "")}`;
+const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
+const queryResolver = new QueryResolverImpl(
+  new QueryManagerResolver(store, baseApiHelper)
 );
-
-const serviceHelper = new ServiceDataManager(
-  new FetcherImpl<"Service">(baseApiHelper),
-  new ServiceStateHelper(storeInstance, serviceKeyMaker),
-  scheduler,
-  serviceKeyMaker
+const commandResolver = new CommandResolverImpl(
+  new CommandManagerResolver(
+    store,
+    baseApiHelper,
+    new KeycloakAuthHelper(keycloak)
+  )
 );
-
-const serviceInstancesHelper = new ServiceInstancesDataManager(
-  new FetcherImpl<"ServiceInstances">(baseApiHelper),
-  new ServiceInstancesStateHelper(storeInstance),
-  scheduler
-);
-
-const resourcesHelper = new ResourcesDataManager(
-  new FetcherImpl<"Resources">(baseApiHelper),
-  new ResourcesStateHelper(storeInstance),
-  scheduler
-);
-
-const eventsDataManager = new EventsDataManager(
-  new FetcherImpl<"Events">(baseApiHelper),
-  new EventsStateHelper(storeInstance),
-  scheduler
-);
-
-const instanceLogsHelper = new InstanceLogsDataManager(
-  new FetcherImpl<"InstanceLogs">(baseApiHelper),
-  new InstanceLogsStateHelper(storeInstance)
-);
-
-const instanceConfigStateHelper = new InstanceConfigStateHelper(storeInstance);
-
-const instanceConfigHelper = new InstanceConfigDataManager(
-  new FetcherImpl<"InstanceConfig">(baseApiHelper),
-  instanceConfigStateHelper,
-  new ServiceStateHelper(storeInstance, serviceKeyMaker),
-  new FetcherImpl<"Service">(baseApiHelper)
-);
-
-const dataProvider = new DataProviderImpl([
-  servicesHelper,
-  serviceHelper,
-  serviceInstancesHelper,
-  resourcesHelper,
-  eventsDataManager,
-  instanceLogsHelper,
-  instanceConfigHelper,
-]);
-
-const commandProvider = new CommandProviderImpl(
-  new InstanceConfigPoster(baseApiHelper),
-  instanceConfigStateHelper
-);
+const urlManager = new UrlManagerImpl(baseUrl);
+const fileFetcher = new FileFetcherImpl(baseApiHelper);
+const environmentModifier = new EnvironmentModifierImpl();
 
 ReactDOM.render(
-  <DependencyProvider dependencies={{ commandProvider, dataProvider }}>
-    <StoreProvider store={storeInstance}>
+  <DependencyProvider
+    dependencies={{
+      queryResolver,
+      commandResolver,
+      urlManager,
+      fileFetcher,
+      environmentModifier,
+    }}
+  >
+    <StoreProvider store={store}>
       <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
     </StoreProvider>
   </DependencyProvider>,

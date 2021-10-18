@@ -4,44 +4,31 @@ import { MemoryRouter } from "react-router";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ServiceModel } from "@/Core";
+import { DynamicCommandManagerResolver, Service } from "@/Test";
+import {
+  BaseApiHelper,
+  CommandResolverImpl,
+  DeleteServiceCommandManager,
+  ServiceDeleter,
+} from "@/Data";
+import { DependencyProvider } from "@/UI/Dependency";
 
-const singleService = [
-  {
-    attributes: [],
-    description: "Description of service1",
-    environment: "env",
-    lifecycle: { initialState: "", states: [], transfers: [] },
-    name: "service1",
-    config: {},
-  },
-];
-const doubleService = [
-  ...singleService,
-  {
-    attributes: [],
-    environment: "env",
-    lifecycle: { initialState: "", states: [], transfers: [] },
-    name: "otherService",
-    config: {},
-  },
-];
-
-const Component = (services?: ServiceModel[]) => (
-  <MemoryRouter>
-    <CatalogDataList
-      services={services}
-      environmentId="env"
-      serviceCatalogUrl="/lsm/v1/service_catalog"
-    />
-  </MemoryRouter>
-);
-
-test("GIVEN CatalogDataList WHEN no services ('undefined') THEN no services are shown", () => {
-  render(Component(undefined));
-
-  const list = screen.getByRole("list", { name: "List of service entities" });
-  expect(within(list).queryByRole("listitem")).not.toBeInTheDocument();
-});
+const Component = (services: ServiceModel[]) => {
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new DeleteServiceCommandManager(
+        new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+      ),
+    ])
+  );
+  return (
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ commandResolver }}>
+        <CatalogDataList services={services} />
+      </DependencyProvider>
+    </MemoryRouter>
+  );
+};
 
 test("GIVEN CatalogDataList WHEN no services ('[]') THEN no services are shown", () => {
   render(Component([]));
@@ -51,53 +38,58 @@ test("GIVEN CatalogDataList WHEN no services ('[]') THEN no services are shown",
 });
 
 test("GIVEN CatalogDataList WHEN 1 service THEN 1 service is shown", () => {
-  render(Component(singleService));
+  render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(
-    within(list).getByRole("listitem", { name: "service1" })
+    within(list).getByRole("listitem", { name: Service.a.name })
   ).toBeInTheDocument();
 });
 
 test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", () => {
-  render(Component(doubleService));
+  render(Component([Service.a, Service.b]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   expect(
-    within(list).getByRole("listitem", { name: "service1" })
+    within(list).getByRole("listitem", { name: Service.a.name })
   ).toBeInTheDocument();
   expect(
-    within(list).getByRole("listitem", { name: "otherService" })
+    within(list).getByRole("listitem", { name: Service.b.name })
   ).toBeInTheDocument();
 });
 
 test("GIVEN CatalogDataList WHEN service THEN service has correct link", () => {
-  render(Component(singleService));
+  render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
-  const listItem = within(list).getByRole("listitem", { name: "service1" });
+  const listItem = within(list).getByRole("listitem", { name: Service.a.name });
   expect(listItem).toBeInTheDocument();
   const link = within(listItem).getByRole("link", { name: "Inventory" });
   expect(link).toBeInTheDocument();
-  expect(link).toHaveAttribute("href", "/lsm/catalog/service1/inventory");
+  expect(link).toHaveAttribute(
+    "href",
+    `/lsm/catalog/${Service.a.name}/inventory`
+  );
 });
 
 test("GIVEN CatalogDataList WHEN description available THEN should show description", () => {
-  render(Component(singleService));
+  render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
-  const listItem = within(list).getByRole("listitem", { name: "service1" });
-  const description = within(listItem).queryByText("Description of service1");
+  const listItem = within(list).getByRole("listitem", { name: Service.a.name });
+  const description = within(listItem).queryByText(
+    Service.a.description as string
+  );
   expect(description).toBeVisible();
 });
 
 test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", () => {
-  render(Component(singleService));
+  render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
-  const listItem = within(list).getByRole("listitem", { name: "service1" });
+  const listItem = within(list).getByRole("listitem", { name: Service.a.name });
   const button = within(listItem).getByRole("button", {
-    name: "service1 Details",
+    name: `${Service.a.name} Details`,
   });
   userEvent.click(button);
 
@@ -108,12 +100,12 @@ test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", () 
 });
 
 test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hidden", () => {
-  render(Component(singleService));
+  render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
-  const listItem = within(list).getByRole("listitem", { name: "service1" });
+  const listItem = within(list).getByRole("listitem", { name: Service.a.name });
   const button = within(listItem).getByRole("button", {
-    name: "service1 Details",
+    name: `${Service.a.name} Details`,
   });
   userEvent.click(button);
   userEvent.click(button);
@@ -125,12 +117,14 @@ test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hid
 });
 
 test("GIVEN CatalogDataList with 2 services WHEN user clicks on both toggles THEN both details are shown", () => {
-  render(Component(doubleService));
+  render(Component([Service.a, Service.b]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
-  const listItem1 = within(list).getByRole("listitem", { name: "service1" });
+  const listItem1 = within(list).getByRole("listitem", {
+    name: Service.a.name,
+  });
   const listItem2 = within(list).getByRole("listitem", {
-    name: "otherService",
+    name: Service.b.name,
   });
 
   expect(
@@ -140,10 +134,10 @@ test("GIVEN CatalogDataList with 2 services WHEN user clicks on both toggles THE
   ).not.toBeInTheDocument();
 
   const toggle1 = within(listItem1).getByRole("button", {
-    name: "service1 Details",
+    name: `${Service.a.name} Details`,
   });
   const toggle2 = within(listItem2).getByRole("button", {
-    name: "otherService Details",
+    name: `${Service.b.name} Details`,
   });
 
   userEvent.click(toggle1);

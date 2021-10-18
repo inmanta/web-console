@@ -1,34 +1,30 @@
 import React from "react";
-import { KeycloakInstance } from "keycloak-js";
 import {
   ServiceModel,
   ServiceInstanceModelWithTargetStates,
-  ServiceInstanceParams,
+  SortDirection,
 } from "@/Core";
+import { MomentDatePresenter } from "@/UI/Utils";
 import {
   AttributesPresenter,
   InstanceActionPresenter,
   InstanceStatePresenter,
-  MomentDatePresenter,
   InventoryTablePresenter,
 } from "./Presenters";
 import { InventoryTable } from "./InventoryTable";
-import { InstanceSetStateManager } from "./InstanceSetStateManager";
 
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
   serviceEntity: ServiceModel;
-  keycloak?: KeycloakInstance;
   sortColumn?: string;
   setSortColumn: (name?: string) => void;
-  order?: ServiceInstanceParams.SortDirection;
-  setOrder: (order?: ServiceInstanceParams.SortDirection) => void;
+  order?: SortDirection;
+  setOrder: (order?: SortDirection) => void;
 }
 
 export const TableProvider: React.FC<Props> = ({
   instances,
   serviceEntity,
-  keycloak,
   sortColumn,
   order,
   setSortColumn,
@@ -37,16 +33,7 @@ export const TableProvider: React.FC<Props> = ({
 }) => {
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
-  const instanceSetStatePresenter = new InstanceSetStateManager(
-    instances,
-    keycloak
-  );
-  const actionPresenter = new InstanceActionPresenter(
-    instances,
-    keycloak,
-    instanceSetStatePresenter,
-    serviceEntity
-  );
+  const actionPresenter = new InstanceActionPresenter(instances, serviceEntity);
   const statePresenter = new InstanceStatePresenter(instances, serviceEntity);
   const tablePresenter = new InventoryTablePresenter(
     datePresenter,
@@ -57,7 +44,6 @@ export const TableProvider: React.FC<Props> = ({
     serviceEntity.service_identity_display_name
   );
   const rows = tablePresenter.createRows(instances);
-
   return (
     <InventoryTable
       {...props}

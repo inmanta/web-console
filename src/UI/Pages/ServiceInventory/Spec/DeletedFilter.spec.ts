@@ -5,17 +5,15 @@ import { Either } from "@/Core";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN only deleted instances are shown", async () => {
-  const {
-    component,
-    serviceInstancesFetcher,
-  } = new ServiceInventoryPrepper().prep();
+  const { component, serviceInstancesFetcher } =
+    new ServiceInventoryPrepper().prep();
 
   render(component);
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.A, ServiceInstance.B],
+        data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })
@@ -24,14 +22,16 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
 
   const filterBar = screen.getByRole("generic", { name: "FilterBar" });
 
-  const picker = within(filterBar).getByRole("button", { name: "State" });
+  const picker = within(filterBar).getByRole("button", {
+    name: "FilterPicker",
+  });
   userEvent.click(picker);
 
   const id = screen.getByRole("option", { name: "Deleted" });
   userEvent.click(id);
 
   const rule = within(filterBar).getByRole("button", {
-    name: "Select a rule...",
+    name: "Select Deleted",
   });
   userEvent.click(rule);
 
@@ -39,13 +39,13 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
   userEvent.click(only);
 
   expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
-    `/lsm/v1/service_inventory/${Service.A.name}?include_deployment_progress=True&limit=20&filter.deleted=true&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.deleted=true&sort=created_at.desc`
   );
 
   await act(async () => {
     await serviceInstancesFetcher.resolve(
       Either.right({
-        data: [ServiceInstance.deleted],
+        data: [{ ...ServiceInstance.a, state: "terminated", deleted: true }],
         links: Pagination.links,
         metadata: Pagination.metadata,
       })

@@ -1,16 +1,18 @@
 import { ReactElement } from "react";
-import { Id, Row, ServiceInstanceModelWithTargetStates } from "@/Core";
+import {
+  Row,
+  ServiceInstanceModelWithTargetStates,
+  getUuidFromRaw,
+} from "@/Core";
 import { words } from "@/UI/words";
-import { DatePresenter } from "./DatePresenter";
+import {
+  ActionPresenter,
+  TablePresenter,
+  DatePresenter,
+  ColumnHead,
+} from "@/UI/Presenters";
 import { AttributesPresenter } from "./AttributesPresenter";
-import { ActionPresenter } from "./ActionPresenter";
 import { StatePresenter } from "./StatePresenter";
-import { TablePresenter } from "./TablePresenter";
-
-interface ColumnHead {
-  apiName: string;
-  displayName: string;
-}
 
 /**
  * The TablePresenter is responsible for formatting the domain data.
@@ -18,7 +20,8 @@ interface ColumnHead {
  * This class should not hold state as state should be kept in the Redux Store.
  */
 export class InventoryTablePresenter
-  implements TablePresenter<ServiceInstanceModelWithTargetStates, Row> {
+  implements TablePresenter<ServiceInstanceModelWithTargetStates, Row>
+{
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
@@ -141,7 +144,7 @@ export class InventoryTablePresenter
     } = instance;
 
     return {
-      id: this.getId(id),
+      id: getUuidFromRaw(id),
       attributesSummary: this.attributesPresenter.getSummary(
         candidate_attributes,
         active_attributes,
@@ -162,9 +165,5 @@ export class InventoryTablePresenter
       serviceIdentityValue: service_identity_attribute_value,
       deleted,
     };
-  }
-
-  private getId(full: string): Id {
-    return { full, short: full.substring(0, 4) };
   }
 }

@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump raw-loader from 3.1.0 to 4.0.2
+destination-branches:
+- master
+- iso4
+sections: {}

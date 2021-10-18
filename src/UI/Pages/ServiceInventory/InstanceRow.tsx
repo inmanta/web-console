@@ -1,12 +1,13 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
-import { words } from "@/UI";
-import { DateWithTooltip } from "@/UI/Components";
+import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
+import { words } from "@/UI/words";
+import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { AttributesSummaryView, IdWithCopy } from "./Components";
 import { DeploymentProgressPresenter } from "./Presenters";
 import { Tabs, TabKey } from "./Tabs";
+import { scrollRowIntoView } from "@/UI/Utils";
 
 interface Props {
   row: Row;
@@ -41,12 +42,7 @@ export const InstanceRow: React.FC<Props> = ({
     if (!isExpanded) {
       onToggle();
     }
-    // Make sure the scroll happens after the rendering
-    setTimeout(() => {
-      if (rowRef.current !== null) {
-        rowRef.current.scrollIntoView({ block: "center" });
-      }
-    }, 0);
+    scrollRowIntoView(rowRef);
   };
   return (
     <Tbody isExpanded={false}>
@@ -63,16 +59,19 @@ export const InstanceRow: React.FC<Props> = ({
             onToggle,
           }}
         />
-        {shouldUseServiceIdentity ? (
+        {shouldUseServiceIdentity && row.serviceIdentityValue ? (
           <Td
             dataLabel={idDataLabel}
             aria-label={`IdentityCell-${row.serviceIdentityValue}`}
           >
-            {row.serviceIdentityValue}
+            <TextWithCopy
+              value={row.serviceIdentityValue}
+              tooltipContent={words("serviceIdentity.copy")}
+            />
           </Td>
         ) : (
           <Td dataLabel={idDataLabel} aria-label={`IdCell-${row.id.short}`}>
-            <IdWithCopy id={row.id} />
+            <IdWithCopy uuid={row.id} />
           </Td>
         )}
         <Td dataLabel={words("inventory.column.state")}>{state}</Td>

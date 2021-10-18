@@ -1,0 +1,6 @@
+description: Add support for finding the base url
+issue-nr: 836
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

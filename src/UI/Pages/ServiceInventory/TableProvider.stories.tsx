@@ -1,16 +1,22 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { instances, InstantFetcher, Service, StaticScheduler } from "@/Test";
+import {
+  DynamicQueryManagerResolver,
+  InstantFetcher,
+  Service,
+  ServiceInstance,
+  StaticScheduler,
+} from "@/Test";
 import { TableProvider, Props } from "./TableProvider";
 import { StoreProvider } from "easy-peasy";
-import { getStoreInstance } from "@/UI/Store";
 import { ServiceModel } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  DataProviderImpl,
-  ResourcesDataManager,
-  ResourcesStateHelper,
-} from "@/UI/Data";
+  QueryResolverImpl,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  getStoreInstance,
+} from "@/Data";
 import { MemoryRouter } from "react-router";
 
 export default {
@@ -20,19 +26,22 @@ export default {
 
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: { data: [] },
-      }),
-      new ResourcesStateHelper(store),
-      new StaticScheduler()
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new InstanceResourcesQueryManager(
+        new InstantFetcher<"InstanceResources">({
+          kind: "Success",
+          data: { data: [] },
+        }),
+        new InstanceResourcesStateHelper(store),
+        new StaticScheduler(),
+        Service.a.environment
+      ),
+    ])
+  );
 
   return (
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver }}>
       <MemoryRouter>
         <StoreProvider store={store}>
           <TableProvider {...args} />
@@ -44,6 +53,12 @@ const Template: Story<Props> = (args) => {
 
 export const Empty = Template.bind({});
 Empty.args = { instances: [], serviceEntity: {} as ServiceModel };
+
+const instances = [
+  { ...ServiceInstance.a, id: "10051234" },
+  { ...ServiceInstance.b, id: "20051234" },
+  { ...ServiceInstance.c, id: "30051234" },
+];
 
 export const Multiple = Template.bind({});
 Multiple.args = {

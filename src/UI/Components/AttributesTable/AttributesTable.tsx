@@ -1,6 +1,6 @@
 import React from "react";
 import { Attributes } from "@/Core";
-import { TreeTable } from "@/UI/Components";
+import { TreeTable } from "@/UI/Components/TreeTable/";
 import {
   AttributeHelper,
   PathHelper,

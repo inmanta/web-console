@@ -1,0 +1,6 @@
+description: Add paging and sorting to compile reports table
+issue-nr: 973
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

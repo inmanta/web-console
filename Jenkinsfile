@@ -20,6 +20,8 @@ pipeline {
                     sh '''yarn install --frozen-lockfile;
                     yarn lint;
                     yarn format:check;
+                    yarn tsc;
+                    yarn check-circular-deps;
                     yarn build;
                     yarn test'''
                 }
@@ -28,8 +30,7 @@ pipeline {
         stage('Testing with cypress') {
             steps {
                 dir('web-console') {
-                    sh '''yarn cypress-test;
-                    npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
+                    sh '''yarn cypress-test'''
                 }
             }
         }
@@ -37,10 +38,12 @@ pipeline {
 
     post {
         always {
+            dir('web-console') {
+                    sh '''npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
+            }
             junit 'web-console/junit.xml'
             cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
-            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml', allowEmptyArchive: true, onlyIfSuccessful: false
-            archiveArtifacts artifacts: 'web-console/cypress/screenshots/*', allowEmptyArchive: true, onlyIfSuccessful: false
+            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**', allowEmptyArchive: true, onlyIfSuccessful: false
             deleteDir()
         }
     }

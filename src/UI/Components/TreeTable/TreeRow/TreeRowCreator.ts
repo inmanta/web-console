@@ -1,7 +1,5 @@
-import {
-  PathHelper,
-  MultiAttributeNode,
-} from "@/UI/Components/TreeTable/Helpers";
+import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
+import { MultiAttributeNode } from "@/UI/Components/TreeTable/Helpers/AttributeNode";
 
 import { TreeRow } from "./TreeRow";
 

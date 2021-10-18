@@ -1,25 +1,16 @@
 import React from "react";
-import copy from "copy-to-clipboard";
-import { Tooltip } from "@patternfly/react-core";
-import { CopyIcon } from "@patternfly/react-icons";
-import { Id } from "@/Core";
-import { words } from "@/UI";
+import { Uuid } from "@/Core";
+import { words } from "@/UI/words";
+import { TextWithCopy } from "@/UI/Components";
 
 interface Props {
-  id: Id;
+  uuid: Uuid;
 }
 
-export const IdWithCopy: React.FC<Props> = ({ id }) => {
+export const IdWithCopy: React.FC<Props> = ({ uuid }) => {
   return (
-    <span className="only-on-hover-container">
-      {id.short}
-      <Tooltip content={words("id.copy")} entryDelay={200}>
-        <CopyIcon
-          className="only-on-hover-visible"
-          style={{ paddingLeft: 5 }}
-          onClick={() => copy(id.full)}
-        />
-      </Tooltip>
-    </span>
+    <TextWithCopy value={uuid.full} tooltipContent={words("id.copy")}>
+      {uuid.short}
+    </TextWithCopy>
   );
 };

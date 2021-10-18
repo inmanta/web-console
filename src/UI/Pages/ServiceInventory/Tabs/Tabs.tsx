@@ -7,12 +7,10 @@ import {
   CogIcon,
   InfoCircleIcon,
   ListIcon,
-  PortIcon,
 } from "@patternfly/react-icons";
 import { StatusTab } from "./StatusTab";
 import { AttributesTab } from "./AttributesTab";
 import { ResourcesTab } from "./ResourcesTab";
-import { EventsTab } from "./EventsTab";
 import { ConfigTab, DisabledConfigTab } from "./ConfigTab";
 
 export enum TabKey {
@@ -47,7 +45,6 @@ export const Tabs: React.FC<Props> = ({
       statusTab(row, state, actions),
       attributesTab(row),
       resourcesTab(serviceInstanceIdentifier),
-      eventsTab(serviceInstanceIdentifier),
       configTab(row.deleted, serviceInstanceIdentifier),
     ]}
   />
@@ -88,16 +85,7 @@ const resourcesTab = (
   id: TabKey.Resources,
   title: words("inventory.tabs.resources"),
   icon: <AutomationIcon />,
-  view: <ResourcesTab qualifier={serviceInstanceIdentifier} />,
-});
-
-const eventsTab = (
-  serviceInstanceIdentifier: VersionedServiceInstanceIdentifier
-): TabDescriptor<TabKey> => ({
-  id: TabKey.Events,
-  title: words("events.title"),
-  icon: <PortIcon />,
-  view: <EventsTab qualifier={serviceInstanceIdentifier} />,
+  view: <ResourcesTab serviceInstanceIdentifier={serviceInstanceIdentifier} />,
 });
 
 const configTab = (

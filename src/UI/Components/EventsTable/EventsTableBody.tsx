@@ -1,19 +1,17 @@
-import { EventRow, InstanceEvent } from "@/Core";
 import React from "react";
+import { EventRow, InstanceEvent } from "@/Core";
+import { TablePresenter } from "@/UI/Presenters";
 import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
-import { TablePresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 import { EventsTableRow } from "./EventsTableRow";
 
 interface Props {
   events: InstanceEvent[];
   tablePresenter: TablePresenter<InstanceEvent, EventRow>;
-  environmentId: string;
 }
 
 export const EventsTableBody: React.FC<Props> = ({
   events,
   tablePresenter,
-  environmentId,
 }) => {
   const expansionManager = new ExpansionManager();
 
@@ -41,7 +39,6 @@ export const EventsTableBody: React.FC<Props> = ({
           onToggle={handleExpansionToggle(row.id)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
           row={row}
-          environmentId={environmentId}
         />
       ))}
     </>

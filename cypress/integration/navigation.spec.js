@@ -1,27 +1,12 @@
 /// <reference types="Cypress" />
 describe("Navigation", function () {
   beforeEach(() => {
-    cy.server();
-    cy.route({
-      method: "GET",
-      url: "**/api/v2/project",
-      response: "fixture:environments.json",
+    cy.intercept("GET", "/api/v2/project", { fixture: "environments.json" });
+    cy.intercept("GET", "/lsm/v1/service_catalog**", {
+      fixture: "lsm/service_catalog.json",
     });
-    cy.route({
-      method: "GET",
-      url: "**/lsm/v1/service_catalog",
-      response: "fixture:lsm/service_catalog.json",
-    });
-    cy.route({
-      method: "GET",
-      url: "**/lsm/v1/service_inventory/e2e_service",
-      response: "fixture:lsm/service_inventory.json",
-    });
-    cy.route({
-      method: "GET",
-      url:
-        "**/lsm/v1/service_inventory/e2e_service/**/resources?current_version=**",
-      response: "fixture:lsm/resources.json",
+    cy.intercept("GET", "/lsm/v1/service_inventory/e2e_service", {
+      fixture: "lsm/service_inventory.json",
     });
   });
   it("Button and breadcrumb navigation should change the url", function () {

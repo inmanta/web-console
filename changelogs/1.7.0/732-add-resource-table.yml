@@ -1,0 +1,6 @@
+description: Add resource table to the resource view
+issue-nr: 732
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

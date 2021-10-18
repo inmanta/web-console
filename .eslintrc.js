@@ -14,7 +14,7 @@ module.exports = {
   },
   plugins: ["testing-library", "jest-dom"],
   extends: [
-    "plugin:testing-library/recommended",
+    "plugin:testing-library/dom",
     "plugin:jest-dom/recommended",
     /**
      * Uses the recommended rules from @eslint-plugin-react
@@ -24,10 +24,6 @@ module.exports = {
      * Uses the recommended rules from the @typescript-eslint/eslint-plugin
      */
     "plugin:@typescript-eslint/recommended",
-    /**
-     * Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
-     */
-    "prettier/@typescript-eslint",
     /**
      * Enables eslint-plugin-prettier and eslint-config-prettier.
      * This will display prettier errors as ESLint errors.
@@ -50,6 +46,12 @@ module.exports = {
       files: ["**/*webpack*", ".storybook/**/*.js"],
       rules: {
         "@typescript-eslint/no-var-requires": "off",
+      },
+    },
+    {
+      files: ["cypress/**/*"],
+      rules: {
+        "testing-library/await-async-utils": "off",
       },
     },
   ],

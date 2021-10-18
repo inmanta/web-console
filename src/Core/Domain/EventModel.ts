@@ -1,4 +1,6 @@
 import { DateInfo } from "./InventoryTable";
+import { LogLevelNumber } from "./LogLevel";
+import { EventType } from "./EventType";
 
 export interface InstanceEvent {
   id: string;
@@ -10,30 +12,11 @@ export interface InstanceEvent {
   message: string;
   ignored_transition: boolean;
   event_correlation_id: string;
-  severity: LogLevel;
+  severity: LogLevelNumber;
   id_compile_report: string | null;
-  event_type: InstanceEventType;
+  event_type: EventType;
   is_error_transition: boolean;
 }
-
-enum LogLevel {
-  CRITICAL = 50,
-  ERROR = 40,
-  WARNING = 30,
-  INFO = 20,
-  DEBUG = 10,
-  TRACE = 3,
-  NOTSET = 0,
-}
-export type InstanceEventType =
-  | "CREATE_TRANSITION"
-  | "API_SET_STATE_TRANSITION"
-  | "ON_UPDATE_TRANSITION"
-  | "ON_DELETE_TRANSITION"
-  | "RESOURCE_TRANSITION"
-  | "RESOURCE_EVENT"
-  | "AUTO_TRANSITION"
-  | "ALLOCATION_UPDATE";
 
 export interface EventRow {
   id: string;
@@ -45,9 +28,9 @@ export interface EventRow {
   message: string;
   ignoredTransition: boolean;
   eventCorrelationId: string;
-  severity: LogLevel;
+  severity: LogLevelNumber;
   idCompileReport: string | null;
-  eventType: InstanceEventType;
+  eventType: EventType;
   isErrorTransition: boolean;
   fullJson: InstanceEvent;
 }

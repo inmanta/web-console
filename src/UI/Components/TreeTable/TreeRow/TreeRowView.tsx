@@ -1,8 +1,9 @@
 import React from "react";
 import { Tr, Td } from "@patternfly/react-table";
 import { TreeRow, isRowOfMultipleValues } from "./TreeRow";
-import { Toggle } from "@/UI/Components";
+import { Toggle } from "@/UI/Components/Toggle";
 import { Indent } from "./Indent";
+import { CellWithCopy } from "./CellWithCopy";
 
 interface RowProps {
   row: TreeRow;
@@ -19,13 +20,12 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
             </Indent>
           </Td>
           {row.valueCells.map(({ label, value }) => (
-            <Td
+            <CellWithCopy
+              label={label}
+              value={value}
               className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
-              key={label}
-              dataLabel={label}
-            >
-              {value}
-            </Td>
+              key={`${label}-${value}`}
+            />
           ))}
         </Tr>
       );
@@ -70,13 +70,12 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
             </Indent>
           </Td>
           {row.valueCells.map(({ label, value }) => (
-            <Td
+            <CellWithCopy
+              label={label}
+              value={value}
               className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
-              key={label}
-              dataLabel={label}
-            >
-              {value}
-            </Td>
+              key={`${label}-${value}`}
+            />
           ))}
         </Tr>
       );

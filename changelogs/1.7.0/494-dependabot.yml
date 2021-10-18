@@ -1,0 +1,6 @@
+change-type: patch
+description: Bump svg-url-loader from 3.0.3 to 7.1.1
+destination-branches:
+- master
+- iso4
+sections: {}

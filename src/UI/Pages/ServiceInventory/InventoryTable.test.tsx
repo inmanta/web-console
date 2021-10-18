@@ -2,22 +2,23 @@ import React from "react";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
 import {
-  DummyStateHelper,
   InstantFetcher,
-  rows,
+  Row,
   tablePresenter,
   tablePresenterWithIdentity,
   StaticScheduler,
+  DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { getStoreInstance } from "@/UI/Store";
 import { StoreProvider } from "easy-peasy";
 import {
-  DataProviderImpl,
-  ResourcesDataManager,
-  ResourcesStateHelper,
-} from "@/UI/Data";
+  QueryResolverImpl,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  getStoreInstance,
+} from "@/Data";
 import userEvent from "@testing-library/user-event";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 const dummySetter = () => {
   return;
@@ -25,37 +26,44 @@ const dummySetter = () => {
 
 test("InventoryTable can be expanded", async () => {
   // Arrange
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: {
-          data: [
-            {
-              resource_id: "resource_id_1",
-              resource_state: "resource_state",
-            },
-          ],
-        },
-      }),
-      new DummyStateHelper<"Resources">(),
-      new StaticScheduler()
-    ),
-  ]);
+  const store = getStoreInstance();
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new InstanceResourcesQueryManager(
+        new InstantFetcher<"InstanceResources">({
+          kind: "Success",
+          data: {
+            data: [
+              {
+                resource_id: "resource_id_1",
+                resource_state: "resource_state",
+              },
+            ],
+          },
+        }),
+        new InstanceResourcesStateHelper(store),
+        new StaticScheduler(),
+        "env"
+      ),
+    ])
+  );
+  const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ dataProvider }}>
-      <InventoryTable
-        rows={rows}
-        tablePresenter={tablePresenter}
-        setSortColumn={dummySetter}
-        setOrder={dummySetter}
-      />
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <StoreProvider store={store}>
+        <InventoryTable
+          rows={[Row.a, Row.b]}
+          tablePresenter={tablePresenter}
+          setSortColumn={dummySetter}
+          setOrder={dummySetter}
+        />
+      </StoreProvider>
     </DependencyProvider>
   );
-  const testid = `details_${rows[0].id.short}`;
+  const testid = `details_${Row.a.id.short}`;
 
   // Act
-  const expandCell = screen.getByLabelText(`expand-button-${rows[0].id.short}`);
+  const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
 
   fireEvent.click(within(expandCell).getByRole("button"));
 
@@ -65,28 +73,32 @@ test("InventoryTable can be expanded", async () => {
 
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
-  const dataProvider = new DataProviderImpl([
-    new ResourcesDataManager(
-      new InstantFetcher<"Resources">({
-        kind: "Success",
-        data: {
-          data: [
-            {
-              resource_id: "resource_id_1",
-              resource_state: "resource_state",
-            },
-          ],
-        },
-      }),
-      new ResourcesStateHelper(store),
-      new StaticScheduler()
-    ),
-  ]);
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([
+      new InstanceResourcesQueryManager(
+        new InstantFetcher<"InstanceResources">({
+          kind: "Success",
+          data: {
+            data: [
+              {
+                resource_id: "resource_id_1",
+                resource_state: "resource_state",
+              },
+            ],
+          },
+        }),
+        new InstanceResourcesStateHelper(store),
+        new StaticScheduler(),
+        "env"
+      ),
+    ])
+  );
+  const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ dataProvider }}>
+    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
       <StoreProvider store={store}>
         <InventoryTable
-          rows={rows}
+          rows={[Row.a, Row.b]}
           tablePresenter={tablePresenter}
           setSortColumn={dummySetter}
           setOrder={dummySetter}
@@ -95,7 +107,7 @@ test("ServiceInventory can show resources for instance", async () => {
     </DependencyProvider>
   );
 
-  const expandCell = screen.getByLabelText(`expand-button-${rows[0].id.short}`);
+  const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
 
   fireEvent.click(within(expandCell).getByRole("button"));
 
@@ -111,7 +123,7 @@ test("ServiceInventory can show resources for instance", async () => {
 test("ServiceInventory shows service identity if it's defined", async () => {
   render(
     <InventoryTable
-      rows={[rows[0]]}
+      rows={[Row.a]}
       tablePresenter={tablePresenterWithIdentity}
       setSortColumn={dummySetter}
       setOrder={dummySetter}
@@ -126,7 +138,7 @@ test("ServiceInventory shows service identity if it's defined", async () => {
 test("ServiceInventory shows sorting buttons for sortable columns", async () => {
   render(
     <InventoryTable
-      rows={[rows[0]]}
+      rows={[Row.a]}
       tablePresenter={tablePresenter}
       setSortColumn={dummySetter}
       setOrder={dummySetter}
@@ -145,7 +157,7 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
   let order;
   render(
     <InventoryTable
-      rows={[rows[0]]}
+      rows={[Row.a]}
       tablePresenter={tablePresenter}
       setSortColumn={(name) => (sortColumn = name)}
       setOrder={(dir) => (order = dir)}

@@ -27,7 +27,7 @@ export const AttributeRulePicker: React.FC<Props> = ({
   return (
     <Select
       variant={SelectVariant.single}
-      aria-label="Select Quality"
+      toggleAriaLabel="Select Quality"
       onToggle={setFilterOpen}
       onSelect={onSelect}
       selections={rule}
