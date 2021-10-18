@@ -43,7 +43,7 @@ function setup() {
     scheduler,
     environment
   );
-  const callbacksFetcher = new DeferredFetcher<"Callbacks">();
+  const callbacksFetcher = new DeferredFetcher<"GetCallbacks">();
   const callbacksStateHelper = new CallbacksStateHelper(store, environment);
   const callbacksQueryManager = new CallbacksQueryManager(
     callbacksFetcher,
@@ -77,7 +77,7 @@ function setup() {
     apiHelper,
     new CallbacksUpdater(
       new CallbacksStateHelper(store, environment),
-      new DeferredFetcher<"Callbacks">(),
+      new DeferredFetcher<"GetCallbacks">(),
       environment
     ),
     environment

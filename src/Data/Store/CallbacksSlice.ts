@@ -1,7 +1,10 @@
 import { Action, action } from "easy-peasy";
 import { Query, RemoteData } from "@/Core";
 
-type Data = RemoteData.Type<Query.Error<"Callbacks">, Query.Data<"Callbacks">>;
+type Data = RemoteData.Type<
+  Query.Error<"GetCallbacks">,
+  Query.Data<"GetCallbacks">
+>;
 
 /**
  * The eventsSlice stores events related to service instances.

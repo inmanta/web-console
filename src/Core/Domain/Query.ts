@@ -50,7 +50,7 @@ type Query =
   | ResourceHistoryQuery
   | ResourceLogsQuery
   | EnvironmentDetailsQuery
-  | CallbacksQuery
+  | GetCallbacks
   | CompileReportsQuery
   | CompileDetailsQuery
   | GetServerStatus;
@@ -332,17 +332,17 @@ interface ResourceHistoryManifest {
   query: ResourceHistoryQuery;
 }
 
-export interface CallbacksQuery {
-  kind: "Callbacks";
+export interface GetCallbacks {
+  kind: "GetCallbacks";
   service_entity: string;
 }
 
-interface CallbacksManifest {
+interface GetCallbacksManifest {
   error: string;
   apiResponse: { data: Callback[] };
   data: Callback[];
   usedData: Callback[];
-  query: CallbacksQuery;
+  query: GetCallbacks;
 }
 
 export interface CompileReportsQuery extends CompileReportParams {
@@ -432,7 +432,7 @@ interface Manifest {
   ResourceHistory: ResourceHistoryManifest;
   ResourceLogs: ResourceLogsManifest;
   EnvironmentDetails: EnvironmentDetailsManifest;
-  Callbacks: CallbacksManifest;
+  GetCallbacks: GetCallbacksManifest;
   CompileReports: CompileReportsManifest;
   CompileDetails: CompileDetailsManifest;
 }

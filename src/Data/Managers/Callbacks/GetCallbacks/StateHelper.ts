@@ -2,13 +2,16 @@ import { Query, RemoteData, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
 import { isEqual, sortBy } from "lodash";
 
-type Data = RemoteData.Type<Query.Error<"Callbacks">, Query.Data<"Callbacks">>;
+type Data = RemoteData.Type<
+  Query.Error<"GetCallbacks">,
+  Query.Data<"GetCallbacks">
+>;
 type ApiData = RemoteData.Type<
-  Query.Error<"Callbacks">,
-  Query.ApiResponse<"Callbacks">
+  Query.Error<"GetCallbacks">,
+  Query.ApiResponse<"GetCallbacks">
 >;
 
-export class CallbacksStateHelper implements StateHelper<"Callbacks"> {
+export class CallbacksStateHelper implements StateHelper<"GetCallbacks"> {
   constructor(
     private readonly store: Store,
     private readonly environment: string
@@ -24,7 +27,7 @@ export class CallbacksStateHelper implements StateHelper<"Callbacks"> {
     return RemoteData.success(sortedCallbacks);
   }
 
-  set(data: ApiData, { service_entity }: Query.SubQuery<"Callbacks">): void {
+  set(data: ApiData, { service_entity }: Query.SubQuery<"GetCallbacks">): void {
     this.store.dispatch.callbacks.setData({
       environment: this.environment,
       service_entity,
@@ -32,7 +35,7 @@ export class CallbacksStateHelper implements StateHelper<"Callbacks"> {
     });
   }
 
-  getHooked({ service_entity }: Query.SubQuery<"Callbacks">): Data {
+  getHooked({ service_entity }: Query.SubQuery<"GetCallbacks">): Data {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) =>
@@ -46,7 +49,7 @@ export class CallbacksStateHelper implements StateHelper<"Callbacks"> {
     return value;
   }
 
-  getOnce({ service_entity }: Query.SubQuery<"Callbacks">): Data {
+  getOnce({ service_entity }: Query.SubQuery<"GetCallbacks">): Data {
     return this.enforce(
       this.store.getState().callbacks.byEnv[this.environment]?.[service_entity]
     );

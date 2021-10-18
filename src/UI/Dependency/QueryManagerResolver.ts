@@ -178,7 +178,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new CallbacksQueryManager(
-        new FetcherImpl<"Callbacks">(this.baseApiHelper),
+        new FetcherImpl<"GetCallbacks">(this.baseApiHelper),
         new CallbacksStateHelper(this.store, environment),
         environment
       ),

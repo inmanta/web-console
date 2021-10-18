@@ -11,7 +11,7 @@ import { omit } from "lodash";
 export class CreateCallbackCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"Callbacks">,
+    private readonly updater: Updater<"GetCallbacks">,
     private readonly environment: string
   ) {}
 
@@ -32,7 +32,7 @@ export class CreateCallbackCommandManager implements CommandManager {
         return Maybe.some(result.value);
       } else {
         await this.updater.update({
-          kind: "Callbacks",
+          kind: "GetCallbacks",
           service_entity: command.service_entity,
         });
         return Maybe.none();

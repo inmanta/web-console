@@ -29,7 +29,7 @@ function setup() {
   const store = getStoreInstance();
   const environment = Service.a.environment;
 
-  const callbacksFetcher = new DeferredFetcher<"Callbacks">();
+  const callbacksFetcher = new DeferredFetcher<"GetCallbacks">();
   const callbacksStateHelper = new CallbacksStateHelper(store, environment);
   const callbacksQueryManager = new CallbacksQueryManager(
     callbacksFetcher,

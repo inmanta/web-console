@@ -126,7 +126,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         this.baseApiHelper,
         new CallbacksUpdater(
           new CallbacksStateHelper(this.store, environment),
-          new FetcherImpl<"Callbacks">(this.baseApiHelper),
+          new FetcherImpl<"GetCallbacks">(this.baseApiHelper),
           environment
         ),
         environment
@@ -135,7 +135,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         this.baseApiHelper,
         new CallbacksUpdater(
           new CallbacksStateHelper(this.store, environment),
-          new FetcherImpl<"Callbacks">(this.baseApiHelper),
+          new FetcherImpl<"GetCallbacks">(this.baseApiHelper),
           environment
         ),
         environment

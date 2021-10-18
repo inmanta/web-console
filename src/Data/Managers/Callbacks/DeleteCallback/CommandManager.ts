@@ -3,7 +3,7 @@ import { ApiHelper, Command, CommandManager, Updater } from "@/Core";
 export class DeleteCallbackCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"Callbacks">,
+    private readonly updater: Updater<"GetCallbacks">,
     private readonly environment: string
   ) {}
 
@@ -20,7 +20,7 @@ export class DeleteCallbackCommandManager implements CommandManager {
         this.environment
       );
       await this.updater.update({
-        kind: "Callbacks",
+        kind: "GetCallbacks",
         service_entity: command.service_entity,
       });
       return result;
