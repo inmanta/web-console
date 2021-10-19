@@ -1,17 +1,12 @@
-import { ProjectModel, RemoteData } from "@/Core";
-import { DependencyContext } from "@/UI";
+import { RemoteData } from "@/Core";
+import { EnvironmentHandlerContext } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import React, { useContext } from "react";
+import { EnvironmentSettings } from "./EnvironmentSettings";
 
-interface Props {
-  projects: ProjectModel[];
-}
-
-export const Tab: React.FC<Props> = ({}) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useContinuous<"EnvironmentDetails">({
-    kind: "EnvironmentDetails",
-  });
+export const Tab: React.FC = () => {
+  const { environmentHandler } = useContext(EnvironmentHandlerContext);
+  const selected = environmentHandler.getSelected();
 
   return RemoteData.fold(
     {
@@ -20,17 +15,16 @@ export const Tab: React.FC<Props> = ({}) => {
       failed: (error) => (
         <ErrorView aria-label="Environment-Failed" message={error} />
       ),
-      success: () => {
-        return <></>;
-        // return (
-        //   <EnvironmentSettings
-        //     projects={projects}
-        //     environment={selected}
-        //   />
-        // );
+      success: (selectedProjectAndEnvironment) => {
+        return (
+          <EnvironmentSettings
+            aria-label="Environment-Success"
+            environment={selectedProjectAndEnvironment.environment}
+            project={selectedProjectAndEnvironment.project}
+          />
+        );
       },
     },
-    data
+    selected
   );
-  return <></>;
 };

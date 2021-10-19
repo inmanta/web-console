@@ -3,10 +3,7 @@ import { EnvironmentModel, ProjectModel, RemoteData } from "@/Core";
 
 export interface ProjectsSlice {
   allProjects: RemoteData.Type<string, ProjectModel[]>;
-  getSelectedProject: Computed<
-    ProjectsSlice,
-    Partial<ProjectModel> | undefined
-  >;
+  getSelectedProject: Computed<ProjectsSlice, ProjectModel | undefined>;
   getSelectedEnvironment: Computed<ProjectsSlice, EnvironmentModel | undefined>;
   selectedProjectId: string;
   selectedEnvironmentId: string;

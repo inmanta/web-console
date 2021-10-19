@@ -19,6 +19,6 @@ const Template: Story<ComponentProps<typeof EnvironmentSettings>> = (args) => {
 
 export const Multiple = Template.bind({});
 Multiple.args = {
-  projects: Project.filterable,
   environment: Project.filterable[0].environments[0],
+  project: Project.filterable[0],
 };

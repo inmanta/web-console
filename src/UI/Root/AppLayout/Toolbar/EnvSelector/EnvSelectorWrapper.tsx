@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { flatMap } from "lodash";
 import { ProjectModel } from "@/Core";
 import { EnvSelector } from "./EnvSelector";
@@ -38,6 +38,12 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
   const [searchValue, setSearchValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [toggleText, setToggleText] = useState(defaultToggleText);
+  useEffect(() => {
+    setFilteredItems(environmentNames);
+    setToggleText(defaultToggleText);
+    setSearchValue("");
+  }, [projects, defaultToggleText]);
+
   const filterItems = (value: string) => {
     const filtered =
       value === ""

@@ -8,3 +8,9 @@ export interface EnvironmentDetails extends WithId {
   settings: Record<string, unknown>;
   halted: boolean;
 }
+
+export interface EnvironmentParams extends WithId {
+  name: string;
+  repository?: string;
+  branch?: string;
+}

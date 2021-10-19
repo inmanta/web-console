@@ -1,1 +1,1 @@
-export { Provider as EnvironmentTab } from "./Provider";
+export { Tab as EnvironmentTab } from "./Tab";

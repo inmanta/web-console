@@ -36,6 +36,8 @@ import {
   EnvironmentDeleter,
   ProjectsUpdater,
   ProjectsStateHelper,
+  ModifyEnvironmentCommandManager,
+  ModifyEnvironmentPoster,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -136,6 +138,13 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
           new CallbacksStateHelper(this.store, environment),
           new FetcherImpl<"Callbacks">(this.baseApiHelper),
           environment
+        )
+      ),
+      new ModifyEnvironmentCommandManager(
+        new ModifyEnvironmentPoster(this.baseApiHelper, environment),
+        new ProjectsUpdater(
+          new ProjectsStateHelper(this.store),
+          new FetcherImpl<"Projects">(this.baseApiHelper)
         )
       ),
     ];

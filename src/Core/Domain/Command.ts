@@ -9,6 +9,7 @@ import { Config } from "./Config";
 import { ServiceIdentifier } from "./ServiceModel";
 import { Field } from "./Field";
 import { CreateCallbackBody } from "./Callback";
+import { EnvironmentParams } from ".";
 
 type Command =
   | ServiceConfigCommand
@@ -20,6 +21,7 @@ type Command =
   | DeleteServiceCommand
   | HaltEnvironmentCommand
   | ResumeEnvironmentCommand
+  | ModifyEnvironmentCommand
   | DeleteCallbackCommand
   | CreateCallbackCommand
   | DeleteEnvironment;
@@ -155,6 +157,20 @@ interface ResumeEnvironmentManifest {
   trigger: () => Promise<Maybe.Type<Error<"ResumeEnvironment">>>;
 }
 
+export interface ModifyEnvironmentCommand {
+  kind: "ModifyEnvironment";
+}
+
+interface ModifyEnvironmentManifest {
+  error: string;
+  apiData: string;
+  body: EnvironmentParams;
+  command: ModifyEnvironmentCommand;
+  trigger: (
+    body: EnvironmentParams
+  ) => Promise<Maybe.Type<Error<"ModifyEnvironment">>>;
+}
+
 export interface DeleteCallbackCommand {
   kind: "DeleteCallback";
   callbackId: string;
@@ -208,6 +224,7 @@ interface Manifest {
   DeleteService: DeleteServiceManifest;
   HaltEnvironment: HaltEnvironmentManifest;
   ResumeEnvironment: ResumeEnvironmentManifest;
+  ModifyEnvironment: ModifyEnvironmentManifest;
   DeleteCallback: DeleteCallbackManifest;
   CreateCallback: CreateCallbackManifest;
   DeleteEnvironment: DeleteEnvironmentManifest;
