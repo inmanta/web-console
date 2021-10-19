@@ -14,6 +14,7 @@ export class EventsStateHelper implements StateHelper<"Events"> {
   }
 
   getHooked({ id }: Query.SubQuery<"Events">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.events.byId[id]);
     }, isEqual);

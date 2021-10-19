@@ -20,6 +20,7 @@ export class InstanceLogsStateHelper implements StateHelper<"InstanceLogs"> {
   }
 
   getHooked(query: Query.SubQuery<"InstanceLogs">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.instanceLogs.byId[query.id]);
     }, isEqual);

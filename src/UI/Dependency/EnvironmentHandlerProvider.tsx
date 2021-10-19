@@ -15,7 +15,7 @@ export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
   const [data] = queryResolver.useOneTime<"Projects">({ kind: "Projects" });
   useEffect(() => {
     environmentHandler.setDefault(data);
-  }, [data]);
+  }, [data]); /* eslint-disable-line react-hooks/exhaustive-deps */
   return (
     <EnvironmentHandlerContext.Provider value={{ environmentHandler }}>
       {children}

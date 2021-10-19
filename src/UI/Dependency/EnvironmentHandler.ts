@@ -92,9 +92,14 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
     return this.store.getState().projects.allProjects;
   }
 
+  /**
+   * @NOTE Due to the caching / limitations of computed properties,
+   * env and project have to be accessed via the useStoreState hook
+   */
   public getSelected(): RemoteData.Type<string, SelectedProjectAndEnvironment> {
-    // Due to the caching / limitations of computed properties, these have to be accessed via the useStoreState hook
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     const env = useStoreState((state) => state.projects.getSelectedEnvironment);
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     const project = useStoreState((state) => state.projects.getSelectedProject);
     return this.determineSelected(project, env);
   }

@@ -49,11 +49,13 @@ export class InstanceConfigQueryManager
 
   useOneTime(query: Query.SubQuery<"InstanceConfig">): [Data, () => void] {
     const { service_entity } = query;
+    const { environment } = this;
 
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     useEffect(() => {
       this.initialize(query);
       this.update(query, this.getConfigUrl(query));
-    }, [this.environment]);
+    }, [environment]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     return [
       this.configFinalizer.finalize(

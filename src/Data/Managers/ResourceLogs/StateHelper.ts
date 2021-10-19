@@ -23,6 +23,7 @@ export class ResourceLogsStateHelper implements StateHelper<"ResourceLogs"> {
   }
 
   getHooked({ id }: Query.SubQuery<"ResourceLogs">): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) => this.enforce(state.resourceLogs.byId[id]),
       isEqual

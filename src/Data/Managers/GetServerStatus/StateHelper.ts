@@ -22,6 +22,7 @@ export class GetServerStatusStateHelper
   }
 
   getHooked(): Data {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) => this.enforce(state.serverStatus.status),
       isEqual

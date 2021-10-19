@@ -28,6 +28,7 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
     if (keycloak && !keycloak.profile) {
       keycloak.loadUserProfile();
     }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [keycloak?.authenticated]);
 
   const Header = (

@@ -43,7 +43,10 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     serviceEntity.environment
   }`;
 
-  const handleRedirect = useCallback(() => history.push(url), [history]);
+  const handleRedirect = useCallback(
+    () => history.push(url),
+    [history] /* eslint-disable-line react-hooks/exhaustive-deps */
+  );
   const attributeInputConverter = new AttributeInputConverterImpl();
   const currentAttributes =
     attributeInputConverter.getCurrentAttributes(instance);
