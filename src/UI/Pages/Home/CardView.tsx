@@ -58,9 +58,9 @@ const CreateNewEnvironmentCard: React.FC = () => (
           {words("home.create.env.desciption")}
         </Title>
         <EmptyStateSecondaryActions>
-          <Button variant="link" isDisabled>
-            {words("home.create.env.link")}
-          </Button>
+          <Link pathname={getUrl("CreateEnvironment", undefined)}>
+            <Button variant="link">{words("home.create.env.link")}</Button>
+          </Link>
         </EmptyStateSecondaryActions>
       </EmptyState>
     </Bullseye>

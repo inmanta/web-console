@@ -20,6 +20,7 @@ interface ParamsManifest {
   Home: undefined;
   ResourceDetails: { resourceId: string };
   Settings: undefined;
+  CreateEnvironment: undefined;
 }
 
 export type Params<R extends Kind> = ParamsManifest[R];
@@ -116,6 +117,13 @@ export const Home: Route = {
   clearEnv: true,
 };
 
+export const CreateEnvironment: Route = {
+  kind: "CreateEnvironment",
+  path: `${BASE_URL}${paths.CreateEnvironment}`,
+  label: "Create Environment",
+  clearEnv: true,
+};
+
 export const Settings: Route = {
   kind: "Settings",
   parent: "Home",
@@ -136,6 +144,7 @@ export const allRoutes: Route[] = [
   CompileDetails,
   ResourceDetails,
   Settings,
+  CreateEnvironment,
   Home,
 ];
 
@@ -170,6 +179,8 @@ export const getRouteFromKind = (kind: Kind): Route => {
       return ResourceDetails;
     case "Settings":
       return Settings;
+    case "CreateEnvironment":
+      return CreateEnvironment;
   }
 };
 

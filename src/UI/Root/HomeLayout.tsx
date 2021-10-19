@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { Page } from "@patternfly/react-core";
-import { Home } from "@/UI/Pages/Home";
 import { AppWrapper } from "./AppLayout/AppWrapper";
 
 interface Props {
@@ -9,14 +8,16 @@ interface Props {
   shouldUseAuth: boolean;
 }
 
-export const HomeLayout: React.FC<Props> = ({ keycloak, shouldUseAuth }) => (
+export const HomeLayout: React.FC<Props> = ({
+  keycloak,
+  shouldUseAuth,
+  children,
+}) => (
   <AppWrapper
     keycloak={shouldUseAuth ? keycloak : undefined}
     shouldUseAuth={shouldUseAuth}
   >
-    <MainPage>
-      <Home />
-    </MainPage>
+    <MainPage>{children}</MainPage>
   </AppWrapper>
 );
 

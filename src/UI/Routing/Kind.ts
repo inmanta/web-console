@@ -1,5 +1,6 @@
 const kinds = [
   "Home",
+  "CreateEnvironment",
   "Catalog",
   "Inventory",
   "CreateInstance",
