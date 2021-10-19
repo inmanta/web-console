@@ -54,6 +54,11 @@ export const EditableMultiTextField: React.FC<Props> = ({
     setFieldValues(initialValues);
   };
   const onCloseAlert = () => setSubmitError("");
+  const onChange = (label: string) => (input: string) => {
+    const updated = { ...fieldValues };
+    updated[label] = input;
+    setFieldValues(updated);
+  };
   return (
     <DescriptionListGroup>
       <DescriptionListTerm>
@@ -104,11 +109,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
                       <TextInput
                         aria-label={`${label}-input`}
                         value={value}
-                        onChange={(input) => {
-                          const updated = { ...fieldValues };
-                          updated[label] = input;
-                          setFieldValues(updated);
-                        }}
+                        onChange={onChange(label)}
                         onKeyDown={onKeyDown}
                       />
                     </FlexItem>
