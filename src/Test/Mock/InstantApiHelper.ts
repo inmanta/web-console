@@ -3,7 +3,6 @@ import * as Outcome from "./Outcome";
 
 export class InstantApiHelper<Data> implements ApiHelper {
   constructor(private outcome: Outcome.Type<string, Data>) {}
-
   get<Data>(): Promise<Either.Type<string, Data>> {
     return Outcome.handle<string, Data>(
       this.outcome as Outcome.Type<string, Data>
@@ -16,6 +15,9 @@ export class InstantApiHelper<Data> implements ApiHelper {
     throw new Error("Method not implemented.");
   }
   postWithoutResponse(): Promise<Maybe.Type<string>> {
+    throw new Error("Method not implemented.");
+  }
+  postWithoutResponseAndEnvironment(): Promise<Maybe.Type<string>> {
     throw new Error("Method not implemented.");
   }
   patch(): Promise<Maybe.Type<string>> {
