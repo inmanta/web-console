@@ -20,7 +20,7 @@ import {
   ServiceDeleter,
   CommandResolverImpl,
 } from "@/Data";
-import { ServiceCatalog } from "./ServiceCatalog";
+import { Page } from "./Page";
 import { MemoryRouter } from "react-router-dom";
 
 function setup() {
@@ -49,7 +49,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
         <StoreProvider store={store}>
-          <ServiceCatalog />
+          <Page />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

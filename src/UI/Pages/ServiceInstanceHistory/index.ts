@@ -1,1 +1,1 @@
-export { Provider as ServiceInstanceHistoryWithProvider } from "./Provider";
+export { Page as ServiceInstanceHistoryPage } from "./Page";

@@ -1,1 +1,1 @@
-export { Provider as ResourceDetailsWithProvider } from "./Provider";
+export { Page as ResourceDetailsPage } from "./Page";

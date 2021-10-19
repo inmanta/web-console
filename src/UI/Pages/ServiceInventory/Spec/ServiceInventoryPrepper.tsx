@@ -27,7 +27,7 @@ import {
   KeycloakAuthHelper,
   getStoreInstance,
 } from "@/Data";
-import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
+import { ServiceInventory } from "@/UI/Pages/ServiceInventory/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Utils";
 

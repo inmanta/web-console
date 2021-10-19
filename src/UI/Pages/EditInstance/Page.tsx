@@ -14,7 +14,7 @@ const PageWrapper: React.FC = ({ children, ...props }) => (
   </PageSectionWithTitle>
 );
 
-export const Provider: React.FC = () => {
+export const Page: React.FC = () => {
   const { service: serviceName, instance } =
     useParams<Route.Params<"EditInstance">>();
 

@@ -10,7 +10,7 @@ import {
   Callback,
   DeferredApiHelper,
 } from "@/Test";
-import { ServiceCatalog } from "@/UI/Pages";
+import { ServiceCatalogPage } from "@/UI/Pages";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -95,7 +95,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
         <StoreProvider store={store}>
-          <ServiceCatalog />
+          <ServiceCatalogPage />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

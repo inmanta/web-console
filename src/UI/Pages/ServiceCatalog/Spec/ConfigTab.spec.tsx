@@ -10,7 +10,7 @@ import {
   Service,
   StaticScheduler,
 } from "@/Test";
-import { ServiceCatalog } from "@/UI/Pages";
+import { ServiceCatalogPage } from "@/UI/Pages";
 import { Either, RemoteData } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -88,7 +88,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <ServiceCatalog />
+          <ServiceCatalogPage />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

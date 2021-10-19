@@ -16,7 +16,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
   </PageSectionWithTitle>
 );
 
-export const ServiceCatalog: React.FC = () => {
+export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [data, retry] = queryResolver.useContinuous<"Services">({
     kind: "Services",

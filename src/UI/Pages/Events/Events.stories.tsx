@@ -9,7 +9,7 @@ import {
   Event,
   DynamicQueryManagerResolver,
 } from "@/Test";
-import { EventsPage } from "./EventsPage";
+import { Events } from "./Events";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
@@ -21,8 +21,8 @@ import { UrlManagerImpl } from "@/UI/Utils";
 import { MemoryRouter } from "react-router";
 
 export default {
-  title: "EventsPage",
-  component: EventsPage,
+  title: "Events",
+  component: Events,
 };
 
 const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
@@ -57,7 +57,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver, urlManager }}>
         <StoreProvider store={store}>
-          <EventsPage service={Service.a} instanceId={service_instance_id} />
+          <Events service={Service.a} instanceId={service_instance_id} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

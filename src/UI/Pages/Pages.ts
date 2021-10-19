@@ -1,16 +1,16 @@
 import { ComponentType } from "react";
 import { Route } from "@/UI/Routing";
-import { CreateInstancePageProvider } from "@/UI/Pages/CreateInstance";
-import { DiagnoseWithProvider } from "@/UI/Pages/Diagnose";
-import { ServiceInstanceHistoryWithProvider } from "@/UI/Pages/ServiceInstanceHistory";
-import { ServiceInventoryWithProvider } from "@/UI/Pages/ServiceInventory";
-import { EventsWithProvider } from "@/UI/Pages/Events";
-import { ServiceCatalog } from "@/UI/Pages/ServiceCatalog";
-import { ResourcesView } from "@/UI/Pages/Resources";
-import { EditInstancePageProvider } from "@/UI/Pages/EditInstance";
-import { CompileReports } from "@/UI/Pages/CompileReports";
-import { CompileDetailsWithProvider } from "./CompileDetails";
-import { ResourceDetailsWithProvider } from "@/UI/Pages/ResourceDetails";
+import { CreateInstancePage } from "@/UI/Pages/CreateInstance";
+import { DiagnosePage } from "@/UI/Pages/Diagnose";
+import { ServiceInstanceHistoryPage } from "@/UI/Pages/ServiceInstanceHistory";
+import { ServiceInventoryPage } from "@/UI/Pages/ServiceInventory";
+import { EventsPage } from "@/UI/Pages/Events";
+import { ServiceCatalogPage } from "@/UI/Pages/ServiceCatalog";
+import { ResourcesPage } from "@/UI/Pages/Resources";
+import { EditInstancePage } from "@/UI/Pages/EditInstance";
+import { CompileReportsPage } from "@/UI/Pages/CompileReports";
+import { CompileDetailsPage } from "./CompileDetails";
+import { ResourceDetailsPage } from "@/UI/Pages/ResourceDetails";
 import { SettingsPage } from "./Settings";
 
 interface Page extends Route.Route {
@@ -19,57 +19,57 @@ interface Page extends Route.Route {
 
 export const Catalog: Page = {
   ...Route.Catalog,
-  component: ServiceCatalog,
+  component: ServiceCatalogPage,
 };
 
 export const Inventory: Page = {
   ...Route.Inventory,
-  component: ServiceInventoryWithProvider,
+  component: ServiceInventoryPage,
 };
 
 export const CreateInstance: Page = {
   ...Route.CreateInstance,
-  component: CreateInstancePageProvider,
+  component: CreateInstancePage,
 };
 
 export const EditInstance: Page = {
   ...Route.EditInstance,
-  component: EditInstancePageProvider,
+  component: EditInstancePage,
 };
 
 export const History: Page = {
   ...Route.History,
-  component: ServiceInstanceHistoryWithProvider,
+  component: ServiceInstanceHistoryPage,
 };
 
 export const Diagnose: Page = {
   ...Route.Diagnose,
-  component: DiagnoseWithProvider,
+  component: DiagnosePage,
 };
 
 export const Events: Page = {
   ...Route.Events,
-  component: EventsWithProvider,
+  component: EventsPage,
 };
 
 export const Resources: Page = {
   ...Route.Resources,
-  component: ResourcesView,
+  component: ResourcesPage,
 };
 
-export const CompileReportsPage: Page = {
+export const CompileReports: Page = {
   ...Route.CompileReports,
-  component: CompileReports,
+  component: CompileReportsPage,
 };
 
 export const CompileDetails: Page = {
   ...Route.CompileDetails,
-  component: CompileDetailsWithProvider,
+  component: CompileDetailsPage,
 };
 
 export const ResourceDetails: Page = {
   ...Route.ResourceDetails,
-  component: ResourceDetailsWithProvider,
+  component: ResourceDetailsPage,
 };
 
 export const Settings: Page = {
@@ -86,7 +86,7 @@ export const pages: Page[] = [
   Diagnose,
   Events,
   Resources,
-  CompileReportsPage,
+  CompileReports,
   CompileDetails,
   ResourceDetails,
   Settings,
