@@ -19,6 +19,10 @@ export interface ApiHelper {
     environment: string,
     body: Body
   ): Promise<Maybe.Type<string>>;
+  postWithoutResponseAndEnvironment<Body>(
+    url: string,
+    body: Body
+  ): Promise<Maybe.Type<string>>;
   patch<Body = unknown>(
     url: string,
     environment: string,

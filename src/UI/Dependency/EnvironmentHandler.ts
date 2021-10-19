@@ -5,7 +5,7 @@ import { Store, useStoreState } from "@/Data";
 import { getUrl, Route } from "@/UI/Routing";
 
 export interface SelectedProjectAndEnvironment {
-  project: Partial<ProjectModel>;
+  project: ProjectModel;
   environment: EnvironmentModel;
 }
 
@@ -28,7 +28,7 @@ class DummyEnvironmentHandler implements EnvironmentHandler {
   }
   getSelected(): RemoteData.Type<
     string,
-    { project: Partial<ProjectModel>; environment: EnvironmentModel }
+    { project: ProjectModel; environment: EnvironmentModel }
   > {
     throw new Error("Method not implemented.");
   }
@@ -105,7 +105,7 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
   }
 
   determineSelected(
-    project?: Partial<ProjectModel>,
+    project?: ProjectModel,
     env?: EnvironmentModel
   ): RemoteData.Type<string, SelectedProjectAndEnvironment> {
     const state = this.store.getState();

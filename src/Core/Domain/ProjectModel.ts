@@ -12,6 +12,8 @@ export interface EnvironmentIdentifier {
 export interface EnvironmentModel extends WithId {
   name: string;
   projectId: string;
+  repo_branch: string;
+  repo_url: string;
 }
 
 export interface FlatEnvironment extends EnvironmentModel {

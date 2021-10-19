@@ -1,0 +1,6 @@
+description: Add environment tab to settings page
+issue-nr: 1482
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

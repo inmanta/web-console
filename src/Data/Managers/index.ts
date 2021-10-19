@@ -14,6 +14,7 @@ export * from "./HaltEnvironment";
 export * from "./InstanceConfig";
 export * from "./InstanceLogs";
 export * from "./InstanceResources";
+export * from "./ModifyEnvironment";
 export * from "./Projects";
 export * from "./ResourceDetails";
 export * from "./ResourceHistory";

@@ -12,6 +12,7 @@ import {
   EnvironmentSelectorItem,
   EnvSelectorWrapper,
 } from "./EnvSelectorWrapper";
+import { flatMap } from "lodash";
 
 interface Props {
   projects: RemoteData.Type<string, ProjectModel[]>;
@@ -48,10 +49,23 @@ export const EnvSelectorWithData: React.FC<Props> = ({
             ),
             success: (selected) => {
               const defaultToggleText = `${selected.environment.name} (${selected.project.name})`;
-
+              const selectorItems = flatMap(projects, (project) => {
+                return project.environments.map((environment) => {
+                  const envSelectorItem: EnvironmentSelectorItem = {
+                    displayName: `${environment.name} (${project.name})`,
+                    projectId: project.id,
+                    environmentId: environment.id,
+                  };
+                  return envSelectorItem;
+                });
+              });
+              const environmentNames = selectorItems.map(
+                (item) => item.displayName
+              );
               return (
                 <EnvSelectorWrapper
-                  projects={projects}
+                  selectorItems={selectorItems}
+                  environmentNames={environmentNames}
                   onSelectEnvironment={onSelectEnvironment}
                   defaultToggleText={defaultToggleText}
                 />
