@@ -39,7 +39,7 @@ export class FileFetcherImpl implements FileFetcher {
   async get(fileId: string): Promise<Either.Type<string, string>> {
     return this.unpack(
       await this.baseApiHelper.get<RawResponse>(
-        `${this.baseApiHelper.getBaseUrl()}${this.getUrl(fileId)}`,
+        this.getUrl(fileId),
         this.getEnvironment()
       )
     );

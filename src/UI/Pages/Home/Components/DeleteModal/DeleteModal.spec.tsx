@@ -96,7 +96,7 @@ test("GIVEN DeleteModal WHEN correct env & delete button pressed THEN delete exe
   userEvent.click(deleteButton);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
-  expect(request.request).toEqual({
+  expect(request).toEqual({
     method: "DELETE",
     environment: "abcd",
     url: "/api/v2/environment/abcd",

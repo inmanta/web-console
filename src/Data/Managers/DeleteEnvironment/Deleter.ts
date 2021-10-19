@@ -8,6 +8,6 @@ export class EnvironmentDeleter implements Deleter<"DeleteEnvironment"> {
   }
 
   private getUrl({ id }: Command.SubCommand<"DeleteEnvironment">): string {
-    return `${this.apiHelper.getBaseUrl()}/api/v2/environment/${id}`;
+    return `/api/v2/environment/${id}`;
   }
 }

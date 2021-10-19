@@ -8,10 +8,6 @@ export class BaseApiHelper implements ApiHelper {
     private readonly keycloak?: KeycloakInstance
   ) {}
 
-  getBaseUrl(): string {
-    return this.baseUrl;
-  }
-
   private getHeaders(environment?: string): Record<string, string> {
     const { keycloak } = this;
     return {
@@ -75,11 +71,15 @@ export class BaseApiHelper implements ApiHelper {
     return Either.isLeft(result) ? Maybe.some(result.value) : Maybe.none();
   }
 
+  private getFullUrl(url: string): string {
+    return `${this.baseUrl}${url}`;
+  }
+
   async get<Data>(
     url: string,
     environment: string
   ): Promise<Either.Type<string, Data>> {
-    return this.executeJson<Data>(url, {
+    return this.executeJson<Data>(this.getFullUrl(url), {
       headers: this.getHeaders(environment),
     });
   }
@@ -87,7 +87,7 @@ export class BaseApiHelper implements ApiHelper {
   async getWithoutEnvironment<Data>(
     url: string
   ): Promise<Either.Type<string, Data>> {
-    return this.executeJson<Data>(url, {
+    return this.executeJson<Data>(this.getFullUrl(url), {
       headers: this.getHeaders(),
     });
   }
@@ -97,7 +97,7 @@ export class BaseApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Either.Type<string, Data>> {
-    return this.executeJson<Data>(url, {
+    return this.executeJson<Data>(this.getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
         ...this.getHeaders(environment),
@@ -112,7 +112,7 @@ export class BaseApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Maybe.Type<string>> {
-    return this.executeWithoutResponse(url, {
+    return this.executeWithoutResponse(this.getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
         ...this.getHeaders(environment),
@@ -127,7 +127,7 @@ export class BaseApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Maybe.Type<string>> {
-    return this.executeWithoutResponse(url, {
+    return this.executeWithoutResponse(this.getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
         ...this.getHeaders(environment),
@@ -138,7 +138,7 @@ export class BaseApiHelper implements ApiHelper {
   }
 
   async delete(url: string, environment: string): Promise<Maybe.Type<string>> {
-    return this.executeWithoutResponse(url, {
+    return this.executeWithoutResponse(this.getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
         ...this.getHeaders(environment),

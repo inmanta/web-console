@@ -5,13 +5,12 @@ import userEvent from "@testing-library/user-event";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on something THEN a data update is triggered", async () => {
-  const { component, serviceInstancesFetcher } =
-    new ServiceInventoryPrepper().prep();
+  const { component, apiHelper } = new ServiceInventoryPrepper().prep();
 
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
@@ -36,7 +35,7 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   ).toBeInTheDocument();
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a],
         links: Pagination.links,

@@ -6,8 +6,7 @@ export class CreateInstancePoster extends PosterImpl<"CreateInstance"> {
     super(
       apiHelper,
       environment,
-      ({ service_entity }) =>
-        `${apiHelper.getBaseUrl()}/lsm/v1/service_inventory/${service_entity}`
+      ({ service_entity }) => `/lsm/v1/service_inventory/${service_entity}`
     );
   }
 }

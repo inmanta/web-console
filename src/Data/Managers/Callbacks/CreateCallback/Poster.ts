@@ -3,10 +3,6 @@ import { PosterImpl } from "@/Data/API";
 
 export class CallbackPoster extends PosterImpl<"CreateCallback"> {
   constructor(apiHelper: ApiHelper, environment: string) {
-    super(
-      apiHelper,
-      environment,
-      () => `${apiHelper.getBaseUrl()}/lsm/v1/callbacks`
-    );
+    super(apiHelper, environment, () => "/lsm/v1/callbacks");
   }
 }

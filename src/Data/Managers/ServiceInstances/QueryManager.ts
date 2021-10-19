@@ -1,19 +1,24 @@
-import { Scheduler, Fetcher, StateHelper, ServiceInstanceParams } from "@/Core";
 import {
-  ContinuousQueryManagerImpl,
+  Scheduler,
+  StateHelper,
+  ServiceInstanceParams,
+  ApiHelper,
+} from "@/Core";
+import {
   getPaginationHandlers,
+  PrimaryContinuousQueryManager,
 } from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
-export class ServiceInstancesQueryManager extends ContinuousQueryManagerImpl<"ServiceInstances"> {
+export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManager<"ServiceInstances"> {
   constructor(
-    fetcher: Fetcher<"ServiceInstances">,
+    apiHelper: ApiHelper,
     stateHelper: StateHelper<"ServiceInstances">,
     scheduler: Scheduler,
     environment: string
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
       ({ name }) => name,

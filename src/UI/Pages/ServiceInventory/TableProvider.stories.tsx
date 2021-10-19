@@ -1,8 +1,11 @@
 import React from "react";
 import { Story } from "@storybook/react/types-6-0";
 import {
+  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   InstantFetcher,
+  MockCommandManager,
+  MockEnvironmentModifier,
   Service,
   ServiceInstance,
   StaticScheduler,
@@ -16,6 +19,7 @@ import {
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
   getStoreInstance,
+  CommandResolverImpl,
 } from "@/Data";
 import { MemoryRouter } from "react-router";
 
@@ -40,14 +44,28 @@ const Template: Story<Props> = (args) => {
     ])
   );
 
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([new MockCommandManager()])
+  );
+
   return (
-    <DependencyProvider dependencies={{ queryResolver }}>
-      <MemoryRouter>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{
+          queryResolver,
+          commandResolver,
+          environmentModifier: new MockEnvironmentModifier(),
+        }}
+      >
         <StoreProvider store={store}>
-          <TableProvider {...args} />
+          <TableProvider
+            {...args}
+            sort={{ name: "created_at", order: "desc" }}
+            setSort={() => undefined}
+          />
         </StoreProvider>
-      </MemoryRouter>
-    </DependencyProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 };
 

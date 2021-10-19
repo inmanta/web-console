@@ -12,7 +12,7 @@ export class SetStatePoster
     service_entity,
     id,
   }: Command.SubCommand<"TriggerSetState">): string {
-    return `${this.apiHelper.getBaseUrl()}/lsm/v1/service_inventory/${service_entity}/${id}/state`;
+    return `/lsm/v1/service_inventory/${service_entity}/${id}/state`;
   }
 
   post(

@@ -6,8 +6,7 @@ export class ServiceConfigPoster extends PosterImpl<"ServiceConfig"> {
     super(
       apiHelper,
       environment,
-      ({ name }) =>
-        `${apiHelper.getBaseUrl()}/lsm/v1/service_catalog/${name}/config`
+      ({ name }) => `/lsm/v1/service_catalog/${name}/config`
     );
   }
 }

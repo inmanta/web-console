@@ -1,52 +1,16 @@
 import { Either, Fetcher, Query } from "@/Core";
-
-export type Outcome<K extends Query.Kind> =
-  | { kind: "Loading" }
-  | { kind: "Failed"; error: Query.Error<K> }
-  | { kind: "Success"; data: Query.ApiResponse<K> };
+import * as Outcome from "./Outcome";
 
 export class InstantFetcher<K extends Query.Kind> implements Fetcher<K> {
-  constructor(private outcome: Outcome<K>) {}
+  constructor(
+    private outcome: Outcome.Type<Query.Error<K>, Query.ApiResponse<K>>
+  ) {}
 
   getData(): Promise<Either.Type<Query.Error<K>, Query.ApiResponse<K>>> {
-    const { outcome } = this;
-
-    switch (outcome.kind) {
-      case "Loading":
-        return new Promise(() => {
-          undefined;
-        });
-
-      case "Failed":
-        return new Promise((resolve) => {
-          resolve(Either.left(outcome.error));
-        });
-
-      case "Success":
-        return new Promise((resolve) => {
-          resolve(Either.right(outcome.data));
-        });
-    }
+    return Outcome.handle<Query.Error<K>, Query.ApiResponse<K>>(this.outcome);
   }
 
   getRootData(): Promise<Either.Type<Query.Error<K>, Query.ApiResponse<K>>> {
-    const { outcome } = this;
-
-    switch (outcome.kind) {
-      case "Loading":
-        return new Promise(() => {
-          undefined;
-        });
-
-      case "Failed":
-        return new Promise((resolve) => {
-          resolve(Either.left(outcome.error));
-        });
-
-      case "Success":
-        return new Promise((resolve) => {
-          resolve(Either.right(outcome.data));
-        });
-    }
+    return Outcome.handle<Query.Error<K>, Query.ApiResponse<K>>(this.outcome);
   }
 }

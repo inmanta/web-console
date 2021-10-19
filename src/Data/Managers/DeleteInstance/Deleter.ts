@@ -14,6 +14,6 @@ export class InstanceDeleter implements Deleter<"DeleteInstance"> {
     id,
     version,
   }: Command.SubCommand<"DeleteInstance">): string {
-    return `${this.apiHelper.getBaseUrl()}/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`;
+    return `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`;
   }
 }
