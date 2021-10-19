@@ -42,7 +42,7 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
     setFilteredItems(environmentNames);
     setToggleText(defaultToggleText);
     setSearchValue("");
-  }, [projects, defaultToggleText]);
+  }, [projects, defaultToggleText, environmentNames]);
 
   const filterItems = (value: string) => {
     const filtered =
