@@ -9,7 +9,7 @@ import { Config } from "./Config";
 import { ServiceIdentifier } from "./ServiceModel";
 import { Field } from "./Field";
 import { CreateCallbackBody } from "./Callback";
-import { EnvironmentParams } from ".";
+import { EnvironmentParams } from "./EnvironmentDetailsModel";
 
 type Command =
   | ServiceConfigCommand
