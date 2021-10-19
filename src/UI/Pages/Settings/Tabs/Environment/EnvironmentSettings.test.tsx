@@ -19,7 +19,7 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { act, render, screen } from "@testing-library/react";
-import userEvent, { specialChars } from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 function setup() {
@@ -76,12 +76,11 @@ test("Given environment settings When submitting the edited name Then the backen
   userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   userEvent.clear(textBox);
-  userEvent.type(textBox, `dev${specialChars.enter}`);
+  userEvent.type(textBox, `dev{enter}`);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
-  expect(request.request).toEqual({
+  expect(request).toEqual({
     method: "POST",
-    environment: selectedEnvironment.id,
     body: {
       id: selectedEnvironment.id,
       name: "dev",
@@ -131,12 +130,12 @@ test.each`
 `(
   "Given environment settings When a name edit yields an error Then the error message is shown and can be closed $displayName",
   async ({ elementName }) => {
-    const { component, apiHelper, selectedEnvironment } = setup();
+    const { component, apiHelper } = setup();
     render(component);
     userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
     const textBox = await screen.findByRole("textbox", { name: "Name-input" });
     userEvent.clear(textBox);
-    userEvent.type(textBox, `dev${specialChars.enter}`);
+    userEvent.type(textBox, `dev{enter}`);
     expect(apiHelper.pendingRequests).toHaveLength(1);
     await act(async () => {
       await apiHelper.resolve(Maybe.some("Invalid environment name"));
@@ -148,10 +147,6 @@ test.each`
       await screen.findByRole("generic", { name: "Name-error-message" })
     ).toBeVisible();
 
-    // The field is shown with the original value
-    expect(
-      await screen.findByRole("generic", { name: "Name-value" })
-    ).toHaveTextContent(selectedEnvironment.name);
     expect(
       screen.queryByRole("textbox", { name: "Name-input" })
     ).not.toBeInTheDocument();
@@ -213,9 +208,8 @@ test("Given environment settings When submitting the edited repository settings 
   );
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
-  expect(request.request).toEqual({
+  expect(request).toEqual({
     method: "POST",
-    environment: selectedEnvironment.id,
     body: {
       id: selectedEnvironment.id,
       name: selectedEnvironment.name,
@@ -286,7 +280,7 @@ test.each`
 `(
   "Given environment settings When a repo edit yields an error Then the error message is shown and can be closed $displayName",
   async ({ elementName }) => {
-    const { component, apiHelper, selectedEnvironment } = setup();
+    const { component, apiHelper } = setup();
     render(component);
     userEvent.click(
       screen.getByRole("button", { name: "Repository Settings-toggle-edit" })
@@ -295,7 +289,7 @@ test.each`
       name: "repo_branch-input",
     });
     userEvent.clear(textBox);
-    userEvent.type(textBox, `dev${specialChars.enter}`);
+    userEvent.type(textBox, `dev{enter}`);
     expect(apiHelper.pendingRequests).toHaveLength(1);
     await act(async () => {
       await apiHelper.resolve(Maybe.some("Invalid branch"));
@@ -309,10 +303,6 @@ test.each`
       })
     ).toBeVisible();
 
-    // The field is shown with the original value
-    expect(
-      await screen.findByRole("generic", { name: "repo_branch-value" })
-    ).toHaveTextContent(selectedEnvironment.repo_branch);
     expect(
       screen.queryByRole("textbox", { name: "repo_branch-input" })
     ).not.toBeInTheDocument();

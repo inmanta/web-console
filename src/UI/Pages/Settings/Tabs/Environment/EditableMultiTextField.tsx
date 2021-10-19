@@ -1,8 +1,5 @@
 import { Maybe } from "@/Core";
 import {
-  Alert,
-  AlertActionCloseButton,
-  Button,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -11,9 +8,14 @@ import {
   FlexItem,
   TextInput,
 } from "@patternfly/react-core";
-import { CheckIcon, PencilAltIcon, TimesIcon } from "@patternfly/react-icons";
 import React, { useState } from "react";
 import styled from "styled-components";
+import {
+  CancelEditButton,
+  EnableEditButton,
+  SubmitEditButton,
+} from "./InlineEditButtons";
+import { InlinePlainAlert } from "./InlinePlainAlert";
 
 interface Props {
   groupName: string;
@@ -36,66 +38,51 @@ export const EditableMultiTextField: React.FC<Props> = ({
     const error = await onSubmit(values);
     if (Maybe.isSome(error)) {
       setSubmitError(error.value);
-      setFieldValues(initialValues);
     }
   };
   const onKeyDown = (event) => {
     if (event.key && event.key !== "Enter") return;
     onSubmitRequest(fieldValues);
   };
+  const onEditClick = () => {
+    setEditable(true);
+    setSubmitError("");
+  };
+  const onSubmitClick = () => onSubmitRequest(fieldValues);
+  const onCancelEditClick = () => {
+    setEditable(false);
+    setFieldValues(initialValues);
+  };
+  const onCloseAlert = () => setSubmitError("");
   return (
     <DescriptionListGroup>
       <DescriptionListTerm>
         {groupName}
         {!editable && (
-          <Button
+          <EnableEditButton
+            onClick={onEditClick}
             aria-label={`${groupName}-toggle-edit`}
-            onClick={() => {
-              setEditable(true);
-              setSubmitError("");
-            }}
-            variant="plain"
-          >
-            <PencilAltIcon />
-          </Button>
+          />
         )}
         {editable && (
           <>
-            <Button
+            <SubmitEditButton
               aria-label={`${groupName}-submit-edit`}
-              onClick={() => {
-                onSubmitRequest(fieldValues);
-              }}
-              variant="link"
-            >
-              <CheckIcon />
-            </Button>
-            <Button
+              onClick={onSubmitClick}
+            />
+            <CancelEditButton
               aria-label={`${groupName}-cancel-edit`}
-              onClick={() => {
-                setEditable(false);
-                setFieldValues(initialValues);
-              }}
-              variant="plain"
-            >
-              <TimesIcon />
-            </Button>
+              onClick={onCancelEditClick}
+            />
           </>
         )}
       </DescriptionListTerm>
       {submitError && (
-        <WidthLimitedAlert
+        <InlinePlainAlert
           aria-label={`${groupName}-error-message`}
-          variant="danger"
-          isInline
-          isPlain
-          title={submitError}
-          actionClose={
-            <AlertActionCloseButton
-              aria-label={`${groupName}-close-error`}
-              onClick={() => setSubmitError("")}
-            />
-          }
+          errorMessage={submitError}
+          closeButtonAriaLabel={`${groupName}-close-error`}
+          onCloseAlert={onCloseAlert}
         />
       )}
       <DescriptionListDescription>
@@ -141,8 +128,4 @@ const HeightMatched = styled.div`
   padding-top: 6px;
   padding-bottom: 6px;
   padding-left: 9px;
-`;
-
-const WidthLimitedAlert = styled(Alert)`
-  width: fit-content;
 `;

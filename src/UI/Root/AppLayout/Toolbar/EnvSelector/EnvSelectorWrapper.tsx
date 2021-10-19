@@ -1,10 +1,9 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { flatMap } from "lodash";
-import { ProjectModel } from "@/Core";
 import { EnvSelector } from "./EnvSelector";
 
 interface Props {
-  projects: ProjectModel[];
+  selectorItems: EnvironmentSelectorItem[];
+  environmentNames: string[];
   onSelectEnvironment: (
     selectedProjectAndEnvironment: EnvironmentSelectorItem
   ) => void;
@@ -18,36 +17,21 @@ export interface EnvironmentSelectorItem {
 }
 
 export const EnvSelectorWrapper: React.FC<Props> = ({
-  projects,
+  selectorItems,
   onSelectEnvironment,
   defaultToggleText,
+  environmentNames,
 }) => {
-  const selectorItems = flatMap(projects, (project) => {
-    return project.environments.map((environment) => {
-      const envSelectorItem: EnvironmentSelectorItem = {
-        displayName: `${environment.name} (${project.name})`,
-        projectId: project.id,
-        environmentId: environment.id,
-      };
-      return envSelectorItem;
-    });
-  });
-
-  const environmentNames = selectorItems.map((item) => item.displayName);
   const [filteredItems, setFilteredItems] = useState(environmentNames);
   const [searchValue, setSearchValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [toggleText, setToggleText] = useState(defaultToggleText);
 
-  useEffect(
-    () => {
-      setFilteredItems(environmentNames);
-      setToggleText(defaultToggleText);
-      setSearchValue("");
-    },
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    [projects, defaultToggleText]
-  );
+  useEffect(() => {
+    setFilteredItems(environmentNames);
+    setToggleText(defaultToggleText);
+    setSearchValue("");
+  }, [environmentNames, defaultToggleText]);
 
   const filterItems = (value: string) => {
     const filtered =

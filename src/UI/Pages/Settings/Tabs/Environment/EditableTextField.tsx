@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import {
-  Alert,
-  AlertActionCloseButton,
-  Button,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
@@ -10,9 +7,14 @@ import {
   FlexItem,
   TextInput,
 } from "@patternfly/react-core";
-import { CheckIcon, PencilAltIcon, TimesIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { Maybe } from "@/Core";
+import {
+  CancelEditButton,
+  EnableEditButton,
+  SubmitEditButton,
+} from "./InlineEditButtons";
+import { InlinePlainAlert } from "./InlinePlainAlert";
 
 interface Props {
   label: string;
@@ -33,13 +35,22 @@ export const EditableTextField: React.FC<Props> = ({
     const error = await onSubmit(value);
     if (Maybe.isSome(error)) {
       setSubmitError(error.value);
-      setValue(initialValue);
     }
   };
   const onKeyDown = async (event) => {
     if (event.key && event.key !== "Enter") return;
     await onSubmitRequest(value);
   };
+  const onEditClick = () => {
+    setEditable(true);
+    setSubmitError("");
+  };
+  const onSubmitClick = () => onSubmitRequest(value);
+  const onCancelEditClick = () => {
+    setEditable(false);
+    setValue(initialValue);
+  };
+  const onCloseAlert = () => setSubmitError("");
 
   return (
     <DescriptionListGroup key={label}>
@@ -51,16 +62,10 @@ export const EditableTextField: React.FC<Props> = ({
           <LabelItem aria-label={`${label}-label`}>{label}</LabelItem>
           {!editable ? (
             <FlexItem>
-              <Button
+              <EnableEditButton
                 aria-label={`${label}-toggle-edit`}
-                onClick={() => {
-                  setEditable(true);
-                  setSubmitError("");
-                }}
-                variant="plain"
-              >
-                <PencilAltIcon />
-              </Button>
+                onClick={onEditClick}
+              />
             </FlexItem>
           ) : (
             <FlexItem>
@@ -70,18 +75,11 @@ export const EditableTextField: React.FC<Props> = ({
         </Flex>
       </DescriptionListTerm>
       {submitError && (
-        <WidthLimitedAlert
+        <InlinePlainAlert
           aria-label={`${label}-error-message`}
-          variant="danger"
-          isInline
-          isPlain
-          title={submitError}
-          actionClose={
-            <AlertActionCloseButton
-              aria-label={`${label}-close-error`}
-              onClick={() => setSubmitError("")}
-            />
-          }
+          errorMessage={submitError}
+          closeButtonAriaLabel={`${label}-close-error`}
+          onCloseAlert={onCloseAlert}
         />
       )}
       <DescriptionListDescription>
@@ -99,27 +97,16 @@ export const EditableTextField: React.FC<Props> = ({
               />
             </FlexItem>
             <FlexItem>
-              <Button
+              <SubmitEditButton
                 aria-label={`${label}-submit-edit`}
-                onClick={async () => {
-                  onSubmitRequest(value);
-                }}
-                variant="link"
-              >
-                <CheckIcon />
-              </Button>
+                onClick={onSubmitClick}
+              />
             </FlexItem>
             <FlexItem>
-              <Button
+              <CancelEditButton
                 aria-label={`${label}-cancel-edit`}
-                onClick={() => {
-                  setEditable(false);
-                  setValue(initialValue);
-                }}
-                variant="plain"
-              >
-                <TimesIcon />
-              </Button>
+                onClick={onCancelEditClick}
+              />
             </FlexItem>
           </Flex>
         )}
@@ -131,10 +118,6 @@ export const EditableTextField: React.FC<Props> = ({
 const Filler = styled.div`
   height: 23px;
   width: 60px;
-`;
-
-const WidthLimitedAlert = styled(Alert)`
-  width: fit-content;
 `;
 
 const LabelItem = styled(FlexItem)`

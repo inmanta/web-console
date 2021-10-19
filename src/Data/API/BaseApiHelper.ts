@@ -121,6 +121,19 @@ export class BaseApiHelper implements ApiHelper {
       body: JSON.stringify(body),
     });
   }
+  async postWithoutResponseAndEnvironment<Body>(
+    url: string,
+    body: Body
+  ): Promise<Maybe.Type<string>> {
+    return this.executeWithoutResponse(this.getFullUrl(url), {
+      headers: {
+        "Content-Type": "application/json",
+        ...this.getHeaders(),
+      },
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+  }
 
   async patch<Body>(
     url: string,
