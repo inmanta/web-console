@@ -1,17 +1,17 @@
 import { Either, Maybe } from "@/Core/Language";
 import {
+  Config,
   InstanceAttributeModel,
   ServiceInstanceModel,
   SetStateBody,
   VersionedServiceInstanceIdentifier,
-} from "./ServiceInstanceModel";
-import { Config } from "./Config";
-import { ServiceIdentifier } from "./ServiceModel";
-import { Field } from "./Field";
-import { CreateCallbackBody } from "./Callback";
-import { EnvironmentParams } from "./EnvironmentDetailsModel";
+  ServiceIdentifier,
+  Field,
+  CreateCallbackBody,
+  EnvironmentParams,
+} from "@/Core/Domain";
 
-type Command =
+export type Command =
   | UpdateServiceConfig
   | UpdateInstanceConfig
   | CreateInstanceCommand

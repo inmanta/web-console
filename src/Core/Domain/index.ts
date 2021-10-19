@@ -1,6 +1,5 @@
 export * from "./ActionTypes";
 export * from "./Callback";
-export * as Command from "./Command";
 export * from "./Config";
 export * from "./EventModel";
 export * from "./EventType";
@@ -8,7 +7,6 @@ export * from "./Field";
 export * from "./InstanceLogModel";
 export * from "./InventoryTable";
 export * from "./ProjectModel";
-export * as Query from "./Query";
 export * from "./InstanceResourceModel";
 export * from "./ServiceInstanceModel";
 export * as ServiceInstanceParams from "./ServiceInstanceParams";

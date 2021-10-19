@@ -1,4 +1,4 @@
-import { Command } from "@/Core/Domain";
+import { Command } from "@/Core/Command";
 import { TriggerProvider } from "./TriggerProvider";
 
 export interface CommandManager extends TriggerProvider {

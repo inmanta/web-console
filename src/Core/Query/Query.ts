@@ -1,39 +1,40 @@
-import { InstanceEvent } from "./EventModel";
-import { InstanceLog } from "./InstanceLogModel";
-import { InstanceResourceModel as InstanceResourceModel } from "./InstanceResourceModel";
+import { WithId } from "@/Core/Language";
 import {
+  InstanceEvent,
+  InstanceLog,
+  InstanceResourceModel,
+  ServiceIdentifier,
+  ServiceModel,
   VersionedServiceInstanceIdentifier,
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
   ServiceInstanceIdentifier,
-} from "./ServiceInstanceModel";
-import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
-import * as Pagination from "./Pagination";
-import { Config } from "./Config";
-import { ServiceInstanceParams } from "./ServiceInstanceParams";
-import { RawDiagnostics, Diagnostics } from "./Diagnostics";
-import { EventParams } from "./EventParams";
-import { ProjectModel } from "./ProjectModel";
-import {
+  Pagination,
+  Config,
+  ServiceInstanceParams,
+  RawDiagnostics,
+  Diagnostics,
+  EventParams,
+  ProjectModel,
   Resource,
   RawResource,
   RawResourceDetails,
   ResourceDetails,
-} from "./Resource";
-import { ResourceParams as ResourceParams } from "./ResourceParams";
-import { WithId } from "../Language";
-import { ResourceHistory } from "./ResourceHistory";
-import { ResourceLog, ResourceLogFilter } from "./ResourceLog";
-import { Sort } from "./Sort";
-import { PageSize } from "./PageSize";
-import { EnvironmentDetails } from "./EnvironmentDetailsModel";
-import { CompileReport } from "./CompileReport";
-import { CompileReportParams } from "./CompileReportParams";
-import { CompileDetails } from "./CompileDetails";
-import { ServerStatus } from "./ServerStatus";
-import { Operation, OperationManifest } from "@/Core/Operations";
+  ResourceParams,
+  ResourceHistory,
+  ResourceLog,
+  ResourceLogFilter,
+  PageSize,
+  Sort,
+  ServerStatus,
+  CompileDetails,
+  CompileReportParams,
+  CompileReport,
+  EnvironmentDetails,
+} from "@/Core/Domain";
+import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
 
-type Query =
+export type Query =
   | ServicesQuery
   | ServiceQuery
   | ServiceInstanceQuery
@@ -53,7 +54,7 @@ type Query =
   | CompileReportsQuery
   | CompileDetailsQuery
   | GetServerStatus
-  | Operation;
+  | GetCallbacks;
 
 export type Type = Query;
 
@@ -130,7 +131,7 @@ interface ServiceManifest {
  */
 export interface ServiceInstancesQuery
   extends ServiceIdentifier,
-    ServiceInstanceParams {
+    ServiceInstanceParams.ServiceInstanceParams {
   kind: "ServiceInstances";
 }
 
@@ -201,7 +202,7 @@ interface InstanceResourcesManifest {
  */
 export interface InstanceEventsQuery
   extends ServiceInstanceIdentifier,
-    EventParams {
+    EventParams.EventParams {
   kind: "Events";
 }
 
@@ -268,7 +269,7 @@ interface DiagnosticsManifest {
   query: DiagnosticsQuery;
 }
 
-export interface ResourcesQuery extends ResourceParams {
+export interface ResourcesQuery extends ResourceParams.ResourceParams {
   kind: "Resources";
 }
 
@@ -308,8 +309,8 @@ interface ResourceDetailsManifest {
 
 export interface ResourceHistoryQuery extends WithId {
   kind: "ResourceHistory";
-  sort?: Sort;
-  pageSize: PageSize;
+  sort?: Sort.Type;
+  pageSize: PageSize.Type;
 }
 
 interface ResourceHistoryManifest {
@@ -332,7 +333,8 @@ interface ResourceHistoryManifest {
   query: ResourceHistoryQuery;
 }
 
-export interface CompileReportsQuery extends CompileReportParams {
+export interface CompileReportsQuery
+  extends CompileReportParams.CompileReportParams {
   kind: "CompileReports";
 }
 
@@ -373,8 +375,8 @@ interface CompileDetailsManifest {
 export interface ResourceLogsQuery extends WithId {
   kind: "ResourceLogs";
   filter?: ResourceLogFilter;
-  sort?: Sort;
-  pageSize: PageSize;
+  sort?: Sort.Type;
+  pageSize: PageSize.Type;
 }
 
 interface ResourceLogsManifest {
@@ -401,7 +403,7 @@ interface ResourceLogsManifest {
  * The Manifest is just a utility that collects all the different
  * types related to all the sub queries.
  */
-interface Manifest extends OperationManifest {
+interface Manifest {
   Services: ServicesManifest;
   Service: ServiceManifest;
   ServiceInstance: ServiceInstanceManifest;
@@ -421,6 +423,7 @@ interface Manifest extends OperationManifest {
   EnvironmentDetails: EnvironmentDetailsManifest;
   CompileReports: CompileReportsManifest;
   CompileDetails: CompileDetailsManifest;
+  GetCallbacks: GetCallbacksManifest;
 }
 
 /**
