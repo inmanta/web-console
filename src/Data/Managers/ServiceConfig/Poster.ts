@@ -1,7 +1,7 @@
 import { ApiHelper } from "@/Core";
 import { PosterImpl } from "@/Data/API";
 
-export class ServiceConfigPoster extends PosterImpl<"ServiceConfig"> {
+export class ServiceConfigPoster extends PosterImpl<"UpdateServiceConfig"> {
   constructor(apiHelper: ApiHelper, environment: string) {
     super(
       apiHelper,

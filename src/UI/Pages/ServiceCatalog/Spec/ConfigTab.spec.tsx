@@ -43,7 +43,7 @@ function setup() {
     scheduler,
     Service.a.environment
   );
-  const serviceConfigFetcher = new DeferredFetcher<"ServiceConfig">();
+  const serviceConfigFetcher = new DeferredFetcher<"GetServiceConfig">();
   const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
   const serviceConfigQueryManager = new ServiceConfigQueryManager(
     serviceConfigFetcher,
@@ -59,7 +59,7 @@ function setup() {
   );
 
   const serviceConfigCommandManager = new ServiceConfigCommandManager(
-    new InstantPoster<"ServiceConfig">(
+    new InstantPoster<"UpdateServiceConfig">(
       RemoteData.success({ data: Service.a.config })
     ),
     serviceConfigStateHelper

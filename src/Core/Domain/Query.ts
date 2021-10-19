@@ -38,11 +38,11 @@ type Query =
   | ServiceQuery
   | ServiceInstanceQuery
   | ServiceInstancesQuery
-  | ServiceConfigQuery
+  | GetServiceConfig
   | InstanceResourcesQuery
   | InstanceEventsQuery
   | InstanceLogsQuery
-  | InstanceConfigQuery
+  | GetInstanceConfig
   | DiagnosticsQuery
   | ProjectsQuery
   | ResourcesQuery
@@ -166,16 +166,16 @@ interface ServiceInstanceManifest {
   query: ServiceInstanceQuery;
 }
 
-export interface ServiceConfigQuery extends ServiceIdentifier {
-  kind: "ServiceConfig";
+export interface GetServiceConfig extends ServiceIdentifier {
+  kind: "GetServiceConfig";
 }
 
-interface ServiceConfigManifest {
+interface GetServiceConfigManifest {
   error: string;
   apiResponse: { data: Config };
   data: Config;
   usedData: Config;
-  query: ServiceConfigQuery;
+  query: GetServiceConfig;
 }
 
 /**
@@ -243,16 +243,16 @@ interface InstanceLogsManifest {
 /**
  * The instanceConfig query describes the config belonging to one specific service instance
  */
-export interface InstanceConfigQuery extends ServiceInstanceIdentifier {
-  kind: "InstanceConfig";
+export interface GetInstanceConfig extends ServiceInstanceIdentifier {
+  kind: "GetInstanceConfig";
 }
 
-interface InstanceConfigManifest {
+interface GetInstanceConfigManifest {
   error: string;
   apiResponse: { data: Config };
   data: Config;
   usedData: { config: Config; defaults: Config };
-  query: InstanceConfigQuery;
+  query: GetInstanceConfig;
 }
 
 /** Diagnostics describe the status of an instance with regards to the diagnose call */
@@ -406,11 +406,11 @@ interface Manifest extends OperationManifest {
   Service: ServiceManifest;
   ServiceInstance: ServiceInstanceManifest;
   ServiceInstances: ServiceInstancesManifest;
-  ServiceConfig: ServiceConfigManifest;
+  GetServiceConfig: GetServiceConfigManifest;
   InstanceResources: InstanceResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;
-  InstanceConfig: InstanceConfigManifest;
+  GetInstanceConfig: GetInstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
   Projects: ProjectsManifest;
   GetServerStatus: GetServerStatusManifest;

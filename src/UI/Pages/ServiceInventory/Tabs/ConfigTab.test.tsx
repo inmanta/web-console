@@ -50,7 +50,7 @@ function setup() {
   };
 
   const instanceConfigHelper = new InstanceConfigQueryManager(
-    new InstantFetcher<"InstanceConfig">({
+    new InstantFetcher<"GetInstanceConfig">({
       kind: "Success",
       data: { data: { auto_creating: false } },
     }),
@@ -88,7 +88,9 @@ test("ConfigTab can reset all settings", async () => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new InstanceConfigCommandManager(
-        new InstantPoster<"InstanceConfig">(RemoteData.success({ data: {} })),
+        new InstantPoster<"UpdateInstanceConfig">(
+          RemoteData.success({ data: {} })
+        ),
         instanceConfigStateHelper
       ),
     ])
@@ -133,7 +135,7 @@ test("ConfigTab can change 1 toggle", async () => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new InstanceConfigCommandManager(
-        new InstantPoster<"InstanceConfig">(
+        new InstantPoster<"UpdateInstanceConfig">(
           RemoteData.success({
             data: { auto_creating: false, auto_designed: false },
           })
@@ -185,7 +187,7 @@ test("ConfigTab handles hooks with environment modifier correctly", async () => 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new InstanceConfigCommandManager(
-        new InstantPoster<"InstanceConfig">(
+        new InstantPoster<"UpdateInstanceConfig">(
           RemoteData.success({
             data: { auto_creating: false, auto_designed: false },
           })
