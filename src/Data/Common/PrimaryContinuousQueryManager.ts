@@ -1,3 +1,10 @@
+/**
+ * @DANGER Disabling these hooks rules is dangerous for an entire file.
+ * When you edit this file, turn the rule off so you know you are not missing anything.
+ */
+
+/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+
 import {
   RemoteData,
   Query,
