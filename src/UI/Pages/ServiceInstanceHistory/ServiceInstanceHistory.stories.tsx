@@ -15,6 +15,7 @@ import {
   InstanceLogsStateHelper,
   getStoreInstance,
 } from "@/Data";
+import { MemoryRouter } from "react-router-dom";
 
 export default {
   title: "ServiceInstanceHistory",
@@ -37,14 +38,16 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   );
 
   return (
-    <DependencyProvider dependencies={{ queryResolver }}>
-      <StoreProvider store={store}>
-        <ServiceInstanceHistory
-          service={Service.a}
-          instanceId={InstanceLog.a.service_instance_id}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver }}>
+        <StoreProvider store={store}>
+          <ServiceInstanceHistory
+            service={Service.a}
+            instanceId={InstanceLog.a.service_instance_id}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 };
 

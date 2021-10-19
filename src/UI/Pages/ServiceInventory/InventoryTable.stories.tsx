@@ -16,6 +16,7 @@ import {
 } from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { StoreProvider } from "easy-peasy";
+import { MemoryRouter } from "react-router-dom";
 
 export default {
   title: "InventoryTable",
@@ -39,11 +40,18 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   );
 
   return (
-    <DependencyProvider dependencies={{ queryResolver }}>
-      <StoreProvider store={store}>
-        <InventoryTable {...args} tablePresenter={tablePresenter} />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver }}>
+        <StoreProvider store={store}>
+          <InventoryTable
+            {...args}
+            sort={{ name: "created_at", order: "desc" }}
+            setSort={() => undefined}
+            tablePresenter={tablePresenter}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 };
 

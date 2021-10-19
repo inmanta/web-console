@@ -11,6 +11,7 @@ import {
   DynamicQueryManagerResolver,
   DynamicCommandManagerResolver,
   MockEnvironmentModifier,
+  DeferredApiHelper,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -40,9 +41,9 @@ import { Chart } from "./Components";
 function setup(service = Service.a) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
+  const apiHelper = new DeferredApiHelper();
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
-    serviceInstancesFetcher,
+    apiHelper,
     new ServiceInstancesStateHelper(store, service.environment),
     scheduler,
     service.environment
@@ -107,21 +108,21 @@ function setup(service = Service.a) {
 
   return {
     component,
-    serviceInstancesFetcher,
+    apiHelper,
     resourcesFetcher,
     scheduler,
   };
 }
 
 test("ServiceInventory shows updated instances", async () => {
-  const { component, serviceInstancesFetcher, scheduler } = setup();
+  const { component, apiHelper, scheduler } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "ServiceInventory-Loading" })
   ).toBeInTheDocument();
 
-  serviceInstancesFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: [],
       links: Pagination.links,
@@ -135,7 +136,7 @@ test("ServiceInventory shows updated instances", async () => {
 
   scheduler.executeAll();
 
-  serviceInstancesFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: [ServiceInstance.a],
       links: Pagination.links,
@@ -149,10 +150,10 @@ test("ServiceInventory shows updated instances", async () => {
 });
 
 test("ServiceInventory shows error with retry", async () => {
-  const { component, serviceInstancesFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  serviceInstancesFetcher.resolve(Either.left("fake error"));
+  apiHelper.resolve(Either.left("fake error"));
 
   expect(
     await screen.findByRole("generic", { name: "ServiceInventory-Failed" })
@@ -160,7 +161,7 @@ test("ServiceInventory shows error with retry", async () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Retry" }));
 
-  serviceInstancesFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: [ServiceInstance.a],
       links: Pagination.links,
@@ -174,10 +175,10 @@ test("ServiceInventory shows error with retry", async () => {
 });
 
 test("ServiceInventory shows next page of instances", async () => {
-  const { component, serviceInstancesFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  serviceInstancesFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: [{ ...ServiceInstance.a, id: "a" }],
       links: { ...Pagination.links, next: "fake-url" },
@@ -191,7 +192,7 @@ test("ServiceInventory shows next page of instances", async () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Next" }));
 
-  serviceInstancesFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: [{ ...ServiceInstance.a, id: "b" }],
       links: Pagination.links,
@@ -205,13 +206,12 @@ test("ServiceInventory shows next page of instances", async () => {
 });
 
 test("GIVEN ResourcesView fetches resources for new instance after instance update", async () => {
-  const { component, serviceInstancesFetcher, resourcesFetcher, scheduler } =
-    setup();
+  const { component, apiHelper, resourcesFetcher, scheduler } = setup();
 
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a],
         links: Pagination.links,
@@ -240,7 +240,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   scheduler.executeAll();
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [{ ...ServiceInstance.a, version: 4 }],
         links: Pagination.links,

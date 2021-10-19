@@ -7,7 +7,7 @@ export class InstanceConfigPoster extends PosterImpl<"InstanceConfig"> {
       apiHelper,
       environment,
       ({ service_entity, id, version }) =>
-        `${apiHelper.getBaseUrl()}/lsm/v1/service_inventory/${service_entity}/${id}/config?current_version=${version}`
+        `/lsm/v1/service_inventory/${service_entity}/${id}/config?current_version=${version}`
     );
   }
 }

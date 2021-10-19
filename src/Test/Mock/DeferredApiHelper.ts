@@ -26,30 +26,30 @@ interface PendingRequest {
 }
 
 export class DeferredApiHelper implements ApiHelper {
-  readonly pendingRequests: PendingRequest[] = [];
+  private readonly _pendingRequests: PendingRequest[] = [];
   readonly resolvedRequests: Request[] = [];
 
+  get pendingRequests(): Request[] {
+    return this._pendingRequests.map((p) => p.request);
+  }
+
   resolve(data: unknown): Promise<unknown> {
-    if (this.pendingRequests.length <= 0) {
+    if (this._pendingRequests.length <= 0) {
       throw new Error("No available invocations");
     }
-    if (this.pendingRequests.length >= 2) {
+    if (this._pendingRequests.length >= 2) {
       throw new Error("2 or more invocations");
     }
-    const { resolve, promise, request } = this.pendingRequests[0];
+    const { resolve, promise, request } = this._pendingRequests[0];
     this.resolvedRequests.push(request);
-    this.pendingRequests.pop();
+    this._pendingRequests.pop();
     resolve(data);
     return promise;
   }
 
-  getBaseUrl(): string {
-    return "";
-  }
-
   delete(url: string, environment: string): Promise<Maybe.Type<string>> {
     const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
+      this._pendingRequests.push({
         request: { method: "DELETE", url, environment },
         resolve,
         promise,
@@ -64,7 +64,7 @@ export class DeferredApiHelper implements ApiHelper {
     environment: string
   ): Promise<Either.Type<string, Data>> {
     const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
+      this._pendingRequests.push({
         request: { method: "GET", url, environment },
         resolve,
         promise,
@@ -76,7 +76,7 @@ export class DeferredApiHelper implements ApiHelper {
 
   getWithoutEnvironment<Data>(url: string): Promise<Either.Type<string, Data>> {
     const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
+      this._pendingRequests.push({
         request: { method: "GET", url },
         resolve,
         promise,
@@ -92,7 +92,7 @@ export class DeferredApiHelper implements ApiHelper {
     body: Body
   ): Promise<Either.Type<string, Data>> {
     const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
+      this._pendingRequests.push({
         request: { method: "POST", url, environment, body },
         resolve,
         promise,
@@ -108,7 +108,7 @@ export class DeferredApiHelper implements ApiHelper {
     body: Body
   ): Promise<Maybe.Type<string>> {
     const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
+      this._pendingRequests.push({
         request: { method: "POST", url, environment, body },
         resolve,
         promise,
@@ -124,7 +124,7 @@ export class DeferredApiHelper implements ApiHelper {
     body: Body
   ): Promise<Maybe.Type<string>> {
     const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
+      this._pendingRequests.push({
         request: { method: "PATCH", url, environment, body },
         resolve,
         promise,

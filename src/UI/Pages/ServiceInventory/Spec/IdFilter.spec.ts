@@ -5,13 +5,12 @@ import userEvent, { specialChars } from "@testing-library/user-event";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async () => {
-  const { component, serviceInstancesFetcher } =
-    new ServiceInventoryPrepper().prep();
+  const { component, apiHelper } = new ServiceInventoryPrepper().prep();
 
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
@@ -33,12 +32,12 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   const input = screen.getByRole("searchbox", { name: "IdFilter" });
   userEvent.type(input, `${ServiceInstance.a.id}${specialChars.enter}`);
 
-  expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual(
+  expect(apiHelper.pendingRequests[0].url).toEqual(
     `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.a.id}&sort=created_at.desc`
   );
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a],
         links: Pagination.links,

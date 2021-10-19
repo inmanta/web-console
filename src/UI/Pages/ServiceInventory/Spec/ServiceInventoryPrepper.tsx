@@ -2,6 +2,7 @@ import React from "react";
 import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
 import {
+  DeferredApiHelper,
   DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
@@ -34,7 +35,7 @@ import { UrlManagerImpl } from "@/UI/Utils";
 export interface Handles {
   component: React.ReactElement;
   scheduler: SchedulerImpl;
-  serviceInstancesFetcher: DeferredFetcher<"ServiceInstances">;
+  apiHelper: DeferredApiHelper;
   resourcesFetcher: DeferredFetcher<"InstanceResources">;
 }
 
@@ -45,9 +46,9 @@ export class ServiceInventoryPrepper {
       effect: jest.fn(() => task.effect()),
       update: jest.fn((result) => task.update(result)),
     }));
-    const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
+    const apiHelper = new DeferredApiHelper();
     const serviceInstancesHelper = new ServiceInstancesQueryManager(
-      serviceInstancesFetcher,
+      apiHelper,
       new ServiceInstancesStateHelper(store, service.environment),
       scheduler,
       service.environment
@@ -104,6 +105,6 @@ export class ServiceInventoryPrepper {
       </MemoryRouter>
     );
 
-    return { component, scheduler, serviceInstancesFetcher, resourcesFetcher };
+    return { component, scheduler, apiHelper, resourcesFetcher };
   }
 }
