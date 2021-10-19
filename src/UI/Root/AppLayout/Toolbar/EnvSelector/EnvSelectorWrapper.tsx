@@ -38,11 +38,16 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
   const [searchValue, setSearchValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [toggleText, setToggleText] = useState(defaultToggleText);
-  useEffect(() => {
-    setFilteredItems(environmentNames);
-    setToggleText(defaultToggleText);
-    setSearchValue("");
-  }, [projects, defaultToggleText, environmentNames]);
+
+  useEffect(
+    () => {
+      setFilteredItems(environmentNames);
+      setToggleText(defaultToggleText);
+      setSearchValue("");
+    },
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    [projects, defaultToggleText]
+  );
 
   const filterItems = (value: string) => {
     const filtered =

@@ -22,9 +22,8 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
-const selectedEnvironment = Project.filterable[0].environments[0];
-
 function setup() {
+  const selectedEnvironment = Project.filterable[0].environments[0];
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const projectsFetcher = new FetcherImpl<"Projects">(apiHelper);
@@ -53,7 +52,7 @@ function setup() {
     </DependencyProvider>
   );
 
-  return { component, apiHelper };
+  return { component, apiHelper, selectedEnvironment };
 }
 
 test("Given environment settings When clicking on the edit name button Then the input field is shown", async () => {
@@ -72,7 +71,7 @@ test("Given environment settings When clicking on the edit name button Then the 
 });
 
 test("Given environment settings When submitting the edited name Then the backend request is fired", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper, selectedEnvironment } = setup();
   render(component);
   userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
@@ -108,7 +107,7 @@ test("Given environment settings When submitting the edited name Then the backen
 });
 
 test("Given environment settings When canceling a name edit Then the backend request is not fired", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper, selectedEnvironment } = setup();
   render(component);
   userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
@@ -132,7 +131,7 @@ test.each`
 `(
   "Given environment settings When a name edit yields an error Then the error message is shown and can be closed $displayName",
   async ({ elementName }) => {
-    const { component, apiHelper } = setup();
+    const { component, apiHelper, selectedEnvironment } = setup();
     render(component);
     userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
     const textBox = await screen.findByRole("textbox", { name: "Name-input" });
@@ -192,7 +191,7 @@ test("Given environment settings When clicking on the edit repository settings b
 });
 
 test("Given environment settings When submitting the edited repository settings Then the backend request is fired", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper, selectedEnvironment } = setup();
   render(component);
   const newRepository = "github.com/test-env";
   const newBranch = "dev";
@@ -250,7 +249,7 @@ test("Given environment settings When submitting the edited repository settings 
 });
 
 test("Given environment settings When canceling a name edit Then the backend request is not fired", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper, selectedEnvironment } = setup();
   render(component);
   userEvent.click(
     screen.getByRole("button", { name: "Repository Settings-toggle-edit" })
@@ -287,7 +286,7 @@ test.each`
 `(
   "Given environment settings When a repo edit yields an error Then the error message is shown and can be closed $displayName",
   async ({ elementName }) => {
-    const { component, apiHelper } = setup();
+    const { component, apiHelper, selectedEnvironment } = setup();
     render(component);
     userEvent.click(
       screen.getByRole("button", { name: "Repository Settings-toggle-edit" })
