@@ -39,7 +39,7 @@ const dict = {
     `There was an error retrieving data: ${error}`,
 
   "notFound.title": "404: We couldn't find that page",
-  "notFound.back": "Go back",
+  "notFound.home": "Go home",
 
   /**
    * Inventory related text
