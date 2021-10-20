@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
 import {
   Button,
   EmptyState,
@@ -9,6 +8,8 @@ import {
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
+import { Link } from "@/UI/Components";
+import { getUrl } from "@/UI/Routing";
 
 export const NotFound: React.FunctionComponent = () => (
   <PageSection variant="light">
@@ -17,8 +18,8 @@ export const NotFound: React.FunctionComponent = () => (
       <Title headingLevel="h3" size="lg">
         {words("notFound.title")}
       </Title>
-      <Link to={{ pathname: "/", search: location.search }}>
-        <Button>{words("notFound.back")}</Button>
+      <Link pathname={getUrl("Home", undefined)}>
+        <Button>{words("notFound.home")}</Button>
       </Link>
     </EmptyState>
   </PageSection>

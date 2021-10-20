@@ -73,7 +73,7 @@ test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highl
   const featureManager = new PrimaryFeatureManager();
   featureManager.setServerStatus(ServerStatus.withLsm);
   render(
-    <MemoryRouter initialEntries={["/lsm/catalog"]}>
+    <MemoryRouter initialEntries={["/console/lsm/catalog"]}>
       <DependencyProvider dependencies={{ featureManager }}>
         <Navigation environment="env" />
       </DependencyProvider>

@@ -68,7 +68,7 @@ test("GIVEN CatalogDataList WHEN service THEN service has correct link", () => {
   expect(link).toBeInTheDocument();
   expect(link).toHaveAttribute(
     "href",
-    `/lsm/catalog/${Service.a.name}/inventory`
+    `/console/lsm/catalog/${Service.a.name}/inventory`
   );
 });
 
