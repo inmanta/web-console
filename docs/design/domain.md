@@ -23,10 +23,10 @@ Each entity has a Redux state slice where it is stored.
 
 Each entity has either a Query, a Command or both.
 
-- A `Query` needs a `QueryManager` which needs a `StateHelper` and a `Fetcher`
-- A `Command` needs a `CommandManager` which needs a `StateHelper` and a `Poster`
+- A `Query` needs a `QueryManager` which needs a `StateHelper` and the `ApiHelper`
+- A `Command` needs a `CommandManager` which needs a `StateHelper` and the `ApiHelper`
 
-All of these classes are entity specific.
+All of these classes are entity specific except for the ApiHelper.
 
 ## StateHelper
 
@@ -37,17 +37,14 @@ It's an adapter around the redux store for 1 specific entity.
 ## QueryManager
 
 The `QueryManager` is reponsible for handling the query and its related data.  
-It uses the `StateHelper` and `Fetcher` to update data.
+It uses the `StateHelper` and `ApiHelper` to update data.
 
 ## CommandManager
 
 The `CommandManager` is reponsible for handling the command and its related data.  
-It uses the `StateHelper` and `Poster` to save and update data.
+It uses the `StateHelper` and `ApiHelper` to save and update data.
 
-## Fetcher
+## ApiHelper
 
-The `Fetcher` is responsible for getting data from the API.
-
-## Poster
-
-The `Poster` is responsible for posting data to the API.
+The `ApiHelper` is responsible for interaction with the API. It has 1 implementation for all entities.  
+This is the class doing actual fetch calls. This is the class that is being mocked during testing.
