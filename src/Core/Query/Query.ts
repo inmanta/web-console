@@ -48,6 +48,10 @@ import {
   GetCompileDetailsManifest,
 } from "./GetCompileDetails";
 import { GetResourceLogs, GetResourceLogsManifest } from "./GetResourceLogs";
+import {
+  GetEnvironmentSettings,
+  GetEnvironmentSettingsManifest,
+} from "./GetEnvironmentSettings";
 
 export type Query =
   | GetServices
@@ -69,7 +73,8 @@ export type Query =
   | GetCompileReports
   | GetCompileDetails
   | GetServerStatus
-  | GetCallbacks;
+  | GetCallbacks
+  | GetEnvironmentSettings;
 
 export type Type = Query;
 
@@ -98,6 +103,7 @@ interface Manifest {
   GetCompileReports: GetCompileReportsManifest;
   GetCompileDetails: GetCompileDetailsManifest;
   GetCallbacks: GetCallbacksManifest;
+  GetEnvironmentSettings: GetEnvironmentSettingsManifest;
 }
 
 /**

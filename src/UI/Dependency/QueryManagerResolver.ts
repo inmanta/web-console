@@ -46,6 +46,8 @@ import {
   ResourceLogsStateHelper,
   GetServerStatusQueryManager,
   GetServerStatusStateHelper,
+  GetEnvironmentSettingsQueryManager,
+  GetEnvironmentSettingsStateHelper,
 } from "@/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -93,6 +95,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     const serviceFetcher = new FetcherImpl<"GetService">(this.baseApiHelper);
 
     return [
+      new GetEnvironmentSettingsQueryManager(
+        this.baseApiHelper,
+        new GetEnvironmentSettingsStateHelper(this.store, environment),
+        environment
+      ),
       new ServicesQueryManager(
         new FetcherImpl<"GetServices">(this.baseApiHelper),
         new ServicesStateHelper(this.store, environment),
