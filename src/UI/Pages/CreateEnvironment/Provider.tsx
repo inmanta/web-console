@@ -2,9 +2,9 @@ import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
 import React, { useContext } from "react";
-import { Form } from "./Form";
+import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 
-export const Provider: React.FC = () => {
+export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"Projects">({ kind: "Projects" });
   return (
@@ -20,7 +20,10 @@ export const Provider: React.FC = () => {
             />
           ),
           success: (projects) => (
-            <Form projects={projects} aria-label="CreateEnvironment-Success" />
+            <CreateEnvironmentForm
+              projects={projects}
+              aria-label="CreateEnvironment-Success"
+            />
           ),
         },
         data

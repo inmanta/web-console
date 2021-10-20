@@ -119,6 +119,7 @@ export const Home: Route = {
 
 export const CreateEnvironment: Route = {
   kind: "CreateEnvironment",
+  parent: "Home",
   path: `${BASE_URL}${paths.CreateEnvironment}`,
   label: "Create Environment",
   clearEnv: true,

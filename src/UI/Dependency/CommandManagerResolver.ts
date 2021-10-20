@@ -38,6 +38,10 @@ import {
   ProjectsStateHelper,
   ModifyEnvironmentCommandManager,
   ModifyEnvironmentPoster,
+  CreateProjectCommandManager,
+  CreateProjectPutter,
+  CreateEnvironmentCommandManager,
+  CreateEnvironmentPutter,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -70,6 +74,16 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
           new ProjectsStateHelper(this.store),
           new FetcherImpl<"Projects">(this.baseApiHelper)
         )
+      ),
+      new CreateProjectCommandManager(
+        new CreateProjectPutter(this.baseApiHelper),
+        new ProjectsUpdater(
+          new ProjectsStateHelper(this.store),
+          new FetcherImpl<"Projects">(this.baseApiHelper)
+        )
+      ),
+      new CreateEnvironmentCommandManager(
+        new CreateEnvironmentPutter(this.baseApiHelper)
       ),
     ];
   }

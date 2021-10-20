@@ -9,7 +9,8 @@ import { Config } from "./Config";
 import { ServiceIdentifier } from "./ServiceModel";
 import { Field } from "./Field";
 import { CreateCallbackBody } from "./Callback";
-import { EnvironmentParams } from "./EnvironmentDetailsModel";
+import { ModifyEnvironmentParams } from "./EnvironmentDetailsModel";
+import { CreateEnvironmentParams } from ".";
 
 type Command =
   | ServiceConfigCommand
@@ -24,7 +25,9 @@ type Command =
   | ModifyEnvironmentCommand
   | DeleteCallbackCommand
   | CreateCallbackCommand
-  | DeleteEnvironment;
+  | DeleteEnvironment
+  | CreateProjectCommand
+  | CreateEnvironmentCommand;
 
 export type Type = Command;
 
@@ -164,11 +167,37 @@ export interface ModifyEnvironmentCommand {
 interface ModifyEnvironmentManifest {
   error: string;
   apiData: string;
-  body: EnvironmentParams;
+  body: ModifyEnvironmentParams;
   command: ModifyEnvironmentCommand;
   trigger: (
-    body: EnvironmentParams
+    body: ModifyEnvironmentParams
   ) => Promise<Maybe.Type<Error<"ModifyEnvironment">>>;
+}
+
+export interface CreateEnvironmentCommand {
+  kind: "CreateEnvironment";
+}
+
+interface CreateEnvironmentManifest {
+  error: string;
+  apiData: string;
+  body: CreateEnvironmentParams;
+  command: CreateEnvironmentCommand;
+  trigger: (
+    body: CreateEnvironmentParams
+  ) => Promise<Maybe.Type<Error<"CreateEnvironment">>>;
+}
+
+export interface CreateProjectCommand {
+  kind: "CreateProject";
+}
+
+interface CreateProjectManifest {
+  error: string;
+  apiData: string;
+  body: { name: string };
+  command: CreateProjectCommand;
+  trigger: (name: string) => Promise<Maybe.Type<Error<"CreateProject">>>;
 }
 
 export interface DeleteCallbackCommand {
@@ -228,6 +257,8 @@ interface Manifest {
   DeleteCallback: DeleteCallbackManifest;
   CreateCallback: CreateCallbackManifest;
   DeleteEnvironment: DeleteEnvironmentManifest;
+  CreateProject: CreateProjectManifest;
+  CreateEnvironment: CreateEnvironmentManifest;
 }
 
 /**

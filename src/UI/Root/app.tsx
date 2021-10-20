@@ -9,7 +9,7 @@ import { SearchSanitizer } from "@/UI/Routing";
 import { HomeLayout } from "./HomeLayout";
 import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
 import { Initializer } from "./Initializer";
-import { Home, CreateEnvironmentPageProvider } from "@/UI/Pages";
+import { Home, CreateEnvironmentPage } from "@/UI/Pages";
 
 interface AuthProps {
   keycloak: Keycloak.KeycloakInstance;
@@ -28,7 +28,7 @@ export const App: React.FC<AuthProps> = ({ keycloak, shouldUseAuth }) => (
           </Route>
           <Route exact path={CreateEnvironment.path}>
             <HomeLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
-              <CreateEnvironmentPageProvider />
+              <CreateEnvironmentPage />
             </HomeLayout>
           </Route>
           <Route>

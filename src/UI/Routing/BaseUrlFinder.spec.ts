@@ -40,6 +40,7 @@ test("GIVEN BaseUrlFinder WHEN getPaths THEN returns paths with wildcard", () =>
     "*/compilereports",
     "*/compilereports/:id",
     "*/settings",
+    "*/environment/create",
     "*/",
   ]);
 });

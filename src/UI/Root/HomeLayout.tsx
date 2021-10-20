@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Page } from "@patternfly/react-core";
 import { AppWrapper } from "./AppLayout/AppWrapper";
+import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 interface Props {
   keycloak?: Keycloak.KeycloakInstance;
@@ -17,7 +18,7 @@ export const HomeLayout: React.FC<Props> = ({
     keycloak={shouldUseAuth ? keycloak : undefined}
     shouldUseAuth={shouldUseAuth}
   >
-    <MainPage>{children}</MainPage>
+    <MainPage breadcrumb={<PageBreadcrumbs />}>{children}</MainPage>
   </AppWrapper>
 );
 

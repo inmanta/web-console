@@ -1,1 +1,1 @@
-export { Provider as CreateEnvironmentPageProvider } from "./Provider";
+export { Page as CreateEnvironmentPage } from "./Provider";

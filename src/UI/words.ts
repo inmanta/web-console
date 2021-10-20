@@ -323,6 +323,8 @@ const dict = {
   "home.filters.project.placeholder": "Filter by project",
   "home.filters.env.placeholder": "Filter by name",
 
+  "createEnv.projectName": "Project Name",
+
   /**
    * Navigation related text
    */

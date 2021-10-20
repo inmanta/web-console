@@ -7,7 +7,6 @@ import {
   FlexItem,
   TextInput,
 } from "@patternfly/react-core";
-import styled from "styled-components";
 import { Maybe } from "@/Core";
 import {
   CancelEditButton,
@@ -15,14 +14,21 @@ import {
   SubmitEditButton,
 } from "./InlineEditButtons";
 import { InlinePlainAlert } from "./InlinePlainAlert";
+import {
+  InlineEditButtonFiller,
+  InlineLabelItem,
+  InlineValue,
+} from "./InlineFillers";
 
 interface Props {
   label: string;
+  isRequired?: boolean;
   initialValue: string;
   onSubmit: (value: string) => Promise<Maybe.Type<string>>;
 }
 
 export const EditableTextField: React.FC<Props> = ({
+  isRequired,
   label,
   initialValue,
   onSubmit,
@@ -59,19 +65,25 @@ export const EditableTextField: React.FC<Props> = ({
           direction={{ default: "row" }}
           spaceItems={{ default: "spaceItemsNone" }}
         >
-          <LabelItem aria-label={`${label}-label`}>{label}</LabelItem>
-          {!editable ? (
-            <FlexItem>
+          <InlineLabelItem aria-label={`${label}-label`}>
+            {label}
+            {isRequired && (
+              <span aria-hidden="true" style={{ color: "red" }}>
+                {" "}
+                *
+              </span>
+            )}
+          </InlineLabelItem>
+          <FlexItem>
+            {!editable ? (
               <EnableEditButton
                 aria-label={`${label}-toggle-edit`}
                 onClick={onEditClick}
               />
-            </FlexItem>
-          ) : (
-            <FlexItem>
-              <Filler />
-            </FlexItem>
-          )}
+            ) : (
+              <InlineEditButtonFiller />
+            )}
+          </FlexItem>
         </Flex>
       </DescriptionListTerm>
       {submitError && (
@@ -114,22 +126,3 @@ export const EditableTextField: React.FC<Props> = ({
     </DescriptionListGroup>
   );
 };
-
-const Filler = styled.div`
-  height: 23px;
-  width: 60px;
-`;
-
-const LabelItem = styled(FlexItem)`
-  && {
-    line-height: var(--pf-global--LineHeight--md);
-    margin-bottom: 7px;
-  }
-`;
-
-const InlineValue = styled.div`
-  padding-bottom: 6px;
-  padding-top: 6px;
-  padding-left: 9px;
-  height: 36px;
-`;
