@@ -17,7 +17,7 @@ import {
   useUrlStateWithSort,
 } from "@/Data";
 
-export const CompileReports: React.FC = () => {
+export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "CompileReports",

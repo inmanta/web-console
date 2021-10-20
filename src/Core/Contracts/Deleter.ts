@@ -1,5 +1,5 @@
 import { Maybe } from "@/Core/Language";
-import { Command } from "@/Core/Domain";
+import { Command } from "@/Core/Command";
 
 /**
  * The Deleter is responsible for sending delete requests to the API and receiving a response.

@@ -1,17 +1,18 @@
 import {
   Command,
   CommandManager,
-  Patcher,
   InstanceAttributeModel,
   Maybe,
   Field,
+  ApiHelper,
 } from "@/Core";
 import { AttributeResultConverter, sanitizeAttributes } from "@/Data/Common";
 
 export class TriggerInstanceUpdateCommandManager implements CommandManager {
   constructor(
-    private readonly patcher: Patcher<"TriggerInstanceUpdate">,
-    private readonly attributeConverter: AttributeResultConverter
+    private readonly apiHelper: ApiHelper,
+    private readonly attributeConverter: AttributeResultConverter,
+    private readonly environment: string
   ) {}
 
   matches(command: Command.SubCommand<"TriggerInstanceUpdate">): boolean {
@@ -39,8 +40,16 @@ export class TriggerInstanceUpdateCommandManager implements CommandManager {
       parsedAttributes,
       currentAttributes
     );
-    return await this.patcher.patch(command, {
+    return await this.apiHelper.patch(this.getUrl(command), this.environment, {
       attributes: attributeDiff,
     });
+  }
+
+  private getUrl({
+    service_entity,
+    id,
+    version,
+  }: Command.SubCommand<"TriggerInstanceUpdate">): string {
+    return `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`;
   }
 }

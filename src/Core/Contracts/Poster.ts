@@ -1,5 +1,5 @@
 import { Either } from "@/Core/Language";
-import { Command } from "@/Core/Domain";
+import { Command } from "@/Core/Command";
 
 /**
  * The Poster is responsible for posting data to the API and receiving a response.

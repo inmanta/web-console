@@ -25,8 +25,8 @@ export const ConfigDetails: React.FC<Props> = ({
 }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const trigger = commandResolver.getTrigger<"InstanceConfig">({
-    kind: "InstanceConfig",
+  const trigger = commandResolver.getTrigger<"UpdateInstanceConfig">({
+    kind: "UpdateInstanceConfig",
     ...serviceInstanceIdentifier,
   });
   const isHalted = environmentModifier.useIsHalted();

@@ -3,20 +3,20 @@ import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<
-  Query.Error<"InstanceConfig">,
-  Query.Data<"InstanceConfig">
+  Query.Error<"GetInstanceConfig">,
+  Query.Data<"GetInstanceConfig">
 >;
 type ApiData = RemoteData.Type<
-  Query.Error<"InstanceConfig">,
-  Query.ApiResponse<"InstanceConfig">
+  Query.Error<"GetInstanceConfig">,
+  Query.ApiResponse<"GetInstanceConfig">
 >;
 
 export class InstanceConfigStateHelper
-  implements StateHelper<"InstanceConfig">
+  implements StateHelper<"GetInstanceConfig">
 {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, query: Query.SubQuery<"InstanceConfig">): void {
+  set(data: ApiData, query: Query.SubQuery<"GetInstanceConfig">): void {
     const value = RemoteData.mapSuccess((data) => data.data, data);
     this.store.dispatch.instanceConfig.setData({
       id: query.id,
@@ -24,7 +24,7 @@ export class InstanceConfigStateHelper
     });
   }
 
-  getHooked(query: Query.SubQuery<"InstanceConfig">): Data {
+  getHooked(query: Query.SubQuery<"GetInstanceConfig">): Data {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.instanceConfig.byId[query.id]);
@@ -36,7 +36,7 @@ export class InstanceConfigStateHelper
     return value;
   }
 
-  getOnce(query: Query.SubQuery<"InstanceConfig">): Data {
+  getOnce(query: Query.SubQuery<"GetInstanceConfig">): Data {
     return this.enforce(this.store.getState().instanceConfig.byId[query.id]);
   }
 }

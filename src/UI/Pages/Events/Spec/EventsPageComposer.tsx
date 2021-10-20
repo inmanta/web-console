@@ -9,7 +9,7 @@ import {
   EventsStateHelper,
   getStoreInstance,
 } from "@/Data";
-import { EventsPage } from "@/UI/Pages/Events/EventsPage";
+import { Events } from "@/UI/Pages/Events/Events";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Utils";
 
@@ -40,7 +40,7 @@ export class EventsPageComposer {
       <MemoryRouter>
         <DependencyProvider dependencies={{ queryResolver, urlManager }}>
           <StoreProvider store={store}>
-            <EventsPage service={service} instanceId="id1" />
+            <Events service={service} instanceId="id1" />
           </StoreProvider>
         </DependencyProvider>
       </MemoryRouter>

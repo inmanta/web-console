@@ -5,7 +5,7 @@ import { Route } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { CompileDetails } from "./CompileDetails";
 
-export const Provider: React.FC = () => {
+export const Page: React.FC = () => {
   const { id } = useParams<Route.Params<"CompileDetails">>();
 
   return (

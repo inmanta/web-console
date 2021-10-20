@@ -113,7 +113,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new ServiceConfigQueryManager(
-        new FetcherImpl<"ServiceConfig">(this.baseApiHelper),
+        new FetcherImpl<"GetServiceConfig">(this.baseApiHelper),
         new ServiceConfigStateHelper(this.store),
         new ServiceConfigFinalizer(serviceStateHelper),
         environment
@@ -136,7 +136,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new InstanceConfigQueryManager(
-        new FetcherImpl<"InstanceConfig">(this.baseApiHelper),
+        new FetcherImpl<"GetInstanceConfig">(this.baseApiHelper),
         new InstanceConfigStateHelper(this.store),
         new InstanceConfigFinalizer(serviceStateHelper),
         environment
@@ -178,7 +178,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new CallbacksQueryManager(
-        new FetcherImpl<"Callbacks">(this.baseApiHelper),
+        new FetcherImpl<"GetCallbacks">(this.baseApiHelper),
         new CallbacksStateHelper(this.store, environment),
         environment
       ),

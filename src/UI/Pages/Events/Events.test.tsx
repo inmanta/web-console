@@ -15,7 +15,7 @@ import {
   EventsStateHelper,
   getStoreInstance,
 } from "@/Data";
-import { EventsPage } from "./EventsPage";
+import { Events } from "./Events";
 import { MemoryRouter } from "react-router";
 
 function setup() {
@@ -43,7 +43,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver }}>
         <StoreProvider store={store}>
-          <EventsPage
+          <Events
             service={Service.a}
             instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
           />

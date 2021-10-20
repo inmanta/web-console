@@ -10,7 +10,7 @@ import {
   Service,
   StaticScheduler,
 } from "@/Test";
-import { ServiceCatalog } from "@/UI/Pages";
+import { ServiceCatalogPage } from "@/UI/Pages";
 import { Either, RemoteData } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -43,7 +43,7 @@ function setup() {
     scheduler,
     Service.a.environment
   );
-  const serviceConfigFetcher = new DeferredFetcher<"ServiceConfig">();
+  const serviceConfigFetcher = new DeferredFetcher<"GetServiceConfig">();
   const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
   const serviceConfigQueryManager = new ServiceConfigQueryManager(
     serviceConfigFetcher,
@@ -59,7 +59,7 @@ function setup() {
   );
 
   const serviceConfigCommandManager = new ServiceConfigCommandManager(
-    new InstantPoster<"ServiceConfig">(
+    new InstantPoster<"UpdateServiceConfig">(
       RemoteData.success({ data: Service.a.config })
     ),
     serviceConfigStateHelper
@@ -88,7 +88,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <ServiceCatalog />
+          <ServiceCatalogPage />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

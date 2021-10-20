@@ -9,25 +9,25 @@ import {
 import { useEffect } from "react";
 
 type Data = RemoteData.Type<
-  Query.Error<"ServiceConfig">,
-  Query.UsedData<"ServiceConfig">
+  Query.Error<"GetServiceConfig">,
+  Query.UsedData<"GetServiceConfig">
 >;
 
 export class ServiceConfigQueryManager
-  implements OneTimeQueryManager<"ServiceConfig">
+  implements OneTimeQueryManager<"GetServiceConfig">
 {
   constructor(
-    private readonly fetcher: Fetcher<"ServiceConfig">,
-    private readonly stateHelper: StateHelper<"ServiceConfig">,
-    private readonly configFinalizer: ConfigFinalizer<"ServiceConfig">,
+    private readonly fetcher: Fetcher<"GetServiceConfig">,
+    private readonly stateHelper: StateHelper<"GetServiceConfig">,
+    private readonly configFinalizer: ConfigFinalizer<"GetServiceConfig">,
     private readonly environment: string
   ) {}
 
-  private getConfigUrl({ name }: Query.SubQuery<"ServiceConfig">): string {
+  private getConfigUrl({ name }: Query.SubQuery<"GetServiceConfig">): string {
     return `/lsm/v1/service_catalog/${name}/config`;
   }
 
-  private initialize(query: Query.SubQuery<"ServiceConfig">): void {
+  private initialize(query: Query.SubQuery<"GetServiceConfig">): void {
     const value = this.stateHelper.getOnce(query);
     if (RemoteData.isNotAsked(value)) {
       this.stateHelper.set(RemoteData.loading(), query);
@@ -35,7 +35,7 @@ export class ServiceConfigQueryManager
   }
 
   private async update(
-    query: Query.SubQuery<"ServiceConfig">,
+    query: Query.SubQuery<"GetServiceConfig">,
     url: string
   ): Promise<void> {
     this.stateHelper.set(
@@ -44,7 +44,7 @@ export class ServiceConfigQueryManager
     );
   }
 
-  useOneTime(query: Query.SubQuery<"ServiceConfig">): [Data, () => void] {
+  useOneTime(query: Query.SubQuery<"GetServiceConfig">): [Data, () => void] {
     const { environment } = this;
     const { name } = query;
 
@@ -60,7 +60,7 @@ export class ServiceConfigQueryManager
     ];
   }
 
-  matches(query: Query.SubQuery<"ServiceConfig">): boolean {
-    return query.kind === "ServiceConfig";
+  matches(query: Query.SubQuery<"GetServiceConfig">): boolean {
+    return query.kind === "GetServiceConfig";
   }
 }

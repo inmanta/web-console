@@ -23,12 +23,11 @@ import {
   TriggerInstanceUpdateCommandManager,
   BaseApiHelper,
   InstanceDeleter,
-  TriggerInstanceUpdatePatcher,
   TriggerSetStateCommandManager,
   KeycloakAuthHelper,
   getStoreInstance,
 } from "@/Data";
-import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
+import { ServiceInventory } from "@/UI/Pages/ServiceInventory/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
 import { UrlManagerImpl } from "@/UI/Utils";
 
@@ -68,8 +67,9 @@ export class ServiceInventoryPrepper {
     const urlManager = new UrlManagerImpl("", service.environment);
 
     const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
-      new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
-      new AttributeResultConverterImpl()
+      new BaseApiHelper(),
+      new AttributeResultConverterImpl(),
+      "env1"
     );
     const deleteCommandManager = new DeleteInstanceCommandManager(
       new InstanceDeleter(new BaseApiHelper(), "env1")

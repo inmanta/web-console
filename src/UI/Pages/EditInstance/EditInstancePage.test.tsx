@@ -18,7 +18,6 @@ import {
   ServiceInstanceStateHelper,
   ServiceInstanceQueryManager,
   TriggerInstanceUpdateCommandManager,
-  TriggerInstanceUpdatePatcher,
   AttributeResultConverterImpl,
   BaseApiHelper,
   CommandResolverImpl,
@@ -43,11 +42,9 @@ function setup() {
   );
   const urlManager = new UrlManagerImpl("", "environment");
   const commandManager = new TriggerInstanceUpdateCommandManager(
-    new TriggerInstanceUpdatePatcher(
-      new BaseApiHelper(),
-      Service.a.environment
-    ),
-    new AttributeResultConverterImpl()
+    new BaseApiHelper(),
+    new AttributeResultConverterImpl(),
+    Service.a.environment
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])

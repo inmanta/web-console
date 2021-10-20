@@ -1,1 +1,1 @@
-export { Provider as EventsWithProvider } from "./Provider";
+export { Page as EventsPage } from "./Page";

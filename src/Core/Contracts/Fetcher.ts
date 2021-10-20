@@ -1,5 +1,5 @@
 import { Either } from "@/Core/Language";
-import { Query } from "@/Core/Domain";
+import { Query } from "@/Core/Query";
 
 /**
  * The Fetcher is responsible for getting data from the API.

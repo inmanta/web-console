@@ -1,5 +1,5 @@
 import { Maybe } from "@/Core/Language";
-import { Command } from "@/Core/Domain";
+import { Command } from "@/Core/Command";
 
 /**
  * The PosterWithoutResponse is responsible for posting data to the API, when the response is empty or not used.

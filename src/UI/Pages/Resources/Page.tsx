@@ -24,7 +24,7 @@ export const Wrapper: React.FC = ({ children }) => (
   </PageSectionWithTitle>
 );
 
-export const ResourcesView: React.FC = () => {
+export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Resources",

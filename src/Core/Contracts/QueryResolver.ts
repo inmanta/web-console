@@ -1,5 +1,5 @@
 import { RemoteData } from "@/Core/Language";
-import { Query } from "@/Core/Domain";
+import { Query } from "@/Core/Query";
 import { ManagerResolverGetter } from "./ManagerResolver";
 import { QueryManager } from "./QueryManager";
 

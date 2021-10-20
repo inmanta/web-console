@@ -10,8 +10,8 @@ interface Props {
 
 export const CallbacksView: React.FC<Props> = ({ service_entity }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data, retry] = queryResolver.useOneTime<"Callbacks">({
-    kind: "Callbacks",
+  const [data, retry] = queryResolver.useOneTime<"GetCallbacks">({
+    kind: "GetCallbacks",
     service_entity,
   });
 

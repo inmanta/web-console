@@ -25,7 +25,7 @@ interface Props {
   instanceId: string;
 }
 
-export const EventsPage: React.FC<Props> = ({ service, instanceId }) => {
+export const Events: React.FC<Props> = ({ service, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [sort, setSort] = useUrlStateWithSort({
     default: { name: "timestamp", order: "desc" },

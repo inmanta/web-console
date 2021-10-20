@@ -26,7 +26,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
   </PageSectionWithTitle>
 );
 
-export const ServiceInventoryWithProvider: React.FC = () => {
+export const Page: React.FC = () => {
   const { service: serviceName } = useParams<Route.Params<"Inventory">>();
 
   return (
