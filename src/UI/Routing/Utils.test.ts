@@ -27,14 +27,14 @@ it.each`
 );
 
 it.each`
-  url                                          | result                                             | resultTxt
-  ${"/"}                                       | ${[Home, {}]}                                      | ${"[Home, {}]"}
-  ${"/lsm/catalog"}                            | ${[Catalog, {}]}                                   | ${"[Catalog, {}]"}
-  ${"/lsm/catalog/xyz/inventory"}              | ${[Inventory, { service: "xyz" }]}                 | ${"[Inventory, {service: 'xyz'}]"}
-  ${"/lsm/catalog/xyz/inventory/add"}          | ${[CreateInstance, { service: "xyz" }]}            | ${"[CreateInstance, {service: 'xyz'}]"}
-  ${"/lsm/catalog/xyz/inventory/123/history"}  | ${[History, { service: "xyz", instance: "123" }]}  | ${"[History, {service: 'xyz', instance: '123'}]"}
-  ${"/lsm/catalog/xyz/inventory/123/events"}   | ${[Events, { service: "xyz", instance: "123" }]}   | ${"[Events, {service: 'xyz', instance: '123'}]"}
-  ${"/lsm/catalog/xyz/inventory/123/diagnose"} | ${[Diagnose, { service: "xyz", instance: "123" }]} | ${"[Diagnose, {service: 'xyz', instance: '123'}]"}
+  url                                                  | result                                             | resultTxt
+  ${"/console/"}                                       | ${[Home, {}]}                                      | ${"[Home, {}]"}
+  ${"/console/lsm/catalog"}                            | ${[Catalog, {}]}                                   | ${"[Catalog, {}]"}
+  ${"/console/lsm/catalog/xyz/inventory"}              | ${[Inventory, { service: "xyz" }]}                 | ${"[Inventory, {service: 'xyz'}]"}
+  ${"/console/lsm/catalog/xyz/inventory/add"}          | ${[CreateInstance, { service: "xyz" }]}            | ${"[CreateInstance, {service: 'xyz'}]"}
+  ${"/console/lsm/catalog/xyz/inventory/123/history"}  | ${[History, { service: "xyz", instance: "123" }]}  | ${"[History, {service: 'xyz', instance: '123'}]"}
+  ${"/console/lsm/catalog/xyz/inventory/123/events"}   | ${[Events, { service: "xyz", instance: "123" }]}   | ${"[Events, {service: 'xyz', instance: '123'}]"}
+  ${"/console/lsm/catalog/xyz/inventory/123/diagnose"} | ${[Diagnose, { service: "xyz", instance: "123" }]} | ${"[Diagnose, {service: 'xyz', instance: '123'}]"}
 `(
   "GIVEN getRouteWithParamsFromUrl WHEN passed '$url' THEN returns $resultTxt",
   ({ url, result }) => {
