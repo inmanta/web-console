@@ -40,6 +40,7 @@ import {
   UpdateEnvironmentSettingCommandManager,
   EnvironmentSettingUpdater,
   GetEnvironmentSettingStateHelper,
+  ResetEnvironmentSettingCommandManager,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -87,6 +88,11 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private getEnvDependentManagers(environment: string): CommandManager[] {
     const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
       this.store,
+      environment
+    );
+    const environmentSettingUpdater = new EnvironmentSettingUpdater(
+      this.baseApiHelper,
+      new GetEnvironmentSettingStateHelper(this.store, environment),
       environment
     );
     return [
@@ -162,11 +168,12 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new UpdateEnvironmentSettingCommandManager(
         this.baseApiHelper,
-        new EnvironmentSettingUpdater(
-          this.baseApiHelper,
-          new GetEnvironmentSettingStateHelper(this.store, environment),
-          environment
-        ),
+        environmentSettingUpdater,
+        environment
+      ),
+      new ResetEnvironmentSettingCommandManager(
+        this.baseApiHelper,
+        environmentSettingUpdater,
         environment
       ),
     ];

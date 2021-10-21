@@ -51,6 +51,17 @@ export class InputInfoCreator {
       return error;
     };
 
+    const reset = async () => {
+      if (initial === definition.default && value !== definition.default) {
+        setValue(definition.default);
+        return Maybe.none();
+      } else {
+        const error = await this.reset(definition.name);
+        this.setError(Maybe.withFallback(error, ""));
+        return error;
+      }
+    };
+
     switch (definition.type) {
       case "bool":
         return {
@@ -60,7 +71,7 @@ export class InputInfoCreator {
           value: this.undefinedFallback(value, definition.default),
           set: (value) => setValue(value),
           update,
-          reset: () => this.reset(definition.name),
+          reset,
         };
       case "int":
         return {
@@ -70,7 +81,7 @@ export class InputInfoCreator {
           value: this.undefinedFallback(value, definition.default),
           set: (value) => setValue(value),
           update,
-          reset: () => this.reset(definition.name),
+          reset,
         };
       case "enum":
         return {
@@ -80,7 +91,7 @@ export class InputInfoCreator {
           value: this.undefinedFallback(value, definition.default),
           set: (value) => setValue(value),
           update,
-          reset: () => this.reset(definition.name),
+          reset,
         };
       case "dict":
         return {
@@ -93,7 +104,7 @@ export class InputInfoCreator {
           ),
           set: (value) => setValue(value),
           update,
-          reset: () => this.reset(definition.name),
+          reset,
         };
     }
   }

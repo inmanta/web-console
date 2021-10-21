@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { EnvironmentSettings, Maybe } from "@/Core";
+import { EnvironmentSettings } from "@/Core";
 import { DependencyContext } from "@/UI";
 import {
   Alert,
@@ -25,13 +25,19 @@ export const Container: React.FC<Props> = ({
   const updateSetting = commandResolver.getTrigger<"UpdateEnvironmentSetting">({
     kind: "UpdateEnvironmentSetting",
   });
-  const resetSetting = async () => Maybe.none();
+  const resetSetting = commandResolver.getTrigger<"ResetEnvironmentSetting">({
+    kind: "ResetEnvironmentSetting",
+  });
   const infos = new InputInfoCreator(
     setValues,
     updateSetting,
     resetSetting,
     setErrorMessage
   ).create(settings, definition, values);
+
+  useEffect(() => {
+    setValues(settings);
+  }, [settings]);
 
   return (
     <PaddedForm>

@@ -38,6 +38,10 @@ import {
   UpdateEnvironmentSetting,
   UpdateEnvironmentSettingManifest,
 } from "./UpdateEnvironmentSetting";
+import {
+  ResetEnvironmentSetting,
+  ResetEnvironmentSettingManifest,
+} from "./ResetEnvironmentSetting";
 
 export type Command =
   | UpdateServiceConfig
@@ -55,7 +59,8 @@ export type Command =
   | DeleteEnvironment
   | CreateProject
   | CreateEnvironment
-  | UpdateEnvironmentSetting;
+  | UpdateEnvironmentSetting
+  | ResetEnvironmentSetting;
 
 export type Type = Command;
 
@@ -80,6 +85,7 @@ interface Manifest {
   CreateProject: CreateProjectManifest;
   CreateEnvironment: CreateEnvironmentManifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
+  ResetEnvironmentSetting: ResetEnvironmentSettingManifest;
 }
 
 /**

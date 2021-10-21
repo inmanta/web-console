@@ -47,7 +47,7 @@ interface IntDefinition extends BaseDefinition {
 
 interface DictDefinition extends BaseDefinition {
   type: "dict";
-  default: unknown;
+  default: Dict;
   allowed_values: null;
 }
 
