@@ -103,6 +103,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         />
         <EditableMultiTextField
           groupName={words("settings.tabs.environment.repoSettings")}
+          initiallyEditable
           initialValues={{
             repository: createEnvironmentBody.repository || "",
             branch: createEnvironmentBody.branch || "",

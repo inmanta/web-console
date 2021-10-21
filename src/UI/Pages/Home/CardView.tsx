@@ -49,8 +49,8 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
 };
 
 const CreateNewEnvironmentCard: React.FC = () => (
-  <Link pathname={getUrl("CreateEnvironment", undefined)}>
-    <Card isHoverable isCompact>
+  <Card isHoverable isCompact>
+    <Link pathname={getUrl("CreateEnvironment", undefined)}>
       <Bullseye>
         <EmptyState variant={EmptyStateVariant.xs}>
           <EmptyStateIcon icon={PlusCircleIcon} />
@@ -59,8 +59,8 @@ const CreateNewEnvironmentCard: React.FC = () => (
           </Title>
         </EmptyState>
       </Bullseye>
-    </Card>
-  </Link>
+    </Link>
+  </Card>
 );
 
 interface EnvironmentCardProps {
