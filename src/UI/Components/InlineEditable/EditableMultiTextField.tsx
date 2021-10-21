@@ -9,17 +9,18 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import React, { useState } from "react";
-import styled from "styled-components";
 import {
   CancelEditButton,
   EnableEditButton,
   SubmitEditButton,
 } from "./InlineEditButtons";
+import { InlineValue } from "./InlineFillers";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 
 interface Props {
   groupName: string;
   initialValues: Record<string, string>;
+  initiallyEditable?: boolean;
   onSubmit: (
     fieldDescriptors: Record<string, string>
   ) => Promise<Maybe.Type<string>>;
@@ -28,9 +29,10 @@ interface Props {
 export const EditableMultiTextField: React.FC<Props> = ({
   groupName,
   initialValues,
+  initiallyEditable,
   onSubmit,
 }) => {
-  const [editable, setEditable] = useState(false);
+  const [editable, setEditable] = useState(initiallyEditable);
   const [fieldValues, setFieldValues] = useState(initialValues);
   const [submitError, setSubmitError] = useState("");
   const onSubmitRequest = async (values: Record<string, string>) => {
@@ -99,9 +101,9 @@ export const EditableMultiTextField: React.FC<Props> = ({
               </DescriptionListTerm>
               <DescriptionListDescription>
                 {!editable && (
-                  <HeightMatched aria-label={`${label}-value`}>
+                  <InlineValue aria-label={`${label}-value`}>
                     {value}
-                  </HeightMatched>
+                  </InlineValue>
                 )}
                 {editable && (
                   <Flex spaceItems={{ default: "spaceItemsNone" }}>
@@ -123,10 +125,3 @@ export const EditableMultiTextField: React.FC<Props> = ({
     </DescriptionListGroup>
   );
 };
-
-const HeightMatched = styled.div`
-  height: 36px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-left: 9px;
-`;

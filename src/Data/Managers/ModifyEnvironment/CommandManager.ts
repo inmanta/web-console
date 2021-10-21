@@ -1,7 +1,7 @@
 import {
   Command,
   CommandManager,
-  EnvironmentParams,
+  ModifyEnvironmentParams,
   Maybe,
   PosterWithoutResponse,
   Updater,
@@ -20,12 +20,12 @@ export class ModifyEnvironmentCommandManager implements CommandManager {
   getTrigger(
     command: Command.SubCommand<"ModifyEnvironment">
   ): Command.Trigger<"ModifyEnvironment"> {
-    return (body: EnvironmentParams) => this.submit(command, body);
+    return (body: ModifyEnvironmentParams) => this.submit(command, body);
   }
 
   private async submit(
     command: Command.SubCommand<"ModifyEnvironment">,
-    body: EnvironmentParams
+    body: ModifyEnvironmentParams
   ): Promise<Maybe.Type<Command.Error<"ModifyEnvironment">>> {
     const error = await this.poster.post(command, body);
     await this.updater.update({

@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { EnvironmentModel, ProjectModel } from "@/Core";
 import { DescriptionList } from "@patternfly/react-core";
-import { EditableTextField } from "./EditableTextField";
-import { EditableMultiTextField } from "./EditableMultiTextField";
+import { EditableTextField, EditableMultiTextField } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Project } from "./Project";

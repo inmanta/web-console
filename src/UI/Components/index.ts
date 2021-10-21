@@ -16,6 +16,7 @@ export * from "./EventIcon";
 export * from "./EventsTable";
 export * from "./Filters";
 export * from "./IconTabs";
+export * from "./InlineEditable";
 export * from "./InstanceState";
 export * from "./Link";
 export * from "./LoadingView";

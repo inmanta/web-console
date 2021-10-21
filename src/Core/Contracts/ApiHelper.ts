@@ -28,5 +28,9 @@ export interface ApiHelper {
     environment: string,
     body: Body
   ): Promise<Maybe.Type<string>>;
+  putWithoutResponseAndEnvironment<Body>(
+    url: string,
+    body: Body
+  ): Promise<Maybe.Type<string>>;
   delete(url: string, environment: string): Promise<Maybe.Type<string>>;
 }

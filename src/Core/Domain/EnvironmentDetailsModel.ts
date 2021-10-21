@@ -9,7 +9,14 @@ export interface EnvironmentDetails extends WithId {
   halted: boolean;
 }
 
-export interface EnvironmentParams extends WithId {
+export interface ModifyEnvironmentParams extends WithId {
+  name: string;
+  repository?: string;
+  branch?: string;
+}
+
+export interface CreateEnvironmentParams {
+  project_id: string;
   name: string;
   repository?: string;
   branch?: string;
