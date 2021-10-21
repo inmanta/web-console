@@ -54,10 +54,10 @@ interface WithValue<ValueType> {
   set: (value: ValueType) => void;
 }
 
-type BooleanInputInfo = WithValue<boolean> & BooleanDefinition;
-type IntInputInfo = WithValue<number> & IntDefinition;
-type EnumInputInfo = WithValue<string> & EnumDefinition;
-type DictInputInfo = WithValue<Dict> & DictDefinition;
+export type BooleanInputInfo = WithValue<boolean> & BooleanDefinition;
+export type IntInputInfo = WithValue<number> & IntDefinition;
+export type EnumInputInfo = WithValue<string> & EnumDefinition;
+export type DictInputInfo = WithValue<Dict> & DictDefinition;
 
 export type InputInfo =
   | BooleanInputInfo

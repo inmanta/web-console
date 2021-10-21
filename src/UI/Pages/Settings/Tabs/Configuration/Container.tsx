@@ -1,6 +1,7 @@
 import { EnvironmentSettings } from "@/Core";
 import { Form, FormGroup } from "@patternfly/react-core";
 import React, { useState } from "react";
+import { Input } from "./Input";
 
 interface Props {
   settings: EnvironmentSettings.EnvironmentSettings;
@@ -14,25 +15,17 @@ export const Container: React.FC<Props> = ({
   return (
     <Form>
       {infos.map((info) => (
-        <FormGroup key={info.name} fieldId={info.name}>
+        <FormGroup
+          key={info.name}
+          fieldId={info.name}
+          helperText={info.doc}
+          label={info.name}
+        >
           <Input info={info} />
         </FormGroup>
       ))}
     </Form>
   );
-};
-
-const Input: React.FC<{ info: EnvironmentSettings.InputInfo }> = ({ info }) => {
-  switch (info.type) {
-    case "bool":
-      return <>{info.name} (bool)</>;
-    case "int":
-      return <>{info.name} int</>;
-    case "enum":
-      return <>{info.name} enum</>;
-    case "dict":
-      return <>{info.name} dict</>;
-  }
 };
 
 function settingsToInfos(
@@ -56,7 +49,7 @@ function sortInfos(
 
 function definitionToInputInfo(
   definition: EnvironmentSettings.Definition,
-  value: EnvironmentSettings.Value,
+  value: EnvironmentSettings.Value | undefined,
   setValue: (value: EnvironmentSettings.Value) => void
 ): EnvironmentSettings.InputInfo {
   switch (definition.type) {
@@ -64,29 +57,36 @@ function definitionToInputInfo(
       return {
         ...definition,
         type: "bool",
-        value: value as boolean,
+        value: undefinedFallback(value, definition.default),
         set: (value) => setValue(value),
       };
     case "int":
       return {
         ...definition,
         type: "int",
-        value: value as number,
+        value: undefinedFallback(value, definition.default),
         set: (value) => setValue(value),
       };
     case "enum":
       return {
         ...definition,
         type: "enum",
-        value: value as string,
+        value: undefinedFallback(value, definition.default),
         set: (value) => setValue(value),
       };
     case "dict":
       return {
         ...definition,
         type: "dict",
-        value: value as EnvironmentSettings.Dict,
+        value: undefinedFallback(
+          value,
+          definition.default as EnvironmentSettings.Dict
+        ),
         set: (value) => setValue(value),
       };
   }
+}
+
+function undefinedFallback<V>(value: unknown | undefined, fallback: V): V {
+  return typeof value === "undefined" ? fallback : (value as V);
 }
