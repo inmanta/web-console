@@ -6,8 +6,8 @@ export interface GetEnvironmentSettings {
 
 export interface GetEnvironmentSettingsManifest {
   error: string;
-  apiResponse: { data: EnvironmentSettings };
-  data: EnvironmentSettings;
-  usedData: EnvironmentSettings;
+  apiResponse: { data: EnvironmentSettings.EnvironmentSettings };
+  data: EnvironmentSettings.EnvironmentSettings;
+  usedData: EnvironmentSettings.EnvironmentSettings;
   query: GetEnvironmentSettings;
 }

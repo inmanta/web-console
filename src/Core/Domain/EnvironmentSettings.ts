@@ -1,14 +1,15 @@
 export interface EnvironmentSettings {
-  settings: EnvironmentSettingsValues;
-  definition: EnvironmentSettingsDefinition;
+  settings: ValuesMap;
+  definition: DefinitionMap;
 }
 
-export type EnvironmentSettingsValues = Record<
-  string,
-  boolean | string | number | Record<string, boolean | string | number>
->;
+export type ValuesMap = Record<string, boolean | string | number | Dict>;
 
-export type EnvironmentSettingsDefinition = Record<string, Definition>;
+export type Dict = Record<string, boolean | string | number>;
+
+export type Value = ValuesMap[keyof ValuesMap];
+
+export type DefinitionMap = Record<string, Definition>;
 
 export type Definition =
   | BooleanDefinition
@@ -47,3 +48,19 @@ interface DictDefinition extends BaseDefinition {
   default: unknown;
   allowed_values: null;
 }
+
+interface WithValue<ValueType> {
+  value: ValueType;
+  set: (value: ValueType) => void;
+}
+
+type BooleanInputInfo = WithValue<boolean> & BooleanDefinition;
+type IntInputInfo = WithValue<number> & IntDefinition;
+type EnumInputInfo = WithValue<string> & EnumDefinition;
+type DictInputInfo = WithValue<Dict> & DictDefinition;
+
+export type InputInfo =
+  | BooleanInputInfo
+  | IntInputInfo
+  | EnumInputInfo
+  | DictInputInfo;
