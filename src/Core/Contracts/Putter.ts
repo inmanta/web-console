@@ -1,5 +1,5 @@
 import { Maybe } from "@/Core/Language";
-import { Command } from "@/Core/Domain";
+import { Command } from "@/Core/Command";
 
 /**
  * The Putter is responsible for executing PUT calls on the API.

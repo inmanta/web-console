@@ -11,20 +11,20 @@ test("EnvironmentHandler redirects to home page when no environment is selected"
   const environmentHandler = new EnvironmentHandlerImpl(history, store);
   environmentHandler.setDefault(RemoteData.success(Project.list));
 
-  expect(history.location.pathname).toEqual("/");
+  expect(history.location.pathname).toEqual("/console/");
   expect(history.location.search).toEqual("");
 });
 
 test("EnvironmentHandler redirects to home page when the selected environment doesn't exist", () => {
   const history = createMemoryHistory({
-    initialEntries: ["/resources?env=doesnotexist"],
+    initialEntries: ["/console/resources?env=doesnotexist"],
   });
   const store = getStoreInstance();
 
   const environmentHandler = new EnvironmentHandlerImpl(history, store);
   environmentHandler.setDefault(RemoteData.success(Project.list));
 
-  expect(history.location.pathname).toEqual("/");
+  expect(history.location.pathname).toEqual("/console/");
   expect(history.location.search).toEqual("");
 });
 

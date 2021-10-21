@@ -1,46 +1,19 @@
-import { Maybe } from "@/Core";
 import { BaseUrlFinder } from "./BaseUrlFinder";
 
 const finder = new BaseUrlFinder();
 
 test.each`
-  fullUrl                                                         | returnText                         | returnValue
-  ${""}                                                           | ${"Maybe.some()"}                  | ${Maybe.some("")}
-  ${"/"}                                                          | ${"Maybe.some()"}                  | ${Maybe.some("/")}
-  ${"/sub1"}                                                      | ${"Maybe.some()"}                  | ${Maybe.some("/sub1")}
-  ${"/sub1/"}                                                     | ${"Maybe.some()"}                  | ${Maybe.some("/sub1/")}
-  ${"/sub1/lsm/catalog"}                                          | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
-  ${"/sub1/lsm/catalog"}                                          | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
-  ${"/sub1/lsm/catalog/cloudconnect/inventory"}                   | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
-  ${"/sub1/lsm/catalog/cloudconnect/inventory/add"}               | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
-  ${"/sub1/lsm/catalog/cloudconnect/inventory/abcd1234/history"}  | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
-  ${"/sub1/lsm/catalog/cloudconnect/inventory/abcd1234/diagnose"} | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
-  ${"/sub1/lsm/catalog/cloudconnect/inventory/abcd1234/events"}   | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
-  ${"/sub1/resources"}                                            | ${"Maybe.some('/sub1')"}           | ${Maybe.some("/sub1")}
-  ${"/sub1/sub2/lsm/catalog"}                                     | ${"Maybe.some('/sub1/sub2')"}      | ${Maybe.some("/sub1/sub2")}
-  ${"/sub1/sub2/sub3/lsm/catalog"}                                | ${"Maybe.some('/sub1/sub2/sub3')"} | ${Maybe.some("/sub1/sub2/sub3")}
+  fullUrl                         | returnText                      | returnValue
+  ${""}                           | ${"/console"}                   | ${"/console"}
+  ${"/"}                          | ${"/console"}                   | ${"/console"}
+  ${"/sub1"}                      | ${"/console"}                   | ${"/console"}
+  ${"/console/something"}         | ${"/console"}                   | ${"/console"}
+  ${"/something/console"}         | ${"/something/console"}         | ${"/something/console"}
+  ${"/something/andmore/console"} | ${"/something/andmore/console"} | ${"/something/andmore/console"}
+  ${"/something/console/wrong"}   | ${"/something/console"}         | ${"/something/console"}
 `(
-  "GIVEN BaseUrlFinder WHEN find('$fullUrl') THEN returns $returnText",
+  "GIVEN BaseUrlFinder WHEN url = $fullUrl THEN returns $returnText",
   ({ fullUrl, returnValue }) => {
-    expect(finder.find(fullUrl)).toMatchObject(returnValue);
+    expect(finder.getUrl(fullUrl)).toEqual(returnValue);
   }
 );
-
-test("GIVEN BaseUrlFinder WHEN getPaths THEN returns paths with wildcard", () => {
-  expect(finder.getPaths()).toEqual([
-    "*/lsm/catalog",
-    "*/lsm/catalog/:service/inventory",
-    "*/lsm/catalog/:service/inventory/add",
-    "*/lsm/catalog/:service/inventory/:instance/edit",
-    "*/lsm/catalog/:service/inventory/:instance/history",
-    "*/lsm/catalog/:service/inventory/:instance/diagnose",
-    "*/lsm/catalog/:service/inventory/:instance/events",
-    "*/resources",
-    "*/resources/:resourceId",
-    "*/compilereports",
-    "*/compilereports/:id",
-    "*/settings",
-    "*/environment/create",
-    "*/",
-  ]);
-});

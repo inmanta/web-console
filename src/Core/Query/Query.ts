@@ -1,48 +1,49 @@
-import { InstanceEvent } from "./EventModel";
-import { InstanceLog } from "./InstanceLogModel";
-import { InstanceResourceModel as InstanceResourceModel } from "./InstanceResourceModel";
+import { WithId } from "@/Core/Language";
 import {
+  InstanceEvent,
+  InstanceLog,
+  InstanceResourceModel,
+  ServiceIdentifier,
+  ServiceModel,
   VersionedServiceInstanceIdentifier,
   ServiceInstanceModel,
   ServiceInstanceModelWithTargetStates,
   ServiceInstanceIdentifier,
-} from "./ServiceInstanceModel";
-import { ServiceIdentifier, ServiceModel } from "./ServiceModel";
-import * as Pagination from "./Pagination";
-import { Config } from "./Config";
-import { ServiceInstanceParams } from "./ServiceInstanceParams";
-import { RawDiagnostics, Diagnostics } from "./Diagnostics";
-import { EventParams } from "./EventParams";
-import { ProjectModel } from "./ProjectModel";
-import {
+  Pagination,
+  Config,
+  ServiceInstanceParams,
+  RawDiagnostics,
+  Diagnostics,
+  EventParams,
+  ProjectModel,
   Resource,
   RawResource,
   RawResourceDetails,
   ResourceDetails,
-} from "./Resource";
-import { ResourceParams as ResourceParams } from "./ResourceParams";
-import { WithId } from "../Language";
-import { ResourceHistory } from "./ResourceHistory";
-import { ResourceLog, ResourceLogFilter } from "./ResourceLog";
-import { Sort } from "./Sort";
-import { PageSize } from "./PageSize";
-import { EnvironmentDetails } from "./EnvironmentDetailsModel";
-import { Callback } from "./Callback";
-import { CompileReport } from "./CompileReport";
-import { CompileReportParams } from "./CompileReportParams";
-import { CompileDetails } from "./CompileDetails";
-import { ServerStatus } from "./ServerStatus";
+  ResourceParams,
+  ResourceHistory,
+  ResourceLog,
+  ResourceLogFilter,
+  PageSize,
+  Sort,
+  ServerStatus,
+  CompileDetails,
+  CompileReportParams,
+  CompileReport,
+  EnvironmentDetails,
+} from "@/Core/Domain";
+import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
 
-type Query =
+export type Query =
   | ServicesQuery
   | ServiceQuery
   | ServiceInstanceQuery
   | ServiceInstancesQuery
-  | ServiceConfigQuery
+  | GetServiceConfig
   | InstanceResourcesQuery
   | InstanceEventsQuery
   | InstanceLogsQuery
-  | InstanceConfigQuery
+  | GetInstanceConfig
   | DiagnosticsQuery
   | ProjectsQuery
   | ResourcesQuery
@@ -50,10 +51,10 @@ type Query =
   | ResourceHistoryQuery
   | ResourceLogsQuery
   | EnvironmentDetailsQuery
-  | CallbacksQuery
   | CompileReportsQuery
   | CompileDetailsQuery
-  | GetServerStatus;
+  | GetServerStatus
+  | GetCallbacks;
 
 export type Type = Query;
 
@@ -130,7 +131,7 @@ interface ServiceManifest {
  */
 export interface ServiceInstancesQuery
   extends ServiceIdentifier,
-    ServiceInstanceParams {
+    ServiceInstanceParams.ServiceInstanceParams {
   kind: "ServiceInstances";
 }
 
@@ -166,16 +167,16 @@ interface ServiceInstanceManifest {
   query: ServiceInstanceQuery;
 }
 
-export interface ServiceConfigQuery extends ServiceIdentifier {
-  kind: "ServiceConfig";
+export interface GetServiceConfig extends ServiceIdentifier {
+  kind: "GetServiceConfig";
 }
 
-interface ServiceConfigManifest {
+interface GetServiceConfigManifest {
   error: string;
   apiResponse: { data: Config };
   data: Config;
   usedData: Config;
-  query: ServiceConfigQuery;
+  query: GetServiceConfig;
 }
 
 /**
@@ -201,7 +202,7 @@ interface InstanceResourcesManifest {
  */
 export interface InstanceEventsQuery
   extends ServiceInstanceIdentifier,
-    EventParams {
+    EventParams.EventParams {
   kind: "Events";
 }
 
@@ -243,16 +244,16 @@ interface InstanceLogsManifest {
 /**
  * The instanceConfig query describes the config belonging to one specific service instance
  */
-export interface InstanceConfigQuery extends ServiceInstanceIdentifier {
-  kind: "InstanceConfig";
+export interface GetInstanceConfig extends ServiceInstanceIdentifier {
+  kind: "GetInstanceConfig";
 }
 
-interface InstanceConfigManifest {
+interface GetInstanceConfigManifest {
   error: string;
   apiResponse: { data: Config };
   data: Config;
   usedData: { config: Config; defaults: Config };
-  query: InstanceConfigQuery;
+  query: GetInstanceConfig;
 }
 
 /** Diagnostics describe the status of an instance with regards to the diagnose call */
@@ -268,7 +269,7 @@ interface DiagnosticsManifest {
   query: DiagnosticsQuery;
 }
 
-export interface ResourcesQuery extends ResourceParams {
+export interface ResourcesQuery extends ResourceParams.ResourceParams {
   kind: "Resources";
 }
 
@@ -308,8 +309,8 @@ interface ResourceDetailsManifest {
 
 export interface ResourceHistoryQuery extends WithId {
   kind: "ResourceHistory";
-  sort?: Sort;
-  pageSize: PageSize;
+  sort?: Sort.Type;
+  pageSize: PageSize.Type;
 }
 
 interface ResourceHistoryManifest {
@@ -332,20 +333,8 @@ interface ResourceHistoryManifest {
   query: ResourceHistoryQuery;
 }
 
-export interface CallbacksQuery {
-  kind: "Callbacks";
-  service_entity: string;
-}
-
-interface CallbacksManifest {
-  error: string;
-  apiResponse: { data: Callback[] };
-  data: Callback[];
-  usedData: Callback[];
-  query: CallbacksQuery;
-}
-
-export interface CompileReportsQuery extends CompileReportParams {
+export interface CompileReportsQuery
+  extends CompileReportParams.CompileReportParams {
   kind: "CompileReports";
 }
 
@@ -386,8 +375,8 @@ interface CompileDetailsManifest {
 export interface ResourceLogsQuery extends WithId {
   kind: "ResourceLogs";
   filter?: ResourceLogFilter;
-  sort?: Sort;
-  pageSize: PageSize;
+  sort?: Sort.Type;
+  pageSize: PageSize.Type;
 }
 
 interface ResourceLogsManifest {
@@ -419,11 +408,11 @@ interface Manifest {
   Service: ServiceManifest;
   ServiceInstance: ServiceInstanceManifest;
   ServiceInstances: ServiceInstancesManifest;
-  ServiceConfig: ServiceConfigManifest;
+  GetServiceConfig: GetServiceConfigManifest;
   InstanceResources: InstanceResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;
-  InstanceConfig: InstanceConfigManifest;
+  GetInstanceConfig: GetInstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
   Projects: ProjectsManifest;
   GetServerStatus: GetServerStatusManifest;
@@ -432,9 +421,9 @@ interface Manifest {
   ResourceHistory: ResourceHistoryManifest;
   ResourceLogs: ResourceLogsManifest;
   EnvironmentDetails: EnvironmentDetailsManifest;
-  Callbacks: CallbacksManifest;
   CompileReports: CompileReportsManifest;
   CompileDetails: CompileDetailsManifest;
+  GetCallbacks: GetCallbacksManifest;
 }
 
 /**

@@ -11,8 +11,8 @@ interface Props {
 
 export const Config: React.FC<Props> = ({ serviceName }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data, retry] = queryResolver.useOneTime<"ServiceConfig">({
-    kind: "ServiceConfig",
+  const [data, retry] = queryResolver.useOneTime<"GetServiceConfig">({
+    kind: "GetServiceConfig",
     name: serviceName,
   });
 

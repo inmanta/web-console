@@ -1,20 +1,20 @@
 import { Either, Maybe } from "@/Core/Language";
 import {
+  Config,
   InstanceAttributeModel,
   ServiceInstanceModel,
   SetStateBody,
   VersionedServiceInstanceIdentifier,
-} from "./ServiceInstanceModel";
-import { Config } from "./Config";
-import { ServiceIdentifier } from "./ServiceModel";
-import { Field } from "./Field";
-import { CreateCallbackBody } from "./Callback";
-import { ModifyEnvironmentParams } from "./EnvironmentDetailsModel";
-import { CreateEnvironmentParams } from ".";
+  ServiceIdentifier,
+  Field,
+  CreateCallbackBody,
+  ModifyEnvironmentParams,
+  CreateEnvironmentParams,
+} from "@/Core/Domain";
 
-type Command =
-  | ServiceConfigCommand
-  | InstanceConfigCommand
+export type Command =
+  | UpdateServiceConfig
+  | UpdateInstanceConfig
   | CreateInstanceCommand
   | TriggerInstanceUpdateCommand
   | DeleteInstanceCommand
@@ -31,31 +31,31 @@ type Command =
 
 export type Type = Command;
 
-export interface ServiceConfigCommand extends ServiceIdentifier {
-  kind: "ServiceConfig";
+export interface UpdateServiceConfig extends ServiceIdentifier {
+  kind: "UpdateServiceConfig";
 }
 
-interface ServiceConfigManifest {
+interface UpdateServiceConfigManifest {
   error: string;
   apiData: { data: Config };
   body: { values: Config };
-  command: ServiceConfigCommand;
+  command: UpdateServiceConfig;
   trigger: (option: string, value: boolean) => void;
 }
 
 /**
  * The instanceConfig command updates the config belonging to one specific service instance
  */
-export interface InstanceConfigCommand
+export interface UpdateInstanceConfig
   extends VersionedServiceInstanceIdentifier {
-  kind: "InstanceConfig";
+  kind: "UpdateInstanceConfig";
 }
 
-interface InstanceConfigManifest {
+interface UpdateInstanceConfigManifest {
   error: string;
   apiData: { data: Config };
   body: { values: Config };
-  command: InstanceConfigCommand;
+  command: UpdateInstanceConfig;
   trigger: (
     payload:
       | { kind: "RESET" }
@@ -244,8 +244,8 @@ interface DeleteEnvironmentManifest {
  * types related to all the sub commands.
  */
 interface Manifest {
-  ServiceConfig: ServiceConfigManifest;
-  InstanceConfig: InstanceConfigManifest;
+  UpdateServiceConfig: UpdateServiceConfigManifest;
+  UpdateInstanceConfig: UpdateInstanceConfigManifest;
   CreateInstance: CreateInstanceManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdateManifest;
   DeleteInstance: DeleteInstanceManifest;

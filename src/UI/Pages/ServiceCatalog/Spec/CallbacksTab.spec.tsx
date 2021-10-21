@@ -5,14 +5,13 @@ import {
   DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
-  InstantPoster,
   Service,
   StaticScheduler,
   Callback,
   DeferredApiHelper,
 } from "@/Test";
-import { ServiceCatalog } from "@/UI/Pages";
-import { Either, RemoteData } from "@/Core";
+import { ServiceCatalogPage } from "@/UI/Pages";
+import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
@@ -25,7 +24,6 @@ import {
   CallbacksQueryManager,
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
-  CallbackDeleter,
   CallbacksUpdater,
   DeleteServiceCommandManager,
   ServiceDeleter,
@@ -45,7 +43,7 @@ function setup() {
     scheduler,
     environment
   );
-  const callbacksFetcher = new DeferredFetcher<"Callbacks">();
+  const callbacksFetcher = new DeferredFetcher<"GetCallbacks">();
   const callbacksStateHelper = new CallbacksStateHelper(store, environment);
   const callbacksQueryManager = new CallbacksQueryManager(
     callbacksFetcher,
@@ -65,25 +63,24 @@ function setup() {
   );
 
   const apiHelper = new DeferredApiHelper();
-  const callbackDeleter = new CallbackDeleter(apiHelper, environment);
   const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
-    callbackDeleter,
+    apiHelper,
     new CallbacksUpdater(
       new CallbacksStateHelper(store, environment),
       callbacksFetcher,
       environment
-    )
+    ),
+    environment
   );
 
   const createCallbackCommandManager = new CreateCallbackCommandManager(
-    new InstantPoster<"CreateCallback">(
-      RemoteData.success({ data: Callback.a.callback_id })
-    ),
+    apiHelper,
     new CallbacksUpdater(
       new CallbacksStateHelper(store, environment),
-      new DeferredFetcher<"Callbacks">(),
+      new DeferredFetcher<"GetCallbacks">(),
       environment
-    )
+    ),
+    environment
   );
 
   const commandResolver = new CommandResolverImpl(
@@ -98,7 +95,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
         <StoreProvider store={store}>
-          <ServiceCatalog />
+          <ServiceCatalogPage />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

@@ -5,7 +5,7 @@ import { Route } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { ResourceDetailsView } from "./ResourceDetailsView";
 
-export const Provider: React.FC = () => {
+export const Page: React.FC = () => {
   const { resourceId } = useParams<Route.Params<"ResourceDetails">>();
   return (
     <PageSectionWithTitle title={words("resources.details.title")}>

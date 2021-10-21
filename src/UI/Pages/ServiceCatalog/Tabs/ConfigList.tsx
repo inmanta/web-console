@@ -12,8 +12,8 @@ interface Props {
 export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const update = commandResolver.getTrigger<"ServiceConfig">({
-    kind: "ServiceConfig",
+  const update = commandResolver.getTrigger<"UpdateServiceConfig">({
+    kind: "UpdateServiceConfig",
     name: serviceName,
   });
   const isHalted = environmentModifier.useIsHalted();

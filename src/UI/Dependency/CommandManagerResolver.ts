@@ -2,7 +2,6 @@ import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
   BaseApiHelper,
   InstanceDeleter,
-  TriggerInstanceUpdatePatcher,
   AttributeResultConverterImpl,
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
@@ -24,12 +23,10 @@ import {
   ResumeEnvironmentCommandManager,
   ResumeEnvironmentPoster,
   DeleteCallbackCommandManager,
-  CallbackDeleter,
   FetcherImpl,
   CallbacksStateHelper,
   CallbacksUpdater,
   CreateCallbackCommandManager,
-  CallbackPoster,
   EnvironmentDetailsUpdater,
   EnvironmentDetailsStateHelper,
   DeleteEnvironmentCommandManager,
@@ -107,8 +104,9 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new AttributeResultConverterImpl()
       ),
       new TriggerInstanceUpdateCommandManager(
-        new TriggerInstanceUpdatePatcher(this.baseApiHelper, environment),
-        new AttributeResultConverterImpl()
+        this.baseApiHelper,
+        new AttributeResultConverterImpl(),
+        environment
       ),
       new DeleteInstanceCommandManager(
         new InstanceDeleter(this.baseApiHelper, environment)
@@ -139,20 +137,22 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         )
       ),
       new DeleteCallbackCommandManager(
-        new CallbackDeleter(this.baseApiHelper, environment),
+        this.baseApiHelper,
         new CallbacksUpdater(
           new CallbacksStateHelper(this.store, environment),
-          new FetcherImpl<"Callbacks">(this.baseApiHelper),
+          new FetcherImpl<"GetCallbacks">(this.baseApiHelper),
           environment
-        )
+        ),
+        environment
       ),
       new CreateCallbackCommandManager(
-        new CallbackPoster(this.baseApiHelper, environment),
+        this.baseApiHelper,
         new CallbacksUpdater(
           new CallbacksStateHelper(this.store, environment),
-          new FetcherImpl<"Callbacks">(this.baseApiHelper),
+          new FetcherImpl<"GetCallbacks">(this.baseApiHelper),
           environment
-        )
+        ),
+        environment
       ),
       new ModifyEnvironmentCommandManager(
         new ModifyEnvironmentPoster(this.baseApiHelper, environment),

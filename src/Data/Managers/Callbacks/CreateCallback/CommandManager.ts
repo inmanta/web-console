@@ -1,16 +1,18 @@
 import {
   Command,
-  Poster,
   CommandManager,
   Updater,
   Either,
   Maybe,
+  ApiHelper,
 } from "@/Core";
+import { omit } from "lodash";
 
 export class CreateCallbackCommandManager implements CommandManager {
   constructor(
-    private readonly poster: Poster<"CreateCallback">,
-    private readonly updater: Updater<"Callbacks">
+    private readonly apiHelper: ApiHelper,
+    private readonly updater: Updater<"GetCallbacks">,
+    private readonly environment: string
   ) {}
 
   matches(command: Command.SubCommand<"CreateCallback">): boolean {
@@ -21,24 +23,18 @@ export class CreateCallbackCommandManager implements CommandManager {
     command: Command.SubCommand<"CreateCallback">
   ): Command.Trigger<"CreateCallback"> {
     return async () => {
-      const {
-        callback_url,
-        callback_id,
-        service_entity,
-        minimal_log_level,
-        event_types,
-      } = command;
-      const result = await this.poster.post(command, {
-        callback_url,
-        callback_id,
-        service_entity,
-        minimal_log_level,
-        event_types,
-      });
+      const result = await this.apiHelper.post(
+        "/lsm/v1/callbacks",
+        this.environment,
+        omit(command, "kind")
+      );
       if (Either.isLeft(result)) {
         return Maybe.some(result.value);
       } else {
-        await this.updater.update({ kind: "Callbacks", service_entity });
+        await this.updater.update({
+          kind: "GetCallbacks",
+          service_entity: command.service_entity,
+        });
         return Maybe.none();
       }
     };

@@ -17,7 +17,7 @@ import {
   CompileReportsStateHelper,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
-import { CompileReports } from "./CompileReports";
+import { Page } from "./Page";
 import { MemoryRouter } from "react-router-dom";
 
 function setup() {
@@ -40,7 +40,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ queryResolver, urlManager }}>
         <StoreProvider store={store}>
-          <CompileReports />
+          <Page />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

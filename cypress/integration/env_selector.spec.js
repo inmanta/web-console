@@ -7,7 +7,7 @@ describe("Environment selector", function () {
     });
   });
   it("Has multiple entries based on backend response", function () {
-    cy.visit("/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c");
+    cy.visit("/console/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c");
     cy.get(".pf-c-context-selector__toggle").click();
 
     cy.get(".pf-c-context-selector__menu-list-item").should((items) => {
@@ -22,7 +22,7 @@ describe("Environment selector", function () {
     });
   });
   it("Has correct entry selected when env parameter is set", function () {
-    cy.visit("/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c");
+    cy.visit("/console/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c");
     cy.get(".pf-c-context-selector__toggle-text").should(
       "contain.text",
       "live"
@@ -30,7 +30,7 @@ describe("Environment selector", function () {
   });
   it("Redirects to home page when the environment from the url doesn't exist", function () {
     cy.intercept("GET", "**/api/v2/project", { fixture: "environments.json" });
-    cy.visit("/lsm/catalog?env=nope");
+    cy.visit("/console/lsm/catalog?env=nope");
     cy.get("h1").contains("Home").should("be.visible");
   });
 });

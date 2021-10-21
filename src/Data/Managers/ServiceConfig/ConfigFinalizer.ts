@@ -9,7 +9,7 @@ import {
 import { uniq } from "lodash";
 
 export class ServiceConfigFinalizer
-  implements ConfigFinalizer<"ServiceConfig">
+  implements ConfigFinalizer<"GetServiceConfig">
 {
   constructor(private readonly serviceStateHelper: StateHelper<"Service">) {}
 

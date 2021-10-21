@@ -1,1 +1,1 @@
-export { Provider as EditInstancePageProvider } from "./Provider";
+export { Page as EditInstancePage } from "./Page";

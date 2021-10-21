@@ -15,7 +15,7 @@ import {
   ResourcesQueryManager,
   ResourcesStateHelper,
 } from "@/Data";
-import { ResourcesView } from "./ResourcesView";
+import { Page } from "./Page";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { MemoryRouter } from "react-router-dom";
@@ -46,7 +46,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <ResourcesView />
+          <Page />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
