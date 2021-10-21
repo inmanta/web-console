@@ -5,13 +5,14 @@ type Update = (
   value: EnvironmentSettings.Value
 ) => Promise<Maybe.Type<string>>;
 
-type Reset = () => Promise<Maybe.Type<string>>;
+type Reset = (id: string) => Promise<Maybe.Type<string>>;
 
 export class InputInfoCreator {
   constructor(
     private readonly setValues: (values: EnvironmentSettings.ValuesMap) => void,
     private readonly update: Update,
-    private readonly reset: Reset
+    private readonly reset: Reset,
+    private readonly setError: (message: string) => void
   ) {}
 
   create(
@@ -41,6 +42,12 @@ export class InputInfoCreator {
     value: EnvironmentSettings.Value | undefined,
     setValue: (value: EnvironmentSettings.Value) => void
   ): EnvironmentSettings.InputInfo {
+    const update = async (value) => {
+      const error = await this.update(definition.name, value);
+      this.setError(Maybe.withFallback(error, ""));
+      return error;
+    };
+
     switch (definition.type) {
       case "bool":
         return {
@@ -48,6 +55,8 @@ export class InputInfoCreator {
           type: "bool",
           value: this.undefinedFallback(value, definition.default),
           set: (value) => setValue(value),
+          update,
+          reset: () => this.reset(definition.name),
         };
       case "int":
         return {
@@ -55,6 +64,8 @@ export class InputInfoCreator {
           type: "int",
           value: this.undefinedFallback(value, definition.default),
           set: (value) => setValue(value),
+          update,
+          reset: () => this.reset(definition.name),
         };
       case "enum":
         return {
@@ -62,6 +73,8 @@ export class InputInfoCreator {
           type: "enum",
           value: this.undefinedFallback(value, definition.default),
           set: (value) => setValue(value),
+          update,
+          reset: () => this.reset(definition.name),
         };
       case "dict":
         return {
@@ -72,6 +85,8 @@ export class InputInfoCreator {
             definition.default as EnvironmentSettings.Dict
           ),
           set: (value) => setValue(value),
+          update,
+          reset: () => this.reset(definition.name),
         };
     }
   }

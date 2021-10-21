@@ -18,13 +18,13 @@ interface Props {
 export const Input: React.FC<Props> = ({ info }) => {
   switch (info.type) {
     case "bool":
-      return <>{info.name} (bool)</>;
+      return <>bool</>;
     case "int":
       return <IntInput info={info} />;
     case "enum":
-      return <>{info.name} enum</>;
+      return <>enum</>;
     case "dict":
-      return <>{info.name} dict</>;
+      return <>dict</>;
   }
 };
 
@@ -56,19 +56,27 @@ const IntInput: React.FC<IntProps> = ({ info }) => {
         <InputGroupText aria-label="default" variant="plain">
           <Tooltip
             content={words("settings.tabs.configuration.default")(
-              info.value === info.default
+              info.default.toString()
             )}
           >
-            <DefaultIcon isDisabled={info.value !== info.default} />
+            <DefaultIcon $isDisabled={info.value !== info.default} />
           </Tooltip>
         </InputGroupText>
         <Tooltip content={words("settings.tabs.configuration.save")}>
-          <Button variant="link" aria-label="Save">
+          <Button
+            variant="link"
+            aria-label="Save"
+            onClick={() => info.update(info.value)}
+          >
             <CheckIcon />
           </Button>
         </Tooltip>
         <Tooltip content={words("settings.tabs.configuration.reset")}>
-          <Button variant="plain" aria-label="Reset">
+          <Button
+            variant="plain"
+            aria-label="Reset"
+            onClick={() => info.reset()}
+          >
             <RedoIcon />
           </Button>
         </Tooltip>

@@ -37,6 +37,9 @@ import {
   ModifyEnvironmentPoster,
   CreateProjectCommandManager,
   CreateEnvironmentCommandManager,
+  UpdateEnvironmentSettingCommandManager,
+  EnvironmentSettingUpdater,
+  GetEnvironmentSettingStateHelper,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -156,6 +159,15 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
           new ProjectsStateHelper(this.store),
           new FetcherImpl<"GetProjects">(this.baseApiHelper)
         )
+      ),
+      new UpdateEnvironmentSettingCommandManager(
+        this.baseApiHelper,
+        new EnvironmentSettingUpdater(
+          this.baseApiHelper,
+          new GetEnvironmentSettingStateHelper(this.store, environment),
+          environment
+        ),
+        environment
       ),
     ];
   }

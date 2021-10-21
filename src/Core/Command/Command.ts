@@ -34,6 +34,10 @@ import {
   DeleteEnvironment,
   DeleteEnvironmentManifest,
 } from "./DeleteEnvironment";
+import {
+  UpdateEnvironmentSetting,
+  UpdateEnvironmentSettingManifest,
+} from "./UpdateEnvironmentSetting";
 
 export type Command =
   | UpdateServiceConfig
@@ -50,7 +54,8 @@ export type Command =
   | CreateCallback
   | DeleteEnvironment
   | CreateProject
-  | CreateEnvironment;
+  | CreateEnvironment
+  | UpdateEnvironmentSetting;
 
 export type Type = Command;
 
@@ -74,6 +79,7 @@ interface Manifest {
   DeleteEnvironment: DeleteEnvironmentManifest;
   CreateProject: CreateProjectManifest;
   CreateEnvironment: CreateEnvironmentManifest;
+  UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
 }
 
 /**

@@ -1,3 +1,5 @@
+import { Maybe } from "@/Core/Language";
+
 export interface EnvironmentSettings {
   settings: ValuesMap;
   definition: DefinitionMap;
@@ -49,15 +51,17 @@ interface DictDefinition extends BaseDefinition {
   allowed_values: null;
 }
 
-interface WithValue<ValueType> {
+interface WithHandlers<ValueType> {
   value: ValueType;
   set: (value: ValueType) => void;
+  update: (value: ValueType) => Promise<Maybe.Maybe<string>>;
+  reset: () => Promise<Maybe.Maybe<string>>;
 }
 
-export type BooleanInputInfo = WithValue<boolean> & BooleanDefinition;
-export type IntInputInfo = WithValue<number> & IntDefinition;
-export type EnumInputInfo = WithValue<string> & EnumDefinition;
-export type DictInputInfo = WithValue<Dict> & DictDefinition;
+export type BooleanInputInfo = WithHandlers<boolean> & BooleanDefinition;
+export type IntInputInfo = WithHandlers<number> & IntDefinition;
+export type EnumInputInfo = WithHandlers<string> & EnumDefinition;
+export type DictInputInfo = WithHandlers<Dict> & DictDefinition;
 
 export type InputInfo =
   | BooleanInputInfo

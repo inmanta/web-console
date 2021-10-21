@@ -1,6 +1,14 @@
+import React, { useContext, useState } from "react";
+import styled from "styled-components";
 import { EnvironmentSettings, Maybe } from "@/Core";
-import { Form, FormGroup } from "@patternfly/react-core";
-import React, { useState } from "react";
+import { DependencyContext } from "@/UI";
+import {
+  Alert,
+  AlertActionCloseButton,
+  Form,
+  FormAlert,
+  FormGroup,
+} from "@patternfly/react-core";
 import { Input } from "./Input";
 import { InputInfoCreator } from "./InputInfoCreator";
 
@@ -12,16 +20,34 @@ export const Container: React.FC<Props> = ({
   settings: { settings, definition },
 }) => {
   const [values, setValues] = useState(settings);
-  const updateSetting = async () => Maybe.none();
+  const [errorMessage, setErrorMessage] = useState("");
+  const { commandResolver } = useContext(DependencyContext);
+  const updateSetting = commandResolver.getTrigger<"UpdateEnvironmentSetting">({
+    kind: "UpdateEnvironmentSetting",
+  });
   const resetSetting = async () => Maybe.none();
   const infos = new InputInfoCreator(
     setValues,
     updateSetting,
-    resetSetting
+    resetSetting,
+    setErrorMessage
   ).create(definition, values);
 
   return (
-    <Form>
+    <PaddedForm>
+      {errorMessage && (
+        <FormAlert>
+          <Alert
+            variant="danger"
+            title={errorMessage}
+            aria-live="polite"
+            actionClose={
+              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
+            }
+            isInline
+          />
+        </FormAlert>
+      )}
       {infos.map((info) => (
         <FormGroup
           key={info.name}
@@ -32,6 +58,10 @@ export const Container: React.FC<Props> = ({
           <Input info={info} />
         </FormGroup>
       ))}
-    </Form>
+    </PaddedForm>
   );
 };
+
+const PaddedForm = styled(Form)`
+  padding-top: 1rem;
+`;

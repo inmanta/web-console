@@ -10,13 +10,20 @@ export interface EnvironmentSettingsSlice {
   byEnv: Record<string, Data>;
   setData: Action<
     EnvironmentSettingsSlice,
-    { environment: string; value: Data }
+    { environment: string; value: Data; merge?: boolean }
   >;
 }
 
 export const environmentSettingsSlice: EnvironmentSettingsSlice = {
   byEnv: {},
-  setData: action((state, { environment, value }) => {
-    state.byEnv[environment] = value;
+  setData: action((state, { environment, value, merge }) => {
+    if (merge) {
+      state.byEnv[environment] = {
+        ...state.byEnv[environment],
+        ...value,
+      };
+    } else {
+      state.byEnv[environment] = value;
+    }
   }),
 };
