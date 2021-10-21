@@ -346,7 +346,10 @@ const dict = {
   "settings.tabs.environment.projectName": "Project Name",
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
-  "settings.tabs.configuration.default": "This is the default value",
+  "settings.tabs.configuration.default": (isDefault: boolean) =>
+    `This is ${isDefault ? "" : "not "}the default value`,
+  "settings.tabs.configuration.save": "Save",
+  "settings.tabs.configuration.reset": "Reset to default",
 };
 
 type Key = keyof typeof dict;
