@@ -55,7 +55,7 @@ function setup() {
   };
 }
 
-it("Config Details akes environment halted status in account", async () => {
+it("Config Details takes environment halted status in account", async () => {
   const { component, store } = setup();
   const { rerender } = render(component({}));
   act(() => {
