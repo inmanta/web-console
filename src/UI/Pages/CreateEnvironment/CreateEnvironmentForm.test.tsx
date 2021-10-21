@@ -134,9 +134,6 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
   const repository = "github.com/test-env";
   const branch = "dev";
-  userEvent.click(
-    screen.getByRole("button", { name: "Repository Settings-toggle-edit" })
-  );
   const branchTextBox = await screen.findByRole("textbox", {
     name: "branch-input",
   });
