@@ -1,6 +1,8 @@
 import React from "react";
 import { EnvironmentSettings } from "@/Core";
-import { NumberInput } from "@patternfly/react-core";
+import { NumberInput, Tooltip } from "@patternfly/react-core";
+import { words } from "@/UI/words";
+import { DefaultIcon } from "./DefaultIcon";
 
 interface Props {
   info: EnvironmentSettings.InputInfo;
@@ -41,6 +43,13 @@ const IntInput: React.FC<IntProps> = ({ info }) => {
       minusBtnAriaLabel="minus"
       plusBtnAriaLabel="plus"
       widthChars={info.value.toString().length + 1}
+      unit={
+        info.value !== info.default ? null : (
+          <Tooltip content={words("settings.tabs.configuration.default")}>
+            <DefaultIcon />
+          </Tooltip>
+        )
+      }
     />
   );
 };
