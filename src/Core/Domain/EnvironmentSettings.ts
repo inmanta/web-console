@@ -52,6 +52,7 @@ interface DictDefinition extends BaseDefinition {
 }
 
 interface WithHandlers<ValueType> {
+  initial: ValueType;
   value: ValueType;
   set: (value: ValueType) => void;
   update: (value: ValueType) => Promise<Maybe.Maybe<string>>;

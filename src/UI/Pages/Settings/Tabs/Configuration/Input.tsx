@@ -67,6 +67,7 @@ const IntInput: React.FC<IntProps> = ({ info }) => {
             variant="link"
             aria-label="Save"
             onClick={() => info.update(info.value)}
+            isDisabled={info.value === info.initial}
           >
             <CheckIcon />
           </Button>
@@ -76,6 +77,7 @@ const IntInput: React.FC<IntProps> = ({ info }) => {
             variant="plain"
             aria-label="Reset"
             onClick={() => info.reset()}
+            isDisabled={info.value === info.default}
           >
             <RedoIcon />
           </Button>

@@ -16,14 +16,16 @@ export class InputInfoCreator {
   ) {}
 
   create(
+    settingsMap: EnvironmentSettings.ValuesMap,
     definitionMap: EnvironmentSettings.DefinitionMap,
     values: EnvironmentSettings.ValuesMap
   ): EnvironmentSettings.InputInfo[] {
     return Object.values(definitionMap)
       .map((definition) =>
         this.definitionToInputInfo(
-          definition,
+          settingsMap[definition.name],
           values[definition.name],
+          definition,
           (value) => this.setValues({ ...values, [definition.name]: value })
         )
       )
@@ -38,8 +40,9 @@ export class InputInfoCreator {
   }
 
   private definitionToInputInfo(
-    definition: EnvironmentSettings.Definition,
+    initial: EnvironmentSettings.Value,
     value: EnvironmentSettings.Value | undefined,
+    definition: EnvironmentSettings.Definition,
     setValue: (value: EnvironmentSettings.Value) => void
   ): EnvironmentSettings.InputInfo {
     const update = async (value) => {
@@ -53,6 +56,7 @@ export class InputInfoCreator {
         return {
           ...definition,
           type: "bool",
+          initial: initial as boolean,
           value: this.undefinedFallback(value, definition.default),
           set: (value) => setValue(value),
           update,
@@ -62,6 +66,7 @@ export class InputInfoCreator {
         return {
           ...definition,
           type: "int",
+          initial: initial as number,
           value: this.undefinedFallback(value, definition.default),
           set: (value) => setValue(value),
           update,
@@ -71,6 +76,7 @@ export class InputInfoCreator {
         return {
           ...definition,
           type: "enum",
+          initial: initial as string,
           value: this.undefinedFallback(value, definition.default),
           set: (value) => setValue(value),
           update,
@@ -80,6 +86,7 @@ export class InputInfoCreator {
         return {
           ...definition,
           type: "dict",
+          initial: initial as EnvironmentSettings.Dict,
           value: this.undefinedFallback(
             value,
             definition.default as EnvironmentSettings.Dict

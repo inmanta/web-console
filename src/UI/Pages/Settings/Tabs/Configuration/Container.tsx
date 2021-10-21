@@ -31,7 +31,7 @@ export const Container: React.FC<Props> = ({
     updateSetting,
     resetSetting,
     setErrorMessage
-  ).create(definition, values);
+  ).create(settings, definition, values);
 
   return (
     <PaddedForm>
