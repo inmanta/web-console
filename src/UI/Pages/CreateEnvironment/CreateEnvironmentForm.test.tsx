@@ -2,9 +2,7 @@ import { Either, Maybe, ProjectModel } from "@/Core";
 import {
   CommandResolverImpl,
   CreateEnvironmentCommandManager,
-  CreateEnvironmentPutter,
   CreateProjectCommandManager,
-  CreateProjectPutter,
   FetcherImpl,
   getStoreInstance,
   ProjectsQueryManager,
@@ -39,12 +37,10 @@ function setup() {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new CreateProjectCommandManager(
-        new CreateProjectPutter(apiHelper),
+        apiHelper,
         new ProjectsUpdater(projectsStateHelper, projectsFetcher)
       ),
-      new CreateEnvironmentCommandManager(
-        new CreateEnvironmentPutter(apiHelper)
-      ),
+      new CreateEnvironmentCommandManager(apiHelper),
     ])
   );
 

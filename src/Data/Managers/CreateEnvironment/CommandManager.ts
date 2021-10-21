@@ -1,13 +1,13 @@
 import {
+  ApiHelper,
   Command,
   CommandManager,
   CreateEnvironmentParams,
   Maybe,
-  Putter,
 } from "@/Core";
 
 export class CreateEnvironmentCommandManager implements CommandManager {
-  constructor(private readonly putter: Putter<"CreateEnvironment">) {}
+  constructor(private readonly apiHelper: ApiHelper) {}
 
   matches(command: Command.SubCommand<"CreateEnvironment">): boolean {
     return command.kind === "CreateEnvironment";
@@ -23,6 +23,9 @@ export class CreateEnvironmentCommandManager implements CommandManager {
     command: Command.SubCommand<"CreateEnvironment">,
     body: CreateEnvironmentParams
   ): Promise<Maybe.Type<Command.Error<"CreateEnvironment">>> {
-    return this.putter.put(command, body);
+    return this.apiHelper.putWithoutResponseAndEnvironment(this.getUrl(), body);
+  }
+  private getUrl(): string {
+    return `/api/v2/environment`;
   }
 }

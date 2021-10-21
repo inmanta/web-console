@@ -26,8 +26,8 @@ export type Command =
   | DeleteCallbackCommand
   | CreateCallbackCommand
   | DeleteEnvironment
-  | CreateProjectCommand
-  | CreateEnvironmentCommand;
+  | CreateProject
+  | CreateEnvironment;
 
 export type Type = Command;
 
@@ -174,7 +174,7 @@ interface ModifyEnvironmentManifest {
   ) => Promise<Maybe.Type<Error<"ModifyEnvironment">>>;
 }
 
-export interface CreateEnvironmentCommand {
+export interface CreateEnvironment {
   kind: "CreateEnvironment";
 }
 
@@ -182,13 +182,13 @@ interface CreateEnvironmentManifest {
   error: string;
   apiData: string;
   body: CreateEnvironmentParams;
-  command: CreateEnvironmentCommand;
+  command: CreateEnvironment;
   trigger: (
     body: CreateEnvironmentParams
   ) => Promise<Maybe.Type<Error<"CreateEnvironment">>>;
 }
 
-export interface CreateProjectCommand {
+export interface CreateProject {
   kind: "CreateProject";
 }
 
@@ -196,7 +196,7 @@ interface CreateProjectManifest {
   error: string;
   apiData: string;
   body: { name: string };
-  command: CreateProjectCommand;
+  command: CreateProject;
   trigger: (name: string) => Promise<Maybe.Type<Error<"CreateProject">>>;
 }
 

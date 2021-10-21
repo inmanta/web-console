@@ -19,4 +19,3 @@ export * from "./PosterWithoutResponse";
 export * from "./EnvironmentModifier";
 export * from "./Updater";
 export * from "./UrlManager";
-export * from "./Putter";
