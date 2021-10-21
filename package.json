@@ -51,7 +51,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/fetch-mock": "^7.3.5",
     "@types/jest": "^27.0.2",
-    "@types/lodash": "^4.14.175",
+    "@types/lodash": "^4.14.176",
     "@types/node": "^16.11.1",
     "@types/qs": "^6.9.7",
     "@types/react": "^17.0.30",
@@ -138,7 +138,7 @@
     "react-router-dom": "^5.3.0",
     "react-syntax-highlighter": "^15.4.4",
     "styled-components": "^5.3.3",
-    "xml-formatter": "^2.5.0"
+    "xml-formatter": "^2.5.1"
   },
   "resolutions": {
     "terser-webpack-plugin": "^1.4.5",
