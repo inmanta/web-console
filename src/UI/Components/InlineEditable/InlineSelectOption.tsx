@@ -111,6 +111,9 @@ export const InlineSelectOption: React.FC<Props> = ({
             <Flex spaceItems={{ default: "spaceItemsNone" }}>
               <FlexItem>
                 <Select
+                  aria-label={`${label}-select-input`}
+                  toggleAriaLabel={`${label}-select-toggle`}
+                  typeAheadAriaLabel={`${label}-typeahead`}
                   variant="typeahead"
                   onToggle={() => {
                     setIsOpen(!isOpen);

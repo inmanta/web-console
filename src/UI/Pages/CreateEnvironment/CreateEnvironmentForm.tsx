@@ -43,7 +43,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
     if (project) {
       setCreateEnvironmentBody({
         ...createEnvironmentBody,
-        project_id: project?.id,
+        project_id: project.id,
       });
     }
   };
@@ -72,6 +72,9 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
     }
   };
   const onCloseAlert = () => setErrorMessage("");
+  const projectName = projects.find(
+    (project) => project.id === createEnvironmentBody.project_id
+  )?.name;
   return (
     <>
       {errorMessage && (
@@ -86,22 +89,26 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         <InlineSelectOption
           isRequired
           label={words("createEnv.projectName")}
-          initialValue={""}
+          initialValue={projectName ? projectName : ""}
           options={projects.map((project) => project.name)}
           onCreate={createProject}
           onSubmit={setProject}
         />
         <EditableTextField
           isRequired
-          initialValue={""}
+          initialValue={createEnvironmentBody.name}
           label={words("settings.tabs.environment.name")}
           onSubmit={setEnvironmentName}
         />
         <EditableMultiTextField
           groupName={words("settings.tabs.environment.repoSettings")}
           initialValues={{
-            repository: "",
-            branch: "",
+            repository: createEnvironmentBody.repository
+              ? createEnvironmentBody.repository
+              : "",
+            branch: createEnvironmentBody.branch
+              ? createEnvironmentBody.branch
+              : "",
           }}
           onSubmit={setRepositorySettings}
         />
