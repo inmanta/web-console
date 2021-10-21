@@ -3289,10 +3289,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.30":
-  version "17.0.30"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.30.tgz#2f8e6f5ab6415c091cc5e571942ee9064b17609e"
-  integrity sha512-3Dt/A8gd3TCXi2aRe84y7cK1K8G+N9CZRDG8kDGguOKa0kf/ZkSwTmVIDPsm/KbQOVMaDJXwhBtuOXxqwdpWVg==
+"@types/react@*", "@types/react@^17.0.31":
+  version "17.0.31"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.31.tgz#fe05ebf91ff3ae35bb6b13f6c1b461db8089dff8"
+  integrity sha512-MQSR5EL4JZtdWRvqDgz9kXhSDDoy2zMTYyg7UhP+FZ5ttUOocWyxiqFJiI57sUG0BtaEX7WDXYQlkCYkb3X9vQ==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -16510,10 +16510,10 @@ ws@^8.1.0:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.2.0.tgz#0b738cd484bfc9303421914b11bb4011e07615bb"
   integrity sha512-uYhVJ/m9oXwEI04iIVmgLmugh2qrZihkywG9y5FfZV2ATeLIzHf93qs+tUNqlttbQK957/VX3mtwAS+UfIwA4g==
 
-xml-formatter@*, xml-formatter@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-2.5.0.tgz#ebe52306b10d565ac54330a09d646030588bab58"
-  integrity sha512-IoDLp5OpSYFd03ONFVPD7gtMP9weilUm4NLVkP9+zRfCqGRbIOTIbmZ+/As0gZa802QlU2/yQxhP5DmSaNoprw==
+xml-formatter@*, xml-formatter@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-2.5.1.tgz#5f0625c815558fed15aab64547ea08bf7e9197ae"
+  integrity sha512-qJwnz5uNMs4mc7jX3UH80taCK4BHnXX91MvByple+iOS2P1eNeifGAfPnKuteyHg8pehbhTBHPBunGOQ53nKdQ==
   dependencies:
     xml-parser-xo "^3.1.2"
 
