@@ -1,9 +1,8 @@
-import { Either, Maybe, ProjectModel } from "@/Core";
+import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
   CreateEnvironmentCommandManager,
   CreateProjectCommandManager,
-  FetcherImpl,
   getStoreInstance,
   ProjectsQueryManager,
   ProjectsStateHelper,
@@ -12,6 +11,7 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Project,
@@ -19,14 +19,15 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
+import { Page } from "./Page";
 
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsFetcher = new FetcherImpl<"Projects">(apiHelper);
+  const projectsFetcher = new DeferredFetcher<"Projects">();
   const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
@@ -44,30 +45,42 @@ function setup() {
     ])
   );
 
-  const component = (projects: ProjectModel[]) => (
+  const component = (
     <MemoryRouter initialEntries={["/console/environment/create"]}>
-      <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
-        <CreateEnvironmentForm projects={projects} />
-      </DependencyProvider>
+      <StoreProvider store={store}>
+        <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+          <Page />
+        </DependencyProvider>
+      </StoreProvider>
     </MemoryRouter>
   );
 
-  return { component, apiHelper };
+  return { component, apiHelper, projectsFetcher };
 }
 
 test("Given CreateEnvironmentForm When project and environment are not set Then the submit button is disabled", async () => {
-  const { component } = setup();
-  render(component(Project.filterable));
+  const { component, projectsFetcher } = setup();
+  render(component);
+
+  projectsFetcher.resolve(
+    Either.right({
+      data: Project.filterable,
+    })
+  );
+
   expect(await screen.findByRole("button", { name: "submit" })).toBeDisabled();
 });
 
 test(`Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked
       Then sends the correct request`, async () => {
-  const { component, apiHelper } = setup();
-  render(component(Project.filterable));
-  userEvent.click(
-    screen.getByRole("button", { name: "Project Name-toggle-edit" })
+  const { component, apiHelper, projectsFetcher } = setup();
+  render(component);
+  projectsFetcher.resolve(
+    Either.right({
+      data: Project.filterable,
+    })
   );
+
   userEvent.click(
     await screen.findByRole("button", { name: "Project Name-select-toggle" })
   );
@@ -78,7 +91,6 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
     await screen.findByRole("button", { name: "Project Name-submit-edit" })
   );
 
-  userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   userEvent.clear(textBox);
   userEvent.type(textBox, `dev{enter}`);
@@ -98,11 +110,14 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
 
 test(`Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set and submit is clicked 
       Then sends the correct request`, async () => {
-  const { component, apiHelper } = setup();
-  render(component(Project.filterable));
-  userEvent.click(
-    screen.getByRole("button", { name: "Project Name-toggle-edit" })
+  const { component, apiHelper, projectsFetcher } = setup();
+  render(component);
+  projectsFetcher.resolve(
+    Either.right({
+      data: Project.filterable,
+    })
   );
+
   userEvent.click(
     await screen.findByRole("button", { name: "Project Name-select-toggle" })
   );
@@ -113,7 +128,6 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
     await screen.findByRole("button", { name: "Project Name-submit-edit" })
   );
 
-  userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   userEvent.clear(textBox);
   userEvent.type(textBox, `dev{enter}`);
@@ -154,11 +168,15 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
 test(`Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked 
       Then sends the correct requests`, async () => {
-  const { component, apiHelper } = setup();
-  const { rerender } = render(component(Project.filterable));
-  userEvent.click(
-    screen.getByRole("button", { name: "Project Name-toggle-edit" })
+  const { component, apiHelper, projectsFetcher } = setup();
+  render(component);
+
+  projectsFetcher.resolve(
+    Either.right({
+      data: Project.filterable,
+    })
   );
+
   userEvent.click(
     await screen.findByRole("button", { name: "Project Name-select-toggle" })
   );
@@ -178,20 +196,15 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     await apiHelper.resolve(Maybe.none());
   });
   expect(apiHelper.resolvedRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests).toHaveLength(1);
   const updatedProjects = [
     ...Project.filterable,
     { name: "new-project", id: "proj-id-new", environments: [] },
   ];
-  await act(async () => {
-    await apiHelper.resolve(Either.right(updatedProjects));
-  });
-  rerender(component(updatedProjects));
+  projectsFetcher.resolve(Either.right({ data: updatedProjects }));
   userEvent.click(
     await screen.findByRole("button", { name: "Project Name-submit-edit" })
   );
 
-  userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   userEvent.clear(textBox);
   userEvent.type(textBox, `dev{enter}`);
@@ -212,10 +225,12 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
 });
 
 test("Given CreateEnvironmentForm When creating a new project is not successful Then shows error message", async () => {
-  const { component, apiHelper } = setup();
-  render(component(Project.filterable));
-  userEvent.click(
-    screen.getByRole("button", { name: "Project Name-toggle-edit" })
+  const { component, apiHelper, projectsFetcher } = setup();
+  render(component);
+  projectsFetcher.resolve(
+    Either.right({
+      data: Project.filterable,
+    })
   );
   userEvent.click(
     await screen.findByRole("button", { name: "Project Name-select-toggle" })
@@ -238,10 +253,6 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
     );
   });
 
-  await act(async () => {
-    await apiHelper.resolve(Either.right(Project.filterable));
-  });
-
   expect(
     await screen.findByRole("generic", { name: "Project Name-error-message" })
   ).toBeVisible();
@@ -255,12 +266,14 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
 
 test(`Given CreateEnvironmentForm When an existing project and invalid environment are set and submit is clicked 
       Then shows the error message`, async () => {
-  const { component, apiHelper } = setup();
-  render(component(Project.filterable));
-  // Input data
-  userEvent.click(
-    screen.getByRole("button", { name: "Project Name-toggle-edit" })
+  const { component, apiHelper, projectsFetcher } = setup();
+  render(component);
+  projectsFetcher.resolve(
+    Either.right({
+      data: Project.filterable,
+    })
   );
+  // Input data
   userEvent.click(
     await screen.findByRole("button", { name: "Project Name-select-toggle" })
   );
@@ -271,7 +284,6 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
     await screen.findByRole("button", { name: "Project Name-submit-edit" })
   );
 
-  userEvent.click(screen.getByRole("button", { name: "Name-toggle-edit" }));
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   userEvent.clear(textBox);
   userEvent.type(textBox, `test-env1{enter}`);

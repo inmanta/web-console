@@ -24,6 +24,7 @@ import { InlinePlainAlert } from "./InlinePlainAlert";
 interface Props {
   label: string;
   initialValue: string;
+  initiallyEditable?: boolean;
   options: string[];
   isRequired?: boolean;
   onCreate: (name: string) => Promise<Maybe.Type<string>>;
@@ -33,12 +34,13 @@ interface Props {
 export const InlineSelectOption: React.FC<Props> = ({
   label,
   initialValue,
+  initiallyEditable,
   options,
   isRequired,
   onCreate,
   onSubmit,
 }) => {
-  const [editable, setEditable] = useState(false);
+  const [editable, setEditable] = useState(initiallyEditable);
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(initialValue);
   const [submitError, setSubmitError] = useState("");

@@ -9,7 +9,7 @@ interface Props {
   shouldUseAuth: boolean;
 }
 
-export const HomeLayout: React.FC<Props> = ({
+export const BaseLayout: React.FC<Props> = ({
   keycloak,
   shouldUseAuth,
   children,

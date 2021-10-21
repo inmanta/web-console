@@ -6,7 +6,7 @@ import { KeycloakProvider } from "react-keycloak";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { CreateEnvironment, Home as HomeRoute } from "@/UI/Routing/Route";
 import { SearchSanitizer } from "@/UI/Routing";
-import { HomeLayout } from "./HomeLayout";
+import { BaseLayout } from "./BaseLayout";
 import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
 import { Initializer } from "./Initializer";
 import { Home, CreateEnvironmentPage } from "@/UI/Pages";
@@ -22,14 +22,14 @@ export const App: React.FC<AuthProps> = ({ keycloak, shouldUseAuth }) => (
       <AuthWrapper keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
         <Switch>
           <Route exact path={HomeRoute.path}>
-            <HomeLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
+            <BaseLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
               <Home />
-            </HomeLayout>
+            </BaseLayout>
           </Route>
           <Route exact path={CreateEnvironment.path}>
-            <HomeLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
+            <BaseLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
               <CreateEnvironmentPage />
-            </HomeLayout>
+            </BaseLayout>
           </Route>
           <Route>
             <EnvSpecificContentLayout

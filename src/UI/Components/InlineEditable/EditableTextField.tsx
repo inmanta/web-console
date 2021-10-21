@@ -24,6 +24,7 @@ interface Props {
   label: string;
   isRequired?: boolean;
   initialValue: string;
+  initiallyEditable?: boolean;
   onSubmit: (value: string) => Promise<Maybe.Type<string>>;
 }
 
@@ -31,9 +32,10 @@ export const EditableTextField: React.FC<Props> = ({
   isRequired,
   label,
   initialValue,
+  initiallyEditable,
   onSubmit,
 }) => {
-  const [editable, setEditable] = useState(false);
+  const [editable, setEditable] = useState(initiallyEditable);
   const [submitError, setSubmitError] = useState("");
   const [value, setValue] = useState(initialValue);
   const onSubmitRequest = async (value: string) => {

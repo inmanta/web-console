@@ -1,6 +1,6 @@
 import { CreateEnvironmentParams, Maybe, ProjectModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { getUrl } from "@/UI/Routing";
+import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import {
   Button,
@@ -14,7 +14,6 @@ import {
   InlineSelectOption,
 } from "@/UI/Components";
 import React, { useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { InlinePlainAlert } from "@/UI/Components/InlineEditable/InlinePlainAlert";
 import styled from "styled-components";
 
@@ -27,8 +26,8 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   ...props
 }) => {
   const { commandResolver } = useContext(DependencyContext);
-  const history = useHistory();
-  const handleRedirect = () => history.push(getUrl("Home", undefined));
+  const navigateTo = useNavigateTo();
+  const handleRedirect = () => navigateTo("Home", undefined);
   const createProject = commandResolver.getTrigger<"CreateProject">({
     kind: "CreateProject",
   });
@@ -89,7 +88,8 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         <InlineSelectOption
           isRequired
           label={words("createEnv.projectName")}
-          initialValue={projectName ? projectName : ""}
+          initialValue={projectName || ""}
+          initiallyEditable
           options={projects.map((project) => project.name)}
           onCreate={createProject}
           onSubmit={setProject}
@@ -97,18 +97,15 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         <EditableTextField
           isRequired
           initialValue={createEnvironmentBody.name}
+          initiallyEditable
           label={words("settings.tabs.environment.name")}
           onSubmit={setEnvironmentName}
         />
         <EditableMultiTextField
           groupName={words("settings.tabs.environment.repoSettings")}
           initialValues={{
-            repository: createEnvironmentBody.repository
-              ? createEnvironmentBody.repository
-              : "",
-            branch: createEnvironmentBody.branch
-              ? createEnvironmentBody.branch
-              : "",
+            repository: createEnvironmentBody.repository || "",
+            branch: createEnvironmentBody.branch || "",
           }}
           onSubmit={setRepositorySettings}
         />

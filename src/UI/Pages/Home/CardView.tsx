@@ -9,7 +9,6 @@ import {
   CardTitle,
   EmptyState,
   EmptyStateIcon,
-  EmptyStateSecondaryActions,
   EmptyStateVariant,
   Gallery,
   PageSection,
@@ -50,21 +49,18 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
 };
 
 const CreateNewEnvironmentCard: React.FC = () => (
-  <Card isHoverable isCompact>
-    <Bullseye>
-      <EmptyState variant={EmptyStateVariant.xs}>
-        <EmptyStateIcon icon={PlusCircleIcon} />
-        <Title headingLevel="h2" size="md">
-          {words("home.create.env.desciption")}
-        </Title>
-        <EmptyStateSecondaryActions>
-          <Link pathname={getUrl("CreateEnvironment", undefined)}>
-            <Button variant="link">{words("home.create.env.link")}</Button>
-          </Link>
-        </EmptyStateSecondaryActions>
-      </EmptyState>
-    </Bullseye>
-  </Card>
+  <Link pathname={getUrl("CreateEnvironment", undefined)}>
+    <Card isHoverable isCompact>
+      <Bullseye>
+        <EmptyState variant={EmptyStateVariant.xs}>
+          <EmptyStateIcon icon={PlusCircleIcon} />
+          <Title headingLevel="h2" size="md">
+            {words("home.create.env.desciption")}
+          </Title>
+        </EmptyState>
+      </Bullseye>
+    </Card>
+  </Link>
 );
 
 interface EnvironmentCardProps {

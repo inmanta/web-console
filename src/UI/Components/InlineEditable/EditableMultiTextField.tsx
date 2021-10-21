@@ -20,6 +20,7 @@ import { InlinePlainAlert } from "./InlinePlainAlert";
 interface Props {
   groupName: string;
   initialValues: Record<string, string>;
+  initiallyEditable?: boolean;
   onSubmit: (
     fieldDescriptors: Record<string, string>
   ) => Promise<Maybe.Type<string>>;
@@ -28,9 +29,10 @@ interface Props {
 export const EditableMultiTextField: React.FC<Props> = ({
   groupName,
   initialValues,
+  initiallyEditable,
   onSubmit,
 }) => {
-  const [editable, setEditable] = useState(false);
+  const [editable, setEditable] = useState(initiallyEditable);
   const [fieldValues, setFieldValues] = useState(initialValues);
   const [submitError, setSubmitError] = useState("");
   const onSubmitRequest = async (values: Record<string, string>) => {
