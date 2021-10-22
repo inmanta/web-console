@@ -17,13 +17,22 @@ export interface EnvironmentSettingsSlice {
 export const environmentSettingsSlice: EnvironmentSettingsSlice = {
   byEnv: {},
   setData: action((state, { environment, value, merge }) => {
-    if (merge) {
-      state.byEnv[environment] = {
-        ...state.byEnv[environment],
-        ...value,
-      };
-    } else {
-      state.byEnv[environment] = value;
-    }
+    state.byEnv[environment] = merge
+      ? mergeData(state.byEnv[environment], value)
+      : value;
   }),
 };
+
+function mergeData(prev: Data, next: Data): Data {
+  if (RemoteData.isSuccess(prev) && RemoteData.isSuccess(next)) {
+    return RemoteData.success({
+      settings: {
+        ...prev.value.settings,
+        ...next.value.settings,
+      },
+      definition: next.value.definition,
+    });
+  }
+
+  return next;
+}
