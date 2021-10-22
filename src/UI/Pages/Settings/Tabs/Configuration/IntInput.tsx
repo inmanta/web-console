@@ -1,11 +1,6 @@
 import React from "react";
 import { EnvironmentSettings } from "@/Core";
-import { InputGroup, NumberInput } from "@patternfly/react-core";
-import {
-  InputDefaultStatus,
-  InputResetAction,
-  InputUpdateAction,
-} from "./InputActions";
+import { NumberInput } from "@patternfly/react-core";
 
 interface Props {
   info: EnvironmentSettings.IntInputInfo;
@@ -19,21 +14,16 @@ export const IntInput: React.FC<Props> = ({ info }) => {
   const onPlus = () => info.set(info.value + 1);
 
   return (
-    <InputGroup>
-      <NumberInput
-        value={info.value}
-        onMinus={onMinus}
-        onChange={onChange}
-        onPlus={onPlus}
-        inputName="input"
-        inputAriaLabel="number input"
-        minusBtnAriaLabel="minus"
-        plusBtnAriaLabel="plus"
-        widthChars={info.value.toString().length + 3}
-      />
-      <InputDefaultStatus info={info} />
-      <InputUpdateAction info={info} />
-      <InputResetAction info={info} />
-    </InputGroup>
+    <NumberInput
+      value={info.value}
+      onMinus={onMinus}
+      onChange={onChange}
+      onPlus={onPlus}
+      inputName="input"
+      inputAriaLabel="number input"
+      minusBtnAriaLabel="minus"
+      plusBtnAriaLabel="plus"
+      widthChars={10}
+    />
   );
 };

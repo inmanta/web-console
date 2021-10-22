@@ -1,73 +1,70 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
-import { DependencyContext } from "@/UI";
-import {
-  Alert,
-  AlertActionCloseButton,
-  Form,
-  FormAlert,
-  FormGroup,
-} from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, Tooltip } from "@patternfly/react-core";
 import { Input } from "./Input";
-import { InputInfoCreator } from "./InputInfoCreator";
+import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
+import { InputActions } from "./InputActions";
 
 interface Props {
-  settings: EnvironmentSettings.EnvironmentSettings;
+  infos: EnvironmentSettings.InputInfo[];
+  errorMessage: string;
+  onErrorClose: () => void;
 }
 
 export const Container: React.FC<Props> = ({
-  settings: { settings, definition },
+  infos,
+  errorMessage,
+  onErrorClose,
 }) => {
-  const [values, setValues] = useState(settings);
-  const [errorMessage, setErrorMessage] = useState("");
-  const { commandResolver } = useContext(DependencyContext);
-  const updateSetting = commandResolver.getTrigger<"UpdateEnvironmentSetting">({
-    kind: "UpdateEnvironmentSetting",
-  });
-  const resetSetting = commandResolver.getTrigger<"ResetEnvironmentSetting">({
-    kind: "ResetEnvironmentSetting",
-  });
-  const infos = new InputInfoCreator(
-    setValues,
-    updateSetting,
-    resetSetting,
-    setErrorMessage
-  ).create(settings, definition, values);
-
-  useEffect(() => {
-    setValues(settings);
-  }, [settings]);
-
   return (
-    <PaddedForm>
+    <Wrapper>
       {errorMessage && (
-        <FormAlert>
-          <Alert
-            variant="danger"
-            title={errorMessage}
-            aria-live="polite"
-            actionClose={
-              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-            }
-            isInline
-          />
-        </FormAlert>
+        <StyledAlert
+          variant="danger"
+          title={errorMessage}
+          aria-live="polite"
+          actionClose={<AlertActionCloseButton onClose={onErrorClose} />}
+          isInline
+        />
       )}
-      {infos.map((info) => (
-        <FormGroup
-          key={info.name}
-          fieldId={info.name}
-          helperText={info.doc}
-          label={info.name}
-        >
-          <Input info={info} />
-        </FormGroup>
-      ))}
-    </PaddedForm>
+      <StyledTable variant="compact" borders={false}>
+        <Tbody>
+          {infos.map((info) => (
+            <InputRow info={info} key={info.name} />
+          ))}
+        </Tbody>
+      </StyledTable>
+    </Wrapper>
   );
 };
 
-const PaddedForm = styled(Form)`
+const InputRow: React.FC<{ info: EnvironmentSettings.InputInfo }> = ({
+  info,
+}) => (
+  <Tr>
+    <Td>
+      <Tooltip content={info.doc}>
+        <span>{info.name}</span>
+      </Tooltip>
+    </Td>
+    <Td>
+      <Input info={info} />
+    </Td>
+    <Td>
+      <InputActions info={info} />
+    </Td>
+  </Tr>
+);
+
+const StyledAlert = styled(Alert)`
+  margin-bottom: 1rem;
+`;
+
+const Wrapper = styled.div`
   padding-top: 1rem;
+`;
+
+const StyledTable = styled(TableComposable)`
+  width: auto;
 `;

@@ -2,6 +2,7 @@ import React from "react";
 import { EnvironmentSettings } from "@/Core";
 import { IntInput } from "./IntInput";
 import { BooleanInput } from "./BooleanInput";
+import { EnumInput } from "./EnumInput";
 
 interface Props {
   info: EnvironmentSettings.InputInfo;
@@ -14,7 +15,7 @@ export const Input: React.FC<Props> = ({ info }) => {
     case "int":
       return <IntInput info={info} />;
     case "enum":
-      return <>enum</>;
+      return <EnumInput info={info} />;
     case "dict":
       return <>dict</>;
   }

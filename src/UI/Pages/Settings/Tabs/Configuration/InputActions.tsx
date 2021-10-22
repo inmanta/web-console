@@ -1,16 +1,44 @@
 import React from "react";
+import styled from "styled-components";
+import {
+  CheckIcon,
+  UndoIcon,
+  ClipboardCheckIcon,
+} from "@patternfly/react-icons";
+import {
+  ActionList,
+  ActionListItem,
+  Button,
+  InputGroupText,
+  Tooltip,
+} from "@patternfly/react-core";
 import { EnvironmentSettings } from "@/Core";
-import { Button, InputGroupText, Tooltip } from "@patternfly/react-core";
 import { words } from "@/UI/words";
-import { CheckIcon, RedoIcon } from "@patternfly/react-icons";
-import { DefaultIcon } from "./DefaultIcon";
 
 type Info<Properties extends keyof EnvironmentSettings.InputInfo> = Pick<
   EnvironmentSettings.InputInfo,
   Properties
 >;
 
-export const InputUpdateAction: React.FC<{
+interface Props {
+  info: Info<"value" | "initial" | "update" | "reset" | "default">;
+}
+
+export const InputActions: React.FC<Props> = ({ info }) => (
+  <ActionList isIconList>
+    <ActionListItem>
+      <InputDefaultStatus info={info} />
+    </ActionListItem>
+    <ActionListItem>
+      <InputUpdateAction info={info} />
+    </ActionListItem>
+    <ActionListItem>
+      <InputResetAction info={info} />
+    </ActionListItem>
+  </ActionList>
+);
+
+const InputUpdateAction: React.FC<{
   info: Info<"value" | "initial" | "update">;
 }> = ({ info }) => (
   <Tooltip content={words("settings.tabs.configuration.save")}>
@@ -25,31 +53,36 @@ export const InputUpdateAction: React.FC<{
   </Tooltip>
 );
 
-export const InputResetAction: React.FC<{
-  info: Info<"value" | "default" | "reset">;
+const InputResetAction: React.FC<{
+  info: Info<"reset">;
 }> = ({ info }) => (
   <Tooltip content={words("settings.tabs.configuration.reset")}>
-    <Button
-      variant="plain"
-      aria-label="Reset"
-      onClick={() => info.reset()}
-      isDisabled={info.value === info.default}
-    >
-      <RedoIcon />
+    <Button variant="plain" aria-label="Reset" onClick={() => info.reset()}>
+      <UndoIcon />
     </Button>
   </Tooltip>
 );
 
-export const InputDefaultStatus: React.FC<{
+const InputDefaultStatus: React.FC<{
   info: Info<"value" | "default">;
 }> = ({ info }) => (
-  <InputGroupText aria-label="default" variant="plain">
+  <PaddedInputGroupText aria-label="default" variant="plain">
     <Tooltip
       content={words("settings.tabs.configuration.default")(
-        info.default.toString()
+        typeof info.default === "object" ? "object" : info.default.toString()
       )}
     >
       <DefaultIcon $isDisabled={info.value !== info.default} />
     </Tooltip>
-  </InputGroupText>
+  </PaddedInputGroupText>
 );
+
+const PaddedInputGroupText = styled(InputGroupText)`
+  padding: 6px 16px;
+`;
+
+const DefaultIcon = styled(ClipboardCheckIcon)<{
+  $isDisabled?: boolean;
+}>`
+  opacity: ${(p) => (p.$isDisabled ? "0.2" : "1")};
+`;
