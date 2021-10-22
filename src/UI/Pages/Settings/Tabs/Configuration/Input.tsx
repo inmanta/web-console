@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { NumberInput, Switch } from "@patternfly/react-core";
 import { EnvironmentSettings } from "@/Core";
-import { SingleTextSelect } from "@/UI/Components";
+import { DictEditor, SingleTextSelect } from "@/UI/Components";
 
 interface Props {
   info: EnvironmentSettings.InputInfo;
@@ -17,7 +17,7 @@ export const Input: React.FC<Props> = ({ info }) => {
     case "enum":
       return <EnumInput info={info} />;
     case "dict":
-      return <>dict</>;
+      return <DictInput info={info} />;
   }
 };
 
@@ -62,8 +62,14 @@ const IntInput: React.FC<{ info: EnvironmentSettings.IntInputInfo }> = ({
   );
 };
 
-export const BooleanInput: React.FC<{
+const BooleanInput: React.FC<{
   info: EnvironmentSettings.BooleanInputInfo;
 }> = ({ info }) => (
   <Switch isChecked={info.value} onChange={info.set} aria-label={info.name} />
 );
+
+const DictInput: React.FC<{
+  info: EnvironmentSettings.DictInputInfo;
+}> = ({ info }) => {
+  return <DictEditor value={info.value} setValue={info.set} />;
+};
