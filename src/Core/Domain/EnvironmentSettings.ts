@@ -51,7 +51,7 @@ interface DictDefinition extends BaseDefinition {
   allowed_values: null;
 }
 
-interface WithHandlers<ValueType> {
+interface WithHandlers<ValueType extends Value> {
   initial: ValueType;
   value: ValueType;
   set: (value: ValueType) => void;
