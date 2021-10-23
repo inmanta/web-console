@@ -6,9 +6,11 @@ import { DictEditor, SingleTextSelect } from "@/UI/Components";
 
 interface Props {
   info: EnvironmentSettings.InputInfo;
+  newKey: string;
+  setNewKey: (k: string) => void;
 }
 
-export const Input: React.FC<Props> = ({ info }) => {
+export const Input: React.FC<Props> = ({ info, newKey, setNewKey }) => {
   switch (info.type) {
     case "bool":
       return <BooleanInput info={info} />;
@@ -17,7 +19,7 @@ export const Input: React.FC<Props> = ({ info }) => {
     case "enum":
       return <EnumInput info={info} />;
     case "dict":
-      return <DictInput info={info} />;
+      return <DictInput info={info} newKey={newKey} setNewKey={setNewKey} />;
   }
 };
 
@@ -70,6 +72,15 @@ const BooleanInput: React.FC<{
 
 const DictInput: React.FC<{
   info: EnvironmentSettings.DictInputInfo;
-}> = ({ info }) => {
-  return <DictEditor value={info.value} setValue={info.set} />;
+  newKey: string;
+  setNewKey: (val: string) => void;
+}> = ({ info, newKey, setNewKey }) => {
+  return (
+    <DictEditor
+      value={info.value}
+      setValue={info.set}
+      newKey={newKey}
+      setNewKey={setNewKey}
+    />
+  );
 };

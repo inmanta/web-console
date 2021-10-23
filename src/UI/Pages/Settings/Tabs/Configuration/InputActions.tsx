@@ -22,15 +22,16 @@ type Info<Properties extends keyof EnvironmentSettings.InputInfo> = Pick<
 
 interface Props {
   info: Info<"value" | "initial" | "update" | "reset" | "default">;
+  clearKey?: () => void;
 }
 
-export const InputActions: React.FC<Props> = ({ info }) => (
+export const InputActions: React.FC<Props> = ({ info, clearKey }) => (
   <ActionList isIconList>
     <ActionListItem>
       <InputDefaultStatus info={info} />
     </ActionListItem>
     <ActionListItem>
-      <InputUpdateAction info={info} />
+      <InputUpdateAction info={info} clearKey={clearKey} />
     </ActionListItem>
     <ActionListItem>
       <InputResetAction info={info} />
@@ -40,12 +41,16 @@ export const InputActions: React.FC<Props> = ({ info }) => (
 
 const InputUpdateAction: React.FC<{
   info: Info<"value" | "initial" | "update">;
-}> = ({ info }) => (
+  clearKey?: () => void;
+}> = ({ info, clearKey }) => (
   <Tooltip content={words("settings.tabs.configuration.save")}>
     <Button
       variant={info.value === info.initial ? "plain" : "link"}
       aria-label="Save"
-      onClick={() => info.update(info.value as never)}
+      onClick={async () => {
+        await info.update(info.value as never);
+        clearKey && clearKey();
+      }}
       isDisabled={info.value === info.initial}
     >
       <CheckIcon />
