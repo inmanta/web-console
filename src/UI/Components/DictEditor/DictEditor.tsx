@@ -17,7 +17,10 @@ export const DictEditor: React.FC<Props> = ({
   newKey,
   setNewKey,
 }) => {
-  const entries = Object.entries(value).filter(([k]) => k !== newKey);
+  const entries = Object.entries(value)
+    .filter(([k]) => k !== newKey)
+    .sort();
+
   return (
     <TableComposable variant="compact" borders={false}>
       <Tbody>
@@ -80,7 +83,7 @@ const Row: React.FC<RowProps> = ({
         <TextInput
           value={value}
           onChange={(val) => update([key, val])}
-          type="text"
+          type="number"
           aria-label="text input example"
         />
       </SlimTd>

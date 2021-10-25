@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { EnvironmentSettings } from "@/Core";
 import { Alert, AlertActionCloseButton, Tooltip } from "@patternfly/react-core";
-import { Input } from "./Input";
 import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
+import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
+import { EnvironmentSettings } from "@/Core";
+import { Input } from "./Input";
 import { InputActions } from "./InputActions";
 
 interface Props {
@@ -46,8 +47,9 @@ const InputRow: React.FC<{ info: EnvironmentSettings.InputInfo }> = ({
   return (
     <Tr>
       <Td>
+        {info.name}{" "}
         <Tooltip content={info.doc}>
-          <span>{info.name}</span>
+          <OutlinedQuestionCircleIcon />
         </Tooltip>
       </Td>
       <Td>
