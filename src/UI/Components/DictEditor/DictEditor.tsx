@@ -50,7 +50,7 @@ export const DictEditor: React.FC<Props> = ({
           clear={clearNewEntry}
           update={setNewEntry}
           isKeyEditable
-          isDeleteable
+          isDeleteable={newEntry[0].length > 0 || newEntry[1].length > 0}
         />
       </Tbody>
     </TableComposable>
@@ -108,7 +108,7 @@ const Row: React.FC<RowProps> = ({
       <SlimTd>
         <Button
           onClick={onClear}
-          variant="link"
+          variant={isDeleteable ? "link" : "plain"}
           isDanger
           isSmall
           isDisabled={!isDeleteable}
