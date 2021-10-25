@@ -45,7 +45,7 @@ export class InputInfoCreator {
     definition: EnvironmentSettings.Definition,
     setValue: (value: EnvironmentSettings.Value) => void
   ): EnvironmentSettings.InputInfo {
-    const update = async (value) => {
+    const update = async (value: EnvironmentSettings.Value) => {
       const error = await this.update(definition.name, value);
       this.setError(Maybe.withFallback(error, ""));
       return error;
@@ -62,6 +62,10 @@ export class InputInfoCreator {
       }
     };
 
+    const isUpdateable = (
+      info: Pick<EnvironmentSettings.InputInfo, "initial" | "value">
+    ) => info.value !== info.initial;
+
     switch (definition.type) {
       case "bool":
         return {
@@ -72,6 +76,7 @@ export class InputInfoCreator {
           set: (value) => setValue(value),
           update,
           reset,
+          isUpdateable,
         };
       case "int":
         return {
@@ -82,6 +87,7 @@ export class InputInfoCreator {
           set: (value) => setValue(value),
           update,
           reset,
+          isUpdateable,
         };
       case "enum":
         return {
@@ -92,6 +98,7 @@ export class InputInfoCreator {
           set: (value) => setValue(value),
           update,
           reset,
+          isUpdateable,
         };
       case "dict":
         return {
@@ -105,6 +112,7 @@ export class InputInfoCreator {
           set: (value) => setValue(value),
           update,
           reset,
+          isUpdateable,
         };
     }
   }

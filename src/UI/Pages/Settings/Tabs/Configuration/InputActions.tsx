@@ -21,17 +21,18 @@ type Info<Properties extends keyof EnvironmentSettings.InputInfo> = Pick<
 >;
 
 interface Props {
-  info: Info<"value" | "initial" | "update" | "reset" | "default">;
-  clearKey?: () => void;
+  info: Info<
+    "value" | "initial" | "update" | "reset" | "default" | "isUpdateable"
+  >;
 }
 
-export const InputActions: React.FC<Props> = ({ info, clearKey }) => (
+export const InputActions: React.FC<Props> = ({ info }) => (
   <ActionList isIconList>
     <ActionListItem>
       <InputDefaultStatus info={info} />
     </ActionListItem>
     <ActionListItem>
-      <InputUpdateAction info={info} clearKey={clearKey} />
+      <InputUpdateAction info={info} />
     </ActionListItem>
     <ActionListItem>
       <InputResetAction info={info} />
@@ -40,18 +41,14 @@ export const InputActions: React.FC<Props> = ({ info, clearKey }) => (
 );
 
 const InputUpdateAction: React.FC<{
-  info: Info<"value" | "initial" | "update">;
-  clearKey?: () => void;
-}> = ({ info, clearKey }) => (
+  info: Info<"value" | "initial" | "update" | "isUpdateable">;
+}> = ({ info }) => (
   <Tooltip content={words("settings.tabs.configuration.save")}>
     <Button
-      variant={info.value === info.initial ? "plain" : "link"}
+      variant={!info.isUpdateable(info) ? "plain" : "link"}
       aria-label="Save"
-      onClick={async () => {
-        await info.update(info.value as never);
-        clearKey && clearKey();
-      }}
-      isDisabled={info.value === info.initial}
+      onClick={() => info.update(info.value as never)}
+      isDisabled={!info.isUpdateable(info)}
     >
       <CheckIcon />
     </Button>

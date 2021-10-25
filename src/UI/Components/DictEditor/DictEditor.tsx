@@ -5,85 +5,82 @@ import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { deleteKey } from "@/Core";
 
-type Dict = Record<string, string | number | boolean>;
-type Entry = [string, string];
+export type Dict = Record<string, string | number | boolean>;
+export type Entry = [string, string];
 
 interface Props {
   value: Dict;
   setValue: (record: Dict) => void;
-  newKey: string;
-  setNewKey: (k: string) => void;
+  newEntry: Entry;
+  setNewEntry: (entry: Entry) => void;
+  isDeleteEntryAllowed: (value: Dict, key: string) => boolean;
 }
 
 export const DictEditor: React.FC<Props> = ({
   value,
   setValue,
-  newKey,
-  setNewKey,
+  newEntry,
+  setNewEntry,
+  isDeleteEntryAllowed,
 }) => {
-  const updateExistingEntry =
+  const updateEntry =
     (key: string) =>
     ([k, v]: Entry) =>
       setValue({ ...deleteKey(key, value), [k]: v });
-  const clearExistingEntry = (key) => setValue(deleteKey(key, value));
-  const updateNewEntry = ([k, v]: Entry) =>
-    setValue({ ...deleteKey(newKey, value), [k]: v });
+  const clearEntry = (key) => setValue(deleteKey(key, value));
   const clearNewEntry = () => {
-    setValue(deleteKey(newKey, value));
-    setNewKey("");
+    setNewEntry(["", ""]);
   };
-
-  const newEntry: Entry = [
-    newKey,
-    value[newKey] ? value[newKey].toString() : "",
-  ];
 
   return (
     <TableComposable variant="compact" borders={false}>
       <Tbody>
-        {getEntries(value, newKey).map((entry) => (
+        {getEntries(value).map((entry) => (
           <Row
             key={entry[0]}
             entry={entry}
-            update={updateExistingEntry(entry[0])}
-            clear={clearExistingEntry}
+            update={updateEntry(entry[0])}
+            clear={clearEntry}
+            isDeleteable={isDeleteEntryAllowed(value, entry[0])}
           />
         ))}
         <Row
           key="pendingEntry"
           entry={newEntry}
           clear={clearNewEntry}
-          update={updateNewEntry}
-          setKey={setNewKey}
+          update={setNewEntry}
+          isKeyEditable
+          isDeleteable
         />
       </Tbody>
     </TableComposable>
   );
 };
 
-const getEntries = (value: Dict, excludedKey: string): Entry[] => {
+const getEntries = (value: Dict): Entry[] => {
   const entries: Entry[] = Object.entries(value).map(([k, v]) => [
     k,
     v.toString(),
   ]);
-  return entries.filter(([k]) => k !== excludedKey).sort();
+  return entries.sort();
 };
 
 interface RowProps {
   entry: Entry;
   update: (entry: Entry) => void;
   clear: (key: string) => void;
-  setKey?: (key: string) => void;
+  isDeleteable?: boolean;
+  isKeyEditable?: boolean;
 }
 
 const Row: React.FC<RowProps> = ({
   entry: [key, value],
   update,
   clear,
-  setKey,
+  isKeyEditable,
+  isDeleteable,
 }) => {
   const onKeyChange = (newKey) => {
-    if (setKey) setKey(newKey);
     update([newKey, value]);
   };
   const onValueChange = (newValue) => update([key, newValue]);
@@ -97,7 +94,7 @@ const Row: React.FC<RowProps> = ({
           onChange={onKeyChange}
           type="text"
           aria-label="editEntryKey"
-          isDisabled={typeof setKey === "undefined"}
+          isDisabled={!isKeyEditable}
         />
       </SlimTd>
       <SlimTd>
@@ -109,7 +106,13 @@ const Row: React.FC<RowProps> = ({
         />
       </SlimTd>
       <SlimTd>
-        <Button onClick={onClear} variant="link" isDanger isSmall>
+        <Button
+          onClick={onClear}
+          variant="link"
+          isDanger
+          isSmall
+          isDisabled={!isDeleteable}
+        >
           <TrashAltIcon />
         </Button>
       </SlimTd>

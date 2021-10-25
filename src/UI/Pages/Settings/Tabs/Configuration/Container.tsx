@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Alert, AlertActionCloseButton, Tooltip } from "@patternfly/react-core";
-import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
-import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
+import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
+import { TableComposable, Tbody } from "@patternfly/react-table";
 import { EnvironmentSettings } from "@/Core";
-import { Input } from "./Input";
-import { InputActions } from "./InputActions";
+import { InputRow } from "./InputRow";
 
 interface Props {
   infos: EnvironmentSettings.InputInfo[];
@@ -40,27 +38,6 @@ export const Container: React.FC<Props> = ({
   );
 };
 
-const InputRow: React.FC<{ info: EnvironmentSettings.InputInfo }> = ({
-  info,
-}) => {
-  const [newKey, setNewKey] = useState("");
-  return (
-    <Tr>
-      <Td>
-        {info.name}{" "}
-        <Tooltip content={info.doc}>
-          <OutlinedQuestionCircleIcon />
-        </Tooltip>
-      </Td>
-      <Td>
-        <Input info={info} newKey={newKey} setNewKey={setNewKey} />
-      </Td>
-      <Td>
-        <InputActions info={info} clearKey={() => setNewKey("")} />
-      </Td>
-    </Tr>
-  );
-};
 const StyledAlert = styled(Alert)`
   margin-bottom: 1rem;
 `;

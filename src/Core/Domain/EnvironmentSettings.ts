@@ -57,6 +57,7 @@ interface WithHandlers<ValueType extends Value> {
   set: (value: ValueType) => void;
   update: (value: ValueType) => Promise<Maybe.Maybe<string>>;
   reset: () => Promise<Maybe.Maybe<string>>;
+  isUpdateable: (info: Pick<InputInfo, "initial" | "value">) => boolean;
 }
 
 export type BooleanInputInfo = WithHandlers<boolean> & BooleanDefinition;
