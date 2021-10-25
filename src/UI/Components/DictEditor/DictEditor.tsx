@@ -5,9 +5,12 @@ import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { deleteKey } from "@/Core";
 
+type Dict = Record<string, string | number | boolean>;
+type Entry = [string, string];
+
 interface Props {
-  value: Record<string, string | number | boolean>;
-  setValue: (record: Record<string, string | number | boolean>) => void;
+  value: Dict;
+  setValue: (record: Dict) => void;
   newKey: string;
   setNewKey: (k: string) => void;
 }
@@ -18,31 +21,39 @@ export const DictEditor: React.FC<Props> = ({
   newKey,
   setNewKey,
 }) => {
-  const entries = Object.entries(value)
-    .filter(([k]) => k !== newKey)
-    .sort();
+  const updateExistingEntry =
+    (key: string) =>
+    ([k, v]: Entry) =>
+      setValue({ ...deleteKey(key, value), [k]: v });
+  const clearExistingEntry = (key) => setValue(deleteKey(key, value));
+  const updateNewEntry = ([k, v]: Entry) =>
+    setValue({ ...deleteKey(newKey, value), [k]: v });
+  const clearNewEntry = () => {
+    setValue(deleteKey(newKey, value));
+    setNewKey("");
+  };
+
+  const newEntry: Entry = [
+    newKey,
+    value[newKey] ? value[newKey].toString() : "",
+  ];
 
   return (
     <TableComposable variant="compact" borders={false}>
       <Tbody>
-        {entries.map((entry) => (
+        {getEntries(value, newKey).map((entry) => (
           <Row
             key={entry[0]}
-            entry={[entry[0], entry[1].toString()]}
-            update={([k, v]) =>
-              setValue({ ...deleteKey(entry[0], value), [k]: v })
-            }
-            clear={(key) => setValue(deleteKey(key, value))}
+            entry={entry}
+            update={updateExistingEntry(entry[0])}
+            clear={clearExistingEntry}
           />
         ))}
         <Row
-          clear={() => {
-            setValue(deleteKey(newKey, value));
-            setNewKey("");
-          }}
-          key="newItem"
-          entry={[newKey, value[newKey] ? value[newKey].toString() : ""]}
-          update={([k, v]) => setValue({ ...deleteKey(newKey, value), [k]: v })}
+          key="pendingEntry"
+          entry={newEntry}
+          clear={clearNewEntry}
+          update={updateNewEntry}
           setKey={setNewKey}
         />
       </Tbody>
@@ -50,9 +61,17 @@ export const DictEditor: React.FC<Props> = ({
   );
 };
 
+const getEntries = (value: Dict, excludedKey: string): Entry[] => {
+  const entries: Entry[] = Object.entries(value).map(([k, v]) => [
+    k,
+    v.toString(),
+  ]);
+  return entries.filter(([k]) => k !== excludedKey).sort();
+};
+
 interface RowProps {
-  entry: [string, string];
-  update: (entry: [string, string]) => void;
+  entry: Entry;
+  update: (entry: Entry) => void;
   clear: (key: string) => void;
   setKey?: (key: string) => void;
 }
