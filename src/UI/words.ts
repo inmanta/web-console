@@ -326,6 +326,8 @@ const dict = {
   "home.environment.copy": "Copy id",
 
   "createEnv.projectName": "Project Name",
+  "createEnv.repository": "Repository",
+  "createEnv.branch": "Branch",
 
   /**
    * Navigation related text

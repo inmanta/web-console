@@ -87,9 +87,6 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
   userEvent.click(
     await screen.findByRole("option", { name: Project.filterable[0].name })
   );
-  userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-submit-edit" })
-  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   userEvent.clear(textBox);
@@ -124,9 +121,6 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   userEvent.click(
     await screen.findByRole("option", { name: Project.filterable[0].name })
   );
-  userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-submit-edit" })
-  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   userEvent.clear(textBox);
@@ -135,18 +129,15 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const repository = "github.com/test-env";
   const branch = "dev";
   const branchTextBox = await screen.findByRole("textbox", {
-    name: "branch-input",
+    name: "Branch-input",
   });
   userEvent.clear(branchTextBox);
   userEvent.type(branchTextBox, branch);
   const urlTextBox = await screen.findByRole("textbox", {
-    name: "repository-input",
+    name: "Repository-input",
   });
   userEvent.clear(urlTextBox);
   userEvent.type(urlTextBox, repository);
-  userEvent.click(
-    screen.getByRole("button", { name: "Repository Settings-submit-edit" })
-  );
 
   userEvent.click(await screen.findByRole("button", { name: "submit" }));
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -198,9 +189,6 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     { name: "new-project", id: "proj-id-new", environments: [] },
   ];
   projectsFetcher.resolve(Either.right({ data: updatedProjects }));
-  userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-submit-edit" })
-  );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   userEvent.clear(textBox);
@@ -276,9 +264,6 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
   );
   userEvent.click(
     await screen.findByRole("option", { name: Project.filterable[0].name })
-  );
-  userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-submit-edit" })
   );
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });

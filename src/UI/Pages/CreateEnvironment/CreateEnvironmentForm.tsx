@@ -2,20 +2,12 @@ import { CreateEnvironmentParams, Maybe, ProjectModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import {
-  Button,
-  DescriptionList,
-  Flex,
-  FlexItem,
-} from "@patternfly/react-core";
-import {
-  EditableMultiTextField,
-  EditableTextField,
-  InlineSelectOption,
-} from "@/UI/Components";
+import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import React, { useContext, useState } from "react";
-import { InlinePlainAlert } from "@/UI/Components/InlineEditable/InlinePlainAlert";
+import { InlinePlainAlert } from "@/UI/Components";
 import styled from "styled-components";
+import { CreatableSelectInput } from "./CreatableSelectInput";
+import { SimpleTextFormInput } from "./SimpleTextFormInput";
 
 interface Props {
   projects: ProjectModel[];
@@ -37,45 +29,35 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   const [createEnvironmentBody, setCreateEnvironmentBody] =
     useState<CreateEnvironmentParams>({ project_id: "", name: "" });
   const [errorMessage, setErrorMessage] = useState("");
-  const setProject = (projectName: string) => {
-    const project = projects.find((project) => project.name === projectName);
-    if (project) {
-      setCreateEnvironmentBody({
-        ...createEnvironmentBody,
-        project_id: project.id,
-      });
-    }
-  };
+  const [projectName, setProjectName] = useState("");
   const setEnvironmentName = async (name: string) => {
-    setCreateEnvironmentBody({ ...createEnvironmentBody, name: name });
+    setCreateEnvironmentBody({ ...createEnvironmentBody, name });
     return Maybe.none();
   };
-  const setRepositorySettings = async (
-    fields: Pick<CreateEnvironmentParams, "branch" | "repository">
-  ) => {
-    setCreateEnvironmentBody({
-      ...createEnvironmentBody,
-      repository: fields.repository,
-      branch: fields.branch,
-    });
-    return Maybe.none();
+  const setRepository = async (repository: string) => {
+    setCreateEnvironmentBody({ ...createEnvironmentBody, repository });
   };
+  const setBranch = async (branch: string) => {
+    setCreateEnvironmentBody({ ...createEnvironmentBody, branch });
+  };
+
   const onSubmitCreate = async () => {
-    if (createEnvironmentBody.project_id && createEnvironmentBody.name) {
-      const result = await createEnvironment(createEnvironmentBody);
-      if (Maybe.isSome(result)) {
-        setErrorMessage(result.value);
-      } else {
-        handleRedirect();
+    if (projectName && createEnvironmentBody.name) {
+      const project = projects.find((project) => project.name === projectName);
+      if (project) {
+        const fullBody = { ...createEnvironmentBody, project_id: project.id };
+        const result = await createEnvironment(fullBody);
+        if (Maybe.isSome(result)) {
+          setErrorMessage(result.value);
+        } else {
+          handleRedirect();
+        }
       }
     }
   };
   const onCloseAlert = () => setErrorMessage("");
-  const projectName = projects.find(
-    (project) => project.id === createEnvironmentBody.project_id
-  )?.name;
   return (
-    <>
+    <Form isWidthLimited aria-label={props["aria-label"]}>
       {errorMessage && (
         <InlinePlainAlert
           aria-label={`submit-error-message`}
@@ -84,48 +66,38 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
           onCloseAlert={onCloseAlert}
         />
       )}
-      <StyledList aria-label={props["aria-label"]}>
-        <InlineSelectOption
-          isRequired
-          label={words("createEnv.projectName")}
-          initialValue={projectName || ""}
-          initiallyEditable
-          options={projects.map((project) => project.name)}
-          onCreate={createProject}
-          onSubmit={setProject}
-        />
-        <EditableTextField
-          isRequired
-          initialValue={createEnvironmentBody.name}
-          initiallyEditable
-          label={words("settings.tabs.environment.name")}
-          onSubmit={setEnvironmentName}
-        />
-        <EditableMultiTextField
-          groupName={words("settings.tabs.environment.repoSettings")}
-          initiallyEditable
-          initialValues={{
-            repository: createEnvironmentBody.repository || "",
-            branch: createEnvironmentBody.branch || "",
-          }}
-          onSubmit={setRepositorySettings}
-        />
-      </StyledList>
-
+      <CreatableSelectInput
+        isRequired
+        label={words("createEnv.projectName")}
+        value={projectName || ""}
+        options={projects.map((project) => project.name)}
+        onCreate={createProject}
+        onSelect={setProjectName}
+      />
+      <SimpleTextFormInput
+        isRequired
+        value={createEnvironmentBody.name}
+        label={words("settings.tabs.environment.name")}
+        onChange={setEnvironmentName}
+      />
+      <SimpleTextFormInput
+        value={createEnvironmentBody.repository || ""}
+        label={words("createEnv.repository")}
+        onChange={setRepository}
+      />
+      <SimpleTextFormInput
+        value={createEnvironmentBody.branch || ""}
+        label={words("createEnv.branch")}
+        onChange={setBranch}
+      />
       <FormControls
         onSubmit={onSubmitCreate}
         onCancel={handleRedirect}
-        isSubmitDisabled={
-          !(createEnvironmentBody.project_id && createEnvironmentBody.name)
-        }
+        isSubmitDisabled={!(projectName && createEnvironmentBody.name)}
       />
-    </>
+    </Form>
   );
 };
-
-const StyledList = styled(DescriptionList)`
-  --pf-c-description-list--RowGap: 0.5rem;
-`;
 
 const FormControls: React.FC<{
   isSubmitDisabled?: boolean;
