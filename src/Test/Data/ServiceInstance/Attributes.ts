@@ -46,7 +46,7 @@ export const a: InstanceAttributeModel = {
     },
   ],
   customer: "BEL/INMANT",
-  order_id: 9764848531585023834,
+  order_id: 9764848531585,
   service_mtu: 1500,
   end_customer: "m1demo",
   protection_scheme: "CC_PROTECTED",
