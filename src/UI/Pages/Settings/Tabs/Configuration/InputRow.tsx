@@ -37,7 +37,7 @@ export const InputRow: React.FC<Props> = ({ info }) => {
 };
 
 const Row: React.FC<Props> = ({ info, children }) => (
-  <Tr>
+  <Tr aria-label={`Row-${info.name}`}>
     <Td>
       {info.name}{" "}
       <Tooltip content={info.doc}>
@@ -60,6 +60,7 @@ const EnumInput: React.FC<{ info: EnvironmentSettings.EnumInputInfo }> = ({
       selected={info.value}
       setSelected={setSelected}
       options={info.allowed_values}
+      toggleAriaLabel={`EnumInput-${info.name}`}
     />
   );
 };

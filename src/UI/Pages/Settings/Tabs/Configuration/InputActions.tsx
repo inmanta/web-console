@@ -46,7 +46,7 @@ const InputUpdateAction: React.FC<{
   <Tooltip content={words("settings.tabs.configuration.save")}>
     <Button
       variant={!info.isUpdateable(info) ? "plain" : "link"}
-      aria-label="Save"
+      aria-label="SaveAction"
       onClick={() => info.update(info.value as never)}
       isDisabled={!info.isUpdateable(info)}
     >
@@ -59,7 +59,11 @@ const InputResetAction: React.FC<{
   info: Info<"reset">;
 }> = ({ info }) => (
   <Tooltip content={words("settings.tabs.configuration.reset")}>
-    <Button variant="plain" aria-label="Reset" onClick={() => info.reset()}>
+    <Button
+      variant="plain"
+      aria-label="ResetAction"
+      onClick={() => info.reset()}
+    >
       <UndoIcon />
     </Button>
   </Tooltip>
@@ -68,7 +72,7 @@ const InputResetAction: React.FC<{
 const InputDefaultStatus: React.FC<{
   info: Info<"value" | "default">;
 }> = ({ info }) => (
-  <PaddedInputGroupText aria-label="default" variant="plain">
+  <PaddedInputGroupText aria-label="DefaultStatus" variant="plain">
     <Tooltip
       content={words("settings.tabs.configuration.default")(
         typeof info.default === "object" ? "object" : info.default.toString()
