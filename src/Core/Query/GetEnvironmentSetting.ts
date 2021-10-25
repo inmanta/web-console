@@ -8,7 +8,7 @@ export interface GetEnvironmentSetting {
 export interface GetEnvironmentSettingManifest {
   error: string;
   apiResponse: { data: EnvironmentSettings.EnvironmentSettings };
-  data: null;
-  usedData: null;
+  data: undefined;
+  usedData: undefined;
   query: GetEnvironmentSetting;
 }

@@ -7,7 +7,7 @@ export interface UpdateEnvironmentSetting {
 
 export interface UpdateEnvironmentSettingManifest {
   error: string;
-  apiData: { data: null };
+  apiData: undefined;
   body: { value: EnvironmentSettings.Value };
   command: UpdateEnvironmentSetting;
   trigger: (
