@@ -3,6 +3,7 @@ import { Button, TextInput } from "@patternfly/react-core";
 import styled from "styled-components";
 import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
 import { TrashAltIcon } from "@patternfly/react-icons";
+import { deleteKey } from "@/Core";
 
 interface Props {
   value: Record<string, string | number | boolean>;
@@ -62,12 +63,13 @@ const Row: React.FC<RowProps> = ({
   clear,
   setKey,
 }) => {
-  const onKeyChange = (val) => {
-    if (setKey) {
-      setKey(val);
-    }
-    update([val, value]);
+  const onKeyChange = (newKey) => {
+    if (setKey) setKey(newKey);
+    update([newKey, value]);
   };
+  const onValueChange = (newValue) => update([key, newValue]);
+  const onClear = () => clear(key);
+
   return (
     <Tr>
       <SlimTd>
@@ -75,31 +77,25 @@ const Row: React.FC<RowProps> = ({
           value={key}
           onChange={onKeyChange}
           type="text"
-          aria-label="text input example"
+          aria-label="editEntryKey"
           isDisabled={typeof setKey === "undefined"}
         />
       </SlimTd>
       <SlimTd>
         <TextInput
           value={value}
-          onChange={(val) => update([key, val])}
-          type="number"
-          aria-label="text input example"
+          onChange={onValueChange}
+          type="text"
+          aria-label="editEntryValue"
         />
       </SlimTd>
       <SlimTd>
-        <Button variant="link" isDanger isSmall onClick={() => clear(key)}>
+        <Button onClick={onClear} variant="link" isDanger isSmall>
           <TrashAltIcon />
         </Button>
       </SlimTd>
     </Tr>
   );
-};
-
-const deleteKey = (key: string, obj: Record<string, unknown>) => {
-  const clone = JSON.parse(JSON.stringify(obj));
-  delete clone[key];
-  return clone;
 };
 
 const SlimTd = styled(Td)`

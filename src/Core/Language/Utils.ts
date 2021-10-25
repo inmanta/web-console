@@ -89,3 +89,13 @@ export const keepKeys = (
     }
     return acc;
   }, {});
+
+/**
+ * Delete a key from an object.
+ * @returns new object without the specified key
+ */
+export const deleteKey = (key: string, obj: Record<string, unknown>) => {
+  const clone = JSON.parse(JSON.stringify(obj));
+  delete clone[key];
+  return clone;
+};
