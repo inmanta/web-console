@@ -6,14 +6,14 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { words } from "@/UI";
-import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components";
+import { InstantFreeTextFilter, SelectOptionFilter } from "@/UI/Components";
 
 interface Props {
   projectFilter?: string[];
   setProjectFilter: (projectFilter?: string[]) => void;
   projectNames: string[];
-  environmentFilter?: string[];
-  setEnvironmentFilter: (environmentFilter?: string[]) => void;
+  environmentFilter?: string;
+  setEnvironmentFilter: (environmentFilter?: string) => void;
   clearFilters: () => void;
 }
 
@@ -30,12 +30,12 @@ export const FilterToolbar: React.FC<Props> = ({
       <ToolbarContent>
         <ToolbarGroup variant="filter-group" aria-label="FilterBar">
           <ToolbarItem variant="search-filter">
-            <FreeTextFilter
+            <InstantFreeTextFilter
               isVisible={true}
               filterPropertyName={"environment"}
               placeholder={words("home.filters.env.placeholder")}
               update={setEnvironmentFilter}
-              searchEntries={environmentFilter}
+              searchEntry={environmentFilter}
             />
           </ToolbarItem>
           <ToolbarItem variant="search-filter">

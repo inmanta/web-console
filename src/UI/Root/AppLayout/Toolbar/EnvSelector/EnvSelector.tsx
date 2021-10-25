@@ -9,7 +9,6 @@ import {
   FlexItem,
   Tooltip,
 } from "@patternfly/react-core";
-import { HomeIcon } from "@patternfly/react-icons";
 import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
@@ -46,9 +45,11 @@ export const EnvSelector: React.FC<Props> = ({
         <ContextSelectorFooter>
           <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
             <FlexItem>
-              <Tooltip content={words("home.navigation")}>
+              <Tooltip content={words("home.navigation.tooltip")}>
                 <Link to={getUrl("Home", undefined)}>
-                  <Button icon={<HomeIcon />} variant="link" />
+                  <Button variant="primary">
+                    {words("home.navigation.button")}{" "}
+                  </Button>
                 </Link>
               </Tooltip>
             </FlexItem>

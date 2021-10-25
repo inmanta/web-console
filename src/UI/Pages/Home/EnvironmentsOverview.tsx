@@ -10,7 +10,7 @@ interface Props {
 
 export interface Filters {
   projectFilter?: string[];
-  environmentFilter?: string[];
+  environmentFilter?: string;
 }
 
 export const EnvironmentsOverview: React.FC<Props> = ({
@@ -28,11 +28,16 @@ export const EnvironmentsOverview: React.FC<Props> = ({
   const setProjectFilter = (projectFilter?: string[]) =>
     setFilter({ ...filter, projectFilter });
   const projectFilter = filter.projectFilter ? filter.projectFilter : [];
-  const setEnvironmentFilter = (environmentFilter?: string[]) =>
-    setFilter({ ...filter, environmentFilter });
+  const setEnvironmentFilter = (environmentFilter?: string) => {
+    setFilter({
+      ...filter,
+      environmentFilter:
+        environmentFilter === "" ? undefined : environmentFilter,
+    });
+  };
   const environmentFilter = filter.environmentFilter
     ? filter.environmentFilter
-    : [];
+    : "";
   const filteredByProjectName = filterByProject(
     filterableEnvironments,
     projectFilter
@@ -60,14 +65,11 @@ export const EnvironmentsOverview: React.FC<Props> = ({
 
 function filterByName(
   filterableEnvironments: FlatEnvironment[],
-  environmentFilter: string[]
+  environmentFilter: string
 ): FlatEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (environmentFilter && environmentFilter.length > 0) {
-      const filterMatches = environmentFilter.filter((envFilter) =>
-        environment.name.includes(envFilter)
-      );
-      return filterMatches.length > 0;
+      return environment.name.includes(environmentFilter);
     }
     return true;
   });

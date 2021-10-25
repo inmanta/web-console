@@ -5,11 +5,12 @@ import {
   DropdownItem,
   KebabToggle,
 } from "@patternfly/react-core";
-import { PencilAltIcon, TrashAltIcon } from "@patternfly/react-icons";
+import { CopyIcon, PencilAltIcon, TrashAltIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { DeleteModal } from "./DeleteModal";
+import copy from "copy-to-clipboard";
 
 interface ActionsProps {
   environment: Pick<FlatEnvironment, "id" | "name">;
@@ -50,6 +51,13 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
               onClick={() => setIsModalOpen(true)}
             >
               {words("home.environment.delete")}
+            </DropdownItem>,
+            <DropdownItem
+              key="copy id"
+              icon={<CopyIcon />}
+              onClick={() => copy(environment.id)}
+            >
+              {words("home.environment.copy")}
             </DropdownItem>,
           ]}
           position={"right"}
