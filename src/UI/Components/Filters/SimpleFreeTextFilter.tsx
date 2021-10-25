@@ -16,7 +16,7 @@ interface Props {
   update: (searchEntry?: string) => void;
 }
 
-export const InstantFreeTextFilter: React.FC<Props> = ({
+export const SimpleFreeTextFilter: React.FC<Props> = ({
   filterPropertyName,
   placeholder,
   searchEntry,
