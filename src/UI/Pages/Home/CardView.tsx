@@ -21,6 +21,7 @@ import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Link } from "@/UI/Components";
 import { Actions } from "./Components";
+import styled from "styled-components";
 
 interface Props {
   environments: FlatEnvironment[];
@@ -52,12 +53,14 @@ const CreateNewEnvironmentCard: React.FC = () => (
   <Card isHoverable isCompact>
     <Link pathname={getUrl("CreateEnvironment", undefined)}>
       <Bullseye>
-        <EmptyState variant={EmptyStateVariant.xs}>
-          <EmptyStateIcon icon={PlusCircleIcon} />
-          <Title headingLevel="h2" size="md">
-            {words("home.create.env.desciption")}
-          </Title>
-        </EmptyState>
+        <StyledCardContent>
+          <EmptyState variant={EmptyStateVariant.xs}>
+            <EmptyStateIcon icon={PlusCircleIcon} />
+            <Title headingLevel="h2" size="md">
+              {words("home.create.env.desciption")}
+            </Title>
+          </EmptyState>
+        </StyledCardContent>
       </Bullseye>
     </Link>
   </Card>
@@ -80,12 +83,22 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
     <CardBody>
       <Bullseye>
         <Link pathname={pathname} search={`env=${environment.id}`}>
-          <Button variant="secondary">
-            {words("home.environment.select")}
-          </Button>
+          <StyledCardContent>
+            <Button variant="secondary">
+              {words("home.environment.select")}
+            </Button>
+          </StyledCardContent>
         </Link>
       </Bullseye>
     </CardBody>
-    <CardFooter style={{ color: "gray" }}>{environment.projectName}</CardFooter>
+    <StyledFooter>{environment.projectName}</StyledFooter>
   </Card>
 );
+
+const StyledCardContent = styled.div`
+  margin: 0.5em;
+`;
+
+const StyledFooter = styled(CardFooter)`
+  color: var(--pf-global--secondary-color--100);
+`;

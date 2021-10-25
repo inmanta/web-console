@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import userEvent, { specialChars } from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 import {
@@ -60,7 +60,7 @@ it.each`
     expect(initialCards).toHaveLength(4);
     const input = await screen.findByPlaceholderText("Filter by name");
     userEvent.click(input);
-    userEvent.type(input, `${filterValue}${specialChars.enter}`);
+    userEvent.type(input, filterValue);
     expect(
       screen.queryAllByRole("article", {
         name: "Environment card",
@@ -87,25 +87,6 @@ test("Given environments overview When filtering by project Then only the matchi
   ).toHaveLength(2);
 });
 
-test("Given environments overview When filtering by multiple names Then the environments that match any of them should be rendered", async () => {
-  const { component } = setup();
-  render(component);
-  const initialCards = await screen.findAllByRole("article", {
-    name: "Environment card",
-  });
-  expect(initialCards).toHaveLength(4);
-  const nameInput = await screen.findByPlaceholderText("Filter by name");
-  userEvent.click(nameInput);
-  userEvent.type(nameInput, `test${specialChars.enter}`);
-  userEvent.click(nameInput);
-  userEvent.type(nameInput, `dev${specialChars.enter}`);
-  expect(
-    screen.queryAllByRole("article", {
-      name: "Environment card",
-    })
-  ).toHaveLength(3);
-});
-
 test("Given environments overview When filtering by name and project Then only the environments that match both should be rendered", async () => {
   const { component } = setup();
   render(component);
@@ -119,7 +100,7 @@ test("Given environments overview When filtering by name and project Then only t
   await userEvent.click(option);
   const nameInput = await screen.findByPlaceholderText("Filter by name");
   userEvent.click(nameInput);
-  userEvent.type(nameInput, `test${specialChars.enter}`);
+  userEvent.type(nameInput, "test");
   expect(
     await screen.findByRole("article", {
       name: "Environment card",

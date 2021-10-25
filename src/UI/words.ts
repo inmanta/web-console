@@ -310,7 +310,8 @@ const dict = {
   "compileDetails.stages.copy": "Copy full command to clipboard",
 
   "home.title": "Home",
-  "home.navigation": "Go to overview page",
+  "home.navigation.tooltip": "Go to the overview page",
+  "home.navigation.button": "Overview",
   "home.empty.message": "No environments found",
   "home.create.env.desciption": "Create new environment",
   "home.create.env.link": "Create environment",
@@ -322,6 +323,7 @@ const dict = {
     "I understand the consequences, delete this environment",
   "home.filters.project.placeholder": "Filter by project",
   "home.filters.env.placeholder": "Filter by name",
+  "home.environment.copy": "Copy id",
 
   "createEnv.projectName": "Project Name",
 
