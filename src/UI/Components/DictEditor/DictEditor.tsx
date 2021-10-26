@@ -42,6 +42,7 @@ export const DictEditor: React.FC<Props> = ({
             update={updateEntry(entry[0])}
             clear={clearEntry}
             isDeleteable={isDeleteEntryAllowed(value, entry[0])}
+            aria-label={`Row-${entry[0]}`}
           />
         ))}
         <Row
@@ -51,6 +52,7 @@ export const DictEditor: React.FC<Props> = ({
           update={setNewEntry}
           isKeyEditable
           isDeleteable={newEntry[0].length > 0 || newEntry[1].length > 0}
+          aria-label="Row-pendingEntry"
         />
       </Tbody>
     </TableComposable>
@@ -79,6 +81,7 @@ const Row: React.FC<RowProps> = ({
   clear,
   isKeyEditable,
   isDeleteable,
+  ...props
 }) => {
   const onKeyChange = (newKey) => {
     update([newKey, value]);
@@ -87,7 +90,7 @@ const Row: React.FC<RowProps> = ({
   const onClear = () => clear(key);
 
   return (
-    <Tr>
+    <Tr {...props}>
       <SlimTd>
         <TextInput
           value={key}
@@ -112,6 +115,7 @@ const Row: React.FC<RowProps> = ({
           isDanger
           isSmall
           isDisabled={!isDeleteable}
+          aria-label="DeleteEntryAction"
         >
           <TrashAltIcon />
         </Button>
