@@ -3,16 +3,16 @@ import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<
-  Query.Error<"EnvironmentDetails">,
-  Query.Data<"EnvironmentDetails">
+  Query.Error<"GetEnvironmentDetails">,
+  Query.Data<"GetEnvironmentDetails">
 >;
 type ApiData = RemoteData.Type<
-  Query.Error<"EnvironmentDetails">,
-  Query.ApiResponse<"EnvironmentDetails">
+  Query.Error<"GetEnvironmentDetails">,
+  Query.ApiResponse<"GetEnvironmentDetails">
 >;
 
 export class EnvironmentDetailsStateHelper
-  implements StateHelper<"EnvironmentDetails">
+  implements StateHelper<"GetEnvironmentDetails">
 {
   constructor(
     private readonly store: Store,

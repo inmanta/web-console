@@ -50,7 +50,7 @@ export type Query =
   | ResourceDetailsQuery
   | ResourceHistoryQuery
   | ResourceLogsQuery
-  | EnvironmentDetailsQuery
+  | GetEnvironmentDetails
   | CompileReportsQuery
   | CompileDetailsQuery
   | GetServerStatus
@@ -82,16 +82,16 @@ export interface GetServerStatusManifest {
   query: GetServerStatus;
 }
 
-export interface EnvironmentDetailsQuery {
-  kind: "EnvironmentDetails";
+export interface GetEnvironmentDetails {
+  kind: "GetEnvironmentDetails";
 }
 
-interface EnvironmentDetailsManifest {
+interface GetEnvironmentDetailsManifest {
   error: string;
   apiResponse: { data: EnvironmentDetails };
   data: EnvironmentDetails;
   usedData: EnvironmentDetails;
-  query: EnvironmentDetailsQuery;
+  query: GetEnvironmentDetails;
 }
 
 /**
@@ -420,7 +420,7 @@ interface Manifest {
   ResourceDetails: ResourceDetailsManifest;
   ResourceHistory: ResourceHistoryManifest;
   ResourceLogs: ResourceLogsManifest;
-  EnvironmentDetails: EnvironmentDetailsManifest;
+  GetEnvironmentDetails: GetEnvironmentDetailsManifest;
   CompileReports: CompileReportsManifest;
   CompileDetails: CompileDetailsManifest;
   GetCallbacks: GetCallbacksManifest;

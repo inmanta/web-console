@@ -119,7 +119,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          new FetcherImpl<"EnvironmentDetails">(this.baseApiHelper),
+          new FetcherImpl<"GetEnvironmentDetails">(this.baseApiHelper),
           environment
         )
       ),
@@ -128,7 +128,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          new FetcherImpl<"EnvironmentDetails">(this.baseApiHelper),
+          new FetcherImpl<"GetEnvironmentDetails">(this.baseApiHelper),
           environment
         )
       ),
