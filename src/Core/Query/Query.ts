@@ -35,7 +35,7 @@ import {
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
 
 export type Query =
-  | ServicesQuery
+  | GetServices
   | ServiceQuery
   | ServiceInstanceQuery
   | ServiceInstancesQuery
@@ -97,16 +97,16 @@ interface GetEnvironmentDetailsManifest {
 /**
  * The ServicesQuery describes all services beloning to an environment.
  */
-export interface ServicesQuery {
-  kind: "Services";
+export interface GetServices {
+  kind: "GetServices";
 }
 
-interface ServicesManifest {
+interface GetServicesManifest {
   error: string;
   apiResponse: { data: ServiceModel[] };
   data: ServiceModel[];
   usedData: ServiceModel[];
-  query: ServicesQuery;
+  query: GetServices;
 }
 
 /**
@@ -404,7 +404,7 @@ interface ResourceLogsManifest {
  * types related to all the sub queries.
  */
 interface Manifest {
-  Services: ServicesManifest;
+  GetServices: GetServicesManifest;
   Service: ServiceManifest;
   ServiceInstance: ServiceInstanceManifest;
   ServiceInstances: ServiceInstancesManifest;

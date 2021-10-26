@@ -2,10 +2,10 @@ import { Scheduler, Fetcher, StateHelper } from "@/Core";
 import { ContinuousQueryManagerImpl } from "@/Data/Common";
 import { identity } from "lodash";
 
-export class ServicesQueryManager extends ContinuousQueryManagerImpl<"Services"> {
+export class ServicesQueryManager extends ContinuousQueryManagerImpl<"GetServices"> {
   constructor(
-    fetcher: Fetcher<"Services">,
-    stateHelper: StateHelper<"Services">,
+    fetcher: Fetcher<"GetServices">,
+    stateHelper: StateHelper<"GetServices">,
     scheduler: Scheduler,
     environment: string
   ) {
@@ -15,7 +15,7 @@ export class ServicesQueryManager extends ContinuousQueryManagerImpl<"Services">
       scheduler,
       () => environment,
       () => [environment],
-      "Services",
+      "GetServices",
       () => `/lsm/v1/service_catalog?instance_summary=True`,
       identity,
       environment

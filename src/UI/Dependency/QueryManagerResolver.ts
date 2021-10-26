@@ -94,7 +94,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
 
     return [
       new ServicesQueryManager(
-        new FetcherImpl<"Services">(this.baseApiHelper),
+        new FetcherImpl<"GetServices">(this.baseApiHelper),
         new ServicesStateHelper(this.store, environment),
         scheduler,
         environment
