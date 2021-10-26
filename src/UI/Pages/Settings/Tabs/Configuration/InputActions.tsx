@@ -12,6 +12,7 @@ import {
   InputGroupText,
   Tooltip,
 } from "@patternfly/react-core";
+import { isEqual } from "lodash";
 import { EnvironmentSettings } from "@/Core";
 import { words } from "@/UI/words";
 
@@ -78,7 +79,7 @@ const InputDefaultStatus: React.FC<{
         typeof info.default === "object" ? "object" : info.default.toString()
       )}
     >
-      <DefaultIcon $isDisabled={info.value !== info.default} />
+      <DefaultIcon $isDisabled={!isEqual(info.value, info.default)} />
     </Tooltip>
   </PaddedInputGroupText>
 );

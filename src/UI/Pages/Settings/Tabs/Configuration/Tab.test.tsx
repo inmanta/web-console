@@ -18,9 +18,10 @@ import {
   UpdateEnvironmentSettingCommandManager,
 } from "@/Data";
 import { act, render, screen, within } from "@testing-library/react";
-import { Either } from "@/Core";
+import { Either, Maybe } from "@/Core";
 import { EnvironmentSettings } from "@/Test";
 import { StoreProvider } from "easy-peasy";
+import userEvent from "@testing-library/user-event";
 
 function setup() {
   const store = getStoreInstance();
@@ -70,6 +71,13 @@ test("GIVEN ConfigurationTab THEN shows all settings", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: "/api/v2/environment_settings",
+    environment: "env",
+  });
+
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: EnvironmentSettings.base }));
   });
@@ -99,4 +107,113 @@ test("GIVEN ConfigurationTab THEN shows all settings", async () => {
   expect(
     within(row).getByRole("button", { name: "ResetAction" })
   ).toBeVisible();
+});
+
+test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and saving THEN update is performed", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: EnvironmentSettings.base }));
+  });
+
+  const row = screen.getByRole("row", {
+    name: "Row-auto_deploy",
+  });
+
+  const toggle = within(row).getByRole<HTMLInputElement>("checkbox", {
+    name: "Toggle-auto_deploy",
+  });
+
+  expect(toggle.checked).toBeFalsy();
+  userEvent.click(toggle);
+  expect(toggle.checked).toBeTruthy();
+  expect(apiHelper.resolvedRequests).toHaveLength(1);
+
+  userEvent.click(
+    within(row).getByRole("button", { name: "SaveAction" }),
+    undefined,
+    { skipHover: true }
+  );
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "POST",
+    url: "/api/v2/environment_settings/auto_deploy",
+    environment: "env",
+    body: { value: true },
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+
+  expect(apiHelper.resolvedRequests).toHaveLength(2);
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: "/api/v2/environment_settings/auto_deploy",
+    environment: "env",
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({ data: EnvironmentSettings.auto_deploy })
+    );
+  });
+
+  expect(apiHelper.resolvedRequests).toHaveLength(3);
+  expect(toggle.checked).toBeTruthy();
+});
+
+test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete is performed", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: EnvironmentSettings.base }));
+  });
+
+  const row = screen.getByRole("row", {
+    name: "Row-auto_deploy",
+  });
+
+  const toggle = within(row).getByRole<HTMLInputElement>("checkbox", {
+    name: "Toggle-auto_deploy",
+  });
+
+  expect(toggle.checked).toBeFalsy();
+
+  userEvent.click(
+    within(row).getByRole("button", { name: "ResetAction" }),
+    undefined,
+    { skipHover: true }
+  );
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "DELETE",
+    url: "/api/v2/environment_settings/auto_deploy",
+    environment: "env",
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: "/api/v2/environment_settings/auto_deploy",
+    environment: "env",
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({ data: EnvironmentSettings.auto_deploy })
+    );
+  });
+
+  expect(toggle.checked).toBeTruthy();
 });

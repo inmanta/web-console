@@ -96,7 +96,11 @@ const IntInput: React.FC<{ info: EnvironmentSettings.IntInputInfo }> = ({
 const BooleanInput: React.FC<{
   info: EnvironmentSettings.BooleanInputInfo;
 }> = ({ info }) => (
-  <Switch isChecked={info.value} onChange={info.set} aria-label={info.name} />
+  <Switch
+    isChecked={info.value}
+    onChange={info.set}
+    aria-label={`Toggle-${info.name}`}
+  />
 );
 
 const DictInputWithRow: React.FC<{
