@@ -12,8 +12,8 @@ interface Props {
 export const RequiresTab: React.FC<Props> = ({ id }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"ResourceDetails">({
-    kind: "ResourceDetails",
+  const [data] = queryResolver.useContinuous<"GetResourceDetails">({
+    kind: "GetResourceDetails",
     id,
   });
 

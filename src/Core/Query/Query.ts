@@ -47,7 +47,7 @@ export type Query =
   | GetDiagnostics
   | GetProjects
   | GetResources
-  | ResourceDetailsQuery
+  | GetResourceDetails
   | ResourceHistoryQuery
   | ResourceLogsQuery
   | GetEnvironmentDetails
@@ -293,18 +293,18 @@ interface GetResourcesManifest {
   query: GetResources;
 }
 
-export interface ResourceDetailsQuery extends WithId {
-  kind: "ResourceDetails";
+export interface GetResourceDetails extends WithId {
+  kind: "GetResourceDetails";
 }
 
-interface ResourceDetailsManifest {
+interface GetResourceDetailsManifest {
   error: string;
   apiResponse: {
     data: RawResourceDetails;
   };
   data: ResourceDetails;
   usedData: ResourceDetails;
-  query: ResourceDetailsQuery;
+  query: GetResourceDetails;
 }
 
 export interface ResourceHistoryQuery extends WithId {
@@ -417,7 +417,7 @@ interface Manifest {
   GetProjects: GetProjectsManifest;
   GetServerStatus: GetServerStatusManifest;
   GetResources: GetResourcesManifest;
-  ResourceDetails: ResourceDetailsManifest;
+  GetResourceDetails: GetResourceDetailsManifest;
   ResourceHistory: ResourceHistoryManifest;
   ResourceLogs: ResourceLogsManifest;
   GetEnvironmentDetails: GetEnvironmentDetailsManifest;

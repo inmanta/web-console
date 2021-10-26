@@ -23,7 +23,7 @@ import { ResourceDetailsView } from "./ResourceDetailsView";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const resourceDetailsFetcher = new DeferredFetcher<"ResourceDetails">();
+  const resourceDetailsFetcher = new DeferredFetcher<"GetResourceDetails">();
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([

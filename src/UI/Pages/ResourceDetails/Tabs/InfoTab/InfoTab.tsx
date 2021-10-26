@@ -15,8 +15,8 @@ interface Props {
 export const InfoTab: React.FC<Props> = ({ id }) => {
   const { queryResolver, urlManager } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"ResourceDetails">({
-    kind: "ResourceDetails",
+  const [data] = queryResolver.useContinuous<"GetResourceDetails">({
+    kind: "GetResourceDetails",
     id,
   });
   const datePresenter = new MomentDatePresenter();

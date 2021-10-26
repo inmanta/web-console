@@ -18,8 +18,8 @@ interface Props {
 export const AttributesTab: React.FC<Props> = ({ id }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"ResourceDetails">({
-    kind: "ResourceDetails",
+  const [data] = queryResolver.useContinuous<"GetResourceDetails">({
+    kind: "GetResourceDetails",
     id,
   });
 
