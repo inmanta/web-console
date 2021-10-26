@@ -160,7 +160,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new ResourceHistoryQueryManager(
-        new FetcherImpl<"ResourceHistory">(this.baseApiHelper),
+        new FetcherImpl<"GetResourceHistory">(this.baseApiHelper),
         new ResourceHistoryStateHelper(this.store),
         scheduler,
         environment

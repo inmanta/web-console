@@ -27,8 +27,8 @@ export const ResourceHistoryView: React.FC<Props> = ({ resourceId }) => {
     default: { name: "date", order: "desc" },
     route: "ResourceDetails",
   });
-  const [data, retry] = queryResolver.useContinuous<"ResourceHistory">({
-    kind: "ResourceHistory",
+  const [data, retry] = queryResolver.useContinuous<"GetResourceHistory">({
+    kind: "GetResourceHistory",
     id: resourceId,
     sort,
     pageSize,

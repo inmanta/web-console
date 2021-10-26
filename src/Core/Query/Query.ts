@@ -48,7 +48,7 @@ export type Query =
   | GetProjects
   | GetResources
   | GetResourceDetails
-  | ResourceHistoryQuery
+  | GetResourceHistory
   | ResourceLogsQuery
   | GetEnvironmentDetails
   | CompileReportsQuery
@@ -307,13 +307,13 @@ interface GetResourceDetailsManifest {
   query: GetResourceDetails;
 }
 
-export interface ResourceHistoryQuery extends WithId {
-  kind: "ResourceHistory";
+export interface GetResourceHistory extends WithId {
+  kind: "GetResourceHistory";
   sort?: Sort.Type;
   pageSize: PageSize.Type;
 }
 
-interface ResourceHistoryManifest {
+interface GetResourceHistoryManifest {
   error: string;
   apiResponse: {
     data: ResourceHistory[];
@@ -330,7 +330,7 @@ interface ResourceHistoryManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: ResourceHistoryQuery;
+  query: GetResourceHistory;
 }
 
 export interface CompileReportsQuery
@@ -418,7 +418,7 @@ interface Manifest {
   GetServerStatus: GetServerStatusManifest;
   GetResources: GetResourcesManifest;
   GetResourceDetails: GetResourceDetailsManifest;
-  ResourceHistory: ResourceHistoryManifest;
+  GetResourceHistory: GetResourceHistoryManifest;
   ResourceLogs: ResourceLogsManifest;
   GetEnvironmentDetails: GetEnvironmentDetailsManifest;
   CompileReports: CompileReportsManifest;
