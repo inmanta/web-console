@@ -4,7 +4,7 @@ import moment from "moment";
 import qs from "qs";
 
 export function getUrl(
-  { pageSize, sort, filter }: Query.SubQuery<"CompileReports">,
+  { pageSize, sort, filter }: Query.SubQuery<"GetCompileReports">,
   timezone = moment.tz.guess()
 ): string {
   const serializedFilters =
@@ -18,7 +18,7 @@ export function getUrl(
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
   return `/api/v2/compilereport?limit=${pageSize.value}${sortParam}${filterParam}`;
 }
-type Filter = NonNullable<Query.SubQuery<"CompileReports">["filter"]>;
+type Filter = NonNullable<Query.SubQuery<"GetCompileReports">["filter"]>;
 
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};

@@ -1,7 +1,10 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData, Query } from "@/Core";
 
-type Data = RemoteData.Type<Query.Error<"Resources">, Query.Data<"Resources">>;
+type Data = RemoteData.Type<
+  Query.Error<"GetResources">,
+  Query.Data<"GetResources">
+>;
 
 /**
  * The ResourcesSlice stores Resources.

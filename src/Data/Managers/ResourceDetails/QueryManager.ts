@@ -2,10 +2,10 @@ import { Fetcher, StateHelper, Scheduler } from "@/Core";
 import { identity } from "lodash";
 import { ContinuousQueryManagerImpl } from "@/Data/Common";
 
-export class ResourceDetailsQueryManager extends ContinuousQueryManagerImpl<"ResourceDetails"> {
+export class ResourceDetailsQueryManager extends ContinuousQueryManagerImpl<"GetResourceDetails"> {
   constructor(
-    fetcher: Fetcher<"ResourceDetails">,
-    stateHelper: StateHelper<"ResourceDetails">,
+    fetcher: Fetcher<"GetResourceDetails">,
+    stateHelper: StateHelper<"GetResourceDetails">,
     scheduler: Scheduler,
     environment: string
   ) {
@@ -15,7 +15,7 @@ export class ResourceDetailsQueryManager extends ContinuousQueryManagerImpl<"Res
       scheduler,
       ({ id }) => id,
       ({ id }) => [id],
-      "ResourceDetails",
+      "GetResourceDetails",
       ({ id }) => `/api/v2/resource/${id}`,
       identity,
       environment

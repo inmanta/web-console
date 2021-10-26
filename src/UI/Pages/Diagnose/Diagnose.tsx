@@ -19,8 +19,8 @@ interface Props {
 export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"Diagnostics">({
-    kind: "Diagnostics",
+  const [data] = queryResolver.useContinuous<"GetDiagnostics">({
+    kind: "GetDiagnostics",
     id: instanceId,
     service_entity: service.name,
   });

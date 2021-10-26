@@ -6,7 +6,9 @@ import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
 export const Home: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"Projects">({ kind: "Projects" });
+  const [data] = queryResolver.useOneTime<"GetProjects">({
+    kind: "GetProjects",
+  });
 
   return (
     <>

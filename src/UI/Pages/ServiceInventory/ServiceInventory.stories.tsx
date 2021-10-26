@@ -47,7 +47,7 @@ export const Basic: React.FC = () => {
     scheduler,
     Service.a.environment
   );
-  const resourcesFetcher = new InstantFetcher<"InstanceResources">({
+  const resourcesFetcher = new InstantFetcher<"GetInstanceResources">({
     kind: "Success",
     data: { data: InstanceResource.listB },
   });

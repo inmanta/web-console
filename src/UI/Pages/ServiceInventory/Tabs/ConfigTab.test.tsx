@@ -35,7 +35,7 @@ function setup() {
   const serviceKeyMaker = new ServiceKeyMaker();
   storeInstance.dispatch.services.setSingle({
     environment: Service.a.environment,
-    query: { kind: "Service", name: Service.a.name },
+    query: { kind: "GetService", name: Service.a.name },
     data: RemoteData.success(Service.a),
   });
 

@@ -25,15 +25,15 @@ export default {
 
 const Template: React.FC<{
   outcome: Outcome.Type<
-    Query.Error<"InstanceResources">,
-    Query.ApiResponse<"InstanceResources">
+    Query.Error<"GetInstanceResources">,
+    Query.ApiResponse<"GetInstanceResources">
   >;
 }> = ({ outcome }) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">(outcome),
+        new InstantFetcher<"GetInstanceResources">(outcome),
         new InstanceResourcesStateHelper(store),
         new StaticScheduler(),
         "34a961ba-db3c-486e-8d85-1438d8e88909"

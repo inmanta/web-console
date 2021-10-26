@@ -32,7 +32,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new EventsQueryManager(
-        new InstantFetcher<"Events">({
+        new InstantFetcher<"GetInstanceEvents">({
           kind: "Success",
           data: {
             data: events,

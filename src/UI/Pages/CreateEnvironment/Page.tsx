@@ -6,7 +6,9 @@ import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"Projects">({ kind: "Projects" });
+  const [data] = queryResolver.useOneTime<"GetProjects">({
+    kind: "GetProjects",
+  });
   return (
     <PageSectionWithTitle title={"Create Environment"}>
       {RemoteData.fold(

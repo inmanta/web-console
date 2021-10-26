@@ -2,8 +2,8 @@ import { Action, action } from "easy-peasy";
 import { RemoteData, Query } from "@/Core";
 
 type Data = RemoteData.Type<
-  Query.Error<"CompileReports">,
-  Query.Data<"CompileReports">
+  Query.Error<"GetCompileReports">,
+  Query.Data<"GetCompileReports">
 >;
 
 /**

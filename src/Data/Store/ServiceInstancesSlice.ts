@@ -9,8 +9,8 @@ import { StoreModel } from "./Store";
 import { ServiceKeyMaker } from "@/Data/Managers/Service/KeyMaker";
 
 type Data = RemoteData.Type<
-  Query.Error<"ServiceInstances">,
-  Query.ApiResponse<"ServiceInstances">
+  Query.Error<"GetServiceInstances">,
+  Query.ApiResponse<"GetServiceInstances">
 >;
 
 const serviceKeyMaker = new ServiceKeyMaker();
@@ -25,7 +25,7 @@ export interface ServiceInstancesSlice {
   setData: Action<
     ServiceInstancesSlice,
     {
-      query: Query.SubQuery<"ServiceInstances">;
+      query: Query.SubQuery<"GetServiceInstances">;
       value: Data;
       environment: string;
     }
@@ -33,7 +33,7 @@ export interface ServiceInstancesSlice {
   instancesWithTargetStates: Computed<
     ServiceInstancesSlice,
     (
-      query: Query.SubQuery<"ServiceInstances">,
+      query: Query.SubQuery<"GetServiceInstances">,
       environment: string
     ) => RemoteData.Type<
       string,

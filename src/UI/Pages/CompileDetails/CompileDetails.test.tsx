@@ -21,7 +21,7 @@ import { CompileDetails } from "./CompileDetails";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"CompileDetails">();
+  const apiHelper = new DeferredFetcher<"GetCompileDetails">();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new CompileDetailsQueryManager(

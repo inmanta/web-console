@@ -26,7 +26,7 @@ import { MemoryRouter } from "react-router-dom";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const servicesFetcher = new DeferredFetcher<"Services">();
+  const servicesFetcher = new DeferredFetcher<"GetServices">();
 
   const servicesHelper = new ServicesQueryManager(
     servicesFetcher,

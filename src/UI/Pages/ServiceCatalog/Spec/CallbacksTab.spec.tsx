@@ -35,7 +35,7 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const environment = Service.a.environment;
-  const servicesFetcher = new DeferredFetcher<"Services">();
+  const servicesFetcher = new DeferredFetcher<"GetServices">();
 
   const servicesQueryManager = new ServicesQueryManager(
     servicesFetcher,

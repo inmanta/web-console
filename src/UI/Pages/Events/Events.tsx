@@ -36,8 +36,8 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
     dateRangeKey: "timestamp",
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: "Events" });
-  const [data] = queryResolver.useContinuous<"Events">({
-    kind: "Events",
+  const [data] = queryResolver.useContinuous<"GetInstanceEvents">({
+    kind: "GetInstanceEvents",
     id: instanceId,
     service_entity: service.name,
     filter,

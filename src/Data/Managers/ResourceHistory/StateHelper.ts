@@ -3,20 +3,20 @@ import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<
-  Query.Error<"ResourceHistory">,
-  Query.Data<"ResourceHistory">
+  Query.Error<"GetResourceHistory">,
+  Query.Data<"GetResourceHistory">
 >;
 type ApiData = RemoteData.Type<
-  Query.Error<"ResourceHistory">,
-  Query.ApiResponse<"ResourceHistory">
+  Query.Error<"GetResourceHistory">,
+  Query.ApiResponse<"GetResourceHistory">
 >;
 
 export class ResourceHistoryStateHelper
-  implements StateHelper<"ResourceHistory">
+  implements StateHelper<"GetResourceHistory">
 {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, query: Query.SubQuery<"ResourceHistory">): void {
+  set(data: ApiData, query: Query.SubQuery<"GetResourceHistory">): void {
     const value = RemoteData.mapSuccess((data) => data, data);
     this.store.dispatch.resourceHistory.setData({
       id: query.id,
@@ -24,7 +24,7 @@ export class ResourceHistoryStateHelper
     });
   }
 
-  getHooked(query: Query.SubQuery<"ResourceHistory">): Data {
+  getHooked(query: Query.SubQuery<"GetResourceHistory">): Data {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) => this.enforce(state.resourceHistory.byId[query.id]),
@@ -37,7 +37,7 @@ export class ResourceHistoryStateHelper
     return value;
   }
 
-  getOnce(query: Query.SubQuery<"ResourceHistory">): Data {
+  getOnce(query: Query.SubQuery<"GetResourceHistory">): Data {
     return this.enforce(this.store.getState().resourceHistory.byId[query.id]);
   }
 }

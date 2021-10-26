@@ -10,8 +10,8 @@ it.each`
 `(
   "getUrl returns correct url for resource history with sort: $sortTxt and pageSize: $pageSize",
   ({ sort, pageSize, url }) => {
-    const query: Query.SubQuery<"ResourceHistory"> = {
-      kind: "ResourceHistory",
+    const query: Query.SubQuery<"GetResourceHistory"> = {
+      kind: "GetResourceHistory",
       id: "resourceId1",
       pageSize: PageSize.from(pageSize),
       sort,

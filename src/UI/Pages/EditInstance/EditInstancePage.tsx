@@ -10,8 +10,8 @@ export const EditInstancePage: React.FC<{
 }> = ({ serviceEntity, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"ServiceInstance">({
-    kind: "ServiceInstance",
+  const [data] = queryResolver.useContinuous<"GetServiceInstance">({
+    kind: "GetServiceInstance",
     service_entity: serviceEntity.name,
     id: instanceId,
   });

@@ -32,7 +32,8 @@ import { EnvironmentControls } from "./EnvironmentControls";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const environmentDetailsFetcher = new DeferredFetcher<"EnvironmentDetails">();
+  const environmentDetailsFetcher =
+    new DeferredFetcher<"GetEnvironmentDetails">();
   const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
     store,
     EnvironmentDetails.a.id
@@ -55,7 +56,7 @@ function setup() {
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(
       environmentDetailsStateHelper,
-      new DeferredFetcher<"EnvironmentDetails">(),
+      new DeferredFetcher<"GetEnvironmentDetails">(),
       EnvironmentDetails.a.id
     )
   );
@@ -65,7 +66,7 @@ function setup() {
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(
       environmentDetailsStateHelper,
-      new DeferredFetcher<"EnvironmentDetails">(),
+      new DeferredFetcher<"GetEnvironmentDetails">(),
       EnvironmentDetails.a.id
     )
   );

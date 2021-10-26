@@ -2,10 +2,10 @@ import { Fetcher, StateHelper, Scheduler } from "@/Core";
 import { identity } from "lodash";
 import { ContinuousQueryManagerImpl } from "@/Data/Common";
 
-export class CompileDetailsQueryManager extends ContinuousQueryManagerImpl<"CompileDetails"> {
+export class CompileDetailsQueryManager extends ContinuousQueryManagerImpl<"GetCompileDetails"> {
   constructor(
-    fetcher: Fetcher<"CompileDetails">,
-    stateHelper: StateHelper<"CompileDetails">,
+    fetcher: Fetcher<"GetCompileDetails">,
+    stateHelper: StateHelper<"GetCompileDetails">,
     scheduler: Scheduler,
     environment: string
   ) {
@@ -15,7 +15,7 @@ export class CompileDetailsQueryManager extends ContinuousQueryManagerImpl<"Comp
       scheduler,
       ({ id }) => id,
       ({ id }) => [id],
-      "CompileDetails",
+      "GetCompileDetails",
       ({ id }) => `/api/v2/compilereport/${id}`,
       identity,
       environment

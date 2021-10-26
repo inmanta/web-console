@@ -3,7 +3,7 @@ import { Command, CommandManager, Deleter, Maybe, Updater } from "@/Core";
 export class DeleteEnvironmentCommandManager implements CommandManager {
   constructor(
     private readonly deleter: Deleter<"DeleteEnvironment">,
-    private readonly updater: Updater<"Projects">
+    private readonly updater: Updater<"GetProjects">
   ) {}
 
   matches(command: Command.SubCommand<"DeleteEnvironment">): boolean {
@@ -17,7 +17,7 @@ export class DeleteEnvironmentCommandManager implements CommandManager {
       const error = await this.deleter.delete(command);
       if (Maybe.isSome(error)) return error;
       await this.updater.update({
-        kind: "Projects",
+        kind: "GetProjects",
       });
       return error;
     };

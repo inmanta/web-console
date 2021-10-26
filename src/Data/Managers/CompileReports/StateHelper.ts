@@ -3,16 +3,16 @@ import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<
-  Query.Error<"CompileReports">,
-  Query.Data<"CompileReports">
+  Query.Error<"GetCompileReports">,
+  Query.Data<"GetCompileReports">
 >;
 type ApiData = RemoteData.Type<
-  Query.Error<"CompileReports">,
-  Query.ApiResponse<"CompileReports">
+  Query.Error<"GetCompileReports">,
+  Query.ApiResponse<"GetCompileReports">
 >;
 
 export class CompileReportsStateHelper
-  implements StateHelper<"CompileReports">
+  implements StateHelper<"GetCompileReports">
 {
   constructor(
     private readonly store: Store,

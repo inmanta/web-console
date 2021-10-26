@@ -31,7 +31,7 @@ test("InventoryTable can be expanded", async () => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">({
+        new InstantFetcher<"GetInstanceResources">({
           kind: "Success",
           data: {
             data: [
@@ -79,7 +79,7 @@ test("ServiceInventory can show resources for instance", async () => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">({
+        new InstantFetcher<"GetInstanceResources">({
           kind: "Success",
           data: {
             data: [

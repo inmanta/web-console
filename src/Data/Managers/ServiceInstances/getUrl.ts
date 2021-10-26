@@ -6,7 +6,7 @@ export function getUrl({
   filter,
   sort,
   pageSize,
-}: Query.SubQuery<"ServiceInstances">): string {
+}: Query.SubQuery<"GetServiceInstances">): string {
   const filterParam = filter
     ? `&${qs.stringify(
         { filter: filterToRaw(filter) },
@@ -19,7 +19,7 @@ export function getUrl({
   return `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=${pageSize.value}${filterParam}${sortParam}${includeDeletedParam}`;
 }
 
-type Filter = NonNullable<Query.SubQuery<"ServiceInstances">["filter"]>;
+type Filter = NonNullable<Query.SubQuery<"GetServiceInstances">["filter"]>;
 
 const filterToRaw = (filter: Filter) => {
   if (typeof filter === "undefined") return {};

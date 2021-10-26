@@ -35,39 +35,39 @@ import {
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
 
 export type Query =
-  | ServicesQuery
-  | ServiceQuery
-  | ServiceInstanceQuery
-  | ServiceInstancesQuery
+  | GetServices
+  | GetService
+  | GetServiceInstance
+  | GetServiceInstances
   | GetServiceConfig
-  | InstanceResourcesQuery
-  | InstanceEventsQuery
-  | InstanceLogsQuery
+  | GetInstanceResources
+  | GetInstanceEvents
+  | GetInstanceLogs
   | GetInstanceConfig
-  | DiagnosticsQuery
-  | ProjectsQuery
-  | ResourcesQuery
-  | ResourceDetailsQuery
-  | ResourceHistoryQuery
-  | ResourceLogsQuery
-  | EnvironmentDetailsQuery
-  | CompileReportsQuery
-  | CompileDetailsQuery
+  | GetDiagnostics
+  | GetProjects
+  | GetResources
+  | GetResourceDetails
+  | GetResourceHistory
+  | GetResourceLogs
+  | GetEnvironmentDetails
+  | GetCompileReports
+  | GetCompileDetails
   | GetServerStatus
   | GetCallbacks;
 
 export type Type = Query;
 
-export interface ProjectsQuery {
-  kind: "Projects";
+export interface GetProjects {
+  kind: "GetProjects";
 }
 
-interface ProjectsManifest {
+interface GetProjectsManifest {
   error: string;
   apiResponse: { data: ProjectModel[] };
   data: ProjectModel[];
   usedData: ProjectModel[];
-  query: ProjectsQuery;
+  query: GetProjects;
 }
 
 export interface GetServerStatus {
@@ -82,46 +82,46 @@ export interface GetServerStatusManifest {
   query: GetServerStatus;
 }
 
-export interface EnvironmentDetailsQuery {
-  kind: "EnvironmentDetails";
+export interface GetEnvironmentDetails {
+  kind: "GetEnvironmentDetails";
 }
 
-interface EnvironmentDetailsManifest {
+interface GetEnvironmentDetailsManifest {
   error: string;
   apiResponse: { data: EnvironmentDetails };
   data: EnvironmentDetails;
   usedData: EnvironmentDetails;
-  query: EnvironmentDetailsQuery;
+  query: GetEnvironmentDetails;
 }
 
 /**
  * The ServicesQuery describes all services beloning to an environment.
  */
-export interface ServicesQuery {
-  kind: "Services";
+export interface GetServices {
+  kind: "GetServices";
 }
 
-interface ServicesManifest {
+interface GetServicesManifest {
   error: string;
   apiResponse: { data: ServiceModel[] };
   data: ServiceModel[];
   usedData: ServiceModel[];
-  query: ServicesQuery;
+  query: GetServices;
 }
 
 /**
  * The ServiceQuery identifies 1 specific service.
  */
-export interface ServiceQuery extends ServiceIdentifier {
-  kind: "Service";
+export interface GetService extends ServiceIdentifier {
+  kind: "GetService";
 }
 
-interface ServiceManifest {
+interface GetServiceManifest {
   error: string;
   apiResponse: { data: ServiceModel };
   data: ServiceModel;
   usedData: ServiceModel;
-  query: ServiceQuery;
+  query: GetService;
 }
 
 /**
@@ -129,13 +129,13 @@ interface ServiceManifest {
  * We are asking for all the instances of 1 unique service
  * based on its name and environment.
  */
-export interface ServiceInstancesQuery
+export interface GetServiceInstances
   extends ServiceIdentifier,
     ServiceInstanceParams.ServiceInstanceParams {
-  kind: "ServiceInstances";
+  kind: "GetServiceInstances";
 }
 
-interface ServiceInstancesManifest {
+interface GetServiceInstancesManifest {
   error: string;
   apiResponse: {
     data: ServiceInstanceModel[];
@@ -152,19 +152,19 @@ interface ServiceInstancesManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: ServiceInstancesQuery;
+  query: GetServiceInstances;
 }
 
-export interface ServiceInstanceQuery extends ServiceInstanceIdentifier {
-  kind: "ServiceInstance";
+export interface GetServiceInstance extends ServiceInstanceIdentifier {
+  kind: "GetServiceInstance";
 }
 
-interface ServiceInstanceManifest {
+interface GetServiceInstanceManifest {
   error: string;
   apiResponse: { data: ServiceInstanceModel };
   data: ServiceInstanceModel;
   usedData: ServiceInstanceModel;
-  query: ServiceInstanceQuery;
+  query: GetServiceInstance;
 }
 
 export interface GetServiceConfig extends ServiceIdentifier {
@@ -184,29 +184,29 @@ interface GetServiceConfigManifest {
  * We are not asking for 1 specific resource. We are asking for all the
  * resources of 1 specific service instance.
  */
-export interface InstanceResourcesQuery
+export interface GetInstanceResources
   extends VersionedServiceInstanceIdentifier {
-  kind: "InstanceResources";
+  kind: "GetInstanceResources";
 }
 
-interface InstanceResourcesManifest {
+interface GetInstanceResourcesManifest {
   error: string;
   apiResponse: { data: InstanceResourceModel[] };
   data: InstanceResourceModel[];
   usedData: InstanceResourceModel[];
-  query: InstanceResourcesQuery;
+  query: GetInstanceResources;
 }
 
 /**
  * The events query describes events belonging to one specific service instance
  */
-export interface InstanceEventsQuery
+export interface GetInstanceEvents
   extends ServiceInstanceIdentifier,
     EventParams.EventParams {
-  kind: "Events";
+  kind: "GetInstanceEvents";
 }
 
-interface EventsManifest {
+interface GetInstanceEventsManifest {
   error: string;
   apiResponse: {
     data: InstanceEvent[];
@@ -223,22 +223,22 @@ interface EventsManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: InstanceEventsQuery;
+  query: GetInstanceEvents;
 }
 
 /**
  * The instanceLogs query describes logs belonging to one specific service instance
  */
-export interface InstanceLogsQuery extends ServiceInstanceIdentifier {
-  kind: "InstanceLogs";
+export interface GetInstanceLogs extends ServiceInstanceIdentifier {
+  kind: "GetInstanceLogs";
 }
 
-interface InstanceLogsManifest {
+interface GetInstanceLogsManifest {
   error: string;
   apiResponse: { data: InstanceLog[] };
   data: InstanceLog[];
   usedData: InstanceLog[];
-  query: InstanceLogsQuery;
+  query: GetInstanceLogs;
 }
 
 /**
@@ -257,23 +257,23 @@ interface GetInstanceConfigManifest {
 }
 
 /** Diagnostics describe the status of an instance with regards to the diagnose call */
-export interface DiagnosticsQuery extends ServiceInstanceIdentifier {
-  kind: "Diagnostics";
+export interface GetDiagnostics extends ServiceInstanceIdentifier {
+  kind: "GetDiagnostics";
 }
 
-interface DiagnosticsManifest {
+interface GetDiagnosticsManifest {
   error: string;
   apiResponse: { data: RawDiagnostics };
   data: Diagnostics;
   usedData: Diagnostics;
-  query: DiagnosticsQuery;
+  query: GetDiagnostics;
 }
 
-export interface ResourcesQuery extends ResourceParams.ResourceParams {
-  kind: "Resources";
+export interface GetResources extends ResourceParams.ResourceParams {
+  kind: "GetResources";
 }
 
-interface ResourcesManifest {
+interface GetResourcesManifest {
   error: string;
   apiResponse: {
     data: RawResource[];
@@ -290,30 +290,30 @@ interface ResourcesManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: ResourcesQuery;
+  query: GetResources;
 }
 
-export interface ResourceDetailsQuery extends WithId {
-  kind: "ResourceDetails";
+export interface GetResourceDetails extends WithId {
+  kind: "GetResourceDetails";
 }
 
-interface ResourceDetailsManifest {
+interface GetResourceDetailsManifest {
   error: string;
   apiResponse: {
     data: RawResourceDetails;
   };
   data: ResourceDetails;
   usedData: ResourceDetails;
-  query: ResourceDetailsQuery;
+  query: GetResourceDetails;
 }
 
-export interface ResourceHistoryQuery extends WithId {
-  kind: "ResourceHistory";
+export interface GetResourceHistory extends WithId {
+  kind: "GetResourceHistory";
   sort?: Sort.Type;
   pageSize: PageSize.Type;
 }
 
-interface ResourceHistoryManifest {
+interface GetResourceHistoryManifest {
   error: string;
   apiResponse: {
     data: ResourceHistory[];
@@ -330,15 +330,15 @@ interface ResourceHistoryManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: ResourceHistoryQuery;
+  query: GetResourceHistory;
 }
 
-export interface CompileReportsQuery
+export interface GetCompileReports
   extends CompileReportParams.CompileReportParams {
-  kind: "CompileReports";
+  kind: "GetCompileReports";
 }
 
-interface CompileReportsManifest {
+interface GetCompileReportsManifest {
   error: string;
   apiResponse: {
     data: CompileReport[];
@@ -355,31 +355,31 @@ interface CompileReportsManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: CompileReportsQuery;
+  query: GetCompileReports;
 }
 
-export interface CompileDetailsQuery extends WithId {
-  kind: "CompileDetails";
+export interface GetCompileDetails extends WithId {
+  kind: "GetCompileDetails";
 }
 
-interface CompileDetailsManifest {
+interface GetCompileDetailsManifest {
   error: string;
   apiResponse: {
     data: CompileDetails;
   };
   data: CompileDetails;
   usedData: CompileDetails;
-  query: CompileDetailsQuery;
+  query: GetCompileDetails;
 }
 
-export interface ResourceLogsQuery extends WithId {
-  kind: "ResourceLogs";
+export interface GetResourceLogs extends WithId {
+  kind: "GetResourceLogs";
   filter?: ResourceLogFilter;
   sort?: Sort.Type;
   pageSize: PageSize.Type;
 }
 
-interface ResourceLogsManifest {
+interface GetResourceLogsManifest {
   error: string;
   apiResponse: {
     data: ResourceLog[];
@@ -396,7 +396,7 @@ interface ResourceLogsManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: ResourceLogsQuery;
+  query: GetResourceLogs;
 }
 
 /**
@@ -404,25 +404,25 @@ interface ResourceLogsManifest {
  * types related to all the sub queries.
  */
 interface Manifest {
-  Services: ServicesManifest;
-  Service: ServiceManifest;
-  ServiceInstance: ServiceInstanceManifest;
-  ServiceInstances: ServiceInstancesManifest;
+  GetServices: GetServicesManifest;
+  GetService: GetServiceManifest;
+  GetServiceInstance: GetServiceInstanceManifest;
+  GetServiceInstances: GetServiceInstancesManifest;
   GetServiceConfig: GetServiceConfigManifest;
-  InstanceResources: InstanceResourcesManifest;
-  Events: EventsManifest;
-  InstanceLogs: InstanceLogsManifest;
+  GetInstanceResources: GetInstanceResourcesManifest;
+  GetInstanceEvents: GetInstanceEventsManifest;
+  GetInstanceLogs: GetInstanceLogsManifest;
   GetInstanceConfig: GetInstanceConfigManifest;
-  Diagnostics: DiagnosticsManifest;
-  Projects: ProjectsManifest;
+  GetDiagnostics: GetDiagnosticsManifest;
+  GetProjects: GetProjectsManifest;
   GetServerStatus: GetServerStatusManifest;
-  Resources: ResourcesManifest;
-  ResourceDetails: ResourceDetailsManifest;
-  ResourceHistory: ResourceHistoryManifest;
-  ResourceLogs: ResourceLogsManifest;
-  EnvironmentDetails: EnvironmentDetailsManifest;
-  CompileReports: CompileReportsManifest;
-  CompileDetails: CompileDetailsManifest;
+  GetResources: GetResourcesManifest;
+  GetResourceDetails: GetResourceDetailsManifest;
+  GetResourceHistory: GetResourceHistoryManifest;
+  GetResourceLogs: GetResourceLogsManifest;
+  GetEnvironmentDetails: GetEnvironmentDetailsManifest;
+  GetCompileReports: GetCompileReportsManifest;
+  GetCompileDetails: GetCompileDetailsManifest;
   GetCallbacks: GetCallbacksManifest;
 }
 

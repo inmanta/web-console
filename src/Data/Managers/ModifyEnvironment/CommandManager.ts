@@ -10,7 +10,7 @@ import {
 export class ModifyEnvironmentCommandManager implements CommandManager {
   constructor(
     private readonly poster: PosterWithoutResponse<"ModifyEnvironment">,
-    private readonly updater: Updater<"Projects">
+    private readonly updater: Updater<"GetProjects">
   ) {}
 
   matches(command: Command.SubCommand<"ModifyEnvironment">): boolean {
@@ -29,7 +29,7 @@ export class ModifyEnvironmentCommandManager implements CommandManager {
   ): Promise<Maybe.Type<Command.Error<"ModifyEnvironment">>> {
     const error = await this.poster.post(command, body);
     await this.updater.update({
-      kind: "Projects",
+      kind: "GetProjects",
     });
     return error;
   }

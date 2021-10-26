@@ -5,10 +5,10 @@ import {
 } from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
-export class CompileReportsQueryManager extends ContinuousQueryManagerImpl<"CompileReports"> {
+export class CompileReportsQueryManager extends ContinuousQueryManagerImpl<"GetCompileReports"> {
   constructor(
-    fetcher: Fetcher<"CompileReports">,
-    stateHelper: StateHelper<"CompileReports">,
+    fetcher: Fetcher<"GetCompileReports">,
+    stateHelper: StateHelper<"GetCompileReports">,
     scheduler: Scheduler,
     environment: string
   ) {
@@ -24,7 +24,7 @@ export class CompileReportsQueryManager extends ContinuousQueryManagerImpl<"Comp
         sort?.order,
         stringifyFilter(filter),
       ],
-      "CompileReports",
+      "GetCompileReports",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {

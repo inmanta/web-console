@@ -1,15 +1,15 @@
 import { Fetcher, Query, RemoteData, StateHelper, Updater } from "@/Core";
 
 export class EnvironmentDetailsUpdater
-  implements Updater<"EnvironmentDetails">
+  implements Updater<"GetEnvironmentDetails">
 {
   constructor(
-    private readonly stateHelper: StateHelper<"EnvironmentDetails">,
-    private readonly fetcher: Fetcher<"EnvironmentDetails">,
+    private readonly stateHelper: StateHelper<"GetEnvironmentDetails">,
+    private readonly fetcher: Fetcher<"GetEnvironmentDetails">,
     private readonly environment: string
   ) {}
 
-  async update(query: Query.SubQuery<"EnvironmentDetails">): Promise<void> {
+  async update(query: Query.SubQuery<"GetEnvironmentDetails">): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(
         await this.fetcher.getData(

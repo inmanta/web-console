@@ -7,7 +7,7 @@ export function getUrl({
   sort,
   filter,
   pageSize,
-}: Query.SubQuery<"ResourceLogs">): string {
+}: Query.SubQuery<"GetResourceLogs">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(

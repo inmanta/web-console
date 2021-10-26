@@ -33,7 +33,7 @@ const Template: Story<Props> = (args) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">({
+        new InstantFetcher<"GetInstanceResources">({
           kind: "Success",
           data: { data: [] },
         }),

@@ -16,14 +16,14 @@ import { UrlManagerImpl } from "@/UI/Utils";
 export interface Handles {
   component: React.ReactElement;
   scheduler: SchedulerImpl;
-  eventsFetcher: DeferredFetcher<"Events">;
+  eventsFetcher: DeferredFetcher<"GetInstanceEvents">;
 }
 
 export class EventsPageComposer {
   compose(service: ServiceModel = Service.a): Handles {
     const store = getStoreInstance();
     const scheduler = new SchedulerImpl(5000);
-    const eventsFetcher = new DeferredFetcher<"Events">();
+    const eventsFetcher = new DeferredFetcher<"GetInstanceEvents">();
     const eventsHelper = new EventsQueryManager(
       eventsFetcher,
       new EventsStateHelper(store),

@@ -22,8 +22,8 @@ import { HaltDialog } from "./HaltDialog";
 
 export const EnvironmentControls: React.FC = () => {
   const { queryResolver, urlManager } = useContext(DependencyContext);
-  const [data] = queryResolver.useContinuous<"EnvironmentDetails">({
-    kind: "EnvironmentDetails",
+  const [data] = queryResolver.useContinuous<"GetEnvironmentDetails">({
+    kind: "GetEnvironmentDetails",
   });
   return RemoteData.fold(
     {

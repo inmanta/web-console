@@ -32,7 +32,7 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new DiagnosticsQueryManager(
-        new InstantFetcher<"Diagnostics">({
+        new InstantFetcher<"GetDiagnostics">({
           kind: "Success",
           data: { data: diagnostics },
         }),

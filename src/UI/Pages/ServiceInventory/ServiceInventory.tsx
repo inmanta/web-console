@@ -67,8 +67,8 @@ export const ServiceInventory: React.FunctionComponent<{
   const [filter, setFilter] =
     useUrlStateWithFilter<ServiceInstanceParams.Filter>({ route: "Inventory" });
 
-  const [data, retry] = queryResolver.useContinuous<"ServiceInstances">({
-    kind: "ServiceInstances",
+  const [data, retry] = queryResolver.useContinuous<"GetServiceInstances">({
+    kind: "GetServiceInstances",
     name: serviceName,
     sort,
     filter,

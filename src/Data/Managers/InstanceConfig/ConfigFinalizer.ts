@@ -12,14 +12,14 @@ import { uniq } from "lodash";
 export class InstanceConfigFinalizer
   implements ConfigFinalizer<"GetInstanceConfig">
 {
-  constructor(private readonly serviceStateHelper: StateHelper<"Service">) {}
+  constructor(private readonly serviceStateHelper: StateHelper<"GetService">) {}
 
   finalize(
     configData: RemoteData.Type<string, Config>,
     serviceName: string
   ): RemoteData.Type<string, Query.UsedData<"GetInstanceConfig">> {
     const serviceData = this.serviceStateHelper.getHooked({
-      kind: "Service",
+      kind: "GetService",
       name: serviceName,
     });
     if (!RemoteData.isSuccess(configData)) return configData;

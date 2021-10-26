@@ -12,8 +12,8 @@ it.each`
 `(
   "getUrl returns correct url for resource logs with filter: $filterTxt and pageSize: $pageSize",
   ({ filter, pageSize, url }) => {
-    const query: Query.SubQuery<"ResourceLogs"> = {
-      kind: "ResourceLogs",
+    const query: Query.SubQuery<"GetResourceLogs"> = {
+      kind: "GetResourceLogs",
       id: "resourceId1",
       pageSize: PageSize.from(pageSize),
       filter,

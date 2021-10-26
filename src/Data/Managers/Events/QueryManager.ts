@@ -5,10 +5,10 @@ import {
 } from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
-export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
+export class EventsQueryManager extends ContinuousQueryManagerImpl<"GetInstanceEvents"> {
   constructor(
-    fetcher: Fetcher<"Events">,
-    stateHelper: StateHelper<"Events">,
+    fetcher: Fetcher<"GetInstanceEvents">,
+    stateHelper: StateHelper<"GetInstanceEvents">,
     scheduler: Scheduler,
     environment: string
   ) {
@@ -24,7 +24,7 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
         stringifyFilter(filter),
         pageSize.value,
       ],
-      "Events",
+      "GetInstanceEvents",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {

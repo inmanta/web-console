@@ -19,8 +19,8 @@ describe("getUrl for events ", () => {
   `(
     "returns correct url $url for filter $filter sort $sort and page size $size",
     ({ filter, sort, size, url }) => {
-      const query: Query.SubQuery<"Events"> = {
-        kind: "Events",
+      const query: Query.SubQuery<"GetInstanceEvents"> = {
+        kind: "GetInstanceEvents",
         service_entity: name,
         id,
         filter,

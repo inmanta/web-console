@@ -2,13 +2,16 @@ import { Query, RemoteData, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
-type Data = RemoteData.Type<Query.Error<"Services">, Query.Data<"Services">>;
+type Data = RemoteData.Type<
+  Query.Error<"GetServices">,
+  Query.Data<"GetServices">
+>;
 type ApiData = RemoteData.Type<
-  Query.Error<"Services">,
-  Query.ApiResponse<"Services">
+  Query.Error<"GetServices">,
+  Query.ApiResponse<"GetServices">
 >;
 
-export class ServicesStateHelper implements StateHelper<"Services"> {
+export class ServicesStateHelper implements StateHelper<"GetServices"> {
   constructor(
     private readonly store: Store,
     private readonly environment: string

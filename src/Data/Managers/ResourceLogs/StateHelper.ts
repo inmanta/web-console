@@ -3,18 +3,18 @@ import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<
-  Query.Error<"ResourceLogs">,
-  Query.Data<"ResourceLogs">
+  Query.Error<"GetResourceLogs">,
+  Query.Data<"GetResourceLogs">
 >;
 type ApiData = RemoteData.Type<
-  Query.Error<"ResourceLogs">,
-  Query.ApiResponse<"ResourceLogs">
+  Query.Error<"GetResourceLogs">,
+  Query.ApiResponse<"GetResourceLogs">
 >;
 
-export class ResourceLogsStateHelper implements StateHelper<"ResourceLogs"> {
+export class ResourceLogsStateHelper implements StateHelper<"GetResourceLogs"> {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, { id }: Query.SubQuery<"ResourceLogs">): void {
+  set(data: ApiData, { id }: Query.SubQuery<"GetResourceLogs">): void {
     const value = RemoteData.mapSuccess((data) => data, data);
     this.store.dispatch.resourceLogs.setData({
       id,
@@ -22,7 +22,7 @@ export class ResourceLogsStateHelper implements StateHelper<"ResourceLogs"> {
     });
   }
 
-  getHooked({ id }: Query.SubQuery<"ResourceLogs">): Data {
+  getHooked({ id }: Query.SubQuery<"GetResourceLogs">): Data {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
       (state) => this.enforce(state.resourceLogs.byId[id]),
@@ -35,7 +35,7 @@ export class ResourceLogsStateHelper implements StateHelper<"ResourceLogs"> {
     return value;
   }
 
-  getOnce({ id }: Query.SubQuery<"ResourceLogs">): Data {
+  getOnce({ id }: Query.SubQuery<"GetResourceLogs">): Data {
     return this.enforce(this.store.getState().resourceLogs.byId[id]);
   }
 }

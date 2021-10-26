@@ -20,8 +20,8 @@ export const ResourcesTab: React.FC<Props> = ({
   const { queryResolver } = useContext(DependencyContext);
   const { id } = serviceInstanceIdentifier;
 
-  const [data] = queryResolver.useContinuous<"InstanceResources">({
-    kind: "InstanceResources",
+  const [data] = queryResolver.useContinuous<"GetInstanceResources">({
+    kind: "GetInstanceResources",
     ...serviceInstanceIdentifier,
   });
 

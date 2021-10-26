@@ -67,14 +67,14 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new EnvironmentDeleter(this.baseApiHelper),
         new ProjectsUpdater(
           new ProjectsStateHelper(this.store),
-          new FetcherImpl<"Projects">(this.baseApiHelper)
+          new FetcherImpl<"GetProjects">(this.baseApiHelper)
         )
       ),
       new CreateProjectCommandManager(
         this.baseApiHelper,
         new ProjectsUpdater(
           new ProjectsStateHelper(this.store),
-          new FetcherImpl<"Projects">(this.baseApiHelper)
+          new FetcherImpl<"GetProjects">(this.baseApiHelper)
         )
       ),
       new CreateEnvironmentCommandManager(this.baseApiHelper),
@@ -119,7 +119,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          new FetcherImpl<"EnvironmentDetails">(this.baseApiHelper),
+          new FetcherImpl<"GetEnvironmentDetails">(this.baseApiHelper),
           environment
         )
       ),
@@ -128,7 +128,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          new FetcherImpl<"EnvironmentDetails">(this.baseApiHelper),
+          new FetcherImpl<"GetEnvironmentDetails">(this.baseApiHelper),
           environment
         )
       ),
@@ -154,7 +154,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new ModifyEnvironmentPoster(this.baseApiHelper, environment),
         new ProjectsUpdater(
           new ProjectsStateHelper(this.store),
-          new FetcherImpl<"Projects">(this.baseApiHelper)
+          new FetcherImpl<"GetProjects">(this.baseApiHelper)
         )
       ),
     ];

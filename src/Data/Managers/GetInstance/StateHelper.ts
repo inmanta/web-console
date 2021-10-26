@@ -3,19 +3,19 @@ import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<string, ServiceInstanceModel>;
-type ApiData = RemoteData.Type<string, Query.ApiResponse<"ServiceInstance">>;
+type ApiData = RemoteData.Type<string, Query.ApiResponse<"GetServiceInstance">>;
 
 export class ServiceInstanceStateHelper
-  implements StateHelper<"ServiceInstance">
+  implements StateHelper<"GetServiceInstance">
 {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, query: Query.SubQuery<"ServiceInstance">): void {
+  set(data: ApiData, query: Query.SubQuery<"GetServiceInstance">): void {
     const value = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
     this.store.dispatch.serviceInstance.setData({ id: query.id, value });
   }
 
-  getHooked(query: Query.SubQuery<"ServiceInstance">): Data {
+  getHooked(query: Query.SubQuery<"GetServiceInstance">): Data {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.serviceInstance.byId[query.id]);
@@ -27,7 +27,7 @@ export class ServiceInstanceStateHelper
     return value;
   }
 
-  getOnce(query: Query.SubQuery<"ServiceInstance">): Data {
+  getOnce(query: Query.SubQuery<"GetServiceInstance">): Data {
     return this.enforce(this.store.getState().serviceInstance.byId[query.id]);
   }
 }

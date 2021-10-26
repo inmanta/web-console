@@ -10,8 +10,8 @@ import {
 export class ResumeEnvironmentCommandManager implements CommandManager {
   constructor(
     private readonly poster: PosterWithoutResponse<"ResumeEnvironment">,
-    private readonly stateHelper: StateHelper<"EnvironmentDetails">,
-    private readonly updater: Updater<"EnvironmentDetails">
+    private readonly stateHelper: StateHelper<"GetEnvironmentDetails">,
+    private readonly updater: Updater<"GetEnvironmentDetails">
   ) {}
 
   matches(command: Command.SubCommand<"ResumeEnvironment">): boolean {
@@ -23,11 +23,11 @@ export class ResumeEnvironmentCommandManager implements CommandManager {
   ): Command.Trigger<"ResumeEnvironment"> {
     return async () => {
       this.stateHelper.set(RemoteData.loading(), {
-        kind: "EnvironmentDetails",
+        kind: "GetEnvironmentDetails",
       });
       const result = await this.poster.post(command, null);
       await this.updater.update({
-        kind: "EnvironmentDetails",
+        kind: "GetEnvironmentDetails",
       });
       return result;
     };

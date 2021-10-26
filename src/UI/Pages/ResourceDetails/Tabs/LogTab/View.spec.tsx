@@ -24,7 +24,7 @@ function setup() {
   const store = getStoreInstance();
   const environment = Service.a.environment;
 
-  const resourceLogsFetcher = new DeferredFetcher<"ResourceLogs">();
+  const resourceLogsFetcher = new DeferredFetcher<"GetResourceLogs">();
   const resourceLogsStateHelper = new ResourceLogsStateHelper(store);
   const resourceLogsQueryManager = new ResourceLogsQueryManager(
     resourceLogsFetcher,
