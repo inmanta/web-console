@@ -125,7 +125,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new EventsQueryManager(
-        new FetcherImpl<"Events">(this.baseApiHelper),
+        new FetcherImpl<"GetInstanceEvents">(this.baseApiHelper),
         new EventsStateHelper(this.store),
         scheduler,
         environment

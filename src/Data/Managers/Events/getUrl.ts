@@ -3,7 +3,13 @@ import moment from "moment-timezone";
 import qs from "qs";
 
 export function getUrl(
-  { service_entity, id, filter, sort, pageSize }: Query.SubQuery<"Events">,
+  {
+    service_entity,
+    id,
+    filter,
+    sort,
+    pageSize,
+  }: Query.SubQuery<"GetInstanceEvents">,
   timezone = moment.tz.guess()
 ): string {
   const filterParam =
@@ -17,7 +23,7 @@ export function getUrl(
   return `/lsm/v1/service_inventory/${service_entity}/${id}/events?limit=${pageSize.value}${sortParam}${filterParam}`;
 }
 
-type Filter = NonNullable<Query.SubQuery<"Events">["filter"]>;
+type Filter = NonNullable<Query.SubQuery<"GetInstanceEvents">["filter"]>;
 
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};

@@ -41,7 +41,7 @@ export type Query =
   | GetServiceInstances
   | GetServiceConfig
   | GetInstanceResources
-  | InstanceEventsQuery
+  | GetInstanceEvents
   | InstanceLogsQuery
   | GetInstanceConfig
   | DiagnosticsQuery
@@ -200,13 +200,13 @@ interface GetInstanceResourcesManifest {
 /**
  * The events query describes events belonging to one specific service instance
  */
-export interface InstanceEventsQuery
+export interface GetInstanceEvents
   extends ServiceInstanceIdentifier,
     EventParams.EventParams {
-  kind: "Events";
+  kind: "GetInstanceEvents";
 }
 
-interface EventsManifest {
+interface GetInstanceEventsManifest {
   error: string;
   apiResponse: {
     data: InstanceEvent[];
@@ -223,7 +223,7 @@ interface EventsManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: InstanceEventsQuery;
+  query: GetInstanceEvents;
 }
 
 /**
@@ -410,7 +410,7 @@ interface Manifest {
   GetServiceInstances: GetServiceInstancesManifest;
   GetServiceConfig: GetServiceConfigManifest;
   GetInstanceResources: GetInstanceResourcesManifest;
-  Events: EventsManifest;
+  GetInstanceEvents: GetInstanceEventsManifest;
   InstanceLogs: InstanceLogsManifest;
   GetInstanceConfig: GetInstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
