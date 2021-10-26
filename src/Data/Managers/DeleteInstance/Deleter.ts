@@ -5,7 +5,9 @@ export class InstanceDeleter implements Deleter<"DeleteInstance"> {
     private readonly apiHelper: ApiHelper,
     private readonly environment: string
   ) {}
-  delete(command: Command.DeleteInstance): Promise<Maybe.Type<string>> {
+  delete(
+    command: Command.SubCommand<"DeleteInstance">
+  ): Promise<Maybe.Type<string>> {
     return this.apiHelper.delete(this.getUrl(command), this.environment);
   }
 

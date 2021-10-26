@@ -1,20 +1,39 @@
-import { Either, Maybe } from "@/Core/Language";
-import {
-  Config,
-  InstanceAttributeModel,
-  ServiceInstanceModel,
-  SetStateBody,
-  VersionedServiceInstanceIdentifier,
-  ServiceIdentifier,
-  Field,
-  CreateCallbackBody,
-  ModifyEnvironmentParams,
-} from "@/Core/Domain";
 import { CreateProject, CreateProjectManifest } from "./CreateProject";
 import {
   CreateEnvironment,
   CreateEnvironmentManifest,
 } from "./CreateEnvironment";
+import {
+  UpdateServiceConfig,
+  UpdateServiceConfigManifest,
+} from "./UpdateServiceConfig";
+import {
+  UpdateInstanceConfig,
+  UpdateInstanceConfigManifest,
+} from "./UpdateInstanceConfig";
+import { CreateInstance, CreateInstanceManifest } from "./CreateInstance";
+import {
+  TriggerInstanceUpdate,
+  TriggerInstanceUpdateManifest,
+} from "./TriggerInstanceUpdate";
+import { DeleteInstance, DeleteInstanceManifest } from "./DeleteInstance";
+import { TriggerSetState, TriggerSetStateManifest } from "./TriggerSetState";
+import { DeleteService, DeleteServiceManifest } from "./DeleteService";
+import { HaltEnvironment, HaltEnvironmentManifest } from "./HaltEnvironment";
+import {
+  ResumeEnvironment,
+  ResumeEnvironmentManifest,
+} from "./ResumeEnvironment";
+import {
+  ModifyEnvironment,
+  ModifyEnvironmentManifest,
+} from "./ModifyEnvironment";
+import { DeleteCallback, DeleteCallbackManifest } from "./DeleteCallback";
+import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
+import {
+  DeleteEnvironment,
+  DeleteEnvironmentManifest,
+} from "./DeleteEnvironment";
 
 export type Command =
   | UpdateServiceConfig
@@ -34,186 +53,6 @@ export type Command =
   | CreateEnvironment;
 
 export type Type = Command;
-
-export interface UpdateServiceConfig extends ServiceIdentifier {
-  kind: "UpdateServiceConfig";
-}
-
-interface UpdateServiceConfigManifest {
-  error: string;
-  apiData: { data: Config };
-  body: { values: Config };
-  command: UpdateServiceConfig;
-  trigger: (option: string, value: boolean) => void;
-}
-
-/**
- * The instanceConfig command updates the config belonging to one specific service instance
- */
-export interface UpdateInstanceConfig
-  extends VersionedServiceInstanceIdentifier {
-  kind: "UpdateInstanceConfig";
-}
-
-interface UpdateInstanceConfigManifest {
-  error: string;
-  apiData: { data: Config };
-  body: { values: Config };
-  command: UpdateInstanceConfig;
-  trigger: (
-    payload:
-      | { kind: "RESET" }
-      | { kind: "UPDATE"; option: string; value: boolean }
-  ) => void;
-}
-
-export interface CreateInstance {
-  kind: "CreateInstance";
-  service_entity: string;
-}
-
-interface CreateInstanceManifest {
-  error: string;
-  apiData: { data: ServiceInstanceModel };
-  body: { attributes: InstanceAttributeModel };
-  command: CreateInstance;
-  trigger: (
-    fields: Field[],
-    formState: InstanceAttributeModel
-  ) => Promise<Either.Type<Error<"CreateInstance">, ApiData<"CreateInstance">>>;
-}
-
-export interface TriggerInstanceUpdate
-  extends VersionedServiceInstanceIdentifier {
-  kind: "TriggerInstanceUpdate";
-}
-
-interface TriggerInstanceUpdateManifest {
-  error: string;
-  apiData: string;
-  body: { attributes: InstanceAttributeModel };
-  command: TriggerInstanceUpdate;
-  trigger: (
-    fields: Field[],
-    currentAttributes: InstanceAttributeModel | null,
-    formState: InstanceAttributeModel
-  ) => Promise<Maybe.Type<Error<"TriggerInstanceUpdate">>>;
-}
-
-export interface DeleteInstance extends VersionedServiceInstanceIdentifier {
-  kind: "DeleteInstance";
-}
-
-interface DeleteInstanceManifest {
-  error: string;
-  apiData: string;
-  body: null;
-  command: DeleteInstance;
-  trigger: () => Promise<Maybe.Type<Error<"DeleteInstance">>>;
-}
-
-export interface TriggerSetState extends VersionedServiceInstanceIdentifier {
-  kind: "TriggerSetState";
-}
-
-interface TriggerSetStateManifest {
-  error: string;
-  apiData: string;
-  body: SetStateBody;
-  command: TriggerSetState;
-  trigger: (
-    target_state: string
-  ) => Promise<Maybe.Type<Error<"TriggerSetState">>>;
-}
-
-export interface DeleteService extends ServiceIdentifier {
-  kind: "DeleteService";
-}
-
-interface DeleteServiceManifest {
-  error: string;
-  apiData: string;
-  body: null;
-  command: DeleteService;
-  trigger: () => Promise<Maybe.Type<Error<"DeleteService">>>;
-}
-
-export interface HaltEnvironment {
-  kind: "HaltEnvironment";
-}
-
-interface HaltEnvironmentManifest {
-  error: string;
-  apiData: string;
-  body: null;
-  command: HaltEnvironment;
-  trigger: () => Promise<Maybe.Type<Error<"HaltEnvironment">>>;
-}
-
-export interface ResumeEnvironment {
-  kind: "ResumeEnvironment";
-}
-
-interface ResumeEnvironmentManifest {
-  error: string;
-  apiData: string;
-  body: null;
-  command: ResumeEnvironment;
-  trigger: () => Promise<Maybe.Type<Error<"ResumeEnvironment">>>;
-}
-
-export interface ModifyEnvironment {
-  kind: "ModifyEnvironment";
-}
-
-interface ModifyEnvironmentManifest {
-  error: string;
-  apiData: string;
-  body: ModifyEnvironmentParams;
-  command: ModifyEnvironment;
-  trigger: (
-    body: ModifyEnvironmentParams
-  ) => Promise<Maybe.Type<Error<"ModifyEnvironment">>>;
-}
-
-export interface DeleteCallback {
-  kind: "DeleteCallback";
-  callbackId: string;
-  service_entity: string;
-}
-
-interface DeleteCallbackManifest {
-  error: string;
-  apiData: string;
-  body: null;
-  command: DeleteCallback;
-  trigger: () => Promise<Maybe.Type<Error<"DeleteCallback">>>;
-}
-
-export interface CreateCallback extends CreateCallbackBody {
-  kind: "CreateCallback";
-}
-
-interface CreateCallbackManifest {
-  error: string;
-  apiData: { data: string };
-  body: CreateCallbackBody;
-  command: CreateCallback;
-  trigger: () => Promise<Maybe.Type<Error<"CreateCallback">>>;
-}
-
-export interface DeleteEnvironment {
-  kind: "DeleteEnvironment";
-  id: string;
-}
-
-interface DeleteEnvironmentManifest {
-  error: string;
-  apiData: string;
-  body: null;
-  command: DeleteEnvironment;
-  trigger: () => Promise<Maybe.Type<Error<"DeleteEnvironment">>>;
-}
 
 /**
  * The Manifest is just a utility that collects all the different
@@ -238,7 +77,7 @@ interface Manifest {
 }
 
 /**
- * Query Utilities
+ * Command Utilities
  */
 export type Kind = Command["kind"];
 export type Error<K extends Kind> = Manifest[K]["error"];
