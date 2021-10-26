@@ -189,7 +189,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new CompileDetailsQueryManager(
-        new FetcherImpl<"CompileDetails">(this.baseApiHelper),
+        new FetcherImpl<"GetCompileDetails">(this.baseApiHelper),
         new CompileDetailsStateHelper(this.store),
         scheduler,
         environment

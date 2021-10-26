@@ -52,7 +52,7 @@ export type Query =
   | GetResourceLogs
   | GetEnvironmentDetails
   | GetCompileReports
-  | CompileDetailsQuery
+  | GetCompileDetails
   | GetServerStatus
   | GetCallbacks;
 
@@ -358,18 +358,18 @@ interface GetCompileReportsManifest {
   query: GetCompileReports;
 }
 
-export interface CompileDetailsQuery extends WithId {
-  kind: "CompileDetails";
+export interface GetCompileDetails extends WithId {
+  kind: "GetCompileDetails";
 }
 
-interface CompileDetailsManifest {
+interface GetCompileDetailsManifest {
   error: string;
   apiResponse: {
     data: CompileDetails;
   };
   data: CompileDetails;
   usedData: CompileDetails;
-  query: CompileDetailsQuery;
+  query: GetCompileDetails;
 }
 
 export interface GetResourceLogs extends WithId {
@@ -422,7 +422,7 @@ interface Manifest {
   GetResourceLogs: GetResourceLogsManifest;
   GetEnvironmentDetails: GetEnvironmentDetailsManifest;
   GetCompileReports: GetCompileReportsManifest;
-  CompileDetails: CompileDetailsManifest;
+  GetCompileDetails: GetCompileDetailsManifest;
   GetCallbacks: GetCallbacksManifest;
 }
 

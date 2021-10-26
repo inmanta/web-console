@@ -11,8 +11,8 @@ interface Props {
 export const CompileDetails: React.FC<Props> = ({ id }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"CompileDetails">({
-    kind: "CompileDetails",
+  const [data] = queryResolver.useContinuous<"GetCompileDetails">({
+    kind: "GetCompileDetails",
     id,
   });
 
