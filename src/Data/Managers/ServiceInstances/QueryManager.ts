@@ -10,10 +10,10 @@ import {
 } from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
-export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManager<"ServiceInstances"> {
+export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManager<"GetServiceInstances"> {
   constructor(
     apiHelper: ApiHelper,
-    stateHelper: StateHelper<"ServiceInstances">,
+    stateHelper: StateHelper<"GetServiceInstances">,
     scheduler: Scheduler,
     environment: string
   ) {
@@ -29,7 +29,7 @@ export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManager<
         sort?.order,
         pageSize.value,
       ],
-      "ServiceInstances",
+      "GetServiceInstances",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {

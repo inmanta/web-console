@@ -3,8 +3,8 @@ import { getUrl } from "./getUrl";
 
 test("getUrl returns correct url for no filter & no sort", () => {
   const name = "service_a";
-  const query: Query.SubQuery<"ServiceInstances"> = {
-    kind: "ServiceInstances",
+  const query: Query.SubQuery<"GetServiceInstances"> = {
+    kind: "GetServiceInstances",
     name,
     filter: undefined,
     sort: undefined,
@@ -18,8 +18,8 @@ test("getUrl returns correct url for no filter & no sort", () => {
 
 test("getUrl returns correct url for filter & no sort", () => {
   const name = "service_a";
-  const query: Query.SubQuery<"ServiceInstances"> = {
-    kind: "ServiceInstances",
+  const query: Query.SubQuery<"GetServiceInstances"> = {
+    kind: "GetServiceInstances",
     name,
     filter: {
       state: ["up", "creating"],
@@ -35,8 +35,8 @@ test("getUrl returns correct url for filter & no sort", () => {
 
 test("getUrl returns correct url for sort & no filter", () => {
   const name = "service_a";
-  const query: Query.SubQuery<"ServiceInstances"> = {
-    kind: "ServiceInstances",
+  const query: Query.SubQuery<"GetServiceInstances"> = {
+    kind: "GetServiceInstances",
     name,
     filter: undefined,
     sort: {
@@ -53,8 +53,8 @@ test("getUrl returns correct url for sort & no filter", () => {
 
 test("getUrl returns correct url for sort & filter", () => {
   const name = "service_a";
-  const query: Query.SubQuery<"ServiceInstances"> = {
-    kind: "ServiceInstances",
+  const query: Query.SubQuery<"GetServiceInstances"> = {
+    kind: "GetServiceInstances",
     name,
     filter: {
       state: ["up", "creating"],
@@ -73,8 +73,8 @@ test("getUrl returns correct url for sort & filter", () => {
 
 test("getUrl returns correct url for empty filter", () => {
   const name = "service_a";
-  const query: Query.SubQuery<"ServiceInstances"> = {
-    kind: "ServiceInstances",
+  const query: Query.SubQuery<"GetServiceInstances"> = {
+    kind: "GetServiceInstances",
     name,
     filter: {
       state: [],

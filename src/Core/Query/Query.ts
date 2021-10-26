@@ -38,7 +38,7 @@ export type Query =
   | GetServices
   | GetService
   | ServiceInstanceQuery
-  | ServiceInstancesQuery
+  | GetServiceInstances
   | GetServiceConfig
   | InstanceResourcesQuery
   | InstanceEventsQuery
@@ -129,13 +129,13 @@ interface GetServiceManifest {
  * We are asking for all the instances of 1 unique service
  * based on its name and environment.
  */
-export interface ServiceInstancesQuery
+export interface GetServiceInstances
   extends ServiceIdentifier,
     ServiceInstanceParams.ServiceInstanceParams {
-  kind: "ServiceInstances";
+  kind: "GetServiceInstances";
 }
 
-interface ServiceInstancesManifest {
+interface GetServiceInstancesManifest {
   error: string;
   apiResponse: {
     data: ServiceInstanceModel[];
@@ -152,7 +152,7 @@ interface ServiceInstancesManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: ServiceInstancesQuery;
+  query: GetServiceInstances;
 }
 
 export interface ServiceInstanceQuery extends ServiceInstanceIdentifier {
@@ -407,7 +407,7 @@ interface Manifest {
   GetServices: GetServicesManifest;
   GetService: GetServiceManifest;
   ServiceInstance: ServiceInstanceManifest;
-  ServiceInstances: ServiceInstancesManifest;
+  GetServiceInstances: GetServiceInstancesManifest;
   GetServiceConfig: GetServiceConfigManifest;
   InstanceResources: InstanceResourcesManifest;
   Events: EventsManifest;

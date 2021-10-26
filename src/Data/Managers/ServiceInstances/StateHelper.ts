@@ -2,11 +2,14 @@ import { Query, RemoteData, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
-type Data = RemoteData.Type<string, Query.Data<"ServiceInstances">>;
-type ApiData = RemoteData.Type<string, Query.ApiResponse<"ServiceInstances">>;
+type Data = RemoteData.Type<string, Query.Data<"GetServiceInstances">>;
+type ApiData = RemoteData.Type<
+  string,
+  Query.ApiResponse<"GetServiceInstances">
+>;
 
 export class ServiceInstancesStateHelper
-  implements StateHelper<"ServiceInstances">
+  implements StateHelper<"GetServiceInstances">
 {
   constructor(
     private readonly store: Store,
@@ -21,7 +24,7 @@ export class ServiceInstancesStateHelper
    * rerendered anyway because the getStoreState hook is also optimized
    * to check if the data is changed.
    */
-  set(value: ApiData, query: Query.SubQuery<"ServiceInstances">): void {
+  set(value: ApiData, query: Query.SubQuery<"GetServiceInstances">): void {
     this.store.dispatch.serviceInstances.setData({
       query,
       value,
@@ -29,7 +32,7 @@ export class ServiceInstancesStateHelper
     });
   }
 
-  getHooked(query: Query.SubQuery<"ServiceInstances">): Data {
+  getHooked(query: Query.SubQuery<"GetServiceInstances">): Data {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(
@@ -46,7 +49,7 @@ export class ServiceInstancesStateHelper
     return value;
   }
 
-  getOnce(query: Query.SubQuery<"ServiceInstances">): Data {
+  getOnce(query: Query.SubQuery<"GetServiceInstances">): Data {
     return this.enforce(
       this.store
         .getState()

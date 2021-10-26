@@ -10,8 +10,8 @@ describe("ServiceInstancesSlice ", () => {
 
   it("differentiates correctly between services with the same name and different environment", () => {
     const store = getStoreInstance();
-    const firstQuery: Query.SubQuery<"ServiceInstances"> = {
-      kind: "ServiceInstances",
+    const firstQuery: Query.SubQuery<"GetServiceInstances"> = {
+      kind: "GetServiceInstances",
       name: serviceInstancesFirstEnv[0].service_entity,
       pageSize: PageSize.initial,
     };
@@ -42,8 +42,8 @@ describe("ServiceInstancesSlice ", () => {
     );
 
     // Check if instances for a service with the same name but different environment return loading state if they are not loaded yet
-    const secondQuery: Query.SubQuery<"ServiceInstances"> = {
-      kind: "ServiceInstances",
+    const secondQuery: Query.SubQuery<"GetServiceInstances"> = {
+      kind: "GetServiceInstances",
       name: serviceInstancesSecondEnv[0].service_entity,
       pageSize: PageSize.initial,
     };
