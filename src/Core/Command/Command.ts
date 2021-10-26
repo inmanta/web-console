@@ -19,16 +19,16 @@ import {
 export type Command =
   | UpdateServiceConfig
   | UpdateInstanceConfig
-  | CreateInstanceCommand
-  | TriggerInstanceUpdateCommand
-  | DeleteInstanceCommand
-  | TriggerSetStateCommand
-  | DeleteServiceCommand
-  | HaltEnvironmentCommand
-  | ResumeEnvironmentCommand
-  | ModifyEnvironmentCommand
-  | DeleteCallbackCommand
-  | CreateCallbackCommand
+  | CreateInstance
+  | TriggerInstanceUpdate
+  | DeleteInstance
+  | TriggerSetState
+  | DeleteService
+  | HaltEnvironment
+  | ResumeEnvironment
+  | ModifyEnvironment
+  | DeleteCallback
+  | CreateCallback
   | DeleteEnvironment
   | CreateProject
   | CreateEnvironment;
@@ -67,7 +67,7 @@ interface UpdateInstanceConfigManifest {
   ) => void;
 }
 
-export interface CreateInstanceCommand {
+export interface CreateInstance {
   kind: "CreateInstance";
   service_entity: string;
 }
@@ -76,14 +76,14 @@ interface CreateInstanceManifest {
   error: string;
   apiData: { data: ServiceInstanceModel };
   body: { attributes: InstanceAttributeModel };
-  command: CreateInstanceCommand;
+  command: CreateInstance;
   trigger: (
     fields: Field[],
     formState: InstanceAttributeModel
   ) => Promise<Either.Type<Error<"CreateInstance">, ApiData<"CreateInstance">>>;
 }
 
-export interface TriggerInstanceUpdateCommand
+export interface TriggerInstanceUpdate
   extends VersionedServiceInstanceIdentifier {
   kind: "TriggerInstanceUpdate";
 }
@@ -92,7 +92,7 @@ interface TriggerInstanceUpdateManifest {
   error: string;
   apiData: string;
   body: { attributes: InstanceAttributeModel };
-  command: TriggerInstanceUpdateCommand;
+  command: TriggerInstanceUpdate;
   trigger: (
     fields: Field[],
     currentAttributes: InstanceAttributeModel | null,
@@ -100,8 +100,7 @@ interface TriggerInstanceUpdateManifest {
   ) => Promise<Maybe.Type<Error<"TriggerInstanceUpdate">>>;
 }
 
-export interface DeleteInstanceCommand
-  extends VersionedServiceInstanceIdentifier {
+export interface DeleteInstance extends VersionedServiceInstanceIdentifier {
   kind: "DeleteInstance";
 }
 
@@ -109,12 +108,11 @@ interface DeleteInstanceManifest {
   error: string;
   apiData: string;
   body: null;
-  command: DeleteInstanceCommand;
+  command: DeleteInstance;
   trigger: () => Promise<Maybe.Type<Error<"DeleteInstance">>>;
 }
 
-export interface TriggerSetStateCommand
-  extends VersionedServiceInstanceIdentifier {
+export interface TriggerSetState extends VersionedServiceInstanceIdentifier {
   kind: "TriggerSetState";
 }
 
@@ -122,13 +120,13 @@ interface TriggerSetStateManifest {
   error: string;
   apiData: string;
   body: SetStateBody;
-  command: TriggerSetStateCommand;
+  command: TriggerSetState;
   trigger: (
     target_state: string
   ) => Promise<Maybe.Type<Error<"TriggerSetState">>>;
 }
 
-export interface DeleteServiceCommand extends ServiceIdentifier {
+export interface DeleteService extends ServiceIdentifier {
   kind: "DeleteService";
 }
 
@@ -136,11 +134,11 @@ interface DeleteServiceManifest {
   error: string;
   apiData: string;
   body: null;
-  command: DeleteServiceCommand;
+  command: DeleteService;
   trigger: () => Promise<Maybe.Type<Error<"DeleteService">>>;
 }
 
-export interface HaltEnvironmentCommand {
+export interface HaltEnvironment {
   kind: "HaltEnvironment";
 }
 
@@ -148,11 +146,11 @@ interface HaltEnvironmentManifest {
   error: string;
   apiData: string;
   body: null;
-  command: HaltEnvironmentCommand;
+  command: HaltEnvironment;
   trigger: () => Promise<Maybe.Type<Error<"HaltEnvironment">>>;
 }
 
-export interface ResumeEnvironmentCommand {
+export interface ResumeEnvironment {
   kind: "ResumeEnvironment";
 }
 
@@ -160,11 +158,11 @@ interface ResumeEnvironmentManifest {
   error: string;
   apiData: string;
   body: null;
-  command: ResumeEnvironmentCommand;
+  command: ResumeEnvironment;
   trigger: () => Promise<Maybe.Type<Error<"ResumeEnvironment">>>;
 }
 
-export interface ModifyEnvironmentCommand {
+export interface ModifyEnvironment {
   kind: "ModifyEnvironment";
 }
 
@@ -172,13 +170,13 @@ interface ModifyEnvironmentManifest {
   error: string;
   apiData: string;
   body: ModifyEnvironmentParams;
-  command: ModifyEnvironmentCommand;
+  command: ModifyEnvironment;
   trigger: (
     body: ModifyEnvironmentParams
   ) => Promise<Maybe.Type<Error<"ModifyEnvironment">>>;
 }
 
-export interface DeleteCallbackCommand {
+export interface DeleteCallback {
   kind: "DeleteCallback";
   callbackId: string;
   service_entity: string;
@@ -188,11 +186,11 @@ interface DeleteCallbackManifest {
   error: string;
   apiData: string;
   body: null;
-  command: DeleteCallbackCommand;
+  command: DeleteCallback;
   trigger: () => Promise<Maybe.Type<Error<"DeleteCallback">>>;
 }
 
-export interface CreateCallbackCommand extends CreateCallbackBody {
+export interface CreateCallback extends CreateCallbackBody {
   kind: "CreateCallback";
 }
 
@@ -200,7 +198,7 @@ interface CreateCallbackManifest {
   error: string;
   apiData: { data: string };
   body: CreateCallbackBody;
-  command: CreateCallbackCommand;
+  command: CreateCallback;
   trigger: () => Promise<Maybe.Type<Error<"CreateCallback">>>;
 }
 
