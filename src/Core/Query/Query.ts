@@ -46,7 +46,7 @@ export type Query =
   | GetInstanceConfig
   | GetDiagnostics
   | GetProjects
-  | ResourcesQuery
+  | GetResources
   | ResourceDetailsQuery
   | ResourceHistoryQuery
   | ResourceLogsQuery
@@ -269,11 +269,11 @@ interface GetDiagnosticsManifest {
   query: GetDiagnostics;
 }
 
-export interface ResourcesQuery extends ResourceParams.ResourceParams {
-  kind: "Resources";
+export interface GetResources extends ResourceParams.ResourceParams {
+  kind: "GetResources";
 }
 
-interface ResourcesManifest {
+interface GetResourcesManifest {
   error: string;
   apiResponse: {
     data: RawResource[];
@@ -290,7 +290,7 @@ interface ResourcesManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: ResourcesQuery;
+  query: GetResources;
 }
 
 export interface ResourceDetailsQuery extends WithId {
@@ -416,7 +416,7 @@ interface Manifest {
   GetDiagnostics: GetDiagnosticsManifest;
   GetProjects: GetProjectsManifest;
   GetServerStatus: GetServerStatusManifest;
-  Resources: ResourcesManifest;
+  GetResources: GetResourcesManifest;
   ResourceDetails: ResourceDetailsManifest;
   ResourceHistory: ResourceHistoryManifest;
   ResourceLogs: ResourceLogsManifest;

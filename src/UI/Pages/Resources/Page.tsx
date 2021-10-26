@@ -37,8 +37,8 @@ export const Page: React.FC = () => {
     route: "Resources",
   });
 
-  const [data, retry] = queryResolver.useContinuous<"Resources">({
-    kind: "Resources",
+  const [data, retry] = queryResolver.useContinuous<"GetResources">({
+    kind: "GetResources",
     sort,
     filter,
     pageSize,
