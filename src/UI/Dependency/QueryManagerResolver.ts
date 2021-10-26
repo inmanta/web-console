@@ -195,7 +195,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new ResourceLogsQueryManager(
-        new FetcherImpl<"ResourceLogs">(this.baseApiHelper),
+        new FetcherImpl<"GetResourceLogs">(this.baseApiHelper),
         new ResourceLogsStateHelper(this.store),
         scheduler,
         environment

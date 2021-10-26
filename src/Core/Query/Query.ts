@@ -49,7 +49,7 @@ export type Query =
   | GetResources
   | GetResourceDetails
   | GetResourceHistory
-  | ResourceLogsQuery
+  | GetResourceLogs
   | GetEnvironmentDetails
   | CompileReportsQuery
   | CompileDetailsQuery
@@ -372,14 +372,14 @@ interface CompileDetailsManifest {
   query: CompileDetailsQuery;
 }
 
-export interface ResourceLogsQuery extends WithId {
-  kind: "ResourceLogs";
+export interface GetResourceLogs extends WithId {
+  kind: "GetResourceLogs";
   filter?: ResourceLogFilter;
   sort?: Sort.Type;
   pageSize: PageSize.Type;
 }
 
-interface ResourceLogsManifest {
+interface GetResourceLogsManifest {
   error: string;
   apiResponse: {
     data: ResourceLog[];
@@ -396,7 +396,7 @@ interface ResourceLogsManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: ResourceLogsQuery;
+  query: GetResourceLogs;
 }
 
 /**
@@ -419,7 +419,7 @@ interface Manifest {
   GetResources: GetResourcesManifest;
   GetResourceDetails: GetResourceDetailsManifest;
   GetResourceHistory: GetResourceHistoryManifest;
-  ResourceLogs: ResourceLogsManifest;
+  GetResourceLogs: GetResourceLogsManifest;
   GetEnvironmentDetails: GetEnvironmentDetailsManifest;
   CompileReports: CompileReportsManifest;
   CompileDetails: CompileDetailsManifest;

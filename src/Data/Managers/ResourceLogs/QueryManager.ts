@@ -5,10 +5,10 @@ import {
 } from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
-export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"ResourceLogs"> {
+export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"GetResourceLogs"> {
   constructor(
-    fetcher: Fetcher<"ResourceLogs">,
-    stateHelper: StateHelper<"ResourceLogs">,
+    fetcher: Fetcher<"GetResourceLogs">,
+    stateHelper: StateHelper<"GetResourceLogs">,
     scheduler: Scheduler,
     environment: string
   ) {
@@ -24,7 +24,7 @@ export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"Resour
         sort?.name,
         sort?.order,
       ],
-      "ResourceLogs",
+      "GetResourceLogs",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")

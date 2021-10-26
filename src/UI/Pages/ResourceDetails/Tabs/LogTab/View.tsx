@@ -33,8 +33,8 @@ export const View: React.FC<Props> = ({ resourceId }) => {
     route: "ResourceDetails",
     dateRangeKey: "timestamp",
   });
-  const [data, retry] = queryResolver.useContinuous<"ResourceLogs">({
-    kind: "ResourceLogs",
+  const [data, retry] = queryResolver.useContinuous<"GetResourceLogs">({
+    kind: "GetResourceLogs",
     id: resourceId,
     pageSize,
     filter,
