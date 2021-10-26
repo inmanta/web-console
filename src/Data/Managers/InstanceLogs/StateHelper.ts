@@ -3,23 +3,23 @@ import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<
-  Query.Error<"InstanceLogs">,
-  Query.Data<"InstanceLogs">
+  Query.Error<"GetInstanceLogs">,
+  Query.Data<"GetInstanceLogs">
 >;
 type ApiData = RemoteData.Type<
-  Query.Error<"InstanceLogs">,
-  Query.ApiResponse<"InstanceLogs">
+  Query.Error<"GetInstanceLogs">,
+  Query.ApiResponse<"GetInstanceLogs">
 >;
 
-export class InstanceLogsStateHelper implements StateHelper<"InstanceLogs"> {
+export class InstanceLogsStateHelper implements StateHelper<"GetInstanceLogs"> {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, query: Query.SubQuery<"InstanceLogs">): void {
+  set(data: ApiData, query: Query.SubQuery<"GetInstanceLogs">): void {
     const value = RemoteData.mapSuccess((data) => data.data, data);
     this.store.dispatch.instanceLogs.setData({ id: query.id, value });
   }
 
-  getHooked(query: Query.SubQuery<"InstanceLogs">): Data {
+  getHooked(query: Query.SubQuery<"GetInstanceLogs">): Data {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.instanceLogs.byId[query.id]);
@@ -31,7 +31,7 @@ export class InstanceLogsStateHelper implements StateHelper<"InstanceLogs"> {
     return value;
   }
 
-  getOnce(query: Query.SubQuery<"InstanceLogs">): Data {
+  getOnce(query: Query.SubQuery<"GetInstanceLogs">): Data {
     return this.enforce(this.store.getState().instanceLogs.byId[query.id]);
   }
 }

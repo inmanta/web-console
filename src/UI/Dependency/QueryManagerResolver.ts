@@ -131,7 +131,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new InstanceLogsQueryManager(
-        new FetcherImpl<"InstanceLogs">(this.baseApiHelper),
+        new FetcherImpl<"GetInstanceLogs">(this.baseApiHelper),
         new InstanceLogsStateHelper(this.store),
         environment
       ),

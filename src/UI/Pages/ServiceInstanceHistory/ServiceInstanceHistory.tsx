@@ -16,8 +16,8 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
 }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useOneTime<"InstanceLogs">({
-    kind: "InstanceLogs",
+  const [data] = queryResolver.useOneTime<"GetInstanceLogs">({
+    kind: "GetInstanceLogs",
     id: instanceId,
     service_entity: service.name,
   });

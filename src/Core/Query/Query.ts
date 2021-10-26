@@ -42,7 +42,7 @@ export type Query =
   | GetServiceConfig
   | GetInstanceResources
   | GetInstanceEvents
-  | InstanceLogsQuery
+  | GetInstanceLogs
   | GetInstanceConfig
   | DiagnosticsQuery
   | GetProjects
@@ -229,16 +229,16 @@ interface GetInstanceEventsManifest {
 /**
  * The instanceLogs query describes logs belonging to one specific service instance
  */
-export interface InstanceLogsQuery extends ServiceInstanceIdentifier {
-  kind: "InstanceLogs";
+export interface GetInstanceLogs extends ServiceInstanceIdentifier {
+  kind: "GetInstanceLogs";
 }
 
-interface InstanceLogsManifest {
+interface GetInstanceLogsManifest {
   error: string;
   apiResponse: { data: InstanceLog[] };
   data: InstanceLog[];
   usedData: InstanceLog[];
-  query: InstanceLogsQuery;
+  query: GetInstanceLogs;
 }
 
 /**
@@ -411,7 +411,7 @@ interface Manifest {
   GetServiceConfig: GetServiceConfigManifest;
   GetInstanceResources: GetInstanceResourcesManifest;
   GetInstanceEvents: GetInstanceEventsManifest;
-  InstanceLogs: InstanceLogsManifest;
+  GetInstanceLogs: GetInstanceLogsManifest;
   GetInstanceConfig: GetInstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
   GetProjects: GetProjectsManifest;

@@ -21,7 +21,7 @@ it("ServiceInstanceHistory renders", async () => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceLogsQueryManager(
-        new InstantFetcher<"InstanceLogs">({
+        new InstantFetcher<"GetInstanceLogs">({
           kind: "Success",
           data: { data: [] },
         }),

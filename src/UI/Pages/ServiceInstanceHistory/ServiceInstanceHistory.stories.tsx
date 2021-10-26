@@ -27,7 +27,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceLogsQueryManager(
-        new InstantFetcher<"InstanceLogs">({
+        new InstantFetcher<"GetInstanceLogs">({
           kind: "Success",
           data: { data: logs },
         }),
