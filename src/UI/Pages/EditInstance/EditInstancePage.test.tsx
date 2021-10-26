@@ -29,7 +29,7 @@ import userEvent from "@testing-library/user-event";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"ServiceInstance">();
+  const apiHelper = new DeferredFetcher<"GetServiceInstance">();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new ServiceInstanceQueryManager(

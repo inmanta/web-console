@@ -172,7 +172,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new ServiceInstanceQueryManager(
-        new FetcherImpl<"ServiceInstance">(this.baseApiHelper),
+        new FetcherImpl<"GetServiceInstance">(this.baseApiHelper),
         new ServiceInstanceStateHelper(this.store),
         scheduler,
         environment

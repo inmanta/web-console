@@ -37,7 +37,7 @@ import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
 export type Query =
   | GetServices
   | GetService
-  | ServiceInstanceQuery
+  | GetServiceInstance
   | GetServiceInstances
   | GetServiceConfig
   | InstanceResourcesQuery
@@ -155,16 +155,16 @@ interface GetServiceInstancesManifest {
   query: GetServiceInstances;
 }
 
-export interface ServiceInstanceQuery extends ServiceInstanceIdentifier {
-  kind: "ServiceInstance";
+export interface GetServiceInstance extends ServiceInstanceIdentifier {
+  kind: "GetServiceInstance";
 }
 
-interface ServiceInstanceManifest {
+interface GetServiceInstanceManifest {
   error: string;
   apiResponse: { data: ServiceInstanceModel };
   data: ServiceInstanceModel;
   usedData: ServiceInstanceModel;
-  query: ServiceInstanceQuery;
+  query: GetServiceInstance;
 }
 
 export interface GetServiceConfig extends ServiceIdentifier {
@@ -406,7 +406,7 @@ interface ResourceLogsManifest {
 interface Manifest {
   GetServices: GetServicesManifest;
   GetService: GetServiceManifest;
-  ServiceInstance: ServiceInstanceManifest;
+  GetServiceInstance: GetServiceInstanceManifest;
   GetServiceInstances: GetServiceInstancesManifest;
   GetServiceConfig: GetServiceConfigManifest;
   InstanceResources: InstanceResourcesManifest;
