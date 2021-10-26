@@ -52,7 +52,7 @@
     "@types/fetch-mock": "^7.3.5",
     "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.176",
-    "@types/node": "^16.11.1",
+    "@types/node": "^16.11.6",
     "@types/qs": "^6.9.7",
     "@types/react": "^17.0.31",
     "@types/react-dom": "^17.0.10",
