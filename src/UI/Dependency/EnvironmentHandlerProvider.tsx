@@ -12,7 +12,9 @@ export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
   const history = useHistory();
   const store = useStore();
   const environmentHandler = new EnvironmentHandlerImpl(history, store);
-  const [data] = queryResolver.useOneTime<"Projects">({ kind: "Projects" });
+  const [data] = queryResolver.useOneTime<"GetProjects">({
+    kind: "GetProjects",
+  });
   useEffect(() => {
     environmentHandler.setDefault(data);
   }, [data]); /* eslint-disable-line react-hooks/exhaustive-deps */

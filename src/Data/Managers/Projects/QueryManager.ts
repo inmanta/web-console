@@ -3,15 +3,18 @@ import { OneTimeQueryManagerImpl } from "@/Data/Common";
 import { identity } from "lodash";
 import { getUrl } from "./getUrl";
 
-export class ProjectsQueryManager extends OneTimeQueryManagerImpl<"Projects"> {
+export class ProjectsQueryManager extends OneTimeQueryManagerImpl<"GetProjects"> {
   constructor(
-    fetcher: Fetcher<"Projects">,
-    stateHelper: StateHelper<"Projects">
+    fetcher: Fetcher<"GetProjects">,
+    stateHelper: StateHelper<"GetProjects">
   ) {
-    super(fetcher, stateHelper, () => [], "Projects", getUrl, identity, "");
+    super(fetcher, stateHelper, () => [], "GetProjects", getUrl, identity, "");
   }
 
-  async update(query: Query.SubQuery<"Projects">, url: string): Promise<void> {
+  async update(
+    query: Query.SubQuery<"GetProjects">,
+    url: string
+  ): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.fetcher.getRootData(url)),
       query

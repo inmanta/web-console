@@ -72,7 +72,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private getIndependentManagers(): QueryManager[] {
     return [
       new ProjectsQueryManager(
-        new FetcherImpl<"Projects">(this.baseApiHelper),
+        new FetcherImpl<"GetProjects">(this.baseApiHelper),
         new ProjectsStateHelper(this.store)
       ),
       new GetServerStatusQueryManager(

@@ -27,7 +27,7 @@ import { Page } from "./Page";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsFetcher = new DeferredFetcher<"Projects">();
+  const projectsFetcher = new DeferredFetcher<"GetProjects">();
   const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([

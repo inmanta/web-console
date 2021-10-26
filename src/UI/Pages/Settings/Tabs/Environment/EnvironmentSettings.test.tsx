@@ -26,7 +26,7 @@ function setup() {
   const selectedEnvironment = Project.filterable[0].environments[0];
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsFetcher = new FetcherImpl<"Projects">(apiHelper);
+  const projectsFetcher = new FetcherImpl<"GetProjects">(apiHelper);
   const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([

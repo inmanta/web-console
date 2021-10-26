@@ -25,7 +25,7 @@ import { Either, Maybe } from "@/Core";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsFetcher = new FetcherImpl<"Projects">(apiHelper);
+  const projectsFetcher = new FetcherImpl<"GetProjects">(apiHelper);
   const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([

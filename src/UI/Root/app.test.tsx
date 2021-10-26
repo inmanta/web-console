@@ -24,7 +24,7 @@ import { Either } from "@/Core";
 function setup() {
   const store = getStoreInstance();
   const projectsManager = new ProjectsQueryManager(
-    new DeferredFetcher<"Projects">(),
+    new DeferredFetcher<"GetProjects">(),
     new ProjectsStateHelper(store)
   );
 

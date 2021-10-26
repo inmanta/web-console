@@ -29,7 +29,7 @@ function setup() {
   const store = getStoreInstance();
   const apiHelper = new BaseApiHelper();
   const scheduler = new StaticScheduler();
-  const projectsFetcher = new DeferredFetcher<"Projects">();
+  const projectsFetcher = new DeferredFetcher<"GetProjects">();
   const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([

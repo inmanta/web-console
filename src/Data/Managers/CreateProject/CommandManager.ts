@@ -3,7 +3,7 @@ import { ApiHelper, Command, CommandManager, Maybe, Updater } from "@/Core";
 export class CreateProjectCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"Projects">
+    private readonly updater: Updater<"GetProjects">
   ) {}
 
   matches(command: Command.SubCommand<"CreateProject">): boolean {
@@ -26,7 +26,7 @@ export class CreateProjectCommandManager implements CommandManager {
     );
     if (Maybe.isNone(result)) {
       await this.updater.update({
-        kind: "Projects",
+        kind: "GetProjects",
       });
     }
     return result;

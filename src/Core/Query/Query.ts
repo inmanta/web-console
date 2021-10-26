@@ -45,7 +45,7 @@ export type Query =
   | InstanceLogsQuery
   | GetInstanceConfig
   | DiagnosticsQuery
-  | ProjectsQuery
+  | GetProjects
   | ResourcesQuery
   | ResourceDetailsQuery
   | ResourceHistoryQuery
@@ -58,16 +58,16 @@ export type Query =
 
 export type Type = Query;
 
-export interface ProjectsQuery {
-  kind: "Projects";
+export interface GetProjects {
+  kind: "GetProjects";
 }
 
-interface ProjectsManifest {
+interface GetProjectsManifest {
   error: string;
   apiResponse: { data: ProjectModel[] };
   data: ProjectModel[];
   usedData: ProjectModel[];
-  query: ProjectsQuery;
+  query: GetProjects;
 }
 
 export interface GetServerStatus {
@@ -414,7 +414,7 @@ interface Manifest {
   InstanceLogs: InstanceLogsManifest;
   GetInstanceConfig: GetInstanceConfigManifest;
   Diagnostics: DiagnosticsManifest;
-  Projects: ProjectsManifest;
+  GetProjects: GetProjectsManifest;
   GetServerStatus: GetServerStatusManifest;
   Resources: ResourcesManifest;
   ResourceDetails: ResourceDetailsManifest;

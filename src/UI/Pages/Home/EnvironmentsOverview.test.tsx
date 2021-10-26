@@ -24,7 +24,7 @@ function setup() {
   const store = getStoreInstance();
   const featureManager = new MockFeatureManger();
   const apiHelper = new BaseApiHelper();
-  const projectsFetcher = new DeferredFetcher<"Projects">();
+  const projectsFetcher = new DeferredFetcher<"GetProjects">();
   const projectsStateHelper = new ProjectsStateHelper(store);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
