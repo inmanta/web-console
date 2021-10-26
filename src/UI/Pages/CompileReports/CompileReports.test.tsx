@@ -23,7 +23,7 @@ import { MemoryRouter } from "react-router-dom";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"CompileReports">();
+  const apiHelper = new DeferredFetcher<"GetCompileReports">();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new CompileReportsQueryManager(

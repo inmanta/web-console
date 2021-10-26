@@ -183,7 +183,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new CompileReportsQueryManager(
-        new FetcherImpl<"CompileReports">(this.baseApiHelper),
+        new FetcherImpl<"GetCompileReports">(this.baseApiHelper),
         new CompileReportsStateHelper(this.store, environment),
         scheduler,
         environment

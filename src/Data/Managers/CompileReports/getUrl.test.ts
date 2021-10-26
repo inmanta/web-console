@@ -19,8 +19,8 @@ it.each`
 `(
   "getUrl returns correct url for compile reports with sort: $sortTxt, filter $filter, and pageSize: $pageSize",
   ({ filter, sort, pageSize, url }) => {
-    const query: Query.SubQuery<"CompileReports"> = {
-      kind: "CompileReports",
+    const query: Query.SubQuery<"GetCompileReports"> = {
+      kind: "GetCompileReports",
       pageSize: PageSize.from(pageSize),
       filter,
       sort,

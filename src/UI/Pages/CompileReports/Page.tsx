@@ -29,8 +29,8 @@ export const Page: React.FC = () => {
     default: { name: "requested", order: "desc" },
     route: "CompileReports",
   });
-  const [data, retry] = queryResolver.useContinuous<"CompileReports">({
-    kind: "CompileReports",
+  const [data, retry] = queryResolver.useContinuous<"GetCompileReports">({
+    kind: "GetCompileReports",
     filter,
     sort,
     pageSize,

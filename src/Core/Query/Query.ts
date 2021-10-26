@@ -51,7 +51,7 @@ export type Query =
   | GetResourceHistory
   | GetResourceLogs
   | GetEnvironmentDetails
-  | CompileReportsQuery
+  | GetCompileReports
   | CompileDetailsQuery
   | GetServerStatus
   | GetCallbacks;
@@ -333,12 +333,12 @@ interface GetResourceHistoryManifest {
   query: GetResourceHistory;
 }
 
-export interface CompileReportsQuery
+export interface GetCompileReports
   extends CompileReportParams.CompileReportParams {
-  kind: "CompileReports";
+  kind: "GetCompileReports";
 }
 
-interface CompileReportsManifest {
+interface GetCompileReportsManifest {
   error: string;
   apiResponse: {
     data: CompileReport[];
@@ -355,7 +355,7 @@ interface CompileReportsManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: CompileReportsQuery;
+  query: GetCompileReports;
 }
 
 export interface CompileDetailsQuery extends WithId {
@@ -421,7 +421,7 @@ interface Manifest {
   GetResourceHistory: GetResourceHistoryManifest;
   GetResourceLogs: GetResourceLogsManifest;
   GetEnvironmentDetails: GetEnvironmentDetailsManifest;
-  CompileReports: CompileReportsManifest;
+  GetCompileReports: GetCompileReportsManifest;
   CompileDetails: CompileDetailsManifest;
   GetCallbacks: GetCallbacksManifest;
 }
