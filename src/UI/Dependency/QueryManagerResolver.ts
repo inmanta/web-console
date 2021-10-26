@@ -142,7 +142,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new DiagnosticsQueryManager(
-        new FetcherImpl<"Diagnostics">(this.baseApiHelper),
+        new FetcherImpl<"GetDiagnostics">(this.baseApiHelper),
         new DiagnosticsStateHelper(this.store),
         scheduler,
         environment

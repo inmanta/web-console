@@ -44,7 +44,7 @@ export type Query =
   | GetInstanceEvents
   | GetInstanceLogs
   | GetInstanceConfig
-  | DiagnosticsQuery
+  | GetDiagnostics
   | GetProjects
   | ResourcesQuery
   | ResourceDetailsQuery
@@ -257,16 +257,16 @@ interface GetInstanceConfigManifest {
 }
 
 /** Diagnostics describe the status of an instance with regards to the diagnose call */
-export interface DiagnosticsQuery extends ServiceInstanceIdentifier {
-  kind: "Diagnostics";
+export interface GetDiagnostics extends ServiceInstanceIdentifier {
+  kind: "GetDiagnostics";
 }
 
-interface DiagnosticsManifest {
+interface GetDiagnosticsManifest {
   error: string;
   apiResponse: { data: RawDiagnostics };
   data: Diagnostics;
   usedData: Diagnostics;
-  query: DiagnosticsQuery;
+  query: GetDiagnostics;
 }
 
 export interface ResourcesQuery extends ResourceParams.ResourceParams {
@@ -413,7 +413,7 @@ interface Manifest {
   GetInstanceEvents: GetInstanceEventsManifest;
   GetInstanceLogs: GetInstanceLogsManifest;
   GetInstanceConfig: GetInstanceConfigManifest;
-  Diagnostics: DiagnosticsManifest;
+  GetDiagnostics: GetDiagnosticsManifest;
   GetProjects: GetProjectsManifest;
   GetServerStatus: GetServerStatusManifest;
   Resources: ResourcesManifest;
