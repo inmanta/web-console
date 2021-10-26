@@ -30,7 +30,6 @@ interface BaseDefinition {
 interface BooleanDefinition extends BaseDefinition {
   type: "bool";
   default: boolean;
-  allowed_values: null;
 }
 
 interface EnumDefinition extends BaseDefinition {
@@ -42,13 +41,11 @@ interface EnumDefinition extends BaseDefinition {
 interface IntDefinition extends BaseDefinition {
   type: "int";
   default: number;
-  allowed_values: null;
 }
 
 interface DictDefinition extends BaseDefinition {
   type: "dict";
   default: Dict;
-  allowed_values: null;
 }
 
 interface WithHandlers<ValueType extends Value> {

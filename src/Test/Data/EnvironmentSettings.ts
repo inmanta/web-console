@@ -9,7 +9,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
-    allowed_values: null,
   },
   push_on_auto_deploy: {
     name: "push_on_auto_deploy",
@@ -19,7 +18,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
-    allowed_values: null,
   },
   agent_trigger_method_on_auto_deploy: {
     name: "agent_trigger_method_on_auto_deploy",
@@ -49,7 +47,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
-    allowed_values: null,
   },
   autostart_agent_deploy_interval: {
     name: "autostart_agent_deploy_interval",
@@ -59,7 +56,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
-    allowed_values: null,
   },
   autostart_agent_deploy_splay_time: {
     name: "autostart_agent_deploy_splay_time",
@@ -69,7 +65,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
-    allowed_values: null,
   },
   autostart_agent_repair_interval: {
     name: "autostart_agent_repair_interval",
@@ -79,7 +74,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
-    allowed_values: null,
   },
   autostart_agent_repair_splay_time: {
     name: "autostart_agent_repair_splay_time",
@@ -89,7 +83,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
-    allowed_values: null,
   },
   autostart_on_start: {
     name: "autostart_on_start",
@@ -99,7 +92,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
-    allowed_values: null,
   },
   autostart_agent_map: {
     name: "autostart_agent_map",
@@ -111,7 +103,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
-    allowed_values: null,
   },
   autostart_agent_interval: {
     name: "autostart_agent_interval",
@@ -121,7 +112,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: true,
-    allowed_values: null,
   },
   server_compile: {
     name: "server_compile",
@@ -131,7 +121,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
-    allowed_values: null,
   },
   resource_action_logs_retention: {
     name: "resource_action_logs_retention",
@@ -141,7 +130,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
-    allowed_values: null,
   },
   purge_on_delete: {
     name: "purge_on_delete",
@@ -151,7 +139,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
-    allowed_values: null,
   },
   protected_environment: {
     name: "protected_environment",
@@ -161,7 +148,6 @@ const definition: EnvironmentSettings.DefinitionMap = {
     recompile: false,
     update_model: false,
     agent_restart: false,
-    allowed_values: null,
   },
 };
 
