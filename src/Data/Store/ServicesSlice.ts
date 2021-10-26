@@ -36,7 +36,7 @@ export interface ServicesSlice {
     ServicesSlice,
     {
       environment: string;
-      query: Query.SubQuery<"Service">;
+      query: Query.SubQuery<"GetService">;
       data: RemoteData.Type<string, ServiceModel>;
     }
   >;

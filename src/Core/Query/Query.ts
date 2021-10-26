@@ -36,7 +36,7 @@ import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
 
 export type Query =
   | GetServices
-  | ServiceQuery
+  | GetService
   | ServiceInstanceQuery
   | ServiceInstancesQuery
   | GetServiceConfig
@@ -112,16 +112,16 @@ interface GetServicesManifest {
 /**
  * The ServiceQuery identifies 1 specific service.
  */
-export interface ServiceQuery extends ServiceIdentifier {
-  kind: "Service";
+export interface GetService extends ServiceIdentifier {
+  kind: "GetService";
 }
 
-interface ServiceManifest {
+interface GetServiceManifest {
   error: string;
   apiResponse: { data: ServiceModel };
   data: ServiceModel;
   usedData: ServiceModel;
-  query: ServiceQuery;
+  query: GetService;
 }
 
 /**
@@ -405,7 +405,7 @@ interface ResourceLogsManifest {
  */
 interface Manifest {
   GetServices: GetServicesManifest;
-  Service: ServiceManifest;
+  GetService: GetServiceManifest;
   ServiceInstance: ServiceInstanceManifest;
   ServiceInstances: ServiceInstancesManifest;
   GetServiceConfig: GetServiceConfigManifest;

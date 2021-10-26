@@ -90,7 +90,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       serviceKeyMaker,
       environment
     );
-    const serviceFetcher = new FetcherImpl<"Service">(this.baseApiHelper);
+    const serviceFetcher = new FetcherImpl<"GetService">(this.baseApiHelper);
 
     return [
       new ServicesQueryManager(

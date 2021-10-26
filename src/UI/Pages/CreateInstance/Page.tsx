@@ -20,8 +20,8 @@ export const Page: React.FC = () => {
   const { service: serviceName } = useParams<Route.Params<"CreateInstance">>();
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data, retry] = queryResolver.useContinuous<"Service">({
-    kind: "Service",
+  const [data, retry] = queryResolver.useContinuous<"GetService">({
+    kind: "GetService",
     name: serviceName,
   });
 
