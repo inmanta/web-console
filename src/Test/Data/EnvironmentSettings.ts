@@ -193,3 +193,13 @@ export const auto_deploy = {
   settings: { auto_deploy: true },
   definition,
 };
+
+export const autostart_agent_map = (extra: Record<string, string>) => ({
+  settings: {
+    autostart_agent_map: {
+      internal: "local:",
+      ...extra,
+    },
+  },
+  definition,
+});

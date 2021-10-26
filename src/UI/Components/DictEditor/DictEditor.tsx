@@ -46,13 +46,13 @@ export const DictEditor: React.FC<Props> = ({
           />
         ))}
         <Row
-          key="pendingEntry"
+          key="__newEntry"
           entry={newEntry}
           clear={clearNewEntry}
           update={setNewEntry}
           isKeyEditable
           isDeleteable={newEntry[0].length > 0 || newEntry[1].length > 0}
-          aria-label="Row-pendingEntry"
+          aria-label="Row-newEntry"
         />
       </Tbody>
     </TableComposable>

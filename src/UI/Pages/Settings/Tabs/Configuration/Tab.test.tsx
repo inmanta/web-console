@@ -217,3 +217,67 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
 
   expect(toggle.checked).toBeTruthy();
 });
+
+test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN entry is locked in", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: EnvironmentSettings.base }));
+  });
+
+  const row = screen.getByRole("row", {
+    name: "Row-autostart_agent_map",
+  });
+
+  const newEntryRow = within(row).getByRole("row", { name: "Row-newEntry" });
+  const newKeyInput = within(newEntryRow).getByRole("textbox", {
+    name: "editEntryKey",
+  });
+  userEvent.type(newKeyInput, "testKey");
+  const newValueInput = within(newEntryRow).getByRole("textbox", {
+    name: "editEntryValue",
+  });
+  userEvent.type(newValueInput, "testValue");
+
+  userEvent.click(
+    within(row).getByRole("button", { name: "SaveAction" }),
+    undefined,
+    { skipHover: true }
+  );
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "POST",
+    url: "/api/v2/environment_settings/autostart_agent_map",
+    environment: "env",
+    body: {
+      value: { internal: "local:", testKey: "testValue" },
+    },
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: "/api/v2/environment_settings/autostart_agent_map",
+    environment: "env",
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: EnvironmentSettings.autostart_agent_map({ testKey: "testValue" }),
+      })
+    );
+  });
+
+  expect(
+    within(row).getByRole("row", { name: "Row-testKey" })
+  ).toBeInTheDocument();
+  expect(newKeyInput).toHaveValue("");
+  expect(newValueInput).toHaveValue("");
+});
