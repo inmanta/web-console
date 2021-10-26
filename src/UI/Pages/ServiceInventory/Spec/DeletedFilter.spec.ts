@@ -56,5 +56,5 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
   });
   expect(rowsAfter.length).toEqual(1);
 
-  expect(within(rowsAfter[0]).queryByText("terminated")).toBeInTheDocument();
+  expect(within(rowsAfter[0]).getByText("terminated")).toBeInTheDocument();
 });
