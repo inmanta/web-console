@@ -40,7 +40,7 @@ export type Query =
   | GetServiceInstance
   | GetServiceInstances
   | GetServiceConfig
-  | InstanceResourcesQuery
+  | GetInstanceResources
   | InstanceEventsQuery
   | InstanceLogsQuery
   | GetInstanceConfig
@@ -184,17 +184,17 @@ interface GetServiceConfigManifest {
  * We are not asking for 1 specific resource. We are asking for all the
  * resources of 1 specific service instance.
  */
-export interface InstanceResourcesQuery
+export interface GetInstanceResources
   extends VersionedServiceInstanceIdentifier {
-  kind: "InstanceResources";
+  kind: "GetInstanceResources";
 }
 
-interface InstanceResourcesManifest {
+interface GetInstanceResourcesManifest {
   error: string;
   apiResponse: { data: InstanceResourceModel[] };
   data: InstanceResourceModel[];
   usedData: InstanceResourceModel[];
-  query: InstanceResourcesQuery;
+  query: GetInstanceResources;
 }
 
 /**
@@ -409,7 +409,7 @@ interface Manifest {
   GetServiceInstance: GetServiceInstanceManifest;
   GetServiceInstances: GetServiceInstancesManifest;
   GetServiceConfig: GetServiceConfigManifest;
-  InstanceResources: InstanceResourcesManifest;
+  GetInstanceResources: GetInstanceResourcesManifest;
   Events: EventsManifest;
   InstanceLogs: InstanceLogsManifest;
   GetInstanceConfig: GetInstanceConfigManifest;

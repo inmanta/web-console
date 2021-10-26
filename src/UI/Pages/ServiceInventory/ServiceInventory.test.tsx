@@ -48,7 +48,7 @@ function setup(service = Service.a) {
     service.environment
   );
 
-  const resourcesFetcher = new DeferredFetcher<"InstanceResources">();
+  const resourcesFetcher = new DeferredFetcher<"GetInstanceResources">();
   const resourcesHelper = new InstanceResourcesQueryManager(
     resourcesFetcher,
     new InstanceResourcesStateHelper(store),

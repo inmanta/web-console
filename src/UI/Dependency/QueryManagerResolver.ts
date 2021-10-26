@@ -119,7 +119,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new InstanceResourcesQueryManager(
-        new FetcherImpl<"InstanceResources">(this.baseApiHelper),
+        new FetcherImpl<"GetInstanceResources">(this.baseApiHelper),
         new InstanceResourcesStateHelper(this.store),
         scheduler,
         environment

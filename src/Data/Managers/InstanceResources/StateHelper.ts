@@ -3,19 +3,22 @@ import { Store, useStoreState } from "@/Data/Store";
 import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<string, InstanceResourceModel[]>;
-type ApiData = RemoteData.Type<string, Query.ApiResponse<"InstanceResources">>;
+type ApiData = RemoteData.Type<
+  string,
+  Query.ApiResponse<"GetInstanceResources">
+>;
 
 export class InstanceResourcesStateHelper
-  implements StateHelper<"InstanceResources">
+  implements StateHelper<"GetInstanceResources">
 {
   constructor(private readonly store: Store) {}
 
-  set(data: ApiData, query: Query.SubQuery<"InstanceResources">): void {
+  set(data: ApiData, query: Query.SubQuery<"GetInstanceResources">): void {
     const value = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
     this.store.dispatch.instanceResources.setData({ id: query.id, value });
   }
 
-  getHooked(query: Query.SubQuery<"InstanceResources">): Data {
+  getHooked(query: Query.SubQuery<"GetInstanceResources">): Data {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState((state) => {
       return this.enforce(state.instanceResources.byId[query.id]);
@@ -27,7 +30,7 @@ export class InstanceResourcesStateHelper
     return value;
   }
 
-  getOnce(query: Query.SubQuery<"InstanceResources">): Data {
+  getOnce(query: Query.SubQuery<"GetInstanceResources">): Data {
     return this.enforce(this.store.getState().instanceResources.byId[query.id]);
   }
 }

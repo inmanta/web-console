@@ -28,7 +28,7 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">({
+        new InstantFetcher<"GetInstanceResources">({
           kind: "Success",
           data: { data: [] },
         }),

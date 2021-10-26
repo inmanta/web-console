@@ -20,7 +20,7 @@ import { ResourcesTab } from "./ResourcesTab";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"InstanceResources">();
+  const apiHelper = new DeferredFetcher<"GetInstanceResources">();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(

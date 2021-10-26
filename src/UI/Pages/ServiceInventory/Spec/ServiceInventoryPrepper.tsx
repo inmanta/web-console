@@ -35,7 +35,7 @@ export interface Handles {
   component: React.ReactElement;
   scheduler: SchedulerImpl;
   apiHelper: DeferredApiHelper;
-  resourcesFetcher: DeferredFetcher<"InstanceResources">;
+  resourcesFetcher: DeferredFetcher<"GetInstanceResources">;
 }
 
 export class ServiceInventoryPrepper {
@@ -53,7 +53,7 @@ export class ServiceInventoryPrepper {
       service.environment
     );
 
-    const resourcesFetcher = new DeferredFetcher<"InstanceResources">();
+    const resourcesFetcher = new DeferredFetcher<"GetInstanceResources">();
     const resourcesHelper = new InstanceResourcesQueryManager(
       resourcesFetcher,
       new InstanceResourcesStateHelper(store),
