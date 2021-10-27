@@ -41,6 +41,13 @@ const dict = {
   "notFound.title": "404: We couldn't find that page",
   "notFound.home": "Go home",
 
+  "codehighlighter.lineWrapping.on": "Wrap long lines",
+  "codehighlighter.lineWrapping.off": "Don't wrap long lines",
+  "codehighlighter.lineNumbers.on": "Show line numbers",
+  "codehighlighter.lineNumbers.off": "Hide line numbers",
+  "codehighlighter.zoom.on": "Enlarge",
+  "codehighlighter.zoom.off": "Back to original size",
+
   /**
    * Inventory related text
    */
