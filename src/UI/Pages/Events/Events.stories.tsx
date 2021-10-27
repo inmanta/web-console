@@ -2,12 +2,12 @@ import React from "react";
 import { InstanceEvent } from "@/Core";
 import { StoreProvider } from "easy-peasy";
 import {
-  InstantFetcher,
   InstanceLog,
   Service,
   StaticScheduler,
   Event,
   DynamicQueryManagerResolver,
+  InstantApiHelper,
 } from "@/Test";
 import { Events } from "./Events";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -32,7 +32,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new EventsQueryManager(
-        new InstantFetcher<"GetInstanceEvents">({
+        new InstantApiHelper({
           kind: "Success",
           data: {
             data: events,

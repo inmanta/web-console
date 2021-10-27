@@ -2,7 +2,6 @@ import React from "react";
 import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
-  FetcherImpl,
   getStoreInstance,
   ModifyEnvironmentCommandManager,
   ProjectsQueryManager,
@@ -25,11 +24,10 @@ function setup() {
   const selectedEnvironment = Project.filterable[0].environments[0];
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsFetcher = new FetcherImpl<"GetProjects">(apiHelper);
   const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ProjectsQueryManager(projectsFetcher, projectsStateHelper),
+      new ProjectsQueryManager(apiHelper, projectsStateHelper),
     ])
   );
 
@@ -37,7 +35,7 @@ function setup() {
     new DynamicCommandManagerResolver([
       new ModifyEnvironmentCommandManager(
         apiHelper,
-        new ProjectsUpdater(projectsStateHelper, projectsFetcher),
+        new ProjectsUpdater(projectsStateHelper, apiHelper),
         selectedEnvironment.id
       ),
     ])

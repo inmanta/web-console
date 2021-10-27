@@ -1,15 +1,15 @@
-import { Fetcher, StateHelper } from "@/Core";
+import { ApiHelper, StateHelper } from "@/Core";
 import { identity } from "lodash";
-import { OneTimeQueryManagerImpl } from "@/Data/Common";
+import { PrimaryOneTimeQueryManager } from "@/Data/Common";
 
-export class InstanceLogsQueryManager extends OneTimeQueryManagerImpl<"GetInstanceLogs"> {
+export class InstanceLogsQueryManager extends PrimaryOneTimeQueryManager<"GetInstanceLogs"> {
   constructor(
-    fetcher: Fetcher<"GetInstanceLogs">,
+    apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetInstanceLogs">,
     environment: string
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       ({ id, service_entity }) => [id, service_entity],
       "GetInstanceLogs",

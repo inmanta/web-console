@@ -18,7 +18,7 @@ import {
   DeferredApiHelper,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
-  InstantFetcher,
+  InstantApiHelper,
   MockEnvironmentModifier,
   Service,
   ServiceInstance,
@@ -56,7 +56,7 @@ function setup(
   };
 
   const instanceConfigHelper = new InstanceConfigQueryManager(
-    new InstantFetcher<"GetInstanceConfig">({
+    new InstantApiHelper({
       kind: "Success",
       data: { data: { auto_creating: false } },
     }),

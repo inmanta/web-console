@@ -15,7 +15,6 @@ import {
   HaltEnvironmentCommandManager,
   ResumeEnvironmentCommandManager,
   DeleteCallbackCommandManager,
-  FetcherImpl,
   CallbacksStateHelper,
   CallbacksUpdater,
   CreateCallbackCommandManager,
@@ -59,17 +58,11 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     return [
       new DeleteEnvironmentCommandManager(
         this.apiHelper,
-        new ProjectsUpdater(
-          new ProjectsStateHelper(this.store),
-          new FetcherImpl<"GetProjects">(this.apiHelper)
-        )
+        new ProjectsUpdater(new ProjectsStateHelper(this.store), this.apiHelper)
       ),
       new CreateProjectCommandManager(
         this.apiHelper,
-        new ProjectsUpdater(
-          new ProjectsStateHelper(this.store),
-          new FetcherImpl<"GetProjects">(this.apiHelper)
-        )
+        new ProjectsUpdater(new ProjectsStateHelper(this.store), this.apiHelper)
       ),
       new CreateEnvironmentCommandManager(this.apiHelper),
     ];
@@ -118,7 +111,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          new FetcherImpl<"GetEnvironmentDetails">(this.apiHelper),
+          this.apiHelper,
           environment
         ),
         environment
@@ -128,7 +121,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          new FetcherImpl<"GetEnvironmentDetails">(this.apiHelper),
+          this.apiHelper,
           environment
         ),
         environment
@@ -155,7 +148,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         this.apiHelper,
         new ProjectsUpdater(
           new ProjectsStateHelper(this.store),
-          new FetcherImpl<"GetProjects">(this.apiHelper)
+          this.apiHelper
         ),
         environment
       ),

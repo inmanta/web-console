@@ -11,7 +11,7 @@ import {
   ResourceDetailsStateHelper,
 } from "@/Data";
 import {
-  DeferredFetcher,
+  DeferredApiHelper,
   DynamicQueryManagerResolver,
   ResourceDetails,
   StaticScheduler,
@@ -23,12 +23,12 @@ import { ResourceDetailsView } from "./ResourceDetailsView";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const resourceDetailsFetcher = new DeferredFetcher<"GetResourceDetails">();
+  const apiHelper = new DeferredApiHelper();
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new ResourceDetailsQueryManager(
-        resourceDetailsFetcher,
+        apiHelper,
         new ResourceDetailsStateHelper(store),
         scheduler,
         environment
@@ -51,23 +51,21 @@ function setup() {
     </MemoryRouter>
   );
 
-  return { component, scheduler, resourceDetailsFetcher };
+  return { component, scheduler, apiHelper };
 }
 
 test("GIVEN The Resource details view WHEN the user clicks on the info tab THEN data is fetched immediately", async () => {
-  const { component, resourceDetailsFetcher } = setup();
+  const { component, apiHelper } = setup();
 
   render(component);
 
-  expect(resourceDetailsFetcher.getInvocations()).toHaveLength(1);
-  expect(resourceDetailsFetcher.getInvocations()[0][1]).toEqual(
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0].url).toEqual(
     "/api/v2/resource/std::File[agent2,path=/tmp/file4]"
   );
 
   await act(async () => {
-    await resourceDetailsFetcher.resolve(
-      Either.right({ data: ResourceDetails.a })
-    );
+    await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
   expect(
@@ -76,21 +74,24 @@ test("GIVEN The Resource details view WHEN the user clicks on the info tab THEN 
 });
 
 test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {
-  const { component, resourceDetailsFetcher } = setup();
+  const { component, apiHelper } = setup();
 
   render(component);
 
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
+  });
+
   userEvent.click(screen.getAllByRole("button", { name: "Requires" })[0]);
 
-  expect(resourceDetailsFetcher.getInvocations()).toHaveLength(2);
-  expect(resourceDetailsFetcher.getInvocations()[1][1]).toEqual(
+  expect(apiHelper.resolvedRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0].url).toEqual(
     "/api/v2/resource/std::File[agent2,path=/tmp/file4]"
   );
 
   await act(async () => {
-    await resourceDetailsFetcher.resolve(
-      Either.right({ data: ResourceDetails.a })
-    );
+    await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
   expect(

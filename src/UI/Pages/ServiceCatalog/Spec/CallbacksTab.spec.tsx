@@ -2,7 +2,6 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
-  DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Service,
@@ -35,10 +34,9 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const environment = Service.a.environment;
-  const servicesFetcher = new DeferredFetcher<"GetServices">();
 
   const servicesQueryManager = new ServicesQueryManager(
-    servicesFetcher,
+    apiHelper,
     new ServicesStateHelper(store, environment),
     scheduler,
     environment
@@ -102,16 +100,15 @@ function setup() {
 
   return {
     component,
-    servicesFetcher,
     apiHelper,
   };
 }
 
 test("GIVEN ServiceCatalog WHEN click on callbacks tab THEN shows callbacks tab", async () => {
-  const { component, servicesFetcher, apiHelper } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+  apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   const details = await screen.findByRole("button", {
     name: `${Service.a.name} Details`,

@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
-  DeferredFetcher,
+  DeferredApiHelper,
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
@@ -20,7 +20,7 @@ import { ResourcesTab } from "./ResourcesTab";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"GetInstanceResources">();
+  const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(

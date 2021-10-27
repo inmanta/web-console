@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
-  DeferredFetcher,
+  DeferredApiHelper,
   DynamicQueryManagerResolver,
   Service,
   StaticScheduler,
@@ -21,7 +21,7 @@ import { MemoryRouter } from "react-router";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"GetInstanceEvents">();
+  const apiHelper = new DeferredApiHelper();
   const instance = {
     id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
     service_entity: "vlan-assignment",

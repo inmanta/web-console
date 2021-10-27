@@ -14,7 +14,7 @@ import {
   PrimaryFeatureManager,
 } from "@/Data";
 import {
-  DeferredFetcher,
+  DeferredApiHelper,
   DynamicQueryManagerResolver,
   ServerStatus,
 } from "@/Test";
@@ -23,14 +23,14 @@ import { Either } from "@/Core";
 
 function setup() {
   const store = getStoreInstance();
+  const apiHelper = new DeferredApiHelper();
   const projectsManager = new ProjectsQueryManager(
-    new DeferredFetcher<"GetProjects">(),
+    apiHelper,
     new ProjectsStateHelper(store)
   );
 
-  const getServerStatusFetcher = new DeferredFetcher<"GetServerStatus">();
   const getServerStatusManager = new GetServerStatusQueryManager(
-    getServerStatusFetcher,
+    apiHelper,
     new GetServerStatusStateHelper(store)
   );
   const featureManager = new PrimaryFeatureManager();
@@ -40,15 +40,14 @@ function setup() {
   return {
     featureManager,
     queryResolver,
-    getServerStatusFetcher,
+    apiHelper,
     store,
   };
 }
 
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
-  const { store, queryResolver, featureManager, getServerStatusFetcher } =
-    setup();
+  const { store, queryResolver, featureManager, apiHelper } = setup();
 
   render(
     <MemoryRouter initialEntries={["/lsm/catalog"]}>
@@ -61,9 +60,7 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
   );
 
   await act(async () => {
-    await getServerStatusFetcher.resolve(
-      Either.right({ data: ServerStatus.withLsm })
-    );
+    await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
   });
 
   expect(

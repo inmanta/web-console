@@ -2,7 +2,6 @@ import React from "react";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
-  DeferredFetcher,
   Service,
   ServiceInstance,
   InstanceResource,
@@ -46,9 +45,8 @@ function setup(service = Service.a) {
     service.environment
   );
 
-  const resourcesFetcher = new DeferredFetcher<"GetInstanceResources">();
   const resourcesHelper = new InstanceResourcesQueryManager(
-    resourcesFetcher,
+    apiHelper,
     new InstanceResourcesStateHelper(store),
     scheduler,
     service.environment
@@ -109,7 +107,6 @@ function setup(service = Service.a) {
   return {
     component,
     apiHelper,
-    resourcesFetcher,
     scheduler,
   };
 }
@@ -206,7 +203,7 @@ test("ServiceInventory shows next page of instances", async () => {
 });
 
 test("GIVEN ResourcesView fetches resources for new instance after instance update", async () => {
-  const { component, apiHelper, resourcesFetcher, scheduler } = setup();
+  const { component, apiHelper, scheduler } = setup();
 
   render(component);
 
@@ -228,9 +225,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   fireEvent.click(await screen.findByRole("button", { name: "Resources" }));
 
   await act(async () => {
-    await resourcesFetcher.resolve(
-      Either.right({ data: InstanceResource.listA })
-    );
+    await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
 
   expect(
@@ -248,14 +243,13 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
       })
     );
   });
+
   await act(async () => {
-    await resourcesFetcher.resolve(
-      Either.right({ data: InstanceResource.listA })
-    );
+    await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
 
-  expect(resourcesFetcher.getInvocations().length).toEqual(3);
-  expect(resourcesFetcher.getInvocations()[2][1]).toMatch(
+  expect(apiHelper.resolvedRequests).toHaveLength(4);
+  expect(apiHelper.pendingRequests[0].url).toMatch(
     `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`
   );
 });
