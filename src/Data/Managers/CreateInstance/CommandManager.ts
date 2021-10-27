@@ -1,17 +1,18 @@
 import {
   Command,
-  Poster,
   CommandManager,
   Either,
   InstanceAttributeModel,
   Field,
+  ApiHelper,
 } from "@/Core";
 import { AttributeResultConverter, sanitizeAttributes } from "@/Data/Common";
 
 export class CreateInstanceCommandManager implements CommandManager {
   constructor(
-    private readonly poster: Poster<"CreateInstance">,
-    private readonly attributeConverter: AttributeResultConverter
+    private readonly apiHelper: ApiHelper,
+    private readonly attributeConverter: AttributeResultConverter,
+    private readonly environment: string
   ) {}
 
   matches(command: Command.SubCommand<"CreateInstance">): boolean {
@@ -27,7 +28,7 @@ export class CreateInstanceCommandManager implements CommandManager {
   }
 
   private async submit(
-    command: Command.SubCommand<"CreateInstance">,
+    { service_entity }: Command.SubCommand<"CreateInstance">,
     fields: Field[],
     attributes: InstanceAttributeModel
   ): Promise<
@@ -42,8 +43,12 @@ export class CreateInstanceCommandManager implements CommandManager {
       (obj, [k, v]) => (v === null ? obj : ((obj[k] = v), obj)),
       {}
     );
-    return await this.poster.post(command, {
-      attributes: attributesWithoutNulls,
-    });
+    return await this.apiHelper.post(
+      `/lsm/v1/service_inventory/${service_entity}`,
+      this.environment,
+      {
+        attributes: attributesWithoutNulls,
+      }
+    );
   }
 }

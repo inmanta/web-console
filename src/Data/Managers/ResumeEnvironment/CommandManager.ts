@@ -1,7 +1,7 @@
 import {
+  ApiHelper,
   Command,
   CommandManager,
-  PosterWithoutResponse,
   RemoteData,
   StateHelper,
   Updater,
@@ -9,23 +9,26 @@ import {
 
 export class ResumeEnvironmentCommandManager implements CommandManager {
   constructor(
-    private readonly poster: PosterWithoutResponse<"ResumeEnvironment">,
+    private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelper<"GetEnvironmentDetails">,
-    private readonly updater: Updater<"GetEnvironmentDetails">
+    private readonly updater: Updater<"GetEnvironmentDetails">,
+    private readonly environment: string
   ) {}
 
   matches(command: Command.SubCommand<"ResumeEnvironment">): boolean {
     return command.kind === "ResumeEnvironment";
   }
 
-  getTrigger(
-    command: Command.SubCommand<"ResumeEnvironment">
-  ): Command.Trigger<"ResumeEnvironment"> {
+  getTrigger(): Command.Trigger<"ResumeEnvironment"> {
     return async () => {
       this.stateHelper.set(RemoteData.loading(), {
         kind: "GetEnvironmentDetails",
       });
-      const result = await this.poster.post(command, null);
+      const result = await this.apiHelper.postWithoutResponse(
+        `/api/v2/actions/environment/resume`,
+        this.environment,
+        null
+      );
       await this.updater.update({
         kind: "GetEnvironmentDetails",
       });

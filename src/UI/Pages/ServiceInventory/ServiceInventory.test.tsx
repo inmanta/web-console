@@ -28,7 +28,6 @@ import {
   BaseApiHelper,
   KeycloakAuthHelper,
   TriggerSetStateCommandManager,
-  SetStatePoster,
   getStoreInstance,
 } from "@/Data";
 import { ServiceInventory } from "./ServiceInventory";
@@ -74,7 +73,8 @@ function setup(service = Service.a) {
 
   const setStateCommandManager = new TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    new SetStatePoster(new BaseApiHelper(), "env1")
+    new BaseApiHelper(),
+    "env1"
   );
 
   const commandResolver = new CommandResolverImpl(

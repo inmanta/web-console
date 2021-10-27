@@ -4,7 +4,6 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   InstanceConfigCommandManager,
-  InstanceConfigPoster,
   InstanceConfigStateHelper,
 } from "@/Data";
 import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
@@ -18,8 +17,9 @@ function setup() {
   const store = getStoreInstance();
   const baseApiHelper = new BaseApiHelper();
   const commandManager = new InstanceConfigCommandManager(
-    new InstanceConfigPoster(baseApiHelper, ServiceInstance.a.environment),
-    new InstanceConfigStateHelper(store)
+    baseApiHelper,
+    new InstanceConfigStateHelper(store),
+    ServiceInstance.a.environment
   );
   store.dispatch.environmentDetails.setData({
     id: ServiceInstance.a.environment,

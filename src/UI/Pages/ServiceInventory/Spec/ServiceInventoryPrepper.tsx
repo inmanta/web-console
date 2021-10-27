@@ -19,7 +19,6 @@ import {
   InstanceResourcesStateHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  SetStatePoster,
   TriggerInstanceUpdateCommandManager,
   BaseApiHelper,
   TriggerSetStateCommandManager,
@@ -77,7 +76,8 @@ export class ServiceInventoryPrepper {
 
     const setStateCommandManager = new TriggerSetStateCommandManager(
       new KeycloakAuthHelper(),
-      new SetStatePoster(new BaseApiHelper(), "env1")
+      new BaseApiHelper(),
+      "env1"
     );
 
     const commandResolver = new CommandResolverImpl(
