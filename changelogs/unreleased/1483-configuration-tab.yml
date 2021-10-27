@@ -2,5 +2,3 @@ description: Add configuration tab to settings page to allow updating environmen
 issue-nr: 1483
 change-type: minor
 destination-branches: [master, iso4]
-sections:
-  feature: "{{description}}"
