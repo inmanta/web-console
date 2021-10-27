@@ -55,7 +55,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
 
   constructor(
     private readonly store: Store,
-    private readonly baseApiHelper: BaseApiHelper
+    private readonly apiHelper: BaseApiHelper
   ) {
     this.managers = this.getIndependentManagers();
   }
@@ -74,11 +74,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private getIndependentManagers(): QueryManager[] {
     return [
       new ProjectsQueryManager(
-        new FetcherImpl<"GetProjects">(this.baseApiHelper),
+        new FetcherImpl<"GetProjects">(this.apiHelper),
         new ProjectsStateHelper(this.store)
       ),
       new GetServerStatusQueryManager(
-        new FetcherImpl<"GetServerStatus">(this.baseApiHelper),
+        new FetcherImpl<"GetServerStatus">(this.apiHelper),
         new GetServerStatusStateHelper(this.store)
       ),
     ];
@@ -92,16 +92,16 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       serviceKeyMaker,
       environment
     );
-    const serviceFetcher = new FetcherImpl<"GetService">(this.baseApiHelper);
+    const serviceFetcher = new FetcherImpl<"GetService">(this.apiHelper);
 
     return [
       new GetEnvironmentSettingsQueryManager(
-        this.baseApiHelper,
+        this.apiHelper,
         new GetEnvironmentSettingsStateHelper(this.store, environment),
         environment
       ),
       new ServicesQueryManager(
-        new FetcherImpl<"GetServices">(this.baseApiHelper),
+        new FetcherImpl<"GetServices">(this.apiHelper),
         new ServicesStateHelper(this.store, environment),
         scheduler,
         environment
@@ -114,95 +114,95 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         environment
       ),
       new ServiceInstancesQueryManager(
-        this.baseApiHelper,
+        this.apiHelper,
         new ServiceInstancesStateHelper(this.store, environment),
         scheduler,
         environment
       ),
       new ServiceConfigQueryManager(
-        new FetcherImpl<"GetServiceConfig">(this.baseApiHelper),
+        new FetcherImpl<"GetServiceConfig">(this.apiHelper),
         new ServiceConfigStateHelper(this.store),
         new ServiceConfigFinalizer(serviceStateHelper),
         environment
       ),
       new InstanceResourcesQueryManager(
-        new FetcherImpl<"GetInstanceResources">(this.baseApiHelper),
+        new FetcherImpl<"GetInstanceResources">(this.apiHelper),
         new InstanceResourcesStateHelper(this.store),
         scheduler,
         environment
       ),
       new EventsQueryManager(
-        new FetcherImpl<"GetInstanceEvents">(this.baseApiHelper),
+        new FetcherImpl<"GetInstanceEvents">(this.apiHelper),
         new EventsStateHelper(this.store),
         scheduler,
         environment
       ),
       new InstanceLogsQueryManager(
-        new FetcherImpl<"GetInstanceLogs">(this.baseApiHelper),
+        new FetcherImpl<"GetInstanceLogs">(this.apiHelper),
         new InstanceLogsStateHelper(this.store),
         environment
       ),
       new InstanceConfigQueryManager(
-        new FetcherImpl<"GetInstanceConfig">(this.baseApiHelper),
+        new FetcherImpl<"GetInstanceConfig">(this.apiHelper),
         new InstanceConfigStateHelper(this.store),
         new InstanceConfigFinalizer(serviceStateHelper),
         environment
       ),
       new DiagnosticsQueryManager(
-        new FetcherImpl<"GetDiagnostics">(this.baseApiHelper),
+        new FetcherImpl<"GetDiagnostics">(this.apiHelper),
         new DiagnosticsStateHelper(this.store),
         scheduler,
         environment
       ),
       new ResourcesQueryManager(
-        new FetcherImpl<"GetResources">(this.baseApiHelper),
+        new FetcherImpl<"GetResources">(this.apiHelper),
         new ResourcesStateHelper(this.store, environment),
         scheduler,
         environment
       ),
       new ResourceDetailsQueryManager(
-        new FetcherImpl<"GetResourceDetails">(this.baseApiHelper),
+        new FetcherImpl<"GetResourceDetails">(this.apiHelper),
         new ResourceDetailsStateHelper(this.store),
         scheduler,
         environment
       ),
       new ResourceHistoryQueryManager(
-        new FetcherImpl<"GetResourceHistory">(this.baseApiHelper),
+        new FetcherImpl<"GetResourceHistory">(this.apiHelper),
         new ResourceHistoryStateHelper(this.store),
         scheduler,
         environment
       ),
       new EnvironmentDetailsQueryManager(
-        new FetcherImpl<"GetEnvironmentDetails">(this.baseApiHelper),
+        new FetcherImpl<"GetEnvironmentDetails">(this.apiHelper),
         new EnvironmentDetailsStateHelper(this.store, environment),
         scheduler,
         environment
       ),
       new ServiceInstanceQueryManager(
-        new FetcherImpl<"GetServiceInstance">(this.baseApiHelper),
+        new FetcherImpl<"GetServiceInstance">(this.apiHelper),
         new ServiceInstanceStateHelper(this.store),
         scheduler,
         environment
       ),
       new CallbacksQueryManager(
-        new FetcherImpl<"GetCallbacks">(this.baseApiHelper),
+        this.apiHelper,
         new CallbacksStateHelper(this.store, environment),
         environment
       ),
       new CompileReportsQueryManager(
-        new FetcherImpl<"GetCompileReports">(this.baseApiHelper),
+        new FetcherImpl<"GetCompileReports">(this.apiHelper),
         new CompileReportsStateHelper(this.store, environment),
         scheduler,
         environment
       ),
       new CompileDetailsQueryManager(
-        new FetcherImpl<"GetCompileDetails">(this.baseApiHelper),
+        this.apiHelper,
         new CompileDetailsStateHelper(this.store),
         scheduler,
         environment
       ),
       new ResourceLogsQueryManager(
-        new FetcherImpl<"GetResourceLogs">(this.baseApiHelper),
+        new FetcherImpl<"GetResourceLogs">(this.apiHelper),
         new ResourceLogsStateHelper(this.store),
         scheduler,
         environment

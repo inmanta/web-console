@@ -9,7 +9,7 @@ import {
 } from "@/Data";
 import {
   CompileDetailsData,
-  DeferredFetcher,
+  DeferredApiHelper,
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
@@ -21,7 +21,7 @@ import { CompileDetails } from "./CompileDetails";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"GetCompileDetails">();
+  const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new CompileDetailsQueryManager(
