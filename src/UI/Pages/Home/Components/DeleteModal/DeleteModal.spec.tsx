@@ -5,7 +5,6 @@ import { DependencyProvider } from "@/UI";
 import {
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
-  EnvironmentDeleter,
   FetcherImpl,
   getStoreInstance,
   ProjectsQueryManager,
@@ -36,7 +35,7 @@ function setup() {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new DeleteEnvironmentCommandManager(
-        new EnvironmentDeleter(apiHelper),
+        apiHelper,
         new ProjectsUpdater(projectsStateHelper, projectsFetcher)
       ),
     ])

@@ -3,10 +3,8 @@ import { MemoryRouter } from "react-router";
 import { StoreProvider } from "easy-peasy";
 import { render, screen } from "@testing-library/react";
 import {
-  BaseApiHelper,
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
-  EnvironmentDeleter,
   getStoreInstance,
   ProjectsQueryManager,
   ProjectsStateHelper,
@@ -14,6 +12,7 @@ import {
   QueryResolverImpl,
 } from "@/Data";
 import {
+  DeferredApiHelper,
   DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
@@ -27,7 +26,7 @@ import { Either } from "@/Core";
 
 function setup() {
   const store = getStoreInstance();
-  const apiHelper = new BaseApiHelper();
+  const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const projectsFetcher = new DeferredFetcher<"GetProjects">();
   const projectsStateHelper = new ProjectsStateHelper(store);
@@ -39,7 +38,7 @@ function setup() {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new DeleteEnvironmentCommandManager(
-        new EnvironmentDeleter(apiHelper),
+        apiHelper,
         new ProjectsUpdater(projectsStateHelper, projectsFetcher)
       ),
     ])

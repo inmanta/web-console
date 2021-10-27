@@ -30,7 +30,6 @@ import {
   EnvironmentDetailsUpdater,
   EnvironmentDetailsStateHelper,
   DeleteEnvironmentCommandManager,
-  EnvironmentDeleter,
   ProjectsUpdater,
   ProjectsStateHelper,
   ModifyEnvironmentCommandManager,
@@ -68,7 +67,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private getIndependentManagers(): CommandManager[] {
     return [
       new DeleteEnvironmentCommandManager(
-        new EnvironmentDeleter(this.baseApiHelper),
+        this.baseApiHelper,
         new ProjectsUpdater(
           new ProjectsStateHelper(this.store),
           new FetcherImpl<"GetProjects">(this.baseApiHelper)

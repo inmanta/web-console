@@ -1,8 +1,8 @@
-import { Command, CommandManager, Deleter, Maybe, Updater } from "@/Core";
+import { ApiHelper, Command, CommandManager, Maybe, Updater } from "@/Core";
 
 export class DeleteEnvironmentCommandManager implements CommandManager {
   constructor(
-    private readonly deleter: Deleter<"DeleteEnvironment">,
+    private readonly apiHelper: ApiHelper,
     private readonly updater: Updater<"GetProjects">
   ) {}
 
@@ -10,11 +10,14 @@ export class DeleteEnvironmentCommandManager implements CommandManager {
     return command.kind === "DeleteEnvironment";
   }
 
-  getTrigger(
-    command: Command.SubCommand<"DeleteEnvironment">
-  ): Command.Trigger<"DeleteEnvironment"> {
+  getTrigger({
+    id,
+  }: Command.SubCommand<"DeleteEnvironment">): Command.Trigger<"DeleteEnvironment"> {
     return async () => {
-      const error = await this.deleter.delete(command);
+      const error = await this.apiHelper.delete(
+        `/api/v2/environment/${id}`,
+        id
+      );
       if (Maybe.isSome(error)) return error;
       await this.updater.update({
         kind: "GetProjects",
