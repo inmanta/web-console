@@ -26,7 +26,7 @@ test("GIVEN Breadcrumbs WHEN url is '/console/lsm/catalog' THEN plain Catalog Br
   const crumbs = screen.getAllByRole("listitem", { name: "BreadcrumbItem" });
   expect(crumbs.length).toEqual(2);
   const [homeCrumb, catalogCrumb] = crumbs;
-  expect(within(homeCrumb).queryByRole("link")).toBeInTheDocument();
+  expect(within(homeCrumb).getByRole("link")).toBeInTheDocument();
   expect(within(catalogCrumb).getByText("Service Catalog")).toBeInTheDocument();
 });
 
@@ -40,7 +40,7 @@ test("GIVEN Breadcrumbs WHEN url is '/console/lsm/catalog/service/inventory' THE
   const crumbs = screen.getAllByRole("listitem", { name: "BreadcrumbItem" });
   expect(crumbs.length).toEqual(3);
   const [, catalogCrumb, inventoryCrumb] = crumbs;
-  expect(within(catalogCrumb).queryByRole("link")).toBeInTheDocument();
+  expect(within(catalogCrumb).getByRole("link")).toBeInTheDocument();
   expect(within(inventoryCrumb).queryByRole("link")).not.toBeInTheDocument();
   expect(
     within(inventoryCrumb).getByText("Service Inventory")

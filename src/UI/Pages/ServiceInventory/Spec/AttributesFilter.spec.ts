@@ -55,7 +55,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   });
 
   expect(
-    within(summary).queryByRole("listitem", {
+    within(summary).getByRole("listitem", {
       name: "Active-NotEmpty",
     })
   ).toBeInTheDocument();
