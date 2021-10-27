@@ -64,7 +64,7 @@
     "@types/xml-formatter": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "^8.2.3",
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^6.4.0",
     "cypress": "^8.7.0",
