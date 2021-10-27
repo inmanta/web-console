@@ -3,6 +3,7 @@ import { CogIcon, InfoCircleIcon, KeyIcon } from "@patternfly/react-icons";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { EnvironmentTab } from "./Environment";
+import { ConfigurationTab } from "./Configuration";
 
 export enum TabKey {
   Environment = "Environment",
@@ -34,7 +35,7 @@ const configurationTab: TabDescriptor<TabKey> = {
   id: TabKey.Configuration,
   title: words("settings.tabs.configuration"),
   icon: <CogIcon />,
-  view: <p>configurationTab</p>,
+  view: <ConfigurationTab />,
 };
 
 const tokensTab: TabDescriptor<TabKey> = {

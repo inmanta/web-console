@@ -4,7 +4,7 @@
  * When you have a 'None', the value is missing.
  * When you have a 'Some', the value is present.
  */
-type Maybe<Value> = None | Some<Value>;
+export type Maybe<Value> = None | Some<Value>;
 
 export type Type<Value> = Maybe<Value>;
 
@@ -32,3 +32,8 @@ export const isSome = <Value>(maybe: Maybe<Value>): maybe is Some<Value> =>
 
 export const orNull = <Value>(maybe: Maybe<Value>): Value | null =>
   isNone(maybe) ? null : maybe.value;
+
+export const withFallback = <Value>(
+  maybe: Maybe<Value>,
+  fallback: Value
+): Value => (isNone(maybe) ? fallback : maybe.value);

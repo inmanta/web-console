@@ -9,6 +9,7 @@ export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
 export * from "./DeleteForm";
 export * from "./Description";
+export * from "./DictEditor";
 export * from "./EmptyView";
 export * from "./EnvironmentProvider";
 export * from "./ErrorView";
