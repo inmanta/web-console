@@ -2,16 +2,16 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
+  DeferredApiHelper,
   DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
-  InstantPoster,
   MockEnvironmentModifier,
   Service,
   StaticScheduler,
 } from "@/Test";
 import { ServiceCatalogPage } from "@/UI/Pages";
-import { Either, RemoteData } from "@/Core";
+import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
@@ -34,6 +34,7 @@ import userEvent from "@testing-library/user-event";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
+  const apiHelper = new DeferredApiHelper();
   const servicesFetcher = new DeferredFetcher<"GetServices">();
 
   const servicesHelper = new ServicesQueryManager(
@@ -57,12 +58,13 @@ function setup() {
     Service.a.environment
   );
 
+  // { data: Service.a.config }
   const serviceConfigCommandManager = new ServiceConfigCommandManager(
-    new InstantPoster<"UpdateServiceConfig">(
-      RemoteData.success({ data: Service.a.config })
-    ),
-    serviceConfigStateHelper
+    apiHelper,
+    serviceConfigStateHelper,
+    Service.a.environment
   );
+
   const deleteServiceCommandManager = new DeleteServiceCommandManager(
     new BaseApiHelper(),
     Service.a.environment
