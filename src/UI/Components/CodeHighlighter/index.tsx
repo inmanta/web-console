@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
 import xml from "react-syntax-highlighter/dist/esm/languages/hljs/xml";
@@ -99,7 +99,7 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
 
   const actions = (
     <>
-      <ClipboardCopyButton
+      <CenteredCopyButton
         id="copy-button"
         textId="code-content"
         aria-label="Copy to clipboard"
@@ -109,11 +109,11 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
         variant="plain"
       >
         {copied ? "Successfully copied to clipboard!" : "Copy to clipboard"}
-      </ClipboardCopyButton>
+      </CenteredCopyButton>
       {close && (
-        <Button variant="plain" aria-label="Close icon" onClick={close}>
+        <SidebarButton variant="plain" aria-label="Close icon" onClick={close}>
           <CloseIcon />
-        </Button>
+        </SidebarButton>
       )}
       <ToggleTooltip
         enabled={zoomed}
@@ -121,13 +121,13 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
         disabledContent={words("codehighlighter.zoom.on")}
       >
         {zoomed ? (
-          <Button variant="plain" onClick={onZoomOut}>
+          <SidebarButton variant="plain" onClick={onZoomOut}>
             <SearchMinusIcon />
-          </Button>
+          </SidebarButton>
         ) : (
-          <Button variant="plain" onClick={onZoomIn}>
+          <SidebarButton variant="plain" onClick={onZoomIn}>
             <SearchPlusIcon />
-          </Button>
+          </SidebarButton>
         )}
       </ToggleTooltip>
       <IconSettings actions={dropdownActions} />
@@ -200,7 +200,7 @@ const FlexItemWithOverflow = styled(FlexItem)`
 `;
 
 const SmallFlexItem = styled(FlexItem)`
-  width: 3em;
+  width: 4em;
 `;
 
 const BorderedArea = styled.div`
@@ -212,8 +212,8 @@ const BorderedArea = styled.div`
 const IconSettings: React.FC<{ actions: JSX.Element[] }> = ({ actions }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <Dropdown
-      toggle={<KebabToggle onToggle={() => setIsOpen(!isOpen)} />}
+    <CenteredDropdown
+      toggle={<CenteredToggle onToggle={() => setIsOpen(!isOpen)} />}
       isOpen={isOpen}
       isPlain
       dropdownItems={actions}
@@ -222,7 +222,29 @@ const IconSettings: React.FC<{ actions: JSX.Element[] }> = ({ actions }) => {
 };
 
 const StyledDropdownItem = styled(DropdownItem)<{ $isEnabled: boolean }>`
-  ${({ $isEnabled }) => ($isEnabled ? "opacity :1" : "opacity: 0.4")}
+  ${({ $isEnabled }) => ($isEnabled ? "opacity: 1;" : "opacity: 0.4;")}
+`;
+
+const centeredSidebarStyles = css`
+  padding-left: 0;
+  padding-right: 0;
+  margin: auto;
+  width: 100%;
+`;
+
+const SidebarButton = styled(Button)`
+  ${centeredSidebarStyles}
+`;
+
+const CenteredDropdown = styled(Dropdown)`
+  ${centeredSidebarStyles}
+`;
+const CenteredToggle = styled(KebabToggle)`
+  ${centeredSidebarStyles}
+`;
+
+const CenteredCopyButton = styled(ClipboardCopyButton)`
+  ${centeredSidebarStyles}
 `;
 
 const ToggleTooltip: React.FC<{
