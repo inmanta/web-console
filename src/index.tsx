@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import keycloakConf from "@/UI/Root/keycloak.json";
@@ -8,6 +9,7 @@ import {
   DependencyProvider,
   CommandManagerResolver,
   QueryManagerResolver,
+  EnvironmentModifierImpl,
 } from "@/UI/Dependency";
 import {
   CommandResolverImpl,
@@ -19,9 +21,7 @@ import {
   PrimaryFeatureManager,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
-import { Route } from "./UI/Routing";
-import { EnvironmentModifierImpl } from "./UI/Dependency/EnvironmentModifier";
-import { BrowserRouter as Router } from "react-router-dom";
+import { PrimaryBaseUrlFinder, PrimaryRouteManager, Route } from "@/UI/Routing";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -60,6 +60,8 @@ const urlManager = new UrlManagerImpl(baseUrl);
 const fileFetcher = new FileFetcherImpl(baseApiHelper);
 const environmentModifier = new EnvironmentModifierImpl();
 const featureManager = new PrimaryFeatureManager();
+const BASE_URL = new PrimaryBaseUrlFinder().getUrl(location.pathname);
+const routeManager = new PrimaryRouteManager(BASE_URL);
 
 ReactDOM.render(
   <DependencyProvider
@@ -70,6 +72,7 @@ ReactDOM.render(
       fileFetcher,
       environmentModifier,
       featureManager,
+      routeManager,
     }}
   >
     <StoreProvider store={store}>

@@ -1,6 +1,6 @@
-import { BaseUrlFinder } from "./BaseUrlFinder";
+import { PrimaryBaseUrlFinder } from "./PrimaryBaseUrlFinder";
 
-const finder = new BaseUrlFinder();
+const finder = new PrimaryBaseUrlFinder();
 
 test.each`
   fullUrl                         | returnText                      | returnValue

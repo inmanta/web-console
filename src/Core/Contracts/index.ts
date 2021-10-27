@@ -1,5 +1,6 @@
 export * from "./ApiHelper";
 export * from "./AuthHelper";
+export * from "./BaseUrlFinder";
 export * from "./CommandManager";
 export * from "./CommandResolver";
 export * from "./ConfigFinalizer";
@@ -10,6 +11,7 @@ export * from "./KeyMaker";
 export * from "./ManagerResolver";
 export * from "./QueryManager";
 export * from "./QueryResolver";
+export * from "./RouteManager";
 export * from "./StateHelper";
 export * from "./TriggerProvider";
 export * from "./EnvironmentModifier";

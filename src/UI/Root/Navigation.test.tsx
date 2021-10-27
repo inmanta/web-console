@@ -4,19 +4,32 @@ import { MemoryRouter } from "react-router-dom";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Navigation } from "./Navigation";
 import { PrimaryFeatureManager } from "@/Data";
-import { ServerStatus } from "@/Test";
+import { ServerStatus as TestServerStatus } from "@/Test";
+import { PrimaryRouteManager } from "..";
+import { ServerStatus } from "@/Core";
 
-test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => {
+function setup(
+  initialEntries: string[] | undefined,
+  serverStatus: ServerStatus
+) {
   const featureManager = new PrimaryFeatureManager();
-  featureManager.setServerStatus(ServerStatus.withLsm);
+  featureManager.setServerStatus(serverStatus);
+  const routeManager = new PrimaryRouteManager("");
 
-  render(
-    <MemoryRouter>
-      <DependencyProvider dependencies={{ featureManager }}>
+  const component = (
+    <MemoryRouter initialEntries={initialEntries}>
+      <DependencyProvider dependencies={{ featureManager, routeManager }}>
         <Navigation environment="env" />
       </DependencyProvider>
     </MemoryRouter>
   );
+
+  return { component };
+}
+
+test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => {
+  const { component } = setup(undefined, TestServerStatus.withLsm);
+  render(component);
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
   expect(navigation).toBeVisible();
@@ -48,15 +61,8 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
 });
 
 test("GIVEN Navigation WHEN no lsm THEN lsm is not shown", () => {
-  const featureManager = new PrimaryFeatureManager();
-  featureManager.setServerStatus(ServerStatus.withoutLsm);
-  render(
-    <MemoryRouter>
-      <DependencyProvider dependencies={{ featureManager }}>
-        <Navigation environment="env" />
-      </DependencyProvider>
-    </MemoryRouter>
-  );
+  const { component } = setup(undefined, TestServerStatus.withoutLsm);
+  render(component);
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
   expect(navigation).toBeVisible();
@@ -70,15 +76,8 @@ test("GIVEN Navigation WHEN no lsm THEN lsm is not shown", () => {
 });
 
 test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highlighted", () => {
-  const featureManager = new PrimaryFeatureManager();
-  featureManager.setServerStatus(ServerStatus.withLsm);
-  render(
-    <MemoryRouter initialEntries={["/console/lsm/catalog"]}>
-      <DependencyProvider dependencies={{ featureManager }}>
-        <Navigation environment="env" />
-      </DependencyProvider>
-    </MemoryRouter>
-  );
+  const { component } = setup(["/lsm/catalog"], TestServerStatus.withLsm);
+  render(component);
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
   const link = within(navigation).getByRole("link", {

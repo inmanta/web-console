@@ -1,6 +1,8 @@
+import { BaseUrlFinder } from "@/Core";
+
 const ANCHOR = "/console";
 
-export class BaseUrlFinder {
+export class PrimaryBaseUrlFinder implements BaseUrlFinder {
   getUrl(url: string): string {
     if (!url.includes(ANCHOR)) return ANCHOR;
     if (url.split(ANCHOR).length > 2) return ANCHOR;
