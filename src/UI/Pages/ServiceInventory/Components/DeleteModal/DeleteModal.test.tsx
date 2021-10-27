@@ -2,10 +2,9 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
+  BaseApiHelper,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
-  BaseApiHelper,
-  InstanceDeleter,
   getStoreInstance,
 } from "@/Data";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
@@ -16,7 +15,8 @@ import { StoreProvider } from "easy-peasy";
 
 function setup() {
   const commandManager = new DeleteInstanceCommandManager(
-    new InstanceDeleter(new BaseApiHelper(), ServiceInstance.a.environment)
+    new BaseApiHelper(),
+    ServiceInstance.a.environment
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
