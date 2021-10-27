@@ -3,7 +3,9 @@ import { ApiHelper, Command, Maybe, Deleter } from "@/Core";
 export class EnvironmentDeleter implements Deleter<"DeleteEnvironment"> {
   constructor(private readonly apiHelper: ApiHelper) {}
 
-  delete(command: Command.DeleteEnvironment): Promise<Maybe.Type<string>> {
+  delete(
+    command: Command.SubCommand<"DeleteEnvironment">
+  ): Promise<Maybe.Type<string>> {
     return this.apiHelper.delete(this.getUrl(command), command.id);
   }
 
