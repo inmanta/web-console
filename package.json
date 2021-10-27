@@ -2,14 +2,14 @@
   "name": "@inmanta/web-console",
   "version": "1.7.1",
   "description": "Web Console for Inmanta Orchestrator",
-  "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
     "prebuild": "yarn clean",
-    "build": "webpack --config webpack.prod.js",
-    "start": "webpack serve --hot --color --progress --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.cjs",
+    "start": "webpack serve --hot --color --progress --config webpack.dev.cjs",
     "test": "jest",
     "format": "prettier --check --write './**/*.{js,jsx,ts,tsx}'",
     "format:check": "prettier --check './**/*.{js,jsx,ts,tsx}'",
@@ -38,6 +38,7 @@
   "files": [
     "dist/"
   ],
+  "type": "module",
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@babel/plugin-transform-typescript": "^7.15.8",

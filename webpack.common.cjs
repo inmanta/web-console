@@ -12,9 +12,7 @@ module.exports = {
   plugins: [
     new webpack.IgnorePlugin({ resourceRegExp: /^\.\/config\.js$/ }),
     new CopyPlugin({ patterns: [{ from: "src/config.js", to: "" }] }),
-    new webpack.ProvidePlugin({
-      process: "process/browser",
-    }),
+   
   ],
   module: {
     rules: [
@@ -145,6 +143,12 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.m?js$/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
     ],
   },
   output: {
@@ -157,6 +161,7 @@ module.exports = {
     plugins: [
       new TsconfigPathsPlugin({
         configFile: path.resolve(__dirname, "./tsconfig.json"),
+
       }),
     ],
     symlinks: false,

@@ -1,41 +1,23 @@
 const path = require("path");
 const { merge } = require("webpack-merge");
-const common = require("./webpack.common.js");
-const webpack = require("webpack");
-const Dotenv = require("dotenv-webpack");
+const common = require("./webpack.common.cjs");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const HOST = process.env.HOST || "localhost";
-const PORT = process.env.PORT || "9000";
-const publicPath = "/";
-
 module.exports = merge(common, {
-  mode: "development",
-  devtool: "eval-source-map",
-  devServer: {
-    host: HOST,
-    port: PORT,
-    compress: true,
-    historyApiFallback: true,
-    hot: true,
-    client: {
-      overlay: true,
-    },
-    static: {
-      directory: path.resolve(__dirname, "dist"),
-      watch: {
-        ignored: /node_modules/,
-      },
-    },
+  mode: "production",
+  devtool: "source-map",
+  optimization: {
+    minimizer: [new OptimizeCSSAssetsPlugin({})],
   },
   plugins: [
-    new Dotenv(),
-    new webpack.EnvironmentPlugin({
-      PUBLIC_PATH: publicPath,
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[name].bundle.css",
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src", "index.html"),
-      PUBLIC_PATH: publicPath,
       favicon: path.resolve(__dirname, "public", "images", "favicon.ico"),
     }),
   ],
@@ -69,8 +51,11 @@ module.exports = merge(common, {
             "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css"
           ),
         ],
-        use: ["style-loader", "css-loader"],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
     ],
+  },
+  output: {
+    publicPath: "",
   },
 });
