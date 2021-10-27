@@ -1,7 +1,6 @@
 import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
   BaseApiHelper,
-  InstanceDeleter,
   AttributeResultConverterImpl,
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
@@ -17,7 +16,6 @@ import {
   TriggerSetStateCommandManager,
   Store,
   DeleteServiceCommandManager,
-  ServiceDeleter,
   HaltEnvironmentCommandManager,
   HaltEnvironmentPoster,
   ResumeEnvironmentCommandManager,
@@ -30,7 +28,6 @@ import {
   EnvironmentDetailsUpdater,
   EnvironmentDetailsStateHelper,
   DeleteEnvironmentCommandManager,
-  EnvironmentDeleter,
   ProjectsUpdater,
   ProjectsStateHelper,
   ModifyEnvironmentCommandManager,
@@ -68,7 +65,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private getIndependentManagers(): CommandManager[] {
     return [
       new DeleteEnvironmentCommandManager(
-        new EnvironmentDeleter(this.baseApiHelper),
+        this.baseApiHelper,
         new ProjectsUpdater(
           new ProjectsStateHelper(this.store),
           new FetcherImpl<"GetProjects">(this.baseApiHelper)
@@ -113,12 +110,8 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new AttributeResultConverterImpl(),
         environment
       ),
-      new DeleteInstanceCommandManager(
-        new InstanceDeleter(this.baseApiHelper, environment)
-      ),
-      new DeleteServiceCommandManager(
-        new ServiceDeleter(this.baseApiHelper, environment)
-      ),
+      new DeleteInstanceCommandManager(this.baseApiHelper, environment),
+      new DeleteServiceCommandManager(this.baseApiHelper, environment),
       new TriggerSetStateCommandManager(
         this.authHelper,
         new SetStatePoster(this.baseApiHelper, environment)

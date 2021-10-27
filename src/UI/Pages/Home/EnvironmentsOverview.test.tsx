@@ -14,7 +14,6 @@ import {
   BaseApiHelper,
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
-  EnvironmentDeleter,
   getStoreInstance,
   ProjectsStateHelper,
   ProjectsUpdater,
@@ -29,7 +28,7 @@ function setup() {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new DeleteEnvironmentCommandManager(
-        new EnvironmentDeleter(apiHelper),
+        apiHelper,
         new ProjectsUpdater(projectsStateHelper, projectsFetcher)
       ),
     ])

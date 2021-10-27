@@ -22,7 +22,6 @@ import {
   SetStatePoster,
   TriggerInstanceUpdateCommandManager,
   BaseApiHelper,
-  InstanceDeleter,
   TriggerSetStateCommandManager,
   KeycloakAuthHelper,
   getStoreInstance,
@@ -72,7 +71,8 @@ export class ServiceInventoryPrepper {
       "env1"
     );
     const deleteCommandManager = new DeleteInstanceCommandManager(
-      new InstanceDeleter(new BaseApiHelper(), "env1")
+      apiHelper,
+      "env1"
     );
 
     const setStateCommandManager = new TriggerSetStateCommandManager(
