@@ -9,7 +9,6 @@ import {
   BaseApiHelper,
   CommandResolverImpl,
   DeleteServiceCommandManager,
-  ServiceDeleter,
 } from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 
@@ -17,7 +16,8 @@ const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new DeleteServiceCommandManager(
-        new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+        new BaseApiHelper(),
+        Service.a.environment
       ),
     ])
   );

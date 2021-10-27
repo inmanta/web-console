@@ -16,7 +16,6 @@ import {
   TriggerSetStateCommandManager,
   Store,
   DeleteServiceCommandManager,
-  ServiceDeleter,
   HaltEnvironmentCommandManager,
   HaltEnvironmentPoster,
   ResumeEnvironmentCommandManager,
@@ -112,9 +111,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environment
       ),
       new DeleteInstanceCommandManager(this.baseApiHelper, environment),
-      new DeleteServiceCommandManager(
-        new ServiceDeleter(this.baseApiHelper, environment)
-      ),
+      new DeleteServiceCommandManager(this.baseApiHelper, environment),
       new TriggerSetStateCommandManager(
         this.authHelper,
         new SetStatePoster(this.baseApiHelper, environment)

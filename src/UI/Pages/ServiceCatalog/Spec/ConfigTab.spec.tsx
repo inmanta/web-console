@@ -26,7 +26,6 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   DeleteServiceCommandManager,
-  ServiceDeleter,
   BaseApiHelper,
 } from "@/Data";
 import { MemoryRouter } from "react-router-dom";
@@ -65,7 +64,8 @@ function setup() {
     serviceConfigStateHelper
   );
   const deleteServiceCommandManager = new DeleteServiceCommandManager(
-    new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+    new BaseApiHelper(),
+    Service.a.environment
   );
 
   const queryResolver = new QueryResolverImpl(

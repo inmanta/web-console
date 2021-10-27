@@ -14,7 +14,6 @@ export * from "./QueryManager";
 export * from "./QueryResolver";
 export * from "./StateHelper";
 export * from "./TriggerProvider";
-export * from "./Deleter";
 export * from "./PosterWithoutResponse";
 export * from "./EnvironmentModifier";
 export * from "./Updater";

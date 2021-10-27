@@ -17,7 +17,6 @@ import {
   getStoreInstance,
   DeleteServiceCommandManager,
   BaseApiHelper,
-  ServiceDeleter,
   CommandResolverImpl,
 } from "@/Data";
 import { Page } from "./Page";
@@ -39,7 +38,8 @@ function setup() {
     new DynamicQueryManagerResolver([servicesHelper])
   );
   const commandManager = new DeleteServiceCommandManager(
-    new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+    new BaseApiHelper(),
+    Service.a.environment
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])

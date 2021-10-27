@@ -4,7 +4,6 @@ import { DependencyProvider } from "@/UI/Dependency";
 import {
   DeleteServiceCommandManager,
   BaseApiHelper,
-  ServiceDeleter,
   CommandResolverImpl,
 } from "@/Data";
 import { Details } from "./Details";
@@ -18,7 +17,8 @@ const Template: React.FC<ComponentProps<typeof Details>> = (args) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new DeleteServiceCommandManager(
-        new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+        new BaseApiHelper(),
+        Service.a.environment
       ),
     ])
   );
