@@ -5,7 +5,7 @@ export class ServiceDeleter implements Deleter<"DeleteService"> {
     private readonly apiHelper: ApiHelper,
     private readonly environment: string
   ) {}
-  delete(command: Command.DeleteServiceCommand): Promise<Maybe.Type<string>> {
+  delete(command: Command.DeleteService): Promise<Maybe.Type<string>> {
     return this.apiHelper.delete(this.getUrl(command), this.environment);
   }
 
