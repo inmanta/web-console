@@ -1,10 +1,9 @@
-import { Kind, Route } from "@/UI/Routing";
-import { Params } from "@/UI/Routing/Route";
+import { RouteKind, Route, RouteParams } from "@/Core/Domain";
 
-export type RouteDictionary = Record<Kind, Route.Route>;
+export type RouteDictionary = Record<RouteKind, Route>;
 
 export interface RouteManager {
   getRouteDictionary(): RouteDictionary;
   getDashboardUrl(environment: string): string;
-  getUrl(kind: Kind, params: Params<typeof kind>): string;
+  getUrl(kind: RouteKind, params: RouteParams<typeof kind>): string;
 }

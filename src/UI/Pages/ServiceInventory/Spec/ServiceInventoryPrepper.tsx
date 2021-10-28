@@ -3,6 +3,7 @@ import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   MockEnvironmentModifier,
@@ -89,6 +90,7 @@ export class ServiceInventoryPrepper {
       <MemoryRouter>
         <DependencyProvider
           dependencies={{
+            ...dependencies,
             queryResolver,
             urlManager,
             commandResolver,

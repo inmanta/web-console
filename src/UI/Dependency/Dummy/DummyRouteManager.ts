@@ -1,5 +1,4 @@
-import { RouteManager } from "@/Core";
-import { Kind, Route } from "@/UI/Routing";
+import { RouteManager, Route, RouteKind } from "@/Core";
 
 export class DummyRouteManager implements RouteManager {
   getUrl(): string {
@@ -8,7 +7,7 @@ export class DummyRouteManager implements RouteManager {
   getDashboardUrl(): string {
     throw new Error("Method not implemented.");
   }
-  getRouteDictionary(): Record<Kind, Route.Route> {
+  getRouteDictionary(): Record<RouteKind, Route> {
     throw new Error("Method not implemented.");
   }
 }

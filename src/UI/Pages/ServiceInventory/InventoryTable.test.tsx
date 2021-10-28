@@ -8,6 +8,7 @@ import {
   StaticScheduler,
   DynamicQueryManagerResolver,
   InstantApiHelper,
+  dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { StoreProvider } from "easy-peasy";
@@ -51,7 +52,9 @@ test("InventoryTable can be expanded", async () => {
   const urlManager = new UrlManagerImpl("", "env");
   render(
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, urlManager }}
+      >
         <StoreProvider store={store}>
           <InventoryTable
             rows={[Row.a, Row.b]}
@@ -99,7 +102,9 @@ test("ServiceInventory can show resources for instance", async () => {
   const urlManager = new UrlManagerImpl("", "env");
   render(
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, urlManager }}
+      >
         <StoreProvider store={store}>
           <InventoryTable
             rows={[Row.a, Row.b]}

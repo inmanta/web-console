@@ -6,12 +6,11 @@ import {
   Field,
   ApiHelper,
 } from "@/Core";
-import { AttributeResultConverter, sanitizeAttributes } from "@/Data/Common";
+import { sanitizeAttributes } from "@/Data/Common";
 
 export class CreateInstanceCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly attributeConverter: AttributeResultConverter,
     private readonly environment: string
   ) {}
 

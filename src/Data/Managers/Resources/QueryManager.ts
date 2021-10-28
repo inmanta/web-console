@@ -2,7 +2,7 @@ import { Scheduler, StateHelper, ResourceParams, ApiHelper } from "@/Core";
 import {
   getPaginationHandlers,
   PrimaryContinuousQueryManager,
-} from "@/Data/Common";
+} from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
 export class ResourcesQueryManager extends PrimaryContinuousQueryManager<"GetResources"> {

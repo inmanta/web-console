@@ -1,8 +1,6 @@
 import { generatePath } from "react-router-dom";
-import { RouteDictionary, RouteManager } from "@/Core";
+import { RouteDictionary, RouteManager, Route, RouteKind } from "@/Core";
 import { paths } from "./Paths";
-import { Route } from "./Route";
-import { Kind } from "./Kind";
 
 export class PrimaryRouteManager implements RouteManager {
   private readonly routeDictionary: RouteDictionary;
@@ -37,7 +35,7 @@ export class PrimaryRouteManager implements RouteManager {
     )}/#!/environment/${environment}`;
   }
 
-  private getRouteFromKind(kind: Kind): Route {
+  private getRouteFromKind(kind: RouteKind): Route {
     switch (kind) {
       case "Catalog":
         return this.routeDictionary.Catalog;
@@ -70,7 +68,7 @@ export class PrimaryRouteManager implements RouteManager {
     }
   }
 
-  getUrl(kind: Kind, params: Params<typeof kind>): string {
+  getUrl(kind: RouteKind, params: Params<typeof kind>): string {
     const route = this.getRouteFromKind(kind);
     return generatePath(route.path, params);
   }
@@ -194,4 +192,4 @@ interface ParamsManifest {
   CreateEnvironment: undefined;
 }
 
-type Params<R extends Kind> = ParamsManifest[R];
+type Params<R extends RouteKind> = ParamsManifest[R];

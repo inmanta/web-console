@@ -1,39 +1,10 @@
+import { Route, RouteKind } from "@/Core";
 import { PrimaryBaseUrlManager } from "./PrimaryBaseUrlManager";
 import { paths } from "./Paths";
-import { Kind } from "./Kind";
 
 export const BASE_URL = new PrimaryBaseUrlManager(
   location.pathname
 ).getConsoleBaseUrl();
-
-interface ParamsManifest {
-  Catalog: undefined;
-  Inventory: { service: string };
-  CreateInstance: { service: string };
-  EditInstance: { service: string; instance: string };
-  History: { service: string; instance: string };
-  Events: { service: string; instance: string };
-  Diagnose: { service: string; instance: string };
-  Resources: undefined;
-  ResourceHistory: { resourceId: string };
-  ResourceLogs: { resourceId: string };
-  CompileReports: undefined;
-  CompileDetails: { id: string };
-  Home: undefined;
-  ResourceDetails: { resourceId: string };
-  Settings: undefined;
-  CreateEnvironment: undefined;
-}
-
-export type Params<R extends Kind> = ParamsManifest[R];
-
-export interface Route {
-  kind: Kind;
-  parent?: Kind;
-  path: string;
-  label: string;
-  clearEnv?: boolean;
-}
 
 export const Catalog: Route = {
   kind: "Catalog",
@@ -154,7 +125,7 @@ export const allRoutes: Route[] = [
 export const DashboardUrl = (environment: string): string =>
   `${BASE_URL.replace("/console", "/dashboard")}/#!/environment/${environment}`;
 
-export const getRouteFromKind = (kind: Kind): Route => {
+export const getRouteFromKind = (kind: RouteKind): Route => {
   switch (kind) {
     case "Catalog":
       return Catalog;
@@ -187,7 +158,7 @@ export const getRouteFromKind = (kind: Kind): Route => {
   }
 };
 
-export const getChildrenKindsFromKind = (kind: Kind): Kind[] => {
+export const getChildrenKindsFromKind = (kind: RouteKind): RouteKind[] => {
   return allRoutes
     .filter((route) => route.parent === kind)
     .map((route) => route.kind);

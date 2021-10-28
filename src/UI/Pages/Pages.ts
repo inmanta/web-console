@@ -1,4 +1,5 @@
 import { ComponentType } from "react";
+import { Route as _Route } from "@/Core";
 import { Route } from "@/UI/Routing";
 import { CreateInstancePage } from "@/UI/Pages/CreateInstance";
 import { DiagnosePage } from "@/UI/Pages/Diagnose";
@@ -13,7 +14,7 @@ import { CompileDetailsPage } from "./CompileDetails";
 import { ResourceDetailsPage } from "@/UI/Pages/ResourceDetails";
 import { SettingsPage } from "./Settings";
 
-interface Page extends Route.Route {
+interface Page extends _Route {
   component: ComponentType;
 }
 

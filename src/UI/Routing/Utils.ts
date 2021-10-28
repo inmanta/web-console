@@ -1,7 +1,9 @@
-import { useEffect } from "react";
-import { matchPath, match, generatePath } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { matchPath, match } from "react-router-dom";
 import { useHistory, useLocation } from "react-router";
-import { Route, Params, getRouteFromKind, allRoutes } from "./Route";
+import { Route, RouteParams } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
+import { getRouteFromKind, allRoutes } from "./Route";
 import { Kind } from "./Kind";
 
 export const getLineageFromRoute = (
@@ -34,14 +36,9 @@ export function getRouteWithParamsFromUrl(
   return [page, match.params];
 }
 
-export function getUrl(kind: Kind, params: Params<typeof kind>): string {
-  const route = getRouteFromKind(kind);
-  return generatePath(route.path, params);
-}
-
 type NavigateTo = (
   kind: Kind,
-  params: Params<typeof kind>,
+  params: RouteParams<typeof kind>,
   search?: string
 ) => void;
 
@@ -49,11 +46,12 @@ type NavigateTo = (
  * The useNavigateTo hook returns a navigateTo function which navigates to a route.
  */
 export const useNavigateTo = (): NavigateTo => {
+  const { routeManager } = useContext(DependencyContext);
   const { search } = useLocation();
   const history = useHistory();
 
   return (routeKind, params, newSearch) => {
-    const pathname = getUrl(routeKind, params);
+    const pathname = routeManager.getUrl(routeKind, params);
     history.push(`${pathname}?${newSearch || search}`);
   };
 };

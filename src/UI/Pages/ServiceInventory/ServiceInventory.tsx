@@ -2,7 +2,12 @@ import React, { useContext, ReactElement } from "react";
 import { useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
+import {
+  RemoteData,
+  ServiceModel,
+  ServiceInstanceParams,
+  RouteParams,
+} from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -13,7 +18,6 @@ import {
   ServiceProvider,
 } from "@/UI/Components";
 import { Chart, TableControls } from "./Components";
-import { Route } from "@/UI/Routing";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -27,7 +31,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 export const Page: React.FC = () => {
-  const { service: serviceName } = useParams<Route.Params<"Inventory">>();
+  const { service: serviceName } = useParams<RouteParams<"Inventory">>();
 
   return (
     <ServiceProvider

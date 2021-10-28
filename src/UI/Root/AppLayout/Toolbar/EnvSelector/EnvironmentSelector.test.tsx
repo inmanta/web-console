@@ -3,21 +3,24 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { RemoteData } from "@/Core";
-import { Project } from "@/Test";
+import { dependencies, Project } from "@/Test";
 import { MemoryRouter } from "react-router";
+import { DependencyProvider } from "@/UI/Dependency";
 
 test("GIVEN EnvironmentSelector WHEN no environments THEN error view", async () => {
   render(
     <MemoryRouter>
-      <EnvironmentSelector
-        projects={RemoteData.success([])}
-        onSelectEnvironment={() => {
-          return;
-        }}
-        selectedProjectAndEnvironment={RemoteData.failed(
-          "No environments were found"
-        )}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          projects={RemoteData.success([])}
+          onSelectEnvironment={() => {
+            return;
+          }}
+          selectedProjectAndEnvironment={RemoteData.failed(
+            "No environments were found"
+          )}
+        />
+      </DependencyProvider>
     </MemoryRouter>
   );
 
@@ -32,16 +35,18 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   const [envB] = projectB.environments;
   render(
     <MemoryRouter>
-      <EnvironmentSelector
-        projects={RemoteData.success(Project.list)}
-        onSelectEnvironment={() => {
-          return;
-        }}
-        selectedProjectAndEnvironment={RemoteData.success({
-          environment: envA,
-          project: projectA,
-        })}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          projects={RemoteData.success(Project.list)}
+          onSelectEnvironment={() => {
+            return;
+          }}
+          selectedProjectAndEnvironment={RemoteData.success({
+            environment: envA,
+            project: projectA,
+          })}
+        />
+      </DependencyProvider>
     </MemoryRouter>
   );
 
@@ -64,17 +69,19 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   const [envB] = projectB.environments;
   render(
     <MemoryRouter>
-      <EnvironmentSelector
-        projects={RemoteData.success(Project.list)}
-        onSelectEnvironment={(item) => {
-          (selectedEnv = item.environmentId),
-            (selectedProject = item.projectId);
-        }}
-        selectedProjectAndEnvironment={RemoteData.success({
-          environment: envA,
-          project: projectA,
-        })}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          projects={RemoteData.success(Project.list)}
+          onSelectEnvironment={(item) => {
+            (selectedEnv = item.environmentId),
+              (selectedProject = item.projectId);
+          }}
+          selectedProjectAndEnvironment={RemoteData.success({
+            environment: envA,
+            project: projectA,
+          })}
+        />
+      </DependencyProvider>
     </MemoryRouter>
   );
 
@@ -112,16 +119,18 @@ test.each`
 
     render(
       <MemoryRouter>
-        <EnvironmentSelector
-          projects={RemoteData.success(Project.list)}
-          onSelectEnvironment={() => {
-            return;
-          }}
-          selectedProjectAndEnvironment={RemoteData.success({
-            environment: env,
-            project,
-          })}
-        />
+        <DependencyProvider dependencies={dependencies}>
+          <EnvironmentSelector
+            projects={RemoteData.success(Project.list)}
+            onSelectEnvironment={() => {
+              return;
+            }}
+            selectedProjectAndEnvironment={RemoteData.success({
+              environment: env,
+              project,
+            })}
+          />
+        </DependencyProvider>
       </MemoryRouter>
     );
 
@@ -146,16 +155,18 @@ test("GIVEN EnvironmentSelector and populated store WHEN user types in non match
   const [env] = project.environments;
   render(
     <MemoryRouter>
-      <EnvironmentSelector
-        projects={RemoteData.success(Project.list)}
-        onSelectEnvironment={() => {
-          return;
-        }}
-        selectedProjectAndEnvironment={RemoteData.success({
-          environment: env,
-          project,
-        })}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          projects={RemoteData.success(Project.list)}
+          onSelectEnvironment={() => {
+            return;
+          }}
+          selectedProjectAndEnvironment={RemoteData.success({
+            environment: env,
+            project,
+          })}
+        />
+      </DependencyProvider>
     </MemoryRouter>
   );
 
@@ -182,17 +193,19 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   const [, envB] = projectB.environments;
   render(
     <MemoryRouter>
-      <EnvironmentSelector
-        projects={RemoteData.success(Project.list)}
-        onSelectEnvironment={(item) => {
-          (selectedEnv = item.environmentId),
-            (selectedProject = item.projectId);
-        }}
-        selectedProjectAndEnvironment={RemoteData.success({
-          environment: envA,
-          project: projectA,
-        })}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          projects={RemoteData.success(Project.list)}
+          onSelectEnvironment={(item) => {
+            (selectedEnv = item.environmentId),
+              (selectedProject = item.projectId);
+          }}
+          selectedProjectAndEnvironment={RemoteData.success({
+            environment: envA,
+            project: projectA,
+          })}
+        />
+      </DependencyProvider>
     </MemoryRouter>
   );
   const toggle = screen.getByRole("button", {

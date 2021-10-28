@@ -12,7 +12,6 @@ import {
   EditModifierHandler,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import {
   Alert,
@@ -31,7 +30,7 @@ interface Props {
 }
 
 export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
-  const { commandResolver, environmentModifier } =
+  const { commandResolver, environmentModifier, routeManager } =
     useContext(DependencyContext);
   const fields = new FieldCreator(new EditModifierHandler()).create(
     serviceEntity
@@ -39,9 +38,9 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const isHalted = environmentModifier.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
   const history = useHistory();
-  const url = `${getUrl("Inventory", { service: serviceEntity.name })}?env=${
-    serviceEntity.environment
-  }`;
+  const url = `${routeManager.getUrl("Inventory", {
+    service: serviceEntity.name,
+  })}?env=${serviceEntity.environment}`;
 
   const handleRedirect = useCallback(
     () => history.push(url),

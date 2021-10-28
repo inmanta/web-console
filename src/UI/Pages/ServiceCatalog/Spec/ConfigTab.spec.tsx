@@ -3,6 +3,7 @@ import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   MockEnvironmentModifier,
@@ -81,6 +82,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           queryResolver,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),

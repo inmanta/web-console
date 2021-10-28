@@ -5,12 +5,7 @@ import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import keycloakConf from "@/UI/Root/keycloak.json";
 import { App } from "@/UI/Root/app";
-import {
-  DependencyProvider,
-  CommandManagerResolver,
-  QueryManagerResolver,
-  EnvironmentModifierImpl,
-} from "@/UI/Dependency";
+import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import {
   CommandResolverImpl,
   QueryResolverImpl,
@@ -19,6 +14,8 @@ import {
   getStoreInstance,
   FileFetcherImpl,
   PrimaryFeatureManager,
+  CommandManagerResolver,
+  QueryManagerResolver,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { PrimaryBaseUrlManager, PrimaryRouteManager } from "@/UI/Routing";

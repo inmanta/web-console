@@ -1,11 +1,11 @@
+import React, { useContext, useEffect } from "react";
+import { useHistory } from "react-router";
+import { useStore } from "@/Data/Store";
 import {
   EnvironmentHandlerContext,
   EnvironmentHandlerImpl,
 } from "./EnvironmentHandler";
 import { DependencyContext } from "./Dependency";
-import { useStore } from "@/Data";
-import React, { useContext, useEffect } from "react";
-import { useHistory } from "react-router";
 
 export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
   const { queryResolver, routeManager } = useContext(DependencyContext);

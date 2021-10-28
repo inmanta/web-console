@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   Resource,
   StaticScheduler,
@@ -40,6 +41,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           queryResolver,
           urlManager: new UrlManagerImpl("", environment),
         }}

@@ -3,6 +3,7 @@ import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   Service,
 } from "@/Test";
@@ -42,7 +43,9 @@ export class EventsPageComposer {
 
     const component = (
       <MemoryRouter>
-        <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+        <DependencyProvider
+          dependencies={{ ...dependencies, queryResolver, urlManager }}
+        >
           <StoreProvider store={store}>
             <Events service={service} instanceId="id1" />
           </StoreProvider>

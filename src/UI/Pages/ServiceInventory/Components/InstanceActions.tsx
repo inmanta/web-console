@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import {
   Button,
@@ -7,10 +7,10 @@ import {
 } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { ButtonWithCursorHandling, Link } from "@/UI/Components";
-import { getUrl } from "@/UI/Routing";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
 import { DeleteModal } from "./DeleteModal";
 import { SetStateAction } from "./SetStateAction";
+import { DependencyContext } from "@/UI/Dependency";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
@@ -25,11 +25,12 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   deleteDisabled,
   diagnoseDisabled,
 }) => {
+  const { routeManager } = useContext(DependencyContext);
   return (
     <DescriptionList>
       <DescriptionListGroup>
         <Link
-          pathname={getUrl("EditInstance", {
+          pathname={routeManager.getUrl("EditInstance", {
             service: instance.service_entity,
             instance: instance.id,
           })}
@@ -54,7 +55,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       </DescriptionListGroup>
       <DescriptionListGroup>
         <Link
-          pathname={getUrl("Diagnose", {
+          pathname={routeManager.getUrl("Diagnose", {
             service: instance.service_entity,
             instance: instance.id,
           })}
@@ -71,7 +72,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       </DescriptionListGroup>
       <DescriptionListGroup>
         <Link
-          pathname={getUrl("History", {
+          pathname={routeManager.getUrl("History", {
             service: instance.service_entity,
             instance: instance.id,
           })}
@@ -83,7 +84,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       </DescriptionListGroup>
       <DescriptionListGroup>
         <Link
-          pathname={getUrl("Events", {
+          pathname={routeManager.getUrl("Events", {
             service: instance.service_entity,
             instance: instance.id,
           })}

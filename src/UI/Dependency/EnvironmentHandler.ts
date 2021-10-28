@@ -6,7 +6,7 @@ import {
 } from "@/Core";
 import { History } from "history";
 import { createContext } from "react";
-import { Store, useStoreState } from "@/Data";
+import { Store, useStoreState } from "@/Data/Store";
 
 export interface SelectedProjectAndEnvironment {
   project: ProjectModel;

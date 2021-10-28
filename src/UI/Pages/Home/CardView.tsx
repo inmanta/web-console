@@ -17,7 +17,6 @@ import {
 import { PlusCircleIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Link } from "@/UI/Components";
 import { Actions } from "./Components";
@@ -28,15 +27,17 @@ interface Props {
 }
 
 export const CardView: React.FC<Props> = ({ environments, ...props }) => {
-  const { featureManager } = useContext(DependencyContext);
+  const { featureManager, routeManager } = useContext(DependencyContext);
   const pathname = featureManager.isLsmEnabled()
-    ? getUrl("Catalog", undefined)
-    : getUrl("CompileReports", undefined);
+    ? routeManager.getUrl("Catalog", undefined)
+    : routeManager.getUrl("CompileReports", undefined);
 
   return (
     <PageSection>
       <Gallery hasGutter {...props}>
-        <CreateNewEnvironmentCard />
+        <CreateNewEnvironmentCard
+          url={routeManager.getUrl("CreateEnvironment", undefined)}
+        />
         {environments.map((environment) => (
           <EnvironmentCard
             pathname={pathname}
@@ -49,9 +50,9 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
   );
 };
 
-const CreateNewEnvironmentCard: React.FC = () => (
+const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
   <Card isHoverable isCompact>
-    <Link pathname={getUrl("CreateEnvironment", undefined)}>
+    <Link pathname={url}>
       <Bullseye>
         <StyledCardContent>
           <EmptyState variant={EmptyStateVariant.xs}>
