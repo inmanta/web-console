@@ -1,5 +1,4 @@
-const fetch = (...args) =>
-  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+import fetch from "node-fetch";
 
 // Get a list of packageVersionIds
 async function getDevVersions() {
@@ -23,7 +22,7 @@ async function getDevVersions() {
     });
     // Make sure we're working with the web-console
     const webConsole = queryResults.data.repository.packages.nodes.find(
-      (package) => package.name === "web-console"
+      (pkg) => pkg.name === "web-console"
     );
 
     if (!webConsole) {
