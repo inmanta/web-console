@@ -2,15 +2,16 @@ import {
   Command,
   RemoteData,
   StateHelper,
-  Poster,
   CommandManager,
   Query,
+  ApiHelper,
 } from "@/Core";
 
 export class ServiceConfigCommandManager implements CommandManager {
   constructor(
-    private readonly poster: Poster<"UpdateServiceConfig">,
-    private readonly stateHelper: StateHelper<"GetServiceConfig">
+    private readonly apiHelper: ApiHelper,
+    private readonly stateHelper: StateHelper<"GetServiceConfig">,
+    private readonly environment: string
   ) {}
 
   matches(command: Command.SubCommand<"UpdateServiceConfig">): boolean {
@@ -41,12 +42,16 @@ export class ServiceConfigCommandManager implements CommandManager {
 
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.poster.post(command, {
-          values: {
-            ...configData.value,
-            [option]: value,
-          },
-        })
+        await this.apiHelper.post(
+          `/lsm/v1/service_catalog/${name}/config`,
+          this.environment,
+          {
+            values: {
+              ...configData.value,
+              [option]: value,
+            },
+          }
+        )
       ),
       this.getQuery(command)
     );

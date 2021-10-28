@@ -26,7 +26,6 @@ import {
   DeleteCallbackCommandManager,
   CallbacksUpdater,
   DeleteServiceCommandManager,
-  ServiceDeleter,
 } from "@/Data";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
@@ -59,7 +58,8 @@ function setup() {
   );
 
   const deleteServiceCommandManager = new DeleteServiceCommandManager(
-    new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+    new BaseApiHelper(),
+    Service.a.environment
   );
 
   const apiHelper = new DeferredApiHelper();

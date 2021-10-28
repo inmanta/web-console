@@ -5,7 +5,6 @@ import {
   FetcherImpl,
   getStoreInstance,
   ModifyEnvironmentCommandManager,
-  ModifyEnvironmentPoster,
   ProjectsQueryManager,
   ProjectsStateHelper,
   ProjectsUpdater,
@@ -37,8 +36,9 @@ function setup() {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new ModifyEnvironmentCommandManager(
-        new ModifyEnvironmentPoster(apiHelper, selectedEnvironment.id),
-        new ProjectsUpdater(projectsStateHelper, projectsFetcher)
+        apiHelper,
+        new ProjectsUpdater(projectsStateHelper, projectsFetcher),
+        selectedEnvironment.id
       ),
     ])
   );

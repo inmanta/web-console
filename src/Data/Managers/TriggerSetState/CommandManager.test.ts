@@ -1,11 +1,11 @@
 import { DummyAuthHelper, ServiceInstance } from "@/Test";
 import { TriggerSetStateCommandManager, BaseApiHelper } from "@/Data";
-import { SetStatePoster } from "./SetStatePoster";
 
 test("TriggerSetStateCommandManager sends correct request with message", async () => {
   const commandManager = new TriggerSetStateCommandManager(
     new DummyAuthHelper(),
-    new SetStatePoster(new BaseApiHelper(), "env1")
+    new BaseApiHelper(),
+    "env1"
   );
   const triggerFunction = commandManager.getTrigger({
     id: ServiceInstance.a.id,

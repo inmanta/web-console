@@ -7,10 +7,8 @@ import {
   EnvironmentDetailsUpdater,
   getStoreInstance,
   HaltEnvironmentCommandManager,
-  HaltEnvironmentPoster,
   QueryResolverImpl,
   ResumeEnvironmentCommandManager,
-  ResumeEnvironmentPoster,
 } from "@/Data";
 import {
   DeferredFetcher,
@@ -52,23 +50,25 @@ function setup() {
   const urlManager = new UrlManagerImpl("", EnvironmentDetails.a.id);
 
   const haltEnvironmentManager = new HaltEnvironmentCommandManager(
-    new HaltEnvironmentPoster(new BaseApiHelper(), EnvironmentDetails.a.id),
+    new BaseApiHelper(),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(
       environmentDetailsStateHelper,
       new DeferredFetcher<"GetEnvironmentDetails">(),
       EnvironmentDetails.a.id
-    )
+    ),
+    EnvironmentDetails.a.id
   );
 
   const resumeEnvironmentManager = new ResumeEnvironmentCommandManager(
-    new ResumeEnvironmentPoster(new BaseApiHelper(), EnvironmentDetails.a.id),
+    new BaseApiHelper(),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(
       environmentDetailsStateHelper,
       new DeferredFetcher<"GetEnvironmentDetails">(),
       EnvironmentDetails.a.id
-    )
+    ),
+    EnvironmentDetails.a.id
   );
 
   const commandResolver = new CommandResolverImpl(

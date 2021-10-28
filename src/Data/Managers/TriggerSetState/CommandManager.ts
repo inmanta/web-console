@@ -1,15 +1,10 @@
-import {
-  AuthHelper,
-  Command,
-  CommandManager,
-  Maybe,
-  PosterWithoutResponse,
-} from "@/Core";
+import { ApiHelper, AuthHelper, Command, CommandManager, Maybe } from "@/Core";
 
 export class TriggerSetStateCommandManager implements CommandManager {
   constructor(
     private readonly authHelper: AuthHelper,
-    private readonly poster: PosterWithoutResponse<"TriggerSetState">
+    private readonly apiHelper: ApiHelper,
+    private readonly environment: string
   ) {}
 
   matches(command: Command.SubCommand<"TriggerSetState">): boolean {
@@ -23,7 +18,7 @@ export class TriggerSetStateCommandManager implements CommandManager {
   }
 
   private async submit(
-    command: Command.SubCommand<"TriggerSetState">,
+    { service_entity, id, version }: Command.SubCommand<"TriggerSetState">,
     targetState: string
   ): Promise<Maybe.Type<Command.Error<"TriggerSetState">>> {
     const userName = this.authHelper.getUsername();
@@ -31,10 +26,14 @@ export class TriggerSetStateCommandManager implements CommandManager {
       ? `Triggered from the console by ${userName}`
       : "Triggered from the console";
 
-    return await this.poster.post(command, {
-      current_version: command.version,
-      target_state: targetState,
-      message,
-    });
+    return await this.apiHelper.postWithoutResponse(
+      `/lsm/v1/service_inventory/${service_entity}/${id}/state`,
+      this.environment,
+      {
+        current_version: version,
+        target_state: targetState,
+        message,
+      }
+    );
   }
 }

@@ -1,27 +1,19 @@
 import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
   BaseApiHelper,
-  InstanceDeleter,
   AttributeResultConverterImpl,
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
   InstanceConfigCommandManager,
   InstanceConfigStateHelper,
   TriggerInstanceUpdateCommandManager,
-  CreateInstancePoster,
-  InstanceConfigPoster,
-  ServiceConfigPoster,
   ServiceConfigStateHelper,
   ServiceConfigCommandManager,
-  SetStatePoster,
   TriggerSetStateCommandManager,
   Store,
   DeleteServiceCommandManager,
-  ServiceDeleter,
   HaltEnvironmentCommandManager,
-  HaltEnvironmentPoster,
   ResumeEnvironmentCommandManager,
-  ResumeEnvironmentPoster,
   DeleteCallbackCommandManager,
   FetcherImpl,
   CallbacksStateHelper,
@@ -30,13 +22,15 @@ import {
   EnvironmentDetailsUpdater,
   EnvironmentDetailsStateHelper,
   DeleteEnvironmentCommandManager,
-  EnvironmentDeleter,
   ProjectsUpdater,
   ProjectsStateHelper,
   ModifyEnvironmentCommandManager,
-  ModifyEnvironmentPoster,
   CreateProjectCommandManager,
   CreateEnvironmentCommandManager,
+  UpdateEnvironmentSettingCommandManager,
+  EnvironmentSettingUpdater,
+  GetEnvironmentSettingStateHelper,
+  ResetEnvironmentSettingCommandManager,
 } from "@/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
@@ -64,7 +58,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private getIndependentManagers(): CommandManager[] {
     return [
       new DeleteEnvironmentCommandManager(
-        new EnvironmentDeleter(this.baseApiHelper),
+        this.baseApiHelper,
         new ProjectsUpdater(
           new ProjectsStateHelper(this.store),
           new FetcherImpl<"GetProjects">(this.baseApiHelper)
@@ -86,51 +80,58 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       this.store,
       environment
     );
+    const environmentSettingUpdater = new EnvironmentSettingUpdater(
+      this.baseApiHelper,
+      new GetEnvironmentSettingStateHelper(this.store, environment),
+      environment
+    );
     return [
       new ServiceConfigCommandManager(
-        new ServiceConfigPoster(this.baseApiHelper, environment),
-        new ServiceConfigStateHelper(this.store)
+        this.baseApiHelper,
+        new ServiceConfigStateHelper(this.store),
+        environment
       ),
       new InstanceConfigCommandManager(
-        new InstanceConfigPoster(this.baseApiHelper, environment),
-        new InstanceConfigStateHelper(this.store)
+        this.baseApiHelper,
+        new InstanceConfigStateHelper(this.store),
+        environment
       ),
       new CreateInstanceCommandManager(
-        new CreateInstancePoster(this.baseApiHelper, environment),
-        new AttributeResultConverterImpl()
+        this.baseApiHelper,
+        new AttributeResultConverterImpl(),
+        environment
       ),
       new TriggerInstanceUpdateCommandManager(
         this.baseApiHelper,
         new AttributeResultConverterImpl(),
         environment
       ),
-      new DeleteInstanceCommandManager(
-        new InstanceDeleter(this.baseApiHelper, environment)
-      ),
-      new DeleteServiceCommandManager(
-        new ServiceDeleter(this.baseApiHelper, environment)
-      ),
+      new DeleteInstanceCommandManager(this.baseApiHelper, environment),
+      new DeleteServiceCommandManager(this.baseApiHelper, environment),
       new TriggerSetStateCommandManager(
         this.authHelper,
-        new SetStatePoster(this.baseApiHelper, environment)
+        this.baseApiHelper,
+        environment
       ),
       new HaltEnvironmentCommandManager(
-        new HaltEnvironmentPoster(this.baseApiHelper, environment),
+        this.baseApiHelper,
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
           new FetcherImpl<"GetEnvironmentDetails">(this.baseApiHelper),
           environment
-        )
+        ),
+        environment
       ),
       new ResumeEnvironmentCommandManager(
-        new ResumeEnvironmentPoster(this.baseApiHelper, environment),
+        this.baseApiHelper,
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
           new FetcherImpl<"GetEnvironmentDetails">(this.baseApiHelper),
           environment
-        )
+        ),
+        environment
       ),
       new DeleteCallbackCommandManager(
         this.baseApiHelper,
@@ -151,11 +152,22 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environment
       ),
       new ModifyEnvironmentCommandManager(
-        new ModifyEnvironmentPoster(this.baseApiHelper, environment),
+        this.baseApiHelper,
         new ProjectsUpdater(
           new ProjectsStateHelper(this.store),
           new FetcherImpl<"GetProjects">(this.baseApiHelper)
-        )
+        ),
+        environment
+      ),
+      new UpdateEnvironmentSettingCommandManager(
+        this.baseApiHelper,
+        environmentSettingUpdater,
+        environment
+      ),
+      new ResetEnvironmentSettingCommandManager(
+        this.baseApiHelper,
+        environmentSettingUpdater,
+        environment
       ),
     ];
   }

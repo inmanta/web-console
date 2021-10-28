@@ -2,15 +2,16 @@ import {
   Command,
   RemoteData,
   StateHelper,
-  Poster,
   CommandManager,
   Query,
+  ApiHelper,
 } from "@/Core";
 
 export class InstanceConfigCommandManager implements CommandManager {
   constructor(
-    private readonly poster: Poster<"UpdateInstanceConfig">,
-    private readonly stateHelper: StateHelper<"GetInstanceConfig">
+    private readonly apiHelper: ApiHelper,
+    private readonly stateHelper: StateHelper<"GetInstanceConfig">,
+    private readonly environment: string
   ) {}
 
   matches(command: Command.SubCommand<"UpdateInstanceConfig">): boolean {
@@ -50,7 +51,7 @@ export class InstanceConfigCommandManager implements CommandManager {
 
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.poster.post(command, {
+        await this.apiHelper.post(this.getUrl(command), this.environment, {
           values: {
             ...configData.value,
             [option]: value,
@@ -65,8 +66,20 @@ export class InstanceConfigCommandManager implements CommandManager {
     command: Command.SubCommand<"UpdateInstanceConfig">
   ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(await this.poster.post(command, { values: {} })),
+      RemoteData.fromEither(
+        await this.apiHelper.post(this.getUrl(command), this.environment, {
+          values: {},
+        })
+      ),
       this.getQuery(command)
     );
+  }
+
+  private getUrl({
+    service_entity,
+    id,
+    version,
+  }: Command.SubCommand<"UpdateInstanceConfig">): string {
+    return `/lsm/v1/service_inventory/${service_entity}/${id}/config?current_version=${version}`;
   }
 }

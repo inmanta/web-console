@@ -4,7 +4,6 @@ import {
   ServiceInstance,
 } from "@/Test";
 import {
-  SetStatePoster,
   TriggerSetStateCommandManager,
   CommandResolverImpl,
   BaseApiHelper,
@@ -21,7 +20,8 @@ import { StoreProvider } from "easy-peasy";
 function setup() {
   const commandManager = new TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    new SetStatePoster(new BaseApiHelper(), "env1")
+    new BaseApiHelper(),
+    "env1"
   );
   return {
     commandResolver: new CommandResolverImpl(

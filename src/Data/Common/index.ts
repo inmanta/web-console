@@ -10,3 +10,5 @@ export * from "./UrlState";
 export * from "./useExpansion";
 export * from "./XmlFormatter";
 export * from "./PrimaryContinuousQueryManager";
+export * from "./PrimaryOneTimeQueryManager";
+export * from "./PrimaryStateHelper";

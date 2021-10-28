@@ -9,6 +9,7 @@ export * from "./DeleteInstance";
 export * from "./DeleteService";
 export * from "./Diagnostics";
 export * from "./EnvironmentDetails";
+export * from "./EnvironmentSettings";
 export * from "./Events";
 export * from "./GetInstance";
 export * from "./GetServerStatus";
