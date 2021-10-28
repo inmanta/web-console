@@ -27,7 +27,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   diagnoseDisabled,
 }) => {
   const location = useLocation();
-  if (instance.state === "terminated") return null;
   return (
     <DescriptionList>
       <DescriptionListGroup>

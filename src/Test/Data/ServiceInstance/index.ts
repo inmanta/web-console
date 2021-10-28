@@ -39,6 +39,14 @@ export const c: ServiceInstanceModelWithTargetStates = {
   rollback_attributes: a.active_attributes,
 };
 
+export const deleted: ServiceInstanceModelWithTargetStates = {
+  ...a,
+  id: "service_instance_id_d",
+  service_identity_attribute_value: "8764848531585023123",
+  state: "terminated",
+  deleted: true,
+};
+
 export const nestedEditable: ServiceInstanceModelWithTargetStates = {
   id: "2acac4c1-e60b-45d8-914a-812231e73233",
   environment: "d7aae603-e7d4-4b12-a2a1-eaa914c34bc4",
