@@ -9,6 +9,7 @@ export * from "./FileFetcher";
 export * from "./Formatter";
 export * from "./KeyMaker";
 export * from "./ManagerResolver";
+export * from "./PageManager";
 export * from "./QueryManager";
 export * from "./QueryResolver";
 export * from "./RouteManager";

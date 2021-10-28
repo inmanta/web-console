@@ -122,9 +122,6 @@ export const allRoutes: Route[] = [
   Home,
 ];
 
-export const DashboardUrl = (environment: string): string =>
-  `${BASE_URL.replace("/console", "/dashboard")}/#!/environment/${environment}`;
-
 export const getRouteFromKind = (kind: RouteKind): Route => {
   switch (kind) {
     case "Catalog":
