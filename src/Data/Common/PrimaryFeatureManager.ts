@@ -15,4 +15,11 @@ export class PrimaryFeatureManager implements FeatureManager {
       ) !== "undefined"
     );
   }
+
+  getServerVersion(): string {
+    if (Maybe.isNone(this.serverStatus)) {
+      throw new Error("ServerStatus has not yet been set.");
+    }
+    return this.serverStatus.value.version.split(".")[0];
+  }
 }

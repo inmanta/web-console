@@ -66,3 +66,17 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
     screen.getByRole("button", { name: "Global navigation" })
   ).toBeVisible();
 });
+
+test("GIVEN the app THEN the documentation link should be visible", async () => {
+  fetchMock.mockResponse(JSON.stringify({}));
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
+  });
+
+  expect(
+    screen.getByRole("link", { name: "documentation link" })
+  ).toBeVisible();
+});

@@ -18,7 +18,6 @@ import {
 } from "@/Data";
 import { Page } from "./Page";
 import userEvent, { specialChars } from "@testing-library/user-event";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { MemoryRouter } from "react-router-dom";
 
 function setup() {
@@ -43,7 +42,6 @@ function setup() {
         dependencies={{
           ...dependencies,
           queryResolver,
-          urlManager: new UrlManagerImpl("", environment),
         }}
       >
         <StoreProvider store={store}>

@@ -12,6 +12,7 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   EnvironmentDetails,
@@ -19,7 +20,6 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -45,8 +45,6 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([environmentDetailsQueryManager])
   );
-
-  const urlManager = new UrlManagerImpl("", EnvironmentDetails.a.id);
 
   const haltEnvironmentManager = new HaltEnvironmentCommandManager(
     new BaseApiHelper(),
@@ -81,8 +79,8 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           queryResolver,
-          urlManager,
           commandResolver,
           environmentModifier: new EnvironmentModifierImpl(),
         }}

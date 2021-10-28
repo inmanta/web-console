@@ -32,7 +32,6 @@ import {
 } from "@/Data";
 import { ServiceInventory } from "./ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { Chart } from "./Components";
 
 function setup(service = Service.a) {
@@ -56,8 +55,6 @@ function setup(service = Service.a) {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
-
-  const urlManager = new UrlManagerImpl("", service.environment);
 
   const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
     apiHelper,
@@ -90,7 +87,6 @@ function setup(service = Service.a) {
         dependencies={{
           ...dependencies,
           queryResolver,
-          urlManager,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
         }}

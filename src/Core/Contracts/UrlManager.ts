@@ -4,4 +4,5 @@ export interface UrlManager {
   getVersionedResourceUrl(resourceId: string, version: string): string;
   getServerStatusUrl(): string;
   getDashboardUrl(environment: string): string;
+  getDocumentationLink(): string;
 }

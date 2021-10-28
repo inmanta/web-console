@@ -8,6 +8,7 @@ import {
   Event,
   DynamicQueryManagerResolver,
   InstantApiHelper,
+  dependencies,
 } from "@/Test";
 import { Events } from "./Events";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -17,7 +18,6 @@ import {
   EventsStateHelper,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { MemoryRouter } from "react-router";
 
 export default {
@@ -51,11 +51,10 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", InstanceLog.a.environment);
 
   return (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <Events service={Service.a} instanceId={service_instance_id} />
         </StoreProvider>

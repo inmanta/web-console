@@ -8,6 +8,7 @@ import {
   StaticScheduler,
   CompileReportsData,
   DeferredApiHelper,
+  dependencies,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -17,7 +18,6 @@ import {
   CompileReportsQueryManager,
   CompileReportsStateHelper,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { Page } from "./Page";
 
@@ -35,13 +35,17 @@ function setup() {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "environment");
+
   const routeManager = new PrimaryRouteManager("");
 
   const component = (
     <MemoryRouter>
       <DependencyProvider
-        dependencies={{ queryResolver, urlManager, routeManager }}
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          routeManager,
+        }}
       >
         <StoreProvider store={store}>
           <Page />

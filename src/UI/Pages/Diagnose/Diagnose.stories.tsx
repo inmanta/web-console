@@ -8,6 +8,7 @@ import {
   DynamicQueryManagerResolver,
   Diagnose,
   InstantApiHelper,
+  dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -16,7 +17,6 @@ import {
   DiagnosticsStateHelper,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 
 export default {
@@ -42,10 +42,9 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", environment);
 
   return (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+    <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
       <StoreProvider store={store}>
         <DiagnoseComponent
           service={Service.a}

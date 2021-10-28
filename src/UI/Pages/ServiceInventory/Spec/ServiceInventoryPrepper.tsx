@@ -27,7 +27,6 @@ import {
 } from "@/Data";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory/ServiceInventory";
 import { MemoryRouter } from "react-router-dom";
-import { UrlManagerImpl } from "@/UI/Utils";
 
 export interface Handles {
   component: React.ReactElement;
@@ -60,7 +59,6 @@ export class ServiceInventoryPrepper {
     const queryResolver = new QueryResolverImpl(
       new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
     );
-    const urlManager = new UrlManagerImpl("", service.environment);
 
     const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
       new BaseApiHelper(),
@@ -92,7 +90,6 @@ export class ServiceInventoryPrepper {
           dependencies={{
             ...dependencies,
             queryResolver,
-            urlManager,
             commandResolver,
             environmentModifier: new MockEnvironmentModifier(),
           }}

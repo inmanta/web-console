@@ -5,7 +5,6 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { dependencies, ServerStatus as TestServerStatus } from "@/Test";
 import { ServerStatus } from "@/Core";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { Navigation } from "./Navigation";
 
 function setup(
@@ -14,13 +13,10 @@ function setup(
 ) {
   dependencies.featureManager.setServerStatus(serverStatus);
   const routeManager = new PrimaryRouteManager("");
-  const urlManager = new UrlManagerImpl("", "env");
 
   const component = (
     <MemoryRouter initialEntries={initialEntries}>
-      <DependencyProvider
-        dependencies={{ ...dependencies, urlManager, routeManager }}
-      >
+      <DependencyProvider dependencies={{ ...dependencies, routeManager }}>
         <Navigation environment="env" />
       </DependencyProvider>
     </MemoryRouter>
