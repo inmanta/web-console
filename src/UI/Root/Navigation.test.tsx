@@ -3,22 +3,24 @@ import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Navigation } from "./Navigation";
-import { PrimaryFeatureManager } from "@/Data";
-import { ServerStatus as TestServerStatus } from "@/Test";
+import { dependencies, ServerStatus as TestServerStatus } from "@/Test";
 import { PrimaryRouteManager } from "..";
 import { ServerStatus } from "@/Core";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 function setup(
   initialEntries: string[] | undefined,
   serverStatus: ServerStatus
 ) {
-  const featureManager = new PrimaryFeatureManager();
-  featureManager.setServerStatus(serverStatus);
+  dependencies.featureManager.setServerStatus(serverStatus);
   const routeManager = new PrimaryRouteManager("");
+  const urlManager = new UrlManagerImpl("", "env");
 
   const component = (
     <MemoryRouter initialEntries={initialEntries}>
-      <DependencyProvider dependencies={{ featureManager, routeManager }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, urlManager, routeManager }}
+      >
         <Navigation environment="env" />
       </DependencyProvider>
     </MemoryRouter>

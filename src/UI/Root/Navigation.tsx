@@ -15,7 +15,8 @@ interface Group {
 export const Navigation: React.FC<{ environment: string }> = ({
   environment,
 }) => {
-  const { featureManager, routeManager } = useContext(DependencyContext);
+  const { featureManager, routeManager, urlManager } =
+    useContext(DependencyContext);
   const routeDict = routeManager.getRouteDictionary();
   const groups: Group[] = [
     ...(featureManager.isLsmEnabled()
@@ -23,7 +24,7 @@ export const Navigation: React.FC<{ environment: string }> = ({
       : []),
     orchestrationEngine(routeDict),
     resourceManager(routeDict),
-    otherSites(routeManager.getDashboardUrl(environment)),
+    otherSites(urlManager.getDashboardUrl(environment)),
   ];
   return (
     <Nav theme="dark">

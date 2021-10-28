@@ -1,11 +1,7 @@
 import { PrimaryFeatureManager } from "@/Data";
-import {
-  PrimaryRouteManager,
-  Dependencies,
-  EnvironmentModifierImpl,
-} from "@/UI";
+import { PrimaryRouteManager, EnvironmentModifierImpl } from "@/UI";
 
-export const dependencies: Partial<Dependencies> = {
+export const dependencies = {
   routeManager: new PrimaryRouteManager(""),
   featureManager: new PrimaryFeatureManager(),
   environmentModifier: new EnvironmentModifierImpl(),

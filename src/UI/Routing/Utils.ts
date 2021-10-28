@@ -1,20 +1,21 @@
 import { useContext, useEffect } from "react";
 import { matchPath, match } from "react-router-dom";
 import { useHistory, useLocation } from "react-router";
-import { Route, RouteParams } from "@/Core";
+import { Route, RouteManager, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { getRouteFromKind, allRoutes } from "./Route";
 import { Kind } from "./Kind";
 
 export const getLineageFromRoute = (
+  routeManager: RouteManager,
   route: Route,
   routes: Route[] = []
 ): Route[] => {
   if (route.parent) {
-    return getLineageFromRoute(getRouteFromKind(route.parent), [
-      route,
-      ...routes,
-    ]);
+    return getLineageFromRoute(
+      routeManager,
+      routeManager.getRoute(route.parent),
+      [route, ...routes]
+    );
   }
   return [route, ...routes];
 };
@@ -22,9 +23,10 @@ export const getLineageFromRoute = (
 type MatchedParams = Record<string, string>;
 
 export function getRouteWithParamsFromUrl(
+  routes: Route[],
   url: string
 ): [Route, MatchedParams] | undefined {
-  const routeMatchPairs = allRoutes.map((route) => [
+  const routeMatchPairs = routes.map((route) => [
     route,
     matchPath<MatchedParams>(url, { path: route.path, exact: true }),
   ]);

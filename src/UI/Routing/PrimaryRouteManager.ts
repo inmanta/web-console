@@ -24,18 +24,15 @@ export class PrimaryRouteManager implements RouteManager {
     };
   }
 
+  getRoutes(): Route[] {
+    return Object.values(this.routeDictionary);
+  }
+
   getRouteDictionary(): RouteDictionary {
     return this.routeDictionary;
   }
 
-  getDashboardUrl(environment: string): string {
-    return `${this.baseUrl.replace(
-      "/console",
-      "/dashboard"
-    )}/#!/environment/${environment}`;
-  }
-
-  private getRouteFromKind(kind: RouteKind): Route {
+  getRoute(kind: RouteKind): Route {
     switch (kind) {
       case "Catalog":
         return this.routeDictionary.Catalog;
@@ -69,7 +66,7 @@ export class PrimaryRouteManager implements RouteManager {
   }
 
   getUrl(kind: RouteKind, params: Params<typeof kind>): string {
-    const route = this.getRouteFromKind(kind);
+    const route = this.getRoute(kind);
     return generatePath(route.path, params);
   }
 }
