@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { CompileReportRow } from "@/Core";
 import { DateWithTooltip } from "@/UI/Components";
@@ -7,13 +7,14 @@ import { Button, Spinner } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { InfoCircleIcon } from "@patternfly/react-icons";
 import { Link } from "react-router-dom";
-import { getUrl } from "@/UI/Routing";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   row: CompileReportRow;
 }
 
 export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
+  const { routeManager } = useContext(DependencyContext);
   return (
     <StyledBody
       isExpanded={false}
@@ -39,7 +40,7 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
         <Td dataLabel={words("compileReports.columns.actions")}>
           <Link
             to={{
-              pathname: getUrl("CompileDetails", {
+              pathname: routeManager.getUrl("CompileDetails", {
                 id: row.id,
               }),
               search: location.search,

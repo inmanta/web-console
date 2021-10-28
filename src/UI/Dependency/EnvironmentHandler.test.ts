@@ -3,28 +3,39 @@ import { createMemoryHistory } from "history";
 import { EnvironmentHandlerImpl } from ".";
 import { RemoteData } from "@/Core";
 import { Project } from "@/Test";
+import { PrimaryRouteManager } from "@/UI/Routing";
+
+const routeManager = new PrimaryRouteManager("");
 
 test("EnvironmentHandler redirects to home page when no environment is selected", () => {
   const history = createMemoryHistory();
   const store = getStoreInstance();
 
-  const environmentHandler = new EnvironmentHandlerImpl(history, store);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    history,
+    store,
+    routeManager
+  );
   environmentHandler.setDefault(RemoteData.success(Project.list));
 
-  expect(history.location.pathname).toEqual("/console/");
+  expect(history.location.pathname).toEqual("/");
   expect(history.location.search).toEqual("");
 });
 
 test("EnvironmentHandler redirects to home page when the selected environment doesn't exist", () => {
   const history = createMemoryHistory({
-    initialEntries: ["/console/resources?env=doesnotexist"],
+    initialEntries: ["/resources?env=doesnotexist"],
   });
   const store = getStoreInstance();
 
-  const environmentHandler = new EnvironmentHandlerImpl(history, store);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    history,
+    store,
+    routeManager
+  );
   environmentHandler.setDefault(RemoteData.success(Project.list));
 
-  expect(history.location.pathname).toEqual("/console/");
+  expect(history.location.pathname).toEqual("/");
   expect(history.location.search).toEqual("");
 });
 
@@ -36,7 +47,11 @@ test("EnvironmentHandler updates environment correctly", () => {
   const [, project] = Project.list;
   const [env] = project.environments;
 
-  const environmentHandler = new EnvironmentHandlerImpl(history, store);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    history,
+    store,
+    routeManager
+  );
   environmentHandler.setDefault(RemoteData.success(Project.list));
   environmentHandler.set(project.id, env.id);
   expect(store.getState().projects.selectedEnvironmentId).toEqual(env.id);
@@ -50,7 +65,11 @@ test("EnvironmentHandler determines selected environment correctly", () => {
   const [project] = Project.list;
   const [env] = project.environments;
 
-  const environmentHandler = new EnvironmentHandlerImpl(history, store);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    history,
+    store,
+    routeManager
+  );
   // Default is loading
   expect(
     RemoteData.isLoading(environmentHandler.determineSelected())

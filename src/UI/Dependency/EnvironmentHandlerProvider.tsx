@@ -8,10 +8,14 @@ import React, { useContext, useEffect } from "react";
 import { useHistory } from "react-router";
 
 export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { queryResolver, routeManager } = useContext(DependencyContext);
   const history = useHistory();
   const store = useStore();
-  const environmentHandler = new EnvironmentHandlerImpl(history, store);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    history,
+    store,
+    routeManager
+  );
   const [data] = queryResolver.useOneTime<"GetProjects">({
     kind: "GetProjects",
   });

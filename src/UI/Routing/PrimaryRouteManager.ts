@@ -1,15 +1,14 @@
+import { generatePath } from "react-router-dom";
 import { RouteDictionary, RouteManager } from "@/Core";
-import { Route } from "./Route";
 import { paths } from "./Paths";
+import { Route } from "./Route";
+import { Kind } from "./Kind";
 
 export class PrimaryRouteManager implements RouteManager {
-  constructor(private readonly baseUrl: string) {}
+  private readonly routeDictionary: RouteDictionary;
 
-  getRoutes(): Route[] {
-    throw new Error("Method not implemented.");
-  }
-  getRouteDictionary(): RouteDictionary {
-    return {
+  constructor(private readonly baseUrl: string) {
+    this.routeDictionary = {
       Home: Home(this.baseUrl),
       CreateEnvironment: CreateEnvironment(this.baseUrl),
       Catalog: Catalog(this.baseUrl),
@@ -27,11 +26,53 @@ export class PrimaryRouteManager implements RouteManager {
     };
   }
 
+  getRouteDictionary(): RouteDictionary {
+    return this.routeDictionary;
+  }
+
   getDashboardUrl(environment: string): string {
     return `${this.baseUrl.replace(
       "/console",
       "/dashboard"
     )}/#!/environment/${environment}`;
+  }
+
+  private getRouteFromKind(kind: Kind): Route {
+    switch (kind) {
+      case "Catalog":
+        return this.routeDictionary.Catalog;
+      case "Inventory":
+        return this.routeDictionary.Inventory;
+      case "History":
+        return this.routeDictionary.History;
+      case "CreateInstance":
+        return this.routeDictionary.CreateInstance;
+      case "EditInstance":
+        return this.routeDictionary.EditInstance;
+      case "Diagnose":
+        return this.routeDictionary.Diagnose;
+      case "Events":
+        return this.routeDictionary.Events;
+      case "Resources":
+        return this.routeDictionary.Resources;
+      case "CompileReports":
+        return this.routeDictionary.CompileReports;
+      case "CompileDetails":
+        return this.routeDictionary.CompileDetails;
+      case "Home":
+        return this.routeDictionary.Home;
+      case "ResourceDetails":
+        return this.routeDictionary.ResourceDetails;
+      case "Settings":
+        return this.routeDictionary.Settings;
+      case "CreateEnvironment":
+        return this.routeDictionary.CreateEnvironment;
+    }
+  }
+
+  getUrl(kind: Kind, params: Params<typeof kind>): string {
+    const route = this.getRouteFromKind(kind);
+    return generatePath(route.path, params);
   }
 }
 
@@ -133,3 +174,24 @@ const Settings = (base: string): Route => ({
   path: `${base}${paths.Settings}`,
   label: "Settings",
 });
+
+interface ParamsManifest {
+  Catalog: undefined;
+  Inventory: { service: string };
+  CreateInstance: { service: string };
+  EditInstance: { service: string; instance: string };
+  History: { service: string; instance: string };
+  Events: { service: string; instance: string };
+  Diagnose: { service: string; instance: string };
+  Resources: undefined;
+  ResourceHistory: { resourceId: string };
+  ResourceLogs: { resourceId: string };
+  CompileReports: undefined;
+  CompileDetails: { id: string };
+  Home: undefined;
+  ResourceDetails: { resourceId: string };
+  Settings: undefined;
+  CreateEnvironment: undefined;
+}
+
+type Params<R extends Kind> = ParamsManifest[R];

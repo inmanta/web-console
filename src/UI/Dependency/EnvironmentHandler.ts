@@ -1,8 +1,12 @@
-import { EnvironmentModel, ProjectModel, RemoteData } from "@/Core";
+import {
+  EnvironmentModel,
+  ProjectModel,
+  RemoteData,
+  RouteManager,
+} from "@/Core";
 import { History } from "history";
 import { createContext } from "react";
 import { Store, useStoreState } from "@/Data";
-import { getUrl, Route } from "@/UI/Routing";
 
 export interface SelectedProjectAndEnvironment {
   project: ProjectModel;
@@ -43,13 +47,17 @@ export const EnvironmentHandlerContext = createContext<{
 export class EnvironmentHandlerImpl implements EnvironmentHandler {
   constructor(
     private readonly history: History,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly routeManager: RouteManager
   ) {}
   public set(projectId: string, environmentId: string): void {
     const params = new URLSearchParams(this.history.location.search);
     if (params.get("env") !== environmentId) {
       params.set("env", environmentId);
-      this.history.push(`${Route.Catalog.path}?${params}`);
+      this.history.push({
+        pathname: this.routeManager.getUrl("Catalog", undefined),
+        search: `?${params}`,
+      });
     }
     this.store.dispatch.projects.selectProjectAndEnvironment({
       project: projectId,
@@ -85,7 +93,10 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
   }
 
   private redirectToHomePage(): void {
-    this.history.push({ pathname: getUrl("Home", undefined), search: "" });
+    this.history.push({
+      pathname: this.routeManager.getUrl("Home", undefined),
+      search: "",
+    });
   }
 
   public getProjects(): RemoteData.Type<string, ProjectModel[]> {
