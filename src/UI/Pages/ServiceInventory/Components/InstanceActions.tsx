@@ -1,5 +1,4 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import {
   Button,
@@ -26,7 +25,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   deleteDisabled,
   diagnoseDisabled,
 }) => {
-  const location = useLocation();
   if (instance.state === "terminated") return null;
   return (
     <DescriptionList>
@@ -36,7 +34,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
             service: instance.service_entity,
             instance: instance.id,
           })}
-          search={location.search}
           isDisabled={editDisabled}
         >
           <ButtonWithCursorHandling
@@ -62,7 +59,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
             service: instance.service_entity,
             instance: instance.id,
           })}
-          search={location.search}
           isDisabled={diagnoseDisabled}
         >
           <ButtonWithCursorHandling
@@ -80,7 +76,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
             service: instance.service_entity,
             instance: instance.id,
           })}
-          search={location.search}
         >
           <Button isBlock>
             <HistoryIcon /> {words("inventory.statusTab.history")}
@@ -93,7 +88,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
             service: instance.service_entity,
             instance: instance.id,
           })}
-          search={location.search}
         >
           <Button isBlock variant="secondary">
             <PortIcon /> {words("inventory.statusTab.events")}
