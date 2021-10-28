@@ -84,7 +84,7 @@ test("ServiceInventory can show resources for instance", async () => {
           data: {
             data: [
               {
-                resource_id: "resource_id_1",
+                resource_id: "resource_id_1,v=1",
                 resource_state: "resource_state",
               },
             ],
@@ -122,7 +122,7 @@ test("ServiceInventory can show resources for instance", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Success" })
   ).toBeInTheDocument();
 
-  expect(screen.getByText("resource_id_1")).toBeInTheDocument();
+  expect(screen.getByText("resource_id_1,v=1")).toBeInTheDocument();
 });
 
 test("ServiceInventory shows service identity if it's defined", async () => {

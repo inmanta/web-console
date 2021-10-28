@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
   Dropdown,
+  DropdownItem,
   KebabToggle,
 } from "@patternfly/react-core";
 import { Failure } from "@/Core";
@@ -15,6 +16,9 @@ import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
 import { DropdownExternalLink } from "./ExternalLink";
 import { Pre } from "./Pre";
+import { Link } from "@/UI/Components/Link";
+import { getUrl } from "@/UI";
+import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 
 interface Props {
   resourceId: string;
@@ -25,11 +29,17 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
   const { urlManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems = [
-    <DropdownExternalLink
+    <Link
       key="resourceDetailsLink"
-      url={urlManager.getResourceUrl(resourceId)}
-      linkText={words("diagnose.links.resourceDetails")}
-    />,
+      pathname={getUrl("ResourceDetails", {
+        resourceId: getResourceIdFromResourceVersionId(resourceId),
+      })}
+      envOnly
+    >
+      <StyledLink style={{ color: "var(--pf-global--link--Color)" }}>
+        {words("diagnose.links.resourceDetails")}
+      </StyledLink>
+    </Link>,
     <DropdownExternalLink
       key="modelVersionLink"
       url={urlManager.getModelVersionUrl(failure.model_version.toString())}
@@ -64,4 +74,8 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
 
 const StyledCardTitle = styled(CardTitle)`
   ${greyText};
+`;
+
+const StyledLink = styled(DropdownItem)`
+  color: var(--pf-global--link--Color);
 `;
