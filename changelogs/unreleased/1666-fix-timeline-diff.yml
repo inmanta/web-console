@@ -1,0 +1,6 @@
+description: Fix compile timeline diff to always show the actual amount of seconds
+issue-nr: 1666
+change-type: patch
+destination-branches: [master, iso4]
+sections:
+  bugfix: "{{description}}"
