@@ -3,7 +3,7 @@ import { Story } from "@storybook/react/types-6-0";
 import {
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
-  InstantFetcher,
+  InstantApiHelper,
   MockCommandManager,
   MockEnvironmentModifier,
   Service,
@@ -33,7 +33,7 @@ const Template: Story<Props> = (args) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"GetInstanceResources">({
+        new InstantApiHelper({
           kind: "Success",
           data: { data: [] },
         }),

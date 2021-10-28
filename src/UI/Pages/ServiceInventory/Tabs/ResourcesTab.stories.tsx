@@ -3,9 +3,9 @@ import { StoreProvider } from "easy-peasy";
 import {
   StaticScheduler,
   Outcome,
-  InstantFetcher,
   InstanceResource,
   DynamicQueryManagerResolver,
+  InstantApiHelper,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -33,7 +33,7 @@ const Template: React.FC<{
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"GetInstanceResources">(outcome),
+        new InstantApiHelper(outcome),
         new InstanceResourcesStateHelper(store),
         new StaticScheduler(),
         "34a961ba-db3c-486e-8d85-1438d8e88909"

@@ -1,19 +1,19 @@
-import { Fetcher, StateHelper, Scheduler, EventParams } from "@/Core";
+import { StateHelper, Scheduler, EventParams, ApiHelper } from "@/Core";
 import {
-  ContinuousQueryManagerImpl,
   getPaginationHandlers,
+  PrimaryContinuousQueryManager,
 } from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
-export class EventsQueryManager extends ContinuousQueryManagerImpl<"GetInstanceEvents"> {
+export class EventsQueryManager extends PrimaryContinuousQueryManager<"GetInstanceEvents"> {
   constructor(
-    fetcher: Fetcher<"GetInstanceEvents">,
+    apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetInstanceEvents">,
     scheduler: Scheduler,
     environment: string
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
       ({ id }) => id,

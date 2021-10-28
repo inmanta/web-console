@@ -1,17 +1,17 @@
-import { KeyMaker, Fetcher, StateHelper, Scheduler } from "@/Core";
-import { ContinuousQueryManagerImpl } from "@/Data/Common";
+import { KeyMaker, StateHelper, Scheduler, ApiHelper } from "@/Core";
+import { PrimaryContinuousQueryManager } from "@/Data/Common";
 import { identity } from "lodash";
 
-export class ServiceQueryManager extends ContinuousQueryManagerImpl<"GetService"> {
+export class ServiceQueryManager extends PrimaryContinuousQueryManager<"GetService"> {
   constructor(
-    fetcher: Fetcher<"GetService">,
+    apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetService">,
     scheduler: Scheduler,
     keyMaker: KeyMaker<[string, string]>,
     environment: string
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
       ({ name }) => keyMaker.make([environment, name]),

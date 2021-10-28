@@ -11,7 +11,6 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
-  DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Project,
@@ -27,11 +26,10 @@ import { Page } from "./Page";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsFetcher = new DeferredFetcher<"GetProjects">();
   const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ProjectsQueryManager(projectsFetcher, projectsStateHelper),
+      new ProjectsQueryManager(apiHelper, projectsStateHelper),
     ])
   );
 
@@ -39,7 +37,7 @@ function setup() {
     new DynamicCommandManagerResolver([
       new CreateProjectCommandManager(
         apiHelper,
-        new ProjectsUpdater(projectsStateHelper, projectsFetcher)
+        new ProjectsUpdater(projectsStateHelper, apiHelper)
       ),
       new CreateEnvironmentCommandManager(apiHelper),
     ])
@@ -55,14 +53,14 @@ function setup() {
     </MemoryRouter>
   );
 
-  return { component, apiHelper, projectsFetcher };
+  return { component, apiHelper };
 }
 
 test("Given CreateEnvironmentForm When project and environment are not set Then the submit button is disabled", async () => {
-  const { component, projectsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  projectsFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: Project.filterable,
     })
@@ -71,11 +69,10 @@ test("Given CreateEnvironmentForm When project and environment are not set Then 
   expect(await screen.findByRole("button", { name: "submit" })).toBeDisabled();
 });
 
-test(`Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked
-      Then sends the correct request`, async () => {
-  const { component, apiHelper, projectsFetcher } = setup();
+test(`Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked Then sends the correct request`, async () => {
+  const { component, apiHelper } = setup();
   render(component);
-  projectsFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: Project.filterable,
     })
@@ -94,8 +91,7 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
 
   userEvent.click(await screen.findByRole("button", { name: "submit" }));
   expect(apiHelper.pendingRequests).toHaveLength(1);
-  const request = apiHelper.pendingRequests[0];
-  expect(request).toEqual({
+  expect(apiHelper.pendingRequests[0]).toEqual({
     method: "PUT",
     body: {
       name: "dev",
@@ -105,11 +101,10 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
   });
 });
 
-test(`Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set and submit is clicked 
-      Then sends the correct request`, async () => {
-  const { component, apiHelper, projectsFetcher } = setup();
+test(`Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set and submit is clicked Then sends the correct request`, async () => {
+  const { component, apiHelper } = setup();
   render(component);
-  projectsFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: Project.filterable,
     })
@@ -154,12 +149,11 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   });
 });
 
-test(`Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked 
-      Then sends the correct requests`, async () => {
-  const { component, apiHelper, projectsFetcher } = setup();
+test(`Given CreateEnvironmentForm When a new project and valid environment are set and submit is clicked Then sends the correct requests`, async () => {
+  const { component, apiHelper } = setup();
   render(component);
 
-  projectsFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: Project.filterable,
     })
@@ -183,12 +177,12 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
   await act(async () => {
     await apiHelper.resolve(Maybe.none());
   });
-  expect(apiHelper.resolvedRequests).toHaveLength(1);
+  expect(apiHelper.resolvedRequests).toHaveLength(2);
   const updatedProjects = [
     ...Project.filterable,
     { name: "new-project", id: "proj-id-new", environments: [] },
   ];
-  projectsFetcher.resolve(Either.right({ data: updatedProjects }));
+  apiHelper.resolve(Either.right({ data: updatedProjects }));
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   userEvent.clear(textBox);
@@ -210,9 +204,9 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
 });
 
 test("Given CreateEnvironmentForm When creating a new project is not successful Then shows error message", async () => {
-  const { component, apiHelper, projectsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
-  projectsFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: Project.filterable,
     })
@@ -251,9 +245,9 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
 
 test(`Given CreateEnvironmentForm When an existing project and invalid environment are set and submit is clicked 
       Then shows the error message`, async () => {
-  const { component, apiHelper, projectsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
-  projectsFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: Project.filterable,
     })

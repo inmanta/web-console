@@ -3,10 +3,10 @@ import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import {
-  DeferredFetcher,
   DynamicQueryManagerResolver,
   StaticScheduler,
   CompileReportsData,
+  DeferredApiHelper,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -23,7 +23,7 @@ import { MemoryRouter } from "react-router-dom";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"GetCompileReports">();
+  const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new CompileReportsQueryManager(
@@ -156,7 +156,7 @@ test("When using the result filter with the Successful option then the successfu
   const option = await screen.findByRole("option", { name: "Successful" });
   await userEvent.click(option);
 
-  expect(apiHelper.getInvocations()[1][1]).toEqual(
+  expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=true`
   );
 
@@ -202,7 +202,7 @@ test("When using the status filter with the In Progress opiton then the compile 
   const option = await screen.findByRole("option", { name: "In Progress" });
   await userEvent.click(option);
 
-  expect(apiHelper.getInvocations()[1][1]).toEqual(
+  expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.completed=false&filter.started=true`
   );
 
@@ -251,7 +251,7 @@ it("When using the Date filter then the compile reports within the range selecte
 
   userEvent.click(await screen.findByLabelText("Apply date filter"));
 
-  expect(apiHelper.getInvocations()[1][1]).toMatch(
+  expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.requested=ge%3A2021-09-`
   );
 

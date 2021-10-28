@@ -2,10 +2,10 @@ import React from "react";
 import { InstanceLog as InstanceLogModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
 import {
-  InstantFetcher,
   InstanceLog,
   Service,
   DynamicQueryManagerResolver,
+  InstantApiHelper,
 } from "@/Test";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -27,7 +27,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceLogsQueryManager(
-        new InstantFetcher<"GetInstanceLogs">({
+        new InstantApiHelper({
           kind: "Success",
           data: { data: logs },
         }),

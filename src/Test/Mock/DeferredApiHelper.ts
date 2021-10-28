@@ -35,15 +35,13 @@ export class DeferredApiHelper implements ApiHelper {
   }
 
   resolve(data: unknown): Promise<unknown> {
-    if (this._pendingRequests.length <= 0) {
+    const pendingRequest = this._pendingRequests.shift();
+    if (typeof pendingRequest === "undefined") {
       throw new Error("No available invocations");
     }
-    if (this._pendingRequests.length >= 2) {
-      throw new Error("2 or more invocations");
-    }
-    const { resolve, promise, request } = this._pendingRequests[0];
+
+    const { resolve, promise, request } = pendingRequest;
     this.resolvedRequests.push(request);
-    this._pendingRequests.pop();
     resolve(data);
     return promise;
   }

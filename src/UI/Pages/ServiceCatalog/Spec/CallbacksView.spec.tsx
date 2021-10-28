@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { MemoryRouter } from "react-router";
 import {
-  DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Service,
@@ -28,11 +27,10 @@ import {
 function setup() {
   const store = getStoreInstance();
   const environment = Service.a.environment;
-
-  const callbacksFetcher = new DeferredFetcher<"GetCallbacks">();
+  const apiHelper = new DeferredApiHelper();
   const callbacksStateHelper = new CallbacksStateHelper(store, environment);
   const callbacksQueryManager = new CallbacksQueryManager(
-    callbacksFetcher,
+    apiHelper,
     callbacksStateHelper,
     environment
   );
@@ -41,10 +39,9 @@ function setup() {
     new DynamicQueryManagerResolver([callbacksQueryManager])
   );
 
-  const apiHelper = new DeferredApiHelper();
   const callbacksUpdater = new CallbacksUpdater(
     new CallbacksStateHelper(store, environment),
-    callbacksFetcher,
+    apiHelper,
     environment
   );
   const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
@@ -78,17 +75,16 @@ function setup() {
 
   return {
     component,
-    callbacksFetcher,
     apiHelper,
   };
 }
 
 test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is deleted", async () => {
-  const { component, callbacksFetcher, apiHelper } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
   await act(async () => {
-    callbacksFetcher.resolve(Either.right({ data: Callback.list }));
+    apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 
   expect(
@@ -114,7 +110,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   const [, ...rest] = Callback.list;
 
   await act(async () => {
-    callbacksFetcher.resolve(Either.right({ data: rest }));
+    apiHelper.resolve(Either.right({ data: rest }));
   });
 
   expect(
@@ -123,11 +119,11 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
 });
 
 test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback is created", async () => {
-  const { component, callbacksFetcher, apiHelper } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
   await act(async () => {
-    callbacksFetcher.resolve(Either.right({ data: Callback.list }));
+    apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 
   expect(
@@ -169,7 +165,7 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   });
 
   await act(async () => {
-    await callbacksFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [...Callback.list, { ...Callback.a, callback_id: "1234" }],
       })

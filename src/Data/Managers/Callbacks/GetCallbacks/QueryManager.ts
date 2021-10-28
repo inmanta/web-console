@@ -1,16 +1,16 @@
-import { Fetcher, StateHelper } from "@/Core";
-import { OneTimeQueryManagerImpl } from "@/Data/Common";
+import { ApiHelper, StateHelper } from "@/Core";
+import { PrimaryOneTimeQueryManager } from "@/Data/Common";
 import { identity } from "lodash";
 import { getUrl } from "@/Data/Managers/Callbacks/getUrl";
 
-export class CallbacksQueryManager extends OneTimeQueryManagerImpl<"GetCallbacks"> {
+export class CallbacksQueryManager extends PrimaryOneTimeQueryManager<"GetCallbacks"> {
   constructor(
-    fetcher: Fetcher<"GetCallbacks">,
+    apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetCallbacks">,
     environment: string
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       () => [environment],
       "GetCallbacks",

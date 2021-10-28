@@ -4,14 +4,13 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 import {
-  DeferredFetcher,
+  DeferredApiHelper,
   DynamicCommandManagerResolver,
   MockFeatureManger,
   Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
-  BaseApiHelper,
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
   getStoreInstance,
@@ -22,14 +21,13 @@ import {
 function setup() {
   const store = getStoreInstance();
   const featureManager = new MockFeatureManger();
-  const apiHelper = new BaseApiHelper();
-  const projectsFetcher = new DeferredFetcher<"GetProjects">();
+  const apiHelper = new DeferredApiHelper();
   const projectsStateHelper = new ProjectsStateHelper(store);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new DeleteEnvironmentCommandManager(
         apiHelper,
-        new ProjectsUpdater(projectsStateHelper, projectsFetcher)
+        new ProjectsUpdater(projectsStateHelper, apiHelper)
       ),
     ])
   );

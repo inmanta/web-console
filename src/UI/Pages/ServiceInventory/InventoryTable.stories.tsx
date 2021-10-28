@@ -3,7 +3,7 @@ import { Story } from "@storybook/react/types-6-0";
 import { InventoryTable } from "./InventoryTable";
 import {
   DynamicQueryManagerResolver,
-  InstantFetcher,
+  InstantApiHelper,
   Row,
   StaticScheduler,
   tablePresenter,
@@ -28,7 +28,7 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"GetInstanceResources">({
+        new InstantApiHelper({
           kind: "Success",
           data: { data: [] },
         }),

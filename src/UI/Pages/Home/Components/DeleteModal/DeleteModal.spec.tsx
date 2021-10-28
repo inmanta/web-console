@@ -5,7 +5,6 @@ import { DependencyProvider } from "@/UI";
 import {
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
-  FetcherImpl,
   getStoreInstance,
   ProjectsQueryManager,
   ProjectsStateHelper,
@@ -24,11 +23,10 @@ import { Either, Maybe } from "@/Core";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsFetcher = new FetcherImpl<"GetProjects">(apiHelper);
   const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ProjectsQueryManager(projectsFetcher, projectsStateHelper),
+      new ProjectsQueryManager(apiHelper, projectsStateHelper),
     ])
   );
 
@@ -36,7 +34,7 @@ function setup() {
     new DynamicCommandManagerResolver([
       new DeleteEnvironmentCommandManager(
         apiHelper,
-        new ProjectsUpdater(projectsStateHelper, projectsFetcher)
+        new ProjectsUpdater(projectsStateHelper, apiHelper)
       ),
     ])
   );
