@@ -16,6 +16,7 @@ import {
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
 import { ResourcesTab } from "./ResourcesTab";
+import { MemoryRouter } from "react-router";
 
 function setup() {
   const store = getStoreInstance();
@@ -37,17 +38,19 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <ResourcesTab
-          serviceInstanceIdentifier={{
-            id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-            service_entity: "vlan-assignment",
-            version: 4,
-          }}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+        <StoreProvider store={store}>
+          <ResourcesTab
+            serviceInstanceIdentifier={{
+              id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+              service_entity: "vlan-assignment",
+              version: 4,
+            }}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };
@@ -93,7 +96,7 @@ test("ResourcesView shows success table", async () => {
 
   apiHelper.resolve(
     Either.right({
-      data: [{ resource_id: "abc123", resource_state: "deployed" }],
+      data: [{ resource_id: "abc123,v=3", resource_state: "deployed" }],
     })
   );
 
@@ -120,7 +123,7 @@ test("ResourcesView shows updated table", async () => {
 
   apiHelper.resolve(
     Either.right({
-      data: [{ resource_id: "abc123", resource_state: "deployed" }],
+      data: [{ resource_id: "abc123,v=4", resource_state: "deployed" }],
     })
   );
 

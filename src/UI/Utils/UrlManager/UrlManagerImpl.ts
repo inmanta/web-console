@@ -1,7 +1,6 @@
 import { Maybe, UrlManager } from "@/Core";
 
 export class UrlManagerImpl implements UrlManager {
-  private readonly versionPrefixLength = 3;
   private environment: Maybe.Type<string> = Maybe.none();
 
   constructor(private readonly baseUrl: string, environment?: string) {
@@ -24,20 +23,6 @@ export class UrlManagerImpl implements UrlManager {
     }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}`;
   }
 
-  getResourceUrl(resourceId: string): string {
-    const indexOfVersionSeparator = resourceId.lastIndexOf(",");
-    const resourceName = resourceId.substring(0, indexOfVersionSeparator);
-    const version = resourceId.substring(
-      indexOfVersionSeparator + this.versionPrefixLength,
-      resourceId.length
-    );
-
-    return `${
-      this.baseUrl
-    }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}/${encodeURI(
-      resourceName
-    ).replace(/\//g, "~2F")}`;
-  }
   getVersionedResourceUrl(resourceId: string, version: string): string {
     return `${
       this.baseUrl
