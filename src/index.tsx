@@ -21,7 +21,7 @@ import {
   PrimaryFeatureManager,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
-import { PrimaryBaseUrlFinder, PrimaryRouteManager, Route } from "@/UI/Routing";
+import { PrimaryBaseUrlManager, PrimaryRouteManager } from "@/UI/Routing";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -41,27 +41,22 @@ if (externalKeycloakConf) {
   keycloak = Keycloak(customKeycloakConf);
 }
 
-const store = getStoreInstance();
-const baseUrl = process.env.API_BASEURL
-  ? process.env.API_BASEURL
-  : `${Route.BASE_URL.replace("/console", "")}`;
-const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
+const STORE = getStoreInstance();
+const baseUrlManager = new PrimaryBaseUrlManager(location.pathname);
+const CONSOLE_BASE_URL = baseUrlManager.getConsoleBaseUrl();
+const BASE_URL = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+const routeManager = new PrimaryRouteManager(CONSOLE_BASE_URL);
+const apiHelper = new BaseApiHelper(BASE_URL, keycloak);
 const queryResolver = new QueryResolverImpl(
-  new QueryManagerResolver(store, baseApiHelper)
+  new QueryManagerResolver(STORE, apiHelper)
 );
 const commandResolver = new CommandResolverImpl(
-  new CommandManagerResolver(
-    store,
-    baseApiHelper,
-    new KeycloakAuthHelper(keycloak)
-  )
+  new CommandManagerResolver(STORE, apiHelper, new KeycloakAuthHelper(keycloak))
 );
-const urlManager = new UrlManagerImpl(baseUrl);
-const fileFetcher = new FileFetcherImpl(baseApiHelper);
+const urlManager = new UrlManagerImpl(BASE_URL);
+const fileFetcher = new FileFetcherImpl(apiHelper);
 const environmentModifier = new EnvironmentModifierImpl();
 const featureManager = new PrimaryFeatureManager();
-const BASE_URL = new PrimaryBaseUrlFinder().getUrl(location.pathname);
-const routeManager = new PrimaryRouteManager(BASE_URL);
 
 ReactDOM.render(
   <DependencyProvider
@@ -75,7 +70,7 @@ ReactDOM.render(
       routeManager,
     }}
   >
-    <StoreProvider store={store}>
+    <StoreProvider store={STORE}>
       <Router>
         <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
       </Router>

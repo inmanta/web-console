@@ -1,8 +1,10 @@
-import { PrimaryBaseUrlFinder } from "./PrimaryBaseUrlFinder";
+import { PrimaryBaseUrlManager } from "./PrimaryBaseUrlManager";
 import { paths } from "./Paths";
 import { Kind } from "./Kind";
 
-export const BASE_URL = new PrimaryBaseUrlFinder().getUrl(location.pathname);
+export const BASE_URL = new PrimaryBaseUrlManager(
+  location.pathname
+).getConsoleBaseUrl();
 
 interface ParamsManifest {
   Catalog: undefined;

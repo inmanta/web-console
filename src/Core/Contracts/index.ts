@@ -1,6 +1,6 @@
 export * from "./ApiHelper";
 export * from "./AuthHelper";
-export * from "./BaseUrlFinder";
+export * from "./BaseUrlManager";
 export * from "./CommandManager";
 export * from "./CommandResolver";
 export * from "./ConfigFinalizer";
