@@ -2,7 +2,7 @@ import React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
-  DeferredFetcher,
+  DeferredApiHelper,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Service,
@@ -25,10 +25,10 @@ import { MemoryRouter } from "react-router-dom";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const servicesFetcher = new DeferredFetcher<"GetServices">();
+  const apiHelper = new DeferredApiHelper();
 
   const servicesHelper = new ServicesQueryManager(
-    servicesFetcher,
+    apiHelper,
     new ServicesStateHelper(store, Service.a.environment),
     scheduler,
     Service.a.environment
@@ -57,20 +57,20 @@ function setup() {
 
   return {
     component,
-    servicesFetcher,
+    apiHelper,
     scheduler,
   };
 }
 
 test("ServiceCatalog shows updated services", async () => {
-  const { component, servicesFetcher, scheduler } = setup();
+  const { component, apiHelper, scheduler } = setup();
   render(component);
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
-  servicesFetcher.resolve(Either.right({ data: [] }));
+  apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Empty" })
@@ -78,7 +78,7 @@ test("ServiceCatalog shows updated services", async () => {
 
   scheduler.executeAll();
 
-  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+  apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
@@ -86,14 +86,14 @@ test("ServiceCatalog shows updated services", async () => {
 });
 
 test("ServiceCatalog shows updated empty", async () => {
-  const { component, servicesFetcher, scheduler } = setup();
+  const { component, apiHelper, scheduler } = setup();
   render(component);
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
-  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+  apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
@@ -101,7 +101,7 @@ test("ServiceCatalog shows updated empty", async () => {
 
   scheduler.executeAll();
 
-  servicesFetcher.resolve(Either.right({ data: [] }));
+  apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Empty" })
@@ -109,14 +109,14 @@ test("ServiceCatalog shows updated empty", async () => {
 });
 
 test("ServiceCatalog removes service after deletion", async () => {
-  const { component, servicesFetcher, scheduler } = setup();
+  const { component, apiHelper, scheduler } = setup();
   render(component);
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
-  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+  apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Success" })
@@ -132,7 +132,7 @@ test("ServiceCatalog removes service after deletion", async () => {
 
   scheduler.executeAll();
 
-  servicesFetcher.resolve(Either.right({ data: [] }));
+  apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Empty" })

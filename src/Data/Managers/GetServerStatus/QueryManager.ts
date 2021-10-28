@@ -1,14 +1,14 @@
-import { Fetcher, StateHelper, Query, RemoteData } from "@/Core";
-import { OneTimeQueryManagerImpl } from "@/Data/Common";
+import { StateHelper, Query, RemoteData, ApiHelper } from "@/Core";
+import { PrimaryOneTimeQueryManager } from "@/Data/Common";
 import { identity } from "lodash";
 
-export class GetServerStatusQueryManager extends OneTimeQueryManagerImpl<"GetServerStatus"> {
+export class GetServerStatusQueryManager extends PrimaryOneTimeQueryManager<"GetServerStatus"> {
   constructor(
-    fetcher: Fetcher<"GetServerStatus">,
+    apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetServerStatus">
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       () => [],
       "GetServerStatus",
@@ -23,7 +23,7 @@ export class GetServerStatusQueryManager extends OneTimeQueryManagerImpl<"GetSer
     url: string
   ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(await this.fetcher.getRootData(url)),
+      RemoteData.fromEither(await this.apiHelper.getWithoutEnvironment(url)),
       query
     );
   }

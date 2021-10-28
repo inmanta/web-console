@@ -15,7 +15,6 @@ import {
   HaltEnvironmentCommandManager,
   ResumeEnvironmentCommandManager,
   DeleteCallbackCommandManager,
-  FetcherImpl,
   CallbacksStateHelper,
   CallbacksUpdater,
   CreateCallbackCommandManager,
@@ -38,7 +37,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
 
   constructor(
     private readonly store: Store,
-    private readonly baseApiHelper: BaseApiHelper,
+    private readonly apiHelper: BaseApiHelper,
     private readonly authHelper: AuthHelper
   ) {
     this.managers = this.getIndependentManagers();
@@ -58,20 +57,14 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private getIndependentManagers(): CommandManager[] {
     return [
       new DeleteEnvironmentCommandManager(
-        this.baseApiHelper,
-        new ProjectsUpdater(
-          new ProjectsStateHelper(this.store),
-          new FetcherImpl<"GetProjects">(this.baseApiHelper)
-        )
+        this.apiHelper,
+        new ProjectsUpdater(new ProjectsStateHelper(this.store), this.apiHelper)
       ),
       new CreateProjectCommandManager(
-        this.baseApiHelper,
-        new ProjectsUpdater(
-          new ProjectsStateHelper(this.store),
-          new FetcherImpl<"GetProjects">(this.baseApiHelper)
-        )
+        this.apiHelper,
+        new ProjectsUpdater(new ProjectsStateHelper(this.store), this.apiHelper)
       ),
-      new CreateEnvironmentCommandManager(this.baseApiHelper),
+      new CreateEnvironmentCommandManager(this.apiHelper),
     ];
   }
 
@@ -81,91 +74,91 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       environment
     );
     const environmentSettingUpdater = new EnvironmentSettingUpdater(
-      this.baseApiHelper,
+      this.apiHelper,
       new GetEnvironmentSettingStateHelper(this.store, environment),
       environment
     );
     return [
       new ServiceConfigCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         new ServiceConfigStateHelper(this.store),
         environment
       ),
       new InstanceConfigCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         new InstanceConfigStateHelper(this.store),
         environment
       ),
       new CreateInstanceCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         new AttributeResultConverterImpl(),
         environment
       ),
       new TriggerInstanceUpdateCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         new AttributeResultConverterImpl(),
         environment
       ),
-      new DeleteInstanceCommandManager(this.baseApiHelper, environment),
-      new DeleteServiceCommandManager(this.baseApiHelper, environment),
+      new DeleteInstanceCommandManager(this.apiHelper, environment),
+      new DeleteServiceCommandManager(this.apiHelper, environment),
       new TriggerSetStateCommandManager(
         this.authHelper,
-        this.baseApiHelper,
+        this.apiHelper,
         environment
       ),
       new HaltEnvironmentCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          new FetcherImpl<"GetEnvironmentDetails">(this.baseApiHelper),
+          this.apiHelper,
           environment
         ),
         environment
       ),
       new ResumeEnvironmentCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          new FetcherImpl<"GetEnvironmentDetails">(this.baseApiHelper),
+          this.apiHelper,
           environment
         ),
         environment
       ),
       new DeleteCallbackCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         new CallbacksUpdater(
           new CallbacksStateHelper(this.store, environment),
-          new FetcherImpl<"GetCallbacks">(this.baseApiHelper),
+          this.apiHelper,
           environment
         ),
         environment
       ),
       new CreateCallbackCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         new CallbacksUpdater(
           new CallbacksStateHelper(this.store, environment),
-          new FetcherImpl<"GetCallbacks">(this.baseApiHelper),
+          this.apiHelper,
           environment
         ),
         environment
       ),
       new ModifyEnvironmentCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         new ProjectsUpdater(
           new ProjectsStateHelper(this.store),
-          new FetcherImpl<"GetProjects">(this.baseApiHelper)
+          this.apiHelper
         ),
         environment
       ),
       new UpdateEnvironmentSettingCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         environmentSettingUpdater,
         environment
       ),
       new ResetEnvironmentSettingCommandManager(
-        this.baseApiHelper,
+        this.apiHelper,
         environmentSettingUpdater,
         environment
       ),

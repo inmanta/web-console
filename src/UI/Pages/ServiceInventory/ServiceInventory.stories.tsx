@@ -4,8 +4,6 @@ import { MemoryRouter } from "react-router-dom";
 import {
   Service,
   ServiceInstance,
-  InstanceResource,
-  InstantFetcher,
   Pagination,
   StaticScheduler,
   DynamicQueryManagerResolver,
@@ -13,6 +11,7 @@ import {
   DynamicCommandManagerResolver,
   MockEnvironmentModifier,
   MockCommandManager,
+  DeferredApiHelper,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -34,6 +33,7 @@ export default {
 export const Basic: React.FC = () => {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
+  const apiHelper = new DeferredApiHelper();
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     new InstantApiHelper({
       kind: "Success",
@@ -47,13 +47,9 @@ export const Basic: React.FC = () => {
     scheduler,
     Service.a.environment
   );
-  const resourcesFetcher = new InstantFetcher<"GetInstanceResources">({
-    kind: "Success",
-    data: { data: InstanceResource.listB },
-  });
 
   const resourcesHelper = new InstanceResourcesQueryManager(
-    resourcesFetcher,
+    apiHelper,
     new InstanceResourcesStateHelper(store),
     scheduler,
     Service.a.environment

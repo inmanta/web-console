@@ -2,9 +2,9 @@ import {
   OneTimeQueryManager,
   Query,
   RemoteData,
-  Fetcher,
   StateHelper,
   ConfigFinalizer,
+  ApiHelper,
 } from "@/Core";
 import { useEffect } from "react";
 
@@ -17,7 +17,7 @@ export class ServiceConfigQueryManager
   implements OneTimeQueryManager<"GetServiceConfig">
 {
   constructor(
-    private readonly fetcher: Fetcher<"GetServiceConfig">,
+    private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelper<"GetServiceConfig">,
     private readonly configFinalizer: ConfigFinalizer<"GetServiceConfig">,
     private readonly environment: string
@@ -39,7 +39,7 @@ export class ServiceConfigQueryManager
     url: string
   ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
+      RemoteData.fromEither(await this.apiHelper.get(url, this.environment)),
       query
     );
   }

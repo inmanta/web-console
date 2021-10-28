@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import {
   DynamicQueryManagerResolver,
-  InstantFetcher,
+  InstantApiHelper,
   Service,
   ServiceInstance,
 } from "@/Test";
@@ -21,7 +21,7 @@ it("ServiceInstanceHistory renders", async () => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceLogsQueryManager(
-        new InstantFetcher<"GetInstanceLogs">({
+        new InstantApiHelper({
           kind: "Success",
           data: { data: [] },
         }),

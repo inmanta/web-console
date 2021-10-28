@@ -2,12 +2,12 @@ import React from "react";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { InventoryTable } from "./InventoryTable";
 import {
-  InstantFetcher,
   Row,
   tablePresenter,
   tablePresenterWithIdentity,
   StaticScheduler,
   DynamicQueryManagerResolver,
+  InstantApiHelper,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { StoreProvider } from "easy-peasy";
@@ -31,7 +31,7 @@ test("InventoryTable can be expanded", async () => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"GetInstanceResources">({
+        new InstantApiHelper({
           kind: "Success",
           data: {
             data: [
@@ -79,7 +79,7 @@ test("ServiceInventory can show resources for instance", async () => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"GetInstanceResources">({
+        new InstantApiHelper({
           kind: "Success",
           data: {
             data: [

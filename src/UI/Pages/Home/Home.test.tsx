@@ -13,7 +13,6 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
-  DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   MockFeatureManger,
@@ -28,18 +27,17 @@ function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
-  const projectsFetcher = new DeferredFetcher<"GetProjects">();
   const projectsStateHelper = new ProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ProjectsQueryManager(projectsFetcher, projectsStateHelper),
+      new ProjectsQueryManager(apiHelper, projectsStateHelper),
     ])
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new DeleteEnvironmentCommandManager(
         apiHelper,
-        new ProjectsUpdater(projectsStateHelper, projectsFetcher)
+        new ProjectsUpdater(projectsStateHelper, apiHelper)
       ),
     ])
   );
@@ -57,18 +55,18 @@ function setup() {
     </MemoryRouter>
   );
 
-  return { component, projectsFetcher, scheduler };
+  return { component, apiHelper, scheduler };
 }
 
 test("Home view shows failed table", async () => {
-  const { component, projectsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "Overview-Loading" })
   ).toBeInTheDocument();
 
-  projectsFetcher.resolve(Either.left("error"));
+  apiHelper.resolve(Either.left("error"));
 
   expect(
     await screen.findByRole("generic", { name: "Overview-Failed" })
@@ -76,14 +74,14 @@ test("Home view shows failed table", async () => {
 });
 
 test("Home View shows success table", async () => {
-  const { component, projectsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "Overview-Loading" })
   ).toBeInTheDocument();
 
-  projectsFetcher.resolve(
+  apiHelper.resolve(
     Either.right({
       data: Project.filterable,
     })

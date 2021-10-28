@@ -2,12 +2,12 @@ import React from "react";
 import { RawDiagnostics } from "@/Core";
 import { StoreProvider } from "easy-peasy";
 import {
-  InstantFetcher,
   InstanceLog,
   Service,
   StaticScheduler,
   DynamicQueryManagerResolver,
   Diagnose,
+  InstantApiHelper,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -32,7 +32,7 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new DiagnosticsQueryManager(
-        new InstantFetcher<"GetDiagnostics">({
+        new InstantApiHelper({
           kind: "Success",
           data: { data: diagnostics },
         }),

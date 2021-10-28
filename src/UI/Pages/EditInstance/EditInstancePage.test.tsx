@@ -2,13 +2,13 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
-  DeferredFetcher,
   DynamicQueryManagerResolver,
   Service,
   StaticScheduler,
   ServiceInstance,
   MockEnvironmentModifier,
   DynamicCommandManagerResolver,
+  DeferredApiHelper,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -29,7 +29,7 @@ import userEvent from "@testing-library/user-event";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"GetServiceInstance">();
+  const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new ServiceInstanceQueryManager(

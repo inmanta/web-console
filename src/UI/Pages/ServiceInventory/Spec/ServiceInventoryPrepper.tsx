@@ -3,7 +3,6 @@ import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredApiHelper,
-  DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   MockEnvironmentModifier,
@@ -33,7 +32,6 @@ export interface Handles {
   component: React.ReactElement;
   scheduler: SchedulerImpl;
   apiHelper: DeferredApiHelper;
-  resourcesFetcher: DeferredFetcher<"GetInstanceResources">;
 }
 
 export class ServiceInventoryPrepper {
@@ -51,9 +49,8 @@ export class ServiceInventoryPrepper {
       service.environment
     );
 
-    const resourcesFetcher = new DeferredFetcher<"GetInstanceResources">();
     const resourcesHelper = new InstanceResourcesQueryManager(
-      resourcesFetcher,
+      apiHelper,
       new InstanceResourcesStateHelper(store),
       scheduler,
       service.environment
@@ -105,6 +102,6 @@ export class ServiceInventoryPrepper {
       </MemoryRouter>
     );
 
-    return { component, scheduler, apiHelper, resourcesFetcher };
+    return { component, scheduler, apiHelper };
   }
 }

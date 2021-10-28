@@ -3,7 +3,6 @@ import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredApiHelper,
-  DeferredFetcher,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   MockEnvironmentModifier,
@@ -35,18 +34,16 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const servicesFetcher = new DeferredFetcher<"GetServices">();
 
   const servicesHelper = new ServicesQueryManager(
-    servicesFetcher,
+    apiHelper,
     new ServicesStateHelper(store, Service.a.environment),
     scheduler,
     Service.a.environment
   );
-  const serviceConfigFetcher = new DeferredFetcher<"GetServiceConfig">();
   const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
   const serviceConfigQueryManager = new ServiceConfigQueryManager(
-    serviceConfigFetcher,
+    apiHelper,
     new ServiceConfigStateHelper(store),
     new ServiceConfigFinalizer(
       new ServiceStateHelper(
@@ -98,17 +95,16 @@ function setup() {
 
   return {
     component,
-    servicesFetcher,
-    serviceConfigFetcher,
+    apiHelper,
     scheduler,
   };
 }
 
 test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async () => {
-  const { component, servicesFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+  apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   const details = await screen.findByRole("button", {
     name: `${Service.a.name} Details`,
@@ -122,10 +118,10 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
 });
 
 test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
-  const { component, servicesFetcher, serviceConfigFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+  apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   const details = await screen.findByRole("button", {
     name: `${Service.a.name} Details`,
@@ -137,7 +133,7 @@ test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", a
     userEvent.click(configButton);
   });
 
-  serviceConfigFetcher.resolve(Either.right({ data: {} }));
+  apiHelper.resolve(Either.right({ data: {} }));
 
   expect(
     await screen.findByRole("generic", { name: "SettingsList" })

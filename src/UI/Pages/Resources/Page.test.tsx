@@ -2,7 +2,7 @@ import React from "react";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
-  DeferredFetcher,
+  DeferredApiHelper,
   DynamicQueryManagerResolver,
   Resource,
   StaticScheduler,
@@ -23,13 +23,12 @@ import { MemoryRouter } from "react-router-dom";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const resourcesApiHelper = new DeferredFetcher<"GetResources">();
-  const resourceDetailsFetcher = new DeferredFetcher<"GetResourceDetails">();
+  const apiHelper = new DeferredApiHelper();
   const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new ResourcesQueryManager(
-        resourcesApiHelper,
+        apiHelper,
         new ResourcesStateHelper(store, environment),
         scheduler,
         environment
@@ -52,18 +51,18 @@ function setup() {
     </MemoryRouter>
   );
 
-  return { component, resourcesApiHelper, scheduler, resourceDetailsFetcher };
+  return { component, apiHelper, scheduler };
 }
 
 test("ResourcesView shows empty table", async () => {
-  const { component, resourcesApiHelper } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  resourcesApiHelper.resolve(
+  apiHelper.resolve(
     Either.right({
       data: [],
       metadata: { total: 0, before: 0, after: 0, page_size: 10 },
@@ -77,14 +76,14 @@ test("ResourcesView shows empty table", async () => {
 });
 
 test("ResourcesView shows failed table", async () => {
-  const { component, resourcesApiHelper } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  resourcesApiHelper.resolve(Either.left("error"));
+  apiHelper.resolve(Either.left("error"));
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Failed" })
@@ -92,14 +91,14 @@ test("ResourcesView shows failed table", async () => {
 });
 
 test("ResourcesView shows success table", async () => {
-  const { component, resourcesApiHelper } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  resourcesApiHelper.resolve(Either.right(Resource.response));
+  apiHelper.resolve(Either.right(Resource.response));
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
@@ -107,10 +106,10 @@ test("ResourcesView shows success table", async () => {
 });
 
 test("ResourcesView shows next page of resources", async () => {
-  const { component, resourcesApiHelper } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  resourcesApiHelper.resolve(
+  apiHelper.resolve(
     Either.right({
       data: Resource.response.data.slice(0, 3),
       links: { ...Resource.response.links, next: "/fake-link" },
@@ -126,7 +125,7 @@ test("ResourcesView shows next page of resources", async () => {
 
   fireEvent.click(screen.getByRole("button", { name: "Next" }));
 
-  resourcesApiHelper.resolve(
+  apiHelper.resolve(
     Either.right({
       data: Resource.response.data.slice(3),
       links: { ...Resource.response.links, next: "/fake-link" },
@@ -142,9 +141,9 @@ test("ResourcesView shows next page of resources", async () => {
 });
 
 test("ResourcesView shows sorting buttons for sortable columns", async () => {
-  const { component, resourcesApiHelper } = setup();
+  const { component, apiHelper } = setup();
   render(component);
-  resourcesApiHelper.resolve(Either.right(Resource.response));
+  apiHelper.resolve(Either.right(Resource.response));
   expect(await screen.findByRole("button", { name: /type/i })).toBeVisible();
   expect(screen.getByRole("button", { name: /agent/i })).toBeVisible();
   expect(screen.getByRole("button", { name: /value/i })).toBeVisible();
@@ -152,15 +151,13 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
 });
 
 test("ResourcesView sets sorting parameters correctly on click", async () => {
-  const { component, resourcesApiHelper } = setup();
+  const { component, apiHelper } = setup();
   render(component);
-  resourcesApiHelper.resolve(Either.right(Resource.response));
+  apiHelper.resolve(Either.right(Resource.response));
   const stateButton = await screen.findByRole("button", { name: /agent/i });
   expect(stateButton).toBeVisible();
   userEvent.click(stateButton);
-  expect(resourcesApiHelper.getInvocations()[1][1]).toContain(
-    "&sort=agent.asc"
-  );
+  expect(apiHelper.pendingRequests[0].url).toContain("&sort=agent.asc");
 });
 
 it.each`
@@ -172,11 +169,11 @@ it.each`
 `(
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
   async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
-    const { component, resourcesApiHelper } = setup();
+    const { component, apiHelper } = setup();
     render(component);
 
     await act(async () => {
-      await resourcesApiHelper.resolve(Either.right(Resource.response));
+      await apiHelper.resolve(Either.right(Resource.response));
     });
 
     const initialRows = await screen.findAllByRole("row", {
@@ -193,12 +190,12 @@ it.each`
       userEvent.type(input, `${filterValue}${specialChars.enter}`);
     }
 
-    expect(resourcesApiHelper.getInvocations()[1][1]).toEqual(
+    expect(apiHelper.pendingRequests[0].url).toEqual(
       `/api/v2/resource?limit=20&filter.${filterUrlName}=${filterValue}&sort=resource_type.asc`
     );
 
     await act(async () => {
-      await resourcesApiHelper.resolve(
+      await apiHelper.resolve(
         Either.right({
           data: Resource.response.data.slice(4),
           links: Resource.response.links,

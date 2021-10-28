@@ -1,7 +1,11 @@
 import React from "react";
 import { SchedulerImpl, ServiceModel } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, DynamicQueryManagerResolver, Service } from "@/Test";
+import {
+  DeferredApiHelper,
+  DynamicQueryManagerResolver,
+  Service,
+} from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
@@ -16,16 +20,16 @@ import { UrlManagerImpl } from "@/UI/Utils";
 export interface Handles {
   component: React.ReactElement;
   scheduler: SchedulerImpl;
-  eventsFetcher: DeferredFetcher<"GetInstanceEvents">;
+  apiHelper: DeferredApiHelper;
 }
 
 export class EventsPageComposer {
   compose(service: ServiceModel = Service.a): Handles {
     const store = getStoreInstance();
     const scheduler = new SchedulerImpl(5000);
-    const eventsFetcher = new DeferredFetcher<"GetInstanceEvents">();
+    const apiHelper = new DeferredApiHelper();
     const eventsHelper = new EventsQueryManager(
-      eventsFetcher,
+      apiHelper,
       new EventsStateHelper(store),
       scheduler,
       Service.a.environment
@@ -46,6 +50,6 @@ export class EventsPageComposer {
       </MemoryRouter>
     );
 
-    return { component, scheduler, eventsFetcher };
+    return { component, scheduler, apiHelper };
   }
 }

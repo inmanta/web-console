@@ -11,7 +11,7 @@ import {
   ResumeEnvironmentCommandManager,
 } from "@/Data";
 import {
-  DeferredFetcher,
+  DeferredApiHelper,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   EnvironmentDetails,
@@ -30,14 +30,13 @@ import { EnvironmentControls } from "./EnvironmentControls";
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const environmentDetailsFetcher =
-    new DeferredFetcher<"GetEnvironmentDetails">();
+  const apiHelper = new DeferredApiHelper();
   const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
     store,
     EnvironmentDetails.a.id
   );
   const environmentDetailsQueryManager = new EnvironmentDetailsQueryManager(
-    environmentDetailsFetcher,
+    apiHelper,
     environmentDetailsStateHelper,
     scheduler,
     EnvironmentDetails.a.id
@@ -54,7 +53,7 @@ function setup() {
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(
       environmentDetailsStateHelper,
-      new DeferredFetcher<"GetEnvironmentDetails">(),
+      apiHelper,
       EnvironmentDetails.a.id
     ),
     EnvironmentDetails.a.id
@@ -65,7 +64,7 @@ function setup() {
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(
       environmentDetailsStateHelper,
-      new DeferredFetcher<"GetEnvironmentDetails">(),
+      apiHelper,
       EnvironmentDetails.a.id
     ),
     EnvironmentDetails.a.id
@@ -96,18 +95,16 @@ function setup() {
   );
   return {
     component,
-    environmentDetailsFetcher,
+    apiHelper,
     scheduler,
   };
 }
 
 test("EnvironmentControls halt the environment when clicked and the environment is running", async () => {
-  const { component, environmentDetailsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
   await act(async () => {
-    await environmentDetailsFetcher.resolve(
-      Either.right({ data: EnvironmentDetails.a })
-    );
+    await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
   });
   const stopButton = await screen.findByText("STOP");
   expect(stopButton).toBeVisible();
@@ -121,12 +118,10 @@ test("EnvironmentControls halt the environment when clicked and the environment 
 });
 
 test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
-  const { component, environmentDetailsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
   await act(async () => {
-    await environmentDetailsFetcher.resolve(
-      Either.right({ data: EnvironmentDetails.a })
-    );
+    await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
   });
   const stopButton = await screen.findByText("STOP");
   expect(stopButton).toBeVisible();
@@ -136,10 +131,10 @@ test("EnvironmentControls don\\t trigger backend call when dialog is not confirm
 });
 
 test("EnvironmentControls resume the environment when clicked and the environment is halted", async () => {
-  const { component, environmentDetailsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
   await act(async () => {
-    await environmentDetailsFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({ data: { ...EnvironmentDetails.a, halted: true } })
     );
   });

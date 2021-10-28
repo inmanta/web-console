@@ -1,19 +1,19 @@
-import { Scheduler, Fetcher, StateHelper, ResourceLogFilter } from "@/Core";
+import { Scheduler, StateHelper, ResourceLogFilter, ApiHelper } from "@/Core";
 import {
-  ContinuousQueryManagerImpl,
   getPaginationHandlers,
+  PrimaryContinuousQueryManager,
 } from "@/Data/Common";
 import { getUrl } from "./getUrl";
 
-export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"GetResourceLogs"> {
+export class ResourceLogsQueryManager extends PrimaryContinuousQueryManager<"GetResourceLogs"> {
   constructor(
-    fetcher: Fetcher<"GetResourceLogs">,
+    apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetResourceLogs">,
     scheduler: Scheduler,
     environment: string
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
       () => environment,
