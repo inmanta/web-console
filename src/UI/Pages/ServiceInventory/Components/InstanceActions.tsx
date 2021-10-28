@@ -25,7 +25,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   deleteDisabled,
   diagnoseDisabled,
 }) => {
-  if (instance.state === "terminated") return null;
   return (
     <DescriptionList>
       <DescriptionListGroup>
