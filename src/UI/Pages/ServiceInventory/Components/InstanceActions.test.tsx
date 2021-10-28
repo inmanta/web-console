@@ -1,5 +1,4 @@
 import {
-  BaseApiHelper,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   KeycloakAuthHelper,
@@ -26,7 +25,7 @@ test("Given InstanceActions component When the instance is terminated Then the a
 
   const setStateCommandManager = new TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    new BaseApiHelper(),
+    apiHelper,
     "env1"
   );
 
