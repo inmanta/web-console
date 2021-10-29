@@ -1,46 +1,8 @@
 import { useContext, useEffect } from "react";
-import { matchPath, match } from "react-router-dom";
 import { useHistory, useLocation } from "react-router";
-import { Route, RouteManager, RouteParams } from "@/Core";
+import { RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { Kind } from "./Kind";
-
-/**
- * Return the list of parent routes including the route itself.
- * The route itself is the last in the list.
- */
-export const getLineageFromRoute = (
-  routeManager: RouteManager,
-  route: Route,
-  routes: Route[] = []
-): Route[] => {
-  if (route.parent) {
-    return getLineageFromRoute(
-      routeManager,
-      routeManager.getRoute(route.parent),
-      [route, ...routes]
-    );
-  }
-  return [route, ...routes];
-};
-
-type MatchedParams = Record<string, string>;
-
-export function getRouteWithParamsFromUrl(
-  routes: Route[],
-  url: string
-): [Route, MatchedParams] | undefined {
-  const routeMatchPairs = routes.map((route) => [
-    route,
-    matchPath<MatchedParams>(url, { path: route.path, exact: true }),
-  ]);
-  const routeWithMatch = routeMatchPairs.find(
-    (pair): pair is [Route, match<MatchedParams>] => pair[1] !== null
-  );
-  if (typeof routeWithMatch === "undefined") return undefined;
-  const [page, match] = routeWithMatch;
-  return [page, match.params];
-}
 
 type NavigateTo = (
   kind: Kind,

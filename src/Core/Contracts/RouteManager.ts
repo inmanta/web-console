@@ -1,6 +1,7 @@
 import { RouteKind, Route, RouteParams } from "@/Core/Domain";
 
 export type RouteDictionary = Record<RouteKind, Route>;
+export type MatchedParams = Record<string, string>;
 
 export interface RouteManager {
   getRoutes(): Route[];
@@ -14,4 +15,11 @@ export interface RouteManager {
    * @param url the current location.pathname
    */
   getRelatedUrlWithoutParams(url: string): string;
+  /**
+   * Return the list of parent routes including the route itself.
+   * The route itself is the last in the list.
+   * @param routes the buildup of parent routes as this is a recursive function
+   */
+  getLineageFromRoute(route: Route, routes?: Route[]): Route[];
+  getRouteWithParamsFromUrl(url: string): [Route, MatchedParams] | undefined;
 }
