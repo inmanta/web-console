@@ -1,0 +1,3 @@
+description: Fix Dict Editor width
+change-type: patch
+destination-branches: [master, iso4]
