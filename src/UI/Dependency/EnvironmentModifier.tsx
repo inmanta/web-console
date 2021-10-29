@@ -1,5 +1,5 @@
 import { EnvironmentModifier, Maybe, RemoteData } from "@/Core";
-import { useStoreState } from "@/Data";
+import { useStoreState } from "@/Data/Store";
 
 export class EnvironmentModifierImpl implements EnvironmentModifier {
   private environment: Maybe.Type<string> = Maybe.none();

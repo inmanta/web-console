@@ -2,6 +2,7 @@ import React from "react";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { MemoryRouter } from "react-router-dom";
 import {
   DynamicQueryManagerResolver,
   StaticScheduler,
@@ -17,8 +18,8 @@ import {
   CompileReportsStateHelper,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { PrimaryRouteManager } from "@/UI/Routing";
 import { Page } from "./Page";
-import { MemoryRouter } from "react-router-dom";
 
 function setup() {
   const store = getStoreInstance();
@@ -35,10 +36,13 @@ function setup() {
     ])
   );
   const urlManager = new UrlManagerImpl("", "environment");
+  const routeManager = new PrimaryRouteManager("");
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <DependencyProvider
+        dependencies={{ queryResolver, urlManager, routeManager }}
+      >
         <StoreProvider store={store}>
           <Page />
         </StoreProvider>

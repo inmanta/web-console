@@ -1,8 +1,7 @@
 import { Kind } from "@/UI/Routing/Kind";
-import { getKeysExcluding, isObject, keepKeys } from "@/Core";
+import { getKeysExcluding, isObject, keepKeys, RouteManager } from "@/Core";
 import { PageStateSanitizer } from "@/UI/Routing/PageStateSanitizer";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
-import { getRouteFromKind } from "@/UI/Routing/Route";
 
 /**
  * SearchSanitizer has utilities to sanitize the search string.
@@ -15,13 +14,13 @@ export class SearchSanitizer {
   searchHelper: SearchHelper;
   pageStateSanitizer: PageStateSanitizer;
 
-  constructor() {
+  constructor(private readonly routeManager: RouteManager) {
     this.searchHelper = new SearchHelper();
-    this.pageStateSanitizer = new PageStateSanitizer();
+    this.pageStateSanitizer = new PageStateSanitizer(routeManager);
   }
 
   private getValidKeys(routeKind: Kind): string[] {
-    const route = getRouteFromKind(routeKind);
+    const route = this.routeManager.getRoute(routeKind);
     if (route.clearEnv) return this.validKeys.filter((k) => k !== "env");
     return this.validKeys;
   }

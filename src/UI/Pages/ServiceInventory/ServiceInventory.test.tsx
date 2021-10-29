@@ -11,6 +11,7 @@ import {
   DynamicCommandManagerResolver,
   MockEnvironmentModifier,
   DeferredApiHelper,
+  dependencies,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -87,6 +88,7 @@ function setup(service = Service.a) {
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           queryResolver,
           urlManager,
           commandResolver,

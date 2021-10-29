@@ -7,7 +7,7 @@ import {
 import {
   getPaginationHandlers,
   PrimaryContinuousQueryManager,
-} from "@/Data/Common";
+} from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
 export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManager<"GetServiceInstances"> {

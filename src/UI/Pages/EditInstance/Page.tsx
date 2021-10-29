@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { RouteParams } from "@/Core";
 import { words } from "@/UI/words";
-import { Route } from "@/UI/Routing";
 import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
 import { EditInstancePage } from "./EditInstancePage";
 
@@ -16,7 +16,7 @@ const PageWrapper: React.FC = ({ children, ...props }) => (
 
 export const Page: React.FC = () => {
   const { service: serviceName, instance } =
-    useParams<Route.Params<"EditInstance">>();
+    useParams<RouteParams<"EditInstance">>();
 
   return (
     <ServiceProvider

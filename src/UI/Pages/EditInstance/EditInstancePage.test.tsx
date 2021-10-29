@@ -9,6 +9,7 @@ import {
   MockEnvironmentModifier,
   DynamicCommandManagerResolver,
   DeferredApiHelper,
+  dependencies,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -53,6 +54,7 @@ function setup() {
   const component = (
     <DependencyProvider
       dependencies={{
+        ...dependencies,
         queryResolver,
         commandResolver,
         urlManager,

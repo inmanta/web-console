@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -16,13 +16,13 @@ import {
   TextVariants,
 } from "@patternfly/react-core";
 import { ServiceModel } from "@/Core";
-import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Spacer } from "@/UI/Components";
 import { greyText } from "@/UI/Styles";
 import { CatalogTabs } from "./Tabs";
 import { SummaryIcons } from "./SummaryIcons";
 import { useUrlStateWithExpansion } from "@/Data";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   services: ServiceModel[];
@@ -31,6 +31,7 @@ interface Props {
 export const CatalogDataList: React.FunctionComponent<Props> = ({
   services,
 }) => {
+  const { routeManager } = useContext(DependencyContext);
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     route: "Catalog",
   });
@@ -87,7 +88,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
           >
             <Link
               to={{
-                pathname: getUrl("Inventory", {
+                pathname: routeManager.getUrl("Inventory", {
                   service: service.name,
                 }),
                 search: location.search,

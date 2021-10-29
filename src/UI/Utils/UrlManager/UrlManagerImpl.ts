@@ -8,6 +8,10 @@ export class UrlManagerImpl implements UrlManager {
     this.environment = Maybe.some(environment);
   }
 
+  getDashboardUrl(environment: string): string {
+    return `${this.baseUrl}/dashboard/#!/environment/${environment}`;
+  }
+
   setEnvironment(environment: string): void {
     this.environment = Maybe.some(environment);
   }

@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
@@ -39,7 +40,9 @@ function setup() {
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, urlManager }}
+      >
         <StoreProvider store={store}>
           <ResourcesTab
             serviceInstanceIdentifier={{

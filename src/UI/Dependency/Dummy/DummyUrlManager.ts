@@ -1,6 +1,9 @@
 import { UrlManager } from "@/Core";
 
 export class DummyUrlManager implements UrlManager {
+  getDashboardUrl(): string {
+    throw new Error("Method not implemented.");
+  }
   setEnvironment(): void {
     throw new Error("Method not implemented.");
   }

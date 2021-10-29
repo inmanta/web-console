@@ -3,25 +3,33 @@ import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { render, screen, within } from "@testing-library/react";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
+import { DependencyProvider, PrimaryRouteManager } from "..";
 
-test("GIVEN Breadcrumbs WHEN url is '/console/' THEN 0 Breadcrumbs are shown", () => {
-  render(
-    <MemoryRouter initialEntries={["/console/"]}>
-      <PageBreadcrumbs />
-    </MemoryRouter>
+function setup(initialEntries?: string[]) {
+  const component = (
+    <DependencyProvider
+      dependencies={{ routeManager: new PrimaryRouteManager("") }}
+    >
+      <MemoryRouter initialEntries={initialEntries}>
+        <PageBreadcrumbs />
+      </MemoryRouter>
+    </DependencyProvider>
   );
 
+  return { component };
+}
+
+test("GIVEN Breadcrumbs WHEN url is '/' THEN 0 Breadcrumbs are shown", () => {
+  const { component } = setup(["/"]);
+  render(component);
   const crumb = screen.getByRole("listitem", { name: "BreadcrumbItem" });
   expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
   expect(within(crumb).getByText("Home")).toBeInTheDocument();
 });
 
-test("GIVEN Breadcrumbs WHEN url is '/console/lsm/catalog' THEN plain Catalog Breadcrumb is shown", () => {
-  render(
-    <MemoryRouter initialEntries={["/console/lsm/catalog"]}>
-      <PageBreadcrumbs />
-    </MemoryRouter>
-  );
+test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog' THEN plain Catalog Breadcrumb is shown", () => {
+  const { component } = setup(["/lsm/catalog"]);
+  render(component);
 
   const crumbs = screen.getAllByRole("listitem", { name: "BreadcrumbItem" });
   expect(crumbs.length).toEqual(2);
@@ -30,13 +38,9 @@ test("GIVEN Breadcrumbs WHEN url is '/console/lsm/catalog' THEN plain Catalog Br
   expect(within(catalogCrumb).getByText("Service Catalog")).toBeInTheDocument();
 });
 
-test("GIVEN Breadcrumbs WHEN url is '/console/lsm/catalog/service/inventory' THEN linked Catalog Breadcrumb and plain Inventory breadcrumb is shown", () => {
-  render(
-    <MemoryRouter initialEntries={["/console/lsm/catalog/service/inventory"]}>
-      <PageBreadcrumbs />
-    </MemoryRouter>
-  );
-
+test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog/service/inventory' THEN linked Catalog Breadcrumb and plain Inventory breadcrumb is shown", () => {
+  const { component } = setup(["/lsm/catalog/service/inventory"]);
+  render(component);
   const crumbs = screen.getAllByRole("listitem", { name: "BreadcrumbItem" });
   expect(crumbs.length).toEqual(3);
   const [, catalogCrumb, inventoryCrumb] = crumbs;
@@ -48,26 +52,15 @@ test("GIVEN Breadcrumbs WHEN url is '/console/lsm/catalog/service/inventory' THE
 });
 
 test("GIVEN Breadcrumbs on Inventory WHEN url contains env THEN catalog breadcrumb link also contains env", () => {
-  render(
-    <MemoryRouter
-      initialEntries={["/console/lsm/catalog/service/inventory?env=env1"]}
-    >
-      <PageBreadcrumbs />
-    </MemoryRouter>
-  );
-
+  const { component } = setup(["/lsm/catalog/service/inventory?env=env1"]);
+  render(component);
   const link = screen.getByRole("link", { name: "Service Catalog" });
-  expect(link).toHaveAttribute("href", "/console/lsm/catalog?env=env1");
+  expect(link).toHaveAttribute("href", "/lsm/catalog?env=env1");
 });
 
 test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link THEN only plain catalog breadcrumb is shown", () => {
-  render(
-    <MemoryRouter
-      initialEntries={["/console/lsm/catalog/service/inventory?env=env1"]}
-    >
-      <PageBreadcrumbs />
-    </MemoryRouter>
-  );
+  const { component } = setup(["/lsm/catalog/service/inventory?env=env1"]);
+  render(component);
   const crumbsBefore = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",
   });
@@ -86,13 +79,8 @@ test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link TH
 });
 
 test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb link THEN Add instance breadcrumb is removed", () => {
-  render(
-    <MemoryRouter
-      initialEntries={["/console/lsm/catalog/service/inventory/add?env=env1"]}
-    >
-      <PageBreadcrumbs />
-    </MemoryRouter>
-  );
+  const { component } = setup(["/lsm/catalog/service/inventory/add?env=env1"]);
+  render(component);
   const crumbsBefore = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",
   });

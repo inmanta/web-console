@@ -11,10 +11,10 @@ import {
   getStoreInstance,
   GetServerStatusQueryManager,
   GetServerStatusStateHelper,
-  PrimaryFeatureManager,
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   ServerStatus,
 } from "@/Test";
@@ -33,31 +33,30 @@ function setup() {
     apiHelper,
     new GetServerStatusStateHelper(store)
   );
-  const featureManager = new PrimaryFeatureManager();
+
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([projectsManager, getServerStatusManager])
   );
-  return {
-    featureManager,
-    queryResolver,
-    apiHelper,
-    store,
-  };
-}
 
-test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
-  fetchMock.mockResponse(JSON.stringify({}));
-  const { store, queryResolver, featureManager, apiHelper } = setup();
-
-  render(
+  const component = (
     <MemoryRouter initialEntries={["/lsm/catalog"]}>
-      <DependencyProvider dependencies={{ queryResolver, featureManager }}>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <App keycloak={Keycloak()} shouldUseAuth={false} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
   );
+  return {
+    component,
+    apiHelper,
+  };
+}
+
+test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
+  fetchMock.mockResponse(JSON.stringify({}));
+  const { component, apiHelper } = setup();
+  render(component);
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));

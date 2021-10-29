@@ -1,7 +1,5 @@
 import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
-  BaseApiHelper,
-  AttributeResultConverterImpl,
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
   InstanceConfigCommandManager,
@@ -10,7 +8,6 @@ import {
   ServiceConfigStateHelper,
   ServiceConfigCommandManager,
   TriggerSetStateCommandManager,
-  Store,
   DeleteServiceCommandManager,
   HaltEnvironmentCommandManager,
   ResumeEnvironmentCommandManager,
@@ -30,7 +27,10 @@ import {
   EnvironmentSettingUpdater,
   GetEnvironmentSettingStateHelper,
   ResetEnvironmentSettingCommandManager,
-} from "@/Data";
+} from "@/Data/Managers";
+import { BaseApiHelper } from "@/Data/API";
+import { Store } from "@/Data/Store";
+import { AttributeResultConverterImpl } from "@/Data/Common/AttributeConverter";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -89,11 +89,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new InstanceConfigStateHelper(this.store),
         environment
       ),
-      new CreateInstanceCommandManager(
-        this.apiHelper,
-        new AttributeResultConverterImpl(),
-        environment
-      ),
+      new CreateInstanceCommandManager(this.apiHelper, environment),
       new TriggerInstanceUpdateCommandManager(
         this.apiHelper,
         new AttributeResultConverterImpl(),

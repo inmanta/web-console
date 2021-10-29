@@ -8,6 +8,7 @@ import {
   StaticScheduler,
   Callback,
   DeferredApiHelper,
+  dependencies,
 } from "@/Test";
 import { ServiceCatalogPage } from "@/UI/Pages";
 import { Either } from "@/Core";
@@ -90,7 +91,9 @@ function setup() {
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, commandResolver }}
+      >
         <StoreProvider store={store}>
           <ServiceCatalogPage />
         </StoreProvider>

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { InstanceResourceModel } from "@/Core";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Button } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 import { ResourceStatusCell } from "@/UI/Components/ResourceStatusCell";
 import { Link } from "@/UI/Components/Link";
-import { getUrl } from "@/UI";
+import { DependencyContext } from "@/UI/Dependency";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 
 interface Props {
@@ -15,11 +15,12 @@ interface Props {
 }
 
 export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
+  const { routeManager } = useContext(DependencyContext);
   const columns = ["Resource Id", "Details", "State"];
   const rows = resources.map((resource) => {
     const linkToDetails = (
       <Link
-        pathname={getUrl("ResourceDetails", {
+        pathname={routeManager.getUrl("ResourceDetails", {
           resourceId: getResourceIdFromResourceVersionId(resource.resource_id),
         })}
         envOnly

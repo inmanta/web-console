@@ -15,7 +15,6 @@ import { Rejection } from "@/Core";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
-import { getUrl } from "@/UI/Routing";
 import { DropdownExternalLink } from "./ExternalLink";
 import { Traceback } from "./Traceback";
 import { Pre } from "./Pre";
@@ -25,7 +24,7 @@ interface Props {
 }
 
 export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
-  const { urlManager } = useContext(DependencyContext);
+  const { urlManager, routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems: React.ReactNode[] = [
     <DropdownItem
@@ -33,7 +32,7 @@ export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
       component={
         <Link
           to={{
-            pathname: getUrl("CompileDetails", {
+            pathname: routeManager.getUrl("CompileDetails", {
               id: rejection.compile_id,
             }),
             search: location.search,

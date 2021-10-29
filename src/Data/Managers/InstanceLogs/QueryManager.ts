@@ -1,6 +1,6 @@
 import { ApiHelper, StateHelper } from "@/Core";
 import { identity } from "lodash";
-import { PrimaryOneTimeQueryManager } from "@/Data/Common";
+import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
 
 export class InstanceLogsQueryManager extends PrimaryOneTimeQueryManager<"GetInstanceLogs"> {
   constructor(

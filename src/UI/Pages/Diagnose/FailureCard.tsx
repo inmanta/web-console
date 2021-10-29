@@ -17,7 +17,6 @@ import { greyText } from "@/UI/Styles";
 import { DropdownExternalLink } from "./ExternalLink";
 import { Pre } from "./Pre";
 import { Link } from "@/UI/Components/Link";
-import { getUrl } from "@/UI";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 
 interface Props {
@@ -26,12 +25,12 @@ interface Props {
 }
 
 export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
-  const { urlManager } = useContext(DependencyContext);
+  const { urlManager, routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems = [
     <Link
       key="resourceDetailsLink"
-      pathname={getUrl("ResourceDetails", {
+      pathname={routeManager.getUrl("ResourceDetails", {
         resourceId: getResourceIdFromResourceVersionId(resourceId),
       })}
       envOnly

@@ -1,5 +1,5 @@
-import { words } from "@/UI";
-import { getUrl } from "@/UI/Routing";
+import React, { ReactNode, useContext } from "react";
+import { Link } from "react-router-dom";
 import {
   Button,
   ContextSelector,
@@ -9,8 +9,8 @@ import {
   FlexItem,
   Tooltip,
 } from "@patternfly/react-core";
-import React, { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { words } from "@/UI";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   searchValue: string;
@@ -31,6 +31,7 @@ export const EnvSelector: React.FC<Props> = ({
   setIsOpen,
   toggleText,
 }) => {
+  const { routeManager } = useContext(DependencyContext);
   return (
     <ContextSelector
       toggleText={toggleText}
@@ -46,7 +47,7 @@ export const EnvSelector: React.FC<Props> = ({
           <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
             <FlexItem>
               <Tooltip content={words("home.navigation.tooltip")}>
-                <Link to={getUrl("Home", undefined)}>
+                <Link to={routeManager.getUrl("Home", undefined)}>
                   <Button variant="primary">
                     {words("home.navigation.button")}{" "}
                   </Button>

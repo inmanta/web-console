@@ -13,6 +13,7 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   MockFeatureManger,
@@ -46,7 +47,12 @@ function setup() {
   const component = (
     <MemoryRouter>
       <DependencyProvider
-        dependencies={{ queryResolver, commandResolver, featureManager }}
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          commandResolver,
+          featureManager,
+        }}
       >
         <StoreProvider store={store}>
           <Home />

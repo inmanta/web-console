@@ -1,14 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
 import keycloakConf from "@/UI/Root/keycloak.json";
 import { App } from "@/UI/Root/app";
-import {
-  DependencyProvider,
-  CommandManagerResolver,
-  QueryManagerResolver,
-} from "@/UI/Dependency";
+import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import {
   CommandResolverImpl,
   QueryResolverImpl,
@@ -17,11 +14,11 @@ import {
   getStoreInstance,
   FileFetcherImpl,
   PrimaryFeatureManager,
+  CommandManagerResolver,
+  QueryManagerResolver,
 } from "@/Data";
 import { UrlManagerImpl } from "@/UI/Utils";
-import { Route } from "./UI/Routing";
-import { EnvironmentModifierImpl } from "./UI/Dependency/EnvironmentModifier";
-import { BrowserRouter as Router } from "react-router-dom";
+import { PrimaryBaseUrlManager, PrimaryRouteManager } from "@/UI/Routing";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */
@@ -42,22 +39,19 @@ if (externalKeycloakConf) {
 }
 
 const store = getStoreInstance();
-const baseUrl = process.env.API_BASEURL
-  ? process.env.API_BASEURL
-  : `${Route.BASE_URL.replace("/console", "")}`;
-const baseApiHelper = new BaseApiHelper(baseUrl, keycloak);
+const baseUrlManager = new PrimaryBaseUrlManager(location.pathname);
+const consoleBaseUrl = baseUrlManager.getConsoleBaseUrl();
+const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+const routeManager = new PrimaryRouteManager(consoleBaseUrl);
+const apiHelper = new BaseApiHelper(baseUrl, keycloak);
 const queryResolver = new QueryResolverImpl(
-  new QueryManagerResolver(store, baseApiHelper)
+  new QueryManagerResolver(store, apiHelper)
 );
 const commandResolver = new CommandResolverImpl(
-  new CommandManagerResolver(
-    store,
-    baseApiHelper,
-    new KeycloakAuthHelper(keycloak)
-  )
+  new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper(keycloak))
 );
 const urlManager = new UrlManagerImpl(baseUrl);
-const fileFetcher = new FileFetcherImpl(baseApiHelper);
+const fileFetcher = new FileFetcherImpl(apiHelper);
 const environmentModifier = new EnvironmentModifierImpl();
 const featureManager = new PrimaryFeatureManager();
 
@@ -70,6 +64,7 @@ ReactDOM.render(
       fileFetcher,
       environmentModifier,
       featureManager,
+      routeManager,
     }}
   >
     <StoreProvider store={store}>

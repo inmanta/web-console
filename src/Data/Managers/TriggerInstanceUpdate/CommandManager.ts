@@ -6,7 +6,10 @@ import {
   Field,
   ApiHelper,
 } from "@/Core";
-import { AttributeResultConverter, sanitizeAttributes } from "@/Data/Common";
+import {
+  AttributeResultConverter,
+  sanitizeAttributes,
+} from "@/Data/Common/AttributeConverter";
 
 export class TriggerInstanceUpdateCommandManager implements CommandManager {
   constructor(
