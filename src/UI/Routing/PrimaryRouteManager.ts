@@ -41,13 +41,13 @@ export class PrimaryRouteManager implements RouteManager {
     return [route, ...routes];
   }
 
-  getRelatedUrlWithoutParams(url: string): string {
-    const routeAndParams = this.getRouteWithParamsFromUrl(url);
+  getRelatedUrlWithoutParams(pathname: string): string {
+    const routeAndParams = this.getRouteWithParamsFromUrl(pathname);
     if (typeof routeAndParams === "undefined") {
       return this.getUrl("Home", undefined);
     }
     const [currentRoute] = routeAndParams;
-    if (!this.routeHasParams(currentRoute)) return url;
+    if (!this.routeHasParams(currentRoute)) return pathname;
     const parent = this.getParentWithoutParams(currentRoute);
     if (typeof parent === "undefined") return this.getUrl("Home", undefined);
     return this.getUrl(parent.kind, undefined);

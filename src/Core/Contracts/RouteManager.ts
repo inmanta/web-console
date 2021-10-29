@@ -12,9 +12,9 @@ export interface RouteManager {
    * Gets the closest url in the lineage without params.
    * When switching environments, we can't go to pages with params,
    * because the params are environment specific.
-   * @param url the current location.pathname
+   * @param pathname the current location.pathname
    */
-  getRelatedUrlWithoutParams(url: string): string;
+  getRelatedUrlWithoutParams(pathname: string): string;
   /**
    * Return the list of parent routes including the route itself.
    * The route itself is the last in the list.
