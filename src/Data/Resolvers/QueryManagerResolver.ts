@@ -1,6 +1,5 @@
 import { QueryManager, ManagerResolver, SchedulerImpl } from "@/Core";
 import {
-  BaseApiHelper,
   ProjectsQueryManager,
   ProjectsStateHelper,
   ServiceQueryManager,
@@ -26,7 +25,6 @@ import {
   ServiceConfigFinalizer,
   ResourcesQueryManager,
   ResourcesStateHelper,
-  Store,
   ResourceDetailsQueryManager,
   ResourceDetailsStateHelper,
   ResourceHistoryStateHelper,
@@ -47,7 +45,9 @@ import {
   GetServerStatusStateHelper,
   GetEnvironmentSettingsQueryManager,
   GetEnvironmentSettingsStateHelper,
-} from "@/Data";
+} from "@/Data/Managers";
+import { BaseApiHelper } from "@/Data/API";
+import { Store } from "@/Data/Store";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];

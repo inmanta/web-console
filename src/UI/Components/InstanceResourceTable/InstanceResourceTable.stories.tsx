@@ -4,6 +4,7 @@ import { InstanceResource } from "@/Test";
 import { ResourceTable } from "./InstanceResourceTable";
 import { DependencyProvider } from "@/UI/Dependency";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { PrimaryFeatureManager } from "@/Data";
 
 export default {
   title: "ResourceTable",
@@ -12,7 +13,9 @@ export default {
 
 const Template: Story<ComponentProps<typeof ResourceTable>> = (args) => (
   <DependencyProvider
-    dependencies={{ urlManager: new UrlManagerImpl("", "env") }}
+    dependencies={{
+      urlManager: new UrlManagerImpl(new PrimaryFeatureManager(), "", "env"),
+    }}
   >
     <ResourceTable {...args} />
   </DependencyProvider>

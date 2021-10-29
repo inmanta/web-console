@@ -1,16 +1,22 @@
-import { getRouteWithParamsFromUrl } from "@/UI/Routing/Utils";
 import { Kind } from "@/UI/Routing/Kind";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory, useLocation } from "react-router";
+import { RouteManager } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "./SearchSanitizer";
 
-const sanitizer = new SearchSanitizer();
-
 export const Provider: React.FC = ({ children }) => {
+  const { routeManager } = useContext(DependencyContext);
   const { pathname, search, hash } = useLocation();
   const history = useHistory();
+  const sanitizer = new SearchSanitizer(routeManager);
 
-  const [sanitizedSearch, routeKind] = getSearchResult(pathname, search);
+  const [sanitizedSearch, routeKind] = getSearchResult(
+    sanitizer,
+    routeManager,
+    pathname,
+    search
+  );
 
   useEffect(() => {
     if (sanitizedSearch !== null && sanitizedSearch !== search) {
@@ -25,10 +31,12 @@ export const Provider: React.FC = ({ children }) => {
 };
 
 const getSearchResult = (
+  sanitizer: SearchSanitizer,
+  routeManager: RouteManager,
   pathname: string,
   search: string
 ): [string | null, Kind | null] => {
-  const match = getRouteWithParamsFromUrl(pathname);
+  const match = routeManager.getRouteWithParamsFromUrl(pathname);
   if (typeof match === "undefined") return [null, null];
   const [route] = match;
   return [sanitizer.sanitize(route.kind, search), route.kind];

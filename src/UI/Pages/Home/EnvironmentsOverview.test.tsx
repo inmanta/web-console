@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router-dom";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   Environment,
   MockFeatureManger,
@@ -33,7 +34,9 @@ function setup() {
   );
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ featureManager, commandResolver }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, featureManager, commandResolver }}
+      >
         <EnvironmentsOverview environments={Environment.filterable} />
       </DependencyProvider>
     </MemoryRouter>

@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, NavGroup } from "@patternfly/react-core";
-import { Route, SearchHelper } from "@/UI/Routing";
+import { SearchHelper } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
+import { RouteDictionary } from "@/Core";
 
 interface Group {
   id: string;
@@ -14,12 +15,16 @@ interface Group {
 export const Navigation: React.FC<{ environment: string }> = ({
   environment,
 }) => {
-  const { featureManager } = useContext(DependencyContext);
+  const { featureManager, routeManager, urlManager } =
+    useContext(DependencyContext);
+  const routeDict = routeManager.getRouteDictionary();
   const groups: Group[] = [
-    ...(featureManager.isLsmEnabled() ? [lifecycleServiceManager] : []),
-    orchestrationEngine,
-    resourceManager,
-    otherSites(environment),
+    ...(featureManager.isLsmEnabled()
+      ? [lifecycleServiceManager(routeDict)]
+      : []),
+    orchestrationEngine(routeDict),
+    resourceManager(routeDict),
+    otherSites(urlManager.getDashboardUrl(environment)),
   ];
   return (
     <Nav theme="dark">
@@ -60,7 +65,7 @@ const Item: React.FC<Link> = ({ id, label, url, external }) => (
   </NavItem>
 );
 
-const lifecycleServiceManager: Group = {
+const lifecycleServiceManager = (Route: RouteDictionary): Group => ({
   id: "LifecycleServiceManager",
   title: words("navigation.lifecycleServiceManager"),
   links: [
@@ -71,9 +76,9 @@ const lifecycleServiceManager: Group = {
       external: false,
     },
   ],
-};
+});
 
-const orchestrationEngine: Group = {
+const orchestrationEngine = (Route: RouteDictionary): Group => ({
   id: "OrchestrationEngine",
   title: words("navigation.orchestrationEngine"),
   links: [
@@ -84,9 +89,9 @@ const orchestrationEngine: Group = {
       external: false,
     },
   ],
-};
+});
 
-const resourceManager: Group = {
+const resourceManager = (Route: RouteDictionary): Group => ({
   id: "ResourceManager",
   title: words("navigation.resourceManager"),
   links: [
@@ -97,16 +102,16 @@ const resourceManager: Group = {
       external: false,
     },
   ],
-};
+});
 
-const otherSites = (env: string): Group => ({
+const otherSites = (dashboardUrl: string): Group => ({
   id: "OtherSites",
   title: "Other Sites",
   links: [
     {
       id: "Dashboard",
       label: "Dashboard",
-      url: Route.DashboardUrl(env),
+      url: dashboardUrl,
       external: true,
     },
   ],

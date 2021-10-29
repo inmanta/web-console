@@ -3,4 +3,6 @@ export interface UrlManager {
   getModelVersionUrl(version: string): string;
   getVersionedResourceUrl(resourceId: string, version: string): string;
   getServerStatusUrl(): string;
+  getDashboardUrl(environment: string): string;
+  getDocumentationLink(): string;
 }

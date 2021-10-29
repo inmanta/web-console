@@ -1,11 +1,20 @@
-import * as React from "react";
-import { PageHeader, PageHeaderTools } from "@patternfly/react-core";
+import React, { useEffect, useContext } from "react";
+import styled from "styled-components";
+import {
+  PageHeader,
+  PageHeaderTools,
+  PageHeaderToolsGroup,
+} from "@patternfly/react-core";
 import Logo from "!react-svg-loader!@images/logo.svg";
 import { GlobalStyles } from "@/UI/Styles";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
-import { Profile, SettingsButton, EnvSelectorWithProvider } from "./Toolbar";
-import { getUrl } from "@/UI/Routing";
-import styled from "styled-components";
+import {
+  Profile,
+  SettingsButton,
+  EnvSelectorWithProvider,
+  DocumentationLink,
+} from "./Toolbar";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   keycloak?: Keycloak.KeycloakInstance;
@@ -24,7 +33,8 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
   withEnv,
   onToggle,
 }) => {
-  React.useEffect(() => {
+  const { routeManager } = useContext(DependencyContext);
+  useEffect(() => {
     if (keycloak && !keycloak.profile) {
       keycloak.loadUserProfile();
     }
@@ -34,10 +44,13 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
   const Header = (
     <PageHeader
       logo={<Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />}
-      logoProps={{ href: getUrl("Home", undefined) }}
+      logoProps={{ href: routeManager.getUrl("Home", undefined) }}
       headerTools={
         <PageHeaderTools>
-          <SettingsButton isDisabled={!withEnv} />
+          <PageHeaderToolsGroup>
+            <SettingsButton isDisabled={!withEnv} />
+            <DocumentationLink />
+          </PageHeaderToolsGroup>
           {shouldUseAuth && <Profile keycloak={keycloak} />}
         </PageHeaderTools>
       }

@@ -42,12 +42,10 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   };
 
   const onSubmitCreate = async () => {
-    console.log(projectName, createEnvironmentBody.name);
     if (projectName && createEnvironmentBody.name) {
       const flatEnv = environments.find(
         (env) => env.projectName === projectName
       );
-      console.log(environments, flatEnv);
       if (flatEnv) {
         const fullBody = {
           ...createEnvironmentBody,

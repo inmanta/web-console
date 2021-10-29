@@ -92,16 +92,16 @@ const Row: React.FC<RowProps> = ({
   return (
     <Tr {...props}>
       <SlimTd>
-        <TextInput
+        <StyledTextInput
           value={key}
           onChange={onKeyChange}
           type="text"
           aria-label="editEntryKey"
-          isDisabled={!isKeyEditable}
+          isReadOnly={!isKeyEditable}
         />
       </SlimTd>
       <SlimTd>
-        <TextInput
+        <StyledTextInput
           value={value}
           onChange={onValueChange}
           type="text"
@@ -123,6 +123,13 @@ const Row: React.FC<RowProps> = ({
     </Tr>
   );
 };
+
+const StyledTextInput = styled(TextInput)`
+  &&& {
+    text-overflow: initial;
+    min-width: 300px;
+  }
+`;
 
 const SlimTd = styled(Td)`
   &&& {

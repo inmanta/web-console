@@ -3,6 +3,9 @@ import { createMemoryHistory } from "history";
 import { EnvironmentHandlerImpl } from ".";
 import { RemoteData } from "@/Core";
 import { Environment } from "@/Test";
+import { PrimaryRouteManager } from "@/UI/Routing";
+
+const routeManager = new PrimaryRouteManager("");
 
 test("EnvironmentHandler updates environment correctly", () => {
   const history = createMemoryHistory({
@@ -16,7 +19,7 @@ test("EnvironmentHandler updates environment correctly", () => {
       RemoteData.success(Environment.filterable)
     );
 
-  const environmentHandler = new EnvironmentHandlerImpl(history);
+  const environmentHandler = new EnvironmentHandlerImpl(history, routeManager);
   environmentHandler.set(env.id);
   expect(history.location.search).toEqual(`?env=${env.id}`);
 });
@@ -24,7 +27,7 @@ test("EnvironmentHandler updates environment correctly", () => {
 test("EnvironmentHandler determines selected environment correctly", () => {
   const history = createMemoryHistory();
 
-  const environmentHandler = new EnvironmentHandlerImpl(history);
+  const environmentHandler = new EnvironmentHandlerImpl(history, routeManager);
   expect(
     environmentHandler.determineSelected(
       RemoteData.notAsked(),

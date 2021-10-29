@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ServiceModel } from "@/Core";
-import { DynamicCommandManagerResolver, Service } from "@/Test";
+import { dependencies, DynamicCommandManagerResolver, Service } from "@/Test";
 import {
   BaseApiHelper,
   CommandResolverImpl,
@@ -23,7 +23,7 @@ const Component = (services: ServiceModel[]) => {
   );
   return (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ commandResolver }}>
+      <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
         <CatalogDataList services={services} />
       </DependencyProvider>
     </MemoryRouter>
@@ -68,7 +68,7 @@ test("GIVEN CatalogDataList WHEN service THEN service has correct link", () => {
   expect(link).toBeInTheDocument();
   expect(link).toHaveAttribute(
     "href",
-    `/console/lsm/catalog/${Service.a.name}/inventory`
+    `/lsm/catalog/${Service.a.name}/inventory`
   );
 });
 

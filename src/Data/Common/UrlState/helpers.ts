@@ -1,5 +1,5 @@
 import { useHistory, useLocation } from "react-router-dom";
-import { Kind } from "@/UI/Routing";
+import { RouteKind } from "@/Core";
 
 export interface Location {
   pathname: string;
@@ -16,7 +16,7 @@ export type Update<Data> = (data: Data) => void;
 export interface StateConfig<Data> {
   default: Data;
   key: string;
-  route: Kind;
+  route: RouteKind;
   serialize: (data: Data) => string | Data;
   parse: (value: unknown) => Data | undefined;
   equals: (a: Data, b: Data) => boolean;

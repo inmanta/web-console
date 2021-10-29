@@ -7,21 +7,25 @@ import { Environment } from "@/Test";
 import { MemoryRouter } from "react-router";
 import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
+import { dependencies } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 
 test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async () => {
   const history = createMemoryHistory();
   render(
     <Router history={history}>
-      <EnvironmentSelector
-        environments={RemoteData.success([])}
-        onSelectEnvironment={() => {
-          return;
-        }}
-        selectedEnvironment={undefined}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          environments={RemoteData.success([])}
+          onSelectEnvironment={() => {
+            return;
+          }}
+          selectedEnvironment={undefined}
+        />
+      </DependencyProvider>
     </Router>
   );
-  expect(history.location.pathname).toEqual("/console/");
+  expect(history.location.pathname).toEqual("/");
 });
 
 test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", () => {
@@ -29,13 +33,15 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   const envB = Environment.filterable[2];
   render(
     <MemoryRouter>
-      <EnvironmentSelector
-        environments={RemoteData.success(Environment.filterable)}
-        onSelectEnvironment={() => {
-          return;
-        }}
-        selectedEnvironment={envA}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          environments={RemoteData.success(Environment.filterable)}
+          onSelectEnvironment={() => {
+            return;
+          }}
+          selectedEnvironment={envA}
+        />
+      </DependencyProvider>
     </MemoryRouter>
   );
 
@@ -56,13 +62,15 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   const envB = Environment.filterable[2];
   render(
     <MemoryRouter>
-      <EnvironmentSelector
-        environments={RemoteData.success(Environment.filterable)}
-        onSelectEnvironment={(item) => {
-          selectedEnv = item.environmentId;
-        }}
-        selectedEnvironment={envA}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          environments={RemoteData.success(Environment.filterable)}
+          onSelectEnvironment={(item) => {
+            selectedEnv = item.environmentId;
+          }}
+          selectedEnvironment={envA}
+        />
+      </DependencyProvider>
     </MemoryRouter>
   );
 
@@ -98,13 +106,15 @@ test.each`
 
     render(
       <MemoryRouter>
-        <EnvironmentSelector
-          environments={RemoteData.success(Environment.filterable)}
-          onSelectEnvironment={() => {
-            return;
-          }}
-          selectedEnvironment={env}
-        />
+        <DependencyProvider dependencies={dependencies}>
+          <EnvironmentSelector
+            environments={RemoteData.success(Environment.filterable)}
+            onSelectEnvironment={() => {
+              return;
+            }}
+            selectedEnvironment={env}
+          />
+        </DependencyProvider>
       </MemoryRouter>
     );
 
@@ -128,13 +138,15 @@ test("GIVEN EnvironmentSelector and populated store WHEN user types in non match
   const env = Environment.filterable[0];
   render(
     <MemoryRouter>
-      <EnvironmentSelector
-        environments={RemoteData.success(Environment.filterable)}
-        onSelectEnvironment={() => {
-          return;
-        }}
-        selectedEnvironment={env}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          environments={RemoteData.success(Environment.filterable)}
+          onSelectEnvironment={() => {
+            return;
+          }}
+          selectedEnvironment={env}
+        />
+      </DependencyProvider>
     </MemoryRouter>
   );
 
@@ -159,13 +171,15 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   const envB = Environment.filterable[2];
   render(
     <MemoryRouter>
-      <EnvironmentSelector
-        environments={RemoteData.success(Environment.filterable)}
-        onSelectEnvironment={(item) => {
-          selectedEnv = item.environmentId;
-        }}
-        selectedEnvironment={envA}
-      />
+      <DependencyProvider dependencies={dependencies}>
+        <EnvironmentSelector
+          environments={RemoteData.success(Environment.filterable)}
+          onSelectEnvironment={(item) => {
+            selectedEnv = item.environmentId;
+          }}
+          selectedEnvironment={envA}
+        />
+      </DependencyProvider>
     </MemoryRouter>
   );
   const toggle = screen.getByRole("button", {

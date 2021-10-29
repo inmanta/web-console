@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   EmptyState,
   EmptyStateIcon,
@@ -12,7 +12,7 @@ import {
   EnvSelectorWrapper,
 } from "./EnvSelectorWrapper";
 import { Redirect } from "react-router";
-import { getUrl } from "@/UI";
+import { DependencyContext } from "@/UI";
 
 interface Props {
   environments: RemoteData.Type<string, FlatEnvironment[]>;
@@ -24,6 +24,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
   onSelectEnvironment,
   selectedEnvironment,
 }) => {
+  const { routeManager } = useContext(DependencyContext);
   return RemoteData.fold(
     {
       notAsked: () => null,
@@ -57,7 +58,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
             />
           );
         } else {
-          return <Redirect to={getUrl("Home", undefined)} />;
+          return <Redirect to={routeManager.getUrl("Home", undefined)} />;
         }
       },
     },

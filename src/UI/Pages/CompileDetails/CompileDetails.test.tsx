@@ -5,6 +5,7 @@ import {
   CompileDetailsQueryManager,
   CompileDetailsStateHelper,
   getStoreInstance,
+  PrimaryFeatureManager,
   QueryResolverImpl,
 } from "@/Data";
 import {
@@ -32,7 +33,11 @@ function setup() {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "environment");
+  const urlManager = new UrlManagerImpl(
+    new PrimaryFeatureManager(),
+    "",
+    "environment"
+  );
 
   const component = (
     <DependencyProvider dependencies={{ queryResolver, urlManager }}>

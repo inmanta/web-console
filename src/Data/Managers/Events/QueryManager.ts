@@ -2,7 +2,7 @@ import { StateHelper, Scheduler, EventParams, ApiHelper } from "@/Core";
 import {
   getPaginationHandlers,
   PrimaryContinuousQueryManager,
-} from "@/Data/Common";
+} from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
 export class EventsQueryManager extends PrimaryContinuousQueryManager<"GetInstanceEvents"> {

@@ -1,22 +1,19 @@
-import React from "react";
-import {
-  Button,
-  PageHeaderToolsGroup,
-  PageHeaderToolsItem,
-} from "@patternfly/react-core";
+import React, { useContext } from "react";
+import { Button, PageHeaderToolsItem } from "@patternfly/react-core";
 import { CogIcon } from "@patternfly/react-icons";
-import { getUrl } from "@/UI/Routing";
 import { Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   isDisabled?: boolean;
 }
 
-export const SettingsButton: React.FC<Props> = ({ isDisabled }) => (
-  <PageHeaderToolsGroup>
+export const SettingsButton: React.FC<Props> = ({ isDisabled }) => {
+  const { routeManager } = useContext(DependencyContext);
+  return (
     <PageHeaderToolsItem>
       <Link
-        pathname={getUrl("Settings", undefined)}
+        pathname={routeManager.getUrl("Settings", undefined)}
         isDisabled={isDisabled}
         envOnly
       >
@@ -29,5 +26,5 @@ export const SettingsButton: React.FC<Props> = ({ isDisabled }) => (
         </Button>
       </Link>
     </PageHeaderToolsItem>
-  </PageHeaderToolsGroup>
-);
+  );
+};

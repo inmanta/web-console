@@ -10,7 +10,6 @@ import {
 import { useHistory } from "react-router-dom";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import {
   CreateModifierHandler,
@@ -21,14 +20,14 @@ import {
 export const CreateInstance: React.FC<{ serviceEntity: ServiceModel }> = ({
   serviceEntity,
 }) => {
-  const { commandResolver, environmentModifier } =
+  const { commandResolver, environmentModifier, routeManager } =
     useContext(DependencyContext);
   const [errorMessage, setErrorMessage] = useState("");
   const isHalted = environmentModifier.useIsHalted();
   const history = useHistory();
-  const url = `${getUrl("Inventory", { service: serviceEntity.name })}?env=${
-    serviceEntity.environment
-  }`;
+  const url = `${routeManager.getUrl("Inventory", {
+    service: serviceEntity.name,
+  })}?env=${serviceEntity.environment}`;
   const handleRedirect = useCallback(
     () => history.push(url),
     [history] /* eslint-disable-line react-hooks/exhaustive-deps */

@@ -21,6 +21,7 @@ export * from "./Resource";
 export * from "./ResourceLog";
 export * as ResourceParams from "./ResourceParams";
 export * from "./ResourceHistory";
+export * from "./Route";
 export * from "./EnvironmentDetailsModel";
 export * from "./Uuid";
 export * as Sort from "./Sort";

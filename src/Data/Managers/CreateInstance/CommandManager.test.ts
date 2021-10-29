@@ -1,12 +1,10 @@
 import { BaseApiHelper } from "@/Data/API";
-import { AttributeResultConverterImpl } from "@/Data/Common";
 import { CreateInstanceCommandManager } from "./CommandManager";
 import { Field } from "@/Test";
 
 describe("CreateInstanceManager", () => {
   const commandManager = new CreateInstanceCommandManager(
     new BaseApiHelper(),
-    new AttributeResultConverterImpl(),
     "env1"
   );
   it("Calls post on instance url when submitted", () => {

@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
@@ -14,7 +15,6 @@ import {
   InstanceResourcesQueryManager,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { ResourcesTab } from "./ResourcesTab";
 import { MemoryRouter } from "react-router";
 
@@ -32,14 +32,10 @@ function setup() {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl(
-    "",
-    "34a961ba-db3c-486e-8d85-1438d8e88909"
-  );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <ResourcesTab
             serviceInstanceIdentifier={{

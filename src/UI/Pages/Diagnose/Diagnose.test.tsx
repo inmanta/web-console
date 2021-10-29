@@ -7,6 +7,7 @@ import {
   StaticScheduler,
   Diagnose,
   DeferredApiHelper,
+  dependencies,
 } from "@/Test";
 import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -17,7 +18,6 @@ import {
   getStoreInstance,
 } from "@/Data";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
-import { UrlManagerImpl } from "@/UI/Utils";
 
 function setup() {
   const store = getStoreInstance();
@@ -33,10 +33,10 @@ function setup() {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "environment");
+  dependencies.urlManager.setEnvironment("environment");
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+    <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
       <StoreProvider store={store}>
         <DiagnoseComponent
           service={Service.a}

@@ -1,5 +1,5 @@
 import { StateHelper, ApiHelper } from "@/Core";
-import { PrimaryOneTimeQueryManager } from "@/Data/Common";
+import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
 import { identity } from "lodash";
 
 export class GetEnvironmentSettingsQueryManager extends PrimaryOneTimeQueryManager<"GetEnvironmentSettings"> {

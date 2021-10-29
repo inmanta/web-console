@@ -6,6 +6,7 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   MockEnvironmentModifier,
   ServiceInstance,
@@ -39,6 +40,7 @@ test("Given InstanceActions component When the instance is terminated Then the a
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
         }}
