@@ -5,11 +5,11 @@ import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { SearchSanitizer } from "@/UI/Routing";
+import { Home, CreateEnvironmentPage } from "@/UI/Pages";
+import { DependencyContext } from "@/UI/Dependency";
 import { BaseLayout } from "./BaseLayout";
 import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
 import { Initializer } from "./Initializer";
-import { Home, CreateEnvironmentPage } from "@/UI/Pages";
-import { DependencyContext } from "..";
 
 interface AuthProps {
   keycloak: Keycloak.KeycloakInstance;

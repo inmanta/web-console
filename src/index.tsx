@@ -38,19 +38,19 @@ if (externalKeycloakConf) {
   keycloak = Keycloak(customKeycloakConf);
 }
 
-const STORE = getStoreInstance();
+const store = getStoreInstance();
 const baseUrlManager = new PrimaryBaseUrlManager(location.pathname);
-const CONSOLE_BASE_URL = baseUrlManager.getConsoleBaseUrl();
-const BASE_URL = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-const routeManager = new PrimaryRouteManager(CONSOLE_BASE_URL);
-const apiHelper = new BaseApiHelper(BASE_URL, keycloak);
+const consoleBaseUrl = baseUrlManager.getConsoleBaseUrl();
+const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
+const routeManager = new PrimaryRouteManager(consoleBaseUrl);
+const apiHelper = new BaseApiHelper(baseUrl, keycloak);
 const queryResolver = new QueryResolverImpl(
-  new QueryManagerResolver(STORE, apiHelper)
+  new QueryManagerResolver(store, apiHelper)
 );
 const commandResolver = new CommandResolverImpl(
-  new CommandManagerResolver(STORE, apiHelper, new KeycloakAuthHelper(keycloak))
+  new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper(keycloak))
 );
-const urlManager = new UrlManagerImpl(BASE_URL);
+const urlManager = new UrlManagerImpl(baseUrl);
 const fileFetcher = new FileFetcherImpl(apiHelper);
 const environmentModifier = new EnvironmentModifierImpl();
 const featureManager = new PrimaryFeatureManager();
@@ -67,7 +67,7 @@ ReactDOM.render(
       routeManager,
     }}
   >
-    <StoreProvider store={STORE}>
+    <StoreProvider store={store}>
       <Router>
         <App keycloak={keycloak} shouldUseAuth={shouldUseAuth} />
       </Router>

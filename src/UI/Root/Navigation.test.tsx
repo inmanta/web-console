@@ -2,11 +2,11 @@ import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { DependencyProvider } from "@/UI/Dependency";
-import { Navigation } from "./Navigation";
+import { PrimaryRouteManager } from "@/UI/Routing";
 import { dependencies, ServerStatus as TestServerStatus } from "@/Test";
-import { PrimaryRouteManager } from "..";
 import { ServerStatus } from "@/Core";
 import { UrlManagerImpl } from "@/UI/Utils";
+import { Navigation } from "./Navigation";
 
 function setup(
   initialEntries: string[] | undefined,

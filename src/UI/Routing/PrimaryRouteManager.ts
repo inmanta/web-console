@@ -1,5 +1,11 @@
 import { generatePath } from "react-router-dom";
-import { RouteDictionary, RouteManager, Route, RouteKind } from "@/Core";
+import {
+  RouteDictionary,
+  RouteManager,
+  Route,
+  RouteKind,
+  RouteParams,
+} from "@/Core";
 import { paths } from "./Paths";
 
 export class PrimaryRouteManager implements RouteManager {
@@ -65,7 +71,7 @@ export class PrimaryRouteManager implements RouteManager {
     }
   }
 
-  getUrl(kind: RouteKind, params: Params<typeof kind>): string {
+  getUrl(kind: RouteKind, params: RouteParams<typeof kind>): string {
     const route = this.getRoute(kind);
     return generatePath(route.path, params);
   }
@@ -169,24 +175,3 @@ const Settings = (base: string): Route => ({
   path: `${base}${paths.Settings}`,
   label: "Settings",
 });
-
-interface ParamsManifest {
-  Catalog: undefined;
-  Inventory: { service: string };
-  CreateInstance: { service: string };
-  EditInstance: { service: string; instance: string };
-  History: { service: string; instance: string };
-  Events: { service: string; instance: string };
-  Diagnose: { service: string; instance: string };
-  Resources: undefined;
-  ResourceHistory: { resourceId: string };
-  ResourceLogs: { resourceId: string };
-  CompileReports: undefined;
-  CompileDetails: { id: string };
-  Home: undefined;
-  ResourceDetails: { resourceId: string };
-  Settings: undefined;
-  CreateEnvironment: undefined;
-}
-
-type Params<R extends RouteKind> = ParamsManifest[R];

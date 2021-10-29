@@ -1,7 +1,7 @@
 import { BaseUrlManager } from "@/Core";
 
 export class PrimaryBaseUrlManager implements BaseUrlManager {
-  ANCHOR = "/console";
+  private readonly ANCHOR = "/console";
 
   constructor(private readonly url: string) {}
 
