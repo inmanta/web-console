@@ -4,7 +4,7 @@ import {
   RemoteData,
   RouteManager,
 } from "@/Core";
-import { SearchHelper } from "@/UI/Routing";
+import { SearchHelper } from "@/UI/Routing/SearchHelper";
 import { useLocation } from "react-router-dom";
 import { History } from "history";
 import { createContext } from "react";

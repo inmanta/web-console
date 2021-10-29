@@ -15,7 +15,7 @@ export const EnvironmentProvider: React.FunctionComponent<Props> = ({
   const { environmentHandler } = useContext(EnvironmentHandlerContext);
 
   const environment = environmentHandler.useSelected();
-  if (environment && environment?.id) {
+  if (environment) {
     return <Dependant environment={environment.id} />;
   } else {
     return (
