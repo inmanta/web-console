@@ -18,10 +18,10 @@ import {
 import copy from "copy-to-clipboard";
 import {
   CloseIcon,
+  CompressArrowsAltIcon,
+  ExpandArrowsAltIcon,
   InfoCircleIcon,
   ListOlIcon,
-  SearchMinusIcon,
-  SearchPlusIcon,
   TextWidthIcon,
 } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
@@ -122,11 +122,11 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
       >
         {zoomed ? (
           <SidebarButton variant="plain" onClick={onZoomOut}>
-            <SearchMinusIcon />
+            <CompressArrowsAltIcon />
           </SidebarButton>
         ) : (
           <SidebarButton variant="plain" onClick={onZoomIn}>
-            <SearchPlusIcon />
+            <ExpandArrowsAltIcon />
           </SidebarButton>
         )}
       </ToggleTooltip>
@@ -168,7 +168,9 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
                 }}
                 wrapLongLines={wrapLongLines}
                 wrapLines
-                lineProps={{ style: { wordBreak: "break-word" } }}
+                lineProps={{
+                  style: { wordBreak: "break-word", flexWrap: "wrap" },
+                }}
               >
                 {code}
               </SyntaxHighlighter>
