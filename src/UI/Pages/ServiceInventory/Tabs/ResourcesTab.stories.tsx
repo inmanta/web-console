@@ -6,6 +6,7 @@ import {
   InstanceResource,
   DynamicQueryManagerResolver,
   InstantApiHelper,
+  dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -14,7 +15,6 @@ import {
   InstanceResourcesQueryManager,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { ResourcesTab } from "./ResourcesTab";
 import { Query } from "@/Core";
 
@@ -41,13 +41,8 @@ const Template: React.FC<{
     ])
   );
 
-  const urlManager = new UrlManagerImpl(
-    "",
-    "34a961ba-db3c-486e-8d85-1438d8e88909"
-  );
-
   return (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+    <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
       <StoreProvider store={store}>
         <ResourcesTab
           serviceInstanceIdentifier={{

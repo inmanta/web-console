@@ -1,10 +1,19 @@
 import React, { useEffect, useContext } from "react";
 import styled from "styled-components";
-import { PageHeader, PageHeaderTools } from "@patternfly/react-core";
+import {
+  PageHeader,
+  PageHeaderTools,
+  PageHeaderToolsGroup,
+} from "@patternfly/react-core";
 import Logo from "!react-svg-loader!@images/logo.svg";
 import { GlobalStyles } from "@/UI/Styles";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
-import { Profile, SettingsButton, EnvSelectorWithProvider } from "./Toolbar";
+import {
+  Profile,
+  SettingsButton,
+  EnvSelectorWithProvider,
+  DocumentationLink,
+} from "./Toolbar";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
@@ -38,7 +47,10 @@ export const AppWrapper: React.FunctionComponent<Props> = ({
       logoProps={{ href: routeManager.getUrl("Home", undefined) }}
       headerTools={
         <PageHeaderTools>
-          <SettingsButton isDisabled={!withEnv} />
+          <PageHeaderToolsGroup>
+            <SettingsButton isDisabled={!withEnv} />
+            <DocumentationLink />
+          </PageHeaderToolsGroup>
           {shouldUseAuth && <Profile keycloak={keycloak} />}
         </PageHeaderTools>
       }

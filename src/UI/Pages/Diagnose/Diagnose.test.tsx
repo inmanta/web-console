@@ -18,7 +18,6 @@ import {
   getStoreInstance,
 } from "@/Data";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
-import { UrlManagerImpl } from "@/UI/Utils";
 
 function setup() {
   const store = getStoreInstance();
@@ -34,12 +33,10 @@ function setup() {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "environment");
+  dependencies.urlManager.setEnvironment("environment");
 
   const component = (
-    <DependencyProvider
-      dependencies={{ ...dependencies, queryResolver, urlManager }}
-    >
+    <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
       <StoreProvider store={store}>
         <DiagnoseComponent
           service={Service.a}

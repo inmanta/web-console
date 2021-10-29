@@ -16,7 +16,6 @@ import {
 } from "@/Data";
 import { Events } from "@/UI/Pages/Events/Events";
 import { MemoryRouter } from "react-router-dom";
-import { UrlManagerImpl } from "@/UI/Utils";
 
 export interface Handles {
   component: React.ReactElement;
@@ -39,13 +38,10 @@ export class EventsPageComposer {
     const queryResolver = new QueryResolverImpl(
       new DynamicQueryManagerResolver([eventsHelper])
     );
-    const urlManager = new UrlManagerImpl("", Service.a.environment);
 
     const component = (
       <MemoryRouter>
-        <DependencyProvider
-          dependencies={{ ...dependencies, queryResolver, urlManager }}
-        >
+        <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
           <StoreProvider store={store}>
             <Events service={service} instanceId="id1" />
           </StoreProvider>

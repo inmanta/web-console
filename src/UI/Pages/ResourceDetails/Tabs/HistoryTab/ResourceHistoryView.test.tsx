@@ -5,6 +5,7 @@ import { StoreProvider } from "easy-peasy";
 import { MemoryRouter } from "react-router";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
@@ -16,7 +17,6 @@ import {
   ResourceHistoryQueryManager,
   ResourceHistoryStateHelper,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 import { ResourceHistory } from "@/Test/Data";
 
@@ -40,8 +40,8 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           queryResolver,
-          urlManager: new UrlManagerImpl("", environment),
         }}
       >
         <StoreProvider store={store}>

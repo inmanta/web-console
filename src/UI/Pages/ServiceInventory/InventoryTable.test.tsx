@@ -19,7 +19,6 @@ import {
   getStoreInstance,
 } from "@/Data";
 import userEvent from "@testing-library/user-event";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { MemoryRouter } from "react-router";
 
 const dummySetter = () => {
@@ -49,12 +48,9 @@ test("InventoryTable can be expanded", async () => {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "env");
   render(
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{ ...dependencies, queryResolver, urlManager }}
-      >
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <InventoryTable
             rows={[Row.a, Row.b]}
@@ -99,12 +95,10 @@ test("ServiceInventory can show resources for instance", async () => {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "env");
+
   render(
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{ ...dependencies, queryResolver, urlManager }}
-      >
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <InventoryTable
             rows={[Row.a, Row.b]}

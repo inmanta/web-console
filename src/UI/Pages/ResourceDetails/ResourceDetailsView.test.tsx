@@ -12,12 +12,12 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   ResourceDetails,
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { ResourceDetailsView } from "./ResourceDetailsView";
 
 function setup() {
@@ -35,13 +35,14 @@ function setup() {
       ),
     ])
   );
+  dependencies.urlManager.setEnvironment(environment);
 
   const component = (
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           queryResolver,
-          urlManager: new UrlManagerImpl("", environment),
         }}
       >
         <StoreProvider store={store}>

@@ -50,10 +50,10 @@ const queryResolver = new QueryResolverImpl(
 const commandResolver = new CommandResolverImpl(
   new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper(keycloak))
 );
-const urlManager = new UrlManagerImpl(baseUrl);
+const featureManager = new PrimaryFeatureManager();
+const urlManager = new UrlManagerImpl(featureManager, baseUrl);
 const fileFetcher = new FileFetcherImpl(apiHelper);
 const environmentModifier = new EnvironmentModifierImpl();
-const featureManager = new PrimaryFeatureManager();
 
 ReactDOM.render(
   <DependencyProvider

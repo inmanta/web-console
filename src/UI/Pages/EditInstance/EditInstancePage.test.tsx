@@ -23,7 +23,7 @@ import {
   BaseApiHelper,
   CommandResolverImpl,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
+
 import { EditInstancePage } from "./EditInstancePage";
 import userEvent from "@testing-library/user-event";
 
@@ -41,7 +41,7 @@ function setup() {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "environment");
+
   const commandManager = new TriggerInstanceUpdateCommandManager(
     new BaseApiHelper(),
     new AttributeResultConverterImpl(),
@@ -57,7 +57,6 @@ function setup() {
         ...dependencies,
         queryResolver,
         commandResolver,
-        urlManager,
         environmentModifier: new MockEnvironmentModifier(),
       }}
     >
