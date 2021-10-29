@@ -17,12 +17,12 @@ export const Provider: React.FC<Props> = ({
   return (
     <Timeline
       requested={{ day: getDay(requested), time: getTime(requested) }}
-      requestedDiff={getDiff(requested, started ? started : now)}
+      requestedDiff={getDiff(started ? started : now, requested)}
       started={
         !started ? undefined : { day: getDay(started), time: getTime(started) }
       }
       startedDiff={
-        !started ? undefined : getDiff(started, completed ? completed : now)
+        !started ? undefined : getDiff(completed ? completed : now, started)
       }
       completed={
         !completed
@@ -39,7 +39,10 @@ const getDay = (timestamp: string): string =>
 const getTime = (timestamp: string): string =>
   moment.utc(timestamp).tz(moment.tz.guess()).format("HH:mm:ss.SSS");
 
-const getDiff = (timestampA: string, timestampB: string): string =>
-  moment
+const getDiff = (timestampA: string, timestampB: string): string => {
+  const seconds = moment
     .duration(moment.utc(timestampA).diff(moment.utc(timestampB)))
-    .humanize({ ss: 4 });
+    .asSeconds();
+  const rounded = Math.round(seconds);
+  return rounded === 1 ? `1 second` : `${rounded} seconds`;
+};
