@@ -7,6 +7,7 @@ import {
   RouteParams,
 } from "@/Core";
 import { paths } from "./Paths";
+import { getRouteWithParamsFromUrl, getLineageFromRoute } from "./Utils";
 
 export class PrimaryRouteManager implements RouteManager {
   private readonly routeDictionary: RouteDictionary;
@@ -28,6 +29,27 @@ export class PrimaryRouteManager implements RouteManager {
       ResourceDetails: ResourceDetails(this.baseUrl),
       Settings: Settings(this.baseUrl),
     };
+  }
+
+  getRelatedUrlWithoutParams(url: string): string {
+    const routeAndParams = getRouteWithParamsFromUrl(this.getRoutes(), url);
+    if (typeof routeAndParams === "undefined") {
+      return this.getUrl("Home", undefined);
+    }
+    const [currentRoute] = routeAndParams;
+    if (!this.routeHasParams(currentRoute)) return url;
+    const parent = this.getParentWithoutParams(currentRoute);
+    if (typeof parent === "undefined") return this.getUrl("Home", undefined);
+    return this.getUrl(parent.kind, undefined);
+  }
+
+  private getParentWithoutParams(route: Route): Route | undefined {
+    const lineage = getLineageFromRoute(this, route);
+    return lineage.reverse().find((route) => !this.routeHasParams(route));
+  }
+
+  private routeHasParams(route: Route): boolean {
+    return route.path.includes(":");
   }
 
   getRoutes(): Route[] {

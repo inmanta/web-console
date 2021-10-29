@@ -1,6 +1,9 @@
 import { RouteManager, Route, RouteKind } from "@/Core";
 
 export class DummyRouteManager implements RouteManager {
+  getRelatedUrlWithoutParams(): string {
+    throw new Error("Method not implemented.");
+  }
   getUrl(): string {
     throw new Error("Method not implemented.");
   }

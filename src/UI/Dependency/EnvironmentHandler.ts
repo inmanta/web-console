@@ -50,12 +50,15 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
     private readonly store: Store,
     private readonly routeManager: RouteManager
   ) {}
+
   public set(projectId: string, environmentId: string): void {
     const params = new URLSearchParams(this.history.location.search);
     if (params.get("env") !== environmentId) {
       params.set("env", environmentId);
       this.history.push({
-        pathname: this.routeManager.getUrl("Catalog", undefined),
+        pathname: this.routeManager.getRelatedUrlWithoutParams(
+          this.history.location.pathname
+        ),
         search: `?${params}`,
       });
     }
@@ -64,6 +67,7 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
       environment: environmentId,
     });
   }
+
   public setDefault(data: RemoteData.Type<string, ProjectModel[]>): void {
     if (data.kind === "Success") {
       const params = new URLSearchParams(this.history.location.search);

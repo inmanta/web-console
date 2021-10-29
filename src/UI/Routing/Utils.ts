@@ -5,6 +5,10 @@ import { Route, RouteManager, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { Kind } from "./Kind";
 
+/**
+ * Return the list of parent routes including the route itself.
+ * The route itself is the last in the list.
+ */
 export const getLineageFromRoute = (
   routeManager: RouteManager,
   route: Route,
