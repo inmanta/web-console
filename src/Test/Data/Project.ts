@@ -35,14 +35,14 @@ export const filterable: ProjectModel[] = [
       {
         id: "123",
         name: "test-env1",
-        projectId: "1",
+        project_id: "1",
         repo_branch: "master",
         repo_url: "github.com/test",
       },
       {
         id: "456",
         name: "dev-env2",
-        projectId: "1",
+        project_id: "1",
         repo_branch: "master",
         repo_url: "github.com/test2",
       },
@@ -55,14 +55,14 @@ export const filterable: ProjectModel[] = [
       {
         id: "789",
         name: "test-env1",
-        projectId: "444",
+        project_id: "444",
         repo_branch: "master",
         repo_url: "gitlab.com/test",
       },
       {
         id: "101",
         name: "env2",
-        projectId: "444",
+        project_id: "444",
         repo_branch: "master",
         repo_url: "gitlab.com/test123",
       },

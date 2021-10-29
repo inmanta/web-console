@@ -15,14 +15,27 @@ export class ProjectsStateHelper implements StateHelper<"GetProjects"> {
   constructor(private readonly store: Store) {}
 
   set(data: ApiData): void {
-    const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-    this.store.dispatch.projects.setAllProjects(unwrapped);
+    const unwrapped = RemoteData.mapSuccess((wrapped) => {
+      return wrapped.data.flatMap((project) => {
+        if (project.environments.length > 0) {
+          return [
+            ...project.environments.map((environment) => ({
+              ...environment,
+              projectName: project.name,
+            })),
+          ];
+        } else {
+          return [{ projectName: project.name, project_id: project.id }];
+        }
+      });
+    }, data);
+    this.store.dispatch.environments.setAllEnvironments(unwrapped);
   }
 
   getHooked(): Data {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     return useStoreState(
-      (state) => this.enforce(state.projects.allProjects),
+      (state) => this.enforce(state.environments.allEnvironments),
       isEqual
     );
   }
@@ -33,6 +46,6 @@ export class ProjectsStateHelper implements StateHelper<"GetProjects"> {
   }
 
   getOnce(): Data {
-    return this.enforce(this.store.getState().projects.allProjects);
+    return this.enforce(this.store.getState().environments.allEnvironments);
   }
 }

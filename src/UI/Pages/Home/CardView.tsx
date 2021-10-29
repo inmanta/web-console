@@ -15,7 +15,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { PlusCircleIcon } from "@patternfly/react-icons";
-import { FlatEnvironment } from "@/Core";
+import { FullEnvironment } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -24,7 +24,7 @@ import { Actions } from "./Components";
 import styled from "styled-components";
 
 interface Props {
-  environments: FlatEnvironment[];
+  environments: FullEnvironment[];
 }
 
 export const CardView: React.FC<Props> = ({ environments, ...props }) => {
@@ -67,7 +67,7 @@ const CreateNewEnvironmentCard: React.FC = () => (
 );
 
 interface EnvironmentCardProps {
-  environment: FlatEnvironment;
+  environment: FullEnvironment;
   pathname: string;
 }
 

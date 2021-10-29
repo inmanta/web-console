@@ -6,8 +6,8 @@ import { EnvironmentsOverview } from "./EnvironmentsOverview";
 import {
   DeferredApiHelper,
   DynamicCommandManagerResolver,
+  Environment,
   MockFeatureManger,
-  Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
@@ -34,7 +34,7 @@ function setup() {
   const component = (
     <MemoryRouter>
       <DependencyProvider dependencies={{ featureManager, commandResolver }}>
-        <EnvironmentsOverview projects={Project.filterable} />
+        <EnvironmentsOverview environments={Environment.filterable} />
       </DependencyProvider>
     </MemoryRouter>
   );

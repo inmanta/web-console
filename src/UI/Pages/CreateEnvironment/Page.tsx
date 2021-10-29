@@ -21,9 +21,9 @@ export const Page: React.FC = () => {
               aria-label="CreateEnvironment-Failed"
             />
           ),
-          success: (projects) => (
+          success: (environments) => (
             <CreateEnvironmentForm
-              projects={projects}
+              environments={environments}
               aria-label="CreateEnvironment-Success"
             />
           ),

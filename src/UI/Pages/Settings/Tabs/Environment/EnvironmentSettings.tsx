@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { EnvironmentModel, ProjectModel } from "@/Core";
+import { FullEnvironment } from "@/Core";
 import { DescriptionList } from "@patternfly/react-core";
 import { EditableTextField, EditableMultiTextField } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -8,13 +8,11 @@ import { Project } from "./Project";
 import styled from "styled-components";
 
 interface Props {
-  environment: EnvironmentModel;
-  project: ProjectModel;
+  environment: FullEnvironment;
 }
 
 export const EnvironmentSettings: React.FC<Props> = ({
   environment,
-  project,
   ...props
 }) => {
   const { commandResolver } = useContext(DependencyContext);
@@ -47,7 +45,7 @@ export const EnvironmentSettings: React.FC<Props> = ({
           });
         }}
       />
-      <Project name={project.name} />
+      <Project name={environment.projectName} />
     </PaddedList>
   );
 };

@@ -3,7 +3,7 @@ import {
   DynamicCommandManagerResolver,
   MockCommandManager,
   MockFeatureManger,
-  Project,
+  Environment,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Story } from "@storybook/react/types-6-0";
@@ -35,5 +35,5 @@ const Template: Story<ComponentProps<typeof EnvironmentsOverview>> = (args) => {
 
 export const Multiple = Template.bind({});
 Multiple.args = {
-  projects: Project.filterable,
+  environments: Environment.filterable,
 };

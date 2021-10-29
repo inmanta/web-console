@@ -20,9 +20,9 @@ export const Home: React.FC = () => {
           failed: (message) => (
             <ErrorView message={message} aria-label="Overview-Failed" />
           ),
-          success: (projects) => (
+          success: (environments) => (
             <EnvironmentsOverview
-              projects={projects}
+              environments={environments}
               aria-label="Overview-Success"
             />
           ),

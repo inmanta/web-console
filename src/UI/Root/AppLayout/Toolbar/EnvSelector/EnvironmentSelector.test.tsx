@@ -3,54 +3,48 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 import { RemoteData } from "@/Core";
-import { Project } from "@/Test";
+import { Environment } from "@/Test";
 import { MemoryRouter } from "react-router";
+import { createMemoryHistory } from "history";
+import { Router } from "react-router-dom";
 
-test("GIVEN EnvironmentSelector WHEN no environments THEN error view", async () => {
+test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async () => {
+  const history = createMemoryHistory();
   render(
-    <MemoryRouter>
+    <Router history={history}>
       <EnvironmentSelector
-        projects={RemoteData.success([])}
+        environments={RemoteData.success([])}
         onSelectEnvironment={() => {
           return;
         }}
-        selectedProjectAndEnvironment={RemoteData.failed(
-          "No environments were found"
-        )}
+        selectedEnvironment={undefined}
       />
-    </MemoryRouter>
+    </Router>
   );
-
-  expect(
-    await screen.findByRole("generic", { name: "EnvSelector-Failed" })
-  ).toBeInTheDocument();
+  expect(history.location.pathname).toEqual("/console/");
 });
 
 test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", () => {
-  const [projectA, projectB] = Project.list;
-  const [envA] = projectA.environments;
-  const [envB] = projectB.environments;
+  const envA = Environment.filterable[0];
+  const envB = Environment.filterable[2];
   render(
     <MemoryRouter>
       <EnvironmentSelector
-        projects={RemoteData.success(Project.list)}
+        environments={RemoteData.success(Environment.filterable)}
         onSelectEnvironment={() => {
           return;
         }}
-        selectedProjectAndEnvironment={RemoteData.success({
-          environment: envA,
-          project: projectA,
-        })}
+        selectedEnvironment={envA}
       />
     </MemoryRouter>
   );
 
   const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${envA.name} (${projectA.name})`,
+    name: `Selected Project: ${envA.name} (${envA.projectName})`,
   });
   userEvent.click(toggle);
   const listItem = screen.queryByRole("menuitem", {
-    name: `${envB.name} (${projectB.name})`,
+    name: `${envB.name} (${envB.projectName})`,
   });
 
   expect(listItem).toBeVisible();
@@ -58,33 +52,27 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
 
 test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", () => {
   let selectedEnv;
-  let selectedProject;
-  const [projectA, projectB] = Project.list;
-  const [envA] = projectA.environments;
-  const [envB] = projectB.environments;
+  const envA = Environment.filterable[0];
+  const envB = Environment.filterable[2];
   render(
     <MemoryRouter>
       <EnvironmentSelector
-        projects={RemoteData.success(Project.list)}
+        environments={RemoteData.success(Environment.filterable)}
         onSelectEnvironment={(item) => {
-          (selectedEnv = item.environmentId),
-            (selectedProject = item.projectId);
+          selectedEnv = item.environmentId;
         }}
-        selectedProjectAndEnvironment={RemoteData.success({
-          environment: envA,
-          project: projectA,
-        })}
+        selectedEnvironment={envA}
       />
     </MemoryRouter>
   );
 
   const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${envA.name} (${projectA.name})`,
+    name: `Selected Project: ${envA.name} (${envA.projectName})`,
   });
   userEvent.click(toggle);
 
   const listItem = screen.getByRole("menuitem", {
-    name: `${envB.name} (${projectB.name})`,
+    name: `${envB.name} (${envB.projectName})`,
   });
 
   expect(listItem).toBeVisible();
@@ -93,45 +81,40 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
 
   expect(
     screen.queryByRole("button", {
-      name: `Selected Project: ${envB.name} (${projectB.name})`,
+      name: `Selected Project: ${envB.name} (${envB.projectName})`,
     })
   ).toBeVisible();
-  expect(selectedProject).toEqual(projectB.id);
   expect(selectedEnv).toEqual(envB.id);
 });
 
 test.each`
-  inputValue          | numberOfMatchedItems
-  ${"project_name"}   | ${5}
-  ${"project_name_a"} | ${1}
+  inputValue    | numberOfMatchedItems
+  ${"test"}     | ${2}
+  ${"dev-env2"} | ${1}
 `(
   "GIVEN EnvironmentSelector and populated store WHEN user types in '$inputValue' THEN shows $numberOfMatchedItems items",
   ({ inputValue, numberOfMatchedItems }) => {
-    const [project] = Project.list;
-    const [env] = project.environments;
+    const env = Environment.filterable[0];
 
     render(
       <MemoryRouter>
         <EnvironmentSelector
-          projects={RemoteData.success(Project.list)}
+          environments={RemoteData.success(Environment.filterable)}
           onSelectEnvironment={() => {
             return;
           }}
-          selectedProjectAndEnvironment={RemoteData.success({
-            environment: env,
-            project,
-          })}
+          selectedEnvironment={env}
         />
       </MemoryRouter>
     );
 
     const toggle = screen.getByRole("button", {
-      name: `Selected Project: ${env.name} (${project.name})`,
+      name: `Selected Project: ${env.name} (${env.projectName})`,
     });
     userEvent.click(toggle);
 
     const menuItemsBefore = screen.getAllByRole("menuitem");
-    expect(menuItemsBefore).toHaveLength(5);
+    expect(menuItemsBefore).toHaveLength(Environment.filterable.length);
 
     const input = screen.getByRole("searchbox", { name: "Filter Projects" });
     userEvent.type(input, inputValue);
@@ -142,30 +125,26 @@ test.each`
 );
 
 test("GIVEN EnvironmentSelector and populated store WHEN user types in non matching text THEN shows no items", () => {
-  const [project] = Project.list;
-  const [env] = project.environments;
+  const env = Environment.filterable[0];
   render(
     <MemoryRouter>
       <EnvironmentSelector
-        projects={RemoteData.success(Project.list)}
+        environments={RemoteData.success(Environment.filterable)}
         onSelectEnvironment={() => {
           return;
         }}
-        selectedProjectAndEnvironment={RemoteData.success({
-          environment: env,
-          project,
-        })}
+        selectedEnvironment={env}
       />
     </MemoryRouter>
   );
 
   const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${env.name} (${project.name})`,
+    name: `Selected Project: ${env.name} (${env.projectName})`,
   });
   userEvent.click(toggle);
 
   const menuItemsBefore = screen.getAllByRole("menuitem");
-  expect(menuItemsBefore).toHaveLength(5);
+  expect(menuItemsBefore).toHaveLength(Environment.filterable.length);
 
   const input = screen.getByRole("searchbox", { name: "Filter Projects" });
   userEvent.type(input, "non_existing_project_name");
@@ -176,27 +155,21 @@ test("GIVEN EnvironmentSelector and populated store WHEN user types in non match
 
 test("GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected", () => {
   let selectedEnv;
-  let selectedProject;
-  const [projectA, projectB] = Project.list;
-  const [envA] = projectA.environments;
-  const [, envB] = projectB.environments;
+  const envA = Environment.filterable[0];
+  const envB = Environment.filterable[2];
   render(
     <MemoryRouter>
       <EnvironmentSelector
-        projects={RemoteData.success(Project.list)}
+        environments={RemoteData.success(Environment.filterable)}
         onSelectEnvironment={(item) => {
-          (selectedEnv = item.environmentId),
-            (selectedProject = item.projectId);
+          selectedEnv = item.environmentId;
         }}
-        selectedProjectAndEnvironment={RemoteData.success({
-          environment: envA,
-          project: projectA,
-        })}
+        selectedEnvironment={envA}
       />
     </MemoryRouter>
   );
   const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${envA.name} (${projectA.name})`,
+    name: `Selected Project: ${envA.name} (${envA.projectName})`,
   });
   userEvent.click(toggle);
 
@@ -205,10 +178,9 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
 
   expect(
     screen.getByRole("button", {
-      name: `Selected Project: ${envB.name} (${projectB.name})`,
+      name: `Selected Project: ${envB.name} (${envB.projectName})`,
     })
   );
 
-  expect(selectedProject).toEqual(projectB.id);
   expect(selectedEnv).toEqual(envB.id);
 });

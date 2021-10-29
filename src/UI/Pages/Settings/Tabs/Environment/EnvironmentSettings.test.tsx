@@ -13,6 +13,7 @@ import {
   DeferredApiHelper,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  Environment,
   Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -21,7 +22,7 @@ import userEvent from "@testing-library/user-event";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 function setup() {
-  const selectedEnvironment = Project.filterable[0].environments[0];
+  const selectedEnvironment = Environment.filterable[0];
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const projectsStateHelper = new ProjectsStateHelper(store);
@@ -43,10 +44,7 @@ function setup() {
 
   const component = (
     <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
-      <EnvironmentSettings
-        environment={selectedEnvironment}
-        project={Project.filterable[0]}
-      />
+      <EnvironmentSettings environment={selectedEnvironment} />
     </DependencyProvider>
   );
 
@@ -91,7 +89,7 @@ test("Given environment settings When submitting the edited name Then the backen
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   await act(async () => {
-    await apiHelper.resolve(Either.right(Project.filterable));
+    await apiHelper.resolve(Either.right({ data: Project.filterable }));
   });
   expect(apiHelper.resolvedRequests).toHaveLength(2);
   expect(apiHelper.pendingRequests).toHaveLength(0);
@@ -139,7 +137,7 @@ test.each`
       await apiHelper.resolve(Maybe.some("Invalid environment name"));
     });
     await act(async () => {
-      await apiHelper.resolve(Either.right(Project.filterable));
+      await apiHelper.resolve(Either.right({ data: Project.filterable }));
     });
     expect(
       await screen.findByRole("generic", { name: "Name-error-message" })
@@ -222,7 +220,7 @@ test("Given environment settings When submitting the edited repository settings 
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   await act(async () => {
-    await apiHelper.resolve(Either.right(Project.filterable));
+    await apiHelper.resolve(Either.right({ data: Project.filterable }));
   });
   expect(apiHelper.resolvedRequests).toHaveLength(2);
   expect(apiHelper.pendingRequests).toHaveLength(0);
@@ -293,7 +291,7 @@ test.each`
       await apiHelper.resolve(Maybe.some("Invalid branch"));
     });
     await act(async () => {
-      await apiHelper.resolve(Either.right(Project.filterable));
+      await apiHelper.resolve(Either.right({ data: Project.filterable }));
     });
     expect(
       await screen.findByRole("generic", {

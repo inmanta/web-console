@@ -1,4 +1,4 @@
-import { EnvironmentHandlerContext } from "@/UI/Dependency";
+import { DependencyContext, EnvironmentHandlerContext } from "@/UI/Dependency";
 import React, { useContext } from "react";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
@@ -6,15 +6,18 @@ import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 export const Provider: React.FC = () => {
   const { environmentHandler } = useContext(EnvironmentHandlerContext);
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
-    environmentHandler.set(item.projectId, item.environmentId);
+    environmentHandler.set(item.environmentId);
   };
-  const selected = environmentHandler.getSelected();
-  const projects = environmentHandler.getProjects();
+  const { queryResolver } = useContext(DependencyContext);
+  const [data] = queryResolver.useOneTime<"GetProjects">({
+    kind: "GetProjects",
+  });
+  const selected = environmentHandler.useSelected();
   return (
     <EnvSelectorWithData
-      projects={projects}
+      environments={data}
       onSelectEnvironment={onSelectEnvironment}
-      selectedProjectAndEnvironment={selected}
+      selectedEnvironment={selected}
     />
   );
 };

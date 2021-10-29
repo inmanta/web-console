@@ -1,11 +1,11 @@
 import React from "react";
-import { FlatEnvironment, ProjectModel } from "@/Core";
+import { FlatEnvironment, FullEnvironment, getFullEnvironments } from "@/Core";
 import { useUrlStateWithFilter } from "@/Data";
 import { CardView } from "./CardView";
 import { FilterToolbar } from "./FilterToolbar";
 
 interface Props {
-  projects: ProjectModel[];
+  environments: FlatEnvironment[];
 }
 
 export interface Filters {
@@ -14,16 +14,13 @@ export interface Filters {
 }
 
 export const EnvironmentsOverview: React.FC<Props> = ({
-  projects,
+  environments,
   ...props
 }) => {
-  const filterableEnvironments = projects.flatMap((project) => [
-    ...project.environments.map((environment) => ({
-      ...environment,
-      projectName: project.name,
-    })),
-  ]);
-  const projectNames = projects.map((project) => project.name);
+  const projectNames = Array.from(
+    new Set(environments.map((environment) => environment.projectName))
+  );
+  const fullEnvironments = getFullEnvironments(environments);
   const [filter, setFilter] = useUrlStateWithFilter<Filters>({ route: "Home" });
   const setProjectFilter = (projectFilter?: string[]) =>
     setFilter({ ...filter, projectFilter });
@@ -39,7 +36,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
     ? filter.environmentFilter
     : "";
   const filteredByProjectName = filterByProject(
-    filterableEnvironments,
+    fullEnvironments,
     projectFilter
   );
   const filteredByEnvName = filterByName(
@@ -64,21 +61,21 @@ export const EnvironmentsOverview: React.FC<Props> = ({
 };
 
 function filterByName(
-  filterableEnvironments: FlatEnvironment[],
+  filterableEnvironments: FullEnvironment[],
   environmentFilter: string
-): FlatEnvironment[] {
+): FullEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (environmentFilter && environmentFilter.length > 0) {
-      return environment.name.includes(environmentFilter);
+      return environment.name?.includes(environmentFilter);
     }
     return true;
   });
 }
 
 function filterByProject(
-  filterableEnvironments: FlatEnvironment[],
+  filterableEnvironments: FullEnvironment[],
   projectFilter: string[]
-): FlatEnvironment[] {
+): FullEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (projectFilter && projectFilter.length > 0) {
       return projectFilter.includes(environment.projectName);

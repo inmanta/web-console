@@ -105,7 +105,7 @@ test("GIVEN DeleteModal WHEN correct env & delete button pressed THEN delete exe
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   await act(async () => {
-    await apiHelper.resolve(Either.right(Project.list));
+    await apiHelper.resolve(Either.right({ data: Project.list }));
   });
   expect(apiHelper.resolvedRequests).toHaveLength(2);
   expect(apiHelper.pendingRequests).toHaveLength(0);
