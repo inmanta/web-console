@@ -1,10 +1,11 @@
-import { generatePath } from "react-router-dom";
+import { generatePath, matchPath, match } from "react-router-dom";
 import {
   RouteDictionary,
   RouteManager,
   Route,
   RouteKind,
   RouteParams,
+  MatchedParams,
 } from "@/Core";
 import { paths } from "./Paths";
 
@@ -28,6 +29,37 @@ export class PrimaryRouteManager implements RouteManager {
       ResourceDetails: ResourceDetails(this.baseUrl),
       Settings: Settings(this.baseUrl),
     };
+  }
+
+  getLineageFromRoute(route: Route, routes: Route[] = []): Route[] {
+    if (route.parent) {
+      return this.getLineageFromRoute(this.getRoute(route.parent), [
+        route,
+        ...routes,
+      ]);
+    }
+    return [route, ...routes];
+  }
+
+  getRelatedUrlWithoutParams(pathname: string): string {
+    const routeAndParams = this.getRouteWithParamsFromUrl(pathname);
+    if (typeof routeAndParams === "undefined") {
+      return this.getUrl("Home", undefined);
+    }
+    const [currentRoute] = routeAndParams;
+    if (!this.routeHasParams(currentRoute)) return pathname;
+    const parent = this.getParentWithoutParams(currentRoute);
+    if (typeof parent === "undefined") return this.getUrl("Home", undefined);
+    return this.getUrl(parent.kind, undefined);
+  }
+
+  private getParentWithoutParams(route: Route): Route | undefined {
+    const lineage = this.getLineageFromRoute(route);
+    return lineage.reverse().find((route) => !this.routeHasParams(route));
+  }
+
+  private routeHasParams(route: Route): boolean {
+    return route.path.includes(":");
   }
 
   getRoutes(): Route[] {
@@ -74,6 +106,19 @@ export class PrimaryRouteManager implements RouteManager {
   getUrl(kind: RouteKind, params: RouteParams<typeof kind>): string {
     const route = this.getRoute(kind);
     return generatePath(route.path, params);
+  }
+
+  getRouteWithParamsFromUrl(url: string): [Route, MatchedParams] | undefined {
+    const routeMatchPairs = this.getRoutes().map((route) => [
+      route,
+      matchPath<MatchedParams>(url, { path: route.path, exact: true }),
+    ]);
+    const routeWithMatch = routeMatchPairs.find(
+      (pair): pair is [Route, match<MatchedParams>] => pair[1] !== null
+    );
+    if (typeof routeWithMatch === "undefined") return undefined;
+    const [page, match] = routeWithMatch;
+    return [page, match.params];
   }
 }
 

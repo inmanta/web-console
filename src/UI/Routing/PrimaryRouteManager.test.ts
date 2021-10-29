@@ -1,7 +1,26 @@
-import { PrimaryRouteManager } from "@/UI/Routing";
-import { getLineageFromRoute, getRouteWithParamsFromUrl } from "./Utils";
+import { PrimaryRouteManager } from "./PrimaryRouteManager";
 
 const routeManager = new PrimaryRouteManager("");
+
+test.each`
+  inputUrl                                                | outputUrl
+  ${"/lsm/catalog"}                                       | ${"/lsm/catalog"}
+  ${"/lsm/catalog/serviceName/inventory"}                 | ${"/lsm/catalog"}
+  ${"/lsm/catalog/serviceName/inventory/instanceId/edit"} | ${"/lsm/catalog"}
+  ${"/resources"}                                         | ${"/resources"}
+  ${"/resources/resourceId"}                              | ${"/resources"}
+  ${"/compilereports"}                                    | ${"/compilereports"}
+  ${"/compilereports/reportId"}                           | ${"/compilereports"}
+  ${"/settings"}                                          | ${"/settings"}
+`(
+  "GIVEN RouteManager.getRelatedUrlWithoutParams WHEN $inputUrl THEN returns $outputUrl",
+  async ({ inputUrl, outputUrl }) => {
+    expect(routeManager.getRelatedUrlWithoutParams(inputUrl)).toEqual(
+      outputUrl
+    );
+  }
+);
+
 const { Home, Catalog, Inventory, CreateInstance, History, Events, Diagnose } =
   routeManager.getRouteDictionary();
 
@@ -16,7 +35,7 @@ it.each`
 `(
   "GIVEN getLineageFromRoute WHEN passed $routeTxt THEN returns routes #$length $resultTxt",
   ({ route, length, result }) => {
-    const routes = getLineageFromRoute(routeManager, route);
+    const routes = routeManager.getLineageFromRoute(route);
     expect(routes).toHaveLength(length);
     expect(routes).toEqual(result);
   }
@@ -34,7 +53,6 @@ it.each`
 `(
   "GIVEN getRouteWithParamsFromUrl WHEN passed '$url' THEN returns $resultTxt",
   ({ url, result }) => {
-    const routes = routeManager.getRoutes();
-    expect(getRouteWithParamsFromUrl(routes, url)).toEqual(result);
+    expect(routeManager.getRouteWithParamsFromUrl(url)).toEqual(result);
   }
 );
