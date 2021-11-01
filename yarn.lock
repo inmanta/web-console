@@ -1920,13 +1920,13 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@patternfly/react-charts@^6.15.32":
-  version "6.15.32"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-charts/-/react-charts-6.15.32.tgz#980f511b24b509529008024e8a3a93909adefca0"
-  integrity sha512-5EuPS0jo62UUg0aWgCegYGOy/TgnZD9w+RKxAMgVEXtn/Fq9ymSUcQZ8WsKh5R2lqhgkQx9CnYapWQIuQc3dsg==
+"@patternfly/react-charts@^6.21.8":
+  version "6.21.8"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-charts/-/react-charts-6.21.8.tgz#5dfd484605e0b5ab3db66adf1ab9ca04e73785d7"
+  integrity sha512-DmS0Ue4zXPodeRptEcPS+sXuiEBypZ2/hbUkxZtrt8tLvezbh9FCNLRZ7NsDXpsLwx6vtD89w3+zFzTHnqngQA==
   dependencies:
-    "@patternfly/react-styles" "^4.12.5"
-    "@patternfly/react-tokens" "^4.14.1"
+    "@patternfly/react-styles" "^4.18.8"
+    "@patternfly/react-tokens" "^4.20.8"
     hoist-non-react-statics "^3.3.0"
     lodash "^4.17.19"
     tslib "^2.0.0"
@@ -1964,10 +1964,10 @@
   resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-4.13.1.tgz#eee1b206a0e1c5f2c559148878e008a4cb0a0822"
   integrity sha512-1cAvcVQcjYqW7bBmz7v7hDvYc43xAftV543AAHEC07VNaLWDTDnS1R1m8B/N/U8j6Xkj3AvtgrKNDCUdpQIT1g==
 
-"@patternfly/react-styles@^4.12.5":
-  version "4.12.5"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-4.12.5.tgz#d1b30ba06be16b231ac1ad714c0e067cdfa43da1"
-  integrity sha512-+vgnjVvrY2MUe+TbKLv2UxGaxlWoLaS62acjhT2w73EMquMUALkdy7nLxC4owVZzSrKPD8qRhdyZW0V1nB1wNA==
+"@patternfly/react-styles@^4.12.5", "@patternfly/react-styles@^4.18.8":
+  version "4.18.8"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-4.18.8.tgz#92b314c41a8df27cf4c531ab60fc9daf11da8150"
+  integrity sha512-136N/Whs0qXDtPpsh5JeNJld5BeFPsbmmcgI5LlMQ+P9dioddh24rTqaaOIea67tHiXUB7orxaqKpBBILXqcPQ==
 
 "@patternfly/react-table@^4.31.8":
   version "4.31.8"
@@ -1981,10 +1981,10 @@
     lodash "^4.17.19"
     tslib "^2.0.0"
 
-"@patternfly/react-tokens@^4.14.1":
-  version "4.14.1"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-4.14.1.tgz#9343bff181deb53e4e7f878cab82b299100995d1"
-  integrity sha512-ck/XJx0raw+xpN0R5a5hXHDV1Os5Z6EMcCphInfKB8dc+R7Ed31onYoVno1ZBXH2Zvtq+mNDf0xTgTk/lPIagg==
+"@patternfly/react-tokens@^4.14.1", "@patternfly/react-tokens@^4.20.8":
+  version "4.20.8"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-4.20.8.tgz#8413af8516fdcdaea1da81912434eef4c9c7865a"
+  integrity sha512-OFlgTknFBNAETWVYYoLdISJBjPMQ8e3tcLpWb3h/KgKk/Tn1NR+P7Pl1gQGvTL/9liBZfS/HKDD5+P8c70w+2Q==
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.4.3":
   version "0.4.3"
