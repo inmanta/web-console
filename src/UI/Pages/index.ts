@@ -10,3 +10,4 @@ export * from "./CompileReports";
 export * from "./Home";
 export * from "./CreateEnvironment";
 export * from "./ResourceDetails";
+export * from "./Status";

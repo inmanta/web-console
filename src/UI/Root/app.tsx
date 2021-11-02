@@ -5,7 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { KeycloakInitOptions } from "keycloak-js";
 import { DependencyContext } from "@/UI/Dependency";
-import { Home, CreateEnvironmentPage, NotFound } from "@/UI/Pages";
+import { Home, CreateEnvironmentPage, StatusPage, NotFound } from "@/UI/Pages";
 import { SearchSanitizer } from "@/UI/Routing";
 import { BaseLayout } from "./BaseLayout";
 import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
@@ -41,6 +41,14 @@ export const App: React.FC<AuthProps> = ({ keycloak, shouldUseAuth }) => {
               element={
                 <BaseLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
                   <CreateEnvironmentPage />
+                </BaseLayout>
+              }
+            />
+            <Route
+              path={routeManager.getUrl("Status", undefined)}
+              element={
+                <BaseLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
+                  <StatusPage />
                 </BaseLayout>
               }
             />
