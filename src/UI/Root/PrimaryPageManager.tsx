@@ -12,6 +12,7 @@ import { ServiceCatalogPage } from "@/UI/Pages/ServiceCatalog";
 import { ServiceInstanceHistoryPage } from "@/UI/Pages/ServiceInstanceHistory";
 import { ServiceInventoryPage } from "@/UI/Pages/ServiceInventory";
 import { SettingsPage } from "@/UI/Pages/Settings";
+import { StatusPage } from "@/UI/Pages/Status";
 
 export class PrimaryPageManager implements PageManager {
   constructor(private readonly routeDictionary: RouteDictionary) {}
@@ -45,6 +46,7 @@ export class PrimaryPageManager implements PageManager {
         element: <ResourceDetailsPage />,
       },
       { ...this.routeDictionary.Settings, element: <SettingsPage /> },
+      { ...this.routeDictionary.Status, element: <StatusPage /> },
     ];
   }
 }

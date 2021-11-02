@@ -28,6 +28,7 @@ export class PrimaryRouteManager implements RouteManager {
       CompileDetails: CompileDetails(this.baseUrl),
       ResourceDetails: ResourceDetails(this.baseUrl),
       Settings: Settings(this.baseUrl),
+      Status: Status(this.baseUrl),
     };
   }
 
@@ -71,36 +72,7 @@ export class PrimaryRouteManager implements RouteManager {
   }
 
   getRoute(kind: RouteKind): Route {
-    switch (kind) {
-      case "Catalog":
-        return this.routeDictionary.Catalog;
-      case "Inventory":
-        return this.routeDictionary.Inventory;
-      case "History":
-        return this.routeDictionary.History;
-      case "CreateInstance":
-        return this.routeDictionary.CreateInstance;
-      case "EditInstance":
-        return this.routeDictionary.EditInstance;
-      case "Diagnose":
-        return this.routeDictionary.Diagnose;
-      case "Events":
-        return this.routeDictionary.Events;
-      case "Resources":
-        return this.routeDictionary.Resources;
-      case "CompileReports":
-        return this.routeDictionary.CompileReports;
-      case "CompileDetails":
-        return this.routeDictionary.CompileDetails;
-      case "Home":
-        return this.routeDictionary.Home;
-      case "ResourceDetails":
-        return this.routeDictionary.ResourceDetails;
-      case "Settings":
-        return this.routeDictionary.Settings;
-      case "CreateEnvironment":
-        return this.routeDictionary.CreateEnvironment;
-    }
+    return this.routeDictionary[kind];
   }
 
   getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
@@ -225,4 +197,11 @@ const Settings = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.Settings}`,
   label: "Settings",
+});
+
+const Status = (base: string): Route => ({
+  kind: "Status",
+  parent: "Home",
+  path: `${base}${paths.Status}`,
+  label: "Status",
 });

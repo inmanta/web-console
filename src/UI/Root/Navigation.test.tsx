@@ -11,7 +11,7 @@ function setup(
   initialEntries: string[] | undefined,
   serverStatus: ServerStatus
 ) {
-  dependencies.featureManager.setServerStatus(serverStatus);
+  dependencies.statusManager.setServerStatus(serverStatus);
   const routeManager = new PrimaryRouteManager("");
 
   const component = (

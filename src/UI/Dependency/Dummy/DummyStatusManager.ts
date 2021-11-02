@@ -1,6 +1,9 @@
-import { FeatureManager } from "@/Core";
+import { ServerStatus, StatusManager } from "@/Core";
 
-export class DummyFeatureManager implements FeatureManager {
+export class DummyStatusManager implements StatusManager {
+  getServerStatus(): ServerStatus {
+    throw new Error("Method not implemented.");
+  }
   getServerVersion(): string {
     throw new Error("Method not implemented.");
   }

@@ -1,5 +1,5 @@
 export * from "./Crumb";
-export * from "./Kind";
+
 export * from "./PrimaryBaseUrlManager";
 export * from "./PrimaryRouteManager";
 export * from "./Utils";

@@ -15,11 +15,11 @@ interface Group {
 export const Navigation: React.FC<{ environment: string }> = ({
   environment,
 }) => {
-  const { featureManager, routeManager, urlManager } =
+  const { statusManager, routeManager, urlManager } =
     useContext(DependencyContext);
   const routeDict = routeManager.getRouteDictionary();
   const groups: Group[] = [
-    ...(featureManager.isLsmEnabled()
+    ...(statusManager.isLsmEnabled()
       ? [lifecycleServiceManager(routeDict)]
       : []),
     orchestrationEngine(routeDict),

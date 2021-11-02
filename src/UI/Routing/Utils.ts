@@ -2,10 +2,9 @@ import { useContext, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { RouteKind, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { Kind } from "./Kind";
 
 type NavigateTo = (
-  kind: Kind,
+  kind: RouteKind,
   params: RouteParams<typeof kind>,
   search?: string
 ) => void;

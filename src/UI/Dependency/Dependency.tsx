@@ -5,7 +5,7 @@ import {
   QueryResolver,
   UrlManager,
   EnvironmentModifier,
-  FeatureManager,
+  StatusManager,
   RouteManager,
   EnvironmentHandler,
   AuthHelper,
@@ -13,7 +13,7 @@ import {
 import {
   DummyCommandResolver,
   DummyEnvironmentModifier,
-  DummyFeatureManager,
+  DummyStatusManager,
   DummyFileFetcher,
   DummyQueryResolver,
   DummyUrlManager,
@@ -28,7 +28,7 @@ export interface Dependencies {
   urlManager: UrlManager;
   fileFetcher: FileFetcher;
   environmentModifier: EnvironmentModifier;
-  featureManager: FeatureManager;
+  statusManager: StatusManager;
   routeManager: RouteManager;
   environmentHandler: EnvironmentHandler;
   authHelper: AuthHelper;
@@ -40,7 +40,7 @@ export const DependencyContext = createContext<Dependencies>({
   urlManager: new DummyUrlManager(),
   fileFetcher: new DummyFileFetcher(),
   environmentModifier: new DummyEnvironmentModifier(),
-  featureManager: new DummyFeatureManager(),
+  statusManager: new DummyStatusManager(),
   routeManager: new DummyRouteManager(),
   environmentHandler: new DummyEnvironmentHandler(),
   authHelper: new DummyAuthHelper(),
@@ -55,7 +55,7 @@ export const DependencyProvider: React.FC<{
     urlManager,
     fileFetcher,
     environmentModifier,
-    featureManager,
+    statusManager,
     routeManager,
     environmentHandler,
     authHelper,
@@ -70,7 +70,7 @@ export const DependencyProvider: React.FC<{
       fileFetcher: fileFetcher || new DummyFileFetcher(),
       environmentModifier:
         environmentModifier || new DummyEnvironmentModifier(),
-      featureManager: featureManager || new DummyFeatureManager(),
+      statusManager: statusManager || new DummyStatusManager(),
       routeManager: routeManager || new DummyRouteManager(),
       environmentHandler: environmentHandler || new DummyEnvironmentHandler(),
       authHelper: authHelper || new DummyAuthHelper(),

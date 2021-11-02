@@ -1,6 +1,6 @@
-import { Kind } from "./Kind";
+import { RouteKind } from "@/Core";
 
-type Paths = Record<Kind, string>;
+type Paths = Record<RouteKind, string>;
 
 export const paths: Paths = {
   Catalog: "/lsm/catalog",
@@ -16,5 +16,6 @@ export const paths: Paths = {
   CompileDetails: "/compilereports/:id",
   Settings: "/settings",
   CreateEnvironment: "/environment/create",
+  Status: "/status",
   Home: "/",
 };

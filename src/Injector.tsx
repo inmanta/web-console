@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { BaseApiHelper, FileFetcherImpl } from "@/Data/API";
 import { KeycloakAuthHelper } from "@/Data/Auth";
-import { PrimaryFeatureManager } from "@/Data/Common";
+import { PrimaryStatusManager } from "@/Data/Common";
 import {
   CommandResolverImpl,
   QueryResolverImpl,
@@ -39,8 +39,8 @@ export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
   const commandResolver = new CommandResolverImpl(
     new CommandManagerResolver(store, apiHelper, authHelper)
   );
-  const featureManager = new PrimaryFeatureManager();
-  const urlManager = new UrlManagerImpl(featureManager, baseUrl);
+  const statusManager = new PrimaryStatusManager();
+  const urlManager = new UrlManagerImpl(statusManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);
   const environmentModifier = new EnvironmentModifierImpl();
   const environmentHandler = new EnvironmentHandlerImpl(
@@ -57,7 +57,7 @@ export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
         urlManager,
         fileFetcher,
         environmentModifier,
-        featureManager,
+        statusManager,
         routeManager,
         environmentHandler,
         authHelper,

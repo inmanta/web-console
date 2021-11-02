@@ -1,5 +1,10 @@
-import { getKeysExcluding, isObject, keepKeys, RouteManager } from "@/Core";
-import { Kind } from "@/UI/Routing/Kind";
+import {
+  getKeysExcluding,
+  isObject,
+  keepKeys,
+  RouteManager,
+  RouteKind,
+} from "@/Core";
 import { PageStateSanitizer } from "@/UI/Routing/PageStateSanitizer";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
@@ -19,7 +24,7 @@ export class SearchSanitizer {
     this.pageStateSanitizer = new PageStateSanitizer(routeManager);
   }
 
-  private getValidKeys(routeKind: Kind): string[] {
+  private getValidKeys(routeKind: RouteKind): string[] {
     const route = this.routeManager.getRoute(routeKind);
     if (route.clearEnv) return this.validKeys.filter((k) => k !== "env");
     return this.validKeys;
@@ -29,7 +34,7 @@ export class SearchSanitizer {
    * Sanitizes the search string.
    * This maintains the original order of the search params.
    */
-  sanitize(routeKind: Kind, search: string): string {
+  sanitize(routeKind: RouteKind, search: string): string {
     const parsedSearch = this.searchHelper.parse(search);
     const sanitizedSearch = keepKeys(
       this.getValidKeys(routeKind),
@@ -51,7 +56,7 @@ export class SearchSanitizer {
   /**
    * Checks if the search string contains illegal values.
    */
-  isSanitized(routeKind: Kind, search: string): boolean {
+  isSanitized(routeKind: RouteKind, search: string): boolean {
     const parsedSearch = this.searchHelper.parse(search);
     if (getKeysExcluding(this.getValidKeys(routeKind), parsedSearch).length > 0)
       return false;
