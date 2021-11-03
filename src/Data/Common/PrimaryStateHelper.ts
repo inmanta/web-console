@@ -17,15 +17,18 @@ export class PrimaryStateHelper<Kind extends Query.Kind>
 {
   constructor(
     private readonly store: Store,
-    private readonly customSet: (data: ApiData<Kind>) => void,
+    private readonly customSet: (
+      data: ApiData<Kind>,
+      query: Query.SubQuery<Kind>
+    ) => void,
     private readonly customGet: (
       state: State<StoreModel>,
       query: Query.SubQuery<Kind>
     ) => Data<Kind>
   ) {}
 
-  set(data: ApiData<Kind>): void {
-    this.customSet(data);
+  set(data: ApiData<Kind>, query: Query.SubQuery<Kind>): void {
+    this.customSet(data, query);
   }
 
   getHooked(query: Query.SubQuery<Kind>): Data<Kind> {

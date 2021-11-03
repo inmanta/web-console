@@ -6,11 +6,12 @@ import {
   InstantApiHelper,
   Service,
   ServiceInstance,
+  StaticScheduler,
 } from "@/Test";
 import {
   QueryResolverImpl,
-  InstanceLogsQueryManager,
-  InstanceLogsStateHelper,
+  GetInstanceLogsQueryManager,
+  GetInstanceLogsStateHelper,
   getStoreInstance,
 } from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -20,12 +21,13 @@ it("ServiceInstanceHistory renders", async () => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new InstanceLogsQueryManager(
+      new GetInstanceLogsQueryManager(
         new InstantApiHelper({
           kind: "Success",
           data: { data: [] },
         }),
-        new InstanceLogsStateHelper(store),
+        new GetInstanceLogsStateHelper(store),
+        new StaticScheduler(),
         Service.a.environment
       ),
     ])

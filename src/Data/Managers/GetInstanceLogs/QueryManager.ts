@@ -1,16 +1,19 @@
-import { ApiHelper, StateHelper } from "@/Core";
+import { ApiHelper, Scheduler, StateHelper } from "@/Core";
 import { identity } from "lodash";
-import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
+import { PrimaryContinuousQueryManager } from "@/Data/Managers/Helpers";
 
-export class InstanceLogsQueryManager extends PrimaryOneTimeQueryManager<"GetInstanceLogs"> {
+export class GetInstanceLogsQueryManager extends PrimaryContinuousQueryManager<"GetInstanceLogs"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetInstanceLogs">,
+    scheduler: Scheduler,
     environment: string
   ) {
     super(
       apiHelper,
       stateHelper,
+      scheduler,
+      ({ id }) => id,
       ({ id, service_entity }) => [id, service_entity],
       "GetInstanceLogs",
       ({ service_entity, id }) =>
