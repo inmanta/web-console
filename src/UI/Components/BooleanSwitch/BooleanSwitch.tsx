@@ -19,8 +19,8 @@ export const BooleanSwitch: React.FC<Props> = ({
 }) => (
   <Switch
     id={name}
-    label={getLabel ? getLabel(value) : words("setting.label.true")}
-    labelOff={getLabel ? getLabel(value) : words("setting.label.false")}
+    label={getLabel ? getLabel(value) : words("config.setting.label.true")}
+    labelOff={getLabel ? getLabel(value) : words("config.setting.label.false")}
     isChecked={value}
     onChange={onChange}
     aria-label={value ? `${name}-True` : `${name}-False`}

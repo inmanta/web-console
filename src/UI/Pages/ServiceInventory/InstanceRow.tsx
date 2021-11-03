@@ -66,7 +66,7 @@ export const InstanceRow: React.FC<Props> = ({
           >
             <TextWithCopy
               value={row.serviceIdentityValue}
-              tooltipContent={words("serviceIdentity.copy")}
+              tooltipContent={words("inventory.serviceIdentity.copy")}
             />
           </Td>
         ) : (

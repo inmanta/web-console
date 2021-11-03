@@ -18,10 +18,10 @@ export const NotFound: React.FunctionComponent = () => {
       <EmptyState>
         <EmptyStateIcon icon={ExclamationTriangleIcon} />
         <Title headingLevel="h3" size="lg">
-          {words("notFound.title")}
+          {words("error.notFound.title")}
         </Title>
         <Link pathname={routeManager.getUrl("Home", undefined)}>
-          <Button>{words("notFound.home")}</Button>
+          <Button>{words("error.notFound.home")}</Button>
         </Link>
       </EmptyState>
     </PageSection>

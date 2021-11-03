@@ -45,7 +45,7 @@ export const StatusTab: React.FC<Props> = ({ statusInfo }) => (
                 <DescriptionListDescription>
                   <TextWithCopy
                     value={statusInfo.instanceId}
-                    tooltipContent={words("id.copy")}
+                    tooltipContent={words("inventory.id.copy")}
                   />
                 </DescriptionListDescription>
               </DescriptionListGroup>

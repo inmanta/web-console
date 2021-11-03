@@ -68,7 +68,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
       )}
       <CreatableSelectInput
         isRequired
-        label={words("createEnv.projectName")}
+        label={words("environment.create.projectName")}
         value={projectName || ""}
         options={projects.map((project) => project.name)}
         onCreate={createProject}
@@ -82,12 +82,12 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
       />
       <SimpleTextFormInput
         value={createEnvironmentBody.repository || ""}
-        label={words("createEnv.repository")}
+        label={words("environment.create.repository")}
         onChange={setRepository}
       />
       <SimpleTextFormInput
         value={createEnvironmentBody.branch || ""}
-        label={words("createEnv.branch")}
+        label={words("environment.create.branch")}
         onChange={setBranch}
       />
       <FormControls

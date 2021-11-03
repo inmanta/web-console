@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
+import ReactMarkdown from "react-markdown";
 import { EnvironmentModel, Maybe } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { words } from "@/UI/words";
@@ -60,10 +61,11 @@ export const DeleteModal: React.FC<Props> = ({
       aria-label="Delete Environment Modal"
       title={words("home.environment.delete.warning")}
       description={
-        <p>
-          This action cannot be undone. This will permanently delete the{" "}
-          <b>{environment.name}</b> environment.
-        </p>
+        <ReactMarkdown>
+          {words("home.environment.delete.warning.description.MD")(
+            environment.name
+          )}
+        </ReactMarkdown>
       }
       titleIconVariant="danger"
       isOpen={isOpen}
@@ -99,7 +101,11 @@ export const DeleteModal: React.FC<Props> = ({
         <FormGroup
           label={
             <CustomLabel>
-              Please type <b>{environment.name}</b> to confirm
+              <ReactMarkdown>
+                {words("home.environment.delete.warning.instruction.MD")(
+                  environment.name
+                )}
+              </ReactMarkdown>
             </CustomLabel>
           }
           type="text"

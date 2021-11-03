@@ -9,7 +9,7 @@ interface Props {
 
 export const IdWithCopy: React.FC<Props> = ({ uuid }) => {
   return (
-    <TextWithCopy value={uuid.full} tooltipContent={words("id.copy")}>
+    <TextWithCopy value={uuid.full} tooltipContent={words("inventory.id.copy")}>
       {uuid.short}
     </TextWithCopy>
   );
