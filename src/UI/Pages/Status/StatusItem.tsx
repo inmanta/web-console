@@ -24,15 +24,15 @@ export const StatusItem: React.FC<Props> = ({
   icon,
   category,
 }) => (
-  <ListItem icon={icon}>
+  <ListItem icon={icon} aria-label={`StatusItem-${name}`}>
     <Flex direction={{ default: "column" }}>
       <FlexItem>
         <InlineTitle headingLevel="h3">{name}</InlineTitle>
-        <span>{category}</span>
+        <Category>{category}</Category>
       </FlexItem>
       {details.length > 0 && (
         <FlexItem>
-          <CompactDescriptionList isHorizontal isCompact>
+          <CompactDescriptionList isHorizontal isCompact isFluid>
             {details.map(([key, value]) => (
               <DescriptionListGroup key={key}>
                 <DescriptionListTerm>{key}</DescriptionListTerm>
@@ -45,6 +45,10 @@ export const StatusItem: React.FC<Props> = ({
     </Flex>
   </ListItem>
 );
+
+const Category = styled.span`
+  color: var(--pf-global--palette--black-500);
+`;
 
 const InlineTitle = styled(Title)`
   display: inline-block;

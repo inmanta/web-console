@@ -1,5 +1,6 @@
 import React from "react";
 import { List } from "@patternfly/react-core";
+import { omit } from "lodash";
 import { ServerStatus } from "@/Core";
 import {
   ClusterIcon,
@@ -21,29 +22,31 @@ export const StatusList: React.FC<Props> = ({
   className,
   ...props
 }) => (
-  <List {...props} isPlain isBordered iconSize="large" className={className}>
+  <List
+    {...props}
+    isPlain
+    isBordered
+    iconSize="large"
+    className={className}
+    aria-label="StatusList"
+  >
     <StatusItem
       name={status.product}
-      details={[
-        ["edition", status.edition],
-        ["version", status.version],
-        ["license", status.license],
-      ]}
+      details={toDetails(
+        omit(status, ["product", "extensions", "slices", "features"])
+      )}
       icon={<TagIcon color="var(--pf-global--palette--blue-500)" />}
     />
     <StatusItem
       name="API"
-      details={[["URL", apiUrl]]}
+      details={[["url", apiUrl]]}
       icon={<ClusterIcon color="var(--pf-global--palette--blue-500)" />}
     />
     {status.extensions.map((extension) => (
       <StatusItem
         key={`extension-${extension.name}`}
         name={extension.name}
-        details={[
-          ["version", extension.version],
-          ["package", extension.package],
-        ]}
+        details={toDetails(omit(extension, "name"))}
         icon={
           <IntegrationIcon color="var(--pf-global--palette--light-blue-400)" />
         }
