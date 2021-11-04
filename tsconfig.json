@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "ES2020",
-    "target": "es5",
+    "target": "es2015",
     "lib": ["es6", "dom", "esnext"],
     "sourceMap": true,
     "jsx": "react",
@@ -31,7 +31,7 @@
     "compilerOptions": {
       "module": "CommonJS",
       "target": "es5",
-    "esModuleInterop": true
+      "esModuleInterop": true
     }
   }
 }
