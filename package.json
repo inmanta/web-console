@@ -139,7 +139,7 @@
     "process": "^0.11.10",
     "qs": "^6.10.1",
     "react-keycloak": "^6.1.1",
-    "react-router-dom": "^5.3.0",
+    "react-router-dom": "^6.0.0",
     "react-syntax-highlighter": "^15.4.4",
     "styled-components": "^5.3.3",
     "xml-formatter": "^2.5.1"
