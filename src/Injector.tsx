@@ -32,15 +32,12 @@ export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = new PrimaryRouteManager(consoleBaseUrl);
   const apiHelper = new BaseApiHelper(baseUrl, keycloak);
+  const authHelper = new KeycloakAuthHelper(keycloak);
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolver(store, apiHelper)
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(
-      store,
-      apiHelper,
-      new KeycloakAuthHelper(keycloak)
-    )
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
   const featureManager = new PrimaryFeatureManager();
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
@@ -63,6 +60,7 @@ export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
         featureManager,
         routeManager,
         environmentHandler,
+        authHelper,
       }}
     >
       {children}

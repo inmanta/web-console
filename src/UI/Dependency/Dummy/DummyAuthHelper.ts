@@ -2,9 +2,9 @@ import { AuthHelper } from "@/Core";
 
 export class DummyAuthHelper implements AuthHelper {
   isDisabled(): boolean {
-    return false;
+    throw new Error("Method not implemented.");
   }
   getUsername(): string | null {
-    return "inmanta";
+    throw new Error("Method not implemented.");
   }
 }

@@ -357,6 +357,11 @@ const dict = {
     `Default is ${value}`,
   "settings.tabs.configuration.save": "Save",
   "settings.tabs.configuration.reset": "Reset to default",
+  "settings.tabs.token.disabledInfo":
+    "An authenticated user is required to create tokens",
+  "settings.tabs.token.description":
+    "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
+  "settings.tabs.token.generate": "Generate",
 };
 
 type Key = keyof typeof dict;

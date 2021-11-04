@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { createRef, useContext } from "react";
+import { Tooltip } from "@patternfly/react-core";
 import { CogIcon, InfoCircleIcon, KeyIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
 import { ErrorView, IconTabs, TabDescriptor } from "@/UI/Components";
@@ -6,6 +7,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ConfigurationTab } from "./Configuration";
 import { EnvironmentTab } from "./Environment";
+import { TokenTab } from "./Token";
 
 export enum TabKey {
   Environment = "Environment",
@@ -19,8 +21,10 @@ interface Props {
 }
 
 export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
-  const { environmentHandler } = useContext(DependencyContext);
+  const { authHelper, environmentHandler } = useContext(DependencyContext);
+  const tokenTooltipRef = createRef<HTMLElement>();
   const selected = environmentHandler.useSelected();
+
   if (!selected) {
     return (
       <ErrorView
@@ -29,16 +33,23 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
       />
     );
   }
+
   return (
-    <IconTabs
-      activeTab={activeTab}
-      onChange={setActiveTab}
-      tabs={[
-        environmentTab(selected),
-        configurationTab(selected.id),
-        tokensTab,
-      ]}
-    />
+    <>
+      <IconTabs
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        tabs={[
+          environmentTab(selected),
+          configurationTab(selected.id),
+          tokensTab(authHelper.isDisabled(), tokenTooltipRef),
+        ]}
+      />
+      <Tooltip
+        content={words("settings.tabs.token.disabledInfo")}
+        reference={tokenTooltipRef}
+      />
+    </>
   );
 };
 
@@ -58,9 +69,14 @@ const configurationTab = (environmentId: string): TabDescriptor<TabKey> => ({
   view: <ConfigurationTab environmentId={environmentId} />,
 });
 
-const tokensTab: TabDescriptor<TabKey> = {
+const tokensTab = (
+  isDisabled: boolean,
+  ref: React.Ref<HTMLElement>
+): TabDescriptor<TabKey> => ({
   id: TabKey.Tokens,
   title: words("settings.tabs.tokens"),
   icon: <KeyIcon />,
-  view: <p>tokensTab</p>,
-};
+  view: <TokenTab />,
+  isDisabled,
+  ref,
+});
