@@ -16,7 +16,7 @@ export const TextWithCopy: React.FC<Props> = ({
   return (
     <Container {...props}>
       {children || value}
-      <StyledCopyIcon fullText={value} tooltipContent={tooltipContent} />
+      <StyledCopyIcon value={value} tooltipContent={tooltipContent} />
     </Container>
   );
 };

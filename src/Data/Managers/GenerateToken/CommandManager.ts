@@ -1,4 +1,4 @@
-import { Command, CommandManager, ApiHelper } from "@/Core";
+import { Command, CommandManager, ApiHelper, Either } from "@/Core";
 
 export class GenerateTokenCommandManager implements CommandManager {
   constructor(
@@ -11,11 +11,14 @@ export class GenerateTokenCommandManager implements CommandManager {
   }
 
   getTrigger(): Command.Trigger<"GenerateToken"> {
-    return (tokenInfo) =>
-      this.apiHelper.post(
-        "/api/v2/environment_auth",
-        this.environment,
-        tokenInfo
+    return async (tokenInfo) =>
+      Either.mapRight(
+        (data) => data.data,
+        await this.apiHelper.post<Command.ApiData<"GenerateToken">>(
+          "/api/v2/environment_auth",
+          this.environment,
+          tokenInfo
+        )
       );
   }
 }

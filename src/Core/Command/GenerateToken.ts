@@ -1,11 +1,5 @@
 import { Either } from "@/Core/Language";
-
-type ClientType = "api" | "agent" | "compiler";
-
-interface TokenInfo {
-  client_types: ClientType[];
-  idempotent: boolean;
-}
+import { TokenInfo } from "@/Core/Domain";
 
 export interface GenerateToken {
   kind: "GenerateToken";

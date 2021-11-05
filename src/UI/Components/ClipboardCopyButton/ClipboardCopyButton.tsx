@@ -1,38 +1,48 @@
 import React, { useState } from "react";
-import { Button, Tooltip } from "@patternfly/react-core";
+import { Button, Tooltip, ButtonProps } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
 import styled from "styled-components";
 import { words } from "@/UI/words";
 
 interface Props {
+  value: string;
+  tooltipContent?: string;
+  isDisabled?: boolean;
   className?: string;
-  fullText: string;
-  tooltipContent: string;
+  variant?: ButtonProps["variant"];
 }
 
 export const ClipboardCopyButton: React.FC<Props> = ({
   className,
-  fullText,
+  value,
   tooltipContent,
+  isDisabled,
+  variant,
+  ...props
 }) => {
   const [copied, setCopied] = useState(false);
+  const onClick = () => {
+    copy(value);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  };
+
+  const tooltipText = copied
+    ? words("copy.feedback")
+    : tooltipContent || words("copy");
+
   return (
-    <WidthLimitedTooltip
-      content={<div>{!copied ? tooltipContent : words("copy.feedback")}</div>}
-      entryDelay={200}
-    >
+    <WidthLimitedTooltip content={<div>{tooltipText}</div>} entryDelay={200}>
       <Button
-        variant="plain"
+        {...props}
+        variant={variant || "plain"}
         aria-label="Copy to clipboard"
         className={className}
-        onClick={() => {
-          copy(fullText);
-          setCopied(true);
-          setTimeout(() => {
-            setCopied(false);
-          }, 2000);
-        }}
+        onClick={onClick}
+        isDisabled={isDisabled}
       >
         <CopyIcon />
       </Button>

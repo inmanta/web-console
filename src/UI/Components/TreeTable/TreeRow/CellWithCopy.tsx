@@ -39,7 +39,7 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
         <>
           <StyledPopoverBody>{value}</StyledPopoverBody>
           <StyledButton
-            fullText={value}
+            value={value}
             tooltipContent={words("attribute.value.copy")}
           />
         </>
