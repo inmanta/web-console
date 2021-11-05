@@ -1,4 +1,4 @@
-import { ApiHelper, Either, Maybe } from "@/Core";
+import { ApiHelper, Deferred, Either, Maybe } from "@/Core";
 
 type Request =
   | (WithMethod<"GET"> & UrlAndEnv)
@@ -47,14 +47,12 @@ export class DeferredApiHelper implements ApiHelper {
   }
 
   delete(url: string, environment: string): Promise<Maybe.Type<string>> {
-    const promise = new Promise((resolve) => {
-      this._pendingRequests.push({
-        request: { method: "DELETE", url, environment },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "DELETE", url, environment },
+      resolve,
+      promise,
     });
-
     return promise as Promise<Maybe.Type<string>>;
   }
 
@@ -62,26 +60,23 @@ export class DeferredApiHelper implements ApiHelper {
     url: string,
     environment: string
   ): Promise<Either.Type<string, Data>> {
-    const promise = new Promise((resolve) => {
-      this._pendingRequests.push({
-        request: { method: "GET", url, environment },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "GET", url, environment },
+      resolve,
+      promise,
     });
 
     return promise as Promise<Either.Type<string, Data>>;
   }
 
   getWithoutEnvironment<Data>(url: string): Promise<Either.Type<string, Data>> {
-    const promise = new Promise((resolve) => {
-      this._pendingRequests.push({
-        request: { method: "GET", url },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "GET", url },
+      resolve,
+      promise,
     });
-
     return promise as Promise<Either.Type<string, Data>>;
   }
 
@@ -90,14 +85,12 @@ export class DeferredApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Either.Type<string, Data>> {
-    const promise = new Promise((resolve) => {
-      this._pendingRequests.push({
-        request: { method: "POST", url, environment, body },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "POST", url, environment, body },
+      resolve,
+      promise,
     });
-
     return promise as Promise<Either.Type<string, Data>>;
   }
 
@@ -106,14 +99,12 @@ export class DeferredApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Maybe.Type<string>> {
-    const promise = new Promise((resolve) => {
-      this._pendingRequests.push({
-        request: { method: "POST", url, environment, body },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "POST", url, environment, body },
+      resolve,
+      promise,
     });
-
     return promise as Promise<Maybe.Type<string>>;
   }
 
@@ -121,14 +112,12 @@ export class DeferredApiHelper implements ApiHelper {
     url: string,
     body: Body
   ): Promise<Maybe.Type<string>> {
-    const promise = new Promise((resolve) => {
-      this._pendingRequests.push({
-        request: { method: "POST", url, body },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "POST", url, body },
+      resolve,
+      promise,
     });
-
     return promise as Promise<Maybe.Type<string>>;
   }
 
@@ -136,14 +125,12 @@ export class DeferredApiHelper implements ApiHelper {
     url: string,
     body: Body
   ): Promise<Maybe.Type<string>> {
-    const promise = new Promise((resolve) => {
-      this._pendingRequests.push({
-        request: { method: "PUT", url, body },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "PUT", url, body },
+      resolve,
+      promise,
     });
-
     return promise as Promise<Maybe.Type<string>>;
   }
 
@@ -152,14 +139,12 @@ export class DeferredApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Maybe.Type<string>> {
-    const promise = new Promise((resolve) => {
-      this._pendingRequests.push({
-        request: { method: "PATCH", url, environment, body },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "PATCH", url, environment, body },
+      resolve,
+      promise,
     });
-
     return promise as Promise<Maybe.Type<string>>;
   }
 }
