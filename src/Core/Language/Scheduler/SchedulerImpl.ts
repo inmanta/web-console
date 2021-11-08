@@ -1,6 +1,7 @@
 import { Dictionary, DictionaryImpl } from "@/Core/Language/Dictionary";
 import * as Maybe from "@/Core/Language/Maybe";
 import { Scheduler, Task } from "./Scheduler";
+import { resolvePromiseRecord } from "@/Core/Language/Utils";
 
 export class SchedulerImpl implements Scheduler {
   private readonly tasks = new DictionaryImpl<Task>();
@@ -11,6 +12,9 @@ export class SchedulerImpl implements Scheduler {
     private readonly taskWrapper?: (task: Task) => Task
   ) {}
 
+  /**
+   * @TODO remove pending promise or abort pending request
+   */
   unregister(id: string): void {
     this.tasks.drop(id);
     this.revalidateTicker();
@@ -31,24 +35,16 @@ export class SchedulerImpl implements Scheduler {
 
   private async execute(): Promise<void> {
     if (this.tasks.isEmpty()) return;
-    const list = Object.entries(this.tasks.toObject());
+    const taskRecord = this.tasks.toObject();
+    const promiseRecord = Object.entries(taskRecord).reduce((acc, curr) => {
+      acc[curr[0]] = curr[1].effect();
+      return acc;
+    }, {});
 
-    const promises = list.map(([, task]) => task.effect());
-    const results = await Promise.all(promises);
-
-    const resultList: [string, unknown][] = results.map((result, index) => [
-      list[index][0],
-      result,
-    ]);
-    const resultDict = resultList.reduce<Record<string, unknown>>(
-      (acc, [id, result]) => {
-        acc[id] = result;
-        return acc;
-      },
-      {}
+    const resolvedTasks = await resolvePromiseRecord(promiseRecord);
+    Object.entries(taskRecord).forEach(([key, task]) =>
+      task.update(resolvedTasks[key])
     );
-
-    list.forEach(([id, task]) => task.update(resultDict[id]));
 
     window.setTimeout(() => {
       this.execute();
