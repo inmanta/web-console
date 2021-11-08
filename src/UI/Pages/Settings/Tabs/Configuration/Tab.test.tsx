@@ -59,7 +59,7 @@ function setup() {
   const component = (
     <StoreProvider store={store}>
       <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
-        <Tab />
+        <Tab environmentId="env" />
       </DependencyProvider>
     </StoreProvider>
   );

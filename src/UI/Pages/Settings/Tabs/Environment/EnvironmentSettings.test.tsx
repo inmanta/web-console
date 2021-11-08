@@ -4,15 +4,12 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   ModifyEnvironmentCommandManager,
-  ProjectsQueryManager,
-  ProjectsStateHelper,
-  ProjectsUpdater,
-  QueryResolverImpl,
+  EnvironmentsUpdater,
+  GetEnvironmentsStateHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
   DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
   Environment,
   Project,
 } from "@/Test";
@@ -25,25 +22,22 @@ function setup() {
   const selectedEnvironment = Environment.filterable[0];
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsStateHelper = new ProjectsStateHelper(store);
-  const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new ProjectsQueryManager(apiHelper, projectsStateHelper),
-    ])
-  );
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new ModifyEnvironmentCommandManager(
         apiHelper,
-        new ProjectsUpdater(projectsStateHelper, apiHelper),
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(store),
+          apiHelper
+        ),
         selectedEnvironment.id
       ),
     ])
   );
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+    <DependencyProvider dependencies={{ commandResolver }}>
       <EnvironmentSettings environment={selectedEnvironment} />
     </DependencyProvider>
   );

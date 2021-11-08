@@ -9,8 +9,8 @@ export const Provider: React.FC = () => {
     environmentHandler.set(item.environmentId);
   };
   const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"GetProjects">({
-    kind: "GetProjects",
+  const [data] = queryResolver.useOneTime<"GetEnvironments">({
+    kind: "GetEnvironments",
   });
   const selected = environmentHandler.useSelected();
   return (

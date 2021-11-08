@@ -5,7 +5,7 @@ import {
   Spinner,
   Title,
 } from "@patternfly/react-core";
-import { FlatEnvironment, getFullEnvironments, RemoteData } from "@/Core";
+import { FlatEnvironment, RemoteData } from "@/Core";
 import { words } from "@/UI/words";
 import {
   EnvironmentSelectorItem,
@@ -35,8 +35,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
       success: (environments) => {
         if (selectedEnvironment) {
           const defaultToggleText = `${selectedEnvironment.name} (${selectedEnvironment.projectName})`;
-          const fullEnvironments = getFullEnvironments(environments);
-          const selectorItems = fullEnvironments.map(
+          const selectorItems = environments.map(
             ({ name, projectName, id, project_id: projectId }) => {
               const envSelectorItem: EnvironmentSelectorItem = {
                 displayName: `${name} (${projectName})`,

@@ -56,6 +56,7 @@ import {
   GetEnvironmentSetting,
   GetEnvironmentSettingManifest,
 } from "./GetEnvironmentSetting";
+import { GetEnvironments, GetEnvironmentsManifest } from "./GetEnvironments";
 
 export type Query =
   | GetServices
@@ -79,7 +80,8 @@ export type Query =
   | GetServerStatus
   | GetCallbacks
   | GetEnvironmentSettings
-  | GetEnvironmentSetting;
+  | GetEnvironmentSetting
+  | GetEnvironments;
 
 export type Type = Query;
 
@@ -110,6 +112,7 @@ interface Manifest {
   GetCallbacks: GetCallbacksManifest;
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
+  GetEnvironments: GetEnvironmentsManifest;
 }
 
 /**

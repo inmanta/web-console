@@ -1,7 +1,7 @@
 import { QueryManager, ManagerResolver, SchedulerImpl } from "@/Core";
 import {
-  ProjectsQueryManager,
-  ProjectsStateHelper,
+  GetProjectsQueryManager,
+  GetProjectsStateHelper,
   ServiceQueryManager,
   ServiceKeyMaker,
   ServiceStateHelper,
@@ -45,6 +45,8 @@ import {
   GetServerStatusStateHelper,
   GetEnvironmentSettingsQueryManager,
   GetEnvironmentSettingsStateHelper,
+  GetEnvironmentsQueryManager,
+  GetEnvironmentsStateHelper,
 } from "@/Data/Managers";
 import { BaseApiHelper } from "@/Data/API";
 import { Store } from "@/Data/Store";
@@ -72,9 +74,13 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
 
   private getIndependentManagers(): QueryManager[] {
     return [
-      new ProjectsQueryManager(
+      new GetProjectsQueryManager(
         this.apiHelper,
-        new ProjectsStateHelper(this.store)
+        new GetProjectsStateHelper(this.store)
+      ),
+      new GetEnvironmentsQueryManager(
+        this.apiHelper,
+        new GetEnvironmentsStateHelper(this.store)
       ),
       new GetServerStatusQueryManager(
         this.apiHelper,

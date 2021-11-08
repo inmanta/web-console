@@ -3,7 +3,7 @@ import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
 import { identity } from "lodash";
 import { getUrl } from "./getUrl";
 
-export class ProjectsQueryManager extends PrimaryOneTimeQueryManager<"GetProjects"> {
+export class GetProjectsQueryManager extends PrimaryOneTimeQueryManager<"GetProjects"> {
   constructor(apiHelper: ApiHelper, stateHelper: StateHelper<"GetProjects">) {
     super(
       apiHelper,

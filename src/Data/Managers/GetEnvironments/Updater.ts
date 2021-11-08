@@ -1,13 +1,13 @@
 import { ApiHelper, Query, RemoteData, StateHelper, Updater } from "@/Core";
 import { getUrl } from "@/Data/Managers/GetProjects/getUrl";
 
-export class ProjectsUpdater implements Updater<"GetProjects"> {
+export class EnvironmentsUpdater implements Updater<"GetEnvironments"> {
   constructor(
-    private readonly stateHelper: StateHelper<"GetProjects">,
+    private readonly stateHelper: StateHelper<"GetEnvironments">,
     private readonly apiHelper: ApiHelper
   ) {}
 
-  async update(query: Query.SubQuery<"GetProjects">): Promise<void> {
+  async update(query: Query.SubQuery<"GetEnvironments">): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(
         await this.apiHelper.getWithoutEnvironment(getUrl())

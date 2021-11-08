@@ -1,4 +1,4 @@
-import { EnvironmentModel, FullEnvironment } from "@/Core";
+import { EnvironmentModel, FlatEnvironment } from "@/Core";
 
 export const a: EnvironmentModel = {
   id: "environment_id_a",
@@ -40,7 +40,7 @@ export const e: EnvironmentModel = {
   repo_url: "",
 };
 
-export const filterable: FullEnvironment[] = [
+export const filterable: FlatEnvironment[] = [
   {
     projectName: "default",
     project_id: "1",

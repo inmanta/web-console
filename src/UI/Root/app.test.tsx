@@ -6,11 +6,11 @@ import { App } from "@/UI/Root/app";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  ProjectsQueryManager,
-  ProjectsStateHelper,
   getStoreInstance,
   GetServerStatusQueryManager,
   GetServerStatusStateHelper,
+  GetEnvironmentsQueryManager,
+  GetEnvironmentsStateHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -24,9 +24,9 @@ import { Either } from "@/Core";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsManager = new ProjectsQueryManager(
+  const environmentsManager = new GetEnvironmentsQueryManager(
     apiHelper,
-    new ProjectsStateHelper(store)
+    new GetEnvironmentsStateHelper(store)
   );
 
   const getServerStatusManager = new GetServerStatusQueryManager(
@@ -35,7 +35,10 @@ function setup() {
   );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([projectsManager, getServerStatusManager])
+    new DynamicQueryManagerResolver([
+      environmentsManager,
+      getServerStatusManager,
+    ])
   );
 
   const component = (

@@ -1,4 +1,4 @@
-import { CreateEnvironmentParams, FlatEnvironment, Maybe } from "@/Core";
+import { CreateEnvironmentParams, Maybe, ProjectModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -10,11 +10,11 @@ import { CreatableSelectInput } from "./CreatableSelectInput";
 import { SimpleTextFormInput } from "./SimpleTextFormInput";
 
 interface Props {
-  environments: FlatEnvironment[];
+  projects: ProjectModel[];
 }
 
 export const CreateEnvironmentForm: React.FC<Props> = ({
-  environments,
+  projects,
   ...props
 }) => {
   const { commandResolver } = useContext(DependencyContext);
@@ -43,13 +43,13 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
 
   const onSubmitCreate = async () => {
     if (projectName && createEnvironmentBody.name) {
-      const flatEnv = environments.find(
-        (env) => env.projectName === projectName
+      const matchingProject = projects.find(
+        (project) => project.name === projectName
       );
-      if (flatEnv) {
+      if (matchingProject) {
         const fullBody = {
           ...createEnvironmentBody,
-          project_id: flatEnv.project_id,
+          project_id: matchingProject.id,
         };
         const result = await createEnvironment(fullBody);
         if (Maybe.isSome(result)) {
@@ -75,9 +75,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         isRequired
         label={words("createEnv.projectName")}
         value={projectName || ""}
-        options={Array.from(
-          new Set(environments.map((env) => env.projectName))
-        )}
+        options={projects.map((project) => project.name)}
         onCreate={createProject}
         onSelect={setProjectName}
       />

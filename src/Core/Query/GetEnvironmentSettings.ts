@@ -2,6 +2,7 @@ import { EnvironmentSettings } from "@/Core/Domain";
 
 export interface GetEnvironmentSettings {
   kind: "GetEnvironmentSettings";
+  environment: string;
 }
 
 export interface GetEnvironmentSettingsManifest {

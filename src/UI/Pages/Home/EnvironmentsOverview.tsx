@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatEnvironment, FullEnvironment, getFullEnvironments } from "@/Core";
+import { FlatEnvironment } from "@/Core";
 import { useUrlStateWithFilter } from "@/Data";
 import { CardView } from "./CardView";
 import { FilterToolbar } from "./FilterToolbar";
@@ -20,7 +20,6 @@ export const EnvironmentsOverview: React.FC<Props> = ({
   const projectNames = Array.from(
     new Set(environments.map((environment) => environment.projectName))
   );
-  const fullEnvironments = getFullEnvironments(environments);
   const [filter, setFilter] = useUrlStateWithFilter<Filters>({ route: "Home" });
   const setProjectFilter = (projectFilter?: string[]) =>
     setFilter({ ...filter, projectFilter });
@@ -35,10 +34,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
   const environmentFilter = filter.environmentFilter
     ? filter.environmentFilter
     : "";
-  const filteredByProjectName = filterByProject(
-    fullEnvironments,
-    projectFilter
-  );
+  const filteredByProjectName = filterByProject(environments, projectFilter);
   const filteredByEnvName = filterByName(
     filteredByProjectName,
     environmentFilter
@@ -61,9 +57,9 @@ export const EnvironmentsOverview: React.FC<Props> = ({
 };
 
 function filterByName(
-  filterableEnvironments: FullEnvironment[],
+  filterableEnvironments: FlatEnvironment[],
   environmentFilter: string
-): FullEnvironment[] {
+): FlatEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (environmentFilter && environmentFilter.length > 0) {
       return environment.name?.includes(environmentFilter);
@@ -73,9 +69,9 @@ function filterByName(
 }
 
 function filterByProject(
-  filterableEnvironments: FullEnvironment[],
+  filterableEnvironments: FlatEnvironment[],
   projectFilter: string[]
-): FullEnvironment[] {
+): FlatEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (projectFilter && projectFilter.length > 0) {
       return projectFilter.includes(environment.projectName);

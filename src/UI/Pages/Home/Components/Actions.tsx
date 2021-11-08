@@ -6,14 +6,14 @@ import {
   KebabToggle,
 } from "@patternfly/react-core";
 import { CopyIcon, PencilAltIcon, TrashAltIcon } from "@patternfly/react-icons";
-import { FullEnvironment } from "@/Core";
+import { FlatEnvironment } from "@/Core";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { DeleteModal } from "./DeleteModal";
 import copy from "copy-to-clipboard";
 
 interface ActionsProps {
-  environment: Pick<FullEnvironment, "id" | "name">;
+  environment: Pick<FlatEnvironment, "id" | "name">;
 }
 
 export const Actions: React.FC<ActionsProps> = ({ environment }) => {

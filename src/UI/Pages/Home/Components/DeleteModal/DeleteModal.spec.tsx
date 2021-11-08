@@ -6,10 +6,11 @@ import {
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
   getStoreInstance,
-  ProjectsQueryManager,
-  ProjectsStateHelper,
-  ProjectsUpdater,
+  GetProjectsQueryManager,
+  GetProjectsStateHelper,
   QueryResolverImpl,
+  EnvironmentsUpdater,
+  GetEnvironmentsStateHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -23,10 +24,10 @@ import { Either, Maybe } from "@/Core";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsStateHelper = new ProjectsStateHelper(store);
+  const projectsStateHelper = new GetProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ProjectsQueryManager(apiHelper, projectsStateHelper),
+      new GetProjectsQueryManager(apiHelper, projectsStateHelper),
     ])
   );
 
@@ -34,7 +35,10 @@ function setup() {
     new DynamicCommandManagerResolver([
       new DeleteEnvironmentCommandManager(
         apiHelper,
-        new ProjectsUpdater(projectsStateHelper, apiHelper)
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(store),
+          apiHelper
+        )
       ),
     ])
   );

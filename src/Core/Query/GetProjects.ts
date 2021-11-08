@@ -1,4 +1,4 @@
-import { FlatEnvironment, ProjectModel } from "@/Core/Domain";
+import { ProjectModel } from "@/Core/Domain";
 
 export interface GetProjects {
   kind: "GetProjects";
@@ -7,7 +7,7 @@ export interface GetProjects {
 export interface GetProjectsManifest {
   error: string;
   apiResponse: { data: ProjectModel[] };
-  data: FlatEnvironment[];
-  usedData: FlatEnvironment[];
+  data: ProjectModel[];
+  usedData: ProjectModel[];
   query: GetProjects;
 }

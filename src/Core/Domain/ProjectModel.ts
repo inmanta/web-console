@@ -16,31 +16,10 @@ export interface EnvironmentModel extends WithId {
   repo_url: string;
 }
 
-export interface FlatEnvironment {
-  id?: string;
-  name?: string;
-  project_id: string;
-  repo_branch?: string;
-  repo_url?: string;
-  projectName: string;
-}
-
-export interface FullEnvironment extends WithId {
+export interface FlatEnvironment extends WithId {
   name: string;
   project_id: string;
   repo_branch: string;
   repo_url: string;
   projectName: string;
-}
-
-export function getFullEnvironments(
-  environments: FlatEnvironment[]
-): FullEnvironment[] {
-  return environments.filter(isFullEnvironment);
-}
-
-function isFullEnvironment(
-  environment: FlatEnvironment
-): environment is FullEnvironment {
-  return environment.id !== undefined && environment.name != undefined;
 }

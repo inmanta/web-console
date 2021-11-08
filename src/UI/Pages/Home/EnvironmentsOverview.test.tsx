@@ -15,20 +15,22 @@ import {
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
   getStoreInstance,
-  ProjectsStateHelper,
-  ProjectsUpdater,
+  EnvironmentsUpdater,
+  GetEnvironmentsStateHelper,
 } from "@/Data";
 
 function setup() {
   const store = getStoreInstance();
   const featureManager = new MockFeatureManger();
   const apiHelper = new DeferredApiHelper();
-  const projectsStateHelper = new ProjectsStateHelper(store);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new DeleteEnvironmentCommandManager(
         apiHelper,
-        new ProjectsUpdater(projectsStateHelper, apiHelper)
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(store),
+          apiHelper
+        )
       ),
     ])
   );
