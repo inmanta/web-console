@@ -1,13 +1,12 @@
-import { RouteKind, Route, RouteParams } from "@/Core/Domain";
+import { RouteKind, Route, RouteParams, RouteMatch } from "@/Core/Domain";
 
 export type RouteDictionary = Record<RouteKind, Route>;
-export type MatchedParams = Record<string, string>;
 
 export interface RouteManager {
   getRoutes(): Route[];
   getRouteDictionary(): RouteDictionary;
   getRoute(routeKind: RouteKind): Route;
-  getUrl(kind: RouteKind, params: RouteParams<typeof kind>): string;
+  getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
   /**
    * Gets the closest url in the lineage without params.
    * When switching environments, we can't go to pages with params,
@@ -21,5 +20,5 @@ export interface RouteManager {
    * @param routes the buildup of parent routes as this is a recursive function
    */
   getLineageFromRoute(route: Route, routes?: Route[]): Route[];
-  getRouteWithParamsFromUrl(url: string): [Route, MatchedParams] | undefined;
+  getRouteMatchFromUrl(url: string): RouteMatch | undefined;
 }

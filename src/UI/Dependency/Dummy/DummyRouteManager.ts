@@ -1,7 +1,7 @@
-import { RouteManager, Route, RouteKind, MatchedParams } from "@/Core";
+import { RouteManager, Route, RouteKind, RouteMatch } from "@/Core";
 
 export class DummyRouteManager implements RouteManager {
-  getRouteWithParamsFromUrl(): [Route, MatchedParams] | undefined {
+  getRouteMatchFromUrl(): RouteMatch | undefined {
     throw new Error("Method not implemented.");
   }
   getLineageFromRoute(): Route[] {

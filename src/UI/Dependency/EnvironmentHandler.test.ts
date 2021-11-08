@@ -17,15 +17,25 @@ test("EnvironmentHandler updates environment correctly", () => {
     .getActions()
     .environments.setEnvironments(RemoteData.success(Environment.filterable));
 
-  const environmentHandler = new EnvironmentHandlerImpl(history, routeManager);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    history.location,
+    (path) => history.push(path),
+    routeManager
+  );
   environmentHandler.set(env.id);
+
   expect(history.location.search).toEqual(`?env=${env.id}`);
 });
 
 test("EnvironmentHandler determines selected environment correctly", () => {
   const history = createMemoryHistory();
 
-  const environmentHandler = new EnvironmentHandlerImpl(history, routeManager);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    history.location,
+    (path) => history.push(path),
+    routeManager
+  );
+
   expect(
     environmentHandler.determineSelected(
       RemoteData.notAsked(),

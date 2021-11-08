@@ -1,7 +1,7 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import { RouteParams, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Events } from "./Events";
 
@@ -12,7 +12,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 const Wrapped: React.FC<{ service: ServiceModel }> = ({ service }) => {
-  const { instance } = useParams<RouteParams<"Events">>();
+  const { instance } = useRouteParams<"Events">();
   return (
     <Wrapper>
       <Events service={service} instanceId={instance} />
@@ -21,7 +21,7 @@ const Wrapped: React.FC<{ service: ServiceModel }> = ({ service }) => {
 };
 
 export const Page: React.FC = () => {
-  const { service: serviceName } = useParams<RouteParams<"Events">>();
+  const { service: serviceName } = useRouteParams<"Events">();
 
   return (
     <ServiceProvider

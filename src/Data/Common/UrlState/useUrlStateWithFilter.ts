@@ -1,6 +1,6 @@
 import { isEqual, pickBy } from "lodash";
 import { isObject, DateRange, isNotUndefined } from "@/Core";
-import { provide, Location, History, StateConfig, Update } from "./helpers";
+import { provide, Location, StateConfig, Update, Replace } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
 export const useUrlStateWithFilter = provide(handleUrlStateWithFilter);
@@ -8,7 +8,7 @@ export const useUrlStateWithFilter = provide(handleUrlStateWithFilter);
 export function handleUrlStateWithFilter<Data>(
   config: Pick<StateConfig<Data>, "route"> & { dateRangeKey?: string },
   location: Location,
-  history: History
+  replace: Replace
 ): [Data, Update<Data>] {
   const serialize = (data: Data): string | Data => {
     if (!config.dateRangeKey) return data;
@@ -43,6 +43,6 @@ export function handleUrlStateWithFilter<Data>(
       parse,
     },
     location,
-    history
+    replace
   );
 }

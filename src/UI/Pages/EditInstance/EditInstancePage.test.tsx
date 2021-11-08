@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -24,7 +25,6 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-
 import { EditInstancePage } from "./EditInstancePage";
 
 function setup() {
@@ -60,12 +60,14 @@ function setup() {
         environmentModifier: new MockEnvironmentModifier(),
       }}
     >
-      <StoreProvider store={store}>
-        <EditInstancePage
-          serviceEntity={Service.a}
-          instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-        />
-      </StoreProvider>
+      <MemoryRouter>
+        <StoreProvider store={store}>
+          <EditInstancePage
+            serviceEntity={Service.a}
+            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+          />
+        </StoreProvider>
+      </MemoryRouter>
     </DependencyProvider>
   );
 

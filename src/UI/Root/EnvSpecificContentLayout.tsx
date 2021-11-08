@@ -2,7 +2,6 @@ import React from "react";
 import { Page, PageSidebar } from "@patternfly/react-core";
 import { EnvironmentProvider } from "@/UI/Components";
 import { DependencyResolver } from "@/UI/Dependency";
-import { PageRouter } from "@/UI/Pages";
 import { AppWrapper } from "@/UI/Root/AppLayout/AppWrapper";
 import { Sidebar } from "@/UI/Root/AppLayout/Sidebar";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
@@ -15,6 +14,7 @@ interface Props {
 export const EnvSpecificContentLayout: React.FC<Props> = ({
   keycloak,
   shouldUseAuth,
+  children,
 }) => {
   const [isNavOpen, setIsNavOpen] = React.useState(true);
   const [isMobileView, setIsMobileView] = React.useState(false);
@@ -55,7 +55,7 @@ export const EnvSpecificContentLayout: React.FC<Props> = ({
               }
               style={{ gridArea: "mainpage", overflow: "hidden" }}
             >
-              <PageRouter />
+              {children}
             </Page>
           </>
         )}

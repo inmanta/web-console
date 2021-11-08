@@ -42,17 +42,17 @@ it.each`
 );
 
 it.each`
-  url                                          | result                                             | resultTxt
-  ${"/"}                                       | ${[Home, {}]}                                      | ${"[Home, {}]"}
-  ${"/lsm/catalog"}                            | ${[Catalog, {}]}                                   | ${"[Catalog, {}]"}
-  ${"/lsm/catalog/xyz/inventory"}              | ${[Inventory, { service: "xyz" }]}                 | ${"[Inventory, {service: 'xyz'}]"}
-  ${"/lsm/catalog/xyz/inventory/add"}          | ${[CreateInstance, { service: "xyz" }]}            | ${"[CreateInstance, {service: 'xyz'}]"}
-  ${"/lsm/catalog/xyz/inventory/123/history"}  | ${[History, { service: "xyz", instance: "123" }]}  | ${"[History, {service: 'xyz', instance: '123'}]"}
-  ${"/lsm/catalog/xyz/inventory/123/events"}   | ${[Events, { service: "xyz", instance: "123" }]}   | ${"[Events, {service: 'xyz', instance: '123'}]"}
-  ${"/lsm/catalog/xyz/inventory/123/diagnose"} | ${[Diagnose, { service: "xyz", instance: "123" }]} | ${"[Diagnose, {service: 'xyz', instance: '123'}]"}
+  url                                          | result                                                              | resultTxt
+  ${"/"}                                       | ${{ route: Home, params: undefined }}                               | ${"Home(undefined)"}
+  ${"/lsm/catalog"}                            | ${{ route: Catalog, params: undefined }}                            | ${"Catalog(undefined)"}
+  ${"/lsm/catalog/xyz/inventory"}              | ${{ route: Inventory, params: { service: "xyz" } }}                 | ${"Inventory({service: 'xyz'})"}
+  ${"/lsm/catalog/xyz/inventory/add"}          | ${{ route: CreateInstance, params: { service: "xyz" } }}            | ${"CreateInstance({service: 'xyz'})"}
+  ${"/lsm/catalog/xyz/inventory/123/history"}  | ${{ route: History, params: { service: "xyz", instance: "123" } }}  | ${"History({service: 'xyz', instance: '123'})"}
+  ${"/lsm/catalog/xyz/inventory/123/events"}   | ${{ route: Events, params: { service: "xyz", instance: "123" } }}   | ${"Events({service: 'xyz', instance: '123'})"}
+  ${"/lsm/catalog/xyz/inventory/123/diagnose"} | ${{ route: Diagnose, params: { service: "xyz", instance: "123" } }} | ${"Diagnose({service: 'xyz', instance: '123'})"}
 `(
   "GIVEN getRouteWithParamsFromUrl WHEN passed '$url' THEN returns $resultTxt",
   ({ url, result }) => {
-    expect(routeManager.getRouteWithParamsFromUrl(url)).toEqual(result);
+    expect(routeManager.getRouteMatchFromUrl(url)).toEqual(result);
   }
 );

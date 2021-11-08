@@ -1,8 +1,8 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { Card } from "@patternfly/react-core";
-import { RouteParams, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 
@@ -13,7 +13,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 const Wrapped: React.FC<{ service: ServiceModel }> = ({ service }) => {
-  const { instance } = useParams<RouteParams<"History">>();
+  const { instance } = useRouteParams<"History">();
   return (
     <Wrapper>
       <ServiceInstanceHistory service={service} instanceId={instance} />
@@ -22,7 +22,7 @@ const Wrapped: React.FC<{ service: ServiceModel }> = ({ service }) => {
 };
 
 export const Page: React.FC = () => {
-  const { service: serviceName } = useParams<RouteParams<"History">>();
+  const { service: serviceName } = useRouteParams<"History">();
 
   return (
     <ServiceProvider

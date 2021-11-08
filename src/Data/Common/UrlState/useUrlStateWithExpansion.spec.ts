@@ -1,4 +1,4 @@
-import { getMockedLocation, mockedHistory } from "./helpers.mocked";
+import { getMockedLocation } from "./helpers.mocked";
 import { handleUrlStateWithExpansion } from "./useUrlStateWithExpansion";
 
 test.each`
@@ -12,7 +12,7 @@ test.each`
     const [value] = handleUrlStateWithExpansion(
       { route: "Inventory" },
       getMockedLocation(search),
-      mockedHistory
+      () => undefined
     );
     expect(value).toEqual(expectedValue);
   }

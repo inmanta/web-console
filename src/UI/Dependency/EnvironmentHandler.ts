@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import { History } from "history";
 import {
   EnvironmentHandler,
   FlatEnvironment,
@@ -11,20 +10,19 @@ import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
 export class EnvironmentHandlerImpl implements EnvironmentHandler {
   constructor(
-    private readonly history: History,
+    private readonly location: { pathname: string; search: string },
+    private readonly navigate: (path: string) => void,
     private readonly routeManager: RouteManager
   ) {}
 
   public set(environmentId: string): void {
-    const params = new URLSearchParams(this.history.location.search);
+    const params = new URLSearchParams(this.location.search);
     if (params.get("env") !== environmentId) {
       params.set("env", environmentId);
-      this.history.push({
-        pathname: this.routeManager.getRelatedUrlWithoutParams(
-          this.history.location.pathname
-        ),
-        search: `?${params}`,
-      });
+      this.navigate(
+        this.routeManager.getRelatedUrlWithoutParams(this.location.pathname) +
+          `?${params}`
+      );
     }
   }
 
