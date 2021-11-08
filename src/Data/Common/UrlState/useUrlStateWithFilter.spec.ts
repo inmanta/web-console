@@ -1,5 +1,5 @@
 import { handleUrlStateWithFilter } from "./useUrlStateWithFilter";
-import { getMockedLocation, mockedHistory } from "./helpers.mocked";
+import { getMockedLocation } from "./helpers.mocked";
 
 const from = {
   search:
@@ -25,7 +25,7 @@ test.each`
     const [value] = handleUrlStateWithFilter(
       { route: "Inventory" },
       getMockedLocation(search),
-      mockedHistory
+      () => undefined
     );
     expect(value).toEqual(expectedValue);
   }

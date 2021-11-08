@@ -1,9 +1,8 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
 import { Diagnose } from "./Diagnose";
 import { words } from "@/UI/words";
-import { RouteParams } from "@/Core";
+import { useRouteParams } from "@/UI/Routing";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("diagnose.title")}>
@@ -12,8 +11,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 export const Page: React.FC = () => {
-  const { service: serviceName, instance } =
-    useParams<RouteParams<"Diagnose">>();
+  const { service: serviceName, instance } = useRouteParams<"Diagnose">();
 
   return (
     <ServiceProvider

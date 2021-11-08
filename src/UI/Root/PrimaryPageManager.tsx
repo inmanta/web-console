@@ -1,3 +1,4 @@
+import React from "react";
 import { PageManager, Page, RouteDictionary } from "@/Core";
 import { CreateInstancePage } from "@/UI/Pages/CreateInstance";
 import { DiagnosePage } from "@/UI/Pages/Diagnose";
@@ -8,7 +9,7 @@ import { ServiceCatalogPage } from "@/UI/Pages/ServiceCatalog";
 import { ResourcesPage } from "@/UI/Pages/Resources";
 import { EditInstancePage } from "@/UI/Pages/EditInstance";
 import { CompileReportsPage } from "@/UI/Pages/CompileReports";
-import { CompileDetailsPage } from "./CompileDetails";
+import { CompileDetailsPage } from "../Pages/CompileDetails";
 import { ResourceDetailsPage } from "@/UI/Pages/ResourceDetails";
 import { SettingsPage } from "@/UI/Pages/Settings";
 
@@ -17,24 +18,33 @@ export class PrimaryPageManager implements PageManager {
 
   getPages(): Page[] {
     return [
-      { ...this.routeDictionary.Catalog, component: ServiceCatalogPage },
-      { ...this.routeDictionary.Inventory, component: ServiceInventoryPage },
-      { ...this.routeDictionary.CreateInstance, component: CreateInstancePage },
-      { ...this.routeDictionary.EditInstance, component: EditInstancePage },
+      { ...this.routeDictionary.Catalog, element: <ServiceCatalogPage /> },
+      { ...this.routeDictionary.Inventory, element: <ServiceInventoryPage /> },
+      {
+        ...this.routeDictionary.CreateInstance,
+        element: <CreateInstancePage />,
+      },
+      { ...this.routeDictionary.EditInstance, element: <EditInstancePage /> },
       {
         ...this.routeDictionary.History,
-        component: ServiceInstanceHistoryPage,
+        element: <ServiceInstanceHistoryPage />,
       },
-      { ...this.routeDictionary.Diagnose, component: DiagnosePage },
-      { ...this.routeDictionary.Events, component: EventsPage },
-      { ...this.routeDictionary.Resources, component: ResourcesPage },
-      { ...this.routeDictionary.CompileReports, component: CompileReportsPage },
-      { ...this.routeDictionary.CompileDetails, component: CompileDetailsPage },
+      { ...this.routeDictionary.Diagnose, element: <DiagnosePage /> },
+      { ...this.routeDictionary.Events, element: <EventsPage /> },
+      { ...this.routeDictionary.Resources, element: <ResourcesPage /> },
+      {
+        ...this.routeDictionary.CompileReports,
+        element: <CompileReportsPage />,
+      },
+      {
+        ...this.routeDictionary.CompileDetails,
+        element: <CompileDetailsPage />,
+      },
       {
         ...this.routeDictionary.ResourceDetails,
-        component: ResourceDetailsPage,
+        element: <ResourceDetailsPage />,
       },
-      { ...this.routeDictionary.Settings, component: SettingsPage },
+      { ...this.routeDictionary.Settings, element: <SettingsPage /> },
     ];
   }
 }

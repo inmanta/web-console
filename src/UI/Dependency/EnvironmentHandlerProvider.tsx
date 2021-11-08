@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { useHistory } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "@/Data/Store";
 import {
   EnvironmentHandlerContext,
@@ -9,10 +9,12 @@ import { DependencyContext } from "./Dependency";
 
 export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
   const { queryResolver, routeManager } = useContext(DependencyContext);
-  const history = useHistory();
+  const navigate = useNavigate();
+  const location = useLocation();
   const store = useStore();
   const environmentHandler = new EnvironmentHandlerImpl(
-    history,
+    location,
+    navigate,
     store,
     routeManager
   );

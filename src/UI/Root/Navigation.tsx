@@ -45,19 +45,21 @@ interface Link {
 }
 
 const Item: React.FC<Link> = ({ id, label, url, external }) => (
-  <NavItem key={id}>
+  <NavItem key={id} styleChildren={false}>
     {external ? (
       <a className="pf-c-nav__link" href={url} target="_blank" rel="noreferrer">
         {label}
       </a>
     ) : (
       <NavLink
-        exact={true}
         to={{
           pathname: url,
           search: new SearchHelper().keepEnvOnly(location.search),
         }}
-        activeClassName="pf-m-current"
+        className={({ isActive }) =>
+          "pf-c-nav__link" + (isActive ? " pf-m-current" : "")
+        }
+        end
       >
         {label}
       </NavLink>

@@ -4,7 +4,6 @@ import {
   RemoteData,
   RouteManager,
 } from "@/Core";
-import { History } from "history";
 import { createContext } from "react";
 import { Store, useStoreState } from "@/Data/Store";
 
@@ -46,21 +45,20 @@ export const EnvironmentHandlerContext = createContext<{
 
 export class EnvironmentHandlerImpl implements EnvironmentHandler {
   constructor(
-    private readonly history: History,
+    private readonly location: { pathname: string; search: string },
+    private readonly navigate: (path: string) => void,
     private readonly store: Store,
     private readonly routeManager: RouteManager
   ) {}
 
   public set(projectId: string, environmentId: string): void {
-    const params = new URLSearchParams(this.history.location.search);
+    const params = new URLSearchParams(this.location.search);
     if (params.get("env") !== environmentId) {
       params.set("env", environmentId);
-      this.history.push({
-        pathname: this.routeManager.getRelatedUrlWithoutParams(
-          this.history.location.pathname
-        ),
-        search: `?${params}`,
-      });
+      this.navigate(
+        this.routeManager.getRelatedUrlWithoutParams(this.location.pathname) +
+          `?${params}`
+      );
     }
     this.store.dispatch.projects.selectProjectAndEnvironment({
       project: projectId,
@@ -70,7 +68,7 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
 
   public setDefault(data: RemoteData.Type<string, ProjectModel[]>): void {
     if (data.kind === "Success") {
-      const params = new URLSearchParams(this.history.location.search);
+      const params = new URLSearchParams(this.location.search);
       const envFromUrl = params.get("env");
       if (!envFromUrl) {
         this.redirectToHomePage();
@@ -97,10 +95,7 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
   }
 
   private redirectToHomePage(): void {
-    this.history.push({
-      pathname: this.routeManager.getUrl("Home", undefined),
-      search: "",
-    });
+    this.navigate(this.routeManager.getUrl("Home", undefined));
   }
 
   public getProjects(): RemoteData.Type<string, ProjectModel[]> {

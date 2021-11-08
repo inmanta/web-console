@@ -1,13 +1,7 @@
 import React, { useContext, ReactElement } from "react";
-import { useParams } from "react-router-dom";
 import { words } from "@/UI/words";
 import { TableProvider } from "./TableProvider";
-import {
-  RemoteData,
-  ServiceModel,
-  ServiceInstanceParams,
-  RouteParams,
-} from "@/Core";
+import { RemoteData, ServiceModel, ServiceInstanceParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
   EmptyView,
@@ -23,6 +17,7 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
+import { useRouteParams } from "@/UI/Routing";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("inventory.title")}>
@@ -31,7 +26,7 @@ const Wrapper: React.FC = ({ children, ...props }) => (
 );
 
 export const Page: React.FC = () => {
-  const { service: serviceName } = useParams<RouteParams<"Inventory">>();
+  const { service: serviceName } = useRouteParams<"Inventory">();
 
   return (
     <ServiceProvider

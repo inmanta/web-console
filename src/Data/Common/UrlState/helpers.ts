@@ -1,4 +1,4 @@
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { RouteKind } from "@/Core";
 
 export interface Location {
@@ -7,9 +7,7 @@ export interface Location {
   hash: string;
 }
 
-export interface History {
-  replace(to: string): void;
-}
+export type Replace = (path: string) => void;
 
 export type Update<Data> = (data: Data) => void;
 
@@ -25,7 +23,7 @@ export interface StateConfig<Data> {
 type Handler<ConfigType, ReturnValue> = (
   config: ConfigType,
   location: Location,
-  history: History
+  replace: Replace
 ) => ReturnValue;
 
 type ProvidedHandler<ConfigType, ReturnValue> = (
@@ -37,7 +35,9 @@ export const provide = <ConfigType, ReturnValue>(
 ): ProvidedHandler<ConfigType, ReturnValue> => {
   return (config) => {
     const location = useLocation();
-    const history = useHistory();
-    return handler(config, location, history);
+    const navigate = useNavigate();
+    return handler(config, location, (path) =>
+      navigate(path, { replace: true })
+    );
   };
 };

@@ -9,9 +9,11 @@ import {
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
 import { words } from "@/UI/words";
 import { Link } from "@/UI/Components";
-import { DependencyContext } from "@/UI";
+import { DependencyContext } from "@/UI/Dependency";
+import { useDocumentTitle } from "@/UI/Routing";
 
-export const NotFound: React.FunctionComponent = () => {
+export const NotFound: React.FC = () => {
+  useDocumentTitle("404 Page Not Found");
   const { routeManager } = React.useContext(DependencyContext);
   return (
     <PageSection variant="light">

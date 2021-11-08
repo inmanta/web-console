@@ -7,7 +7,7 @@ import {
   TextContent,
   TextVariants,
 } from "@patternfly/react-core";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -24,13 +24,13 @@ export const CreateInstance: React.FC<{ serviceEntity: ServiceModel }> = ({
     useContext(DependencyContext);
   const [errorMessage, setErrorMessage] = useState("");
   const isHalted = environmentModifier.useIsHalted();
-  const history = useHistory();
+  const navigate = useNavigate();
   const url = `${routeManager.getUrl("Inventory", {
     service: serviceEntity.name,
   })}?env=${serviceEntity.environment}`;
   const handleRedirect = useCallback(
-    () => history.push(url),
-    [history] /* eslint-disable-line react-hooks/exhaustive-deps */
+    () => navigate(url),
+    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
   );
 
   const trigger = commandResolver.getTrigger<"CreateInstance">({

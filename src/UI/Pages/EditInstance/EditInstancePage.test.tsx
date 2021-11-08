@@ -26,6 +26,7 @@ import {
 
 import { EditInstancePage } from "./EditInstancePage";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 
 function setup() {
   const store = getStoreInstance();
@@ -60,12 +61,14 @@ function setup() {
         environmentModifier: new MockEnvironmentModifier(),
       }}
     >
-      <StoreProvider store={store}>
-        <EditInstancePage
-          serviceEntity={Service.a}
-          instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-        />
-      </StoreProvider>
+      <MemoryRouter>
+        <StoreProvider store={store}>
+          <EditInstancePage
+            serviceEntity={Service.a}
+            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+          />
+        </StoreProvider>
+      </MemoryRouter>
     </DependencyProvider>
   );
 

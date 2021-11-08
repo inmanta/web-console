@@ -1,5 +1,5 @@
 import { handleUrlStateWithString } from "./useUrlStateWithString";
-import { getMockedLocation, mockedHistory } from "./helpers.mocked";
+import { getMockedLocation } from "./helpers.mocked";
 
 test.each`
   search                               | searchText      | expectedValue   | valueText
@@ -11,7 +11,7 @@ test.each`
     const [value] = handleUrlStateWithString(
       { default: "Info", key: "tab", route: "Inventory" },
       getMockedLocation(search),
-      mockedHistory
+      () => undefined
     );
     expect(value).toEqual(expectedValue);
   }

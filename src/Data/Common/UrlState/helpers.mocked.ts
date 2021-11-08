@@ -1,10 +1,4 @@
-import { Location, History } from "./helpers";
-
-export const mockedHistory: History = {
-  replace() {
-    return undefined;
-  },
-};
+import { Location } from "./helpers";
 
 export const getMockedLocation = (search: string): Location => ({
   pathname: "",

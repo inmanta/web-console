@@ -12,7 +12,8 @@ test("EnvironmentHandler redirects to home page when no environment is selected"
   const store = getStoreInstance();
 
   const environmentHandler = new EnvironmentHandlerImpl(
-    history,
+    history.location,
+    (path) => history.push(path),
     store,
     routeManager
   );
@@ -29,7 +30,8 @@ test("EnvironmentHandler redirects to home page when the selected environment do
   const store = getStoreInstance();
 
   const environmentHandler = new EnvironmentHandlerImpl(
-    history,
+    history.location,
+    (path) => history.push(path),
     store,
     routeManager
   );
@@ -48,7 +50,8 @@ test("EnvironmentHandler updates environment correctly", () => {
   const [env] = project.environments;
 
   const environmentHandler = new EnvironmentHandlerImpl(
-    history,
+    history.location,
+    (path) => history.push(path),
     store,
     routeManager
   );
@@ -66,7 +69,8 @@ test("EnvironmentHandler determines selected environment correctly", () => {
   const [env] = project.environments;
 
   const environmentHandler = new EnvironmentHandlerImpl(
-    history,
+    history.location,
+    (path) => history.push(path),
     store,
     routeManager
   );
