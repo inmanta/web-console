@@ -1,0 +1,3 @@
+description: Fix code highlighter wrapping and icons
+change-type: patch
+destination-branches: [master, iso4]

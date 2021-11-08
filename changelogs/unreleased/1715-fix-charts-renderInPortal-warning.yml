@@ -1,0 +1,4 @@
+description: Fix charts renderInPortal warning by removing @types/victory
+issue-nr: 1715
+change-type: patch
+destination-branches: [master, iso4]
