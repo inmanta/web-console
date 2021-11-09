@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import "@patternfly/react-core/dist/styles/base.css";
 import { KeycloakProvider } from "react-keycloak";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { KeycloakInitOptions } from "keycloak-js";
 import { DependencyContext } from "@/UI/Dependency";
@@ -28,12 +28,6 @@ export const App: React.FC<AuthProps> = ({ keycloak, shouldUseAuth }) => {
       <SearchSanitizer.Provider>
         <AuthWrapper keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <Navigate replace to={routeManager.getUrl("Home", undefined)} />
-              }
-            />
             <Route
               path={routeManager.getUrl("Home", undefined)}
               element={

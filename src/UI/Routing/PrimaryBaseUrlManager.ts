@@ -14,6 +14,6 @@ export class PrimaryBaseUrlManager implements BaseUrlManager {
   }
 
   getBaseUrl(forcedUrl?: string): string {
-    return forcedUrl || this.getConsoleBaseUrl().replace("/console", "");
+    return forcedUrl || this.getConsoleBaseUrl().replace(this.ANCHOR, "");
   }
 }
