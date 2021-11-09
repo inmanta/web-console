@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
 import {
   Card,
@@ -11,13 +10,14 @@ import {
   DropdownItem,
   KebabToggle,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 import { Rejection } from "@/Core";
-import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
+import { words } from "@/UI/words";
 import { DropdownExternalLink } from "./ExternalLink";
-import { Traceback } from "./Traceback";
 import { Pre } from "./Pre";
+import { Traceback } from "./Traceback";
 
 interface Props {
   rejection: Rejection;

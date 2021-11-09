@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { CogIcon, InfoCircleIcon, KeyIcon } from "@patternfly/react-icons";
-import { ErrorView, IconTabs, TabDescriptor } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { EnvironmentTab } from "./Environment";
-import { ConfigurationTab } from "./Configuration";
-import { EnvironmentHandlerContext } from "@/UI/Dependency";
 import { FlatEnvironment } from "@/Core";
+import { ErrorView, IconTabs, TabDescriptor } from "@/UI/Components";
+import { EnvironmentHandlerContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
+import { ConfigurationTab } from "./Configuration";
+import { EnvironmentTab } from "./Environment";
 
 export enum TabKey {
   Environment = "Environment",

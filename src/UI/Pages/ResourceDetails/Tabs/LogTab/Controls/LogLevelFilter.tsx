@@ -1,6 +1,6 @@
 import React from "react";
-import { LogLevelsList, ResourceLogFilter } from "@/Core";
 import { ToolbarFilter } from "@patternfly/react-core";
+import { LogLevelsList, ResourceLogFilter } from "@/Core";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
 

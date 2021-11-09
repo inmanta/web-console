@@ -1,18 +1,18 @@
 import React, { useContext } from "react";
+import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
 import { RemoteData } from "@/Core";
-import { ResourceHistoryTablePresenter } from "./TablePresenter";
-import { MomentDatePresenter } from "@/UI/Utils";
-import { ResourceHistoryTable } from "./ResourceHistoryTable";
-import { DependencyContext } from "@/UI/Dependency";
+import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import {
   EmptyView,
   ErrorView,
   LoadingView,
   PaginationWidget,
 } from "@/UI/Components";
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { DependencyContext } from "@/UI/Dependency";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
+import { ResourceHistoryTable } from "./ResourceHistoryTable";
+import { ResourceHistoryTablePresenter } from "./TablePresenter";
 
 interface Props {
   resourceId: string;

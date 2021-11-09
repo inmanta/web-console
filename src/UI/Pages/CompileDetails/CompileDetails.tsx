@@ -1,7 +1,7 @@
+import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import React, { useContext } from "react";
 import { CompileDetailsSections } from "./CompileDetailsSections";
 
 interface Props {

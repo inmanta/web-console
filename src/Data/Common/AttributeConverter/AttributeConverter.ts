@@ -1,10 +1,10 @@
+import { TextInputTypes } from "@patternfly/react-core";
 import {
   AttributeModel,
   FormAttributeResult,
   InstanceAttributeModel,
   ServiceInstanceModel,
 } from "@/Core";
-import { TextInputTypes } from "@patternfly/react-core";
 
 export interface AttributeInputConverter {
   /**

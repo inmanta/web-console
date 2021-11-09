@@ -1,3 +1,8 @@
+import React from "react";
+import { MemoryRouter } from "react-router-dom";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
   BaseApiHelper,
@@ -20,11 +25,6 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
-import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import React from "react";
-import { MemoryRouter } from "react-router-dom";
 import { EnvironmentControls } from "./EnvironmentControls";
 
 function setup() {

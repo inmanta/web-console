@@ -1,4 +1,5 @@
 import React from "react";
+import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -16,7 +17,6 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { UrlManagerImpl } from "@/UI/Utils";
-import { render, screen } from "@testing-library/react";
 import { CompileDetails } from "./CompileDetails";
 
 function setup() {

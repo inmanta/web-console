@@ -2,8 +2,8 @@ import React from "react";
 import { CompileDetails } from "@/Core";
 import { PageSectionWithTitle } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { CompileStageReportTable } from "./CompileStageReportTable";
 import { CompileErrorsSection } from "./CompileErrorsSection";
+import { CompileStageReportTable } from "./CompileStageReportTable";
 import { StatusSection } from "./StatusSection";
 
 interface Props {

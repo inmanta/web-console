@@ -1,5 +1,5 @@
-import { PageSection, PageSectionProps } from "@patternfly/react-core";
 import React from "react";
+import { PageSection, PageSectionProps } from "@patternfly/react-core";
 import { PageTitle } from "../PageTitle";
 
 export const PageSectionWithTitle: React.FC<

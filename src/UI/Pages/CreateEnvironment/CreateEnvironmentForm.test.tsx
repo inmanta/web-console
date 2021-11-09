@@ -1,3 +1,8 @@
+import React from "react";
+import { MemoryRouter } from "react-router";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
 import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
@@ -16,11 +21,6 @@ import {
   Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { StoreProvider } from "easy-peasy";
-import React from "react";
-import { MemoryRouter } from "react-router";
 import { Page } from "./Page";
 
 function setup() {

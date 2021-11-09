@@ -1,5 +1,5 @@
-import { AuthHelper } from "@/Core";
 import { KeycloakInstance } from "keycloak-js";
+import { AuthHelper } from "@/Core";
 
 export class KeycloakAuthHelper implements AuthHelper {
   constructor(private readonly keycloak?: KeycloakInstance) {}

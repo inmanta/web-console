@@ -1,6 +1,6 @@
 import React from "react";
-import { AttributeModel } from "@/Core";
 import { Table, TableBody, TableHeader } from "@patternfly/react-table";
+import { AttributeModel } from "@/Core";
 
 interface Props {
   attributes: AttributeModel[];

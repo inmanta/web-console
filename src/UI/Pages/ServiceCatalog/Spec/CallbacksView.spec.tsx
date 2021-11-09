@@ -1,18 +1,9 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { MemoryRouter } from "react-router";
-import {
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
-  Service,
-  Callback,
-  DeferredApiHelper,
-} from "@/Test";
-import { CallbacksView } from "@/UI/Pages/ServiceCatalog/Tabs/Callbacks";
 import { Either, Maybe } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   CommandResolverImpl,
@@ -23,6 +14,15 @@ import {
   DeleteCallbackCommandManager,
   CallbacksUpdater,
 } from "@/Data";
+import {
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  Service,
+  Callback,
+  DeferredApiHelper,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { CallbacksView } from "@/UI/Pages/ServiceCatalog/Tabs/Callbacks";
 
 function setup() {
   const store = getStoreInstance();

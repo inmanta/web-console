@@ -1,24 +1,24 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { MemoryRouter } from "react-router";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolver,
-  StaticScheduler,
-} from "@/Test";
 import { Either } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   getStoreInstance,
   ResourceHistoryQueryManager,
   ResourceHistoryStateHelper,
 } from "@/Data";
-import { ResourceHistoryView } from "./ResourceHistoryView";
+import {
+  DeferredApiHelper,
+  dependencies,
+  DynamicQueryManagerResolver,
+  StaticScheduler,
+} from "@/Test";
 import { ResourceHistory } from "@/Test/Data";
+import { DependencyProvider } from "@/UI/Dependency";
+import { ResourceHistoryView } from "./ResourceHistoryView";
 
 function setup() {
   const store = getStoreInstance();

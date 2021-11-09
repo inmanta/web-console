@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
-import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import {
   Button,
   DescriptionList,
   DescriptionListGroup,
 } from "@patternfly/react-core";
-import { words } from "@/UI/words";
+import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import { ButtonWithCursorHandling, Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 import { DeleteModal } from "./DeleteModal";
 import { SetStateAction } from "./SetStateAction";
-import { DependencyContext } from "@/UI/Dependency";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;

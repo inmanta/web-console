@@ -1,6 +1,13 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { Either } from "@/Core";
+import {
+  QueryResolverImpl,
+  DiagnosticsQueryManager,
+  DiagnosticsStateHelper,
+  getStoreInstance,
+} from "@/Data";
 import {
   DynamicQueryManagerResolver,
   Service,
@@ -9,14 +16,7 @@ import {
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
-import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  DiagnosticsQueryManager,
-  DiagnosticsStateHelper,
-  getStoreInstance,
-} from "@/Data";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 
 function setup() {

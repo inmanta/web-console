@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import { InstanceResourceModel } from "@/Core";
-import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Button } from "@patternfly/react-core";
-import { words } from "@/UI/words";
-import { ResourceStatusCell } from "@/UI/Components/ResourceStatusCell";
+import { Table, TableHeader, TableBody } from "@patternfly/react-table";
+import { InstanceResourceModel } from "@/Core";
 import { Link } from "@/UI/Components/Link";
+import { ResourceStatusCell } from "@/UI/Components/ResourceStatusCell";
 import { DependencyContext } from "@/UI/Dependency";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
 interface Props {
   resources: InstanceResourceModel[];

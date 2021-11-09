@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import styled from "styled-components";
 import {
   Card,
   CardActions,
@@ -10,14 +9,15 @@ import {
   DropdownItem,
   KebabToggle,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 import { Failure } from "@/Core";
-import { words } from "@/UI/words";
+import { Link } from "@/UI/Components/Link";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
+import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import { DropdownExternalLink } from "./ExternalLink";
 import { Pre } from "./Pre";
-import { Link } from "@/UI/Components/Link";
-import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 
 interface Props {
   resourceId: string;

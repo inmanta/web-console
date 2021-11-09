@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
+import { RemoteData } from "@/Core";
 import {
   EmptyView,
   ErrorView,
   LoadingView,
   PageSectionWithTitle,
 } from "@/UI/Components";
-import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
-import { RemoteData } from "@/Core";
+import { words } from "@/UI/words";
 import { CatalogDataList } from "./CatalogDataList";
 
 const Wrapper: React.FC = ({ children, ...props }) => (

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { RemoteData, ServiceModel } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
 import { ErrorView, LoadingView } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { EditForm } from "./EditForm";
 
 export const EditInstancePage: React.FC<{

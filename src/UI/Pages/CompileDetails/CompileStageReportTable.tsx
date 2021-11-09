@@ -1,6 +1,4 @@
-import { CompileStageReport } from "@/Core";
-import { useExpansion } from "@/Data";
-import { MomentDatePresenter } from "@/UI/Utils";
+import React from "react";
 import {
   TableComposable,
   TableVariant,
@@ -8,7 +6,9 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import React from "react";
+import { CompileStageReport } from "@/Core";
+import { useExpansion } from "@/Data";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { CompileStageReportTablePresenter } from "./CompileStageReportTablePresenter";
 import { CompileStageReportTableRow } from "./CompileStageReportTableRow";
 

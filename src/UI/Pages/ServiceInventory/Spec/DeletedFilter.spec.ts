@@ -1,7 +1,7 @@
 import { render, screen, act, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Service, ServiceInstance, Pagination } from "@/Test";
 import { Either } from "@/Core";
+import { Service, ServiceInstance, Pagination } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN only deleted instances are shown", async () => {

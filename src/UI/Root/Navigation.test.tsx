@@ -1,10 +1,10 @@
 import React from "react";
-import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { render, screen, within } from "@testing-library/react";
+import { ServerStatus } from "@/Core";
+import { dependencies, ServerStatus as TestServerStatus } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
-import { dependencies, ServerStatus as TestServerStatus } from "@/Test";
-import { ServerStatus } from "@/Core";
 import { Navigation } from "./Navigation";
 
 function setup(

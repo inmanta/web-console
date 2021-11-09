@@ -1,7 +1,7 @@
 import { render, screen, act } from "@testing-library/react";
-import { ServiceInstance } from "@/Test";
-import { Either } from "@/Core";
 import userEvent from "@testing-library/user-event";
+import { Either } from "@/Core";
+import { ServiceInstance } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user clicks on prev THEN first page is shown", async () => {

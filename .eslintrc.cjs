@@ -11,8 +11,17 @@ module.exports = {
     react: {
       version: "detect", // Tells eslint-plugin-react to automatically detect the version of React to use
     },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
+    "import/resolver": {
+      typescript: {
+        alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+      },
+      webpack: "webpack",
+    },
   },
-  plugins: ["testing-library", "jest-dom"],
+  plugins: ["testing-library", "jest-dom", "import"],
   extends: [
     "plugin:testing-library/dom",
     "plugin:jest-dom/recommended",
@@ -31,10 +40,46 @@ module.exports = {
      * Make sure this is always the last configuration in the extends array.
      */
     "plugin:prettier/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
   ],
   rules: {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     "react/display-name": "off",
+
+    "import/no-named-as-default-member": "off",
+
+    // turn on errors for missing imports
+    "import/no-unresolved": "error",
+
+    "import/order": [
+      "error",
+      {
+        groups: [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type",
+        ],
+        pathGroups: [
+          {
+            pattern: "@/**",
+            group: "internal",
+          },
+          {
+            pattern: "react*",
+            group: "external",
+            position: "before",
+          },
+        ],
+        pathGroupsExcludedImportTypes: ["react"],
+        alphabetize: { order: "asc" },
+      },
+    ],
   },
   overrides: [
     {

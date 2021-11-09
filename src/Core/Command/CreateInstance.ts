@@ -1,9 +1,9 @@
-import { Either } from "@/Core/Language";
 import {
   InstanceAttributeModel,
   ServiceInstanceModel,
   Field,
 } from "@/Core/Domain";
+import { Either } from "@/Core/Language";
 
 export interface CreateInstance {
   kind: "CreateInstance";

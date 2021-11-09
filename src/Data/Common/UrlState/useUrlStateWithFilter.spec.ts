@@ -1,5 +1,5 @@
-import { handleUrlStateWithFilter } from "./useUrlStateWithFilter";
 import { getMockedLocation, mockedHistory } from "./helpers.mocked";
+import { handleUrlStateWithFilter } from "./useUrlStateWithFilter";
 
 const from = {
   search:

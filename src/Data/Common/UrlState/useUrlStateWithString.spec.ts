@@ -1,5 +1,5 @@
-import { handleUrlStateWithString } from "./useUrlStateWithString";
 import { getMockedLocation, mockedHistory } from "./helpers.mocked";
+import { handleUrlStateWithString } from "./useUrlStateWithString";
 
 test.each`
   search                               | searchText      | expectedValue   | valueText

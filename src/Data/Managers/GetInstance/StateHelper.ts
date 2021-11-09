@@ -1,6 +1,6 @@
+import { isEqual } from "lodash";
 import { Query, RemoteData, StateHelper, ServiceInstanceModel } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
-import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<string, ServiceInstanceModel>;
 type ApiData = RemoteData.Type<string, Query.ApiResponse<"GetServiceInstance">>;

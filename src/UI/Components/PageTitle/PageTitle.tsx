@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import { Title } from "@patternfly/react-core";
+import styled from "styled-components";
 
 export const PageTitle = styled(Title).attrs(() => ({
   headingLevel: "h1",

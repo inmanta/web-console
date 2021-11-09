@@ -1,16 +1,16 @@
 import { PageManager, Page, RouteDictionary } from "@/Core";
+import { CompileReportsPage } from "@/UI/Pages/CompileReports";
 import { CreateInstancePage } from "@/UI/Pages/CreateInstance";
 import { DiagnosePage } from "@/UI/Pages/Diagnose";
+import { EditInstancePage } from "@/UI/Pages/EditInstance";
+import { EventsPage } from "@/UI/Pages/Events";
+import { ResourceDetailsPage } from "@/UI/Pages/ResourceDetails";
+import { ResourcesPage } from "@/UI/Pages/Resources";
+import { ServiceCatalogPage } from "@/UI/Pages/ServiceCatalog";
 import { ServiceInstanceHistoryPage } from "@/UI/Pages/ServiceInstanceHistory";
 import { ServiceInventoryPage } from "@/UI/Pages/ServiceInventory";
-import { EventsPage } from "@/UI/Pages/Events";
-import { ServiceCatalogPage } from "@/UI/Pages/ServiceCatalog";
-import { ResourcesPage } from "@/UI/Pages/Resources";
-import { EditInstancePage } from "@/UI/Pages/EditInstance";
-import { CompileReportsPage } from "@/UI/Pages/CompileReports";
-import { CompileDetailsPage } from "./CompileDetails";
-import { ResourceDetailsPage } from "@/UI/Pages/ResourceDetails";
 import { SettingsPage } from "@/UI/Pages/Settings";
+import { CompileDetailsPage } from "./CompileDetails";
 
 export class PrimaryPageManager implements PageManager {
   constructor(private readonly routeDictionary: RouteDictionary) {}

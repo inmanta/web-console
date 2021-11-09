@@ -7,9 +7,9 @@ import {
   OnSort,
 } from "@patternfly/react-table";
 import { Row, Sort } from "@/Core";
-import { InventoryTablePresenter } from "./Presenters";
-import { InstanceRow } from "./InstanceRow";
 import { useUrlStateWithExpansion } from "@/Data";
+import { InstanceRow } from "./InstanceRow";
+import { InventoryTablePresenter } from "./Presenters";
 
 interface Props {
   rows: Row[];

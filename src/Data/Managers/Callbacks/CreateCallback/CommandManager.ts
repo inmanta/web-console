@@ -1,3 +1,4 @@
+import { omit } from "lodash";
 import {
   Command,
   CommandManager,
@@ -6,7 +7,6 @@ import {
   Maybe,
   ApiHelper,
 } from "@/Core";
-import { omit } from "lodash";
 
 export class CreateCallbackCommandManager implements CommandManager {
   constructor(

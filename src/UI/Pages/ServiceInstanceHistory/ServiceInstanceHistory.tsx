@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { DependencyContext } from "@/UI/Dependency";
 import { RemoteData, ServiceModel } from "@/Core";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { HistoryTable } from "./HistoryTable";
 

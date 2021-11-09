@@ -1,6 +1,6 @@
+import { EventType } from "./EventType";
 import { DateInfo } from "./InventoryTable";
 import { LogLevelNumber } from "./LogLevel";
-import { EventType } from "./EventType";
 
 export interface InstanceEvent {
   id: string;

@@ -4,13 +4,13 @@ import {
   ServiceInstanceModelWithTargetStates,
   getUuidFromRaw,
 } from "@/Core";
-import { words } from "@/UI/words";
 import {
   ActionPresenter,
   TablePresenter,
   DatePresenter,
   ColumnHead,
 } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 import { AttributesPresenter } from "./AttributesPresenter";
 import { StatePresenter } from "./StatePresenter";
 

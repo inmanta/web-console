@@ -5,8 +5,8 @@ import {
   SelectVariant,
   SelectOption,
 } from "@patternfly/react-core";
-import { CompileReportParams } from "@/Core";
 import { FilterIcon } from "@patternfly/react-icons";
+import { CompileReportParams } from "@/Core";
 
 interface Props {
   filterKind: CompileReportParams.Kind | string;

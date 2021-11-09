@@ -1,6 +1,6 @@
 import { BaseApiHelper } from "@/Data/API";
-import { CreateInstanceCommandManager } from "./CommandManager";
 import { Field } from "@/Test";
+import { CreateInstanceCommandManager } from "./CommandManager";
 
 describe("CreateInstanceManager", () => {
   const commandManager = new CreateInstanceCommandManager(

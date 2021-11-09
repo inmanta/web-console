@@ -1,5 +1,5 @@
-import { ResourceParams } from "@/Core";
 import { createContext } from "react";
+import { ResourceParams } from "@/Core";
 
 interface SetFilterProvider {
   setFilter: (filter: ResourceParams.Filter) => void;

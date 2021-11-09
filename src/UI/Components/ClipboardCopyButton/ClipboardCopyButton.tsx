@@ -1,10 +1,9 @@
-import { words } from "@/UI/words";
+import React, { useState } from "react";
 import { Button, Tooltip } from "@patternfly/react-core";
 import { CopyIcon } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
-import React from "react";
-import { useState } from "react";
 import styled from "styled-components";
+import { words } from "@/UI/words";
 
 interface Props {
   className?: string;

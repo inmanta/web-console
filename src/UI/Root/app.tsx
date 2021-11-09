@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import "@patternfly/react-core/dist/styles/base.css";
-import { Route, Switch } from "react-router-dom";
-import { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakProvider } from "react-keycloak";
+import { Route, Switch } from "react-router-dom";
 import { Spinner, Bullseye } from "@patternfly/react-core";
-import { SearchSanitizer } from "@/UI/Routing";
-import { Home, CreateEnvironmentPage } from "@/UI/Pages";
+import { KeycloakInitOptions } from "keycloak-js";
 import { DependencyContext } from "@/UI/Dependency";
+import { Home, CreateEnvironmentPage } from "@/UI/Pages";
+import { SearchSanitizer } from "@/UI/Routing";
 import { BaseLayout } from "./BaseLayout";
 import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
 import { Initializer } from "./Initializer";

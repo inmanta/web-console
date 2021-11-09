@@ -1,36 +1,40 @@
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
-import { GetProjects, GetProjectsManifest } from "./GetProjects";
-import { GetServerStatus, GetServerStatusManifest } from "./GetServerStatus";
+import {
+  GetCompileDetails,
+  GetCompileDetailsManifest,
+} from "./GetCompileDetails";
+import {
+  GetCompileReports,
+  GetCompileReportsManifest,
+} from "./GetCompileReports";
+import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
 import {
   GetEnvironmentDetails,
   GetEnvironmentDetailsManifest,
 } from "./GetEnvironmentDetails";
-import { GetServices, GetServicesManifest } from "./GetServices";
-import { GetService, GetServiceManifest } from "./GetService";
 import {
-  GetServiceInstances,
-  GetServiceInstancesManifest,
-} from "./GetServiceInstances";
+  GetEnvironmentSetting,
+  GetEnvironmentSettingManifest,
+} from "./GetEnvironmentSetting";
 import {
-  GetServiceInstance,
-  GetServiceInstanceManifest,
-} from "./GetServiceInstance";
-import { GetServiceConfig, GetServiceConfigManifest } from "./GetServiceConfig";
+  GetEnvironmentSettings,
+  GetEnvironmentSettingsManifest,
+} from "./GetEnvironmentSettings";
+import { GetEnvironments, GetEnvironmentsManifest } from "./GetEnvironments";
 import {
-  GetInstanceResources,
-  GetInstanceResourcesManifest,
-} from "./GetInstanceResources";
+  GetInstanceConfig,
+  GetInstanceConfigManifest,
+} from "./GetInstanceConfig";
 import {
   GetInstanceEvents,
   GetInstanceEventsManifest,
 } from "./GetInstanceEvents";
 import { GetInstanceLogs, GetInstanceLogsManifest } from "./GetInstanceLogs";
 import {
-  GetInstanceConfig,
-  GetInstanceConfigManifest,
-} from "./GetInstanceConfig";
-import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
-import { GetResources, GetResourcesManifest } from "./GetResources";
+  GetInstanceResources,
+  GetInstanceResourcesManifest,
+} from "./GetInstanceResources";
+import { GetProjects, GetProjectsManifest } from "./GetProjects";
 import {
   GetResourceDetails,
   GetResourceDetailsManifest,
@@ -39,24 +43,20 @@ import {
   GetResourceHistory,
   GetResourceHistoryManifest,
 } from "./GetResourceHistory";
-import {
-  GetCompileReports,
-  GetCompileReportsManifest,
-} from "./GetCompileReports";
-import {
-  GetCompileDetails,
-  GetCompileDetailsManifest,
-} from "./GetCompileDetails";
 import { GetResourceLogs, GetResourceLogsManifest } from "./GetResourceLogs";
+import { GetResources, GetResourcesManifest } from "./GetResources";
+import { GetServerStatus, GetServerStatusManifest } from "./GetServerStatus";
+import { GetService, GetServiceManifest } from "./GetService";
+import { GetServiceConfig, GetServiceConfigManifest } from "./GetServiceConfig";
 import {
-  GetEnvironmentSettings,
-  GetEnvironmentSettingsManifest,
-} from "./GetEnvironmentSettings";
+  GetServiceInstance,
+  GetServiceInstanceManifest,
+} from "./GetServiceInstance";
 import {
-  GetEnvironmentSetting,
-  GetEnvironmentSettingManifest,
-} from "./GetEnvironmentSetting";
-import { GetEnvironments, GetEnvironmentsManifest } from "./GetEnvironments";
+  GetServiceInstances,
+  GetServiceInstancesManifest,
+} from "./GetServiceInstances";
+import { GetServices, GetServicesManifest } from "./GetServices";
 
 export type Query =
   | GetServices

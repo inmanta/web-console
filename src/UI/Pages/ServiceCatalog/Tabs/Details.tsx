@@ -1,9 +1,9 @@
-import { InstanceSummary } from "@/Core";
 import React from "react";
-import { words } from "@/UI/words";
 import { Flex, FlexItem, Title } from "@patternfly/react-core";
-import { DeleteEntityModal } from "../DeleteEntityModal";
+import { InstanceSummary } from "@/Core";
 import { EmptyView, Spacer, SummaryChart } from "@/UI/Components";
+import { words } from "@/UI/words";
+import { DeleteEntityModal } from "../DeleteEntityModal";
 
 interface Props {
   serviceName: string;

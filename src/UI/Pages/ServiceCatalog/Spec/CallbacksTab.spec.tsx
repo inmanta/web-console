@@ -1,18 +1,9 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import {
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
-  Service,
-  StaticScheduler,
-  Callback,
-  DeferredApiHelper,
-  dependencies,
-} from "@/Test";
-import { ServiceCatalogPage } from "@/UI/Pages";
 import { Either } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   ServicesQueryManager,
@@ -27,8 +18,17 @@ import {
   CallbacksUpdater,
   DeleteServiceCommandManager,
 } from "@/Data";
-import { MemoryRouter } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
+import {
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  Service,
+  StaticScheduler,
+  Callback,
+  DeferredApiHelper,
+  dependencies,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { ServiceCatalogPage } from "@/UI/Pages";
 
 function setup() {
   const store = getStoreInstance();

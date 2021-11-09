@@ -1,7 +1,7 @@
+import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
 import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
-import React, { useContext } from "react";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
 export const Home: React.FC = () => {

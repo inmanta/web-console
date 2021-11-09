@@ -1,8 +1,8 @@
-import { Maybe } from "@/Core/Language";
 import {
   SetStateBody,
   VersionedServiceInstanceIdentifier,
 } from "@/Core/Domain";
+import { Maybe } from "@/Core/Language";
 
 export interface TriggerSetState extends VersionedServiceInstanceIdentifier {
   kind: "TriggerSetState";

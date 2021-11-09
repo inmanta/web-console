@@ -1,6 +1,13 @@
 import React from "react";
-import { InstanceEvent } from "@/Core";
+import { MemoryRouter } from "react-router";
 import { StoreProvider } from "easy-peasy";
+import { InstanceEvent } from "@/Core";
+import {
+  QueryResolverImpl,
+  EventsQueryManager,
+  EventsStateHelper,
+  getStoreInstance,
+} from "@/Data";
 import {
   InstanceLog,
   Service,
@@ -10,15 +17,8 @@ import {
   InstantApiHelper,
   dependencies,
 } from "@/Test";
-import { Events } from "./Events";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  EventsQueryManager,
-  EventsStateHelper,
-  getStoreInstance,
-} from "@/Data";
-import { MemoryRouter } from "react-router";
+import { Events } from "./Events";
 
 export default {
   title: "Events",

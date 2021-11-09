@@ -1,14 +1,13 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
+import { Router } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
-import { RemoteData } from "@/Core";
-import { Environment } from "@/Test";
-import { MemoryRouter } from "react-router";
 import { createMemoryHistory } from "history";
-import { Router } from "react-router-dom";
-import { dependencies } from "@/Test";
+import { RemoteData } from "@/Core";
+import { Environment, dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithData";
 
 test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async () => {
   const history = createMemoryHistory();

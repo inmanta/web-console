@@ -1,5 +1,4 @@
 import React from "react";
-import { State } from "@/Core";
 import { Label, LabelProps } from "@patternfly/react-core";
 import {
   CheckCircleIcon,
@@ -7,6 +6,7 @@ import {
   ExclamationTriangleIcon,
   InfoCircleIcon,
 } from "@patternfly/react-icons";
+import { State } from "@/Core";
 
 export const InstanceState: React.FC<State> = ({ name, label }) => {
   const visual = getVisual(label);

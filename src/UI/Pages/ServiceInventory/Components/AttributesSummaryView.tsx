@@ -1,10 +1,10 @@
 import React from "react";
+import { List, ListItem, ListVariant, Tooltip } from "@patternfly/react-core";
 import {
   OutlinedQuestionCircleIcon,
   ListIcon,
   UndoIcon,
 } from "@patternfly/react-icons";
-import { List, ListItem, ListVariant, Tooltip } from "@patternfly/react-core";
 import { AttributesSummary } from "@/Core";
 import { words } from "@/UI/words";
 

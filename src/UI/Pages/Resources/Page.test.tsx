@@ -1,6 +1,15 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import userEvent, { specialChars } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { Either } from "@/Core";
+import {
+  QueryResolverImpl,
+  getStoreInstance,
+  ResourcesQueryManager,
+  ResourcesStateHelper,
+} from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
@@ -8,17 +17,8 @@ import {
   Resource,
   StaticScheduler,
 } from "@/Test";
-import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
-} from "@/Data";
 import { Page } from "./Page";
-import userEvent, { specialChars } from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
 
 function setup() {
   const store = getStoreInstance();

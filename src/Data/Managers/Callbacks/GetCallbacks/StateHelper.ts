@@ -1,6 +1,6 @@
+import { isEqual, sortBy } from "lodash";
 import { Query, RemoteData, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
-import { isEqual, sortBy } from "lodash";
 
 type Data = RemoteData.Type<
   Query.Error<"GetCallbacks">,

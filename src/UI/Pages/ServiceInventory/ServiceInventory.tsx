@@ -1,14 +1,16 @@
 import React, { useContext, ReactElement } from "react";
 import { useParams } from "react-router-dom";
-import { words } from "@/UI/words";
-import { TableProvider } from "./TableProvider";
 import {
   RemoteData,
   ServiceModel,
   ServiceInstanceParams,
   RouteParams,
 } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 import {
   EmptyView,
   ErrorView,
@@ -17,12 +19,10 @@ import {
   PaginationWidget,
   ServiceProvider,
 } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import { Chart, TableControls } from "./Components";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { TableProvider } from "./TableProvider";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("inventory.title")}>

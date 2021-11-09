@@ -1,7 +1,7 @@
-import { Service } from "@/Test";
-import { render, screen } from "@testing-library/react";
 import assert from "assert";
 import React from "react";
+import { render, screen } from "@testing-library/react";
+import { Service } from "@/Test";
 import { SummaryChart } from "./SummaryChart";
 
 test("SummaryChart renders with multiple instances", () => {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { Dropdown, DropdownItem, DropdownToggle } from "@patternfly/react-core";
 import { CaretDownIcon, CheckIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 import { PageSize } from "@/Core";
 
 interface Props {

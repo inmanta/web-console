@@ -1,9 +1,9 @@
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
+import React, { useContext, useState } from "react";
 import { Button, Modal } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
-import React, { useContext, useState } from "react";
 import styled from "styled-components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 export const ResumeDialog: React.FC = () => {
   const { commandResolver } = useContext(DependencyContext);

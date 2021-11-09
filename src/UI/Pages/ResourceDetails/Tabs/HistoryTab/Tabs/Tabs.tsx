@@ -1,7 +1,8 @@
 import React from "react";
-import { Table, TableBody, TableHeader } from "@patternfly/react-table";
 import { Card, CardBody } from "@patternfly/react-core";
 import { ListIcon, ModuleIcon } from "@patternfly/react-icons";
+import { Table, TableBody, TableHeader } from "@patternfly/react-table";
+import { JsonFormatter, XmlFormatter } from "@/Data";
 import {
   AttributeClassifier,
   AttributeList,
@@ -9,7 +10,6 @@ import {
   TabDescriptor,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { JsonFormatter, XmlFormatter } from "@/Data";
 
 export enum TabKey {
   Attributes = "Attributes",

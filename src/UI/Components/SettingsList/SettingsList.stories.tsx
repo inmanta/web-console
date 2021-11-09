@@ -1,7 +1,7 @@
 import React from "react";
+import { Config } from "@/Core";
 import { DefaultSwitch } from "@/UI/Components";
 import { SettingsList } from "./SettingsList";
-import { Config } from "@/Core";
 
 export default {
   title: "SettingsList",

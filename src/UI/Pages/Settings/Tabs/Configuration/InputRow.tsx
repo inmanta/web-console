@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { NumberInput, Switch, Tooltip } from "@patternfly/react-core";
+import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
+import { Td, Tr } from "@patternfly/react-table";
+import styled from "styled-components";
 import { EnvironmentSettings, Maybe } from "@/Core";
 import { DictEditor, SingleTextSelect, Entry, Dict } from "@/UI/Components";
-import { Td, Tr } from "@patternfly/react-table";
-import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import { InputActions } from "./InputActions";
 
 interface Props {

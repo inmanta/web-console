@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { PlusIcon } from "@patternfly/react-icons";
 import {
   Toolbar,
   ToolbarGroup,
@@ -8,10 +7,11 @@ import {
   ToolbarContent,
   Button,
 } from "@patternfly/react-core";
+import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
-import { words } from "@/UI/words";
-import { FilterWidget } from "@/UI/Pages/ServiceInventory/Components/FilterWidget";
 import { DependencyContext } from "@/UI/Dependency";
+import { FilterWidget } from "@/UI/Pages/ServiceInventory/Components/FilterWidget";
+import { words } from "@/UI/words";
 
 interface Props {
   serviceName: string;

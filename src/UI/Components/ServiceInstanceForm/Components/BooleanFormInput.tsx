@@ -1,5 +1,5 @@
-import { FormGroup, Radio } from "@patternfly/react-core";
 import React from "react";
+import { FormGroup, Radio } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 
 interface Props {

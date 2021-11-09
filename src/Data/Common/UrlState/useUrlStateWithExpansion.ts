@@ -1,7 +1,7 @@
 import { isEqual, identity } from "lodash";
 import { toggleValueInList } from "@/Core";
-import { handleUrlState } from "./useUrlState";
 import { provide, Location, History, StateConfig, Update } from "./helpers";
+import { handleUrlState } from "./useUrlState";
 
 type IsExpanded = (id: string) => boolean;
 type OnExpansion = (id: string) => () => void;

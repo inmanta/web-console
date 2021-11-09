@@ -1,7 +1,7 @@
-import { Query, RemoteData, StateHelper } from "@/Core";
-import { Store, StoreModel, useStoreState } from "@/Data/Store";
 import { State } from "easy-peasy";
 import { isEqual } from "lodash";
+import { Query, RemoteData, StateHelper } from "@/Core";
+import { Store, StoreModel, useStoreState } from "@/Data/Store";
 
 type Data<Kind extends Query.Kind> = RemoteData.Type<
   Query.Error<Kind>,

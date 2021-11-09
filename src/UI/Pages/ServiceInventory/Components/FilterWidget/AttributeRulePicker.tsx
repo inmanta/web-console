@@ -1,5 +1,5 @@
-import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
 import React, { useState } from "react";
+import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
 
 export enum AttributeRule {
   Empty = "empty",

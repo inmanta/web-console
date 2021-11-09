@@ -8,11 +8,11 @@ import {
 } from "@patternfly/react-icons";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { InfoTab } from "./InfoTab";
-import { RequiresTab } from "./RequiresTab";
 import { AttributesTab } from "./AttributesTab";
 import { ResourceHistoryView } from "./HistoryTab/ResourceHistoryView";
+import { InfoTab } from "./InfoTab";
 import { ResourceLogView } from "./LogTab";
+import { RequiresTab } from "./RequiresTab";
 
 export enum TabKey {
   Info = "Info",

@@ -1,8 +1,4 @@
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
-import { EnvironmentModel, Maybe } from "@/Core";
-import { DependencyContext } from "@/UI";
-import { words } from "@/UI/words";
 import {
   Alert,
   Button,
@@ -12,6 +8,10 @@ import {
   Modal,
   TextInput,
 } from "@patternfly/react-core";
+import styled from "styled-components";
+import { EnvironmentModel, Maybe } from "@/Core";
+import { DependencyContext } from "@/UI";
+import { words } from "@/UI/words";
 
 interface Props {
   environment: Pick<EnvironmentModel, "id" | "name">;

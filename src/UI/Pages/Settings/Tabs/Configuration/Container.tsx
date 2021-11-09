@@ -1,7 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
 import { TableComposable, Tbody } from "@patternfly/react-table";
+import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
 import { InputRow } from "./InputRow";
 

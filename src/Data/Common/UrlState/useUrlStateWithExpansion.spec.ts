@@ -1,5 +1,5 @@
-import { handleUrlStateWithExpansion } from "./useUrlStateWithExpansion";
 import { getMockedLocation, mockedHistory } from "./helpers.mocked";
+import { handleUrlStateWithExpansion } from "./useUrlStateWithExpansion";
 
 test.each`
   search                                                                    | searchText   | expectedValue       | valueText

@@ -1,4 +1,4 @@
-import { Maybe } from "@/Core";
+import React, { useState } from "react";
 import {
   DescriptionListDescription,
   DescriptionListGroup,
@@ -8,7 +8,7 @@ import {
   Select,
   SelectOption,
 } from "@patternfly/react-core";
-import React, { useState } from "react";
+import { Maybe } from "@/Core";
 import {
   CancelEditButton,
   EnableEditButton,

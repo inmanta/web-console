@@ -1,9 +1,9 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import Keycloak from "keycloak-js";
-import { App } from "@/UI/Root/app";
-import { DependencyProvider } from "@/UI/Dependency";
+import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
@@ -18,8 +18,8 @@ import {
   DynamicQueryManagerResolver,
   ServerStatus,
 } from "@/Test";
-import { MemoryRouter } from "react-router";
-import { Either } from "@/Core";
+import { DependencyProvider } from "@/UI/Dependency";
+import { App } from "@/UI/Root/app";
 
 function setup() {
   const store = getStoreInstance();

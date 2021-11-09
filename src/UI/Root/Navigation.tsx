@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { Nav, NavItem, NavGroup } from "@patternfly/react-core";
+import { RouteDictionary } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { DependencyContext } from "@/UI/Dependency";
-import { RouteDictionary } from "@/Core";
 
 interface Group {
   id: string;

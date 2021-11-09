@@ -1,6 +1,6 @@
+import { identity } from "lodash";
 import { StateHelper, Query, RemoteData, ApiHelper } from "@/Core";
 import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
-import { identity } from "lodash";
 import { getUrl } from "./getUrl";
 
 export class GetProjectsQueryManager extends PrimaryOneTimeQueryManager<"GetProjects"> {

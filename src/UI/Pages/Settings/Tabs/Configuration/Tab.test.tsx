@@ -1,11 +1,8 @@
 import React from "react";
-import { DependencyProvider } from "@/UI";
-import { Tab } from "./Tab";
-import {
-  DeferredApiHelper,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
-} from "@/Test";
+import { act, render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
   EnvironmentSettingUpdater,
@@ -17,11 +14,14 @@ import {
   ResetEnvironmentSettingCommandManager,
   UpdateEnvironmentSettingCommandManager,
 } from "@/Data";
-import { act, render, screen, within } from "@testing-library/react";
-import { Either, Maybe } from "@/Core";
-import { EnvironmentSettings } from "@/Test";
-import { StoreProvider } from "easy-peasy";
-import userEvent from "@testing-library/user-event";
+import {
+  DeferredApiHelper,
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  EnvironmentSettings,
+} from "@/Test";
+import { DependencyProvider } from "@/UI";
+import { Tab } from "./Tab";
 
 function setup() {
   const store = getStoreInstance();

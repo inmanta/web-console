@@ -1,4 +1,6 @@
 import React from "react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
@@ -14,8 +16,6 @@ import {
   Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { act, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 function setup() {

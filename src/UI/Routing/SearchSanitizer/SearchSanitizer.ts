@@ -1,5 +1,5 @@
-import { Kind } from "@/UI/Routing/Kind";
 import { getKeysExcluding, isObject, keepKeys, RouteManager } from "@/Core";
+import { Kind } from "@/UI/Routing/Kind";
 import { PageStateSanitizer } from "@/UI/Routing/PageStateSanitizer";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
 

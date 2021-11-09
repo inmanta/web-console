@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { ResourceRow } from "@/Core";
-import { words } from "@/UI/words";
 import { Link } from "react-router-dom";
 import { Button } from "@patternfly/react-core";
 import { InfoCircleIcon } from "@patternfly/react-icons";
+import { Tbody, Tr, Td } from "@patternfly/react-table";
+import { ResourceRow } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   row: ResourceRow;

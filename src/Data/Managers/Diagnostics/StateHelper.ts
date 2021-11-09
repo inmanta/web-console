@@ -1,6 +1,6 @@
+import { isEqual } from "lodash";
 import { Query, RemoteData, StateHelper, Diagnostics } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
-import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<string, Diagnostics>;
 type ApiData = RemoteData.Type<string, Query.ApiResponse<"GetDiagnostics">>;

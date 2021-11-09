@@ -1,7 +1,7 @@
-import { Environment } from "@/Test";
-import { Story } from "@storybook/react/types-6-0";
 import React, { ComponentProps } from "react";
 import { MemoryRouter } from "react-router";
+import { Story } from "@storybook/react/types-6-0";
+import { Environment } from "@/Test";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 export default {

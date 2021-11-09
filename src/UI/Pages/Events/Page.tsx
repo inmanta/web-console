@@ -2,8 +2,8 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { RouteParams, ServiceModel } from "@/Core";
 import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
-import { Events } from "./Events";
 import { words } from "@/UI/words";
+import { Events } from "./Events";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("events.title")}>

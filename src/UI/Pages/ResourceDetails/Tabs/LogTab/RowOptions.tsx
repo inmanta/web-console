@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import {
   Dropdown,
   DropdownItem,
@@ -7,6 +6,7 @@ import {
   KebabToggle,
 } from "@patternfly/react-core";
 import { FilterIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 import { words } from "@/UI/words";
 
 export type ToggleActionType = (actionType: string) => void;

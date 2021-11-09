@@ -1,6 +1,4 @@
 import React from "react";
-import styled from "styled-components";
-import { ResourceLog, Sort } from "@/Core";
 import {
   OnSort,
   TableComposable,
@@ -8,10 +6,12 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
+import styled from "styled-components";
+import { ResourceLog, Sort } from "@/Core";
+import { useUrlStateWithExpansion } from "@/Data";
+import { words } from "@/UI/words";
 import { Row } from "./Row";
 import { ToggleActionType } from "./RowOptions";
-import { words } from "@/UI/words";
-import { useUrlStateWithExpansion } from "@/Data";
 
 interface Props {
   logs: ResourceLog[];

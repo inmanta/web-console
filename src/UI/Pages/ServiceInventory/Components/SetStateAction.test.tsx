@@ -1,8 +1,7 @@
-import {
-  DynamicCommandManagerResolver,
-  MockEnvironmentModifier,
-  ServiceInstance,
-} from "@/Test";
+import React from "react";
+import { fireEvent, screen, render, act } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { EnvironmentDetails, RemoteData } from "@/Core";
 import {
   TriggerSetStateCommandManager,
   CommandResolverImpl,
@@ -10,12 +9,13 @@ import {
   KeycloakAuthHelper,
   getStoreInstance,
 } from "@/Data";
+import {
+  DynamicCommandManagerResolver,
+  MockEnvironmentModifier,
+  ServiceInstance,
+} from "@/Test";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
-import { fireEvent, screen, render, act } from "@testing-library/react";
-import React from "react";
 import { SetStateAction } from "./SetStateAction";
-import { EnvironmentDetails, RemoteData } from "@/Core";
-import { StoreProvider } from "easy-peasy";
 
 function setup() {
   const commandManager = new TriggerSetStateCommandManager(

@@ -1,5 +1,5 @@
-import { Resource, Sort } from "@/Core";
 import React from "react";
+import { Resource, Sort } from "@/Core";
 import { ResourcesTable } from "./ResourcesTable";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 

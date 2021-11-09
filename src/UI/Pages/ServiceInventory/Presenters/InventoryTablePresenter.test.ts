@@ -1,5 +1,3 @@
-import { InventoryTablePresenter } from "./InventoryTablePresenter";
-import { AttributesPresenter } from "./AttributesPresenter";
 import {
   ServiceInstance,
   DummyActionPresenter,
@@ -7,6 +5,8 @@ import {
   tablePresenter,
 } from "@/Test";
 import { DummyStatePresenter } from "@/Test/Mock/DummyStatePresenter";
+import { AttributesPresenter } from "./AttributesPresenter";
+import { InventoryTablePresenter } from "./InventoryTablePresenter";
 
 const presenter = new InventoryTablePresenter(
   new DummyDatePresenter(),

@@ -1,6 +1,13 @@
 import React from "react";
-import { SchedulerImpl, ServiceModel } from "@/Core";
+import { MemoryRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
+import { SchedulerImpl, ServiceModel } from "@/Core";
+import {
+  QueryResolverImpl,
+  EventsQueryManager,
+  EventsStateHelper,
+  getStoreInstance,
+} from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
@@ -8,14 +15,7 @@ import {
   Service,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  EventsQueryManager,
-  EventsStateHelper,
-  getStoreInstance,
-} from "@/Data";
 import { Events } from "@/UI/Pages/Events/Events";
-import { MemoryRouter } from "react-router-dom";
 
 export interface Handles {
   component: React.ReactElement;

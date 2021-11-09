@@ -1,9 +1,9 @@
 const path = require("path");
-const { merge } = require("webpack-merge");
-const common = require("./webpack.common.cjs");
-const webpack = require("webpack");
 const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
+const { merge } = require("webpack-merge");
+const common = require("./webpack.common.cjs");
 
 const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || "9000";

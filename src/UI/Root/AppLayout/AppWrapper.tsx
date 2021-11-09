@@ -1,11 +1,11 @@
 import React, { useEffect, useContext } from "react";
-import styled from "styled-components";
 import {
   PageHeader,
   PageHeaderTools,
   PageHeaderToolsGroup,
 } from "@patternfly/react-core";
-import Logo from "!react-svg-loader!@images/logo.svg";
+import styled from "styled-components";
+import { DependencyContext } from "@/UI/Dependency";
 import { GlobalStyles } from "@/UI/Styles";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 import {
@@ -14,7 +14,8 @@ import {
   EnvSelectorWithProvider,
   DocumentationLink,
 } from "./Toolbar";
-import { DependencyContext } from "@/UI/Dependency";
+/* eslint-disable-next-line import/no-unresolved */
+import Logo from "!react-svg-loader!@images/logo.svg";
 
 interface Props {
   keycloak?: Keycloak.KeycloakInstance;

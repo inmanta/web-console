@@ -1,3 +1,4 @@
+import { uniq } from "lodash";
 import {
   Config,
   RemoteData,
@@ -6,7 +7,6 @@ import {
   StateHelper,
   isNotNull,
 } from "@/Core";
-import { uniq } from "lodash";
 
 export class ServiceConfigFinalizer
   implements ConfigFinalizer<"GetServiceConfig">

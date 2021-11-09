@@ -1,7 +1,7 @@
-import { RemoteData } from "@/Core";
 import React, { useContext } from "react";
-import { DependencyContext } from "@/UI/Dependency";
+import { RemoteData } from "@/Core";
 import { LoadingView, ErrorView } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 
 export const Initializer: React.FC = ({ children }) => {
   const { queryResolver, featureManager } = useContext(DependencyContext);

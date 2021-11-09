@@ -1,7 +1,7 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { Timeline } from "./Timeline";
 import { Provider } from "./Provider";
+import { Timeline } from "./Timeline";
 
 export default {
   title: "Timeline",

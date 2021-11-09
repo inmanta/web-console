@@ -1,17 +1,17 @@
 import React from "react";
-import { IconTabs, TabDescriptor } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
   AutomationIcon,
   CogIcon,
   InfoCircleIcon,
   ListIcon,
 } from "@patternfly/react-icons";
-import { StatusTab } from "./StatusTab";
+import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
+import { IconTabs, TabDescriptor } from "@/UI/Components";
+import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
-import { ResourcesTab } from "./ResourcesTab";
 import { ConfigTab, DisabledConfigTab } from "./ConfigTab";
+import { ResourcesTab } from "./ResourcesTab";
+import { StatusTab } from "./StatusTab";
 
 export enum TabKey {
   Status = "Status",

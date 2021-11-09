@@ -1,9 +1,9 @@
 import React from "react";
 import { EventRow, InstanceEvent } from "@/Core";
-import { TablePresenter } from "@/UI/Presenters";
-import { EventsTableRow } from "./EventsTableRow";
 import { useUrlStateWithExpansion } from "@/Data";
+import { TablePresenter } from "@/UI/Presenters";
 import { Kind } from "@/UI/Routing";
+import { EventsTableRow } from "./EventsTableRow";
 
 interface Props {
   events: InstanceEvent[];

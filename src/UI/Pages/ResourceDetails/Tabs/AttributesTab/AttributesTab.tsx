@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
+import { Card, CardBody } from "@patternfly/react-core";
 import { RemoteData } from "@/Core";
+import { JsonFormatter, XmlFormatter } from "@/Data";
 import {
   AttributeClassifier,
   AttributeList,
@@ -8,8 +10,6 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Card, CardBody } from "@patternfly/react-core";
-import { JsonFormatter, XmlFormatter } from "@/Data";
 
 interface Props {
   id: string;

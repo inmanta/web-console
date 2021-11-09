@@ -1,5 +1,5 @@
-import { WithId } from "@/Core/Language";
 import { Pagination, ResourceHistory, PageSize, Sort } from "@/Core/Domain";
+import { WithId } from "@/Core/Language";
 
 export interface GetResourceHistory extends WithId {
   kind: "GetResourceHistory";

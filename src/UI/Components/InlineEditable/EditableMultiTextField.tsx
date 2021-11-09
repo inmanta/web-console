@@ -1,4 +1,4 @@
-import { Maybe } from "@/Core";
+import React, { useEffect, useState } from "react";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -8,7 +8,7 @@ import {
   FlexItem,
   TextInput,
 } from "@patternfly/react-core";
-import React, { useEffect, useState } from "react";
+import { Maybe } from "@/Core";
 import {
   CancelEditButton,
   EnableEditButton,

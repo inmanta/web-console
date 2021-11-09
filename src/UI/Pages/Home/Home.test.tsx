@@ -1,7 +1,8 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { StoreProvider } from "easy-peasy";
 import { render, screen } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { Either } from "@/Core";
 import {
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
@@ -22,7 +23,6 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Home } from "./Home";
-import { Either } from "@/Core";
 
 function setup() {
   const store = getStoreInstance();

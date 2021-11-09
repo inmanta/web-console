@@ -1,6 +1,6 @@
+import { isEqual } from "lodash";
 import { Query, RemoteData, ResourceStatus, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
-import { isEqual } from "lodash";
 
 type Data = RemoteData.Type<
   Query.Error<"GetResources">,

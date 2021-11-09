@@ -1,4 +1,6 @@
 import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
+import { BaseApiHelper } from "@/Data/API";
+import { AttributeResultConverterImpl } from "@/Data/Common/AttributeConverter";
 import {
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
@@ -30,9 +32,7 @@ import {
   EnvironmentsUpdater,
   GetEnvironmentsStateHelper,
 } from "@/Data/Managers";
-import { BaseApiHelper } from "@/Data/API";
 import { Store } from "@/Data/Store";
-import { AttributeResultConverterImpl } from "@/Data/Common/AttributeConverter";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];

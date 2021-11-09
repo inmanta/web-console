@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
 import { EventParams, EventType, DateRange } from "@/Core";
-import { words } from "@/UI/words";
 import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import { FilterPicker } from "./FilterPicker";
 import { VersionFilter } from "./VersionFilter";
 

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { set } from "lodash";
 import { ActionGroup, Button, Form } from "@patternfly/react-core";
-import { words } from "@/UI/words";
+import { set } from "lodash";
 import { InstanceAttributeModel, Field } from "@/Core";
-import { createEditFormState, createFormState } from "./Helpers";
-import { FieldInput } from "./Components";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
+import { words } from "@/UI/words";
+import { FieldInput } from "./Components";
+import { createEditFormState, createFormState } from "./Helpers";
 
 interface Props {
   fields: Field[];

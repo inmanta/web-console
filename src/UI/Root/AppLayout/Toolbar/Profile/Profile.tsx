@@ -7,6 +7,7 @@ import {
 } from "@patternfly/react-core";
 import { AngleDownIcon } from "@patternfly/react-icons";
 import { IconDropdown } from "./IconDropdown";
+/* eslint-disable-next-line import/no-unresolved */
 import AvatarImg from "!url-loader!@assets/images/img_avatar.svg";
 
 interface Props {

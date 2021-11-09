@@ -7,8 +7,8 @@ import {
   ButtonVariant,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
-import { toggleValueInList } from "@/Core";
 import { uniq } from "lodash";
+import { toggleValueInList } from "@/Core";
 
 interface Props {
   versions: string[];

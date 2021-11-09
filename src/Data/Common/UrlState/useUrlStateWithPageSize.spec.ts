@@ -1,6 +1,6 @@
 import { PageSize } from "@/Core";
-import { handleUrlStateWithPageSize } from "./useUrlStateWithPageSize";
 import { getMockedLocation, mockedHistory } from "./helpers.mocked";
+import { handleUrlStateWithPageSize } from "./useUrlStateWithPageSize";
 
 test.each`
   search                            | searchText | expectedValue          | valueText

@@ -5,8 +5,8 @@ import {
   RemoteData,
   ServiceInstanceModelWithTargetStates,
 } from "@/Core";
-import { StoreModel } from "./Store";
 import { ServiceKeyMaker } from "@/Data/Managers/Service/KeyMaker";
+import { StoreModel } from "./Store";
 
 type Data = RemoteData.Type<
   Query.Error<"GetServiceInstances">,

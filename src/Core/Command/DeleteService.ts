@@ -1,5 +1,5 @@
-import { Maybe } from "@/Core/Language";
 import { ServiceIdentifier } from "@/Core/Domain";
+import { Maybe } from "@/Core/Language";
 
 export interface DeleteService extends ServiceIdentifier {
   kind: "DeleteService";

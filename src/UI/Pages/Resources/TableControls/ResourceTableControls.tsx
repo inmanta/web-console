@@ -1,9 +1,9 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
 import { ResourceParams } from "@/Core";
+import { AgentFilter } from "./AgentFilter";
 import { DeployStateFilter } from "./DeployStateFilter";
 import { TypeFilter } from "./TypeFilter";
-import { AgentFilter } from "./AgentFilter";
 import { ValueFilter } from "./ValueFilter";
 
 interface Props {

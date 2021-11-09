@@ -1,7 +1,7 @@
+import React, { useState } from "react";
+import { FormGroup, Select, SelectOption } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { InlinePlainAlert } from "@/UI/Components";
-import { FormGroup, Select, SelectOption } from "@patternfly/react-core";
-import React, { useState } from "react";
 
 interface Props {
   label: string;

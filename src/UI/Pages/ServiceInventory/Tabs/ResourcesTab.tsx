@@ -7,8 +7,8 @@ import {
   LoadingView,
   ErrorView,
 } from "@/UI/Components";
-import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
