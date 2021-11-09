@@ -44,23 +44,19 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
 
 const environmentTab = (
   environment: FlatEnvironment
-): TabDescriptor<TabKey> => {
-  return {
-    id: TabKey.Environment,
-    title: words("settings.tabs.environment"),
-    icon: <InfoCircleIcon />,
-    view: <EnvironmentTab environment={environment} />,
-  };
-};
+): TabDescriptor<TabKey> => ({
+  id: TabKey.Environment,
+  title: words("settings.tabs.environment"),
+  icon: <InfoCircleIcon />,
+  view: <EnvironmentTab environment={environment} />,
+});
 
-const configurationTab = (environmentId: string): TabDescriptor<TabKey> => {
-  return {
-    id: TabKey.Configuration,
-    title: words("settings.tabs.configuration"),
-    icon: <CogIcon />,
-    view: <ConfigurationTab environmentId={environmentId} />,
-  };
-};
+const configurationTab = (environmentId: string): TabDescriptor<TabKey> => ({
+  id: TabKey.Configuration,
+  title: words("settings.tabs.configuration"),
+  icon: <CogIcon />,
+  view: <ConfigurationTab environmentId={environmentId} />,
+});
 
 const tokensTab: TabDescriptor<TabKey> = {
   id: TabKey.Tokens,

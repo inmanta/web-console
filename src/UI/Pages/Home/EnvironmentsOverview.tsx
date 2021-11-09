@@ -62,7 +62,7 @@ function filterByName(
 ): FlatEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (environmentFilter && environmentFilter.length > 0) {
-      return environment.name?.includes(environmentFilter);
+      return environment.name.includes(environmentFilter);
     }
     return true;
   });
