@@ -18,3 +18,4 @@ export * from "./TriggerProvider";
 export * from "./EnvironmentModifier";
 export * from "./Updater";
 export * from "./UrlManager";
+export * from "./EnvironmentHandler";
