@@ -1,4 +1,3 @@
-import { createContext } from "react";
 import { useLocation } from "react-router-dom";
 import { History } from "history";
 import {
@@ -9,13 +8,6 @@ import {
 } from "@/Core";
 import { useStoreState } from "@/Data/Store";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
-import { DummyEnvironmentHandler } from "./Dummy";
-
-export const EnvironmentHandlerContext = createContext<{
-  environmentHandler: EnvironmentHandler;
-}>({
-  environmentHandler: new DummyEnvironmentHandler(),
-});
 
 export class EnvironmentHandlerImpl implements EnvironmentHandler {
   constructor(

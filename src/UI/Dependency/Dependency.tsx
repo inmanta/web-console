@@ -7,6 +7,7 @@ import {
   EnvironmentModifier,
   FeatureManager,
   RouteManager,
+  EnvironmentHandler,
 } from "@/Core";
 import {
   DummyCommandResolver,
@@ -16,6 +17,7 @@ import {
   DummyQueryResolver,
   DummyUrlManager,
   DummyRouteManager,
+  DummyEnvironmentHandler,
 } from "./Dummy";
 
 export interface Dependencies {
@@ -26,6 +28,7 @@ export interface Dependencies {
   environmentModifier: EnvironmentModifier;
   featureManager: FeatureManager;
   routeManager: RouteManager;
+  environmentHandler: EnvironmentHandler;
 }
 
 export const DependencyContext = createContext<Dependencies>({
@@ -36,6 +39,7 @@ export const DependencyContext = createContext<Dependencies>({
   environmentModifier: new DummyEnvironmentModifier(),
   featureManager: new DummyFeatureManager(),
   routeManager: new DummyRouteManager(),
+  environmentHandler: new DummyEnvironmentHandler(),
 });
 
 export const DependencyProvider: React.FC<{
@@ -49,6 +53,7 @@ export const DependencyProvider: React.FC<{
     environmentModifier,
     featureManager,
     routeManager,
+    environmentHandler,
   },
   children,
 }) => (
@@ -62,6 +67,7 @@ export const DependencyProvider: React.FC<{
         environmentModifier || new DummyEnvironmentModifier(),
       featureManager: featureManager || new DummyFeatureManager(),
       routeManager: routeManager || new DummyRouteManager(),
+      environmentHandler: environmentHandler || new DummyEnvironmentHandler(),
     }}
   >
     {children}
