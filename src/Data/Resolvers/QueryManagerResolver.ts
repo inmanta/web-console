@@ -13,8 +13,8 @@ import {
   EventsStateHelper,
   ServicesQueryManager,
   ServicesStateHelper,
-  InstanceLogsQueryManager,
-  InstanceLogsStateHelper,
+  GetInstanceLogsQueryManager,
+  GetInstanceLogsStateHelper,
   InstanceConfigQueryManager,
   InstanceConfigStateHelper,
   InstanceConfigFinalizer,
@@ -141,9 +141,10 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         scheduler,
         environment
       ),
-      new InstanceLogsQueryManager(
+      new GetInstanceLogsQueryManager(
         this.apiHelper,
-        new InstanceLogsStateHelper(this.store),
+        new GetInstanceLogsStateHelper(this.store),
+        scheduler,
         environment
       ),
       new InstanceConfigQueryManager(

@@ -6,13 +6,14 @@ import {
   Service,
   DynamicQueryManagerResolver,
   InstantApiHelper,
+  StaticScheduler,
 } from "@/Test";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
-  InstanceLogsQueryManager,
-  InstanceLogsStateHelper,
+  GetInstanceLogsQueryManager,
+  GetInstanceLogsStateHelper,
   getStoreInstance,
 } from "@/Data";
 import { MemoryRouter } from "react-router-dom";
@@ -26,12 +27,13 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new InstanceLogsQueryManager(
+      new GetInstanceLogsQueryManager(
         new InstantApiHelper({
           kind: "Success",
           data: { data: logs },
         }),
-        new InstanceLogsStateHelper(store),
+        new GetInstanceLogsStateHelper(store),
+        new StaticScheduler(),
         Service.a.environment
       ),
     ])
