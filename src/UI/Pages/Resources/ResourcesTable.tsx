@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import {
   OnSort,
   TableComposable,
@@ -8,6 +7,7 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
+import styled from "styled-components";
 import { ResourceRow, Sort } from "@/Core";
 import { ResourceTableRow } from "./ResourceTableRow";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";

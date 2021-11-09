@@ -1,8 +1,8 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { DictEditor } from "./DictEditor";
-import { DependencyProvider } from "@/UI/Dependency";
 import { InstantFileFetcher } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { DictEditor } from "./DictEditor";
 
 export default {
   title: "DictEditor",

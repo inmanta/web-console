@@ -1,8 +1,8 @@
+import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import React from "react";
-import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import * as Test from "@/Test";
+import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 test("GIVEN ServiceInstanceForm WHEN passed a FlatField (text) THEN shows that field", () => {
   render(

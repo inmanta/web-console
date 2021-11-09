@@ -1,4 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Alert,
   AlertActionCloseButton,
@@ -7,15 +8,14 @@ import {
   TextContent,
   TextVariants,
 } from "@patternfly/react-core";
-import { useHistory } from "react-router-dom";
 import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import {
   CreateModifierHandler,
   FieldCreator,
   ServiceInstanceForm,
 } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 export const CreateInstance: React.FC<{ serviceEntity: ServiceModel }> = ({
   serviceEntity,

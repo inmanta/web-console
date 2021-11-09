@@ -1,8 +1,8 @@
-import { Kind } from "@/UI/Routing/Kind";
 import React, { useContext, useEffect } from "react";
 import { useHistory, useLocation } from "react-router";
 import { RouteManager } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import { Kind } from "@/UI/Routing/Kind";
 import { SearchSanitizer } from "./SearchSanitizer";
 
 export const Provider: React.FC = ({ children }) => {

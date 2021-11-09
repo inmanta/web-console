@@ -1,6 +1,6 @@
+import { identity } from "lodash";
 import { KeyMaker, StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { PrimaryContinuousQueryManager } from "@/Data/Managers/Helpers";
-import { identity } from "lodash";
 
 export class ServiceQueryManager extends PrimaryContinuousQueryManager<"GetService"> {
   constructor(

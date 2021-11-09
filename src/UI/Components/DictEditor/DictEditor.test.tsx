@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, within } from "@testing-library/react";
-import { DictEditor } from "./DictEditor";
 import userEvent from "@testing-library/user-event";
+import { DictEditor } from "./DictEditor";
 
 function setup() {
   const setValue = jest.fn();

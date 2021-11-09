@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { EnvironmentSettings } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { InputInfoCreator } from "./InputInfoCreator";
 import { Container } from "./Container";
+import { InputInfoCreator } from "./InputInfoCreator";
 
 interface Props {
   settings: EnvironmentSettings.EnvironmentSettings;

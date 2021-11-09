@@ -1,9 +1,9 @@
-import { FlatEnvironment, RemoteData, RouteManager } from "@/Core";
-import { SearchHelper } from "@/UI/Routing/SearchHelper";
+import { createContext } from "react";
 import { useLocation } from "react-router-dom";
 import { History } from "history";
-import { createContext } from "react";
+import { FlatEnvironment, RemoteData, RouteManager } from "@/Core";
 import { useStoreState } from "@/Data/Store";
+import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
 export interface EnvironmentHandler {
   set(environmentId: string): void;

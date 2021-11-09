@@ -1,5 +1,5 @@
-import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { identity } from "lodash";
+import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { PrimaryContinuousQueryManager } from "@/Data/Managers/Helpers";
 
 export class DiagnosticsQueryManager extends PrimaryContinuousQueryManager<"GetDiagnostics"> {

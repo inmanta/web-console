@@ -1,5 +1,5 @@
-import { Maybe } from "@/Core/Language";
 import { VersionedServiceInstanceIdentifier } from "@/Core/Domain";
+import { Maybe } from "@/Core/Language";
 
 export interface DeleteInstance extends VersionedServiceInstanceIdentifier {
   kind: "DeleteInstance";

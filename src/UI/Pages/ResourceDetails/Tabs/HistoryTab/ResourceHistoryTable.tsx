@@ -8,9 +8,9 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import { ResourceHistoryRow, Sort } from "@/Core";
+import { useUrlStateWithExpansion } from "@/Data";
 import { ResourceHistoryTableRow } from "./ResourceHistoryTableRow";
 import { ResourceHistoryTablePresenter } from "./TablePresenter";
-import { useUrlStateWithExpansion } from "@/Data";
 
 interface Props {
   tablePresenter: ResourceHistoryTablePresenter;

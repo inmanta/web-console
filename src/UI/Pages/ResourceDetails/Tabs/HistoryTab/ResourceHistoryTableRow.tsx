@@ -1,10 +1,9 @@
+import React, { useRef, useState } from "react";
+import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { ResourceHistoryRow } from "@/Core";
 import { DateWithTooltip } from "@/UI/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { Tbody, Td, Tr } from "@patternfly/react-table";
-import React from "react";
-import { useRef, useState } from "react";
 import { TabKey, Tabs } from "./Tabs";
 
 interface Props {

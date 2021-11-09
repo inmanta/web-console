@@ -1,8 +1,14 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
-import { EnvironmentsOverview } from "./EnvironmentsOverview";
+import {
+  CommandResolverImpl,
+  DeleteEnvironmentCommandManager,
+  getStoreInstance,
+  EnvironmentsUpdater,
+  GetEnvironmentsStateHelper,
+} from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
@@ -11,13 +17,7 @@ import {
   MockFeatureManger,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  CommandResolverImpl,
-  DeleteEnvironmentCommandManager,
-  getStoreInstance,
-  EnvironmentsUpdater,
-  GetEnvironmentsStateHelper,
-} from "@/Data";
+import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
 function setup() {
   const store = getStoreInstance();

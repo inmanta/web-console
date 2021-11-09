@@ -1,9 +1,9 @@
+import React from "react";
 import {
   Alert,
   AlertActionCloseButton,
   AlertGroup,
 } from "@patternfly/react-core";
-import React from "react";
 
 interface Props {
   errorMessage: string;

@@ -1,7 +1,4 @@
 import React, { useContext } from "react";
-import { Maybe, ResourceStatus } from "@/Core";
-import { ResourceStatusCell } from "@/UI/Components";
-import { words } from "@/UI/words";
 import {
   Tbody,
   TableComposable,
@@ -11,8 +8,11 @@ import {
   Tr,
   Td,
 } from "@patternfly/react-table";
-import { ResourceIdParser } from "@/UI/Pages/Resources/ResourceId";
+import { Maybe, ResourceStatus } from "@/Core";
+import { ResourceStatusCell } from "@/UI/Components";
 import { ResourceFilterContext } from "@/UI/Pages/Resources/ResourceFilterContext";
+import { ResourceIdParser } from "@/UI/Pages/Resources/ResourceId";
+import { words } from "@/UI/words";
 
 interface Props {
   requiresStatus: Record<string, ResourceStatus>;

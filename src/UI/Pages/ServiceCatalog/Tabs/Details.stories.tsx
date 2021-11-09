@@ -1,11 +1,11 @@
 import React, { ComponentProps } from "react";
-import { Service, DynamicCommandManagerResolver } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   DeleteServiceCommandManager,
   BaseApiHelper,
   CommandResolverImpl,
 } from "@/Data";
+import { Service, DynamicCommandManagerResolver } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { Details } from "./Details";
 
 export default {

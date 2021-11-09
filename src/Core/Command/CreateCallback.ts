@@ -1,5 +1,5 @@
-import { Maybe } from "@/Core/Language";
 import { CreateCallbackBody } from "@/Core/Domain";
+import { Maybe } from "@/Core/Language";
 
 export interface CreateCallback extends CreateCallbackBody {
   kind: "CreateCallback";

@@ -1,9 +1,9 @@
 import React from "react";
-import styled from "styled-components";
-import { omit } from "lodash";
 import { Button, TextInput } from "@patternfly/react-core";
-import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
 import { TrashAltIcon } from "@patternfly/react-icons";
+import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
+import { omit } from "lodash";
+import styled from "styled-components";
 
 export type Dict = Record<string, string | number | boolean>;
 export type Entry = [string, string];

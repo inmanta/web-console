@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
-import { Pagination, PageSize } from "@/Core";
 import { AngleLeftIcon, AngleRightIcon } from "@patternfly/react-icons";
+import { Pagination, PageSize } from "@/Core";
 import { Indicator } from "./Indicator";
 import { PageSizeSelector } from "./PageSizeSelector";
 

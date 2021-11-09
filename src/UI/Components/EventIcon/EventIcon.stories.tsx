@@ -1,7 +1,7 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { EventIcon } from "./EventIcon";
 import { EventType } from "@/Core";
+import { EventIcon } from "./EventIcon";
 
 export default {
   title: "EventIcon",

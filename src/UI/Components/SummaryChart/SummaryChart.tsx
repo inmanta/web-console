@@ -1,5 +1,4 @@
-import { InstancesByLabel } from "@/Core";
-import { words } from "@/UI/words";
+import React from "react";
 import { ChartDonut } from "@patternfly/react-charts";
 import {
   global_danger_color_100,
@@ -8,7 +7,8 @@ import {
   global_success_color_100,
   global_warning_color_100,
 } from "@patternfly/react-tokens";
-import React from "react";
+import { InstancesByLabel } from "@/Core";
+import { words } from "@/UI/words";
 
 interface Props {
   by_label: InstancesByLabel;

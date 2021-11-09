@@ -1,5 +1,10 @@
+import React, { useContext } from "react";
 import { ResourceParams, RemoteData } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 import {
   EmptyView,
   ErrorView,
@@ -7,16 +12,11 @@ import {
   PageSectionWithTitle,
   PaginationWidget,
 } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import React, { useContext } from "react";
+import { ResourceFilterContext } from "./ResourceFilterContext";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { ResourceTableControls } from "./TableControls";
-import { ResourceFilterContext } from "./ResourceFilterContext";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
 
 export const Wrapper: React.FC = ({ children }) => (
   <PageSectionWithTitle title={words("inventory.tabs.resources")}>

@@ -1,11 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
-import Keycloak from "keycloak-js";
 import { StoreProvider } from "easy-peasy";
-import keycloakConf from "@/UI/Root/keycloak.json";
-import { App } from "@/UI/Root/app";
-import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
+import Keycloak from "keycloak-js";
 import {
   CommandResolverImpl,
   QueryResolverImpl,
@@ -17,8 +14,11 @@ import {
   CommandManagerResolver,
   QueryManagerResolver,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
+import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
+import { App } from "@/UI/Root/app";
+import keycloakConf from "@/UI/Root/keycloak.json";
 import { PrimaryBaseUrlManager, PrimaryRouteManager } from "@/UI/Routing";
+import { UrlManagerImpl } from "@/UI/Utils";
 
 if (process.env.NODE_ENV !== "production") {
   /* eslint-disable-next-line @typescript-eslint/no-var-requires */

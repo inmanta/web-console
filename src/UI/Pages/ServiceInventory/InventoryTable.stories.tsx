@@ -1,6 +1,13 @@
 import React, { ComponentProps } from "react";
+import { MemoryRouter } from "react-router-dom";
 import { Story } from "@storybook/react/types-6-0";
-import { InventoryTable } from "./InventoryTable";
+import { StoreProvider } from "easy-peasy";
+import {
+  QueryResolverImpl,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  getStoreInstance,
+} from "@/Data";
 import {
   DynamicQueryManagerResolver,
   InstantApiHelper,
@@ -8,15 +15,8 @@ import {
   StaticScheduler,
   tablePresenter,
 } from "@/Test";
-import {
-  QueryResolverImpl,
-  InstanceResourcesQueryManager,
-  InstanceResourcesStateHelper,
-  getStoreInstance,
-} from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
-import { StoreProvider } from "easy-peasy";
-import { MemoryRouter } from "react-router-dom";
+import { InventoryTable } from "./InventoryTable";
 
 export default {
   title: "InventoryTable",

@@ -1,9 +1,9 @@
-import { getStoreInstance } from "@/Data";
 import { createMemoryHistory } from "history";
-import { EnvironmentHandlerImpl } from ".";
 import { RemoteData } from "@/Core";
+import { getStoreInstance } from "@/Data";
 import { Environment } from "@/Test";
 import { PrimaryRouteManager } from "@/UI/Routing";
+import { EnvironmentHandlerImpl } from ".";
 
 const routeManager = new PrimaryRouteManager("");
 

@@ -1,7 +1,7 @@
-import { LifecycleModel } from "@/Core";
 import React from "react";
-import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Badge, Tooltip } from "@patternfly/react-core";
+import { Table, TableHeader, TableBody } from "@patternfly/react-table";
+import { LifecycleModel } from "@/Core";
 
 export const LifecycleTable: React.FunctionComponent<{
   lifecycle: LifecycleModel;

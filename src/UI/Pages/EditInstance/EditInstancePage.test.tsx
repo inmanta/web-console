@@ -1,18 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import {
-  DynamicQueryManagerResolver,
-  Service,
-  StaticScheduler,
-  ServiceInstance,
-  MockEnvironmentModifier,
-  DynamicCommandManagerResolver,
-  DeferredApiHelper,
-  dependencies,
-} from "@/Test";
 import { Either } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   getStoreInstance,
@@ -23,9 +13,19 @@ import {
   BaseApiHelper,
   CommandResolverImpl,
 } from "@/Data";
+import {
+  DynamicQueryManagerResolver,
+  Service,
+  StaticScheduler,
+  ServiceInstance,
+  MockEnvironmentModifier,
+  DynamicCommandManagerResolver,
+  DeferredApiHelper,
+  dependencies,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 
 import { EditInstancePage } from "./EditInstancePage";
-import userEvent from "@testing-library/user-event";
 
 function setup() {
   const store = getStoreInstance();

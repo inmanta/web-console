@@ -1,5 +1,5 @@
-import { Query, Sort } from "@/Core";
 import qs from "qs";
+import { Query, Sort } from "@/Core";
 
 export function getUrl({
   name,

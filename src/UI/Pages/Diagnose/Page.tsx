@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
-import { Diagnose } from "./Diagnose";
-import { words } from "@/UI/words";
 import { RouteParams } from "@/Core";
+import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
+import { words } from "@/UI/words";
+import { Diagnose } from "./Diagnose";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("diagnose.title")}>

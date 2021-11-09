@@ -1,5 +1,5 @@
-import { handleUrlStateWithSort } from "./useUrlStateWithSort";
 import { getMockedLocation, mockedHistory } from "./helpers.mocked";
+import { handleUrlStateWithSort } from "./useUrlStateWithSort";
 
 test.each`
   search                                | searchText      | expectedValue                           | valueText

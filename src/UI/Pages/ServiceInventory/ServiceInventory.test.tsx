@@ -1,20 +1,8 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import {
-  Service,
-  ServiceInstance,
-  InstanceResource,
-  Pagination,
-  StaticScheduler,
-  DynamicQueryManagerResolver,
-  DynamicCommandManagerResolver,
-  MockEnvironmentModifier,
-  DeferredApiHelper,
-  dependencies,
-} from "@/Test";
 import { Either } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   ServiceInstancesQueryManager,
@@ -30,9 +18,21 @@ import {
   TriggerSetStateCommandManager,
   getStoreInstance,
 } from "@/Data";
-import { ServiceInventory } from "./ServiceInventory";
-import { MemoryRouter } from "react-router-dom";
+import {
+  Service,
+  ServiceInstance,
+  InstanceResource,
+  Pagination,
+  StaticScheduler,
+  DynamicQueryManagerResolver,
+  DynamicCommandManagerResolver,
+  MockEnvironmentModifier,
+  DeferredApiHelper,
+  dependencies,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { Chart } from "./Components";
+import { ServiceInventory } from "./ServiceInventory";
 
 function setup(service = Service.a) {
   const store = getStoreInstance();

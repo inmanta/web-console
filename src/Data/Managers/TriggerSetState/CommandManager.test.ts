@@ -1,5 +1,5 @@
-import { DummyAuthHelper, ServiceInstance } from "@/Test";
 import { TriggerSetStateCommandManager, BaseApiHelper } from "@/Data";
+import { DummyAuthHelper, ServiceInstance } from "@/Test";
 
 test("TriggerSetStateCommandManager sends correct request with message", async () => {
   const commandManager = new TriggerSetStateCommandManager(

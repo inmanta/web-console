@@ -5,13 +5,13 @@ import {
   Sort,
 } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
+import { InventoryTable } from "./InventoryTable";
 import {
   AttributesPresenter,
   InstanceActionPresenter,
   InstanceStatePresenter,
   InventoryTablePresenter,
 } from "./Presenters";
-import { InventoryTable } from "./InventoryTable";
 
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];

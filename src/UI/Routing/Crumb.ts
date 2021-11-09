@@ -1,5 +1,5 @@
-import { RouteKind, RouteManager } from "@/Core";
 import { generatePath } from "react-router-dom";
+import { RouteKind, RouteManager } from "@/Core";
 
 interface Crumb {
   kind: RouteKind;

@@ -1,5 +1,5 @@
-import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
 import React from "react";
+import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
 import styled from "styled-components";
 
 interface Props {

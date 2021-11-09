@@ -1,4 +1,3 @@
-import { WithId } from "@/Core/Language";
 import {
   Pagination,
   ResourceLog,
@@ -6,6 +5,7 @@ import {
   PageSize,
   Sort,
 } from "@/Core/Domain";
+import { WithId } from "@/Core/Language";
 
 export interface GetResourceLogs extends WithId {
   kind: "GetResourceLogs";

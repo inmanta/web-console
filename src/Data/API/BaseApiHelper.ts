@@ -1,6 +1,6 @@
+import { KeycloakInstance } from "keycloak-js";
 import { ApiHelper, Either, Maybe, objectHasKey, isObject } from "@/Core";
 import { words } from "@/UI/words";
-import { KeycloakInstance } from "keycloak-js";
 
 export class BaseApiHelper implements ApiHelper {
   constructor(

@@ -1,13 +1,13 @@
 import React from "react";
-import styled from "styled-components";
 import { Tabs, Tab } from "@patternfly/react-core";
+import styled from "styled-components";
 import { ServiceModel } from "@/Core";
+import { useUrlStateWithString } from "@/Data";
 import { AttributeTable } from "./AttributeTable";
-import { LifecycleTable } from "./LifecycleTable";
+import { CallbacksView } from "./Callbacks";
 import { Config } from "./Config";
 import { Details } from "./Details";
-import { CallbacksView } from "./Callbacks";
-import { useUrlStateWithString } from "@/Data";
+import { LifecycleTable } from "./LifecycleTable";
 
 export const CatalogTabs: React.FunctionComponent<{
   service: ServiceModel;

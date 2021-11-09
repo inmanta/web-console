@@ -1,5 +1,5 @@
-import { FlatEnvironment } from "@/Core";
 import React from "react";
+import { FlatEnvironment } from "@/Core";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 interface Props {

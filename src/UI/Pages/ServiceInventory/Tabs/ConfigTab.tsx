@@ -1,9 +1,9 @@
+import React, { useContext } from "react";
+import { Card, CardBody } from "@patternfly/react-core";
 import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
 import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Card, CardBody } from "@patternfly/react-core";
-import React, { useContext } from "react";
 import { ConfigDetails } from "./ConfigDetails";
 
 interface Props {

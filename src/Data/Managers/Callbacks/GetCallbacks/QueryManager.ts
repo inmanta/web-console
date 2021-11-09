@@ -1,7 +1,7 @@
 import { identity } from "lodash";
 import { ApiHelper, StateHelper } from "@/Core";
-import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "@/Data/Managers/Callbacks/getUrl";
+import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
 
 export class CallbacksQueryManager extends PrimaryOneTimeQueryManager<"GetCallbacks"> {
   constructor(

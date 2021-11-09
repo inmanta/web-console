@@ -1,7 +1,7 @@
 import { render, screen, act, within } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
-import { Service, Pagination, Event as InstanceEvent } from "@/Test";
 import { Either } from "@/Core";
+import { Service, Pagination, Event as InstanceEvent } from "@/Test";
 import { EventsPageComposer } from "./EventsPageComposer";
 
 /** Test with the whole events page rendered */

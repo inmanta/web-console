@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { words } from "@/UI/words";
 import { ErrorView } from "@/UI/Components/ErrorView";
 import { EnvironmentHandlerContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   Wrapper: React.FC;

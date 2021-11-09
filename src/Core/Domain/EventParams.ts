@@ -1,7 +1,7 @@
-import { PageSize } from "./PageSize";
-import { EventType } from "./EventType";
-import { Sort } from "./Sort";
 import { DateRange } from "./DateRange";
+import { EventType } from "./EventType";
+import { PageSize } from "./PageSize";
+import { Sort } from "./Sort";
 
 export interface EventParams {
   filter?: Filter;

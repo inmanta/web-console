@@ -1,6 +1,6 @@
+import { DateRange } from "./DateRange";
 import { PageSize } from "./PageSize";
 import { Sort } from "./Sort";
-import { DateRange } from "./DateRange";
 
 export interface CompileReportParams {
   filter?: Filter;

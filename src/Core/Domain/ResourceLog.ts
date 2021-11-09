@@ -1,5 +1,5 @@
-import { LogLevelString } from "./LogLevel";
 import { DateRange } from "./DateRange";
+import { LogLevelString } from "./LogLevel";
 
 export interface ResourceLog {
   level: LogLevelString;

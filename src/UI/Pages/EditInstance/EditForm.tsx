@@ -1,3 +1,13 @@
+import React, { useCallback, useContext, useState } from "react";
+import { useHistory } from "react-router-dom";
+import {
+  Alert,
+  AlertActionCloseButton,
+  AlertGroup,
+  Text,
+  TextContent,
+  TextVariants,
+} from "@patternfly/react-core";
 import {
   Field,
   InstanceAttributeModel,
@@ -13,16 +23,6 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  Text,
-  TextContent,
-  TextVariants,
-} from "@patternfly/react-core";
-import React, { useCallback, useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
 
 interface Props {
   serviceEntity: ServiceModel;

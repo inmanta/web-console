@@ -1,7 +1,7 @@
 import React from "react";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { DependencyProvider } from "@/UI";
+import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
@@ -18,8 +18,8 @@ import {
   DynamicQueryManagerResolver,
   Project,
 } from "@/Test";
+import { DependencyProvider } from "@/UI";
 import { DeleteModal } from "./DeleteModal";
-import { Either, Maybe } from "@/Core";
 
 function setup() {
   const store = getStoreInstance();

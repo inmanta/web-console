@@ -1,5 +1,15 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { Story } from "@storybook/react/types-6-0";
+import { StoreProvider } from "easy-peasy";
+import { ServiceModel } from "@/Core";
+import {
+  QueryResolverImpl,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  getStoreInstance,
+  CommandResolverImpl,
+} from "@/Data";
 import {
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
@@ -10,18 +20,8 @@ import {
   ServiceInstance,
   StaticScheduler,
 } from "@/Test";
-import { TableProvider, Props } from "./TableProvider";
-import { StoreProvider } from "easy-peasy";
-import { ServiceModel } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  InstanceResourcesQueryManager,
-  InstanceResourcesStateHelper,
-  getStoreInstance,
-  CommandResolverImpl,
-} from "@/Data";
-import { MemoryRouter } from "react-router";
+import { TableProvider, Props } from "./TableProvider";
 
 export default {
   title: "TableProvider",

@@ -1,6 +1,10 @@
 import React, { useContext } from "react";
-import { DependencyContext } from "@/UI/Dependency";
 import { EventParams, RemoteData, ServiceModel } from "@/Core";
+import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
 import {
   ErrorView,
   LoadingView,
@@ -11,14 +15,10 @@ import {
   Description,
   PaginationWidget,
 } from "@/UI/Components";
-import { words } from "@/UI/words";
+import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import { EventsTableControls } from "./EventsTableControls";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
 
 interface Props {
   service: ServiceModel;

@@ -1,7 +1,7 @@
 import React from "react";
-import { DeleteForm } from "./DeleteForm";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { DeleteForm } from "./DeleteForm";
 
 test("GIVEN DeleteForm WHEN user clicks 'No' THEN closeModal is executed", () => {
   const submit = jest.fn();

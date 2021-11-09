@@ -1,6 +1,6 @@
-import { DateRange, Query } from "@/Core";
 import moment from "moment-timezone";
 import qs from "qs";
+import { DateRange, Query } from "@/Core";
 
 export function getUrl(
   {

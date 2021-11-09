@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { Card } from "@patternfly/react-core";
 import { RouteParams, ServiceModel } from "@/Core";
 import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
-import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 import { words } from "@/UI/words";
+import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
   <PageSectionWithTitle {...props} title={words("history.title")}>

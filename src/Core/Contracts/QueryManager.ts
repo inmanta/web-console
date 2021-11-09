@@ -1,5 +1,5 @@
-import { Query } from "@/Core/Query";
 import { RemoteData } from "@/Core/Language";
+import { Query } from "@/Core/Query";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,

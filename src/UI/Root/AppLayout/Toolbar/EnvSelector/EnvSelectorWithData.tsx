@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Redirect } from "react-router";
 import {
   EmptyState,
   EmptyStateIcon,
@@ -6,13 +7,12 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { FlatEnvironment, RemoteData } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { words } from "@/UI/words";
 import {
   EnvironmentSelectorItem,
   EnvSelectorWrapper,
 } from "./EnvSelectorWrapper";
-import { Redirect } from "react-router";
-import { DependencyContext } from "@/UI";
 
 interface Props {
   environments: RemoteData.Type<string, FlatEnvironment[]>;

@@ -1,6 +1,5 @@
 import React from "react";
-import { ResourceParams } from "@/Core";
-import { ResourceStatus } from "@/Core";
+import { ResourceParams, ResourceStatus } from "@/Core";
 import { SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 

@@ -1,10 +1,10 @@
-import { words } from "@/UI";
+import React from "react";
 import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import React from "react";
+import { words } from "@/UI";
 
 interface Props {
   name: string;

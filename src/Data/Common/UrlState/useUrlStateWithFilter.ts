@@ -1,7 +1,7 @@
-import { isObject, DateRange, isNotUndefined } from "@/Core";
 import { isEqual, pickBy } from "lodash";
-import { handleUrlState } from "./useUrlState";
+import { isObject, DateRange, isNotUndefined } from "@/Core";
 import { provide, Location, History, StateConfig, Update } from "./helpers";
+import { handleUrlState } from "./useUrlState";
 
 export const useUrlStateWithFilter = provide(handleUrlStateWithFilter);
 

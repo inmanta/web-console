@@ -1,10 +1,10 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
+import { PrimaryFeatureManager } from "@/Data";
 import { InstanceResource } from "@/Test";
-import { ResourceTable } from "./InstanceResourceTable";
 import { DependencyProvider } from "@/UI/Dependency";
 import { UrlManagerImpl } from "@/UI/Utils";
-import { PrimaryFeatureManager } from "@/Data";
+import { ResourceTable } from "./InstanceResourceTable";
 
 export default {
   title: "ResourceTable",

@@ -1,9 +1,5 @@
 import React, { useRef, useState } from "react";
-import styled, { css } from "styled-components";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
-import xml from "react-syntax-highlighter/dist/esm/languages/hljs/xml";
-import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
 import {
   Button,
   ClipboardCopyButton,
@@ -15,7 +11,6 @@ import {
   Label,
   Tooltip,
 } from "@patternfly/react-core";
-import copy from "copy-to-clipboard";
 import {
   CloseIcon,
   CompressArrowsAltIcon,
@@ -24,8 +19,13 @@ import {
   ListOlIcon,
   TextWidthIcon,
 } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
+import copy from "copy-to-clipboard";
+import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
+import xml from "react-syntax-highlighter/dist/esm/languages/hljs/xml";
+import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
+import styled, { css } from "styled-components";
 import { scrollRowIntoView } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
 SyntaxHighlighter.registerLanguage("json", json);
 SyntaxHighlighter.registerLanguage("xml", xml);

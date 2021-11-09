@@ -1,5 +1,5 @@
-import { WithId } from "@/Core/Language";
 import { RawResourceDetails, ResourceDetails } from "@/Core/Domain";
+import { WithId } from "@/Core/Language";
 
 export interface GetResourceDetails extends WithId {
   kind: "GetResourceDetails";

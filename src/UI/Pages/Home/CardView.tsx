@@ -15,12 +15,12 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { PlusCircleIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { words } from "@/UI/words";
 import { Link } from "@/UI/Components";
+import { words } from "@/UI/words";
 import { Actions } from "./Components";
-import styled from "styled-components";
 
 interface Props {
   environments: FlatEnvironment[];

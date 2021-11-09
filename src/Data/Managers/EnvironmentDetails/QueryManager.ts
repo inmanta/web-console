@@ -1,6 +1,6 @@
+import { identity } from "lodash";
 import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { PrimaryContinuousQueryManager } from "@/Data/Managers/Helpers";
-import { identity } from "lodash";
 
 export class EnvironmentDetailsQueryManager extends PrimaryContinuousQueryManager<"GetEnvironmentDetails"> {
   constructor(

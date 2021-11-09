@@ -1,3 +1,4 @@
+import React from "react";
 import {
   FormGroup,
   Popover,
@@ -5,7 +6,6 @@ import {
   TextInputTypes,
 } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
-import React from "react";
 
 interface Props {
   attributeName: string;

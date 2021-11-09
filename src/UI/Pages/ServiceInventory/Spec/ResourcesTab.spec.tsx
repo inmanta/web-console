@@ -1,7 +1,7 @@
 import { render, screen, act } from "@testing-library/react";
-import { ServiceInstance, Pagination, InstanceResource } from "@/Test";
-import { Either, Maybe } from "@/Core";
 import userEvent from "@testing-library/user-event";
+import { Either, Maybe } from "@/Core";
+import { ServiceInstance, Pagination, InstanceResource } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 jest.useFakeTimers("modern");

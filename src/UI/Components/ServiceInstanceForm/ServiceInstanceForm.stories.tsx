@@ -1,7 +1,6 @@
+import React, { ComponentProps } from "react";
 import { TextInputTypes } from "@patternfly/react-core";
 import { Story } from "@storybook/react/types-6-0";
-import React from "react";
-import { ComponentProps } from "react";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 export default {

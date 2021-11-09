@@ -1,8 +1,15 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { MemoryRouter } from "react-router";
+import { Either } from "@/Core";
+import {
+  QueryResolverImpl,
+  getStoreInstance,
+  ResourceLogsStateHelper,
+  ResourceLogsQueryManager,
+} from "@/Data";
 import {
   DynamicQueryManagerResolver,
   Service,
@@ -10,14 +17,7 @@ import {
   ResourceLogs,
   DeferredApiHelper,
 } from "@/Test";
-import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  ResourceLogsStateHelper,
-  ResourceLogsQueryManager,
-} from "@/Data";
 import { View } from "./View";
 
 function setup() {

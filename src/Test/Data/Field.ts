@@ -1,5 +1,5 @@
-import { DictListField, Field, FlatField, NestedField } from "@/Core";
 import { TextInputTypes } from "@patternfly/react-core";
+import { DictListField, Field, FlatField, NestedField } from "@/Core";
 
 export const text: FlatField = {
   kind: "Flat",

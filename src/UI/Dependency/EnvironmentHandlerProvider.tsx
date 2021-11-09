@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { useHistory } from "react-router";
+import { DependencyContext } from "@/UI/Dependency/Dependency";
 import {
   EnvironmentHandlerContext,
   EnvironmentHandlerImpl,
 } from "./EnvironmentHandler";
-import { DependencyContext } from "@/UI/Dependency/Dependency";
 
 export const EnvironmentHandlerProvider: React.FC = ({ children }) => {
   const { routeManager } = useContext(DependencyContext);

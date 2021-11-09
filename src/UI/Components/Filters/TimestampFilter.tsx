@@ -6,12 +6,12 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { DateRange } from "@/Core";
-import { DatePresenter } from "@/UI/Presenters";
-import { TimestampPicker } from "./TimestampPicker";
 import { SearchIcon } from "@patternfly/react-icons";
 import { reject } from "lodash";
+import { DateRange } from "@/Core";
+import { DatePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
+import { TimestampPicker } from "./TimestampPicker";
 
 interface Props {
   datePresenter: DatePresenter;

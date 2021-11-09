@@ -1,7 +1,7 @@
-import { Stack, StackItem } from "@patternfly/react-core";
 import React from "react";
-import { EnvironmentControls } from "./EnvironmentControls";
+import { Stack, StackItem } from "@patternfly/react-core";
 import { Navigation } from "@/UI/Root/Navigation";
+import { EnvironmentControls } from "./EnvironmentControls";
 
 export const Sidebar: React.FC<{ environment: string }> = ({ environment }) => {
   return (

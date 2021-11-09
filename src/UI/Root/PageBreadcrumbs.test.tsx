@@ -1,9 +1,9 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
 import { render, screen, within } from "@testing-library/react";
-import { PageBreadcrumbs } from "./PageBreadcrumbs";
+import userEvent from "@testing-library/user-event";
 import { DependencyProvider, PrimaryRouteManager } from "..";
+import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 function setup(initialEntries?: string[]) {
   const component = (

@@ -1,18 +1,9 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
-  MockEnvironmentModifier,
-  Service,
-  StaticScheduler,
-} from "@/Test";
-import { ServiceCatalogPage } from "@/UI/Pages";
 import { Either } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   ServicesQueryManager,
@@ -28,8 +19,17 @@ import {
   DeleteServiceCommandManager,
   BaseApiHelper,
 } from "@/Data";
-import { MemoryRouter } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
+import {
+  DeferredApiHelper,
+  dependencies,
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  MockEnvironmentModifier,
+  Service,
+  StaticScheduler,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { ServiceCatalogPage } from "@/UI/Pages";
 
 function setup() {
   const store = getStoreInstance();

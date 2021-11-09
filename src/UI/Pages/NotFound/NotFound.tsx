@@ -7,9 +7,9 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
-import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI";
+import { Link } from "@/UI/Components";
+import { words } from "@/UI/words";
 
 export const NotFound: React.FunctionComponent = () => {
   const { routeManager } = React.useContext(DependencyContext);

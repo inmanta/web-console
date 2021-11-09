@@ -1,5 +1,5 @@
-import { Query } from "@/Core";
 import qs from "qs";
+import { Query } from "@/Core";
 
 export function getUrl({
   filter,

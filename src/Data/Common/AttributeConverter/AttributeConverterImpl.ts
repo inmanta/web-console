@@ -1,11 +1,11 @@
+import { TextInputTypes } from "@patternfly/react-core";
+import { isEmpty, isEqual } from "lodash";
 import {
   AttributeModel,
   FormAttributeResult,
   InstanceAttributeModel,
   ServiceInstanceModel,
 } from "@/Core";
-import { TextInputTypes } from "@patternfly/react-core";
-import { isEmpty, isEqual } from "lodash";
 import {
   AttributeInputConverter,
   AttributeResultConverter,

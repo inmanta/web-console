@@ -1,4 +1,4 @@
-import { Sort } from "@/Core";
+import React from "react";
 import {
   OnSort,
   TableComposable,
@@ -8,7 +8,7 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import React from "react";
+import { Sort } from "@/Core";
 import { EventsTablePresenter } from "./EventsTablePresenter";
 
 interface Props {

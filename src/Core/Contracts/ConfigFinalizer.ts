@@ -1,5 +1,5 @@
-import { Query } from "@/Core/Query";
 import { RemoteData } from "@/Core/Language";
+import { Query } from "@/Core/Query";
 
 export interface ConfigFinalizer<Kind extends Query.Kind> {
   finalize(

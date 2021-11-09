@@ -1,8 +1,8 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { MemoryRouter } from "react-router-dom";
 import { Either } from "@/Core";
 import {
   getStoreInstance,

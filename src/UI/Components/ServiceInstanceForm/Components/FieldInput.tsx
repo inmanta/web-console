@@ -1,15 +1,11 @@
 import React from "react";
-import { get } from "lodash";
 import {
   Button,
   FormFieldGroupExpandable,
   FormFieldGroupHeader,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
-import { toOptionalBoolean } from "@/Data";
-import { BooleanFormInput } from "./BooleanFormInput";
-import { TextFormInput } from "./TextFormInput";
+import { get } from "lodash";
 import {
   InstanceAttributeModel,
   DictListField,
@@ -17,7 +13,11 @@ import {
   FlatField,
   NestedField,
 } from "@/Core";
+import { toOptionalBoolean } from "@/Data";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
+import { words } from "@/UI/words";
+import { BooleanFormInput } from "./BooleanFormInput";
+import { TextFormInput } from "./TextFormInput";
 
 interface Props {
   field: Field;

@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -7,6 +6,7 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 import { CodeHighlighter } from "@/UI/Components/CodeHighlighter";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { ClassifiedAttribute } from "./ClassifiedAttribute";

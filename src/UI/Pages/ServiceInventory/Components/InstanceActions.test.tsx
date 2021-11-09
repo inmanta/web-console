@@ -1,3 +1,6 @@
+import React from "react";
+import { MemoryRouter } from "react-router";
+import { render, screen } from "@testing-library/react";
 import {
   CommandResolverImpl,
   DeleteInstanceCommandManager,
@@ -12,9 +15,6 @@ import {
   ServiceInstance,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { render, screen } from "@testing-library/react";
-import React from "react";
-import { MemoryRouter } from "react-router";
 import { InstanceActions } from "./InstanceActions";
 
 test("Given InstanceActions component When the instance is terminated Then the actions are still shown", async () => {

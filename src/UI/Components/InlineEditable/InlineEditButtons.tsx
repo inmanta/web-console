@@ -1,6 +1,6 @@
+import React from "react";
 import { Button } from "@patternfly/react-core";
 import { CheckIcon, PencilAltIcon, TimesIcon } from "@patternfly/react-icons";
-import React from "react";
 
 export const EnableEditButton: React.FC<{
   onClick: () => void;

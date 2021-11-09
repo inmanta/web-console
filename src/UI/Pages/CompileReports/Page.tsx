@@ -1,6 +1,11 @@
 import React, { useContext } from "react";
 import { CompileReportParams, RemoteData } from "@/Core";
 import {
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
+import {
   EmptyView,
   ErrorView,
   LoadingView,
@@ -9,13 +14,8 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { TableProvider } from "./TableProvider";
 import { CompileReportsTableControls } from "./CompileReportsTableControls";
-import {
-  useUrlStateWithFilter,
-  useUrlStateWithPageSize,
-  useUrlStateWithSort,
-} from "@/Data";
+import { TableProvider } from "./TableProvider";
 
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);

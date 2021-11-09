@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import {
   Button,
   DataList,
@@ -15,14 +14,15 @@ import {
   Title,
   TextVariants,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 import { ServiceModel } from "@/Core";
-import { words } from "@/UI/words";
-import { Spacer } from "@/UI/Components";
-import { greyText } from "@/UI/Styles";
-import { CatalogTabs } from "./Tabs";
-import { SummaryIcons } from "./SummaryIcons";
 import { useUrlStateWithExpansion } from "@/Data";
+import { Spacer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { greyText } from "@/UI/Styles";
+import { words } from "@/UI/words";
+import { SummaryIcons } from "./SummaryIcons";
+import { CatalogTabs } from "./Tabs";
 
 interface Props {
   services: ServiceModel[];

@@ -1,11 +1,11 @@
 import React from "react";
+import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
 import { InstanceLog, ServiceModel } from "@/Core";
+import { useUrlStateWithExpansion } from "@/Data";
 import { InstanceState } from "@/UI/Components";
+import { AttributesPresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { InstanceLogRow } from "./InstanceLogRow";
-import { AttributesPresenter } from "@/UI/Pages/ServiceInventory/Presenters";
-import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
-import { useUrlStateWithExpansion } from "@/Data";
 
 interface Props {
   service: ServiceModel;

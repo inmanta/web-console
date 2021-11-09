@@ -1,47 +1,47 @@
-import { CreateProject, CreateProjectManifest } from "./CreateProject";
+import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
 import {
   CreateEnvironment,
   CreateEnvironmentManifest,
 } from "./CreateEnvironment";
-import {
-  UpdateServiceConfig,
-  UpdateServiceConfigManifest,
-} from "./UpdateServiceConfig";
-import {
-  UpdateInstanceConfig,
-  UpdateInstanceConfigManifest,
-} from "./UpdateInstanceConfig";
 import { CreateInstance, CreateInstanceManifest } from "./CreateInstance";
+import { CreateProject, CreateProjectManifest } from "./CreateProject";
+import { DeleteCallback, DeleteCallbackManifest } from "./DeleteCallback";
 import {
-  TriggerInstanceUpdate,
-  TriggerInstanceUpdateManifest,
-} from "./TriggerInstanceUpdate";
+  DeleteEnvironment,
+  DeleteEnvironmentManifest,
+} from "./DeleteEnvironment";
 import { DeleteInstance, DeleteInstanceManifest } from "./DeleteInstance";
-import { TriggerSetState, TriggerSetStateManifest } from "./TriggerSetState";
 import { DeleteService, DeleteServiceManifest } from "./DeleteService";
 import { HaltEnvironment, HaltEnvironmentManifest } from "./HaltEnvironment";
+import {
+  ModifyEnvironment,
+  ModifyEnvironmentManifest,
+} from "./ModifyEnvironment";
+import {
+  ResetEnvironmentSetting,
+  ResetEnvironmentSettingManifest,
+} from "./ResetEnvironmentSetting";
 import {
   ResumeEnvironment,
   ResumeEnvironmentManifest,
 } from "./ResumeEnvironment";
 import {
-  ModifyEnvironment,
-  ModifyEnvironmentManifest,
-} from "./ModifyEnvironment";
-import { DeleteCallback, DeleteCallbackManifest } from "./DeleteCallback";
-import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
-import {
-  DeleteEnvironment,
-  DeleteEnvironmentManifest,
-} from "./DeleteEnvironment";
+  TriggerInstanceUpdate,
+  TriggerInstanceUpdateManifest,
+} from "./TriggerInstanceUpdate";
+import { TriggerSetState, TriggerSetStateManifest } from "./TriggerSetState";
 import {
   UpdateEnvironmentSetting,
   UpdateEnvironmentSettingManifest,
 } from "./UpdateEnvironmentSetting";
 import {
-  ResetEnvironmentSetting,
-  ResetEnvironmentSettingManifest,
-} from "./ResetEnvironmentSetting";
+  UpdateInstanceConfig,
+  UpdateInstanceConfigManifest,
+} from "./UpdateInstanceConfig";
+import {
+  UpdateServiceConfig,
+  UpdateServiceConfigManifest,
+} from "./UpdateServiceConfig";
 
 export type Command =
   | UpdateServiceConfig

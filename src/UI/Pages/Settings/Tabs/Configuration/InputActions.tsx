@@ -1,10 +1,4 @@
 import React from "react";
-import styled from "styled-components";
-import {
-  CheckIcon,
-  UndoIcon,
-  ClipboardCheckIcon,
-} from "@patternfly/react-icons";
 import {
   ActionList,
   ActionListItem,
@@ -12,7 +6,13 @@ import {
   InputGroupText,
   Tooltip,
 } from "@patternfly/react-core";
+import {
+  CheckIcon,
+  UndoIcon,
+  ClipboardCheckIcon,
+} from "@patternfly/react-icons";
 import { isEqual } from "lodash";
+import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
 import { words } from "@/UI/words";
 

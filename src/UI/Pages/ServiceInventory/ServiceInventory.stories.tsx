@@ -1,6 +1,15 @@
 import React from "react";
-import { StoreProvider } from "easy-peasy";
 import { MemoryRouter } from "react-router-dom";
+import { StoreProvider } from "easy-peasy";
+import {
+  QueryResolverImpl,
+  ServiceInstancesQueryManager,
+  ServiceInstancesStateHelper,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  getStoreInstance,
+  CommandResolverImpl,
+} from "@/Data";
 import {
   Service,
   ServiceInstance,
@@ -14,15 +23,6 @@ import {
   DeferredApiHelper,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  ServiceInstancesQueryManager,
-  ServiceInstancesStateHelper,
-  InstanceResourcesQueryManager,
-  InstanceResourcesStateHelper,
-  getStoreInstance,
-  CommandResolverImpl,
-} from "@/Data";
 import { ServiceInventory } from "./ServiceInventory";
 
 export default {

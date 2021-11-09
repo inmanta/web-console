@@ -1,6 +1,14 @@
 import React from "react";
 import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import {
+  Either,
+  EnvironmentDetails,
+  EnvironmentModifier,
+  RemoteData,
+  VersionedServiceInstanceIdentifier,
+} from "@/Core";
 import {
   CommandResolverImpl,
   QueryResolverImpl,
@@ -12,8 +20,6 @@ import {
   InstanceConfigFinalizer,
   getStoreInstance,
 } from "@/Data";
-import { DependencyProvider } from "@/UI/Dependency";
-import { ConfigTab } from "./ConfigTab";
 import {
   DeferredApiHelper,
   DynamicCommandManagerResolver,
@@ -23,15 +29,9 @@ import {
   Service,
   ServiceInstance,
 } from "@/Test";
-import { StoreProvider } from "easy-peasy";
-import {
-  Either,
-  EnvironmentDetails,
-  EnvironmentModifier,
-  RemoteData,
-  VersionedServiceInstanceIdentifier,
-} from "@/Core";
+import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
+import { ConfigTab } from "./ConfigTab";
 
 function setup(
   environmentModifier: EnvironmentModifier = new MockEnvironmentModifier()

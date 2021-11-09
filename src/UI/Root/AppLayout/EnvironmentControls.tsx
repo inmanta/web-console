@@ -1,4 +1,4 @@
-import { RemoteData } from "@/Core";
+import React, { useContext } from "react";
 import {
   Button,
   Flex,
@@ -12,13 +12,13 @@ import {
   ExclamationTriangleIcon,
   TimesIcon,
 } from "@patternfly/react-icons";
-import React, { useContext } from "react";
 import styled from "styled-components";
+import { RemoteData } from "@/Core";
+import { LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { LoadingView } from "@/UI/Components";
-import { ResumeDialog } from "./ResumeDialog";
 import { HaltDialog } from "./HaltDialog";
+import { ResumeDialog } from "./ResumeDialog";
 
 export const EnvironmentControls: React.FC = () => {
   const { queryResolver, urlManager } = useContext(DependencyContext);

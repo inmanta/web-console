@@ -1,17 +1,17 @@
 import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { EnvironmentDetails, RemoteData } from "@/Core";
 import {
   BaseApiHelper,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   getStoreInstance,
 } from "@/Data";
-import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
+import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { DeleteModal } from "./DeleteModal";
-import { EnvironmentDetails, RemoteData } from "@/Core";
-import { StoreProvider } from "easy-peasy";
 
 function setup() {
   const commandManager = new DeleteInstanceCommandManager(

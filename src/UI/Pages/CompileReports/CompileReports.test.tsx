@@ -1,8 +1,15 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { MemoryRouter } from "react-router-dom";
+import { Either } from "@/Core";
+import {
+  QueryResolverImpl,
+  getStoreInstance,
+  CompileReportsQueryManager,
+  CompileReportsStateHelper,
+} from "@/Data";
 import {
   DynamicQueryManagerResolver,
   StaticScheduler,
@@ -10,14 +17,7 @@ import {
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
-import { Either } from "@/Core";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  CompileReportsQueryManager,
-  CompileReportsStateHelper,
-} from "@/Data";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { Page } from "./Page";
 

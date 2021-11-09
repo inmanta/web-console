@@ -1,4 +1,5 @@
 import { QueryManager, ManagerResolver, SchedulerImpl } from "@/Core";
+import { BaseApiHelper } from "@/Data/API";
 import {
   GetProjectsQueryManager,
   GetProjectsStateHelper,
@@ -48,7 +49,6 @@ import {
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
 } from "@/Data/Managers";
-import { BaseApiHelper } from "@/Data/API";
 import { Store } from "@/Data/Store";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {

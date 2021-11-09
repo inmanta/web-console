@@ -1,9 +1,9 @@
-import { Maybe } from "@/Core/Language";
 import {
   InstanceAttributeModel,
   VersionedServiceInstanceIdentifier,
   Field,
 } from "@/Core/Domain";
+import { Maybe } from "@/Core/Language";
 
 export interface TriggerInstanceUpdate
   extends VersionedServiceInstanceIdentifier {

@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { FlatEnvironment } from "@/Core";
 import { DescriptionList } from "@patternfly/react-core";
+import styled from "styled-components";
+import { FlatEnvironment } from "@/Core";
 import { EditableTextField, EditableMultiTextField } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Project } from "./Project";
-import styled from "styled-components";
 
 interface Props {
   environment: FlatEnvironment;

@@ -1,5 +1,12 @@
 import React from "react";
 import { StoreProvider } from "easy-peasy";
+import { Query } from "@/Core";
+import {
+  QueryResolverImpl,
+  InstanceResourcesStateHelper,
+  InstanceResourcesQueryManager,
+  getStoreInstance,
+} from "@/Data";
 import {
   StaticScheduler,
   Outcome,
@@ -9,14 +16,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  InstanceResourcesStateHelper,
-  InstanceResourcesQueryManager,
-  getStoreInstance,
-} from "@/Data";
 import { ResourcesTab } from "./ResourcesTab";
-import { Query } from "@/Core";
 
 export default {
   title: "ResourcesTab",

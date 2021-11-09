@@ -1,7 +1,7 @@
-import { CompileReportParams, DateRange, Query } from "@/Core";
 import { omit } from "lodash";
 import moment from "moment";
 import qs from "qs";
+import { CompileReportParams, DateRange, Query } from "@/Core";
 
 export function getUrl(
   { pageSize, sort, filter }: Query.SubQuery<"GetCompileReports">,

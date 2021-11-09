@@ -1,15 +1,7 @@
 import React from "react";
-import { SchedulerImpl, ServiceModel } from "@/Core";
+import { MemoryRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
-  MockEnvironmentModifier,
-  Service,
-} from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { SchedulerImpl, ServiceModel } from "@/Core";
 import {
   AttributeResultConverterImpl,
   CommandResolverImpl,
@@ -25,8 +17,16 @@ import {
   KeycloakAuthHelper,
   getStoreInstance,
 } from "@/Data";
+import {
+  DeferredApiHelper,
+  dependencies,
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  MockEnvironmentModifier,
+  Service,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory/ServiceInventory";
-import { MemoryRouter } from "react-router-dom";
 
 export interface Handles {
   component: React.ReactElement;

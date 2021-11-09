@@ -1,6 +1,6 @@
+import { Field } from "@/Test";
 import { createFormState } from "@/UI/Components";
 import { sanitizeAttributes } from "./sanitizeAttributes";
-import { Field } from "@/Test";
 
 test("GIVEN sanitizeAttributes WHEN passed DictListFields THEN sanitizes all fields", () => {
   const fields = [Field.dictList([Field.text, Field.bool])];

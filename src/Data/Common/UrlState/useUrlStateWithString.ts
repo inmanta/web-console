@@ -1,6 +1,6 @@
 import { identity } from "lodash";
-import { handleUrlState } from "./useUrlState";
 import { provide, Location, History, StateConfig, Update } from "./helpers";
+import { handleUrlState } from "./useUrlState";
 
 export const useUrlStateWithString = provide(handleUrlStateWithString);
 

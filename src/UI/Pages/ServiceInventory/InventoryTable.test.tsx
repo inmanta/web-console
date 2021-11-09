@@ -1,6 +1,14 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { render, screen, fireEvent, within } from "@testing-library/react";
-import { InventoryTable } from "./InventoryTable";
+import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import {
+  QueryResolverImpl,
+  InstanceResourcesQueryManager,
+  InstanceResourcesStateHelper,
+  getStoreInstance,
+} from "@/Data";
 import {
   Row,
   tablePresenter,
@@ -11,15 +19,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { StoreProvider } from "easy-peasy";
-import {
-  QueryResolverImpl,
-  InstanceResourcesQueryManager,
-  InstanceResourcesStateHelper,
-  getStoreInstance,
-} from "@/Data";
-import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router";
+import { InventoryTable } from "./InventoryTable";
 
 const dummySetter = () => {
   return;

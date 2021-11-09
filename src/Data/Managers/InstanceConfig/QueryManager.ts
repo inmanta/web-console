@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   OneTimeQueryManager,
   Query,
@@ -6,7 +7,6 @@ import {
   ConfigFinalizer,
   ApiHelper,
 } from "@/Core";
-import { useEffect } from "react";
 
 type Data = RemoteData.Type<
   Query.Error<"GetInstanceConfig">,

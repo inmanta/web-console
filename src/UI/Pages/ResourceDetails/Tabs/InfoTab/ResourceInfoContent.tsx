@@ -1,4 +1,4 @@
-import { words } from "@/UI/words";
+import React from "react";
 import {
   Card,
   CardBody,
@@ -8,7 +8,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import React from "react";
+import { words } from "@/UI/words";
 
 interface Props {
   id: string;

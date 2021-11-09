@@ -13,12 +13,12 @@ import {
   EnableEditButton,
   SubmitEditButton,
 } from "./InlineEditButtons";
-import { InlinePlainAlert } from "./InlinePlainAlert";
 import {
   InlineEditButtonFiller,
   InlineLabelItem,
   InlineValue,
 } from "./InlineFillers";
+import { InlinePlainAlert } from "./InlinePlainAlert";
 
 interface Props {
   label: string;

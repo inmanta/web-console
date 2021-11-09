@@ -1,3 +1,6 @@
+import React from "react";
+import { act, render, screen } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
 import { Config, EnvironmentDetails, RemoteData } from "@/Core";
 import {
   BaseApiHelper,
@@ -12,9 +15,6 @@ import {
   ServiceInstance,
 } from "@/Test";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
-import { act, render, screen } from "@testing-library/react";
-import { StoreProvider } from "easy-peasy";
-import React from "react";
 import { ConfigList } from "./ConfigList";
 
 function setup() {

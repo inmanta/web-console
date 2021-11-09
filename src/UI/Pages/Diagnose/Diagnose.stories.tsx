@@ -1,6 +1,12 @@
 import React from "react";
-import { RawDiagnostics } from "@/Core";
 import { StoreProvider } from "easy-peasy";
+import { RawDiagnostics } from "@/Core";
+import {
+  QueryResolverImpl,
+  DiagnosticsQueryManager,
+  DiagnosticsStateHelper,
+  getStoreInstance,
+} from "@/Data";
 import {
   InstanceLog,
   Service,
@@ -11,12 +17,6 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import {
-  QueryResolverImpl,
-  DiagnosticsQueryManager,
-  DiagnosticsStateHelper,
-  getStoreInstance,
-} from "@/Data";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 
 export default {

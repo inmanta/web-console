@@ -5,8 +5,8 @@ import {
   ToolbarContent,
   Divider,
 } from "@patternfly/react-core";
-import { ActionFilter } from "./ActionFilter";
 import { ResourceLogFilter } from "@/Core";
+import { ActionFilter } from "./ActionFilter";
 import { LogLevelFilter } from "./LogLevelFilter";
 import { MessageFilter } from "./MessageFilter";
 import { TimestampFilter } from "./TimestampFilter";

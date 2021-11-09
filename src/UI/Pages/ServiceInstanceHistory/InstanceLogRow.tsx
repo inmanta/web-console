@@ -1,10 +1,10 @@
+import React, { useRef } from "react";
+import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { AttributesSummary, DateInfo, InstanceLog } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { DateWithTooltip } from "@/UI/Components";
 import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
-import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import React, { useRef } from "react";
 import { Tabs, TabKey } from "./Tabs";
 
 interface Props {

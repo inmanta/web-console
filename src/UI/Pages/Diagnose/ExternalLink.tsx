@@ -1,7 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import { DropdownItem } from "@patternfly/react-core";
 import { ExternalLinkAltIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 
 interface Props {
   url: string;

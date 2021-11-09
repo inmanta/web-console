@@ -1,6 +1,12 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
+import { StoreProvider } from "easy-peasy";
+import {
+  QueryResolverImpl,
+  GetInstanceLogsQueryManager,
+  GetInstanceLogsStateHelper,
+  getStoreInstance,
+} from "@/Data";
 import {
   DynamicQueryManagerResolver,
   InstantApiHelper,
@@ -8,14 +14,8 @@ import {
   ServiceInstance,
   StaticScheduler,
 } from "@/Test";
-import {
-  QueryResolverImpl,
-  GetInstanceLogsQueryManager,
-  GetInstanceLogsStateHelper,
-  getStoreInstance,
-} from "@/Data";
 import { DependencyProvider } from "@/UI/Dependency";
-import { StoreProvider } from "easy-peasy";
+import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 
 it("ServiceInstanceHistory renders", async () => {
   const store = getStoreInstance();

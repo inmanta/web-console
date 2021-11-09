@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "styled-components";
 import { Page } from "@patternfly/react-core";
+import styled from "styled-components";
 import { AppWrapper } from "./AppLayout/AppWrapper";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 

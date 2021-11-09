@@ -1,5 +1,5 @@
-import { FormGroup, TextInput } from "@patternfly/react-core";
 import React from "react";
+import { FormGroup, TextInput } from "@patternfly/react-core";
 
 interface Props {
   label: string;

@@ -1,8 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { RouteParams } from "@/Core";
-import { words } from "@/UI/words";
 import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
+import { words } from "@/UI/words";
 import { EditInstancePage } from "./EditInstancePage";
 
 const PageWrapper: React.FC = ({ children, ...props }) => (

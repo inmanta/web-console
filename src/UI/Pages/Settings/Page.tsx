@@ -1,7 +1,7 @@
 import React from "react";
-import { words } from "@/UI/words";
-import { PageSectionWithTitle } from "@/UI/Components";
 import { useUrlStateWithString } from "@/Data";
+import { PageSectionWithTitle } from "@/UI/Components";
+import { words } from "@/UI/words";
 import { TabKey, Tabs } from "./Tabs";
 
 export const Page: React.FC = () => {

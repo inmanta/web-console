@@ -1,5 +1,5 @@
-import { Formatter } from "@/Core";
 import formatXml from "xml-formatter";
+import { Formatter } from "@/Core";
 
 export class XmlFormatter implements Formatter {
   format(source: string): string {

@@ -5,6 +5,7 @@
 
 /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
+import { useEffect, useState } from "react";
 import {
   RemoteData,
   Query,
@@ -14,7 +15,6 @@ import {
   Scheduler,
   ApiHelper,
 } from "@/Core";
-import { useEffect, useState } from "react";
 
 type GetUnique<Kind extends Query.Kind> = (
   query: Query.SubQuery<Kind>

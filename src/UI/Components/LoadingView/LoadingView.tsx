@@ -1,5 +1,4 @@
 import React from "react";
-import { words } from "@/UI/words";
 import {
   EmptyState,
   EmptyStateIcon,
@@ -7,6 +6,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { Delayed } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
 interface Props {
   delay?: number;

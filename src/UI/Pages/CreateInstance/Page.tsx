@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { RemoteData, RouteParams } from "@/Core";
-import { words } from "@/UI/words";
-import { DependencyContext } from "@/UI/Dependency";
 import { PageSectionWithTitle, ErrorView, LoadingView } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import { CreateInstance } from "./CreateInstance";
 
 const PageWrapper: React.FC = ({ children, ...props }) => (
