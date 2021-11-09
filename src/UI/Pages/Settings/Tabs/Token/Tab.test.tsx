@@ -1,15 +1,15 @@
 import React from "react";
 import { act, render, screen, within } from "@testing-library/react";
-import { DependencyProvider } from "@/UI";
+import userEvent from "@testing-library/user-event";
+import { Either } from "@/Core";
+import { CommandResolverImpl, GenerateTokenCommandManager } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
   DynamicCommandManagerResolver,
 } from "@/Test";
-import { CommandResolverImpl, GenerateTokenCommandManager } from "@/Data";
+import { DependencyProvider } from "@/UI";
 import { Tab } from "./Tab";
-import userEvent from "@testing-library/user-event";
-import { Either } from "@/Core";
 
 function setup() {
   const apiHelper = new DeferredApiHelper();

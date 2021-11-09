@@ -1,8 +1,4 @@
 import React from "react";
-import { ClientType, Maybe } from "@/Core";
-import { ClipboardCopyButton, Description } from "@/UI/Components";
-import { words } from "@/UI/words";
-import styled from "styled-components";
 import {
   Alert,
   AlertActionCloseButton,
@@ -19,6 +15,10 @@ import {
   ProcessAutomationIcon,
   UserIcon,
 } from "@patternfly/react-icons";
+import styled from "styled-components";
+import { ClientType, Maybe } from "@/Core";
+import { ClipboardCopyButton, Description } from "@/UI/Components";
+import { words } from "@/UI/words";
 
 interface Props {
   onGenerate(): void;
