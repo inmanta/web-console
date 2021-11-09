@@ -46,12 +46,18 @@ export const DeleteModal: React.FC<Props> = ({
     setIsBusy(true);
     setErrorMessage(null);
     const error = await trigger();
-    setIsBusy(false);
     if (Maybe.isNone(error)) {
       onClose();
     } else {
+      setIsBusy(false);
       setErrorMessage(error.value);
     }
+  };
+
+  const onSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (validated !== "success" || isBusy) return;
+    onDelete();
   };
 
   return (
@@ -83,7 +89,7 @@ export const DeleteModal: React.FC<Props> = ({
         </Button>,
       ]}
     >
-      <Form>
+      <Form onSubmit={onSubmit}>
         {errorMessage && (
           <FormAlert>
             <Alert
@@ -112,6 +118,7 @@ export const DeleteModal: React.FC<Props> = ({
             value={candidateEnv}
             validated={validated}
             onChange={setCandidateEnv}
+            autoFocus
           />
         </FormGroup>
       </Form>
