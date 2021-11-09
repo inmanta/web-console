@@ -4,10 +4,15 @@ import { DependencyContext } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { Provider } from "./Provider";
 
-export const Tab: React.FC = () => {
+interface Props {
+  environmentId: string;
+}
+
+export const Tab: React.FC<Props> = ({ environmentId }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [settings] = queryResolver.useOneTime<"GetEnvironmentSettings">({
     kind: "GetEnvironmentSettings",
+    environment: environmentId,
   });
 
   return RemoteData.fold(

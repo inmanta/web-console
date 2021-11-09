@@ -6,8 +6,8 @@ import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
 export const Home: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"GetProjects">({
-    kind: "GetProjects",
+  const [data] = queryResolver.useOneTime<"GetEnvironments">({
+    kind: "GetEnvironments",
   });
 
   return (
@@ -20,9 +20,9 @@ export const Home: React.FC = () => {
           failed: (message) => (
             <ErrorView message={message} aria-label="Overview-Failed" />
           ),
-          success: (projects) => (
+          success: (environments) => (
             <EnvironmentsOverview
-              projects={projects}
+              environments={environments}
               aria-label="Overview-Success"
             />
           ),

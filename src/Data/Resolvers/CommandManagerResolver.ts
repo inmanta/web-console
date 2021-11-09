@@ -19,7 +19,7 @@ import {
   EnvironmentDetailsStateHelper,
   DeleteEnvironmentCommandManager,
   ProjectsUpdater,
-  ProjectsStateHelper,
+  GetProjectsStateHelper,
   ModifyEnvironmentCommandManager,
   CreateProjectCommandManager,
   CreateEnvironmentCommandManager,
@@ -27,6 +27,8 @@ import {
   EnvironmentSettingUpdater,
   GetEnvironmentSettingStateHelper,
   ResetEnvironmentSettingCommandManager,
+  EnvironmentsUpdater,
+  GetEnvironmentsStateHelper,
 } from "@/Data/Managers";
 import { BaseApiHelper } from "@/Data/API";
 import { Store } from "@/Data/Store";
@@ -58,11 +60,17 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     return [
       new DeleteEnvironmentCommandManager(
         this.apiHelper,
-        new ProjectsUpdater(new ProjectsStateHelper(this.store), this.apiHelper)
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(this.store),
+          this.apiHelper
+        )
       ),
       new CreateProjectCommandManager(
         this.apiHelper,
-        new ProjectsUpdater(new ProjectsStateHelper(this.store), this.apiHelper)
+        new ProjectsUpdater(
+          new GetProjectsStateHelper(this.store),
+          this.apiHelper
+        )
       ),
       new CreateEnvironmentCommandManager(this.apiHelper),
     ];
@@ -142,8 +150,8 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new ModifyEnvironmentCommandManager(
         this.apiHelper,
-        new ProjectsUpdater(
-          new ProjectsStateHelper(this.store),
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(this.store),
           this.apiHelper
         ),
         environment

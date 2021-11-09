@@ -1,32 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   EmptyState,
   EmptyStateIcon,
   Spinner,
   Title,
 } from "@patternfly/react-core";
-import { ProjectModel, RemoteData } from "@/Core";
+import { FlatEnvironment, RemoteData } from "@/Core";
 import { words } from "@/UI/words";
-import { SelectedProjectAndEnvironment } from "@/UI/Dependency";
 import {
   EnvironmentSelectorItem,
   EnvSelectorWrapper,
 } from "./EnvSelectorWrapper";
-import { flatMap } from "lodash";
+import { Redirect } from "react-router";
+import { DependencyContext } from "@/UI";
 
 interface Props {
-  projects: RemoteData.Type<string, ProjectModel[]>;
+  environments: RemoteData.Type<string, FlatEnvironment[]>;
   onSelectEnvironment(item: EnvironmentSelectorItem): void;
-  selectedProjectAndEnvironment: RemoteData.Type<
-    string,
-    SelectedProjectAndEnvironment
-  >;
+  selectedEnvironment?: FlatEnvironment;
 }
 export const EnvSelectorWithData: React.FC<Props> = ({
-  projects,
+  environments,
   onSelectEnvironment,
-  selectedProjectAndEnvironment,
+  selectedEnvironment,
 }) => {
+  const { routeManager } = useContext(DependencyContext);
   return RemoteData.fold(
     {
       notAsked: () => null,
@@ -34,49 +32,36 @@ export const EnvSelectorWithData: React.FC<Props> = ({
       failed: (error) => (
         <EnvSelectorError aria-label="EnvSelector-Failed" message={error} />
       ),
-      success: (projects) => {
-        return RemoteData.fold(
-          {
-            notAsked: () => null,
-            loading: () => (
-              <EnvSelectorLoading aria-label="EnvSelector-Loading" />
-            ),
-            failed: (error) => (
-              <EnvSelectorError
-                aria-label="EnvSelector-Failed"
-                message={error}
-              />
-            ),
-            success: (selected) => {
-              const defaultToggleText = `${selected.environment.name} (${selected.project.name})`;
-              const selectorItems = flatMap(projects, (project) => {
-                return project.environments.map((environment) => {
-                  const envSelectorItem: EnvironmentSelectorItem = {
-                    displayName: `${environment.name} (${project.name})`,
-                    projectId: project.id,
-                    environmentId: environment.id,
-                  };
-                  return envSelectorItem;
-                });
-              });
-              const environmentNames = selectorItems.map(
-                (item) => item.displayName
-              );
-              return (
-                <EnvSelectorWrapper
-                  selectorItems={selectorItems}
-                  environmentNames={environmentNames}
-                  onSelectEnvironment={onSelectEnvironment}
-                  defaultToggleText={defaultToggleText}
-                />
-              );
-            },
-          },
-          selectedProjectAndEnvironment
-        );
+      success: (environments) => {
+        if (selectedEnvironment) {
+          const defaultToggleText = `${selectedEnvironment.name} (${selectedEnvironment.projectName})`;
+          const selectorItems = environments.map(
+            ({ name, projectName, id, project_id: projectId }) => {
+              const envSelectorItem: EnvironmentSelectorItem = {
+                displayName: `${name} (${projectName})`,
+                projectId,
+                environmentId: id,
+              };
+              return envSelectorItem;
+            }
+          );
+          const environmentNames = selectorItems.map(
+            (item) => item.displayName
+          );
+          return (
+            <EnvSelectorWrapper
+              selectorItems={selectorItems}
+              environmentNames={environmentNames}
+              onSelectEnvironment={onSelectEnvironment}
+              defaultToggleText={defaultToggleText}
+            />
+          );
+        } else {
+          return <Redirect to={routeManager.getUrl("Home", undefined)} />;
+        }
       },
     },
-    projects
+    environments
   );
 };
 

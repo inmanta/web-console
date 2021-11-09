@@ -8,7 +8,7 @@ import {
   FlexItem,
   TextInput,
 } from "@patternfly/react-core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   CancelEditButton,
   EnableEditButton,
@@ -61,6 +61,9 @@ export const EditableMultiTextField: React.FC<Props> = ({
     updated[label] = input;
     setFieldValues(updated);
   };
+  useEffect(() => {
+    setFieldValues(initialValues);
+  }, [initialValues]);
   return (
     <DescriptionListGroup>
       <DescriptionListTerm>

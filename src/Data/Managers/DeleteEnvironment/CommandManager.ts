@@ -3,7 +3,7 @@ import { ApiHelper, Command, CommandManager, Maybe, Updater } from "@/Core";
 export class DeleteEnvironmentCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"GetProjects">
+    private readonly updater: Updater<"GetEnvironments">
   ) {}
 
   matches(command: Command.SubCommand<"DeleteEnvironment">): boolean {
@@ -20,7 +20,7 @@ export class DeleteEnvironmentCommandManager implements CommandManager {
       );
       if (Maybe.isSome(error)) return error;
       await this.updater.update({
-        kind: "GetProjects",
+        kind: "GetEnvironments",
       });
       return error;
     };

@@ -7,28 +7,30 @@ import {
   DeferredApiHelper,
   dependencies,
   DynamicCommandManagerResolver,
+  Environment,
   MockFeatureManger,
-  Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   CommandResolverImpl,
   DeleteEnvironmentCommandManager,
   getStoreInstance,
-  ProjectsStateHelper,
-  ProjectsUpdater,
+  EnvironmentsUpdater,
+  GetEnvironmentsStateHelper,
 } from "@/Data";
 
 function setup() {
   const store = getStoreInstance();
   const featureManager = new MockFeatureManger();
   const apiHelper = new DeferredApiHelper();
-  const projectsStateHelper = new ProjectsStateHelper(store);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new DeleteEnvironmentCommandManager(
         apiHelper,
-        new ProjectsUpdater(projectsStateHelper, apiHelper)
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(store),
+          apiHelper
+        )
       ),
     ])
   );
@@ -37,7 +39,7 @@ function setup() {
       <DependencyProvider
         dependencies={{ ...dependencies, featureManager, commandResolver }}
       >
-        <EnvironmentsOverview projects={Project.filterable} />
+        <EnvironmentsOverview environments={Environment.filterable} />
       </DependencyProvider>
     </MemoryRouter>
   );

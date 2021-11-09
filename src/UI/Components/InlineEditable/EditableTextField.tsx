@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DescriptionListDescription,
   DescriptionListGroup,
@@ -59,6 +59,10 @@ export const EditableTextField: React.FC<Props> = ({
     setValue(initialValue);
   };
   const onCloseAlert = () => setSubmitError("");
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
 
   return (
     <DescriptionListGroup key={label}>

@@ -4,8 +4,8 @@ import {
   CreateEnvironmentCommandManager,
   CreateProjectCommandManager,
   getStoreInstance,
-  ProjectsQueryManager,
-  ProjectsStateHelper,
+  GetProjectsQueryManager,
+  GetProjectsStateHelper,
   ProjectsUpdater,
   QueryResolverImpl,
 } from "@/Data";
@@ -26,10 +26,10 @@ import { Page } from "./Page";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsStateHelper = new ProjectsStateHelper(store);
+  const projectsStateHelper = new GetProjectsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ProjectsQueryManager(apiHelper, projectsStateHelper),
+      new GetProjectsQueryManager(apiHelper, projectsStateHelper),
     ])
   );
 

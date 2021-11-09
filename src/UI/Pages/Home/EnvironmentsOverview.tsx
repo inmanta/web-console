@@ -1,11 +1,11 @@
 import React from "react";
-import { FlatEnvironment, ProjectModel } from "@/Core";
+import { FlatEnvironment } from "@/Core";
 import { useUrlStateWithFilter } from "@/Data";
 import { CardView } from "./CardView";
 import { FilterToolbar } from "./FilterToolbar";
 
 interface Props {
-  projects: ProjectModel[];
+  environments: FlatEnvironment[];
 }
 
 export interface Filters {
@@ -14,16 +14,12 @@ export interface Filters {
 }
 
 export const EnvironmentsOverview: React.FC<Props> = ({
-  projects,
+  environments,
   ...props
 }) => {
-  const filterableEnvironments = projects.flatMap((project) => [
-    ...project.environments.map((environment) => ({
-      ...environment,
-      projectName: project.name,
-    })),
-  ]);
-  const projectNames = projects.map((project) => project.name);
+  const projectNames = Array.from(
+    new Set(environments.map((environment) => environment.projectName))
+  );
   const [filter, setFilter] = useUrlStateWithFilter<Filters>({ route: "Home" });
   const setProjectFilter = (projectFilter?: string[]) =>
     setFilter({ ...filter, projectFilter });
@@ -38,10 +34,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
   const environmentFilter = filter.environmentFilter
     ? filter.environmentFilter
     : "";
-  const filteredByProjectName = filterByProject(
-    filterableEnvironments,
-    projectFilter
-  );
+  const filteredByProjectName = filterByProject(environments, projectFilter);
   const filteredByEnvName = filterByName(
     filteredByProjectName,
     environmentFilter

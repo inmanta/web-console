@@ -4,7 +4,7 @@ import {
   InstanceConfigSlice,
   instanceConfigSlice,
 } from "./InstanceConfigSlice";
-import { ProjectsSlice, projectsSlice } from "./ProjectsSlice";
+import { EnvironmentsSlice, environmentsSlice } from "./EnvironmentsSlice";
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
 import {
   instanceResourcesSlice,
@@ -48,8 +48,10 @@ import {
   environmentSettingsSlice,
   EnvironmentSettingsSlice,
 } from "./EnvironmentSettingsSlice";
+import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
 
 export interface StoreModel {
+  environments: EnvironmentsSlice;
   projects: ProjectsSlice;
   serverStatus: ServerStatusSlice;
   services: ServicesSlice;
@@ -73,6 +75,7 @@ export interface StoreModel {
 }
 
 export const storeModel: StoreModel = {
+  environments: environmentsSlice,
   projects: projectsSlice,
   serverStatus: serverStatusSlice,
   services: servicesSlice,

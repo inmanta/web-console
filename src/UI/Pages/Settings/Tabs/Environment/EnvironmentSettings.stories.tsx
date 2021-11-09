@@ -1,4 +1,4 @@
-import { Project } from "@/Test";
+import { Environment } from "@/Test";
 import { Story } from "@storybook/react/types-6-0";
 import React, { ComponentProps } from "react";
 import { MemoryRouter } from "react-router";
@@ -19,6 +19,5 @@ const Template: Story<ComponentProps<typeof EnvironmentSettings>> = (args) => {
 
 export const Multiple = Template.bind({});
 Multiple.args = {
-  environment: Project.filterable[0].environments[0],
-  project: Project.filterable[0],
+  environment: Environment.filterable[0],
 };
