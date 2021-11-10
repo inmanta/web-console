@@ -1,29 +1,13 @@
-import { createContext } from "react";
 import { useLocation } from "react-router-dom";
 import { History } from "history";
-import { FlatEnvironment, RemoteData, RouteManager } from "@/Core";
+import {
+  EnvironmentHandler,
+  FlatEnvironment,
+  RemoteData,
+  RouteManager,
+} from "@/Core";
 import { useStoreState } from "@/Data/Store";
 import { SearchHelper } from "@/UI/Routing/SearchHelper";
-
-export interface EnvironmentHandler {
-  set(environmentId: string): void;
-  useSelected(): FlatEnvironment | undefined;
-}
-
-class DummyEnvironmentHandler implements EnvironmentHandler {
-  set(): void {
-    throw new Error("Method not implemented.");
-  }
-  useSelected(): FlatEnvironment {
-    throw new Error("Method not implemented.");
-  }
-}
-
-export const EnvironmentHandlerContext = createContext<{
-  environmentHandler: EnvironmentHandler;
-}>({
-  environmentHandler: new DummyEnvironmentHandler(),
-});
 
 export class EnvironmentHandlerImpl implements EnvironmentHandler {
   constructor(

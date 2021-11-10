@@ -2,6 +2,7 @@ import React from "react";
 import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { createMemoryHistory } from "history";
 import Keycloak from "keycloak-js";
 import { Either } from "@/Core";
 import {
@@ -18,7 +19,7 @@ import {
   DynamicQueryManagerResolver,
   ServerStatus,
 } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { App } from "@/UI/Root/app";
 
 function setup() {
@@ -41,13 +42,20 @@ function setup() {
     ])
   );
 
+  const environmentHandler = new EnvironmentHandlerImpl(
+    createMemoryHistory(),
+    dependencies.routeManager
+  );
+
   const component = (
     <MemoryRouter initialEntries={["/lsm/catalog"]}>
-      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
-        <StoreProvider store={store}>
+      <StoreProvider store={store}>
+        <DependencyProvider
+          dependencies={{ ...dependencies, queryResolver, environmentHandler }}
+        >
           <App keycloak={Keycloak()} shouldUseAuth={false} />
-        </StoreProvider>
-      </DependencyProvider>
+        </DependencyProvider>
+      </StoreProvider>
     </MemoryRouter>
   );
   return {

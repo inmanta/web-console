@@ -1,10 +1,7 @@
 import React from "react";
 import { Page, PageSidebar } from "@patternfly/react-core";
 import { EnvironmentProvider } from "@/UI/Components";
-import {
-  DependencyResolver,
-  EnvironmentHandlerProvider,
-} from "@/UI/Dependency";
+import { DependencyResolver } from "@/UI/Dependency";
 import { PageRouter } from "@/UI/Pages";
 import { AppWrapper } from "@/UI/Root/AppLayout/AppWrapper";
 import { Sidebar } from "@/UI/Root/AppLayout/Sidebar";
@@ -33,38 +30,36 @@ export const EnvSpecificContentLayout: React.FC<Props> = ({
   };
   const onToggle = isMobileView ? onNavToggleMobile : onNavToggle;
   return (
-    <EnvironmentHandlerProvider>
-      <AppWrapper
-        keycloak={shouldUseAuth ? keycloak : undefined}
-        shouldUseAuth={shouldUseAuth}
-        isNavOpen={isNavOpen}
-        onToggle={onToggle}
-        withEnv
-      >
-        <EnvironmentProvider
-          Wrapper={({ children }) => <>{children}</>}
-          Dependant={({ environment }) => (
-            <>
-              <DependencyResolver environment={environment} />
-              <Page
-                breadcrumb={<PageBreadcrumbs />}
-                onPageResize={onPageResize}
-                sidebar={
-                  <PageSidebar
-                    aria-label="PageSidebar"
-                    nav={<Sidebar environment={environment} />}
-                    isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
-                    theme="dark"
-                  />
-                }
-                style={{ gridArea: "mainpage", overflow: "hidden" }}
-              >
-                <PageRouter />
-              </Page>
-            </>
-          )}
-        />
-      </AppWrapper>
-    </EnvironmentHandlerProvider>
+    <AppWrapper
+      keycloak={shouldUseAuth ? keycloak : undefined}
+      shouldUseAuth={shouldUseAuth}
+      isNavOpen={isNavOpen}
+      onToggle={onToggle}
+      withEnv
+    >
+      <EnvironmentProvider
+        Wrapper={({ children }) => <>{children}</>}
+        Dependant={({ environment }) => (
+          <>
+            <DependencyResolver environment={environment} />
+            <Page
+              breadcrumb={<PageBreadcrumbs />}
+              onPageResize={onPageResize}
+              sidebar={
+                <PageSidebar
+                  aria-label="PageSidebar"
+                  nav={<Sidebar environment={environment} />}
+                  isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
+                  theme="dark"
+                />
+              }
+              style={{ gridArea: "mainpage", overflow: "hidden" }}
+            >
+              <PageRouter />
+            </Page>
+          </>
+        )}
+      />
+    </AppWrapper>
   );
 };

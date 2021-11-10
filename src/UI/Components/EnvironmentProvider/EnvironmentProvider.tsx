@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ErrorView } from "@/UI/Components/ErrorView";
-import { EnvironmentHandlerContext } from "@/UI/Dependency";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -12,7 +12,7 @@ export const EnvironmentProvider: React.FunctionComponent<Props> = ({
   Wrapper,
   Dependant,
 }) => {
-  const { environmentHandler } = useContext(EnvironmentHandlerContext);
+  const { environmentHandler } = useContext(DependencyContext);
 
   const environment = environmentHandler.useSelected();
   if (environment) {
