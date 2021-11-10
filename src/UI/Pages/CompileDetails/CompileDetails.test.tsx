@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -8,6 +9,7 @@ import {
   getStoreInstance,
   PrimaryFeatureManager,
   QueryResolverImpl,
+  useEnvironment,
 } from "@/Data";
 import {
   CompileDetailsData,
@@ -29,7 +31,7 @@ function setup() {
         apiHelper,
         new CompileDetailsStateHelper(store),
         scheduler,
-        "environment"
+        useEnvironment
       ),
     ])
   );
@@ -40,11 +42,13 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <CompileDetails id="123" />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+        <StoreProvider store={store}>
+          <CompileDetails id="123" />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };

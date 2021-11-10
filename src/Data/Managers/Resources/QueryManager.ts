@@ -10,14 +10,14 @@ export class ResourcesQueryManager extends PrimaryContinuousQueryManager<"GetRes
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetResources">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      () => environment,
-      ({ filter, sort, pageSize }) => [
+      (query, environment) => environment as string,
+      ({ filter, sort, pageSize }, environment) => [
         environment,
         pageSize.value,
         sort?.name,
@@ -36,7 +36,7 @@ export class ResourcesQueryManager extends PrimaryContinuousQueryManager<"GetRes
           metadata,
         };
       },
-      environment
+      useEnvironment
     );
   }
 }

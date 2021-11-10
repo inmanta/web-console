@@ -7,7 +7,7 @@ export class InstanceResourcesQueryManager extends PrimaryContinuousQueryManager
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetInstanceResources">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
@@ -19,7 +19,7 @@ export class InstanceResourcesQueryManager extends PrimaryContinuousQueryManager
       ({ service_entity, id, version }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

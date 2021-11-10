@@ -9,6 +9,7 @@ import {
   InstanceResourcesStateHelper,
   getStoreInstance,
   CommandResolverImpl,
+  useEnvironment,
 } from "@/Data";
 import {
   DynamicCommandManagerResolver,
@@ -39,7 +40,7 @@ const Template: Story<Props> = (args) => {
         }),
         new InstanceResourcesStateHelper(store),
         new StaticScheduler(),
-        Service.a.environment
+        useEnvironment
       ),
     ])
   );

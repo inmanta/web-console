@@ -7,7 +7,7 @@ export class DiagnosticsQueryManager extends PrimaryContinuousQueryManager<"GetD
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetDiagnostics">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
@@ -19,7 +19,7 @@ export class DiagnosticsQueryManager extends PrimaryContinuousQueryManager<"GetD
       ({ service_entity, id }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/diagnose`,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

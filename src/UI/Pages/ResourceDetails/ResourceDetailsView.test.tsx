@@ -9,6 +9,7 @@ import {
   QueryResolverImpl,
   ResourceDetailsQueryManager,
   ResourceDetailsStateHelper,
+  useEnvironment,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -31,7 +32,7 @@ function setup() {
         apiHelper,
         new ResourceDetailsStateHelper(store),
         scheduler,
-        environment
+        useEnvironment
       ),
     ])
   );

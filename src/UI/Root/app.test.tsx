@@ -42,8 +42,10 @@ function setup() {
     ])
   );
 
+  const history = createMemoryHistory();
   const environmentHandler = new EnvironmentHandlerImpl(
-    createMemoryHistory(),
+    () => history.location,
+    history.push,
     dependencies.routeManager
   );
 

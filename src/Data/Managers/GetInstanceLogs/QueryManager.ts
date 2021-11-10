@@ -7,7 +7,7 @@ export class GetInstanceLogsQueryManager extends PrimaryContinuousQueryManager<"
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetInstanceLogs">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
@@ -19,7 +19,7 @@ export class GetInstanceLogsQueryManager extends PrimaryContinuousQueryManager<"
       ({ service_entity, id }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/log`,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

@@ -7,7 +7,7 @@ export class ServiceInstanceQueryManager extends PrimaryContinuousQueryManager<"
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetServiceInstance">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
@@ -19,7 +19,7 @@ export class ServiceInstanceQueryManager extends PrimaryContinuousQueryManager<"
       ({ service_entity, id }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}`,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

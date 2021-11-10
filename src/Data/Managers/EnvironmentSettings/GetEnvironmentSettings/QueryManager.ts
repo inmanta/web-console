@@ -6,7 +6,7 @@ export class GetEnvironmentSettingsQueryManager extends PrimaryOneTimeQueryManag
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetEnvironmentSettings">,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
@@ -15,7 +15,7 @@ export class GetEnvironmentSettingsQueryManager extends PrimaryOneTimeQueryManag
       "GetEnvironmentSettings",
       () => `/api/v2/environment_settings`,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

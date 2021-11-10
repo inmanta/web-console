@@ -17,6 +17,7 @@ import {
   KeycloakAuthHelper,
   TriggerSetStateCommandManager,
   getStoreInstance,
+  useEnvironment,
 } from "@/Data";
 import {
   Service,
@@ -42,14 +43,14 @@ function setup(service = Service.a) {
     apiHelper,
     new ServiceInstancesStateHelper(store, service.environment),
     scheduler,
-    service.environment
+    useEnvironment
   );
 
   const resourcesHelper = new InstanceResourcesQueryManager(
     apiHelper,
     new InstanceResourcesStateHelper(store),
     scheduler,
-    service.environment
+    useEnvironment
   );
 
   const queryResolver = new QueryResolverImpl(

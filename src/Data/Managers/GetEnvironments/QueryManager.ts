@@ -1,5 +1,5 @@
 import { identity } from "lodash";
-import { StateHelper, Query, RemoteData, ApiHelper } from "@/Core";
+import { StateHelper, ApiHelper } from "@/Core";
 import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
@@ -14,18 +14,7 @@ export class GetEnvironmentsQueryManager extends PrimaryOneTimeQueryManager<"Get
       () => [],
       "GetEnvironments",
       getUrl,
-      identity,
-      ""
-    );
-  }
-
-  async update(
-    query: Query.SubQuery<"GetEnvironments">,
-    url: string
-  ): Promise<void> {
-    this.stateHelper.set(
-      RemoteData.fromEither(await this.apiHelper.getWithoutEnvironment(url)),
-      query
+      identity
     );
   }
 }

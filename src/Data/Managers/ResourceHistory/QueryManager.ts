@@ -10,14 +10,14 @@ export class ResourceHistoryQueryManager extends PrimaryContinuousQueryManager<"
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetResourceHistory">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      () => environment,
-      ({ sort, pageSize }) => [
+      (query, environment) => environment as string,
+      ({ sort, pageSize }, environment) => [
         environment,
         pageSize.value,
         sort?.name,
@@ -34,7 +34,7 @@ export class ResourceHistoryQueryManager extends PrimaryContinuousQueryManager<"
           metadata,
         };
       },
-      environment
+      useEnvironment
     );
   }
 }

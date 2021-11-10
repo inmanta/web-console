@@ -13,6 +13,7 @@ import {
   AttributeResultConverterImpl,
   BaseApiHelper,
   CommandResolverImpl,
+  useEnvironment,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
@@ -37,7 +38,7 @@ function setup() {
         apiHelper,
         new ServiceInstanceStateHelper(store),
         scheduler,
-        "environment"
+        useEnvironment
       ),
     ])
   );
@@ -52,23 +53,23 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-        queryResolver,
-        commandResolver,
-        environmentModifier: new MockEnvironmentModifier(),
-      }}
-    >
-      <MemoryRouter>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          commandResolver,
+          environmentModifier: new MockEnvironmentModifier(),
+        }}
+      >
         <StoreProvider store={store}>
           <EditInstancePage
             serviceEntity={Service.a}
             instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
           />
         </StoreProvider>
-      </MemoryRouter>
-    </DependencyProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };

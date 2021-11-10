@@ -7,6 +7,7 @@ import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,
   getStoreInstance,
+  useEnvironment,
 } from "@/Data";
 import {
   InstanceLog,
@@ -34,7 +35,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
         }),
         new GetInstanceLogsStateHelper(store),
         new StaticScheduler(),
-        Service.a.environment
+        useEnvironment
       ),
     ])
   );

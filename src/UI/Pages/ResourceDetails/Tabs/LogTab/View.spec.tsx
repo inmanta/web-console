@@ -9,10 +9,10 @@ import {
   getStoreInstance,
   ResourceLogsStateHelper,
   ResourceLogsQueryManager,
+  useEnvironment,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
-  Service,
   StaticScheduler,
   ResourceLogs,
   DeferredApiHelper,
@@ -22,14 +22,13 @@ import { View } from "./View";
 
 function setup() {
   const store = getStoreInstance();
-  const environment = Service.a.environment;
   const apiHelper = new DeferredApiHelper();
   const resourceLogsStateHelper = new ResourceLogsStateHelper(store);
   const resourceLogsQueryManager = new ResourceLogsQueryManager(
     apiHelper,
     resourceLogsStateHelper,
     new StaticScheduler(),
-    environment
+    useEnvironment
   );
 
   const queryResolver = new QueryResolverImpl(

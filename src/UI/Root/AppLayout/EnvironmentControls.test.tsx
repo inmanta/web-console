@@ -14,6 +14,7 @@ import {
   HaltEnvironmentCommandManager,
   QueryResolverImpl,
   ResumeEnvironmentCommandManager,
+  useEnvironment,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -39,7 +40,7 @@ function setup() {
     apiHelper,
     environmentDetailsStateHelper,
     scheduler,
-    EnvironmentDetails.a.id
+    useEnvironment
   );
 
   const queryResolver = new QueryResolverImpl(

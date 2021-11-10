@@ -8,18 +8,18 @@ export class ServiceQueryManager extends PrimaryContinuousQueryManager<"GetServi
     stateHelper: StateHelper<"GetService">,
     scheduler: Scheduler,
     keyMaker: KeyMaker<[string, string]>,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      ({ name }) => keyMaker.make([environment, name]),
-      ({ name }) => [name, environment],
+      ({ name }, environment) => keyMaker.make([environment as string, name]),
+      ({ name }, environment) => [name, environment],
       "GetService",
       ({ name }) => `/lsm/v1/service_catalog/${name}?instance_summary=True`,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

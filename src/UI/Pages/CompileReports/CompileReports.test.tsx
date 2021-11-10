@@ -9,6 +9,7 @@ import {
   getStoreInstance,
   CompileReportsQueryManager,
   CompileReportsStateHelper,
+  useEnvironment,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
@@ -31,7 +32,7 @@ function setup() {
         apiHelper,
         new CompileReportsStateHelper(store, "environment"),
         scheduler,
-        "environment"
+        useEnvironment
       ),
     ])
   );

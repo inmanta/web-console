@@ -16,7 +16,8 @@ import {
 } from "@/Core";
 
 type GetDependencies<Kind extends Query.Kind> = (
-  query: Query.SubQuery<Kind>
+  query: Query.SubQuery<Kind>,
+  environment: string | undefined
 ) => (string | number | boolean | undefined)[];
 
 type Data<Kind extends Query.Kind> = [
@@ -27,37 +28,52 @@ type Data<Kind extends Query.Kind> = [
 export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
   implements OneTimeQueryManager<Kind>
 {
+  private readonly useEnvironment: () => string | undefined;
+
   constructor(
     protected readonly apiHelper: ApiHelper,
     protected readonly stateHelper: StateHelper<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
-    private readonly getUrl: (query: Query.SubQuery<Kind>) => string,
+    private readonly getUrl: (
+      query: Query.SubQuery<Kind>,
+      environment: string | undefined
+    ) => string,
     private readonly toUsed: (
       data: Query.Data<Kind>,
       setUrl: (url: string) => void
     ) => Query.UsedData<Kind>,
-    private readonly environment: string
-  ) {}
+    useEnvironment?: () => string
+  ) {
+    this.useEnvironment = useEnvironment || (() => undefined);
+  }
 
-  async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
+  async update(
+    query: Query.SubQuery<Kind>,
+    url: string,
+    environment?: string
+  ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(await this.apiHelper.get(url, this.environment)),
+      RemoteData.fromEither(
+        environment
+          ? await this.apiHelper.get(url, environment)
+          : await this.apiHelper.getWithoutEnvironment(url)
+      ),
       query
     );
   }
 
   useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
-    const { environment } = this;
-    const [url, setUrl] = useState(this.getUrl(query));
+    const environment = this.useEnvironment();
+    const [url, setUrl] = useState(this.getUrl(query, environment));
 
     useEffect(() => {
-      setUrl(this.getUrl(query));
-    }, this.getDependencies(query));
+      setUrl(this.getUrl(query, environment));
+    }, this.getDependencies(query, environment));
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query);
-      this.update(query, url);
+      this.update(query, url, environment);
     }, [url, environment]);
 
     return [
@@ -65,7 +81,7 @@ export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
         (d) => this.toUsed(d, setUrl),
         this.stateHelper.getHooked(query)
       ),
-      () => this.update(query, url),
+      () => this.update(query, url, environment),
     ];
   }
 

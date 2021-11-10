@@ -10,7 +10,7 @@ export class EventsQueryManager extends PrimaryContinuousQueryManager<"GetInstan
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetInstanceEvents">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
@@ -36,7 +36,7 @@ export class EventsQueryManager extends PrimaryContinuousQueryManager<"GetInstan
           metadata,
         };
       },
-      environment
+      useEnvironment
     );
   }
 }

@@ -9,7 +9,9 @@ export class InstantApiHelper<Data> implements ApiHelper {
     );
   }
   getWithoutEnvironment<Data>(): Promise<Either.Type<string, Data>> {
-    throw new Error("Method not implemented.");
+    return Outcome.handle<string, Data>(
+      this.outcome as Outcome.Type<string, Data>
+    );
   }
   post<Data>(): Promise<Either.Type<string, Data>> {
     throw new Error("Method not implemented.");

@@ -7,18 +7,18 @@ export class EnvironmentDetailsQueryManager extends PrimaryContinuousQueryManage
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetEnvironmentDetails">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      () => `env-${environment}`,
-      () => [environment],
+      (query, environment) => `env-${environment}`,
+      (query, environment) => [environment],
       "GetEnvironmentDetails",
-      () => `/api/v2/environment/${environment}`,
+      (query, environment) => `/api/v2/environment/${environment}`,
       identity,
-      ""
+      useEnvironment
     );
   }
 }

@@ -9,6 +9,7 @@ import {
   InstanceResourcesStateHelper,
   getStoreInstance,
   CommandResolverImpl,
+  useEnvironment,
 } from "@/Data";
 import {
   Service,
@@ -45,14 +46,14 @@ export const Basic: React.FC = () => {
     }),
     new ServiceInstancesStateHelper(store, Service.a.environment),
     scheduler,
-    Service.a.environment
+    useEnvironment
   );
 
   const resourcesHelper = new InstanceResourcesQueryManager(
     apiHelper,
     new InstanceResourcesStateHelper(store),
     scheduler,
-    Service.a.environment
+    useEnvironment
   );
 
   const catchAllCommandManager = new MockCommandManager();
@@ -92,7 +93,7 @@ export const Failed: React.FC = () => {
     }),
     new ServiceInstancesStateHelper(store, Service.a.environment),
     scheduler,
-    Service.a.environment
+    useEnvironment
   );
 
   const queryResolver = new QueryResolverImpl(

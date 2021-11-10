@@ -7,6 +7,7 @@ import {
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
   getStoreInstance,
+  useEnvironment,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
@@ -34,7 +35,7 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
         }),
         new InstanceResourcesStateHelper(store),
         new StaticScheduler(),
-        "env"
+        useEnvironment
       ),
     ])
   );

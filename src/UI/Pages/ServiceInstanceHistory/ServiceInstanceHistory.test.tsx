@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import {
@@ -6,6 +7,7 @@ import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,
   getStoreInstance,
+  useEnvironment,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
@@ -28,20 +30,22 @@ it("ServiceInstanceHistory renders", async () => {
         }),
         new GetInstanceLogsStateHelper(store),
         new StaticScheduler(),
-        Service.a.environment
+        useEnvironment
       ),
     ])
   );
 
   render(
-    <DependencyProvider dependencies={{ queryResolver }}>
-      <StoreProvider store={store}>
-        <ServiceInstanceHistory
-          service={Service.a}
-          instanceId={ServiceInstance.a.id}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver }}>
+        <StoreProvider store={store}>
+          <ServiceInstanceHistory
+            service={Service.a}
+            instanceId={ServiceInstance.a.id}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   expect(

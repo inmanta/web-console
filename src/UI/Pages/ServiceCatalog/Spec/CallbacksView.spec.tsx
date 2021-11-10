@@ -13,6 +13,7 @@ import {
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
   CallbacksUpdater,
+  useEnvironment,
 } from "@/Data";
 import {
   DynamicCommandManagerResolver,
@@ -32,7 +33,7 @@ function setup() {
   const callbacksQueryManager = new CallbacksQueryManager(
     apiHelper,
     callbacksStateHelper,
-    environment
+    useEnvironment
   );
 
   const queryResolver = new QueryResolverImpl(

@@ -7,7 +7,7 @@ export class CompileDetailsQueryManager extends PrimaryContinuousQueryManager<"G
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetCompileDetails">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
@@ -18,7 +18,7 @@ export class CompileDetailsQueryManager extends PrimaryContinuousQueryManager<"G
       "GetCompileDetails",
       ({ id }) => `/api/v2/compilereport/${id}`,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

@@ -7,18 +7,18 @@ export class ServicesQueryManager extends PrimaryContinuousQueryManager<"GetServ
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetServices">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      () => environment,
-      () => [environment],
+      ({ kind }) => kind,
+      () => [],
       "GetServices",
       () => `/lsm/v1/service_catalog?instance_summary=True`,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

@@ -15,7 +15,7 @@ export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManager<
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetServiceInstances">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
@@ -41,7 +41,7 @@ export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManager<
           metadata,
         };
       },
-      environment
+      useEnvironment
     );
   }
 }

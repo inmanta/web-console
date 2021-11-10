@@ -7,16 +7,16 @@ export class CallbacksQueryManager extends PrimaryOneTimeQueryManager<"GetCallba
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetCallbacks">,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
       stateHelper,
-      () => [environment],
+      () => [],
       "GetCallbacks",
       getUrl,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

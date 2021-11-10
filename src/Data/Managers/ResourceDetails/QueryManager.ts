@@ -7,7 +7,7 @@ export class ResourceDetailsQueryManager extends PrimaryContinuousQueryManager<"
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetResourceDetails">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
@@ -18,7 +18,7 @@ export class ResourceDetailsQueryManager extends PrimaryContinuousQueryManager<"
       "GetResourceDetails",
       ({ id }) => `/api/v2/resource/${id}`,
       identity,
-      environment
+      useEnvironment
     );
   }
 }

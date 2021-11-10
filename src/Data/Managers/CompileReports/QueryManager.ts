@@ -10,14 +10,14 @@ export class CompileReportsQueryManager extends PrimaryContinuousQueryManager<"G
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetCompileReports">,
     scheduler: Scheduler,
-    environment: string
+    useEnvironment: () => string
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      () => environment,
-      ({ pageSize, sort, filter }) => [
+      (query, environment) => environment as string,
+      ({ pageSize, sort, filter }, environment) => [
         environment,
         pageSize.value,
         sort?.name,
@@ -36,7 +36,7 @@ export class CompileReportsQueryManager extends PrimaryContinuousQueryManager<"G
           metadata,
         };
       },
-      environment
+      useEnvironment
     );
   }
 }
