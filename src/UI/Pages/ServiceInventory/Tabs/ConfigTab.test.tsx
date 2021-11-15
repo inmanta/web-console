@@ -20,10 +20,10 @@ import {
   ServiceStateHelper,
   InstanceConfigFinalizer,
   getStoreInstance,
-  useEnvironment,
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   InstantApiHelper,
@@ -69,8 +69,7 @@ function setup(
         serviceKeyMaker,
         Service.a.environment
       )
-    ),
-    useEnvironment
+    )
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -91,6 +90,7 @@ function setup(
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           queryResolver,
           commandResolver,
           environmentModifier,

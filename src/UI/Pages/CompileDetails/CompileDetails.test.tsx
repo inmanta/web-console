@@ -9,11 +9,11 @@ import {
   getStoreInstance,
   PrimaryFeatureManager,
   QueryResolverImpl,
-  useEnvironment,
 } from "@/Data";
 import {
   CompileDetailsData,
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
@@ -30,8 +30,7 @@ function setup() {
       new CompileDetailsQueryManager(
         apiHelper,
         new CompileDetailsStateHelper(store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
     ])
   );
@@ -43,7 +42,9 @@ function setup() {
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, urlManager }}
+      >
         <StoreProvider store={store}>
           <CompileDetails id="123" />
         </StoreProvider>

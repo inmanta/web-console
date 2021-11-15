@@ -14,10 +14,10 @@ import {
   QueryResolverImpl,
   ResetEnvironmentSettingCommandManager,
   UpdateEnvironmentSettingCommandManager,
-  useEnvironment,
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   EnvironmentSettings,
@@ -32,8 +32,7 @@ function setup() {
     new DynamicQueryManagerResolver([
       new GetEnvironmentSettingsQueryManager(
         apiHelper,
-        new GetEnvironmentSettingsStateHelper(store, "env"),
-        useEnvironment
+        new GetEnvironmentSettingsStateHelper(store, "env")
       ),
     ])
   );
@@ -58,10 +57,13 @@ function setup() {
       ),
     ])
   );
+
   const component = (
     <MemoryRouter initialEntries={[{ search: "?env=env" }]}>
       <StoreProvider store={store}>
-        <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+        <DependencyProvider
+          dependencies={{ ...dependencies, queryResolver, commandResolver }}
+        >
           <Tab environmentId="env" />
         </DependencyProvider>
       </StoreProvider>

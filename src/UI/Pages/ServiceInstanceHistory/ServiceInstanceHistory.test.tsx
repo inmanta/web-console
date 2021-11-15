@@ -7,11 +7,12 @@ import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,
   getStoreInstance,
-  useEnvironment,
 } from "@/Data";
 import {
+  dependencies,
   DynamicQueryManagerResolver,
   InstantApiHelper,
+  MockEnvironmentHandler,
   Service,
   ServiceInstance,
   StaticScheduler,
@@ -29,15 +30,18 @@ it("ServiceInstanceHistory renders", async () => {
           data: { data: [] },
         }),
         new GetInstanceLogsStateHelper(store),
-        new StaticScheduler(),
-        useEnvironment
+        new StaticScheduler()
       ),
     ])
   );
 
+  const environmentHandler = new MockEnvironmentHandler();
+
   render(
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, environmentHandler }}
+      >
         <StoreProvider store={store}>
           <ServiceInstanceHistory
             service={Service.a}

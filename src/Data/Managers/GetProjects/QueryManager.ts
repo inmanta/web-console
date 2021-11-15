@@ -1,9 +1,9 @@
 import { identity } from "lodash";
 import { StateHelper, ApiHelper } from "@/Core";
-import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
+import { PrimaryOneTimeQueryManagerWithEnv } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class GetProjectsQueryManager extends PrimaryOneTimeQueryManager<"GetProjects"> {
+export class GetProjectsQueryManager extends PrimaryOneTimeQueryManagerWithEnv<"GetProjects"> {
   constructor(apiHelper: ApiHelper, stateHelper: StateHelper<"GetProjects">) {
     super(
       apiHelper,

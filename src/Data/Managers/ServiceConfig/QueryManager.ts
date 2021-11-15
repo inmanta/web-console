@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   OneTimeQueryManager,
   Query,
@@ -7,6 +7,7 @@ import {
   ConfigFinalizer,
   ApiHelper,
 } from "@/Core";
+import { DependencyContext } from "@/UI";
 
 type Data = RemoteData.Type<
   Query.Error<"GetServiceConfig">,
@@ -19,8 +20,7 @@ export class ServiceConfigQueryManager
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelper<"GetServiceConfig">,
-    private readonly configFinalizer: ConfigFinalizer<"GetServiceConfig">,
-    private readonly useEnvironment: () => string
+    private readonly configFinalizer: ConfigFinalizer<"GetServiceConfig">
   ) {}
 
   private getConfigUrl({ name }: Query.SubQuery<"GetServiceConfig">): string {
@@ -46,7 +46,9 @@ export class ServiceConfigQueryManager
   }
 
   useOneTime(query: Query.SubQuery<"GetServiceConfig">): [Data, () => void] {
-    const environment = this.useEnvironment();
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
+    const { environmentHandler } = useContext(DependencyContext);
+    const environment = environmentHandler.useId();
     const { name } = query;
 
     /* eslint-disable-next-line react-hooks/rules-of-hooks */

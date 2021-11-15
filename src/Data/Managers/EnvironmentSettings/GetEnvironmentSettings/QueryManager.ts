@@ -1,12 +1,11 @@
 import { identity } from "lodash";
 import { StateHelper, ApiHelper } from "@/Core";
-import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
+import { PrimaryOneTimeQueryManagerWithEnv } from "@/Data/Managers/Helpers";
 
-export class GetEnvironmentSettingsQueryManager extends PrimaryOneTimeQueryManager<"GetEnvironmentSettings"> {
+export class GetEnvironmentSettingsQueryManager extends PrimaryOneTimeQueryManagerWithEnv<"GetEnvironmentSettings"> {
   constructor(
     apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetEnvironmentSettings">,
-    useEnvironment: () => string
+    stateHelper: StateHelper<"GetEnvironmentSettings">
   ) {
     super(
       apiHelper,
@@ -14,8 +13,7 @@ export class GetEnvironmentSettingsQueryManager extends PrimaryOneTimeQueryManag
       () => [],
       "GetEnvironmentSettings",
       () => `/api/v2/environment_settings`,
-      identity,
-      useEnvironment
+      identity
     );
   }
 }

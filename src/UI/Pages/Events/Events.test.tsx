@@ -8,10 +8,10 @@ import {
   EventsQueryManager,
   EventsStateHelper,
   getStoreInstance,
-  useEnvironment,
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   Service,
   StaticScheduler,
@@ -28,15 +28,14 @@ function setup() {
       new EventsQueryManager(
         apiHelper,
         new EventsStateHelper(store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
     ])
   );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver }}>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <Events
             service={Service.a}

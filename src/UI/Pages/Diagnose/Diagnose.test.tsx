@@ -8,7 +8,6 @@ import {
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,
   getStoreInstance,
-  useEnvironment,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
@@ -30,8 +29,7 @@ function setup() {
       new DiagnosticsQueryManager(
         apiHelper,
         new DiagnosticsStateHelper(store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
     ])
   );

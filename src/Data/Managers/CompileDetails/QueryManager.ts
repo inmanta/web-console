@@ -1,13 +1,12 @@
 import { identity } from "lodash";
 import { StateHelper, Scheduler, ApiHelper } from "@/Core";
-import { PrimaryContinuousQueryManager } from "@/Data/Managers/Helpers";
+import { PrimaryContinuousQueryManagerWithEnv } from "@/Data/Managers/Helpers";
 
-export class CompileDetailsQueryManager extends PrimaryContinuousQueryManager<"GetCompileDetails"> {
+export class CompileDetailsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetCompileDetails"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetCompileDetails">,
-    scheduler: Scheduler,
-    useEnvironment: () => string
+    scheduler: Scheduler
   ) {
     super(
       apiHelper,
@@ -17,8 +16,7 @@ export class CompileDetailsQueryManager extends PrimaryContinuousQueryManager<"G
       ({ id }) => [id],
       "GetCompileDetails",
       ({ id }) => `/api/v2/compilereport/${id}`,
-      identity,
-      useEnvironment
+      identity
     );
   }
 }

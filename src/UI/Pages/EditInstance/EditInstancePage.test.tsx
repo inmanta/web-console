@@ -11,9 +11,7 @@ import {
   ServiceInstanceQueryManager,
   TriggerInstanceUpdateCommandManager,
   AttributeResultConverterImpl,
-  BaseApiHelper,
   CommandResolverImpl,
-  useEnvironment,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
@@ -37,14 +35,13 @@ function setup() {
       new ServiceInstanceQueryManager(
         apiHelper,
         new ServiceInstanceStateHelper(store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
     ])
   );
 
   const commandManager = new TriggerInstanceUpdateCommandManager(
-    new BaseApiHelper(),
+    apiHelper,
     new AttributeResultConverterImpl(),
     Service.a.environment
   );
@@ -93,6 +90,7 @@ test("Edit Instance View shows failed table", async () => {
 test("EditInstance View shows success form", async () => {
   const { component, apiHelper } = setup();
   render(component);
+  const { service_entity, id, version } = ServiceInstance.nestedEditable;
 
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Loading" })
@@ -103,14 +101,23 @@ test("EditInstance View shows success form", async () => {
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Success" })
   ).toBeInTheDocument();
-  const bandwidthField = await screen.findByText("bandwidth");
+
+  const bandwidthField = screen.getByText("bandwidth");
   expect(bandwidthField).toBeVisible();
+
   userEvent.type(bandwidthField, "2");
-  userEvent.click(await screen.findByText("Confirm"));
-  expect(fetchMock.mock.calls).toHaveLength(1);
-  const [, requestInit] = fetchMock.mock.calls[0];
-  expect(requestInit?.body).toBeTruthy();
-  expect(
-    JSON.parse(requestInit?.body as string)["attributes"]["bandwidth"]
-  ).toEqual("2");
+  userEvent.click(screen.getByText("Confirm"));
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "PATCH",
+    url: `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
+    body: {
+      attributes: {
+        bandwidth: "2",
+        circuits: [{}],
+      },
+    },
+    environment: "environment_id_a",
+  });
 });

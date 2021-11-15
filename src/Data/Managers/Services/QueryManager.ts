@@ -1,13 +1,12 @@
 import { identity } from "lodash";
 import { Scheduler, StateHelper, ApiHelper } from "@/Core";
-import { PrimaryContinuousQueryManager } from "@/Data/Managers/Helpers";
+import { PrimaryContinuousQueryManagerWithEnv } from "@/Data/Managers/Helpers";
 
-export class ServicesQueryManager extends PrimaryContinuousQueryManager<"GetServices"> {
+export class ServicesQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetServices"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetServices">,
-    scheduler: Scheduler,
-    useEnvironment: () => string
+    scheduler: Scheduler
   ) {
     super(
       apiHelper,
@@ -17,8 +16,7 @@ export class ServicesQueryManager extends PrimaryContinuousQueryManager<"GetServ
       () => [],
       "GetServices",
       () => `/lsm/v1/service_catalog?instance_summary=True`,
-      identity,
-      useEnvironment
+      identity
     );
   }
 }

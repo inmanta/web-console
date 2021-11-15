@@ -13,7 +13,6 @@ import {
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
   CallbacksUpdater,
-  useEnvironment,
 } from "@/Data";
 import {
   DynamicCommandManagerResolver,
@@ -21,6 +20,7 @@ import {
   Service,
   Callback,
   DeferredApiHelper,
+  dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CallbacksView } from "@/UI/Pages/ServiceCatalog/Tabs/Callbacks";
@@ -32,8 +32,7 @@ function setup() {
   const callbacksStateHelper = new CallbacksStateHelper(store, environment);
   const callbacksQueryManager = new CallbacksQueryManager(
     apiHelper,
-    callbacksStateHelper,
-    useEnvironment
+    callbacksStateHelper
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -66,7 +65,9 @@ function setup() {
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, commandResolver }}
+      >
         <StoreProvider store={store}>
           <CallbacksView service_entity={Service.a.name} />
         </StoreProvider>

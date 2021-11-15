@@ -7,7 +7,6 @@ import {
   EventsQueryManager,
   EventsStateHelper,
   getStoreInstance,
-  useEnvironment,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -32,8 +31,7 @@ export class EventsPageComposer {
     const eventsHelper = new EventsQueryManager(
       apiHelper,
       new EventsStateHelper(store),
-      scheduler,
-      useEnvironment
+      scheduler
     );
 
     const queryResolver = new QueryResolverImpl(

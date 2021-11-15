@@ -6,16 +6,15 @@ import {
 } from "@/Core";
 import {
   getPaginationHandlers,
-  PrimaryContinuousQueryManager,
+  PrimaryContinuousQueryManagerWithEnv,
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManager<"GetServiceInstances"> {
+export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetServiceInstances"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetServiceInstances">,
-    scheduler: Scheduler,
-    useEnvironment: () => string
+    scheduler: Scheduler
   ) {
     super(
       apiHelper,
@@ -40,8 +39,7 @@ export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManager<
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      },
-      useEnvironment
+      }
     );
   }
 }

@@ -18,7 +18,6 @@ import {
   getStoreInstance,
   DeleteServiceCommandManager,
   BaseApiHelper,
-  useEnvironment,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -40,8 +39,7 @@ function setup() {
   const servicesHelper = new ServicesQueryManager(
     apiHelper,
     new ServicesStateHelper(store, Service.a.environment),
-    scheduler,
-    useEnvironment
+    scheduler
   );
   const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
   const serviceConfigQueryManager = new ServiceConfigQueryManager(
@@ -53,8 +51,7 @@ function setup() {
         new ServiceKeyMaker(),
         Service.a.environment
       )
-    ),
-    useEnvironment
+    )
   );
 
   // { data: Service.a.config }

@@ -1,6 +1,5 @@
 import { QueryManager, ManagerResolver, SchedulerImpl } from "@/Core";
 import { BaseApiHelper } from "@/Data/API";
-import { useEnvironment } from "@/Data/Common";
 import {
   GetProjectsQueryManager,
   GetProjectsStateHelper,
@@ -102,116 +101,97 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     return [
       new GetEnvironmentSettingsQueryManager(
         this.apiHelper,
-        new GetEnvironmentSettingsStateHelper(this.store, environment),
-        useEnvironment
+        new GetEnvironmentSettingsStateHelper(this.store, environment)
       ),
       new ServicesQueryManager(
         this.apiHelper,
         new ServicesStateHelper(this.store, environment),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new ServiceQueryManager(
         this.apiHelper,
         serviceStateHelper,
         scheduler,
-        serviceKeyMaker,
-        useEnvironment
+        serviceKeyMaker
       ),
       new ServiceInstancesQueryManager(
         this.apiHelper,
         new ServiceInstancesStateHelper(this.store, environment),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new ServiceConfigQueryManager(
         this.apiHelper,
         new ServiceConfigStateHelper(this.store),
-        new ServiceConfigFinalizer(serviceStateHelper),
-        useEnvironment
+        new ServiceConfigFinalizer(serviceStateHelper)
       ),
       new InstanceResourcesQueryManager(
         this.apiHelper,
         new InstanceResourcesStateHelper(this.store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new EventsQueryManager(
         this.apiHelper,
         new EventsStateHelper(this.store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new GetInstanceLogsQueryManager(
         this.apiHelper,
         new GetInstanceLogsStateHelper(this.store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new InstanceConfigQueryManager(
         this.apiHelper,
         new InstanceConfigStateHelper(this.store),
-        new InstanceConfigFinalizer(serviceStateHelper),
-        useEnvironment
+        new InstanceConfigFinalizer(serviceStateHelper)
       ),
       new DiagnosticsQueryManager(
         this.apiHelper,
         new DiagnosticsStateHelper(this.store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new ResourcesQueryManager(
         this.apiHelper,
         new ResourcesStateHelper(this.store, environment),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new ResourceDetailsQueryManager(
         this.apiHelper,
         new ResourceDetailsStateHelper(this.store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new ResourceHistoryQueryManager(
         this.apiHelper,
         new ResourceHistoryStateHelper(this.store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new EnvironmentDetailsQueryManager(
         this.apiHelper,
         new EnvironmentDetailsStateHelper(this.store, environment),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new ServiceInstanceQueryManager(
         this.apiHelper,
         new ServiceInstanceStateHelper(this.store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new CallbacksQueryManager(
         this.apiHelper,
-        new CallbacksStateHelper(this.store, environment),
-        useEnvironment
+        new CallbacksStateHelper(this.store, environment)
       ),
       new CompileReportsQueryManager(
         this.apiHelper,
         new CompileReportsStateHelper(this.store, environment),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new CompileDetailsQueryManager(
         this.apiHelper,
         new CompileDetailsStateHelper(this.store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
       new ResourceLogsQueryManager(
         this.apiHelper,
         new ResourceLogsStateHelper(this.store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
     ];
   }

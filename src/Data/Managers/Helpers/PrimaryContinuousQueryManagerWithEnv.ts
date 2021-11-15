@@ -5,7 +5,7 @@
 
 /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   RemoteData,
   Query,
@@ -15,19 +15,23 @@ import {
   Scheduler,
   ApiHelper,
 } from "@/Core";
+import { DependencyContext } from "@/UI";
 import { GetDependencies, Data, GetUnique } from "./types";
 
-export class PrimaryContinuousQueryManager<Kind extends Query.Kind>
+export class PrimaryContinuousQueryManagerWithEnv<Kind extends Query.Kind>
   implements ContinuousQueryManager<Kind>
 {
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelper<Kind>,
     private readonly scheduler: Scheduler,
-    private readonly getUnique: GetUnique<Kind, false>,
-    private readonly getDependencies: GetDependencies<Kind, false>,
+    private readonly getUnique: GetUnique<Kind, true>,
+    private readonly getDependencies: GetDependencies<Kind, true>,
     private readonly kind: Kind,
-    private readonly getUrl: (query: Query.SubQuery<Kind>) => string,
+    private readonly getUrl: (
+      query: Query.SubQuery<Kind>,
+      environment: string
+    ) => string,
     private readonly toUsed: (
       data: Query.Data<Kind>,
       setUrl: (url: string) => void
@@ -36,42 +40,45 @@ export class PrimaryContinuousQueryManager<Kind extends Query.Kind>
 
   private async update(
     query: Query.SubQuery<Kind>,
-    url: string
+    url: string,
+    environment: string
   ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(await this.apiHelper.getWithoutEnvironment(url)),
+      RemoteData.fromEither(await this.apiHelper.get(url, environment)),
       query
     );
   }
 
   useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
-    const [url, setUrl] = useState(this.getUrl(query));
+    const { environmentHandler } = useContext(DependencyContext);
+    const environment = environmentHandler.useId();
+    const [url, setUrl] = useState(this.getUrl(query, environment));
 
     useEffect(() => {
-      setUrl(this.getUrl(query));
-    }, this.getDependencies(query));
+      setUrl(this.getUrl(query, environment));
+    }, this.getDependencies(query, environment));
 
     const task = {
       effect: async () =>
-        RemoteData.fromEither(await this.apiHelper.getWithoutEnvironment(url)),
+        RemoteData.fromEither(await this.apiHelper.get(url, environment)),
       update: (data) => this.stateHelper.set(data, query),
     };
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query);
-      this.update(query, url);
-      this.scheduler.register(this.getUnique(query), task);
+      this.update(query, url, environment);
+      this.scheduler.register(this.getUnique(query, environment), task);
       return () => {
-        this.scheduler.unregister(this.getUnique(query));
+        this.scheduler.unregister(this.getUnique(query, environment));
       };
-    }, [url]);
+    }, [url, environment]);
 
     return [
       RemoteData.mapSuccess(
         (data) => this.toUsed(data, setUrl),
         this.stateHelper.getHooked(query)
       ),
-      () => this.update(query, url),
+      () => this.update(query, url, environment),
     ];
   }
 

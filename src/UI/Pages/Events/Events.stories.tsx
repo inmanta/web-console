@@ -7,7 +7,6 @@ import {
   EventsQueryManager,
   EventsStateHelper,
   getStoreInstance,
-  useEnvironment,
 } from "@/Data";
 import {
   InstanceLog,
@@ -47,8 +46,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
           },
         }),
         new EventsStateHelper(store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
     ])
   );

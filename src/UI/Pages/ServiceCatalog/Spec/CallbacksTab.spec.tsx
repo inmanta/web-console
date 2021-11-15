@@ -17,7 +17,6 @@ import {
   DeleteCallbackCommandManager,
   CallbacksUpdater,
   DeleteServiceCommandManager,
-  useEnvironment,
 } from "@/Data";
 import {
   DynamicCommandManagerResolver,
@@ -40,14 +39,12 @@ function setup() {
   const servicesQueryManager = new ServicesQueryManager(
     apiHelper,
     new ServicesStateHelper(store, environment),
-    scheduler,
-    useEnvironment
+    scheduler
   );
   const callbacksStateHelper = new CallbacksStateHelper(store, environment);
   const callbacksQueryManager = new CallbacksQueryManager(
     apiHelper,
-    callbacksStateHelper,
-    useEnvironment
+    callbacksStateHelper
   );
 
   const queryResolver = new QueryResolverImpl(

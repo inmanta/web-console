@@ -26,6 +26,14 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
     }
   }
 
+  useId(): string {
+    const environment = this.useSelected();
+    if (typeof environment === "undefined") {
+      throw new Error("environment required but missing");
+    }
+    return environment.id;
+  }
+
   useSelected(): FlatEnvironment | undefined {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     const allEnvironments = useStoreState(

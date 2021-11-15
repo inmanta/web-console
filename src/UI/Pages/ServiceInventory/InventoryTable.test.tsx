@@ -8,7 +8,6 @@ import {
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
   getStoreInstance,
-  useEnvironment,
 } from "@/Data";
 import {
   Row,
@@ -44,8 +43,7 @@ test("InventoryTable can be expanded", async () => {
           },
         }),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        useEnvironment
+        new StaticScheduler()
       ),
     ])
   );
@@ -91,8 +89,7 @@ test("ServiceInventory can show resources for instance", async () => {
           },
         }),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        useEnvironment
+        new StaticScheduler()
       ),
     ])
   );

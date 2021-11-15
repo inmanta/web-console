@@ -6,7 +6,6 @@ import {
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,
   getStoreInstance,
-  useEnvironment,
 } from "@/Data";
 import {
   InstanceLog,
@@ -38,8 +37,7 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
           data: { data: diagnostics },
         }),
         new DiagnosticsStateHelper(store),
-        new StaticScheduler(),
-        useEnvironment
+        new StaticScheduler()
       ),
     ])
   );

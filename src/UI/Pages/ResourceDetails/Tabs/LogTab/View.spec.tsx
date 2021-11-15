@@ -9,13 +9,13 @@ import {
   getStoreInstance,
   ResourceLogsStateHelper,
   ResourceLogsQueryManager,
-  useEnvironment,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
   StaticScheduler,
   ResourceLogs,
   DeferredApiHelper,
+  dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { View } from "./View";
@@ -27,8 +27,7 @@ function setup() {
   const resourceLogsQueryManager = new ResourceLogsQueryManager(
     apiHelper,
     resourceLogsStateHelper,
-    new StaticScheduler(),
-    useEnvironment
+    new StaticScheduler()
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -37,7 +36,7 @@ function setup() {
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver }}>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <View resourceId="resourceId1" />
         </StoreProvider>

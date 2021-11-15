@@ -6,7 +6,6 @@ import {
   InstanceResourcesStateHelper,
   InstanceResourcesQueryManager,
   getStoreInstance,
-  useEnvironment,
 } from "@/Data";
 import {
   StaticScheduler,
@@ -36,8 +35,7 @@ const Template: React.FC<{
       new InstanceResourcesQueryManager(
         new InstantApiHelper(outcome),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        useEnvironment
+        new StaticScheduler()
       ),
     ])
   );

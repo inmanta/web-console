@@ -9,7 +9,6 @@ import {
   getStoreInstance,
   ResourceHistoryQueryManager,
   ResourceHistoryStateHelper,
-  useEnvironment,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -30,8 +29,7 @@ function setup() {
       new ResourceHistoryQueryManager(
         apiHelper,
         new ResourceHistoryStateHelper(store),
-        scheduler,
-        useEnvironment
+        scheduler
       ),
     ])
   );
