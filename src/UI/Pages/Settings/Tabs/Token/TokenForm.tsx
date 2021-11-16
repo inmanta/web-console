@@ -82,7 +82,7 @@ export const TokenForm: React.FC<Props> = ({
         id="token"
         type="text"
         aria-label="TokenOutput"
-        isDisabled={Maybe.isNone(token)}
+        isReadOnly
         value={Maybe.withFallback(token, "")}
       />
       <ClipboardCopyButton

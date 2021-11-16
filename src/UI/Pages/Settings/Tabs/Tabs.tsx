@@ -24,6 +24,7 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
   const { authHelper, environmentHandler } = useContext(DependencyContext);
   const tokenTooltipRef = createRef<HTMLElement>();
   const selected = environmentHandler.useSelected();
+  const tokenTabDisabled = authHelper.isDisabled();
 
   if (!selected) {
     return (
@@ -42,13 +43,15 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
         tabs={[
           environmentTab(selected),
           configurationTab(selected.id),
-          tokensTab(authHelper.isDisabled(), tokenTooltipRef),
+          tokensTab(tokenTabDisabled, tokenTooltipRef),
         ]}
       />
-      <Tooltip
-        content={words("settings.tabs.token.disabledInfo")}
-        reference={tokenTooltipRef}
-      />
+      {tokenTabDisabled && (
+        <Tooltip
+          content={words("settings.tabs.token.disabledInfo")}
+          reference={tokenTooltipRef}
+        />
+      )}
     </>
   );
 };
