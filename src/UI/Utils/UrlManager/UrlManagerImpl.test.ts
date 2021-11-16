@@ -1,7 +1,7 @@
-import { PrimaryStatusManager } from "@/Data";
+import { MockFeatureManager } from "@/Test";
 import { UrlManagerImpl } from "./UrlManagerImpl";
 
-const statusManager = new PrimaryStatusManager();
+const statusManager = new MockFeatureManager();
 
 test("Model version href creator works correctly", () => {
   expect(

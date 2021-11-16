@@ -4,7 +4,7 @@ import { LoadingView, ErrorView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 
 export const Initializer: React.FC = ({ children }) => {
-  const { queryResolver, statusManager } = useContext(DependencyContext);
+  const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"GetServerStatus">({
     kind: "GetServerStatus",
   });
@@ -14,10 +14,7 @@ export const Initializer: React.FC = ({ children }) => {
       notAsked: () => null,
       loading: () => <LoadingView />,
       failed: (error) => <ErrorView message={error} />,
-      success: (serverStatus) => {
-        statusManager.setServerStatus(serverStatus);
-        return <>{children}</>;
-      },
+      success: () => <>{children}</>,
     },
     data
   );

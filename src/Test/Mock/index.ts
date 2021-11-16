@@ -8,7 +8,7 @@ export * from "./InstantFileFetcher";
 export * from "./StaticScheduler";
 export * from "./DummyAuthHelper";
 export * from "./MockEnvironmentModifier";
-export * from "./MockStatusManager";
+export * from "./MockFeatureManager";
 export * as Outcome from "./Outcome";
 export * from "./MockCommandManager";
 export * from "./MockEnvironmentHandler";

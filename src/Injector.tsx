@@ -1,15 +1,17 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { BaseApiHelper, FileFetcherImpl } from "@/Data/API";
-import { KeycloakAuthHelper } from "@/Data/Auth";
-import { PrimaryStatusManager } from "@/Data/Common";
 import {
+  KeycloakAuthHelper,
+  PrimaryFeatureManager,
+  GetServerStatusStateHelper,
+  BaseApiHelper,
+  FileFetcherImpl,
   CommandResolverImpl,
   QueryResolverImpl,
   CommandManagerResolver,
   QueryManagerResolver,
-} from "@/Data/Resolvers";
-import { Store } from "@/Data/Store";
+  Store,
+} from "@/Data";
 import {
   PrimaryBaseUrlManager,
   PrimaryRouteManager,
@@ -39,8 +41,10 @@ export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
   const commandResolver = new CommandResolverImpl(
     new CommandManagerResolver(store, apiHelper, authHelper)
   );
-  const statusManager = new PrimaryStatusManager();
-  const urlManager = new UrlManagerImpl(statusManager, baseUrl);
+  const featureManager = new PrimaryFeatureManager(
+    new GetServerStatusStateHelper(store)
+  );
+  const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);
   const environmentModifier = new EnvironmentModifierImpl();
   const environmentHandler = new EnvironmentHandlerImpl(
@@ -57,7 +61,7 @@ export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
         urlManager,
         fileFetcher,
         environmentModifier,
-        statusManager,
+        featureManager,
         routeManager,
         environmentHandler,
         authHelper,

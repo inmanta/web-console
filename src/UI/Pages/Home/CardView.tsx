@@ -27,8 +27,8 @@ interface Props {
 }
 
 export const CardView: React.FC<Props> = ({ environments, ...props }) => {
-  const { statusManager, routeManager } = useContext(DependencyContext);
-  const pathname = statusManager.isLsmEnabled()
+  const { featureManager, routeManager } = useContext(DependencyContext);
+  const pathname = featureManager.isLsmEnabled()
     ? routeManager.getUrl("Catalog", undefined)
     : routeManager.getUrl("CompileReports", undefined);
 

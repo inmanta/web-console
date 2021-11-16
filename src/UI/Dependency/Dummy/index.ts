@@ -2,7 +2,7 @@ export * from "./DummyAuthHelper";
 export * from "./DummyCommandResolver";
 export * from "./DummyEnvironmentHandler";
 export * from "./DummyEnvironmentModifier";
-export * from "./DummyStatusManager";
+export * from "./DummyFeatureManager";
 export * from "./DummyFileFetcher";
 export * from "./DummyQueryResolver";
 export * from "./DummyRouteManager";

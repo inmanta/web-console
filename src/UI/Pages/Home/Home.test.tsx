@@ -17,7 +17,6 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
-  MockStatusManager,
   Project,
   StaticScheduler,
 } from "@/Test";
@@ -42,7 +41,6 @@ function setup() {
       ),
     ])
   );
-  const statusManager = new MockStatusManager();
 
   const component = (
     <MemoryRouter>
@@ -51,7 +49,6 @@ function setup() {
           ...dependencies,
           queryResolver,
           commandResolver,
-          statusManager,
         }}
       >
         <StoreProvider store={store}>

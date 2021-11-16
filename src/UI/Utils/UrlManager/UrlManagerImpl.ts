@@ -1,10 +1,10 @@
-import { StatusManager, Maybe, UrlManager } from "@/Core";
+import { FeatureManager, Maybe, UrlManager } from "@/Core";
 
 export class UrlManagerImpl implements UrlManager {
   private environment: Maybe.Type<string> = Maybe.none();
 
   constructor(
-    private readonly statusManager: StatusManager,
+    private readonly featureManager: FeatureManager,
     private readonly baseUrl: string,
     environment?: string
   ) {
@@ -17,7 +17,7 @@ export class UrlManagerImpl implements UrlManager {
   }
 
   getDocumentationLink(): string {
-    return `https://docs.inmanta.com/inmanta-service-orchestrator/${this.statusManager.getServerVersion()}/`;
+    return `https://docs.inmanta.com/inmanta-service-orchestrator/${this.featureManager.getServerVersion()}/`;
   }
 
   setEnvironment(environment: string): void {
