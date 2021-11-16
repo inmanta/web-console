@@ -42,7 +42,8 @@ import {
   CompileDetailsStateHelper,
   ResourceLogsQueryManager,
   ResourceLogsStateHelper,
-  GetServerStatusQueryManager,
+  GetServerStatusOneTimeQueryManager,
+  GetServerStatusContinuousQueryManager,
   GetServerStatusStateHelper,
   GetEnvironmentSettingsQueryManager,
   GetEnvironmentSettingsStateHelper,
@@ -82,9 +83,14 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.apiHelper,
         new GetEnvironmentsStateHelper(this.store)
       ),
-      new GetServerStatusQueryManager(
+      new GetServerStatusOneTimeQueryManager(
         this.apiHelper,
         new GetServerStatusStateHelper(this.store)
+      ),
+      new GetServerStatusContinuousQueryManager(
+        this.apiHelper,
+        new GetServerStatusStateHelper(this.store),
+        new SchedulerImpl(10000)
       ),
     ];
   }
