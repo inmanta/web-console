@@ -1,13 +1,13 @@
 import React from "react";
 import { List } from "@patternfly/react-core";
-import { omit } from "lodash";
-import { ServerStatus } from "@/Core";
 import {
   ClusterIcon,
   IntegrationIcon,
   ModuleIcon,
   TagIcon,
 } from "@patternfly/react-icons";
+import { omit } from "lodash";
+import { ServerStatus } from "@/Core";
 import { StatusItem } from "./StatusItem";
 
 interface Props {

@@ -1,8 +1,8 @@
 import React from "react";
+import { render, screen } from "@testing-library/react";
 import { dependencies, ServerStatus } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
-import { render, screen } from "@testing-library/react";
 
 test("GIVEN StatusPage THEN shows server status", async () => {
   dependencies.statusManager.setServerStatus(ServerStatus.withLsm);

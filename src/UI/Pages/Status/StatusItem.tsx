@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import {
   ListItem,
   DescriptionList,
@@ -10,6 +9,7 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 
 interface Props {
   name: string;

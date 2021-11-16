@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import { words } from "@/UI/words";
 import { Description, PageSectionWithTitle } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import { StatusList } from "./StatusList";
-import { DependencyContext } from "@/UI";
 
 export const Page: React.FC = () => {
   const { urlManager, statusManager } = useContext(DependencyContext);
