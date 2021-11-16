@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
 import { DependencyContext } from "./Dependency";
 
-export const DependencyResolver: React.FC<{ environment: string }> = ({
-  environment,
-}) => {
+interface Props {
+  environment: string;
+}
+
+export const DependencyResolver: React.FC<Props> = ({ environment }) => {
   const {
     queryResolver,
     commandResolver,

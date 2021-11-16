@@ -49,6 +49,12 @@ describe("Service catalog", function () {
 
     cy.contains("Lifecycle States").click();
 
+    /**
+     * @NOTE This assertion indirectly verifies that no full page rerender is triggered.
+     * We do not have the prop unMountOnExit set to true for the Tabs component.
+     * This means, the TabContent of previous viewed tabs is not destroyed.
+     * So here we correctly assume there are 2 TabContent components in the DOM.
+     */
     cy.get("#e2e_service-expand")
       .find(".pf-c-tab-content")
       .should("have.length", 2);
