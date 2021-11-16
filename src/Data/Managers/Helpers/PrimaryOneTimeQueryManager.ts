@@ -14,7 +14,7 @@ import {
   StateHelper,
   ApiHelper,
 } from "@/Core";
-import { GetDependencies, Data } from "./types";
+import { GetDependencies, Data, GetUrl, ToUsed } from "./types";
 
 export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
   implements OneTimeQueryManager<Kind>
@@ -22,13 +22,10 @@ export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
   constructor(
     protected readonly apiHelper: ApiHelper,
     protected readonly stateHelper: StateHelper<Kind>,
-    private readonly getDependencies: GetDependencies<Kind, false>,
+    private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
-    private readonly getUrl: (query: Query.SubQuery<Kind>) => string,
-    private readonly toUsed: (
-      data: Query.Data<Kind>,
-      setUrl: (url: string) => void
-    ) => Query.UsedData<Kind>
+    private readonly getUrl: GetUrl<Kind>,
+    private readonly toUsed: ToUsed<Kind>
   ) {}
 
   async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {

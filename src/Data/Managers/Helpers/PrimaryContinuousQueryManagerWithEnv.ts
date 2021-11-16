@@ -16,7 +16,13 @@ import {
   ApiHelper,
 } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { GetDependencies, Data, GetUnique } from "./types";
+import {
+  Data,
+  GetUniqueWithEnv,
+  GetDependenciesWithEnv,
+  GetUrlWithEnv,
+  ToUsed,
+} from "./types";
 
 export class PrimaryContinuousQueryManagerWithEnv<Kind extends Query.Kind>
   implements ContinuousQueryManager<Kind>
@@ -25,17 +31,11 @@ export class PrimaryContinuousQueryManagerWithEnv<Kind extends Query.Kind>
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelper<Kind>,
     private readonly scheduler: Scheduler,
-    private readonly getUnique: GetUnique<Kind, true>,
-    private readonly getDependencies: GetDependencies<Kind, true>,
+    private readonly getUnique: GetUniqueWithEnv<Kind>,
+    private readonly getDependencies: GetDependenciesWithEnv<Kind>,
     private readonly kind: Kind,
-    private readonly getUrl: (
-      query: Query.SubQuery<Kind>,
-      environment: string
-    ) => string,
-    private readonly toUsed: (
-      data: Query.Data<Kind>,
-      setUrl: (url: string) => void
-    ) => Query.UsedData<Kind>
+    private readonly getUrl: GetUrlWithEnv<Kind>,
+    private readonly toUsed: ToUsed<Kind>
   ) {}
 
   private async update(

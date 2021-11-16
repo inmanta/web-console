@@ -15,7 +15,7 @@ import {
   Scheduler,
   ApiHelper,
 } from "@/Core";
-import { GetDependencies, Data, GetUnique } from "./types";
+import { GetDependencies, Data, GetUnique, GetUrl, ToUsed } from "./types";
 
 export class PrimaryContinuousQueryManager<Kind extends Query.Kind>
   implements ContinuousQueryManager<Kind>
@@ -24,14 +24,11 @@ export class PrimaryContinuousQueryManager<Kind extends Query.Kind>
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelper<Kind>,
     private readonly scheduler: Scheduler,
-    private readonly getUnique: GetUnique<Kind, false>,
-    private readonly getDependencies: GetDependencies<Kind, false>,
+    private readonly getUnique: GetUnique<Kind>,
+    private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
-    private readonly getUrl: (query: Query.SubQuery<Kind>) => string,
-    private readonly toUsed: (
-      data: Query.Data<Kind>,
-      setUrl: (url: string) => void
-    ) => Query.UsedData<Kind>
+    private readonly getUrl: GetUrl<Kind>,
+    private readonly toUsed: ToUsed<Kind>
   ) {}
 
   private async update(
