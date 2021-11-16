@@ -39,7 +39,7 @@ test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is execu
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
-    body: { client_types: [], idempotent: false },
+    body: { client_types: [] },
     url: `/api/v2/environment_auth`,
     environment: "env",
   });
@@ -52,7 +52,7 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
   userEvent.click(screen.getByRole("button", { name: "Generate" }));
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
-    body: { client_types: ["agent"], idempotent: false },
+    body: { client_types: ["agent"] },
     url: `/api/v2/environment_auth`,
     environment: "env",
   });
