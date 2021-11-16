@@ -12,7 +12,6 @@ import {
   dependencies,
   DynamicQueryManagerResolver,
   InstantApiHelper,
-  MockEnvironmentHandler,
   Service,
   ServiceInstance,
   StaticScheduler,
@@ -35,13 +34,9 @@ it("ServiceInstanceHistory renders", async () => {
     ])
   );
 
-  const environmentHandler = new MockEnvironmentHandler();
-
   render(
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{ ...dependencies, queryResolver, environmentHandler }}
-      >
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <ServiceInstanceHistory
             service={Service.a}
