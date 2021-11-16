@@ -43,8 +43,7 @@ test("InventoryTable can be expanded", async () => {
           },
         }),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        "env"
+        new StaticScheduler()
       ),
     ])
   );
@@ -90,8 +89,7 @@ test("ServiceInventory can show resources for instance", async () => {
           },
         }),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        "env"
+        new StaticScheduler()
       ),
     ])
   );

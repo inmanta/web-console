@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Alert,
   AlertActionCloseButton,
@@ -37,14 +37,14 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   );
   const isHalted = environmentModifier.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
   const url = `${routeManager.getUrl("Inventory", {
     service: serviceEntity.name,
   })}?env=${serviceEntity.environment}`;
 
   const handleRedirect = useCallback(
-    () => history.push(url),
-    [history] /* eslint-disable-line react-hooks/exhaustive-deps */
+    () => navigate(url),
+    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
   );
   const attributeInputConverter = new AttributeInputConverterImpl();
   const currentAttributes =

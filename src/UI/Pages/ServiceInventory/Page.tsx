@@ -1,13 +1,13 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import { RouteParams, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { ServiceProvider } from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
 import { Wrapper } from "./Wrapper";
 
 export const Page: React.FC = () => {
-  const { service: serviceName } = useParams<RouteParams<"Inventory">>();
+  const { service: serviceName } = useRouteParams<"Inventory">();
 
   return (
     <ServiceProvider

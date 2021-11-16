@@ -12,11 +12,11 @@ export class GetEnvironmentSettingsStateHelper extends PrimaryStateHelper<"GetEn
           data
         );
         store.dispatch.environmentSettings.setData({
-          environment: this.environment,
+          environment,
           value: unwrapped,
         });
       },
-      (state) => state.environmentSettings.byEnv[this.environment]
+      (state) => state.environmentSettings.byEnv[environment]
     );
   }
 }

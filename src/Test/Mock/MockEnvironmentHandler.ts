@@ -1,8 +1,8 @@
 import { EnvironmentHandler, FlatEnvironment } from "@/Core";
 
-export class DummyEnvironmentHandler implements EnvironmentHandler {
+export class MockEnvironmentHandler implements EnvironmentHandler {
   useId(): string {
-    throw new Error("Method not implemented.");
+    return "env";
   }
   set(): void {
     throw new Error("Method not implemented.");

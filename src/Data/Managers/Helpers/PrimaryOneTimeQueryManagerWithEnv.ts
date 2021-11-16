@@ -5,7 +5,7 @@
 
 /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   RemoteData,
   Query,
@@ -14,45 +14,52 @@ import {
   StateHelper,
   ApiHelper,
 } from "@/Core";
-import { GetDependencies, Data, GetUrl, ToUsed } from "./types";
+import { DependencyContext } from "@/UI";
+import { Data, GetDependenciesWithEnv, GetUrlWithEnv, ToUsed } from "./types";
 
-export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
+export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
   implements OneTimeQueryManager<Kind>
 {
   constructor(
     protected readonly apiHelper: ApiHelper,
     protected readonly stateHelper: StateHelper<Kind>,
-    private readonly getDependencies: GetDependencies<Kind>,
+    private readonly getDependencies: GetDependenciesWithEnv<Kind>,
     private readonly kind: Kind,
-    private readonly getUrl: GetUrl<Kind>,
+    private readonly getUrl: GetUrlWithEnv<Kind>,
     private readonly toUsed: ToUsed<Kind>
   ) {}
 
-  async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
+  async update(
+    query: Query.SubQuery<Kind>,
+    url: string,
+    environment: string
+  ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(await this.apiHelper.getWithoutEnvironment(url)),
+      RemoteData.fromEither(await this.apiHelper.get(url, environment)),
       query
     );
   }
 
   useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
-    const [url, setUrl] = useState(this.getUrl(query));
+    const { environmentHandler } = useContext(DependencyContext);
+    const environment = environmentHandler.useId();
+    const [url, setUrl] = useState(this.getUrl(query, environment));
 
     useEffect(() => {
-      setUrl(this.getUrl(query));
-    }, this.getDependencies(query));
+      setUrl(this.getUrl(query, environment));
+    }, this.getDependencies(query, environment));
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query);
-      this.update(query, url);
-    }, [url]);
+      this.update(query, url, environment);
+    }, [url, environment]);
 
     return [
       RemoteData.mapSuccess(
         (d) => this.toUsed(d, setUrl),
         this.stateHelper.getHooked(query)
       ),
-      () => this.update(query, url),
+      () => this.update(query, url, environment),
     ];
   }
 

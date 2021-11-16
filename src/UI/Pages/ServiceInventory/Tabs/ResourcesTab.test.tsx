@@ -27,8 +27,7 @@ function setup() {
       new InstanceResourcesQueryManager(
         apiHelper,
         new InstanceResourcesStateHelper(store),
-        scheduler,
-        "34a961ba-db3c-486e-8d85-1438d8e88909"
+        scheduler
       ),
     ])
   );

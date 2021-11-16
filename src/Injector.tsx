@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BaseApiHelper, FileFetcherImpl } from "@/Data/API";
 import { KeycloakAuthHelper } from "@/Data/Auth";
 import { PrimaryFeatureManager } from "@/Data/Common";
@@ -25,7 +25,8 @@ interface Props {
 }
 
 export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
-  const history = useHistory();
+  const location = useLocation();
+  const navigate = useNavigate();
   const baseUrlManager = new PrimaryBaseUrlManager(location.pathname);
   const consoleBaseUrl = baseUrlManager.getConsoleBaseUrl();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
@@ -45,7 +46,11 @@ export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);
   const environmentModifier = new EnvironmentModifierImpl();
-  const environmentHandler = new EnvironmentHandlerImpl(history, routeManager);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    useLocation,
+    navigate,
+    routeManager
+  );
 
   return (
     <DependencyProvider

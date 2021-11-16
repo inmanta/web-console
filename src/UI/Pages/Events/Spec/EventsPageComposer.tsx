@@ -31,8 +31,7 @@ export class EventsPageComposer {
     const eventsHelper = new EventsQueryManager(
       apiHelper,
       new EventsStateHelper(store),
-      scheduler,
-      Service.a.environment
+      scheduler
     );
 
     const queryResolver = new QueryResolverImpl(

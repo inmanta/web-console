@@ -38,8 +38,7 @@ const Template: Story<Props> = (args) => {
           data: { data: [] },
         }),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        Service.a.environment
+        new StaticScheduler()
       ),
     ])
   );

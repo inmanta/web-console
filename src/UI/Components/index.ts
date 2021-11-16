@@ -11,7 +11,6 @@ export * from "./DeleteForm";
 export * from "./Description";
 export * from "./DictEditor";
 export * from "./EmptyView";
-export * from "./EnvironmentProvider";
 export * from "./ErrorView";
 export * from "./EventIcon";
 export * from "./EventsTable";

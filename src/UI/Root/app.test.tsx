@@ -1,8 +1,8 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { createMemoryHistory } from "history";
 import Keycloak from "keycloak-js";
 import { Either } from "@/Core";
 import {
@@ -43,7 +43,8 @@ function setup() {
   );
 
   const environmentHandler = new EnvironmentHandlerImpl(
-    createMemoryHistory(),
+    useLocation,
+    (...args) => useNavigate()(...args),
     dependencies.routeManager
   );
 

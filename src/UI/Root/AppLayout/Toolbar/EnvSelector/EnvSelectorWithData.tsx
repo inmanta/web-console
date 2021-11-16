@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Redirect } from "react-router";
+import { Navigate } from "react-router-dom";
 import {
   EmptyState,
   EmptyStateIcon,
@@ -57,7 +57,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
             />
           );
         } else {
-          return <Redirect to={routeManager.getUrl("Home", undefined)} />;
+          return <Navigate to={routeManager.getUrl("Home", undefined)} />;
         }
       },
     },

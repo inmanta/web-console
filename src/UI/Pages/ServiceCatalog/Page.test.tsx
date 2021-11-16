@@ -1,8 +1,9 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { Link, MemoryRouter, useLocation, useNavigate } from "react-router-dom";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   ServicesQueryManager,
@@ -17,11 +18,14 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  Environment,
   Service,
   StaticScheduler,
 } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { Page } from "./Page";
+
+const [env1, env2] = Environment.filterable.map((env) => env.id);
 
 function setup() {
   const store = getStoreInstance();
@@ -30,9 +34,8 @@ function setup() {
 
   const servicesHelper = new ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store, Service.a.environment),
-    scheduler,
-    Service.a.environment
+    new ServicesStateHelper(store, env1),
+    scheduler
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -40,19 +43,43 @@ function setup() {
   );
   const commandManager = new DeleteServiceCommandManager(
     new BaseApiHelper(),
-    Service.a.environment
+    env1
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
   );
 
+  const environmentHandler = new EnvironmentHandlerImpl(
+    useLocation,
+    (...args) => useNavigate()(...args),
+    dependencies.routeManager
+  );
+
+  store.dispatch.environments.setEnvironments(
+    RemoteData.success(Environment.filterable)
+  );
+
+  const linkToEnv2 = (
+    <Link to={{ pathname: "/lsm/catalog", search: `?env=${env2}` }}>
+      <button>change environment</button>
+    </Link>
+  );
+
   const component = (
-    <MemoryRouter>
+    <MemoryRouter
+      initialEntries={[{ pathname: "/lsm/catalog", search: `?env=${env1}` }]}
+    >
       <DependencyProvider
-        dependencies={{ ...dependencies, queryResolver, commandResolver }}
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          commandResolver,
+          environmentHandler,
+        }}
       >
         <StoreProvider store={store}>
           <Page />
+          {linkToEnv2}
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -140,4 +167,31 @@ test("ServiceCatalog removes service after deletion", async () => {
   expect(
     await screen.findByRole("region", { name: "ServiceCatalog-Empty" })
   ).toBeInTheDocument();
+});
+
+test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is triggered", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.resolvedRequests).toHaveLength(0);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: "/lsm/v1/service_catalog?instance_summary=True",
+    environment: env1,
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [Service.a] }));
+  });
+
+  userEvent.click(screen.getByText("change environment"));
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.resolvedRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: "/lsm/v1/service_catalog?instance_summary=True",
+    environment: env2,
+  });
 });

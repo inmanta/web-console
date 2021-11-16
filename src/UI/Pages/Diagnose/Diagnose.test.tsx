@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -28,22 +29,23 @@ function setup() {
       new DiagnosticsQueryManager(
         apiHelper,
         new DiagnosticsStateHelper(store),
-        scheduler,
-        "environment"
+        scheduler
       ),
     ])
   );
   dependencies.urlManager.setEnvironment("environment");
 
   const component = (
-    <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
-      <StoreProvider store={store}>
-        <DiagnoseComponent
-          service={Service.a}
-          instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+        <StoreProvider store={store}>
+          <DiagnoseComponent
+            service={Service.a}
+            instanceId={"4a4a6d14-8cd0-4a16-bc38-4b768eb004e3"}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };

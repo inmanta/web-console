@@ -17,15 +17,25 @@ test("EnvironmentHandler updates environment correctly", () => {
     .getActions()
     .environments.setEnvironments(RemoteData.success(Environment.filterable));
 
-  const environmentHandler = new EnvironmentHandlerImpl(history, routeManager);
-  environmentHandler.set(env.id);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    () => history.location,
+    history.push,
+    routeManager
+  );
+  environmentHandler.set(history.location, env.id);
+
   expect(history.location.search).toEqual(`?env=${env.id}`);
 });
 
 test("EnvironmentHandler determines selected environment correctly", () => {
   const history = createMemoryHistory();
 
-  const environmentHandler = new EnvironmentHandlerImpl(history, routeManager);
+  const environmentHandler = new EnvironmentHandlerImpl(
+    () => history.location,
+    (path) => history.push(path),
+    routeManager
+  );
+
   expect(
     environmentHandler.determineSelected(
       RemoteData.notAsked(),
@@ -47,7 +57,7 @@ test("EnvironmentHandler determines selected environment correctly", () => {
     )
   ).toEqual(Environment.filterable[0]);
 
-  environmentHandler.set(Environment.filterable[1].id);
+  environmentHandler.set(history.location, Environment.filterable[1].id);
   expect(
     environmentHandler.determineSelected(
       RemoteData.success(Environment.filterable),

@@ -1,5 +1,5 @@
 import { identity } from "lodash";
-import { provide, Location, History, StateConfig, Update } from "./helpers";
+import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
 export const useUrlStateWithString = provide(handleUrlStateWithString);
@@ -7,7 +7,7 @@ export const useUrlStateWithString = provide(handleUrlStateWithString);
 export function handleUrlStateWithString<Data extends string>(
   config: Pick<StateConfig<Data>, "default" | "key" | "route">,
   location: Location,
-  history: History
+  replace: Replace
 ): [Data, Update<Data>] {
   return handleUrlState<Data>(
     {
@@ -19,6 +19,6 @@ export function handleUrlStateWithString<Data extends string>(
       equals: (a: Data, b: Data) => a === b,
     },
     location,
-    history
+    replace
   );
 }

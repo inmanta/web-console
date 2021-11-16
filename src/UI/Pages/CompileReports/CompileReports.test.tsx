@@ -30,8 +30,7 @@ function setup() {
       new CompileReportsQueryManager(
         apiHelper,
         new CompileReportsStateHelper(store, "environment"),
-        scheduler,
-        "environment"
+        scheduler
       ),
     ])
   );

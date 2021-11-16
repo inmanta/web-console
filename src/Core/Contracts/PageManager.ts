@@ -1,8 +1,8 @@
-import { ComponentType } from "react";
+import { ReactElement } from "react";
 import { Route } from "@/Core/Domain";
 
 export interface Page extends Route {
-  component: ComponentType;
+  element: ReactElement | null;
 }
 
 export interface PageManager {

@@ -1,5 +1,5 @@
 import { PageSize } from "@/Core";
-import { provide, Location, History, StateConfig, Update } from "./helpers";
+import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
 export const useUrlStateWithPageSize = provide(handleUrlStateWithPageSize);
@@ -7,7 +7,7 @@ export const useUrlStateWithPageSize = provide(handleUrlStateWithPageSize);
 export function handleUrlStateWithPageSize(
   config: Pick<StateConfig<PageSize.Type>, "route">,
   location: Location,
-  history: History
+  replace: Replace
 ): [PageSize.Type, Update<PageSize.Type>] {
   return handleUrlState<PageSize.Type>(
     {
@@ -19,6 +19,6 @@ export function handleUrlStateWithPageSize(
       equals: PageSize.equals,
     },
     location,
-    history
+    replace
   );
 }

@@ -24,7 +24,6 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
 import { EnvironmentControls } from "./EnvironmentControls";
 
 function setup() {
@@ -38,8 +37,7 @@ function setup() {
   const environmentDetailsQueryManager = new EnvironmentDetailsQueryManager(
     apiHelper,
     environmentDetailsStateHelper,
-    scheduler,
-    EnvironmentDetails.a.id
+    scheduler
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -76,13 +74,12 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
       <DependencyProvider
         dependencies={{
           ...dependencies,
           queryResolver,
           commandResolver,
-          environmentModifier: new EnvironmentModifierImpl(),
         }}
       >
         <StoreProvider store={store}>

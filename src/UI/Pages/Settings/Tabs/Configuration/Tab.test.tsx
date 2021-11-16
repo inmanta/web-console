@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -16,6 +17,7 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   EnvironmentSettings,
@@ -30,8 +32,7 @@ function setup() {
     new DynamicQueryManagerResolver([
       new GetEnvironmentSettingsQueryManager(
         apiHelper,
-        new GetEnvironmentSettingsStateHelper(store, "env"),
-        "env"
+        new GetEnvironmentSettingsStateHelper(store, "env")
       ),
     ])
   );
@@ -56,12 +57,17 @@ function setup() {
       ),
     ])
   );
+
   const component = (
-    <StoreProvider store={store}>
-      <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
-        <Tab environmentId="env" />
-      </DependencyProvider>
-    </StoreProvider>
+    <MemoryRouter initialEntries={[{ search: "?env=env" }]}>
+      <StoreProvider store={store}>
+        <DependencyProvider
+          dependencies={{ ...dependencies, queryResolver, commandResolver }}
+        >
+          <Tab environmentId="env" />
+        </DependencyProvider>
+      </StoreProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper };

@@ -1,6 +1,6 @@
 import { isEqual, identity } from "lodash";
 import { toggleValueInList } from "@/Core";
-import { provide, Location, History, StateConfig, Update } from "./helpers";
+import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";
 
 type IsExpanded = (id: string) => boolean;
@@ -16,7 +16,7 @@ export const useUrlStateWithExpansion = provide(
 export function handleUrlStateWithExpansion(
   config: Config,
   location: Location,
-  history: History
+  replace: Replace
 ): [string[], Update<string[]>] {
   return handleUrlState<string[]>(
     {
@@ -28,19 +28,19 @@ export function handleUrlStateWithExpansion(
       equals: isEqual,
     },
     location,
-    history
+    replace
   );
 }
 
 function handleUrlStateWithExpansionWrapped(
   config: Config,
   location: Location,
-  history: History
+  replace: Replace
 ): [IsExpanded, OnExpansion] {
   const [expandedKeys, setExpandedKeys] = handleUrlStateWithExpansion(
     config,
     location,
-    history
+    replace
   );
 
   return [

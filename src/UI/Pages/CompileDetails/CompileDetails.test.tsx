@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -12,6 +13,7 @@ import {
 import {
   CompileDetailsData,
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
@@ -28,8 +30,7 @@ function setup() {
       new CompileDetailsQueryManager(
         apiHelper,
         new CompileDetailsStateHelper(store),
-        scheduler,
-        "environment"
+        scheduler
       ),
     ])
   );
@@ -40,11 +41,15 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <CompileDetails id="123" />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, urlManager }}
+      >
+        <StoreProvider store={store}>
+          <CompileDetails id="123" />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };

@@ -39,14 +39,12 @@ function setup() {
   const servicesQueryManager = new ServicesQueryManager(
     apiHelper,
     new ServicesStateHelper(store, environment),
-    scheduler,
-    environment
+    scheduler
   );
   const callbacksStateHelper = new CallbacksStateHelper(store, environment);
   const callbacksQueryManager = new CallbacksQueryManager(
     apiHelper,
-    callbacksStateHelper,
-    environment
+    callbacksStateHelper
   );
 
   const queryResolver = new QueryResolverImpl(

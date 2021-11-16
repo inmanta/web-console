@@ -1,5 +1,4 @@
 import { PageSize } from "@/Core";
-import { getMockedLocation, mockedHistory } from "./helpers.mocked";
 import { handleUrlStateWithPageSize } from "./useUrlStateWithPageSize";
 
 test.each`
@@ -11,8 +10,8 @@ test.each`
   async ({ search, expectedValue }) => {
     const [value] = handleUrlStateWithPageSize(
       { route: "Inventory" },
-      getMockedLocation(search),
-      mockedHistory
+      { pathname: "", search, hash: "" },
+      () => undefined
     );
     expect(value).toEqual(expectedValue);
   }

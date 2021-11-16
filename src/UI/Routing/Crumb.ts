@@ -9,9 +9,9 @@ interface Crumb {
 }
 
 export function getCrumbs(routeManager: RouteManager, url: string): Crumb[] {
-  const routeWithParams = routeManager.getRouteWithParamsFromUrl(url);
-  if (typeof routeWithParams === "undefined") return [];
-  const [route, params] = routeWithParams;
+  const routeMatch = routeManager.getRouteMatchFromUrl(url);
+  if (typeof routeMatch === "undefined") return [];
+  const { route, params } = routeMatch;
   const lineage = routeManager.getLineageFromRoute(route);
   return lineage.map(({ kind, label, path }, idx) => ({
     kind,

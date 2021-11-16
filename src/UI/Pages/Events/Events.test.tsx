@@ -11,6 +11,7 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   Service,
   StaticScheduler,
@@ -22,26 +23,19 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const instance = {
-    id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-    service_entity: "vlan-assignment",
-    version: 4,
-    environment: "34a961ba-db3c-486e-8d85-1438d8e88909",
-  };
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new EventsQueryManager(
         apiHelper,
         new EventsStateHelper(store),
-        scheduler,
-        instance.environment
+        scheduler
       ),
     ])
   );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver }}>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <Events
             service={Service.a}

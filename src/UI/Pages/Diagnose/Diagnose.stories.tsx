@@ -27,7 +27,7 @@ export default {
 const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   diagnostics,
 }) => {
-  const { service_instance_id, environment } = InstanceLog.a;
+  const { service_instance_id } = InstanceLog.a;
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
@@ -37,8 +37,7 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
           data: { data: diagnostics },
         }),
         new DiagnosticsStateHelper(store),
-        new StaticScheduler(),
-        environment
+        new StaticScheduler()
       ),
     ])
   );

@@ -41,15 +41,13 @@ function setup(service = Service.a) {
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     apiHelper,
     new ServiceInstancesStateHelper(store, service.environment),
-    scheduler,
-    service.environment
+    scheduler
   );
 
   const resourcesHelper = new InstanceResourcesQueryManager(
     apiHelper,
     new InstanceResourcesStateHelper(store),
-    scheduler,
-    service.environment
+    scheduler
   );
 
   const queryResolver = new QueryResolverImpl(

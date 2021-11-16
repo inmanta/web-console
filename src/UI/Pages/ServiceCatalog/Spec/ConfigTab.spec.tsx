@@ -39,8 +39,7 @@ function setup() {
   const servicesHelper = new ServicesQueryManager(
     apiHelper,
     new ServicesStateHelper(store, Service.a.environment),
-    scheduler,
-    Service.a.environment
+    scheduler
   );
   const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
   const serviceConfigQueryManager = new ServiceConfigQueryManager(
@@ -52,8 +51,7 @@ function setup() {
         new ServiceKeyMaker(),
         Service.a.environment
       )
-    ),
-    Service.a.environment
+    )
   );
 
   // { data: Service.a.config }

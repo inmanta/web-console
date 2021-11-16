@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -22,6 +23,7 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   InstantApiHelper,
@@ -67,8 +69,7 @@ function setup(
         serviceKeyMaker,
         Service.a.environment
       )
-    ),
-    Service.a.environment
+    )
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -86,17 +87,20 @@ function setup(
   );
 
   const component = (
-    <DependencyProvider
-      dependencies={{
-        queryResolver,
-        commandResolver,
-        environmentModifier,
-      }}
-    >
-      <StoreProvider store={storeInstance}>
-        <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          commandResolver,
+          environmentModifier,
+        }}
+      >
+        <StoreProvider store={storeInstance}>
+          <ConfigTab serviceInstanceIdentifier={instanceIdentifier} />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return {

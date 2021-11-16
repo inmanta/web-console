@@ -1,5 +1,5 @@
 import { identity } from "lodash";
-import { StateHelper, Query, RemoteData, ApiHelper } from "@/Core";
+import { StateHelper, ApiHelper } from "@/Core";
 import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
 
 export class GetServerStatusQueryManager extends PrimaryOneTimeQueryManager<"GetServerStatus"> {
@@ -13,18 +13,7 @@ export class GetServerStatusQueryManager extends PrimaryOneTimeQueryManager<"Get
       () => [],
       "GetServerStatus",
       () => `/api/v1/serverstatus`,
-      identity,
-      ""
-    );
-  }
-
-  async update(
-    query: Query.SubQuery<"GetServerStatus">,
-    url: string
-  ): Promise<void> {
-    this.stateHelper.set(
-      RemoteData.fromEither(await this.apiHelper.getWithoutEnvironment(url)),
-      query
+      identity
     );
   }
 }

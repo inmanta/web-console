@@ -1,5 +1,4 @@
-import { useLocation } from "react-router-dom";
-import { History } from "history";
+import { Location } from "history";
 import {
   EnvironmentHandler,
   FlatEnvironment,
@@ -11,30 +10,36 @@ import { SearchHelper } from "@/UI/Routing/SearchHelper";
 
 export class EnvironmentHandlerImpl implements EnvironmentHandler {
   constructor(
-    private readonly history: History,
+    private readonly useLocation: () => Location,
+    private readonly navigate: (pathname: string) => void,
     private readonly routeManager: RouteManager
   ) {}
 
-  public set(environmentId: string): void {
-    const params = new URLSearchParams(this.history.location.search);
+  set(location: Location, environmentId: string): void {
+    const { pathname, search } = location;
+    const params = new URLSearchParams(search);
     if (params.get("env") !== environmentId) {
       params.set("env", environmentId);
-      this.history.push({
-        pathname: this.routeManager.getRelatedUrlWithoutParams(
-          this.history.location.pathname
-        ),
-        search: `?${params}`,
-      });
+      this.navigate(
+        this.routeManager.getRelatedUrlWithoutParams(pathname) + `?${params}`
+      );
     }
   }
 
-  public useSelected(): FlatEnvironment | undefined {
+  useId(): string {
+    const environment = this.useSelected();
+    if (typeof environment === "undefined") {
+      throw new Error("environment required but missing");
+    }
+    return environment.id;
+  }
+
+  useSelected(): FlatEnvironment | undefined {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     const allEnvironments = useStoreState(
       (state) => state.environments.environments
     );
-    /* eslint-disable-next-line react-hooks/rules-of-hooks */
-    const { search } = useLocation();
+    const { search } = this.useLocation();
     return this.determineSelected(allEnvironments, search);
   }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
-import { SchedulerImpl, ServiceModel } from "@/Core";
+import { RemoteData, SchedulerImpl, ServiceModel } from "@/Core";
 import {
   AttributeResultConverterImpl,
   CommandResolverImpl,
@@ -22,6 +22,7 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  Environment,
   MockEnvironmentModifier,
   Service,
 } from "@/Test";
@@ -45,15 +46,13 @@ export class ServiceInventoryPrepper {
     const serviceInstancesHelper = new ServiceInstancesQueryManager(
       apiHelper,
       new ServiceInstancesStateHelper(store, service.environment),
-      scheduler,
-      service.environment
+      scheduler
     );
 
     const resourcesHelper = new InstanceResourcesQueryManager(
       apiHelper,
       new InstanceResourcesStateHelper(store),
-      scheduler,
-      service.environment
+      scheduler
     );
 
     const queryResolver = new QueryResolverImpl(
@@ -84,8 +83,12 @@ export class ServiceInventoryPrepper {
       ])
     );
 
+    store.dispatch.environments.setEnvironments(
+      RemoteData.success(Environment.filterable)
+    );
+
     const component = (
-      <MemoryRouter>
+      <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
         <DependencyProvider
           dependencies={{
             ...dependencies,

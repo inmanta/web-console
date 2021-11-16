@@ -1,16 +1,15 @@
 import { StateHelper, Scheduler, EventParams, ApiHelper } from "@/Core";
 import {
   getPaginationHandlers,
-  PrimaryContinuousQueryManager,
+  PrimaryContinuousQueryManagerWithEnv,
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class EventsQueryManager extends PrimaryContinuousQueryManager<"GetInstanceEvents"> {
+export class EventsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetInstanceEvents"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetInstanceEvents">,
-    scheduler: Scheduler,
-    environment: string
+    scheduler: Scheduler
   ) {
     super(
       apiHelper,
@@ -25,7 +24,7 @@ export class EventsQueryManager extends PrimaryContinuousQueryManager<"GetInstan
         pageSize.value,
       ],
       "GetInstanceEvents",
-      getUrl,
+      (query) => getUrl(query),
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
           return { data: data, handlers: {}, metadata };
@@ -35,8 +34,7 @@ export class EventsQueryManager extends PrimaryContinuousQueryManager<"GetInstan
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      },
-      environment
+      }
     );
   }
 }

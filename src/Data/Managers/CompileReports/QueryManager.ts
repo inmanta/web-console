@@ -1,23 +1,22 @@
 import { Scheduler, StateHelper, CompileReportParams, ApiHelper } from "@/Core";
 import {
   getPaginationHandlers,
-  PrimaryContinuousQueryManager,
+  PrimaryContinuousQueryManagerWithEnv,
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class CompileReportsQueryManager extends PrimaryContinuousQueryManager<"GetCompileReports"> {
+export class CompileReportsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetCompileReports"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetCompileReports">,
-    scheduler: Scheduler,
-    environment: string
+    scheduler: Scheduler
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      () => environment,
-      ({ pageSize, sort, filter }) => [
+      (query, environment) => environment,
+      ({ pageSize, sort, filter }, environment) => [
         environment,
         pageSize.value,
         sort?.name,
@@ -25,7 +24,7 @@ export class CompileReportsQueryManager extends PrimaryContinuousQueryManager<"G
         stringifyFilter(filter),
       ],
       "GetCompileReports",
-      getUrl,
+      (query) => getUrl(query),
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
           return { data: data, handlers: {}, metadata };
@@ -35,8 +34,7 @@ export class CompileReportsQueryManager extends PrimaryContinuousQueryManager<"G
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      },
-      environment
+      }
     );
   }
 }

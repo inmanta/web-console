@@ -33,8 +33,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
           data: { data: logs },
         }),
         new GetInstanceLogsStateHelper(store),
-        new StaticScheduler(),
-        Service.a.environment
+        new StaticScheduler()
       ),
     ])
   );

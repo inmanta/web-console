@@ -30,8 +30,7 @@ function setup() {
       new ResourceDetailsQueryManager(
         apiHelper,
         new ResourceDetailsStateHelper(store),
-        scheduler,
-        environment
+        scheduler
       ),
     ])
   );

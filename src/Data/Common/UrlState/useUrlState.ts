@@ -1,6 +1,6 @@
 import { isObject } from "@/Core";
 import { SearchHelper } from "@/UI/Routing";
-import { provide, Location, History, Update, StateConfig } from "./helpers";
+import { provide, Location, Replace, Update, StateConfig } from "./helpers";
 
 const searchHelper = new SearchHelper();
 
@@ -9,7 +9,7 @@ export const useUrlState = provide(handleUrlState);
 export function handleUrlState<Data>(
   config: StateConfig<Data>,
   location: Location,
-  history: History
+  replace: Replace
 ): [Data, Update<Data>] {
   const parsedSearch = searchHelper.parse(location.search);
   const state = getKeyOrEmpty(parsedSearch, "state");
@@ -43,7 +43,7 @@ export function handleUrlState<Data>(
       },
     });
 
-    history.replace(`${location.pathname}${newSearch}${location.hash}`);
+    replace(`${location.pathname}${newSearch}${location.hash}`);
   };
 
   return [currentValue, setValue];

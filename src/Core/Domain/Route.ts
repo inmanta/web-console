@@ -28,23 +28,28 @@ export interface Route {
   clearEnv?: boolean;
 }
 
-interface RouteParamsManifest {
-  Catalog: undefined;
-  Inventory: { service: string };
-  CreateInstance: { service: string };
-  EditInstance: { service: string; instance: string };
-  History: { service: string; instance: string };
-  Events: { service: string; instance: string };
-  Diagnose: { service: string; instance: string };
-  Resources: undefined;
-  ResourceHistory: { resourceId: string };
-  ResourceLogs: { resourceId: string };
-  CompileReports: undefined;
-  CompileDetails: { id: string };
-  Home: undefined;
-  ResourceDetails: { resourceId: string };
-  Settings: undefined;
-  CreateEnvironment: undefined;
+interface RouteParamKeysManifest {
+  Inventory: "service";
+  CreateInstance: "service";
+  EditInstance: "service" | "instance";
+  History: "service" | "instance";
+  Events: "service" | "instance";
+  Diagnose: "service" | "instance";
+  ResourceHistory: "resourceId";
+  ResourceLogs: "resourceId";
+  CompileDetails: "id";
+  ResourceDetails: "resourceId";
 }
 
-export type RouteParams<R extends RouteKind> = RouteParamsManifest[R];
+export type RouteParamKeys<K extends RouteKind> =
+  K extends keyof RouteParamKeysManifest ? RouteParamKeysManifest[K] : never;
+
+export type RouteParams<K extends RouteKind> =
+  K extends keyof RouteParamKeysManifest
+    ? Record<RouteParamKeysManifest[K], string>
+    : undefined;
+
+export interface RouteMatch {
+  route: Route;
+  params: RouteParams<RouteKind>;
+}

@@ -12,7 +12,7 @@ import { EnvSelectorWithData as EnvironmentSelector } from "./EnvSelectorWithDat
 test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", async () => {
   const history = createMemoryHistory();
   render(
-    <Router history={history}>
+    <Router location={history.location} navigator={history}>
       <DependencyProvider dependencies={dependencies}>
         <EnvironmentSelector
           environments={RemoteData.success([])}

@@ -1,23 +1,22 @@
 import { Scheduler, StateHelper, ApiHelper } from "@/Core";
 import {
   getPaginationHandlers,
-  PrimaryContinuousQueryManager,
+  PrimaryContinuousQueryManagerWithEnv,
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ResourceHistoryQueryManager extends PrimaryContinuousQueryManager<"GetResourceHistory"> {
+export class ResourceHistoryQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetResourceHistory"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetResourceHistory">,
-    scheduler: Scheduler,
-    environment: string
+    scheduler: Scheduler
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      () => environment,
-      ({ sort, pageSize }) => [
+      (query, environment) => environment,
+      ({ sort, pageSize }, environment) => [
         environment,
         pageSize.value,
         sort?.name,
@@ -33,8 +32,7 @@ export class ResourceHistoryQueryManager extends PrimaryContinuousQueryManager<"
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      },
-      environment
+      }
     );
   }
 }

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
-import { useHistory, useLocation } from "react-router";
-import { RouteParams } from "@/Core";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { RouteKind, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { Kind } from "./Kind";
 
@@ -16,12 +16,17 @@ type NavigateTo = (
 export const useNavigateTo = (): NavigateTo => {
   const { routeManager } = useContext(DependencyContext);
   const { search } = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (routeKind, params, newSearch) => {
     const pathname = routeManager.getUrl(routeKind, params);
-    history.push(`${pathname}?${newSearch || search}`);
+    navigate(`${pathname}?${newSearch || search}`);
   };
+};
+
+export const useRouteParams = <R extends RouteKind>(): RouteParams<R> => {
+  const params = useParams();
+  return params as RouteParams<R>;
 };
 
 /**

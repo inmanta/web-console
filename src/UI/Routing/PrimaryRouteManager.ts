@@ -1,11 +1,11 @@
-import { generatePath, matchPath, match } from "react-router-dom";
+import { generatePath, matchPath, PathMatch } from "react-router-dom";
 import {
   RouteDictionary,
   RouteManager,
   Route,
   RouteKind,
   RouteParams,
-  MatchedParams,
+  RouteMatch,
 } from "@/Core";
 import { paths } from "./Paths";
 
@@ -42,13 +42,13 @@ export class PrimaryRouteManager implements RouteManager {
   }
 
   getRelatedUrlWithoutParams(pathname: string): string {
-    const routeAndParams = this.getRouteWithParamsFromUrl(pathname);
-    if (typeof routeAndParams === "undefined") {
+    const routeMatch = this.getRouteMatchFromUrl(pathname);
+    if (typeof routeMatch === "undefined") {
       return this.getUrl("Home", undefined);
     }
-    const [currentRoute] = routeAndParams;
-    if (!this.routeHasParams(currentRoute)) return pathname;
-    const parent = this.getParentWithoutParams(currentRoute);
+    const { route } = routeMatch;
+    if (!this.routeHasParams(route)) return pathname;
+    const parent = this.getParentWithoutParams(route);
     if (typeof parent === "undefined") return this.getUrl("Home", undefined);
     return this.getUrl(parent.kind, undefined);
   }
@@ -103,22 +103,28 @@ export class PrimaryRouteManager implements RouteManager {
     }
   }
 
-  getUrl(kind: RouteKind, params: RouteParams<typeof kind>): string {
+  getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
     const route = this.getRoute(kind);
     return generatePath(route.path, params);
   }
 
-  getRouteWithParamsFromUrl(url: string): [Route, MatchedParams] | undefined {
+  getRouteMatchFromUrl(url: string): RouteMatch | undefined {
     const routeMatchPairs = this.getRoutes().map((route) => [
       route,
-      matchPath<MatchedParams>(url, { path: route.path, exact: true }),
+      matchPath(route.path, url),
     ]);
     const routeWithMatch = routeMatchPairs.find(
-      (pair): pair is [Route, match<MatchedParams>] => pair[1] !== null
+      (pair): pair is [Route, PathMatch] => pair[1] !== null
     );
     if (typeof routeWithMatch === "undefined") return undefined;
-    const [page, match] = routeWithMatch;
-    return [page, match.params];
+    const [route, match] = routeWithMatch;
+    return {
+      route,
+      params:
+        Object.entries(match.params).length <= 0
+          ? undefined
+          : (match.params as RouteParams<typeof route.kind>),
+    };
   }
 }
 
