@@ -1,4 +1,3 @@
-import { getMockedLocation } from "./helpers.mocked";
 import { handleUrlStateWithFilter } from "./useUrlStateWithFilter";
 
 const from = {
@@ -24,7 +23,7 @@ test.each`
   async ({ search, expectedValue }) => {
     const [value] = handleUrlStateWithFilter(
       { route: "Inventory" },
-      getMockedLocation(search),
+      { pathname: "", search, hash: "" },
       () => undefined
     );
     expect(value).toEqual(expectedValue);

@@ -1,4 +1,3 @@
-import { getMockedLocation } from "./helpers.mocked";
 import { handleUrlStateWithSort } from "./useUrlStateWithSort";
 
 test.each`
@@ -10,7 +9,7 @@ test.each`
   async ({ search, expectedValue }) => {
     const [value] = handleUrlStateWithSort(
       { default: { name: "timestamp", order: "desc" }, route: "Inventory" },
-      getMockedLocation(search),
+      { pathname: "", search, hash: "" },
       () => undefined
     );
     expect(value).toEqual(expectedValue);
