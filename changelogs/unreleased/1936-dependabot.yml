@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump tsconfig-paths-webpack-plugin from 3.5.1 to 3.5.2'
+destination-branches:
+- master
+- iso4
+sections: {}
