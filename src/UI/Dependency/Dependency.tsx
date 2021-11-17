@@ -5,10 +5,10 @@ import {
   QueryResolver,
   UrlManager,
   EnvironmentModifier,
-  FeatureManager,
   RouteManager,
   EnvironmentHandler,
   AuthHelper,
+  FeatureManager,
 } from "@/Core";
 import {
   DummyCommandResolver,

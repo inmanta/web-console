@@ -1,23 +1,32 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
-import { ServerStatus } from "@/Core";
+import { StoreProvider } from "easy-peasy";
+import { RemoteData, ServerStatus } from "@/Core";
+import {
+  PrimaryFeatureManager,
+  getStoreInstance,
+  GetServerStatusStateHelper,
+} from "@/Data";
 import { dependencies, ServerStatus as TestServerStatus } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
 import { Navigation } from "./Navigation";
 
 function setup(
   initialEntries: string[] | undefined,
   serverStatus: ServerStatus
 ) {
-  dependencies.featureManager.setServerStatus(serverStatus);
-  const routeManager = new PrimaryRouteManager("");
-
+  const store = getStoreInstance();
+  store.dispatch.serverStatus.setData(RemoteData.success(serverStatus));
+  const featureManager = new PrimaryFeatureManager(
+    new GetServerStatusStateHelper(store)
+  );
   const component = (
     <MemoryRouter initialEntries={initialEntries}>
-      <DependencyProvider dependencies={{ ...dependencies, routeManager }}>
-        <Navigation environment="env" />
+      <DependencyProvider dependencies={{ ...dependencies, featureManager }}>
+        <StoreProvider store={store}>
+          <Navigation environment="env" />
+        </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
   );

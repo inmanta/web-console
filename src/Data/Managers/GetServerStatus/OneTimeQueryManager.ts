@@ -2,7 +2,7 @@ import { identity } from "lodash";
 import { StateHelper, ApiHelper } from "@/Core";
 import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
 
-export class GetServerStatusQueryManager extends PrimaryOneTimeQueryManager<"GetServerStatus"> {
+export class GetServerStatusOneTimeQueryManager extends PrimaryOneTimeQueryManager<"GetServerStatus"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetServerStatus">

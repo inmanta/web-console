@@ -46,4 +46,8 @@ export class UrlManagerImpl implements UrlManager {
   getServerStatusUrl(): string {
     return `${this.baseUrl}/dashboard/#!/serverstatus`;
   }
+
+  getApiUrl(): string {
+    return this.baseUrl;
+  }
 }

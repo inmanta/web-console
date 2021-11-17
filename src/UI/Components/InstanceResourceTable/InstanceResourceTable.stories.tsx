@@ -1,9 +1,7 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { PrimaryFeatureManager } from "@/Data";
-import { InstanceResource } from "@/Test";
+import { dependencies, InstanceResource } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { ResourceTable } from "./InstanceResourceTable";
 
 export default {
@@ -12,11 +10,7 @@ export default {
 };
 
 const Template: Story<ComponentProps<typeof ResourceTable>> = (args) => (
-  <DependencyProvider
-    dependencies={{
-      urlManager: new UrlManagerImpl(new PrimaryFeatureManager(), "", "env"),
-    }}
-  >
+  <DependencyProvider dependencies={dependencies}>
     <ResourceTable {...args} />
   </DependencyProvider>
 );

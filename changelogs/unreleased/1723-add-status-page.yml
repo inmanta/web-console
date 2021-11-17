@@ -1,0 +1,6 @@
+description: Add server status page
+issue-nr: 1723
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

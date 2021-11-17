@@ -5,8 +5,8 @@ import { CommandResolverImpl } from "@/Data";
 import {
   DynamicCommandManagerResolver,
   MockCommandManager,
-  MockFeatureManger,
   Environment,
+  dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
@@ -21,7 +21,7 @@ const Template: Story<ComponentProps<typeof EnvironmentsOverview>> = (args) => {
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
-          featureManager: new MockFeatureManger(),
+          ...dependencies,
           commandResolver: new CommandResolverImpl(
             new DynamicCommandManagerResolver([new MockCommandManager()])
           ),

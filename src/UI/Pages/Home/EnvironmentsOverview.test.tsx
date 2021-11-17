@@ -14,14 +14,13 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
   Environment,
-  MockFeatureManger,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
 function setup() {
   const store = getStoreInstance();
-  const featureManager = new MockFeatureManger();
+
   const apiHelper = new DeferredApiHelper();
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
@@ -36,9 +35,7 @@ function setup() {
   );
   const component = (
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{ ...dependencies, featureManager, commandResolver }}
-      >
+      <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
         <EnvironmentsOverview environments={Environment.filterable} />
       </DependencyProvider>
     </MemoryRouter>

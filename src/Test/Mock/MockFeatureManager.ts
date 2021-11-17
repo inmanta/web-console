@@ -1,15 +1,11 @@
 import { FeatureManager } from "@/Core";
 
-export class MockFeatureManger implements FeatureManager {
+export class MockFeatureManager implements FeatureManager {
   getServerVersion(): string {
     return "4";
   }
 
   isLsmEnabled(): boolean {
     return true;
-  }
-
-  setServerStatus(): void {
-    return undefined;
   }
 }

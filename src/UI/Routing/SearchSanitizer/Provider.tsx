@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { RouteManager } from "@/Core";
+import { RouteManager, RouteKind } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { Kind } from "@/UI/Routing/Kind";
 import { SearchSanitizer } from "./SearchSanitizer";
 
 export const Provider: React.FC = ({ children }) => {
@@ -35,7 +34,7 @@ const getSearchResult = (
   routeManager: RouteManager,
   pathname: string,
   search: string
-): [string | null, Kind | null] => {
+): [string | null, RouteKind | null] => {
   const match = routeManager.getRouteMatchFromUrl(pathname);
   if (typeof match === "undefined") return [null, null];
   return [sanitizer.sanitize(match.route.kind, search), match.route.kind];

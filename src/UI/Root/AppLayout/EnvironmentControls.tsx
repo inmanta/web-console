@@ -14,14 +14,15 @@ import {
 } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
-import { LoadingView } from "@/UI/Components";
+import { LoadingView, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { HaltDialog } from "./HaltDialog";
 import { ResumeDialog } from "./ResumeDialog";
 
 export const EnvironmentControls: React.FC = () => {
-  const { queryResolver, urlManager } = useContext(DependencyContext);
+  const { queryResolver, urlManager, routeManager } =
+    useContext(DependencyContext);
   const [data] = queryResolver.useContinuous<"GetEnvironmentDetails">({
     kind: "GetEnvironmentDetails",
   });
@@ -63,13 +64,12 @@ export const EnvironmentControls: React.FC = () => {
             <StackItem>
               <Flex>
                 <FlexItem>
-                  <GreenButton
-                    icon={<CheckIcon />}
-                    component="a"
-                    aria-label="Server status"
-                    href={urlManager.getServerStatusUrl()}
-                    target="_blank"
-                  />
+                  <Link pathname={routeManager.getUrl("Status", undefined)}>
+                    <GreenButton
+                      icon={<CheckIcon />}
+                      aria-label="Server status"
+                    />
+                  </Link>
                 </FlexItem>
                 <FlexItem>
                   {data.halted ? <ResumeDialog /> : <HaltDialog />}

@@ -363,6 +363,13 @@ const dict = {
   "settings.tabs.token.description":
     "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
   "settings.tabs.token.generate": "Generate",
+
+  /**
+   * Status
+   */
+  "status.title": "Orchestrator Status",
+  "status.description":
+    "The status of the orchestration server, loaded extensions and active components.",
 };
 
 type Key = keyof typeof dict;

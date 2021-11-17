@@ -1,25 +1,25 @@
-import { FeatureManager, Maybe, ServerStatus } from "@/Core";
+import { FeatureManager, RemoteData, StateHelper } from "@/Core";
 
 export class PrimaryFeatureManager implements FeatureManager {
-  private serverStatus: Maybe.Type<ServerStatus> = Maybe.none();
-  setServerStatus(serverStatus: ServerStatus): void {
-    this.serverStatus = Maybe.some(serverStatus);
-  }
+  constructor(private readonly stateHelper: StateHelper<"GetServerStatus">) {}
+
   isLsmEnabled(): boolean {
-    if (Maybe.isNone(this.serverStatus)) {
+    const serverStatus = this.stateHelper.getOnce({ kind: "GetServerStatus" });
+    if (!RemoteData.isSuccess(serverStatus)) {
       throw new Error("ServerStatus has not yet been set.");
     }
     return (
-      typeof this.serverStatus.value.extensions.find(
+      typeof serverStatus.value.extensions.find(
         (extension) => extension.name === "lsm"
       ) !== "undefined"
     );
   }
 
   getServerVersion(): string {
-    if (Maybe.isNone(this.serverStatus)) {
+    const serverStatus = this.stateHelper.getOnce({ kind: "GetServerStatus" });
+    if (!RemoteData.isSuccess(serverStatus)) {
       throw new Error("ServerStatus has not yet been set.");
     }
-    return this.serverStatus.value.version.split(".")[0];
+    return serverStatus.value.version.split(".")[0];
   }
 }

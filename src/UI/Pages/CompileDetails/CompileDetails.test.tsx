@@ -7,7 +7,6 @@ import {
   CompileDetailsQueryManager,
   CompileDetailsStateHelper,
   getStoreInstance,
-  PrimaryFeatureManager,
   QueryResolverImpl,
 } from "@/Data";
 import {
@@ -35,7 +34,7 @@ function setup() {
     ])
   );
   const urlManager = new UrlManagerImpl(
-    new PrimaryFeatureManager(),
+    dependencies.featureManager,
     "",
     "environment"
   );

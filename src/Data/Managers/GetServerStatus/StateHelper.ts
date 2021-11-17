@@ -1,40 +1,27 @@
-import { isEqual } from "lodash";
-import { Query, RemoteData, StateHelper } from "@/Core";
-import { Store, useStoreState } from "@/Data/Store";
+import { RemoteData, ServerStatus } from "@/Core";
+import { PrimaryStateHelper } from "@/Data/Common";
+import { Store } from "@/Data/Store";
 
-type Data = RemoteData.Type<
-  Query.Error<"GetServerStatus">,
-  Query.Data<"GetServerStatus">
->;
-type ApiData = RemoteData.Type<
-  Query.Error<"GetServerStatus">,
-  Query.ApiResponse<"GetServerStatus">
->;
-
-export class GetServerStatusStateHelper
-  implements StateHelper<"GetServerStatus">
-{
-  constructor(private readonly store: Store) {}
-
-  set(data: ApiData): void {
-    const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-    this.store.dispatch.serverStatus.setData(unwrapped);
-  }
-
-  getHooked(): Data {
-    /* eslint-disable-next-line react-hooks/rules-of-hooks */
-    return useStoreState(
-      (state) => this.enforce(state.serverStatus.status),
-      isEqual
+export class GetServerStatusStateHelper extends PrimaryStateHelper<"GetServerStatus"> {
+  constructor(store: Store) {
+    super(
+      store,
+      (data) => {
+        const currentStatus: RemoteData.Type<string, ServerStatus> =
+          store.getState().serverStatus.status;
+        const newStatus = RemoteData.mapSuccess(
+          (wrapped) => wrapped.data,
+          data
+        );
+        if (
+          RemoteData.isLoading(newStatus) &&
+          !RemoteData.isNotAsked(currentStatus)
+        ) {
+          return;
+        }
+        store.dispatch.serverStatus.setData(newStatus);
+      },
+      (state) => state.serverStatus.status
     );
-  }
-
-  private enforce(value: undefined | Data): Data {
-    if (typeof value === "undefined") return RemoteData.notAsked();
-    return value;
-  }
-
-  getOnce(): Data {
-    return this.enforce(this.store.getState().serverStatus.status);
   }
 }

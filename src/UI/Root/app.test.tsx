@@ -8,7 +8,7 @@ import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  GetServerStatusQueryManager,
+  GetServerStatusOneTimeQueryManager,
   GetServerStatusStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
@@ -30,7 +30,7 @@ function setup() {
     new GetEnvironmentsStateHelper(store)
   );
 
-  const getServerStatusManager = new GetServerStatusQueryManager(
+  const getServerStatusManager = new GetServerStatusOneTimeQueryManager(
     apiHelper,
     new GetServerStatusStateHelper(store)
   );

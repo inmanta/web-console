@@ -1,14 +1,13 @@
 import React from "react";
-import { EventRow, InstanceEvent } from "@/Core";
+import { EventRow, InstanceEvent, RouteKind } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { TablePresenter } from "@/UI/Presenters";
-import { Kind } from "@/UI/Routing";
 import { EventsTableRow } from "./EventsTableRow";
 
 interface Props {
   events: InstanceEvent[];
   tablePresenter: TablePresenter<InstanceEvent, EventRow>;
-  route: Kind;
+  route: RouteKind;
 }
 
 export const EventsTableBody: React.FC<Props> = ({
