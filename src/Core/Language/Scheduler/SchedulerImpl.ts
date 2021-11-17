@@ -1,7 +1,7 @@
 import { Dictionary, DictionaryImpl } from "@/Core/Language/Dictionary";
 import * as Maybe from "@/Core/Language/Maybe";
-import { Scheduler, Task } from "./Scheduler";
 import { resolvePromiseRecord } from "@/Core/Language/Utils";
+import { Scheduler, Task } from "./Scheduler";
 
 export class SchedulerImpl implements Scheduler {
   private readonly tasks = new DictionaryImpl<Task>();
