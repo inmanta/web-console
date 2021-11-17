@@ -71,9 +71,7 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
     name: "GenerateTokenError",
   });
   expect(errorContainer).toBeVisible();
-  const errorMessage = within(errorContainer).getByText("error message");
-  expect(errorMessage).toBeVisible();
-  expect(errorMessage).toHaveTextContent("error message");
+  expect(within(errorContainer).getByText("error message")).toBeVisible();
 });
 
 test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () => {

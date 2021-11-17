@@ -7,7 +7,7 @@ export interface TabDescriptor<K extends string> {
   icon: React.ReactNode;
   view: React.ReactNode;
   isDisabled?: boolean;
-  ref?: React.Ref<HTMLElement>;
+  ref?: React.MutableRefObject<HTMLElement | undefined>;
 }
 
 interface Props<K extends string> {

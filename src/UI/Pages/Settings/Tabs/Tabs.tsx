@@ -1,4 +1,4 @@
-import React, { createRef, useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { Tooltip } from "@patternfly/react-core";
 import { CogIcon, InfoCircleIcon, KeyIcon } from "@patternfly/react-icons";
 import { FlatEnvironment } from "@/Core";
@@ -22,7 +22,7 @@ interface Props {
 
 export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
   const { authHelper, environmentHandler } = useContext(DependencyContext);
-  const tokenTooltipRef = createRef<HTMLElement>();
+  const tokenTooltipRef = useRef<HTMLElement>();
   const selected = environmentHandler.useSelected();
   const tokenTabDisabled = authHelper.isDisabled();
 
@@ -74,7 +74,7 @@ const configurationTab = (environmentId: string): TabDescriptor<TabKey> => ({
 
 const tokensTab = (
   isDisabled: boolean,
-  ref: React.Ref<HTMLElement>
+  ref: React.MutableRefObject<HTMLElement | undefined>
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Tokens,
   title: words("settings.tabs.tokens"),
