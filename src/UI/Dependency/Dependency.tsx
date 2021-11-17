@@ -8,6 +8,7 @@ import {
   FeatureManager,
   RouteManager,
   EnvironmentHandler,
+  AuthHelper,
 } from "@/Core";
 import {
   DummyCommandResolver,
@@ -18,6 +19,7 @@ import {
   DummyUrlManager,
   DummyRouteManager,
   DummyEnvironmentHandler,
+  DummyAuthHelper,
 } from "./Dummy";
 
 export interface Dependencies {
@@ -29,6 +31,7 @@ export interface Dependencies {
   featureManager: FeatureManager;
   routeManager: RouteManager;
   environmentHandler: EnvironmentHandler;
+  authHelper: AuthHelper;
 }
 
 export const DependencyContext = createContext<Dependencies>({
@@ -40,6 +43,7 @@ export const DependencyContext = createContext<Dependencies>({
   featureManager: new DummyFeatureManager(),
   routeManager: new DummyRouteManager(),
   environmentHandler: new DummyEnvironmentHandler(),
+  authHelper: new DummyAuthHelper(),
 });
 
 export const DependencyProvider: React.FC<{
@@ -54,6 +58,7 @@ export const DependencyProvider: React.FC<{
     featureManager,
     routeManager,
     environmentHandler,
+    authHelper,
   },
   children,
 }) => (
@@ -68,6 +73,7 @@ export const DependencyProvider: React.FC<{
       featureManager: featureManager || new DummyFeatureManager(),
       routeManager: routeManager || new DummyRouteManager(),
       environmentHandler: environmentHandler || new DummyEnvironmentHandler(),
+      authHelper: authHelper || new DummyAuthHelper(),
     }}
   >
     {children}

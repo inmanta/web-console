@@ -11,6 +11,7 @@ export * from "./Diagnostics";
 export * from "./EnvironmentDetails";
 export * from "./EnvironmentSettings";
 export * from "./Events";
+export * from "./GenerateToken";
 export * from "./GetInstance";
 export * from "./GetServerStatus";
 export * from "./HaltEnvironment";

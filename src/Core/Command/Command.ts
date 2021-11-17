@@ -12,6 +12,7 @@ import {
 } from "./DeleteEnvironment";
 import { DeleteInstance, DeleteInstanceManifest } from "./DeleteInstance";
 import { DeleteService, DeleteServiceManifest } from "./DeleteService";
+import { GenerateToken, GenerateTokenManifest } from "./GenerateToken";
 import { HaltEnvironment, HaltEnvironmentManifest } from "./HaltEnvironment";
 import {
   ModifyEnvironment,
@@ -60,7 +61,8 @@ export type Command =
   | CreateProject
   | CreateEnvironment
   | UpdateEnvironmentSetting
-  | ResetEnvironmentSetting;
+  | ResetEnvironmentSetting
+  | GenerateToken;
 
 export type Type = Command;
 
@@ -86,6 +88,7 @@ interface Manifest {
   CreateEnvironment: CreateEnvironmentManifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
   ResetEnvironmentSetting: ResetEnvironmentSettingManifest;
+  GenerateToken: GenerateTokenManifest;
 }
 
 /**
