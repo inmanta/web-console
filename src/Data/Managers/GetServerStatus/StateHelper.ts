@@ -1,5 +1,5 @@
 import { RemoteData, ServerStatus } from "@/Core";
-import { PrimaryStateHelper } from "@/Data";
+import { PrimaryStateHelper } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
 export class GetServerStatusStateHelper extends PrimaryStateHelper<"GetServerStatus"> {
