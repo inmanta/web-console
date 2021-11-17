@@ -17,8 +17,6 @@ export const Page: React.FC = () => {
     kind: "GetServerStatus",
   });
 
-  console.log("StatusPage");
-
   return (
     <PageSectionWithTitle title={words("status.title")}>
       <Description>{words("status.description")}</Description>
