@@ -158,3 +158,33 @@ test("GIVEN a Scheduler WHEN unregistering a task during its ongoing effect THEN
   expect(taskA.update).not.toBeCalled();
   expect(taskB.update).toHaveBeenCalledTimes(1);
 });
+
+test("GIVEN a Scheduler WHEN unregistering + reregistering a task during its ongoing effect THEN the task's update is not executed", async () => {
+  const scheduler = new SchedulerImpl(5000);
+
+  const slowEffect = async () =>
+    new Promise<void>((resolve) => {
+      window.setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
+
+  const taskA = { effect: jest.fn(slowEffect), update: jest.fn() };
+  const taskA2 = { effect: jest.fn(async () => undefined), update: jest.fn() };
+  const taskB = { effect: jest.fn(async () => undefined), update: jest.fn() };
+
+  scheduler.register("taskA", taskA);
+  scheduler.register("taskB", taskB);
+
+  jest.advanceTimersByTime(5000);
+  await flushPromises();
+
+  scheduler.unregister("taskA");
+  scheduler.register("taskA", taskA2);
+  jest.advanceTimersByTime(2000);
+  await flushPromises();
+
+  expect(taskA.update).not.toBeCalled();
+  expect(taskA2.update).not.toBeCalled();
+  expect(taskB.update).toHaveBeenCalledTimes(1);
+});
