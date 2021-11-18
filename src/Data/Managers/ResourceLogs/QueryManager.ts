@@ -15,7 +15,7 @@ export class ResourceLogsQueryManager extends PrimaryContinuousQueryManagerWithE
       apiHelper,
       stateHelper,
       scheduler,
-      (query, environment) => environment,
+      ({ kind, id }) => `${kind}_${id}`,
       ({ pageSize, filter, sort }, environment) => [
         environment,
         pageSize.value,

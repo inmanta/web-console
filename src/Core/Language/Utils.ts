@@ -89,3 +89,19 @@ export const keepKeys = (
     }
     return acc;
   }, {});
+
+export const resolvePromiseRecord = async (
+  record: Record<string, Promise<unknown>>
+): Promise<Record<string, unknown>> => {
+  const list = Object.entries(record);
+  const promises = list.map(([, promise]) => promise);
+  const results = await Promise.all(promises);
+  const resultList: [string, unknown][] = results.map((result, index) => [
+    list[index][0],
+    result,
+  ]);
+  return resultList.reduce<Record<string, unknown>>((acc, [id, result]) => {
+    acc[id] = result;
+    return acc;
+  }, {});
+};

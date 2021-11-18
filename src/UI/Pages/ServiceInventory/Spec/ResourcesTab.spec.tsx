@@ -36,11 +36,14 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
 
-  const tasks = scheduler.getTasks();
   const serviceInstancesTask = Maybe.orNull(
-    tasks.get(ServiceInstance.a.service_entity)
+    scheduler.tasks.get(
+      `GetServiceInstances_${ServiceInstance.a.service_entity}`
+    )
   );
-  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.a.id));
+  const resourcesTask = Maybe.orNull(
+    scheduler.tasks.get(`GetInstanceResources_${ServiceInstance.a.id}`)
+  );
 
   expect(serviceInstancesTask?.effect).not.toBeCalled();
   expect(resourcesTask?.effect).not.toBeCalled();
@@ -71,11 +74,14 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
 
-  const tasks = scheduler.getTasks();
   const serviceInstancesTask = Maybe.orNull(
-    tasks.get(ServiceInstance.a.service_entity)
+    scheduler.tasks.get(
+      `GetServiceInstances_${ServiceInstance.a.service_entity}`
+    )
   );
-  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.a.id));
+  const resourcesTask = Maybe.orNull(
+    scheduler.tasks.get(`GetInstanceResources_${ServiceInstance.a.id}`)
+  );
 
   jest.advanceTimersByTime(5000);
 

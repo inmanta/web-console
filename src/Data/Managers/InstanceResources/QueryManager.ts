@@ -12,7 +12,7 @@ export class InstanceResourcesQueryManager extends PrimaryContinuousQueryManager
       apiHelper,
       stateHelper,
       scheduler,
-      ({ id }) => id,
+      ({ kind, id }) => `${kind}_${id}`,
       ({ id, version }) => [id, version],
       "GetInstanceResources",
       ({ service_entity, id, version }) =>

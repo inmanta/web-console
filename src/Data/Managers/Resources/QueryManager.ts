@@ -15,7 +15,7 @@ export class ResourcesQueryManager extends PrimaryContinuousQueryManagerWithEnv<
       apiHelper,
       stateHelper,
       scheduler,
-      (query, environment) => environment,
+      ({ kind }, environment) => `${kind}_${environment}`,
       ({ filter, sort, pageSize }, environment) => [
         environment,
         pageSize.value,

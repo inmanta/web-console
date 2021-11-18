@@ -12,7 +12,7 @@ export class ResourceDetailsQueryManager extends PrimaryContinuousQueryManagerWi
       apiHelper,
       stateHelper,
       scheduler,
-      ({ id }) => id,
+      ({ kind, id }) => `${kind}_${id}`,
       ({ id }) => [id],
       "GetResourceDetails",
       ({ id }) => `/api/v2/resource/${id}`,

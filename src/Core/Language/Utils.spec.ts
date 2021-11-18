@@ -3,6 +3,7 @@ import {
   stringifyList,
   getKeysExcluding,
   keepKeys,
+  resolvePromiseRecord,
 } from "./Utils";
 
 test("toggleValueInList", () => {
@@ -35,4 +36,16 @@ test("keepKeys", () => {
 
 test("keepKeys", () => {
   expect(keepKeys(["a", "b"], { a: 1, c: 2, d: 3 })).toEqual({ a: 1 });
+});
+
+test("resolvePromiseRecord", async () => {
+  const promiseRecord: Record<string, Promise<unknown>> = {
+    a: new Promise((resolve) => resolve(123)),
+    b: new Promise((resolve) => resolve("blabla")),
+  };
+
+  expect(await resolvePromiseRecord(promiseRecord)).toEqual({
+    a: 123,
+    b: "blabla",
+  });
 });

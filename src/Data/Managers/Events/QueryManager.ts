@@ -15,7 +15,7 @@ export class EventsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"Ge
       apiHelper,
       stateHelper,
       scheduler,
-      ({ id }) => id,
+      ({ kind, id }) => `${kind}_${id}`,
       ({ id, service_entity, sort, filter, pageSize }) => [
         id,
         service_entity,

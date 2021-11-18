@@ -19,3 +19,4 @@ export * as CompileDetailsData from "./CompileDetails";
 export * as ServerStatus from "./ServerStatus";
 export * as EnvironmentSettings from "./EnvironmentSettings";
 export * as Environment from "./Environment";
+export * as ServiceInventory from "./ServiceInventory";

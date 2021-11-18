@@ -12,7 +12,7 @@ export class GetInstanceLogsQueryManager extends PrimaryContinuousQueryManagerWi
       apiHelper,
       stateHelper,
       scheduler,
-      ({ id }) => id,
+      ({ kind, id }) => `${kind}_${id}`,
       ({ id, service_entity }) => [id, service_entity],
       "GetInstanceLogs",
       ({ service_entity, id }) =>

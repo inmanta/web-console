@@ -15,7 +15,7 @@ export class CompileReportsQueryManager extends PrimaryContinuousQueryManagerWit
       apiHelper,
       stateHelper,
       scheduler,
-      (query, environment) => environment,
+      ({ kind }, environment) => `${kind}_${environment}`,
       ({ pageSize, sort, filter }, environment) => [
         environment,
         pageSize.value,
