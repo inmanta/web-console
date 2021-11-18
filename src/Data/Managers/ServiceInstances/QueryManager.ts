@@ -20,7 +20,7 @@ export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManagerW
       apiHelper,
       stateHelper,
       scheduler,
-      ({ name }) => name,
+      ({ kind, name }) => `${kind}_${name}`,
       ({ name, filter, sort, pageSize }) => [
         name,
         stringifyFilter(filter),

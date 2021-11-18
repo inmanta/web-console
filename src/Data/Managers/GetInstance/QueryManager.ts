@@ -12,7 +12,7 @@ export class ServiceInstanceQueryManager extends PrimaryContinuousQueryManagerWi
       apiHelper,
       stateHelper,
       scheduler,
-      ({ id }) => id,
+      ({ kind, id }) => `${kind}_${id}`,
       ({ id }) => [id],
       "GetServiceInstance",
       ({ service_entity, id }) =>

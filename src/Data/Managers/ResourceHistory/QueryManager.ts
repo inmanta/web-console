@@ -15,7 +15,7 @@ export class ResourceHistoryQueryManager extends PrimaryContinuousQueryManagerWi
       apiHelper,
       stateHelper,
       scheduler,
-      (query, environment) => environment,
+      ({ kind, id }) => `${kind}_${id}`,
       ({ sort, pageSize }, environment) => [
         environment,
         pageSize.value,

@@ -123,7 +123,7 @@ test("GIVEN a Scheduler WHEN unregistering the first task THEN the first task is
   expect(taskB.update).toHaveBeenCalledTimes(2);
 });
 
-test.skip("GIVEN a Scheduler WHEN unregistering a task during its ongoing effect THEN the task's update is not executed", async () => {
+test("GIVEN a Scheduler WHEN unregistering a task during its ongoing effect THEN the task's update is not executed", async () => {
   const scheduler = new SchedulerImpl(5000);
 
   const slowEffect = async () =>

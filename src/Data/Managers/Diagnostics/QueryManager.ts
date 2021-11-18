@@ -12,7 +12,7 @@ export class DiagnosticsQueryManager extends PrimaryContinuousQueryManagerWithEn
       apiHelper,
       stateHelper,
       scheduler,
-      ({ id }) => id,
+      ({ kind, id }) => `${kind}_${id}`,
       ({ id, service_entity }) => [id, service_entity],
       "GetDiagnostics",
       ({ service_entity, id }) =>

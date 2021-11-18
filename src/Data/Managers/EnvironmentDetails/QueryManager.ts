@@ -12,7 +12,7 @@ export class EnvironmentDetailsQueryManager extends PrimaryContinuousQueryManage
       apiHelper,
       stateHelper,
       scheduler,
-      (query, environment) => `env-${environment}`,
+      ({ kind }, environment) => `${kind}_${environment}`,
       (query, environment) => [environment],
       "GetEnvironmentDetails",
       (query, environment) => `/api/v2/environment/${environment}`,

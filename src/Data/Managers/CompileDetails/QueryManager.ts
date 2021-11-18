@@ -12,7 +12,7 @@ export class CompileDetailsQueryManager extends PrimaryContinuousQueryManagerWit
       apiHelper,
       stateHelper,
       scheduler,
-      ({ id }) => id,
+      ({ id, kind }) => `${kind}_${id}`,
       ({ id }) => [id],
       "GetCompileDetails",
       ({ id }) => `/api/v2/compilereport/${id}`,
