@@ -127,7 +127,7 @@
     "@patternfly/react-icons": "^4.26.4",
     "@patternfly/react-styles": "^4.25.4",
     "@patternfly/react-table": "^4.37.8",
-    "@patternfly/react-tokens": "^4.14.1",
+    "@patternfly/react-tokens": "^4.27.4",
     "copy-to-clipboard": "^3.3.1",
     "dotenv-webpack": "^7.0.3",
     "easy-peasy": "^5.0.4",
