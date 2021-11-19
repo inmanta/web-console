@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump @patternfly/react-styles from 4.18.8 to 4.25.4'
+destination-branches:
+- master
+- iso4
+sections: {}
