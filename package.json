@@ -51,7 +51,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/fetch-mock": "^7.3.5",
-    "@types/jest": "^27.0.2",
+    "@types/jest": "^27.0.3",
     "@types/lodash": "^4.14.177",
     "@types/node": "^16.11.7",
     "@types/qs": "^6.9.7",
@@ -124,7 +124,7 @@
   "dependencies": {
     "@patternfly/react-charts": "^6.21.8",
     "@patternfly/react-core": "^4.162.3",
-    "@patternfly/react-icons": "^4.13.1",
+    "@patternfly/react-icons": "^4.26.4",
     "@patternfly/react-styles": "^4.12.5",
     "@patternfly/react-table": "^4.37.8",
     "@patternfly/react-tokens": "^4.14.1",
