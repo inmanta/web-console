@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump @patternfly/react-charts from 6.21.8 to 6.28.4'
+destination-branches:
+- master
+- iso4
+sections: {}
