@@ -14,6 +14,10 @@ import { DeleteInstance, DeleteInstanceManifest } from "./DeleteInstance";
 import { DeleteService, DeleteServiceManifest } from "./DeleteService";
 import { Deploy, DeployManifest } from "./Deploy";
 import { GenerateToken, GenerateTokenManifest } from "./GenerateToken";
+import {
+  GetSupportArchive,
+  GetSupportArchiveManifest,
+} from "./GetSupportArchive";
 import { HaltEnvironment, HaltEnvironmentManifest } from "./HaltEnvironment";
 import {
   ModifyEnvironment,
@@ -66,7 +70,8 @@ export type Command =
   | ResetEnvironmentSetting
   | GenerateToken
   | Deploy
-  | Repair;
+  | Repair
+  | GetSupportArchive;
 
 export type Type = Command;
 
@@ -95,6 +100,7 @@ interface Manifest {
   GenerateToken: GenerateTokenManifest;
   Deploy: DeployManifest;
   Repair: RepairManifest;
+  GetSupportArchive: GetSupportArchiveManifest;
 }
 
 /**

@@ -10,9 +10,11 @@ import {
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { StatusList } from "./StatusList";
+import { SupportArchive } from "./SupportArchive";
 
 export const Page: React.FC = () => {
-  const { urlManager, queryResolver } = useContext(DependencyContext);
+  const { urlManager, queryResolver, featureManager } =
+    useContext(DependencyContext);
   const [data, retry] = queryResolver.useContinuous<"GetServerStatus">({
     kind: "GetServerStatus",
   });
@@ -20,6 +22,7 @@ export const Page: React.FC = () => {
   return (
     <PageSectionWithTitle title={words("status.title")}>
       <Description>{words("status.description")}</Description>
+      {featureManager.isSupportEnabled() && <SupportArchive />}
       {RemoteData.fold(
         {
           notAsked: () => null,
