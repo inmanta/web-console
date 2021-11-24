@@ -16,7 +16,6 @@ import {
   PaginationWidget,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { EventsTableControls } from "./EventsTableControls";
 
@@ -44,7 +43,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
     sort,
     pageSize,
   });
-  const tablePresenter = new EventsTablePresenter(new MomentDatePresenter());
+  const tablePresenter = new EventsTablePresenter();
   const states = service.lifecycle.states.map((state) => state.name).sort();
 
   return (

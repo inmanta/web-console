@@ -7,6 +7,7 @@ import {
 } from "@patternfly/react-icons";
 import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
 import { ConfigTab, DisabledConfigTab } from "./ConfigTab";
@@ -50,6 +51,8 @@ export const Tabs: React.FC<Props> = ({
   />
 );
 
+const datePresenter = new MomentDatePresenter();
+
 const statusTab = (
   row: Row,
   state: React.ReactElement | null,
@@ -64,8 +67,8 @@ const statusTab = (
         instanceId: row.id.full,
         state,
         version: row.version,
-        createdAt: row.createdAt.full,
-        updatedAt: row.updatedAt.full,
+        createdAt: datePresenter.getFull(row.createdAt),
+        updatedAt: datePresenter.getFull(row.updatedAt),
         actions,
       }}
     />

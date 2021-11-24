@@ -96,10 +96,10 @@ export const InstanceRow: React.FC<Props> = ({
           </span>
         </Td>
         <Td dataLabel={words("inventory.column.createdAt")}>
-          <DateWithTooltip date={row.createdAt} />
+          <DateWithTooltip timestamp={row.createdAt} />
         </Td>
         <Td dataLabel={words("inventory.column.updatedAt")}>
-          <DateWithTooltip date={row.updatedAt} />
+          <DateWithTooltip timestamp={row.updatedAt} />
         </Td>
       </StyledRow>
       <Tr

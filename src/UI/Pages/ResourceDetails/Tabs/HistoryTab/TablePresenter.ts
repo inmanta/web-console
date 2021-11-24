@@ -26,7 +26,7 @@ export class ResourceHistoryTablePresenter
     return sourceData.map((resource) => ({
       attribute_hash: resource.attribute_hash,
       attributes: resource.attributes,
-      date: this.datePresenter.get(resource.date),
+      date: resource.date,
       numberOfDependencies: resource.requires.length,
       requires: resource.requires,
       id: `${resource.attribute_hash}-${resource.date}`,

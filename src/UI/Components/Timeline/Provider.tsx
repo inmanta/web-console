@@ -1,5 +1,6 @@
 import React from "react";
 import moment from "moment";
+import { useTickerWithInterval } from "@/UI/Utils";
 import { Timeline } from "./Timeline";
 
 interface Props {
@@ -13,6 +14,7 @@ export const Provider: React.FC<Props> = ({
   started,
   completed,
 }) => {
+  useTickerWithInterval(!(started && completed) ? "OneSecond" : "Never");
   const now = new Date(Date.now()).toISOString();
   return (
     <Timeline

@@ -1,5 +1,4 @@
 import { EventType } from "./EventType";
-import { DateInfo } from "./InventoryTable";
 import { LogLevelNumber } from "./LogLevel";
 
 export interface InstanceEvent {
@@ -22,7 +21,7 @@ export interface EventRow {
   id: string;
   serviceInstanceId: string;
   serviceInstanceVersion: number;
-  timestamp: DateInfo;
+  timestamp: string;
   source: string | null;
   destination: string | null;
   message: string;

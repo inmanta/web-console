@@ -41,7 +41,7 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
           }}
         />
         <Td dataLabel={words("resources.history.column.date")}>
-          <DateWithTooltip date={row.date} />
+          <DateWithTooltip timestamp={row.date} />
         </Td>
         <Td
           dataLabel={words("resources.history.column.numberOfDependencies")}
