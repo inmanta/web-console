@@ -9,22 +9,15 @@ interface Props {
   >;
 }
 
-export const Summary: React.FC<Props> = ({ data }) => {
-  return (
-    <>
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => null,
-          failed: () => null,
-          success: (result) => {
-            return (
-              <DeployStateChart summary={result.metadata.deploy_summary} />
-            );
-          },
-        },
-        data
-      )}
-    </>
+export const Summary: React.FC<Props> = ({ data }) =>
+  RemoteData.fold(
+    {
+      notAsked: () => null,
+      loading: () => null,
+      failed: () => null,
+      success: (result) => (
+        <DeployStateChart summary={result.metadata.deploy_summary} />
+      ),
+    },
+    data
   );
-};

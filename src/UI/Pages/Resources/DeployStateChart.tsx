@@ -23,10 +23,7 @@ interface Props {
 }
 
 export const DeployStateChart: React.FC<Props> = ({ summary }) => {
-  const done = Object.entries(summary.by_state || {})
-    .filter(([key]) => !TRANSIENT_STATES.includes(key))
-    .map(([, value]) => value)
-    .reduce((acc, current) => acc + current, 0);
+  const done = getResourcesInDoneState(summary.by_state || {});
   return (
     <div style={{ height: "20px", width: "500px" }}>
       <Chart
@@ -51,21 +48,34 @@ export const DeployStateChart: React.FC<Props> = ({ summary }) => {
           }}
         />
         <ChartStack horizontal>
-          {statesInOrder
-            .filter((state) => summary.by_state[state] !== undefined)
-            .map((state) => (
-              <ChartBar
-                key={state}
-                data={[{ name: state, x: "1", y: summary.by_state[state] }]}
-                style={{ data: { fill: stateToColor[state].value } }}
-                barWidth={20}
-              />
-            ))}
+          {getBarsForResourcesByState(summary.by_state)}
         </ChartStack>
       </Chart>
     </div>
   );
 };
+
+function getResourcesInDoneState(by_state: Record<string, number>): number {
+  return Object.entries(by_state)
+    .filter(([key]) => !TRANSIENT_STATES.includes(key))
+    .map(([, value]) => value)
+    .reduce((acc, current) => acc + current, 0);
+}
+
+function getBarsForResourcesByState(
+  by_state: Record<string, number>
+): React.ReactElement[] {
+  return statesInOrder
+    .filter((state) => by_state[state] !== undefined)
+    .map((state) => (
+      <ChartBar
+        key={state}
+        data={[{ name: state, x: "1", y: by_state[state] }]}
+        style={{ data: { fill: stateToColor[state].value } }}
+        barWidth={20}
+      />
+    ));
+}
 
 const stateToColor = {
   deployed: global_success_color_100,
