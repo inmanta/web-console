@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+// These values are in milliseconds
 const TWO_HOURS = 7200000;
 const ONE_HOUR = 3600000;
 const FIVE_MINUTES = 300000;
