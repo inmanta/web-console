@@ -1,6 +1,6 @@
 import React from "react";
 import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
-import { DateInfo, InstanceLog } from "@/Core";
+import { InstanceLog } from "@/Core";
 import {
   AttributesTable,
   EmptyView,
@@ -10,7 +10,6 @@ import {
   IconTabs,
   TabDescriptor,
 } from "@/UI/Components";
-import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { DetailsTab } from "./DetailsTab";
 
@@ -22,7 +21,7 @@ export enum TabKey {
 
 interface Props {
   log: InstanceLog;
-  timestamp: DateInfo;
+  timestamp: string;
   state: React.ReactElement;
   activeTab: TabKey;
   setActiveTab: (tab: TabKey) => void;
@@ -40,7 +39,7 @@ export const Tabs: React.FC<Props> = ({
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={[
-        detailsTab(state, log.version, timestamp.full),
+        detailsTab(state, log.version, timestamp),
         attributesTab(log),
         eventsTab(log),
       ]}
@@ -87,13 +86,13 @@ const eventsTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
       />
     ) : (
       <EventsTableWrapper
-        tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
+        tablePresenter={new EventsTablePresenter()}
         aria-label="EventTable-Success"
       >
         <EventsTableBody
           route="History"
           events={log.events}
-          tablePresenter={new EventsTablePresenter(new MomentDatePresenter())}
+          tablePresenter={new EventsTablePresenter()}
         />
       </EventsTableWrapper>
     ),

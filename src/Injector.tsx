@@ -18,8 +18,8 @@ import {
   DependencyProvider,
   EnvironmentHandlerImpl,
   EnvironmentModifierImpl,
+  UrlManagerImpl,
 } from "@/UI";
-import { UrlManagerImpl } from "@/UI/Utils";
 
 interface Props {
   store: Store;

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import { AttributesSummary, DateInfo, InstanceLog } from "@/Core";
+import { AttributesSummary, InstanceLog } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { DateWithTooltip } from "@/UI/Components";
 import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
@@ -14,7 +14,7 @@ interface Props {
   onToggle: () => void;
   numberOfColumns: number;
   log: InstanceLog;
-  timestamp: DateInfo;
+  timestamp: string;
   attributesSummary: AttributesSummary;
   state: React.ReactElement;
 }
@@ -56,7 +56,7 @@ export const InstanceLogRow: React.FC<Props> = ({
         />
         <Td dataLabel={"version"}>{id}</Td>
         <Td dataLabel={"timestamp"}>
-          <DateWithTooltip date={timestamp} />
+          <DateWithTooltip timestamp={timestamp} />
         </Td>
         <Td dataLabel={"state"}>{state}</Td>
         <Td dataLabel={"Attributes"} ref={rowRef}>

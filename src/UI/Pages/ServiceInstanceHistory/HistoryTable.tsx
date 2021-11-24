@@ -45,7 +45,7 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
             onToggle={onExpansion(id)}
             isExpanded={isExpanded(id)}
             log={dict[id]}
-            timestamp={datePresenter.get(dict[id].timestamp)}
+            timestamp={datePresenter.getFull(dict[id].timestamp)}
             attributesSummary={attributesPresenter.getSummary(
               dict[id].candidate_attributes,
               dict[id].active_attributes,

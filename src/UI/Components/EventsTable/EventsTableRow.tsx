@@ -41,7 +41,7 @@ export const EventsTableRow: React.FC<Props> = ({
         <EventIcon eventType={row.eventType} />
       </Td>
       <Td>
-        <DateWithTooltip date={row.timestamp} />
+        <DateWithTooltip timestamp={row.timestamp} />
       </Td>
       <Td>{row.serviceInstanceVersion}</Td>
       <Td>{row.source}</Td>

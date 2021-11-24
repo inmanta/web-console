@@ -26,7 +26,7 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
           {row.inProgress && <Spinner isSVG size="md" />}
         </Td>
         <Td dataLabel={words("compileReports.columns.requested")}>
-          <DateWithTooltip date={row.requested} />
+          <DateWithTooltip timestamp={row.requested} />
         </Td>
         <Td dataLabel={words("compileReports.columns.message")}>
           {row.message}

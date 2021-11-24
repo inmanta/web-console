@@ -48,8 +48,8 @@ RequestedWithProvider.args = {
   requested: nowMin3,
 };
 
-export const StartedWitProvider = ProviderTemplate.bind({});
-StartedWitProvider.args = {
+export const StartedWithProvider = ProviderTemplate.bind({});
+StartedWithProvider.args = {
   requested: nowMin3,
   started: nowMin1,
 };
