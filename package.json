@@ -4,7 +4,7 @@
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "prepare": "husky install",
     "prebuild": "yarn clean",
