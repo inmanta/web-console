@@ -48,7 +48,14 @@ export const DeployStateChart: React.FC<Props> = ({ summary }) => {
           }}
         />
         <ChartStack horizontal>
-          {getBarsForResourcesByState(summary.by_state)}
+          {getDataforBars(summary.by_state).map(({ name, y, color }) => (
+            <ChartBar
+              key={name}
+              data={[{ name: name, x: "1", y }]}
+              style={{ data: { fill: color } }}
+              barWidth={20}
+            />
+          ))}
         </ChartStack>
       </Chart>
     </div>
@@ -62,19 +69,20 @@ function getResourcesInDoneState(by_state: Record<string, number>): number {
     .reduce((acc, current) => acc + current, 0);
 }
 
-function getBarsForResourcesByState(
-  by_state: Record<string, number>
-): React.ReactElement[] {
+interface BarData {
+  name: string;
+  y: number;
+  color: string;
+}
+
+function getDataforBars(by_state: Record<string, number>): BarData[] {
   return statesInOrder
     .filter((state) => by_state[state] !== undefined)
-    .map((state) => (
-      <ChartBar
-        key={state}
-        data={[{ name: state, x: "1", y: by_state[state] }]}
-        style={{ data: { fill: stateToColor[state].value } }}
-        barWidth={20}
-      />
-    ));
+    .map((state) => ({
+      name: state,
+      y: by_state[state],
+      color: stateToColor[state].value,
+    }));
 }
 
 const stateToColor = {
