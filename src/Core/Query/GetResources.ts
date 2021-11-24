@@ -3,6 +3,7 @@ import {
   Resource,
   RawResource,
   ResourceParams,
+  ResourceMetadata,
 } from "@/Core/Domain";
 
 export interface GetResources extends ResourceParams.ResourceParams {
@@ -14,17 +15,17 @@ export interface GetResourcesManifest {
   apiResponse: {
     data: RawResource[];
     links: Pagination.Links;
-    metadata: Pagination.Metadata;
+    metadata: ResourceMetadata;
   };
   data: {
     data: Resource[];
     links: Pagination.Links;
-    metadata: Pagination.Metadata;
+    metadata: ResourceMetadata;
   };
   usedData: {
     data: Resource[];
     handlers: Pagination.Handlers;
-    metadata: Pagination.Metadata;
+    metadata: ResourceMetadata;
   };
   query: GetResources;
 }

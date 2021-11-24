@@ -64,7 +64,13 @@ test("ResourcesView shows empty table", async () => {
   apiHelper.resolve(
     Either.right({
       data: [],
-      metadata: { total: 0, before: 0, after: 0, page_size: 10 },
+      metadata: {
+        total: 0,
+        before: 0,
+        after: 0,
+        page_size: 10,
+        deploy_summary: { total: 0, by_state: {} },
+      },
       links: { self: "" },
     })
   );
@@ -190,7 +196,7 @@ it.each`
     }
 
     expect(apiHelper.pendingRequests[0].url).toEqual(
-      `/api/v2/resource?limit=20&filter.${filterUrlName}=${filterValue}&sort=resource_type.asc`
+      `/api/v2/resource?deploy_summary=True&limit=20&filter.${filterUrlName}=${filterValue}&sort=resource_type.asc`
     );
 
     await act(async () => {
@@ -209,3 +215,17 @@ it.each`
     expect(rowsAfter).toHaveLength(2);
   }
 );
+
+test("ResourcesView shows deploy state bar", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  apiHelper.resolve(Either.right(Resource.response));
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourcesView-Success" })
+  ).toBeInTheDocument();
+
+  expect(
+    await screen.findByRole("img", { name: "Deployment state summary" })
+  ).toBeInTheDocument();
+});

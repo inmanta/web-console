@@ -1,3 +1,5 @@
+import { Metadata } from "./Pagination";
+
 export interface Resource {
   resource_id: string;
   requires: string[];
@@ -69,3 +71,14 @@ export interface RawResourceDetails {
   attributes: Record<string, unknown>;
   requires_status: Record<string, string>;
 }
+
+export interface ResourceDeploySummary {
+  total: number;
+  by_state: Record<string, number>;
+}
+
+export interface ResourceMetadata extends Metadata {
+  deploy_summary: ResourceDeploySummary;
+}
+
+export const TRANSIENT_STATES = ["available", "deploying", "processing_events"];

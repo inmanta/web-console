@@ -16,6 +16,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ResourceFilterContext } from "./ResourceFilterContext";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
+import { Summary } from "./Summary";
 import { ResourceTableControls } from "./TableControls";
 
 export const Wrapper: React.FC = ({ children }) => (
@@ -60,6 +61,7 @@ export const Page: React.FC = () => {
 
   return (
     <Wrapper>
+      <Summary data={data} />
       <ResourceFilterContext.Provider value={{ setFilter }}>
         {tableControls}
         {RemoteData.fold(
