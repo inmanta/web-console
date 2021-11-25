@@ -7,12 +7,14 @@ import { TypeFilter } from "./TypeFilter";
 import { ValueFilter } from "./ValueFilter";
 
 interface Props {
+  summaryWidget: React.ReactNode;
   paginationWidget: React.ReactNode;
   filter: ResourceParams.Filter;
   setFilter: (filter: ResourceParams.Filter) => void;
 }
 
 export const ResourceTableControls: React.FC<Props> = ({
+  summaryWidget,
   paginationWidget,
   filter,
   setFilter,
@@ -20,6 +22,7 @@ export const ResourceTableControls: React.FC<Props> = ({
   <>
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
+        {summaryWidget}
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
       <ToolbarContent>

@@ -47,6 +47,7 @@ export const Page: React.FC = () => {
 
   const tableControls = (
     <ResourceTableControls
+      summaryWidget={<Summary data={data} />}
       paginationWidget={
         <PaginationWidget
           data={data}
@@ -61,7 +62,6 @@ export const Page: React.FC = () => {
 
   return (
     <Wrapper>
-      <Summary data={data} />
       <ResourceFilterContext.Provider value={{ setFilter }}>
         {tableControls}
         {RemoteData.fold(

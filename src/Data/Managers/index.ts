@@ -32,3 +32,5 @@ export * from "./ServiceInstances";
 export * from "./Services";
 export * from "./TriggerInstanceUpdate";
 export * from "./TriggerSetState";
+export * from "./Deploy";
+export * from "./Repair";
