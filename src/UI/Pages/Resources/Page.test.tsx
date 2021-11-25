@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either, EnvironmentDetails, RemoteData } from "@/Core";
+import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
@@ -18,6 +18,7 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  EnvironmentDetails,
   Resource,
   StaticScheduler,
 } from "@/Test";
@@ -298,7 +299,7 @@ test("Given the ResourcesView When environment is halted, then deploy and repair
   environmentModifier.setEnvironment(environment);
   store.dispatch.environmentDetails.setData({
     id: environment,
-    value: RemoteData.success({ halted: true } as EnvironmentDetails),
+    value: RemoteData.success(EnvironmentDetails.halted),
   });
 
   render(component);

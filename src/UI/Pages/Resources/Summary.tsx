@@ -1,5 +1,5 @@
 import React from "react";
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import { ToolbarItem } from "@patternfly/react-core";
 import { Query, RemoteData } from "@/Core";
 import { DeployButton } from "./DeployButton";
 import { DeployStateChart } from "./DeployStateChart";
@@ -19,19 +19,17 @@ export const Summary: React.FC<Props> = ({ data }) =>
       loading: () => null,
       failed: () => null,
       success: (result) => (
-        <Toolbar>
-          <ToolbarContent>
-            <ToolbarItem>
-              <DeployStateChart summary={result.metadata.deploy_summary} />
-            </ToolbarItem>
-            <ToolbarItem>
-              <DeployButton />
-            </ToolbarItem>
-            <ToolbarItem>
-              <RepairButton />
-            </ToolbarItem>
-          </ToolbarContent>
-        </Toolbar>
+        <>
+          <ToolbarItem>
+            <DeployStateChart summary={result.metadata.deploy_summary} />
+          </ToolbarItem>
+          <ToolbarItem>
+            <DeployButton />
+          </ToolbarItem>
+          <ToolbarItem>
+            <RepairButton />
+          </ToolbarItem>
+        </>
       ),
     },
     data
