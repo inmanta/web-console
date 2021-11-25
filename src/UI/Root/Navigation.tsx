@@ -103,6 +103,12 @@ const resourceManager = (Route: RouteDictionary): Group => ({
       url: Route.Resources.path,
       external: false,
     },
+    {
+      id: Route.Agents.kind,
+      label: Route.Agents.label,
+      url: Route.Agents.path,
+      external: false,
+    },
   ],
 });
 

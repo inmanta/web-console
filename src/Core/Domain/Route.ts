@@ -9,6 +9,7 @@ const kinds = [
   "Diagnose",
   "Events",
   "Resources",
+  "Agents",
   "CompileReports",
   "CompileDetails",
   "ResourceDetails",
