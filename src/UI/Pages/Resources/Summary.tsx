@@ -1,6 +1,9 @@
 import React from "react";
+import { ToolbarItem } from "@patternfly/react-core";
 import { Query, RemoteData } from "@/Core";
+import { DeployButton } from "./DeployButton";
 import { DeployStateChart } from "./DeployStateChart";
+import { RepairButton } from "./RepairButton";
 
 interface Props {
   data: RemoteData.Type<
@@ -16,7 +19,17 @@ export const Summary: React.FC<Props> = ({ data }) =>
       loading: () => null,
       failed: () => null,
       success: (result) => (
-        <DeployStateChart summary={result.metadata.deploy_summary} />
+        <>
+          <ToolbarItem>
+            <DeployStateChart summary={result.metadata.deploy_summary} />
+          </ToolbarItem>
+          <ToolbarItem>
+            <DeployButton />
+          </ToolbarItem>
+          <ToolbarItem>
+            <RepairButton />
+          </ToolbarItem>
+        </>
       ),
     },
     data

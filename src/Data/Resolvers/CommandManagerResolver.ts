@@ -32,6 +32,8 @@ import {
   EnvironmentsUpdater,
   GetEnvironmentsStateHelper,
   GenerateTokenCommandManager,
+  RepairCommandManager,
+  DeployCommandManager,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -168,6 +170,8 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environment
       ),
       new GenerateTokenCommandManager(this.apiHelper, environment),
+      new DeployCommandManager(this.apiHelper, environment),
+      new RepairCommandManager(this.apiHelper, environment),
     ];
   }
 }

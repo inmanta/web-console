@@ -239,6 +239,8 @@ const dict = {
   "resources.filters.value.placeholder": "Value...",
   "resources.filters.type.placeholder": "Type...",
   "resources.deploySummary.title": "Deployment state summary",
+  "resources.deploySummary.deploy": "Deploy",
+  "resources.deploySummary.repair": "Repair",
   "resources.details.title": "Resource Details",
   "resources.info.title": "Info",
   "resources.info.id": "Id",

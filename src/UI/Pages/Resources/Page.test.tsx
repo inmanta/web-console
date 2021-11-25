@@ -3,17 +3,22 @@ import { MemoryRouter } from "react-router-dom";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
   ResourcesQueryManager,
   ResourcesStateHelper,
+  CommandResolverImpl,
+  DeployCommandManager,
+  RepairCommandManager,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
+  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  EnvironmentDetails,
   Resource,
   StaticScheduler,
 } from "@/Test";
@@ -34,6 +39,12 @@ function setup() {
       ),
     ])
   );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new DeployCommandManager(apiHelper, environment),
+      new RepairCommandManager(apiHelper, environment),
+    ])
+  );
 
   const component = (
     <MemoryRouter>
@@ -41,6 +52,7 @@ function setup() {
         dependencies={{
           ...dependencies,
           queryResolver,
+          commandResolver,
         }}
       >
         <StoreProvider store={store}>
@@ -50,7 +62,14 @@ function setup() {
     </MemoryRouter>
   );
 
-  return { component, apiHelper, scheduler };
+  return {
+    component,
+    apiHelper,
+    scheduler,
+    environment,
+    store,
+    environmentModifier: dependencies.environmentModifier,
+  };
 }
 
 test("ResourcesView shows empty table", async () => {
@@ -228,4 +247,68 @@ test("ResourcesView shows deploy state bar", async () => {
   expect(
     await screen.findByRole("img", { name: "Deployment state summary" })
   ).toBeInTheDocument();
+});
+
+test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async () => {
+  const { component, apiHelper, environment } = setup();
+  render(component);
+  apiHelper.resolve(Either.right(Resource.response));
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourcesView-Success" })
+  ).toBeInTheDocument();
+
+  userEvent.click(await screen.findByRole("button", { name: "Deploy" }));
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "POST",
+      url: "/api/v1/deploy",
+      environment,
+      body: {
+        agent_trigger_method: "push_incremental_deploy",
+      },
+    },
+  ]);
+});
+
+test("Given the ResourcesView When clicking on repair, then the approriate backend request is fired", async () => {
+  const { component, apiHelper, environment } = setup();
+  render(component);
+  apiHelper.resolve(Either.right(Resource.response));
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourcesView-Success" })
+  ).toBeInTheDocument();
+
+  userEvent.click(await screen.findByRole("button", { name: "Repair" }));
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "POST",
+      url: "/api/v1/deploy",
+      environment,
+      body: {
+        agent_trigger_method: "push_full_deploy",
+      },
+    },
+  ]);
+});
+
+test("Given the ResourcesView When environment is halted, then deploy and repair buttons are disabled", async () => {
+  const { component, apiHelper, environment, store, environmentModifier } =
+    setup();
+  environmentModifier.setEnvironment(environment);
+  store.dispatch.environmentDetails.setData({
+    id: environment,
+    value: RemoteData.success(EnvironmentDetails.halted),
+  });
+
+  render(component);
+  apiHelper.resolve(Either.right(Resource.response));
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourcesView-Success" })
+  ).toBeInTheDocument();
+
+  expect(await screen.findByRole("button", { name: "Repair" })).toBeDisabled();
+  expect(await screen.findByRole("button", { name: "Deploy" })).toBeDisabled();
 });

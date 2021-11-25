@@ -1,0 +1,4 @@
+description: Add deploy and repair buttons
+issue-nr: 1807
+change-type: minor
+destination-branches: [master, iso4]
