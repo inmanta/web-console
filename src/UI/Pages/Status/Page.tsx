@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import {
@@ -21,8 +22,17 @@ export const Page: React.FC = () => {
 
   return (
     <PageSectionWithTitle title={words("status.title")}>
-      <Description>{words("status.description")}</Description>
-      {featureManager.isSupportEnabled() && <SupportArchive />}
+      <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+        <FlexItem>
+          <Description>{words("status.description")}</Description>
+        </FlexItem>
+        {featureManager.isSupportEnabled() && (
+          <FlexItem>
+            <SupportArchive />
+          </FlexItem>
+        )}
+      </Flex>
+
       {RemoteData.fold(
         {
           notAsked: () => null,

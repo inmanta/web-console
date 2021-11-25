@@ -1,26 +1,13 @@
 import React, { useContext, useState } from "react";
-import { Alert, AlertActionCloseButton, Button } from "@patternfly/react-core";
-import { saveAs } from "file-saver";
-import JSZip from "jszip";
+import {
+  Alert,
+  AlertActionCloseButton,
+  AlertGroup,
+  Button,
+} from "@patternfly/react-core";
 import { Either } from "@/Core";
+import { ArchiveHelper } from "@/Data";
 import { DependencyContext } from "@/UI/Dependency";
-
-class ArchiveHelper {
-  /**
-   * Generates a blob based on the provided string
-   * @param value a base64 encoded string of zip archive
-   */
-  async generateBlob(value: string): Promise<Blob> {
-    const zip = await JSZip.loadAsync(value, { base64: true });
-    return await zip.generateAsync({ type: "blob" });
-  }
-
-  triggerDownload(blob: Blob): void {
-    saveAs(blob, "support-archive.zip");
-  }
-}
-
-const archiveHelper = new ArchiveHelper();
 
 type Phase = "Default" | "Downloading" | "Generating";
 
@@ -31,6 +18,7 @@ export const SupportArchive: React.FC = () => {
   const trigger = commandResolver.getTrigger<"GetSupportArchive">({
     kind: "GetSupportArchive",
   });
+  const archiveHelper = new ArchiveHelper();
 
   const onClick = async () => {
     setPhase("Downloading");
@@ -49,7 +37,6 @@ export const SupportArchive: React.FC = () => {
 
   return (
     <>
-      <span>Support Archive: </span>
       <Button
         spinnerAriaValueText={phaseLabelRecord[phase]}
         isLoading={phase !== "Default"}
@@ -60,21 +47,24 @@ export const SupportArchive: React.FC = () => {
         {phaseLabelRecord[phase]}
       </Button>
       {error && (
-        <Alert
-          variant="danger"
-          isInline
-          title="Something went wrong with downloading the support archive"
-          actionClose={<AlertActionCloseButton onClose={close} />}
-        >
-          {error}
-        </Alert>
+        <AlertGroup isToast isLiveRegion>
+          <Alert
+            variant="danger"
+            title="Something went wrong with downloading the support archive"
+            actionClose={
+              <AlertActionCloseButton onClose={() => setError(null)} />
+            }
+          >
+            {error}
+          </Alert>
+        </AlertGroup>
       )}
     </>
   );
 };
 
 const phaseLabelRecord: Record<Phase, string> = {
-  Default: "Download",
-  Downloading: "Fetching data",
-  Generating: "Generating archive",
+  Default: "Download support archive",
+  Downloading: "Fetching support data",
+  Generating: "Generating support archive",
 };
