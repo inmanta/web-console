@@ -1,4 +1,4 @@
 description: Add facts tab
 issue-nr: 978
-change-type: patch
+change-type: minor
 destination-branches: [master, iso4]
