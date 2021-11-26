@@ -35,3 +35,4 @@ export * from "./TriggerInstanceUpdate";
 export * from "./TriggerSetState";
 export * from "./Deploy";
 export * from "./Repair";
+export * from "./GetFacts";

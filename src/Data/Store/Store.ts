@@ -18,6 +18,7 @@ import {
 } from "./EnvironmentSettingsSlice";
 import { EnvironmentsSlice, environmentsSlice } from "./EnvironmentsSlice";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
+import { factsSlice, FactsSlice } from "./FactsSlice";
 import {
   InstanceConfigSlice,
   instanceConfigSlice,
@@ -72,6 +73,7 @@ export interface StoreModel {
   compileReports: CompileReportsSlice;
   compileDetails: CompileDetailsSlice;
   environmentSettings: EnvironmentSettingsSlice;
+  facts: FactsSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -96,4 +98,5 @@ export const storeModel: StoreModel = {
   compileReports: compileReportsSlice,
   compileDetails: compileDetailsSlice,
   environmentSettings: environmentSettingsSlice,
+  facts: factsSlice,
 };

@@ -32,3 +32,4 @@ export * from "./CompileError";
 export * as DateRange from "./DateRange";
 export * from "./ServerStatus";
 export * from "./Token";
+export * from "./Fact";

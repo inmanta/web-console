@@ -49,6 +49,8 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
+  GetFactsQueryManager,
+  GetFactsStateHelper,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -197,6 +199,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new ResourceLogsQueryManager(
         this.apiHelper,
         new ResourceLogsStateHelper(this.store),
+        scheduler
+      ),
+      new GetFactsQueryManager(
+        this.apiHelper,
+        new GetFactsStateHelper(this.store),
         scheduler
       ),
     ];
