@@ -74,3 +74,8 @@ The main reasons for this are:
 - Patternfly, the component library we use also only supports these browsers
 - improving security
 - keeping up to date with the new developments of the browser APIs
+
+## ZIP Archive
+
+library for archive handling: https://stuk.github.io/jszip/
+library for saving a file: https://www.npmjs.com/package/file-saver

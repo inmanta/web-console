@@ -1,4 +1,5 @@
 export * from "./ApiHelper";
+export * from "./ArchiveHelper";
 export * from "./AuthHelper";
 export * from "./BaseUrlManager";
 export * from "./CommandManager";
@@ -6,6 +7,7 @@ export * from "./CommandResolver";
 export * from "./ConfigFinalizer";
 export * from "./FeatureManager";
 export * from "./FileFetcher";
+export * from "./FileManager";
 export * from "./Formatter";
 export * from "./KeyMaker";
 export * from "./ManagerResolver";

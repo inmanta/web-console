@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import {
@@ -10,16 +11,28 @@ import {
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { StatusList } from "./StatusList";
+import { SupportArchive } from "./SupportArchive";
 
 export const Page: React.FC = () => {
-  const { urlManager, queryResolver } = useContext(DependencyContext);
+  const { urlManager, queryResolver, featureManager } =
+    useContext(DependencyContext);
   const [data, retry] = queryResolver.useContinuous<"GetServerStatus">({
     kind: "GetServerStatus",
   });
 
   return (
     <PageSectionWithTitle title={words("status.title")}>
-      <Description>{words("status.description")}</Description>
+      <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
+        <FlexItem>
+          <Description>{words("status.description")}</Description>
+        </FlexItem>
+        {featureManager.isSupportEnabled() && (
+          <FlexItem>
+            <SupportArchive />
+          </FlexItem>
+        )}
+      </Flex>
+
       {RemoteData.fold(
         {
           notAsked: () => null,

@@ -11,6 +11,8 @@ import {
   CommandManagerResolver,
   QueryManagerResolver,
   Store,
+  PrimaryArchiveHelper,
+  PrimaryFileManager,
 } from "@/Data";
 import {
   PrimaryBaseUrlManager,
@@ -52,6 +54,8 @@ export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
     navigate,
     routeManager
   );
+  const fileManager = new PrimaryFileManager();
+  const archiveHelper = new PrimaryArchiveHelper(fileManager);
 
   return (
     <DependencyProvider
@@ -65,6 +69,7 @@ export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
         routeManager,
         environmentHandler,
         authHelper,
+        archiveHelper,
       }}
     >
       {children}

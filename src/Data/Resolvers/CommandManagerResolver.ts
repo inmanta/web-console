@@ -34,6 +34,7 @@ import {
   GenerateTokenCommandManager,
   RepairCommandManager,
   DeployCommandManager,
+  GetSupportArchiveCommandManager,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -76,6 +77,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         )
       ),
       new CreateEnvironmentCommandManager(this.apiHelper),
+      new GetSupportArchiveCommandManager(this.apiHelper),
     ];
   }
 

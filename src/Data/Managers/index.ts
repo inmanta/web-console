@@ -12,6 +12,7 @@ export * from "./EnvironmentDetails";
 export * from "./EnvironmentSettings";
 export * from "./Events";
 export * from "./GenerateToken";
+export * from "./GetSupportArchive";
 export * from "./GetInstance";
 export * from "./GetServerStatus";
 export * from "./HaltEnvironment";
