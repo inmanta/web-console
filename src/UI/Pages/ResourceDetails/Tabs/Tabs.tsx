@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ColumnsIcon,
   HistoryIcon,
   InfoCircleIcon,
   ListIcon,
@@ -85,6 +86,6 @@ const logTab = (id: string): TabDescriptor<TabKey> => ({
 const factsTab = (id: string): TabDescriptor<TabKey> => ({
   id: TabKey.Facts,
   title: words("resources.facts.title"),
-  icon: <TableIcon />,
+  icon: <ColumnsIcon />,
   view: <FactsTab resourceId={id} />,
 });
