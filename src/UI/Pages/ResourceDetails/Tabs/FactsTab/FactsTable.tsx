@@ -7,7 +7,7 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { Fact } from "@/Core";
+import { Fact, Sort } from "@/Core";
 import { Order } from "@/Core/Domain/Sort";
 import { ColumnHead } from "@/UI/Presenters";
 import { words } from "@/UI/words";
@@ -25,23 +25,19 @@ const factsColumnHeads: ColumnHead[] = [
 ];
 
 export const FactsTable: React.FC<Props> = ({ facts }) => {
-  const [activeSortColumn, setActiveSortColumn] = useState("name");
-  const [activeSortDirection, setActiveSortDirection] = useState<Order>("asc");
-  const [rows, setRows] = useState(
-    sortFactRows(facts, activeSortColumn, activeSortDirection)
-  );
+  const [sort, setSort] = useState<Sort.Type>({ name: "name", order: "asc" });
+  const [rows, setRows] = useState(sortFactRows(facts, sort.name, sort.order));
   const onSort = (event, index, direction) => {
     const updatedSortColumn = indexToColumnName(index);
-    setActiveSortColumn(updatedSortColumn);
-    setActiveSortDirection(direction);
+    setSort({ name: updatedSortColumn, order: direction });
     const updatedRows = sortFactRows(rows, updatedSortColumn, direction);
     setRows(updatedRows);
   };
 
   // Ensure that the table is updated with new facts
   useEffect(() => {
-    setRows(sortFactRows(facts, activeSortColumn, activeSortDirection));
-  }, [facts, activeSortColumn, activeSortDirection]);
+    setRows(sortFactRows(facts, sort.name, sort.order));
+  }, [facts, sort]);
 
   return (
     <TableComposable variant="compact" aria-label="Facts-Success">
@@ -52,8 +48,8 @@ export const FactsTable: React.FC<Props> = ({ facts }) => {
               key={displayName}
               sort={{
                 sortBy: {
-                  index: columnNameToIndex(activeSortColumn),
-                  direction: activeSortDirection,
+                  index: columnNameToIndex(sort.name),
+                  direction: sort.order,
                   defaultDirection: "asc",
                 },
                 columnIndex: idx,
@@ -112,6 +108,7 @@ export function sortFactRows(
     }
   });
 }
+
 function coalesceDateToMin(date?: string) {
   const definedDate = date ? date : 0;
   return new Date(definedDate).getTime();
