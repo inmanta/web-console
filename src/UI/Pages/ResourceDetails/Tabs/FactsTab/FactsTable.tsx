@@ -1,0 +1,118 @@
+import React, { useEffect, useState } from "react";
+import {
+  TableComposable,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
+import { Fact } from "@/Core";
+import { Order } from "@/Core/Domain/Sort";
+import { ColumnHead } from "@/UI/Presenters";
+import { words } from "@/UI/words";
+
+type FactRow = Pick<Fact, "id" | "name" | "updated" | "value">;
+
+interface Props {
+  facts: FactRow[];
+}
+
+const factsColumnHeads: ColumnHead[] = [
+  { apiName: "name", displayName: words("resources.facts.columns.name") },
+  { apiName: "updated", displayName: words("resources.facts.columns.updated") },
+  { apiName: "value", displayName: words("resources.facts.columns.value") },
+];
+
+export const FactsTable: React.FC<Props> = ({ facts }) => {
+  const [activeSortColumn, setActiveSortColumn] = useState("name");
+  const [activeSortDirection, setActiveSortDirection] = useState<Order>("asc");
+  const [rows, setRows] = useState(
+    sortFactRows(facts, activeSortColumn, activeSortDirection)
+  );
+  const onSort = (event, index, direction) => {
+    const updatedSortColumn = indexToColumnName(index);
+    setActiveSortColumn(updatedSortColumn);
+    setActiveSortDirection(direction);
+    const updatedRows = sortFactRows(rows, updatedSortColumn, direction);
+    setRows(updatedRows);
+  };
+
+  // Ensure that the table is updated with new facts
+  useEffect(() => {
+    setRows(sortFactRows(facts, activeSortColumn, activeSortDirection));
+  }, [facts, activeSortColumn, activeSortDirection]);
+
+  return (
+    <TableComposable variant="compact" aria-label="Facts-Success">
+      <Thead>
+        <Tr>
+          {factsColumnHeads.map(({ displayName }, idx) => (
+            <Th
+              key={displayName}
+              sort={{
+                sortBy: {
+                  index: columnNameToIndex(activeSortColumn),
+                  direction: activeSortDirection,
+                  defaultDirection: "asc",
+                },
+                columnIndex: idx,
+                onSort,
+              }}
+            >
+              {displayName}
+            </Th>
+          ))}
+        </Tr>
+      </Thead>
+      <Tbody>
+        {rows.map((fact) => (
+          <Tr key={fact.id} aria-label="Facts table row">
+            <Td>{fact.name}</Td>
+            <Td>{fact.updated}</Td>
+            <Td>{fact.value}</Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </TableComposable>
+  );
+};
+
+function indexToColumnName(index: number): string {
+  const columns = factsColumnHeads.map((head) => head.apiName);
+  return columns[index];
+}
+
+function columnNameToIndex(columnName: string): number {
+  const columns = factsColumnHeads.map((head) => head.apiName);
+  return columns.indexOf(columnName);
+}
+
+export function sortFactRows(
+  rows: FactRow[],
+  columnName: string,
+  direction: Order
+): FactRow[] {
+  return rows.sort((a: FactRow, b: FactRow) => {
+    // sort by date
+    if (columnName === "updated") {
+      const aDate = coalesceDateToMin(a[columnName]);
+      const bDate = coalesceDateToMin(b[columnName]);
+      if (direction === "asc") {
+        return aDate - bDate;
+      }
+      return bDate - aDate;
+    } else {
+      const aValue = a[columnName];
+      const bValue = b[columnName];
+      if (direction === "asc") {
+        return aValue.localeCompare(bValue);
+      }
+      return bValue.localeCompare(aValue);
+    }
+  });
+}
+function coalesceDateToMin(date?: string) {
+  const definedDate = date ? date : 0;
+  return new Date(definedDate).getTime();
+}

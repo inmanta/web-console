@@ -21,6 +21,7 @@ import {
   GetEnvironmentSettingsManifest,
 } from "./GetEnvironmentSettings";
 import { GetEnvironments, GetEnvironmentsManifest } from "./GetEnvironments";
+import { GetFacts, GetFactsManifest } from "./GetFacts";
 import {
   GetInstanceConfig,
   GetInstanceConfigManifest,
@@ -81,7 +82,8 @@ export type Query =
   | GetCallbacks
   | GetEnvironmentSettings
   | GetEnvironmentSetting
-  | GetEnvironments;
+  | GetEnvironments
+  | GetFacts;
 
 export type Type = Query;
 
@@ -113,6 +115,7 @@ interface Manifest {
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
   GetEnvironments: GetEnvironmentsManifest;
+  GetFacts: GetFactsManifest;
 }
 
 /**

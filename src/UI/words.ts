@@ -282,6 +282,10 @@ const dict = {
   "resources.logs.message": "Message",
   "resources.logs.message.placeholder": "Message...",
   "resources.logs.options": "Options",
+  "resources.facts.title": "Facts",
+  "resources.facts.columns.name": "Name",
+  "resources.facts.columns.updated": "Last Updated",
+  "resources.facts.columns.value": "Value",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",

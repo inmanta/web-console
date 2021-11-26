@@ -1,0 +1,4 @@
+description: Add facts tab
+issue-nr: 978
+change-type: patch
+destination-branches: [master, iso4]
