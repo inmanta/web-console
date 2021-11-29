@@ -22,23 +22,20 @@ const intervalValueMap: Record<Interval, number> = {
 };
 
 /**
- * @param timestamp the timestamp in UTC timezone without trailing 'Z'
+ * @param value unix ms for timestamp
  * @param customNow a custom Date.now() value for testing
- * @returns the difference in milliseconds between now and the timestamp
+ * @returns the difference in ms between now and the value
  */
-export const getDiffFromNow = (
-  timestamp: string,
-  customNow?: number
-): number => {
+export const getDiffFromNow = (value: number, customNow?: number): number => {
   const now = customNow || Date.now();
-  const timestampWithZone = timestamp.split("Z")[0] + "Z";
-  const timestampMs = new Date(timestampWithZone).valueOf();
-  const diff = Math.abs(now - timestampMs);
-  return diff;
+  return Math.abs(now - value);
 };
 
-export const useTickerWithTimestamp = (timestamp: string): number => {
-  const diff = getDiffFromNow(timestamp);
+/**
+ * @param value unix ms for timestamp
+ */
+export const useTickerWithUnixMs = (value: number): number => {
+  const diff = getDiffFromNow(value);
   const interval = getIntervalForDiff(diff);
   return useTickerWithInterval(interval);
 };

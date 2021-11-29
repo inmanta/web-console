@@ -6,4 +6,5 @@ export interface DatePresenter {
   getShort(timestamp: Date): string;
   parseShort(timestamp: string): Date;
   diff(timestamp1: string, timestamp2: string): string;
+  toUnixMs(timestamp: string): number;
 }

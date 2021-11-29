@@ -2,7 +2,7 @@ import React from "react";
 import { act, render } from "@testing-library/react";
 import {
   useTickerWithInterval,
-  useTickerWithTimestamp,
+  useTickerWithUnixMs,
   getDiffFromNow,
 } from "./useTicker";
 
@@ -28,11 +28,11 @@ test("GIVEN useTickerWithInterval WHEN provided with interval THEN executes at t
   expect(callback).toBeCalledTimes(2);
 });
 
-test("GIVEN useTickerWithTimestamp WHEN provided with timestamp longer than 1 hour ago THEN executes every minute", () => {
+test("GIVEN useTickerWithUnixMs WHEN provided with timestamp longer than 1 hour ago THEN executes every minute", () => {
   const callback = jest.fn();
-  const timestamp = new Date(Date.now() - 3 * ONE_HOUR).toISOString();
+  const value = new Date(Date.now() - 3 * ONE_HOUR).valueOf();
   const Component: React.FC = () => {
-    useTickerWithTimestamp(timestamp);
+    useTickerWithUnixMs(value);
     callback();
     return null;
   };
@@ -45,11 +45,11 @@ test("GIVEN useTickerWithTimestamp WHEN provided with timestamp longer than 1 ho
   expect(callback).toBeCalledTimes(11);
 });
 
-test("GIVEN useTickerWithTimestamp WHEN provided with timestamp less than 1 minute ago THEN executes every second until 1 minute is reached", () => {
+test("GIVEN useTickerWithUnixMs WHEN provided with timestamp less than 1 minute ago THEN executes every second until 1 minute is reached", () => {
   const callback = jest.fn();
-  const timestamp = new Date(Date.now() - 50 * ONE_SECOND).toISOString();
+  const value = new Date(Date.now() - 50 * ONE_SECOND).valueOf();
   const Component: React.FC = () => {
-    useTickerWithTimestamp(timestamp);
+    useTickerWithUnixMs(value);
     callback();
     return null;
   };
@@ -77,8 +77,6 @@ test("GIVEN useTickerWithTimestamp WHEN provided with timestamp less than 1 minu
 test("GIVEN getDiffFromNow WHEN provided with timestamp THEN returns correct millisecond difference", () => {
   const now = Date.now();
   const TEN_MINUTES_IN_MS = 600000;
-  const timestamp = new Date(now - TEN_MINUTES_IN_MS).toISOString();
-  const serverTimestamp = timestamp.split("Z")[0];
-
-  expect(getDiffFromNow(serverTimestamp, now)).toEqual(TEN_MINUTES_IN_MS);
+  const value = new Date(now - TEN_MINUTES_IN_MS).valueOf();
+  expect(getDiffFromNow(value, now)).toEqual(TEN_MINUTES_IN_MS);
 });

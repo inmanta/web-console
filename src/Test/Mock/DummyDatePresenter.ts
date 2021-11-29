@@ -2,6 +2,9 @@ import { DateInfo } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
 
 export class DummyDatePresenter implements DatePresenter {
+  toUnixMs(): number {
+    return 0;
+  }
   diff(): string {
     return "10 seconds";
   }
