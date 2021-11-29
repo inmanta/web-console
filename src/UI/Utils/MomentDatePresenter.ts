@@ -36,4 +36,8 @@ export class MomentDatePresenter implements DatePresenter {
   parseShort(timestamp: string): Date {
     return moment.tz(timestamp, "YYYY-MM-DD+HH:mm z", this.timezone).toDate();
   }
+
+  toUnixMs(timestamp: string): number {
+    return moment.utc(timestamp).valueOf();
+  }
 }

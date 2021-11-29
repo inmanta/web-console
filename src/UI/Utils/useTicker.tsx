@@ -1,34 +1,41 @@
 import { useEffect, useState } from "react";
 
 // These values are in milliseconds
-const TWO_HOURS = 7200000;
 const ONE_HOUR = 3600000;
-const FIVE_MINUTES = 300000;
 const ONE_MINUTE = 60000;
 const TEN_SECONDS = 10000;
-const FIVE_SECONDS = 5000;
 const ONE_SECOND = 1000;
 
-type Interval = "OneSecond" | "FiveSeconds" | "OneMinute" | "FiveMinutes";
+type Interval = "OneSecond" | "TenSeconds" | "OneMinute";
 type IntervalWithNever = Interval | "Never";
 
 const getIntervalForDiff = (diff: number): IntervalWithNever => {
-  if (diff > TWO_HOURS) return "Never";
-  if (diff > ONE_HOUR) return "FiveMinutes";
-  if (diff > FIVE_MINUTES) return "OneMinute";
-  if (diff > TEN_SECONDS) return "FiveSeconds";
+  if (diff > ONE_HOUR) return "OneMinute";
+  if (diff > ONE_MINUTE) return "TenSeconds";
   return "OneSecond";
 };
 
 const intervalValueMap: Record<Interval, number> = {
   OneSecond: ONE_SECOND,
-  FiveSeconds: FIVE_SECONDS,
+  TenSeconds: TEN_SECONDS,
   OneMinute: ONE_MINUTE,
-  FiveMinutes: FIVE_MINUTES,
 };
 
-export const useTickerWithTimestamp = (timestamp: string): number => {
-  const diff = Math.abs(Date.now() - new Date(timestamp).valueOf());
+/**
+ * @param value unix ms for timestamp
+ * @param customNow a custom Date.now() value for testing
+ * @returns the difference in ms between now and the value
+ */
+export const getDiffFromNow = (value: number, customNow?: number): number => {
+  const now = customNow || Date.now();
+  return Math.abs(now - value);
+};
+
+/**
+ * @param value unix ms for timestamp
+ */
+export const useTickerWithUnixMs = (value: number): number => {
+  const diff = getDiffFromNow(value);
   const interval = getIntervalForDiff(diff);
   return useTickerWithInterval(interval);
 };
