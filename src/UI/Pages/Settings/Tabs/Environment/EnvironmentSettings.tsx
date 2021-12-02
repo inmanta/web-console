@@ -29,14 +29,33 @@ export const EnvironmentSettings: React.FC<Props> = ({
     kind: "CreateProject",
   });
 
+  const onNameSubmit = (name: string) =>
+    modifyEnvironmentTrigger({ name: name });
+
+  const onRepoSubmit = (fields: Record<string, string>) =>
+    modifyEnvironmentTrigger({
+      name: environment.name,
+      repository: fields["repo_url"],
+      branch: fields["repo_branch"],
+    });
+
+  const onProjectSubmit = async (projectName: string) => {
+    const match = projects.find((project) => project.name === projectName);
+    if (!match) {
+      return Maybe.some(`No matching project found for name '${projectName}'`);
+    }
+    return modifyEnvironmentTrigger({
+      name: environment.name,
+      project_id: match.id,
+    });
+  };
+
   return (
     <PaddedList aria-label={props["aria-label"]}>
       <EditableTextField
         initialValue={environment.name}
         label={words("settings.tabs.environment.name")}
-        onSubmit={(name) => {
-          return modifyEnvironmentTrigger({ name: name });
-        }}
+        onSubmit={onNameSubmit}
       />
       <EditableMultiTextField
         groupName={words("settings.tabs.environment.repoSettings")}
@@ -44,33 +63,14 @@ export const EnvironmentSettings: React.FC<Props> = ({
           repo_branch: environment.repo_branch,
           repo_url: environment.repo_url,
         }}
-        onSubmit={(fields) => {
-          return modifyEnvironmentTrigger({
-            name: environment.name,
-            repository: fields["repo_url"],
-            branch: fields["repo_branch"],
-          });
-        }}
+        onSubmit={onRepoSubmit}
       />
       <EditableSelectField
         label={words("settings.tabs.environment.projectName")}
         initialValue={environment.projectName}
         options={projects.map((project) => project.name)}
         onCreate={createProject}
-        onSubmit={async (projectName) => {
-          const match = projects.find(
-            (project) => project.name === projectName
-          );
-          if (!match) {
-            return Maybe.some(
-              `No matching project found for name '${projectName}'`
-            );
-          }
-          return modifyEnvironmentTrigger({
-            name: environment.name,
-            project_id: match.id,
-          });
-        }}
+        onSubmit={onProjectSubmit}
       />
     </PaddedList>
   );
