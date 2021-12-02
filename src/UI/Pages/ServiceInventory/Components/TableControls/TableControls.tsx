@@ -44,7 +44,6 @@ export const TableControls: React.FC<Props> = ({
           states={states}
           identityAttribute={identityAttribute}
         />
-        <ToolbarItem variant="separator" />
         <ToolbarGroup alignment={{ default: "alignRight" }}>
           <ToolbarItem>
             <Link
