@@ -1,6 +1,7 @@
 import { identity } from "lodash";
 import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { PrimaryContinuousQueryManagerWithEnv } from "@/Data/Managers/Helpers";
+import { getUrl } from "./getUrl";
 
 export class EnvironmentDetailsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetEnvironmentDetails"> {
   constructor(
@@ -15,7 +16,7 @@ export class EnvironmentDetailsQueryManager extends PrimaryContinuousQueryManage
       ({ kind }, environment) => `${kind}_${environment}`,
       (query, environment) => [environment],
       "GetEnvironmentDetails",
-      (query, environment) => `/api/v2/environment/${environment}`,
+      ({ details }, environment) => getUrl(details, environment),
       identity
     );
   }

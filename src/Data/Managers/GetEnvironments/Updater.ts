@@ -10,7 +10,7 @@ export class EnvironmentsUpdater implements Updater<"GetEnvironments"> {
   async update(query: Query.SubQuery<"GetEnvironments">): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.apiHelper.getWithoutEnvironment(getUrl())
+        await this.apiHelper.getWithoutEnvironment(getUrl(query.details))
       ),
       query
     );

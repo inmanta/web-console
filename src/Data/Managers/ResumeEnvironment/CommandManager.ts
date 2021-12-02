@@ -23,6 +23,7 @@ export class ResumeEnvironmentCommandManager implements CommandManager {
     return async () => {
       this.stateHelper.set(RemoteData.loading(), {
         kind: "GetEnvironmentDetails",
+        details: false,
       });
       const result = await this.apiHelper.postWithoutResponse(
         `/api/v2/actions/environment/resume`,
@@ -31,6 +32,7 @@ export class ResumeEnvironmentCommandManager implements CommandManager {
       );
       await this.updater.update({
         kind: "GetEnvironmentDetails",
+        details: false,
       });
       return result;
     };

@@ -1,7 +1,7 @@
 import { identity } from "lodash";
 import { StateHelper, ApiHelper } from "@/Core";
+import { getUrl } from "@/Data/Managers/GetProjects/getUrl";
 import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
-import { getUrl } from "./getUrl";
 
 export class GetEnvironmentsQueryManager extends PrimaryOneTimeQueryManager<"GetEnvironments"> {
   constructor(
@@ -13,7 +13,7 @@ export class GetEnvironmentsQueryManager extends PrimaryOneTimeQueryManager<"Get
       stateHelper,
       () => [],
       "GetEnvironments",
-      getUrl,
+      ({ details }) => getUrl(details),
       identity
     );
   }

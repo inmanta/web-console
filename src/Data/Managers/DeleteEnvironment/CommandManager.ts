@@ -21,6 +21,7 @@ export class DeleteEnvironmentCommandManager implements CommandManager {
       if (Maybe.isSome(error)) return error;
       await this.updater.update({
         kind: "GetEnvironments",
+        details: true,
       });
       return error;
     };

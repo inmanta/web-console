@@ -10,7 +10,9 @@ export class ProjectsUpdater implements Updater<"GetProjects"> {
   async update(query: Query.SubQuery<"GetProjects">): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.apiHelper.getWithoutEnvironment(getUrl())
+        await this.apiHelper.getWithoutEnvironment(
+          getUrl(query.environmentDetails)
+        )
       ),
       query
     );

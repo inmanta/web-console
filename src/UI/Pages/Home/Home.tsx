@@ -8,6 +8,7 @@ export const Home: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"GetEnvironments">({
     kind: "GetEnvironments",
+    details: true,
   });
 
   return (

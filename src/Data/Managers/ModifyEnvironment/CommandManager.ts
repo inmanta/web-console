@@ -31,6 +31,7 @@ export class ModifyEnvironmentCommandManager implements CommandManager {
     );
     await this.updater.update({
       kind: "GetEnvironments",
+      details: true,
     });
     return error;
   }

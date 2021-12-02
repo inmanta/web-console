@@ -21,17 +21,15 @@ export class CreateProjectCommandManager implements CommandManager {
     body: { name: string }
   ): Promise<Maybe.Type<Command.Error<"CreateProject">>> {
     const result = await this.apiHelper.putWithoutResponseAndEnvironment(
-      this.getUrl(),
+      `/api/v2/project`,
       body
     );
     if (Maybe.isNone(result)) {
       await this.updater.update({
         kind: "GetProjects",
+        environmentDetails: false,
       });
     }
     return result;
-  }
-  private getUrl(): string {
-    return `/api/v2/project`;
   }
 }

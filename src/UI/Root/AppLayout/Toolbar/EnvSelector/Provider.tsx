@@ -12,6 +12,7 @@ export const Provider: React.FC = () => {
   };
   const [data] = queryResolver.useOneTime<"GetEnvironments">({
     kind: "GetEnvironments",
+    details: false,
   });
   const selected = environmentHandler.useSelected();
   return (
