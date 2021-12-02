@@ -5,6 +5,13 @@ import { getUrl } from "./getUrl";
 
 export class GetProjectsQueryManager extends PrimaryOneTimeQueryManager<"GetProjects"> {
   constructor(apiHelper: ApiHelper, stateHelper: StateHelper<"GetProjects">) {
-    super(apiHelper, stateHelper, () => [], "GetProjects", getUrl, identity);
+    super(
+      apiHelper,
+      stateHelper,
+      () => [],
+      "GetProjects",
+      ({ environmentDetails }) => getUrl(environmentDetails),
+      identity
+    );
   }
 }

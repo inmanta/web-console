@@ -1,4 +1,5 @@
 import { ApiHelper, Query, RemoteData, StateHelper, Updater } from "@/Core";
+import { getUrl } from "./getUrl";
 
 export class EnvironmentDetailsUpdater
   implements Updater<"GetEnvironmentDetails">
@@ -13,7 +14,7 @@ export class EnvironmentDetailsUpdater
     this.stateHelper.set(
       RemoteData.fromEither(
         await this.apiHelper.get(
-          `/api/v2/environment/${this.environment}`,
+          getUrl(query.details, this.environment),
           this.environment
         )
       ),

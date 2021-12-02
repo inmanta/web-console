@@ -2,6 +2,7 @@ import { FlatEnvironment, ProjectModel } from "@/Core/Domain";
 
 export interface GetEnvironments {
   kind: "GetEnvironments";
+  details: boolean;
 }
 
 export interface GetEnvironmentsManifest {

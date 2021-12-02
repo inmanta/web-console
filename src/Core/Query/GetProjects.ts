@@ -2,6 +2,7 @@ import { ProjectModel } from "@/Core/Domain";
 
 export interface GetProjects {
   kind: "GetProjects";
+  environmentDetails: boolean;
 }
 
 export interface GetProjectsManifest {

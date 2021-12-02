@@ -8,6 +8,7 @@ export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"GetProjects">({
     kind: "GetProjects",
+    environmentDetails: false,
   });
   return (
     <PageSectionWithTitle title={"Create Environment"}>

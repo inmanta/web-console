@@ -25,6 +25,7 @@ export const EnvironmentControls: React.FC = () => {
     useContext(DependencyContext);
   const [data] = queryResolver.useContinuous<"GetEnvironmentDetails">({
     kind: "GetEnvironmentDetails",
+    details: false,
   });
   return RemoteData.fold(
     {
