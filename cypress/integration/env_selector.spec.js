@@ -1,7 +1,9 @@
 /// <reference types="Cypress" />
 describe("Environment selector", function () {
   beforeEach(() => {
-    cy.intercept("GET", "/api/v2/project", { fixture: "environments.json" });
+    cy.intercept("GET", "/api/v2/project?environment_details=false", {
+      fixture: "environments.json",
+    });
     cy.intercept("GET", "**/api/v1/serverstatus", {
       fixture: "serverstatus.json",
     });
@@ -29,7 +31,9 @@ describe("Environment selector", function () {
     );
   });
   it("Redirects to home page when the environment from the url doesn't exist", function () {
-    cy.intercept("GET", "**/api/v2/project", { fixture: "environments.json" });
+    cy.intercept("GET", "**/api/v2/project?environment_details=false", {
+      fixture: "environments.json",
+    });
     cy.visit("/console/lsm/catalog?env=nope");
     cy.get("h1").contains("Home").should("be.visible");
   });

@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 describe("Service catalog", function () {
   beforeEach(() => {
-    cy.intercept("GET", "/api/v2/project", {
+    cy.intercept("GET", "/api/v2/project?environment_details=false", {
       fixture: "environments.json",
     });
     cy.intercept("GET", "**/api/v1/serverstatus", {
