@@ -1,8 +1,9 @@
 import { EnvironmentHandler, FlatEnvironment } from "@/Core";
 
 export class MockEnvironmentHandler implements EnvironmentHandler {
+  constructor(private readonly environment: string) {}
   useId(): string {
-    return "env";
+    return this.environment;
   }
   set(): void {
     throw new Error("Method not implemented.");

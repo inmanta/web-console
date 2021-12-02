@@ -1,18 +1,21 @@
 import React, { ComponentProps } from "react";
+import { BrowserRouter } from "react-router-dom";
 import { Story } from "@storybook/react/types-6-0";
 import { dependencies, InstanceResource } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceTable } from "./InstanceResourceTable";
 
 export default {
-  title: "ResourceTable",
+  title: "InstanceResourceTable",
   component: ResourceTable,
 };
 
 const Template: Story<ComponentProps<typeof ResourceTable>> = (args) => (
-  <DependencyProvider dependencies={dependencies}>
-    <ResourceTable {...args} />
-  </DependencyProvider>
+  <BrowserRouter>
+    <DependencyProvider dependencies={dependencies}>
+      <ResourceTable {...args} />
+    </DependencyProvider>
+  </BrowserRouter>
 );
 
 export const Empty = Template.bind({});

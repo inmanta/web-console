@@ -1,7 +1,14 @@
 import React, { ComponentProps } from "react";
-import { MemoryRouter } from "react-router";
+import { BrowserRouter } from "react-router-dom";
 import { Story } from "@storybook/react/types-6-0";
-import { Environment } from "@/Test";
+import { CommandResolverImpl } from "@/Data";
+import {
+  dependencies,
+  DynamicCommandManagerResolver,
+  Environment,
+  MockCommandManager,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 export default {
@@ -10,10 +17,15 @@ export default {
 };
 
 const Template: Story<ComponentProps<typeof EnvironmentSettings>> = (args) => {
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([new MockCommandManager()])
+  );
   return (
-    <MemoryRouter>
-      <EnvironmentSettings {...args} />
-    </MemoryRouter>
+    <BrowserRouter>
+      <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
+        <EnvironmentSettings {...args} />
+      </DependencyProvider>
+    </BrowserRouter>
   );
 };
 
