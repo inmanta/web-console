@@ -8,6 +8,9 @@ import {
   ModifyEnvironmentCommandManager,
   EnvironmentsUpdater,
   GetEnvironmentsStateHelper,
+  CreateProjectCommandManager,
+  ProjectsUpdater,
+  GetProjectsStateHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -25,6 +28,10 @@ function setup() {
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
+      new CreateProjectCommandManager(
+        apiHelper,
+        new ProjectsUpdater(new GetProjectsStateHelper(store), apiHelper)
+      ),
       new ModifyEnvironmentCommandManager(
         apiHelper,
         new EnvironmentsUpdater(
@@ -38,7 +45,10 @@ function setup() {
 
   const component = (
     <DependencyProvider dependencies={{ commandResolver }}>
-      <EnvironmentSettings environment={selectedEnvironment} />
+      <EnvironmentSettings
+        environment={selectedEnvironment}
+        projects={Project.list}
+      />
     </DependencyProvider>
   );
 

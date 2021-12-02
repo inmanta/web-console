@@ -1,18 +1,23 @@
 import React, { useContext } from "react";
 import { DescriptionList } from "@patternfly/react-core";
 import styled from "styled-components";
-import { FlatEnvironment } from "@/Core";
-import { EditableTextField, EditableMultiTextField } from "@/UI/Components";
+import { FlatEnvironment, Maybe, ProjectModel } from "@/Core";
+import {
+  EditableTextField,
+  EditableMultiTextField,
+  EditableSelectField,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Project } from "./Project";
 
 interface Props {
   environment: FlatEnvironment;
+  projects: ProjectModel[];
 }
 
 export const EnvironmentSettings: React.FC<Props> = ({
   environment,
+  projects,
   ...props
 }) => {
   const { commandResolver } = useContext(DependencyContext);
@@ -20,6 +25,9 @@ export const EnvironmentSettings: React.FC<Props> = ({
     commandResolver.getTrigger<"ModifyEnvironment">({
       kind: "ModifyEnvironment",
     });
+  const createProject = commandResolver.getTrigger<"CreateProject">({
+    kind: "CreateProject",
+  });
 
   return (
     <PaddedList aria-label={props["aria-label"]}>
@@ -44,7 +52,26 @@ export const EnvironmentSettings: React.FC<Props> = ({
           });
         }}
       />
-      <Project name={environment.projectName} />
+      <EditableSelectField
+        label={words("settings.tabs.environment.projectName")}
+        initialValue={environment.projectName}
+        options={projects.map((project) => project.name)}
+        onCreate={createProject}
+        onSubmit={async (projectName) => {
+          const match = projects.find(
+            (project) => project.name === projectName
+          );
+          if (!match) {
+            return Maybe.some(
+              `No matching project found for name '${projectName}'`
+            );
+          }
+          return modifyEnvironmentTrigger({
+            name: environment.name,
+            project_id: match.id,
+          });
+        }}
+      />
     </PaddedList>
   );
 };
