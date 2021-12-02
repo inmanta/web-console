@@ -1,3 +1,4 @@
+import { omit } from "lodash";
 import { Agent, AgentRow } from "@/Core";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
@@ -25,25 +26,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   }
 
   createRows(sourceData: Agent[]): AgentRow[] {
-    return sourceData.map(
-      ({
-        name,
-        process_name,
-        process_id,
-        status,
-        last_failover,
-        unpause_on_resume,
-        paused,
-      }) => ({
-        name,
-        process_id,
-        process_name,
-        status,
-        last_failover,
-        unpause_on_resume,
-        paused,
-      })
-    );
+    return sourceData.map((agent) => omit(agent, ["environment"]));
   }
 
   getColumnHeadDisplayNames(): string[] {

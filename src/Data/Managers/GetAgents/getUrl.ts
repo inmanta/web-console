@@ -1,5 +1,5 @@
 import qs from "qs";
-import { Query } from "@/Core";
+import { Query, Sort } from "@/Core";
 
 export function getUrl({
   pageSize,
@@ -19,6 +19,6 @@ export function getUrl({
           { allowDots: true, arrayFormat: "repeat" }
         )}`
       : "";
-  const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
+  const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
   return `/api/v2/agents?limit=${pageSize.value}${filterParam}${sortParam}`;
 }

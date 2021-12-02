@@ -22,7 +22,6 @@ import {
   DynamicCommandManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { PrimaryRouteManager } from "@/UI/Routing";
 import { Page } from "./Page";
 
 function setup() {
@@ -46,15 +45,12 @@ function setup() {
     ])
   );
 
-  const routeManager = new PrimaryRouteManager("");
-
   const component = (
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
           ...dependencies,
           queryResolver,
-          routeManager,
           commandResolver,
         }}
       >
