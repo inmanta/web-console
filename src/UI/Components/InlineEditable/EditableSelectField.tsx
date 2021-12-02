@@ -1,6 +1,6 @@
 import React from "react";
 import { Maybe } from "@/Core";
-import { CreatableSelectInput } from "@/UI/Components/CreatableSelectInput";
+import { CreatableSelectInput } from "./CreatableSelectInput";
 import { EditableField, FieldProps } from "./EditableField";
 
 interface Props extends FieldProps {
