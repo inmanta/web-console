@@ -34,5 +34,5 @@ export const Provider: React.FC<Props> = ({ data, pageSize, setPageSize }) =>
 
 const Filler = styled.div`
   height: 36px;
-  width: 100px;
+  width: 264px;
 `;
