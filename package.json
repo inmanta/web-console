@@ -150,7 +150,8 @@
   "resolutions": {
     "terser-webpack-plugin": "^1.4.5",
     "selfsigned": "^1.10.8",
-    "immer": "^9.0.6"
+    "immer": "^9.0.6",
+    "prismjs": "^1.25.0"
   },
   "madge": {
     "fileExtensions": [
