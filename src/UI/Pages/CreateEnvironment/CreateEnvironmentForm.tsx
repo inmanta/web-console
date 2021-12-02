@@ -79,6 +79,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
       )}
       <CreatableSelectInput
         isRequired
+        withLabel
         label={words("createEnv.projectName")}
         value={projectName || ""}
         options={projects.map((project) => project.name)}
