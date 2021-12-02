@@ -15,7 +15,11 @@ export const RepairButton: React.FC = () => {
       ariaLabel={words("resources.deploySummary.repair")}
       tooltipContent={words("environment.halt.tooltip")}
     >
-      <Button variant="secondary" isDisabled={isHalted} onClick={trigger}>
+      <Button
+        variant="secondary"
+        isDisabled={isHalted}
+        onClick={() => trigger()}
+      >
         {words("resources.deploySummary.repair")}
       </Button>
     </ActionDisabledTooltip>

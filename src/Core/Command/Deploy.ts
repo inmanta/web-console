@@ -7,7 +7,7 @@ export interface Deploy {
 export interface DeployManifest {
   error: string;
   apiData: { data: string };
-  body: null;
+  body: { agents?: string[] };
   command: Deploy;
-  trigger: () => Promise<Maybe.Type<string>>;
+  trigger: (agents?: string[]) => Promise<Maybe.Type<string>>;
 }

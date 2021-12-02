@@ -377,6 +377,22 @@ const dict = {
   "status.title": "Orchestrator Status",
   "status.description":
     "The status of the orchestration server, loaded extensions and active components.",
+
+  /** Agents */
+  "agents.title": "Agents",
+  "agents.empty.message": "No agents found",
+  "agents.columns.name": "Name",
+  "agents.columns.process": "Process",
+  "agents.columns.status": "Status",
+  "agents.columns.failover": "Last failover",
+  "agents.columns.unpause": "Unpause on resume",
+  "agents.columns.actions": "Actions",
+  "agents.actions.pause": "Pause",
+  "agents.actions.deploy": "Force deploy",
+  "agents.actions.repair": "Force repair",
+  "agents.filters.status.placeholder": "Select status...",
+  "agents.filters.name.placeholder": "Filter by name",
+  "agents.filters.processName.placeholder": "Filter by process name",
 };
 
 type Key = keyof typeof dict;
