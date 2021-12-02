@@ -11,9 +11,10 @@ export class DeployCommandManager implements CommandManager {
   }
 
   getTrigger(): Command.Trigger<"Deploy"> {
-    return () =>
+    return (agents?: string[]) =>
       this.apiHelper.postWithoutResponse(`/api/v1/deploy`, this.environment, {
         agent_trigger_method: "push_incremental_deploy",
+        agents: agents,
       });
   }
 }

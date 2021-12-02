@@ -7,7 +7,7 @@ export interface Repair {
 export interface RepairManifest {
   error: string;
   apiData: { data: string };
-  body: null;
+  body: { agents?: string[] };
   command: Repair;
-  trigger: () => Promise<Maybe.Type<string>>;
+  trigger: (agents?: string[]) => Promise<Maybe.Type<string>>;
 }

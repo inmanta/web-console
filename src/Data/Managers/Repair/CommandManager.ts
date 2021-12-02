@@ -11,9 +11,10 @@ export class RepairCommandManager implements CommandManager {
   }
 
   getTrigger(): Command.Trigger<"Repair"> {
-    return () =>
+    return (agents?: string[]) =>
       this.apiHelper.postWithoutResponse(`/api/v1/deploy`, this.environment, {
         agent_trigger_method: "push_full_deploy",
+        agents: agents,
       });
   }
 }

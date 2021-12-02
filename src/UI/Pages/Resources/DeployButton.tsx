@@ -15,7 +15,11 @@ export const DeployButton: React.FC = () => {
       ariaLabel={words("resources.deploySummary.deploy")}
       tooltipContent={words("environment.halt.tooltip")}
     >
-      <Button variant="secondary" isDisabled={isHalted} onClick={trigger}>
+      <Button
+        variant="secondary"
+        isDisabled={isHalted}
+        onClick={() => trigger()}
+      >
         {words("resources.deploySummary.deploy")}
       </Button>
     </ActionDisabledTooltip>

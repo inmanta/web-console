@@ -33,3 +33,6 @@ export * as DateRange from "./DateRange";
 export * from "./ServerStatus";
 export * from "./Token";
 export * from "./Fact";
+export * from "./Agent";
+export * from "./AgentStatus";
+export * as AgentParams from "./AgentParams";
