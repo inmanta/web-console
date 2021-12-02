@@ -10,6 +10,7 @@ const kinds = [
   "Events",
   "Resources",
   "Agents",
+  "AgentProcess",
   "CompileReports",
   "CompileDetails",
   "ResourceDetails",
@@ -41,6 +42,7 @@ interface RouteParamKeysManifest {
   ResourceLogs: "resourceId";
   CompileDetails: "id";
   ResourceDetails: "resourceId";
+  AgentProcess: "id";
 }
 
 export type RouteParamKeys<K extends RouteKind> =

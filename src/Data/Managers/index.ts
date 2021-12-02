@@ -37,3 +37,4 @@ export * from "./Deploy";
 export * from "./Repair";
 export * from "./GetFacts";
 export * from "./GetAgents";
+export * from "./GetAgentProcess";

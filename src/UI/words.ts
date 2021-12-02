@@ -393,6 +393,13 @@ const dict = {
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",
+
+  /** Agent Process */
+  "agentProcess.title": "Agent Process",
+  "agentProcess.hostname": "Hostname",
+  "agentProcess.firstSeen": "First seen",
+  "agentProcess.lastSeen": "Last seen",
+  "agentProcess.expired": "Expired",
 };
 
 type Key = keyof typeof dict;

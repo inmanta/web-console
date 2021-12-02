@@ -1,3 +1,4 @@
+import { agentProcessSlice, AgentProcessSlice } from "./AgentProcessSlice";
 import { agentsSlice, AgentsSlice } from "./AgentsSlice";
 import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
 import {
@@ -76,6 +77,7 @@ export interface StoreModel {
   environmentSettings: EnvironmentSettingsSlice;
   facts: FactsSlice;
   agents: AgentsSlice;
+  agentProcess: AgentProcessSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -102,4 +104,5 @@ export const storeModel: StoreModel = {
   environmentSettings: environmentSettingsSlice,
   facts: factsSlice,
   agents: agentsSlice,
+  agentProcess: agentProcessSlice,
 };
