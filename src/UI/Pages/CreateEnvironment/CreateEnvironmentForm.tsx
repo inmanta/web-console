@@ -2,11 +2,10 @@ import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import styled from "styled-components";
 import { CreateEnvironmentParams, Maybe, ProjectModel } from "@/Core";
-import { InlinePlainAlert } from "@/UI/Components";
+import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { CreatableSelectInput } from "./CreatableSelectInput";
 import { SimpleTextFormInput } from "./SimpleTextFormInput";
 
 interface Props {
@@ -80,6 +79,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
       )}
       <CreatableSelectInput
         isRequired
+        withLabel
         label={words("createEnv.projectName")}
         value={projectName || ""}
         options={projects.map((project) => project.name)}

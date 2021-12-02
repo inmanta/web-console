@@ -1,4 +1,5 @@
+export * from "./CreatableSelectInput";
 export * from "./EditableTextField";
 export * from "./EditableMultiTextField";
-export * from "./InlineSelectOption";
+export * from "./EditableSelectField";
 export * from "./InlinePlainAlert";

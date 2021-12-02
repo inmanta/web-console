@@ -8,6 +8,9 @@ import {
   ModifyEnvironmentCommandManager,
   EnvironmentsUpdater,
   GetEnvironmentsStateHelper,
+  CreateProjectCommandManager,
+  ProjectsUpdater,
+  GetProjectsStateHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -25,6 +28,10 @@ function setup() {
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
+      new CreateProjectCommandManager(
+        apiHelper,
+        new ProjectsUpdater(new GetProjectsStateHelper(store), apiHelper)
+      ),
       new ModifyEnvironmentCommandManager(
         apiHelper,
         new EnvironmentsUpdater(
@@ -38,7 +45,10 @@ function setup() {
 
   const component = (
     <DependencyProvider dependencies={{ commandResolver }}>
-      <EnvironmentSettings environment={selectedEnvironment} />
+      <EnvironmentSettings
+        environment={selectedEnvironment}
+        projects={Project.list}
+      />
     </DependencyProvider>
   );
 
@@ -72,7 +82,6 @@ test("Given environment settings When submitting the edited name Then the backen
   expect(request).toEqual({
     method: "POST",
     body: {
-      id: selectedEnvironment.id,
       name: "dev",
     },
     url: `/api/v2/environment/${selectedEnvironment.id}`,
@@ -201,7 +210,6 @@ test("Given environment settings When submitting the edited repository settings 
   expect(request).toEqual({
     method: "POST",
     body: {
-      id: selectedEnvironment.id,
       name: selectedEnvironment.name,
       repository: newRepository,
       branch: newBranch,
@@ -232,7 +240,7 @@ test("Given environment settings When submitting the edited repository settings 
   ).not.toBeInTheDocument();
 });
 
-test("Given environment settings When canceling a name edit Then the backend request is not fired", async () => {
+test("Given environment settings When canceling a repository edit Then the backend request is not fired", async () => {
   const { component, apiHelper, selectedEnvironment } = setup();
   render(component);
   userEvent.click(
@@ -303,6 +311,133 @@ test.each`
       screen.queryByRole("generic", {
         name: "Repository Settings-error-message",
       })
+    ).not.toBeInTheDocument();
+  }
+);
+
+test("Given environment settings When clicking on the edit project button Then the select field is shown", async () => {
+  const { component } = setup();
+  render(component);
+  expect(
+    await screen.findByRole("generic", { name: "Project Name-value" })
+  ).toBeVisible();
+  userEvent.click(
+    screen.getByRole("button", { name: "Project Name-toggle-edit" })
+  );
+  expect(
+    await screen.findByRole("textbox", { name: "Project Name-typeahead" })
+  ).toBeVisible();
+
+  expect(
+    screen.queryByRole("generic", { name: "Project Name-value" })
+  ).not.toBeInTheDocument();
+});
+
+test("Given environment settings When submitting the edited project name Then the backend request is fired", async () => {
+  const { component, apiHelper, selectedEnvironment } = setup();
+  render(component);
+  userEvent.click(
+    screen.getByRole("button", { name: "Project Name-toggle-edit" })
+  );
+  const toggle = await screen.findByRole("button", {
+    name: "Project Name-select-toggle",
+  });
+  userEvent.click(toggle);
+  userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
+  userEvent.click(
+    screen.getByRole("button", { name: "Project Name-submit-edit" })
+  );
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "POST",
+    body: {
+      name: selectedEnvironment.name,
+      project_id: "project_id_b",
+    },
+    url: `/api/v2/environment/${selectedEnvironment.id}`,
+  });
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: Project.filterable }));
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(2);
+  expect(apiHelper.pendingRequests).toHaveLength(0);
+  expect(
+    await screen.findByRole("generic", { name: "Project Name-value" })
+  ).toHaveTextContent("project_name_b");
+  expect(
+    screen.queryByRole("textbox", { name: "Project Name-typeahead" })
+  ).not.toBeInTheDocument();
+});
+
+test("Given environment settings When canceling a project name edit Then the backend request is not fired", async () => {
+  const { component, apiHelper, selectedEnvironment } = setup();
+  render(component);
+  userEvent.click(
+    screen.getByRole("button", { name: "Project Name-toggle-edit" })
+  );
+  const toggle = await screen.findByRole("button", {
+    name: "Project Name-select-toggle",
+  });
+  userEvent.click(toggle);
+  userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
+  userEvent.click(
+    screen.getByRole("button", { name: "Project Name-cancel-edit" })
+  );
+
+  expect(apiHelper.pendingRequests).toHaveLength(0);
+  expect(
+    await screen.findByRole("generic", { name: "Project Name-value" })
+  ).toHaveTextContent(selectedEnvironment.projectName);
+  expect(
+    screen.queryByRole("textbox", { name: "Project Name-typeahead" })
+  ).not.toBeInTheDocument();
+});
+
+test.each`
+  displayName                 | elementName
+  ${"with the close button"}  | ${"Project Name-close-error"}
+  ${"by starting a new edit"} | ${"Project Name-toggle-edit"}
+`(
+  "Given environment settings When a project name edit yields an error Then the error message is shown and can be closed $displayName",
+  async ({ elementName }) => {
+    const { component, apiHelper } = setup();
+    render(component);
+    userEvent.click(
+      screen.getByRole("button", { name: "Project Name-toggle-edit" })
+    );
+    const toggle = await screen.findByRole("button", {
+      name: "Project Name-select-toggle",
+    });
+    userEvent.click(toggle);
+    userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
+    userEvent.click(
+      screen.getByRole("button", { name: "Project Name-submit-edit" })
+    );
+    expect(apiHelper.pendingRequests).toHaveLength(1);
+    await act(async () => {
+      await apiHelper.resolve(Maybe.some("Invalid project id"));
+    });
+    await act(async () => {
+      await apiHelper.resolve(Either.right({ data: Project.filterable }));
+    });
+    expect(
+      await screen.findByRole("generic", { name: "Project Name-error-message" })
+    ).toBeVisible();
+
+    expect(
+      screen.queryByRole("textbox", { name: "Project Name-typeahead" })
+    ).not.toBeInTheDocument();
+
+    // Closing the alert
+    userEvent.click(screen.getByRole("button", { name: elementName }));
+    expect(
+      screen.queryByRole("generic", { name: "Project Name-error-message" })
     ).not.toBeInTheDocument();
   }
 );
