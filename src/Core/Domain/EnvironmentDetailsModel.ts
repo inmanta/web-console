@@ -1,6 +1,5 @@
-import { WithId } from "../Language";
-
-export interface EnvironmentDetails extends WithId {
+export interface EnvironmentDetails {
+  id: string;
   name: string;
   project_id: string;
   repo_url: string;
@@ -9,8 +8,9 @@ export interface EnvironmentDetails extends WithId {
   halted: boolean;
 }
 
-export interface ModifyEnvironmentParams extends WithId {
+export interface ModifyEnvironmentParams {
   name: string;
+  project_id?: string;
   repository?: string;
   branch?: string;
 }

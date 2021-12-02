@@ -72,7 +72,6 @@ test("Given environment settings When submitting the edited name Then the backen
   expect(request).toEqual({
     method: "POST",
     body: {
-      id: selectedEnvironment.id,
       name: "dev",
     },
     url: `/api/v2/environment/${selectedEnvironment.id}`,
@@ -201,7 +200,6 @@ test("Given environment settings When submitting the edited repository settings 
   expect(request).toEqual({
     method: "POST",
     body: {
-      id: selectedEnvironment.id,
       name: selectedEnvironment.name,
       repository: newRepository,
       branch: newBranch,

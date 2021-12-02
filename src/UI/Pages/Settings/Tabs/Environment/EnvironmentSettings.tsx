@@ -27,7 +27,7 @@ export const EnvironmentSettings: React.FC<Props> = ({
         initialValue={environment.name}
         label={words("settings.tabs.environment.name")}
         onSubmit={(name) => {
-          return modifyEnvironmentTrigger({ id: environment.id, name: name });
+          return modifyEnvironmentTrigger({ name: name });
         }}
       />
       <EditableMultiTextField
@@ -38,7 +38,6 @@ export const EnvironmentSettings: React.FC<Props> = ({
         }}
         onSubmit={(fields) => {
           return modifyEnvironmentTrigger({
-            id: environment.id,
             name: environment.name,
             repository: fields["repo_url"],
             branch: fields["repo_branch"],
