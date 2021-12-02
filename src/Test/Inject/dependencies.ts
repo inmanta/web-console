@@ -10,8 +10,8 @@ import { UrlManagerImpl } from "@/UI/Utils";
 const routeManager = new PrimaryRouteManager("");
 const featureManager = new MockFeatureManager();
 const environmentModifier = new EnvironmentModifierImpl();
-const urlManager = new UrlManagerImpl(featureManager, "");
-const environmentHandler = new MockEnvironmentHandler();
+const urlManager = new UrlManagerImpl(featureManager, "", "env");
+const environmentHandler = new MockEnvironmentHandler("env");
 const fileManager = new MockFileManager();
 const archiveHelper = new PrimaryArchiveHelper(fileManager);
 

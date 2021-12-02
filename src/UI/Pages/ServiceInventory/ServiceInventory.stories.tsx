@@ -18,9 +18,9 @@ import {
   DynamicQueryManagerResolver,
   InstantApiHelper,
   DynamicCommandManagerResolver,
-  MockEnvironmentModifier,
   MockCommandManager,
   DeferredApiHelper,
+  dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ServiceInventory } from "./ServiceInventory";
@@ -66,9 +66,9 @@ export const Basic: React.FC = () => {
   return (
     <DependencyProvider
       dependencies={{
+        ...dependencies,
         queryResolver,
         commandResolver,
-        environmentModifier: new MockEnvironmentModifier(),
       }}
     >
       <StoreProvider store={store}>
@@ -97,7 +97,7 @@ export const Failed: React.FC = () => {
   );
 
   return (
-    <DependencyProvider dependencies={{ queryResolver }}>
+    <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
       <StoreProvider store={store}>
         <MemoryRouter>
           <ServiceInventory serviceName={Service.a.name} service={Service.a} />

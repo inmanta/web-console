@@ -14,6 +14,7 @@ import {
   DynamicQueryManagerResolver,
   InstantApiHelper,
   StaticScheduler,
+  dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
@@ -40,7 +41,7 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
 
   return (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver }}>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <ServiceInstanceHistory
             service={Service.a}

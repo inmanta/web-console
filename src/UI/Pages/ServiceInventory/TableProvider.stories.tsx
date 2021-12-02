@@ -11,11 +11,11 @@ import {
   CommandResolverImpl,
 } from "@/Data";
 import {
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   InstantApiHelper,
   MockCommandManager,
-  MockEnvironmentModifier,
   Service,
   ServiceInstance,
   StaticScheduler,
@@ -51,9 +51,9 @@ const Template: Story<Props> = (args) => {
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           queryResolver,
           commandResolver,
-          environmentModifier: new MockEnvironmentModifier(),
         }}
       >
         <StoreProvider store={store}>
