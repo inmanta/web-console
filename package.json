@@ -152,7 +152,8 @@
     "selfsigned": "^1.10.8",
     "immer": "^9.0.6",
     "prismjs": "^1.25.0",
-    "trim": "^0.0.3"
+    "trim": "^0.0.3",
+    "glob-parent": "^5.1.2"
   },
   "madge": {
     "fileExtensions": [
