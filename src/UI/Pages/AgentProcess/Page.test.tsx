@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
-  AgentProcessStateHelper,
+  GetAgentProcessStateHelper,
   GetAgentProcessQueryManager,
   getStoreInstance,
   QueryResolverImpl,
@@ -17,7 +17,6 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { UrlManagerImpl } from "@/UI/Utils";
 import { Page } from "./Page";
 
 function setup() {
@@ -28,21 +27,14 @@ function setup() {
     new DynamicQueryManagerResolver([
       new GetAgentProcessQueryManager(
         apiHelper,
-        new AgentProcessStateHelper(store)
+        new GetAgentProcessStateHelper(store)
       ),
     ])
-  );
-  const urlManager = new UrlManagerImpl(
-    dependencies.featureManager,
-    "",
-    "environment"
   );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{ ...dependencies, queryResolver, urlManager }}
-      >
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
           <Page />
         </StoreProvider>

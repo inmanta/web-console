@@ -54,7 +54,7 @@ import {
   GetAgentsQueryManager,
   GetAgentsStateHelper,
   GetAgentProcessQueryManager,
-  AgentProcessStateHelper,
+  GetAgentProcessStateHelper,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -217,7 +217,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new GetAgentProcessQueryManager(
         this.apiHelper,
-        new AgentProcessStateHelper(this.store)
+        new GetAgentProcessStateHelper(this.store)
       ),
     ];
   }

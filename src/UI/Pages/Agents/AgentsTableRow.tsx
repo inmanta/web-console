@@ -19,13 +19,11 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
       <Tr aria-label="Agents Table Row">
         <Td dataLabel={words("agents.columns.name")}>{row.name}</Td>
         <Td dataLabel={words("agents.columns.process")}>
-          {" "}
           {row.process_id && (
             <Link
               pathname={routeManager.getUrl("AgentProcess", {
                 id: row.process_id,
               })}
-              search={location.search}
             >
               <Button variant="secondary" isSmall icon={<InfoCircleIcon />}>
                 {row.process_name}
