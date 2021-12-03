@@ -12,6 +12,7 @@ export const Tab: React.FC<Props> = ({ environment }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"GetProjects">({
     kind: "GetProjects",
+    environmentDetails: false,
   });
   return RemoteData.fold(
     {
