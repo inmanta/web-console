@@ -13,6 +13,7 @@ export const paths: Paths = {
   Resources: "/resources",
   ResourceDetails: "/resources/:resourceId",
   Agents: "/agents",
+  AgentProcess: "/agents/:id",
   CompileReports: "/compilereports",
   CompileDetails: "/compilereports/:id",
   Settings: "/settings",

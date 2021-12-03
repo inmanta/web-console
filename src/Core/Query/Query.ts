@@ -1,3 +1,4 @@
+import { GetAgentProcess, GetAgentProcessManifest } from "./GetAgentProcess";
 import { GetAgents, GetAgentsManifest } from "./GetAgents";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
 import {
@@ -85,7 +86,8 @@ export type Query =
   | GetEnvironmentSetting
   | GetEnvironments
   | GetFacts
-  | GetAgents;
+  | GetAgents
+  | GetAgentProcess;
 
 export type Type = Query;
 
@@ -119,6 +121,7 @@ interface Manifest {
   GetEnvironments: GetEnvironmentsManifest;
   GetFacts: GetFactsManifest;
   GetAgents: GetAgentsManifest;
+  GetAgentProcess: GetAgentProcessManifest;
 }
 
 /**

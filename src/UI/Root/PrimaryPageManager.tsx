@@ -1,5 +1,6 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary } from "@/Core";
+import { AgentProcessPage } from "@/UI/Pages/AgentProcess";
 import { AgentsPage } from "@/UI/Pages/Agents";
 import { CompileDetailsPage } from "@/UI/Pages/CompileDetails";
 import { CompileReportsPage } from "@/UI/Pages/CompileReports";
@@ -49,6 +50,7 @@ export class PrimaryPageManager implements PageManager {
       { ...this.routeDictionary.Settings, element: <SettingsPage /> },
       { ...this.routeDictionary.Status, element: <StatusPage /> },
       { ...this.routeDictionary.Agents, element: <AgentsPage /> },
+      { ...this.routeDictionary.AgentProcess, element: <AgentProcessPage /> },
     ];
   }
 }

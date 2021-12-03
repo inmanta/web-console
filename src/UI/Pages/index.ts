@@ -1,4 +1,5 @@
 export * from "./Agents";
+export * from "./AgentProcess";
 export * from "./CreateInstance";
 export * from "./Diagnose";
 export * from "./Events";

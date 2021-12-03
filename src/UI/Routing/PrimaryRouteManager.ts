@@ -25,6 +25,7 @@ export class PrimaryRouteManager implements RouteManager {
       Events: Events(this.baseUrl),
       Resources: Resources(this.baseUrl),
       Agents: Agents(this.baseUrl),
+      AgentProcess: AgentProcess(this.baseUrl),
       CompileReports: CompileReports(this.baseUrl),
       CompileDetails: CompileDetails(this.baseUrl),
       ResourceDetails: ResourceDetails(this.baseUrl),
@@ -162,6 +163,13 @@ const Agents = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.Agents}`,
   label: "Agents",
+});
+
+const AgentProcess = (base: string): Route => ({
+  kind: "AgentProcess",
+  parent: "Agents",
+  path: `${base}${paths.AgentProcess}`,
+  label: "Agent Process",
 });
 
 const CompileReports = (base: string): Route => ({

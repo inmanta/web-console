@@ -22,3 +22,4 @@ export * as Environment from "./Environment";
 export * as ServiceInventory from "./ServiceInventory";
 export * as Facts from "./Facts";
 export * as Agents from "./Agents";
+export * as AgentProcessData from "./AgentProcess";

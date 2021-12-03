@@ -36,3 +36,4 @@ export * from "./Fact";
 export * from "./Agent";
 export * from "./AgentStatus";
 export * as AgentParams from "./AgentParams";
+export * from "./AgentProcess";
