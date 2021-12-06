@@ -76,16 +76,16 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   pathname,
 }) => (
   <Card isHoverable isCompact aria-label={"Environment card"}>
-    <CardHeader>
+    <StyledHeader>
       {environment.icon && (
-        <img
-          style={{ height: "2em" }}
+        <StyledIcon
           src={`data:${environment.icon}`}
           alt={words("home.environment.icon")(environment.name)}
-        ></img>
+          aria-label={`${environment.name}-icon`}
+        />
       )}
       <Actions environment={environment} />
-    </CardHeader>
+    </StyledHeader>
     <CardTitle>{environment.name}</CardTitle>
     <CardBody>
       <StyledCardContent>{environment.description}</StyledCardContent>
@@ -105,4 +105,12 @@ const StyledCardContent = styled.div`
 
 const StyledFooterDiv = styled.div`
   color: var(--pf-global--secondary-color--100);
+`;
+
+const StyledIcon = styled.img`
+  height: 2em;
+`;
+
+const StyledHeader = styled(CardHeader)`
+  height: 3em;
 `;
