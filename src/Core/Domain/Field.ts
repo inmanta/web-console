@@ -5,7 +5,12 @@ import { TextInputTypes } from "@patternfly/react-core";
  * The actual live form value is not contained within this type.
  * It is kept separate in a formState object.
  */
-export type Field = FlatField | NestedField | DictListField;
+export type Field =
+  | BooleanField
+  | TextField
+  | EnumField
+  | NestedField
+  | DictListField;
 
 interface BaseField {
   name: string;
@@ -13,11 +18,24 @@ interface BaseField {
   isOptional: boolean;
 }
 
-export interface FlatField extends BaseField {
-  kind: "Flat";
+export interface BooleanField extends BaseField {
+  kind: "Boolean";
   defaultValue: unknown;
-  inputType: TextInputTypes | "bool";
   type: string;
+}
+
+export interface TextField extends BaseField {
+  kind: "Text";
+  defaultValue: unknown;
+  inputType: TextInputTypes;
+  type: string;
+}
+
+export interface EnumField extends BaseField {
+  kind: "Enum";
+  defaultValue: unknown;
+  type: string;
+  options: Record<string, string | number>;
 }
 
 export interface NestedField extends BaseField {

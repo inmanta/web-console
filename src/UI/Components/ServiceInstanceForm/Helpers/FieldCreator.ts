@@ -87,8 +87,31 @@ export class FieldCreator {
           attribute.default_value
         );
 
+        if (type === "bool") {
+          return {
+            kind: "Boolean",
+            name: attribute.name,
+            defaultValue: defaultValue,
+            description: attribute.description,
+            type: attribute.type,
+            isOptional: attribute.type.includes("?"),
+          };
+        }
+
+        if (attribute.validation_type === "enum") {
+          return {
+            kind: "Enum",
+            name: attribute.name,
+            defaultValue: defaultValue,
+            description: attribute.description,
+            type: attribute.type,
+            isOptional: attribute.type.includes("?"),
+            options: {},
+          };
+        }
+
         return {
-          kind: "Flat",
+          kind: "Text",
           name: attribute.name,
           defaultValue: defaultValue,
           inputType: type,
