@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import {
   Bullseye,
-  Button,
   Card,
   CardBody,
   CardFooter,
@@ -33,7 +32,7 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
     : routeManager.getUrl("CompileReports", undefined);
 
   return (
-    <PageSection>
+    <PageSection isFilled>
       <Gallery hasGutter {...props}>
         <CreateNewEnvironmentCard
           url={routeManager.getUrl("CreateEnvironment", undefined)}
@@ -52,8 +51,8 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
 
 const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
   <Card isHoverable isCompact>
-    <Link pathname={url}>
-      <Bullseye>
+    <Bullseye>
+      <Link pathname={url}>
         <StyledCardContent>
           <EmptyState variant={EmptyStateVariant.xs}>
             <EmptyStateIcon icon={PlusCircleIcon} />
@@ -62,8 +61,8 @@ const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
             </Title>
           </EmptyState>
         </StyledCardContent>
-      </Bullseye>
-    </Link>
+      </Link>
+    </Bullseye>
   </Card>
 );
 
@@ -77,29 +76,41 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   pathname,
 }) => (
   <Card isHoverable isCompact aria-label={"Environment card"}>
-    <CardHeader>
-      <CardTitle>{environment.name}</CardTitle>
+    <StyledHeader>
+      {environment.icon && (
+        <StyledIcon
+          src={`data:${environment.icon}`}
+          alt={words("home.environment.icon")(environment.name)}
+          aria-label={`${environment.name}-icon`}
+        />
+      )}
       <Actions environment={environment} />
-    </CardHeader>
+    </StyledHeader>
+    <CardTitle>{environment.name}</CardTitle>
     <CardBody>
-      <Bullseye>
-        <Link pathname={pathname} search={`env=${environment.id}`}>
-          <StyledCardContent>
-            <Button variant="secondary">
-              {words("home.environment.select")}
-            </Button>
-          </StyledCardContent>
-        </Link>
-      </Bullseye>
+      <StyledCardContent>{environment.description}</StyledCardContent>
     </CardBody>
-    <StyledFooter>{environment.projectName}</StyledFooter>
+    <CardFooter>
+      <Link pathname={pathname} search={`env=${environment.id}`}>
+        {words("home.environment.select")}
+      </Link>
+      <StyledFooterDiv>{environment.projectName}</StyledFooterDiv>
+    </CardFooter>
   </Card>
 );
 
 const StyledCardContent = styled.div`
-  margin: 0.5em;
+  overflow-wrap: break-word;
 `;
 
-const StyledFooter = styled(CardFooter)`
+const StyledFooterDiv = styled.div`
   color: var(--pf-global--secondary-color--100);
+`;
+
+const StyledIcon = styled.img`
+  height: 2em;
+`;
+
+const StyledHeader = styled(CardHeader)`
+  height: 3em;
 `;
