@@ -106,3 +106,10 @@ test("Given environments overview When filtering by name and project Then only t
     })
   ).toBeVisible();
 });
+
+test("Given environments overview When rendering environment with icon Then the icon is shown", async () => {
+  const { component } = setup();
+  render(component);
+  const cardsWithIcons = await screen.findByRole("img");
+  expect(cardsWithIcons).toBeInTheDocument();
+});

@@ -330,6 +330,7 @@ const dict = {
   "home.empty.message": "No environments found",
   "home.create.env.desciption": "Create new environment",
   "home.create.env.link": "Create environment",
+  "home.environment.icon": (name: string) => `Icon for environment ${name}`,
   "home.environment.select": "Select this environment",
   "home.environment.edit": "Edit environment",
   "home.environment.delete": "Delete environment",

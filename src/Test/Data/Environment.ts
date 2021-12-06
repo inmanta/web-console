@@ -48,6 +48,8 @@ export const filterable: FlatEnvironment[] = [
     name: "test-env1",
     repo_branch: "master",
     repo_url: "github.com/test",
+    description: "Test desc",
+    icon: "image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiCiAgICAgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIgogICAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iYmxhY2siIC8+CiAgPGNpcmNsZSBjeD0iMTUiIGN5PSIxMCIgcj0iOCIgZmlsbD0id2hpdGUiIC8+Cjwvc3ZnPg==",
   },
   {
     id: "456",
