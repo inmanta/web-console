@@ -6,17 +6,19 @@ import {
   ServiceInstanceModel,
 } from "@/Core";
 
+export type InputType = TextInputTypes | "bool";
+
 export interface AttributeInputConverter {
   /**
    * Determines what kind of input should be used for a Service Attribute
    */
-  getInputType(attributeModel: AttributeModel): TextInputTypes | "bool";
+  getInputType(attributeModel: AttributeModel): InputType;
 
   /**
    * Determines the default value for an attribute, taking into account the form input that will be rendered
    */
   getFormDefaultValue(
-    inputType: TextInputTypes | "bool",
+    inputType: InputType,
     defaultValueSet: boolean,
     defaultValue: string | null
   ): string | null | undefined;

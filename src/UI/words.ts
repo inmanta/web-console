@@ -401,6 +401,12 @@ const dict = {
   "agentProcess.firstSeen": "First seen",
   "agentProcess.lastSeen": "Last seen",
   "agentProcess.expired": "Expired",
+
+  /**
+   * Common
+   */
+  "common.serviceInstance.select": (attribute: string) =>
+    `Select value for ${attribute}`,
 };
 
 type Key = keyof typeof dict;

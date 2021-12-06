@@ -5,11 +5,12 @@ import {
   NestedField,
   TextField,
   BooleanField,
+  EnumField,
 } from "@/Core";
 
 export const text: TextField = {
   kind: "Text",
-  name: "flat_field_text",
+  name: "text_field",
   description: "description",
   isOptional: true,
   defaultValue: "",
@@ -19,11 +20,24 @@ export const text: TextField = {
 
 export const bool: BooleanField = {
   kind: "Boolean",
-  name: "flat_field_boolean",
+  name: "boolean_field",
   description: "description",
   isOptional: true,
   defaultValue: null,
   type: "bool?",
+};
+
+export const enumField: EnumField = {
+  kind: "Enum",
+  name: "enum_field",
+  description: "description",
+  isOptional: false,
+  defaultValue: "local",
+  options: {
+    local: "local",
+    ci: "ci",
+  },
+  type: "string",
 };
 
 export const number: TextField = {

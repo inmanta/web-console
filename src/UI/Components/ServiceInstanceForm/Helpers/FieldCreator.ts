@@ -106,7 +106,7 @@ export class FieldCreator {
             description: attribute.description,
             type: attribute.type,
             isOptional: attribute.type.includes("?"),
-            options: {},
+            options: attribute.validation_parameters.names,
           };
         }
 

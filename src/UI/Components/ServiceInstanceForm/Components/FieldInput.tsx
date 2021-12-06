@@ -3,7 +3,6 @@ import {
   Button,
   FormFieldGroupExpandable,
   FormFieldGroupHeader,
-  TextInputTypes,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { get } from "lodash";
@@ -17,6 +16,7 @@ import { toOptionalBoolean } from "@/Data";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";
+import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
 
 interface Props {
@@ -42,7 +42,7 @@ export const FieldInput: React.FC<Props> = ({
     case "Boolean":
       return (
         <BooleanFormInput
-          aria-label={`FlatFieldInput-${field.name}`}
+          aria-label={`BooleanFieldInput-${field.name}`}
           attributeName={field.name}
           isOptional={field.isOptional}
           isChecked={get(formState, makePath(path, field.name)) as boolean}
@@ -56,7 +56,7 @@ export const FieldInput: React.FC<Props> = ({
     case "Text":
       return (
         <TextFormInput
-          aria-label={`FlatFieldInput-${field.name}`}
+          aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
           attributeValue={get(formState, makePath(path, field.name)) as string}
           description={field.description}
@@ -70,16 +70,14 @@ export const FieldInput: React.FC<Props> = ({
       );
     case "Enum":
       return (
-        <TextFormInput
-          aria-label={`FlatFieldInput-${field.name}`}
+        <SelectFormInput
+          aria-label={`EnumFieldInput-${field.name}`}
+          options={field.options}
           attributeName={field.name}
           attributeValue={get(formState, makePath(path, field.name)) as string}
           description={field.description}
           isOptional={field.isOptional}
-          type={TextInputTypes.text}
           handleInputChange={getUpdate(makePath(path, field.name))}
-          placeholder={getPlaceholderForType(field.type)}
-          typeHint={getTypeHintForType(field.type)}
           key={field.name}
         />
       );

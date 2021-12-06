@@ -1,15 +1,14 @@
+import { AttributeValidation } from "./AttributeValidation";
 import { Config } from "./Config";
 
-export interface AttributeModel {
+export type AttributeModel = AttributeValidation & {
   name: string;
   type: string;
   description?: string;
   modifier: string;
   default_value: string | null;
   default_value_set: boolean;
-  validation_type?: string | null;
-  validation_parameters?: Record<string, unknown> | null;
-}
+};
 
 export interface StateModel {
   deleted: boolean;

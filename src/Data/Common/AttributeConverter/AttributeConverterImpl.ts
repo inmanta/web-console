@@ -9,6 +9,7 @@ import {
 import {
   AttributeInputConverter,
   AttributeResultConverter,
+  InputType,
 } from "./AttributeConverter";
 
 function isNumberArray(type: string): boolean {
@@ -31,20 +32,19 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
   /**
    * Determines what kind of input should be used for a Service Attribute
    */
-  getInputType(attributeModel: AttributeModel): TextInputTypes | "bool" {
-    return attributeModel.type.includes("bool")
-      ? "bool"
-      : this.matchTextInputWithPatternflyInput(
-          attributeModel.name,
-          attributeModel.type
-        );
+  getInputType(attributeModel: AttributeModel): InputType {
+    if (attributeModel.type.includes("bool")) return "bool";
+    return this.matchTextInputWithPatternflyInput(
+      attributeModel.name,
+      attributeModel.type
+    );
   }
 
   /**
    * Determines the default value for an attribute, taking into account the form input that will be rendered
    */
   getFormDefaultValue(
-    inputType: TextInputTypes | "bool",
+    inputType: InputType,
     defaultValueSet: boolean,
     defaultValue: string | null
   ): string | null | undefined {
