@@ -8,13 +8,17 @@ import {
 import { AttributeInputConverterImpl } from "@/Data";
 import { ModifierHandler } from "./ModifierHandler";
 
+/**
+ * Create form fields based on a ServiceModel.
+ * And more specifically, based on the AttributeModel and EmbeddedEntities.
+ */
 export class FieldCreator {
   constructor(private readonly fieldModifierHandler: ModifierHandler) {}
+
   create(
     service: Pick<ServiceModel, "attributes" | "embedded_entities">
   ): Field[] {
-    const fieldsFromAttributes: Field[] = attributesToFields(
-      this.fieldModifierHandler,
+    const fieldsFromAttributes: Field[] = this.attributesToFields(
       service.attributes
     );
 
@@ -29,20 +33,19 @@ export class FieldCreator {
     return [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities];
   }
 
-  isOptional(entity: Pick<EmbeddedEntity, "lower_limit">): boolean {
+  private isOptional(entity: Pick<EmbeddedEntity, "lower_limit">): boolean {
     return entity.lower_limit === 0;
   }
 
-  isList(entity: Pick<EmbeddedEntity, "upper_limit">): boolean {
+  private isList(entity: Pick<EmbeddedEntity, "upper_limit">): boolean {
     return !entity.upper_limit || entity.upper_limit > 1;
   }
 
-  embeddedEntityToField(entity: EmbeddedEntity): Field | null {
+  private embeddedEntityToField(entity: EmbeddedEntity): Field | null {
     if (!this.fieldModifierHandler.validateModifier(entity.modifier))
       return null;
 
-    const fieldsFromAttributes: Field[] = attributesToFields(
-      this.fieldModifierHandler,
+    const fieldsFromAttributes: Field[] = this.attributesToFields(
       entity.attributes
     );
 
@@ -69,33 +72,30 @@ export class FieldCreator {
       fields: [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities],
     };
   }
-}
 
-function attributesToFields(
-  fieldModifierHandler: ModifierHandler,
-  attributes: AttributeModel[]
-): Field[] {
-  const converter = new AttributeInputConverterImpl();
-  return attributes
-    .filter((attribute) =>
-      fieldModifierHandler.validateModifier(attribute.modifier)
-    )
-    .map((attribute) => {
-      const type = converter.getInputType(attribute);
-      const defaultValue = converter.getFormDefaultValue(
-        type,
-        attribute.default_value_set,
-        attribute.default_value
-      );
+  private attributesToFields(attributes: AttributeModel[]): Field[] {
+    const converter = new AttributeInputConverterImpl();
+    return attributes
+      .filter((attribute) =>
+        this.fieldModifierHandler.validateModifier(attribute.modifier)
+      )
+      .map((attribute) => {
+        const type = converter.getInputType(attribute);
+        const defaultValue = converter.getFormDefaultValue(
+          type,
+          attribute.default_value_set,
+          attribute.default_value
+        );
 
-      return {
-        kind: "Flat",
-        name: attribute.name,
-        defaultValue: defaultValue,
-        inputType: type,
-        description: attribute.description,
-        type: attribute.type,
-        isOptional: attribute.type.includes("?"),
-      };
-    });
+        return {
+          kind: "Flat",
+          name: attribute.name,
+          defaultValue: defaultValue,
+          inputType: type,
+          description: attribute.description,
+          type: attribute.type,
+          isOptional: attribute.type.includes("?"),
+        };
+      });
+  }
 }

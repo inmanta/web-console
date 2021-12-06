@@ -99,7 +99,7 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   ).toBeVisible();
 });
 
-test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with fields & formState", () => {
+test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", () => {
   const nestedField = Test.Field.nested([
     { ...Test.Field.text, name: "flat_field_text_2" },
   ]);
@@ -138,7 +138,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
 
   userEvent.click(screen.getByRole("button", { name: "Confirm" }));
   expect(submitCb).toBeCalled();
-  expect(submitCb).toHaveBeenCalledWith(fields, {
+  expect(submitCb).toHaveBeenCalledWith({
     [Test.Field.text.name]: "test text",
     [Test.Field.bool.name]: true,
     [nestedField.name]: { [nestedField.fields[0].name]: "test text 2" },

@@ -9,7 +9,6 @@ import {
   TextVariants,
 } from "@patternfly/react-core";
 import {
-  Field,
   InstanceAttributeModel,
   Maybe,
   ServiceInstanceModel,
@@ -32,9 +31,8 @@ interface Props {
 export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const { commandResolver, environmentModifier, routeManager } =
     useContext(DependencyContext);
-  const fields = new FieldCreator(new EditModifierHandler()).create(
-    serviceEntity
-  );
+  const fieldCreator = new FieldCreator(new EditModifierHandler());
+  const fields = fieldCreator.create(serviceEntity);
   const isHalted = environmentModifier.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -56,10 +54,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     id: instance.id,
     version: instance.version,
   });
-  const onSubmit = async (
-    fields: Field[],
-    attributes: InstanceAttributeModel
-  ) => {
+  const onSubmit = async (attributes: InstanceAttributeModel) => {
     const result = await trigger(fields, currentAttributes, attributes);
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
