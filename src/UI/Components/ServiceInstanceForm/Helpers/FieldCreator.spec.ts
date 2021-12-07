@@ -7,8 +7,8 @@ test("GIVEN FieldCreator for create form WHEN create is provided with a service 
   const fields = new FieldCreator(new CreateModifierHandler()).create(
     Service.a
   );
-  expect(fields).toHaveLength(4);
-  expect((fields[3] as NestedField).fields).toHaveLength(3);
+  expect(fields).toHaveLength(6);
+  expect((fields[5] as NestedField).fields).toHaveLength(3);
 });
 
 test("GIVEN FieldCreator for edit form WHEN create is provided with a service THEN returns correct fields", () => {

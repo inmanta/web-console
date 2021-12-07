@@ -8,7 +8,7 @@ import {
   TextContent,
   TextVariants,
 } from "@patternfly/react-core";
-import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
+import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
   FieldCreator,
@@ -22,6 +22,8 @@ export const CreateInstance: React.FC<{ serviceEntity: ServiceModel }> = ({
 }) => {
   const { commandResolver, environmentModifier, routeManager } =
     useContext(DependencyContext);
+  const fieldCreator = new FieldCreator(new CreateModifierHandler());
+  const fields = fieldCreator.create(serviceEntity);
   const [errorMessage, setErrorMessage] = useState("");
   const isHalted = environmentModifier.useIsHalted();
   const navigate = useNavigate();
@@ -38,10 +40,7 @@ export const CreateInstance: React.FC<{ serviceEntity: ServiceModel }> = ({
     service_entity: serviceEntity.name,
   });
 
-  const onSubmit = async (
-    fields: Field[],
-    attributes: InstanceAttributeModel
-  ) => {
+  const onSubmit = async (attributes: InstanceAttributeModel) => {
     const result = await trigger(fields, attributes);
     if (result.kind === "Left") {
       setErrorMessage(result.value);
@@ -69,9 +68,7 @@ export const CreateInstance: React.FC<{ serviceEntity: ServiceModel }> = ({
         </Text>
       </TextContent>
       <ServiceInstanceForm
-        fields={new FieldCreator(new CreateModifierHandler()).create(
-          serviceEntity
-        )}
+        fields={fields}
         onSubmit={onSubmit}
         onCancel={handleRedirect}
         isSubmitDisabled={isHalted}

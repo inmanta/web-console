@@ -1,30 +1,50 @@
 import { TextInputTypes } from "@patternfly/react-core";
 
-export type Field = FlatField | NestedField | DictListField;
+/**
+ * A field contains all the information required to setup a form field for an AttributeModel.
+ * The actual live form value is not contained within this type.
+ * It is kept separate in a formState object.
+ */
+export type Field =
+  | BooleanField
+  | TextField
+  | EnumField
+  | NestedField
+  | DictListField;
 
-export interface FlatField {
-  kind: "Flat";
+interface BaseField {
   name: string;
   description?: string;
-  defaultValue: unknown;
-  inputType: TextInputTypes | "bool";
   isOptional: boolean;
+}
+
+export interface BooleanField extends BaseField {
+  kind: "Boolean";
+  defaultValue: unknown;
   type: string;
 }
 
-export interface NestedField {
+export interface TextField extends BaseField {
+  kind: "Text";
+  defaultValue: unknown;
+  inputType: TextInputTypes;
+  type: string;
+}
+
+export interface EnumField extends BaseField {
+  kind: "Enum";
+  defaultValue: unknown;
+  type: string;
+  options: Record<string, string | number>;
+}
+
+export interface NestedField extends BaseField {
   kind: "Nested";
-  name: string;
-  description?: string;
-  isOptional: boolean;
   fields: Field[];
 }
 
-export interface DictListField {
+export interface DictListField extends BaseField {
   kind: "DictList";
-  name: string;
-  description?: string;
-  isOptional: boolean;
   fields: Field[];
   min: number;
   max?: number;

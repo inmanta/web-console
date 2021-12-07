@@ -1,9 +1,16 @@
 import { TextInputTypes } from "@patternfly/react-core";
-import { DictListField, Field, FlatField, NestedField } from "@/Core";
+import {
+  DictListField,
+  Field,
+  NestedField,
+  TextField,
+  BooleanField,
+  EnumField,
+} from "@/Core";
 
-export const text: FlatField = {
-  kind: "Flat",
-  name: "flat_field_text",
+export const text: TextField = {
+  kind: "Text",
+  name: "text_field",
   description: "description",
   isOptional: true,
   defaultValue: "",
@@ -11,18 +18,30 @@ export const text: FlatField = {
   type: "string?",
 };
 
-export const bool: FlatField = {
-  kind: "Flat",
-  name: "flat_field_boolean",
+export const bool: BooleanField = {
+  kind: "Boolean",
+  name: "boolean_field",
   description: "description",
   isOptional: true,
   defaultValue: null,
-  inputType: "bool",
   type: "bool?",
 };
 
-export const number: FlatField = {
-  kind: "Flat",
+export const enumField: EnumField = {
+  kind: "Enum",
+  name: "enum_field",
+  description: "description",
+  isOptional: false,
+  defaultValue: "local",
+  options: {
+    local: "local",
+    ci: "ci",
+  },
+  type: "string",
+};
+
+export const number: TextField = {
+  kind: "Text",
   name: "flat_field_numbr",
   description: "description",
   isOptional: true,
@@ -51,7 +70,7 @@ export const dictList = (fields?: Field[]): DictListField => ({
 
 export const nestedEditable: Field[] = [
   {
-    kind: "Flat",
+    kind: "Text",
     name: "id_attr",
     defaultValue: "id",
     inputType: TextInputTypes.text,
@@ -60,7 +79,7 @@ export const nestedEditable: Field[] = [
     isOptional: false,
   },
   {
-    kind: "Flat",
+    kind: "Text",
     name: "other_attr1",
     defaultValue: "test",
     inputType: TextInputTypes.text,
@@ -69,7 +88,7 @@ export const nestedEditable: Field[] = [
     isOptional: true,
   },
   {
-    kind: "Flat",
+    kind: "Text",
     name: "other_attr2",
     defaultValue: "",
     inputType: TextInputTypes.text,
@@ -83,7 +102,7 @@ export const nestedEditable: Field[] = [
     isOptional: true,
     fields: [
       {
-        kind: "Flat",
+        kind: "Text",
         name: "my_attr",
         defaultValue: "",
         inputType: TextInputTypes.number,
@@ -91,15 +110,14 @@ export const nestedEditable: Field[] = [
         isOptional: false,
       },
       {
-        kind: "Flat",
+        kind: "Boolean",
         name: "bool_attr",
         defaultValue: null,
-        inputType: "bool",
         type: "bool?",
         isOptional: true,
       },
       {
-        kind: "Flat",
+        kind: "Text",
         name: "dict_attr",
         defaultValue: "",
         inputType: TextInputTypes.text,
@@ -112,7 +130,7 @@ export const nestedEditable: Field[] = [
         isOptional: true,
         fields: [
           {
-            kind: "Flat",
+            kind: "Text",
             name: "attr4",
             defaultValue: "",
             inputType: TextInputTypes.text,
@@ -131,7 +149,7 @@ export const nestedEditable: Field[] = [
     isOptional: true,
     fields: [
       {
-        kind: "Flat",
+        kind: "Text",
         name: "my_other_attr",
         defaultValue: "",
         inputType: TextInputTypes.text,
@@ -144,7 +162,7 @@ export const nestedEditable: Field[] = [
         isOptional: true,
         fields: [
           {
-            kind: "Flat",
+            kind: "Text",
             name: "attr5",
             defaultValue: "",
             inputType: TextInputTypes.number,
@@ -152,7 +170,7 @@ export const nestedEditable: Field[] = [
             isOptional: false,
           },
           {
-            kind: "Flat",
+            kind: "Text",
             name: "attr6",
             defaultValue: "",
             inputType: TextInputTypes.number,

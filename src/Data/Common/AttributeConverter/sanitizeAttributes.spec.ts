@@ -9,8 +9,8 @@ test("GIVEN sanitizeAttributes WHEN passed DictListFields THEN sanitizes all fie
   expect(sanitized).toMatchObject({
     dict_list_field: [
       {
-        flat_field_text: null,
-        flat_field_boolean: null,
+        text_field: null,
+        boolean_field: null,
       },
     ],
   });

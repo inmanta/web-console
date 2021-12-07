@@ -1,0 +1,4 @@
+description: Add enum support for service instance create and edit
+issue-nr: 1951
+change-type: minor
+destination-branches: [master, iso4]

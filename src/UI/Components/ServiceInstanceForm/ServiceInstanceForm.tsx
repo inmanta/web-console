@@ -9,7 +9,7 @@ import { createEditFormState, createFormState } from "./Helpers";
 
 interface Props {
   fields: Field[];
-  onSubmit(fields: Field[], formState: InstanceAttributeModel): void;
+  onSubmit(formState: InstanceAttributeModel): void;
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
   isSubmitDisabled?: boolean;
@@ -40,6 +40,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     event.preventDefault();
   };
 
+  const onConfirm = () => onSubmit(formState);
+
   return (
     <Form onSubmit={preventDefault}>
       {fields.map((field) => (
@@ -60,7 +62,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         >
           <Button
             variant="primary"
-            onClick={() => onSubmit(fields, formState)}
+            onClick={onConfirm}
             isDisabled={isSubmitDisabled}
           >
             {words("confirm")}
