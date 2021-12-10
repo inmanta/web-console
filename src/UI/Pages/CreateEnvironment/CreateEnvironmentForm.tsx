@@ -34,16 +34,16 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   const setName = (name: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, name });
   };
-  const setDescription = async (description: string) => {
+  const setDescription = (description: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, description });
   };
-  const setRepository = async (repository: string) => {
+  const setRepository = (repository: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, repository });
   };
-  const setBranch = async (branch: string) => {
+  const setBranch = (branch: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, branch });
   };
-  const setIcon = async (icon: string) => {
+  const setIcon = (icon: string) => {
     setCreateEnvironmentBody({
       ...createEnvironmentBody,
       icon,
