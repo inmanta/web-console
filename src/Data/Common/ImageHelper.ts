@@ -19,13 +19,13 @@ export class ImageHelper {
     return `${Math.round(file.size / 1000)} KB`;
   }
 
-  private static isFileTypeValid(file: { type: string }): boolean {
+  private static isFileTypeValid(file: FileType): boolean {
     return ["image/png", "image/jpeg", "image/webp", "image/svg+xml"].includes(
       file.type
     );
   }
 
-  private static isFileSizeValid(file: { size: number }): boolean {
+  private static isFileSizeValid(file: FileSize): boolean {
     return file.size <= 64000;
   }
 
