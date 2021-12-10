@@ -155,9 +155,10 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new ModifyEnvironmentCommandManager(
         this.apiHelper,
-        new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(this.store),
-          this.apiHelper
+        new EnvironmentDetailsUpdater(
+          new EnvironmentDetailsStateHelper(this.store, environment),
+          this.apiHelper,
+          environment
         ),
         environment
       ),

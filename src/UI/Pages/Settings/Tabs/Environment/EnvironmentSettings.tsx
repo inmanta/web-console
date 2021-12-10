@@ -6,6 +6,7 @@ import {
   EditableTextField,
   EditableMultiTextField,
   EditableSelectField,
+  EditableImageField,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -50,6 +51,12 @@ export const EnvironmentSettings: React.FC<Props> = ({
     });
   };
 
+  const onIconSubmit = async (icon: string) =>
+    modifyEnvironmentTrigger({
+      name: environment.name,
+      icon,
+    });
+
   return (
     <PaddedList aria-label={props["aria-label"]}>
       <EditableTextField
@@ -71,6 +78,11 @@ export const EnvironmentSettings: React.FC<Props> = ({
         options={projects.map((project) => project.name)}
         onCreate={createProject}
         onSubmit={onProjectSubmit}
+      />
+      <EditableImageField
+        label={words("settings.tabs.environment.icon")}
+        initialValue={environment.icon || ""}
+        onSubmit={onIconSubmit}
       />
     </PaddedList>
   );

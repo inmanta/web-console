@@ -10,7 +10,7 @@ import {
 export class ModifyEnvironmentCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"GetEnvironments">,
+    private readonly updater: Updater<"GetEnvironmentDetails">,
     private readonly environment: string
   ) {}
 
@@ -30,7 +30,7 @@ export class ModifyEnvironmentCommandManager implements CommandManager {
       body
     );
     await this.updater.update({
-      kind: "GetEnvironments",
+      kind: "GetEnvironmentDetails",
       details: true,
     });
     return error;

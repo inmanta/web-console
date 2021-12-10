@@ -15,6 +15,10 @@ import {
   EnvironmentDetailsSlice,
 } from "./EnvironmentDetailsSlice";
 import {
+  environmentDetailsWithIconSlice,
+  EnvironmentDetailsWithIconSlice,
+} from "./EnvironmentDetailsWithIconSlice";
+import {
   environmentSettingsSlice,
   EnvironmentSettingsSlice,
 } from "./EnvironmentSettingsSlice";
@@ -71,6 +75,7 @@ export interface StoreModel {
   resourceHistory: ResourceHistorySlice;
   resourceLogs: ResourceLogsSlice;
   environmentDetails: EnvironmentDetailsSlice;
+  environmentDetailsWithIcon: EnvironmentDetailsWithIconSlice;
   callbacks: CallbacksSlice;
   compileReports: CompileReportsSlice;
   compileDetails: CompileDetailsSlice;
@@ -98,6 +103,7 @@ export const storeModel: StoreModel = {
   resourceHistory: resourceHistorySlice,
   resourceLogs: resourceLogsSlice,
   environmentDetails: environmentDetailsSlice,
+  environmentDetailsWithIcon: environmentDetailsWithIconSlice,
   callbacks: callbacksSlice,
   compileReports: compileReportsSlice,
   compileDetails: compileDetailsSlice,

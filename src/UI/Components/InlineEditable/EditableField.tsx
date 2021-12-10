@@ -12,11 +12,7 @@ import {
   EnableEditButton,
   SubmitEditButton,
 } from "./InlineEditButtons";
-import {
-  InlineEditButtonFiller,
-  InlineLabelItem,
-  InlineValue,
-} from "./InlineFillers";
+import { InlineEditButtonFiller, InlineLabelItem } from "./InlineFillers";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 
 export interface FieldProps {
@@ -27,15 +23,19 @@ export interface FieldProps {
   onSubmit: (value: string) => Promise<Maybe.Type<string>>;
 }
 
-export type InputComponent = React.FC<{
+export type EditViewComponent = React.FC<{
   label: string;
   value: string;
+  initialValue: string;
   onChange(value: string): void;
   onSubmit(): void;
 }>;
 
+export type StaticViewComponent = React.FC<{ value: string }>;
+
 interface Props extends FieldProps {
-  Input: InputComponent;
+  EditView: EditViewComponent;
+  StaticView: StaticViewComponent;
 }
 
 export const EditableField: React.FC<Props> = ({
@@ -44,7 +44,8 @@ export const EditableField: React.FC<Props> = ({
   initialValue,
   initiallyEditable,
   onSubmit,
-  Input,
+  EditView,
+  StaticView,
 }) => {
   const [editable, setEditable] = useState(initiallyEditable);
   const [submitError, setSubmitError] = useState("");
@@ -109,25 +110,26 @@ export const EditableField: React.FC<Props> = ({
       )}
       <DescriptionListDescription>
         {!editable && (
-          <InlineValue aria-label={`${label}-value`}>{value}</InlineValue>
+          <StaticView aria-label={`${label}-value`} value={value} />
         )}
         {editable && (
           <Flex spaceItems={{ default: "spaceItemsNone" }}>
             <FlexItem>
-              <Input
+              <EditView
                 label={label}
                 value={value}
                 onChange={setValue}
                 onSubmit={() => onSubmitRequest(value)}
+                initialValue={initialValue}
               />
             </FlexItem>
-            <FlexItem>
+            <FlexItem alignSelf={{ default: "alignSelfFlexEnd" }}>
               <SubmitEditButton
                 aria-label={`${label}-submit-edit`}
                 onClick={onSubmitClick}
               />
             </FlexItem>
-            <FlexItem>
+            <FlexItem alignSelf={{ default: "alignSelfFlexEnd" }}>
               <CancelEditButton
                 aria-label={`${label}-cancel-edit`}
                 onClick={onCancelEditClick}

@@ -6,11 +6,11 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   ModifyEnvironmentCommandManager,
-  EnvironmentsUpdater,
-  GetEnvironmentsStateHelper,
   CreateProjectCommandManager,
   ProjectsUpdater,
   GetProjectsStateHelper,
+  EnvironmentDetailsUpdater,
+  EnvironmentDetailsStateHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -34,9 +34,10 @@ function setup() {
       ),
       new ModifyEnvironmentCommandManager(
         apiHelper,
-        new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(store),
-          apiHelper
+        new EnvironmentDetailsUpdater(
+          new EnvironmentDetailsStateHelper(store, selectedEnvironment.id),
+          apiHelper,
+          selectedEnvironment.id
         ),
         selectedEnvironment.id
       ),

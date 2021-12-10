@@ -37,6 +37,13 @@ const dict = {
   "error.authorizationFailed": "Authorization failed, please log in",
   "error.fetch": (error: string) =>
     `There was an error retrieving data: ${error}`,
+  "error.image.title": "Invalid image",
+  "error.image.unknown": (name: string) =>
+    `Something went wrong with file ${name}`,
+  "error.image.type": (name: string, type: string) =>
+    `File '${name}' is not allowed because of an incorrect file type (${type}). Only jpeg, png, webp and svg images are supported.`,
+  "error.image.size": (name: string, size: string) =>
+    `File '${name}' is not allowed because of an incorrect file size (${size}). The maximum file size supported is 64 KB.`,
 
   "notFound.title": "404: We couldn't find that page",
   "notFound.home": "Go home",
@@ -344,6 +351,7 @@ const dict = {
   "createEnv.projectName": "Project Name",
   "createEnv.repository": "Repository",
   "createEnv.branch": "Branch",
+  "createEnv.icon": "Icon",
 
   /**
    * Navigation related text
@@ -360,6 +368,7 @@ const dict = {
   "settings.tabs.environment.name": "Name",
   "settings.tabs.environment.repoSettings": "Repository Settings",
   "settings.tabs.environment.projectName": "Project Name",
+  "settings.tabs.environment.icon": "Icon",
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
   "settings.tabs.configuration.default": (value: string) =>

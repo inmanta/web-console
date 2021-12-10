@@ -97,3 +97,22 @@ export const fold = <F, S, R>(
       return handlers.success(data.value);
   }
 };
+
+/**
+ * Merges 2 remote data values into 1.
+ * When both values are successful, both values are returned.
+ * In all other cases:
+ * - Notasked takes priority over Loading.
+ * - Loading takes priority over Failed.
+ * - Failed takes priority over Success
+ */
+export const merge = <F1, S1, F2, S2>(
+  data1: RemoteData<F1, S1>,
+  data2: RemoteData<F2, S2>
+): RemoteData<F1 | F2, [S1, S2]> => {
+  if (isNotAsked(data1) || isNotAsked(data2)) return notAsked();
+  if (isLoading(data1) || isLoading(data2)) return loading();
+  if (isFailed(data1)) return failed(data1.value);
+  if (isFailed(data2)) return failed(data2.value);
+  return success([data1.value, data2.value] as [S1, S2]);
+};

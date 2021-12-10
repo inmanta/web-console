@@ -1,5 +1,6 @@
 import React from "react";
-import { FormGroup, TextInput } from "@patternfly/react-core";
+import { FormGroup } from "@patternfly/react-core";
+import { ImageUpload } from "@/UI/Components";
 
 interface Props {
   label: string;
@@ -8,7 +9,7 @@ interface Props {
   onChange: (value: string) => void;
 }
 
-export const SimpleTextFormInput: React.FC<Props> = ({
+export const ImageField: React.FC<Props> = ({
   label,
   isRequired,
   value,
@@ -16,11 +17,7 @@ export const SimpleTextFormInput: React.FC<Props> = ({
 }) => {
   return (
     <FormGroup fieldId={label} label={label} isRequired={isRequired}>
-      <TextInput
-        aria-label={`${label}-input`}
-        value={value}
-        onChange={onChange}
-      />
+      <ImageUpload onComplete={onChange} initial={value} />
     </FormGroup>
   );
 };

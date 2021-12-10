@@ -6,7 +6,8 @@ import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { SimpleTextFormInput } from "./SimpleTextFormInput";
+import { ImageField } from "./ImageField";
+import { TextField } from "./TextField";
 
 interface Props {
   projects: ProjectModel[];
@@ -38,6 +39,12 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   };
   const setBranch = async (branch: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, branch });
+  };
+  const setIcon = async (icon: string) => {
+    setCreateEnvironmentBody({
+      ...createEnvironmentBody,
+      icon,
+    });
   };
 
   const onSubmitCreate = async () => {
@@ -86,21 +93,26 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
         onCreate={createProject}
         onSelect={setProjectName}
       />
-      <SimpleTextFormInput
+      <TextField
         isRequired
         value={createEnvironmentBody.name}
         label={words("settings.tabs.environment.name")}
         onChange={setEnvironmentName}
       />
-      <SimpleTextFormInput
+      <TextField
         value={createEnvironmentBody.repository || ""}
         label={words("createEnv.repository")}
         onChange={setRepository}
       />
-      <SimpleTextFormInput
+      <TextField
         value={createEnvironmentBody.branch || ""}
         label={words("createEnv.branch")}
         onChange={setBranch}
+      />
+      <ImageField
+        value={createEnvironmentBody.icon || ""}
+        label={words("createEnv.icon")}
+        onChange={setIcon}
       />
       <FormControls
         onSubmit={onSubmitCreate}

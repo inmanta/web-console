@@ -31,6 +31,7 @@ import {
   ResourceHistoryStateHelper,
   ResourceHistoryQueryManager,
   EnvironmentDetailsQueryManager,
+  EnvironmentDetailsOneTimeQueryManager,
   EnvironmentDetailsStateHelper,
   ServiceInstanceQueryManager,
   ServiceInstanceStateHelper,
@@ -180,6 +181,10 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.apiHelper,
         new EnvironmentDetailsStateHelper(this.store, environment),
         scheduler
+      ),
+      new EnvironmentDetailsOneTimeQueryManager(
+        this.apiHelper,
+        new EnvironmentDetailsStateHelper(this.store, environment)
       ),
       new ServiceInstanceQueryManager(
         this.apiHelper,

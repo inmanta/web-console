@@ -1,3 +1,4 @@
+export * from "./ImageHelper";
 export * from "./PrimaryArchiveHelper";
 export * from "./PrimaryFeatureManager";
 export * from "./PrimaryFileManager";
