@@ -6,6 +6,8 @@ import {
   EditableTextField,
   EditableMultiTextField,
   EditableSelectField,
+  EditableImageField,
+  EditableTextAreaField,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -50,12 +52,29 @@ export const EnvironmentSettings: React.FC<Props> = ({
     });
   };
 
+  const onIconSubmit = async (icon: string) =>
+    modifyEnvironmentTrigger({
+      name: environment.name,
+      icon,
+    });
+
+  const onDescriptionSubmit = async (description: string) =>
+    modifyEnvironmentTrigger({
+      name: environment.name,
+      description,
+    });
+
   return (
     <PaddedList aria-label={props["aria-label"]}>
       <EditableTextField
         initialValue={environment.name}
         label={words("settings.tabs.environment.name")}
         onSubmit={onNameSubmit}
+      />
+      <EditableTextAreaField
+        initialValue={environment.description || ""}
+        label={words("settings.tabs.environment.description")}
+        onSubmit={onDescriptionSubmit}
       />
       <EditableMultiTextField
         groupName={words("settings.tabs.environment.repoSettings")}
@@ -72,10 +91,16 @@ export const EnvironmentSettings: React.FC<Props> = ({
         onCreate={createProject}
         onSubmit={onProjectSubmit}
       />
+      <EditableImageField
+        label={words("settings.tabs.environment.icon")}
+        initialValue={environment.icon || ""}
+        onSubmit={onIconSubmit}
+      />
     </PaddedList>
   );
 };
 
 const PaddedList = styled(DescriptionList)`
   padding-top: 1em;
+  max-width: 600px;
 `;

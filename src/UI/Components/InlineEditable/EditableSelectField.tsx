@@ -1,7 +1,12 @@
 import React from "react";
 import { Maybe } from "@/Core";
 import { CreatableSelectInput } from "./CreatableSelectInput";
-import { EditableField, FieldProps } from "./EditableField";
+import {
+  EditableField,
+  FieldProps,
+  StaticViewComponent,
+} from "./EditableField";
+import { InlineValue } from "./InlineFillers";
 
 interface Props extends FieldProps {
   options: string[];
@@ -24,7 +29,7 @@ export const EditableSelectField: React.FC<Props> = ({
       label={label}
       initialValue={initialValue}
       onSubmit={onSubmit}
-      Input={({ value, onChange, label }) => (
+      EditView={({ value, onChange, label }) => (
         <CreatableSelectInput
           value={value}
           label={label}
@@ -33,6 +38,11 @@ export const EditableSelectField: React.FC<Props> = ({
           onSelect={onChange}
         />
       )}
+      StaticView={StaticView}
     />
   );
 };
+
+const StaticView: StaticViewComponent = ({ value, ...props }) => (
+  <InlineValue {...props}>{value}</InlineValue>
+);

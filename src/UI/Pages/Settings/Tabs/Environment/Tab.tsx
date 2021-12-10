@@ -1,19 +1,25 @@
 import React, { useContext } from "react";
-import { FlatEnvironment, RemoteData } from "@/Core";
+import {
+  EnvironmentDetails,
+  FlatEnvironment,
+  ProjectModel,
+  RemoteData,
+} from "@/Core";
 import { DependencyContext } from "@/UI";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
-interface Props {
-  environment: FlatEnvironment;
-}
-
-export const Tab: React.FC<Props> = ({ environment }) => {
+export const Tab: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"GetProjects">({
     kind: "GetProjects",
     environmentDetails: false,
   });
+  const [envData] = queryResolver.useOneTime<"GetEnvironmentDetails">({
+    kind: "GetEnvironmentDetails",
+    details: true,
+  });
+
   return RemoteData.fold(
     {
       notAsked: () => null,
@@ -21,14 +27,23 @@ export const Tab: React.FC<Props> = ({ environment }) => {
       failed: (message) => (
         <ErrorView message={message} aria-label="EditEnvironment-Failed" />
       ),
-      success: (projects) => (
+      success: ([environmentDetails, projects]) => (
         <EnvironmentSettings
           aria-label="Environment-Success"
-          environment={environment}
+          environment={addProjectName(environmentDetails, projects)}
           projects={projects}
         />
       ),
     },
-    data
+    RemoteData.merge(envData, data)
   );
+};
+
+const addProjectName = (
+  env: EnvironmentDetails,
+  projects: ProjectModel[]
+): FlatEnvironment => {
+  const match = projects.find((p) => p.id === env.project_id);
+  if (!match) return { ...env, projectName: "" };
+  return { ...env, projectName: match.name };
 };

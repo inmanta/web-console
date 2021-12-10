@@ -1,7 +1,6 @@
 import React, { useContext, useRef } from "react";
 import { Tooltip } from "@patternfly/react-core";
 import { CogIcon, InfoCircleIcon, KeyIcon } from "@patternfly/react-icons";
-import { FlatEnvironment } from "@/Core";
 import { ErrorView, IconTabs, TabDescriptor } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -41,7 +40,7 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
         activeTab={activeTab}
         onChange={setActiveTab}
         tabs={[
-          environmentTab(selected),
+          environmentTab(),
           configurationTab(selected.id),
           tokensTab(tokenTabDisabled, tokenTooltipRef),
         ]}
@@ -56,13 +55,11 @@ export const Tabs: React.FC<Props> = ({ activeTab, setActiveTab }) => {
   );
 };
 
-const environmentTab = (
-  environment: FlatEnvironment
-): TabDescriptor<TabKey> => ({
+const environmentTab = (): TabDescriptor<TabKey> => ({
   id: TabKey.Environment,
   title: words("settings.tabs.environment"),
   icon: <InfoCircleIcon />,
-  view: <EnvironmentTab environment={environment} />,
+  view: <EnvironmentTab />,
 });
 
 const configurationTab = (environmentId: string): TabDescriptor<TabKey> => ({

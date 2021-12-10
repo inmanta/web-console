@@ -110,7 +110,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
                 )}
                 {editable && (
                   <Flex spaceItems={{ default: "spaceItemsNone" }}>
-                    <FlexItem>
+                    <FlexItem grow={{ default: "grow" }}>
                       <TextInput
                         aria-label={`${label}-input`}
                         value={value}

@@ -12,11 +12,7 @@ import {
   EnableEditButton,
   SubmitEditButton,
 } from "./InlineEditButtons";
-import {
-  InlineEditButtonFiller,
-  InlineLabelItem,
-  InlineValue,
-} from "./InlineFillers";
+import { InlineEditButtonFiller, InlineLabelItem } from "./InlineFillers";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 
 export interface FieldProps {
@@ -27,15 +23,20 @@ export interface FieldProps {
   onSubmit: (value: string) => Promise<Maybe.Type<string>>;
 }
 
-export type InputComponent = React.FC<{
+export type EditViewComponent = React.FC<{
   label: string;
   value: string;
+  initialValue: string;
   onChange(value: string): void;
   onSubmit(): void;
 }>;
 
+export type StaticViewComponent = React.FC<{ value: string }>;
+
 interface Props extends FieldProps {
-  Input: InputComponent;
+  EditView: EditViewComponent;
+  StaticView: StaticViewComponent;
+  alignActions?: "start" | "end";
 }
 
 export const EditableField: React.FC<Props> = ({
@@ -44,8 +45,12 @@ export const EditableField: React.FC<Props> = ({
   initialValue,
   initiallyEditable,
   onSubmit,
-  Input,
+  EditView,
+  StaticView,
+  alignActions,
 }) => {
+  const alignment =
+    alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
   const [editable, setEditable] = useState(initiallyEditable);
   const [submitError, setSubmitError] = useState("");
   const [value, setValue] = useState(initialValue);
@@ -109,25 +114,27 @@ export const EditableField: React.FC<Props> = ({
       )}
       <DescriptionListDescription>
         {!editable && (
-          <InlineValue aria-label={`${label}-value`}>{value}</InlineValue>
+          <StaticView aria-label={`${label}-value`} value={value} />
         )}
         {editable && (
           <Flex spaceItems={{ default: "spaceItemsNone" }}>
-            <FlexItem>
-              <Input
+            <FlexItem grow={{ default: "grow" }}>
+              <EditView
+                aria-label={`${label}-input`}
                 label={label}
                 value={value}
                 onChange={setValue}
                 onSubmit={() => onSubmitRequest(value)}
+                initialValue={initialValue}
               />
             </FlexItem>
-            <FlexItem>
+            <FlexItem alignSelf={{ default: alignment }}>
               <SubmitEditButton
                 aria-label={`${label}-submit-edit`}
                 onClick={onSubmitClick}
               />
             </FlexItem>
-            <FlexItem>
+            <FlexItem alignSelf={{ default: alignment }}>
               <CancelEditButton
                 aria-label={`${label}-cancel-edit`}
                 onClick={onCancelEditClick}

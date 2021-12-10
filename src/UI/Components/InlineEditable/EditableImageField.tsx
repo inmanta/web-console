@@ -1,14 +1,14 @@
 import React from "react";
-import { TextInput } from "@patternfly/react-core";
+import { ImageUpload } from "@/UI/Components/ImageUpload";
+import { ImagePreview } from "../ImageUpload/ImagePreview";
 import {
   EditableField,
   EditViewComponent,
   FieldProps,
   StaticViewComponent,
 } from "./EditableField";
-import { InlineValue } from "./InlineFillers";
 
-export const EditableTextField: React.FC<FieldProps> = ({
+export const EditableImageField: React.FC<FieldProps> = ({
   isRequired,
   label,
   initialValue,
@@ -23,21 +23,14 @@ export const EditableTextField: React.FC<FieldProps> = ({
     onSubmit={onSubmit}
     EditView={EditView}
     StaticView={StaticView}
+    alignActions="end"
   />
 );
 
-const EditView: EditViewComponent = ({ value, onChange, onSubmit, label }) => (
-  <TextInput
-    aria-label={`${label}-input`}
-    value={value}
-    onChange={onChange}
-    onKeyDown={(event) => {
-      if (event.key && event.key !== "Enter") return;
-      onSubmit();
-    }}
-  />
+const EditView: EditViewComponent = ({ onChange, initialValue, ...props }) => (
+  <ImageUpload {...props} onComplete={onChange} initial={initialValue} />
 );
 
 const StaticView: StaticViewComponent = ({ value, ...props }) => (
-  <InlineValue {...props}>{value}</InlineValue>
+  <ImagePreview {...props} dataUrl={value} />
 );

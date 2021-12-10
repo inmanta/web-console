@@ -77,12 +77,16 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
 }) => (
   <Card isHoverable isCompact aria-label={"Environment card"}>
     <StyledHeader>
-      {environment.icon && (
+      {environment.icon ? (
         <StyledIcon
           src={`data:${environment.icon}`}
           alt={words("home.environment.icon")(environment.name)}
           aria-label={`${environment.name}-icon`}
         />
+      ) : (
+        <FillerIcon aria-label={`${environment.name}-icon`}>
+          {environment.name[0].toUpperCase()}
+        </FillerIcon>
       )}
       <Actions environment={environment} />
     </StyledHeader>
@@ -100,7 +104,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
 );
 
 const StyledCardContent = styled.div`
-  overflow-wrap: break-word;
+  white-space: pre-wrap;
 `;
 
 const StyledFooterDiv = styled.div`
@@ -108,9 +112,22 @@ const StyledFooterDiv = styled.div`
 `;
 
 const StyledIcon = styled.img`
-  height: 2em;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+`;
+
+const FillerIcon = styled.div`
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: white;
+  background-color: var(--pf-global--default-color--100);
+  border-radius: 50%;
 `;
 
 const StyledHeader = styled(CardHeader)`
-  height: 3em;
+  min-height: 64px;
 `;

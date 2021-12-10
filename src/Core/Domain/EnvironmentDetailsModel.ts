@@ -6,6 +6,8 @@ export interface EnvironmentDetails {
   repo_branch: string;
   settings: Record<string, unknown>;
   halted: boolean;
+  description?: string;
+  icon?: string;
 }
 
 export interface ModifyEnvironmentParams {
@@ -13,11 +15,15 @@ export interface ModifyEnvironmentParams {
   project_id?: string;
   repository?: string;
   branch?: string;
+  icon?: string;
+  description?: string;
 }
 
 export interface CreateEnvironmentParams {
-  project_id: string;
   name: string;
+  project_id: string;
   repository?: string;
   branch?: string;
+  icon?: string;
+  description?: string;
 }

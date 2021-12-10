@@ -291,3 +291,45 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
     screen.queryByRole("generic", { name: "submit-error-message" })
   ).not.toBeInTheDocument();
 });
+
+test.only(`Given CreateEnvironmentForm When an existing project, a valid environment and description are set and submit is clicked Then sends the correct requests`, async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  apiHelper.resolve(
+    Either.right({
+      data: Project.filterable,
+    })
+  );
+
+  userEvent.click(
+    await screen.findByRole("button", { name: "Project Name-select-toggle" })
+  );
+  userEvent.click(
+    await screen.findByRole("option", { name: Project.filterable[0].name })
+  );
+
+  const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+  userEvent.clear(textBox);
+  userEvent.type(textBox, `dev{enter}`);
+
+  const description = "description text";
+  const descriptionInput = screen.getByRole("textbox", {
+    name: "Description-input",
+  });
+  userEvent.clear(descriptionInput);
+  userEvent.type(descriptionInput, description);
+
+  userEvent.click(await screen.findByRole("button", { name: "submit" }));
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "PUT",
+    body: {
+      name: "dev",
+      project_id: "1",
+      description,
+    },
+    url: `/api/v2/environment`,
+  });
+});

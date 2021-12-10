@@ -1,48 +1,29 @@
-import { isEqual } from "lodash";
-import { Query, RemoteData, StateHelper } from "@/Core";
-import { Store, useStoreState } from "@/Data/Store";
+import { Query, RemoteData } from "@/Core";
+import { PrimaryStateHelper } from "@/Data/Common";
+import { Store, State, Dispatch } from "@/Data/Store";
 
-type Data = RemoteData.Type<
-  Query.Error<"GetEnvironmentDetails">,
-  Query.Data<"GetEnvironmentDetails">
->;
-type ApiData = RemoteData.Type<
-  Query.Error<"GetEnvironmentDetails">,
-  Query.ApiResponse<"GetEnvironmentDetails">
->;
-
-export class EnvironmentDetailsStateHelper
-  implements StateHelper<"GetEnvironmentDetails">
-{
-  constructor(
-    private readonly store: Store,
-    private readonly environment: string
-  ) {}
-
-  set(data: ApiData): void {
-    const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-    this.store.dispatch.environmentDetails.setData({
-      id: this.environment,
-      value: unwrapped,
-    });
-  }
-
-  getHooked(): Data {
-    /* eslint-disable-next-line react-hooks/rules-of-hooks */
-    return useStoreState(
-      (state) => this.enforce(state.environmentDetails.byEnv[this.environment]),
-      isEqual
+export class EnvironmentDetailsStateHelper extends PrimaryStateHelper<"GetEnvironmentDetails"> {
+  constructor(store: Store, private readonly environment: string) {
+    super(
+      store,
+      (data, query) => {
+        const unwrapped = RemoteData.mapSuccess(
+          (wrapped) => wrapped.data,
+          data
+        );
+        this.getSlice(store.dispatch, query).setData({
+          id: this.environment,
+          value: unwrapped,
+        });
+      },
+      (state, query) => this.getSlice(state, query).byEnv[environment]
     );
   }
 
-  private enforce(value: undefined | Data): Data {
-    if (typeof value === "undefined") return RemoteData.notAsked();
-    return value;
-  }
-
-  getOnce(): Data {
-    return this.enforce(
-      this.store.getState().environmentDetails.byEnv[this.environment]
-    );
+  private getSlice<T extends Dispatch | State>(
+    root: T,
+    { details }: Query.SubQuery<"GetEnvironmentDetails">
+  ): T["environmentDetails" | "environmentDetailsWithIcon"] {
+    return details ? root.environmentDetailsWithIcon : root.environmentDetails;
   }
 }
