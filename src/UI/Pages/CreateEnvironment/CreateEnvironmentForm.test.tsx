@@ -292,7 +292,7 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
   ).not.toBeInTheDocument();
 });
 
-test(`Given CreateEnvironmentForm When an existing project, a valid environmentt and image and description are set and submit is clicked Then sends the correct requests`, async () => {
+test.only(`Given CreateEnvironmentForm When an existing project, a valid environment and description are set and submit is clicked Then sends the correct requests`, async () => {
   const { component, apiHelper } = setup();
   render(component);
 
