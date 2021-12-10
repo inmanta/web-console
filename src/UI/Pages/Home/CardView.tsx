@@ -104,7 +104,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
 );
 
 const StyledCardContent = styled.div`
-  overflow-wrap: break-word;
+  white-space: pre-wrap;
 `;
 
 const StyledFooterDiv = styled.div`

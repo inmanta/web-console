@@ -23,6 +23,7 @@ export const EditableImageField: React.FC<FieldProps> = ({
     onSubmit={onSubmit}
     EditView={EditView}
     StaticView={StaticView}
+    alignActions="end"
   />
 );
 

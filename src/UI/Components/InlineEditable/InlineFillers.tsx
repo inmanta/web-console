@@ -13,6 +13,13 @@ export const InlineLabelItem = styled(FlexItem)`
   }
 `;
 
+export const InlineAreaValue = styled.div`
+  padding-bottom: 6px;
+  padding-top: 6px;
+  padding-left: 9px;
+  height: 75px;
+`;
+
 export const InlineValue = styled.div`
   padding-bottom: 6px;
   padding-top: 6px;

@@ -7,6 +7,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { ImageField } from "./ImageField";
+import { TextAreaField } from "./TextAreaField";
 import { TextField } from "./TextField";
 
 interface Props {
@@ -30,9 +31,11 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
     useState<CreateEnvironmentParams>({ project_id: "", name: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const [projectName, setProjectName] = useState("");
-  const setEnvironmentName = async (name: string) => {
+  const setName = (name: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, name });
-    return Maybe.none();
+  };
+  const setDescription = async (description: string) => {
+    setCreateEnvironmentBody({ ...createEnvironmentBody, description });
   };
   const setRepository = async (repository: string) => {
     setCreateEnvironmentBody({ ...createEnvironmentBody, repository });
@@ -96,8 +99,13 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
       <TextField
         isRequired
         value={createEnvironmentBody.name}
-        label={words("settings.tabs.environment.name")}
-        onChange={setEnvironmentName}
+        label={words("createEnv.name")}
+        onChange={setName}
+      />
+      <TextAreaField
+        value={createEnvironmentBody.description || ""}
+        label={words("createEnv.description")}
+        onChange={setDescription}
       />
       <TextField
         value={createEnvironmentBody.repository || ""}

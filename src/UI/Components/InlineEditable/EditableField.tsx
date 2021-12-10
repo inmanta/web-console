@@ -36,6 +36,7 @@ export type StaticViewComponent = React.FC<{ value: string }>;
 interface Props extends FieldProps {
   EditView: EditViewComponent;
   StaticView: StaticViewComponent;
+  alignActions?: "start" | "end";
 }
 
 export const EditableField: React.FC<Props> = ({
@@ -46,7 +47,10 @@ export const EditableField: React.FC<Props> = ({
   onSubmit,
   EditView,
   StaticView,
+  alignActions,
 }) => {
+  const alignment =
+    alignActions === "end" ? "alignSelfFlexEnd" : "alignSelfFlexStart";
   const [editable, setEditable] = useState(initiallyEditable);
   const [submitError, setSubmitError] = useState("");
   const [value, setValue] = useState(initialValue);
@@ -114,7 +118,7 @@ export const EditableField: React.FC<Props> = ({
         )}
         {editable && (
           <Flex spaceItems={{ default: "spaceItemsNone" }}>
-            <FlexItem>
+            <FlexItem grow={{ default: "grow" }}>
               <EditView
                 label={label}
                 value={value}
@@ -123,13 +127,13 @@ export const EditableField: React.FC<Props> = ({
                 initialValue={initialValue}
               />
             </FlexItem>
-            <FlexItem alignSelf={{ default: "alignSelfFlexEnd" }}>
+            <FlexItem alignSelf={{ default: alignment }}>
               <SubmitEditButton
                 aria-label={`${label}-submit-edit`}
                 onClick={onSubmitClick}
               />
             </FlexItem>
-            <FlexItem alignSelf={{ default: "alignSelfFlexEnd" }}>
+            <FlexItem alignSelf={{ default: alignment }}>
               <CancelEditButton
                 aria-label={`${label}-cancel-edit`}
                 onClick={onCancelEditClick}

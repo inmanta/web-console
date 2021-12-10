@@ -348,6 +348,8 @@ const dict = {
   "home.filters.env.placeholder": "Filter by name",
   "home.environment.copy": "Copy id",
 
+  "createEnv.name": "Name",
+  "createEnv.description": "Description",
   "createEnv.projectName": "Project Name",
   "createEnv.repository": "Repository",
   "createEnv.branch": "Branch",
@@ -366,6 +368,7 @@ const dict = {
   "settings.title": "Settings",
   "settings.tabs.environment": "Environment",
   "settings.tabs.environment.name": "Name",
+  "settings.tabs.environment.description": "Description",
   "settings.tabs.environment.repoSettings": "Repository Settings",
   "settings.tabs.environment.projectName": "Project Name",
   "settings.tabs.environment.icon": "Icon",
