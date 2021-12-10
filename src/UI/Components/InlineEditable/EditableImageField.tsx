@@ -27,10 +27,10 @@ export const EditableImageField: React.FC<FieldProps> = ({
   />
 );
 
-const EditView: EditViewComponent = ({ onChange, initialValue }) => (
-  <ImageUpload onComplete={onChange} initial={initialValue} />
+const EditView: EditViewComponent = ({ onChange, initialValue, ...props }) => (
+  <ImageUpload {...props} onComplete={onChange} initial={initialValue} />
 );
 
 const StaticView: StaticViewComponent = ({ value, ...props }) => (
-  <ImagePreview dataUrl={value} {...props} />
+  <ImagePreview {...props} dataUrl={value} />
 );

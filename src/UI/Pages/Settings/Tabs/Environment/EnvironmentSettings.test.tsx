@@ -442,3 +442,37 @@ test.each`
     ).not.toBeInTheDocument();
   }
 );
+
+test("Given environment settings When clicking on the edit description button Then the textarea field is shown", async () => {
+  const { component } = setup();
+  render(component);
+  expect(
+    await screen.findByRole("generic", { name: "Description-value" })
+  ).toBeVisible();
+
+  userEvent.click(
+    screen.getByRole("button", { name: "Description-toggle-edit" })
+  );
+  expect(
+    await screen.findByRole("textbox", { name: "Description-input" })
+  ).toBeVisible();
+
+  expect(
+    screen.queryByRole("generic", { name: "Description-value" })
+  ).not.toBeInTheDocument();
+});
+
+test("Given environment settings When clicking on the edit icon button Then the image field is shown", async () => {
+  const { component } = setup();
+  render(component);
+  expect(await screen.findByRole("img", { name: "Icon-value" })).toBeVisible();
+
+  userEvent.click(screen.getByRole("button", { name: "Icon-toggle-edit" }));
+  expect(
+    await screen.findByRole("textbox", { name: "Icon-input" })
+  ).toBeVisible();
+
+  expect(
+    screen.queryByRole("img", { name: "Icon-value" })
+  ).not.toBeInTheDocument();
+});

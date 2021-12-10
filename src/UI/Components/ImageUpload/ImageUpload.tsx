@@ -12,6 +12,7 @@ import { words } from "@/UI/words";
 import { ImagePreview } from "./ImagePreview";
 
 interface Props {
+  "aria-label"?: string;
   initial?: string;
   onComplete: (dataUrl: string) => void;
 }
@@ -22,7 +23,12 @@ interface Props {
  * @param {function} onComplete - The callback called when an image is loaded into the app.
  * The callback is called with the dataUrl of the image, without the 'data:' scheme part.
  */
-export const ImageUpload: React.FC<Props> = ({ initial, onComplete }) => {
+export const ImageUpload: React.FC<Props> = ({
+  initial,
+  onComplete,
+  "aria-label": ariaLabel,
+  ...props
+}) => {
   const initialDataUrl = initial ? ImageHelper.addDataScheme(initial) : "";
   const [filename, setFilename] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -91,12 +97,13 @@ export const ImageUpload: React.FC<Props> = ({ initial, onComplete }) => {
 
   return (
     <>
-      <ImagePreview dataUrl={dataUrl} />
+      <ImagePreview {...props} dataUrl={dataUrl} />
       <FileUpload
         hideDefaultPreview
         id="simple-text-file"
         type="dataURL"
         filename={filename || ""}
+        filenameAriaLabel={ariaLabel}
         filenamePlaceholder="Drag and drop an image or select one"
         onDataChange={onDataChange}
         onReadStarted={onReadStarted}

@@ -2,15 +2,18 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { ImageHelper } from "@/Data";
 
-export const ImagePreview: React.FC<{ dataUrl: string }> = ({ dataUrl }) =>
+export const ImagePreview: React.FC<{ dataUrl: string }> = ({
+  dataUrl,
+  ...props
+}) =>
   dataUrl !== "" ? (
     <StyledImage
+      {...props}
       src={ImageHelper.addDataScheme(dataUrl)}
       alt="image preview"
-      aria-label="image preview"
     />
   ) : (
-    <FillerImage>no icon</FillerImage>
+    <FillerImage {...props}>no icon</FillerImage>
   );
 
 const dimensions = css`

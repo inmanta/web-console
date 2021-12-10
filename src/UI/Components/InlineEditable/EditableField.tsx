@@ -120,6 +120,7 @@ export const EditableField: React.FC<Props> = ({
           <Flex spaceItems={{ default: "spaceItemsNone" }}>
             <FlexItem grow={{ default: "grow" }}>
               <EditView
+                aria-label={`${label}-input`}
                 label={label}
                 value={value}
                 onChange={setValue}
