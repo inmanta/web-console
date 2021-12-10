@@ -15,7 +15,7 @@ export class ImageHelper {
     return Maybe.none();
   }
 
-  static getFileSize(file: FileSize): string {
+  static formatFileSize(file: FileSize): string {
     return `${Math.round(file.size / 1000)} KB`;
   }
 
