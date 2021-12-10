@@ -23,7 +23,6 @@ interface Props {
  * The callback is called with the dataUrl of the image, without the 'data:' scheme part.
  */
 export const ImageUpload: React.FC<Props> = ({ initial, onComplete }) => {
-  console.log({ initial });
   const initialDataUrl = initial ? ImageHelper.addDataScheme(initial) : "";
   const [filename, setFilename] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,16 +34,13 @@ export const ImageUpload: React.FC<Props> = ({ initial, onComplete }) => {
     setFilename(extension ? `icon.${extension}` : "icon");
   };
 
-  const onDataChange = (newDataUrl: string) => {
-    console.log("onDataChange");
-    console.log({ newDataUrl });
+  const onDataChange: FileUploadProps["onDataChange"] = (newDataUrl) => {
     setDataUrl(newDataUrl);
     onComplete(ImageHelper.stripDataScheme(newDataUrl));
     setFilenameFromDataUrl(newDataUrl);
   };
 
-  const onClear = () => {
-    console.log("onClear");
+  const onClear: FileUploadProps["onClearClick"] = () => {
     setError(null);
     setIsLoading(false);
     setFilename(null);
@@ -52,20 +48,17 @@ export const ImageUpload: React.FC<Props> = ({ initial, onComplete }) => {
     onComplete("");
   };
 
-  const onReadStarted: FileUploadProps["onReadStarted"] = (file) => {
-    console.log("onReadStarted", file.name);
+  const onReadStarted: FileUploadProps["onReadStarted"] = () => {
     setError(null);
     setIsLoading(true);
   };
 
-  const onReadFinished: FileUploadProps["onReadFinished"] = (file) => {
-    console.log("onReadFinished", file.name);
+  const onReadFinished: FileUploadProps["onReadFinished"] = () => {
     setError(null);
     setIsLoading(false);
   };
 
   const onDropRejected: DropFileEventHandler = ([file]) => {
-    console.log("onDropRejected");
     const error = ImageHelper.validateFile(file);
     if (Maybe.isNone(error)) {
       setError(words("error.image.unknown")(file.name));
@@ -95,8 +88,6 @@ export const ImageUpload: React.FC<Props> = ({ initial, onComplete }) => {
       setDataUrl(initialDataUrl);
     }
   }, [initialDataUrl]);
-
-  console.log({ dataUrl });
 
   return (
     <>
