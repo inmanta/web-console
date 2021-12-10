@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import "@patternfly/react-core/dist/styles/base.css";
 import { KeycloakProvider } from "react-keycloak";
 import { Route, Routes } from "react-router-dom";
 import { Spinner, Bullseye } from "@patternfly/react-core";
