@@ -19,5 +19,6 @@ export const paths: Paths = {
   Settings: "/settings",
   CreateEnvironment: "/environment/create",
   Status: "/status",
+  DesiredState: "/desiredstate",
   Home: "/",
 };

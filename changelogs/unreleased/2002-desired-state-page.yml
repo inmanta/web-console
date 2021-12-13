@@ -1,0 +1,6 @@
+description: Add desired state page
+issue-nr: 2002
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

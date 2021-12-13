@@ -31,6 +31,7 @@ export class PrimaryRouteManager implements RouteManager {
       ResourceDetails: ResourceDetails(this.baseUrl),
       Settings: Settings(this.baseUrl),
       Status: Status(this.baseUrl),
+      DesiredState: DesiredState(this.baseUrl),
     };
   }
 
@@ -170,6 +171,13 @@ const AgentProcess = (base: string): Route => ({
   parent: "Agents",
   path: `${base}${paths.AgentProcess}`,
   label: "Agent Process",
+});
+
+const DesiredState = (base: string): Route => ({
+  kind: "DesiredState",
+  parent: "Home",
+  path: `${base}${paths.DesiredState}`,
+  label: "Desired State",
 });
 
 const CompileReports = (base: string): Route => ({
