@@ -9,6 +9,7 @@ export * from "./FeatureManager";
 export * from "./FileFetcher";
 export * from "./FileManager";
 export * from "./Formatter";
+export * from "./KeycloakController";
 export * from "./KeyMaker";
 export * from "./ManagerResolver";
 export * from "./PageManager";
