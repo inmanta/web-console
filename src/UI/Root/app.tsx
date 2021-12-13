@@ -6,7 +6,6 @@ import { DependencyContext } from "@/UI/Dependency";
 import { Home, CreateEnvironmentPage, StatusPage, NotFound } from "@/UI/Pages";
 import { SearchSanitizer } from "@/UI/Routing";
 import { AppFrame } from "./AppFrame";
-import { BaseLayout } from "./BaseLayout";
 import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
 import { Initializer } from "./Initializer";
 import { PrimaryPageManager } from "./PrimaryPageManager";
@@ -33,17 +32,17 @@ export const App: React.FC = () => {
             <Route
               path={routeManager.getUrl("CreateEnvironment", undefined)}
               element={
-                <BaseLayout>
+                <AppFrame>
                   <CreateEnvironmentPage />
-                </BaseLayout>
+                </AppFrame>
               }
             />
             <Route
               path={routeManager.getUrl("Status", undefined)}
               element={
-                <BaseLayout>
+                <AppFrame>
                   <StatusPage />
-                </BaseLayout>
+                </AppFrame>
               }
             />
             {pages.map(({ path, kind, element }) => (
@@ -58,9 +57,9 @@ export const App: React.FC = () => {
             <Route
               path="*"
               element={
-                <EnvSpecificContentLayout>
+                <AppFrame>
                   <NotFound />
-                </EnvSpecificContentLayout>
+                </AppFrame>
               }
             />
           </Routes>

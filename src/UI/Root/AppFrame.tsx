@@ -18,6 +18,7 @@ import {
   Profile,
 } from "./AppLayout/Toolbar";
 import { Navigation } from "./Navigation";
+import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 /* eslint-disable-next-line import/no-unresolved */
 import Logo from "!react-svg-loader!@images/logo.svg";
@@ -57,6 +58,7 @@ export const AppFrame: React.FC = ({ children }) => {
       <GlobalStyles />
       <SimpleBackgroundImage />
       <Page
+        breadcrumb={<PageBreadcrumbs />}
         onPageResize={onPageResize}
         header={Header}
         sidebar={
