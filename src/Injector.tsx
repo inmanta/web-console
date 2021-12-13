@@ -78,6 +78,7 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
         environmentHandler,
         authHelper,
         archiveHelper,
+        keycloakController,
       }}
     >
       {children}
