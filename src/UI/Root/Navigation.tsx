@@ -85,6 +85,12 @@ const orchestrationEngine = (Route: RouteDictionary): Group => ({
   title: words("navigation.orchestrationEngine"),
   links: [
     {
+      id: Route.DesiredState.kind,
+      label: Route.DesiredState.label,
+      url: Route.DesiredState.path,
+      external: false,
+    },
+    {
       id: Route.CompileReports.kind,
       label: Route.CompileReports.label,
       url: Route.CompileReports.path,

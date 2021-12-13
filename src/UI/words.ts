@@ -414,6 +414,9 @@ const dict = {
   "agentProcess.lastSeen": "Last seen",
   "agentProcess.expired": "Expired",
 
+  /** Desired State */
+  "desiredState.title": "Desired State",
+
   /**
    * Common
    */

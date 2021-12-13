@@ -5,6 +5,7 @@ import { AgentsPage } from "@/UI/Pages/Agents";
 import { CompileDetailsPage } from "@/UI/Pages/CompileDetails";
 import { CompileReportsPage } from "@/UI/Pages/CompileReports";
 import { CreateInstancePage } from "@/UI/Pages/CreateInstance";
+import { DesiredStatePage } from "@/UI/Pages/DesiredState";
 import { DiagnosePage } from "@/UI/Pages/Diagnose";
 import { EditInstancePage } from "@/UI/Pages/EditInstance";
 import { EventsPage } from "@/UI/Pages/Events";
@@ -51,6 +52,7 @@ export class PrimaryPageManager implements PageManager {
       { ...this.routeDictionary.Status, element: <StatusPage /> },
       { ...this.routeDictionary.Agents, element: <AgentsPage /> },
       { ...this.routeDictionary.AgentProcess, element: <AgentProcessPage /> },
+      { ...this.routeDictionary.DesiredState, element: <DesiredStatePage /> },
     ];
   }
 }
