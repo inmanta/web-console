@@ -13,6 +13,7 @@ import {
   Store,
   PrimaryArchiveHelper,
   PrimaryFileManager,
+  PrimaryKeycloakController,
 } from "@/Data";
 import {
   PrimaryBaseUrlManager,
@@ -25,18 +26,25 @@ import {
 
 interface Props {
   store: Store;
-  keycloak: Keycloak.KeycloakInstance | undefined;
 }
 
-export const Injector: React.FC<Props> = ({ store, children, keycloak }) => {
+export const Injector: React.FC<Props> = ({ store, children }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const keycloakController = new PrimaryKeycloakController(
+    process.env.SHOULD_USE_AUTH,
+    globalThis && globalThis.auth,
+    process.env.KEYCLOAK_URL
+  );
   const baseUrlManager = new PrimaryBaseUrlManager(location.pathname);
   const consoleBaseUrl = baseUrlManager.getConsoleBaseUrl();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = new PrimaryRouteManager(consoleBaseUrl);
-  const apiHelper = new BaseApiHelper(baseUrl, keycloak);
-  const authHelper = new KeycloakAuthHelper(keycloak);
+  const apiHelper = new BaseApiHelper(
+    baseUrl,
+    keycloakController.getInstance()
+  );
+  const authHelper = new KeycloakAuthHelper(keycloakController.getInstance());
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolver(store, apiHelper)
   );

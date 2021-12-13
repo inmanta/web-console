@@ -1,4 +1,8 @@
-import Keycloak, { KeycloakInstance, KeycloakConfig } from "keycloak-js";
+import Keycloak, {
+  KeycloakInstance,
+  KeycloakConfig,
+  KeycloakInitOptions,
+} from "keycloak-js";
 import { KeycloakController } from "@/Core";
 import keycloakConf from "./keycloak.json";
 
@@ -11,6 +15,13 @@ export class PrimaryKeycloakController implements KeycloakController {
     private readonly keycloakUrl: string | undefined
   ) {
     this.instance = Keycloak(this.getConfig());
+  }
+
+  getInitConfig(): KeycloakInitOptions {
+    return {
+      onLoad: "login-required",
+      flow: "implicit",
+    };
   }
 
   getInstance(): KeycloakInstance {

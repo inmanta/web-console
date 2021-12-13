@@ -1,6 +1,7 @@
-import Keycloak from "keycloak-js";
+import Keycloak, { KeycloakInitOptions } from "keycloak-js";
 
 export interface KeycloakController {
   getInstance(): Keycloak.KeycloakInstance;
   isEnabled(): boolean;
+  getInitConfig(): KeycloakInitOptions;
 }

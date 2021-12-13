@@ -3,7 +3,6 @@ import { MemoryRouter } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import Keycloak from "keycloak-js";
 import { Either } from "@/Core";
 import {
   QueryResolverImpl,
@@ -54,7 +53,7 @@ function setup() {
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, environmentHandler }}
         >
-          <App keycloak={Keycloak()} shouldUseAuth={false} />
+          <App />
         </DependencyProvider>
       </StoreProvider>
     </MemoryRouter>
