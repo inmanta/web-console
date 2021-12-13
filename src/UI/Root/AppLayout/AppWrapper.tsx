@@ -18,23 +18,21 @@ import {
 import Logo from "!react-svg-loader!@images/logo.svg";
 
 interface Props {
-  keycloak?: Keycloak.KeycloakInstance;
   children: React.ReactNode;
-  shouldUseAuth: boolean;
   isNavOpen?: boolean;
   onToggle?: () => void;
   withEnv?: boolean;
 }
 
 export const AppWrapper: React.FunctionComponent<Props> = ({
-  keycloak,
   children,
-  shouldUseAuth,
   isNavOpen,
   withEnv,
   onToggle,
 }) => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, keycloakController } = useContext(DependencyContext);
+  const shouldUseAuth = keycloakController.isEnabled();
+  const keycloak = shouldUseAuth ? keycloakController.getInstance() : undefined;
   useEffect(() => {
     if (keycloak && !keycloak.profile) {
       keycloak.loadUserProfile();

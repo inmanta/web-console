@@ -11,13 +11,10 @@ import { Initializer } from "./Initializer";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const App: React.FC = () => {
-  const { routeManager, keycloakController } = useContext(DependencyContext);
+  const { routeManager } = useContext(DependencyContext);
   const pages = new PrimaryPageManager(
     routeManager.getRouteDictionary()
   ).getPages();
-
-  const keycloak = keycloakController.getInstance();
-  const shouldUseAuth = keycloakController.isEnabled();
 
   return (
     <Initializer>
@@ -27,7 +24,7 @@ export const App: React.FC = () => {
             <Route
               path={routeManager.getUrl("Home", undefined)}
               element={
-                <BaseLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
+                <BaseLayout>
                   <Home />
                 </BaseLayout>
               }
@@ -35,7 +32,7 @@ export const App: React.FC = () => {
             <Route
               path={routeManager.getUrl("CreateEnvironment", undefined)}
               element={
-                <BaseLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
+                <BaseLayout>
                   <CreateEnvironmentPage />
                 </BaseLayout>
               }
@@ -43,7 +40,7 @@ export const App: React.FC = () => {
             <Route
               path={routeManager.getUrl("Status", undefined)}
               element={
-                <BaseLayout keycloak={keycloak} shouldUseAuth={shouldUseAuth}>
+                <BaseLayout>
                   <StatusPage />
                 </BaseLayout>
               }
@@ -52,12 +49,7 @@ export const App: React.FC = () => {
               <Route
                 path={path}
                 element={
-                  <EnvSpecificContentLayout
-                    keycloak={keycloak}
-                    shouldUseAuth={shouldUseAuth}
-                  >
-                    {element}
-                  </EnvSpecificContentLayout>
+                  <EnvSpecificContentLayout>{element}</EnvSpecificContentLayout>
                 }
                 key={kind}
               />
@@ -65,10 +57,7 @@ export const App: React.FC = () => {
             <Route
               path="*"
               element={
-                <EnvSpecificContentLayout
-                  keycloak={keycloak}
-                  shouldUseAuth={shouldUseAuth}
-                >
+                <EnvSpecificContentLayout>
                   <NotFound />
                 </EnvSpecificContentLayout>
               }

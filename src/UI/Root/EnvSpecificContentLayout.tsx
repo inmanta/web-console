@@ -7,16 +7,7 @@ import { Sidebar } from "@/UI/Root/AppLayout/Sidebar";
 import { words } from "@/UI/words";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
-interface Props {
-  keycloak?: Keycloak.KeycloakInstance;
-  shouldUseAuth: boolean;
-}
-
-export const EnvSpecificContentLayout: React.FC<Props> = ({
-  keycloak,
-  shouldUseAuth,
-  children,
-}) => {
+export const EnvSpecificContentLayout: React.FC = ({ children }) => {
   const { environmentHandler } = useContext(DependencyContext);
   const environment = environmentHandler.useSelected();
   const [isNavOpen, setIsNavOpen] = React.useState(true);
@@ -33,13 +24,7 @@ export const EnvSpecificContentLayout: React.FC<Props> = ({
   };
   const onToggle = isMobileView ? onNavToggleMobile : onNavToggle;
   return (
-    <AppWrapper
-      keycloak={shouldUseAuth ? keycloak : undefined}
-      shouldUseAuth={shouldUseAuth}
-      isNavOpen={isNavOpen}
-      onToggle={onToggle}
-      withEnv
-    >
+    <AppWrapper isNavOpen={isNavOpen} onToggle={onToggle} withEnv>
       {!environment ? (
         <ErrorView message={words("error.environment.missing")} />
       ) : (

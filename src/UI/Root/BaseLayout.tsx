@@ -4,20 +4,8 @@ import styled from "styled-components";
 import { AppWrapper } from "./AppLayout/AppWrapper";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
-interface Props {
-  keycloak?: Keycloak.KeycloakInstance;
-  shouldUseAuth: boolean;
-}
-
-export const BaseLayout: React.FC<Props> = ({
-  keycloak,
-  shouldUseAuth,
-  children,
-}) => (
-  <AppWrapper
-    keycloak={shouldUseAuth ? keycloak : undefined}
-    shouldUseAuth={shouldUseAuth}
-  >
+export const BaseLayout: React.FC = ({ children }) => (
+  <AppWrapper>
     <MainPage breadcrumb={<PageBreadcrumbs />}>{children}</MainPage>
   </AppWrapper>
 );
