@@ -5,6 +5,7 @@ import { Spinner, Bullseye } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
 import { Home, CreateEnvironmentPage, StatusPage, NotFound } from "@/UI/Pages";
 import { SearchSanitizer } from "@/UI/Routing";
+import { AppFrame } from "./AppFrame";
 import { BaseLayout } from "./BaseLayout";
 import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
 import { Initializer } from "./Initializer";
@@ -24,9 +25,9 @@ export const App: React.FC = () => {
             <Route
               path={routeManager.getUrl("Home", undefined)}
               element={
-                <BaseLayout>
+                <AppFrame>
                   <Home />
-                </BaseLayout>
+                </AppFrame>
               }
             />
             <Route
