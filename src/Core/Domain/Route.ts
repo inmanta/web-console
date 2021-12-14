@@ -29,7 +29,7 @@ export interface Route {
   parent?: RouteKind;
   path: string;
   label: string;
-  clearEnv?: boolean;
+  environmentRole: "Forbidden" | "Optional" | "Required";
 }
 
 interface RouteParamKeysManifest {

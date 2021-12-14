@@ -21,7 +21,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { Home } from "./Home";
+import { Page } from "./Page";
 
 function setup() {
   const store = getStoreInstance();
@@ -52,7 +52,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <Home />
+          <Page />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

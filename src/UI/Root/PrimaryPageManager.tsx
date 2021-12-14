@@ -4,11 +4,13 @@ import { AgentProcessPage } from "@/UI/Pages/AgentProcess";
 import { AgentsPage } from "@/UI/Pages/Agents";
 import { CompileDetailsPage } from "@/UI/Pages/CompileDetails";
 import { CompileReportsPage } from "@/UI/Pages/CompileReports";
+import { CreateEnvironmentPage } from "@/UI/Pages/CreateEnvironment";
 import { CreateInstancePage } from "@/UI/Pages/CreateInstance";
 import { DesiredStatePage } from "@/UI/Pages/DesiredState";
 import { DiagnosePage } from "@/UI/Pages/Diagnose";
 import { EditInstancePage } from "@/UI/Pages/EditInstance";
 import { EventsPage } from "@/UI/Pages/Events";
+import { HomePage } from "@/UI/Pages/Home";
 import { ResourceDetailsPage } from "@/UI/Pages/ResourceDetails";
 import { ResourcesPage } from "@/UI/Pages/Resources";
 import { ServiceCatalogPage } from "@/UI/Pages/ServiceCatalog";
@@ -22,6 +24,12 @@ export class PrimaryPageManager implements PageManager {
 
   getPages(): Page[] {
     return [
+      { ...this.routeDictionary.Home, element: <HomePage /> },
+      {
+        ...this.routeDictionary.CreateEnvironment,
+        element: <CreateEnvironmentPage />,
+      },
+      { ...this.routeDictionary.Status, element: <StatusPage /> },
       { ...this.routeDictionary.Catalog, element: <ServiceCatalogPage /> },
       { ...this.routeDictionary.Inventory, element: <ServiceInventoryPage /> },
       {
@@ -49,7 +57,6 @@ export class PrimaryPageManager implements PageManager {
         element: <ResourceDetailsPage />,
       },
       { ...this.routeDictionary.Settings, element: <SettingsPage /> },
-      { ...this.routeDictionary.Status, element: <StatusPage /> },
       { ...this.routeDictionary.Agents, element: <AgentsPage /> },
       { ...this.routeDictionary.AgentProcess, element: <AgentProcessPage /> },
       { ...this.routeDictionary.DesiredState, element: <DesiredStatePage /> },

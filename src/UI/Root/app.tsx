@@ -3,7 +3,12 @@ import { KeycloakProvider } from "react-keycloak";
 import { Route, Routes } from "react-router-dom";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
-import { Home, CreateEnvironmentPage, StatusPage, NotFound } from "@/UI/Pages";
+import {
+  HomePage,
+  CreateEnvironmentPage,
+  StatusPage,
+  NotFoundPage,
+} from "@/UI/Pages";
 import { SearchSanitizer } from "@/UI/Routing";
 import { AppFrame } from "./AppFrame";
 import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
@@ -25,7 +30,7 @@ export const App: React.FC = () => {
               path={routeManager.getUrl("Home", undefined)}
               element={
                 <AppFrame>
-                  <Home />
+                  <HomePage />
                 </AppFrame>
               }
             />
@@ -58,7 +63,7 @@ export const App: React.FC = () => {
               path="*"
               element={
                 <AppFrame>
-                  <NotFound />
+                  <NotFoundPage />
                 </AppFrame>
               }
             />

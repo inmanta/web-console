@@ -26,7 +26,8 @@ export class SearchSanitizer {
 
   private getValidKeys(routeKind: RouteKind): string[] {
     const route = this.routeManager.getRoute(routeKind);
-    if (route.clearEnv) return this.validKeys.filter((k) => k !== "env");
+    if (route.environmentRole === "Forbidden")
+      return this.validKeys.filter((k) => k !== "env");
     return this.validKeys;
   }
 
