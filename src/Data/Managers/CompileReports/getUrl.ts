@@ -1,7 +1,7 @@
 import { omit } from "lodash";
 import moment from "moment";
 import qs from "qs";
-import { CompileReportParams, DateRange, Query } from "@/Core";
+import { CompileReportParams, Query, RangeOperator } from "@/Core";
 
 export function getUrl(
   { pageSize, sort, filter }: Query.SubQuery<"GetCompileReports">,
@@ -25,7 +25,9 @@ const filterToParam = (filter: Filter, timezone: string) => {
   const { status, success, requested } = filter;
   const serializedTimestampOperatorFilters = requested?.map(
     (timestampWithOperator) =>
-      `${DateRange.serializeOperator(timestampWithOperator.operator)}:${moment
+      `${RangeOperator.serializeOperator(
+        timestampWithOperator.operator
+      )}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`

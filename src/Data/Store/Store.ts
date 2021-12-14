@@ -9,6 +9,7 @@ import {
   compileReportsSlice,
   CompileReportsSlice,
 } from "./CompileReportsSlice";
+import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
 import {
   environmentDetailsSlice,
@@ -83,6 +84,7 @@ export interface StoreModel {
   facts: FactsSlice;
   agents: AgentsSlice;
   agentProcess: AgentProcessSlice;
+  desiredStates: DesiredStatesSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -111,4 +113,5 @@ export const storeModel: StoreModel = {
   facts: factsSlice,
   agents: agentsSlice,
   agentProcess: agentProcessSlice,
+  desiredStates: desiredStatesSlice,
 };

@@ -1,6 +1,6 @@
 import moment from "moment-timezone";
 import qs from "qs";
-import { DateRange, Query } from "@/Core";
+import { Query, RangeOperator } from "@/Core";
 
 export function getUrl(
   {
@@ -30,7 +30,9 @@ const filterToParam = (filter: Filter, timezone: string) => {
   const { source, destination, version, event_type, timestamp } = filter;
   const serializedTimestampOperatorFilters = timestamp?.map(
     (timestampWithOperator) =>
-      `${DateRange.serializeOperator(timestampWithOperator.operator)}:${moment
+      `${RangeOperator.serializeOperator(
+        timestampWithOperator.operator
+      )}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
