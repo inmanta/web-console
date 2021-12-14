@@ -20,6 +20,7 @@ import {
   DocumentationLink,
   Profile,
   StatusButton,
+  EnvSelectorWithProvider,
 } from "./AppLayout/Toolbar";
 import { Navigation } from "./Navigation";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
@@ -98,6 +99,7 @@ const AppFrameInner: React.FC<InnerProps> = ({ children, environmentId }) => {
       logoProps={{ href: routeManager.getUrl("Home", undefined) }}
       headerTools={<TopNavActions noEnv={!Boolean(environmentId)} />}
       showNavToggle
+      topNav={<EnvSelectorWithProvider />}
       isNavOpen={isNavOpen}
       onNavToggle={onToggle}
     />

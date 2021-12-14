@@ -6,15 +6,24 @@ import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
 export const Provider: React.FC = () => {
   const location = useLocation();
-  const { environmentHandler, queryResolver } = useContext(DependencyContext);
+  const { environmentHandler, queryResolver, routeManager, featureManager } =
+    useContext(DependencyContext);
+  const selected = environmentHandler.useSelected();
+  const pathname = featureManager.isLsmEnabled()
+    ? routeManager.getUrl("Catalog", undefined)
+    : routeManager.getUrl("CompileReports", undefined);
+
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
-    environmentHandler.set(location, item.environmentId);
+    if (!selected) {
+      environmentHandler.set({ ...location, pathname }, item.environmentId);
+    } else {
+      environmentHandler.set(location, item.environmentId);
+    }
   };
   const [data] = queryResolver.useOneTime<"GetEnvironments">({
     kind: "GetEnvironments",
     details: false,
   });
-  const selected = environmentHandler.useSelected();
   return (
     <EnvSelectorWithData
       environments={data}

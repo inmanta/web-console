@@ -436,6 +436,7 @@ const dict = {
    */
   "common.serviceInstance.select": (attribute: string) =>
     `Select value for ${attribute}`,
+  "common.environment.select": "Select an environment...",
 };
 
 type Key = keyof typeof dict;
