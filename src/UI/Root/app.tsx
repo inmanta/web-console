@@ -3,15 +3,9 @@ import { KeycloakProvider } from "react-keycloak";
 import { Route, Routes } from "react-router-dom";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
-import {
-  HomePage,
-  CreateEnvironmentPage,
-  StatusPage,
-  NotFoundPage,
-} from "@/UI/Pages";
+import { NotFoundPage } from "@/UI/Pages";
 import { SearchSanitizer } from "@/UI/Routing";
 import { AppFrame } from "./AppFrame";
-import { EnvSpecificContentLayout } from "./EnvSpecificContentLayout";
 import { Initializer } from "./Initializer";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
@@ -26,35 +20,13 @@ export const App: React.FC = () => {
       <SearchSanitizer.Provider>
         <AuthWrapper>
           <Routes>
-            <Route
-              path={routeManager.getUrl("Home", undefined)}
-              element={
-                <AppFrame>
-                  <HomePage />
-                </AppFrame>
-              }
-            />
-            <Route
-              path={routeManager.getUrl("CreateEnvironment", undefined)}
-              element={
-                <AppFrame>
-                  <CreateEnvironmentPage />
-                </AppFrame>
-              }
-            />
-            <Route
-              path={routeManager.getUrl("Status", undefined)}
-              element={
-                <AppFrame>
-                  <StatusPage />
-                </AppFrame>
-              }
-            />
-            {pages.map(({ path, kind, element }) => (
+            {pages.map(({ path, kind, element, environmentRole }) => (
               <Route
                 path={path}
                 element={
-                  <EnvSpecificContentLayout>{element}</EnvSpecificContentLayout>
+                  <AppFrame environmentRole={environmentRole}>
+                    {element}
+                  </AppFrame>
                 }
                 key={kind}
               />
@@ -62,7 +34,7 @@ export const App: React.FC = () => {
             <Route
               path="*"
               element={
-                <AppFrame>
+                <AppFrame environmentRole="Optional">
                   <NotFoundPage />
                 </AppFrame>
               }

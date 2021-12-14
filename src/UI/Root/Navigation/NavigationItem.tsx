@@ -51,7 +51,10 @@ const RegularItem: React.FC<Label & Url> = ({ label, url }) => (
 const LockedItem: React.FC<Label> = ({ label }) => (
   <StyledNavItem styleChildren={false}>
     {label}
-    <StyledTooltip content={"Select an environment to enable this link"}>
+    <StyledTooltip
+      content={"Select an environment to enable this link"}
+      position="right"
+    >
       <StyledLockIcon />
     </StyledTooltip>
   </StyledNavItem>
