@@ -38,3 +38,5 @@ export * from "./Repair";
 export * from "./GetFacts";
 export * from "./GetAgents";
 export * from "./GetAgentProcess";
+export * from "./GetDesiredStates";
+export * from "./PromoteVersion";

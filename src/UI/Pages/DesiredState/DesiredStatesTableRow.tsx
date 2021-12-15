@@ -60,7 +60,10 @@ export const DesiredStatesTableRow: React.FC<Props> = ({ row }) => (
         width={20}
         $status={row.status}
       >
-        <Actions />
+        <Actions
+          version={row.version}
+          isPromoteDisabled={row.status != DesiredStateVersionStatus.candidate}
+        />
       </StyledCell>
     </Tr>
   </StyledBody>

@@ -3,8 +3,14 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
+import { Either, Maybe } from "@/Core";
+import {
+  QueryResolverImpl,
+  getStoreInstance,
+  CommandResolverImpl,
+  PromoteVersionCommandManager,
+  DesiredStatesUpdater,
+} from "@/Data";
 import {
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
@@ -15,6 +21,7 @@ import {
   DeferredApiHelper,
   dependencies,
   DesiredStateVersions,
+  DynamicCommandManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
@@ -24,12 +31,30 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const environment = "env";
+  const getDesiredStatesStateHelper = new GetDesiredStatesStateHelper(
+    store,
+    environment
+  );
+  const desiredStatesUpdater = new DesiredStatesUpdater(
+    getDesiredStatesStateHelper,
+    apiHelper,
+    environment
+  );
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new GetDesiredStatesQueryManager(
         apiHelper,
-        new GetDesiredStatesStateHelper(store, environment),
+        getDesiredStatesStateHelper,
         scheduler
+      ),
+    ])
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new PromoteVersionCommandManager(
+        apiHelper,
+        desiredStatesUpdater,
+        environment
       ),
     ])
   );
@@ -40,6 +65,7 @@ function setup() {
         dependencies={{
           ...dependencies,
           queryResolver,
+          commandResolver,
         }}
       >
         <StoreProvider store={store}>
@@ -263,4 +289,137 @@ it("When using the Version filter then the desired state versions within the ran
   window.dispatchEvent(new Event("resize"));
   expect(await screen.findByText("from | 3", { exact: false })).toBeVisible();
   expect(await screen.findByText("to | 5", { exact: false })).toBeVisible();
+});
+
+test("Given the Desired states view When promoting a version, then the correct request is be fired", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+  });
+  const rows = await screen.findAllByRole("row", {
+    name: "DesiredStates Table Row",
+  });
+
+  const skippedCandidatePromoteButton = await within(rows[8]).findByRole(
+    "button",
+    { name: "Promote" }
+  );
+  expect(skippedCandidatePromoteButton).toBeDisabled();
+
+  const candidatePromoteButton = await within(rows[0]).findByRole("button", {
+    name: "Promote",
+  });
+  userEvent.click(candidatePromoteButton);
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "POST",
+    environment: "env",
+    url: "/api/v2/desiredstate/9/promote",
+    body: null,
+  });
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(2);
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  await act(async () => {
+    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(3);
+  expect(apiHelper.pendingRequests).toHaveLength(0);
+});
+
+test("Given the Desired states view with filters When promoting a version, then the correct request is be fired", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+  });
+
+  userEvent.click(
+    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+      "button",
+      { name: "FilterPicker" }
+    )
+  );
+  userEvent.click(screen.getByRole("option", { name: "Status" }));
+
+  const input = screen.getByPlaceholderText("Select status...");
+  userEvent.click(input);
+
+  const option = await screen.findByRole("option", {
+    name: "candidate",
+  });
+  userEvent.click(option);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+  });
+  const rows = await screen.findAllByRole("row", {
+    name: "DesiredStates Table Row",
+  });
+  const candidatePromoteButton = await within(rows[0]).findByRole("button", {
+    name: "Promote",
+  });
+
+  userEvent.click(candidatePromoteButton);
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "POST",
+    environment: "env",
+    url: "/api/v2/desiredstate/9/promote",
+    body: null,
+  });
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(3);
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    environment: "env",
+    url: "/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=candidate",
+  });
+  await act(async () => {
+    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(4);
+  expect(apiHelper.pendingRequests).toHaveLength(0);
+});
+
+test("Given the Desired states view When promoting a version results in an error, then the error is shown", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+  });
+  const rows = await screen.findAllByRole("row", {
+    name: "DesiredStates Table Row",
+  });
+  const candidatePromoteButton = await within(rows[0]).findByRole("button", {
+    name: "Promote",
+  });
+
+  userEvent.click(candidatePromoteButton);
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "POST",
+    environment: "env",
+    url: "/api/v2/desiredstate/9/promote",
+    body: null,
+  });
+  await act(async () => {
+    await apiHelper.resolve(Maybe.some("something happened"));
+    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+  });
+  expect(await screen.findByText("something happened")).toBeVisible();
 });

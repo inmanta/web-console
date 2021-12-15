@@ -23,6 +23,7 @@ import {
   ModifyEnvironment,
   ModifyEnvironmentManifest,
 } from "./ModifyEnvironment";
+import { PromoteVersion, PromoteVersionManifest } from "./PromoteVersion";
 import { Repair, RepairManifest } from "./Repair";
 import {
   ResetEnvironmentSetting,
@@ -71,7 +72,8 @@ export type Command =
   | GenerateToken
   | Deploy
   | Repair
-  | GetSupportArchive;
+  | GetSupportArchive
+  | PromoteVersion;
 
 export type Type = Command;
 
@@ -101,6 +103,7 @@ interface Manifest {
   Deploy: DeployManifest;
   Repair: RepairManifest;
   GetSupportArchive: GetSupportArchiveManifest;
+  PromoteVersion: PromoteVersionManifest;
 }
 
 /**
