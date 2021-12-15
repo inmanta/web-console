@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { KeycloakProvider } from "react-keycloak";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Spinner, Bullseye } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
 import { NotFoundPage } from "@/UI/Pages";
@@ -20,6 +20,18 @@ export const App: React.FC = () => {
       <SearchSanitizer.Provider>
         <AuthWrapper>
           <Routes>
+            <Route
+              path="/"
+              element={<Navigate to={routeManager.getUrl("Home", undefined)} />}
+            />
+            <Route
+              path="*"
+              element={
+                <AppFrame environmentRole="Optional">
+                  <NotFoundPage />
+                </AppFrame>
+              }
+            />
             {pages.map(({ path, kind, element, environmentRole }) => (
               <Route
                 path={path}
@@ -31,14 +43,6 @@ export const App: React.FC = () => {
                 key={kind}
               />
             ))}
-            <Route
-              path="*"
-              element={
-                <AppFrame environmentRole="Optional">
-                  <NotFoundPage />
-                </AppFrame>
-              }
-            />
           </Routes>
         </AuthWrapper>
       </SearchSanitizer.Provider>
