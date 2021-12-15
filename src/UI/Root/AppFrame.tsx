@@ -51,13 +51,6 @@ export const AppFrame: React.FC<Props> = ({ children, environmentRole }) => {
   const eitherEnvironmentId = getEnvironmentId(environmentRole, environment);
   const environmentId = Either.withFallback(undefined, eitherEnvironmentId);
 
-  console.log({
-    eitherEnvironmentId,
-    environmentRole,
-    environmentId,
-    environment,
-  });
-
   return (
     <>
       {environmentId && <DependencyResolver environment={environmentId} />}
