@@ -35,6 +35,9 @@ import {
   RepairCommandManager,
   DeployCommandManager,
   GetSupportArchiveCommandManager,
+  PromoteVersionCommandManager,
+  GetDesiredStatesStateHelper,
+  DesiredStatesUpdater,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -89,6 +92,15 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     const environmentSettingUpdater = new EnvironmentSettingUpdater(
       this.apiHelper,
       new GetEnvironmentSettingStateHelper(this.store, environment),
+      environment
+    );
+    const getDesiredStatesStateHelper = new GetDesiredStatesStateHelper(
+      this.store,
+      environment
+    );
+    const desiredStatesUpdater = new DesiredStatesUpdater(
+      getDesiredStatesStateHelper,
+      this.apiHelper,
       environment
     );
     return [
@@ -175,6 +187,11 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new GenerateTokenCommandManager(this.apiHelper, environment),
       new DeployCommandManager(this.apiHelper, environment),
       new RepairCommandManager(this.apiHelper, environment),
+      new PromoteVersionCommandManager(
+        this.apiHelper,
+        desiredStatesUpdater,
+        environment
+      ),
     ];
   }
 }

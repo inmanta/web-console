@@ -425,6 +425,8 @@ const dict = {
   "desiredState.columns.actions": "Actions",
   "desiredState.actions.details": "Details",
   "desiredState.actions.promote": "Promote",
+  "desiredState.actions.promote.disabledTooltip":
+    "Promoting this version is not allowed",
   "desiredState.filters.status.placeholder": "Select status...",
   "desiredState.filters.version.placeholder": "Filter by version",
   "desiredState.filters.date.placeholder": "Filter by date",
