@@ -4,13 +4,7 @@ import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  CommandResolverImpl,
-  DeployCommandManager,
-  RepairCommandManager,
-} from "@/Data";
+import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
@@ -20,7 +14,6 @@ import {
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
   DesiredStateVersions,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -40,12 +33,6 @@ function setup() {
       ),
     ])
   );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new DeployCommandManager(apiHelper, environment),
-      new RepairCommandManager(apiHelper, environment),
-    ])
-  );
 
   const component = (
     <MemoryRouter>
@@ -53,7 +40,6 @@ function setup() {
         dependencies={{
           ...dependencies,
           queryResolver,
-          commandResolver,
         }}
       >
         <StoreProvider store={store}>
