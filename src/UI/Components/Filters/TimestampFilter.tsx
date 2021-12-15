@@ -8,7 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import { reject } from "lodash";
-import { DateRange } from "@/Core";
+import { DateRange, RangeOperator } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 import { TimestampPicker } from "./TimestampPicker";
@@ -33,12 +33,12 @@ export const TimestampFilter: React.FC<Props> = ({
     const withNewFrom = insertNewTimestamp(
       timestampFilters,
       from,
-      DateRange.Operator.From
+      RangeOperator.Operator.From
     );
     const withNewTo = insertNewTimestamp(
       withNewFrom,
       to,
-      DateRange.Operator.To
+      RangeOperator.Operator.To
     );
     update(withNewTo);
     setFrom(undefined);
@@ -75,7 +75,7 @@ export const TimestampFilter: React.FC<Props> = ({
     const [operator, date] = pretty.split("|");
     return {
       date: datePresenter.parseShort(date),
-      operator: operator.trim() as DateRange.Operator,
+      operator: operator.trim() as RangeOperator.Operator,
     };
   };
 
@@ -134,7 +134,7 @@ export const TimestampFilter: React.FC<Props> = ({
 function insertNewTimestamp(
   timestampFilters: DateRange.Type[],
   date: Date | undefined,
-  operator: DateRange.Operator
+  operator: RangeOperator.Operator
 ): DateRange.Type[] {
   if (date) {
     return [

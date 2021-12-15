@@ -416,6 +416,18 @@ const dict = {
 
   /** Desired State */
   "desiredState.title": "Desired State",
+  "desiredState.empty.message": "No desired state versions found",
+  "desiredState.columns.date": "Date",
+  "desiredState.columns.version": "Version",
+  "desiredState.columns.status": "Status",
+  "desiredState.columns.resources": "Number of resources",
+  "desiredState.columns.labels": "Labels",
+  "desiredState.columns.actions": "Actions",
+  "desiredState.actions.details": "Details",
+  "desiredState.actions.promote": "Promote",
+  "desiredState.filters.status.placeholder": "Select status...",
+  "desiredState.filters.version.placeholder": "Filter by version",
+  "desiredState.filters.date.placeholder": "Filter by date",
 
   /**
    * Common
