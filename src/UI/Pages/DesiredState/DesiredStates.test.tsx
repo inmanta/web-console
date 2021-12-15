@@ -172,17 +172,17 @@ it("When using the Date filter then the desired state versions within the range 
   );
   userEvent.click(screen.getByRole("option", { name: "Date" }));
 
-  const fromDatePicker = await screen.findByLabelText("From Date Picker");
+  const fromDatePicker = screen.getByLabelText("From Date Picker");
   userEvent.click(fromDatePicker);
   userEvent.type(fromDatePicker, `2021-12-06`);
-  const toDatePicker = await screen.findByLabelText("To Date Picker");
+  const toDatePicker = screen.getByLabelText("To Date Picker");
   userEvent.click(toDatePicker);
   userEvent.type(toDatePicker, `2021-12-07`);
 
-  userEvent.click(await screen.findByLabelText("Apply date filter"));
+  userEvent.click(screen.getByLabelText("Apply date filter"));
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-`
+    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-05%2B23%3A00%3A00&filter.date=le%3A2021-12-06%2B23%3A00%3A00`
   );
 
   await act(async () => {
