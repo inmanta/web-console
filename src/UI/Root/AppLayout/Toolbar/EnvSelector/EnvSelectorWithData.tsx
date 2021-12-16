@@ -19,7 +19,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
 }) =>
   RemoteData.fold(
     {
-      notAsked: () => null,
+      notAsked: () => <ContextSelector aria-label="EnvSelector-NotAsked" />,
       loading: () => <ContextSelector aria-label="EnvSelector-Loading" />,
       failed: (error) => (
         <>
@@ -32,31 +32,34 @@ export const EnvSelectorWithData: React.FC<Props> = ({
           </Alert>
         </>
       ),
-      success: (environments) => {
-        const defaultToggleText = selectedEnvironment
-          ? `${selectedEnvironment.name} (${selectedEnvironment.projectName})`
-          : words("common.environment.select");
-
-        const selectorItems = environments.map(
-          ({ name, projectName, id, project_id: projectId }) => {
-            const envSelectorItem: EnvironmentSelectorItem = {
-              displayName: `${name} (${projectName})`,
-              projectId,
-              environmentId: id,
-            };
-            return envSelectorItem;
+      success: (environments) => (
+        <EnvSelectorWrapper
+          selectorItems={environments.map(environmentToSelector)}
+          environmentNames={environments.map(environmentToName)}
+          onSelectEnvironment={onSelectEnvironment}
+          defaultToggleText={
+            selectedEnvironment
+              ? environmentToName(selectedEnvironment)
+              : words("common.environment.select")
           }
-        );
-        const environmentNames = selectorItems.map((item) => item.displayName);
-        return (
-          <EnvSelectorWrapper
-            selectorItems={selectorItems}
-            environmentNames={environmentNames}
-            onSelectEnvironment={onSelectEnvironment}
-            defaultToggleText={defaultToggleText}
-          />
-        );
-      },
+        />
+      ),
     },
     environments
   );
+
+const environmentToSelector = ({
+  id,
+  project_id: projectId,
+  ...environment
+}: FlatEnvironment): EnvironmentSelectorItem => ({
+  displayName: environmentToName(environment),
+  projectId,
+  environmentId: id,
+});
+
+const environmentToName = ({
+  name,
+  projectName,
+}: Pick<FlatEnvironment, "name" | "projectName">): string =>
+  `${name} (${projectName})`;

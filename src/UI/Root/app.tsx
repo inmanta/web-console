@@ -20,10 +20,14 @@ export const App: React.FC = () => {
       <SearchSanitizer.Provider>
         <AuthWrapper>
           <Routes>
-            <Route
-              path="/"
-              element={<Navigate to={routeManager.getUrl("Home", undefined)} />}
-            />
+            {routeManager.isBaseUrlDefined() && (
+              <Route
+                path="/"
+                element={
+                  <Navigate to={routeManager.getUrl("Home", undefined)} />
+                }
+              />
+            )}
             <Route
               path="*"
               element={

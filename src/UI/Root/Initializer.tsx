@@ -5,8 +5,13 @@ import { DependencyContext } from "@/UI/Dependency";
 
 export const Initializer: React.FC = ({ children }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"GetServerStatus">({
+  const [statusData] = queryResolver.useOneTime<"GetServerStatus">({
     kind: "GetServerStatus",
+  });
+
+  const [environmentsData] = queryResolver.useOneTime<"GetEnvironments">({
+    kind: "GetEnvironments",
+    details: false,
   });
 
   return RemoteData.fold(
@@ -16,6 +21,6 @@ export const Initializer: React.FC = ({ children }) => {
       failed: (error) => <ErrorView message={error} />,
       success: () => <>{children}</>,
     },
-    data
+    RemoteData.merge(statusData, environmentsData)
   );
 };

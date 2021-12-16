@@ -5,13 +5,18 @@ import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
 
 export const Provider: React.FC = () => {
-  const location = useLocation();
   const { environmentHandler, queryResolver, routeManager, featureManager } =
     useContext(DependencyContext);
+  const location = useLocation();
   const selected = environmentHandler.useSelected();
   const pathname = featureManager.isLsmEnabled()
     ? routeManager.getUrl("Catalog", undefined)
     : routeManager.getUrl("CompileReports", undefined);
+
+  const [data] = queryResolver.useOneTime<"GetEnvironments">({
+    kind: "GetEnvironments",
+    details: false,
+  });
 
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
     if (!selected) {
@@ -20,10 +25,7 @@ export const Provider: React.FC = () => {
       environmentHandler.set(location, item.environmentId);
     }
   };
-  const [data] = queryResolver.useOneTime<"GetEnvironments">({
-    kind: "GetEnvironments",
-    details: false,
-  });
+
   return (
     <EnvSelectorWithData
       environments={data}

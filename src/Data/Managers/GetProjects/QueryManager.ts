@@ -11,7 +11,8 @@ export class GetProjectsQueryManager extends PrimaryOneTimeQueryManager<"GetProj
       () => [],
       "GetProjects",
       ({ environmentDetails }) => getUrl(environmentDetails),
-      identity
+      identity,
+      "MERGE"
     );
   }
 }

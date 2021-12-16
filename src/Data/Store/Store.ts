@@ -24,6 +24,10 @@ import {
   EnvironmentSettingsSlice,
 } from "./EnvironmentSettingsSlice";
 import { EnvironmentsSlice, environmentsSlice } from "./EnvironmentsSlice";
+import {
+  EnvironmentsWithDetailsSlice,
+  environmentsWithDetailsSlice,
+} from "./EnvironmentsWithDetailsSlice";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
 import { factsSlice, FactsSlice } from "./FactsSlice";
 import {
@@ -60,6 +64,7 @@ import { servicesSlice, ServicesSlice } from "./ServicesSlice";
 
 export interface StoreModel {
   environments: EnvironmentsSlice;
+  environmentsWithDetails: EnvironmentsWithDetailsSlice;
   projects: ProjectsSlice;
   serverStatus: ServerStatusSlice;
   services: ServicesSlice;
@@ -89,6 +94,7 @@ export interface StoreModel {
 
 export const storeModel: StoreModel = {
   environments: environmentsSlice,
+  environmentsWithDetails: environmentsWithDetailsSlice,
   projects: projectsSlice,
   serverStatus: serverStatusSlice,
   services: servicesSlice,

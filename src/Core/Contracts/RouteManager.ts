@@ -3,6 +3,7 @@ import { RouteKind, Route, RouteParams, RouteMatch } from "@/Core/Domain";
 export type RouteDictionary = Record<RouteKind, Route>;
 
 export interface RouteManager {
+  isBaseUrlDefined(): boolean;
   getRoutes(): Route[];
   getRouteDictionary(): RouteDictionary;
   getRoute(routeKind: RouteKind): Route;

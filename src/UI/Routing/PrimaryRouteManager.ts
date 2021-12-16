@@ -34,6 +34,9 @@ export class PrimaryRouteManager implements RouteManager {
       DesiredState: DesiredState(this.baseUrl),
     };
   }
+  isBaseUrlDefined(): boolean {
+    return this.baseUrl !== "";
+  }
 
   getLineageFromRoute(route: Route, routes: Route[] = []): Route[] {
     if (route.parent) {

@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import {
   Page,
   PageHeader,
@@ -9,7 +10,7 @@ import {
   StackItem,
 } from "@patternfly/react-core";
 import { Either, EnvironmentRole, FlatEnvironment } from "@/Core";
-import { ErrorView } from "@/UI/Components";
+
 import { DependencyContext, DependencyResolver } from "@/UI/Dependency";
 import { GlobalStyles } from "@/UI/Styles";
 import { words } from "@/UI/words";
@@ -45,18 +46,28 @@ const getEnvironmentId = (
 };
 
 export const AppFrame: React.FC<Props> = ({ children, environmentRole }) => {
-  const { environmentHandler } = useContext(DependencyContext);
+  const { environmentHandler, routeManager, keycloakController } =
+    useContext(DependencyContext);
   const environment = environmentHandler.useSelected();
 
   const eitherEnvironmentId = getEnvironmentId(environmentRole, environment);
   const environmentId = Either.withFallback(undefined, eitherEnvironmentId);
+
+  const keycloak = keycloakController.getInstance();
+
+  useEffect(() => {
+    if (keycloak && !keycloak.profile) {
+      keycloak.loadUserProfile();
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [keycloak?.authenticated]);
 
   return (
     <>
       {environmentId && <DependencyResolver environment={environmentId} />}
       <AppFrameInner environmentId={environmentId}>
         {Either.isLeft(eitherEnvironmentId) ? (
-          <ErrorView message={words("error.environment.missing")} />
+          <Navigate to={routeManager.getUrl("Home", undefined)} />
         ) : (
           children
         )}
