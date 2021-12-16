@@ -9,21 +9,23 @@ export const Provider: React.FC = () => {
     useContext(DependencyContext);
   const location = useLocation();
   const selected = environmentHandler.useSelected();
-  const pathname = featureManager.isLsmEnabled()
-    ? routeManager.getUrl("Catalog", undefined)
-    : routeManager.getUrl("CompileReports", undefined);
-
   const [data] = queryResolver.useOneTime<"GetEnvironments">({
     kind: "GetEnvironments",
     details: false,
   });
 
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
-    if (!selected) {
-      environmentHandler.set({ ...location, pathname }, item.environmentId);
-    } else {
+    if (selected) {
       environmentHandler.set(location, item.environmentId);
+      return;
     }
+    const newLocation = {
+      ...location,
+      pathname: featureManager.isLsmEnabled()
+        ? routeManager.getUrl("Catalog", undefined)
+        : routeManager.getUrl("CompileReports", undefined),
+    };
+    environmentHandler.set(newLocation, item.environmentId);
   };
 
   return (
