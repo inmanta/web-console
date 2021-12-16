@@ -1,9 +1,9 @@
-export interface Sort {
-  name: string;
+export interface Sort<Name extends string = string> {
+  name: Name;
   order: Order;
 }
 
-export type Type = Sort;
+export type Type<Name extends string = string> = Sort<Name>;
 
 export type Order = "asc" | "desc";
 
@@ -15,9 +15,11 @@ export const equals = (a: Sort, b: Sort): boolean =>
 
 export const serialize = (sort: Sort): string => `${sort.name}.${sort.order}`;
 
-export const parse = (value: unknown): Sort | undefined => {
+export const parse = <Name extends string = string>(
+  value: unknown
+): Sort<Name> | undefined => {
   if (typeof value !== "string") return undefined;
   const [name, order] = value.split(".");
   if (!orderIsValid(order)) return undefined;
-  return { name, order };
+  return { name: name as Name, order };
 };

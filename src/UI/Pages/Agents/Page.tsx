@@ -25,7 +25,7 @@ export const Page: React.FC = () => {
   const [filter, setFilter] = useUrlStateWithFilter<AgentParams.Filter>({
     route: "Agents",
   });
-  const [sort, setSort] = useUrlStateWithSort({
+  const [sort, setSort] = useUrlStateWithSort<string>({
     default: { name: "name", order: "asc" },
     route: "Agents",
   });

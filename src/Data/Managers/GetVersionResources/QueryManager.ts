@@ -5,30 +5,29 @@ import {
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class GetAgentsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetAgents"> {
+export class GetVersionResourcesQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetVersionResources"> {
   constructor(
     apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetAgents">,
+    stateHelper: StateHelper<"GetVersionResources">,
     scheduler: Scheduler
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      ({ kind }, environment) => `${kind}_${environment}`,
-      ({ pageSize, sort, filter }, environment) => [
+      ({ kind, version }) => `${kind}_${version}`,
+      ({ pageSize, filter, sort }, environment) => [
         environment,
         pageSize.value,
+        stringifyObject(filter),
         sort?.name,
         sort?.order,
-        stringifyObject(filter),
       ],
-      "GetAgents",
-      (query) => getUrl(query),
+      "GetVersionResources",
+      getUrl,
       ({ data, links, metadata }, setUrl) => {
-        if (typeof links === "undefined") {
+        if (typeof links === "undefined")
           return { data: data, handlers: {}, metadata };
-        }
         return {
           data: data,
           handlers: getPaginationHandlers(links, metadata, setUrl),

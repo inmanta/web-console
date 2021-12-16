@@ -33,7 +33,7 @@ export const Page: React.FC = () => {
   const [filter, setFilter] = useUrlStateWithFilter<ResourceParams.Filter>({
     route: "Resources",
   });
-  const [sort, setSort] = useUrlStateWithSort({
+  const [sort, setSort] = useUrlStateWithSort<string>({
     default: { name: "resource_type", order: "asc" },
     route: "Resources",
   });
