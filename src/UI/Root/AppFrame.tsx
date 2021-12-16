@@ -53,7 +53,9 @@ export const AppFrame: React.FC<Props> = ({ children, environmentRole }) => {
   const eitherEnvironmentId = getEnvironmentId(environmentRole, environment);
   const environmentId = Either.withFallback(undefined, eitherEnvironmentId);
 
-  const keycloak = keycloakController.getInstance();
+  const keycloak = keycloakController.isEnabled()
+    ? keycloakController.getInstance()
+    : undefined;
 
   useEffect(() => {
     if (keycloak && !keycloak.profile) {
