@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
-import { ActionDisabledTooltip } from "@/UI/Components";
+import { ActionDisabledTooltip, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
@@ -11,18 +11,31 @@ interface Props {
   isPromoteDisabled: boolean;
 }
 
-export const Actions: React.FC<Props> = ({ version, isPromoteDisabled }) => (
-  <Flex direction={{ default: "column", "2xl": "row" }}>
-    <FlexItem>
-      <Button isDisabled variant="primary">
-        {words("desiredState.actions.details")}
-      </Button>
-    </FlexItem>
-    <FlexItem>
-      <PromoteVersionButton version={version} isDisabled={isPromoteDisabled} />
-    </FlexItem>
-  </Flex>
-);
+export const Actions: React.FC<Props> = ({ version, isPromoteDisabled }) => {
+  const { routeManager } = useContext(DependencyContext);
+  return (
+    <Flex direction={{ default: "column", "2xl": "row" }}>
+      <FlexItem>
+        <Link
+          pathname={routeManager.getUrl("DesiredStateDetails", {
+            version: version.toString(),
+          })}
+          envOnly
+        >
+          <Button variant="primary">
+            {words("desiredState.actions.details")}
+          </Button>
+        </Link>
+      </FlexItem>
+      <FlexItem>
+        <PromoteVersionButton
+          version={version}
+          isDisabled={isPromoteDisabled}
+        />
+      </FlexItem>
+    </Flex>
+  );
+};
 
 const PromoteVersionButton: React.FC<{
   version: number;

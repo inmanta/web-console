@@ -32,6 +32,7 @@ export class PrimaryRouteManager implements RouteManager {
       Settings: Settings(this.baseUrl),
       Status: Status(this.baseUrl),
       DesiredState: DesiredState(this.baseUrl),
+      DesiredStateDetails: DesiredStateDetails(this.baseUrl),
     };
   }
   isBaseUrlDefined(): boolean {
@@ -191,6 +192,14 @@ const DesiredState = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.DesiredState}`,
   label: "Desired State",
+  environmentRole: "Required",
+});
+
+const DesiredStateDetails = (base: string): Route => ({
+  kind: "DesiredStateDetails",
+  parent: "DesiredState",
+  path: `${base}${paths.DesiredStateDetails}`,
+  label: "Desired State Details",
   environmentRole: "Required",
 });
 
