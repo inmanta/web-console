@@ -14,7 +14,8 @@ export class GetEnvironmentsQueryManager extends PrimaryOneTimeQueryManager<"Get
       () => [],
       "GetEnvironments",
       ({ details }) => getUrl(details),
-      identity
+      identity,
+      "MERGE"
     );
   }
 }

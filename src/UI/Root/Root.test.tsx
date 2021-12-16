@@ -3,7 +3,6 @@ import { MemoryRouter } from "react-router";
 import { useLocation, useNavigate } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import Keycloak from "keycloak-js";
 import { Either } from "@/Core";
 import {
   QueryResolverImpl,
@@ -17,10 +16,11 @@ import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolver,
+  Project,
   ServerStatus,
 } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
-import { App } from "@/UI/Root/app";
+import { Root } from "./Root";
 
 function setup() {
   const store = getStoreInstance();
@@ -49,12 +49,12 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter initialEntries={["/lsm/catalog"]}>
+    <MemoryRouter initialEntries={["/"]}>
       <StoreProvider store={store}>
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, environmentHandler }}
         >
-          <App keycloak={Keycloak()} shouldUseAuth={false} />
+          <Root />
         </DependencyProvider>
       </StoreProvider>
     </MemoryRouter>
@@ -72,6 +72,7 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
+    await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
   expect(
@@ -86,6 +87,7 @@ test("GIVEN the app THEN the documentation link should be visible", async () => 
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
+    await apiHelper.resolve(Either.right({ data: Project.list }));
   });
 
   expect(

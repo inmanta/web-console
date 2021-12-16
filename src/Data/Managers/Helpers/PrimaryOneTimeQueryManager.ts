@@ -25,7 +25,8 @@ export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
     private readonly getUrl: GetUrl<Kind>,
-    private readonly toUsed: ToUsed<Kind>
+    private readonly toUsed: ToUsed<Kind>,
+    private readonly strategy: "MERGE" | "RELOAD"
   ) {}
 
   async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
@@ -43,7 +44,12 @@ export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
     }, this.getDependencies(query));
 
     useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), query);
+      if (
+        this.strategy === "RELOAD" ||
+        RemoteData.isNotAsked(this.stateHelper.getOnce(query))
+      ) {
+        this.stateHelper.set(RemoteData.loading(), query);
+      }
       this.update(query, url);
     }, [url]);
 

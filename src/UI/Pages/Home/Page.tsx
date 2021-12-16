@@ -4,7 +4,7 @@ import { DependencyContext, words } from "@/UI";
 import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
-export const Home: React.FC = () => {
+export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"GetEnvironments">({
     kind: "GetEnvironments",

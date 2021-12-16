@@ -12,7 +12,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useDocumentTitle } from "@/UI/Routing";
 import { words } from "@/UI/words";
 
-export const NotFound: React.FC = () => {
+export const Page: React.FC = () => {
   useDocumentTitle("404 Page Not Found");
   const { routeManager } = React.useContext(DependencyContext);
   return (

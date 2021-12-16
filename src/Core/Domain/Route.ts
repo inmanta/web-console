@@ -24,12 +24,14 @@ export type RouteKind = typeof kinds[number];
 export const isValidKind = (value: string): value is RouteKind =>
   kinds.includes(value as RouteKind);
 
+export type EnvironmentRole = "Forbidden" | "Optional" | "Required";
+
 export interface Route {
   kind: RouteKind;
   parent?: RouteKind;
   path: string;
   label: string;
-  clearEnv?: boolean;
+  environmentRole: EnvironmentRole;
 }
 
 interface RouteParamKeysManifest {

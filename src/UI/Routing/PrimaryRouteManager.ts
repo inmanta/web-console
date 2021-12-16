@@ -34,6 +34,9 @@ export class PrimaryRouteManager implements RouteManager {
       DesiredState: DesiredState(this.baseUrl),
     };
   }
+  isBaseUrlDefined(): boolean {
+    return this.baseUrl !== "";
+  }
 
   getLineageFromRoute(route: Route, routes: Route[] = []): Route[] {
     if (route.parent) {
@@ -108,6 +111,7 @@ const Catalog = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.Catalog}`,
   label: "Service Catalog",
+  environmentRole: "Required",
 });
 
 const Inventory = (base: string): Route => ({
@@ -115,6 +119,7 @@ const Inventory = (base: string): Route => ({
   parent: "Catalog",
   path: `${base}${paths.Inventory}`,
   label: "Service Inventory",
+  environmentRole: "Required",
 });
 
 const CreateInstance = (base: string): Route => ({
@@ -122,6 +127,7 @@ const CreateInstance = (base: string): Route => ({
   parent: "Inventory",
   path: `${base}${paths.CreateInstance}`,
   label: "Create Instance",
+  environmentRole: "Required",
 });
 
 const EditInstance = (base: string): Route => ({
@@ -129,6 +135,7 @@ const EditInstance = (base: string): Route => ({
   parent: "Inventory",
   path: `${base}${paths.EditInstance}`,
   label: "Edit Instance",
+  environmentRole: "Required",
 });
 
 const History = (base: string): Route => ({
@@ -136,6 +143,7 @@ const History = (base: string): Route => ({
   parent: "Inventory",
   path: `${base}${paths.History}`,
   label: "Service Instance History",
+  environmentRole: "Required",
 });
 
 const Diagnose = (base: string): Route => ({
@@ -143,6 +151,7 @@ const Diagnose = (base: string): Route => ({
   parent: "Inventory",
   path: `${base}${paths.Diagnose}`,
   label: "Diagnose Service Instance",
+  environmentRole: "Required",
 });
 
 const Events = (base: string): Route => ({
@@ -150,6 +159,7 @@ const Events = (base: string): Route => ({
   parent: "Inventory",
   label: "Service Instance Events",
   path: `${base}${paths.Events}`,
+  environmentRole: "Required",
 });
 
 const Resources = (base: string): Route => ({
@@ -157,6 +167,7 @@ const Resources = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.Resources}`,
   label: "Resources",
+  environmentRole: "Required",
 });
 
 const Agents = (base: string): Route => ({
@@ -164,6 +175,7 @@ const Agents = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.Agents}`,
   label: "Agents",
+  environmentRole: "Required",
 });
 
 const AgentProcess = (base: string): Route => ({
@@ -171,6 +183,7 @@ const AgentProcess = (base: string): Route => ({
   parent: "Agents",
   path: `${base}${paths.AgentProcess}`,
   label: "Agent Process",
+  environmentRole: "Required",
 });
 
 const DesiredState = (base: string): Route => ({
@@ -178,6 +191,7 @@ const DesiredState = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.DesiredState}`,
   label: "Desired State",
+  environmentRole: "Required",
 });
 
 const CompileReports = (base: string): Route => ({
@@ -185,6 +199,7 @@ const CompileReports = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.CompileReports}`,
   label: "Compile Reports",
+  environmentRole: "Required",
 });
 
 const CompileDetails = (base: string): Route => ({
@@ -192,6 +207,7 @@ const CompileDetails = (base: string): Route => ({
   parent: "CompileReports",
   path: `${base}${paths.CompileDetails}`,
   label: "Compile Details",
+  environmentRole: "Required",
 });
 
 const ResourceDetails = (base: string): Route => ({
@@ -199,13 +215,14 @@ const ResourceDetails = (base: string): Route => ({
   parent: "Resources",
   path: `${base}${paths.ResourceDetails}`,
   label: "Resource Details",
+  environmentRole: "Required",
 });
 
 const Home = (base: string): Route => ({
   kind: "Home",
   path: `${base}${paths.Home}`,
   label: "Home",
-  clearEnv: true,
+  environmentRole: "Forbidden",
 });
 
 const CreateEnvironment = (base: string): Route => ({
@@ -213,7 +230,7 @@ const CreateEnvironment = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.CreateEnvironment}`,
   label: "Create Environment",
-  clearEnv: true,
+  environmentRole: "Forbidden",
 });
 
 const Settings = (base: string): Route => ({
@@ -221,6 +238,7 @@ const Settings = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.Settings}`,
   label: "Settings",
+  environmentRole: "Required",
 });
 
 const Status = (base: string): Route => ({
@@ -228,4 +246,5 @@ const Status = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.Status}`,
   label: "Status",
+  environmentRole: "Optional",
 });

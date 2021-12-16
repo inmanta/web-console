@@ -18,15 +18,13 @@ import {
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Project,
-  StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { Home } from "./Home";
+import { Page } from "./Page";
 
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const scheduler = new StaticScheduler();
   const environmentsStateHelper = new GetEnvironmentsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
@@ -52,13 +50,13 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <Home />
+          <Page />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component, apiHelper };
 }
 
 test("Home view shows failed table", async () => {

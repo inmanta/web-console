@@ -1,4 +1,4 @@
-import { PrimaryArchiveHelper } from "@/Data";
+import { PrimaryArchiveHelper, PrimaryKeycloakController } from "@/Data";
 import {
   MockEnvironmentHandler,
   MockFeatureManager,
@@ -14,6 +14,11 @@ const urlManager = new UrlManagerImpl(featureManager, "", "env");
 const environmentHandler = new MockEnvironmentHandler("env");
 const fileManager = new MockFileManager();
 const archiveHelper = new PrimaryArchiveHelper(fileManager);
+const keycloakController = new PrimaryKeycloakController(
+  undefined,
+  undefined,
+  undefined
+);
 
 export const dependencies = {
   routeManager,
@@ -22,4 +27,5 @@ export const dependencies = {
   urlManager,
   environmentHandler,
   archiveHelper,
+  keycloakController,
 };

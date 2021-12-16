@@ -13,7 +13,8 @@ export class GetServerStatusOneTimeQueryManager extends PrimaryOneTimeQueryManag
       () => [],
       "GetServerStatus",
       () => `/api/v1/serverstatus`,
-      identity
+      identity,
+      "MERGE"
     );
   }
 }
