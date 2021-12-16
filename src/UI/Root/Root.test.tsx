@@ -20,7 +20,7 @@ import {
   ServerStatus,
 } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
-import { App } from "@/UI/Root/app";
+import { Root } from "./Root";
 
 function setup() {
   const store = getStoreInstance();
@@ -54,7 +54,7 @@ function setup() {
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, environmentHandler }}
         >
-          <App />
+          <Root />
         </DependencyProvider>
       </StoreProvider>
     </MemoryRouter>

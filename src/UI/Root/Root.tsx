@@ -9,7 +9,7 @@ import { AppFrame } from "./AppFrame";
 import { Initializer } from "./Initializer";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
-export const App: React.FC = () => {
+export const Root: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
   const pages = new PrimaryPageManager(
     routeManager.getRouteDictionary()
