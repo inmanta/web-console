@@ -191,6 +191,7 @@ const DesiredState = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.DesiredState}`,
   label: "Desired State",
+  environmentRole: "Required",
 });
 
 const CompileReports = (base: string): Route => ({
