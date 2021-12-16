@@ -2,7 +2,8 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { DependencyProvider, PrimaryRouteManager } from "..";
+import { DependencyProvider } from "@/UI/Dependency";
+import { PrimaryRouteManager } from "@/UI/Routing";
 import { PageBreadcrumbs } from "./PageBreadcrumbs";
 
 function setup(initialEntries?: string[]) {

@@ -1,33 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import {
-  Page,
-  PageHeader,
-  PageHeaderTools,
-  PageHeaderToolsGroup,
-  PageSidebar,
-  Stack,
-  StackItem,
-} from "@patternfly/react-core";
+import { Page } from "@patternfly/react-core";
 import { Either, EnvironmentRole, FlatEnvironment } from "@/Core";
-
 import { DependencyContext, DependencyResolver } from "@/UI/Dependency";
+import { Header } from "@/UI/Root/Components/Header";
+import { PageBreadcrumbs } from "@/UI/Root/Components/PageBreadcrumbs";
+import { Sidebar } from "@/UI/Root/Components/Sidebar";
 import { GlobalStyles } from "@/UI/Styles";
 import { words } from "@/UI/words";
-import { EnvironmentControls } from "./AppLayout/EnvironmentControls";
-import { SimpleBackgroundImage } from "./AppLayout/SimpleBackgroundImage";
-import {
-  SettingsButton,
-  DocumentationLink,
-  Profile,
-  StatusButton,
-  EnvSelectorWithProvider,
-} from "./AppLayout/Toolbar";
-import { Navigation } from "./Navigation";
-import { PageBreadcrumbs } from "./PageBreadcrumbs";
-
-/* eslint-disable-next-line import/no-unresolved */
-import Logo from "!react-svg-loader!@images/logo.svg";
+import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 
 interface Props {
   environmentRole: EnvironmentRole;
@@ -45,7 +26,7 @@ const getEnvironmentId = (
   return Either.right(environment ? environment.id : undefined);
 };
 
-export const AppFrame: React.FC<Props> = ({ children, environmentRole }) => {
+export const PageFrame: React.FC<Props> = ({ children, environmentRole }) => {
   const { environmentHandler, routeManager, keycloakController } =
     useContext(DependencyContext);
   const environment = environmentHandler.useSelected();
@@ -83,7 +64,6 @@ interface InnerProps {
 }
 
 const AppFrameInner: React.FC<InnerProps> = ({ children, environmentId }) => {
-  const { routeManager } = useContext(DependencyContext);
   const [isNavOpen, setIsNavOpen] = useState(true);
   const [isMobileView, setIsMobileView] = React.useState(false);
   const [isNavOpenMobile, setIsNavOpenMobile] = React.useState(false);
@@ -99,18 +79,6 @@ const AppFrameInner: React.FC<InnerProps> = ({ children, environmentId }) => {
 
   const onToggle = isMobileView ? onNavToggleMobile : onNavToggle;
 
-  const header = (
-    <PageHeader
-      logo={<Logo alt="Inmanta Logo" aria-label="Inmanta Logo" />}
-      logoProps={{ href: routeManager.getUrl("Home", undefined) }}
-      headerTools={<TopNavActions noEnv={!Boolean(environmentId)} />}
-      showNavToggle
-      topNav={<EnvSelectorWithProvider />}
-      isNavOpen={isNavOpen}
-      onNavToggle={onToggle}
-    />
-  );
-
   return (
     <>
       <GlobalStyles />
@@ -118,7 +86,13 @@ const AppFrameInner: React.FC<InnerProps> = ({ children, environmentId }) => {
       <Page
         breadcrumb={<PageBreadcrumbs />}
         onPageResize={onPageResize}
-        header={header}
+        header={
+          <Header
+            noEnv={!Boolean(environmentId)}
+            isNavOpen={isNavOpen}
+            onToggle={onToggle}
+          />
+        }
         sidebar={
           <Sidebar
             isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
@@ -129,49 +103,5 @@ const AppFrameInner: React.FC<InnerProps> = ({ children, environmentId }) => {
         {children}
       </Page>
     </>
-  );
-};
-
-const TopNavActions: React.FC<{ noEnv: boolean }> = ({ noEnv }) => {
-  const { keycloakController } = useContext(DependencyContext);
-  return (
-    <PageHeaderTools>
-      <PageHeaderToolsGroup>
-        <StatusButton />
-        <DocumentationLink />
-        <SettingsButton isDisabled={noEnv} />
-      </PageHeaderToolsGroup>
-      {keycloakController.isEnabled() && (
-        <Profile keycloak={keycloakController.getInstance()} />
-      )}
-    </PageHeaderTools>
-  );
-};
-
-const Sidebar: React.FC<{
-  isNavOpen: boolean;
-  environment: string | undefined;
-}> = ({ isNavOpen, environment }) => {
-  return (
-    <PageSidebar
-      aria-label="PageSidebar"
-      nav={
-        <Stack>
-          <StackItem>
-            <Navigation environment={environment} />
-          </StackItem>
-          {environment && (
-            <>
-              <StackItem isFilled />
-              <StackItem>
-                <EnvironmentControls />
-              </StackItem>
-            </>
-          )}
-        </Stack>
-      }
-      isNavOpen={isNavOpen}
-      theme="dark"
-    />
   );
 };
