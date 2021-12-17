@@ -431,6 +431,9 @@ const dict = {
   "desiredState.filters.version.placeholder": "Filter by version",
   "desiredState.filters.date.placeholder": "Filter by date",
 
+  /** Desired State Details */
+  "desiredState.details.title": "Desired State Details",
+
   /**
    * Common
    */
