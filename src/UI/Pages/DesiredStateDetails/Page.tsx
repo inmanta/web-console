@@ -16,6 +16,8 @@ import {
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Controls } from "./Controls";
+import { VersionResourceTable } from "./VersionResourceTable";
+import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
 export const Page: React.FC = () => {
   const { version } = useRouteParams<"DesiredStateDetails">();
@@ -27,7 +29,7 @@ const InnerPage: React.FC<{ version: string }> = ({ version }) => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "DesiredStateDetails",
   });
-  const [sort] = useUrlStateWithSort<Resource.SortKeyFromVersion>({
+  const [sort, setSort] = useUrlStateWithSort<Resource.SortKeyFromVersion>({
     default: { name: "agent", order: "desc" },
     route: "DesiredStateDetails",
   });
@@ -44,6 +46,8 @@ const InnerPage: React.FC<{ version: string }> = ({ version }) => {
     filter,
     sort,
   });
+
+  const presenter = new VersionResourceTablePresenter();
 
   return (
     <PageSectionWithTitle title={words("desiredState.details.title")}>
@@ -77,7 +81,14 @@ const InnerPage: React.FC<{ version: string }> = ({ version }) => {
                 message={words("resources.empty.message")}
                 aria-label="VersionResourcesTable-Empty"
               />
-            ) : null,
+            ) : (
+              <VersionResourceTable
+                rows={presenter.createRows(resources.data)}
+                tablePresenter={new VersionResourceTablePresenter()}
+                sort={sort}
+                setSort={setSort}
+              />
+            ),
         },
         data
       )}

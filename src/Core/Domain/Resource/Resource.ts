@@ -50,6 +50,8 @@ export interface Row {
   id: string;
 }
 
+export type RowFromVersion = Omit<Row, "deployState">;
+
 export interface Details {
   resource_id: string;
   resource_type: string;
