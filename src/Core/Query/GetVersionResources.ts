@@ -1,34 +1,27 @@
-import {
-  Pagination,
-  PageSize,
-  Sort,
-  VersionResource,
-  VersionResourceFilter,
-  VersionResourcesSortName,
-} from "@/Core/Domain";
+import { Pagination, PageSize, Sort, Resource } from "@/Core/Domain";
 
 export interface GetVersionResources {
   kind: "GetVersionResources";
   version: string;
-  filter?: VersionResourceFilter;
-  sort?: Sort.Type<VersionResourcesSortName>;
+  filter?: Resource.FilterFromVersion;
+  sort?: Sort.Type<Resource.SortKeyFromVersion>;
   pageSize: PageSize.Type;
 }
 
 export interface GetVersionResourcesManifest {
   error: string;
   apiResponse: {
-    data: VersionResource[];
+    data: Resource.FromVersion[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   data: {
-    data: VersionResource[];
+    data: Resource.FromVersion[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   usedData: {
-    data: VersionResource[];
+    data: Resource.FromVersion[];
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };

@@ -8,15 +8,15 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import styled from "styled-components";
-import { ResourceRow, Sort } from "@/Core";
+import { Resource, Sort } from "@/Core";
 import { ResourceTableRow } from "./ResourceTableRow";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 
 interface Props {
-  rows: ResourceRow[];
+  rows: Resource.Row[];
   tablePresenter: ResourcesTablePresenter;
-  sort: Sort.Type;
-  setSort: (sort: Sort.Type) => void;
+  sort: Sort.Type<Resource.SortKey>;
+  setSort: (sort: Sort.Type<Resource.SortKey>) => void;
 }
 export const ResourcesTable: React.FC<Props> = ({
   rows,
@@ -27,7 +27,7 @@ export const ResourcesTable: React.FC<Props> = ({
 }) => {
   const onSort: OnSort = (event, index, order) => {
     setSort({
-      name: tablePresenter.getColumnNameForIndex(index) as string,
+      name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKey,
       order,
     });
   };

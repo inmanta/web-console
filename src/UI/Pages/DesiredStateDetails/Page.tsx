@@ -1,9 +1,5 @@
 import React, { useContext } from "react";
-import {
-  RemoteData,
-  VersionResourceFilter,
-  VersionResourcesSortName,
-} from "@/Core";
+import { RemoteData, Resource } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -29,15 +25,17 @@ export const Page: React.FC = () => {
 const InnerPage: React.FC<{ version: string }> = ({ version }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
-    route: "ResourceDetails",
+    route: "DesiredStateDetails",
   });
-  const [sort] = useUrlStateWithSort<VersionResourcesSortName>({
+  const [sort] = useUrlStateWithSort<Resource.SortKeyFromVersion>({
     default: { name: "agent", order: "desc" },
     route: "DesiredStateDetails",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<VersionResourceFilter>({
-    route: "DesiredStateDetails",
-  });
+  const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>(
+    {
+      route: "DesiredStateDetails",
+    }
+  );
 
   const [data, retry] = queryResolver.useContinuous<"GetVersionResources">({
     kind: "GetVersionResources",

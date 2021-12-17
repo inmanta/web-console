@@ -1,16 +1,14 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { ResourceParams } from "@/Core";
-import { AgentFilter } from "./AgentFilter";
+import { Resource } from "@/Core";
+import { AgentFilter, TypeFilter, ValueFilter } from "@/UI/Components";
 import { DeployStateFilter } from "./DeployStateFilter";
-import { TypeFilter } from "./TypeFilter";
-import { ValueFilter } from "./ValueFilter";
 
 interface Props {
   summaryWidget: React.ReactNode;
   paginationWidget: React.ReactNode;
-  filter: ResourceParams.Filter;
-  setFilter: (filter: ResourceParams.Filter) => void;
+  filter: Resource.Filter;
+  setFilter: (filter: Resource.Filter) => void;
 }
 
 export const ResourceTableControls: React.FC<Props> = ({

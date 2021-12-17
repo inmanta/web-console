@@ -1,20 +1,26 @@
-import { Metadata } from "./Pagination";
+import { Pagination } from "@/Core/Domain/Pagination";
+import { PageSize } from "../PageSize";
+import { Sort } from "../Sort";
 
 export interface Resource {
   resource_id: string;
   requires: string[];
-  status: ResourceStatus;
-  id_details: ResourceIdDetails;
+  status: Status;
+  id_details: IdDetails;
 }
 
-export interface ResourceIdDetails {
+export interface FromVersion extends Omit<Resource, "status"> {
+  resource_version_id: string;
+}
+
+export interface IdDetails {
   resource_type: string;
   agent: string;
   attribute: string;
   resource_id_value: string;
 }
 
-export enum ResourceStatus {
+export enum Status {
   unavailable = "unavailable",
   skipped = "skipped",
   dry = "dry",
@@ -28,37 +34,37 @@ export enum ResourceStatus {
   orphaned = "orphaned",
 }
 
-export interface RawResource {
+export interface Raw {
   resource_id: string;
   requires: string[];
   status: string;
-  id_details: ResourceIdDetails;
+  id_details: IdDetails;
 }
 
-export interface ResourceRow {
+export interface Row {
   type: string;
   agent: string;
   value: string;
   numberOfDependencies: number;
-  deployState: ResourceStatus;
+  deployState: Status;
   id: string;
 }
 
-export interface ResourceDetails {
+export interface Details {
   resource_id: string;
   resource_type: string;
   agent: string;
   id_attribute: string;
   id_attribute_value: string;
-  status: ResourceStatus;
+  status: Status;
   last_deploy?: string;
   first_generated_time: string;
   first_generated_version: number;
   attributes: Record<string, unknown>;
-  requires_status: Record<string, ResourceStatus>;
+  requires_status: Record<string, Status>;
 }
 
-export interface RawResourceDetails {
+export interface RawDetails {
   resource_id: string;
   resource_type: string;
   agent: string;
@@ -72,13 +78,42 @@ export interface RawResourceDetails {
   requires_status: Record<string, string>;
 }
 
-export interface ResourceDeploySummary {
+export interface DeploySummary {
   total: number;
   by_state: Record<string, number>;
 }
 
-export interface ResourceMetadata extends Metadata {
-  deploy_summary: ResourceDeploySummary;
+export interface Metadata extends Pagination.Metadata {
+  deploy_summary: DeploySummary;
 }
 
 export const TRANSIENT_STATES = ["available", "deploying", "processing_events"];
+
+export interface ResourceParams {
+  sort?: Sort<SortKey>;
+  filter?: Filter;
+  pageSize: PageSize;
+}
+
+export interface Filter {
+  type?: string[];
+  agent?: string[];
+  value?: string[];
+  status?: Status[];
+}
+
+export enum FilterKind {
+  Type = "Type",
+  Agent = "Agent",
+  Value = "Value",
+  Status = "Status",
+}
+
+export type SortKey =
+  | "agent"
+  | "status"
+  | "resource_type"
+  | "resource_id_value";
+
+export type FilterFromVersion = Omit<Filter, "status">;
+export type SortKeyFromVersion = Exclude<SortKey, "status">;

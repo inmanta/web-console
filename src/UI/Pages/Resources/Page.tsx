@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ResourceParams, RemoteData } from "@/Core";
+import { Resource, RemoteData } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -30,10 +30,10 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Resources",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<ResourceParams.Filter>({
+  const [filter, setFilter] = useUrlStateWithFilter<Resource.Filter>({
     route: "Resources",
   });
-  const [sort, setSort] = useUrlStateWithSort<string>({
+  const [sort, setSort] = useUrlStateWithSort<Resource.SortKey>({
     default: { name: "resource_type", order: "asc" },
     route: "Resources",
   });

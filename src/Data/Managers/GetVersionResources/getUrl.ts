@@ -13,8 +13,8 @@ export function getUrl({
           {
             filter: {
               agent: filter.agent,
-              resource_id_value: filter.resource_id_value,
-              resource_type: filter.resource_type,
+              resource_id_value: filter.value,
+              resource_type: filter.type,
             },
           },
           { allowDots: true, arrayFormat: "repeat" }

@@ -8,14 +8,14 @@ import {
   Tr,
   Td,
 } from "@patternfly/react-table";
-import { Maybe, ResourceStatus } from "@/Core";
+import { Maybe, Resource } from "@/Core";
 import { ResourceStatusCell } from "@/UI/Components";
 import { ResourceFilterContext } from "@/UI/Pages/Resources/ResourceFilterContext";
 import { ResourceIdParser } from "@/UI/Pages/Resources/ResourceId";
 import { words } from "@/UI/words";
 
 interface Props {
-  requiresStatus: Record<string, ResourceStatus>;
+  requiresStatus: Record<string, Resource.Status>;
   "aria-label"?: string;
 }
 export const RequiresTable: React.FC<Props> = ({

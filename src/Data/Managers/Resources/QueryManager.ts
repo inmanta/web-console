@@ -1,4 +1,4 @@
-import { Scheduler, StateHelper, ResourceParams, ApiHelper } from "@/Core";
+import { Scheduler, StateHelper, Resource, ApiHelper } from "@/Core";
 import {
   getPaginationHandlers,
   PrimaryContinuousQueryManagerWithEnv,
@@ -39,6 +39,6 @@ export class ResourcesQueryManager extends PrimaryContinuousQueryManagerWithEnv<
   }
 }
 
-function stringifyFilter(filter: ResourceParams.Filter | undefined): string {
+function stringifyFilter(filter: Resource.Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

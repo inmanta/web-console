@@ -27,9 +27,9 @@ export class GetVersionResourcesQueryManager extends PrimaryContinuousQueryManag
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")
-          return { data: data, handlers: {}, metadata };
+          return { data, handlers: {}, metadata };
         return {
-          data: data,
+          data,
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };

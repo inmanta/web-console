@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { Button } from "@patternfly/react-core";
 import { InfoCircleIcon } from "@patternfly/react-icons";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { ResourceRow } from "@/Core";
+import { Resource } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 interface Props {
-  row: ResourceRow;
+  row: Resource.Row;
 }
 
 export const ResourceTableRow: React.FC<Props> = ({ row }) => {

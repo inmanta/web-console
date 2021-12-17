@@ -1,4 +1,4 @@
-import { RawResourceDetails, ResourceDetails } from "@/Core/Domain";
+import { Resource } from "@/Core/Domain";
 import { WithId } from "@/Core/Language";
 
 export interface GetResourceDetails extends WithId {
@@ -8,9 +8,9 @@ export interface GetResourceDetails extends WithId {
 export interface GetResourceDetailsManifest {
   error: string;
   apiResponse: {
-    data: RawResourceDetails;
+    data: Resource.RawDetails;
   };
-  data: ResourceDetails;
-  usedData: ResourceDetails;
+  data: Resource.Details;
+  usedData: Resource.Details;
   query: GetResourceDetails;
 }
