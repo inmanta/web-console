@@ -61,6 +61,10 @@ import {
   GetServiceInstancesManifest,
 } from "./GetServiceInstances";
 import { GetServices, GetServicesManifest } from "./GetServices";
+import {
+  GetVersionResources,
+  GetVersionResourcesManifest,
+} from "./GetVersionResources";
 
 export type Query =
   | GetServices
@@ -89,7 +93,8 @@ export type Query =
   | GetFacts
   | GetAgents
   | GetAgentProcess
-  | GetDesiredStates;
+  | GetDesiredStates
+  | GetVersionResources;
 
 export type Type = Query;
 
@@ -125,6 +130,7 @@ interface Manifest {
   GetAgents: GetAgentsManifest;
   GetAgentProcess: GetAgentProcessManifest;
   GetDesiredStates: GetDesiredStatesManifest;
+  GetVersionResources: GetVersionResourcesManifest;
 }
 
 /**

@@ -1,31 +1,25 @@
-import {
-  Pagination,
-  Resource,
-  RawResource,
-  ResourceParams,
-  ResourceMetadata,
-} from "@/Core/Domain";
+import { Pagination, Resource } from "@/Core/Domain";
 
-export interface GetResources extends ResourceParams.ResourceParams {
+export interface GetResources extends Resource.ResourceParams {
   kind: "GetResources";
 }
 
 export interface GetResourcesManifest {
   error: string;
   apiResponse: {
-    data: RawResource[];
+    data: Resource.Raw[];
     links: Pagination.Links;
-    metadata: ResourceMetadata;
+    metadata: Resource.Metadata;
   };
   data: {
-    data: Resource[];
+    data: Resource.Resource[];
     links: Pagination.Links;
-    metadata: ResourceMetadata;
+    metadata: Resource.Metadata;
   };
   usedData: {
-    data: Resource[];
+    data: Resource.Resource[];
     handlers: Pagination.Handlers;
-    metadata: ResourceMetadata;
+    metadata: Resource.Metadata;
   };
   query: GetResources;
 }

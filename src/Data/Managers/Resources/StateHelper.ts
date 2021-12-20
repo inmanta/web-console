@@ -1,5 +1,5 @@
 import { isEqual } from "lodash";
-import { Query, RemoteData, ResourceStatus, StateHelper } from "@/Core";
+import { Query, RemoteData, Resource, StateHelper } from "@/Core";
 import { Store, useStoreState } from "@/Data/Store";
 
 type Data = RemoteData.Type<
@@ -23,7 +23,7 @@ export class ResourcesStateHelper implements StateHelper<"GetResources"> {
         ...wrapped,
         data: wrapped.data.map((resource) => ({
           ...resource,
-          status: resource.status as ResourceStatus,
+          status: resource.status as Resource.Status,
         })),
       }),
       data

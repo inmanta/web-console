@@ -9,16 +9,16 @@ import {
 } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Resource, Sort } from "@/Core";
-import { ResourceTableRow } from "./ResourceTableRow";
-import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
+import { Row } from "./Row";
+import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
 interface Props {
-  rows: Resource.Row[];
-  tablePresenter: ResourcesTablePresenter;
-  sort: Sort.Type<Resource.SortKey>;
-  setSort: (sort: Sort.Type<Resource.SortKey>) => void;
+  rows: Resource.RowFromVersion[];
+  tablePresenter: VersionResourceTablePresenter;
+  sort: Sort.Type<Resource.SortKeyFromVersion>;
+  setSort: (sort: Sort.Type<Resource.SortKeyFromVersion>) => void;
 }
-export const ResourcesTable: React.FC<Props> = ({
+export const VersionResourceTable: React.FC<Props> = ({
   rows,
   tablePresenter,
   sort,
@@ -27,7 +27,9 @@ export const ResourcesTable: React.FC<Props> = ({
 }) => {
   const onSort: OnSort = (event, index, order) => {
     setSort({
-      name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKey,
+      name: tablePresenter.getColumnNameForIndex(
+        index
+      ) as Resource.SortKeyFromVersion,
       order,
     });
   };
@@ -66,7 +68,7 @@ export const ResourcesTable: React.FC<Props> = ({
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
-        <ResourceTableRow row={row} key={row.id} />
+        <Row row={row} key={row.id} />
       ))}
     </TableComposable>
   );

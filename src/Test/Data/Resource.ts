@@ -1,3 +1,5 @@
+import { Resource } from "@/Core";
+
 export const response = {
   data: [
     {
@@ -97,5 +99,86 @@ export const response = {
         processing_events: 0,
       },
     },
+  },
+};
+
+export const responseFromVersion: Resource.ResponseFromVersion = {
+  data: [
+    {
+      resource_id: "std::File[agent2,path=/tmp/file4]",
+      resource_version_id: "std::File[agent2,path=/tmp/file4],v=3",
+      id_details: {
+        resource_type: "std::File",
+        agent: "agent2",
+        attribute: "path",
+        resource_id_value: "/tmp/file4",
+      },
+      requires: [
+        "std::File[agent2,path=/etc/file3],v=3",
+        "std::File[agent1,path=/etc/file2],v=3",
+      ],
+    },
+    {
+      resource_id: "std::File[agent2,path=/etc/file3]",
+      resource_version_id: "std::File[agent2,path=/etc/file3],v=2",
+      id_details: {
+        resource_type: "std::File",
+        agent: "agent2",
+        attribute: "path",
+        resource_id_value: "/etc/file3",
+      },
+      requires: [],
+    },
+    {
+      resource_id: "std::File[agent1,path=/etc/file2]",
+      resource_version_id: "std::File[agent1,path=/etc/file2],v=2",
+      id_details: {
+        resource_type: "std::File",
+        agent: "agent1",
+        attribute: "path",
+        resource_id_value: "/etc/file2",
+      },
+      requires: [],
+    },
+    {
+      resource_id: "std::File[agent1,path=/etc/file1]",
+      resource_version_id: "std::File[agent1,path=/etc/file1],v=3",
+      id_details: {
+        resource_type: "std::File",
+        agent: "agent1",
+        attribute: "path",
+        resource_id_value: "/etc/file1",
+      },
+      requires: [],
+    },
+    {
+      resource_id: "std::Directory[agent3,path=/tmp/dir6]",
+      resource_version_id: "std::Directory[agent3,path=/tmp/dir6],v=3",
+      id_details: {
+        resource_type: "std::Directory",
+        agent: "agent3",
+        attribute: "path",
+        resource_id_value: "/tmp/dir6",
+      },
+      requires: [],
+    },
+    {
+      resource_id: "std::Directory[agent2,path=/tmp/dir5]",
+      resource_version_id: "std::Directory[agent2,path=/tmp/dir5],v=3",
+      id_details: {
+        resource_type: "std::Directory",
+        agent: "agent2",
+        attribute: "path",
+        resource_id_value: "/tmp/dir5",
+      },
+      requires: [],
+    },
+  ],
+  links: { self: "/api/v2/resource?limit=20&sort=resource_type.DESC" },
+  metadata: {
+    total: 6,
+    before: 0,
+    after: 0,
+    page_size: 20,
   },
 };

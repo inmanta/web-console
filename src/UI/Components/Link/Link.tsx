@@ -17,20 +17,15 @@ export const Link: React.FC<Props> = ({
   search: newSearch,
 }) => {
   const { search: currentSearch } = useLocation();
+  const search = newSearch
+    ? newSearch
+    : envOnly
+    ? new SearchHelper().keepEnvOnly(currentSearch)
+    : currentSearch;
+
   return isDisabled ? (
     <>{children}</>
   ) : (
-    <RRLink
-      to={{
-        pathname,
-        search: newSearch
-          ? newSearch
-          : envOnly
-          ? new SearchHelper().keepEnvOnly(currentSearch)
-          : currentSearch,
-      }}
-    >
-      {children}
-    </RRLink>
+    <RRLink to={{ pathname, search }}>{children}</RRLink>
   );
 };

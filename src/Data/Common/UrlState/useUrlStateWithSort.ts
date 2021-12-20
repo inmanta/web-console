@@ -4,12 +4,12 @@ import { handleUrlState } from "./useUrlState";
 
 export const useUrlStateWithSort = provide(handleUrlStateWithSort);
 
-export function handleUrlStateWithSort(
-  config: Pick<StateConfig<Sort.Type>, "route" | "default">,
+export function handleUrlStateWithSort<Key extends string = string>(
+  config: Pick<StateConfig<Sort.Type<Key>>, "route" | "default">,
   location: Location,
   replace: Replace
-): [Sort.Type, Update<Sort.Type>] {
-  return handleUrlState<Sort.Type>(
+): [Sort.Type<Key>, Update<Sort.Type<Key>>] {
+  return handleUrlState<Sort.Type<Key>>(
     {
       default: config.default,
       key: "sort",

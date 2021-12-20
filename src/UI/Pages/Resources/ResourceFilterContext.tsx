@@ -1,8 +1,8 @@
 import { createContext } from "react";
-import { ResourceParams } from "@/Core";
+import { Resource } from "@/Core";
 
 interface SetFilterProvider {
-  setFilter: (filter: ResourceParams.Filter) => void;
+  setFilter: (filter: Resource.Filter) => void;
 }
 
 export const ResourceFilterContext = createContext<SetFilterProvider>({

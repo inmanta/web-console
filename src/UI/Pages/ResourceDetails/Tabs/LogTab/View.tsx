@@ -25,7 +25,7 @@ export const View: React.FC<Props> = ({ resourceId }) => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "ResourceDetails",
   });
-  const [sort, setSort] = useUrlStateWithSort({
+  const [sort, setSort] = useUrlStateWithSort<string>({
     default: { name: "timestamp", order: "desc" },
     route: "ResourceDetails",
   });

@@ -2,8 +2,8 @@ import { Resource } from "@/Core";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
-export class ResourcesTablePresenter
-  implements TablePresenter<Resource.Resource, Resource.Row>
+export class VersionResourceTablePresenter
+  implements TablePresenter<Resource.FromVersion, Resource.RowFromVersion>
 {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
@@ -24,10 +24,6 @@ export class ResourcesTablePresenter
         apiName: "requires",
       },
       {
-        displayName: words("resources.column.deployState"),
-        apiName: "status",
-      },
-      {
         displayName: words("compileReports.columns.actions"),
         apiName: "",
       },
@@ -35,12 +31,11 @@ export class ResourcesTablePresenter
     this.numberOfColumns = this.columnHeads.length + 1;
   }
 
-  createRows(sourceData: Resource.Resource[]): Resource.Row[] {
+  createRows(sourceData: Resource.FromVersion[]): Resource.RowFromVersion[] {
     return sourceData.map((resource) => ({
       type: resource.id_details.resource_type,
       value: resource.id_details.resource_id_value,
       agent: resource.id_details.agent,
-      deployState: resource.status,
       numberOfDependencies: resource.requires.length,
       id: resource.resource_id,
     }));
@@ -67,13 +62,7 @@ export class ResourcesTablePresenter
   }
 
   public getSortableColumnNames(): string[] {
-    const sortableColumns = [
-      "resource_type",
-      "agent",
-      "resource_id_value",
-      "status",
-    ];
-    return sortableColumns;
+    return ["resource_type", "agent", "resource_id_value"];
   }
 
   getNumberOfColumns(): number {

@@ -1,11 +1,11 @@
 import React from "react";
-import { ResourceParams } from "@/Core";
+import { Resource } from "@/Core";
 import { FreeTextFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 
 interface Props {
-  filter: ResourceParams.Filter;
-  setFilter: (filter: ResourceParams.Filter) => void;
+  filter: Resource.Filter;
+  setFilter: (filter: Resource.Filter) => void;
 }
 export const TypeFilter: React.FC<Props> = ({ filter, setFilter }) => {
   const updateType = (types: string[]) =>
@@ -15,7 +15,7 @@ export const TypeFilter: React.FC<Props> = ({ filter, setFilter }) => {
     <FreeTextFilter
       isVisible={true}
       searchEntries={filter.type}
-      filterPropertyName={ResourceParams.Kind.Type}
+      filterPropertyName={Resource.FilterKind.Type}
       placeholder={words("resources.filters.type.placeholder")}
       update={updateType}
     />

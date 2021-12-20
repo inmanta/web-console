@@ -15,11 +15,11 @@ import {
   global_success_color_100,
   global_warning_color_100,
 } from "@patternfly/react-tokens";
-import { ResourceDeploySummary, TRANSIENT_STATES } from "@/Core";
+import { Resource } from "@/Core";
 import { words } from "@/UI";
 
 interface Props {
-  summary: ResourceDeploySummary;
+  summary: Resource.DeploySummary;
 }
 
 export const DeployStateChart: React.FC<Props> = ({ summary }) => {
@@ -64,7 +64,7 @@ export const DeployStateChart: React.FC<Props> = ({ summary }) => {
 
 function getResourcesInDoneState(by_state: Record<string, number>): number {
   return Object.entries(by_state)
-    .filter(([key]) => !TRANSIENT_STATES.includes(key))
+    .filter(([key]) => !Resource.TRANSIENT_STATES.includes(key))
     .map(([, value]) => value)
     .reduce((acc, current) => acc + current, 0);
 }

@@ -61,6 +61,10 @@ import {
   ServiceInstancesSlice,
 } from "./ServiceInstancesSlice";
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
+import {
+  versionResourcesSlice,
+  VersionResourcesSlice,
+} from "./VersionResourcesSlice";
 
 export interface StoreModel {
   environments: EnvironmentsSlice;
@@ -90,6 +94,7 @@ export interface StoreModel {
   agents: AgentsSlice;
   agentProcess: AgentProcessSlice;
   desiredStates: DesiredStatesSlice;
+  versionResources: VersionResourcesSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -120,4 +125,5 @@ export const storeModel: StoreModel = {
   agents: agentsSlice,
   agentProcess: agentProcessSlice,
   desiredStates: desiredStatesSlice,
+  versionResources: versionResourcesSlice,
 };

@@ -1,3 +1,8 @@
+/** These imports are special because of a limitation with eslint plugin https://github.com/import-js/eslint-plugin-import/issues/2289 */
+import { Pagination } from "./Pagination";
+import { Resource } from "./Resource";
+export { Pagination, Resource };
+
 export * from "./ActionTypes";
 export * from "./Callback";
 export * from "./Config";
@@ -14,12 +19,9 @@ export * as ServiceInstanceParams from "./ServiceInstanceParams";
 export * from "./ServiceModel";
 export * from "./LogLevel";
 export * as PageSize from "./PageSize";
-export * as Pagination from "./Pagination";
 export * from "./Diagnostics";
 export * as EventParams from "./EventParams";
-export * from "./Resource";
 export * from "./ResourceLog";
-export * as ResourceParams from "./ResourceParams";
 export * from "./ResourceHistory";
 export * from "./Route";
 export * from "./EnvironmentDetailsModel";

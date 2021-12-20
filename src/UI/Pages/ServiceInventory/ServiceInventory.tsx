@@ -54,7 +54,7 @@ export const ServiceInventory: React.FunctionComponent<{
 }> = ({ serviceName, service, intro }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [sort, setSort] = useUrlStateWithSort({
+  const [sort, setSort] = useUrlStateWithSort<string>({
     default: { name: "created_at", order: "desc" },
     route: "Inventory",
   });

@@ -105,3 +105,9 @@ export const resolvePromiseRecord = async (
     return acc;
   }, {});
 };
+
+export const stringifyObject = (
+  obj: Record<string, unknown> | unknown
+): string => {
+  return typeof obj === "undefined" ? "undefined" : JSON.stringify(obj);
+};

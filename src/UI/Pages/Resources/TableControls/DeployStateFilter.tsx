@@ -1,11 +1,11 @@
 import React from "react";
-import { ResourceParams, ResourceStatus } from "@/Core";
+import { Resource } from "@/Core";
 import { SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 
 interface Props {
-  filter: ResourceParams.Filter;
-  setFilter: (filter: ResourceParams.Filter) => void;
+  filter: Resource.Filter;
+  setFilter: (filter: Resource.Filter) => void;
 }
 
 export const DeployStateFilter: React.FC<Props> = ({ filter, setFilter }) => {
@@ -14,7 +14,7 @@ export const DeployStateFilter: React.FC<Props> = ({ filter, setFilter }) => {
       ...filter,
       status:
         statuses.length > 0
-          ? statuses.map((status) => ResourceStatus[status])
+          ? statuses.map((status) => Resource.Status[status])
           : undefined,
     });
 
@@ -23,7 +23,9 @@ export const DeployStateFilter: React.FC<Props> = ({ filter, setFilter }) => {
       isVisible={true}
       filterPropertyName={words("resources.column.deployState")}
       placeholder={words("resources.filters.status.placeholder")}
-      possibleStates={Object.keys(ResourceStatus).map((k) => ResourceStatus[k])}
+      possibleStates={Object.keys(Resource.Status).map(
+        (k) => Resource.Status[k]
+      )}
       selectedStates={filter.status ? filter.status : []}
       update={updateStatus}
     />

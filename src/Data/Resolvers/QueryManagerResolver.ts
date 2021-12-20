@@ -56,6 +56,8 @@ import {
   GetAgentsStateHelper,
   GetAgentProcessQueryManager,
   GetAgentProcessStateHelper,
+  GetVersionResourcesQueryManager,
+  GetVersionResourcesStateHelper,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import {
@@ -231,6 +233,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new GetDesiredStatesQueryManager(
         this.apiHelper,
         new GetDesiredStatesStateHelper(this.store, environment),
+        scheduler
+      ),
+      new GetVersionResourcesQueryManager(
+        this.apiHelper,
+        new GetVersionResourcesStateHelper(this.store, environment),
         scheduler
       ),
     ];
