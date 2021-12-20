@@ -13,12 +13,12 @@ interface Props {
 }
 
 export const LoadingView: React.FC<Props> = ({ delay, ...props }) => (
-  <Delayed delay={delay}>
-    <EmptyState {...props}>
+  <EmptyState {...props}>
+    <Delayed delay={delay}>
       <EmptyStateIcon variant="container" component={Spinner} />
       <Title size="lg" headingLevel="h4">
         {words("loading")}
       </Title>
-    </EmptyState>
-  </Delayed>
+    </Delayed>
+  </EmptyState>
 );

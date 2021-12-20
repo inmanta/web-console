@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Details } from "./Details";
@@ -30,15 +30,9 @@ export const DetailsProvider: React.FC<Props> = ({ resourceId: id }) => {
           message={words("resources.requires.failed.body")(error)}
         />
       ),
-      success: (details) =>
-        Object.keys(details.requires_status).length <= 0 ? (
-          <EmptyView
-            message={words("resources.requires.empty.message")}
-            aria-label="ResourceDetails-Empty"
-          />
-        ) : (
-          <Details details={details} aria-label="ResourceDetails-Success" />
-        ),
+      success: (details) => (
+        <Details details={details} aria-label="ResourceDetails-Success" />
+      ),
     },
     data
   );
