@@ -19,18 +19,18 @@ import { Controls } from "./Controls";
 import { VersionResourceTable } from "./VersionResourceTable";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
-export const Page: React.FC = () => {
+export const Provider: React.FC = () => {
   const { version } = useRouteParams<"DesiredStateDetails">();
-  return <InnerPage version={version} />;
+  return <Page version={version} />;
 };
 
-const InnerPage: React.FC<{ version: string }> = ({ version }) => {
+export const Page: React.FC<{ version: string }> = ({ version }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "DesiredStateDetails",
   });
   const [sort, setSort] = useUrlStateWithSort<Resource.SortKeyFromVersion>({
-    default: { name: "agent", order: "desc" },
+    default: { name: "resource_type", order: "asc" },
     route: "DesiredStateDetails",
   });
   const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>(
@@ -83,6 +83,7 @@ const InnerPage: React.FC<{ version: string }> = ({ version }) => {
               />
             ) : (
               <VersionResourceTable
+                aria-label="VersionResourcesTable-Success"
                 rows={presenter.createRows(resources.data)}
                 tablePresenter={new VersionResourceTablePresenter()}
                 sort={sort}

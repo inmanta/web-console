@@ -10,16 +10,8 @@ export interface GetVersionResources {
 
 export interface GetVersionResourcesManifest {
   error: string;
-  apiResponse: {
-    data: Resource.FromVersion[];
-    links: Pagination.Links;
-    metadata: Pagination.Metadata;
-  };
-  data: {
-    data: Resource.FromVersion[];
-    links: Pagination.Links;
-    metadata: Pagination.Metadata;
-  };
+  apiResponse: Resource.ResponseFromVersion;
+  data: Resource.ResponseFromVersion;
   usedData: {
     data: Resource.FromVersion[];
     handlers: Pagination.Handlers;

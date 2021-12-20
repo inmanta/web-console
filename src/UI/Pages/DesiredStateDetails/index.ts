@@ -1,1 +1,1 @@
-export { Page as DesiredStateDetailsPage } from "./Page";
+export { Provider as DesiredStateDetailsPage } from "./Page";

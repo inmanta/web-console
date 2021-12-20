@@ -7,11 +7,13 @@ import {
 import { PrimaryRouteManager, EnvironmentModifierImpl } from "@/UI";
 import { UrlManagerImpl } from "@/UI/Utils";
 
-const routeManager = new PrimaryRouteManager("");
+const baseUrl = "";
+const env = "env";
+const routeManager = new PrimaryRouteManager(baseUrl);
 const featureManager = new MockFeatureManager();
 const environmentModifier = new EnvironmentModifierImpl();
-const urlManager = new UrlManagerImpl(featureManager, "", "env");
-const environmentHandler = new MockEnvironmentHandler("env");
+const urlManager = new UrlManagerImpl(featureManager, baseUrl, env);
+const environmentHandler = new MockEnvironmentHandler(env);
 const fileManager = new MockFileManager();
 const archiveHelper = new PrimaryArchiveHelper(fileManager);
 const keycloakController = new PrimaryKeycloakController(

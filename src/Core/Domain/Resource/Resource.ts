@@ -119,3 +119,9 @@ export type SortKey =
 
 export type FilterFromVersion = Omit<Filter, "status">;
 export type SortKeyFromVersion = Exclude<SortKey, "status">;
+
+export interface ResponseFromVersion {
+  data: FromVersion[];
+  links: Pagination.Links;
+  metadata: Pagination.Metadata;
+}
