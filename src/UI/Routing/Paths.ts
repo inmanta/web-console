@@ -20,6 +20,7 @@ export const paths: Paths = {
   CreateEnvironment: "/environment/create",
   Status: "/status",
   DesiredState: "/desiredstate",
-  DesiredStateDetails: "/desiredstate/:version/details",
+  DesiredStateDetails: "/desiredstate/:version",
+  DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
   Home: "/",
 };

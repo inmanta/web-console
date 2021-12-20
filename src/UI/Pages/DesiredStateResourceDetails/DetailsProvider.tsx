@@ -1,19 +1,15 @@
 import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
-import {
-  EmptyView,
-  ErrorView,
-  LoadingView,
-  RequiresTable,
-} from "@/UI/Components";
+import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Details } from "./Details";
 
 interface Props {
-  id: string;
+  resourceId: string;
 }
 
-export const RequiresTab: React.FC<Props> = ({ id }) => {
+export const DetailsProvider: React.FC<Props> = ({ resourceId: id }) => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [data] = queryResolver.useContinuous<"GetResourceDetails">({
@@ -25,26 +21,23 @@ export const RequiresTab: React.FC<Props> = ({ id }) => {
     {
       notAsked: () => null,
       loading: () => (
-        <LoadingView delay={500} aria-label="ResourceRequires-Loading" />
+        <LoadingView delay={500} aria-label="ResourceDetails-Loading" />
       ),
       failed: (error) => (
         <ErrorView
-          aria-label="ResourceRequires-Failed"
+          aria-label="ResourceDetails-Failed"
           title={words("resources.requires.failed.title")}
           message={words("resources.requires.failed.body")(error)}
         />
       ),
-      success: (resourceDetails) =>
-        Object.keys(resourceDetails.requires_status).length <= 0 ? (
+      success: (details) =>
+        Object.keys(details.requires_status).length <= 0 ? (
           <EmptyView
             message={words("resources.requires.empty.message")}
-            aria-label="ResourceRequires-Empty"
+            aria-label="ResourceDetails-Empty"
           />
         ) : (
-          <RequiresTable
-            aria-label="ResourceRequires-Success"
-            requiresStatus={resourceDetails.requires_status}
-          />
+          <Details details={details} aria-label="ResourceDetails-Success" />
         ),
     },
     data

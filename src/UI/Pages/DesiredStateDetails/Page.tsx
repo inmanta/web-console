@@ -84,6 +84,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
             ) : (
               <VersionResourceTable
                 aria-label="VersionResourcesTable-Success"
+                version={version}
                 rows={presenter.createRows(resources.data)}
                 tablePresenter={new VersionResourceTablePresenter()}
                 sort={sort}

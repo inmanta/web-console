@@ -8,6 +8,7 @@ import { CreateEnvironmentPage } from "./CreateEnvironment";
 import { CreateInstancePage } from "./CreateInstance";
 import { DesiredStatePage } from "./DesiredState";
 import { DesiredStateDetailsPage } from "./DesiredStateDetails";
+import { DesiredStateResourceDetailsPage } from "./DesiredStateResourceDetails";
 import { DiagnosePage } from "./Diagnose";
 import { EditInstancePage } from "./EditInstance";
 import { EventsPage } from "./Events";
@@ -64,6 +65,10 @@ export class PrimaryPageManager implements PageManager {
       {
         ...this.routeDictionary.DesiredStateDetails,
         element: <DesiredStateDetailsPage />,
+      },
+      {
+        ...this.routeDictionary.DesiredStateResourceDetails,
+        element: <DesiredStateResourceDetailsPage />,
       },
     ];
   }
