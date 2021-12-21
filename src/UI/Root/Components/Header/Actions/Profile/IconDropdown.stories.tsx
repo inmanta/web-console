@@ -12,14 +12,12 @@ export default {
 export const Default = () => (
   <Container>
     <IconDropdown
-      icon={AngleDownIcon}
+      icon={<AngleDownIcon />}
       dropdownItems={[
         <DropdownItem
           key="action2"
           component="button"
-          onClick={() => {
-            console.log("click");
-          }}
+          onClick={() => console.log("click")}
         >
           Logout
         </DropdownItem>,
