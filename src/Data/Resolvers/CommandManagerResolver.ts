@@ -103,6 +103,11 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       this.apiHelper,
       environment
     );
+    const callbacksUpdater = new CallbacksUpdater(
+      new CallbacksStateHelper(this.store),
+      this.apiHelper
+    );
+
     return [
       new ServiceConfigCommandManager(
         this.apiHelper,
@@ -149,20 +154,12 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new DeleteCallbackCommandManager(
         this.apiHelper,
-        new CallbacksUpdater(
-          new CallbacksStateHelper(this.store, environment),
-          this.apiHelper,
-          environment
-        ),
+        callbacksUpdater,
         environment
       ),
       new CreateCallbackCommandManager(
         this.apiHelper,
-        new CallbacksUpdater(
-          new CallbacksStateHelper(this.store, environment),
-          this.apiHelper,
-          environment
-        ),
+        callbacksUpdater,
         environment
       ),
       new ModifyEnvironmentCommandManager(

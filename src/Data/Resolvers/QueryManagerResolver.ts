@@ -199,7 +199,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new CallbacksQueryManager(
         this.apiHelper,
-        new CallbacksStateHelper(this.store, environment)
+        new CallbacksStateHelper(this.store)
       ),
       new CompileReportsQueryManager(
         this.apiHelper,

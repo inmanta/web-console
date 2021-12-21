@@ -1,9 +1,9 @@
-import { ApiHelper, Command, CommandManager, Updater } from "@/Core";
+import { ApiHelper, Command, CommandManager, UpdaterWithEnv } from "@/Core";
 
 export class DeleteCallbackCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"GetCallbacks">,
+    private readonly updater: UpdaterWithEnv<"GetCallbacks">,
     private readonly environment: string
   ) {}
 
@@ -19,10 +19,13 @@ export class DeleteCallbackCommandManager implements CommandManager {
         this.getUrl(command),
         this.environment
       );
-      await this.updater.update({
-        kind: "GetCallbacks",
-        service_entity: command.service_entity,
-      });
+      await this.updater.update(
+        {
+          kind: "GetCallbacks",
+          service_entity: command.service_entity,
+        },
+        this.environment
+      );
       return result;
     };
   }

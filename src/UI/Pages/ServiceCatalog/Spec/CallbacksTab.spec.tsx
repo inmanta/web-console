@@ -41,7 +41,7 @@ function setup() {
     new ServicesStateHelper(store, environment),
     scheduler
   );
-  const callbacksStateHelper = new CallbacksStateHelper(store, environment);
+  const callbacksStateHelper = new CallbacksStateHelper(store);
   const callbacksQueryManager = new CallbacksQueryManager(
     apiHelper,
     callbacksStateHelper
@@ -61,21 +61,13 @@ function setup() {
 
   const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(
-      new CallbacksStateHelper(store, environment),
-      apiHelper,
-      environment
-    ),
+    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper),
     environment
   );
 
   const createCallbackCommandManager = new CreateCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(
-      new CallbacksStateHelper(store, environment),
-      apiHelper,
-      environment
-    ),
+    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper),
     environment
   );
 

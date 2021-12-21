@@ -13,6 +13,7 @@ import {
   QueryManagerKind,
   StateHelper,
   ApiHelper,
+  StateHelperWithEnv,
 } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { Data, GetDependenciesWithEnv, GetUrlWithEnv, ToUsed } from "./types";
@@ -58,6 +59,59 @@ export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
       RemoteData.mapSuccess(
         (d) => this.toUsed(d, setUrl),
         this.stateHelper.getHooked(query)
+      ),
+      () => this.update(query, url, environment),
+    ];
+  }
+
+  matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
+    return query.kind === this.kind && kind === "OneTime";
+  }
+}
+
+export class PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv<
+  Kind extends Query.Kind
+> implements OneTimeQueryManager<Kind>
+{
+  constructor(
+    protected readonly apiHelper: ApiHelper,
+    protected readonly stateHelper: StateHelperWithEnv<Kind>,
+    private readonly getDependencies: GetDependenciesWithEnv<Kind>,
+    private readonly kind: Kind,
+    private readonly getUrl: GetUrlWithEnv<Kind>,
+    private readonly toUsed: ToUsed<Kind>
+  ) {}
+
+  async update(
+    query: Query.SubQuery<Kind>,
+    url: string,
+    environment: string
+  ): Promise<void> {
+    this.stateHelper.set(
+      RemoteData.fromEither(await this.apiHelper.get(url, environment)),
+      query,
+      environment
+    );
+  }
+
+  useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
+    const { environmentHandler } = useContext(DependencyContext);
+    const environment = environmentHandler.useId();
+    const [url, setUrl] = useState(this.getUrl(query, environment));
+
+    useEffect(() => {
+      setUrl(this.getUrl(query, environment));
+    }, this.getDependencies(query, environment));
+
+    useEffect(() => {
+      this.stateHelper.set(RemoteData.loading(), query, environment);
+      this.update(query, url, environment);
+    }, [url, environment]);
+
+    return [
+      RemoteData.mapSuccess(
+        (d) => this.toUsed(d, setUrl),
+        this.stateHelper.getHooked(query, environment)
       ),
       () => this.update(query, url, environment),
     ];

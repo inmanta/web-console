@@ -36,3 +36,13 @@ export interface StateHelper<Kind extends Query.Kind> {
   getOnce(query: Query.SubQuery<Kind>): Data<Kind>;
   getHooked(query: Query.SubQuery<Kind>): Data<Kind>;
 }
+
+export interface StateHelperWithEnv<Kind extends Query.Kind> {
+  set(
+    value: ApiData<Kind>,
+    query: Query.SubQuery<Kind>,
+    environment: string
+  ): void;
+  getOnce(query: Query.SubQuery<Kind>, environment: string): Data<Kind>;
+  getHooked(query: Query.SubQuery<Kind>, environment: string): Data<Kind>;
+}

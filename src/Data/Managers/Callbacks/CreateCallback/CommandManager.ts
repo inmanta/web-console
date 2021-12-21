@@ -2,16 +2,16 @@ import { omit } from "lodash";
 import {
   Command,
   CommandManager,
-  Updater,
   Either,
   Maybe,
   ApiHelper,
+  UpdaterWithEnv,
 } from "@/Core";
 
 export class CreateCallbackCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"GetCallbacks">,
+    private readonly updater: UpdaterWithEnv<"GetCallbacks">,
     private readonly environment: string
   ) {}
 
@@ -31,10 +31,13 @@ export class CreateCallbackCommandManager implements CommandManager {
       if (Either.isLeft(result)) {
         return Maybe.some(result.value);
       } else {
-        await this.updater.update({
-          kind: "GetCallbacks",
-          service_entity: command.service_entity,
-        });
+        await this.updater.update(
+          {
+            kind: "GetCallbacks",
+            service_entity: command.service_entity,
+          },
+          this.environment
+        );
         return Maybe.none();
       }
     };
