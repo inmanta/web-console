@@ -1,61 +1,36 @@
-import React, { ComponentClass } from "react";
+import React, { useState } from "react";
 import {
   Dropdown,
   DropdownToggle,
   DropdownPosition,
 } from "@patternfly/react-core";
-import { SVGIconProps } from "@patternfly/react-icons/dist/js/createIcon";
 
 interface Props {
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  icon: ComponentClass<SVGIconProps, any>;
+  icon: JSX.Element;
   dropdownItems: JSX.Element[];
 }
 
-export class IconDropdown extends React.Component<Props, { isOpen: boolean }> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      isOpen: false,
-    };
-    this.onToggle = this.onToggle.bind(this);
-    this.onSelect = this.onSelect.bind(this);
-  }
+export const IconDropdown: React.FC<Props> = ({ icon, dropdownItems }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const onSelect = (): void => setIsOpen(!isOpen);
 
-  public render(): JSX.Element {
-    const { isOpen } = this.state;
-    return (
-      <Dropdown
-        onSelect={this.onSelect}
-        toggle={
-          <DropdownToggle
-            toggleIndicator={null}
-            onToggle={this.onToggle}
-            aria-label="Applications"
-            isDisabled={
-              !this.props.dropdownItems || this.props.dropdownItems.length === 0
-            }
-          >
-            <this.props.icon />
-          </DropdownToggle>
-        }
-        isOpen={isOpen}
-        position={DropdownPosition.right}
-        isPlain={true}
-        dropdownItems={this.props.dropdownItems}
-      />
-    );
-  }
-
-  private onToggle(isOpen: boolean): void {
-    this.setState({
-      isOpen,
-    });
-  }
-
-  private onSelect(): void {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  }
-}
+  return (
+    <Dropdown
+      onSelect={onSelect}
+      toggle={
+        <DropdownToggle
+          toggleIndicator={null}
+          onToggle={setIsOpen}
+          aria-label="Applications"
+          isDisabled={dropdownItems.length === 0}
+        >
+          {icon}
+        </DropdownToggle>
+      }
+      isOpen={isOpen}
+      position={DropdownPosition.right}
+      isPlain={true}
+      dropdownItems={dropdownItems}
+    />
+  );
+};
