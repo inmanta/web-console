@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Command, CommandManager } from "@/Core";
 import { DependencyContext } from "@/UI";
 
-export class PrimaryCommandManager<Kind extends Command.Kind>
+export class CommandManagerWithEnv<Kind extends Command.Kind>
   implements CommandManager
 {
   constructor(

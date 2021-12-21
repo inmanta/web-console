@@ -1,7 +1,7 @@
 import { ApiHelper, Command, UpdaterWithEnv } from "@/Core";
-import { PrimaryCommandManager } from "@/Data/Common";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class DeleteCallbackCommandManager extends PrimaryCommandManager<"DeleteCallback"> {
+export class DeleteCallbackCommandManager extends CommandManagerWithEnv<"DeleteCallback"> {
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly updater: UpdaterWithEnv<"GetCallbacks">

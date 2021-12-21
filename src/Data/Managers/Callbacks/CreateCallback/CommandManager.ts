@@ -1,8 +1,8 @@
 import { omit } from "lodash";
 import { Either, Maybe, ApiHelper, UpdaterWithEnv } from "@/Core";
-import { PrimaryCommandManager } from "@/Data/Common";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class CreateCallbackCommandManager extends PrimaryCommandManager<"CreateCallback"> {
+export class CreateCallbackCommandManager extends CommandManagerWithEnv<"CreateCallback"> {
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly updater: UpdaterWithEnv<"GetCallbacks">

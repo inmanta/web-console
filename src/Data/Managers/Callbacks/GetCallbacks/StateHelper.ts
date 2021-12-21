@@ -1,6 +1,6 @@
 import { sortBy } from "lodash";
 import { Query, RemoteData } from "@/Core";
-import { PrimaryStateHelperWithEnv } from "@/Data";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
 type Data = RemoteData.Type<
