@@ -1,0 +1,4 @@
+description: Allow eslint to be updated by dependabot
+issue-nr: 1841
+change-type: patch
+destination-branches: [master, iso4]
