@@ -18,7 +18,7 @@ export const Profile: React.FC<Props> = ({ keycloak }) => (
   <PageHeaderToolsGroup>
     <Login keycloak={keycloak} />
     <IconDropdown
-      icon={AngleDownIcon}
+      icon={<AngleDownIcon />}
       dropdownItems={[
         <DropdownItem
           key="action2"
