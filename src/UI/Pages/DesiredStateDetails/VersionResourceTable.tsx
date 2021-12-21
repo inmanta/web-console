@@ -13,12 +13,15 @@ import { Row } from "./Row";
 import { VersionResourceTablePresenter } from "./VersionResourceTablePresenter";
 
 interface Props {
+  version: string;
   rows: Resource.RowFromVersion[];
   tablePresenter: VersionResourceTablePresenter;
   sort: Sort.Type<Resource.SortKeyFromVersion>;
   setSort: (sort: Sort.Type<Resource.SortKeyFromVersion>) => void;
 }
+
 export const VersionResourceTable: React.FC<Props> = ({
+  version,
   rows,
   tablePresenter,
   sort,
@@ -68,7 +71,7 @@ export const VersionResourceTable: React.FC<Props> = ({
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
-        <Row row={row} key={row.id} />
+        <Row row={row} key={row.id} version={version} />
       ))}
     </TableComposable>
   );

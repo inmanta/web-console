@@ -9,12 +9,10 @@ import { words } from "@/UI/words";
 
 interface Props {
   row: Resource.RowFromVersion;
+  version: string;
 }
 
-/**
- * @TODO Add link to correct page
- */
-export const Row: React.FC<Props> = ({ row }) => {
+export const Row: React.FC<Props> = ({ row, version }) => {
   const { routeManager } = useContext(DependencyContext);
   return (
     <Tbody>
@@ -27,9 +25,9 @@ export const Row: React.FC<Props> = ({ row }) => {
         </Td>
         <Td>
           <Link
-            isDisabled
-            pathname={routeManager.getUrl("ResourceDetails", {
+            pathname={routeManager.getUrl("DesiredStateResourceDetails", {
               resourceId: row.id,
+              version,
             })}
           >
             <Button variant="secondary" isSmall icon={<InfoCircleIcon />}>

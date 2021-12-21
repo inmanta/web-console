@@ -1,9 +1,13 @@
 import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import {
+  EmptyView,
+  ErrorView,
+  LoadingView,
+  RequiresTable,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { RequiresTable } from "./RequiresTable";
 
 interface Props {
   id: string;

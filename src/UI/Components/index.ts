@@ -40,3 +40,4 @@ export * from "./PageSectionWithTitle";
 export * from "./ResourceStatusCell";
 export * from "./DesiredStateAttributes";
 export * from "./ResourceFilters";
+export * from "./RequiresTable";
