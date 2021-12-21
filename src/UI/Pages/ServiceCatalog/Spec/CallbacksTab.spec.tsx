@@ -61,14 +61,12 @@ function setup() {
 
   const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper),
-    environment
+    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper)
   );
 
   const createCallbackCommandManager = new CreateCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper),
-    environment
+    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper)
   );
 
   const commandResolver = new CommandResolverImpl(

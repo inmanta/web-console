@@ -21,14 +21,12 @@ import {
   Callback,
   DeferredApiHelper,
   dependencies,
-  MockEnvironmentHandler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CallbacksView } from "@/UI/Pages/ServiceCatalog/Tabs/Callbacks";
 
 function setup() {
   const store = getStoreInstance();
-  const environment = Service.a.environment;
   const apiHelper = new DeferredApiHelper();
   const callbacksStateHelper = new CallbacksStateHelper(store);
   const callbacksQueryManager = new CallbacksQueryManager(
@@ -46,14 +44,12 @@ function setup() {
   );
   const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
     apiHelper,
-    callbacksUpdater,
-    environment
+    callbacksUpdater
   );
 
   const createCallbackCommandManager = new CreateCallbackCommandManager(
     apiHelper,
-    callbacksUpdater,
-    environment
+    callbacksUpdater
   );
 
   const commandResolver = new CommandResolverImpl(
@@ -70,7 +66,6 @@ function setup() {
           ...dependencies,
           queryResolver,
           commandResolver,
-          environmentHandler: new MockEnvironmentHandler(environment),
         }}
       >
         <StoreProvider store={store}>

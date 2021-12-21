@@ -8,3 +8,4 @@ export * from "./UrlState";
 export * from "./useExpansion";
 export * from "./XmlFormatter";
 export * from "./PrimaryStateHelper";
+export * from "./PrimaryCommandManager";
