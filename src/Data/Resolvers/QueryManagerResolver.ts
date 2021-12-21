@@ -203,7 +203,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new CompileReportsQueryManager(
         this.apiHelper,
-        new CompileReportsStateHelper(this.store, environment),
+        new CompileReportsStateHelper(this.store),
         scheduler
       ),
       new CompileDetailsQueryManager(
