@@ -1,24 +1,14 @@
-import { ApiHelper, Command, CommandManager } from "@/Core";
+import { ApiHelper } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data";
 
-export class DeleteInstanceCommandManager implements CommandManager {
-  constructor(
-    private readonly apiHelper: ApiHelper,
-    private readonly environment: string
-  ) {}
-
-  matches(command: Command.SubCommand<"DeleteInstance">): boolean {
-    return command.kind === "DeleteInstance";
-  }
-
-  getTrigger({
-    id,
-    service_entity,
-    version,
-  }: Command.SubCommand<"DeleteInstance">): Command.Trigger<"DeleteInstance"> {
-    return () =>
-      this.apiHelper.delete(
-        `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
-        this.environment
-      );
+export class DeleteInstanceCommandManager extends CommandManagerWithEnv<"DeleteInstance"> {
+  constructor(private readonly apiHelper: ApiHelper) {
+    super("DeleteInstance", ({ id, service_entity, version }, environment) => {
+      return () =>
+        this.apiHelper.delete(
+          `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
+          environment
+        );
+    });
   }
 }

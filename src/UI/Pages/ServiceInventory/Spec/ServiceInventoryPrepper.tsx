@@ -64,10 +64,7 @@ export class ServiceInventoryPrepper {
       new AttributeResultConverterImpl(),
       "env1"
     );
-    const deleteCommandManager = new DeleteInstanceCommandManager(
-      apiHelper,
-      "env1"
-    );
+    const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
 
     const setStateCommandManager = new TriggerSetStateCommandManager(
       new KeycloakAuthHelper(),
