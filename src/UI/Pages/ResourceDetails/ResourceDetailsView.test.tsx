@@ -16,6 +16,7 @@ import {
   DynamicQueryManagerResolver,
   ResourceDetails,
   StaticScheduler,
+  Resource,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceDetailsView } from "./ResourceDetailsView";
@@ -45,7 +46,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <ResourceDetailsView resourceId="std::File[agent2,path=/tmp/file4]" />
+          <ResourceDetailsView resourceId={Resource.id} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -61,16 +62,14 @@ test("GIVEN The Resource details view WHEN the user clicks on the info tab THEN 
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    "/api/v2/resource/std::File[agent2,path=/tmp/file4]"
+    `/api/v2/resource/${Resource.encodedId}`
   );
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
-  expect(
-    await screen.findByText("std::File[agent2,path=/tmp/file4]")
-  ).toBeVisible();
+  expect(await screen.findByText(Resource.id)).toBeVisible();
 });
 
 test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {
@@ -87,7 +86,7 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    "/api/v2/resource/std::File[agent2,path=/tmp/file4]"
+    `/api/v2/resource/${Resource.encodedId}`
   );
 
   await act(async () => {

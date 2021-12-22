@@ -8,6 +8,7 @@ import {
   RouteMatch,
 } from "@/Core";
 import { paths } from "./Paths";
+import { encodeParams } from "./Utils";
 
 export class PrimaryRouteManager implements RouteManager {
   private readonly routeDictionary: RouteDictionary;
@@ -85,7 +86,10 @@ export class PrimaryRouteManager implements RouteManager {
 
   getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
     const route = this.getRoute(kind);
-    return generatePath(route.path, params);
+    return generatePath(
+      route.path,
+      params === undefined ? params : encodeParams(params)
+    );
   }
 
   getRouteMatchFromUrl(url: string): RouteMatch | undefined {

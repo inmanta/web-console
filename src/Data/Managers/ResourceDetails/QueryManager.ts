@@ -1,6 +1,7 @@
 import { identity } from "lodash";
 import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { PrimaryContinuousQueryManagerWithEnv } from "@/Data/Managers/Helpers";
+import { getUrl } from "./getUrl";
 
 export class ResourceDetailsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetResourceDetails"> {
   constructor(
@@ -15,7 +16,7 @@ export class ResourceDetailsQueryManager extends PrimaryContinuousQueryManagerWi
       ({ kind, id }) => `${kind}_${id}`,
       ({ id }) => [id],
       "GetResourceDetails",
-      ({ id }) => `/api/v2/resource/${id}`,
+      getUrl,
       identity
     );
   }
