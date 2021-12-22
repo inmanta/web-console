@@ -237,7 +237,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new GetVersionResourcesQueryManager(
         this.apiHelper,
-        new GetVersionResourcesStateHelper(this.store, environment),
+        new GetVersionResourcesStateHelper(this.store),
         scheduler
       ),
     ];

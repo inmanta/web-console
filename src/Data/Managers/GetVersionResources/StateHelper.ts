@@ -1,17 +1,17 @@
-import { PrimaryStateHelper } from "@/Data/Common";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export class GetVersionResourcesStateHelper extends PrimaryStateHelper<"GetVersionResources"> {
-  constructor(store: Store, private readonly environment: string) {
+export class GetVersionResourcesStateHelper extends PrimaryStateHelperWithEnv<"GetVersionResources"> {
+  constructor(store: Store) {
     super(
       store,
-      (data) => {
+      (data, query, environment) => {
         store.dispatch.versionResources.set({
-          environment: this.environment,
+          environment,
           data,
         });
       },
-      (state) => state.versionResources.byEnv[this.environment]
+      (state, query, environment) => state.versionResources.byEnv[environment]
     );
   }
 }
