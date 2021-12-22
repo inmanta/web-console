@@ -174,8 +174,8 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environment
       ),
       new GenerateTokenCommandManager(this.apiHelper, environment),
-      new DeployCommandManager(this.apiHelper, environment),
-      new RepairCommandManager(this.apiHelper, environment),
+      new DeployCommandManager(this.apiHelper),
+      new RepairCommandManager(this.apiHelper),
       new PromoteVersionCommandManager(
         this.apiHelper,
         desiredStatesUpdater,

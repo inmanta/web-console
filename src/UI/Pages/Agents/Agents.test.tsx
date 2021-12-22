@@ -40,8 +40,8 @@ function setup() {
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new DeployCommandManager(apiHelper, environment),
-      new RepairCommandManager(apiHelper, environment),
+      new DeployCommandManager(apiHelper),
+      new RepairCommandManager(apiHelper),
     ])
   );
 

@@ -1,20 +1,14 @@
-import { ApiHelper, Command, CommandManager } from "@/Core";
+import { ApiHelper } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class RepairCommandManager implements CommandManager {
-  constructor(
-    private readonly apiHelper: ApiHelper,
-    private readonly environment: string
-  ) {}
-
-  matches(command: Command.SubCommand<"Repair">): boolean {
-    return command.kind === "Repair";
-  }
-
-  getTrigger(): Command.Trigger<"Repair"> {
-    return (agents?: string[]) =>
-      this.apiHelper.postWithoutResponse(`/api/v1/deploy`, this.environment, {
-        agent_trigger_method: "push_full_deploy",
-        agents: agents,
-      });
+export class RepairCommandManager extends CommandManagerWithEnv<"Repair"> {
+  constructor(private readonly apiHelper: ApiHelper) {
+    super("Repair", (command, environment) => {
+      return (agents?: string[]) =>
+        this.apiHelper.postWithoutResponse(`/api/v1/deploy`, environment, {
+          agent_trigger_method: "push_full_deploy",
+          agents: agents,
+        });
+    });
   }
 }
