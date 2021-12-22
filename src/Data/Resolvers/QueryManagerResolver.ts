@@ -120,7 +120,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     return [
       new GetEnvironmentSettingsQueryManager(
         this.apiHelper,
-        new GetEnvironmentSettingsStateHelper(this.store, environment)
+        new GetEnvironmentSettingsStateHelper(this.store)
       ),
       new ServicesQueryManager(
         this.apiHelper,

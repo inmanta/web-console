@@ -1,23 +1,32 @@
-import { ApiHelper, Query, RemoteData, StateHelper, Updater } from "@/Core";
+import {
+  ApiHelper,
+  RemoteData,
+  StateHelperWithEnv,
+  UpdaterWithEnv,
+} from "@/Core";
+import { GetEnvironmentSetting } from "@/Core/Query/GetEnvironmentSetting";
 
 export class EnvironmentSettingUpdater
-  implements Updater<"GetEnvironmentSetting">
+  implements UpdaterWithEnv<"GetEnvironmentSetting">
 {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly stateHelper: StateHelper<"GetEnvironmentSetting">,
-    private readonly environment: string
+    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentSetting">
   ) {}
 
-  async update(query: Query.SubQuery<"GetEnvironmentSetting">): Promise<void> {
-    this.stateHelper.set(
+  async update(
+    query: GetEnvironmentSetting,
+    environment: string
+  ): Promise<void> {
+    return this.stateHelper.set(
       RemoteData.fromEither(
         await this.apiHelper.get(
           `/api/v2/environment_settings/${query.id}`,
-          this.environment
+          environment
         )
       ),
-      query
+      query,
+      environment
     );
   }
 }

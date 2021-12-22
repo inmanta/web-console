@@ -1,18 +1,18 @@
 import { RemoteData } from "@/Core";
-import { PrimaryStateHelper } from "@/Data/Common";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export class GetEnvironmentSettingStateHelper extends PrimaryStateHelper<"GetEnvironmentSetting"> {
-  constructor(store: Store, private readonly environment: string) {
+export class GetEnvironmentSettingStateHelper extends PrimaryStateHelperWithEnv<"GetEnvironmentSetting"> {
+  constructor(store: Store) {
     super(
       store,
-      (data) => {
+      (data, query, environment) => {
         const unwrapped = RemoteData.mapSuccess(
           (wrapped) => wrapped.data,
           data
         );
         store.dispatch.environmentSettings.setData({
-          environment: this.environment,
+          environment,
           value: unwrapped,
           merge: true,
         });

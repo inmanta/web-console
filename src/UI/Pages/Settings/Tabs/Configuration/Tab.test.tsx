@@ -32,28 +32,25 @@ function setup() {
     new DynamicQueryManagerResolver([
       new GetEnvironmentSettingsQueryManager(
         apiHelper,
-        new GetEnvironmentSettingsStateHelper(store, "env")
+        new GetEnvironmentSettingsStateHelper(store)
       ),
     ])
   );
 
   const environmentSettingUpdater = new EnvironmentSettingUpdater(
     apiHelper,
-    new GetEnvironmentSettingStateHelper(store, "env"),
-    "env"
+    new GetEnvironmentSettingStateHelper(store)
   );
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new UpdateEnvironmentSettingCommandManager(
         apiHelper,
-        environmentSettingUpdater,
-        "env"
+        environmentSettingUpdater
       ),
       new ResetEnvironmentSettingCommandManager(
         apiHelper,
-        environmentSettingUpdater,
-        "env"
+        environmentSettingUpdater
       ),
     ])
   );

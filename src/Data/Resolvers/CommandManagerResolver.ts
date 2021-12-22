@@ -90,8 +90,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     );
     const environmentSettingUpdater = new EnvironmentSettingUpdater(
       this.apiHelper,
-      new GetEnvironmentSettingStateHelper(this.store, environment),
-      environment
+      new GetEnvironmentSettingStateHelper(this.store)
     );
     const getDesiredStatesStateHelper = new GetDesiredStatesStateHelper(
       this.store,
@@ -164,13 +163,11 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new UpdateEnvironmentSettingCommandManager(
         this.apiHelper,
-        environmentSettingUpdater,
-        environment
+        environmentSettingUpdater
       ),
       new ResetEnvironmentSettingCommandManager(
         this.apiHelper,
-        environmentSettingUpdater,
-        environment
+        environmentSettingUpdater
       ),
       new GenerateTokenCommandManager(this.apiHelper, environment),
       new DeployCommandManager(this.apiHelper),
