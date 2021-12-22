@@ -28,12 +28,11 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const environment = "environment";
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new GetAgentsQueryManager(
         apiHelper,
-        new GetAgentsStateHelper(store, environment),
+        new GetAgentsStateHelper(store),
         scheduler
       ),
     ])

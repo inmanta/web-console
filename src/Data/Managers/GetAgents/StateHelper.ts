@@ -1,19 +1,19 @@
 import { RemoteData } from "@/Core";
-import { PrimaryStateHelper } from "@/Data/Common";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export class GetAgentsStateHelper extends PrimaryStateHelper<"GetAgents"> {
-  constructor(store: Store, private readonly environment: string) {
+export class GetAgentsStateHelper extends PrimaryStateHelperWithEnv<"GetAgents"> {
+  constructor(store: Store) {
     super(
       store,
-      (data) => {
+      (data, query, environment) => {
         const value = RemoteData.mapSuccess((wrapped) => wrapped, data);
         store.dispatch.agents.setList({
-          environment: this.environment,
+          environment,
           data: value,
         });
       },
-      (state) => state.agents.listByEnv[this.environment]
+      (state, query, environment) => state.agents.listByEnv[environment]
     );
   }
 }

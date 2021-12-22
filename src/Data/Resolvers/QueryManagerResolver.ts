@@ -223,7 +223,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new GetAgentsQueryManager(
         this.apiHelper,
-        new GetAgentsStateHelper(this.store, environment),
+        new GetAgentsStateHelper(this.store),
         scheduler
       ),
       new GetAgentProcessQueryManager(
