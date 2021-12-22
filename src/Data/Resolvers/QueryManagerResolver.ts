@@ -232,7 +232,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new GetDesiredStatesQueryManager(
         this.apiHelper,
-        new GetDesiredStatesStateHelper(this.store, environment),
+        new GetDesiredStatesStateHelper(this.store),
         scheduler
       ),
       new GetVersionResourcesQueryManager(

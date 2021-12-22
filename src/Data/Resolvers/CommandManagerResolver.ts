@@ -93,8 +93,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new GetEnvironmentSettingStateHelper(this.store)
     );
     const getDesiredStatesStateHelper = new GetDesiredStatesStateHelper(
-      this.store,
-      environment
+      this.store
     );
     const desiredStatesUpdater = new DesiredStatesUpdater(
       getDesiredStatesStateHelper,

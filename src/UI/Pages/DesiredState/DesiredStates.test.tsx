@@ -31,10 +31,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const environment = "env";
-  const getDesiredStatesStateHelper = new GetDesiredStatesStateHelper(
-    store,
-    environment
-  );
+  const getDesiredStatesStateHelper = new GetDesiredStatesStateHelper(store);
   const desiredStatesUpdater = new DesiredStatesUpdater(
     getDesiredStatesStateHelper,
     apiHelper,

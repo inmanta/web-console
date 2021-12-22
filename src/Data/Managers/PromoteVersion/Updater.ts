@@ -1,9 +1,15 @@
-import { ApiHelper, Query, RemoteData, StateHelper, Updater } from "@/Core";
+import {
+  ApiHelper,
+  Query,
+  RemoteData,
+  StateHelperWithEnv,
+  Updater,
+} from "@/Core";
 import { getUrl } from "@/Data/Managers/GetDesiredStates/getUrl";
 
 export class DesiredStatesUpdater implements Updater<"GetDesiredStates"> {
   constructor(
-    private readonly stateHelper: StateHelper<"GetDesiredStates">,
+    private readonly stateHelper: StateHelperWithEnv<"GetDesiredStates">,
     private readonly apiHelper: ApiHelper,
     private readonly environment: string
   ) {}
@@ -13,7 +19,8 @@ export class DesiredStatesUpdater implements Updater<"GetDesiredStates"> {
       RemoteData.fromEither(
         await this.apiHelper.get(getUrl(query), this.environment)
       ),
-      query
+      query,
+      this.environment
     );
   }
 }
