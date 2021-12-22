@@ -169,7 +169,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         this.apiHelper,
         environmentSettingUpdater
       ),
-      new GenerateTokenCommandManager(this.apiHelper, environment),
+      new GenerateTokenCommandManager(this.apiHelper),
       new DeployCommandManager(this.apiHelper),
       new RepairCommandManager(this.apiHelper),
       new PromoteVersionCommandManager(
