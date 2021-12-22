@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation, useParams, Params } from "react-router-dom";
+import { mapValues } from "lodash";
 import { RouteKind, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -23,9 +24,12 @@ export const useNavigateTo = (): NavigateTo => {
   };
 };
 
+/**
+ * @NOTE useRouteParams decodes the parameter values before returning them.
+ */
 export const useRouteParams = <R extends RouteKind>(): RouteParams<R> => {
   const params = useParams();
-  return params as RouteParams<R>;
+  return decodeParams(params) as RouteParams<R>;
 };
 
 /**
@@ -41,4 +45,16 @@ export const useDocumentTitle = (title: string): void => {
       document.title = originalTitle;
     };
   }, [title]);
+};
+
+export const decodeParams = (params: Params): Params => {
+  return mapValues(params, (value) =>
+    value === undefined ? value : decodeURIComponent(value)
+  );
+};
+
+export const encodeParams = (params: Params): Params => {
+  return mapValues(params, (value) =>
+    value === undefined ? value : encodeURIComponent(value)
+  );
 };
