@@ -35,7 +35,7 @@ function setup() {
       new ModifyEnvironmentCommandManager(
         apiHelper,
         new EnvironmentDetailsUpdater(
-          new EnvironmentDetailsStateHelper(store, selectedEnvironment.id),
+          new EnvironmentDetailsStateHelper(store),
           apiHelper,
           selectedEnvironment.id
         ),

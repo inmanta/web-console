@@ -1,11 +1,17 @@
-import { ApiHelper, Query, RemoteData, StateHelper, Updater } from "@/Core";
+import {
+  ApiHelper,
+  Query,
+  RemoteData,
+  StateHelperWithEnv,
+  Updater,
+} from "@/Core";
 import { getUrl } from "./getUrl";
 
 export class EnvironmentDetailsUpdater
   implements Updater<"GetEnvironmentDetails">
 {
   constructor(
-    private readonly stateHelper: StateHelper<"GetEnvironmentDetails">,
+    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">,
     private readonly apiHelper: ApiHelper,
     private readonly environment: string
   ) {}
@@ -18,7 +24,8 @@ export class EnvironmentDetailsUpdater
           this.environment
         )
       ),
-      query
+      query,
+      this.environment
     );
   }
 }

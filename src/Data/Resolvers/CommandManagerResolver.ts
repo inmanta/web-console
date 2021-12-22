@@ -86,8 +86,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
 
   private getEnvDependentManagers(environment: string): CommandManager[] {
     const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
-      this.store,
-      environment
+      this.store
     );
     const environmentSettingUpdater = new EnvironmentSettingUpdater(
       this.apiHelper,
@@ -157,7 +156,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new ModifyEnvironmentCommandManager(
         this.apiHelper,
         new EnvironmentDetailsUpdater(
-          new EnvironmentDetailsStateHelper(this.store, environment),
+          new EnvironmentDetailsStateHelper(this.store),
           this.apiHelper,
           environment
         ),

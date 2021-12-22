@@ -31,8 +31,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
-    store,
-    EnvironmentDetails.a.id
+    store
   );
   const environmentDetailsQueryManager = new EnvironmentDetailsQueryManager(
     apiHelper,

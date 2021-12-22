@@ -185,12 +185,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new EnvironmentDetailsQueryManager(
         this.apiHelper,
-        new EnvironmentDetailsStateHelper(this.store, environment),
+        new EnvironmentDetailsStateHelper(this.store),
         scheduler
       ),
       new EnvironmentDetailsOneTimeQueryManager(
         this.apiHelper,
-        new EnvironmentDetailsStateHelper(this.store, environment)
+        new EnvironmentDetailsStateHelper(this.store)
       ),
       new ServiceInstanceQueryManager(
         this.apiHelper,

@@ -3,14 +3,14 @@ import {
   Command,
   CommandManager,
   RemoteData,
-  StateHelper,
+  StateHelperWithEnv,
   Updater,
 } from "@/Core";
 
 export class HaltEnvironmentCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly stateHelper: StateHelper<"GetEnvironmentDetails">,
+    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">,
     private readonly updater: Updater<"GetEnvironmentDetails">,
     private readonly environment: string
   ) {}
@@ -21,10 +21,14 @@ export class HaltEnvironmentCommandManager implements CommandManager {
 
   getTrigger(): Command.Trigger<"HaltEnvironment"> {
     return async () => {
-      this.stateHelper.set(RemoteData.loading(), {
-        kind: "GetEnvironmentDetails",
-        details: false,
-      });
+      this.stateHelper.set(
+        RemoteData.loading(),
+        {
+          kind: "GetEnvironmentDetails",
+          details: false,
+        },
+        this.environment
+      );
       const result = await this.apiHelper.postWithoutResponse(
         `/api/v2/actions/environment/halt`,
         this.environment,
