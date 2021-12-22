@@ -3,14 +3,14 @@ import {
   CommandManager,
   ModifyEnvironmentParams,
   Maybe,
-  Updater,
   ApiHelper,
+  UpdaterWithEnv,
 } from "@/Core";
 
 export class ModifyEnvironmentCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"GetEnvironmentDetails">,
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">,
     private readonly environment: string
   ) {}
 
@@ -29,10 +29,13 @@ export class ModifyEnvironmentCommandManager implements CommandManager {
       `/api/v2/environment/${this.environment}`,
       body
     );
-    await this.updater.update({
-      kind: "GetEnvironmentDetails",
-      details: true,
-    });
+    await this.updater.update(
+      {
+        kind: "GetEnvironmentDetails",
+        details: true,
+      },
+      this.environment
+    );
     return error;
   }
 }

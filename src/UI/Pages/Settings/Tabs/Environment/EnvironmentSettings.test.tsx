@@ -36,8 +36,7 @@ function setup() {
         apiHelper,
         new EnvironmentDetailsUpdater(
           new EnvironmentDetailsStateHelper(store),
-          apiHelper,
-          selectedEnvironment.id
+          apiHelper
         ),
         selectedEnvironment.id
       ),

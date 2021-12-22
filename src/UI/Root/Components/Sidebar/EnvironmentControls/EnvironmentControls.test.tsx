@@ -21,6 +21,7 @@ import {
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   EnvironmentDetails,
+  MockEnvironmentHandler,
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -46,22 +47,13 @@ function setup() {
   const haltEnvironmentManager = new HaltEnvironmentCommandManager(
     new BaseApiHelper(),
     environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(
-      environmentDetailsStateHelper,
-      apiHelper,
-      EnvironmentDetails.a.id
-    ),
-    EnvironmentDetails.a.id
+    new EnvironmentDetailsUpdater(environmentDetailsStateHelper, apiHelper)
   );
 
   const resumeEnvironmentManager = new ResumeEnvironmentCommandManager(
     new BaseApiHelper(),
     environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(
-      environmentDetailsStateHelper,
-      apiHelper,
-      EnvironmentDetails.a.id
-    ),
+    new EnvironmentDetailsUpdater(environmentDetailsStateHelper, apiHelper),
     EnvironmentDetails.a.id
   );
 
@@ -79,6 +71,9 @@ function setup() {
           ...dependencies,
           queryResolver,
           commandResolver,
+          environmentHandler: new MockEnvironmentHandler(
+            EnvironmentDetails.a.id
+          ),
         }}
       >
         <StoreProvider store={store}>

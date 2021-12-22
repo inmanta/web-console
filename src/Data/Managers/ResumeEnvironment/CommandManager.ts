@@ -4,14 +4,14 @@ import {
   CommandManager,
   RemoteData,
   StateHelperWithEnv,
-  Updater,
+  UpdaterWithEnv,
 } from "@/Core";
 
 export class ResumeEnvironmentCommandManager implements CommandManager {
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">,
-    private readonly updater: Updater<"GetEnvironmentDetails">,
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">,
     private readonly environment: string
   ) {}
 
@@ -34,10 +34,13 @@ export class ResumeEnvironmentCommandManager implements CommandManager {
         this.environment,
         null
       );
-      await this.updater.update({
-        kind: "GetEnvironmentDetails",
-        details: false,
-      });
+      await this.updater.update(
+        {
+          kind: "GetEnvironmentDetails",
+          details: false,
+        },
+        this.environment
+      );
       return result;
     };
   }

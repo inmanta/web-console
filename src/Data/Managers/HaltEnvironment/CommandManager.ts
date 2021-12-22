@@ -1,44 +1,41 @@
 import {
   ApiHelper,
-  Command,
-  CommandManager,
   RemoteData,
   StateHelperWithEnv,
-  Updater,
+  UpdaterWithEnv,
 } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data";
 
-export class HaltEnvironmentCommandManager implements CommandManager {
+export class HaltEnvironmentCommandManager extends CommandManagerWithEnv<"HaltEnvironment"> {
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">,
-    private readonly updater: Updater<"GetEnvironmentDetails">,
-    private readonly environment: string
-  ) {}
-
-  matches(command: Command.SubCommand<"HaltEnvironment">): boolean {
-    return command.kind === "HaltEnvironment";
-  }
-
-  getTrigger(): Command.Trigger<"HaltEnvironment"> {
-    return async () => {
-      this.stateHelper.set(
-        RemoteData.loading(),
-        {
-          kind: "GetEnvironmentDetails",
-          details: false,
-        },
-        this.environment
-      );
-      const result = await this.apiHelper.postWithoutResponse(
-        `/api/v2/actions/environment/halt`,
-        this.environment,
-        null
-      );
-      await this.updater.update({
-        kind: "GetEnvironmentDetails",
-        details: false,
-      });
-      return result;
-    };
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">
+  ) {
+    super("HaltEnvironment", (command, environment) => {
+      return async () => {
+        this.stateHelper.set(
+          RemoteData.loading(),
+          {
+            kind: "GetEnvironmentDetails",
+            details: false,
+          },
+          environment
+        );
+        const result = await this.apiHelper.postWithoutResponse(
+          `/api/v2/actions/environment/halt`,
+          environment,
+          null
+        );
+        await this.updater.update(
+          {
+            kind: "GetEnvironmentDetails",
+            details: false,
+          },
+          environment
+        );
+        return result;
+      };
+    });
   }
 }

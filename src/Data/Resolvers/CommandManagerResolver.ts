@@ -134,18 +134,15 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          this.apiHelper,
-          environment
-        ),
-        environment
+          this.apiHelper
+        )
       ),
       new ResumeEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
-          this.apiHelper,
-          environment
+          this.apiHelper
         ),
         environment
       ),
@@ -155,8 +152,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         this.apiHelper,
         new EnvironmentDetailsUpdater(
           new EnvironmentDetailsStateHelper(this.store),
-          this.apiHelper,
-          environment
+          this.apiHelper
         ),
         environment
       ),
