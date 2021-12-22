@@ -41,10 +41,7 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([servicesHelper])
   );
-  const commandManager = new DeleteServiceCommandManager(
-    new BaseApiHelper(),
-    env1
-  );
+  const commandManager = new DeleteServiceCommandManager(new BaseApiHelper());
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
   );

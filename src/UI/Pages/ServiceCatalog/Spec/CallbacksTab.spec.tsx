@@ -55,8 +55,7 @@ function setup() {
   );
 
   const deleteServiceCommandManager = new DeleteServiceCommandManager(
-    new BaseApiHelper(),
-    Service.a.environment
+    new BaseApiHelper()
   );
 
   const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
