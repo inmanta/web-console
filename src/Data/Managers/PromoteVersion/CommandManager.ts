@@ -1,10 +1,10 @@
-import { ApiHelper, Updater } from "@/Core";
+import { ApiHelper, UpdaterWithEnv } from "@/Core";
 import { CommandManagerWithEnv } from "@/Data";
 
 export class PromoteVersionCommandManager extends CommandManagerWithEnv<"PromoteVersion"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"GetDesiredStates">
+    private readonly updater: UpdaterWithEnv<"GetDesiredStates">
   ) {
     super("PromoteVersion", ({ version }, environment) => async (query) => {
       const result = await this.apiHelper.postWithoutResponse(
@@ -12,7 +12,7 @@ export class PromoteVersionCommandManager extends CommandManagerWithEnv<"Promote
         environment,
         null
       );
-      await this.updater.update(query);
+      await this.updater.update(query, environment);
       return result;
     });
   }

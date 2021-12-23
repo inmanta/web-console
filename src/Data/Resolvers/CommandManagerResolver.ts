@@ -55,10 +55,10 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     return this.managers;
   }
 
-  resolve(env: string): void {
+  resolve(): void {
     this.managers = [
       ...this.getIndependentManagers(),
-      ...this.getEnvDependentManagers(env),
+      ...this.getEnvDependentManagers(),
     ];
   }
 
@@ -83,7 +83,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     ];
   }
 
-  private getEnvDependentManagers(environment: string): CommandManager[] {
+  private getEnvDependentManagers(): CommandManager[] {
     const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
       this.store
     );
@@ -96,8 +96,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     );
     const desiredStatesUpdater = new DesiredStatesUpdater(
       getDesiredStatesStateHelper,
-      this.apiHelper,
-      environment
+      this.apiHelper
     );
     const callbacksUpdater = new CallbacksUpdater(
       new CallbacksStateHelper(this.store),

@@ -30,12 +30,10 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const environment = "env";
   const getDesiredStatesStateHelper = new GetDesiredStatesStateHelper(store);
   const desiredStatesUpdater = new DesiredStatesUpdater(
     getDesiredStatesStateHelper,
-    apiHelper,
-    environment
+    apiHelper
   );
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([

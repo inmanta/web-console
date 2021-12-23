@@ -7,8 +7,8 @@ it("CommandManagerResolver should replace managers when environment changes", ()
     new BaseApiHelper(),
     new KeycloakAuthHelper()
   );
-  commandManagerResolver.resolve("env1");
+  commandManagerResolver.resolve();
   const originalLength = commandManagerResolver.get().length;
-  commandManagerResolver.resolve("env2");
+  commandManagerResolver.resolve();
   expect(commandManagerResolver.get()).toHaveLength(originalLength);
 });

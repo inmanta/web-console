@@ -3,24 +3,28 @@ import {
   Query,
   RemoteData,
   StateHelperWithEnv,
-  Updater,
+  UpdaterWithEnv,
 } from "@/Core";
 import { getUrl } from "@/Data/Managers/GetDesiredStates/getUrl";
 
-export class DesiredStatesUpdater implements Updater<"GetDesiredStates"> {
+export class DesiredStatesUpdater
+  implements UpdaterWithEnv<"GetDesiredStates">
+{
   constructor(
     private readonly stateHelper: StateHelperWithEnv<"GetDesiredStates">,
-    private readonly apiHelper: ApiHelper,
-    private readonly environment: string
+    private readonly apiHelper: ApiHelper
   ) {}
 
-  async update(query: Query.SubQuery<"GetDesiredStates">): Promise<void> {
+  async update(
+    query: Query.SubQuery<"GetDesiredStates">,
+    environment: string
+  ): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.apiHelper.get(getUrl(query), this.environment)
+        await this.apiHelper.get(getUrl(query), environment)
       ),
       query,
-      this.environment
+      environment
     );
   }
 }
