@@ -5,6 +5,7 @@ import {
   ChartBar,
   ChartLegend,
   ChartStack,
+  ChartTooltip,
 } from "@patternfly/react-charts";
 import {
   global_danger_color_100,
@@ -48,12 +49,13 @@ export const DeployStateChart: React.FC<Props> = ({ summary }) => {
           }}
         />
         <ChartStack horizontal>
-          {getDataforBars(summary.by_state).map(({ name, y, color }) => (
+          {getDataforBars(summary.by_state).map((barData) => (
             <ChartBar
-              key={name}
-              data={[{ name: name, x: "1", y }]}
-              style={{ data: { fill: color } }}
+              key={barData.name}
+              data={[barData]}
+              style={{ data: { fill: barData.color } }}
               barWidth={20}
+              labelComponent={<ChartTooltip />}
             />
           ))}
         </ChartStack>
@@ -71,41 +73,63 @@ function getResourcesInDoneState(by_state: Record<string, number>): number {
 
 interface BarData {
   name: string;
+  x: number;
   y: number;
   color: string;
+  label: string;
 }
 
 function getDataforBars(by_state: Record<string, number>): BarData[] {
-  return statesInOrder
-    .filter((state) => by_state[state] !== undefined)
-    .map((state) => ({
-      name: state,
-      y: by_state[state],
-      color: stateToColor[state].value,
+  return infos
+    .map((info) => addTotal(info, by_state))
+    .filter((info) => info.total > 0)
+    .map((info) => ({
+      name: info.keys[0],
+      x: 1,
+      y: info.total,
+      color: info.color,
+      label: info.keys.reduce((acc, cur) => `${acc} & ${cur}`),
     }));
 }
 
-const stateToColor = {
-  deployed: global_success_color_100,
-  skipped: global_palette_cyan_200,
-  skipped_for_undefined: global_palette_cyan_200,
-  cancelled: global_palette_cyan_200,
-  failed: global_danger_color_100,
-  unavailable: global_warning_color_100,
-  undefined: global_warning_color_100,
-  deploying: global_primary_color_100,
-  available: global_palette_black_400,
-  processing_events: global_palette_black_400,
-};
+function addTotal(info: Info, byState: Record<string, number>): InfoWithTotal {
+  return {
+    ...info,
+    total: info.keys
+      .map((key) => (byState[key] === undefined ? 0 : byState[key]))
+      .reduce((acc, cur) => acc + cur, 0),
+  };
+}
 
-const statesInOrder = [
-  "deployed",
-  "deploying",
-  "available",
-  "processing_events",
-  "skipped",
-  "skipped_for_undefined",
-  "unavailable",
-  "undefined",
-  "failed",
+interface Info {
+  keys: string[];
+  color: string;
+}
+
+interface InfoWithTotal extends Info {
+  total: number;
+}
+
+const infos: Info[] = [
+  { keys: ["deployed"], color: global_success_color_100.value },
+  {
+    keys: ["skipped", "skipped_for_undefined", "cancelled"],
+    color: global_palette_cyan_200.value,
+  },
+  {
+    keys: ["failed"],
+    color: global_danger_color_100.value,
+  },
+  {
+    keys: ["unavailable", "undefined"],
+    color: global_warning_color_100.value,
+  },
+  {
+    keys: ["deploying"],
+    color: global_primary_color_100.value,
+  },
+  {
+    keys: ["available", "processing_events"],
+    color: global_palette_black_400.value,
+  },
 ];
