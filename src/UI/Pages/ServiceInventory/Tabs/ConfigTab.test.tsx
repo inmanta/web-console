@@ -78,11 +78,7 @@ function setup(
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new InstanceConfigCommandManager(
-        apiHelper,
-        instanceConfigStateHelper,
-        "env"
-      ),
+      new InstanceConfigCommandManager(apiHelper, instanceConfigStateHelper),
     ])
   );
 

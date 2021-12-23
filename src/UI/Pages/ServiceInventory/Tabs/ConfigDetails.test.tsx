@@ -9,7 +9,11 @@ import {
   InstanceConfigCommandManager,
   InstanceConfigStateHelper,
 } from "@/Data";
-import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
+import {
+  dependencies,
+  DynamicCommandManagerResolver,
+  ServiceInstance,
+} from "@/Test";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { ConfigDetails } from "./ConfigDetails";
 
@@ -18,8 +22,7 @@ function setup() {
   const baseApiHelper = new BaseApiHelper();
   const commandManager = new InstanceConfigCommandManager(
     baseApiHelper,
-    new InstanceConfigStateHelper(store),
-    ServiceInstance.a.environment
+    new InstanceConfigStateHelper(store)
   );
   store.dispatch.environmentDetails.setData({
     id: ServiceInstance.a.environment,
@@ -34,6 +37,7 @@ function setup() {
     component: (config: Config) => (
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           commandResolver,
           environmentModifier,
         }}

@@ -1,35 +1,22 @@
-import {
-  Command,
-  RemoteData,
-  StateHelper,
-  CommandManager,
-  Query,
-  ApiHelper,
-} from "@/Core";
+import { Command, RemoteData, StateHelper, Query, ApiHelper } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data";
 
-export class InstanceConfigCommandManager implements CommandManager {
+export class InstanceConfigCommandManager extends CommandManagerWithEnv<"UpdateInstanceConfig"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly stateHelper: StateHelper<"GetInstanceConfig">,
-    private readonly environment: string
-  ) {}
-
-  matches(command: Command.SubCommand<"UpdateInstanceConfig">): boolean {
-    return command.kind === "UpdateInstanceConfig";
-  }
-
-  getTrigger(
-    command: Command.SubCommand<"UpdateInstanceConfig">
-  ): Command.Trigger<"UpdateInstanceConfig"> {
-    return async (payload) => {
-      switch (payload.kind) {
-        case "RESET":
-          this.reset(command);
-          return;
-        case "UPDATE":
-          this.update(command, payload.option, payload.value);
-      }
-    };
+    private readonly stateHelper: StateHelper<"GetInstanceConfig">
+  ) {
+    super("UpdateInstanceConfig", (command, environment) => {
+      return async (payload) => {
+        switch (payload.kind) {
+          case "RESET":
+            this.reset(command, environment);
+            return;
+          case "UPDATE":
+            this.update(command, payload.option, payload.value, environment);
+        }
+      };
+    });
   }
 
   private getQuery(
@@ -44,14 +31,15 @@ export class InstanceConfigCommandManager implements CommandManager {
   private async update(
     command: Command.SubCommand<"UpdateInstanceConfig">,
     option: string,
-    value: boolean
+    value: boolean,
+    environment: string
   ): Promise<void> {
     const configData = this.stateHelper.getOnce(this.getQuery(command));
     if (!RemoteData.isSuccess(configData)) return;
 
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.apiHelper.post(this.getUrl(command), this.environment, {
+        await this.apiHelper.post(this.getUrl(command), environment, {
           values: {
             ...configData.value,
             [option]: value,
@@ -63,11 +51,12 @@ export class InstanceConfigCommandManager implements CommandManager {
   }
 
   private async reset(
-    command: Command.SubCommand<"UpdateInstanceConfig">
+    command: Command.SubCommand<"UpdateInstanceConfig">,
+    environment: string
   ): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.apiHelper.post(this.getUrl(command), this.environment, {
+        await this.apiHelper.post(this.getUrl(command), environment, {
           values: {},
         })
       ),
