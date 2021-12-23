@@ -14,6 +14,7 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   Environment,
   Project,
@@ -37,14 +38,13 @@ function setup() {
         new EnvironmentDetailsUpdater(
           new EnvironmentDetailsStateHelper(store),
           apiHelper
-        ),
-        selectedEnvironment.id
+        )
       ),
     ])
   );
 
   const component = (
-    <DependencyProvider dependencies={{ commandResolver }}>
+    <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
       <EnvironmentSettings
         environment={selectedEnvironment}
         projects={Project.list}

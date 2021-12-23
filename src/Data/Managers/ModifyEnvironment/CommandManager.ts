@@ -1,41 +1,27 @@
-import {
-  Command,
-  CommandManager,
-  ModifyEnvironmentParams,
-  Maybe,
-  ApiHelper,
-  UpdaterWithEnv,
-} from "@/Core";
+import { ModifyEnvironmentParams, ApiHelper, UpdaterWithEnv } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data";
 
-export class ModifyEnvironmentCommandManager implements CommandManager {
+export class ModifyEnvironmentCommandManager extends CommandManagerWithEnv<"ModifyEnvironment"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">,
-    private readonly environment: string
-  ) {}
-
-  matches(command: Command.SubCommand<"ModifyEnvironment">): boolean {
-    return command.kind === "ModifyEnvironment";
-  }
-
-  getTrigger(): Command.Trigger<"ModifyEnvironment"> {
-    return (body: ModifyEnvironmentParams) => this.submit(body);
-  }
-
-  private async submit(
-    body: ModifyEnvironmentParams
-  ): Promise<Maybe.Type<Command.Error<"ModifyEnvironment">>> {
-    const error = await this.apiHelper.postWithoutResponseAndEnvironment(
-      `/api/v2/environment/${this.environment}`,
-      body
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">
+  ) {
+    super(
+      "ModifyEnvironment",
+      (command, environment) => async (body: ModifyEnvironmentParams) => {
+        const error = await this.apiHelper.postWithoutResponseAndEnvironment(
+          `/api/v2/environment/${environment}`,
+          body
+        );
+        await this.updater.update(
+          {
+            kind: "GetEnvironmentDetails",
+            details: true,
+          },
+          environment
+        );
+        return error;
+      }
     );
-    await this.updater.update(
-      {
-        kind: "GetEnvironmentDetails",
-        details: true,
-      },
-      this.environment
-    );
-    return error;
   }
 }
