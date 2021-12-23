@@ -134,7 +134,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new ServiceInstancesQueryManager(
         this.apiHelper,
-        new ServiceInstancesStateHelper(this.store, environment),
+        new ServiceInstancesStateHelper(this.store),
         scheduler
       ),
       new ServiceConfigQueryManager(

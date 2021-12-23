@@ -40,7 +40,7 @@ function setup(service = Service.a) {
   const apiHelper = new DeferredApiHelper();
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     apiHelper,
-    new ServiceInstancesStateHelper(store, service.environment),
+    new ServiceInstancesStateHelper(store),
     scheduler
   );
 
