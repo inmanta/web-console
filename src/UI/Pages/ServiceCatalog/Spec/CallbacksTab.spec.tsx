@@ -34,11 +34,10 @@ function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
-  const environment = Service.a.environment;
 
   const servicesQueryManager = new ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store, environment),
+    new ServicesStateHelper(store),
     scheduler
   );
   const callbacksStateHelper = new CallbacksStateHelper(store);

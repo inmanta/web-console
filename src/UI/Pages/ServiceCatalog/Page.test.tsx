@@ -34,7 +34,7 @@ function setup() {
 
   const servicesHelper = new ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store, env1),
+    new ServicesStateHelper(store),
     scheduler
   );
 

@@ -79,10 +79,10 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     return this.managers;
   }
 
-  resolve(env: string): void {
+  resolve(): void {
     this.managers = [
       ...this.getIndependentManagers(),
-      ...this.getEnvDependentManagers(env),
+      ...this.getEnvDependentManagers(),
     ];
   }
 
@@ -108,7 +108,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     ];
   }
 
-  private getEnvDependentManagers(environment: string): QueryManager[] {
+  private getEnvDependentManagers(): QueryManager[] {
     const serviceKeyMaker = new ServiceKeyMaker();
     const scheduler = new SchedulerImpl(5000);
     const serviceStateHelper = new ServiceStateHelper(
@@ -123,7 +123,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new ServicesQueryManager(
         this.apiHelper,
-        new ServicesStateHelper(this.store, environment),
+        new ServicesStateHelper(this.store),
         scheduler
       ),
       new ServiceQueryManager(

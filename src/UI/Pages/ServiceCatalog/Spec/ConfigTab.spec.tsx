@@ -39,7 +39,7 @@ function setup() {
 
   const servicesHelper = new ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store, Service.a.environment),
+    new ServicesStateHelper(store),
     scheduler
   );
   const serviceConfigStateHelper = new ServiceConfigStateHelper(store);

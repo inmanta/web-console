@@ -6,8 +6,8 @@ it("QueryManagerResolver should replace managers when environment changes", () =
     getStoreInstance(),
     new BaseApiHelper()
   );
-  queryManagerResolver.resolve("env1");
+  queryManagerResolver.resolve();
   const originalLength = queryManagerResolver.get().length;
-  queryManagerResolver.resolve("env2");
+  queryManagerResolver.resolve();
   expect(queryManagerResolver.get()).toHaveLength(originalLength);
 });
