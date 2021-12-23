@@ -1,12 +1,25 @@
 import React from "react";
 import { PageSection, PageSectionProps } from "@patternfly/react-core";
+import styled from "styled-components";
 import { PageTitle } from "../PageTitle";
 
-export const PageSectionWithTitle: React.FC<
-  PageSectionProps & { title: string }
-> = ({ children, title, ...props }) => (
+interface Props extends PageSectionProps {
+  title: string;
+}
+
+export const PageSectionWithTitle: React.FC<Props> = ({
+  children,
+  title,
+  ...props
+}) => (
   <PageSection variant="light" {...props}>
-    <PageTitle>{title}</PageTitle>
-    {children}
+    <Container>
+      <PageTitle>{title}</PageTitle>
+      {children}
+    </Container>
   </PageSection>
 );
+
+const Container = styled.div`
+  padding-bottom: 300px;
+`;
