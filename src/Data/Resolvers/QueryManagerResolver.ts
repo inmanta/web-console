@@ -170,7 +170,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new ResourcesQueryManager(
         this.apiHelper,
-        new ResourcesStateHelper(this.store, environment),
+        new ResourcesStateHelper(this.store),
         scheduler
       ),
       new ResourceDetailsQueryManager(

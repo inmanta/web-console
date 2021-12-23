@@ -35,7 +35,7 @@ function setup() {
     new DynamicQueryManagerResolver([
       new ResourcesQueryManager(
         apiHelper,
-        new ResourcesStateHelper(store, environment),
+        new ResourcesStateHelper(store),
         scheduler
       ),
     ])
