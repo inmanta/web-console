@@ -10,6 +10,7 @@ import {
   ServiceConfigStateHelper,
 } from "@/Data";
 import {
+  dependencies,
   DynamicCommandManagerResolver,
   Service,
   ServiceInstance,
@@ -37,6 +38,7 @@ function setup() {
     component: (config: Config) => (
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           commandResolver,
           environmentModifier,
         }}
