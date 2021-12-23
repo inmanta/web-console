@@ -1,5 +1,5 @@
 import { Command, ApiHelper, Either } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class GenerateTokenCommandManager extends CommandManagerWithEnv<"GenerateToken"> {
   constructor(private readonly apiHelper: ApiHelper) {

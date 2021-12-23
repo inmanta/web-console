@@ -1,5 +1,5 @@
 import { KeyMaker, RemoteData } from "@/Core";
-import { PrimaryStateHelperWithEnv } from "@/Data";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
 export class ServiceStateHelper extends PrimaryStateHelperWithEnv<"GetService"> {

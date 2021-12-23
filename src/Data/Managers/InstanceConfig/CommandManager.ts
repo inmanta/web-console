@@ -1,5 +1,5 @@
 import { Command, RemoteData, StateHelper, Query, ApiHelper } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class InstanceConfigCommandManager extends CommandManagerWithEnv<"UpdateInstanceConfig"> {
   constructor(

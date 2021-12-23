@@ -4,7 +4,7 @@ import {
   StateHelperWithEnv,
   UpdaterWithEnv,
 } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class HaltEnvironmentCommandManager extends CommandManagerWithEnv<"HaltEnvironment"> {
   constructor(

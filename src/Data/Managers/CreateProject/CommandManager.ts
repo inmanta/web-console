@@ -1,5 +1,5 @@
 import { ApiHelper, Maybe, Updater } from "@/Core";
-import { CommandManagerWithoutEnv } from "@/Data";
+import { CommandManagerWithoutEnv } from "@/Data/Common";
 
 export class CreateProjectCommandManager extends CommandManagerWithoutEnv<"CreateProject"> {
   constructor(

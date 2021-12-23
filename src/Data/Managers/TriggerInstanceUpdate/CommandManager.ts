@@ -1,5 +1,5 @@
 import { Command, Field, ApiHelper, InstanceAttributeModel } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data";
+import { CommandManagerWithEnv } from "@/Data/Common";
 import {
   AttributeResultConverterImpl,
   sanitizeAttributes,

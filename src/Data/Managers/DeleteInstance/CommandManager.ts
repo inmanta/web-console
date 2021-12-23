@@ -1,5 +1,5 @@
 import { ApiHelper } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class DeleteInstanceCommandManager extends CommandManagerWithEnv<"DeleteInstance"> {
   constructor(private readonly apiHelper: ApiHelper) {

@@ -1,5 +1,5 @@
 import { RemoteData, Resource } from "@/Core";
-import { PrimaryStateHelperWithEnv } from "@/Data";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
 export class ResourcesStateHelper extends PrimaryStateHelperWithEnv<"GetResources"> {

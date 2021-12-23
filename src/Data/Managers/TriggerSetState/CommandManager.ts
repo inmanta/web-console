@@ -1,5 +1,5 @@
 import { ApiHelper, AuthHelper, SetStateBody } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class TriggerSetStateCommandManager extends CommandManagerWithEnv<"TriggerSetState"> {
   constructor(

@@ -1,5 +1,5 @@
 import { ApiHelper, UpdaterWithEnv } from "@/Core";
-import { CommandManagerWithEnv } from "@/Data";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class PromoteVersionCommandManager extends CommandManagerWithEnv<"PromoteVersion"> {
   constructor(
