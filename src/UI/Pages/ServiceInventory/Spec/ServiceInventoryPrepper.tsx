@@ -61,8 +61,7 @@ export class ServiceInventoryPrepper {
 
     const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
       new BaseApiHelper(),
-      new AttributeResultConverterImpl(),
-      "env1"
+      new AttributeResultConverterImpl()
     );
     const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
 

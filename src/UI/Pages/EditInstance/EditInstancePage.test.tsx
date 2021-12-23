@@ -42,8 +42,7 @@ function setup() {
 
   const commandManager = new TriggerInstanceUpdateCommandManager(
     apiHelper,
-    new AttributeResultConverterImpl(),
-    Service.a.environment
+    new AttributeResultConverterImpl()
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])

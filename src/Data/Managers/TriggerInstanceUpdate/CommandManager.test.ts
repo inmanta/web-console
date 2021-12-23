@@ -8,8 +8,7 @@ import { Field } from "@/Test";
 describe("TriggerInstanceUpdateCommandManager ", () => {
   const commandManager = new TriggerInstanceUpdateCommandManager(
     new BaseApiHelper(),
-    new AttributeResultConverterImpl(),
-    "env1"
+    new AttributeResultConverterImpl()
   );
   const currentAttributes = { attr1: "some value", attr2: "", attr3: null };
 

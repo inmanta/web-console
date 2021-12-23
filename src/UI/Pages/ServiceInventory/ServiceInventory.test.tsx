@@ -56,8 +56,7 @@ function setup(service = Service.a) {
 
   const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
     apiHelper,
-    new AttributeResultConverterImpl(),
-    "env1"
+    new AttributeResultConverterImpl()
   );
 
   const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
