@@ -61,8 +61,7 @@ function setup(service = Service.a) {
 
   const setStateCommandManager = new TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    new BaseApiHelper(),
-    "env1"
+    new BaseApiHelper()
   );
 
   const commandResolver = new CommandResolverImpl(

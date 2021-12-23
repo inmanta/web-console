@@ -65,8 +65,7 @@ export class ServiceInventoryPrepper {
 
     const setStateCommandManager = new TriggerSetStateCommandManager(
       new KeycloakAuthHelper(),
-      new BaseApiHelper(),
-      "env1"
+      new BaseApiHelper()
     );
 
     const commandResolver = new CommandResolverImpl(

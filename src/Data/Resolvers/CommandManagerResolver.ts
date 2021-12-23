@@ -117,11 +117,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new TriggerInstanceUpdateCommandManager(this.apiHelper),
       new DeleteInstanceCommandManager(this.apiHelper),
       new DeleteServiceCommandManager(this.apiHelper),
-      new TriggerSetStateCommandManager(
-        this.authHelper,
-        this.apiHelper,
-        environment
-      ),
+      new TriggerSetStateCommandManager(this.authHelper, this.apiHelper),
       new HaltEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,

@@ -23,8 +23,7 @@ test("Given InstanceActions component When the instance is terminated Then the a
 
   const setStateCommandManager = new TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper,
-    "env1"
+    apiHelper
   );
 
   const commandResolver = new CommandResolverImpl(

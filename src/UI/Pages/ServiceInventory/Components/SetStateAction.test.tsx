@@ -10,6 +10,7 @@ import {
   getStoreInstance,
 } from "@/Data";
 import {
+  dependencies,
   DynamicCommandManagerResolver,
   MockEnvironmentModifier,
   ServiceInstance,
@@ -20,8 +21,7 @@ import { SetStateAction } from "./SetStateAction";
 function setup() {
   const commandManager = new TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    new BaseApiHelper(),
-    "env1"
+    new BaseApiHelper()
   );
   return {
     commandResolver: new CommandResolverImpl(
@@ -35,6 +35,7 @@ function setupComponent() {
     component: (
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
         }}
@@ -56,6 +57,7 @@ test("SetStateAction dropdown is disabled when no targets are found", async () =
   render(
     <DependencyProvider
       dependencies={{
+        ...dependencies,
         commandResolver,
         environmentModifier: new MockEnvironmentModifier(),
       }}
@@ -85,6 +87,7 @@ test("SetStateAction dropdown takes environment halted status in account", async
   const componentWithDependencies = (targets: string[]) => (
     <DependencyProvider
       dependencies={{
+        ...dependencies,
         commandResolver,
         environmentModifier,
       }}
