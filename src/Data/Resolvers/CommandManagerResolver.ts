@@ -108,8 +108,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     return [
       new ServiceConfigCommandManager(
         this.apiHelper,
-        new ServiceConfigStateHelper(this.store),
-        environment
+        new ServiceConfigStateHelper(this.store)
       ),
       new InstanceConfigCommandManager(
         this.apiHelper,

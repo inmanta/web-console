@@ -22,8 +22,7 @@ function setup() {
   const baseApiHelper = new BaseApiHelper();
   const commandManager = new ServiceConfigCommandManager(
     baseApiHelper,
-    new ServiceConfigStateHelper(store),
-    Service.a.environment
+    new ServiceConfigStateHelper(store)
   );
   store.dispatch.environmentDetails.setData({
     id: Service.a.environment,

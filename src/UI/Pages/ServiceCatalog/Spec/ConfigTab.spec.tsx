@@ -54,8 +54,7 @@ function setup() {
   // { data: Service.a.config }
   const serviceConfigCommandManager = new ServiceConfigCommandManager(
     apiHelper,
-    serviceConfigStateHelper,
-    Service.a.environment
+    serviceConfigStateHelper
   );
 
   const deleteServiceCommandManager = new DeleteServiceCommandManager(
