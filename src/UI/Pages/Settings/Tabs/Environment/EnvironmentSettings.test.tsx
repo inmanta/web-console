@@ -17,6 +17,7 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
   Environment,
+  MockEnvironmentHandler,
   Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -44,7 +45,13 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
+    <DependencyProvider
+      dependencies={{
+        ...dependencies,
+        commandResolver,
+        environmentHandler: new MockEnvironmentHandler(selectedEnvironment.id),
+      }}
+    >
       <EnvironmentSettings
         environment={selectedEnvironment}
         projects={Project.list}
