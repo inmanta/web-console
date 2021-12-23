@@ -142,8 +142,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new EnvironmentDetailsUpdater(
           environmentDetailsStateHelper,
           this.apiHelper
-        ),
-        environment
+        )
       ),
       new DeleteCallbackCommandManager(this.apiHelper, callbacksUpdater),
       new CreateCallbackCommandManager(this.apiHelper, callbacksUpdater),

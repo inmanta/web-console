@@ -53,8 +53,7 @@ function setup() {
   const resumeEnvironmentManager = new ResumeEnvironmentCommandManager(
     new BaseApiHelper(),
     environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(environmentDetailsStateHelper, apiHelper),
-    EnvironmentDetails.a.id
+    new EnvironmentDetailsUpdater(environmentDetailsStateHelper, apiHelper)
   );
 
   const commandResolver = new CommandResolverImpl(
