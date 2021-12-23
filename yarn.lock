@@ -7219,10 +7219,10 @@ eslint-plugin-react-hooks@^4.3.0:
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.3.0.tgz#318dbf312e06fab1c835a4abef00121751ac1172"
   integrity sha512-XslZy0LnMn+84NEG9jSGR6eGqaZB3133L8xewQo3fQagbQuGt7a63gf+P1NGKZavEYEC3UXaWEAA/AqDkuN6xA==
 
-eslint-plugin-react@^7.27.1:
-  version "7.27.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.27.1.tgz#469202442506616f77a854d91babaae1ec174b45"
-  integrity sha512-meyunDjMMYeWr/4EBLTV1op3iSG3mjT/pz5gti38UzfM4OPpNc2m0t2xvKCOMU5D6FSdd34BIMFOvQbW+i8GAA==
+eslint-plugin-react@^7.28.0:
+  version "7.28.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.28.0.tgz#8f3ff450677571a659ce76efc6d80b6a525adbdf"
+  integrity sha512-IOlFIRHzWfEQQKcAD4iyYDndHwTQiCMcJVJjxempf203jnNLUnW34AXLrV33+nEXoifJE2ZEGmcjKPL8957eSw==
   dependencies:
     array-includes "^3.1.4"
     array.prototype.flatmap "^1.2.5"
@@ -15789,10 +15789,10 @@ webpack-dev-middleware@^5.3.0:
     range-parser "^1.2.1"
     schema-utils "^4.0.0"
 
-webpack-dev-server@^4.7.0:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.7.0.tgz#658aae4902dc920e90dbb8ad8b4eaf6491ac33af"
-  integrity sha512-ldR+a54iygMxUawTzMlWD/JblePhNRVGHxTHQz9EAvsbH7HZbX53OxV6Y092x+tgN5umv885i2X4wfdo/ynEQA==
+webpack-dev-server@^4.7.1:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.7.1.tgz#4fe8f7435843dd2e676d687846f7a3d53f758c0d"
+  integrity sha512-bkoNgFyqlF/CT726Axtf/ELHHYsTZJWz3QJ6HqstWPbalhjAPunlPH9bwt/Lr5cLb+uoLmsta6svVplVzq8beA==
   dependencies:
     "@types/bonjour" "^3.5.9"
     "@types/connect-history-api-fallback" "^1.3.5"
@@ -15821,7 +15821,6 @@ webpack-dev-server@^4.7.0:
     sockjs "^0.3.21"
     spdy "^4.0.2"
     strip-ansi "^7.0.0"
-    url "^0.11.0"
     webpack-dev-middleware "^5.3.0"
     ws "^8.1.0"
 
