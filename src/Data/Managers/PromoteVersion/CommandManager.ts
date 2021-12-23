@@ -1,27 +1,19 @@
-import { ApiHelper, Command, CommandManager, Query, Updater } from "@/Core";
+import { ApiHelper, Updater } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data";
 
-export class PromoteVersionCommandManager implements CommandManager {
+export class PromoteVersionCommandManager extends CommandManagerWithEnv<"PromoteVersion"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"GetDesiredStates">,
-    private readonly environment: string
-  ) {}
-
-  matches(command: Command.SubCommand<"PromoteVersion">): boolean {
-    return command.kind === "PromoteVersion";
-  }
-
-  getTrigger(
-    command: Command.SubCommand<"PromoteVersion">
-  ): Command.Trigger<"PromoteVersion"> {
-    return async (query: Query.SubQuery<"GetDesiredStates">) => {
+    private readonly updater: Updater<"GetDesiredStates">
+  ) {
+    super("PromoteVersion", ({ version }, environment) => async (query) => {
       const result = await this.apiHelper.postWithoutResponse(
-        `/api/v2/desiredstate/${command.version}/promote`,
-        this.environment,
+        `/api/v2/desiredstate/${version}/promote`,
+        environment,
         null
       );
       await this.updater.update(query);
       return result;
-    };
+    });
   }
 }

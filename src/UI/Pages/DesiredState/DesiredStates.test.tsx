@@ -48,11 +48,7 @@ function setup() {
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new PromoteVersionCommandManager(
-        apiHelper,
-        desiredStatesUpdater,
-        environment
-      ),
+      new PromoteVersionCommandManager(apiHelper, desiredStatesUpdater),
     ])
   );
 
