@@ -24,6 +24,7 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  MockEnvironmentHandler,
   MockEnvironmentModifier,
   Service,
   StaticScheduler,
@@ -46,11 +47,7 @@ function setup() {
     apiHelper,
     new ServiceConfigStateHelper(store),
     new ServiceConfigFinalizer(
-      new ServiceStateHelper(
-        store,
-        new ServiceKeyMaker(),
-        Service.a.environment
-      )
+      new ServiceStateHelper(store, new ServiceKeyMaker())
     )
   );
 
@@ -83,6 +80,7 @@ function setup() {
           queryResolver,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
+          environmentHandler: new MockEnvironmentHandler(Service.a.environment),
         }}
       >
         <StoreProvider store={store}>

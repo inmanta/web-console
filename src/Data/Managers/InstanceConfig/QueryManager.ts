@@ -63,7 +63,8 @@ export class InstanceConfigQueryManager
     return [
       this.configFinalizer.finalize(
         this.stateHelper.getHooked(query),
-        service_entity
+        service_entity,
+        environment
       ),
       () => this.update(query, this.getConfigUrl(query), environment),
     ];

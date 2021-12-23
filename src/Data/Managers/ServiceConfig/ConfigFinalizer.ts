@@ -4,23 +4,29 @@ import {
   RemoteData,
   ServiceModel,
   ConfigFinalizer,
-  StateHelper,
   isNotNull,
+  StateHelperWithEnv,
 } from "@/Core";
 
 export class ServiceConfigFinalizer
   implements ConfigFinalizer<"GetServiceConfig">
 {
-  constructor(private readonly serviceStateHelper: StateHelper<"GetService">) {}
+  constructor(
+    private readonly serviceStateHelper: StateHelperWithEnv<"GetService">
+  ) {}
 
   finalize(
     configData: RemoteData.Type<string, Config>,
-    serviceName: string
+    serviceName: string,
+    environment: string
   ): RemoteData.Type<string, Config> {
-    const serviceData = this.serviceStateHelper.getHooked({
-      kind: "GetService",
-      name: serviceName,
-    });
+    const serviceData = this.serviceStateHelper.getHooked(
+      {
+        kind: "GetService",
+        name: serviceName,
+      },
+      environment
+    );
     if (!RemoteData.isSuccess(configData)) return configData;
     if (!RemoteData.isSuccess(serviceData)) return serviceData;
     const config = configData.value;

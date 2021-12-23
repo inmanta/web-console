@@ -113,8 +113,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     const scheduler = new SchedulerImpl(5000);
     const serviceStateHelper = new ServiceStateHelper(
       this.store,
-      serviceKeyMaker,
-      environment
+      serviceKeyMaker
     );
 
     return [
