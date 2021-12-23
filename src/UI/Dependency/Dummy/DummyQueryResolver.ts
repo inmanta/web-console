@@ -1,10 +1,4 @@
-import {
-  QueryManager,
-  ManagerResolver,
-  Query,
-  RemoteData,
-  QueryResolver,
-} from "@/Core";
+import { Query, RemoteData, QueryResolver } from "@/Core";
 
 type Data = RemoteData.Type<
   Query.Error<Query.Kind>,
@@ -12,9 +6,6 @@ type Data = RemoteData.Type<
 >;
 
 export class DummyQueryResolver implements QueryResolver {
-  getManagerResolver(): ManagerResolver<QueryManager> {
-    throw new Error("Method not implemented.");
-  }
   useOneTime(): [Data, () => void] {
     throw new Error("Method not implemented.");
   }

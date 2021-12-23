@@ -72,21 +72,21 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     private readonly store: Store,
     private readonly apiHelper: BaseApiHelper
   ) {
-    this.managers = this.getIndependentManagers();
+    this.managers = this.getManagers();
   }
 
   get(): QueryManager[] {
     return this.managers;
   }
 
-  resolve(): void {
-    this.managers = [
-      ...this.getIndependentManagers(),
-      ...this.getEnvDependentManagers(),
-    ];
-  }
+  private getManagers(): QueryManager[] {
+    const serviceKeyMaker = new ServiceKeyMaker();
+    const scheduler = new SchedulerImpl(5000);
+    const serviceStateHelper = new ServiceStateHelper(
+      this.store,
+      serviceKeyMaker
+    );
 
-  private getIndependentManagers(): QueryManager[] {
     return [
       new GetProjectsQueryManager(
         this.apiHelper,
@@ -105,18 +105,6 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetServerStatusStateHelper(this.store),
         new SchedulerImpl(10000)
       ),
-    ];
-  }
-
-  private getEnvDependentManagers(): QueryManager[] {
-    const serviceKeyMaker = new ServiceKeyMaker();
-    const scheduler = new SchedulerImpl(5000);
-    const serviceStateHelper = new ServiceStateHelper(
-      this.store,
-      serviceKeyMaker
-    );
-
-    return [
       new GetEnvironmentSettingsQueryManager(
         this.apiHelper,
         new GetEnvironmentSettingsStateHelper(this.store)

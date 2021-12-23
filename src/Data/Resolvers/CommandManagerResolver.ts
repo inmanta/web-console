@@ -48,42 +48,14 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     private readonly apiHelper: BaseApiHelper,
     private readonly authHelper: AuthHelper
   ) {
-    this.managers = this.getIndependentManagers();
+    this.managers = this.getManagers();
   }
 
   get(): CommandManager[] {
     return this.managers;
   }
 
-  resolve(): void {
-    this.managers = [
-      ...this.getIndependentManagers(),
-      ...this.getEnvDependentManagers(),
-    ];
-  }
-
-  private getIndependentManagers(): CommandManager[] {
-    return [
-      new DeleteEnvironmentCommandManager(
-        this.apiHelper,
-        new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(this.store),
-          this.apiHelper
-        )
-      ),
-      new CreateProjectCommandManager(
-        this.apiHelper,
-        new ProjectsUpdater(
-          new GetProjectsStateHelper(this.store),
-          this.apiHelper
-        )
-      ),
-      new CreateEnvironmentCommandManager(this.apiHelper),
-      new GetSupportArchiveCommandManager(this.apiHelper),
-    ];
-  }
-
-  private getEnvDependentManagers(): CommandManager[] {
+  private getManagers(): CommandManager[] {
     const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
       this.store
     );
@@ -104,6 +76,22 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
     );
 
     return [
+      new DeleteEnvironmentCommandManager(
+        this.apiHelper,
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(this.store),
+          this.apiHelper
+        )
+      ),
+      new CreateProjectCommandManager(
+        this.apiHelper,
+        new ProjectsUpdater(
+          new GetProjectsStateHelper(this.store),
+          this.apiHelper
+        )
+      ),
+      new CreateEnvironmentCommandManager(this.apiHelper),
+      new GetSupportArchiveCommandManager(this.apiHelper),
       new ServiceConfigCommandManager(
         this.apiHelper,
         new ServiceConfigStateHelper(this.store)
