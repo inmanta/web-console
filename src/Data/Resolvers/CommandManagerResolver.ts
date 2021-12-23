@@ -1,6 +1,5 @@
 import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import { BaseApiHelper } from "@/Data/API";
-import { AttributeResultConverterImpl } from "@/Data/Common/AttributeConverter";
 import {
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
@@ -115,10 +114,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new InstanceConfigStateHelper(this.store)
       ),
       new CreateInstanceCommandManager(this.apiHelper),
-      new TriggerInstanceUpdateCommandManager(
-        this.apiHelper,
-        new AttributeResultConverterImpl()
-      ),
+      new TriggerInstanceUpdateCommandManager(this.apiHelper),
       new DeleteInstanceCommandManager(this.apiHelper),
       new DeleteServiceCommandManager(this.apiHelper),
       new TriggerSetStateCommandManager(

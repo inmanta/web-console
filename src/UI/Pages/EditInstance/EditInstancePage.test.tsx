@@ -10,7 +10,6 @@ import {
   ServiceInstanceStateHelper,
   ServiceInstanceQueryManager,
   TriggerInstanceUpdateCommandManager,
-  AttributeResultConverterImpl,
   CommandResolverImpl,
 } from "@/Data";
 import {
@@ -40,10 +39,7 @@ function setup() {
     ])
   );
 
-  const commandManager = new TriggerInstanceUpdateCommandManager(
-    apiHelper,
-    new AttributeResultConverterImpl()
-  );
+  const commandManager = new TriggerInstanceUpdateCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
   );
@@ -117,6 +113,6 @@ test("EditInstance View shows success form", async () => {
         circuits: [{}],
       },
     },
-    environment: "environment_id_a",
+    environment: "env",
   });
 });

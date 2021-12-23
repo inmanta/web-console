@@ -10,7 +10,6 @@ import {
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
   TriggerInstanceUpdateCommandManager,
-  AttributeResultConverterImpl,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   BaseApiHelper,
@@ -55,8 +54,7 @@ function setup(service = Service.a) {
   );
 
   const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
-    apiHelper,
-    new AttributeResultConverterImpl()
+    apiHelper
   );
 
   const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);

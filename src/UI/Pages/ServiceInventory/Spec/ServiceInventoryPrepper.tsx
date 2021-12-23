@@ -3,7 +3,6 @@ import { MemoryRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, SchedulerImpl, ServiceModel } from "@/Core";
 import {
-  AttributeResultConverterImpl,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   QueryResolverImpl,
@@ -60,8 +59,7 @@ export class ServiceInventoryPrepper {
     );
 
     const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
-      new BaseApiHelper(),
-      new AttributeResultConverterImpl()
+      new BaseApiHelper()
     );
     const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
 
