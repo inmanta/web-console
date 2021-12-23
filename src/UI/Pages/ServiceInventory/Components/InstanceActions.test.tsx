@@ -19,15 +19,11 @@ import { InstanceActions } from "./InstanceActions";
 
 test("Given InstanceActions component When the instance is terminated Then the actions are still shown", async () => {
   const apiHelper = new DeferredApiHelper();
-  const deleteCommandManager = new DeleteInstanceCommandManager(
-    apiHelper,
-    "env1"
-  );
+  const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
 
   const setStateCommandManager = new TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper,
-    "env1"
+    apiHelper
   );
 
   const commandResolver = new CommandResolverImpl(

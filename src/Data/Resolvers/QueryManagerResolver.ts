@@ -72,21 +72,21 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     private readonly store: Store,
     private readonly apiHelper: BaseApiHelper
   ) {
-    this.managers = this.getIndependentManagers();
+    this.managers = this.getManagers();
   }
 
   get(): QueryManager[] {
     return this.managers;
   }
 
-  resolve(env: string): void {
-    this.managers = [
-      ...this.getIndependentManagers(),
-      ...this.getEnvDependentManagers(env),
-    ];
-  }
+  private getManagers(): QueryManager[] {
+    const serviceKeyMaker = new ServiceKeyMaker();
+    const scheduler = new SchedulerImpl(5000);
+    const serviceStateHelper = new ServiceStateHelper(
+      this.store,
+      serviceKeyMaker
+    );
 
-  private getIndependentManagers(): QueryManager[] {
     return [
       new GetProjectsQueryManager(
         this.apiHelper,
@@ -105,26 +105,13 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetServerStatusStateHelper(this.store),
         new SchedulerImpl(10000)
       ),
-    ];
-  }
-
-  private getEnvDependentManagers(environment: string): QueryManager[] {
-    const serviceKeyMaker = new ServiceKeyMaker();
-    const scheduler = new SchedulerImpl(5000);
-    const serviceStateHelper = new ServiceStateHelper(
-      this.store,
-      serviceKeyMaker,
-      environment
-    );
-
-    return [
       new GetEnvironmentSettingsQueryManager(
         this.apiHelper,
-        new GetEnvironmentSettingsStateHelper(this.store, environment)
+        new GetEnvironmentSettingsStateHelper(this.store)
       ),
       new ServicesQueryManager(
         this.apiHelper,
-        new ServicesStateHelper(this.store, environment),
+        new ServicesStateHelper(this.store),
         scheduler
       ),
       new ServiceQueryManager(
@@ -135,7 +122,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new ServiceInstancesQueryManager(
         this.apiHelper,
-        new ServiceInstancesStateHelper(this.store, environment),
+        new ServiceInstancesStateHelper(this.store),
         scheduler
       ),
       new ServiceConfigQueryManager(
@@ -170,7 +157,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new ResourcesQueryManager(
         this.apiHelper,
-        new ResourcesStateHelper(this.store, environment),
+        new ResourcesStateHelper(this.store),
         scheduler
       ),
       new ResourceDetailsQueryManager(
@@ -185,12 +172,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new EnvironmentDetailsQueryManager(
         this.apiHelper,
-        new EnvironmentDetailsStateHelper(this.store, environment),
+        new EnvironmentDetailsStateHelper(this.store),
         scheduler
       ),
       new EnvironmentDetailsOneTimeQueryManager(
         this.apiHelper,
-        new EnvironmentDetailsStateHelper(this.store, environment)
+        new EnvironmentDetailsStateHelper(this.store)
       ),
       new ServiceInstanceQueryManager(
         this.apiHelper,
@@ -199,11 +186,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new CallbacksQueryManager(
         this.apiHelper,
-        new CallbacksStateHelper(this.store, environment)
+        new CallbacksStateHelper(this.store)
       ),
       new CompileReportsQueryManager(
         this.apiHelper,
-        new CompileReportsStateHelper(this.store, environment),
+        new CompileReportsStateHelper(this.store),
         scheduler
       ),
       new CompileDetailsQueryManager(
@@ -223,7 +210,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new GetAgentsQueryManager(
         this.apiHelper,
-        new GetAgentsStateHelper(this.store, environment),
+        new GetAgentsStateHelper(this.store),
         scheduler
       ),
       new GetAgentProcessQueryManager(
@@ -232,12 +219,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new GetDesiredStatesQueryManager(
         this.apiHelper,
-        new GetDesiredStatesStateHelper(this.store, environment),
+        new GetDesiredStatesStateHelper(this.store),
         scheduler
       ),
       new GetVersionResourcesQueryManager(
         this.apiHelper,
-        new GetVersionResourcesStateHelper(this.store, environment),
+        new GetVersionResourcesStateHelper(this.store),
         scheduler
       ),
     ];

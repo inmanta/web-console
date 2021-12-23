@@ -43,7 +43,7 @@ export const Basic: React.FC = () => {
         metadata: Pagination.metadata,
       },
     }),
-    new ServiceInstancesStateHelper(store, Service.a.environment),
+    new ServiceInstancesStateHelper(store),
     scheduler
   );
 
@@ -88,7 +88,7 @@ export const Failed: React.FC = () => {
       kind: "Failed",
       error: "fake error message",
     }),
-    new ServiceInstancesStateHelper(store, Service.a.environment),
+    new ServiceInstancesStateHelper(store),
     scheduler
   );
 

@@ -16,10 +16,6 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 export class QueryResolverImpl implements QueryResolver {
   constructor(public readonly managerResolver: ManagerResolver<QueryManager>) {}
 
-  getManagerResolver(): ManagerResolver<QueryManager> {
-    return this.managerResolver;
-  }
-
   private getOneTimeQueryManager(
     query: Query.Type
   ): OneTimeQueryManager<typeof query.kind> {

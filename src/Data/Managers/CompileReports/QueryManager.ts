@@ -1,14 +1,19 @@
-import { Scheduler, StateHelper, CompileReportParams, ApiHelper } from "@/Core";
+import {
+  Scheduler,
+  CompileReportParams,
+  ApiHelper,
+  StateHelperWithEnv,
+} from "@/Core";
 import {
   getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnv,
+  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class CompileReportsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetCompileReports"> {
+export class CompileReportsQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetCompileReports"> {
   constructor(
     apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetCompileReports">,
+    stateHelper: StateHelperWithEnv<"GetCompileReports">,
     scheduler: Scheduler
   ) {
     super(

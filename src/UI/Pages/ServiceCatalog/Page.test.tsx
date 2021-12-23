@@ -34,17 +34,14 @@ function setup() {
 
   const servicesHelper = new ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store, env1),
+    new ServicesStateHelper(store),
     scheduler
   );
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([servicesHelper])
   );
-  const commandManager = new DeleteServiceCommandManager(
-    new BaseApiHelper(),
-    env1
-  );
+  const commandManager = new DeleteServiceCommandManager(new BaseApiHelper());
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
   );

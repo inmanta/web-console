@@ -1,40 +1,41 @@
 import {
   ApiHelper,
-  Command,
-  CommandManager,
   RemoteData,
-  StateHelper,
-  Updater,
+  StateHelperWithEnv,
+  UpdaterWithEnv,
 } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class ResumeEnvironmentCommandManager implements CommandManager {
+export class ResumeEnvironmentCommandManager extends CommandManagerWithEnv<"ResumeEnvironment"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly stateHelper: StateHelper<"GetEnvironmentDetails">,
-    private readonly updater: Updater<"GetEnvironmentDetails">,
-    private readonly environment: string
-  ) {}
-
-  matches(command: Command.SubCommand<"ResumeEnvironment">): boolean {
-    return command.kind === "ResumeEnvironment";
-  }
-
-  getTrigger(): Command.Trigger<"ResumeEnvironment"> {
-    return async () => {
-      this.stateHelper.set(RemoteData.loading(), {
-        kind: "GetEnvironmentDetails",
-        details: false,
-      });
-      const result = await this.apiHelper.postWithoutResponse(
-        `/api/v2/actions/environment/resume`,
-        this.environment,
-        null
-      );
-      await this.updater.update({
-        kind: "GetEnvironmentDetails",
-        details: false,
-      });
-      return result;
-    };
+    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">,
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">
+  ) {
+    super("ResumeEnvironment", (command, environment) => {
+      return async () => {
+        this.stateHelper.set(
+          RemoteData.loading(),
+          {
+            kind: "GetEnvironmentDetails",
+            details: false,
+          },
+          environment
+        );
+        const result = await this.apiHelper.postWithoutResponse(
+          `/api/v2/actions/environment/resume`,
+          environment,
+          null
+        );
+        await this.updater.update(
+          {
+            kind: "GetEnvironmentDetails",
+            details: false,
+          },
+          environment
+        );
+        return result;
+      };
+    });
   }
 }

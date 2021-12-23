@@ -24,6 +24,7 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  MockEnvironmentHandler,
   MockEnvironmentModifier,
   Service,
   StaticScheduler,
@@ -38,7 +39,7 @@ function setup() {
 
   const servicesHelper = new ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store, Service.a.environment),
+    new ServicesStateHelper(store),
     scheduler
   );
   const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
@@ -46,24 +47,18 @@ function setup() {
     apiHelper,
     new ServiceConfigStateHelper(store),
     new ServiceConfigFinalizer(
-      new ServiceStateHelper(
-        store,
-        new ServiceKeyMaker(),
-        Service.a.environment
-      )
+      new ServiceStateHelper(store, new ServiceKeyMaker())
     )
   );
 
   // { data: Service.a.config }
   const serviceConfigCommandManager = new ServiceConfigCommandManager(
     apiHelper,
-    serviceConfigStateHelper,
-    Service.a.environment
+    serviceConfigStateHelper
   );
 
   const deleteServiceCommandManager = new DeleteServiceCommandManager(
-    new BaseApiHelper(),
-    Service.a.environment
+    new BaseApiHelper()
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -84,6 +79,7 @@ function setup() {
           queryResolver,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
+          environmentHandler: new MockEnvironmentHandler(Service.a.environment),
         }}
       >
         <StoreProvider store={store}>

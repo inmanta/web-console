@@ -3,7 +3,6 @@ import { MemoryRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, SchedulerImpl, ServiceModel } from "@/Core";
 import {
-  AttributeResultConverterImpl,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   QueryResolverImpl,
@@ -45,7 +44,7 @@ export class ServiceInventoryPrepper {
     const apiHelper = new DeferredApiHelper();
     const serviceInstancesHelper = new ServiceInstancesQueryManager(
       apiHelper,
-      new ServiceInstancesStateHelper(store, service.environment),
+      new ServiceInstancesStateHelper(store),
       scheduler
     );
 
@@ -60,19 +59,13 @@ export class ServiceInventoryPrepper {
     );
 
     const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
-      new BaseApiHelper(),
-      new AttributeResultConverterImpl(),
-      "env1"
+      new BaseApiHelper()
     );
-    const deleteCommandManager = new DeleteInstanceCommandManager(
-      apiHelper,
-      "env1"
-    );
+    const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
 
     const setStateCommandManager = new TriggerSetStateCommandManager(
       new KeycloakAuthHelper(),
-      new BaseApiHelper(),
-      "env1"
+      new BaseApiHelper()
     );
 
     const commandResolver = new CommandResolverImpl(

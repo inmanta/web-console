@@ -22,7 +22,7 @@ jest.useFakeTimers("legacy");
 const setup = () => {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const stateHelper = new ServiceInstancesStateHelper(store, "env");
+  const stateHelper = new ServiceInstancesStateHelper(store);
   const tasks = new DictionaryImpl<Task>();
   const scheduler = new SchedulerImpl(
     5000,

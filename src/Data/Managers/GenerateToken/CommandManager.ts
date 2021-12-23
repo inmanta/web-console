@@ -1,24 +1,18 @@
-import { Command, CommandManager, ApiHelper, Either } from "@/Core";
+import { Command, ApiHelper, Either } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class GenerateTokenCommandManager implements CommandManager {
-  constructor(
-    private readonly apiHelper: ApiHelper,
-    private readonly environment: string
-  ) {}
-
-  matches(command: Command.SubCommand<"GenerateToken">): boolean {
-    return command.kind === "GenerateToken";
-  }
-
-  getTrigger(): Command.Trigger<"GenerateToken"> {
-    return async (tokenInfo) =>
-      Either.mapRight(
-        (data) => data.data,
-        await this.apiHelper.post<Command.ApiData<"GenerateToken">>(
-          "/api/v2/environment_auth",
-          this.environment,
-          tokenInfo
-        )
-      );
+export class GenerateTokenCommandManager extends CommandManagerWithEnv<"GenerateToken"> {
+  constructor(private readonly apiHelper: ApiHelper) {
+    super("GenerateToken", (command, environment) => {
+      return async (tokenInfo) =>
+        Either.mapRight(
+          (data) => data.data,
+          await this.apiHelper.post<Command.ApiData<"GenerateToken">>(
+            "/api/v2/environment_auth",
+            environment,
+            tokenInfo
+          )
+        );
+    });
   }
 }

@@ -1,42 +1,32 @@
 import { omit } from "lodash";
-import {
-  Command,
-  CommandManager,
-  Updater,
-  Either,
-  Maybe,
-  ApiHelper,
-} from "@/Core";
+import { Either, Maybe, ApiHelper, UpdaterWithEnv } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class CreateCallbackCommandManager implements CommandManager {
+export class CreateCallbackCommandManager extends CommandManagerWithEnv<"CreateCallback"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"GetCallbacks">,
-    private readonly environment: string
-  ) {}
-
-  matches(command: Command.SubCommand<"CreateCallback">): boolean {
-    return command.kind === "CreateCallback";
-  }
-
-  getTrigger(
-    command: Command.SubCommand<"CreateCallback">
-  ): Command.Trigger<"CreateCallback"> {
-    return async () => {
-      const result = await this.apiHelper.post(
-        "/lsm/v1/callbacks",
-        this.environment,
-        omit(command, "kind")
-      );
-      if (Either.isLeft(result)) {
-        return Maybe.some(result.value);
-      } else {
-        await this.updater.update({
-          kind: "GetCallbacks",
-          service_entity: command.service_entity,
-        });
-        return Maybe.none();
-      }
-    };
+    private readonly updater: UpdaterWithEnv<"GetCallbacks">
+  ) {
+    super("CreateCallback", (command, environment) => {
+      return async () => {
+        const result = await this.apiHelper.post(
+          "/lsm/v1/callbacks",
+          environment,
+          omit(command, "kind")
+        );
+        if (Either.isLeft(result)) {
+          return Maybe.some(result.value);
+        } else {
+          await this.updater.update(
+            {
+              kind: "GetCallbacks",
+              service_entity: command.service_entity,
+            },
+            environment
+          );
+          return Maybe.none();
+        }
+      };
+    });
   }
 }

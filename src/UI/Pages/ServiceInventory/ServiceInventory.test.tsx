@@ -10,7 +10,6 @@ import {
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
   TriggerInstanceUpdateCommandManager,
-  AttributeResultConverterImpl,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   BaseApiHelper,
@@ -40,7 +39,7 @@ function setup(service = Service.a) {
   const apiHelper = new DeferredApiHelper();
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     apiHelper,
-    new ServiceInstancesStateHelper(store, service.environment),
+    new ServiceInstancesStateHelper(store),
     scheduler
   );
 
@@ -55,20 +54,14 @@ function setup(service = Service.a) {
   );
 
   const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
-    apiHelper,
-    new AttributeResultConverterImpl(),
-    "env1"
+    apiHelper
   );
 
-  const deleteCommandManager = new DeleteInstanceCommandManager(
-    apiHelper,
-    "env1"
-  );
+  const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
 
   const setStateCommandManager = new TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    new BaseApiHelper(),
-    "env1"
+    new BaseApiHelper()
   );
 
   const commandResolver = new CommandResolverImpl(

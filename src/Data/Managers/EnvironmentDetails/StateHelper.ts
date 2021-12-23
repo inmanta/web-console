@@ -1,22 +1,23 @@
 import { Query, RemoteData } from "@/Core";
-import { PrimaryStateHelper } from "@/Data/Common";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store, State, Dispatch } from "@/Data/Store";
 
-export class EnvironmentDetailsStateHelper extends PrimaryStateHelper<"GetEnvironmentDetails"> {
-  constructor(store: Store, private readonly environment: string) {
+export class EnvironmentDetailsStateHelper extends PrimaryStateHelperWithEnv<"GetEnvironmentDetails"> {
+  constructor(store: Store) {
     super(
       store,
-      (data, query) => {
+      (data, query, environment) => {
         const unwrapped = RemoteData.mapSuccess(
           (wrapped) => wrapped.data,
           data
         );
         this.getSlice(store.dispatch, query).setData({
-          id: this.environment,
+          id: environment,
           value: unwrapped,
         });
       },
-      (state, query) => this.getSlice(state, query).byEnv[environment]
+      (state, query, environment) =>
+        this.getSlice(state, query).byEnv[environment]
     );
   }
 

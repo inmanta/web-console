@@ -29,7 +29,7 @@ function setup() {
     new DynamicQueryManagerResolver([
       new CompileReportsQueryManager(
         apiHelper,
-        new CompileReportsStateHelper(store, "environment"),
+        new CompileReportsStateHelper(store),
         scheduler
       ),
     ])

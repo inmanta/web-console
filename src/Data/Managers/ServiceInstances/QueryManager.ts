@@ -1,19 +1,19 @@
 import {
   Scheduler,
-  StateHelper,
   ServiceInstanceParams,
   ApiHelper,
+  StateHelperWithEnv,
 } from "@/Core";
 import {
   getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnv,
+  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetServiceInstances"> {
+export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetServiceInstances"> {
   constructor(
     apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetServiceInstances">,
+    stateHelper: StateHelperWithEnv<"GetServiceInstances">,
     scheduler: Scheduler
   ) {
     super(

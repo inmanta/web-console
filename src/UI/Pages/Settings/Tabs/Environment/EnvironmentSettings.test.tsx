@@ -14,8 +14,10 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   Environment,
+  MockEnvironmentHandler,
   Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -35,17 +37,21 @@ function setup() {
       new ModifyEnvironmentCommandManager(
         apiHelper,
         new EnvironmentDetailsUpdater(
-          new EnvironmentDetailsStateHelper(store, selectedEnvironment.id),
-          apiHelper,
-          selectedEnvironment.id
-        ),
-        selectedEnvironment.id
+          new EnvironmentDetailsStateHelper(store),
+          apiHelper
+        )
       ),
     ])
   );
 
   const component = (
-    <DependencyProvider dependencies={{ commandResolver }}>
+    <DependencyProvider
+      dependencies={{
+        ...dependencies,
+        commandResolver,
+        environmentHandler: new MockEnvironmentHandler(selectedEnvironment.id),
+      }}
+    >
       <EnvironmentSettings
         environment={selectedEnvironment}
         projects={Project.list}

@@ -25,7 +25,7 @@ export const Default: React.FC = () => {
   const apiHelper = new InstantApiHelper({ kind: "Success", data: null });
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new CreateInstanceCommandManager(apiHelper, "env"),
+      new CreateInstanceCommandManager(apiHelper),
     ])
   );
   return (

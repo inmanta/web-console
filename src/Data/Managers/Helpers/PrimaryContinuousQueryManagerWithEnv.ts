@@ -14,6 +14,7 @@ import {
   StateHelper,
   Scheduler,
   ApiHelper,
+  StateHelperWithEnv,
 } from "@/Core";
 import { DependencyContext } from "@/UI";
 import {
@@ -77,6 +78,71 @@ export class PrimaryContinuousQueryManagerWithEnv<Kind extends Query.Kind>
       RemoteData.mapSuccess(
         (data) => this.toUsed(data, setUrl),
         this.stateHelper.getHooked(query)
+      ),
+      () => this.update(query, url, environment),
+    ];
+  }
+
+  matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
+    return query.kind === this.kind && kind === "Continuous";
+  }
+}
+
+export class PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<
+  Kind extends Query.Kind
+> implements ContinuousQueryManager<Kind>
+{
+  constructor(
+    private readonly apiHelper: ApiHelper,
+    private readonly stateHelper: StateHelperWithEnv<Kind>,
+    private readonly scheduler: Scheduler,
+    private readonly getUnique: GetUniqueWithEnv<Kind>,
+    private readonly getDependencies: GetDependenciesWithEnv<Kind>,
+    private readonly kind: Kind,
+    private readonly getUrl: GetUrlWithEnv<Kind>,
+    private readonly toUsed: ToUsed<Kind>
+  ) {}
+
+  private async update(
+    query: Query.SubQuery<Kind>,
+    url: string,
+    environment: string
+  ): Promise<void> {
+    this.stateHelper.set(
+      RemoteData.fromEither(await this.apiHelper.get(url, environment)),
+      query,
+      environment
+    );
+  }
+
+  useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
+    const { environmentHandler } = useContext(DependencyContext);
+    const environment = environmentHandler.useId();
+    const [url, setUrl] = useState(this.getUrl(query, environment));
+
+    useEffect(() => {
+      setUrl(this.getUrl(query, environment));
+    }, this.getDependencies(query, environment));
+
+    const task = {
+      effect: async () =>
+        RemoteData.fromEither(await this.apiHelper.get(url, environment)),
+      update: (data) => this.stateHelper.set(data, query, environment),
+    };
+
+    useEffect(() => {
+      this.stateHelper.set(RemoteData.loading(), query, environment);
+      this.update(query, url, environment);
+      this.scheduler.register(this.getUnique(query, environment), task);
+      return () => {
+        this.scheduler.unregister(this.getUnique(query, environment));
+      };
+    }, [url, environment]);
+
+    return [
+      RemoteData.mapSuccess(
+        (data) => this.toUsed(data, setUrl),
+        this.stateHelper.getHooked(query, environment)
       ),
       () => this.update(query, url, environment),
     ];

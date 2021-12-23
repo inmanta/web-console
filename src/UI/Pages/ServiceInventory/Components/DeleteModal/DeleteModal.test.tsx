@@ -9,15 +9,16 @@ import {
   DeleteInstanceCommandManager,
   getStoreInstance,
 } from "@/Data";
-import { DynamicCommandManagerResolver, ServiceInstance } from "@/Test";
+import {
+  dependencies,
+  DynamicCommandManagerResolver,
+  ServiceInstance,
+} from "@/Test";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { DeleteModal } from "./DeleteModal";
 
 function setup() {
-  const commandManager = new DeleteInstanceCommandManager(
-    new BaseApiHelper(),
-    ServiceInstance.a.environment
-  );
+  const commandManager = new DeleteInstanceCommandManager(new BaseApiHelper());
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
   );
@@ -32,6 +33,7 @@ function setup() {
     component: (isDisabled = false) => (
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           commandResolver,
           environmentModifier,
         }}

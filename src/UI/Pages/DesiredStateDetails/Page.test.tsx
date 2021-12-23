@@ -28,7 +28,7 @@ function setup() {
     new DynamicQueryManagerResolver([
       new GetVersionResourcesQueryManager(
         apiHelper,
-        new GetVersionResourcesStateHelper(store, "env"),
+        new GetVersionResourcesStateHelper(store),
         scheduler
       ),
     ])

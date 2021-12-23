@@ -19,6 +19,7 @@ import {
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   EnvironmentDetails,
+  MockEnvironmentHandler,
   Resource,
   StaticScheduler,
 } from "@/Test";
@@ -34,15 +35,15 @@ function setup() {
     new DynamicQueryManagerResolver([
       new ResourcesQueryManager(
         apiHelper,
-        new ResourcesStateHelper(store, environment),
+        new ResourcesStateHelper(store),
         scheduler
       ),
     ])
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new DeployCommandManager(apiHelper, environment),
-      new RepairCommandManager(apiHelper, environment),
+      new DeployCommandManager(apiHelper),
+      new RepairCommandManager(apiHelper),
     ])
   );
 
@@ -53,6 +54,7 @@ function setup() {
           ...dependencies,
           queryResolver,
           commandResolver,
+          environmentHandler: new MockEnvironmentHandler(environment),
         }}
       >
         <StoreProvider store={store}>
