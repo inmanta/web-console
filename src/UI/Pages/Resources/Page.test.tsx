@@ -247,7 +247,7 @@ test("ResourcesView shows deploy state bar", async () => {
   ).toBeInTheDocument();
 
   expect(
-    await screen.findByRole("img", { name: "Deployment state summary" })
+    await screen.findByRole("generic", { name: "Deployment state summary" })
   ).toBeInTheDocument();
 });
 

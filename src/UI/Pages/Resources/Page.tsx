@@ -45,9 +45,13 @@ export const Page: React.FC = () => {
     pageSize,
   });
 
+  const updateFilter = (
+    updater: (filter: Resource.Filter) => Resource.Filter
+  ): void => setFilter(updater(filter));
+
   const tableControls = (
     <ResourceTableControls
-      summaryWidget={<Summary data={data} />}
+      summaryWidget={<Summary data={data} updateFilter={updateFilter} />}
       paginationWidget={
         <PaginationWidget
           data={data}
