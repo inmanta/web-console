@@ -1,13 +1,13 @@
 import React from "react";
-import { DeployStateChart } from "./DeployStateChart";
+import { DeployStateBar } from "./DeployStateBar";
 
 export default {
-  title: "DeployStateChart",
-  component: DeployStateChart,
+  title: "DeployStateBar",
+  component: DeployStateBar,
 };
 
 export const Default = () => (
-  <DeployStateChart
+  <DeployStateBar
     summary={{
       total: 200,
       by_state: {

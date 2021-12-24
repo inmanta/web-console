@@ -8,14 +8,15 @@ import {
   global_warning_color_100,
 } from "@patternfly/react-tokens";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { LegendBar, LegendItem } from "./LegendBar";
+import { LegendBar } from "./LegendBar";
+import { LegendItemDetails } from ".";
 
 export default {
   title: "LegendBar",
   component: LegendBar,
 } as ComponentMeta<typeof LegendBar>;
 
-const items: LegendItem[] = [
+const items: LegendItemDetails[] = [
   {
     id: "deployed",
     value: 1,
@@ -61,7 +62,10 @@ const items: LegendItem[] = [
 ];
 
 export const Primary: ComponentStory<typeof LegendBar> = () => (
-  <LegendBar items={items} formatTotal={(total) => `100 / ${total}`} />
+  <LegendBar
+    items={items}
+    total={{ label: "hello", format: (total) => `? / ${total}` }}
+  />
 );
 
 export const NoTotal: ComponentStory<typeof LegendBar> = () => (

@@ -2,7 +2,7 @@ import React from "react";
 import { ToolbarItem } from "@patternfly/react-core";
 import { Query, RemoteData } from "@/Core";
 import { DeployButton } from "./DeployButton";
-import { DeployStateChart } from "./DeployStateChart";
+import { DeployStateBar } from "./DeployStateBar";
 import { RepairButton } from "./RepairButton";
 
 interface Props {
@@ -21,7 +21,7 @@ export const Summary: React.FC<Props> = ({ data }) =>
       success: (result) => (
         <>
           <ToolbarItem>
-            <DeployStateChart summary={result.metadata.deploy_summary} />
+            <DeployStateBar summary={result.metadata.deploy_summary} />
           </ToolbarItem>
           <ToolbarItem>
             <DeployButton />
