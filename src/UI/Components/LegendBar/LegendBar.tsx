@@ -11,7 +11,7 @@ interface Props {
 export const LegendBar: React.FC<Props> = ({ items, total, ...props }) => {
   const totalValue = items
     .map((item) => item.value)
-    .reduce((acc, cur) => acc + cur);
+    .reduce((acc, cur) => acc + cur, 0);
   return (
     <Container {...props}>
       <Bar>
