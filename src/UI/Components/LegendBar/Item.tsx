@@ -28,6 +28,7 @@ export const Item: React.FC<Props> = ({
       backgroundColor={backgroundColor}
       color={color}
       onClick={onClick ? () => onClick(id) : undefined}
+      aria-label={`LegendItem-${id}`}
     >
       {value}
     </Container>
