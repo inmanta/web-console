@@ -1,7 +1,7 @@
 import React from "react";
 import { ToolbarItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Query, RemoteData } from "@/Core";
+import { Query, RemoteData, Resource } from "@/Core";
 import { DeployButton } from "./DeployButton";
 import { DeployStateBar } from "./DeployStateBar";
 import { RepairButton } from "./RepairButton";
@@ -11,9 +11,10 @@ interface Props {
     Query.Error<"GetResources">,
     Query.UsedData<"GetResources">
   >;
+  updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
 
-export const Summary: React.FC<Props> = ({ data }) =>
+export const Summary: React.FC<Props> = ({ data, updateFilter }) =>
   RemoteData.fold(
     {
       notAsked: () => null,
@@ -22,7 +23,10 @@ export const Summary: React.FC<Props> = ({ data }) =>
       success: (result) => (
         <>
           <StretchedToolbarItem>
-            <DeployStateBar summary={result.metadata.deploy_summary} />
+            <DeployStateBar
+              summary={result.metadata.deploy_summary}
+              updateFilter={updateFilter}
+            />
           </StretchedToolbarItem>
           <ToolbarItem>
             <DeployButton />

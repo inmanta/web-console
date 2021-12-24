@@ -13,14 +13,23 @@ import { LegendBar, LegendItemDetails } from "@/UI/Components";
 
 interface Props {
   summary: Resource.DeploySummary;
+  updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
 
-export const DeployStateBar: React.FC<Props> = ({ summary }) => {
+export const DeployStateBar: React.FC<Props> = ({ summary, updateFilter }) => {
   const done = getResourcesInDoneState(summary.by_state || {});
+
+  const onClick = (ids: Resource.Status[]) =>
+    updateFilter((filter) => ({
+      ...filter,
+      status: ids,
+    }));
+
   const items = infos
     .map((info) => addTotal(info, summary.by_state))
     .filter((info) => info.total > 0)
-    .map(infoToLegendItem);
+    .map((info) => infoToLegendItem(info, onClick));
+
   return (
     <LegendBar
       items={items}
@@ -39,12 +48,16 @@ function getResourcesInDoneState(by_state: Record<string, number>): number {
     .reduce((acc, current) => acc + current, 0);
 }
 
-function infoToLegendItem(info: InfoWithTotal): LegendItemDetails {
+function infoToLegendItem(
+  info: InfoWithTotal,
+  onClick: (ids: Resource.Status[]) => void
+): LegendItemDetails {
   return {
     id: info.keys[0],
     value: info.total,
     backgroundColor: info.color,
-    label: info.keys.reduce((acc, cur) => `${acc} & ${cur}`),
+    label: (info.keys as string[]).reduce((acc, cur) => `${acc} & ${cur}`),
+    onClick: () => onClick(info.keys),
   };
 }
 
@@ -58,7 +71,7 @@ function addTotal(info: Info, byState: Record<string, number>): InfoWithTotal {
 }
 
 interface Info {
-  keys: string[];
+  keys: Resource.Status[];
   color: string;
 }
 
@@ -67,25 +80,29 @@ interface InfoWithTotal extends Info {
 }
 
 const infos: Info[] = [
-  { keys: ["deployed"], color: global_success_color_100.value },
+  { keys: [Resource.Status.deployed], color: global_success_color_100.value },
   {
-    keys: ["skipped", "skipped_for_undefined", "cancelled"],
+    keys: [
+      Resource.Status.skipped,
+      Resource.Status.skipped_for_undefined,
+      Resource.Status.cancelled,
+    ],
     color: global_palette_cyan_200.value,
   },
   {
-    keys: ["failed"],
+    keys: [Resource.Status.failed],
     color: global_danger_color_100.value,
   },
   {
-    keys: ["unavailable", "undefined"],
+    keys: [Resource.Status.unavailable, Resource.Status.undefined],
     color: global_warning_color_100.value,
   },
   {
-    keys: ["deploying"],
+    keys: [Resource.Status.deploying],
     color: global_primary_color_100.value,
   },
   {
-    keys: ["available", "processing_events"],
+    keys: [Resource.Status.available, Resource.Status.processing_events],
     color: global_palette_black_400.value,
   },
 ];

@@ -45,4 +45,5 @@ const Container = styled.div<Omit<Props, "id" | "label">>`
   line-height: 36px;
   padding: 0 8px;
   cursor: ${(p) => (p.onClick ? "pointer" : "text")};
+  user-select: none;
 `;

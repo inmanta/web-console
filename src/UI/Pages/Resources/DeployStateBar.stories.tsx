@@ -23,5 +23,6 @@ export const Default = () => (
         skipped_for_undefined: 10,
       },
     }}
+    updateFilter={(updater) => alert(updater({}).status)}
   />
 );

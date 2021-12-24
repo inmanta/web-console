@@ -32,6 +32,7 @@ export enum Status {
   undefined = "undefined",
   skipped_for_undefined = "skipped_for_undefined",
   orphaned = "orphaned",
+  processing_events = "processing_events",
 }
 
 export interface Raw {
