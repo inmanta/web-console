@@ -1,5 +1,6 @@
 import React from "react";
 import { ToolbarItem } from "@patternfly/react-core";
+import styled from "styled-components";
 import { Query, RemoteData } from "@/Core";
 import { DeployButton } from "./DeployButton";
 import { DeployStateBar } from "./DeployStateBar";
@@ -20,9 +21,9 @@ export const Summary: React.FC<Props> = ({ data }) =>
       failed: () => null,
       success: (result) => (
         <>
-          <ToolbarItem>
+          <StretchedToolbarItem>
             <DeployStateBar summary={result.metadata.deploy_summary} />
-          </ToolbarItem>
+          </StretchedToolbarItem>
           <ToolbarItem>
             <DeployButton />
           </ToolbarItem>
@@ -34,3 +35,7 @@ export const Summary: React.FC<Props> = ({ data }) =>
     },
     data
   );
+
+const StretchedToolbarItem = styled(ToolbarItem)`
+  flex-grow: 1;
+`;

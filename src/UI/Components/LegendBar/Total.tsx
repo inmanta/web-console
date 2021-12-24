@@ -8,7 +8,7 @@ export interface Total {
 }
 
 const TotalContainer = styled.div`
-  padding: 0 16px;
+  padding-left: 16px;
   line-height: 36px;
 `;
 
