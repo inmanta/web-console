@@ -435,6 +435,9 @@ const dict = {
   "desiredState.details.title": "Details",
   "desiredState.resourceDetails.title": "Resource Details",
 
+  /** Desired State Details */
+  "desiredState.compare.title": "Compare",
+
   /**
    * Common
    */
