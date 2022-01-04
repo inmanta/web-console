@@ -1,50 +1,18 @@
 import React, { useContext } from "react";
-import { Button, Flex, FlexItem } from "@patternfly/react-core";
+import { DropdownItem } from "@patternfly/react-core";
+import { CheckIcon } from "@patternfly/react-icons";
 import { Maybe } from "@/Core";
-import { ActionDisabledTooltip, Link } from "@/UI/Components";
+import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { CompareAction } from "./Compare";
-import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
+import { GetDesiredStatesContext } from "../GetDesiredStatesContext";
 
 interface Props {
   version: number;
-  isPromoteDisabled: boolean;
+  isDisabled: boolean;
 }
 
-export const Actions: React.FC<Props> = ({ version, isPromoteDisabled }) => {
-  const { routeManager } = useContext(DependencyContext);
-  return (
-    <Flex direction={{ default: "column", "2xl": "row" }}>
-      <FlexItem>
-        <Link
-          pathname={routeManager.getUrl("DesiredStateDetails", {
-            version: version.toString(),
-          })}
-          envOnly
-        >
-          <Button variant="primary">
-            {words("desiredState.actions.details")}
-          </Button>
-        </Link>
-      </FlexItem>
-      <FlexItem>
-        <PromoteVersionButton
-          version={version}
-          isDisabled={isPromoteDisabled}
-        />
-      </FlexItem>
-      <FlexItem>
-        <CompareAction version={version} />
-      </FlexItem>
-    </Flex>
-  );
-};
-
-const PromoteVersionButton: React.FC<{
-  version: number;
-  isDisabled: boolean;
-}> = ({ version, isDisabled }) => {
+export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
   const { filter, pageSize, setErrorMessage } = useContext(
@@ -75,13 +43,13 @@ const PromoteVersionButton: React.FC<{
           : words("desiredState.actions.promote.disabledTooltip")
       }
     >
-      <Button
+      <DropdownItem
         isDisabled={isDisabled || isHalted}
-        variant="primary"
         onClick={onSubmit}
+        icon={<CheckIcon />}
       >
         {words("desiredState.actions.promote")}
-      </Button>
+      </DropdownItem>
     </ActionDisabledTooltip>
   );
 };

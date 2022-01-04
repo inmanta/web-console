@@ -1,15 +1,9 @@
 import React, { useContext } from "react";
-import { Button } from "@patternfly/react-core";
+import { DropdownItem } from "@patternfly/react-core";
+import { BalanceScaleIcon } from "@patternfly/react-icons";
 import { Maybe } from "@/Core";
 import { useNavigateTo } from "@/UI/Routing";
 import { GetDesiredStatesContext } from "../GetDesiredStatesContext";
-
-export const CompareSelectionInput: React.FC = () => {
-  const { compareSelection: selection } = useContext(GetDesiredStatesContext);
-
-  if (Maybe.isNone(selection)) return <p>selected: none</p>;
-  return <p>selected: {selection.value}</p>;
-};
 
 interface Props {
   version: number;
@@ -20,6 +14,10 @@ export const CompareAction: React.FC<Props> = ({ version }) => {
 
   if (Maybe.isNone(selection))
     return <SelectForCompareAction version={version} />;
+
+  if (version === selection.value)
+    return <UnselectForCompareAction version={version} />;
+
   return (
     <CompareWithSelectedAction
       version={version}
@@ -35,7 +33,25 @@ const SelectForCompareAction: React.FC<Props> = ({ version }) => {
     setCompareSelection(Maybe.some(version));
   };
 
-  return <Button onClick={onClick}>Select for compare</Button>;
+  return (
+    <DropdownItem onClick={onClick} icon={<BalanceScaleIcon />}>
+      Select {version} for compare
+    </DropdownItem>
+  );
+};
+
+const UnselectForCompareAction: React.FC<Props> = ({ version }) => {
+  const { setCompareSelection } = useContext(GetDesiredStatesContext);
+
+  const onClick = () => {
+    setCompareSelection(Maybe.none());
+  };
+
+  return (
+    <DropdownItem onClick={onClick} icon={<BalanceScaleIcon />}>
+      Unselect {version} for compare
+    </DropdownItem>
+  );
 };
 
 const CompareWithSelectedAction: React.FC<{
@@ -50,5 +66,9 @@ const CompareWithSelectedAction: React.FC<{
     });
   };
 
-  return <Button onClick={onClick}>Compare with {sourceVersion}</Button>;
+  return (
+    <DropdownItem onClick={onClick} icon={<BalanceScaleIcon />}>
+      Compare {version} against {sourceVersion}
+    </DropdownItem>
+  );
 };

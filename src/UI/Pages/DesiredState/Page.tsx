@@ -11,10 +11,10 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { CompareSelection } from "./Compare/type";
+import { TableControls } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
-import { DesiredStatesTableControls } from "./DesiredStatesTableControls";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
+import { CompareSelection } from "./Utils";
 
 export const Page: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -47,7 +47,7 @@ export const Page: React.FC = () => {
           setCompareSelection,
         }}
       >
-        <DesiredStatesTableControls
+        <TableControls
           filter={filter}
           setFilter={setFilter}
           paginationWidget={

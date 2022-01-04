@@ -16,10 +16,7 @@ interface Props {
   setFilter: (filter: DesiredStateParams.Filter) => void;
 }
 
-export const DesiredStatesFilterWidget: React.FC<Props> = ({
-  filter,
-  setFilter,
-}) => {
+export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
   const [filterKind, setFilterKind] = useState<DesiredStateParams.Kind>(
     DesiredStateParams.Kind.Status
   );

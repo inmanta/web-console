@@ -6,7 +6,7 @@ import { DesiredStateVersion } from "@/Core";
 import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersionStatus";
 import { DateWithTooltip } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Actions } from "./Actions";
+import { Actions } from "./Components";
 
 interface Props {
   row: DesiredStateVersion;
