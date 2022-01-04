@@ -20,7 +20,7 @@ export const useNavigateTo = (): NavigateTo => {
 
   return (routeKind, params, newSearch) => {
     const pathname = routeManager.getUrl(routeKind, params);
-    navigate(`${pathname}?${newSearch || search}`);
+    navigate(`${pathname}${newSearch || search}`);
   };
 };
 

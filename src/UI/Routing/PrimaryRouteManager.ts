@@ -35,6 +35,7 @@ export class PrimaryRouteManager implements RouteManager {
       DesiredState: DesiredState(this.baseUrl),
       DesiredStateDetails: DesiredStateDetails(this.baseUrl),
       DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
+      DesiredStateCompare: DesiredStateCompare(this.baseUrl),
     };
   }
   isBaseUrlDefined(): boolean {
@@ -213,6 +214,14 @@ const DesiredStateResourceDetails = (base: string): Route => ({
   parent: "DesiredStateDetails",
   path: `${base}${paths.DesiredStateResourceDetails}`,
   label: "Resource Details",
+  environmentRole: "Required",
+});
+
+const DesiredStateCompare = (base: string): Route => ({
+  kind: "DesiredStateCompare",
+  parent: "DesiredState",
+  path: `${base}${paths.DesiredStateCompare}`,
+  label: "Compare",
   environmentRole: "Required",
 });
 

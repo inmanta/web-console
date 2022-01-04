@@ -19,6 +19,7 @@ const kinds = [
   "DesiredState",
   "DesiredStateDetails",
   "DesiredStateResourceDetails",
+  "DesiredStateCompare",
 ] as const;
 
 export type RouteKind = typeof kinds[number];
@@ -50,6 +51,7 @@ interface RouteParamKeysManifest {
   AgentProcess: "id";
   DesiredStateDetails: "version";
   DesiredStateResourceDetails: "version" | "resourceId";
+  DesiredStateCompare: "sourceVersion" | "targetVersion";
 }
 
 export type RouteParamKeys<K extends RouteKind> =

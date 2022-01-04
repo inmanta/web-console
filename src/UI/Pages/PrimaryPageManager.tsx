@@ -7,6 +7,7 @@ import { CompileReportsPage } from "./CompileReports";
 import { CreateEnvironmentPage } from "./CreateEnvironment";
 import { CreateInstancePage } from "./CreateInstance";
 import { DesiredStatePage } from "./DesiredState";
+import { DesiredStateComparePage } from "./DesiredStateCompare";
 import { DesiredStateDetailsPage } from "./DesiredStateDetails";
 import { DesiredStateResourceDetailsPage } from "./DesiredStateResourceDetails";
 import { DiagnosePage } from "./Diagnose";
@@ -69,6 +70,10 @@ export class PrimaryPageManager implements PageManager {
       {
         ...this.routeDictionary.DesiredStateResourceDetails,
         element: <DesiredStateResourceDetailsPage />,
+      },
+      {
+        ...this.routeDictionary.DesiredStateCompare,
+        element: <DesiredStateComparePage />,
       },
     ];
   }

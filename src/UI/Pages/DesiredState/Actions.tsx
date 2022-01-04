@@ -4,6 +4,7 @@ import { Maybe } from "@/Core";
 import { ActionDisabledTooltip, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { CompareAction } from "./Compare";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
 
 interface Props {
@@ -32,6 +33,9 @@ export const Actions: React.FC<Props> = ({ version, isPromoteDisabled }) => {
           version={version}
           isDisabled={isPromoteDisabled}
         />
+      </FlexItem>
+      <FlexItem>
+        <CompareAction version={version} />
       </FlexItem>
     </Flex>
   );

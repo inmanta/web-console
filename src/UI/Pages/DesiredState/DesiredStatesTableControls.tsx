@@ -1,6 +1,7 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
 import { DesiredStateParams } from "@/Core";
+import { CompareSelectionInput } from "./Compare";
 import { DesiredStatesFilterWidget } from "./FilterWidget";
 
 interface Props {
@@ -20,6 +21,8 @@ export const DesiredStatesTableControls: React.FC<Props> = ({
   >
     <ToolbarContent>
       <DesiredStatesFilterWidget filter={filter} setFilter={setFilter} />
+      <ToolbarItem variant="separator" />
+      <CompareSelectionInput />
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
     </ToolbarContent>
   </Toolbar>

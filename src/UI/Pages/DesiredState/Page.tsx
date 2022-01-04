@@ -11,6 +11,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { CompareSelection } from "./Compare/type";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { DesiredStatesTableControls } from "./DesiredStatesTableControls";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
@@ -31,22 +32,32 @@ export const Page: React.FC = () => {
     filter,
     pageSize,
   });
+  const [compareSelection, setCompareSelection] = useState<CompareSelection>({
+    kind: "None",
+  });
+
   return (
     <PageContainer title={words("desiredState.title")}>
-      <DesiredStatesTableControls
-        filter={filter}
-        setFilter={setFilter}
-        paginationWidget={
-          <PaginationWidget
-            data={data}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-          />
-        }
-      />
       <GetDesiredStatesContext.Provider
-        value={{ filter, pageSize, setErrorMessage }}
+        value={{
+          filter,
+          pageSize,
+          setErrorMessage,
+          compareSelection,
+          setCompareSelection,
+        }}
       >
+        <DesiredStatesTableControls
+          filter={filter}
+          setFilter={setFilter}
+          paginationWidget={
+            <PaginationWidget
+              data={data}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+            />
+          }
+        />
         <ErrorToastAlert
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
