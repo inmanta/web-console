@@ -10,7 +10,7 @@ import {
   EmptyView,
   ErrorView,
   LoadingView,
-  PageSectionWithTitle,
+  PageContainer,
   PaginationWidget,
 } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
@@ -50,7 +50,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
   const presenter = new VersionResourceTablePresenter();
 
   return (
-    <PageSectionWithTitle title={words("desiredState.details.title")}>
+    <PageContainer title={words("desiredState.details.title")}>
       <Controls
         paginationWidget={
           <PaginationWidget
@@ -94,6 +94,6 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
         },
         data
       )}
-    </PageSectionWithTitle>
+    </PageContainer>
   );
 };

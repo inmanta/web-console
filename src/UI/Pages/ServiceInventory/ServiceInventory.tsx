@@ -9,7 +9,7 @@ import {
   EmptyView,
   ErrorView,
   LoadingView,
-  PageSectionWithTitle,
+  PageContainer,
   PaginationWidget,
   ServiceProvider,
 } from "@/UI/Components";
@@ -20,9 +20,9 @@ import { Chart, TableControls } from "./Components";
 import { TableProvider } from "./TableProvider";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithTitle {...props} title={words("inventory.title")}>
+  <PageContainer {...props} title={words("inventory.title")}>
     {children}
-  </PageSectionWithTitle>
+  </PageContainer>
 );
 
 export const Page: React.FC = () => {

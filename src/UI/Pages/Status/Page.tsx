@@ -6,7 +6,7 @@ import {
   Description,
   ErrorView,
   LoadingView,
-  PageSectionWithTitle,
+  PageContainer,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -21,7 +21,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageSectionWithTitle title={words("status.title")}>
+    <PageContainer title={words("status.title")}>
       <Flex justifyContent={{ default: "justifyContentSpaceBetween" }}>
         <FlexItem>
           <Description>{words("status.description")}</Description>
@@ -50,7 +50,7 @@ export const Page: React.FC = () => {
         },
         data
       )}
-    </PageSectionWithTitle>
+    </PageContainer>
   );
 };
 

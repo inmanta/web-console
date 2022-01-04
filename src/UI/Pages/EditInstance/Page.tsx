@@ -1,16 +1,13 @@
 import React from "react";
-import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
+import { PageContainer, ServiceProvider } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { EditInstancePage } from "./EditInstancePage";
 
 const PageWrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithTitle
-    {...props}
-    title={words("inventory.editInstance.title")}
-  >
+  <PageContainer {...props} title={words("inventory.editInstance.title")}>
     {children}
-  </PageSectionWithTitle>
+  </PageContainer>
 );
 
 export const Page: React.FC = () => {

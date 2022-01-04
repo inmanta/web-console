@@ -6,7 +6,7 @@ import {
   ErrorToastAlert,
   ErrorView,
   LoadingView,
-  PageSectionWithTitle,
+  PageContainer,
   PaginationWidget,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -32,7 +32,7 @@ export const Page: React.FC = () => {
     pageSize,
   });
   return (
-    <PageSectionWithTitle title={words("desiredState.title")}>
+    <PageContainer title={words("desiredState.title")}>
       <DesiredStatesTableControls
         filter={filter}
         setFilter={setFilter}
@@ -80,6 +80,6 @@ export const Page: React.FC = () => {
           data
         )}
       </GetDesiredStatesContext.Provider>
-    </PageSectionWithTitle>
+    </PageContainer>
   );
 };

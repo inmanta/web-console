@@ -4,16 +4,16 @@ import {
   EmptyView,
   ErrorView,
   LoadingView,
-  PageSectionWithTitle,
+  PageContainer,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CatalogDataList } from "./CatalogDataList";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithTitle {...props} title={words("catalog.title")}>
+  <PageContainer {...props} title={words("catalog.title")}>
     {children}
-  </PageSectionWithTitle>
+  </PageContainer>
 );
 
 export const Page: React.FC = () => {

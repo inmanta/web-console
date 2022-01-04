@@ -1,18 +1,15 @@
 import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
-import { PageSectionWithTitle, ErrorView, LoadingView } from "@/UI/Components";
+import { PageContainer, ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { CreateInstance } from "./CreateInstance";
 
 const PageWrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithTitle
-    {...props}
-    title={words("inventory.createInstance.title")}
-  >
+  <PageContainer title={words("inventory.createInstance.title")} {...props}>
     {children}
-  </PageSectionWithTitle>
+  </PageContainer>
 );
 
 export const Page: React.FC = () => {

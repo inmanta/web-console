@@ -9,7 +9,7 @@ import {
   EmptyView,
   ErrorView,
   LoadingView,
-  PageSectionWithTitle,
+  PageContainer,
   PaginationWidget,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -20,9 +20,9 @@ import { Summary } from "./Summary";
 import { ResourceTableControls } from "./TableControls";
 
 export const Wrapper: React.FC = ({ children }) => (
-  <PageSectionWithTitle title={words("inventory.tabs.resources")}>
+  <PageContainer title={words("inventory.tabs.resources")}>
     {children}
-  </PageSectionWithTitle>
+  </PageContainer>
 );
 
 export const Page: React.FC = () => {
