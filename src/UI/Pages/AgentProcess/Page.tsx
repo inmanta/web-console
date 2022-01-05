@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
-import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
+import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -16,7 +16,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageSectionWithTitle title={words("agentProcess.title")}>
+    <PageContainer title={words("agentProcess.title")}>
       {RemoteData.fold(
         {
           notAsked: () => null,
@@ -33,6 +33,6 @@ export const Page: React.FC = () => {
         },
         data
       )}
-    </PageSectionWithTitle>
+    </PageContainer>
   );
 };

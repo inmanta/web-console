@@ -1,14 +1,14 @@
 import React from "react";
 import { ServiceModel } from "@/Core";
-import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
+import { PageContainer, ServiceProvider } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Events } from "./Events";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithTitle {...props} title={words("events.title")}>
+  <PageContainer {...props} title={words("events.title")}>
     {children}
-  </PageSectionWithTitle>
+  </PageContainer>
 );
 
 const Wrapped: React.FC<{ service: ServiceModel }> = ({ service }) => {

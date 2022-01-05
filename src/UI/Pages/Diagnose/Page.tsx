@@ -1,13 +1,13 @@
 import React from "react";
-import { PageSectionWithTitle, ServiceProvider } from "@/UI/Components";
+import { PageContainer, ServiceProvider } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Diagnose } from "./Diagnose";
 
 const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageSectionWithTitle {...props} title={words("diagnose.title")}>
+  <PageContainer {...props} title={words("diagnose.title")}>
     {children}
-  </PageSectionWithTitle>
+  </PageContainer>
 );
 
 export const Page: React.FC = () => {

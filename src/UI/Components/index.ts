@@ -36,6 +36,7 @@ export * from "./SingleTextSelect";
 export * from "./Spacer";
 export * from "./SummaryChart";
 export * from "./PageTitle";
+export * from "./PageContainer";
 export * from "./PageSectionWithTitle";
 export * from "./ResourceStatusCell";
 export * from "./DesiredStateAttributes";

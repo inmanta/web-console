@@ -9,7 +9,7 @@ import {
   EmptyView,
   ErrorView,
   LoadingView,
-  PageSectionWithTitle,
+  PageContainer,
   PaginationWidget,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -37,7 +37,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageSectionWithTitle title={words("agents.title")}>
+    <PageContainer title={words("agents.title")}>
       <AgentsTableControls
         filter={filter}
         setFilter={setFilter}
@@ -77,6 +77,6 @@ export const Page: React.FC = () => {
         },
         data
       )}
-    </PageSectionWithTitle>
+    </PageContainer>
   );
 };

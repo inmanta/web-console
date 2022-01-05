@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
+import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { CreateEnvironmentForm } from "./CreateEnvironmentForm";
 
 export const Page: React.FC = () => {
@@ -11,7 +11,7 @@ export const Page: React.FC = () => {
     environmentDetails: false,
   });
   return (
-    <PageSectionWithTitle title={"Create Environment"}>
+    <PageContainer title={"Create Environment"}>
       {RemoteData.fold(
         {
           notAsked: () => null,
@@ -31,6 +31,6 @@ export const Page: React.FC = () => {
         },
         data
       )}
-    </PageSectionWithTitle>
+    </PageContainer>
   );
 };
