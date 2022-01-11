@@ -30,6 +30,7 @@ export * from "./StackedProgressBar";
 export * from "./Toggle";
 export * from "./TreeTable";
 export * from "./PaginationWidget";
+export * from "./RemoteDataView";
 export * from "./TextWithCopy";
 export * from "./ErrorToastAlert";
 export * from "./SingleTextSelect";

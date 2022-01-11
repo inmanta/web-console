@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
-import { RemoteData, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import {
   Description,
   EmptyView,
-  ErrorView,
-  LoadingView,
+  RemoteDataView,
   Spacer,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -25,14 +24,11 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
     service_entity: service.name,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView aria-label="Diagnostics-Loading" />,
-      failed: (error) => (
-        <ErrorView aria-label="Diagnostics-Failed" message={error} />
-      ),
-      success: (diagnostics) => {
+  return (
+    <RemoteDataView
+      data={data}
+      label="Diagnostics"
+      SuccessView={({ data: diagnostics }) => {
         if (
           diagnostics.failures.length <= 0 &&
           diagnostics.rejections.length === 0
@@ -56,8 +52,7 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
             <DiagnoseCardLayout diagnostics={diagnostics} />
           </div>
         );
-      },
-    },
-    data
+      }}
+    />
   );
 };

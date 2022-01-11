@@ -31,6 +31,8 @@ const dict = {
    * Error related text
    */
   error: "Something went wrong",
+  "error.general": (message: string) =>
+    `The following error occured: ${message}`,
   "error.environment.missing": "Environment is missing",
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
