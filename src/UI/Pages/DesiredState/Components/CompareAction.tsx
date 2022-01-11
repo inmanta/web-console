@@ -7,10 +7,13 @@ import { GetDesiredStatesContext } from "../GetDesiredStatesContext";
 
 interface Props {
   version: number;
+  isDisabled?: boolean;
 }
 
-export const CompareAction: React.FC<Props> = ({ version }) => {
+export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { compareSelection: selection } = useContext(GetDesiredStatesContext);
+
+  if (isDisabled) return <DisabledAction version={version} />;
 
   if (Maybe.isNone(selection))
     return <SelectForCompareAction version={version} />;
@@ -26,7 +29,13 @@ export const CompareAction: React.FC<Props> = ({ version }) => {
   );
 };
 
-const SelectForCompareAction: React.FC<Props> = ({ version }) => {
+const DisabledAction: React.FC<{ version: number }> = ({ version }) => (
+  <DropdownItem icon={<BalanceScaleIcon />} isDisabled>
+    Select {version} for compare
+  </DropdownItem>
+);
+
+const SelectForCompareAction: React.FC<{ version: number }> = ({ version }) => {
   const { setCompareSelection } = useContext(GetDesiredStatesContext);
 
   const onClick = () => {
@@ -40,7 +49,9 @@ const SelectForCompareAction: React.FC<Props> = ({ version }) => {
   );
 };
 
-const UnselectForCompareAction: React.FC<Props> = ({ version }) => {
+const UnselectForCompareAction: React.FC<{ version: number }> = ({
+  version,
+}) => {
   const { setCompareSelection } = useContext(GetDesiredStatesContext);
 
   const onClick = () => {

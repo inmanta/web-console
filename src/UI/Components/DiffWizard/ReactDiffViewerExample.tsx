@@ -12,7 +12,10 @@ interface Props {
   newText: string;
 }
 
-export const Differ: React.FC<Props> = ({ oldText, newText }) => {
+export const ReactDiffViewerExample: React.FC<Props> = ({
+  oldText,
+  newText,
+}) => {
   return (
     <div className="App">
       <h1>ReactDiffViewer Demo CodeSandbox</h1>
@@ -37,7 +40,7 @@ export const Differ: React.FC<Props> = ({ oldText, newText }) => {
 
       <h2>Split view (without markers)</h2>
       <ReactDiffViewer
-        styles={customStyles}
+        styles={{ marker: { display: "none" } }}
         compareMethod={DiffMethod.WORDS}
         oldValue={oldText}
         newValue={newText}

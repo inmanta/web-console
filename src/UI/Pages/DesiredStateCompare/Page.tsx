@@ -1,18 +1,16 @@
 import React from "react";
-import { PageSectionWithTitle } from "@/UI/Components";
+import { PageContainer } from "@/UI/Components";
+import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { DiffWizard, Item } from "./DiffWizard";
-import json from "./diff.json";
 
 export const Page: React.FC = () => {
-  const items: Item[] = json.map((resource) => ({
-    id: resource.resource_id,
-    status: "Added",
-  }));
+  const { sourceVersion, targetVersion } =
+    useRouteParams<"DesiredStateCompare">();
 
   return (
-    <PageSectionWithTitle title={words("desiredState.compare.title")}>
-      <DiffWizard items={items} />
-    </PageSectionWithTitle>
+    <PageContainer title={words("desiredState.compare.title")}>
+      <p>{sourceVersion}</p>
+      <p>{targetVersion}</p>
+    </PageContainer>
   );
 };

@@ -41,7 +41,7 @@ export const Actions: React.FC<Props> = ({ version, isPromoteDisabled }) => {
           version={version}
           isDisabled={isPromoteDisabled}
         />,
-        <CompareAction key="compare" version={version} />,
+        <CompareAction key="compare" version={version} isDisabled />,
       ]}
     />
   );

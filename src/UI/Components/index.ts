@@ -10,6 +10,7 @@ export * from "./DefaultSwitch";
 export * from "./DeleteForm";
 export * from "./Description";
 export * from "./DictEditor";
+export * from "./DiffWizard";
 export * from "./EmptyView";
 export * from "./ErrorView";
 export * from "./EventIcon";

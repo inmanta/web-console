@@ -6,7 +6,7 @@ interface Props {
   diffText: string;
 }
 
-export const Differ: React.FC<Props> = ({ diffText }) => {
+export const ReactDiffViewExample: React.FC<Props> = ({ diffText }) => {
   const files = parseDiff(diffText);
 
   console.log({ files });

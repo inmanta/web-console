@@ -1,10 +1,5 @@
 import React, { useState } from "react";
 import {
-  Card,
-  CardBody,
-  CardExpandableContent,
-  CardHeader,
-  CardTitle,
   SimpleList,
   SimpleListItem,
   SimpleListProps,
@@ -22,7 +17,7 @@ interface Props {
   items: Item[];
 }
 
-export const DiffWizard: React.FC<Props> = ({ items }) => {
+export const ItemIndex: React.FC<Props> = ({ items }) => {
   const [selectedResourceId, setSelectedResource] = useState<string | null>(
     items[0].id
   );
@@ -32,58 +27,24 @@ export const DiffWizard: React.FC<Props> = ({ items }) => {
   };
 
   return (
-    <div>
-      <SimpleList onSelect={onSelect} aria-label="Simple List Example">
-        {items.map((item) => (
-          <SimpleListItem
-            key={item.id}
-            isActive={selectedResourceId === item.id}
-            itemId={item.id}
-          >
-            <Descriptor item={item} />
-          </SimpleListItem>
-        ))}
-      </SimpleList>
-      <div>
-        {items.map((item) => (
-          <ItemDiff key={item.id} item={item} />
-        ))}
-      </div>
-    </div>
+    <SimpleList onSelect={onSelect} aria-label="Simple List Example">
+      {items.map((item) => (
+        <SimpleListItem
+          key={item.id}
+          isActive={selectedResourceId === item.id}
+          itemId={item.id}
+        >
+          <Descriptor item={item} />
+        </SimpleListItem>
+      ))}
+    </SimpleList>
   );
 };
-
-const ItemDiff: React.FC<{ item: Item }> = ({ item }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
-  const onExpand = () => setIsExpanded(!isExpanded);
-  return (
-    <StyledCard isExpanded={isExpanded} isFlat isCompact isRounded>
-      <CardHeader
-        onExpand={onExpand}
-        toggleButtonProps={{
-          id: "toggle-button",
-          "aria-label": "Details",
-          "aria-labelledby": "titleId toggle-button",
-          "aria-expanded": isExpanded,
-        }}
-      >
-        <CardTitle id="titleId">{item.id}</CardTitle>
-      </CardHeader>
-      <CardExpandableContent>
-        <CardBody>{item.status}</CardBody>
-      </CardExpandableContent>
-    </StyledCard>
-  );
-};
-
-const StyledCard = styled(Card)`
-  margin-bottom: 16px;
-`;
 
 const Descriptor: React.FC<{ item: Item }> = ({ item }) => {
   return (
     <Container>
-      <Id>{item.id}</Id>
+      {item.id}
       <StatusDescriptor status={item.status} />
     </Container>
   );
@@ -93,8 +54,6 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
-const Id = styled.div``;
 
 const StatusDescriptor: React.FC<{ status: Status }> = ({ status }) => {
   switch (status) {
@@ -108,6 +67,7 @@ const StatusDescriptor: React.FC<{ status: Status }> = ({ status }) => {
 };
 
 const descriptorStyles = css`
+  flex-shrink: 0;
   width: 18px;
   height: 18px;
   line-height: 18px;
