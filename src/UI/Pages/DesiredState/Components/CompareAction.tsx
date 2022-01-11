@@ -2,8 +2,9 @@ import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
 import { BalanceScaleIcon } from "@patternfly/react-icons";
 import { Maybe } from "@/Core";
+import { GetDesiredStatesContext } from "@/UI/Pages/DesiredState/GetDesiredStatesContext";
 import { useNavigateTo } from "@/UI/Routing";
-import { GetDesiredStatesContext } from "../GetDesiredStatesContext";
+import { words } from "@/UI/words";
 
 interface Props {
   version: number;
@@ -13,13 +14,12 @@ interface Props {
 export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { compareSelection: selection } = useContext(GetDesiredStatesContext);
 
-  if (isDisabled) return <DisabledAction version={version} />;
+  if (isDisabled) return <DisabledAction />;
 
   if (Maybe.isNone(selection))
-    return <SelectForCompareAction version={version} />;
+    return <InitialCompareAction version={version} />;
 
-  if (version === selection.value)
-    return <UnselectForCompareAction version={version} />;
+  if (version === selection.value) return <ClearSelectionForCompareAction />;
 
   return (
     <CompareWithSelectedAction
@@ -29,13 +29,13 @@ export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
   );
 };
 
-const DisabledAction: React.FC<{ version: number }> = ({ version }) => (
+const DisabledAction: React.FC = () => (
   <DropdownItem icon={<BalanceScaleIcon />} isDisabled>
-    Select {version} for compare
+    {words("desiredState.compare.action.compare")}
   </DropdownItem>
 );
 
-const SelectForCompareAction: React.FC<{ version: number }> = ({ version }) => {
+const InitialCompareAction: React.FC<{ version: number }> = ({ version }) => {
   const { setCompareSelection } = useContext(GetDesiredStatesContext);
 
   const onClick = () => {
@@ -44,14 +44,12 @@ const SelectForCompareAction: React.FC<{ version: number }> = ({ version }) => {
 
   return (
     <DropdownItem onClick={onClick} icon={<BalanceScaleIcon />}>
-      Select {version} for compare
+      {words("desiredState.compare.action.compare")}
     </DropdownItem>
   );
 };
 
-const UnselectForCompareAction: React.FC<{ version: number }> = ({
-  version,
-}) => {
+const ClearSelectionForCompareAction: React.FC = () => {
   const { setCompareSelection } = useContext(GetDesiredStatesContext);
 
   const onClick = () => {
@@ -60,7 +58,7 @@ const UnselectForCompareAction: React.FC<{ version: number }> = ({
 
   return (
     <DropdownItem onClick={onClick} icon={<BalanceScaleIcon />}>
-      Unselect {version} for compare
+      {words("desiredState.compare.action.clearSelection")}
     </DropdownItem>
   );
 };
@@ -79,7 +77,10 @@ const CompareWithSelectedAction: React.FC<{
 
   return (
     <DropdownItem onClick={onClick} icon={<BalanceScaleIcon />}>
-      Compare {version} against {sourceVersion}
+      {words("desiredState.compare.action.compareWith")(
+        sourceVersion.toString(),
+        version.toString()
+      )}
     </DropdownItem>
   );
 };

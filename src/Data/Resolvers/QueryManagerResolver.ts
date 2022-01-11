@@ -58,12 +58,10 @@ import {
   GetAgentProcessStateHelper,
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
-} from "@/Data/Managers";
-import { Store } from "@/Data/Store";
-import {
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
-} from "../Managers/GetDesiredStates";
+} from "@/Data/Managers";
+import { Store } from "@/Data/Store";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];

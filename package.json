@@ -130,6 +130,7 @@
     "@patternfly/react-table": "^4.50.1",
     "@patternfly/react-tokens": "^4.27.4",
     "copy-to-clipboard": "^3.3.1",
+    "diff": "^5.0.0",
     "diff2html": "^3.4.13",
     "dotenv-webpack": "^7.0.3",
     "easy-peasy": "^5.0.4",

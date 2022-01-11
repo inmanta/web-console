@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { Chip, ChipGroup } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
-import { GetDesiredStatesContext } from "../GetDesiredStatesContext";
+import { GetDesiredStatesContext } from "@/UI/Pages/DesiredState/GetDesiredStatesContext";
+import { words } from "@/UI/words";
 
 export const CompareSelectionWidget: React.FC = () => {
   const { compareSelection: selection, setCompareSelection } = useContext(
@@ -13,7 +14,7 @@ export const CompareSelectionWidget: React.FC = () => {
   };
 
   return (
-    <ChipGroup categoryName="Compare">
+    <ChipGroup categoryName={words("desiredState.compare.selectionLabel")}>
       {Maybe.isNone(selection) ? (
         <Chip isReadOnly>...</Chip>
       ) : (
