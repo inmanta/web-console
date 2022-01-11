@@ -2,8 +2,11 @@ const path = require("path");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MomentLocalesPlugin = require("moment-locales-webpack-plugin");
+const MomentTimezoneDataPlugin = require("moment-timezone-data-webpack-plugin");
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common.cjs");
+const currentYear = new Date().getFullYear();
 
 module.exports = merge(common, {
   mode: "production",
@@ -26,6 +29,13 @@ module.exports = merge(common, {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src", "index.html"),
       favicon: path.resolve(__dirname, "public", "images", "favicon.ico"),
+    }),
+    new MomentLocalesPlugin({
+      localesToKeep: ["es-us"],
+    }),
+    new MomentTimezoneDataPlugin({
+      startYear: currentYear - 5,
+      endYear: currentYear + 5,
     }),
   ],
   module: {

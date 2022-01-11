@@ -1,4 +1,4 @@
-import { forIn, mapValues, omit } from "lodash";
+import { forIn, mapValues, omit } from "lodash-es";
 import { Dictionary, DictionaryImpl } from "@/Core/Language/Dictionary";
 import { resolvePromiseRecord } from "@/Core/Language/Utils";
 import { Scheduler, Task } from "./Scheduler";

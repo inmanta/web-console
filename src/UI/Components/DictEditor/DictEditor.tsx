@@ -2,7 +2,7 @@ import React from "react";
 import { Button, TextInput } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
-import { omit } from "lodash";
+import { omit } from "lodash-es";
 import styled from "styled-components";
 
 export type Dict = Record<string, string | number | boolean>;

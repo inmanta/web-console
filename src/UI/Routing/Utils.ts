@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useNavigate, useLocation, useParams, Params } from "react-router-dom";
-import { mapValues } from "lodash";
+import { mapValues } from "lodash-es";
 import { RouteKind, RouteParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 

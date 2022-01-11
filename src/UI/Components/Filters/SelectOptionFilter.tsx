@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToolbarFilter, Select, SelectOption } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
-import { uniq } from "lodash";
+import { uniq } from "lodash-es";
 import { toggleValueInList } from "@/Core";
 
 interface Props {

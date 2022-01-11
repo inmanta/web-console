@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ActionGroup, Button, Form } from "@patternfly/react-core";
-import { set } from "lodash";
+import { set } from "lodash-es";
 import { InstanceAttributeModel, Field } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { words } from "@/UI/words";

@@ -11,7 +11,7 @@ import {
   UndoIcon,
   ClipboardCheckIcon,
 } from "@patternfly/react-icons";
-import { isEqual } from "lodash";
+import { isEqual } from "lodash-es";
 import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
 import { words } from "@/UI/words";

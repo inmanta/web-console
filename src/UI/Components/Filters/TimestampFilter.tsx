@@ -7,7 +7,7 @@ import {
   FlexItem,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
-import { reject } from "lodash";
+import { reject } from "lodash-es";
 import { DateRange, RangeOperator } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
