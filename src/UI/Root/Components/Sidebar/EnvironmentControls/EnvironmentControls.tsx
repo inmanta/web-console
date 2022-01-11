@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import {
+  Bullseye,
   Button,
   Flex,
   FlexItem,
@@ -14,7 +15,7 @@ import {
 } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
-import { LoadingView, Link } from "@/UI/Components";
+import { Link, Spinner } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { HaltDialog } from "./HaltDialog";
@@ -30,7 +31,11 @@ export const EnvironmentControls: React.FC = () => {
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => <LoadingView />,
+      loading: () => (
+        <Bullseye>
+          <Spinner variant="light" />
+        </Bullseye>
+      ),
       failed: () => (
         <PaddedStack>
           <StackItem>

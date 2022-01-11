@@ -36,9 +36,7 @@ export const AttributesTab: React.FC<Props> = ({ id }) => {
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => (
-        <LoadingView delay={500} aria-label="ResourceAttributes-Loading" />
-      ),
+      loading: () => <LoadingView aria-label="ResourceAttributes-Loading" />,
       failed: (error) => (
         <ErrorView
           aria-label="ResourceAttributes-Failed"

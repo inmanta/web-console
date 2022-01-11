@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { DependencyContext } from "@/UI/Dependency";
 import { NotFoundPage, PrimaryPageManager } from "@/UI/Pages";
 import { SearchSanitizer } from "@/UI/Routing";
+import { GlobalStyles } from "@/UI/Styles";
 import { AuthProvider, PageFrame, Initializer } from "./Components";
 
 export const Root: React.FC = () => {
@@ -12,40 +13,43 @@ export const Root: React.FC = () => {
   ).getPages();
 
   return (
-    <Initializer>
-      <SearchSanitizer.Provider>
-        <AuthProvider>
-          <Routes>
-            {routeManager.isBaseUrlDefined() && (
+    <>
+      <GlobalStyles />
+      <Initializer>
+        <SearchSanitizer.Provider>
+          <AuthProvider>
+            <Routes>
+              {routeManager.isBaseUrlDefined() && (
+                <Route
+                  path="/"
+                  element={
+                    <Navigate to={routeManager.getUrl("Home", undefined)} />
+                  }
+                />
+              )}
               <Route
-                path="/"
+                path="*"
                 element={
-                  <Navigate to={routeManager.getUrl("Home", undefined)} />
-                }
-              />
-            )}
-            <Route
-              path="*"
-              element={
-                <PageFrame environmentRole="Optional">
-                  <NotFoundPage />
-                </PageFrame>
-              }
-            />
-            {pages.map(({ path, kind, element, environmentRole }) => (
-              <Route
-                path={path}
-                element={
-                  <PageFrame environmentRole={environmentRole}>
-                    {element}
+                  <PageFrame environmentRole="Optional">
+                    <NotFoundPage />
                   </PageFrame>
                 }
-                key={kind}
               />
-            ))}
-          </Routes>
-        </AuthProvider>
-      </SearchSanitizer.Provider>
-    </Initializer>
+              {pages.map(({ path, kind, element, environmentRole }) => (
+                <Route
+                  path={path}
+                  element={
+                    <PageFrame environmentRole={environmentRole}>
+                      {element}
+                    </PageFrame>
+                  }
+                  key={kind}
+                />
+              ))}
+            </Routes>
+          </AuthProvider>
+        </SearchSanitizer.Provider>
+      </Initializer>
+    </>
   );
 };

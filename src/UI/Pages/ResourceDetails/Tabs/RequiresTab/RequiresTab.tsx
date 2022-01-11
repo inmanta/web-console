@@ -24,9 +24,7 @@ export const RequiresTab: React.FC<Props> = ({ id }) => {
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => (
-        <LoadingView delay={500} aria-label="ResourceRequires-Loading" />
-      ),
+      loading: () => <LoadingView aria-label="ResourceRequires-Loading" />,
       failed: (error) => (
         <ErrorView
           aria-label="ResourceRequires-Failed"

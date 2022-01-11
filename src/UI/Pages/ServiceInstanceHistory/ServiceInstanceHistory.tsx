@@ -25,7 +25,7 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => <LoadingView delay={500} />,
+      loading: () => <LoadingView />,
       failed: (error) => <ErrorView message={error} />,
       success: (logs) =>
         logs.length <= 0 ? (

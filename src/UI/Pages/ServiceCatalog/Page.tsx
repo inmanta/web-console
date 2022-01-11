@@ -27,7 +27,7 @@ export const Page: React.FC = () => {
       notAsked: () => null,
       loading: () => (
         <Wrapper aria-label="ServiceCatalog-Loading">
-          <LoadingView delay={500} />
+          <LoadingView />
         </Wrapper>
       ),
       failed: (error) => (

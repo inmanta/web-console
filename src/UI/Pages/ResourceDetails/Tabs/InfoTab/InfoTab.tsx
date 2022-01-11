@@ -24,9 +24,7 @@ export const InfoTab: React.FC<Props> = ({ id }) => {
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => (
-        <LoadingView delay={500} aria-label="ResourceDetails-Loading" />
-      ),
+      loading: () => <LoadingView aria-label="ResourceDetails-Loading" />,
       failed: (error) => (
         <ErrorView
           aria-label="ResourceDetails-Failed"

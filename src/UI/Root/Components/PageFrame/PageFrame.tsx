@@ -3,7 +3,6 @@ import { Page } from "@patternfly/react-core";
 import { Header } from "@/UI/Root/Components/Header";
 import { PageBreadcrumbs } from "@/UI/Root/Components/PageBreadcrumbs";
 import { Sidebar } from "@/UI/Root/Components/Sidebar";
-import { GlobalStyles } from "@/UI/Styles";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 
 interface Props {
@@ -28,7 +27,6 @@ export const PageFrame: React.FC<Props> = ({ children, environmentId }) => {
 
   return (
     <>
-      <GlobalStyles />
       <SimpleBackgroundImage />
       <Page
         breadcrumb={<PageBreadcrumbs />}

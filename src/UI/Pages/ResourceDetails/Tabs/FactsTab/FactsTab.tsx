@@ -20,7 +20,7 @@ export const FactsTab: React.FC<Props> = ({ resourceId }) => {
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => <LoadingView delay={500} aria-label="Facts-Loading" />,
+      loading: () => <LoadingView aria-label="Facts-Loading" />,
       failed: (error) => (
         <ErrorView
           aria-label="Facts-Failed"

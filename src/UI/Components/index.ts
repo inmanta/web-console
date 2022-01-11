@@ -34,6 +34,7 @@ export * from "./TextWithCopy";
 export * from "./ErrorToastAlert";
 export * from "./SingleTextSelect";
 export * from "./Spacer";
+export * from "./Spinner";
 export * from "./SummaryChart";
 export * from "./PageTitle";
 export * from "./PageContainer";

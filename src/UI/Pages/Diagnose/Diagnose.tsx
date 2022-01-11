@@ -28,9 +28,7 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
   return RemoteData.fold(
     {
       notAsked: () => null,
-      loading: () => (
-        <LoadingView aria-label="Diagnostics-Loading" delay={500} />
-      ),
+      loading: () => <LoadingView aria-label="Diagnostics-Loading" />,
       failed: (error) => (
         <ErrorView aria-label="Diagnostics-Failed" message={error} />
       ),
