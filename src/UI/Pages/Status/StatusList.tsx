@@ -6,7 +6,7 @@ import {
   ModuleIcon,
   TagIcon,
 } from "@patternfly/react-icons";
-import { omit } from "lodash";
+import { omit } from "lodash-es";
 import { ServerStatus } from "@/Core";
 import { StatusItem } from "./StatusItem";
 

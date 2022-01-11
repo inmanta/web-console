@@ -1,4 +1,4 @@
-import { omit } from "lodash";
+import { omit } from "lodash-es";
 import moment from "moment";
 import qs from "qs";
 import { CompileReportParams, Query, RangeOperator } from "@/Core";

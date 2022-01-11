@@ -24,6 +24,7 @@ module.exports = {
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
       "<rootDir>/__mocks__/fileMock.js",
     "@/(.*)": "<rootDir>/src/$1",
+    "^lodash-es$": "<rootDir>/node_modules/lodash/index.js", // Use CommonJS version of lodash in the test cases instead of ESM
   },
 
   // A preset that is used as a base for Jest's configuration

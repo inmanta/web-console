@@ -1,4 +1,4 @@
-import { sortBy } from "lodash";
+import { sortBy } from "lodash-es";
 import { Query, RemoteData } from "@/Core";
 import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";

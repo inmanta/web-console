@@ -1,4 +1,4 @@
-import { identity } from "lodash";
+import { identity } from "lodash-es";
 import { KeyMaker, Scheduler, ApiHelper, StateHelperWithEnv } from "@/Core";
 import { PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv } from "@/Data/Managers/Helpers";
 

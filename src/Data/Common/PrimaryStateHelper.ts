@@ -1,5 +1,5 @@
 import { State } from "easy-peasy";
-import { isEqual } from "lodash";
+import { isEqual } from "lodash-es";
 import { Query, RemoteData, StateHelper, StateHelperWithEnv } from "@/Core";
 import { Store, StoreModel, useStoreState } from "@/Data/Store";
 

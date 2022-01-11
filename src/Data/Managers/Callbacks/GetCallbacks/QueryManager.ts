@@ -1,4 +1,4 @@
-import { identity } from "lodash";
+import { identity } from "lodash-es";
 import { ApiHelper, StateHelperWithEnv } from "@/Core";
 import { getUrl } from "@/Data/Managers/Callbacks/getUrl";
 import { PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv } from "@/Data/Managers/Helpers";

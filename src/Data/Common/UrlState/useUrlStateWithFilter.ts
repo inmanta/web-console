@@ -1,4 +1,4 @@
-import { isEqual, pickBy } from "lodash";
+import { isEqual, pickBy } from "lodash-es";
 import { isObject, DateRange, isNotUndefined, IntRange } from "@/Core";
 import { provide, Location, StateConfig, Update, Replace } from "./helpers";
 import { handleUrlState } from "./useUrlState";

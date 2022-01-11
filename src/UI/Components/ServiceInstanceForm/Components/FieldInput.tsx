@@ -5,7 +5,7 @@ import {
   FormFieldGroupHeader,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
-import { get } from "lodash";
+import { get } from "lodash-es";
 import {
   InstanceAttributeModel,
   DictListField,

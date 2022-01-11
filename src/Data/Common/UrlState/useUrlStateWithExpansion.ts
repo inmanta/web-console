@@ -1,4 +1,4 @@
-import { isEqual, identity } from "lodash";
+import { isEqual, identity } from "lodash-es";
 import { toggleValueInList } from "@/Core";
 import { provide, Location, Replace, StateConfig, Update } from "./helpers";
 import { handleUrlState } from "./useUrlState";

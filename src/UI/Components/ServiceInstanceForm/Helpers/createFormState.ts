@@ -1,4 +1,4 @@
-import { times, cloneDeep } from "lodash";
+import { times, cloneDeep } from "lodash-es";
 import { Field, InstanceAttributeModel } from "@/Core";
 
 export const createFormState = (fields: Field[]): InstanceAttributeModel => {

@@ -8,7 +8,7 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
-import { reject } from "lodash";
+import { reject } from "lodash-es";
 import { IntRange, RangeOperator } from "@/Core";
 import { words } from "@/UI/words";
 

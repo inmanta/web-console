@@ -1,5 +1,5 @@
 import { TextInputTypes } from "@patternfly/react-core";
-import { isEmpty, isEqual } from "lodash";
+import { isEmpty, isEqual } from "lodash-es";
 import {
   AttributeModel,
   FormAttributeResult,
