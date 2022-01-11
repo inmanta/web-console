@@ -14,7 +14,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       initConfig={keycloakController.getInitConfig()}
       LoadingComponent={
         <Bullseye>
-          <Spinner size="xl" />
+          <Spinner isSVG size="xl" />
         </Bullseye>
       }
     >
