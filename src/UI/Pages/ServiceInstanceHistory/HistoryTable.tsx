@@ -4,7 +4,6 @@ import { InstanceLog, ServiceModel } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { InstanceState } from "@/UI/Components";
 import { AttributesPresenter } from "@/UI/Pages/ServiceInventory/Presenters";
-import { MomentDatePresenter } from "@/UI/Utils";
 import { InstanceLogRow } from "./InstanceLogRow";
 
 interface Props {
@@ -18,7 +17,6 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
   const ids = sorted.map((log) => log.version.toString());
   const dict: Record<string, InstanceLog> = {};
   sorted.forEach((log) => (dict[log.version.toString()] = log));
-  const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
 
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
@@ -45,7 +43,7 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
             onToggle={onExpansion(id)}
             isExpanded={isExpanded(id)}
             log={dict[id]}
-            timestamp={datePresenter.getFull(dict[id].timestamp)}
+            timestamp={dict[id].timestamp}
             attributesSummary={attributesPresenter.getSummary(
               dict[id].candidate_attributes,
               dict[id].active_attributes,
