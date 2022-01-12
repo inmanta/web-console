@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { CompileDetailsSections } from "./CompileDetailsSections";
 
@@ -16,20 +15,16 @@ export const CompileDetails: React.FC<Props> = ({ id }) => {
     id,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView aria-label="CompileDetailsView-Loading" />,
-      failed: (error) => (
-        <ErrorView message={error} aria-label="CompileDetailsView-Failed" />
-      ),
-      success: (data) => (
+  return (
+    <RemoteDataView
+      data={data}
+      label="CompileDetailsView"
+      SuccessView={(data) => (
         <CompileDetailsSections
           compileDetails={data}
           aria-label="CompileDetailsView-Success"
         />
-      ),
-    },
-    data
+      )}
+    />
   );
 };

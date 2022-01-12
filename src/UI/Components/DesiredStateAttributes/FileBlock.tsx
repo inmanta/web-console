@@ -1,13 +1,9 @@
 import React, { useState, useContext } from "react";
-import {
-  Alert,
-  AlertActionCloseButton,
-  Button,
-  Spinner,
-} from "@patternfly/react-core";
+import { Alert, AlertActionCloseButton, Button } from "@patternfly/react-core";
 import { DownloadIcon } from "@patternfly/react-icons";
 import { RemoteData } from "@/Core";
 import { CodeHighlighter } from "@/UI/Components/CodeHighlighter";
+import { Spinner } from "@/UI/Components/Spinner";
 import { TextWithCopy } from "@/UI/Components/TextWithCopy";
 import { DependencyContext } from "@/UI/Dependency";
 import { Delayed } from "@/UI/Utils";
@@ -43,7 +39,7 @@ export const FileBlock: React.FC<{ hash: string }> = ({ hash }) => {
           loading: () => (
             <Delayed delay={500}>
               <div>
-                <Spinner isSVG size="md" />
+                <Spinner variant="small" />
               </div>
             </Delayed>
           ),

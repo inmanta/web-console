@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { KeycloakProvider } from "react-keycloak";
-import { Spinner, Bullseye } from "@patternfly/react-core";
+import { Bullseye } from "@patternfly/react-core";
+import { Spinner } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 
 export const AuthProvider: React.FC = ({ children }) => {
@@ -14,7 +15,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       initConfig={keycloakController.getInitConfig()}
       LoadingComponent={
         <Bullseye>
-          <Spinner size="xl" />
+          <Spinner />
         </Bullseye>
       }
     >

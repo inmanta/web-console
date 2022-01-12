@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { CompileReportParams, RemoteData } from "@/Core";
+import { CompileReportParams } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -7,10 +7,9 @@ import {
 } from "@/Data";
 import {
   EmptyView,
-  ErrorView,
-  LoadingView,
   PageContainer,
   PaginationWidget,
+  RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -49,36 +48,26 @@ export const Page: React.FC = () => {
           />
         }
       />
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => (
-            <LoadingView aria-label="CompileReportsView-Loading" />
-          ),
-          failed: (error) => (
-            <ErrorView
-              message={error}
-              retry={retry}
-              aria-label="CompileReportsView-Failed"
+      <RemoteDataView
+        data={data}
+        retry={retry}
+        label="CompileReportsView"
+        SuccessView={(compileReports) =>
+          compileReports.data.length <= 0 ? (
+            <EmptyView
+              message={words("compileReports.empty.message")}
+              aria-label="CompileReportsView-Empty"
             />
-          ),
-          success: (compileReports) =>
-            compileReports.data.length <= 0 ? (
-              <EmptyView
-                message={words("compileReports.empty.message")}
-                aria-label="CompileReportsView-Empty"
-              />
-            ) : (
-              <TableProvider
-                compileReports={compileReports.data}
-                aria-label="CompileReportsView-Success"
-                sort={sort}
-                setSort={setSort}
-              />
-            ),
-        },
-        data
-      )}
+          ) : (
+            <TableProvider
+              compileReports={compileReports.data}
+              aria-label="CompileReportsView-Success"
+              sort={sort}
+              setSort={setSort}
+            />
+          )
+        }
+      />
     </PageContainer>
   );
 };

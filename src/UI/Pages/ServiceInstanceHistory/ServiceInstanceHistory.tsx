@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { RemoteData, ServiceModel } from "@/Core";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import { ServiceModel } from "@/Core";
+import { EmptyView, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { HistoryTable } from "./HistoryTable";
@@ -22,20 +22,18 @@ export const ServiceInstanceHistory: React.FC<Props> = ({
     service_entity: service.name,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView delay={500} />,
-      failed: (error) => <ErrorView message={error} />,
-      success: (logs) =>
+  return (
+    <RemoteDataView
+      data={data}
+      SuccessView={(logs) =>
         logs.length <= 0 ? (
           <div aria-label="ServiceInstanceHistory-Empty">
             <EmptyView message={words("history.missing")(instanceId)} />
           </div>
         ) : (
           <HistoryTable service={service} logs={logs} />
-        ),
-    },
-    data
+        )
+      }
+    />
   );
 };

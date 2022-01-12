@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { CallbacksTable } from "./CallbacksTable";
 
@@ -15,21 +14,14 @@ export const CallbacksView: React.FC<Props> = ({ service_entity }) => {
     service_entity,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView aria-label="Callbacks-Loading" />,
-      failed: (error) => (
-        <ErrorView
-          aria-label="Callbacks-Failed"
-          message={error}
-          retry={retry}
-        />
-      ),
-      success: (callbacks) => (
+  return (
+    <RemoteDataView
+      data={data}
+      label="Callbacks"
+      retry={retry}
+      SuccessView={(callbacks) => (
         <CallbacksTable callbacks={callbacks} service_entity={service_entity} />
-      ),
-    },
-    data
+      )}
+    />
   );
 };

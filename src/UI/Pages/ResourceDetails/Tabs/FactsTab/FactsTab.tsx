@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { FactsTable } from "./FactsTable";
 
 interface Props {
@@ -17,19 +15,11 @@ export const FactsTab: React.FC<Props> = ({ resourceId }) => {
     resourceId,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView delay={500} aria-label="Facts-Loading" />,
-      failed: (error) => (
-        <ErrorView
-          aria-label="Facts-Failed"
-          title={words("error")}
-          message={words("error.fetch")(error)}
-        />
-      ),
-      success: (facts) => <FactsTable facts={facts} />,
-    },
-    data
+  return (
+    <RemoteDataView
+      data={data}
+      label="Facts"
+      SuccessView={(facts) => <FactsTable facts={facts} />}
+    />
   );
 };

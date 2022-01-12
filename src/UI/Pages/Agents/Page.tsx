@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AgentParams, RemoteData } from "@/Core";
+import { AgentParams } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -7,10 +7,9 @@ import {
 } from "@/Data";
 import {
   EmptyView,
-  ErrorView,
-  LoadingView,
   PageContainer,
   PaginationWidget,
+  RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -49,34 +48,26 @@ export const Page: React.FC = () => {
           />
         }
       />
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView aria-label="AgentsView-Loading" />,
-          failed: (error) => (
-            <ErrorView
-              message={error}
-              retry={retry}
-              aria-label="AgentsView-Failed"
+      <RemoteDataView
+        data={data}
+        retry={retry}
+        label="AgentsView"
+        SuccessView={(agents) =>
+          agents.data.length <= 0 ? (
+            <EmptyView
+              message={words("agents.empty.message")}
+              aria-label="AgentsView-Empty"
             />
-          ),
-          success: (agents) =>
-            agents.data.length <= 0 ? (
-              <EmptyView
-                message={words("agents.empty.message")}
-                aria-label="AgentsView-Empty"
-              />
-            ) : (
-              <TableProvider
-                agents={agents.data}
-                aria-label="AgentsView-Success"
-                sort={sort}
-                setSort={setSort}
-              />
-            ),
-        },
-        data
-      )}
+          ) : (
+            <TableProvider
+              agents={agents.data}
+              aria-label="AgentsView-Success"
+              sort={sort}
+              setSort={setSort}
+            />
+          )
+        }
+      />
     </PageContainer>
   );
 };

@@ -30,7 +30,7 @@ export const ResourcesTab: React.FC<Props> = ({
       notAsked: () => null,
       loading: () => (
         <ResourceTableWrapper aria-label="ResourceTable-Loading" id={id}>
-          <LoadingView delay={500} />
+          <LoadingView />
         </ResourceTableWrapper>
       ),
       failed: (error) => (

@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { ExternalLinkAltIcon } from "@patternfly/react-icons";
-import { RemoteData } from "@/Core";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -21,20 +20,11 @@ export const InfoTab: React.FC<Props> = ({ id }) => {
   });
   const datePresenter = new MomentDatePresenter();
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => (
-        <LoadingView delay={500} aria-label="ResourceDetails-Loading" />
-      ),
-      failed: (error) => (
-        <ErrorView
-          aria-label="ResourceDetails-Failed"
-          title={words("resources.details.failed.title")}
-          message={words("resources.details.failed.body")(error)}
-        />
-      ),
-      success: (resourceDetails) => (
+  return (
+    <RemoteDataView
+      data={data}
+      label="ResourceDetails"
+      SuccessView={(resourceDetails) => (
         <ResourceInfoContent
           id={resourceDetails.resource_id}
           lastDeploy={
@@ -62,8 +52,7 @@ export const InfoTab: React.FC<Props> = ({ id }) => {
           }
           aria-label="ResourceDetails-Success"
         />
-      ),
-    },
-    data
+      )}
+    />
   );
 };

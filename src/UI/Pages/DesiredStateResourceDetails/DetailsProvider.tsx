@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 import { Details } from "./Details";
 
 interface Props {
@@ -17,23 +15,13 @@ export const DetailsProvider: React.FC<Props> = ({ resourceId: id }) => {
     id,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => (
-        <LoadingView delay={500} aria-label="ResourceDetails-Loading" />
-      ),
-      failed: (error) => (
-        <ErrorView
-          aria-label="ResourceDetails-Failed"
-          title={words("resources.requires.failed.title")}
-          message={words("resources.requires.failed.body")(error)}
-        />
-      ),
-      success: (details) => (
+  return (
+    <RemoteDataView
+      data={data}
+      label="ResourceDetails"
+      SuccessView={(details) => (
         <Details details={details} aria-label="ResourceDetails-Success" />
-      ),
-    },
-    data
+      )}
+    />
   );
 };

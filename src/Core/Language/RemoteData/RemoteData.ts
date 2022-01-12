@@ -15,7 +15,7 @@ import * as Either from "@/Core/Language/Either";
  *
  * - Success means the data request resulted in actual valid data.
  */
-type RemoteData<F, S> = NotAsked | Loading | Failed<F> | Success<S>;
+export type RemoteData<F, S> = NotAsked | Loading | Failed<F> | Success<S>;
 
 export type Type<F, S> = RemoteData<F, S>;
 

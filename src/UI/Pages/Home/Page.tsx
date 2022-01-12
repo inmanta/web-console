@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
 import { DependencyContext, words } from "@/UI";
-import { ErrorView, LoadingView, PageSectionWithTitle } from "@/UI/Components";
+import { PageSectionWithTitle, RemoteDataView } from "@/UI/Components";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
 export const Page: React.FC = () => {
@@ -14,22 +13,16 @@ export const Page: React.FC = () => {
   return (
     <>
       <PageSectionWithTitle title={words("home.title")} />
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView aria-label="Overview-Loading" />,
-          failed: (message) => (
-            <ErrorView message={message} aria-label="Overview-Failed" />
-          ),
-          success: (environments) => (
-            <EnvironmentsOverview
-              environments={environments}
-              aria-label="Overview-Success"
-            />
-          ),
-        },
-        data
-      )}
+      <RemoteDataView
+        data={data}
+        label="Overview"
+        SuccessView={(environments) => (
+          <EnvironmentsOverview
+            environments={environments}
+            aria-label="Overview-Success"
+          />
+        )}
+      />
     </>
   );
 };

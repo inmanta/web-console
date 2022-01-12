@@ -31,6 +31,8 @@ const dict = {
    * Error related text
    */
   error: "Something went wrong",
+  "error.general": (message: string) =>
+    `The following error occured: ${message}`,
   "error.environment.missing": "Environment is missing",
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
@@ -166,7 +168,6 @@ const dict = {
     "No events could be found for this instance and the specified filters",
   "events.details.title": "Event details",
   "events.title": "Service Instance Events",
-  "events.failed.title": "Something went wrong",
   "events.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
   "events.caption": (id: string) => `Showing events of instance ${id}`,
@@ -254,14 +255,8 @@ const dict = {
   "resources.info.lastDeploy": "Last Deploy",
   "resources.info.firstTime": "Created",
   "resources.info.versionLink": "Open resource version details",
-  "resources.details.failed.title": "Something went wrong",
-  "resources.details.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
   "resources.requires.title": "Requires",
   "resources.requires.empty.message": "No requirements found",
-  "resources.requires.failed.title": "Something went wrong",
-  "resources.requires.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
   "resources.requires.resourceId": "Resource Id",
   "resources.requires.deployState": "Deploy State",
   "resources.history.title": "History",
@@ -270,15 +265,9 @@ const dict = {
   "resources.history.tabs.attributes": "Desired State",
   "resources.history.tabs.requires": "Requires",
   "resources.history.empty.message": "No requirements found",
-  "resources.history.failed.title": "Something went wrong",
-  "resources.history.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
   "resources.attributes.title": "Desired State",
   "resources.logs.title": "Logs",
   "resources.logs.empty.message": "No logs found",
-  "resources.logs.failed.title": "Something went wrong",
-  "resources.logs.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
   "resources.logs.filterOnAction": (actionType: string) =>
     `Filter on '${actionType}'`,
   "resources.logs.timestamp": "Timestamp",

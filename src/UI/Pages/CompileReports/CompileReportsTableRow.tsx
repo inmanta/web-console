@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { Button, Spinner } from "@patternfly/react-core";
+import { Button } from "@patternfly/react-core";
 import { InfoCircleIcon } from "@patternfly/react-icons";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { CompileReportRow } from "@/Core";
-import { DateWithTooltip } from "@/UI/Components";
+import { DateWithTooltip, Spinner } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -23,7 +23,7 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
     >
       <Tr aria-label="Compile Reports Table Row">
         <Td dataLabel={words("compileReports.columns.inProgress")}>
-          {row.inProgress && <Spinner isSVG size="md" />}
+          {row.inProgress && <Spinner variant="small" />}
         </Td>
         <Td dataLabel={words("compileReports.columns.requested")}>
           <DateWithTooltip timestamp={row.requested} />
