@@ -1224,10 +1224,10 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.12.13"
 
-"@babel/plugin-transform-typescript@^7.13.0", "@babel/plugin-transform-typescript@^7.16.7":
-  version "7.16.7"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-typescript/-/plugin-transform-typescript-7.16.7.tgz#33f8c2c890fbfdc4ef82446e9abb8de8211a3ff3"
-  integrity sha512-Hzx1lvBtOCWuCEwMmYOfpQpO7joFeXLgoPuzZZBtTxXqSqUGUubvFGZv2ygo1tB5Bp9q6PXV3H0E/kf7KM0RLA==
+"@babel/plugin-transform-typescript@^7.13.0", "@babel/plugin-transform-typescript@^7.16.8":
+  version "7.16.8"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-typescript/-/plugin-transform-typescript-7.16.8.tgz#591ce9b6b83504903fa9dd3652c357c2ba7a1ee0"
+  integrity sha512-bHdQ9k7YpBDO2d0NVfkj51DpQcvwIzIusJ7mEUaMlbZq3Kt/U47j24inXZHQ5MDiYpCs+oZiwnXyKedE8+q7AQ==
   dependencies:
     "@babel/helper-create-class-features-plugin" "^7.16.7"
     "@babel/helper-plugin-utils" "^7.16.7"
@@ -13761,7 +13761,7 @@ select-hose@^2.0.0:
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"
   integrity sha1-Yl2GWPhlr0Psliv8N2o3NZpJlMo=
 
-selfsigned@^1.10.11, selfsigned@^1.10.8:
+selfsigned@^1.10.8, selfsigned@^2.0.0:
   version "1.10.8"
   resolved "https://registry.yarnpkg.com/selfsigned/-/selfsigned-1.10.8.tgz#0d17208b7d12c33f8eac85c41835f27fc3d81a30"
   integrity sha512-2P4PtieJeEwVgTU9QEcwIRDQ/mXJLX8/+I3ur+Pg16nS8oNbrGxEso9NyYWy8NAmXiNl4dlAp5MwoNeCWzON4w==
@@ -15943,10 +15943,10 @@ webpack-dev-middleware@^5.3.0:
     range-parser "^1.2.1"
     schema-utils "^4.0.0"
 
-webpack-dev-server@^4.7.2:
-  version "4.7.2"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.7.2.tgz#324b79046491f2cf0b9d9e275381198c8246b380"
-  integrity sha512-s6yEOSfPpB6g1T2+C5ZOUt5cQOMhjI98IVmmvMNb5cdiqHoxSUfACISHqU/wZy+q4ar/A9jW0pbNj7sa50XRVA==
+webpack-dev-server@^4.7.3:
+  version "4.7.3"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-4.7.3.tgz#4e995b141ff51fa499906eebc7906f6925d0beaa"
+  integrity sha512-mlxq2AsIw2ag016nixkzUkdyOE8ST2GTy34uKSABp1c4nhjZvH90D5ZRR+UOLSsG4Z3TFahAi72a3ymRtfRm+Q==
   dependencies:
     "@types/bonjour" "^3.5.9"
     "@types/connect-history-api-fallback" "^1.3.5"
@@ -15970,7 +15970,7 @@ webpack-dev-server@^4.7.2:
     p-retry "^4.5.0"
     portfinder "^1.0.28"
     schema-utils "^4.0.0"
-    selfsigned "^1.10.11"
+    selfsigned "^2.0.0"
     serve-index "^1.9.1"
     sockjs "^0.3.21"
     spdy "^4.0.2"
