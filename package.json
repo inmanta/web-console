@@ -64,7 +64,7 @@
     "@types/styled-components": "^5.1.19",
     "@types/webpack": "^5.28.0",
     "@types/xml-formatter": "^2.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",
     "babel-loader": "^8.2.3",
     "clean-css": "^5.2.2",
@@ -122,7 +122,7 @@
     "webpack": "^5.65.0",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.7.2",
+    "webpack-dev-server": "^4.7.3",
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
