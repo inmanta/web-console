@@ -104,7 +104,7 @@ And by making the diff vertical instead of horizontal allows the value to stretc
 ## Data Format
 
 The amount of changed resources can be big, so we will need paging on this endpoint.  
-On the frontend, it would be strange to have pages. So we will need to implement a "Load more" button at the end of the list.  
+On the frontend, it would be strange to have pages. So we will need to implement an infinite scroll mechanism (or load more button).
 We will just grow the list on the frontend. On the backend, paging can be done like all other endpoints.
 
 ```json

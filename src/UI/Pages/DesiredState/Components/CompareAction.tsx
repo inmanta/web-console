@@ -12,75 +12,68 @@ interface Props {
 }
 
 export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
-  const { compareSelection: selection } = useContext(GetDesiredStatesContext);
-
-  if (isDisabled) return <DisabledAction />;
-
-  if (Maybe.isNone(selection))
-    return <InitialCompareAction version={version} />;
-
-  if (version === selection.value) return <ClearSelectionForCompareAction />;
+  const { compareSelection, setCompareSelection } = useContext(
+    GetDesiredStatesContext
+  );
 
   return (
-    <CompareWithSelectedAction
-      version={version}
-      sourceVersion={selection.value}
-    />
+    <>
+      <DropdownItem
+        onClick={
+          isDisabled
+            ? undefined
+            : () => setCompareSelection(Maybe.some(version))
+        }
+        icon={<BalanceScaleIcon />}
+        isDisabled={isDisabled}
+      >
+        {words("desiredState.compare.action.compare")}
+      </DropdownItem>
+      <CompareWithSelected
+        selection={compareSelection}
+        version={version}
+        isDisabled={isDisabled}
+      />
+    </>
   );
 };
 
-const DisabledAction: React.FC = () => (
-  <DropdownItem icon={<BalanceScaleIcon />} isDisabled>
-    {words("desiredState.compare.action.compare")}
-  </DropdownItem>
-);
-
-const InitialCompareAction: React.FC<{ version: number }> = ({ version }) => {
-  const { setCompareSelection } = useContext(GetDesiredStatesContext);
-
-  const onClick = () => {
-    setCompareSelection(Maybe.some(version));
-  };
-
-  return (
-    <DropdownItem onClick={onClick} icon={<BalanceScaleIcon />}>
-      {words("desiredState.compare.action.compare")}
-    </DropdownItem>
-  );
-};
-
-const ClearSelectionForCompareAction: React.FC = () => {
-  const { setCompareSelection } = useContext(GetDesiredStatesContext);
-
-  const onClick = () => {
-    setCompareSelection(Maybe.none());
-  };
-
-  return (
-    <DropdownItem onClick={onClick} icon={<BalanceScaleIcon />}>
-      {words("desiredState.compare.action.clearSelection")}
-    </DropdownItem>
-  );
-};
-
-const CompareWithSelectedAction: React.FC<{
-  sourceVersion: number;
+interface CompareWithSelectedProps {
   version: number;
-}> = ({ sourceVersion, version }) => {
+  selection: Maybe.Maybe<number>;
+  isDisabled?: boolean;
+}
+
+const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
+  selection,
+  version,
+  isDisabled,
+}) => {
   const navigateTo = useNavigateTo();
-  const onClick = () => {
-    navigateTo("DesiredStateCompare", {
-      targetVersion: version.toString(),
-      sourceVersion: sourceVersion.toString(),
-    });
-  };
+
+  if (
+    isDisabled ||
+    Maybe.isNone(selection) ||
+    (Maybe.isSome(selection) && selection.value === version)
+  ) {
+    return (
+      <DropdownItem isDisabled icon={<BalanceScaleIcon />}>
+        {words("desiredState.compare.action.compareWith")}
+      </DropdownItem>
+    );
+  }
 
   return (
-    <DropdownItem onClick={onClick} icon={<BalanceScaleIcon />}>
-      {words("desiredState.compare.action.compareWith")(
-        sourceVersion.toString(),
-        version.toString()
-      )}
+    <DropdownItem
+      onClick={() =>
+        navigateTo("DesiredStateCompare", {
+          targetVersion: version.toString(),
+          sourceVersion: selection.value.toString(),
+        })
+      }
+      icon={<BalanceScaleIcon />}
+    >
+      {words("desiredState.compare.action.compareWith")}
     </DropdownItem>
   );
 };

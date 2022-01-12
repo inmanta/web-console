@@ -437,10 +437,8 @@ const dict = {
 
   /** Desired State Details */
   "desiredState.compare.title": "Compare",
-  "desiredState.compare.action.compareWith": (source: string, target: string) =>
-    `Compare ${target} with ${source}`,
-  "desiredState.compare.action.clearSelection": "Clear selection",
-  "desiredState.compare.action.compare": "Compare",
+  "desiredState.compare.action.compare": "Select for compare",
+  "desiredState.compare.action.compareWith": "Compare with selected",
   "desiredState.compare.selectionLabel": "Compare versions",
 
   /**
