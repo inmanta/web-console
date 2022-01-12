@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@patternfly/react-core";
+import { Button, Label } from "@patternfly/react-core";
 import { InfoCircleIcon } from "@patternfly/react-icons";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { Resource } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { labelColorConfig } from "./Components";
 
 interface Props {
   row: Resource.Row;
@@ -23,7 +24,9 @@ export const ResourceTableRow: React.FC<Props> = ({ row }) => {
           {row.numberOfDependencies}
         </Td>
         <Td dataLabel={words("resources.column.deployState")}>
-          {row.deployState}
+          <Label color={labelColorConfig[row.deployState]}>
+            {row.deployState}
+          </Label>
         </Td>
         <Td>
           <Link

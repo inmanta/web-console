@@ -1,15 +1,8 @@
 import React from "react";
-import {
-  global_danger_color_100,
-  global_palette_black_400,
-  global_palette_cyan_200,
-  global_primary_color_100,
-  global_success_color_100,
-  global_warning_color_100,
-} from "@patternfly/react-tokens";
 import { Resource } from "@/Core";
 import { words } from "@/UI";
 import { LegendBar, LegendItemDetails } from "@/UI/Components";
+import { colorConfig } from "./DeployStateColorConfig";
 
 interface Props {
   summary: Resource.DeploySummary;
@@ -79,30 +72,20 @@ interface InfoWithTotal extends Info {
   total: number;
 }
 
-const infos: Info[] = [
-  { keys: [Resource.Status.deployed], color: global_success_color_100.value },
-  {
-    keys: [
-      Resource.Status.skipped,
-      Resource.Status.skipped_for_undefined,
-      Resource.Status.cancelled,
-    ],
-    color: global_palette_cyan_200.value,
-  },
-  {
-    keys: [Resource.Status.failed],
-    color: global_danger_color_100.value,
-  },
-  {
-    keys: [Resource.Status.unavailable, Resource.Status.undefined],
-    color: global_warning_color_100.value,
-  },
-  {
-    keys: [Resource.Status.deploying],
-    color: global_primary_color_100.value,
-  },
-  {
-    keys: [Resource.Status.available, Resource.Status.processing_events],
-    color: global_palette_black_400.value,
-  },
+const groups: Array<Array<Resource.Status>> = [
+  [Resource.Status.deployed],
+  [
+    Resource.Status.skipped,
+    Resource.Status.skipped_for_undefined,
+    Resource.Status.cancelled,
+  ],
+  [Resource.Status.failed],
+  [Resource.Status.unavailable, Resource.Status.undefined],
+  [Resource.Status.deploying],
+  [Resource.Status.available, Resource.Status.processing_events],
 ];
+
+const infos: Info[] = groups.map((group) => ({
+  keys: group,
+  color: colorConfig[group[0]],
+}));
