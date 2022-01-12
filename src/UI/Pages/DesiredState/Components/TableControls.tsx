@@ -2,7 +2,8 @@ import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
 import { DesiredStateParams } from "@/Core";
 import { CompileWidget } from "@/UI/Components";
-import { DesiredStatesFilterWidget } from "./FilterWidget";
+import { CompareSelectionWidget } from "./CompareSelectionWidget";
+import { FilterWidget } from "./FilterWidget";
 
 interface Props {
   filter: DesiredStateParams.Filter;
@@ -10,7 +11,7 @@ interface Props {
   paginationWidget: React.ReactNode;
 }
 
-export const DesiredStatesTableControls: React.FC<Props> = ({
+export const TableControls: React.FC<Props> = ({
   filter,
   setFilter,
   paginationWidget,
@@ -20,9 +21,10 @@ export const DesiredStatesTableControls: React.FC<Props> = ({
     collapseListedFiltersBreakpoint="xl"
   >
     <ToolbarContent>
-      <DesiredStatesFilterWidget filter={filter} setFilter={setFilter} />
+      <FilterWidget filter={filter} setFilter={setFilter} />
       <ToolbarItem variant="separator" />
       <CompileWidget />
+      <CompareSelectionWidget />
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
     </ToolbarContent>
   </Toolbar>
