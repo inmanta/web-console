@@ -3412,10 +3412,10 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.0.tgz#7036640b4e21cc2f259ae826ce843d277dad8cff"
   integrity sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
 
-"@types/styled-components@^5.1.19":
-  version "5.1.19"
-  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-5.1.19.tgz#d76f431ee49d0a222ab4e758dcd540b01987652d"
-  integrity sha512-hNj14Oamk7Jhb/fMMQG7TUkd3e8uMMgxsCTH+ueJNGdFo/PuhlGDQTPChqyilpZP0WttgBHkc2YyT5UG+yc6Yw==
+"@types/styled-components@^5.1.20":
+  version "5.1.20"
+  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-5.1.20.tgz#83c545d1b793b846c231ff18e93019ccd2867972"
+  integrity sha512-TvpQceFwnxJJsAzR1aHsYpL5DxWMHRzM2/0EA6sGtRjV6DtJubmNxeoPMPiIPQzKEGNHccwObXO7Hug/iwm1Xw==
   dependencies:
     "@types/hoist-non-react-statics" "*"
     "@types/react" "*"
@@ -3980,12 +3980,7 @@ acorn@^7.1.1, acorn@^7.4.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.4.1.tgz#feaed255973d2e77555b83dbc08851a6c63520fa"
   integrity sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==
 
-acorn@^8.0.4, acorn@^8.2.4, acorn@^8.4.1:
-  version "8.4.1"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.4.1.tgz#56c36251fc7cabc7096adc18f05afe814321a28c"
-  integrity sha512-asabaBSkEKosYKMITunzX177CXxQ4Q8BSSzMTKD+FefUhipQC70gfW5SiUDhYQ3vk8G+81HqQk7Fv9OXwwn9KA==
-
-acorn@^8.7.0:
+acorn@^8.0.4, acorn@^8.2.4, acorn@^8.4.1, acorn@^8.7.0:
   version "8.7.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.7.0.tgz#90951fde0f8f09df93549481e5fc141445b791cf"
   integrity sha512-V/LGr1APy+PXIwKebEWrkZPwoeoF+w1jiOBUmuxuiUIaOHtob8Qc9BTrYo7VuI5fR8tqsy+buA2WFooR5olqvQ==
@@ -8386,10 +8381,10 @@ gonzales-pe@^4.2.3:
   dependencies:
     minimist "^1.2.5"
 
-graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0, graceful-fs@^4.2.4, graceful-fs@^4.2.6, graceful-fs@^4.2.8:
-  version "4.2.8"
-  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.8.tgz#e412b8d33f5e006593cbd3cee6df9f2cebbe802a"
-  integrity sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==
+graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0, graceful-fs@^4.2.4, graceful-fs@^4.2.6, graceful-fs@^4.2.8, graceful-fs@^4.2.9:
+  version "4.2.9"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.9.tgz#041b05df45755e587a24942279b9d113146e1c96"
+  integrity sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==
 
 graphviz@0.0.9:
   version "0.0.9"
@@ -15913,10 +15908,10 @@ webpack@4:
     watchpack "^1.7.4"
     webpack-sources "^1.4.1"
 
-webpack@^5, webpack@^5.65.0:
-  version "5.65.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.65.0.tgz#ed2891d9145ba1f0d318e4ea4f89c3fa18e6f9be"
-  integrity sha512-Q5or2o6EKs7+oKmJo7LaqZaMOlDWQse9Tm5l1WAfU/ujLGN5Pb0SqGeVkN/4bpPmEqEP5RnVhiqsOtWtUVwGRw==
+webpack@^5, webpack@^5.66.0:
+  version "5.66.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.66.0.tgz#789bf36287f407fc92b3e2d6f978ddff1bfc2dbb"
+  integrity sha512-NJNtGT7IKpGzdW7Iwpn/09OXz9inIkeIQ/ibY6B+MdV1x6+uReqz/5z1L89ezWnpPDWpXF0TY5PCYKQdWVn8Vg==
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.50"
@@ -15932,7 +15927,7 @@ webpack@^5, webpack@^5.65.0:
     eslint-scope "5.1.1"
     events "^3.2.0"
     glob-to-regexp "^0.4.1"
-    graceful-fs "^4.2.4"
+    graceful-fs "^4.2.9"
     json-parse-better-errors "^1.0.2"
     loader-runner "^4.2.0"
     mime-types "^2.1.27"
