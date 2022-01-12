@@ -1,19 +1,18 @@
 import React, { useContext } from "react";
-import { EventParams, RemoteData, ServiceModel } from "@/Core";
+import { EventParams, ServiceModel } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
 import {
-  ErrorView,
-  LoadingView,
   EventsTablePresenter,
   EventsTableWrapper,
   EmptyView,
   EventsTableBody,
   Description,
   PaginationWidget,
+  RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -49,7 +48,6 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
   return (
     <div>
       <Description>{words("events.caption")(instanceId)}</Description>
-
       <EventsTableControls
         filter={filter}
         setFilter={setFilter}
@@ -62,41 +60,32 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
           />
         }
       />
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView aria-label="EventTable-Loading" />,
-          failed: (error) => (
-            <ErrorView
-              title={words("events.failed.title")}
-              message={words("events.failed.body")(error)}
-              aria-label="EventTable-Failed"
+      <RemoteDataView
+        data={data}
+        label="EventTable"
+        SuccessView={(events) =>
+          events.data.length === 0 ? (
+            <EmptyView
+              title={words("events.empty.title")}
+              message={words("events.empty.body")}
+              aria-label="EventTable-Empty"
             />
-          ),
-          success: (events) =>
-            events.data.length === 0 ? (
-              <EmptyView
-                title={words("events.empty.title")}
-                message={words("events.empty.body")}
-                aria-label="EventTable-Empty"
-              />
-            ) : (
-              <EventsTableWrapper
+          ) : (
+            <EventsTableWrapper
+              tablePresenter={tablePresenter}
+              aria-label="EventTable-Success"
+              sort={sort}
+              setSort={setSort}
+            >
+              <EventsTableBody
+                route="Events"
+                events={events.data}
                 tablePresenter={tablePresenter}
-                aria-label="EventTable-Success"
-                sort={sort}
-                setSort={setSort}
-              >
-                <EventsTableBody
-                  route="Events"
-                  events={events.data}
-                  tablePresenter={tablePresenter}
-                />
-              </EventsTableWrapper>
-            ),
-        },
-        data
-      )}
+              />
+            </EventsTableWrapper>
+          )
+        }
+      />
     </div>
   );
 };

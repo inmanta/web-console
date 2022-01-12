@@ -1,18 +1,21 @@
 import React from "react";
 import { RemoteData } from "@/Core";
-import { LoadingView, ErrorView } from "@/UI/Components";
+import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
 import { words } from "@/UI/words";
 
 interface Props<T> {
   data: RemoteData.RemoteData<string, T>;
-  SuccessView: React.FC<{ data: T }>;
+  SuccessView(data: T): ReturnType<React.FC>;
   label?: string;
+  retry?: () => void;
 }
 
 export const RemoteDataView = <T,>({
   data,
   label,
   SuccessView,
+  retry,
 }: Props<T>): ReturnType<React.FC> => {
   return RemoteData.fold(
     {
@@ -25,9 +28,10 @@ export const RemoteDataView = <T,>({
           title={words("error")}
           message={words("error.general")(error)}
           aria-label={label ? `${label}-Failed` : undefined}
+          retry={retry}
         />
       ),
-      success: (successData) => <SuccessView data={successData} />,
+      success: SuccessView,
     },
     data
   );

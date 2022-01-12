@@ -5,11 +5,9 @@ import { JsonFormatter, XmlFormatter } from "@/Data";
 import {
   AttributeClassifier,
   AttributeList,
-  ErrorView,
-  LoadingView,
+  RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
 
 interface Props {
   id: string;
@@ -33,25 +31,17 @@ export const AttributesTab: React.FC<Props> = ({ id }) => {
     data
   );
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView aria-label="ResourceAttributes-Loading" />,
-      failed: (error) => (
-        <ErrorView
-          aria-label="ResourceAttributes-Failed"
-          title={words("error")}
-          message={words("error.fetch")(error)}
-        />
-      ),
-      success: (attributes) => (
+  return (
+    <RemoteDataView
+      data={classifiedAttributes}
+      label="ResourceAttributes"
+      SuccessView={(attributes) => (
         <Card isCompact>
           <CardBody>
             <AttributeList attributes={attributes} />
           </CardBody>
         </Card>
-      ),
-    },
-    classifiedAttributes
+      )}
+    />
   );
 };

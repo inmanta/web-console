@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Card, CardBody } from "@patternfly/react-core";
-import { RemoteData, VersionedServiceInstanceIdentifier } from "@/Core";
-import { EmptyView, ErrorView, LoadingView } from "@/UI/Components";
+import { VersionedServiceInstanceIdentifier } from "@/Core";
+import { EmptyView, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ConfigDetails } from "./ConfigDetails";
@@ -25,19 +25,17 @@ export const ConfigTab: React.FC<Props> = ({ serviceInstanceIdentifier }) => {
     ...serviceInstanceIdentifier,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView />,
-      failed: (error) => <ErrorView message={error} retry={retry} />,
-      success: ({ config, defaults }) => (
+  return (
+    <RemoteDataView
+      data={data}
+      retry={retry}
+      SuccessView={({ config, defaults }) => (
         <ConfigDetails
           config={config}
           defaults={defaults}
           serviceInstanceIdentifier={serviceInstanceIdentifier}
         />
-      ),
-    },
-    data
+      )}
+    />
   );
 };

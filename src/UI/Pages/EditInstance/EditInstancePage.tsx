@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { RemoteData, ServiceModel } from "@/Core";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { ServiceModel } from "@/Core";
+import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { EditForm } from "./EditForm";
 
@@ -16,21 +16,15 @@ export const EditInstancePage: React.FC<{
     id: instanceId,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView aria-label="EditInstance-Loading" />,
-      failed: (message) => (
-        <ErrorView aria-label="EditInstance-Failed" message={message} />
-      ),
-      success: (instance) => {
-        return (
-          <div aria-label="EditInstance-Success">
-            <EditForm instance={instance} serviceEntity={serviceEntity} />
-          </div>
-        );
-      },
-    },
-    data
+  return (
+    <RemoteDataView
+      data={data}
+      label="EditInstance"
+      SuccessView={(instance) => (
+        <div aria-label="EditInstance-Success">
+          <EditForm instance={instance} serviceEntity={serviceEntity} />
+        </div>
+      )}
+    />
   );
 };

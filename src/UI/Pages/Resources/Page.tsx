@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Resource, RemoteData } from "@/Core";
+import { Resource } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -7,10 +7,9 @@ import {
 } from "@/Data";
 import {
   EmptyView,
-  ErrorView,
-  LoadingView,
   PageContainer,
   PaginationWidget,
+  RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -68,34 +67,26 @@ export const Page: React.FC = () => {
     <Wrapper>
       <ResourceFilterContext.Provider value={{ setFilter }}>
         {tableControls}
-        {RemoteData.fold(
-          {
-            notAsked: () => null,
-            loading: () => <LoadingView aria-label="ResourcesView-Loading" />,
-            failed: (error) => (
-              <ErrorView
-                message={error}
-                retry={retry}
-                aria-label="ResourcesView-Failed"
+        <RemoteDataView
+          data={data}
+          label="ResourcesView"
+          retry={retry}
+          SuccessView={(resources) =>
+            resources.data.length <= 0 ? (
+              <EmptyView
+                message={words("resources.empty.message")}
+                aria-label="ResourcesView-Empty"
               />
-            ),
-            success: (resources) =>
-              resources.data.length <= 0 ? (
-                <EmptyView
-                  message={words("resources.empty.message")}
-                  aria-label="ResourcesView-Empty"
-                />
-              ) : (
-                <ResourcesTableProvider
-                  sort={sort}
-                  setSort={setSort}
-                  resources={resources.data}
-                  aria-label="ResourcesView-Success"
-                />
-              ),
-          },
-          data
-        )}
+            ) : (
+              <ResourcesTableProvider
+                sort={sort}
+                setSort={setSort}
+                resources={resources.data}
+                aria-label="ResourcesView-Success"
+              />
+            )
+          }
+        />
       </ResourceFilterContext.Provider>
     </Wrapper>
   );

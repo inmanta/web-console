@@ -94,13 +94,13 @@ test("ServiceCatalog shows updated services", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
-    await screen.findByRole("region", { name: "ServiceCatalog-Empty" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -108,7 +108,7 @@ test("ServiceCatalog shows updated services", async () => {
   apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   expect(
-    await screen.findByRole("region", { name: "ServiceCatalog-Success" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
   ).toBeInTheDocument();
 });
 
@@ -117,13 +117,13 @@ test("ServiceCatalog shows updated empty", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   expect(
-    await screen.findByRole("region", { name: "ServiceCatalog-Success" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -131,7 +131,7 @@ test("ServiceCatalog shows updated empty", async () => {
   apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
-    await screen.findByRole("region", { name: "ServiceCatalog-Empty" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
   ).toBeInTheDocument();
 });
 
@@ -140,13 +140,13 @@ test("ServiceCatalog removes service after deletion", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("region", { name: "ServiceCatalog-Loading" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" })
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   expect(
-    await screen.findByRole("region", { name: "ServiceCatalog-Success" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
   ).toBeInTheDocument();
 
   fireEvent.click(
@@ -162,7 +162,7 @@ test("ServiceCatalog removes service after deletion", async () => {
   apiHelper.resolve(Either.right({ data: [] }));
 
   expect(
-    await screen.findByRole("region", { name: "ServiceCatalog-Empty" })
+    await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
   ).toBeInTheDocument();
 });
 

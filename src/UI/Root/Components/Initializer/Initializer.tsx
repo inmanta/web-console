@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { RemoteData } from "@/Core";
-import { LoadingView, ErrorView } from "@/UI/Components";
+import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 
 export const Initializer: React.FC = ({ children }) => {
@@ -14,13 +14,10 @@ export const Initializer: React.FC = ({ children }) => {
     details: false,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView />,
-      failed: (error) => <ErrorView message={error} />,
-      success: () => <>{children}</>,
-    },
-    RemoteData.merge(statusData, environmentsData)
+  return (
+    <RemoteDataView
+      data={RemoteData.merge(statusData, environmentsData)}
+      SuccessView={() => <>{children}</>}
+    />
   );
 };

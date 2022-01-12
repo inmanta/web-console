@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { RemoteData, Resource } from "@/Core";
+import { Resource } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -8,10 +8,9 @@ import {
 import { DependencyContext } from "@/UI";
 import {
   EmptyView,
-  ErrorView,
-  LoadingView,
   PageContainer,
   PaginationWidget,
+  RemoteDataView,
 } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -62,38 +61,28 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
         filter={filter}
         setFilter={setFilter}
       />
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => (
-            <LoadingView aria-label="VersionResourcesTable-Loading" />
-          ),
-          failed: (error) => (
-            <ErrorView
-              message={error}
-              retry={retry}
-              aria-label="VersionResourcesTable-Failed"
+      <RemoteDataView
+        data={data}
+        retry={retry}
+        label="VersionResourcesTable"
+        SuccessView={(resources) =>
+          resources.data.length <= 0 ? (
+            <EmptyView
+              message={words("resources.empty.message")}
+              aria-label="VersionResourcesTable-Empty"
             />
-          ),
-          success: (resources) =>
-            resources.data.length <= 0 ? (
-              <EmptyView
-                message={words("resources.empty.message")}
-                aria-label="VersionResourcesTable-Empty"
-              />
-            ) : (
-              <VersionResourceTable
-                aria-label="VersionResourcesTable-Success"
-                version={version}
-                rows={presenter.createRows(resources.data)}
-                tablePresenter={new VersionResourceTablePresenter()}
-                sort={sort}
-                setSort={setSort}
-              />
-            ),
-        },
-        data
-      )}
+          ) : (
+            <VersionResourceTable
+              aria-label="VersionResourcesTable-Success"
+              version={version}
+              rows={presenter.createRows(resources.data)}
+              tablePresenter={new VersionResourceTablePresenter()}
+              sort={sort}
+              setSort={setSort}
+            />
+          )
+        }
+      />
     </PageContainer>
   );
 };

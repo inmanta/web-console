@@ -6,7 +6,7 @@ import {
   RemoteData,
 } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { ErrorView, LoadingView } from "@/UI/Components";
+import { RemoteDataView } from "@/UI/Components";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 export const Tab: React.FC = () => {
@@ -20,22 +20,18 @@ export const Tab: React.FC = () => {
     details: true,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView aria-label="EditEnvironment-Loading" />,
-      failed: (message) => (
-        <ErrorView message={message} aria-label="EditEnvironment-Failed" />
-      ),
-      success: ([environmentDetails, projects]) => (
+  return (
+    <RemoteDataView
+      data={RemoteData.merge(envData, data)}
+      label="EditEnvironment"
+      SuccessView={([environmentDetails, projects]) => (
         <EnvironmentSettings
           aria-label="Environment-Success"
           environment={addProjectName(environmentDetails, projects)}
           projects={projects}
         />
-      ),
-    },
-    RemoteData.merge(envData, data)
+      )}
+    />
   );
 };
 

@@ -1,11 +1,5 @@
 import React, { useContext } from "react";
-import { RemoteData } from "@/Core";
-import {
-  EmptyView,
-  ErrorView,
-  LoadingView,
-  RequiresTable,
-} from "@/UI/Components";
+import { EmptyView, RemoteDataView, RequiresTable } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -21,18 +15,11 @@ export const RequiresTab: React.FC<Props> = ({ id }) => {
     id,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView aria-label="ResourceRequires-Loading" />,
-      failed: (error) => (
-        <ErrorView
-          aria-label="ResourceRequires-Failed"
-          title={words("resources.requires.failed.title")}
-          message={words("resources.requires.failed.body")(error)}
-        />
-      ),
-      success: (resourceDetails) =>
+  return (
+    <RemoteDataView
+      data={data}
+      label="ResourceRequires"
+      SuccessView={(resourceDetails) =>
         Object.keys(resourceDetails.requires_status).length <= 0 ? (
           <EmptyView
             message={words("resources.requires.empty.message")}
@@ -43,8 +30,8 @@ export const RequiresTab: React.FC<Props> = ({ id }) => {
             aria-label="ResourceRequires-Success"
             requiresStatus={resourceDetails.requires_status}
           />
-        ),
-    },
-    data
+        )
+      }
+    />
   );
 };

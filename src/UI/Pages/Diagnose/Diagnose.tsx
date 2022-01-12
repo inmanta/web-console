@@ -28,7 +28,7 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
     <RemoteDataView
       data={data}
       label="Diagnostics"
-      SuccessView={({ data: diagnostics }) => {
+      SuccessView={(diagnostics) => {
         if (
           diagnostics.failures.length <= 0 &&
           diagnostics.rejections.length === 0

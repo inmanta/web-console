@@ -17,9 +17,11 @@ import {
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
-export const CreateInstance: React.FC<{ serviceEntity: ServiceModel }> = ({
-  serviceEntity,
-}) => {
+interface Props {
+  serviceEntity: ServiceModel;
+}
+
+export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   const { commandResolver, environmentModifier, routeManager } =
     useContext(DependencyContext);
   const fieldCreator = new FieldCreator(new CreateModifierHandler());

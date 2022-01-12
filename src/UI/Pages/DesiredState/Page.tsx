@@ -1,13 +1,12 @@
 import React, { useContext, useState } from "react";
-import { DesiredStateParams, RemoteData } from "@/Core";
+import { DesiredStateParams } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import {
   EmptyView,
   ErrorToastAlert,
-  ErrorView,
-  LoadingView,
   PageContainer,
   PaginationWidget,
+  RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -51,34 +50,24 @@ export const Page: React.FC = () => {
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />
-        {RemoteData.fold(
-          {
-            notAsked: () => null,
-            loading: () => (
-              <LoadingView aria-label="DesiredStatesView-Loading" />
-            ),
-            failed: (error) => (
-              <ErrorView
-                message={error}
-                retry={retry}
-                aria-label="DesiredStatesView-Failed"
+        <RemoteDataView
+          data={data}
+          retry={retry}
+          label="DesiredStatesView"
+          SuccessView={(desiredStates) =>
+            desiredStates.data.length <= 0 ? (
+              <EmptyView
+                message={words("desiredState.empty.message")}
+                aria-label="DesiredStatesView-Empty"
               />
-            ),
-            success: (desiredStates) =>
-              desiredStates.data.length <= 0 ? (
-                <EmptyView
-                  message={words("desiredState.empty.message")}
-                  aria-label="DesiredStatesView-Empty"
-                />
-              ) : (
-                <DesiredStatesTable
-                  rows={desiredStates.data}
-                  aria-label="DesiredStatesView-Success"
-                />
-              ),
-          },
-          data
-        )}
+            ) : (
+              <DesiredStatesTable
+                rows={desiredStates.data}
+                aria-label="DesiredStatesView-Success"
+              />
+            )
+          }
+        />
       </GetDesiredStatesContext.Provider>
     </PageContainer>
   );
