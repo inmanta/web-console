@@ -27,10 +27,3 @@ Out of these 1 and 2 happen on every page reload (so not while navigating, only 
 To make sure that queries that don't need the details don't overwrite the results of those that do, separate slices have been introduced for this data.
 
 Introducing these different slices for the separate components leads to a situation where this data is very much like local state - but stored in Redux, mostly for consistency and the updates (which are more complex, because more slices might have to be updated after an action).
-
-## Possible improvements
-
-1. Merge the environment list slices, and always request the details - it would mean a bit more traffic, but easier updates and bookkeeping of this data in general
-2. Allow the `EnvironmentSelector` to start with `stale` data, which in practice is requested only a
-few milliseconds earlier - this would introduce some complexity and might not worth the gain
-3. Maybe rename the query or the slice for the continuous Environment get call, it's main goal is only to check the `halted` state
