@@ -100,10 +100,7 @@ module.exports = {
           input.indexOf("fonts") === -1 &&
           input.indexOf("background-filter") === -1 &&
           input.indexOf("pficon") === -1,
-        use: {
-          loader: "raw-loader",
-          options: {},
-        },
+        type: "asset/inline",
       },
       {
         test: /\.(jpg|jpeg|png|gif)$/i,
@@ -135,15 +132,7 @@ module.exports = {
             "node_modules/@patternfly/react-inline-edit-extension/node_modules/@patternfly/react-styles/css/assets/images"
           ),
         ],
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              limit: 5000,
-              name: "[name].[ext]",
-            },
-          },
-        ],
+        type: "asset/resource",
       },
       {
         test: /\.m?js$/,
