@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardActions,
@@ -11,12 +11,10 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Failure } from "@/Core";
-import { Link } from "@/UI/Components/Link";
-import { DependencyContext } from "@/UI/Dependency";
+import { useNavigateTo } from "@/UI/Routing";
 import { greyText } from "@/UI/Styles";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { DropdownExternalLink } from "./ExternalLink";
 import { Pre } from "./Pre";
 
 interface Props {
@@ -25,25 +23,29 @@ interface Props {
 }
 
 export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
-  const { urlManager, routeManager } = useContext(DependencyContext);
+  const navigateTo = useNavigateTo();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems = [
-    <Link
+    <DropdownItem
       key="resourceDetailsLink"
-      pathname={routeManager.getUrl("ResourceDetails", {
-        resourceId: getResourceIdFromResourceVersionId(resourceId),
-      })}
-      envOnly
+      onClick={() =>
+        navigateTo("ResourceDetails", {
+          resourceId: getResourceIdFromResourceVersionId(resourceId),
+        })
+      }
     >
-      <StyledLink style={{ color: "var(--pf-global--link--Color)" }}>
-        {words("diagnose.links.resourceDetails")}
-      </StyledLink>
-    </Link>,
-    <DropdownExternalLink
+      {words("diagnose.links.resourceDetails")}
+    </DropdownItem>,
+    <DropdownItem
       key="modelVersionLink"
-      url={urlManager.getModelVersionUrl(failure.model_version.toString())}
-      linkText={words("diagnose.links.modelVersionDetails")}
-    />,
+      onClick={() =>
+        navigateTo("DesiredStateDetails", {
+          version: failure.model_version.toString(),
+        })
+      }
+    >
+      {words("diagnose.links.modelVersionDetails")}
+    </DropdownItem>,
   ];
 
   return (
@@ -73,8 +75,4 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
 
 const StyledCardTitle = styled(CardTitle)`
   ${greyText};
-`;
-
-const StyledLink = styled(DropdownItem)`
-  color: var(--pf-global--link--Color);
 `;

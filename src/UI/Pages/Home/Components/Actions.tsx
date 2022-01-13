@@ -40,7 +40,7 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
               key="edit environment"
               icon={<PencilAltIcon />}
               onClick={() =>
-                navigateTo("Settings", undefined, `env=${environment.id}`)
+                navigateTo("Settings", undefined, `?env=${environment.id}`)
               }
             >
               {words("home.environment.edit")}

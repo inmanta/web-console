@@ -12,6 +12,7 @@ type NavigateTo = (
 
 /**
  * The useNavigateTo hook returns a navigateTo function which navigates to a route.
+ * @param newSearch This string should start with a question mark "?".
  */
 export const useNavigateTo = (): NavigateTo => {
   const { routeManager } = useContext(DependencyContext);
@@ -20,7 +21,7 @@ export const useNavigateTo = (): NavigateTo => {
 
   return (routeKind, params, newSearch) => {
     const pathname = routeManager.getUrl(routeKind, params);
-    navigate(`${pathname}?${newSearch || search}`);
+    navigate(`${pathname}${newSearch || search}`);
   };
 };
 
