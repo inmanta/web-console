@@ -20,9 +20,15 @@ export const useNavigateTo = (): NavigateTo => {
   const navigate = useNavigate();
 
   return (routeKind, params, newSearch) => {
+    if (newSearch !== undefined) validateSearch(newSearch);
     const pathname = routeManager.getUrl(routeKind, params);
     navigate(`${pathname}${newSearch || search}`);
   };
+};
+
+const validateSearch = (search: string): void => {
+  if (search.startsWith("?")) return;
+  throw new Error("A search string should start with a question mark (?).");
 };
 
 /**
