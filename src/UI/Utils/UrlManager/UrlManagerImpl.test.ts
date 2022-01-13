@@ -3,12 +3,6 @@ import { UrlManagerImpl } from "./UrlManagerImpl";
 
 const featureManager = new MockFeatureManager();
 
-test("Model version href creator works correctly", () => {
-  expect(
-    new UrlManagerImpl(featureManager, "", "env1").getModelVersionUrl("4")
-  ).toEqual("/dashboard/#!/environment/env1/version/4");
-});
-
 test("Versioned Resource href creator works correctly", () => {
   expect(
     new UrlManagerImpl(featureManager, "", "env1").getVersionedResourceUrl(

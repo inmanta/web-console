@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardActions,
@@ -12,10 +11,10 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Rejection } from "@/Core";
+import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
 import { words } from "@/UI/words";
-import { DropdownExternalLink } from "./ExternalLink";
 import { Pre } from "./Pre";
 import { Traceback } from "./Traceback";
 
@@ -23,37 +22,41 @@ interface Props {
   rejection: Rejection;
 }
 
-export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
-  const { urlManager, routeManager } = useContext(DependencyContext);
+export const RejectionCard: React.FC<Props> = ({
+  rejection: { model_version, compile_id, trace, error },
+}) => {
+  const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems: React.ReactNode[] = [
     <DropdownItem
       key="compileReportLink"
       component={
         <Link
-          to={{
-            pathname: routeManager.getUrl("CompileDetails", {
-              id: rejection.compile_id,
-            }),
-            search: location.search,
-          }}
+          pathname={routeManager.getUrl("CompileDetails", {
+            id: compile_id,
+          })}
         >
           {words("diagnose.links.compileReport")}
         </Link>
       }
-    ></DropdownItem>,
+    />,
+    ...(model_version
+      ? [
+          <DropdownItem
+            key="modelVersionLink"
+            component={
+              <Link
+                pathname={routeManager.getUrl("DesiredStateDetails", {
+                  version: model_version.toString(),
+                })}
+              >
+                {words("diagnose.links.modelVersionDetails")}
+              </Link>
+            }
+          />,
+        ]
+      : []),
   ];
-  if (rejection.model_version) {
-    dropdownItems.push(
-      <DropdownExternalLink
-        key="modelVersionLink"
-        url={urlManager.getModelVersionUrl(rejection.model_version.toString())}
-        linkText={words("diagnose.links.modelVersionDetails")}
-      />
-    );
-  }
-
-  const error = rejection.error;
 
   return (
     <Card>
@@ -75,7 +78,7 @@ export const RejectionCard: React.FC<Props> = ({ rejection: rejection }) => {
       {error && <StyledCardTitle>{error.type}</StyledCardTitle>}
       <CardBody>
         {error && <Pre>{error.message}</Pre>}
-        {rejection.trace && <Traceback trace={rejection.trace} />}
+        {trace && <Traceback trace={trace} />}
       </CardBody>
     </Card>
   );

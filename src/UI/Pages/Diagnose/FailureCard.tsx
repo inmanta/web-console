@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardActions,
@@ -11,12 +11,11 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Failure } from "@/Core";
-import { Link } from "@/UI/Components/Link";
+import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { DropdownExternalLink } from "./ExternalLink";
 import { Pre } from "./Pre";
 
 interface Props {
@@ -25,24 +24,32 @@ interface Props {
 }
 
 export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
-  const { urlManager, routeManager } = useContext(DependencyContext);
+  const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems = [
-    <Link
+    <DropdownItem
       key="resourceDetailsLink"
-      pathname={routeManager.getUrl("ResourceDetails", {
-        resourceId: getResourceIdFromResourceVersionId(resourceId),
-      })}
-      envOnly
-    >
-      <StyledLink style={{ color: "var(--pf-global--link--Color)" }}>
-        {words("diagnose.links.resourceDetails")}
-      </StyledLink>
-    </Link>,
-    <DropdownExternalLink
+      component={
+        <Link
+          pathname={routeManager.getUrl("ResourceDetails", {
+            resourceId: getResourceIdFromResourceVersionId(resourceId),
+          })}
+        >
+          {words("diagnose.links.resourceDetails")}
+        </Link>
+      }
+    />,
+    <DropdownItem
       key="modelVersionLink"
-      url={urlManager.getModelVersionUrl(failure.model_version.toString())}
-      linkText={words("diagnose.links.modelVersionDetails")}
+      component={
+        <Link
+          pathname={routeManager.getUrl("DesiredStateDetails", {
+            version: failure.model_version.toString(),
+          })}
+        >
+          {words("diagnose.links.modelVersionDetails")}
+        </Link>
+      }
     />,
   ];
 
@@ -73,8 +80,4 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
 
 const StyledCardTitle = styled(CardTitle)`
   ${greyText};
-`;
-
-const StyledLink = styled(DropdownItem)`
-  color: var(--pf-global--link--Color);
 `;

@@ -29,12 +29,6 @@ export class UrlManagerImpl implements UrlManager {
     throw new Error("Environment not set");
   }
 
-  getModelVersionUrl(version: string): string {
-    return `${
-      this.baseUrl
-    }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}`;
-  }
-
   getVersionedResourceUrl(resourceId: string, version: string): string {
     return `${
       this.baseUrl
