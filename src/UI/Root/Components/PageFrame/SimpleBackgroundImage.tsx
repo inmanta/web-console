@@ -9,11 +9,11 @@ import sm2x from "@patternfly/react-core/dist/styles/assets/images/pfbg_768@2x.j
 export const SimpleBackgroundImage: React.FC = () => (
   <BackgroundImage
     src={{
-      lg: lg,
-      sm: sm,
-      sm2x: sm2x,
-      xs: xs,
-      xs2x: xs2x,
+      lg,
+      sm,
+      sm2x,
+      xs,
+      xs2x,
     }}
     alt="Background image"
   />

@@ -3,8 +3,6 @@ const CopyPlugin = require("copy-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const webpack = require("webpack");
 
-const BG_IMAGES_DIRNAME = "bgimages";
-
 module.exports = {
   entry: {
     app: path.resolve(__dirname, "src", "index.tsx"),
@@ -66,40 +64,10 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        include: (input) => input.indexOf("background-filter.svg") > 1,
-        use: [
-          {
-            loader: "url-loader",
-            options: {
-              limit: 5000,
-              outputPath: "svgs",
-              name: "[name].[ext]",
-            },
-          },
-        ],
-      },
-      {
-        test: /\.svg$/,
-        // only process SVG modules with this loader if they live under a 'bgimages' directory
-        // this is primarily useful when applying a CSS background using an SVG
-        include: [
-          (input) => input.indexOf(BG_IMAGES_DIRNAME) > -1,
-          path.resolve(__dirname, "src"),
-        ],
-        use: {
-          loader: "svg-url-loader",
-          options: {},
-        },
-      },
-      {
-        test: /\.svg$/,
-        // only process SVG modules with this loader when they don't live under a 'bgimages',
+        // only process SVG modules with this loader when they don't live under a
         // 'fonts', or 'pficon' directory, those are handled with other loaders
         include: (input) =>
-          input.indexOf(BG_IMAGES_DIRNAME) === -1 &&
-          input.indexOf("fonts") === -1 &&
-          input.indexOf("background-filter") === -1 &&
-          input.indexOf("pficon") === -1,
+          input.indexOf("fonts") === -1 && input.indexOf("pficon") === -1,
         type: "asset/inline",
       },
       {
