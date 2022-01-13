@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardActions,
@@ -11,7 +11,8 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Rejection } from "@/Core";
-import { useNavigateTo } from "@/UI/Routing";
+import { Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
 import { words } from "@/UI/words";
 import { Pre } from "./Pre";
@@ -24,33 +25,37 @@ interface Props {
 export const RejectionCard: React.FC<Props> = ({
   rejection: { model_version, compile_id, trace, error },
 }) => {
-  const navigateTo = useNavigateTo();
+  const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems: React.ReactNode[] = [
     <DropdownItem
       key="compileReportLink"
-      onClick={() =>
-        navigateTo("CompileDetails", {
-          id: compile_id,
-        })
+      component={
+        <Link
+          pathname={routeManager.getUrl("CompileDetails", {
+            id: compile_id,
+          })}
+        >
+          {words("diagnose.links.compileReport")}
+        </Link>
       }
-    >
-      {words("diagnose.links.compileReport")}
-    </DropdownItem>,
-    <DropdownItem
-      key="modelVersionLink"
-      isDisabled={model_version === undefined}
-      onClick={
-        model_version === undefined
-          ? undefined
-          : () =>
-              navigateTo("DesiredStateDetails", {
-                version: model_version.toString(),
-              })
-      }
-    >
-      {words("diagnose.links.modelVersionDetails")}
-    </DropdownItem>,
+    />,
+    ...(model_version
+      ? [
+          <DropdownItem
+            key="modelVersionLink"
+            component={
+              <Link
+                pathname={routeManager.getUrl("DesiredStateDetails", {
+                  version: model_version.toString(),
+                })}
+              >
+                {words("diagnose.links.modelVersionDetails")}
+              </Link>
+            }
+          />,
+        ]
+      : []),
   ];
 
   return (

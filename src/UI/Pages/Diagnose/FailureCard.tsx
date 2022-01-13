@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardActions,
@@ -11,7 +11,8 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Failure } from "@/Core";
-import { useNavigateTo } from "@/UI/Routing";
+import { Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -23,29 +24,33 @@ interface Props {
 }
 
 export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
-  const navigateTo = useNavigateTo();
+  const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems = [
     <DropdownItem
       key="resourceDetailsLink"
-      onClick={() =>
-        navigateTo("ResourceDetails", {
-          resourceId: getResourceIdFromResourceVersionId(resourceId),
-        })
+      component={
+        <Link
+          pathname={routeManager.getUrl("ResourceDetails", {
+            resourceId: getResourceIdFromResourceVersionId(resourceId),
+          })}
+        >
+          {words("diagnose.links.resourceDetails")}
+        </Link>
       }
-    >
-      {words("diagnose.links.resourceDetails")}
-    </DropdownItem>,
+    />,
     <DropdownItem
       key="modelVersionLink"
-      onClick={() =>
-        navigateTo("DesiredStateDetails", {
-          version: failure.model_version.toString(),
-        })
+      component={
+        <Link
+          pathname={routeManager.getUrl("DesiredStateDetails", {
+            version: failure.model_version.toString(),
+          })}
+        >
+          {words("diagnose.links.modelVersionDetails")}
+        </Link>
       }
-    >
-      {words("diagnose.links.modelVersionDetails")}
-    </DropdownItem>,
+    />,
   ];
 
   return (
