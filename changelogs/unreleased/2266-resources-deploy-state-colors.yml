@@ -1,0 +1,4 @@
+description: Add labels with colors for deploy states on Resources page
+issue-nr: 2266
+change-type: patch
+destination-branches: [master, iso4]

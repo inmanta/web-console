@@ -13,10 +13,10 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { ResourceTableControls } from "./Components";
 import { ResourceFilterContext } from "./ResourceFilterContext";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { Summary } from "./Summary";
-import { ResourceTableControls } from "./TableControls";
 
 export const Wrapper: React.FC = ({ children }) => (
   <PageContainer title={words("inventory.tabs.resources")}>

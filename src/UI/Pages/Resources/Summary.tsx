@@ -2,9 +2,7 @@ import React from "react";
 import { ToolbarItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Query, RemoteData, Resource } from "@/Core";
-import { DeployButton } from "./DeployButton";
-import { DeployStateBar } from "./DeployStateBar";
-import { RepairButton } from "./RepairButton";
+import { DeployStateBar, DeployButton, RepairButton } from "./Components";
 
 interface Props {
   data: RemoteData.Type<
