@@ -13,6 +13,7 @@ type NavigateTo = (
 /**
  * The useNavigateTo hook returns a navigateTo function which navigates to a route.
  * @param newSearch This string should start with a question mark "?".
+ * @throws Will throw an error when newSearch is invalid
  */
 export const useNavigateTo = (): NavigateTo => {
   const { routeManager } = useContext(DependencyContext);
