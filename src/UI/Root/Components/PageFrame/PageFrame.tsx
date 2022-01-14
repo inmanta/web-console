@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Page } from "@patternfly/react-core";
+import styled from "styled-components";
 import { Header } from "@/UI/Root/Components/Header";
 import { PageBreadcrumbs } from "@/UI/Root/Components/PageBreadcrumbs";
 import { Sidebar } from "@/UI/Root/Components/Sidebar";
@@ -28,7 +29,7 @@ export const PageFrame: React.FC<Props> = ({ children, environmentId }) => {
   return (
     <>
       <SimpleBackgroundImage />
-      <Page
+      <StyledPage
         breadcrumb={<PageBreadcrumbs />}
         onPageResize={onPageResize}
         header={
@@ -46,7 +47,11 @@ export const PageFrame: React.FC<Props> = ({ children, environmentId }) => {
         }
       >
         {children}
-      </Page>
+      </StyledPage>
     </>
   );
 };
+
+const StyledPage = styled(Page)`
+  background-color: transparent;
+`;

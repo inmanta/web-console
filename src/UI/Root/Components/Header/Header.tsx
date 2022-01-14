@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { PageHeader } from "@patternfly/react-core";
+import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import logo from "@images/logo.svg";
 import { Actions } from "./Actions";
@@ -14,7 +15,7 @@ interface Props {
 export const Header: React.FC<Props> = ({ noEnv, isNavOpen, onToggle }) => {
   const { routeManager } = useContext(DependencyContext);
   return (
-    <PageHeader
+    <StyledHeader
       logo={<img src={logo} alt="Inmanta Logo" aria-label="Inmanta Logo" />}
       logoProps={{ href: routeManager.getUrl("Home", undefined) }}
       headerTools={<Actions noEnv={noEnv} />}
@@ -25,3 +26,7 @@ export const Header: React.FC<Props> = ({ noEnv, isNavOpen, onToggle }) => {
     />
   );
 };
+
+const StyledHeader = styled(PageHeader)`
+  background-color: transparent;
+`;
