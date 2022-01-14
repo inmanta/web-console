@@ -6,7 +6,9 @@ import xs2x from "@patternfly/react-core/dist/styles/assets/images/pfbg_576@2x.j
 import sm from "@patternfly/react-core/dist/styles/assets/images/pfbg_768.jpg";
 import sm2x from "@patternfly/react-core/dist/styles/assets/images/pfbg_768@2x.jpg";
 
-export const SimpleBackgroundImage: React.FC = () => (
+export const SimpleBackgroundImage: React.FC<{ className?: string }> = ({
+  className,
+}) => (
   <BackgroundImage
     src={{
       lg,
@@ -16,5 +18,6 @@ export const SimpleBackgroundImage: React.FC = () => (
       xs2x,
     }}
     alt="Background image"
+    className={className}
   />
 );
