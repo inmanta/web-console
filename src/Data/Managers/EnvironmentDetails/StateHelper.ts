@@ -7,6 +7,7 @@ export class EnvironmentDetailsStateHelper extends PrimaryStateHelperWithEnv<"Ge
     super(
       store,
       (data, query, environment) => {
+        console.log("State set: ", { environment });
         const unwrapped = RemoteData.mapSuccess(
           (wrapped) => wrapped.data,
           data
@@ -16,8 +17,10 @@ export class EnvironmentDetailsStateHelper extends PrimaryStateHelperWithEnv<"Ge
           value: unwrapped,
         });
       },
-      (state, query, environment) =>
-        this.getSlice(state, query).byEnv[environment]
+      (state, query, environment) => {
+        console.log("State get: ", { environment });
+        return this.getSlice(state, query).byEnv[environment];
+      }
     );
   }
 

@@ -17,7 +17,14 @@ export class EnvironmentDetailsQueryManager extends PrimaryContinuousQueryManage
       (query, environment) => [environment],
       "GetEnvironmentDetails",
       ({ details }, environment) => getUrl(details, environment),
-      identity
+      identity,
+      (data) => {
+        if (data.kind !== "Success") return;
+        console.log("Update: ", { name: data.value.data.name });
+      },
+      (key) => {
+        console.log("Unregister: ", { key });
+      }
     );
   }
 }
