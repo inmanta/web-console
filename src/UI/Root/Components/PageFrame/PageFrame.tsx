@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Page } from "@patternfly/react-core";
-import styled from "styled-components";
 import { Header } from "@/UI/Root/Components/Header";
 import { PageBreadcrumbs } from "@/UI/Root/Components/PageBreadcrumbs";
 import { Sidebar } from "@/UI/Root/Components/Sidebar";
-import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 
 interface Props {
   environmentId?: string;
@@ -27,31 +25,24 @@ export const PageFrame: React.FC<Props> = ({ children, environmentId }) => {
   const onToggle = isMobileView ? onNavToggleMobile : onNavToggle;
 
   return (
-    <>
-      <SimpleBackgroundImage />
-      <StyledPage
-        breadcrumb={<PageBreadcrumbs />}
-        onPageResize={onPageResize}
-        header={
-          <Header
-            noEnv={!Boolean(environmentId)}
-            isNavOpen={isNavOpen}
-            onToggle={onToggle}
-          />
-        }
-        sidebar={
-          <Sidebar
-            isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
-            environment={environmentId}
-          />
-        }
-      >
-        {children}
-      </StyledPage>
-    </>
+    <Page
+      breadcrumb={<PageBreadcrumbs />}
+      onPageResize={onPageResize}
+      header={
+        <Header
+          noEnv={!Boolean(environmentId)}
+          isNavOpen={isNavOpen}
+          onToggle={onToggle}
+        />
+      }
+      sidebar={
+        <Sidebar
+          isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
+          environment={environmentId}
+        />
+      }
+    >
+      {children}
+    </Page>
   );
 };
-
-const StyledPage = styled(Page)`
-  background-color: transparent;
-`;
