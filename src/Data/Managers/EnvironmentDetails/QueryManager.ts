@@ -24,6 +24,9 @@ export class EnvironmentDetailsQueryManager extends PrimaryContinuousQueryManage
       },
       (key) => {
         console.log("Unregister: ", { key });
+      },
+      (key) => {
+        console.log("Register: ", { key });
       }
     );
   }

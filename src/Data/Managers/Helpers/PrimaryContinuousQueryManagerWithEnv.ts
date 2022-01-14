@@ -107,7 +107,8 @@ export class PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<
     private readonly getUrl: GetUrlWithEnv<Kind>,
     private readonly toUsed: ToUsed<Kind>,
     private readonly logForUpdate?: (data: ApiData<Kind>) => void,
-    private readonly logForUnregister?: (data: unknown) => void
+    private readonly logForUnregister?: (data: unknown) => void,
+    private readonly logForRegister?: (data: unknown) => void
   ) {}
 
   private async update(
@@ -143,6 +144,8 @@ export class PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query, environment);
       this.update(query, url, environment);
+      this.logForRegister &&
+        this.logForRegister(this.getUnique(query, environment));
       this.scheduler.register(this.getUnique(query, environment), task);
       return () => {
         this.logForUnregister &&
