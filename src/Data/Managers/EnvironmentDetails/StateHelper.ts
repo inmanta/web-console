@@ -7,7 +7,12 @@ export class EnvironmentDetailsStateHelper extends PrimaryStateHelperWithEnv<"Ge
     super(
       store,
       (data, query, environment) => {
-        console.log("State set: ", { environment });
+        if (data.kind === "Success" && environment !== data.value.data.id) {
+          console.error("ENV MISMATCH", {
+            environment,
+            dataEnvironment: data.value.data.id,
+          });
+        }
         const unwrapped = RemoteData.mapSuccess(
           (wrapped) => wrapped.data,
           data
@@ -17,10 +22,8 @@ export class EnvironmentDetailsStateHelper extends PrimaryStateHelperWithEnv<"Ge
           value: unwrapped,
         });
       },
-      (state, query, environment) => {
-        console.log("State get: ", { environment });
-        return this.getSlice(state, query).byEnv[environment];
-      }
+      (state, query, environment) =>
+        this.getSlice(state, query).byEnv[environment]
     );
   }
 

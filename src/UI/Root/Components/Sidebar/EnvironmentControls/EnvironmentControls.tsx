@@ -28,8 +28,7 @@ export const EnvironmentControls: React.FC = () => {
     kind: "GetEnvironmentDetails",
     details: false,
   });
-  if (data.kind === "Success")
-    console.log("Component: ", data.value.name, { halted: data.value.halted });
+
   return RemoteData.fold(
     {
       notAsked: () => null,

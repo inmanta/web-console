@@ -18,10 +18,6 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
   set(location: Location, environmentId: string): void {
     const { pathname, search } = location;
     const params = new URLSearchParams(search);
-    console.log("EnvHandler set: ", {
-      environmentId,
-      paramsEnv: params.get("env"),
-    });
     if (params.get("env") !== environmentId) {
       params.set("env", environmentId);
       this.navigate(
@@ -35,7 +31,6 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
     if (typeof environment === "undefined") {
       throw new Error("environment required but missing");
     }
-    console.log("UseId: ", environment.id);
     return environment.id;
   }
 

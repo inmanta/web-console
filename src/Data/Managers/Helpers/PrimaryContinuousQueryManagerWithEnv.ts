@@ -88,11 +88,6 @@ export class PrimaryContinuousQueryManagerWithEnv<Kind extends Query.Kind>
   }
 }
 
-type ApiData<K extends Query.Kind> = RemoteData.Type<
-  Query.Error<K>,
-  Query.ApiResponse<K>
->;
-
 export class PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<
   Kind extends Query.Kind
 > implements ContinuousQueryManager<Kind>
@@ -105,10 +100,7 @@ export class PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<
     private readonly getDependencies: GetDependenciesWithEnv<Kind>,
     private readonly kind: Kind,
     private readonly getUrl: GetUrlWithEnv<Kind>,
-    private readonly toUsed: ToUsed<Kind>,
-    private readonly logForUpdate?: (data: ApiData<Kind>) => void,
-    private readonly logForUnregister?: (data: unknown) => void,
-    private readonly logForRegister?: (data: unknown) => void
+    private readonly toUsed: ToUsed<Kind>
   ) {}
 
   private async update(
@@ -135,21 +127,14 @@ export class PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<
     const task = {
       effect: async () =>
         RemoteData.fromEither(await this.apiHelper.get(url, environment)),
-      update: (data) => {
-        this.logForUpdate && this.logForUpdate(data);
-        this.stateHelper.set(data, query, environment);
-      },
+      update: (data) => this.stateHelper.set(data, query, environment),
     };
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query, environment);
-      this.update(query, url, environment);
-      this.logForRegister &&
-        this.logForRegister(this.getUnique(query, environment));
+      this.update(query, this.getUrl(query, environment), environment);
       this.scheduler.register(this.getUnique(query, environment), task);
       return () => {
-        this.logForUnregister &&
-          this.logForUnregister(this.getUnique(query, environment));
         this.scheduler.unregister(this.getUnique(query, environment));
       };
     }, [url, environment]);

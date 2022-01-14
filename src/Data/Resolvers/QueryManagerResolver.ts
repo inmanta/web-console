@@ -1,5 +1,9 @@
-import { QueryManager, ManagerResolver, SchedulerImpl } from "@/Core";
-import { BaseApiHelper } from "@/Data/API";
+import {
+  QueryManager,
+  ManagerResolver,
+  SchedulerImpl,
+  ApiHelper,
+} from "@/Core";
 import {
   GetProjectsQueryManager,
   GetProjectsStateHelper,
@@ -70,7 +74,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
 
   constructor(
     private readonly store: Store,
-    private readonly apiHelper: BaseApiHelper
+    private readonly apiHelper: ApiHelper
   ) {
     this.managers = this.getManagers();
   }
