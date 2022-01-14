@@ -1,5 +1,6 @@
 import React from "react";
 import { DeployStateBar } from "./DeployStateBar";
+import { colorConfig } from "./DeployStateColorConfig";
 
 export default {
   title: "DeployStateBar",
@@ -26,3 +27,20 @@ export const Default = () => (
     updateFilter={(updater) => alert(updater({}).status)}
   />
 );
+
+export const Legend = () =>
+  Object.entries(colorConfig).map(([key, value]) => (
+    <div
+      key={key}
+      style={{
+        backgroundColor: value,
+        padding: "16px",
+        marginBottom: "8px",
+        borderRadius: "2px",
+        width: "300px",
+        fontSize: "18px",
+      }}
+    >
+      {key}
+    </div>
+  ));
