@@ -1,7 +1,9 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const { GitRevisionPlugin } = require("git-revision-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const webpack = require("webpack");
+const gitRevisionPlugin = new GitRevisionPlugin();
 
 module.exports = {
   entry: {
@@ -12,6 +14,10 @@ module.exports = {
     new CopyPlugin({ patterns: [{ from: "src/config.js", to: "" }] }),
     new webpack.ProvidePlugin({
       process: "process/browser",
+    }),
+    gitRevisionPlugin,
+    new webpack.DefinePlugin({
+      COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
     }),
   ],
   module: {
