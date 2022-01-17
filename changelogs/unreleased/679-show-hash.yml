@@ -1,0 +1,4 @@
+description: Show commit hash on the status page
+issue-nr: 679
+change-type: minor
+destination-branches: [master, iso4]

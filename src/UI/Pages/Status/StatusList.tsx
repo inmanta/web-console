@@ -2,6 +2,7 @@ import React from "react";
 import { List } from "@patternfly/react-core";
 import {
   ClusterIcon,
+  DesktopIcon,
   IntegrationIcon,
   ModuleIcon,
   TagIcon,
@@ -41,6 +42,11 @@ export const StatusList: React.FC<Props> = ({
       name="API"
       details={[["url", apiUrl]]}
       icon={<ClusterIcon color="var(--pf-global--palette--blue-500)" />}
+    />
+    <StatusItem
+      name="Web Console"
+      details={[["commit hash", COMMITHASH]]}
+      icon={<DesktopIcon color="var(--pf-global--palette--blue-500)" />}
     />
     {status.extensions.map((extension) => (
       <StatusItem
