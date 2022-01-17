@@ -12,6 +12,8 @@ type NavigateTo = (
 
 /**
  * The useNavigateTo hook returns a navigateTo function which navigates to a route.
+ * @param newSearch This string should start with a question mark "?".
+ * @throws Will throw an error when newSearch is invalid
  */
 export const useNavigateTo = (): NavigateTo => {
   const { routeManager } = useContext(DependencyContext);
@@ -19,9 +21,15 @@ export const useNavigateTo = (): NavigateTo => {
   const navigate = useNavigate();
 
   return (routeKind, params, newSearch) => {
+    if (newSearch !== undefined) validateSearch(newSearch);
     const pathname = routeManager.getUrl(routeKind, params);
-    navigate(`${pathname}?${newSearch || search}`);
+    navigate(`${pathname}${newSearch || search}`);
   };
+};
+
+const validateSearch = (search: string): void => {
+  if (search.startsWith("?")) return;
+  throw new Error("A search string should start with a question mark (?).");
 };
 
 /**
