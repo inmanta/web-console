@@ -45,7 +45,7 @@ export const StatusList: React.FC<Props> = ({
     />
     <StatusItem
       name="Web Console"
-      details={[["version", COMMITHASH]]}
+      details={[["commit hash", COMMITHASH]]}
       icon={<DesktopIcon color="var(--pf-global--palette--blue-500)" />}
     />
     {status.extensions.map((extension) => (
