@@ -7,12 +7,6 @@ export class EnvironmentDetailsStateHelper extends PrimaryStateHelperWithEnv<"Ge
     super(
       store,
       (data, query, environment) => {
-        if (data.kind === "Success" && environment !== data.value.data.id) {
-          console.error("ENV MISMATCH", {
-            environment,
-            dataEnvironment: data.value.data.id,
-          });
-        }
         const unwrapped = RemoteData.mapSuccess(
           (wrapped) => wrapped.data,
           data
