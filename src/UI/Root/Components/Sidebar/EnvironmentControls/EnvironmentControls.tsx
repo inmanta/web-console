@@ -28,6 +28,7 @@ export const EnvironmentControls: React.FC = () => {
     kind: "GetEnvironmentDetails",
     details: false,
   });
+
   return RemoteData.fold(
     {
       notAsked: () => null,
