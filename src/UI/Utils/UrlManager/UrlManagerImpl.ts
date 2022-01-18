@@ -17,7 +17,10 @@ export class UrlManagerImpl implements UrlManager {
   }
 
   getDocumentationLink(): string {
-    return `https://docs.inmanta.com/inmanta-service-orchestrator/${this.featureManager.getServerVersion()}/`;
+    if (this.featureManager.getEdition().includes("Open Source")) {
+      return `https://docs.inmanta.com/community/${this.featureManager.getServerVersion()}`;
+    }
+    return `https://docs.inmanta.com/inmanta-service-orchestrator/${this.featureManager.getServerMajorVersion()}/`;
   }
 
   setEnvironment(environment: string): void {

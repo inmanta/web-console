@@ -27,11 +27,19 @@ export class PrimaryFeatureManager implements FeatureManager {
     return this.isExtensionEnabled("lsm");
   }
 
+  getServerMajorVersion(): string {
+    const serverStatus = this.get();
+    return serverStatus.version.split(".")[0];
+  }
+
   getServerVersion(): string {
-    const serverStatus = this.stateHelper.getOnce({ kind: "GetServerStatus" });
-    if (!RemoteData.isSuccess(serverStatus)) {
-      throw new Error("ServerStatus has not yet been set.");
-    }
-    return serverStatus.value.version.split(".")[0];
+    const fullVersion = this.get().version;
+    return fullVersion.indexOf(".dev") > -1
+      ? fullVersion.substring(0, fullVersion.indexOf(".dev"))
+      : fullVersion;
+  }
+
+  getEdition(): string {
+    return this.get().edition;
   }
 }
