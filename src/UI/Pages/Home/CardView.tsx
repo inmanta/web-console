@@ -19,7 +19,6 @@ import { FlatEnvironment } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { Link } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Actions } from "./Components";
 
 interface Props {
   environments: FlatEnvironment[];
@@ -76,32 +75,35 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   pathname,
 }) => (
   <Card isHoverable isCompact aria-label={"Environment card"}>
-    <StyledHeader>
-      {environment.icon ? (
-        <StyledIcon
-          src={`data:${environment.icon}`}
-          alt={words("home.environment.icon")(environment.name)}
-          aria-label={`${environment.name}-icon`}
-        />
-      ) : (
-        <FillerIcon aria-label={`${environment.name}-icon`}>
-          {environment.name[0].toUpperCase()}
-        </FillerIcon>
-      )}
-      <Actions environment={environment} />
-    </StyledHeader>
-    <CardTitle>{environment.name}</CardTitle>
-    <CardBody>
-      <StyledCardContent>{environment.description}</StyledCardContent>
-    </CardBody>
-    <CardFooter>
-      <Link pathname={pathname} search={`env=${environment.id}`}>
-        {words("home.environment.select")}
-      </Link>
-      <StyledFooterDiv>{environment.projectName}</StyledFooterDiv>
-    </CardFooter>
+    <StyledLink pathname={pathname} search={`env=${environment.id}`}>
+      <StyledHeader>
+        {environment.icon ? (
+          <StyledIcon
+            src={`data:${environment.icon}`}
+            alt={words("home.environment.icon")(environment.name)}
+            aria-label={`${environment.name}-icon`}
+          />
+        ) : (
+          <FillerIcon aria-label={`${environment.name}-icon`}>
+            {environment.name[0].toUpperCase()}
+          </FillerIcon>
+        )}
+      </StyledHeader>
+      <CardTitle>{environment.name}</CardTitle>
+      <CardBody>
+        <StyledCardContent>{environment.description}</StyledCardContent>
+      </CardBody>
+      <CardFooter>
+        <StyledFooterDiv>{environment.projectName}</StyledFooterDiv>
+      </CardFooter>
+    </StyledLink>
   </Card>
 );
+
+const StyledLink = styled(Link)`
+  text-decoration: auto;
+  color: var(--pf-global--Color--100);
+`;
 
 const StyledCardContent = styled.div`
   white-space: pre-wrap;

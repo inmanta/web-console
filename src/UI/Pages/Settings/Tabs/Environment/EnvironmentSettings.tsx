@@ -11,6 +11,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Actions } from "./Components";
 
 interface Props {
   environment: FlatEnvironment;
@@ -96,6 +97,7 @@ export const EnvironmentSettings: React.FC<Props> = ({
         initialValue={environment.icon || ""}
         onSubmit={onIconSubmit}
       />
+      <Actions environment={environment} />
     </PaddedList>
   );
 };

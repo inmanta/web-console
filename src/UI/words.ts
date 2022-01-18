@@ -361,6 +361,7 @@ const dict = {
   "settings.tabs.environment.repoSettings": "Repository Settings",
   "settings.tabs.environment.projectName": "Project Name",
   "settings.tabs.environment.icon": "Icon",
+  "settings.tabs.environment.id": "Id",
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
   "settings.tabs.configuration.default": (value: string) =>

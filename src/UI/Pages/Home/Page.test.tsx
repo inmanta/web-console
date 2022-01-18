@@ -4,18 +4,14 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
-  CommandResolverImpl,
-  DeleteEnvironmentCommandManager,
   getStoreInstance,
   QueryResolverImpl,
   GetEnvironmentsStateHelper,
   GetEnvironmentsQueryManager,
-  EnvironmentsUpdater,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Project,
 } from "@/Test";
@@ -31,22 +27,12 @@ function setup() {
       new GetEnvironmentsQueryManager(apiHelper, environmentsStateHelper),
     ])
   );
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new DeleteEnvironmentCommandManager(
-        apiHelper,
-        new EnvironmentsUpdater(environmentsStateHelper, apiHelper)
-      ),
-    ])
-  );
-
   const component = (
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
           ...dependencies,
           queryResolver,
-          commandResolver,
         }}
       >
         <StoreProvider store={store}>

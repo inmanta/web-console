@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Either, Maybe } from "@/Core";
@@ -11,6 +12,9 @@ import {
   GetProjectsStateHelper,
   EnvironmentDetailsUpdater,
   EnvironmentDetailsStateHelper,
+  DeleteEnvironmentCommandManager,
+  EnvironmentsUpdater,
+  GetEnvironmentsStateHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -41,22 +45,33 @@ function setup() {
           apiHelper
         )
       ),
+      new DeleteEnvironmentCommandManager(
+        apiHelper,
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(store),
+          apiHelper
+        )
+      ),
     ])
   );
 
   const component = (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-        commandResolver,
-        environmentHandler: new MockEnvironmentHandler(selectedEnvironment.id),
-      }}
-    >
-      <EnvironmentSettings
-        environment={selectedEnvironment}
-        projects={Project.list}
-      />
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          commandResolver,
+          environmentHandler: new MockEnvironmentHandler(
+            selectedEnvironment.id
+          ),
+        }}
+      >
+        <EnvironmentSettings
+          environment={selectedEnvironment}
+          projects={Project.list}
+        />
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, selectedEnvironment };

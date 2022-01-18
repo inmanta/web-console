@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Either, Maybe } from "@/Core";
@@ -14,6 +15,7 @@ import {
 } from "@/Data";
 import {
   DeferredApiHelper,
+  dependencies,
   DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Project,
@@ -46,13 +48,17 @@ function setup() {
   const onClose = jest.fn();
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
-      <DeleteModal
-        isOpen
-        onClose={onClose}
-        environment={{ id: "abcd", name: "connect" }}
-      />
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, commandResolver }}
+      >
+        <DeleteModal
+          isOpen
+          onClose={onClose}
+          environment={{ id: "abcd", name: "connect" }}
+        />
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, onClose };
