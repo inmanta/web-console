@@ -2,40 +2,14 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {
-  CommandResolverImpl,
-  DeleteEnvironmentCommandManager,
-  getStoreInstance,
-  EnvironmentsUpdater,
-  GetEnvironmentsStateHelper,
-} from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicCommandManagerResolver,
-  Environment,
-} from "@/Test";
+import { dependencies, Environment } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
 function setup() {
-  const store = getStoreInstance();
-
-  const apiHelper = new DeferredApiHelper();
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new DeleteEnvironmentCommandManager(
-        apiHelper,
-        new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(store),
-          apiHelper
-        )
-      ),
-    ])
-  );
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
+      <DependencyProvider dependencies={dependencies}>
         <EnvironmentsOverview environments={Environment.filterable} />
       </DependencyProvider>
     </MemoryRouter>

@@ -10,7 +10,8 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { EnvironmentModel, Maybe } from "@/Core";
-import { DependencyContext } from "@/UI";
+import { DependencyContext } from "@/UI/Dependency";
+import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -28,6 +29,8 @@ export const DeleteModal: React.FC<Props> = ({
   onClose,
 }) => {
   const { commandResolver } = useContext(DependencyContext);
+  const navigateTo = useNavigateTo();
+  const redirectToHome = () => navigateTo("Home", undefined);
   const [candidateEnv, setCandidateEnv] = useState("");
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
   const [isBusy, setIsBusy] = useState(false);
@@ -48,6 +51,7 @@ export const DeleteModal: React.FC<Props> = ({
     const error = await trigger();
     if (Maybe.isNone(error)) {
       onClose();
+      redirectToHome();
     } else {
       setIsBusy(false);
       setErrorMessage(error.value);
