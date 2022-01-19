@@ -25,7 +25,7 @@ function setup() {
     baseApiHelper,
     new ServiceConfigStateHelper(store)
   );
-  store.dispatch.environmentDetails.setData({
+  store.dispatch.environment.setEnvironmentDetailsById({
     id: Service.a.environment,
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
@@ -56,7 +56,7 @@ it("Config Details takes environment halted status in account", async () => {
   const { component, store } = setup();
   const { rerender } = render(component({}));
   act(() => {
-    store.dispatch.environmentDetails.setData({
+    store.dispatch.environment.setEnvironmentDetailsById({
       id: ServiceInstance.a.environment,
       value: RemoteData.success({ halted: true } as EnvironmentDetails),
     });

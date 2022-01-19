@@ -37,7 +37,7 @@ export class EnvironmentHandlerImpl implements EnvironmentHandler {
   useSelected(): FlatEnvironment | undefined {
     /* eslint-disable-next-line react-hooks/rules-of-hooks */
     const allEnvironments = useStoreState(
-      (state) => state.environments.environments
+      (state) => state.environment.environments
     );
     const { search } = this.useLocation();
     return this.determineSelected(allEnvironments, search);

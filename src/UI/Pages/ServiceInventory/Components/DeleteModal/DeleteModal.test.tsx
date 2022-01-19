@@ -23,7 +23,7 @@ function setup() {
     new DynamicCommandManagerResolver([commandManager])
   );
   const storeInstance = getStoreInstance();
-  storeInstance.dispatch.environmentDetails.setData({
+  storeInstance.dispatch.environment.setEnvironmentDetailsById({
     id: ServiceInstance.a.environment,
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
@@ -88,7 +88,7 @@ describe("DeleteModal ", () => {
     const { component, storeInstance } = setup();
     const { rerender } = render(component(true));
     act(() => {
-      storeInstance.dispatch.environmentDetails.setData({
+      storeInstance.dispatch.environment.setEnvironmentDetailsById({
         id: ServiceInstance.a.environment,
         value: RemoteData.success({ halted: true } as EnvironmentDetails),
       });

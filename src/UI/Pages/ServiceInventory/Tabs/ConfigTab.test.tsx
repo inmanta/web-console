@@ -158,7 +158,7 @@ test("ConfigTab handles hooks with environment modifier correctly", async () => 
   const environmentModifier = new EnvironmentModifierImpl();
   environmentModifier.setEnvironment(Service.a.environment);
   const { component, storeInstance } = setup(environmentModifier);
-  storeInstance.dispatch.environmentDetails.setData({
+  storeInstance.dispatch.environment.setEnvironmentDetailsById({
     id: Service.a.environment,
     value: RemoteData.success({ halted: true } as EnvironmentDetails),
   });

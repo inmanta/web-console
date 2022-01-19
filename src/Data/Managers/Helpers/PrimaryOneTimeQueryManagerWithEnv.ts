@@ -17,6 +17,7 @@ import {
 } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { Data, GetDependenciesWithEnv, GetUrlWithEnv, ToUsed } from "./types";
+import { usePrevious } from "./usePrevious";
 
 export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
   implements OneTimeQueryManager<Kind>
@@ -45,6 +46,7 @@ export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
     const [url, setUrl] = useState(this.getUrl(query, environment));
+    const previousEnvironment = usePrevious(environment);
 
     useEffect(() => {
       setUrl(this.getUrl(query, environment));
@@ -52,7 +54,13 @@ export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query);
-      this.update(query, url, environment);
+      // If the environment changed, use the url derived from the query
+      // Otherwise the url has changed, use it to not lose e.g. paging state
+      const urlToUse =
+        environment !== previousEnvironment
+          ? this.getUrl(query, environment)
+          : url;
+      this.update(query, urlToUse, environment);
     }, [url, environment]);
 
     return [
@@ -98,6 +106,7 @@ export class PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv<
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
     const [url, setUrl] = useState(this.getUrl(query, environment));
+    const previousEnvironment = usePrevious(environment);
 
     useEffect(() => {
       setUrl(this.getUrl(query, environment));
@@ -105,7 +114,13 @@ export class PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv<
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query, environment);
-      this.update(query, url, environment);
+      // If the environment changed, use the url derived from the query
+      // Otherwise the url has changed, use it to not lose e.g. paging state
+      const urlToUse =
+        environment !== previousEnvironment
+          ? this.getUrl(query, environment)
+          : url;
+      this.update(query, urlToUse, environment);
     }, [url, environment]);
 
     return [

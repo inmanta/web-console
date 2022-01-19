@@ -15,7 +15,7 @@ test("EnvironmentHandler updates environment correctly", () => {
   const env = Environment.filterable[0];
   store
     .getActions()
-    .environments.setEnvironments(RemoteData.success(Environment.filterable));
+    .environment.setEnvironments(RemoteData.success(Environment.filterable));
 
   const environmentHandler = new EnvironmentHandlerImpl(
     () => history.location,

@@ -69,7 +69,6 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
   fetchMock.mockResponse(JSON.stringify({}));
   const { component, apiHelper } = setup();
   render(component);
-
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: ServerStatus.withLsm }));
     await apiHelper.resolve(Either.right({ data: Project.list }));

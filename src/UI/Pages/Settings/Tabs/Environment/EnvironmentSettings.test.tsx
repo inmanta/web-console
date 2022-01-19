@@ -43,6 +43,10 @@ function setup() {
         new EnvironmentDetailsUpdater(
           new EnvironmentDetailsStateHelper(store),
           apiHelper
+        ),
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(store),
+          apiHelper
         )
       ),
       new DeleteEnvironmentCommandManager(
@@ -114,9 +118,12 @@ test("Given environment settings When submitting the edited name Then the backen
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   await act(async () => {
+    await apiHelper.resolve(Either.right({ data: Environment.filterable[0] }));
+  });
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: Project.filterable }));
   });
-  expect(apiHelper.resolvedRequests).toHaveLength(2);
+  expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(apiHelper.pendingRequests).toHaveLength(0);
   expect(
     await screen.findByRole("generic", { name: "Name-value" })
@@ -160,6 +167,11 @@ test.each`
     expect(apiHelper.pendingRequests).toHaveLength(1);
     await act(async () => {
       await apiHelper.resolve(Maybe.some("Invalid environment name"));
+    });
+    await act(async () => {
+      await apiHelper.resolve(
+        Either.right({ data: Environment.filterable[0] })
+      );
     });
     await act(async () => {
       await apiHelper.resolve(Either.right({ data: Project.filterable }));
@@ -244,9 +256,12 @@ test("Given environment settings When submitting the edited repository settings 
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   await act(async () => {
+    await apiHelper.resolve(Either.right({ data: Environment.filterable[0] }));
+  });
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: Project.filterable }));
   });
-  expect(apiHelper.resolvedRequests).toHaveLength(2);
+  expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(apiHelper.pendingRequests).toHaveLength(0);
   expect(
     await screen.findByRole("generic", { name: "repo_branch-value" })
@@ -313,6 +328,11 @@ test.each`
     expect(apiHelper.pendingRequests).toHaveLength(1);
     await act(async () => {
       await apiHelper.resolve(Maybe.some("Invalid branch"));
+    });
+    await act(async () => {
+      await apiHelper.resolve(
+        Either.right({ data: Environment.filterable[0] })
+      );
     });
     await act(async () => {
       await apiHelper.resolve(Either.right({ data: Project.filterable }));
@@ -385,9 +405,12 @@ test("Given environment settings When submitting the edited project name Then th
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   await act(async () => {
+    await apiHelper.resolve(Either.right({ data: Environment.filterable[0] }));
+  });
+  await act(async () => {
     await apiHelper.resolve(Either.right({ data: Project.filterable }));
   });
-  expect(apiHelper.resolvedRequests).toHaveLength(2);
+  expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(apiHelper.pendingRequests).toHaveLength(0);
   expect(
     await screen.findByRole("generic", { name: "Project Name-value" })
@@ -444,6 +467,11 @@ test.each`
     expect(apiHelper.pendingRequests).toHaveLength(1);
     await act(async () => {
       await apiHelper.resolve(Maybe.some("Invalid project id"));
+    });
+    await act(async () => {
+      await apiHelper.resolve(
+        Either.right({ data: Environment.filterable[0] })
+      );
     });
     await act(async () => {
       await apiHelper.resolve(Either.right({ data: Project.filterable }));
