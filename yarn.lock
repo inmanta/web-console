@@ -5865,10 +5865,10 @@ css-loader@^6.5.1:
     postcss-value-parser "^4.1.0"
     semver "^7.3.5"
 
-css-minimizer-webpack-plugin@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/css-minimizer-webpack-plugin/-/css-minimizer-webpack-plugin-3.3.1.tgz#5afc4507a4ec13dd223f043cda8953ee0bf6ecfa"
-  integrity sha512-SHA7Hu/EiF0dOwdmV2+agvqYpG+ljlUa7Dvn1AVOmSH3N8KOERoaM9lGpstz9nGsoTjANGyUXdrxl/EwdMScRg==
+css-minimizer-webpack-plugin@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/css-minimizer-webpack-plugin/-/css-minimizer-webpack-plugin-3.4.1.tgz#ab78f781ced9181992fe7b6e4f3422e76429878f"
+  integrity sha512-1u6D71zeIfgngN2XNRJefc/hY7Ybsxd74Jm4qngIXyUEk7fss3VUzuHxLAq/R8NAba4QU9OUSaMZlbpRc7bM4Q==
   dependencies:
     cssnano "^5.0.6"
     jest-worker "^27.0.2"
@@ -10057,16 +10057,7 @@ jest-worker@^26.6.2:
     merge-stream "^2.0.0"
     supports-color "^7.0.0"
 
-jest-worker@^27.0.2:
-  version "27.4.5"
-  resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-27.4.5.tgz#d696e3e46ae0f24cff3fa7195ffba22889262242"
-  integrity sha512-f2s8kEdy15cv9r7q4KkzGXvlY0JTcmCbMHZBfSQDwW77REr45IDWwd0lksDFeVHH2jJ5pqb90T77XscrjeGzzg==
-  dependencies:
-    "@types/node" "*"
-    merge-stream "^2.0.0"
-    supports-color "^8.0.0"
-
-jest-worker@^27.4.6:
+jest-worker@^27.0.2, jest-worker@^27.4.6:
   version "27.4.6"
   resolved "https://registry.yarnpkg.com/jest-worker/-/jest-worker-27.4.6.tgz#5d2d93db419566cb680752ca0792780e71b3273e"
   integrity sha512-gHWJF/6Xi5CTG5QCvROr6GcmpIqNYpDJyc8A1h/DyXqH1tD6SnRCM0d3U5msV31D2LB/U+E0M+W4oyvKV44oNw==
@@ -10369,10 +10360,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lint-staged@^12.1.7:
-  version "12.1.7"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.1.7.tgz#fe9137992ac18a456422bb8484dd30be0140629f"
-  integrity sha512-bltv/ejiLWtowExpjU+s5z8j1Byjg9AlmaAjMmqNbIicY69u6sYIwXGg0dCn0TlkrrY2CphtHIXAkbZ+1VoWQQ==
+lint-staged@^12.2.0:
+  version "12.2.0"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.2.0.tgz#6f7298399519efc382a414d36717949714b705c3"
+  integrity sha512-TnNciMBhmEqzqM+RvzqqdvrG4TsI8wCDMX1Vg9+rj2Y9uY70Nq84Mb1WOIiwxW9l5tUlCOqtY5La71RM2fSgfA==
   dependencies:
     cli-truncate "^3.1.0"
     colorette "^2.0.16"
