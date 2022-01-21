@@ -78,7 +78,7 @@ test("SetStateAction dropdown takes environment halted status in account", async
   const id = ServiceInstance.b.id;
   const { commandResolver } = setup();
   const storeInstance = getStoreInstance();
-  storeInstance.dispatch.environmentDetails.setData({
+  storeInstance.dispatch.environment.setEnvironmentDetailsById({
     id: ServiceInstance.b.environment,
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
@@ -104,7 +104,7 @@ test("SetStateAction dropdown takes environment halted status in account", async
   );
   const { rerender } = render(componentWithDependencies([]));
   act(() => {
-    storeInstance.dispatch.environmentDetails.setData({
+    storeInstance.dispatch.environment.setEnvironmentDetailsById({
       id: ServiceInstance.b.environment,
       value: RemoteData.success({ halted: true } as EnvironmentDetails),
     });

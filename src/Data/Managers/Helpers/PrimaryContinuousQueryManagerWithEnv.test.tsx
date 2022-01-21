@@ -27,7 +27,7 @@ import { PrimaryRouteManager } from "@/UI/Routing";
 test("GIVEN ContinuousQueryManagerWithEnv WHEN environment changes THEN the api call uses the correct url", async () => {
   const apiHelper = new DeferredApiHelper();
   const store = getStoreInstance();
-  store.dispatch.environments.setEnvironments(
+  store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
         id: "aaa",

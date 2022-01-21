@@ -2,6 +2,11 @@ import { RemoteData, Query } from "@/Core";
 import { PrimaryStateHelper } from "@/Data/Common";
 import { Store, State, Dispatch } from "@/Data/Store";
 
+type Data = RemoteData.Type<
+  Query.Error<"GetEnvironments">,
+  Query.Data<"GetEnvironments">
+>;
+
 export class GetEnvironmentsStateHelper extends PrimaryStateHelper<"GetEnvironments"> {
   constructor(store: Store) {
     super(
@@ -15,16 +20,33 @@ export class GetEnvironmentsStateHelper extends PrimaryStateHelper<"GetEnvironme
             })),
           ]);
         }, data);
-        this.getSlice(store.dispatch, query).setEnvironments(unwrapped);
+        this.setData(store.dispatch, query, unwrapped);
       },
-      (state, query) => this.getSlice(state, query).environments
+      (state, query) => this.getData(state, query)
     );
   }
 
-  private getSlice<T extends Dispatch | State>(
-    root: T,
+  private getData(
+    state: State,
     { details }: Query.SubQuery<"GetEnvironments">
-  ): T["environments" | "environmentsWithDetails"] {
-    return details ? root.environmentsWithDetails : root.environments;
+  ): Data {
+    return details
+      ? state.environment.environmentsWithDetails
+      : state.environment.environments;
+  }
+
+  private setData(
+    store: Dispatch,
+    { details }: Query.SubQuery<"GetEnvironments">,
+    data: Data
+  ) {
+    if (details) {
+      store.environment.setEnvironmentsWithDetails(data);
+      if (RemoteData.isSuccess(data)) {
+        store.environment.setEnvironments(data);
+      }
+    } else {
+      store.environment.setEnvironments(data);
+    }
   }
 }

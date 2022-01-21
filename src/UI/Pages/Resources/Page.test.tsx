@@ -299,7 +299,7 @@ test("Given the ResourcesView When environment is halted, then deploy and repair
   const { component, apiHelper, environment, store, environmentModifier } =
     setup();
   environmentModifier.setEnvironment(environment);
-  store.dispatch.environmentDetails.setData({
+  store.dispatch.environment.setEnvironmentDetailsById({
     id: environment,
     value: RemoteData.success(EnvironmentDetails.halted),
   });

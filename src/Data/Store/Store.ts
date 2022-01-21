@@ -12,22 +12,10 @@ import {
 import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
 import {
-  environmentDetailsSlice,
-  EnvironmentDetailsSlice,
-} from "./EnvironmentDetailsSlice";
-import {
-  environmentDetailsWithIconSlice,
-  EnvironmentDetailsWithIconSlice,
-} from "./EnvironmentDetailsWithIconSlice";
-import {
   environmentSettingsSlice,
   EnvironmentSettingsSlice,
 } from "./EnvironmentSettingsSlice";
-import { EnvironmentsSlice, environmentsSlice } from "./EnvironmentsSlice";
-import {
-  EnvironmentsWithDetailsSlice,
-  environmentsWithDetailsSlice,
-} from "./EnvironmentsWithDetailsSlice";
+import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
 import { factsSlice, FactsSlice } from "./FactsSlice";
 import {
@@ -67,8 +55,7 @@ import {
 } from "./VersionResourcesSlice";
 
 export interface StoreModel {
-  environments: EnvironmentsSlice;
-  environmentsWithDetails: EnvironmentsWithDetailsSlice;
+  environment: EnvironmentSlice;
   projects: ProjectsSlice;
   serverStatus: ServerStatusSlice;
   services: ServicesSlice;
@@ -84,8 +71,6 @@ export interface StoreModel {
   resourceDetails: ResourceDetailsSlice;
   resourceHistory: ResourceHistorySlice;
   resourceLogs: ResourceLogsSlice;
-  environmentDetails: EnvironmentDetailsSlice;
-  environmentDetailsWithIcon: EnvironmentDetailsWithIconSlice;
   callbacks: CallbacksSlice;
   compileReports: CompileReportsSlice;
   compileDetails: CompileDetailsSlice;
@@ -98,8 +83,7 @@ export interface StoreModel {
 }
 
 export const storeModel: StoreModel = {
-  environments: environmentsSlice,
-  environmentsWithDetails: environmentsWithDetailsSlice,
+  environment: environmentSlice,
   projects: projectsSlice,
   serverStatus: serverStatusSlice,
   services: servicesSlice,
@@ -115,8 +99,6 @@ export const storeModel: StoreModel = {
   resourceDetails: resourceDetailsSlice,
   resourceHistory: resourceHistorySlice,
   resourceLogs: resourceLogsSlice,
-  environmentDetails: environmentDetailsSlice,
-  environmentDetailsWithIcon: environmentDetailsWithIconSlice,
   callbacks: callbacksSlice,
   compileReports: compileReportsSlice,
   compileDetails: compileDetailsSlice,

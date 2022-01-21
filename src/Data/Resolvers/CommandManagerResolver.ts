@@ -128,6 +128,10 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         new EnvironmentDetailsUpdater(
           new EnvironmentDetailsStateHelper(this.store),
           this.apiHelper
+        ),
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(this.store),
+          this.apiHelper
         )
       ),
       new UpdateEnvironmentSettingCommandManager(

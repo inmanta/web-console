@@ -1,10 +1,16 @@
-import { ModifyEnvironmentParams, ApiHelper, UpdaterWithEnv } from "@/Core";
+import {
+  ModifyEnvironmentParams,
+  ApiHelper,
+  UpdaterWithEnv,
+  Updater,
+} from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class ModifyEnvironmentCommandManager extends CommandManagerWithEnv<"ModifyEnvironment"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">,
+    private readonly listUpdater: Updater<"GetEnvironments">
   ) {
     super(
       "ModifyEnvironment",
@@ -20,6 +26,10 @@ export class ModifyEnvironmentCommandManager extends CommandManagerWithEnv<"Modi
           },
           environment
         );
+        await this.listUpdater.update({
+          kind: "GetEnvironments",
+          details: true,
+        });
         return error;
       }
     );

@@ -76,7 +76,7 @@ export class ServiceInventoryPrepper {
       ])
     );
 
-    store.dispatch.environments.setEnvironments(
+    store.dispatch.environment.setEnvironments(
       RemoteData.success(Environment.filterable)
     );
 
