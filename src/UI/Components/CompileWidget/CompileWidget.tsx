@@ -16,7 +16,7 @@ interface Props {
   onUpdateAndRecompile(): void;
 }
 
-export const CompileButton: React.FC<Props> = ({
+export const CompileWidget: React.FC<Props> = ({
   compiling,
   onRecompile,
   onUpdateAndRecompile,
@@ -26,7 +26,7 @@ export const CompileButton: React.FC<Props> = ({
   const onSelect = () => setIsOpen(false);
   return (
     <Dropdown
-      aria-label="CompileButton"
+      aria-label="CompileWidget"
       onSelect={onSelect}
       toggle={
         <DropdownToggle
@@ -35,7 +35,7 @@ export const CompileButton: React.FC<Props> = ({
             <DropdownToggleAction
               key="action"
               onClick={onRecompile}
-              aria-label="Recompile"
+              aria-label="RecompileButton"
             >
               {recompile}
             </DropdownToggleAction>,
@@ -48,7 +48,7 @@ export const CompileButton: React.FC<Props> = ({
       isOpen={isOpen}
       dropdownItems={[
         <DropdownItem
-          aria-label="UpdateAndRecompile"
+          aria-label="UpdateAndRecompileButton"
           key="action"
           component="button"
           onClick={onUpdateAndRecompile}

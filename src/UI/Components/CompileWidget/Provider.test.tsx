@@ -30,11 +30,11 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  const widget = screen.getByRole("generic", { name: "CompileButton" });
+  const widget = screen.getByRole("generic", { name: "CompileWidget" });
   expect(widget).toBeVisible();
 
   const button = within(widget).getByRole("button", {
-    name: "Recompile",
+    name: "RecompileButton",
   });
 
   userEvent.click(button);
@@ -57,7 +57,7 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
   const { component, apiHelper } = setup();
   render(component);
 
-  const widget = screen.getByRole("generic", { name: "CompileButton" });
+  const widget = screen.getByRole("generic", { name: "CompileWidget" });
   expect(widget).toBeVisible();
 
   const toggle = within(widget).getByRole("button", {
@@ -67,7 +67,7 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
   userEvent.click(toggle);
 
   const button = within(widget).getByRole("button", {
-    name: "UpdateAndRecompile",
+    name: "UpdateAndRecompileButton",
   });
 
   userEvent.click(button);

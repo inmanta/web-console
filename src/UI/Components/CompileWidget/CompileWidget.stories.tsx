@@ -1,14 +1,14 @@
 import React from "react";
 import { RemoteData } from "@/Core";
-import { CompileButton } from "./CompileButton";
+import { CompileWidget } from "./CompileWidget";
 
 export default {
-  title: "CompileButton",
-  component: CompileButton,
+  title: "CompileWidget",
+  component: CompileWidget,
 };
 
 export const Default = () => (
-  <CompileButton
+  <CompileWidget
     compiling={RemoteData.success(false)}
     onRecompile={() => alert("Recompile")}
     onUpdateAndRecompile={() => alert("Update & Recompile")}
