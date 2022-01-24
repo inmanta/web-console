@@ -1,10 +1,10 @@
-import { CompileReportParams, Operator, Query } from "@/Core";
-import { omit } from "lodash";
+import { omit } from "lodash-es";
 import moment from "moment";
 import qs from "qs";
+import { CompileReportParams, Query, RangeOperator } from "@/Core";
 
 export function getUrl(
-  { pageSize, sort, filter }: Query.SubQuery<"CompileReports">,
+  { pageSize, sort, filter }: Query.SubQuery<"GetCompileReports">,
   timezone = moment.tz.guess()
 ): string {
   const serializedFilters =
@@ -18,14 +18,16 @@ export function getUrl(
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
   return `/api/v2/compilereport?limit=${pageSize.value}${sortParam}${filterParam}`;
 }
-type Filter = NonNullable<Query.SubQuery<"CompileReports">["filter"]>;
+type Filter = NonNullable<Query.SubQuery<"GetCompileReports">["filter"]>;
 
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};
   const { status, success, requested } = filter;
   const serializedTimestampOperatorFilters = requested?.map(
     (timestampWithOperator) =>
-      `${operatorToParam(timestampWithOperator.operator)}:${moment
+      `${RangeOperator.serializeOperator(
+        timestampWithOperator.operator
+      )}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
@@ -73,12 +75,3 @@ function combineStatusFilters(status?: CompileReportParams.CompileStatus[]) {
   }
   return {};
 }
-
-const operatorToParam = (operator: Operator): string => {
-  switch (operator) {
-    case Operator.From:
-      return "ge";
-    case Operator.To:
-      return "le";
-  }
-};

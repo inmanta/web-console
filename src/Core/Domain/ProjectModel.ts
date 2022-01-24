@@ -11,5 +11,19 @@ export interface EnvironmentIdentifier {
 
 export interface EnvironmentModel extends WithId {
   name: string;
-  projectId: string;
+  project_id: string;
+  repo_branch: string;
+  repo_url: string;
+  description?: string;
+  icon?: string;
+}
+
+export interface FlatEnvironment extends WithId {
+  name: string;
+  project_id: string;
+  repo_branch: string;
+  repo_url: string;
+  projectName: string;
+  description?: string;
+  icon?: string;
 }

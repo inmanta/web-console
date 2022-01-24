@@ -1,8 +1,4 @@
 import React from "react";
-import styled from "styled-components";
-import { CompileStageReportRow } from "@/Core";
-import { CodeHighlighter, TextWithCopy } from "@/UI/Components";
-import { words } from "@/UI/words";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -10,6 +6,10 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { Td, Tr, Tbody } from "@patternfly/react-table";
+import styled from "styled-components";
+import { CompileStageReportRow } from "@/Core";
+import { CodeHighlighter, TextWithCopy } from "@/UI/Components";
+import { words } from "@/UI/words";
 
 interface Props {
   row: CompileStageReportRow;

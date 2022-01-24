@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump ts-jest from 27.0.6 to 27.0.7'
+destination-branches:
+- master
+- iso4
+sections: {}

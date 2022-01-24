@@ -1,51 +1,28 @@
-import { Query, RemoteData, ResourceStatus, StateHelper } from "@/Core";
-import { Store, useStoreState } from "@/Data/Store";
-import { isEqual } from "lodash";
+import { RemoteData, Resource } from "@/Core";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
+import { Store } from "@/Data/Store";
 
-type Data = RemoteData.Type<Query.Error<"Resources">, Query.Data<"Resources">>;
-type ApiData = RemoteData.Type<
-  Query.Error<"Resources">,
-  Query.ApiResponse<"Resources">
->;
-
-export class ResourcesStateHelper implements StateHelper<"Resources"> {
-  constructor(
-    private readonly store: Store,
-    private readonly environment: string
-  ) {}
-
-  set(data: ApiData): void {
-    const unwrapped = RemoteData.mapSuccess(
-      (wrapped) => ({
-        ...wrapped,
-        data: wrapped.data.map((resource) => ({
-          ...resource,
-          status: resource.status as ResourceStatus,
-        })),
-      }),
-      data
-    );
-    this.store.dispatch.resources.setList({
-      environment: this.environment,
-      data: unwrapped,
-    });
-  }
-
-  getHooked(): Data {
-    return useStoreState(
-      (state) => this.enforce(state.resources.listByEnv[this.environment]),
-      isEqual
-    );
-  }
-
-  private enforce(value: undefined | Data): Data {
-    if (typeof value === "undefined") return RemoteData.notAsked();
-    return value;
-  }
-
-  getOnce(): Data {
-    return this.enforce(
-      this.store.getState().resources.listByEnv[this.environment]
+export class ResourcesStateHelper extends PrimaryStateHelperWithEnv<"GetResources"> {
+  constructor(store: Store) {
+    super(
+      store,
+      (data, query, environment) => {
+        const unwrapped = RemoteData.mapSuccess(
+          (wrapped) => ({
+            ...wrapped,
+            data: wrapped.data.map((resource) => ({
+              ...resource,
+              status: resource.status as Resource.Status,
+            })),
+          }),
+          data
+        );
+        store.dispatch.resources.setList({
+          environment,
+          data: unwrapped,
+        });
+      },
+      (state, query, environment) => state.resources.listByEnv[environment]
     );
   }
 }

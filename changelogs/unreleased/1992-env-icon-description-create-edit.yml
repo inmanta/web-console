@@ -1,0 +1,4 @@
+description: Add icon and description field to CreateEnvironment and EditEnvironment views
+issue-nr: 1992
+change-type: minor
+destination-branches: [master, iso4]

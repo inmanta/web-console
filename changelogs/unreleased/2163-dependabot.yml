@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump ts-prune from 0.10.2 to 0.10.3'
+destination-branches:
+- master
+- iso4
+sections: {}

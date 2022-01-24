@@ -1,24 +1,23 @@
-import { Fetcher, StateHelper, Scheduler } from "@/Core";
-import { ContinuousQueryManagerImpl } from "@/Data/Common";
-import { identity } from "lodash";
+import { identity } from "lodash-es";
+import { Scheduler, ApiHelper, StateHelperWithEnv } from "@/Core";
+import { PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv } from "@/Data/Managers/Helpers";
+import { getUrl } from "./getUrl";
 
-export class EnvironmentDetailsQueryManager extends ContinuousQueryManagerImpl<"EnvironmentDetails"> {
+export class EnvironmentDetailsQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetEnvironmentDetails"> {
   constructor(
-    fetcher: Fetcher<"EnvironmentDetails">,
-    stateHelper: StateHelper<"EnvironmentDetails">,
-    scheduler: Scheduler,
-    environment: string
+    apiHelper: ApiHelper,
+    stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">,
+    scheduler: Scheduler
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
-      () => `env-${environment}`,
-      () => [environment],
-      "EnvironmentDetails",
-      () => `/api/v2/environment/${environment}`,
-      identity,
-      ""
+      ({ kind }, environment) => `${kind}_${environment}`,
+      (query, environment) => [environment],
+      "GetEnvironmentDetails",
+      ({ details }, environment) => getUrl(details, environment),
+      identity
     );
   }
 }

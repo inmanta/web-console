@@ -1,9 +1,9 @@
-import { Maybe } from "@/Core";
-import { words } from "@/UI/words";
-import { DependencyContext } from "@/UI/Dependency";
-import { DeleteForm, ErrorToastAlert } from "@/UI/Components";
-import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import React, { useContext, useState } from "react";
+import { Button, Modal, ModalVariant } from "@patternfly/react-core";
+import { Maybe } from "@/Core";
+import { DeleteForm, ErrorToastAlert } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 export const DeleteEntityModal: React.FunctionComponent<{
   serviceName: string;

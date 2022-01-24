@@ -1,24 +1,20 @@
 import React from "react";
-import { words } from "@/UI/words";
-import {
-  EmptyState,
-  EmptyStateIcon,
-  Spinner,
-  Title,
-} from "@patternfly/react-core";
+import { EmptyState, EmptyStateIcon, Title } from "@patternfly/react-core";
+import { Spinner } from "@/UI/Components/Spinner";
 import { Delayed } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
 interface Props {
-  delay?: number;
+  instant?: boolean;
 }
 
-export const LoadingView: React.FC<Props> = ({ delay, ...props }) => (
-  <Delayed delay={delay}>
-    <EmptyState {...props}>
+export const LoadingView: React.FC<Props> = ({ instant, ...props }) => (
+  <EmptyState isFullHeight {...props}>
+    <Delayed delay={instant ? undefined : 500}>
       <EmptyStateIcon variant="container" component={Spinner} />
       <Title size="lg" headingLevel="h4">
         {words("loading")}
       </Title>
-    </EmptyState>
-  </Delayed>
+    </Delayed>
+  </EmptyState>
 );

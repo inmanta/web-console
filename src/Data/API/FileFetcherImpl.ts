@@ -1,5 +1,4 @@
-import { FileFetcher, Either, Maybe } from "@/Core";
-import { BaseApiHelper } from "./BaseApiHelper";
+import { FileFetcher, Either, Maybe, ApiHelper } from "@/Core";
 
 interface RawResponse {
   data?: {
@@ -11,10 +10,7 @@ interface RawResponse {
 export class FileFetcherImpl implements FileFetcher {
   private environment: Maybe.Type<string> = Maybe.none();
 
-  constructor(
-    private readonly baseApiHelper: BaseApiHelper,
-    environment?: string
-  ) {
+  constructor(private readonly apiHelper: ApiHelper, environment?: string) {
     if (typeof environment === "undefined") return;
     this.environment = Maybe.some(environment);
   }
@@ -38,8 +34,8 @@ export class FileFetcherImpl implements FileFetcher {
 
   async get(fileId: string): Promise<Either.Type<string, string>> {
     return this.unpack(
-      await this.baseApiHelper.get<RawResponse>(
-        `${this.baseApiHelper.getBaseUrl()}${this.getUrl(fileId)}`,
+      await this.apiHelper.get<RawResponse>(
+        this.getUrl(fileId),
         this.getEnvironment()
       )
     );

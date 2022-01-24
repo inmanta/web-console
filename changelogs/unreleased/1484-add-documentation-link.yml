@@ -1,0 +1,6 @@
+description: Add documentation link to navigation bar
+issue-nr: 1484
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

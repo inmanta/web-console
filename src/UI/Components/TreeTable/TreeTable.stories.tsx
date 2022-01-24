@@ -1,6 +1,5 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { TreeTable } from "./TreeTable";
 import { ServiceInstance } from "@/Test";
 import {
   AttributeHelper,
@@ -8,6 +7,7 @@ import {
   TreeExpansionManager,
   TreeTableHelper,
 } from "./Helpers";
+import { TreeTable } from "./TreeTable";
 
 export default {
   title: "TreeTable",

@@ -1,30 +1,29 @@
-import { Scheduler, Fetcher, StateHelper, ResourceLogFilter } from "@/Core";
+import { Scheduler, StateHelper, ResourceLogFilter, ApiHelper } from "@/Core";
 import {
-  ContinuousQueryManagerImpl,
   getPaginationHandlers,
-} from "@/Data/Common";
+  PrimaryContinuousQueryManagerWithEnv,
+} from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"ResourceLogs"> {
+export class ResourceLogsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetResourceLogs"> {
   constructor(
-    fetcher: Fetcher<"ResourceLogs">,
-    stateHelper: StateHelper<"ResourceLogs">,
-    scheduler: Scheduler,
-    environment: string
+    apiHelper: ApiHelper,
+    stateHelper: StateHelper<"GetResourceLogs">,
+    scheduler: Scheduler
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
-      () => environment,
-      ({ pageSize, filter, sort }) => [
+      ({ kind, id }) => `${kind}_${id}`,
+      ({ pageSize, filter, sort }, environment) => [
         environment,
         pageSize.value,
         stringifyFilter(filter),
         sort?.name,
         sort?.order,
       ],
-      "ResourceLogs",
+      "GetResourceLogs",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined")
@@ -34,8 +33,7 @@ export class ResourceLogsQueryManager extends ContinuousQueryManagerImpl<"Resour
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      },
-      environment
+      }
     );
   }
 }

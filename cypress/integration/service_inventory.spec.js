@@ -1,7 +1,12 @@
 /// <reference types="Cypress" />
 describe("Service inventory", function () {
   beforeEach(() => {
-    cy.intercept("GET", "/api/v2/project", { fixture: "environments.json" });
+    cy.intercept("GET", "/api/v2/project?environment_details=false", {
+      fixture: "environments.json",
+    });
+    cy.intercept("GET", "**/api/v1/serverstatus", {
+      fixture: "serverstatus.json",
+    });
     cy.intercept("GET", "/lsm/v1/service_inventory/e2e_service?**", {
       fixture: "lsm/service_inventory.json",
     });
@@ -17,7 +22,7 @@ describe("Service inventory", function () {
 
   it("Should show/hide resources tab on click", function () {
     cy.visit(
-      "/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
+      "/console/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
     );
     // click first toggle for expansion
     cy.get("#expand-toggle0").click();
@@ -32,7 +37,7 @@ describe("Service inventory", function () {
   });
   it("Should show/hide add instance page on click", function () {
     cy.visit(
-      "/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
+      "/console/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
     );
     cy.get("#add-instance-button").click();
     cy.contains("Cancel").click().should("not.exist");
@@ -50,7 +55,7 @@ describe("Service inventory", function () {
       }
     );
     cy.visit(
-      "/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
+      "/console/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
     );
     cy.get("button#expand-toggle0").click();
     cy.contains("button", "Delete").click();
@@ -59,14 +64,14 @@ describe("Service inventory", function () {
   });
   it("Should show attributes tab when clicking on attribute summary", function () {
     cy.visit(
-      "/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
+      "/console/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
     );
     cy.get("#instance-row-summary-78ac").click();
     cy.get('[data-testid="attributes-tree-table-78ac"]').should("be.visible");
   });
   it("Should show resources tab when clicking on resource deployment progress", function () {
     cy.visit(
-      "/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
+      "/console/lsm/catalog/e2e_service/inventory?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c"
     );
     cy.get("#instance-row-resources-78ac").click();
     cy.get(

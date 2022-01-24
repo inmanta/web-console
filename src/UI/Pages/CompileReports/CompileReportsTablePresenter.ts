@@ -22,7 +22,7 @@ export class CompileReportsTablePresenter
   createRows(sourceData: CompileReport[]): CompileReportRow[] {
     return sourceData.map((compileReport) => ({
       id: compileReport.id,
-      requested: this.datePresenter.get(compileReport.requested),
+      requested: compileReport.requested,
       compileTime:
         compileReport.started && compileReport.completed
           ? this.datePresenter.diff(

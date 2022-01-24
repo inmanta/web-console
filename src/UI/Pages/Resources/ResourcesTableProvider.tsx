@@ -1,22 +1,18 @@
-import { Resource, SortDirection } from "@/Core";
 import React from "react";
+import { Resource, Sort } from "@/Core";
 import { ResourcesTable } from "./ResourcesTable";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 
 interface Props {
-  resources: Resource[];
-  sortColumn?: string;
-  order?: SortDirection;
-  setSortColumn: (name?: string) => void;
-  setOrder: (order?: SortDirection) => void;
+  resources: Resource.Resource[];
+  sort: Sort.Type<Resource.SortKey>;
+  setSort: (sort: Sort.Type<Resource.SortKey>) => void;
 }
 
 export const ResourcesTableProvider: React.FC<Props> = ({
   resources,
-  sortColumn,
-  order,
-  setSortColumn,
-  setOrder,
+  sort,
+  setSort,
   ...props
 }) => {
   const tablePresenter = new ResourcesTablePresenter();
@@ -25,10 +21,8 @@ export const ResourcesTableProvider: React.FC<Props> = ({
     <ResourcesTable
       {...props}
       rows={rows}
-      sortColumn={sortColumn}
-      order={order}
-      setSortColumn={setSortColumn}
-      setOrder={setOrder}
+      sort={sort}
+      setSort={setSort}
       tablePresenter={tablePresenter}
     />
   );

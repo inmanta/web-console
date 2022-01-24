@@ -1,0 +1,4 @@
+description: Simplify projects and environments query
+issue-nr: 1614
+change-type: patch
+destination-branches: [master, iso4]

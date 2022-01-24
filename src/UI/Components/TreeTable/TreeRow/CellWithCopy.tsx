@@ -1,9 +1,9 @@
-import { Popover } from "@patternfly/react-core";
 import React, { useState, MouseEvent } from "react";
+import { Popover } from "@patternfly/react-core";
 import { Td } from "@patternfly/react-table";
-import { words } from "@/UI/words";
 import styled from "styled-components";
 import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
+import { words } from "@/UI/words";
 
 interface Props {
   className: string;
@@ -39,7 +39,7 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
         <>
           <StyledPopoverBody>{value}</StyledPopoverBody>
           <StyledButton
-            fullText={value}
+            value={value}
             tooltipContent={words("attribute.value.copy")}
           />
         </>

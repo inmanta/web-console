@@ -25,7 +25,7 @@ export class MomentDatePresenter implements DatePresenter {
       .format("MMMM Do YYYY, h:mm:ss a z");
   }
 
-  getRelative(timestamp: string): string {
+  private getRelative(timestamp: string): string {
     return moment.utc(timestamp).tz(this.timezone).fromNow();
   }
 
@@ -35,5 +35,9 @@ export class MomentDatePresenter implements DatePresenter {
 
   parseShort(timestamp: string): Date {
     return moment.tz(timestamp, "YYYY-MM-DD+HH:mm z", this.timezone).toDate();
+  }
+
+  toUnixMs(timestamp: string): number {
+    return moment.utc(timestamp).valueOf();
   }
 }

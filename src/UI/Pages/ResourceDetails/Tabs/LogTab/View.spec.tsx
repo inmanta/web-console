@@ -1,35 +1,33 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import {
-  DeferredFetcher,
-  DynamicQueryManagerResolver,
-  Service,
-  StaticScheduler,
-  ResourceLogs,
-} from "@/Test";
 import { Either } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   getStoreInstance,
   ResourceLogsStateHelper,
   ResourceLogsQueryManager,
 } from "@/Data";
+import {
+  DynamicQueryManagerResolver,
+  StaticScheduler,
+  ResourceLogs,
+  DeferredApiHelper,
+  dependencies,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { View } from "./View";
 
 function setup() {
   const store = getStoreInstance();
-  const environment = Service.a.environment;
-
-  const resourceLogsFetcher = new DeferredFetcher<"ResourceLogs">();
+  const apiHelper = new DeferredApiHelper();
   const resourceLogsStateHelper = new ResourceLogsStateHelper(store);
   const resourceLogsQueryManager = new ResourceLogsQueryManager(
-    resourceLogsFetcher,
+    apiHelper,
     resourceLogsStateHelper,
-    new StaticScheduler(),
-    environment
+    new StaticScheduler()
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -37,21 +35,23 @@ function setup() {
   );
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver }}>
-      <StoreProvider store={store}>
-        <View resourceId="resourceId1" />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+        <StoreProvider store={store}>
+          <View resourceId="resourceId1" />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return {
     component,
-    resourceLogsFetcher,
+    apiHelper,
   };
 }
 
 test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
-  const { component, resourceLogsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
   expect(
@@ -59,7 +59,7 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   ).toBeVisible();
 
   await act(async () => {
-    resourceLogsFetcher.resolve(Either.right(ResourceLogs.response));
+    apiHelper.resolve(Either.right(ResourceLogs.response));
   });
 
   expect(
@@ -73,11 +73,11 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
 });
 
 test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant logs", async () => {
-  const { component, resourceLogsFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
   await act(async () => {
-    resourceLogsFetcher.resolve(Either.right(ResourceLogs.response));
+    apiHelper.resolve(Either.right(ResourceLogs.response));
   });
 
   const messageFilter = screen.getByRole("searchbox", {
@@ -86,7 +86,7 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
   userEvent.type(messageFilter, "failed{enter}");
 
   await act(async () => {
-    resourceLogsFetcher.resolve(
+    apiHelper.resolve(
       Either.right({
         ...ResourceLogs.response,
         data: [ResourceLogs.response.data[0]],

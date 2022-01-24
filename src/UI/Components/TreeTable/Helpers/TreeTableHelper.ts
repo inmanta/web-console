@@ -1,9 +1,9 @@
 import { Attributes } from "@/Core";
+import { TreeRow, TreeRowCreator } from "@/UI/Components/TreeTable/TreeRow";
+import { words } from "@/UI/words";
 import { AttributeHelper } from "./AttributeHelper";
 import { PathHelper } from "./PathHelper";
 import { ExpansionState, TreeExpansionManager } from "./TreeExpansionManager";
-import { TreeRow, TreeRowCreator } from "@/UI/Components/TreeTable/TreeRow";
-import { words } from "@/UI/words";
 
 export class TreeTableHelper {
   private readonly columns = [

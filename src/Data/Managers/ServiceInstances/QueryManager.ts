@@ -1,22 +1,26 @@
-import { Scheduler, Fetcher, StateHelper, ServiceInstanceParams } from "@/Core";
 import {
-  ContinuousQueryManagerImpl,
+  Scheduler,
+  ServiceInstanceParams,
+  ApiHelper,
+  StateHelperWithEnv,
+} from "@/Core";
+import {
   getPaginationHandlers,
-} from "@/Data/Common";
+  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
+} from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ServiceInstancesQueryManager extends ContinuousQueryManagerImpl<"ServiceInstances"> {
+export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetServiceInstances"> {
   constructor(
-    fetcher: Fetcher<"ServiceInstances">,
-    stateHelper: StateHelper<"ServiceInstances">,
-    scheduler: Scheduler,
-    environment: string
+    apiHelper: ApiHelper,
+    stateHelper: StateHelperWithEnv<"GetServiceInstances">,
+    scheduler: Scheduler
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
-      ({ name }) => name,
+      ({ kind, name }) => `${kind}_${name}`,
       ({ name, filter, sort, pageSize }) => [
         name,
         stringifyFilter(filter),
@@ -24,7 +28,7 @@ export class ServiceInstancesQueryManager extends ContinuousQueryManagerImpl<"Se
         sort?.order,
         pageSize.value,
       ],
-      "ServiceInstances",
+      "GetServiceInstances",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
@@ -35,8 +39,7 @@ export class ServiceInstancesQueryManager extends ContinuousQueryManagerImpl<"Se
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      },
-      environment
+      }
     );
   }
 }

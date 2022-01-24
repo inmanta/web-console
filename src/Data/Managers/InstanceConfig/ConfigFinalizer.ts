@@ -1,27 +1,33 @@
+import { uniq } from "lodash-es";
 import {
   Config,
   RemoteData,
   ServiceModel,
   ConfigFinalizer,
   Query,
-  StateHelper,
   isNotNull,
+  StateHelperWithEnv,
 } from "@/Core";
-import { uniq } from "lodash";
 
 export class InstanceConfigFinalizer
-  implements ConfigFinalizer<"InstanceConfig">
+  implements ConfigFinalizer<"GetInstanceConfig">
 {
-  constructor(private readonly serviceStateHelper: StateHelper<"Service">) {}
+  constructor(
+    private readonly serviceStateHelper: StateHelperWithEnv<"GetService">
+  ) {}
 
   finalize(
     configData: RemoteData.Type<string, Config>,
-    serviceName: string
-  ): RemoteData.Type<string, Query.UsedData<"InstanceConfig">> {
-    const serviceData = this.serviceStateHelper.getHooked({
-      kind: "Service",
-      name: serviceName,
-    });
+    serviceName: string,
+    environment: string
+  ): RemoteData.Type<string, Query.UsedData<"GetInstanceConfig">> {
+    const serviceData = this.serviceStateHelper.getHooked(
+      {
+        kind: "GetService",
+        name: serviceName,
+      },
+      environment
+    );
     if (!RemoteData.isSuccess(configData)) return configData;
     if (!RemoteData.isSuccess(serviceData)) return serviceData;
     const config = configData.value;

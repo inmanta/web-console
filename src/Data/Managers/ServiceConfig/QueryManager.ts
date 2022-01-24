@@ -1,33 +1,33 @@
+import { useContext, useEffect } from "react";
 import {
   OneTimeQueryManager,
   Query,
   RemoteData,
-  Fetcher,
   StateHelper,
   ConfigFinalizer,
+  ApiHelper,
 } from "@/Core";
-import { useEffect } from "react";
+import { DependencyContext } from "@/UI";
 
 type Data = RemoteData.Type<
-  Query.Error<"ServiceConfig">,
-  Query.UsedData<"ServiceConfig">
+  Query.Error<"GetServiceConfig">,
+  Query.UsedData<"GetServiceConfig">
 >;
 
 export class ServiceConfigQueryManager
-  implements OneTimeQueryManager<"ServiceConfig">
+  implements OneTimeQueryManager<"GetServiceConfig">
 {
   constructor(
-    private readonly fetcher: Fetcher<"ServiceConfig">,
-    private readonly stateHelper: StateHelper<"ServiceConfig">,
-    private readonly configFinalizer: ConfigFinalizer<"ServiceConfig">,
-    private readonly environment: string
+    private readonly apiHelper: ApiHelper,
+    private readonly stateHelper: StateHelper<"GetServiceConfig">,
+    private readonly configFinalizer: ConfigFinalizer<"GetServiceConfig">
   ) {}
 
-  private getConfigUrl({ name }: Query.SubQuery<"ServiceConfig">): string {
+  private getConfigUrl({ name }: Query.SubQuery<"GetServiceConfig">): string {
     return `/lsm/v1/service_catalog/${name}/config`;
   }
 
-  private initialize(query: Query.SubQuery<"ServiceConfig">): void {
+  private initialize(query: Query.SubQuery<"GetServiceConfig">): void {
     const value = this.stateHelper.getOnce(query);
     if (RemoteData.isNotAsked(value)) {
       this.stateHelper.set(RemoteData.loading(), query);
@@ -35,30 +35,39 @@ export class ServiceConfigQueryManager
   }
 
   private async update(
-    query: Query.SubQuery<"ServiceConfig">,
-    url: string
+    query: Query.SubQuery<"GetServiceConfig">,
+    url: string,
+    environment: string
   ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(await this.fetcher.getData(this.environment, url)),
+      RemoteData.fromEither(await this.apiHelper.get(url, environment)),
       query
     );
   }
 
-  useOneTime(query: Query.SubQuery<"ServiceConfig">): [Data, () => void] {
+  useOneTime(query: Query.SubQuery<"GetServiceConfig">): [Data, () => void] {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
+    const { environmentHandler } = useContext(DependencyContext);
+    const environment = environmentHandler.useId();
     const { name } = query;
 
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
     useEffect(() => {
       this.initialize(query);
-      this.update(query, this.getConfigUrl(query));
-    }, [this.environment]);
+      this.update(query, this.getConfigUrl(query), environment);
+    }, [environment]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     return [
-      this.configFinalizer.finalize(this.stateHelper.getHooked(query), name),
-      () => this.update(query, this.getConfigUrl(query)),
+      this.configFinalizer.finalize(
+        this.stateHelper.getHooked(query),
+        name,
+        environment
+      ),
+      () => this.update(query, this.getConfigUrl(query), environment),
     ];
   }
 
-  matches(query: Query.SubQuery<"ServiceConfig">): boolean {
-    return query.kind === "ServiceConfig";
+  matches(query: Query.SubQuery<"GetServiceConfig">): boolean {
+    return query.kind === "GetServiceConfig";
   }
 }

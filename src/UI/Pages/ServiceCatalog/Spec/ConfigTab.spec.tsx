@@ -1,18 +1,9 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import {
-  DeferredFetcher,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
-  InstantPoster,
-  MockEnvironmentModifier,
-  Service,
-  StaticScheduler,
-} from "@/Test";
-import { ServiceCatalog } from "@/UI/Pages";
-import { Either, RemoteData } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
+import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   ServicesQueryManager,
@@ -26,46 +17,48 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   DeleteServiceCommandManager,
-  ServiceDeleter,
   BaseApiHelper,
 } from "@/Data";
-import { MemoryRouter } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
+import {
+  DeferredApiHelper,
+  dependencies,
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  MockEnvironmentHandler,
+  MockEnvironmentModifier,
+  Service,
+  StaticScheduler,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { ServiceCatalogPage } from "@/UI/Pages";
 
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const servicesFetcher = new DeferredFetcher<"Services">();
+  const apiHelper = new DeferredApiHelper();
 
   const servicesHelper = new ServicesQueryManager(
-    servicesFetcher,
-    new ServicesStateHelper(store, Service.a.environment),
-    scheduler,
-    Service.a.environment
+    apiHelper,
+    new ServicesStateHelper(store),
+    scheduler
   );
-  const serviceConfigFetcher = new DeferredFetcher<"ServiceConfig">();
   const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
   const serviceConfigQueryManager = new ServiceConfigQueryManager(
-    serviceConfigFetcher,
+    apiHelper,
     new ServiceConfigStateHelper(store),
     new ServiceConfigFinalizer(
-      new ServiceStateHelper(
-        store,
-        new ServiceKeyMaker(),
-        Service.a.environment
-      )
-    ),
-    Service.a.environment
+      new ServiceStateHelper(store, new ServiceKeyMaker())
+    )
   );
 
+  // { data: Service.a.config }
   const serviceConfigCommandManager = new ServiceConfigCommandManager(
-    new InstantPoster<"ServiceConfig">(
-      RemoteData.success({ data: Service.a.config })
-    ),
+    apiHelper,
     serviceConfigStateHelper
   );
+
   const deleteServiceCommandManager = new DeleteServiceCommandManager(
-    new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+    new BaseApiHelper()
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -82,13 +75,15 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           queryResolver,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
+          environmentHandler: new MockEnvironmentHandler(Service.a.environment),
         }}
       >
         <StoreProvider store={store}>
-          <ServiceCatalog />
+          <ServiceCatalogPage />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -96,17 +91,16 @@ function setup() {
 
   return {
     component,
-    servicesFetcher,
-    serviceConfigFetcher,
+    apiHelper,
     scheduler,
   };
 }
 
 test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", async () => {
-  const { component, servicesFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+  apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   const details = await screen.findByRole("button", {
     name: `${Service.a.name} Details`,
@@ -120,10 +114,10 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
 });
 
 test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", async () => {
-  const { component, servicesFetcher, serviceConfigFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+  apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   const details = await screen.findByRole("button", {
     name: `${Service.a.name} Details`,
@@ -135,7 +129,7 @@ test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", a
     userEvent.click(configButton);
   });
 
-  serviceConfigFetcher.resolve(Either.right({ data: {} }));
+  apiHelper.resolve(Either.right({ data: {} }));
 
   expect(
     await screen.findByRole("generic", { name: "SettingsList" })

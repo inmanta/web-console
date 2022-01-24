@@ -1,1 +1,1 @@
-export * from "./ServiceCatalog";
+export { Page as ServiceCatalogPage } from "./Page";

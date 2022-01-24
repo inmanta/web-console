@@ -1,31 +1,35 @@
-import { Scheduler, Fetcher, StateHelper, CompileReportParams } from "@/Core";
 import {
-  ContinuousQueryManagerImpl,
+  Scheduler,
+  CompileReportParams,
+  ApiHelper,
+  StateHelperWithEnv,
+} from "@/Core";
+import {
   getPaginationHandlers,
-} from "@/Data/Common";
+  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
+} from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class CompileReportsQueryManager extends ContinuousQueryManagerImpl<"CompileReports"> {
+export class CompileReportsQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetCompileReports"> {
   constructor(
-    fetcher: Fetcher<"CompileReports">,
-    stateHelper: StateHelper<"CompileReports">,
-    scheduler: Scheduler,
-    environment: string
+    apiHelper: ApiHelper,
+    stateHelper: StateHelperWithEnv<"GetCompileReports">,
+    scheduler: Scheduler
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
-      () => environment,
-      ({ pageSize, sort, filter }) => [
+      ({ kind }, environment) => `${kind}_${environment}`,
+      ({ pageSize, sort, filter }, environment) => [
         environment,
         pageSize.value,
         sort?.name,
         sort?.order,
         stringifyFilter(filter),
       ],
-      "CompileReports",
-      getUrl,
+      "GetCompileReports",
+      (query) => getUrl(query),
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
           return { data: data, handlers: {}, metadata };
@@ -35,8 +39,7 @@ export class CompileReportsQueryManager extends ContinuousQueryManagerImpl<"Comp
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      },
-      environment
+      }
     );
   }
 }

@@ -1,4 +1,4 @@
-import { ResourceRow, SortDirection } from "@/Core";
+import React from "react";
 import {
   OnSort,
   TableComposable,
@@ -7,43 +7,41 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import React from "react";
+import styled from "styled-components";
+import { Resource, Sort } from "@/Core";
 import { ResourceTableRow } from "./ResourceTableRow";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 
 interface Props {
-  rows: ResourceRow[];
+  rows: Resource.Row[];
   tablePresenter: ResourcesTablePresenter;
-  sortColumn?: string;
-  order?: SortDirection;
-  setSortColumn: (name?: string) => void;
-  setOrder: (order?: SortDirection) => void;
+  sort: Sort.Type<Resource.SortKey>;
+  setSort: (sort: Sort.Type<Resource.SortKey>) => void;
 }
 export const ResourcesTable: React.FC<Props> = ({
   rows,
   tablePresenter,
-  setOrder,
-  setSortColumn,
-  sortColumn,
-  order,
+  sort,
+  setSort,
   ...props
 }) => {
-  const onSort: OnSort = (event, index, direction) => {
-    setSortColumn(tablePresenter.getColumnNameForIndex(index));
-    setOrder(direction);
+  const onSort: OnSort = (event, index, order) => {
+    setSort({
+      name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKey,
+      order,
+    });
   };
-  const activeSortIndex = tablePresenter.getIndexForColumnName(sortColumn);
+  const activeSortIndex = tablePresenter.getIndexForColumnName(sort.name);
   const heads = tablePresenter
     .getColumnHeads()
     .map(({ apiName, displayName }, columnIndex) => {
-      const sortParams = tablePresenter
-        .getSortableColumnNames()
-        .includes(apiName)
+      const hasSort = tablePresenter.getSortableColumnNames().includes(apiName);
+      const sortParams = hasSort
         ? {
             sort: {
               sortBy: {
                 index: activeSortIndex,
-                direction: order,
+                direction: sort.order,
               },
               onSort,
               columnIndex,
@@ -51,9 +49,14 @@ export const ResourcesTable: React.FC<Props> = ({
           }
         : {};
       return (
-        <Th key={displayName} {...sortParams}>
+        <StyledTh
+          key={displayName}
+          {...sortParams}
+          $characters={displayName.length}
+          $hasSort={hasSort}
+        >
           {displayName}
-        </Th>
+        </StyledTh>
       );
     });
 
@@ -68,3 +71,20 @@ export const ResourcesTable: React.FC<Props> = ({
     </TableComposable>
   );
 };
+
+interface HeaderProps {
+  $characters: number;
+  $hasSort: boolean;
+}
+
+const getWidth = ({ $characters, $hasSort }: HeaderProps) => {
+  const base = `${$characters}ch`;
+  const extra = $hasSort ? "60px" : "16px";
+  return `calc(${base} + ${extra})`;
+};
+
+const StyledTh = styled(Th)<HeaderProps>`
+  &&& {
+    min-width: ${getWidth};
+  }
+`;

@@ -1,7 +1,6 @@
+import React, { ComponentProps } from "react";
 import { TextInputTypes } from "@patternfly/react-core";
 import { Story } from "@storybook/react/types-6-0";
-import React from "react";
-import { ComponentProps } from "react";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 export default {
@@ -17,15 +16,14 @@ export const OneOfEach = Template.bind({});
 OneOfEach.args = {
   fields: [
     {
-      kind: "Flat",
+      kind: "Boolean",
       name: "BoolParam",
       defaultValue: false,
-      inputType: "bool",
       type: "bool",
       isOptional: true,
     },
     {
-      kind: "Flat",
+      kind: "Text",
       name: "TextParam",
       defaultValue: "",
       inputType: TextInputTypes.text,
@@ -34,7 +32,7 @@ OneOfEach.args = {
       isOptional: false,
     },
     {
-      kind: "Flat",
+      kind: "Text",
       name: "Int list param",
       defaultValue: "",
       inputType: TextInputTypes.text,
@@ -43,7 +41,7 @@ OneOfEach.args = {
       isOptional: true,
     },
     {
-      kind: "Flat",
+      kind: "Text",
       name: "Float list param",
       defaultValue: "",
       inputType: TextInputTypes.text,
@@ -52,7 +50,7 @@ OneOfEach.args = {
       isOptional: true,
     },
     {
-      kind: "Flat",
+      kind: "Text",
       name: "NumberParam",
       defaultValue: "",
       inputType: TextInputTypes.number,
@@ -67,7 +65,7 @@ OneOfEach.args = {
       isOptional: true,
       fields: [
         {
-          kind: "Flat",
+          kind: "Text",
           name: "Float list param",
           defaultValue: "",
           inputType: TextInputTypes.text,
@@ -76,7 +74,7 @@ OneOfEach.args = {
           isOptional: true,
         },
         {
-          kind: "Flat",
+          kind: "Text",
           name: "NumberParam",
           defaultValue: "",
           inputType: TextInputTypes.number,
@@ -91,7 +89,7 @@ OneOfEach.args = {
           isOptional: true,
           fields: [
             {
-              kind: "Flat",
+              kind: "Text",
               name: "Float list param",
               defaultValue: "",
               inputType: TextInputTypes.text,
@@ -100,7 +98,7 @@ OneOfEach.args = {
               isOptional: true,
             },
             {
-              kind: "Flat",
+              kind: "Text",
               name: "NumberParam",
               defaultValue: "",
               inputType: TextInputTypes.number,

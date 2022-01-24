@@ -10,8 +10,10 @@ The agreement is to roughly follow the building blocks in the folder structure.
 ```
 src/
   Core/
+    Query/ - All Query definitions
+    Command/ - All Command definitions
     Contracts/ - All interfaces that represent a contract
-    Domain/ - Domain entities, Query/Command interfaces
+    Domain/ - Entities
     Language/ - Language extensions & isolated implementations
   Data/ - All classes related to the Data Layer
     API/ - Classes for communicating with the REST API (based on Fetch API)

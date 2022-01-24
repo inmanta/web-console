@@ -1,5 +1,4 @@
 import React from "react";
-import { words } from "@/UI/words";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -8,8 +7,9 @@ import {
   List,
   ListItem,
 } from "@patternfly/react-core";
-import { EventTypesList } from "@/Core";
 import styled from "styled-components";
+import { EventTypesList } from "@/Core";
+import { words } from "@/UI/words";
 
 interface Props {
   event_types: string[];

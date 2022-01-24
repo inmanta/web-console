@@ -1,6 +1,6 @@
 import React from "react";
-import { InstanceState } from "./InstanceState";
 import { render, screen } from "@testing-library/react";
+import { InstanceState } from "./InstanceState";
 
 test("GIVEN State label WHEN (name,label) is ('up','success') THEN name is visible", async () => {
   render(<InstanceState name="up" label="success" />);

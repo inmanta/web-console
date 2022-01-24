@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { Pagination } from "@/Core";
 
 interface Props {
@@ -6,10 +7,16 @@ interface Props {
 }
 
 export const Indicator: React.FC<Props> = ({ metadata }) => (
-  <span>
+  <Container>
     <b>{getCurrent(metadata)}</b> of <b>{metadata.total}</b>
-  </span>
+  </Container>
 );
+
+const Container = styled.span`
+  display: inline-block;
+  text-align: right;
+  min-width: 120px;
+`;
 
 export function getCurrent({
   before,

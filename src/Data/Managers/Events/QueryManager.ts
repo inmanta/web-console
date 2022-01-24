@@ -1,22 +1,21 @@
-import { Fetcher, StateHelper, Scheduler, EventParams } from "@/Core";
+import { StateHelper, Scheduler, EventParams, ApiHelper } from "@/Core";
 import {
-  ContinuousQueryManagerImpl,
   getPaginationHandlers,
-} from "@/Data/Common";
+  PrimaryContinuousQueryManagerWithEnv,
+} from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
+export class EventsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetInstanceEvents"> {
   constructor(
-    fetcher: Fetcher<"Events">,
-    stateHelper: StateHelper<"Events">,
-    scheduler: Scheduler,
-    environment: string
+    apiHelper: ApiHelper,
+    stateHelper: StateHelper<"GetInstanceEvents">,
+    scheduler: Scheduler
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
-      ({ id }) => id,
+      ({ kind, id }) => `${kind}_${id}`,
       ({ id, service_entity, sort, filter, pageSize }) => [
         id,
         service_entity,
@@ -24,8 +23,8 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
         stringifyFilter(filter),
         pageSize.value,
       ],
-      "Events",
-      getUrl,
+      "GetInstanceEvents",
+      (query) => getUrl(query),
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
           return { data: data, handlers: {}, metadata };
@@ -35,8 +34,7 @@ export class EventsQueryManager extends ContinuousQueryManagerImpl<"Events"> {
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      },
-      environment
+      }
     );
   }
 }

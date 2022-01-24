@@ -1,19 +1,9 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import {
-  DeferredFetcher,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
-  InstantPoster,
-  Service,
-  StaticScheduler,
-  Callback,
-  DeferredApiHelper,
-} from "@/Test";
-import { ServiceCatalog } from "@/UI/Pages";
-import { Either, RemoteData } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
+import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   ServicesQueryManager,
@@ -25,32 +15,35 @@ import {
   CallbacksQueryManager,
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
-  CallbackDeleter,
   CallbacksUpdater,
   DeleteServiceCommandManager,
-  ServiceDeleter,
 } from "@/Data";
-import { MemoryRouter } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
+import {
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  Service,
+  StaticScheduler,
+  Callback,
+  DeferredApiHelper,
+  dependencies,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { ServiceCatalogPage } from "@/UI/Pages";
 
 function setup() {
   const store = getStoreInstance();
+  const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
-  const environment = Service.a.environment;
-  const servicesFetcher = new DeferredFetcher<"Services">();
 
   const servicesQueryManager = new ServicesQueryManager(
-    servicesFetcher,
-    new ServicesStateHelper(store, environment),
-    scheduler,
-    environment
+    apiHelper,
+    new ServicesStateHelper(store),
+    scheduler
   );
-  const callbacksFetcher = new DeferredFetcher<"Callbacks">();
-  const callbacksStateHelper = new CallbacksStateHelper(store, environment);
+  const callbacksStateHelper = new CallbacksStateHelper(store);
   const callbacksQueryManager = new CallbacksQueryManager(
-    callbacksFetcher,
-    callbacksStateHelper,
-    environment
+    apiHelper,
+    callbacksStateHelper
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -61,29 +54,17 @@ function setup() {
   );
 
   const deleteServiceCommandManager = new DeleteServiceCommandManager(
-    new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
+    new BaseApiHelper()
   );
 
-  const apiHelper = new DeferredApiHelper();
-  const callbackDeleter = new CallbackDeleter(apiHelper, environment);
   const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
-    callbackDeleter,
-    new CallbacksUpdater(
-      new CallbacksStateHelper(store, environment),
-      callbacksFetcher,
-      environment
-    )
+    apiHelper,
+    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper)
   );
 
   const createCallbackCommandManager = new CreateCallbackCommandManager(
-    new InstantPoster<"CreateCallback">(
-      RemoteData.success({ data: Callback.a.callback_id })
-    ),
-    new CallbacksUpdater(
-      new CallbacksStateHelper(store, environment),
-      new DeferredFetcher<"Callbacks">(),
-      environment
-    )
+    apiHelper,
+    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper)
   );
 
   const commandResolver = new CommandResolverImpl(
@@ -96,9 +77,11 @@ function setup() {
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, commandResolver }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, commandResolver }}
+      >
         <StoreProvider store={store}>
-          <ServiceCatalog />
+          <ServiceCatalogPage />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -106,17 +89,15 @@ function setup() {
 
   return {
     component,
-    servicesFetcher,
-    callbacksFetcher,
     apiHelper,
   };
 }
 
 test("GIVEN ServiceCatalog WHEN click on callbacks tab THEN shows callbacks tab", async () => {
-  const { component, servicesFetcher, callbacksFetcher } = setup();
+  const { component, apiHelper } = setup();
   render(component);
 
-  servicesFetcher.resolve(Either.right({ data: [Service.a] }));
+  apiHelper.resolve(Either.right({ data: [Service.a] }));
 
   const details = await screen.findByRole("button", {
     name: `${Service.a.name} Details`,
@@ -131,7 +112,7 @@ test("GIVEN ServiceCatalog WHEN click on callbacks tab THEN shows callbacks tab"
   ).toBeVisible();
 
   await act(async () => {
-    callbacksFetcher.resolve(Either.right({ data: Callback.list }));
+    apiHelper.resolve(Either.right({ data: Callback.list }));
   });
 
   expect(

@@ -1,15 +1,11 @@
-import { Command, CommandManager, Deleter } from "@/Core";
+import { ApiHelper } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class DeleteServiceCommandManager implements CommandManager {
-  constructor(private readonly deleter: Deleter<"DeleteService">) {}
-
-  matches(command: Command.SubCommand<"DeleteService">): boolean {
-    return command.kind === "DeleteService";
-  }
-
-  getTrigger(
-    command: Command.SubCommand<"DeleteService">
-  ): Command.Trigger<"DeleteService"> {
-    return () => this.deleter.delete(command);
+export class DeleteServiceCommandManager extends CommandManagerWithEnv<"DeleteService"> {
+  constructor(private readonly apiHelper: ApiHelper) {
+    super("DeleteService", ({ name }, environment) => {
+      return () =>
+        this.apiHelper.delete(`/lsm/v1/service_catalog/${name}`, environment);
+    });
   }
 }

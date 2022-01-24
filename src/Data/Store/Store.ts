@@ -1,23 +1,33 @@
+import { agentProcessSlice, AgentProcessSlice } from "./AgentProcessSlice";
+import { agentsSlice, AgentsSlice } from "./AgentsSlice";
 import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
-import { InstanceLogsSlice, instanceLogsSlice } from "./InstanceLogsSlice";
+import {
+  compileDetailsSlice,
+  CompileDetailsSlice,
+} from "./CompileDetailsSlice";
+import {
+  compileReportsSlice,
+  CompileReportsSlice,
+} from "./CompileReportsSlice";
+import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
+import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
+import {
+  environmentSettingsSlice,
+  EnvironmentSettingsSlice,
+} from "./EnvironmentSettingsSlice";
+import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
+import { EventsSlice, eventsSlice } from "./EventsSlice";
+import { factsSlice, FactsSlice } from "./FactsSlice";
 import {
   InstanceConfigSlice,
   instanceConfigSlice,
 } from "./InstanceConfigSlice";
-import { ProjectsSlice, projectsSlice } from "./ProjectsSlice";
-import { servicesSlice, ServicesSlice } from "./ServicesSlice";
+import { InstanceLogsSlice, instanceLogsSlice } from "./InstanceLogsSlice";
 import {
   instanceResourcesSlice,
   InstanceResourcesSlice,
 } from "./InstanceResourcesSlice";
-import {
-  serviceInstancesSlice,
-  ServiceInstancesSlice,
-} from "./ServiceInstancesSlice";
-import { EventsSlice, eventsSlice } from "./EventsSlice";
-import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
-import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";
-import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
+import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
 import {
   resourceDetailsSlice,
   ResourceDetailsSlice,
@@ -27,25 +37,27 @@ import {
   ResourceHistorySlice,
 } from "./ResourceHistorySlice";
 import { resourceLogsSlice, ResourceLogsSlice } from "./ResourceLogsSlice";
-import {
-  environmentDetailsSlice,
-  EnvironmentDetailsSlice,
-} from "./EnvironmentDetailsSlice";
+import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
+import { serverStatusSlice, ServerStatusSlice } from "./ServerStatusSlice";
+import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";
 import {
   serviceInstanceSlice,
   ServiceInstanceSlice,
 } from "./ServiceInstanceSlice";
 import {
-  compileReportsSlice,
-  CompileReportsSlice,
-} from "./CompileReportsSlice";
+  serviceInstancesSlice,
+  ServiceInstancesSlice,
+} from "./ServiceInstancesSlice";
+import { servicesSlice, ServicesSlice } from "./ServicesSlice";
 import {
-  compileDetailsSlice,
-  CompileDetailsSlice,
-} from "./CompileDetailsSlice";
+  versionResourcesSlice,
+  VersionResourcesSlice,
+} from "./VersionResourcesSlice";
 
 export interface StoreModel {
+  environment: EnvironmentSlice;
   projects: ProjectsSlice;
+  serverStatus: ServerStatusSlice;
   services: ServicesSlice;
   serviceInstances: ServiceInstancesSlice;
   serviceInstance: ServiceInstanceSlice;
@@ -59,14 +71,21 @@ export interface StoreModel {
   resourceDetails: ResourceDetailsSlice;
   resourceHistory: ResourceHistorySlice;
   resourceLogs: ResourceLogsSlice;
-  environmentDetails: EnvironmentDetailsSlice;
   callbacks: CallbacksSlice;
   compileReports: CompileReportsSlice;
   compileDetails: CompileDetailsSlice;
+  environmentSettings: EnvironmentSettingsSlice;
+  facts: FactsSlice;
+  agents: AgentsSlice;
+  agentProcess: AgentProcessSlice;
+  desiredStates: DesiredStatesSlice;
+  versionResources: VersionResourcesSlice;
 }
 
 export const storeModel: StoreModel = {
+  environment: environmentSlice,
   projects: projectsSlice,
+  serverStatus: serverStatusSlice,
   services: servicesSlice,
   serviceInstances: serviceInstancesSlice,
   serviceInstance: serviceInstanceSlice,
@@ -80,8 +99,13 @@ export const storeModel: StoreModel = {
   resourceDetails: resourceDetailsSlice,
   resourceHistory: resourceHistorySlice,
   resourceLogs: resourceLogsSlice,
-  environmentDetails: environmentDetailsSlice,
   callbacks: callbacksSlice,
   compileReports: compileReportsSlice,
   compileDetails: compileDetailsSlice,
+  environmentSettings: environmentSettingsSlice,
+  facts: factsSlice,
+  agents: agentsSlice,
+  agentProcess: agentProcessSlice,
+  desiredStates: desiredStatesSlice,
+  versionResources: versionResourcesSlice,
 };

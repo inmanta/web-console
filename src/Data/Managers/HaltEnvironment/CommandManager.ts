@@ -1,35 +1,41 @@
 import {
-  Command,
-  CommandManager,
-  PosterWithoutResponse,
+  ApiHelper,
   RemoteData,
-  StateHelper,
-  Updater,
+  StateHelperWithEnv,
+  UpdaterWithEnv,
 } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class HaltEnvironmentCommandManager implements CommandManager {
+export class HaltEnvironmentCommandManager extends CommandManagerWithEnv<"HaltEnvironment"> {
   constructor(
-    private readonly poster: PosterWithoutResponse<"HaltEnvironment">,
-    private readonly stateHelper: StateHelper<"EnvironmentDetails">,
-    private readonly updater: Updater<"EnvironmentDetails">
-  ) {}
-
-  matches(command: Command.SubCommand<"HaltEnvironment">): boolean {
-    return command.kind === "HaltEnvironment";
-  }
-
-  getTrigger(
-    command: Command.SubCommand<"HaltEnvironment">
-  ): Command.Trigger<"HaltEnvironment"> {
-    return async () => {
-      this.stateHelper.set(RemoteData.loading(), {
-        kind: "EnvironmentDetails",
-      });
-      const result = await this.poster.post(command, null);
-      await this.updater.update({
-        kind: "EnvironmentDetails",
-      });
-      return result;
-    };
+    private readonly apiHelper: ApiHelper,
+    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">,
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">
+  ) {
+    super("HaltEnvironment", (command, environment) => {
+      return async () => {
+        this.stateHelper.set(
+          RemoteData.loading(),
+          {
+            kind: "GetEnvironmentDetails",
+            details: false,
+          },
+          environment
+        );
+        const result = await this.apiHelper.postWithoutResponse(
+          `/api/v2/actions/environment/halt`,
+          environment,
+          null
+        );
+        await this.updater.update(
+          {
+            kind: "GetEnvironmentDetails",
+            details: false,
+          },
+          environment
+        );
+        return result;
+      };
+    });
   }
 }

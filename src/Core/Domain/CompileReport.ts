@@ -1,5 +1,3 @@
-import { DateInfo } from "./InventoryTable";
-
 export interface CompileReport {
   id: string;
   remote_id?: string;
@@ -17,7 +15,7 @@ export interface CompileReport {
 
 export interface CompileReportRow {
   id: string;
-  requested: DateInfo;
+  requested: string;
   completed?: string | null;
   success?: boolean;
   inProgress: boolean;

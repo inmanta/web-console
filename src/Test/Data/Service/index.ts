@@ -2,9 +2,9 @@ import { ServiceModel } from "@/Core";
 import * as Environment from "@/Test/Data/Environment";
 import * as Attribute from "./Attribute";
 import * as EmbeddedEntity from "./EmbeddedEntity";
+import * as InstanceSummary from "./InstanceSummary";
 import * as State from "./State";
 import * as Transfer from "./Transfer";
-import * as InstanceSummary from "./InstanceSummary";
 
 export const a: ServiceModel = {
   environment: Environment.a.id,

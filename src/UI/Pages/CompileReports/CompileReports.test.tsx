@@ -1,46 +1,53 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import {
-  DeferredFetcher,
-  DynamicQueryManagerResolver,
-  StaticScheduler,
-  CompileReportsData,
-} from "@/Test";
 import { Either } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   getStoreInstance,
   CompileReportsQueryManager,
   CompileReportsStateHelper,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
-import { CompileReports } from "./CompileReports";
-import { MemoryRouter } from "react-router-dom";
+import {
+  DynamicQueryManagerResolver,
+  StaticScheduler,
+  CompileReportsData,
+  DeferredApiHelper,
+  dependencies,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { PrimaryRouteManager } from "@/UI/Routing";
+import { Page } from "./Page";
 
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"CompileReports">();
+  const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new CompileReportsQueryManager(
         apiHelper,
-        new CompileReportsStateHelper(store, "environment"),
-        scheduler,
-        "environment"
+        new CompileReportsStateHelper(store),
+        scheduler
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "environment");
+
+  const routeManager = new PrimaryRouteManager("");
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          routeManager,
+        }}
+      >
         <StoreProvider store={store}>
-          <CompileReports />
+          <Page />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -156,7 +163,7 @@ test("When using the result filter with the Successful option then the successfu
   const option = await screen.findByRole("option", { name: "Successful" });
   await userEvent.click(option);
 
-  expect(apiHelper.getInvocations()[1][1]).toEqual(
+  expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=true`
   );
 
@@ -202,7 +209,7 @@ test("When using the status filter with the In Progress opiton then the compile 
   const option = await screen.findByRole("option", { name: "In Progress" });
   await userEvent.click(option);
 
-  expect(apiHelper.getInvocations()[1][1]).toEqual(
+  expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.completed=false&filter.started=true`
   );
 
@@ -251,7 +258,7 @@ it("When using the Date filter then the compile reports within the range selecte
 
   userEvent.click(await screen.findByLabelText("Apply date filter"));
 
-  expect(apiHelper.getInvocations()[1][1]).toMatch(
+  expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.requested=ge%3A2021-09-`
   );
 

@@ -1,7 +1,7 @@
 import { render, screen, act, within } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
-import { Service, Pagination, Event as InstanceEvent } from "@/Test";
 import { Either } from "@/Core";
+import { Service, Pagination, Event as InstanceEvent } from "@/Test";
 import { EventsPageComposer } from "./EventsPageComposer";
 
 /** Test with the whole events page rendered */
@@ -21,13 +21,13 @@ describe("Given the Events Page", () => {
       placeholderText,
       filterUrlName,
     }) => {
-      const { component, eventsFetcher } = new EventsPageComposer().compose(
+      const { component, apiHelper } = new EventsPageComposer().compose(
         Service.a
       );
       render(component);
 
       await act(async () => {
-        await eventsFetcher.resolve(
+        await apiHelper.resolve(
           Either.right({
             data: InstanceEvent.listA,
             links: Pagination.links,
@@ -58,12 +58,12 @@ describe("Given the Events Page", () => {
         userEvent.type(input, `${filterValue}${specialChars.enter}`);
       }
 
-      expect(eventsFetcher.getInvocations()[1][1]).toEqual(
+      expect(apiHelper.pendingRequests[0].url).toEqual(
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.${filterUrlName}=${filterValue}`
       );
 
       await act(async () => {
-        await eventsFetcher.resolve(
+        await apiHelper.resolve(
           Either.right({
             data: InstanceEvent.listB,
             links: Pagination.links,
@@ -79,13 +79,13 @@ describe("Given the Events Page", () => {
     }
   );
   it("When using the Date filter then the events with from and to the events in the range should be fetched and shown", async () => {
-    const { component, eventsFetcher } = new EventsPageComposer().compose(
+    const { component, apiHelper } = new EventsPageComposer().compose(
       Service.a
     );
     render(component);
 
     await act(async () => {
-      await eventsFetcher.resolve(
+      await apiHelper.resolve(
         Either.right({
           data: InstanceEvent.listA,
           links: Pagination.links,
@@ -116,12 +116,12 @@ describe("Given the Events Page", () => {
 
     userEvent.click(await screen.findByLabelText("Apply date filter"));
 
-    expect(eventsFetcher.getInvocations()[1][1]).toMatch(
+    expect(apiHelper.pendingRequests[0].url).toMatch(
       `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=ge%3A2021-04-`
     );
 
     await act(async () => {
-      await eventsFetcher.resolve(
+      await apiHelper.resolve(
         Either.right({
           data: InstanceEvent.listB,
           links: Pagination.links,
@@ -153,13 +153,13 @@ describe("Given the Events Page", () => {
   `(
     "When using the Date filter then the events with only $filterType filter, the matching should be fetched and a chip shown",
     async ({ filterType, value, operator, chip }) => {
-      const { component, eventsFetcher } = new EventsPageComposer().compose(
+      const { component, apiHelper } = new EventsPageComposer().compose(
         Service.a
       );
       render(component);
 
       await act(async () => {
-        await eventsFetcher.resolve(
+        await apiHelper.resolve(
           Either.right({
             data: InstanceEvent.listA,
             links: Pagination.links,
@@ -189,12 +189,12 @@ describe("Given the Events Page", () => {
 
       userEvent.click(await screen.findByLabelText("Apply date filter"));
 
-      expect(eventsFetcher.getInvocations()[1][1]).toMatch(
+      expect(apiHelper.pendingRequests[0].url).toMatch(
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=${operator}%3A2021-05-`
       );
 
       await act(async () => {
-        await eventsFetcher.resolve(
+        await apiHelper.resolve(
           Either.right({
             data: InstanceEvent.listB,
             links: Pagination.links,
@@ -215,7 +215,7 @@ describe("Given the Events Page", () => {
       expect(await screen.findByText(chip, { exact: false })).toBeVisible();
       userEvent.click(await screen.findByLabelText("close"));
 
-      expect(eventsFetcher.getInvocations()[2][1]).toMatch(
+      expect(apiHelper.pendingRequests[0].url).toMatch(
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc`
       );
     }

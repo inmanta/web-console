@@ -1,19 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@patternfly/react-core";
+import { InfoCircleIcon } from "@patternfly/react-icons";
+import { Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { CompileReportRow } from "@/Core";
-import { DateWithTooltip } from "@/UI/Components";
+import { DateWithTooltip, Spinner } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Button, Spinner } from "@patternfly/react-core";
-import { Tbody, Td, Tr } from "@patternfly/react-table";
-import { InfoCircleIcon } from "@patternfly/react-icons";
-import { Link } from "react-router-dom";
-import { getUrl } from "@/UI/Routing";
 
 interface Props {
   row: CompileReportRow;
 }
 
 export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
+  const { routeManager } = useContext(DependencyContext);
   return (
     <StyledBody
       isExpanded={false}
@@ -22,10 +23,10 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
     >
       <Tr aria-label="Compile Reports Table Row">
         <Td dataLabel={words("compileReports.columns.inProgress")}>
-          {row.inProgress && <Spinner isSVG size="md" />}
+          {row.inProgress && <Spinner variant="small" />}
         </Td>
         <Td dataLabel={words("compileReports.columns.requested")}>
-          <DateWithTooltip date={row.requested} />
+          <DateWithTooltip timestamp={row.requested} />
         </Td>
         <Td dataLabel={words("compileReports.columns.message")}>
           {row.message}
@@ -39,7 +40,7 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
         <Td dataLabel={words("compileReports.columns.actions")}>
           <Link
             to={{
-              pathname: getUrl("CompileDetails", {
+              pathname: routeManager.getUrl("CompileDetails", {
                 id: row.id,
               }),
               search: location.search,

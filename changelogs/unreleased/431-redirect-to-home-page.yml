@@ -1,0 +1,6 @@
+description: Redirect to home page when no environment is selected
+issue-nr: 431
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

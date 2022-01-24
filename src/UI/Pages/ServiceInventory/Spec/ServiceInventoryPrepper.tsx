@@ -1,16 +1,8 @@
 import React from "react";
-import { SchedulerImpl, ServiceModel } from "@/Core";
+import { MemoryRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
+import { RemoteData, SchedulerImpl, ServiceModel } from "@/Core";
 import {
-  DeferredFetcher,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
-  MockEnvironmentModifier,
-  Service,
-} from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
-import {
-  AttributeResultConverterImpl,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   QueryResolverImpl,
@@ -18,24 +10,28 @@ import {
   InstanceResourcesStateHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  SetStatePoster,
   TriggerInstanceUpdateCommandManager,
   BaseApiHelper,
-  InstanceDeleter,
-  TriggerInstanceUpdatePatcher,
   TriggerSetStateCommandManager,
   KeycloakAuthHelper,
   getStoreInstance,
 } from "@/Data";
-import { ServiceInventory } from "@/UI/Pages/ServiceInventory";
-import { MemoryRouter } from "react-router-dom";
-import { UrlManagerImpl } from "@/UI/Utils";
+import {
+  DeferredApiHelper,
+  dependencies,
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  Environment,
+  MockEnvironmentModifier,
+  Service,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { ServiceInventory } from "@/UI/Pages/ServiceInventory/ServiceInventory";
 
 export interface Handles {
   component: React.ReactElement;
   scheduler: SchedulerImpl;
-  serviceInstancesFetcher: DeferredFetcher<"ServiceInstances">;
-  resourcesFetcher: DeferredFetcher<"InstanceResources">;
+  apiHelper: DeferredApiHelper;
 }
 
 export class ServiceInventoryPrepper {
@@ -45,38 +41,31 @@ export class ServiceInventoryPrepper {
       effect: jest.fn(() => task.effect()),
       update: jest.fn((result) => task.update(result)),
     }));
-    const serviceInstancesFetcher = new DeferredFetcher<"ServiceInstances">();
+    const apiHelper = new DeferredApiHelper();
     const serviceInstancesHelper = new ServiceInstancesQueryManager(
-      serviceInstancesFetcher,
-      new ServiceInstancesStateHelper(store, service.environment),
-      scheduler,
-      service.environment
+      apiHelper,
+      new ServiceInstancesStateHelper(store),
+      scheduler
     );
 
-    const resourcesFetcher = new DeferredFetcher<"InstanceResources">();
     const resourcesHelper = new InstanceResourcesQueryManager(
-      resourcesFetcher,
+      apiHelper,
       new InstanceResourcesStateHelper(store),
-      scheduler,
-      service.environment
+      scheduler
     );
 
     const queryResolver = new QueryResolverImpl(
       new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
     );
-    const urlManager = new UrlManagerImpl("", service.environment);
 
     const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
-      new TriggerInstanceUpdatePatcher(new BaseApiHelper(), "env1"),
-      new AttributeResultConverterImpl()
+      new BaseApiHelper()
     );
-    const deleteCommandManager = new DeleteInstanceCommandManager(
-      new InstanceDeleter(new BaseApiHelper(), "env1")
-    );
+    const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
 
     const setStateCommandManager = new TriggerSetStateCommandManager(
       new KeycloakAuthHelper(),
-      new SetStatePoster(new BaseApiHelper(), "env1")
+      new BaseApiHelper()
     );
 
     const commandResolver = new CommandResolverImpl(
@@ -87,12 +76,16 @@ export class ServiceInventoryPrepper {
       ])
     );
 
+    store.dispatch.environment.setEnvironments(
+      RemoteData.success(Environment.filterable)
+    );
+
     const component = (
-      <MemoryRouter>
+      <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
         <DependencyProvider
           dependencies={{
+            ...dependencies,
             queryResolver,
-            urlManager,
             commandResolver,
             environmentModifier: new MockEnvironmentModifier(),
           }}
@@ -104,6 +97,6 @@ export class ServiceInventoryPrepper {
       </MemoryRouter>
     );
 
-    return { component, scheduler, serviceInstancesFetcher, resourcesFetcher };
+    return { component, scheduler, apiHelper };
   }
 }

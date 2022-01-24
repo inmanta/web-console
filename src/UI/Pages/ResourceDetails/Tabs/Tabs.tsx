@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ColumnsIcon,
   HistoryIcon,
   InfoCircleIcon,
   ListIcon,
@@ -8,11 +9,12 @@ import {
 } from "@patternfly/react-icons";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { InfoTab } from "./InfoTab";
-import { RequiresTab } from "./RequiresTab";
 import { AttributesTab } from "./AttributesTab";
+import { FactsTab } from "./FactsTab";
 import { ResourceHistoryView } from "./HistoryTab/ResourceHistoryView";
+import { InfoTab } from "./InfoTab";
 import { ResourceLogView } from "./LogTab";
+import { RequiresTab } from "./RequiresTab";
 
 export enum TabKey {
   Info = "Info",
@@ -20,6 +22,7 @@ export enum TabKey {
   Attributes = "Attributes",
   History = "History",
   Logs = "Logs",
+  Facts = "Facts",
 }
 
 interface Props {
@@ -39,6 +42,7 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab }) => {
         attributesTab(id),
         historyTab(id),
         logTab(id),
+        factsTab(id),
       ]}
     />
   );
@@ -77,4 +81,11 @@ const logTab = (id: string): TabDescriptor<TabKey> => ({
   title: words("resources.logs.title"),
   icon: <TableIcon />,
   view: <ResourceLogView resourceId={id} />,
+});
+
+const factsTab = (id: string): TabDescriptor<TabKey> => ({
+  id: TabKey.Facts,
+  title: words("resources.facts.title"),
+  icon: <ColumnsIcon />,
+  view: <FactsTab resourceId={id} />,
 });

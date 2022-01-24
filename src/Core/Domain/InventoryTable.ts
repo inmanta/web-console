@@ -24,8 +24,8 @@ export interface Row {
   id: Uuid;
   attributesSummary: AttributesSummary;
   attributes: Attributes;
-  createdAt: DateInfo;
-  updatedAt: DateInfo;
+  createdAt: string;
+  updatedAt: string;
   version: number;
   instanceSetStateTargets: string[];
   service_entity: string;

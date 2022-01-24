@@ -7,8 +7,8 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
 import { Delayed } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
 interface Props {
   message: string;

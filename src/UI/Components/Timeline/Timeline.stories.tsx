@@ -1,7 +1,7 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
-import { Timeline } from "./Timeline";
 import { Provider } from "./Provider";
+import { Timeline } from "./Timeline";
 
 export default {
   title: "Timeline",
@@ -36,8 +36,8 @@ Completed.args = {
 };
 
 const now = new Date(Date.now()).toISOString();
-const nowMin5 = new Date(Date.now() - 5000).toISOString();
-const nowMin10 = new Date(Date.now() - 10000).toISOString();
+const nowMin1 = new Date(Date.now() - 1000).toISOString();
+const nowMin3 = new Date(Date.now() - 3000).toISOString();
 
 const ProviderTemplate: Story<ComponentProps<typeof Provider>> = (args) => (
   <Provider {...args} />
@@ -45,18 +45,18 @@ const ProviderTemplate: Story<ComponentProps<typeof Provider>> = (args) => (
 
 export const RequestedWithProvider = ProviderTemplate.bind({});
 RequestedWithProvider.args = {
-  requested: nowMin10,
+  requested: nowMin3,
 };
 
-export const StartedWitProvider = ProviderTemplate.bind({});
-StartedWitProvider.args = {
-  requested: nowMin10,
-  started: nowMin5,
+export const StartedWithProvider = ProviderTemplate.bind({});
+StartedWithProvider.args = {
+  requested: nowMin3,
+  started: nowMin1,
 };
 
 export const CompletedWithProvider = ProviderTemplate.bind({});
 CompletedWithProvider.args = {
-  requested: nowMin10,
-  started: nowMin5,
+  requested: nowMin3,
+  started: nowMin1,
   completed: now,
 };

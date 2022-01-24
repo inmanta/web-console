@@ -1,23 +1,23 @@
 import React from "react";
-import { get } from "lodash";
 import {
   Button,
   FormFieldGroupExpandable,
   FormFieldGroupHeader,
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
-import { toOptionalBoolean } from "@/Data";
-import { BooleanFormInput } from "./BooleanFormInput";
-import { TextFormInput } from "./TextFormInput";
+import { get } from "lodash-es";
 import {
   InstanceAttributeModel,
   DictListField,
   Field,
-  FlatField,
   NestedField,
 } from "@/Core";
+import { toOptionalBoolean } from "@/Data";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
+import { words } from "@/UI/words";
+import { BooleanFormInput } from "./BooleanFormInput";
+import { SelectFormInput } from "./SelectFormInput";
+import { TextFormInput } from "./TextFormInput";
 
 interface Props {
   field: Field;
@@ -39,12 +39,46 @@ export const FieldInput: React.FC<Props> = ({
   path,
 }) => {
   switch (field.kind) {
-    case "Flat":
+    case "Boolean":
       return (
-        <FlatFieldInput
-          field={field}
-          value={get(formState, makePath(path, field.name))}
-          update={getUpdate(makePath(path, field.name))}
+        <BooleanFormInput
+          aria-label={`BooleanFieldInput-${field.name}`}
+          attributeName={field.name}
+          isOptional={field.isOptional}
+          isChecked={get(formState, makePath(path, field.name)) as boolean}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name))(toOptionalBoolean(value))
+          }
+          description={field.description}
+          key={field.name}
+        />
+      );
+    case "Text":
+      return (
+        <TextFormInput
+          aria-label={`TextFieldInput-${field.name}`}
+          attributeName={field.name}
+          attributeValue={get(formState, makePath(path, field.name)) as string}
+          description={field.description}
+          isOptional={field.isOptional}
+          type={field.inputType}
+          handleInputChange={getUpdate(makePath(path, field.name))}
+          placeholder={getPlaceholderForType(field.type)}
+          typeHint={getTypeHintForType(field.type)}
+          key={field.name}
+        />
+      );
+    case "Enum":
+      return (
+        <SelectFormInput
+          aria-label={`EnumFieldInput-${field.name}`}
+          options={field.options}
+          attributeName={field.name}
+          attributeValue={get(formState, makePath(path, field.name)) as string}
+          description={field.description}
+          isOptional={field.isOptional}
+          handleInputChange={getUpdate(makePath(path, field.name))}
+          key={field.name}
         />
       );
     case "Nested":
@@ -90,51 +124,6 @@ const getTypeHintForType = (typeName: string): string | undefined => {
     return words("inventory.form.typeHint.dict");
   }
   return undefined;
-};
-
-interface FlatProps {
-  field: FlatField;
-  value: unknown;
-  update: Update;
-}
-
-const FlatFieldInput: React.FC<FlatProps> = ({ field, value, update }) => {
-  const changeHandler = (_, event) => {
-    const target = event.target;
-    let val;
-    if (target.type === "radio") {
-      val = toOptionalBoolean(event.target.value);
-    } else {
-      val = event.target.value;
-    }
-
-    update(val);
-  };
-
-  return field.inputType === "bool" ? (
-    <BooleanFormInput
-      aria-label={`FlatFieldInput-${field.name}`}
-      attributeName={field.name}
-      isOptional={field.isOptional}
-      isChecked={value as boolean}
-      handleInputChange={changeHandler}
-      description={field.description}
-      key={field.name}
-    />
-  ) : (
-    <TextFormInput
-      aria-label={`FlatFieldInput-${field.name}`}
-      attributeName={field.name}
-      attributeValue={value as string}
-      description={field.description}
-      isOptional={field.isOptional}
-      type={field.inputType}
-      handleInputChange={changeHandler}
-      placeholder={getPlaceholderForType(field.type)}
-      typeHint={getTypeHintForType(field.type)}
-      key={field.name}
-    />
-  );
 };
 
 interface NestedProps {

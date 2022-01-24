@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
-import { TreeRowView, Indent } from "./TreeRow";
+import styled from "styled-components";
 import { TreeTableHelper } from "./Helpers";
+import { TreeRowView, Indent } from "./TreeRow";
 
 interface Props {
   treeTableHelper: TreeTableHelper;

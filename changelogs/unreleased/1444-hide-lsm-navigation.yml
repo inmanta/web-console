@@ -1,0 +1,6 @@
+description: Hide LSM navigation when extension not present
+issue-nr: 1444
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

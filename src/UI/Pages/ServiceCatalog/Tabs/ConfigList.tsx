@@ -1,8 +1,8 @@
+import React, { useContext } from "react";
 import { Config } from "@/Core";
 import { BooleanSwitch, EmptyView, SettingsList } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import React, { useContext } from "react";
 
 interface Props {
   config: Config;
@@ -12,8 +12,8 @@ interface Props {
 export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const update = commandResolver.getTrigger<"ServiceConfig">({
-    kind: "ServiceConfig",
+  const update = commandResolver.getTrigger<"UpdateServiceConfig">({
+    kind: "UpdateServiceConfig",
     name: serviceName,
   });
   const isHalted = environmentModifier.useIsHalted();

@@ -1,7 +1,7 @@
-import { TreeRowCreator } from "./TreeRowCreator";
-import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
 import { MultiAttributeNode } from "@/UI/Components/TreeTable/Helpers/AttributeNode";
+import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
 import { TreeRow } from "./TreeRow";
+import { TreeRowCreator } from "./TreeRowCreator";
 
 const onToggle = () => {
   undefined;

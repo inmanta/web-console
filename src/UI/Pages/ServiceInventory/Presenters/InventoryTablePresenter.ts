@@ -4,13 +4,13 @@ import {
   ServiceInstanceModelWithTargetStates,
   getUuidFromRaw,
 } from "@/Core";
-import { words } from "@/UI/words";
 import {
   ActionPresenter,
   TablePresenter,
   DatePresenter,
   ColumnHead,
 } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 import { AttributesPresenter } from "./AttributesPresenter";
 import { StatePresenter } from "./StatePresenter";
 
@@ -155,8 +155,8 @@ export class InventoryTablePresenter
         active: active_attributes,
         rollback: rollback_attributes,
       },
-      createdAt: this.datePresenter.get(created_at),
-      updatedAt: this.datePresenter.get(last_updated),
+      createdAt: created_at,
+      updatedAt: last_updated,
       version: version,
       instanceSetStateTargets,
       environment,

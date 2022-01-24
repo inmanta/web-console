@@ -28,7 +28,35 @@ export const c: AttributeModel = {
   default_value: "1234",
 };
 
-export const list = [a, b, c];
+export const d: AttributeModel = {
+  default_value: null,
+  default_value_set: false,
+  description: "The release of the orchestrator to install in the lab",
+  modifier: "rw",
+  name: "iso_release",
+  type: "string",
+  validation_parameters: {
+    names: { dev: "dev", next: "next", stable: "stable" },
+    value: "iso_release_t",
+  },
+  validation_type: "enum",
+};
+
+export const e: AttributeModel = {
+  default_value: "local",
+  default_value_set: true,
+  description: "The network this orchestrator should reside on.",
+  modifier: "rw",
+  name: "network",
+  type: "string",
+  validation_parameters: {
+    names: { ci: "ci", local: "local" },
+    value: "infra_network",
+  },
+  validation_type: "enum",
+};
+
+export const list = [a, b, c, d, e];
 
 export const nestedEditable: AttributeModel[] = [
   {

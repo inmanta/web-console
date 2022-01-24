@@ -1,5 +1,4 @@
-import { EventRow } from "@/Core";
-import styled from "styled-components";
+import React from "react";
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -7,9 +6,10 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import React from "react";
-import { EventIcon } from "@/UI/Components/EventIcon";
+import styled from "styled-components";
+import { EventRow } from "@/Core";
 import { DateWithTooltip } from "@/UI/Components/DateWithTooltip";
+import { EventIcon } from "@/UI/Components/EventIcon";
 import { words } from "@/UI/words";
 import { CompileReportLink } from "./CompileReportLink";
 
@@ -41,7 +41,7 @@ export const EventsTableRow: React.FC<Props> = ({
         <EventIcon eventType={row.eventType} />
       </Td>
       <Td>
-        <DateWithTooltip date={row.timestamp} />
+        <DateWithTooltip timestamp={row.timestamp} />
       </Td>
       <Td>{row.serviceInstanceVersion}</Td>
       <Td>{row.source}</Td>

@@ -1,46 +1,32 @@
-import {
-  Command,
-  Poster,
-  CommandManager,
-  Updater,
-  Either,
-  Maybe,
-} from "@/Core";
+import { omit } from "lodash-es";
+import { Either, Maybe, ApiHelper, UpdaterWithEnv } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class CreateCallbackCommandManager implements CommandManager {
+export class CreateCallbackCommandManager extends CommandManagerWithEnv<"CreateCallback"> {
   constructor(
-    private readonly poster: Poster<"CreateCallback">,
-    private readonly updater: Updater<"Callbacks">
-  ) {}
-
-  matches(command: Command.SubCommand<"CreateCallback">): boolean {
-    return command.kind === "CreateCallback";
-  }
-
-  getTrigger(
-    command: Command.SubCommand<"CreateCallback">
-  ): Command.Trigger<"CreateCallback"> {
-    return async () => {
-      const {
-        callback_url,
-        callback_id,
-        service_entity,
-        minimal_log_level,
-        event_types,
-      } = command;
-      const result = await this.poster.post(command, {
-        callback_url,
-        callback_id,
-        service_entity,
-        minimal_log_level,
-        event_types,
-      });
-      if (Either.isLeft(result)) {
-        return Maybe.some(result.value);
-      } else {
-        await this.updater.update({ kind: "Callbacks", service_entity });
-        return Maybe.none();
-      }
-    };
+    private readonly apiHelper: ApiHelper,
+    private readonly updater: UpdaterWithEnv<"GetCallbacks">
+  ) {
+    super("CreateCallback", (command, environment) => {
+      return async () => {
+        const result = await this.apiHelper.post(
+          "/lsm/v1/callbacks",
+          environment,
+          omit(command, "kind")
+        );
+        if (Either.isLeft(result)) {
+          return Maybe.some(result.value);
+        } else {
+          await this.updater.update(
+            {
+              kind: "GetCallbacks",
+              service_entity: command.service_entity,
+            },
+            environment
+          );
+          return Maybe.none();
+        }
+      };
+    });
   }
 }

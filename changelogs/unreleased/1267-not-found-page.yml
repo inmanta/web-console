@@ -1,0 +1,6 @@
+description: Update design of not found page
+issue-nr: 1267
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

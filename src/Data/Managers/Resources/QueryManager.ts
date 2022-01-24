@@ -1,30 +1,29 @@
-import { Scheduler, Fetcher, StateHelper, ResourceParams } from "@/Core";
+import { Scheduler, Resource, ApiHelper, StateHelperWithEnv } from "@/Core";
 import {
-  ContinuousQueryManagerImpl,
   getPaginationHandlers,
-} from "@/Data/Common";
+  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
+} from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ResourcesQueryManager extends ContinuousQueryManagerImpl<"Resources"> {
+export class ResourcesQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetResources"> {
   constructor(
-    fetcher: Fetcher<"Resources">,
-    stateHelper: StateHelper<"Resources">,
-    scheduler: Scheduler,
-    environment: string
+    apiHelper: ApiHelper,
+    stateHelper: StateHelperWithEnv<"GetResources">,
+    scheduler: Scheduler
   ) {
     super(
-      fetcher,
+      apiHelper,
       stateHelper,
       scheduler,
-      () => environment,
-      ({ filter, sort, pageSize }) => [
+      ({ kind }, environment) => `${kind}_${environment}`,
+      ({ filter, sort, pageSize }, environment) => [
         environment,
         pageSize.value,
         sort?.name,
         sort?.order,
         stringifyFilter(filter),
       ],
-      "Resources",
+      "GetResources",
       getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
@@ -35,12 +34,11 @@ export class ResourcesQueryManager extends ContinuousQueryManagerImpl<"Resources
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      },
-      environment
+      }
     );
   }
 }
 
-function stringifyFilter(filter: ResourceParams.Filter | undefined): string {
+function stringifyFilter(filter: Resource.Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

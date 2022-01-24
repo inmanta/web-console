@@ -1,6 +1,6 @@
+import React from "react";
 import { DeploymentProgress } from "@/Core";
 import { StackedProgressBar } from "@/UI/Components";
-import React from "react";
 
 export class DeploymentProgressPresenter {
   getDeploymentProgressBar(

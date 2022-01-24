@@ -1,5 +1,5 @@
 import { EnvironmentModifier, Maybe, RemoteData } from "@/Core";
-import { useStoreState } from "@/Data";
+import { useStoreState } from "@/Data/Store";
 
 export class EnvironmentModifierImpl implements EnvironmentModifier {
   private environment: Maybe.Type<string> = Maybe.none();
@@ -8,7 +8,10 @@ export class EnvironmentModifierImpl implements EnvironmentModifier {
   }
 
   useIsHalted(): boolean {
-    const storeState = useStoreState((state) => state.environmentDetails.byEnv);
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
+    const storeState = useStoreState(
+      (state) => state.environment.environmentDetailsById
+    );
     if (Maybe.isSome(this.environment)) {
       const state = storeState[this.environment.value];
       if (RemoteData.isSuccess(state)) {

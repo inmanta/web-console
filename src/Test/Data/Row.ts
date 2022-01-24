@@ -15,14 +15,8 @@ export const a: Row = {
     },
     rollback: null,
   },
-  createdAt: {
-    full: "January 8th 2021, 4:44:27 pm",
-    relative: "17 hours ago",
-  },
-  updatedAt: {
-    full: "January 8th 2021, 4:44:27 pm",
-    relative: "17 hours ago",
-  },
+  createdAt: "2021-01-11T12:55:25.961567",
+  updatedAt: "2021-01-11T12:55:25.961567",
   version: 2,
   instanceSetStateTargets: [],
   environment: "env",

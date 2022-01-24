@@ -1,18 +1,32 @@
-import { Query, RemoteData, StateHelper } from "@/Core";
-import { Store, useStoreState } from "@/Data/Store";
-import { isEqual, sortBy } from "lodash";
+import { sortBy } from "lodash-es";
+import { Query, RemoteData } from "@/Core";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
+import { Store } from "@/Data/Store";
 
-type Data = RemoteData.Type<Query.Error<"Callbacks">, Query.Data<"Callbacks">>;
+type Data = RemoteData.Type<
+  Query.Error<"GetCallbacks">,
+  Query.Data<"GetCallbacks">
+>;
 type ApiData = RemoteData.Type<
-  Query.Error<"Callbacks">,
-  Query.ApiResponse<"Callbacks">
+  Query.Error<"GetCallbacks">,
+  Query.ApiResponse<"GetCallbacks">
 >;
 
-export class CallbacksStateHelper implements StateHelper<"Callbacks"> {
-  constructor(
-    private readonly store: Store,
-    private readonly environment: string
-  ) {}
+export class CallbacksStateHelper extends PrimaryStateHelperWithEnv<"GetCallbacks"> {
+  constructor(store: Store) {
+    super(
+      store,
+      (data, { service_entity }, environment) => {
+        store.dispatch.callbacks.setData({
+          environment,
+          service_entity,
+          value: this.sanitize(data, service_entity),
+        });
+      },
+      (state, { service_entity }, environment) =>
+        state.callbacks.byEnv[environment]?.[service_entity]
+    );
+  }
 
   private sanitize(data: ApiData, service_entity: string): Data {
     if (!RemoteData.isSuccess(data)) return data;
@@ -22,32 +36,5 @@ export class CallbacksStateHelper implements StateHelper<"Callbacks"> {
     );
     const sortedCallbacks = sortBy(serviceCallbacks, ["url"]);
     return RemoteData.success(sortedCallbacks);
-  }
-
-  set(data: ApiData, { service_entity }: Query.SubQuery<"Callbacks">): void {
-    this.store.dispatch.callbacks.setData({
-      environment: this.environment,
-      service_entity,
-      value: this.sanitize(data, service_entity),
-    });
-  }
-
-  getHooked({ service_entity }: Query.SubQuery<"Callbacks">): Data {
-    return useStoreState(
-      (state) =>
-        this.enforce(state.callbacks.byEnv[this.environment]?.[service_entity]),
-      isEqual
-    );
-  }
-
-  private enforce(value: undefined | Data): Data {
-    if (typeof value === "undefined") return RemoteData.notAsked();
-    return value;
-  }
-
-  getOnce({ service_entity }: Query.SubQuery<"Callbacks">): Data {
-    return this.enforce(
-      this.store.getState().callbacks.byEnv[this.environment]?.[service_entity]
-    );
   }
 }

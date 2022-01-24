@@ -1,0 +1,6 @@
+description: Refactor Query and Command definitions
+issue-nr: 1414
+change-type: patch
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

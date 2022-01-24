@@ -1,5 +1,5 @@
-import { Select, SelectOption } from "@patternfly/react-core";
 import React, { useState } from "react";
+import { Select, SelectOption } from "@patternfly/react-core";
 
 interface Props {
   selected: string | null;

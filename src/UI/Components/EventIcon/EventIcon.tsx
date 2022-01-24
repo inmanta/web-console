@@ -1,4 +1,4 @@
-import { EventType } from "@/Core";
+import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import {
   AddCircleOIcon,
@@ -10,8 +10,7 @@ import {
   RunningIcon,
   TrashIcon,
 } from "@patternfly/react-icons";
-
-import React from "react";
+import { EventType } from "@/Core";
 
 interface Props {
   eventType: EventType;

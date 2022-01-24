@@ -1,0 +1,4 @@
+description: Refactor app structure to always show navigation
+issue-nr: 1840
+change-type: minor
+destination-branches: [master, iso4]

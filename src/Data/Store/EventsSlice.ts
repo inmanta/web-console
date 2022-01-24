@@ -1,7 +1,10 @@
 import { Action, action } from "easy-peasy";
 import { Query, RemoteData } from "@/Core";
 
-type Data = RemoteData.Type<Query.Error<"Events">, Query.ApiResponse<"Events">>;
+type Data = RemoteData.Type<
+  Query.Error<"GetInstanceEvents">,
+  Query.ApiResponse<"GetInstanceEvents">
+>;
 
 /**
  * The eventsSlice stores events related to service instances.

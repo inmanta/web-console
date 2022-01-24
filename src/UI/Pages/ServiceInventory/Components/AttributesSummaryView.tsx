@@ -1,10 +1,10 @@
 import React from "react";
+import { List, ListItem, ListVariant, Tooltip } from "@patternfly/react-core";
 import {
   OutlinedQuestionCircleIcon,
   ListIcon,
-  RedoIcon,
+  UndoIcon,
 } from "@patternfly/react-icons";
-import { List, ListItem, ListVariant, Tooltip } from "@patternfly/react-core";
 import { AttributesSummary } from "@/Core";
 import { words } from "@/UI/words";
 
@@ -30,7 +30,7 @@ export const AttributesSummaryView: React.FC<{
     </ListItem>
     <ListItem aria-label={`Rollback-${rollback ? "NotEmpty" : "Empty"}`}>
       <Tooltip content={words("attributes.rollback")} entryDelay={200}>
-        <RedoIcon color={getColor(rollback)} />
+        <UndoIcon color={getColor(rollback)} />
       </Tooltip>
     </ListItem>
   </List>

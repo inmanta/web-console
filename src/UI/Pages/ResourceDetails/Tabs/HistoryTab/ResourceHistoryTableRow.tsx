@@ -1,10 +1,9 @@
+import React, { useRef, useState } from "react";
+import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { ResourceHistoryRow } from "@/Core";
 import { DateWithTooltip } from "@/UI/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { Tbody, Td, Tr } from "@patternfly/react-table";
-import React from "react";
-import { useRef, useState } from "react";
 import { TabKey, Tabs } from "./Tabs";
 
 interface Props {
@@ -42,7 +41,7 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
           }}
         />
         <Td dataLabel={words("resources.history.column.date")}>
-          <DateWithTooltip date={row.date} />
+          <DateWithTooltip timestamp={row.date} />
         </Td>
         <Td
           dataLabel={words("resources.history.column.numberOfDependencies")}

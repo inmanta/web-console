@@ -1,12 +1,11 @@
 import React, { ComponentProps } from "react";
-import { Service, DynamicCommandManagerResolver } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   DeleteServiceCommandManager,
   BaseApiHelper,
-  ServiceDeleter,
   CommandResolverImpl,
 } from "@/Data";
+import { Service, DynamicCommandManagerResolver } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { Details } from "./Details";
 
 export default {
@@ -17,9 +16,7 @@ export default {
 const Template: React.FC<ComponentProps<typeof Details>> = (args) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new DeleteServiceCommandManager(
-        new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
-      ),
+      new DeleteServiceCommandManager(new BaseApiHelper()),
     ])
   );
 

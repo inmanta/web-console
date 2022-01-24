@@ -1,0 +1,6 @@
+description: Add create environment page
+issue-nr: 1473
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

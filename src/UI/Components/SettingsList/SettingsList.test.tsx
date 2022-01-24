@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { SettingsList } from "./SettingsList";
 import { BooleanSwitch } from "@/UI/Components";
+import { SettingsList } from "./SettingsList";
 
 test("ConfigView shows setting as toggle correctly", () => {
   render(

@@ -1,6 +1,7 @@
-import { PageSize } from "./PageSize";
+import { DateRange } from "./DateRange";
 import { EventType } from "./EventType";
-import { Sort, TimestampOperatorFilter } from "./Params";
+import { PageSize } from "./PageSize";
+import { Sort } from "./Sort";
 
 export interface EventParams {
   filter?: Filter;
@@ -19,7 +20,7 @@ export interface Filter {
   version?: string[];
   source?: string[];
   destination?: string[];
-  timestamp?: TimestampOperatorFilter[];
+  timestamp?: DateRange[];
 }
 
 export enum Kind {

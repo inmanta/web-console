@@ -1,7 +1,4 @@
-import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
-import { DefaultSwitch, EmptyView, SettingsList } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
-import { words } from "@/UI/words";
+import React, { useContext } from "react";
 import {
   Button,
   Card,
@@ -10,7 +7,10 @@ import {
   CardHeader,
   Tooltip,
 } from "@patternfly/react-core";
-import React, { useContext } from "react";
+import { Config, VersionedServiceInstanceIdentifier } from "@/Core";
+import { DefaultSwitch, EmptyView, SettingsList } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   config: Config;
@@ -25,8 +25,8 @@ export const ConfigDetails: React.FC<Props> = ({
 }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const trigger = commandResolver.getTrigger<"InstanceConfig">({
-    kind: "InstanceConfig",
+  const trigger = commandResolver.getTrigger<"UpdateInstanceConfig">({
+    kind: "UpdateInstanceConfig",
     ...serviceInstanceIdentifier,
   });
   const isHalted = environmentModifier.useIsHalted();

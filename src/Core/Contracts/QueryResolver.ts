@@ -1,7 +1,5 @@
 import { RemoteData } from "@/Core/Language";
-import { Query } from "@/Core/Domain";
-import { ManagerResolverGetter } from "./ManagerResolver";
-import { QueryManager } from "./QueryManager";
+import { Query } from "@/Core/Query";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,
@@ -16,7 +14,7 @@ type Pair<K extends Query.Kind> = [Data<K>, () => void];
  * attached to the component lifecycle. Data is provided
  * based on a query.
  */
-export interface QueryResolver extends ManagerResolverGetter<QueryManager> {
+export interface QueryResolver {
   useOneTime<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
   useContinuous<Kind extends Query.Kind>(query: Query.Type): Pair<Kind>;
 }

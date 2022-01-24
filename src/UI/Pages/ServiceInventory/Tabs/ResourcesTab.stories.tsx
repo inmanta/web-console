@@ -1,20 +1,22 @@
 import React from "react";
+import { BrowserRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
-import {
-  StaticScheduler,
-  Outcome,
-  InstantFetcher,
-  InstanceResource,
-  DynamicQueryManagerResolver,
-} from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { Query } from "@/Core";
 import {
   QueryResolverImpl,
   InstanceResourcesStateHelper,
   InstanceResourcesQueryManager,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
+import {
+  StaticScheduler,
+  Outcome,
+  InstanceResource,
+  DynamicQueryManagerResolver,
+  InstantApiHelper,
+  dependencies,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { ResourcesTab } from "./ResourcesTab";
 
 export default {
@@ -22,38 +24,37 @@ export default {
   component: ResourcesTab,
 };
 
-const Template: React.FC<{ outcome: Outcome<"InstanceResources"> }> = ({
-  outcome,
-}) => {
+const Template: React.FC<{
+  outcome: Outcome.Type<
+    Query.Error<"GetInstanceResources">,
+    Query.ApiResponse<"GetInstanceResources">
+  >;
+}> = ({ outcome }) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">(outcome),
+        new InstantApiHelper(outcome),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        "34a961ba-db3c-486e-8d85-1438d8e88909"
+        new StaticScheduler()
       ),
     ])
   );
 
-  const urlManager = new UrlManagerImpl(
-    "",
-    "34a961ba-db3c-486e-8d85-1438d8e88909"
-  );
-
   return (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <ResourcesTab
-          serviceInstanceIdentifier={{
-            id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-            service_entity: "vlan-assignment",
-            version: 4,
-          }}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <BrowserRouter>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+        <StoreProvider store={store}>
+          <ResourcesTab
+            serviceInstanceIdentifier={{
+              id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+              service_entity: "vlan-assignment",
+              version: 4,
+            }}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </BrowserRouter>
   );
 };
 

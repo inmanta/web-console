@@ -5,13 +5,25 @@ import {
   QueryResolver,
   UrlManager,
   EnvironmentModifier,
+  RouteManager,
+  EnvironmentHandler,
+  AuthHelper,
+  FeatureManager,
+  ArchiveHelper,
+  KeycloakController,
 } from "@/Core";
 import {
   DummyCommandResolver,
   DummyEnvironmentModifier,
+  DummyFeatureManager,
   DummyFileFetcher,
   DummyQueryResolver,
   DummyUrlManager,
+  DummyRouteManager,
+  DummyEnvironmentHandler,
+  DummyAuthHelper,
+  DummyArchiveHelper,
+  DummyKeycloakController,
 } from "./Dummy";
 
 export interface Dependencies {
@@ -20,6 +32,12 @@ export interface Dependencies {
   urlManager: UrlManager;
   fileFetcher: FileFetcher;
   environmentModifier: EnvironmentModifier;
+  featureManager: FeatureManager;
+  routeManager: RouteManager;
+  environmentHandler: EnvironmentHandler;
+  authHelper: AuthHelper;
+  archiveHelper: ArchiveHelper;
+  keycloakController: KeycloakController;
 }
 
 export const DependencyContext = createContext<Dependencies>({
@@ -28,6 +46,12 @@ export const DependencyContext = createContext<Dependencies>({
   urlManager: new DummyUrlManager(),
   fileFetcher: new DummyFileFetcher(),
   environmentModifier: new DummyEnvironmentModifier(),
+  featureManager: new DummyFeatureManager(),
+  routeManager: new DummyRouteManager(),
+  environmentHandler: new DummyEnvironmentHandler(),
+  authHelper: new DummyAuthHelper(),
+  archiveHelper: new DummyArchiveHelper(),
+  keycloakController: new DummyKeycloakController(),
 });
 
 export const DependencyProvider: React.FC<{
@@ -39,6 +63,12 @@ export const DependencyProvider: React.FC<{
     urlManager,
     fileFetcher,
     environmentModifier,
+    featureManager,
+    routeManager,
+    environmentHandler,
+    authHelper,
+    archiveHelper,
+    keycloakController,
   },
   children,
 }) => (
@@ -50,6 +80,12 @@ export const DependencyProvider: React.FC<{
       fileFetcher: fileFetcher || new DummyFileFetcher(),
       environmentModifier:
         environmentModifier || new DummyEnvironmentModifier(),
+      featureManager: featureManager || new DummyFeatureManager(),
+      routeManager: routeManager || new DummyRouteManager(),
+      environmentHandler: environmentHandler || new DummyEnvironmentHandler(),
+      authHelper: authHelper || new DummyAuthHelper(),
+      archiveHelper: archiveHelper || new DummyArchiveHelper(),
+      keycloakController: keycloakController || new DummyKeycloakController(),
     }}
   >
     {children}
