@@ -40,6 +40,7 @@ import {
   ControlAgentCommandManager,
   GetAgentsUpdater,
   GetAgentsStateHelper,
+  TriggerCompileCommandManager,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -156,6 +157,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
           this.apiHelper
         )
       ),
+      new TriggerCompileCommandManager(this.apiHelper),
     ];
   }
 }

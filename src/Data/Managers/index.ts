@@ -31,6 +31,7 @@ export * from "./Service";
 export * from "./ServiceConfig";
 export * from "./ServiceInstances";
 export * from "./Services";
+export * from "./TriggerCompile";
 export { TriggerInstanceUpdateCommandManager } from "./TriggerInstanceUpdate";
 export { TriggerSetStateCommandManager } from "./TriggerSetState";
 export * from "./Deploy";
