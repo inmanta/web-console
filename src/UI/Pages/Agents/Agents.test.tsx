@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { Either, Maybe } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
@@ -12,6 +12,8 @@ import {
   CommandResolverImpl,
   DeployCommandManager,
   RepairCommandManager,
+  AgentActionCommandManager,
+  GetAgentsUpdater,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
@@ -28,6 +30,7 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
+  const stateHelper = new GetAgentsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new GetAgentsQueryManager(
@@ -41,6 +44,10 @@ function setup() {
     new DynamicCommandManagerResolver([
       new DeployCommandManager(apiHelper),
       new RepairCommandManager(apiHelper),
+      new AgentActionCommandManager(
+        apiHelper,
+        new GetAgentsUpdater(stateHelper, apiHelper)
+      ),
     ])
   );
 
@@ -248,4 +255,132 @@ test("When using the status filter with the 'up' option then the agents in the '
     name: "Agents Table Row",
   });
   expect(rowsAfter).toHaveLength(3);
+});
+
+test("Given the Agents view with filters, When pausing an agent, then the correct request is fired", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+
+  const input = screen.getByPlaceholderText("Filter by name");
+  userEvent.click(input);
+  userEvent.type(input, "aws{enter}");
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+  const rows = await screen.findAllByRole("row", {
+    name: "Agents Table Row",
+  });
+  const pauseAgentButton = await within(rows[0]).findByRole("button", {
+    name: "Pause",
+  });
+
+  userEvent.click(pauseAgentButton);
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "POST",
+    environment: "env",
+    url: "/api/v2/agent/aws/pause",
+    body: null,
+  });
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(3);
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    environment: "env",
+    url: "/api/v2/agents?limit=20&filter.name=aws&sort=name.asc",
+  });
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(4);
+  expect(apiHelper.pendingRequests).toHaveLength(0);
+});
+
+test("Given the Agents view with filters, When unpausing an agent, then the correct request is fired", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+
+  const input = screen.getByPlaceholderText("Filter by name");
+  userEvent.click(input);
+  userEvent.type(input, "bru{enter}");
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+  const rows = await screen.findAllByRole("row", {
+    name: "Agents Table Row",
+  });
+  const unpauseAgentButton = await within(rows[1]).findByRole("button", {
+    name: "Unpause",
+  });
+
+  userEvent.click(unpauseAgentButton);
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "POST",
+    environment: "env",
+    url: "/api/v2/agent/bru-23-r321/unpause",
+    body: null,
+  });
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(3);
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    environment: "env",
+    url: "/api/v2/agents?limit=20&filter.name=bru&sort=name.asc",
+  });
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+  expect(apiHelper.resolvedRequests).toHaveLength(4);
+  expect(apiHelper.pendingRequests).toHaveLength(0);
+});
+
+test("Given the Agents view When pausing an agent results in an error, then the error is shown", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+  const rows = await screen.findAllByRole("row", {
+    name: "Agents Table Row",
+  });
+  const pauseAgentButton = await within(rows[0]).findByRole("button", {
+    name: "Pause",
+  });
+
+  userEvent.click(pauseAgentButton);
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "POST",
+    environment: "env",
+    url: "/api/v2/agent/aws/pause",
+    body: null,
+  });
+  await act(async () => {
+    await apiHelper.resolve(Maybe.some("something happened"));
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+  expect(await screen.findByText("something happened")).toBeVisible();
 });
