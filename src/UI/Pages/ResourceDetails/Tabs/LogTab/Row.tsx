@@ -38,13 +38,13 @@ export const Row: React.FC<Props> = ({
             onToggle,
           }}
         />
-        <Td>{presentDate(log.timestamp)}</Td>
-        <Td>{log.action}</Td>
-        <Td>{log.level}</Td>
-        <Td>
-          <CodeText singleLine>{presentShortMessage(log.msg)}</CodeText>
+        <Td width={15}>{presentDate(log.timestamp)}</Td>
+        <Td width={10}>{log.action}</Td>
+        <Td width={10}>{log.level}</Td>
+        <Td modifier="truncate">
+          <CodeText singleLine>{log.msg}</CodeText>
         </Td>
-        <Td>
+        <Td width={10}>
           <RowOptions toggleActionType={toggleActionType} action={log.action} />
         </Td>
       </Tr>
@@ -86,9 +86,6 @@ const getStyleForLevel = (level: string) => {
       return "";
   }
 };
-
-const presentShortMessage = (message: string): string =>
-  message.length <= 40 ? message : message.slice(0, 40) + "...";
 
 const presentDate = (timestamp: string): string => {
   return moment
