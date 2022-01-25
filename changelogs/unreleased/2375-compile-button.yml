@@ -1,0 +1,4 @@
+description: Add compile button to Desired State Page and Compile Report page
+issue-nr: 2375
+change-type: patch
+destination-branches: [master, iso4, iso5]
