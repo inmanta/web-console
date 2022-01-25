@@ -1,0 +1,4 @@
+description: Improve Resource Details tabs
+issue-nr: 2465
+change-type: patch
+destination-branches: [master, iso4, iso5]

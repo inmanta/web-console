@@ -33,11 +33,7 @@ function setup() {
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl(
-    dependencies.featureManager,
-    "",
-    "environment"
-  );
+  const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
 
   const component = (
     <MemoryRouter>

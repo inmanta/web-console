@@ -25,7 +25,6 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new ResourceDetailsQueryManager(
@@ -35,7 +34,6 @@ function setup() {
       ),
     ])
   );
-  dependencies.urlManager.setEnvironment(environment);
 
   const component = (
     <MemoryRouter>
@@ -55,7 +53,7 @@ function setup() {
   return { component, scheduler, apiHelper };
 }
 
-test("GIVEN The Resource details view WHEN the user clicks on the info tab THEN data is fetched immediately", async () => {
+test("GIVEN The Resource details view THEN desired state data is fetched immediately", async () => {
   const { component, apiHelper } = setup();
 
   render(component);
@@ -69,7 +67,9 @@ test("GIVEN The Resource details view WHEN the user clicks on the info tab THEN 
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
-  expect(await screen.findByText(Resource.id)).toBeVisible();
+  expect(
+    await screen.findByText(ResourceDetails.a.attributes.path)
+  ).toBeVisible();
 });
 
 test("GIVEN The Resource details view WHEN the user clicks on the requires tab THEN the requires table is shown", async () => {

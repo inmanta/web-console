@@ -33,7 +33,6 @@ function setup() {
       ),
     ])
   );
-  dependencies.urlManager.setEnvironment("environment");
 
   const component = (
     <MemoryRouter>
