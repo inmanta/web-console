@@ -1,4 +1,4 @@
-import { AgentAction, AgentActionManifest } from "./AgentAction";
+import { ControlAgent, ControlAgentManifest } from "./ControlAgent";
 import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
 import {
   CreateEnvironment,
@@ -75,7 +75,7 @@ export type Command =
   | Repair
   | GetSupportArchive
   | PromoteVersion
-  | AgentAction;
+  | ControlAgent;
 
 export type Type = Command;
 
@@ -106,7 +106,7 @@ interface Manifest {
   Repair: RepairManifest;
   GetSupportArchive: GetSupportArchiveManifest;
   PromoteVersion: PromoteVersionManifest;
-  AgentAction: AgentActionManifest;
+  ControlAgent: ControlAgentManifest;
 }
 
 /**

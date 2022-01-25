@@ -37,7 +37,7 @@ import {
   PromoteVersionCommandManager,
   GetDesiredStatesStateHelper,
   DesiredStatesUpdater,
-  AgentActionCommandManager,
+  ControlAgentCommandManager,
   GetAgentsUpdater,
   GetAgentsStateHelper,
 } from "@/Data/Managers";
@@ -149,7 +149,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new DeployCommandManager(this.apiHelper),
       new RepairCommandManager(this.apiHelper),
       new PromoteVersionCommandManager(this.apiHelper, desiredStatesUpdater),
-      new AgentActionCommandManager(
+      new ControlAgentCommandManager(
         this.apiHelper,
         new GetAgentsUpdater(
           new GetAgentsStateHelper(this.store),

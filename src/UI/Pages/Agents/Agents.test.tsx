@@ -12,7 +12,7 @@ import {
   CommandResolverImpl,
   DeployCommandManager,
   RepairCommandManager,
-  AgentActionCommandManager,
+  ControlAgentCommandManager,
   GetAgentsUpdater,
 } from "@/Data";
 import {
@@ -44,7 +44,7 @@ function setup() {
     new DynamicCommandManagerResolver([
       new DeployCommandManager(apiHelper),
       new RepairCommandManager(apiHelper),
-      new AgentActionCommandManager(
+      new ControlAgentCommandManager(
         apiHelper,
         new GetAgentsUpdater(stateHelper, apiHelper)
       ),
