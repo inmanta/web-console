@@ -1,19 +1,26 @@
-import { Fetcher, Query, RemoteData, StateHelper, Updater } from "@/Core";
+import {
+  ApiHelper,
+  Query,
+  RemoteData,
+  StateHelperWithEnv,
+  UpdaterWithEnv,
+} from "@/Core";
 import { getUrl } from "@/Data/Managers/Callbacks/getUrl";
 
-export class CallbacksUpdater implements Updater<"Callbacks"> {
+export class CallbacksUpdater implements UpdaterWithEnv<"GetCallbacks"> {
   constructor(
-    private readonly stateHelper: StateHelper<"Callbacks">,
-    private readonly fetcher: Fetcher<"Callbacks">,
-    private readonly environment: string
+    private readonly stateHelper: StateHelperWithEnv<"GetCallbacks">,
+    private readonly apiHelper: ApiHelper
   ) {}
 
-  async update(query: Query.SubQuery<"Callbacks">): Promise<void> {
+  async update(
+    query: Query.SubQuery<"GetCallbacks">,
+    environment: string
+  ): Promise<void> {
     this.stateHelper.set(
-      RemoteData.fromEither(
-        await this.fetcher.getData(this.environment, getUrl())
-      ),
-      query
+      RemoteData.fromEither(await this.apiHelper.get(getUrl(), environment)),
+      query,
+      environment
     );
   }
 }

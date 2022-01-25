@@ -1,11 +1,11 @@
-import { Query } from "@/Core";
 import qs from "qs";
+import { Query } from "@/Core";
 
 export function getUrl({
   filter,
   pageSize,
   sort,
-}: Query.SubQuery<"Resources">): string {
+}: Query.SubQuery<"GetResources">): string {
   const filterParam =
     filter && Object.keys(filter).length > 0
       ? `&${qs.stringify(
@@ -21,5 +21,5 @@ export function getUrl({
         )}`
       : "";
   const sortParam = sort ? `&sort=${sort.name}.${sort.order}` : "";
-  return `/api/v2/resource?limit=${pageSize.value}${filterParam}${sortParam}`;
+  return `/api/v2/resource?deploy_summary=True&limit=${pageSize.value}${filterParam}${sortParam}`;
 }

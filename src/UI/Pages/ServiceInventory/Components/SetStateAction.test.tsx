@@ -1,24 +1,27 @@
+import React from "react";
+import { fireEvent, screen, render, act } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { EnvironmentDetails, RemoteData } from "@/Core";
 import {
-  DynamicCommandManagerResolver,
-  MockEnvironmentModifier,
-  ServiceInstance,
-} from "@/Test";
-import {
-  SetStatePoster,
   TriggerSetStateCommandManager,
   CommandResolverImpl,
   BaseApiHelper,
   KeycloakAuthHelper,
+  getStoreInstance,
 } from "@/Data";
-import { DependencyProvider } from "@/UI/Dependency";
-import { fireEvent, screen, render } from "@testing-library/react";
-import React from "react";
+import {
+  dependencies,
+  DynamicCommandManagerResolver,
+  MockEnvironmentModifier,
+  ServiceInstance,
+} from "@/Test";
+import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { SetStateAction } from "./SetStateAction";
 
 function setup() {
   const commandManager = new TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    new SetStatePoster(new BaseApiHelper(), "env1")
+    new BaseApiHelper()
   );
   return {
     commandResolver: new CommandResolverImpl(
@@ -32,6 +35,7 @@ function setupComponent() {
     component: (
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
         }}
@@ -53,6 +57,7 @@ test("SetStateAction dropdown is disabled when no targets are found", async () =
   render(
     <DependencyProvider
       dependencies={{
+        ...dependencies,
         commandResolver,
         environmentModifier: new MockEnvironmentModifier(),
       }}
@@ -65,6 +70,47 @@ test("SetStateAction dropdown is disabled when no targets are found", async () =
       />
     </DependencyProvider>
   );
+  const testid = `${id}-set-state-toggle`;
+  expect(await screen.findByTestId(testid)).toBeDisabled();
+});
+
+test("SetStateAction dropdown takes environment halted status in account", async () => {
+  const id = ServiceInstance.b.id;
+  const { commandResolver } = setup();
+  const storeInstance = getStoreInstance();
+  storeInstance.dispatch.environment.setEnvironmentDetailsById({
+    id: ServiceInstance.b.environment,
+    value: RemoteData.success({ halted: false } as EnvironmentDetails),
+  });
+  const environmentModifier = new EnvironmentModifierImpl();
+  environmentModifier.setEnvironment(ServiceInstance.b.environment);
+  const componentWithDependencies = (targets: string[]) => (
+    <DependencyProvider
+      dependencies={{
+        ...dependencies,
+        commandResolver,
+        environmentModifier,
+      }}
+    >
+      <StoreProvider store={storeInstance}>
+        <SetStateAction
+          id={ServiceInstance.b.id}
+          service_entity={ServiceInstance.b.service_entity}
+          version={ServiceInstance.b.version}
+          targets={targets}
+        />
+      </StoreProvider>
+    </DependencyProvider>
+  );
+  const { rerender } = render(componentWithDependencies([]));
+  act(() => {
+    storeInstance.dispatch.environment.setEnvironmentDetailsById({
+      id: ServiceInstance.b.environment,
+      value: RemoteData.success({ halted: true } as EnvironmentDetails),
+    });
+  });
+
+  rerender(componentWithDependencies(["update_started"]));
   const testid = `${id}-set-state-toggle`;
   expect(await screen.findByTestId(testid)).toBeDisabled();
 });

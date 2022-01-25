@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { DependencyContext } from "@/UI/Dependency";
 import { RemoteData, ServiceModel } from "@/Core";
-import { LoadingView } from "@/UI/Components/LoadingView";
 import { ErrorView } from "@/UI/Components/ErrorView";
+import { LoadingView } from "@/UI/Components/LoadingView";
+import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   serviceName: string;
@@ -17,8 +17,8 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
 }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data, retry] = queryResolver.useContinuous<"Service">({
-    kind: "Service",
+  const [data, retry] = queryResolver.useContinuous<"GetService">({
+    kind: "GetService",
     name: serviceName,
   });
 

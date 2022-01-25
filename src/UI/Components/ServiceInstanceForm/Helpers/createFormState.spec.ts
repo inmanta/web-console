@@ -1,5 +1,5 @@
-import { createEditFormState, createFormState } from "./createFormState";
 import { Field, ServiceInstance } from "@/Test";
+import { createEditFormState, createFormState } from "./createFormState";
 
 test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState correctly", () => {
   const fields = [Field.dictList([Field.text])];

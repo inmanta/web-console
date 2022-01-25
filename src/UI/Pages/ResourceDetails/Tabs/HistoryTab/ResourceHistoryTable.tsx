@@ -1,5 +1,4 @@
 import React from "react";
-import { ExpansionManager } from "@/UI/Pages/ServiceInventory/ExpansionManager";
 import {
   OnSort,
   TableComposable,
@@ -8,27 +7,32 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { ResourceHistoryRow, SortDirection } from "@/Core";
+import { ResourceHistoryRow, Sort } from "@/Core";
+import { useUrlStateWithExpansion } from "@/Data";
 import { ResourceHistoryTableRow } from "./ResourceHistoryTableRow";
 import { ResourceHistoryTablePresenter } from "./TablePresenter";
 
 interface Props {
   tablePresenter: ResourceHistoryTablePresenter;
-  order: SortDirection;
-  setOrder: (order: SortDirection) => void;
+  sort: Sort.Type;
+  setSort: (sort: Sort.Type) => void;
   rows: ResourceHistoryRow[];
   "aria-label"?: string;
 }
 
 export const ResourceHistoryTable: React.FC<Props> = ({
   tablePresenter,
-  order,
-  setOrder,
+  sort,
+  setSort,
   rows,
   ...props
 }) => {
-  const onSort: OnSort = (event, index, direction) => {
-    setOrder(direction);
+  const [isExpanded, onExpansion] = useUrlStateWithExpansion({
+    route: "ResourceDetails",
+    key: "history-expansion",
+  });
+  const onSort: OnSort = (event, index, order) => {
+    setSort({ ...sort, order });
   };
   // The resource history table is only sortable by one column
   const heads = tablePresenter
@@ -40,7 +44,7 @@ export const ResourceHistoryTable: React.FC<Props> = ({
               sort: {
                 sortBy: {
                   index: 0,
-                  direction: order,
+                  direction: sort.order,
                 },
                 onSort,
                 columnIndex,
@@ -53,19 +57,6 @@ export const ResourceHistoryTable: React.FC<Props> = ({
         </Th>
       );
     });
-  const expansionManager = new ExpansionManager();
-
-  const [expansionState, setExpansionState] = React.useState(
-    expansionManager.create(rowsToIds(rows))
-  );
-
-  const handleExpansionToggle = (id: string) => () => {
-    setExpansionState(expansionManager.toggle(expansionState, id));
-  };
-
-  React.useEffect(() => {
-    setExpansionState(expansionManager.merge(expansionState, rowsToIds(rows)));
-  }, [rows]);
 
   return (
     <TableComposable {...props} variant={TableVariant.compact}>
@@ -80,15 +71,11 @@ export const ResourceHistoryTable: React.FC<Props> = ({
           row={row}
           key={row.id}
           index={idx}
-          isExpanded={expansionState[row.id]}
-          onToggle={handleExpansionToggle(row.id)}
+          isExpanded={isExpanded(row.id)}
+          onToggle={onExpansion(row.id)}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
         />
       ))}
     </TableComposable>
   );
 };
-
-function rowsToIds(rows: ResourceHistoryRow[]): string[] {
-  return rows.map((row) => row.id);
-}

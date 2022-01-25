@@ -1,21 +1,22 @@
 import React, { ComponentProps } from "react";
+import { MemoryRouter } from "react-router-dom";
 import { Story } from "@storybook/react/types-6-0";
-import { InventoryTable } from "./InventoryTable";
-import {
-  DynamicQueryManagerResolver,
-  InstantFetcher,
-  Row,
-  StaticScheduler,
-  tablePresenter,
-} from "@/Test";
+import { StoreProvider } from "easy-peasy";
 import {
   QueryResolverImpl,
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
   getStoreInstance,
 } from "@/Data";
+import {
+  DynamicQueryManagerResolver,
+  InstantApiHelper,
+  Row,
+  StaticScheduler,
+  tablePresenter,
+} from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { StoreProvider } from "easy-peasy";
+import { InventoryTable } from "./InventoryTable";
 
 export default {
   title: "InventoryTable",
@@ -27,23 +28,29 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">({
+        new InstantApiHelper({
           kind: "Success",
           data: { data: [] },
         }),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        "env"
+        new StaticScheduler()
       ),
     ])
   );
 
   return (
-    <DependencyProvider dependencies={{ queryResolver }}>
-      <StoreProvider store={store}>
-        <InventoryTable {...args} tablePresenter={tablePresenter} />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ queryResolver }}>
+        <StoreProvider store={store}>
+          <InventoryTable
+            {...args}
+            sort={{ name: "created_at", order: "desc" }}
+            setSort={() => undefined}
+            tablePresenter={tablePresenter}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 };
 

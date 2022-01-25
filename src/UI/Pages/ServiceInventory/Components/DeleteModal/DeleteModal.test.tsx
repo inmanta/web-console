@@ -1,50 +1,61 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
+import { EnvironmentDetails, RemoteData } from "@/Core";
 import {
+  BaseApiHelper,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
-  BaseApiHelper,
-  InstanceDeleter,
+  getStoreInstance,
 } from "@/Data";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
+  dependencies,
   DynamicCommandManagerResolver,
-  MockEnvironmentModifier,
   ServiceInstance,
 } from "@/Test";
+import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { DeleteModal } from "./DeleteModal";
 
 function setup() {
-  const commandManager = new DeleteInstanceCommandManager(
-    new InstanceDeleter(new BaseApiHelper(), ServiceInstance.a.environment)
-  );
+  const commandManager = new DeleteInstanceCommandManager(new BaseApiHelper());
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
   );
+  const storeInstance = getStoreInstance();
+  storeInstance.dispatch.environment.setEnvironmentDetailsById({
+    id: ServiceInstance.a.environment,
+    value: RemoteData.success({ halted: false } as EnvironmentDetails),
+  });
+  const environmentModifier = new EnvironmentModifierImpl();
+  environmentModifier.setEnvironment(ServiceInstance.a.environment);
   return {
-    component: (
+    component: (isDisabled = false) => (
       <DependencyProvider
         dependencies={{
+          ...dependencies,
           commandResolver,
-          environmentModifier: new MockEnvironmentModifier(),
+          environmentModifier,
         }}
       >
-        <DeleteModal
-          id={ServiceInstance.a.id}
-          version={ServiceInstance.a.version}
-          isDisabled={false}
-          service_entity={ServiceInstance.a.service_entity}
-        />
+        <StoreProvider store={storeInstance}>
+          <DeleteModal
+            id={ServiceInstance.a.id}
+            version={ServiceInstance.a.version}
+            isDisabled={isDisabled}
+            service_entity={ServiceInstance.a.service_entity}
+          />
+        </StoreProvider>
       </DependencyProvider>
     ),
+    storeInstance,
   };
 }
 
 describe("DeleteModal ", () => {
   it("Shows form when clicking on modal button", async () => {
     const { component } = setup();
-    render(component);
+    render(component());
     const modalButton = await screen.findByText("Delete");
     userEvent.click(modalButton);
     expect(await screen.findByText("Yes")).toBeVisible();
@@ -52,7 +63,7 @@ describe("DeleteModal ", () => {
   });
   it("Closes modal when cancelled", async () => {
     const { component } = setup();
-    render(component);
+    render(component());
     const modalButton = await screen.findByText("Delete");
     userEvent.click(modalButton);
     const noButton = await screen.findByText("No");
@@ -61,7 +72,7 @@ describe("DeleteModal ", () => {
   });
   it("Sends request when submitted", async () => {
     const { component } = setup();
-    render(component);
+    render(component());
     const modalButton = await screen.findByText("Delete");
     userEvent.click(modalButton);
     const yesButton = await screen.findByText("Yes");
@@ -72,5 +83,19 @@ describe("DeleteModal ", () => {
       `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}?current_version=${ServiceInstance.a.version}`
     );
     expect(requestInit?.method).toEqual("DELETE");
+  });
+  it("Takes environment halted status in account", async () => {
+    const { component, storeInstance } = setup();
+    const { rerender } = render(component(true));
+    act(() => {
+      storeInstance.dispatch.environment.setEnvironmentDetailsById({
+        id: ServiceInstance.a.environment,
+        value: RemoteData.success({ halted: true } as EnvironmentDetails),
+      });
+    });
+    rerender(component(false));
+    expect(
+      await screen.findByRole("button", { name: "Delete" })
+    ).toBeDisabled();
   });
 });

@@ -1,6 +1,7 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
 import { CompileReportParams } from "@/Core";
+import { CompileWidget } from "@/UI/Components";
 import { CompileReportsFilterWidget } from "./FilterWidget";
 
 interface Props {
@@ -21,6 +22,8 @@ export const CompileReportsTableControls: React.FC<Props> = ({
     >
       <ToolbarContent>
         <CompileReportsFilterWidget filter={filter} setFilter={setFilter} />
+        <ToolbarItem variant="separator" />
+        <CompileWidget />
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
     </Toolbar>

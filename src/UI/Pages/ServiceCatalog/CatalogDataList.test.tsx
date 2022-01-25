@@ -1,29 +1,26 @@
-import { CatalogDataList } from "./CatalogDataList";
 import React from "react";
 import { MemoryRouter } from "react-router";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ServiceModel } from "@/Core";
-import { DynamicCommandManagerResolver, Service } from "@/Test";
 import {
   BaseApiHelper,
   CommandResolverImpl,
   DeleteServiceCommandManager,
-  ServiceDeleter,
 } from "@/Data";
+import { dependencies, DynamicCommandManagerResolver, Service } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { CatalogDataList } from "./CatalogDataList";
 
 const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new DeleteServiceCommandManager(
-        new ServiceDeleter(new BaseApiHelper(), Service.a.environment)
-      ),
+      new DeleteServiceCommandManager(new BaseApiHelper()),
     ])
   );
   return (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ commandResolver }}>
+      <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
         <CatalogDataList services={services} />
       </DependencyProvider>
     </MemoryRouter>

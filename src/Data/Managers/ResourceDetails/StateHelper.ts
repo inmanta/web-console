@@ -1,47 +1,28 @@
-import { Query, RemoteData, StateHelper, ResourceStatus } from "@/Core";
-import { Store, useStoreState } from "@/Data/Store";
-import { isEqual } from "lodash";
+import { RemoteData, Resource } from "@/Core";
+import { PrimaryStateHelper } from "@/Data/Common";
+import { Store } from "@/Data/Store";
 
-type Data = RemoteData.Type<
-  Query.Error<"ResourceDetails">,
-  Query.Data<"ResourceDetails">
->;
-type ApiData = RemoteData.Type<string, Query.ApiResponse<"ResourceDetails">>;
-
-export class ResourceDetailsStateHelper
-  implements StateHelper<"ResourceDetails">
-{
-  constructor(private readonly store: Store) {}
-
-  set(data: ApiData, query: Query.SubQuery<"ResourceDetails">): void {
-    const value = RemoteData.mapSuccess(
-      (wrapped) => ({
-        ...wrapped.data,
-        status: wrapped.data.status as ResourceStatus,
-        requires_status: Object.fromEntries(
-          Object.entries(wrapped.data.requires_status).map(([k, v]) => [
-            k,
-            v as ResourceStatus,
-          ])
-        ),
-      }),
-      data
+export class ResourceDetailsStateHelper extends PrimaryStateHelper<"GetResourceDetails"> {
+  constructor(store: Store) {
+    super(
+      store,
+      (data, query) => {
+        const value = RemoteData.mapSuccess(
+          (wrapped) => ({
+            ...wrapped.data,
+            status: wrapped.data.status as Resource.Status,
+            requires_status: Object.fromEntries(
+              Object.entries(wrapped.data.requires_status).map(([k, v]) => [
+                k,
+                v as Resource.Status,
+              ])
+            ),
+          }),
+          data
+        );
+        store.dispatch.resourceDetails.setData({ id: query.id, value });
+      },
+      (state, query) => state.resourceDetails.byId[query.id]
     );
-    this.store.dispatch.resourceDetails.setData({ id: query.id, value });
-  }
-
-  getHooked(query: Query.SubQuery<"ResourceDetails">): Data {
-    return useStoreState((state) => {
-      return this.enforce(state.resourceDetails.byId[query.id]);
-    }, isEqual);
-  }
-
-  private enforce(value: undefined | Data): Data {
-    if (typeof value === "undefined") return RemoteData.notAsked();
-    return value;
-  }
-
-  getOnce(query: Query.SubQuery<"ResourceDetails">): Data {
-    return this.enforce(this.store.getState().resourceDetails.byId[query.id]);
   }
 }

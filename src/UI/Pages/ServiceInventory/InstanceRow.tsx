@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react";
-import styled from "styled-components";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
+import styled from "styled-components";
 import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
-import { words } from "@/UI/words";
 import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
+import { scrollRowIntoView } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import { AttributesSummaryView, IdWithCopy } from "./Components";
 import { DeploymentProgressPresenter } from "./Presenters";
 import { Tabs, TabKey } from "./Tabs";
-import { scrollRowIntoView } from "@/UI/Utils";
 
 interface Props {
   row: Row;
@@ -96,10 +96,10 @@ export const InstanceRow: React.FC<Props> = ({
           </span>
         </Td>
         <Td dataLabel={words("inventory.column.createdAt")}>
-          <DateWithTooltip date={row.createdAt} />
+          <DateWithTooltip timestamp={row.createdAt} />
         </Td>
         <Td dataLabel={words("inventory.column.updatedAt")}>
-          <DateWithTooltip date={row.updatedAt} />
+          <DateWithTooltip timestamp={row.updatedAt} />
         </Td>
       </StyledRow>
       <Tr

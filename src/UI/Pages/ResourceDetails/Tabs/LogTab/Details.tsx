@@ -1,13 +1,13 @@
 import React from "react";
-import { ResourceLog, isObjectEmpty } from "@/Core";
 import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
 } from "@patternfly/react-core";
-import { CodeHighlighter, CodeText } from "@/UI/Components";
+import { ResourceLog, isObjectEmpty } from "@/Core";
 import { JsonFormatter } from "@/Data";
+import { CodeHighlighter, CodeText } from "@/UI/Components";
 
 interface Props {
   log: ResourceLog;

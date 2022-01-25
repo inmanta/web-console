@@ -7,8 +7,8 @@ import {
   LoadingView,
   ErrorView,
 } from "@/UI/Components";
-import { words } from "@/UI/words";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
@@ -20,8 +20,8 @@ export const ResourcesTab: React.FC<Props> = ({
   const { queryResolver } = useContext(DependencyContext);
   const { id } = serviceInstanceIdentifier;
 
-  const [data] = queryResolver.useContinuous<"InstanceResources">({
-    kind: "InstanceResources",
+  const [data] = queryResolver.useContinuous<"GetInstanceResources">({
+    kind: "GetInstanceResources",
     ...serviceInstanceIdentifier,
   });
 
@@ -30,7 +30,7 @@ export const ResourcesTab: React.FC<Props> = ({
       notAsked: () => null,
       loading: () => (
         <ResourceTableWrapper aria-label="ResourceTable-Loading" id={id}>
-          <LoadingView delay={500} />
+          <LoadingView />
         </ResourceTableWrapper>
       ),
       failed: (error) => (

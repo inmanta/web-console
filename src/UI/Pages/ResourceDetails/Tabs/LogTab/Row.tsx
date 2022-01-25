@@ -1,10 +1,10 @@
 import React from "react";
+import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
+import moment from "moment";
 import styled, { css } from "styled-components";
 import { ResourceLog } from "@/Core";
-import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
-import { Details } from "./Details";
-import moment from "moment";
 import { CodeText } from "@/UI/Components";
+import { Details } from "./Details";
 import { RowOptions, ToggleActionType } from "./RowOptions";
 
 interface Props {

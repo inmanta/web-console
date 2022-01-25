@@ -1,51 +1,53 @@
 import React from "react";
-import { SchedulerImpl, ServiceModel } from "@/Core";
+import { MemoryRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
-import { DeferredFetcher, DynamicQueryManagerResolver, Service } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { SchedulerImpl, ServiceModel } from "@/Core";
 import {
   QueryResolverImpl,
   EventsQueryManager,
   EventsStateHelper,
   getStoreInstance,
 } from "@/Data";
-import { EventsPage } from "@/UI/Pages/Events/EventsPage";
-import { MemoryRouter } from "react-router-dom";
-import { UrlManagerImpl } from "@/UI/Utils";
+import {
+  DeferredApiHelper,
+  dependencies,
+  DynamicQueryManagerResolver,
+  Service,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { Events } from "@/UI/Pages/Events/Events";
 
 export interface Handles {
   component: React.ReactElement;
   scheduler: SchedulerImpl;
-  eventsFetcher: DeferredFetcher<"Events">;
+  apiHelper: DeferredApiHelper;
 }
 
 export class EventsPageComposer {
   compose(service: ServiceModel = Service.a): Handles {
     const store = getStoreInstance();
     const scheduler = new SchedulerImpl(5000);
-    const eventsFetcher = new DeferredFetcher<"Events">();
+    const apiHelper = new DeferredApiHelper();
     const eventsHelper = new EventsQueryManager(
-      eventsFetcher,
+      apiHelper,
       new EventsStateHelper(store),
-      scheduler,
-      Service.a.environment
+      scheduler
     );
 
     const queryResolver = new QueryResolverImpl(
       new DynamicQueryManagerResolver([eventsHelper])
     );
-    const urlManager = new UrlManagerImpl("", Service.a.environment);
 
     const component = (
       <MemoryRouter>
-        <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+        <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
           <StoreProvider store={store}>
-            <EventsPage service={service} instanceId="id1" />
+            <Events service={service} instanceId="id1" />
           </StoreProvider>
         </DependencyProvider>
       </MemoryRouter>
     );
 
-    return { component, scheduler, eventsFetcher };
+    return { component, scheduler, apiHelper };
   }
 }

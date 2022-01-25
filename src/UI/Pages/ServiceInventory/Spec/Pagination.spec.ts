@@ -1,17 +1,16 @@
 import { render, screen, act } from "@testing-library/react";
-import { ServiceInstance } from "@/Test";
-import { Either } from "@/Core";
 import userEvent from "@testing-library/user-event";
+import { Either } from "@/Core";
+import { ServiceInstance } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user clicks on prev THEN first page is shown", async () => {
-  const { component, serviceInstancesFetcher } =
-    new ServiceInventoryPrepper().prep();
+  const { component, apiHelper } = new ServiceInventoryPrepper().prep();
 
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a, ServiceInstance.b],
         links: {
@@ -33,5 +32,5 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
 
   const button = screen.getByRole("button", { name: "Prev" });
   userEvent.click(button);
-  expect(serviceInstancesFetcher.getInvocations()[1][1]).toEqual("first");
+  expect(apiHelper.pendingRequests[0].url).toEqual("first");
 });

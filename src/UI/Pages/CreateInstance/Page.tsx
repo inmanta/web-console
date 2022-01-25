@@ -1,79 +1,31 @@
-import React, { useCallback, useContext, useState } from "react";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  Text,
-  TextContent,
-  TextVariants,
-} from "@patternfly/react-core";
-import { useHistory } from "react-router-dom";
-import { Field, InstanceAttributeModel, ServiceModel } from "@/Core";
+import React, { useContext } from "react";
+import { PageContainer, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { getUrl } from "@/UI/Routing";
+import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import {
-  CreateModifierHandler,
-  FieldCreator,
-  ServiceInstanceForm,
-} from "@/UI/Components";
+import { CreateInstance } from "./CreateInstance";
 
-export const CreateInstancePage: React.FC<{ serviceEntity: ServiceModel }> = ({
-  serviceEntity,
-}) => {
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
-  const [errorMessage, setErrorMessage] = useState("");
-  const isHalted = environmentModifier.useIsHalted();
-  const history = useHistory();
-  const url = `${getUrl("Inventory", { service: serviceEntity.name })}?env=${
-    serviceEntity.environment
-  }`;
-  const handleRedirect = useCallback(() => history.push(url), [history]);
+export const Page: React.FC = () => {
+  const { service: serviceName } = useRouteParams<"CreateInstance">();
+  const { queryResolver } = useContext(DependencyContext);
 
-  const trigger = commandResolver.getTrigger<"CreateInstance">({
-    kind: "CreateInstance",
-    service_entity: serviceEntity.name,
+  const [data, retry] = queryResolver.useContinuous<"GetService">({
+    kind: "GetService",
+    name: serviceName,
   });
 
-  const onSubmit = async (
-    fields: Field[],
-    attributes: InstanceAttributeModel
-  ) => {
-    const result = await trigger(fields, attributes);
-    if (result.kind === "Left") {
-      setErrorMessage(result.value);
-    } else {
-      handleRedirect();
-    }
-  };
-
   return (
-    <>
-      {errorMessage && (
-        <AlertGroup isToast>
-          <Alert
-            variant={"danger"}
-            title={errorMessage}
-            actionClose={
-              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-            }
-          />
-        </AlertGroup>
-      )}
-      <TextContent>
-        <Text component={TextVariants.small}>
-          {words("inventory.addInstance.title")(serviceEntity.name)}
-        </Text>
-      </TextContent>
-      <ServiceInstanceForm
-        fields={new FieldCreator(new CreateModifierHandler()).create(
-          serviceEntity
+    <PageContainer title={words("inventory.createInstance.title")}>
+      <RemoteDataView
+        data={data}
+        retry={retry}
+        label="AddInstance"
+        SuccessView={(service) => (
+          <div aria-label="AddInstance-Success">
+            <CreateInstance serviceEntity={service} />
+          </div>
         )}
-        onSubmit={onSubmit}
-        onCancel={handleRedirect}
-        isSubmitDisabled={isHalted}
       />
-    </>
+    </PageContainer>
   );
 };

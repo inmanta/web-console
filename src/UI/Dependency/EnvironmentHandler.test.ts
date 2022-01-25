@@ -1,79 +1,67 @@
-import { getStoreInstance } from "@/Data";
 import { createMemoryHistory } from "history";
-import { EnvironmentHandlerImpl } from ".";
 import { RemoteData } from "@/Core";
-import { Project } from "@/Test";
+import { getStoreInstance } from "@/Data";
+import { Environment } from "@/Test";
+import { PrimaryRouteManager } from "@/UI/Routing";
+import { EnvironmentHandlerImpl } from ".";
 
-test("EnvironmentHandler sets default environment correctly", () => {
-  const history = createMemoryHistory();
-  const store = getStoreInstance();
-  const [project] = Project.list;
-  const [env] = project.environments;
-
-  const environmentHandler = new EnvironmentHandlerImpl(history, store);
-  environmentHandler.setDefault(RemoteData.success(Project.list), () => {
-    return;
-  });
-  expect(store.getState().projects.selectedEnvironmentId).toEqual(env.id);
-  expect(store.getState().projects.selectedProjectId).toEqual(project.id);
-  expect(history.location.search).toEqual(`?env=${env.id}`);
-});
+const routeManager = new PrimaryRouteManager("");
 
 test("EnvironmentHandler updates environment correctly", () => {
-  const history = createMemoryHistory();
-  const store = getStoreInstance();
-  const [, project] = Project.list;
-  const [env] = project.environments;
-
-  const environmentHandler = new EnvironmentHandlerImpl(history, store);
-  environmentHandler.setDefault(RemoteData.success(Project.list), () => {
-    return;
+  const history = createMemoryHistory({
+    initialEntries: ["/resources?env=123"],
   });
-  environmentHandler.set(project.id, env.id);
-  expect(store.getState().projects.selectedEnvironmentId).toEqual(env.id);
-  expect(store.getState().projects.selectedProjectId).toEqual(project.id);
+  const store = getStoreInstance();
+  const env = Environment.filterable[0];
+  store
+    .getActions()
+    .environment.setEnvironments(RemoteData.success(Environment.filterable));
+
+  const environmentHandler = new EnvironmentHandlerImpl(
+    () => history.location,
+    history.push,
+    routeManager
+  );
+  environmentHandler.set(history.location, env.id);
+
   expect(history.location.search).toEqual(`?env=${env.id}`);
 });
 
 test("EnvironmentHandler determines selected environment correctly", () => {
   const history = createMemoryHistory();
-  const store = getStoreInstance();
-  const [project] = Project.list;
-  const [env] = project.environments;
 
-  const environmentHandler = new EnvironmentHandlerImpl(history, store);
-  // Default is loading
-  expect(
-    RemoteData.isLoading(environmentHandler.determineSelected())
-  ).toBeTruthy();
+  const environmentHandler = new EnvironmentHandlerImpl(
+    () => history.location,
+    (path) => history.push(path),
+    routeManager
+  );
 
-  // If the fetching fails, the selectedEnvironment should be failed as well
-  store
-    .getActions()
-    .projects.setAllProjects(RemoteData.failed("Failure message"));
   expect(
-    RemoteData.isFailed(environmentHandler.determineSelected())
-  ).toBeTruthy();
+    environmentHandler.determineSelected(
+      RemoteData.notAsked(),
+      history.location.search
+    )
+  ).toBeUndefined();
+  history.push(`?env=${Environment.filterable[0].id}`);
+  expect(
+    environmentHandler.determineSelected(
+      RemoteData.notAsked(),
+      history.location.search
+    )
+  ).toBeUndefined();
 
-  // Fetching is successful, but the selection logic has not finished yet
-  store.getActions().projects.setAllProjects(RemoteData.success(Project.list));
   expect(
-    RemoteData.isLoading(environmentHandler.determineSelected())
-  ).toBeTruthy();
+    environmentHandler.determineSelected(
+      RemoteData.success(Environment.filterable),
+      history.location.search
+    )
+  ).toEqual(Environment.filterable[0]);
 
-  // Only the project is selected
+  environmentHandler.set(history.location, Environment.filterable[1].id);
   expect(
-    RemoteData.isLoading(environmentHandler.determineSelected(project))
-  ).toBeTruthy();
-
-  // Both are selected
-  expect(
-    RemoteData.isSuccess(environmentHandler.determineSelected(project, env))
-  ).toBeTruthy();
-
-  // Fetching is successful, but the list is empty
-  store.getActions().projects.setAllProjects(RemoteData.success([]));
-  expect(
-    RemoteData.isFailed(environmentHandler.determineSelected())
-  ).toBeTruthy();
+    environmentHandler.determineSelected(
+      RemoteData.success(Environment.filterable),
+      history.location.search
+    )
+  ).toEqual(Environment.filterable[1]);
 });

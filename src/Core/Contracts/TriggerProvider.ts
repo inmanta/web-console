@@ -1,4 +1,4 @@
-import { Command } from "@/Core/Domain";
+import { Command } from "@/Core/Command";
 
 /**
  * The TriggerProvider is responsible for providing a

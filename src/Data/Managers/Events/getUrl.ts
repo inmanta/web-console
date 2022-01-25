@@ -1,9 +1,15 @@
-import { Operator, Query } from "@/Core";
 import moment from "moment-timezone";
 import qs from "qs";
+import { Query, RangeOperator } from "@/Core";
 
 export function getUrl(
-  { service_entity, id, filter, sort, pageSize }: Query.SubQuery<"Events">,
+  {
+    service_entity,
+    id,
+    filter,
+    sort,
+    pageSize,
+  }: Query.SubQuery<"GetInstanceEvents">,
   timezone = moment.tz.guess()
 ): string {
   const filterParam =
@@ -17,14 +23,16 @@ export function getUrl(
   return `/lsm/v1/service_inventory/${service_entity}/${id}/events?limit=${pageSize.value}${sortParam}${filterParam}`;
 }
 
-type Filter = NonNullable<Query.SubQuery<"Events">["filter"]>;
+type Filter = NonNullable<Query.SubQuery<"GetInstanceEvents">["filter"]>;
 
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};
   const { source, destination, version, event_type, timestamp } = filter;
   const serializedTimestampOperatorFilters = timestamp?.map(
     (timestampWithOperator) =>
-      `${operatorToParam(timestampWithOperator.operator)}:${moment
+      `${RangeOperator.serializeOperator(
+        timestampWithOperator.operator
+      )}:${moment
         .tz(timestampWithOperator.date, timezone)
         .utc()
         .format("YYYY-MM-DD+HH:mm:ss")}`
@@ -37,13 +45,4 @@ const filterToParam = (filter: Filter, timezone: string) => {
     event_type,
     timestamp: serializedTimestampOperatorFilters,
   };
-};
-
-const operatorToParam = (operator: Operator): string => {
-  switch (operator) {
-    case Operator.From:
-      return "ge";
-    case Operator.To:
-      return "le";
-  }
 };

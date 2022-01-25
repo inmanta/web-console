@@ -1,0 +1,4 @@
+description: Add token tab for generating authentication tokens
+issue-nr: 1724
+change-type: minor
+destination-branches: [master, iso4]

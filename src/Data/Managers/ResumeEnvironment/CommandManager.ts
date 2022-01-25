@@ -1,35 +1,41 @@
 import {
-  Command,
-  CommandManager,
-  PosterWithoutResponse,
+  ApiHelper,
   RemoteData,
-  StateHelper,
-  Updater,
+  StateHelperWithEnv,
+  UpdaterWithEnv,
 } from "@/Core";
+import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class ResumeEnvironmentCommandManager implements CommandManager {
+export class ResumeEnvironmentCommandManager extends CommandManagerWithEnv<"ResumeEnvironment"> {
   constructor(
-    private readonly poster: PosterWithoutResponse<"ResumeEnvironment">,
-    private readonly stateHelper: StateHelper<"EnvironmentDetails">,
-    private readonly updater: Updater<"EnvironmentDetails">
-  ) {}
-
-  matches(command: Command.SubCommand<"ResumeEnvironment">): boolean {
-    return command.kind === "ResumeEnvironment";
-  }
-
-  getTrigger(
-    command: Command.SubCommand<"ResumeEnvironment">
-  ): Command.Trigger<"ResumeEnvironment"> {
-    return async () => {
-      this.stateHelper.set(RemoteData.loading(), {
-        kind: "EnvironmentDetails",
-      });
-      const result = await this.poster.post(command, null);
-      await this.updater.update({
-        kind: "EnvironmentDetails",
-      });
-      return result;
-    };
+    private readonly apiHelper: ApiHelper,
+    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">,
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">
+  ) {
+    super("ResumeEnvironment", (command, environment) => {
+      return async () => {
+        this.stateHelper.set(
+          RemoteData.loading(),
+          {
+            kind: "GetEnvironmentDetails",
+            details: false,
+          },
+          environment
+        );
+        const result = await this.apiHelper.postWithoutResponse(
+          `/api/v2/actions/environment/resume`,
+          environment,
+          null
+        );
+        await this.updater.update(
+          {
+            kind: "GetEnvironmentDetails",
+            details: false,
+          },
+          environment
+        );
+        return result;
+      };
+    });
   }
 }

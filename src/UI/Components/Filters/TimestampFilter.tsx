@@ -6,22 +6,17 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { Operator } from "@/Core";
-import { DatePresenter } from "@/UI/Presenters";
-import { TimestampPicker } from "./TimestampPicker";
 import { SearchIcon } from "@patternfly/react-icons";
-import { reject } from "lodash";
+import { reject } from "lodash-es";
+import { DateRange, RangeOperator } from "@/Core";
+import { DatePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
-
-interface Raw {
-  date: Date;
-  operator: Operator;
-}
+import { TimestampPicker } from "./TimestampPicker";
 
 interface Props {
   datePresenter: DatePresenter;
-  timestampFilters: Raw[];
-  update: (timestampFilters: Raw[]) => void;
+  timestampFilters: DateRange.Type[];
+  update: (timestampFilters: DateRange.Type[]) => void;
   isVisible: boolean;
 }
 
@@ -38,9 +33,13 @@ export const TimestampFilter: React.FC<Props> = ({
     const withNewFrom = insertNewTimestamp(
       timestampFilters,
       from,
-      Operator.From
+      RangeOperator.Operator.From
     );
-    const withNewTo = insertNewTimestamp(withNewFrom, to, Operator.To);
+    const withNewTo = insertNewTimestamp(
+      withNewFrom,
+      to,
+      RangeOperator.Operator.To
+    );
     update(withNewTo);
     setFrom(undefined);
     setTo(undefined);
@@ -65,18 +64,18 @@ export const TimestampFilter: React.FC<Props> = ({
     setTo(timestamp);
   };
 
-  const getChips = (timestampFilters: Raw[]): string[] => {
+  const getChips = (timestampFilters: DateRange.Type[]): string[] => {
     return timestampFilters.map(rawToPretty);
   };
 
-  const rawToPretty = ({ date, operator }: Raw): string => {
+  const rawToPretty = ({ date, operator }: DateRange.Type): string => {
     return `${operator} | ${datePresenter.getShort(date)}`;
   };
-  const prettyToRaw = (pretty: string): Raw => {
+  const prettyToRaw = (pretty: string): DateRange.Type => {
     const [operator, date] = pretty.split("|");
     return {
       date: datePresenter.parseShort(date),
-      operator: operator.trim() as Operator,
+      operator: operator.trim() as RangeOperator.Operator,
     };
   };
 
@@ -133,10 +132,10 @@ export const TimestampFilter: React.FC<Props> = ({
 };
 
 function insertNewTimestamp(
-  timestampFilters: Raw[],
+  timestampFilters: DateRange.Type[],
   date: Date | undefined,
-  operator: Operator
-): Raw[] {
+  operator: RangeOperator.Operator
+): DateRange.Type[] {
   if (date) {
     return [
       ...reject(timestampFilters, (ts) => ts.operator === operator),

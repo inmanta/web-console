@@ -1,47 +1,59 @@
-import { Query, RemoteData, StateHelper } from "@/Core";
-import { Store, useStoreState } from "@/Data/Store";
-import { isEqual } from "lodash";
+import { Query, RemoteData } from "@/Core";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
+import { Store, State, Dispatch } from "@/Data/Store";
 
 type Data = RemoteData.Type<
-  Query.Error<"EnvironmentDetails">,
-  Query.Data<"EnvironmentDetails">
->;
-type ApiData = RemoteData.Type<
-  Query.Error<"EnvironmentDetails">,
-  Query.ApiResponse<"EnvironmentDetails">
+  Query.Error<"GetEnvironmentDetails">,
+  Query.Data<"GetEnvironmentDetails">
 >;
 
-export class EnvironmentDetailsStateHelper
-  implements StateHelper<"EnvironmentDetails">
-{
-  constructor(
-    private readonly store: Store,
-    private readonly environment: string
-  ) {}
-
-  set(data: ApiData): void {
-    const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
-    this.store.dispatch.environmentDetails.setData({
-      id: this.environment,
-      value: unwrapped,
-    });
-  }
-
-  getHooked(): Data {
-    return useStoreState(
-      (state) => this.enforce(state.environmentDetails.byEnv[this.environment]),
-      isEqual
+export class EnvironmentDetailsStateHelper extends PrimaryStateHelperWithEnv<"GetEnvironmentDetails"> {
+  constructor(store: Store) {
+    super(
+      store,
+      (data, query, environment) => {
+        const unwrapped = RemoteData.mapSuccess(
+          (wrapped) => wrapped.data,
+          data
+        );
+        this.setData(store.dispatch, query, environment, unwrapped);
+      },
+      (state, query, environment) => this.getData(state, query, environment)
     );
   }
 
-  private enforce(value: undefined | Data): Data {
-    if (typeof value === "undefined") return RemoteData.notAsked();
-    return value;
+  private getData(
+    state: State,
+    { details }: Query.SubQuery<"GetEnvironmentDetails">,
+    id: string
+  ): Data {
+    return details
+      ? state.environment.environmentDetailsWithIconById[id]
+      : state.environment.environmentDetailsById[id];
   }
 
-  getOnce(): Data {
-    return this.enforce(
-      this.store.getState().environmentDetails.byEnv[this.environment]
-    );
+  private setData(
+    store: Dispatch,
+    { details }: Query.SubQuery<"GetEnvironmentDetails">,
+    environment: string,
+    data: Data
+  ) {
+    if (details) {
+      store.environment.setEnvironmentDetailsWithIconById({
+        id: environment,
+        value: data,
+      });
+      if (RemoteData.isSuccess(data)) {
+        store.environment.setEnvironmentDetailsById({
+          id: environment,
+          value: data,
+        });
+      }
+    } else {
+      store.environment.setEnvironmentDetailsById({
+        id: environment,
+        value: data,
+      });
+    }
   }
 }

@@ -1,5 +1,7 @@
+import { id } from "./Resource";
+
 export const a = {
-  resource_id: "std::File[agent2,path=/tmp/file4]",
+  resource_id: id,
   resource_type: "std::File",
   agent: "internal",
   id_attribute: "path",

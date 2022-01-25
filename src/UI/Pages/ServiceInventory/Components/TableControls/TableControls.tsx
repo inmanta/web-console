@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { PlusIcon } from "@patternfly/react-icons";
 import {
   Toolbar,
   ToolbarGroup,
@@ -8,10 +7,11 @@ import {
   ToolbarContent,
   Button,
 } from "@patternfly/react-core";
+import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
-import { words } from "@/UI/words";
-import { getUrl } from "@/UI/Routing";
+import { DependencyContext } from "@/UI/Dependency";
 import { FilterWidget } from "@/UI/Pages/ServiceInventory/Components/FilterWidget";
+import { words } from "@/UI/words";
 
 interface Props {
   serviceName: string;
@@ -28,6 +28,7 @@ export const TableControls: React.FC<Props> = ({
   service,
   paginationWidget,
 }) => {
+  const { routeManager } = useContext(DependencyContext);
   const { service_identity, service_identity_display_name } = service;
   const identityAttribute =
     service_identity && service_identity_display_name
@@ -43,12 +44,11 @@ export const TableControls: React.FC<Props> = ({
           states={states}
           identityAttribute={identityAttribute}
         />
-        <ToolbarItem variant="separator" />
-        <ToolbarGroup>
+        <ToolbarGroup alignment={{ default: "alignRight" }}>
           <ToolbarItem>
             <Link
               to={{
-                pathname: getUrl("CreateInstance", {
+                pathname: routeManager.getUrl("CreateInstance", {
                   service: serviceName,
                 }),
                 search: location.search,

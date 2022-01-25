@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-import styled from "styled-components";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardActions,
@@ -7,13 +6,16 @@ import {
   CardHeader,
   CardTitle,
   Dropdown,
+  DropdownItem,
   KebabToggle,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 import { Failure } from "@/Core";
-import { words } from "@/UI/words";
+import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
-import { DropdownExternalLink } from "./ExternalLink";
+import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import { Pre } from "./Pre";
 
 interface Props {
@@ -22,18 +24,32 @@ interface Props {
 }
 
 export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
-  const { urlManager } = useContext(DependencyContext);
+  const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownItems = [
-    <DropdownExternalLink
+    <DropdownItem
       key="resourceDetailsLink"
-      url={urlManager.getResourceUrl(resourceId)}
-      linkText={words("diagnose.links.resourceDetails")}
+      component={
+        <Link
+          pathname={routeManager.getUrl("ResourceDetails", {
+            resourceId: getResourceIdFromResourceVersionId(resourceId),
+          })}
+        >
+          {words("diagnose.links.resourceDetails")}
+        </Link>
+      }
     />,
-    <DropdownExternalLink
+    <DropdownItem
       key="modelVersionLink"
-      url={urlManager.getModelVersionUrl(failure.model_version.toString())}
-      linkText={words("diagnose.links.modelVersionDetails")}
+      component={
+        <Link
+          pathname={routeManager.getUrl("DesiredStateDetails", {
+            version: failure.model_version.toString(),
+          })}
+        >
+          {words("diagnose.links.modelVersionDetails")}
+        </Link>
+      }
     />,
   ];
 

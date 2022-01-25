@@ -1,5 +1,5 @@
-import { ServiceInstanceModelWithTargetStates } from "@/Core";
 import { ReactElement } from "react";
+import { ServiceInstanceModelWithTargetStates } from "@/Core";
 
 export type ServiceInstanceForAction = Pick<
   ServiceInstanceModelWithTargetStates,

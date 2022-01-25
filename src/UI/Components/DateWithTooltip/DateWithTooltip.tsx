@@ -1,9 +1,17 @@
 import React from "react";
 import { Tooltip } from "@patternfly/react-core";
-import { DateInfo } from "@/Core";
+import { MomentDatePresenter, useTickerWithUnixMs } from "@/UI/Utils";
 
-export const DateWithTooltip: React.FC<{ date: DateInfo }> = ({ date }) => (
-  <Tooltip content={date.full} entryDelay={200}>
-    <span>{date.relative}</span>
-  </Tooltip>
-);
+const datePresenter = new MomentDatePresenter();
+
+export const DateWithTooltip: React.FC<{ timestamp: string }> = ({
+  timestamp,
+}) => {
+  useTickerWithUnixMs(datePresenter.toUnixMs(timestamp));
+  const date = datePresenter.get(timestamp);
+  return (
+    <Tooltip content={date.full} entryDelay={200}>
+      <span>{date.relative}</span>
+    </Tooltip>
+  );
+};

@@ -5,8 +5,8 @@ import {
   SelectVariant,
   SelectOption,
 } from "@patternfly/react-core";
-import { EventParams } from "@/Core";
 import { FilterIcon } from "@patternfly/react-icons";
+import { EventParams } from "@/Core";
 
 interface Props {
   filterKind: EventParams.Kind | string;

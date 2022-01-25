@@ -1,42 +1,44 @@
-import { useEffect } from "react";
-import { matchPath, match, generatePath } from "react-router-dom";
-import { Route, Params, getRouteFromKind, allRoutes } from "./Route";
-import { Kinds } from "./Kinds";
+import { useContext, useEffect } from "react";
+import { useNavigate, useLocation, useParams, Params } from "react-router-dom";
+import { mapValues } from "lodash-es";
+import { RouteKind, RouteParams } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 
-export const getLineageFromRoute = (
-  route: Route,
-  routes: Route[] = []
-): Route[] => {
-  if (route.parent) {
-    return getLineageFromRoute(getRouteFromKind(route.parent), [
-      route,
-      ...routes,
-    ]);
-  }
-  return [route, ...routes];
+type NavigateTo = (
+  kind: RouteKind,
+  params: RouteParams<typeof kind>,
+  search?: string
+) => void;
+
+/**
+ * The useNavigateTo hook returns a navigateTo function which navigates to a route.
+ * @param newSearch This string should start with a question mark "?".
+ * @throws Will throw an error when newSearch is invalid
+ */
+export const useNavigateTo = (): NavigateTo => {
+  const { routeManager } = useContext(DependencyContext);
+  const { search } = useLocation();
+  const navigate = useNavigate();
+
+  return (routeKind, params, newSearch) => {
+    if (newSearch !== undefined) validateSearch(newSearch);
+    const pathname = routeManager.getUrl(routeKind, params);
+    navigate(`${pathname}${newSearch || search}`);
+  };
 };
 
-type MatchedParams = Record<string, string>;
+const validateSearch = (search: string): void => {
+  if (search.startsWith("?")) return;
+  throw new Error("A search string should start with a question mark (?).");
+};
 
-export function getRouteWithParamsFromUrl(
-  url: string
-): [Route, MatchedParams] | undefined {
-  const routeMatchPairs = allRoutes.map((route) => [
-    route,
-    matchPath<MatchedParams>(url, { path: route.path, exact: true }),
-  ]);
-  const routeWithMatch = routeMatchPairs.find(
-    (pair): pair is [Route, match<MatchedParams>] => pair[1] !== null
-  );
-  if (typeof routeWithMatch === "undefined") return undefined;
-  const [page, match] = routeWithMatch;
-  return [page, match.params];
-}
-
-export function getUrl(kind: Kinds, params: Params<typeof kind>): string {
-  const route = getRouteFromKind(kind);
-  return generatePath(route.path, params);
-}
+/**
+ * @NOTE useRouteParams decodes the parameter values before returning them.
+ */
+export const useRouteParams = <R extends RouteKind>(): RouteParams<R> => {
+  const params = useParams();
+  return decodeParams(params) as RouteParams<R>;
+};
 
 /**
  * A custom hook for setting the page title
@@ -51,4 +53,16 @@ export const useDocumentTitle = (title: string): void => {
       document.title = originalTitle;
     };
   }, [title]);
+};
+
+export const decodeParams = (params: Params): Params => {
+  return mapValues(params, (value) =>
+    value === undefined ? value : decodeURIComponent(value)
+  );
+};
+
+export const encodeParams = (params: Params): Params => {
+  return mapValues(params, (value) =>
+    value === undefined ? value : encodeURIComponent(value)
+  );
 };

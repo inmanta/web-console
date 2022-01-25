@@ -1,1 +1,1 @@
-export { Provider as CompileDetailsWithProvider } from "./Provider";
+export { Page as CompileDetailsPage } from "./Page";

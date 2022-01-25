@@ -1,9 +1,11 @@
-import { ApiHelper, Either, Maybe } from "@/Core";
+import { ApiHelper, Deferred, Either, Maybe } from "@/Core";
 
 type Request =
   | (WithMethod<"GET"> & UrlAndEnv)
   | (WithMethod<"POST"> & UrlAndEnv & WithBody)
   | (WithMethod<"PATCH"> & UrlAndEnv & WithBody)
+  | (WithMethod<"PUT"> & UrlAndEnv & WithBody)
+  | (WithMethod<"HEAD"> & UrlAndEnv)
   | (WithMethod<"DELETE"> & UrlAndEnv);
 
 interface WithMethod<Method extends string> {
@@ -12,7 +14,7 @@ interface WithMethod<Method extends string> {
 
 interface UrlAndEnv {
   url: string;
-  environment: string;
+  environment?: string;
 }
 
 interface WithBody {
@@ -26,36 +28,32 @@ interface PendingRequest {
 }
 
 export class DeferredApiHelper implements ApiHelper {
-  private readonly pendingRequests: PendingRequest[] = [];
-  private readonly resolvedRequests: Request[] = [];
+  private readonly _pendingRequests: PendingRequest[] = [];
+  readonly resolvedRequests: Request[] = [];
+
+  get pendingRequests(): Request[] {
+    return this._pendingRequests.map((p) => p.request);
+  }
 
   resolve(data: unknown): Promise<unknown> {
-    if (this.pendingRequests.length <= 0) {
+    const pendingRequest = this._pendingRequests.shift();
+    if (typeof pendingRequest === "undefined") {
       throw new Error("No available invocations");
     }
-    if (this.pendingRequests.length >= 2) {
-      throw new Error("2 or more invocations");
-    }
-    const { resolve, promise, request } = this.pendingRequests[0];
+
+    const { resolve, promise, request } = pendingRequest;
     this.resolvedRequests.push(request);
-    this.pendingRequests.pop();
     resolve(data);
     return promise;
   }
 
-  getBaseUrl(): string {
-    return "";
-  }
-
   delete(url: string, environment: string): Promise<Maybe.Type<string>> {
-    const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
-        request: { method: "DELETE", url, environment },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "DELETE", url, environment },
+      resolve,
+      promise,
     });
-
     return promise as Promise<Maybe.Type<string>>;
   }
 
@@ -63,14 +61,23 @@ export class DeferredApiHelper implements ApiHelper {
     url: string,
     environment: string
   ): Promise<Either.Type<string, Data>> {
-    const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
-        request: { method: "GET", url, environment },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "GET", url, environment },
+      resolve,
+      promise,
     });
 
+    return promise as Promise<Either.Type<string, Data>>;
+  }
+
+  getWithoutEnvironment<Data>(url: string): Promise<Either.Type<string, Data>> {
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "GET", url },
+      resolve,
+      promise,
+    });
     return promise as Promise<Either.Type<string, Data>>;
   }
 
@@ -79,14 +86,12 @@ export class DeferredApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Either.Type<string, Data>> {
-    const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
-        request: { method: "POST", url, environment, body },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "POST", url, environment, body },
+      resolve,
+      promise,
     });
-
     return promise as Promise<Either.Type<string, Data>>;
   }
 
@@ -95,14 +100,38 @@ export class DeferredApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Maybe.Type<string>> {
-    const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
-        request: { method: "POST", url, environment, body },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "POST", url, environment, body },
+      resolve,
+      promise,
     });
+    return promise as Promise<Maybe.Type<string>>;
+  }
 
+  postWithoutResponseAndEnvironment<Body>(
+    url: string,
+    body: Body
+  ): Promise<Maybe.Type<string>> {
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "POST", url, body },
+      resolve,
+      promise,
+    });
+    return promise as Promise<Maybe.Type<string>>;
+  }
+
+  putWithoutResponseAndEnvironment<Body>(
+    url: string,
+    body: Body
+  ): Promise<Maybe.Type<string>> {
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "PUT", url, body },
+      resolve,
+      promise,
+    });
     return promise as Promise<Maybe.Type<string>>;
   }
 
@@ -111,14 +140,23 @@ export class DeferredApiHelper implements ApiHelper {
     environment: string,
     body: Body
   ): Promise<Maybe.Type<string>> {
-    const promise = new Promise((resolve) => {
-      this.pendingRequests.push({
-        request: { method: "PATCH", url, environment, body },
-        resolve,
-        promise,
-      });
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "PATCH", url, environment, body },
+      resolve,
+      promise,
+    });
+    return promise as Promise<Maybe.Type<string>>;
+  }
+
+  head(url: string): Promise<number> {
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "HEAD", url },
+      resolve,
+      promise,
     });
 
-    return promise as Promise<Maybe.Type<string>>;
+    return promise as Promise<number>;
   }
 }

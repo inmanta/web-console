@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { RemoteData, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
+import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { ErrorView, LoadingView } from "@/UI/Components";
 import { EditForm } from "./EditForm";
 
 export const EditInstancePage: React.FC<{
@@ -10,27 +10,21 @@ export const EditInstancePage: React.FC<{
 }> = ({ serviceEntity, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"ServiceInstance">({
-    kind: "ServiceInstance",
+  const [data] = queryResolver.useContinuous<"GetServiceInstance">({
+    kind: "GetServiceInstance",
     service_entity: serviceEntity.name,
     id: instanceId,
   });
 
-  return RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <LoadingView aria-label="EditInstance-Loading" />,
-      failed: (message) => (
-        <ErrorView aria-label="EditInstance-Failed" message={message} />
-      ),
-      success: (instance) => {
-        return (
-          <div aria-label="EditInstance-Success">
-            <EditForm instance={instance} serviceEntity={serviceEntity} />
-          </div>
-        );
-      },
-    },
-    data
+  return (
+    <RemoteDataView
+      data={data}
+      label="EditInstance"
+      SuccessView={(instance) => (
+        <div aria-label="EditInstance-Success">
+          <EditForm instance={instance} serviceEntity={serviceEntity} />
+        </div>
+      )}
+    />
   );
 };

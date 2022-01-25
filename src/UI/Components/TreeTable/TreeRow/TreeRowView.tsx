@@ -1,9 +1,9 @@
 import React from "react";
 import { Tr, Td } from "@patternfly/react-table";
-import { TreeRow, isRowOfMultipleValues } from "./TreeRow";
 import { Toggle } from "@/UI/Components/Toggle";
-import { Indent } from "./Indent";
 import { CellWithCopy } from "./CellWithCopy";
+import { Indent } from "./Indent";
+import { TreeRow, isRowOfMultipleValues } from "./TreeRow";
 
 interface RowProps {
   row: TreeRow;

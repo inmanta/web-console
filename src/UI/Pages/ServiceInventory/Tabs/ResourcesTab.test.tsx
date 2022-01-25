@@ -1,53 +1,51 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import {
-  DeferredFetcher,
-  DynamicQueryManagerResolver,
-  StaticScheduler,
-} from "@/Test";
 import { Either } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   InstanceResourcesStateHelper,
   InstanceResourcesQueryManager,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
+import {
+  DeferredApiHelper,
+  dependencies,
+  DynamicQueryManagerResolver,
+  StaticScheduler,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { ResourcesTab } from "./ResourcesTab";
 
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"InstanceResources">();
+  const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
         apiHelper,
         new InstanceResourcesStateHelper(store),
-        scheduler,
-        "34a961ba-db3c-486e-8d85-1438d8e88909"
+        scheduler
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl(
-    "",
-    "34a961ba-db3c-486e-8d85-1438d8e88909"
-  );
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <ResourcesTab
-          serviceInstanceIdentifier={{
-            id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
-            service_entity: "vlan-assignment",
-            version: 4,
-          }}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+        <StoreProvider store={store}>
+          <ResourcesTab
+            serviceInstanceIdentifier={{
+              id: "4a4a6d14-8cd0-4a16-bc38-4b768eb004e3",
+              service_entity: "vlan-assignment",
+              version: 4,
+            }}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };
@@ -93,7 +91,7 @@ test("ResourcesView shows success table", async () => {
 
   apiHelper.resolve(
     Either.right({
-      data: [{ resource_id: "abc123", resource_state: "deployed" }],
+      data: [{ resource_id: "abc123,v=3", resource_state: "deployed" }],
     })
   );
 
@@ -120,7 +118,7 @@ test("ResourcesView shows updated table", async () => {
 
   apiHelper.resolve(
     Either.right({
-      data: [{ resource_id: "abc123", resource_state: "deployed" }],
+      data: [{ resource_id: "abc123,v=4", resource_state: "deployed" }],
     })
   );
 

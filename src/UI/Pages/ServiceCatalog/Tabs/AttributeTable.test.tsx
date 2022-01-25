@@ -1,7 +1,7 @@
 import React from "react";
-import { AttributeTable } from "./AttributeTable";
 import { render, screen, within } from "@testing-library/react";
 import { AttributeModel } from "@/Core";
+import { AttributeTable } from "./AttributeTable";
 
 const attribute1: AttributeModel = {
   name: "order_id",

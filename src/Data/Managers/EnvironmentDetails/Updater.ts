@@ -1,23 +1,33 @@
-import { Fetcher, Query, RemoteData, StateHelper, Updater } from "@/Core";
+import {
+  ApiHelper,
+  Query,
+  RemoteData,
+  StateHelperWithEnv,
+  UpdaterWithEnv,
+} from "@/Core";
+import { getUrl } from "./getUrl";
 
 export class EnvironmentDetailsUpdater
-  implements Updater<"EnvironmentDetails">
+  implements UpdaterWithEnv<"GetEnvironmentDetails">
 {
   constructor(
-    private readonly stateHelper: StateHelper<"EnvironmentDetails">,
-    private readonly fetcher: Fetcher<"EnvironmentDetails">,
-    private readonly environment: string
+    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">,
+    private readonly apiHelper: ApiHelper
   ) {}
 
-  async update(query: Query.SubQuery<"EnvironmentDetails">): Promise<void> {
+  async update(
+    query: Query.SubQuery<"GetEnvironmentDetails">,
+    environment: string
+  ): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.fetcher.getData(
-          this.environment,
-          `/api/v2/environment/${this.environment}`
+        await this.apiHelper.get(
+          getUrl(query.details, environment),
+          environment
         )
       ),
-      query
+      query,
+      environment
     );
   }
 }

@@ -1,17 +1,18 @@
 import React from "react";
-import { IconTabs, TabDescriptor } from "@/UI/Components";
-import { words } from "@/UI/words";
-import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
   AutomationIcon,
   CogIcon,
   InfoCircleIcon,
   ListIcon,
 } from "@patternfly/react-icons";
-import { StatusTab } from "./StatusTab";
+import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
+import { IconTabs, TabDescriptor } from "@/UI/Components";
+import { MomentDatePresenter } from "@/UI/Utils";
+import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
-import { ResourcesTab } from "./ResourcesTab";
 import { ConfigTab, DisabledConfigTab } from "./ConfigTab";
+import { ResourcesTab } from "./ResourcesTab";
+import { StatusTab } from "./StatusTab";
 
 export enum TabKey {
   Status = "Status",
@@ -50,6 +51,8 @@ export const Tabs: React.FC<Props> = ({
   />
 );
 
+const datePresenter = new MomentDatePresenter();
+
 const statusTab = (
   row: Row,
   state: React.ReactElement | null,
@@ -64,8 +67,8 @@ const statusTab = (
         instanceId: row.id.full,
         state,
         version: row.version,
-        createdAt: row.createdAt.full,
-        updatedAt: row.updatedAt.full,
+        createdAt: datePresenter.getFull(row.createdAt),
+        updatedAt: datePresenter.getFull(row.updatedAt),
         actions,
       }}
     />

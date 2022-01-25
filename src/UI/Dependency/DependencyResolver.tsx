@@ -1,19 +1,12 @@
 import React, { useContext } from "react";
 import { DependencyContext } from "./Dependency";
 
-export const DependencyResolver: React.FC<{ environment: string }> = ({
-  environment,
-}) => {
-  const {
-    queryResolver,
-    commandResolver,
-    urlManager,
-    fileFetcher,
-    environmentModifier,
-  } = useContext(DependencyContext);
-  queryResolver.getManagerResolver().resolve(environment);
-  commandResolver.getManagerResolver().resolve(environment);
-  urlManager.setEnvironment(environment);
+interface Props {
+  environment: string;
+}
+
+export const DependencyResolver: React.FC<Props> = ({ environment }) => {
+  const { fileFetcher, environmentModifier } = useContext(DependencyContext);
   fileFetcher.setEnvironment(environment);
   environmentModifier.setEnvironment(environment);
   return null;

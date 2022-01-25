@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ServiceInstanceParams } from "@/Core";
 import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
+import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
   attributeSet: ServiceInstanceParams.AttributeSet | undefined;

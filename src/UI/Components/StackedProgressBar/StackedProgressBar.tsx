@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "styled-components";
 import { Tooltip } from "@patternfly/react-core";
+import styled from "styled-components";
 import { words } from "@/UI/words";
 
 interface Props {

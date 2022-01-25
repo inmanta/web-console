@@ -1,4 +1,6 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
+import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -9,37 +11,40 @@ import {
 } from "@/Data";
 import {
   CompileDetailsData,
-  DeferredFetcher,
+  DeferredApiHelper,
+  dependencies,
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { UrlManagerImpl } from "@/UI/Utils";
-import { render, screen } from "@testing-library/react";
 import { CompileDetails } from "./CompileDetails";
 
 function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const apiHelper = new DeferredFetcher<"CompileDetails">();
+  const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new CompileDetailsQueryManager(
         apiHelper,
         new CompileDetailsStateHelper(store),
-        scheduler,
-        "environment"
+        scheduler
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "environment");
+  const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
 
   const component = (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <CompileDetails id="123" />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, urlManager }}
+      >
+        <StoreProvider store={store}>
+          <CompileDetails id="123" />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return { component, apiHelper, scheduler };

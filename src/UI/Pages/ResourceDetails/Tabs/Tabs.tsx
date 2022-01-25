@@ -1,25 +1,25 @@
 import React from "react";
 import {
+  ColumnsIcon,
   HistoryIcon,
-  InfoCircleIcon,
   ListIcon,
   ModuleIcon,
   TableIcon,
 } from "@patternfly/react-icons";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { InfoTab } from "./InfoTab";
-import { RequiresTab } from "./RequiresTab";
 import { AttributesTab } from "./AttributesTab";
+import { FactsTab } from "./FactsTab";
 import { ResourceHistoryView } from "./HistoryTab/ResourceHistoryView";
 import { ResourceLogView } from "./LogTab";
+import { RequiresTab } from "./RequiresTab";
 
 export enum TabKey {
-  Info = "Info",
   Requires = "Requires",
   Attributes = "Attributes",
   History = "History",
   Logs = "Logs",
+  Facts = "Facts",
 }
 
 interface Props {
@@ -34,22 +34,15 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab }) => {
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={[
-        infoTab(id),
-        requiresTab(id),
         attributesTab(id),
+        requiresTab(id),
         historyTab(id),
         logTab(id),
+        factsTab(id),
       ]}
     />
   );
 };
-
-const infoTab = (id: string): TabDescriptor<TabKey> => ({
-  id: TabKey.Info,
-  title: words("resources.info.title"),
-  icon: <InfoCircleIcon />,
-  view: <InfoTab id={id} />,
-});
 
 const requiresTab = (id: string): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
@@ -77,4 +70,11 @@ const logTab = (id: string): TabDescriptor<TabKey> => ({
   title: words("resources.logs.title"),
   icon: <TableIcon />,
   view: <ResourceLogView resourceId={id} />,
+});
+
+const factsTab = (id: string): TabDescriptor<TabKey> => ({
+  id: TabKey.Facts,
+  title: words("resources.facts.title"),
+  icon: <ColumnsIcon />,
+  view: <FactsTab resourceId={id} />,
 });

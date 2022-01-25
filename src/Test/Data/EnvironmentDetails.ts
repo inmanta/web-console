@@ -15,3 +15,5 @@ export const a: EnvironmentDetails = {
   },
   halted: false,
 };
+
+export const halted: EnvironmentDetails = { ...a, halted: true };

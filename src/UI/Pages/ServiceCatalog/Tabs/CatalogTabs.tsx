@@ -1,17 +1,22 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React from "react";
 import { Tabs, Tab } from "@patternfly/react-core";
+import styled from "styled-components";
 import { ServiceModel } from "@/Core";
+import { useUrlStateWithString } from "@/Data";
 import { AttributeTable } from "./AttributeTable";
-import { LifecycleTable } from "./LifecycleTable";
+import { CallbacksView } from "./Callbacks";
 import { Config } from "./Config";
 import { Details } from "./Details";
-import { CallbacksView } from "./Callbacks";
+import { LifecycleTable } from "./LifecycleTable";
 
 export const CatalogTabs: React.FunctionComponent<{
   service: ServiceModel;
 }> = ({ service }) => {
-  const [activeTabKey, setActiveTabKey] = useState(0);
+  const [activeTabKey, setActiveTabKey] = useUrlStateWithString({
+    default: "details",
+    key: `tab-${service.name}`,
+    route: "Catalog",
+  });
 
   const handleTabClick = (event, tabIndex) => {
     setActiveTabKey(tabIndex);
@@ -24,26 +29,26 @@ export const CatalogTabs: React.FunctionComponent<{
       onSelect={handleTabClick}
       mountOnEnter
     >
-      <Tab eventKey={0} title="Details">
+      <Tab eventKey="details" title="Details">
         <Details
           serviceName={service.name}
           instanceSummary={service.instance_summary}
         />
       </Tab>
-      <Tab eventKey={1} title="Attributes">
+      <Tab eventKey="attributes" title="Attributes">
         <OverflowContainer>
           <AttributeTable attributes={service.attributes} />
         </OverflowContainer>
       </Tab>
-      <Tab eventKey={2} title="Lifecycle States">
+      <Tab eventKey="lifecycle_states" title="Lifecycle States">
         <OverflowContainer>
           <LifecycleTable lifecycle={service.lifecycle} />
         </OverflowContainer>
       </Tab>
-      <Tab eventKey={3} title="Config">
+      <Tab eventKey="config" title="Config">
         <Config serviceName={service.name} />
       </Tab>
-      <Tab eventKey={4} title="Callbacks">
+      <Tab eventKey="callbacks" title="Callbacks">
         <CallbacksView service_entity={service.name} />
       </Tab>
     </Tabs>

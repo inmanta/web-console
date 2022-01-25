@@ -1,15 +1,7 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { render, screen, fireEvent, within } from "@testing-library/react";
-import { InventoryTable } from "./InventoryTable";
-import {
-  InstantFetcher,
-  Row,
-  tablePresenter,
-  tablePresenterWithIdentity,
-  StaticScheduler,
-  DynamicQueryManagerResolver,
-} from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import {
   QueryResolverImpl,
@@ -17,8 +9,17 @@ import {
   InstanceResourcesStateHelper,
   getStoreInstance,
 } from "@/Data";
-import userEvent from "@testing-library/user-event";
-import { UrlManagerImpl } from "@/UI/Utils";
+import {
+  Row,
+  tablePresenter,
+  tablePresenterWithIdentity,
+  StaticScheduler,
+  DynamicQueryManagerResolver,
+  InstantApiHelper,
+  dependencies,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { InventoryTable } from "./InventoryTable";
 
 const dummySetter = () => {
   return;
@@ -30,7 +31,7 @@ test("InventoryTable can be expanded", async () => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">({
+        new InstantApiHelper({
           kind: "Success",
           data: {
             data: [
@@ -42,23 +43,23 @@ test("InventoryTable can be expanded", async () => {
           },
         }),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        "env"
+        new StaticScheduler()
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "env");
   render(
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <InventoryTable
-          rows={[Row.a, Row.b]}
-          tablePresenter={tablePresenter}
-          setSortColumn={dummySetter}
-          setOrder={dummySetter}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+        <StoreProvider store={store}>
+          <InventoryTable
+            rows={[Row.a, Row.b]}
+            tablePresenter={tablePresenter}
+            setSort={dummySetter}
+            sort={{ name: "created_at", order: "desc" }}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
   const testid = `details_${Row.a.id.short}`;
 
@@ -76,35 +77,36 @@ test("ServiceInventory can show resources for instance", async () => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">({
+        new InstantApiHelper({
           kind: "Success",
           data: {
             data: [
               {
-                resource_id: "resource_id_1",
+                resource_id: "resource_id_1,v=1",
                 resource_state: "resource_state",
               },
             ],
           },
         }),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        "env"
+        new StaticScheduler()
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", "env");
+
   render(
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
-      <StoreProvider store={store}>
-        <InventoryTable
-          rows={[Row.a, Row.b]}
-          tablePresenter={tablePresenter}
-          setSortColumn={dummySetter}
-          setOrder={dummySetter}
-        />
-      </StoreProvider>
-    </DependencyProvider>
+    <MemoryRouter>
+      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+        <StoreProvider store={store}>
+          <InventoryTable
+            rows={[Row.a, Row.b]}
+            tablePresenter={tablePresenter}
+            setSort={dummySetter}
+            sort={{ name: "created_at", order: "desc" }}
+          />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
@@ -117,17 +119,19 @@ test("ServiceInventory can show resources for instance", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Success" })
   ).toBeInTheDocument();
 
-  expect(screen.getByText("resource_id_1")).toBeInTheDocument();
+  expect(screen.getByText("resource_id_1,v=1")).toBeInTheDocument();
 });
 
 test("ServiceInventory shows service identity if it's defined", async () => {
   render(
-    <InventoryTable
-      rows={[Row.a]}
-      tablePresenter={tablePresenterWithIdentity}
-      setSortColumn={dummySetter}
-      setOrder={dummySetter}
-    />
+    <MemoryRouter>
+      <InventoryTable
+        rows={[Row.a]}
+        tablePresenter={tablePresenterWithIdentity}
+        setSort={dummySetter}
+        sort={{ name: "created_at", order: "desc" }}
+      />
+    </MemoryRouter>
   );
 
   expect(await screen.findByText("Order ID")).toBeVisible();
@@ -137,12 +141,14 @@ test("ServiceInventory shows service identity if it's defined", async () => {
 
 test("ServiceInventory shows sorting buttons for sortable columns", async () => {
   render(
-    <InventoryTable
-      rows={[Row.a]}
-      tablePresenter={tablePresenter}
-      setSortColumn={dummySetter}
-      setOrder={dummySetter}
-    />
+    <MemoryRouter>
+      <InventoryTable
+        rows={[Row.a]}
+        tablePresenter={tablePresenter}
+        setSort={dummySetter}
+        sort={{ name: "created_at", order: "desc" }}
+      />
+    </MemoryRouter>
   );
   expect(await screen.findByRole("button", { name: /state/i })).toBeVisible();
   expect(await screen.findByRole("button", { name: /created/i })).toBeVisible();
@@ -153,19 +159,20 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
 });
 
 test("ServiceInventory sets sorting parameters correctly on click", async () => {
-  let sortColumn;
-  let order;
+  let sort;
   render(
-    <InventoryTable
-      rows={[Row.a]}
-      tablePresenter={tablePresenter}
-      setSortColumn={(name) => (sortColumn = name)}
-      setOrder={(dir) => (order = dir)}
-    />
+    <MemoryRouter>
+      <InventoryTable
+        rows={[Row.a]}
+        tablePresenter={tablePresenter}
+        setSort={(v) => (sort = v)}
+        sort={{ name: "created_at", order: "desc" }}
+      />
+    </MemoryRouter>
   );
   const stateButton = await screen.findByRole("button", { name: /state/i });
   expect(stateButton).toBeVisible();
   userEvent.click(stateButton);
-  expect(sortColumn).toEqual("state");
-  expect(order).toEqual("asc");
+  expect(sort.name).toEqual("state");
+  expect(sort.order).toEqual("asc");
 });

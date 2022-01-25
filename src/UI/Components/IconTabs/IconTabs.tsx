@@ -6,6 +6,8 @@ export interface TabDescriptor<K extends string> {
   title: string;
   icon: React.ReactNode;
   view: React.ReactNode;
+  isDisabled?: boolean;
+  ref?: React.MutableRefObject<HTMLElement | undefined>;
 }
 
 interface Props<K extends string> {
@@ -36,6 +38,8 @@ export const IconTabs = <Key extends string>({
         <Tab
           key={tab.id}
           eventKey={tab.id}
+          ref={tab.ref}
+          isAriaDisabled={tab.isDisabled}
           title={
             <>
               <TabTitleIcon>{tab.icon}</TabTitleIcon>

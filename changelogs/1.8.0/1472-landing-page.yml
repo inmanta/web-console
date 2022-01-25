@@ -1,0 +1,6 @@
+description: Create landing page
+issue-nr: 1472
+change-type: minor
+destination-branches: [master, iso4]
+sections:
+  feature: "{{description}}"

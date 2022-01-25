@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
-import { InstanceResourceModel } from "@/Core";
-import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { Button } from "@patternfly/react-core";
-import { ExternalLinkAltIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
-import { DependencyContext } from "@/UI/Dependency";
+import { Table, TableHeader, TableBody } from "@patternfly/react-table";
+import { InstanceResourceModel } from "@/Core";
+import { Link } from "@/UI/Components/Link";
 import { ResourceStatusCell } from "@/UI/Components/ResourceStatusCell";
+import { DependencyContext } from "@/UI/Dependency";
+import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
+import { words } from "@/UI/words";
 
 interface Props {
   resources: InstanceResourceModel[];
@@ -14,20 +15,20 @@ interface Props {
 }
 
 export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
-  const { urlManager } = useContext(DependencyContext);
+  const { routeManager } = useContext(DependencyContext);
   const columns = ["Resource Id", "Details", "State"];
   const rows = resources.map((resource) => {
     const linkToDetails = (
-      <Button
-        component="a"
-        variant="link"
-        isInline={true}
-        icon={<ExternalLinkAltIcon />}
-        href={urlManager.getResourceUrl(resource.resource_id)}
-        target="_blank"
+      <Link
+        pathname={routeManager.getUrl("ResourceDetails", {
+          resourceId: getResourceIdFromResourceVersionId(resource.resource_id),
+        })}
+        envOnly
       >
-        {words("inventory.resourcesTab.detailsLink")}
-      </Button>
+        <Button variant="secondary" isInline>
+          {words("inventory.resourcesTab.detailsLink")}
+        </Button>
+      </Link>
     );
 
     return {

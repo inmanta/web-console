@@ -1,5 +1,5 @@
 import { RemoteData } from "@/Core/Language";
-import { Query } from "@/Core/Domain";
+import { Query } from "@/Core/Query";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
   Query.Error<K>,
@@ -35,4 +35,14 @@ export interface StateHelper<Kind extends Query.Kind> {
   set(value: ApiData<Kind>, query: Query.SubQuery<Kind>): void;
   getOnce(query: Query.SubQuery<Kind>): Data<Kind>;
   getHooked(query: Query.SubQuery<Kind>): Data<Kind>;
+}
+
+export interface StateHelperWithEnv<Kind extends Query.Kind> {
+  set(
+    value: ApiData<Kind>,
+    query: Query.SubQuery<Kind>,
+    environment: string
+  ): void;
+  getOnce(query: Query.SubQuery<Kind>, environment: string): Data<Kind>;
+  getHooked(query: Query.SubQuery<Kind>, environment: string): Data<Kind>;
 }

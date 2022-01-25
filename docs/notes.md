@@ -74,3 +74,15 @@ The main reasons for this are:
 - Patternfly, the component library we use also only supports these browsers
 - improving security
 - keeping up to date with the new developments of the browser APIs
+
+## ZIP Archive
+
+library for archive handling: https://stuk.github.io/jszip/
+library for saving a file: https://www.npmjs.com/package/file-saver
+
+## Using a `<Link />` component vs `useNavigateTo()`
+
+You should always try to use the `<Link />` component because this actually creates an anchor element in the html.
+This allows right clicking the link and other browser behaviour.
+
+You should only use `useNavigateTo` when you need to programmatically change the url.

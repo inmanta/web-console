@@ -1,20 +1,13 @@
+import React, { useContext } from "react";
+import { ResourceLogFilter, toggleValueInList } from "@/Core";
 import {
-  PageSize,
-  RemoteData,
-  ResourceLogFilter,
-  SortDirection,
-  toggleValueInList,
-} from "@/Core";
-import {
-  EmptyView,
-  ErrorView,
-  LoadingView,
-  PaginationWidget,
-} from "@/UI/Components";
+  useUrlStateWithFilter,
+  useUrlStateWithPageSize,
+  useUrlStateWithSort,
+} from "@/Data";
+import { EmptyView, PaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import React, { useContext, useState } from "react";
-import styled from "styled-components";
 import { Controls } from "./Controls";
 import { ResourceLogsTable } from "./ResourceLogsTable";
 
@@ -24,34 +17,24 @@ interface Props {
 
 export const View: React.FC<Props> = ({ resourceId }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [pageSize, setPageSize] = useState(PageSize.initial);
-  const [order, setOrder] = useState<SortDirection>("desc");
-  const sort = order ? { name: "timestamp", order } : undefined;
-  const [filter, setFilter] = useState<ResourceLogFilter>({});
-  const [data, retry] = queryResolver.useContinuous<"ResourceLogs">({
-    kind: "ResourceLogs",
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
+    route: "ResourceDetails",
+  });
+  const [sort, setSort] = useUrlStateWithSort<string>({
+    default: { name: "timestamp", order: "desc" },
+    route: "ResourceDetails",
+  });
+  const [filter, setFilter] = useUrlStateWithFilter<ResourceLogFilter>({
+    route: "ResourceDetails",
+    dateRangeKey: "timestamp",
+  });
+  const [data, retry] = queryResolver.useContinuous<"GetResourceLogs">({
+    kind: "GetResourceLogs",
     id: resourceId,
     pageSize,
     filter,
     sort,
   });
-
-  const paginationWidget = RemoteData.fold(
-    {
-      notAsked: () => null,
-      loading: () => <Filler />,
-      failed: () => null,
-      success: ({ handlers, metadata }) => (
-        <PaginationWidget
-          handlers={handlers}
-          metadata={metadata}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      ),
-    },
-    data
-  );
 
   const toggleActionType = (action: string) => {
     const list = toggleValueInList(action, filter.action || []);
@@ -65,48 +48,39 @@ export const View: React.FC<Props> = ({ resourceId }) => {
   return (
     <>
       <Controls
-        paginationWidget={paginationWidget}
+        paginationWidget={
+          <PaginationWidget
+            data={data}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
         filter={filter}
         setFilter={setFilter}
       />
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView aria-label="ResourceLogs-Loading" />,
-          failed: (error) => (
-            <ErrorView
-              retry={retry}
-              title={words("resources.logs.failed.title")}
-              message={words("resources.logs.failed.body")(error)}
-              aria-label="ResourceLogs-Failed"
-            />
-          ),
-          success: (response) => {
-            if (response.data.length <= 0) {
-              return (
-                <EmptyView
-                  message={words("resources.logs.empty.message")}
-                  aria-label="ResourceLogs-Empty"
-                />
-              );
-            }
+      <RemoteDataView
+        data={data}
+        retry={retry}
+        label="ResourceLogs"
+        SuccessView={(response) => {
+          if (response.data.length <= 0) {
             return (
-              <ResourceLogsTable
-                logs={response.data}
-                toggleActionType={toggleActionType}
-                order={order}
-                setOrder={setOrder}
+              <EmptyView
+                message={words("resources.logs.empty.message")}
+                aria-label="ResourceLogs-Empty"
               />
             );
-          },
-        },
-        data
-      )}
+          }
+          return (
+            <ResourceLogsTable
+              logs={response.data}
+              toggleActionType={toggleActionType}
+              sort={sort}
+              setSort={setSort}
+            />
+          );
+        }}
+      />
     </>
   );
 };
-
-const Filler = styled.div`
-  height: 36px;
-  width: 100px;
-`;

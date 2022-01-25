@@ -1,5 +1,3 @@
-import { DateInfo } from "./InventoryTable";
-
 export interface ResourceHistory {
   resource_id: string;
   attribute_hash: string;
@@ -12,7 +10,7 @@ export interface ResourceHistoryRow {
   id: string;
   attribute_hash: string;
   attributes: Record<string, unknown>;
-  date: DateInfo;
+  date: string;
   numberOfDependencies: number;
   requires: string[];
 }

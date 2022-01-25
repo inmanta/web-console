@@ -1,15 +1,14 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
+import React, { useContext } from "react";
 import {
   Button,
   DescriptionList,
   DescriptionListGroup,
 } from "@patternfly/react-core";
-import { words } from "@/UI/words";
-import { ButtonWithCursorHandling } from "@/UI/Components";
-import { getUrl } from "@/UI/Routing";
+import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
+import { ButtonWithCursorHandling, Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
+import { words } from "@/UI/words";
 import { DeleteModal } from "./DeleteModal";
 import { SetStateAction } from "./SetStateAction";
 
@@ -26,19 +25,16 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   deleteDisabled,
   diagnoseDisabled,
 }) => {
-  const location = useLocation();
-  if (instance.state === "terminated") return null;
+  const { routeManager } = useContext(DependencyContext);
   return (
     <DescriptionList>
       <DescriptionListGroup>
         <Link
-          to={{
-            pathname: getUrl("EditInstance", {
-              service: instance.service_entity,
-              instance: instance.id,
-            }),
-            search: location.search,
-          }}
+          pathname={routeManager.getUrl("EditInstance", {
+            service: instance.service_entity,
+            instance: instance.id,
+          })}
+          isDisabled={editDisabled}
         >
           <ButtonWithCursorHandling
             isBlock
@@ -59,13 +55,11 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       </DescriptionListGroup>
       <DescriptionListGroup>
         <Link
-          to={{
-            pathname: getUrl("Diagnose", {
-              service: instance.service_entity,
-              instance: instance.id,
-            }),
-            search: location.search,
-          }}
+          pathname={routeManager.getUrl("Diagnose", {
+            service: instance.service_entity,
+            instance: instance.id,
+          })}
+          isDisabled={diagnoseDisabled}
         >
           <ButtonWithCursorHandling
             isBlock
@@ -78,13 +72,10 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       </DescriptionListGroup>
       <DescriptionListGroup>
         <Link
-          to={{
-            pathname: getUrl("History", {
-              service: instance.service_entity,
-              instance: instance.id,
-            }),
-            search: location.search,
-          }}
+          pathname={routeManager.getUrl("History", {
+            service: instance.service_entity,
+            instance: instance.id,
+          })}
         >
           <Button isBlock>
             <HistoryIcon /> {words("inventory.statusTab.history")}
@@ -93,13 +84,10 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       </DescriptionListGroup>
       <DescriptionListGroup>
         <Link
-          to={{
-            pathname: getUrl("Events", {
-              service: instance.service_entity,
-              instance: instance.id,
-            }),
-            search: location.search,
-          }}
+          pathname={routeManager.getUrl("Events", {
+            service: instance.service_entity,
+            instance: instance.id,
+          })}
         >
           <Button isBlock variant="secondary">
             <PortIcon /> {words("inventory.statusTab.events")}

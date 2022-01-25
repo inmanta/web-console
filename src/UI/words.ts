@@ -31,18 +31,38 @@ const dict = {
    * Error related text
    */
   error: "Something went wrong",
+  "error.general": (message: string) =>
+    `The following error occured: ${message}`,
   "error.environment.missing": "Environment is missing",
   "error.server.intro": (errorMessage: string) =>
     `The following error occured while communicating with the server: ${errorMessage}`,
   "error.authorizationFailed": "Authorization failed, please log in",
   "error.fetch": (error: string) =>
     `There was an error retrieving data: ${error}`,
+  "error.image.title": "Invalid image",
+  "error.image.unknown": (name: string) =>
+    `Something went wrong with file ${name}`,
+  "error.image.type": (name: string, type: string) =>
+    `File '${name}' is not allowed because of an incorrect file type (${type}). Only jpeg, png, webp and svg images are supported.`,
+  "error.image.size": (name: string, size: string) =>
+    `File '${name}' is not allowed because of an incorrect file size (${size}). The maximum file size supported is 64 KB.`,
+
+  "notFound.title": "404: We couldn't find that page",
+  "notFound.home": "Go home",
+
+  "codehighlighter.lineWrapping.on": "Wrap long lines",
+  "codehighlighter.lineWrapping.off": "Don't wrap long lines",
+  "codehighlighter.lineNumbers.on": "Show line numbers",
+  "codehighlighter.lineNumbers.off": "Hide line numbers",
+  "codehighlighter.zoom.on": "Enlarge",
+  "codehighlighter.zoom.off": "Back to original size",
 
   /**
    * Inventory related text
    */
   "id.copy": "Copy full service instance id to clipboard",
   "serviceIdentity.copy": "Copy identifier to clipboard",
+  copy: "Copy",
   "copy.feedback": "Copied to clipboard",
   "attributes.active": "Active Attributes",
   "attributes.candidate": "Candidate Attributes",
@@ -148,7 +168,6 @@ const dict = {
     "No events could be found for this instance and the specified filters",
   "events.details.title": "Event details",
   "events.title": "Service Instance Events",
-  "events.failed.title": "Something went wrong",
   "events.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
   "events.caption": (id: string) => `Showing events of instance ${id}`,
@@ -227,20 +246,15 @@ const dict = {
   "resources.filters.agent.placeholder": "Agent...",
   "resources.filters.value.placeholder": "Value...",
   "resources.filters.type.placeholder": "Type...",
+  "resources.deploySummary.title": "Deployment state summary",
+  "resources.deploySummary.deploy": "Deploy",
+  "resources.deploySummary.repair": "Repair",
   "resources.details.title": "Resource Details",
-  "resources.info.title": "Info",
   "resources.info.id": "Id",
   "resources.info.lastDeploy": "Last Deploy",
   "resources.info.firstTime": "Created",
-  "resources.info.versionLink": "Open resource version details",
-  "resources.details.failed.title": "Something went wrong",
-  "resources.details.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
   "resources.requires.title": "Requires",
   "resources.requires.empty.message": "No requirements found",
-  "resources.requires.failed.title": "Something went wrong",
-  "resources.requires.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
   "resources.requires.resourceId": "Resource Id",
   "resources.requires.deployState": "Deploy State",
   "resources.history.title": "History",
@@ -249,15 +263,9 @@ const dict = {
   "resources.history.tabs.attributes": "Desired State",
   "resources.history.tabs.requires": "Requires",
   "resources.history.empty.message": "No requirements found",
-  "resources.history.failed.title": "Something went wrong",
-  "resources.history.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
   "resources.attributes.title": "Desired State",
   "resources.logs.title": "Logs",
   "resources.logs.empty.message": "No logs found",
-  "resources.logs.failed.title": "Something went wrong",
-  "resources.logs.failed.body": (error: string) =>
-    `There was an error retrieving data: ${error}`,
   "resources.logs.filterOnAction": (actionType: string) =>
     `Filter on '${actionType}'`,
   "resources.logs.timestamp": "Timestamp",
@@ -268,6 +276,10 @@ const dict = {
   "resources.logs.message": "Message",
   "resources.logs.message.placeholder": "Message...",
   "resources.logs.options": "Options",
+  "resources.facts.title": "Facts",
+  "resources.facts.columns.name": "Name",
+  "resources.facts.columns.updated": "Last Updated",
+  "resources.facts.columns.value": "Value",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
@@ -306,12 +318,121 @@ const dict = {
   "compileDetails.stages.columns.errstream": "Error Stream",
   "compileDetails.stages.copy": "Copy full command to clipboard",
 
+  "home.title": "Home",
+  "home.navigation.tooltip": "Go to the overview page",
+  "home.navigation.button": "Overview",
+  "home.empty.message": "No environments found",
+  "home.create.env.desciption": "Create new environment",
+  "home.create.env.link": "Create environment",
+  "home.environment.icon": (name: string) => `Icon for environment ${name}`,
+  "home.environment.select": "Select this environment",
+  "home.environment.edit": "Edit environment",
+  "home.environment.delete": "Delete environment",
+  "home.environment.delete.warning": "Are you absolutely sure?",
+  "home.environment.delete.warning.action":
+    "I understand the consequences, delete this environment",
+  "home.filters.project.placeholder": "Filter by project",
+  "home.filters.env.placeholder": "Filter by name",
+  "home.environment.copy": "Copy id",
+
+  "createEnv.name": "Name",
+  "createEnv.description": "Description",
+  "createEnv.projectName": "Project Name",
+  "createEnv.repository": "Repository",
+  "createEnv.branch": "Branch",
+  "createEnv.icon": "Icon",
+
   /**
    * Navigation related text
    */
   "navigation.lifecycleServiceManager": "Lifecycle Service Manager",
   "navigation.resourceManager": "Resource Manager",
   "navigation.orchestrationEngine": "Orchestration Engine",
+
+  /**
+   * Settings
+   */
+  "settings.title": "Settings",
+  "settings.tabs.environment": "Environment",
+  "settings.tabs.environment.name": "Name",
+  "settings.tabs.environment.description": "Description",
+  "settings.tabs.environment.repoSettings": "Repository Settings",
+  "settings.tabs.environment.projectName": "Project Name",
+  "settings.tabs.environment.icon": "Icon",
+  "settings.tabs.environment.id": "Id",
+  "settings.tabs.configuration": "Configuration",
+  "settings.tabs.tokens": "Tokens",
+  "settings.tabs.configuration.default": (value: string) =>
+    `Default is ${value}`,
+  "settings.tabs.configuration.save": "Save",
+  "settings.tabs.configuration.reset": "Reset to default",
+  "settings.tabs.token.disabledInfo":
+    "An authenticated user is required to create tokens",
+  "settings.tabs.token.description":
+    "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
+  "settings.tabs.token.generate": "Generate",
+
+  /**
+   * Status
+   */
+  "status.title": "Orchestrator Status",
+  "status.description":
+    "The status of the orchestration server, loaded extensions and active components.",
+
+  /** Agents */
+  "agents.title": "Agents",
+  "agents.empty.message": "No agents found",
+  "agents.columns.name": "Name",
+  "agents.columns.process": "Process",
+  "agents.columns.status": "Status",
+  "agents.columns.failover": "Last failover",
+  "agents.columns.unpause": "Unpause on resume",
+  "agents.columns.actions": "Actions",
+  "agents.actions.pause": "Pause",
+  "agents.actions.unpause": "Unpause",
+  "agents.actions.deploy": "Force deploy",
+  "agents.actions.repair": "Force repair",
+  "agents.filters.status.placeholder": "Select status...",
+  "agents.filters.name.placeholder": "Filter by name",
+  "agents.filters.processName.placeholder": "Filter by process name",
+
+  /** Agent Process */
+  "agentProcess.title": "Agent Process",
+  "agentProcess.hostname": "Hostname",
+  "agentProcess.firstSeen": "First seen",
+  "agentProcess.lastSeen": "Last seen",
+  "agentProcess.expired": "Expired",
+
+  /** Desired State */
+  "desiredState.title": "Desired State",
+  "desiredState.empty.message": "No desired state versions found",
+  "desiredState.columns.date": "Date",
+  "desiredState.columns.version": "Version",
+  "desiredState.columns.status": "Status",
+  "desiredState.columns.resources": "Number of resources",
+  "desiredState.columns.labels": "Labels",
+  "desiredState.columns.actions": "Actions",
+  "desiredState.actions.details": "Details",
+  "desiredState.actions.promote": "Promote",
+  "desiredState.actions.promote.disabledTooltip":
+    "Promoting this version is not allowed",
+  "desiredState.filters.status.placeholder": "Select status...",
+  "desiredState.filters.version.placeholder": "Filter by version",
+  "desiredState.filters.date.placeholder": "Filter by date",
+
+  /** Desired State Details */
+  "desiredState.details.title": "Details",
+  "desiredState.resourceDetails.title": "Resource Details",
+
+  /**
+   * Common
+   */
+  "common.serviceInstance.select": (attribute: string) =>
+    `Select value for ${attribute}`,
+  "common.environment.select": "Select an environment...",
+  "common.compileWidget.recompile": "Recompile",
+  "common.compileWidget.updateAndRecompile": "Update project & recompile",
+  "common.compileWidget.compiling": "Compiling",
 };
 
 type Key = keyof typeof dict;

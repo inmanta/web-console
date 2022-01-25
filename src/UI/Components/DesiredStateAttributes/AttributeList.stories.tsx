@@ -1,9 +1,9 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
+import { InstantFileFetcher } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { AttributeList } from "./AttributeList";
 import { classified } from "./Data";
-import { DependencyProvider } from "@/UI/Dependency";
-import { InstantFileFetcher } from "@/Test";
 
 export default {
   title: "AttributeList",

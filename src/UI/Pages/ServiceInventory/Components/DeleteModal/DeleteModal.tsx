@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
 import { Button, Modal } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
-import { words } from "@/UI/words";
-import { DependencyContext } from "@/UI/Dependency";
+import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
   ErrorToastAlert,
   ActionDisabledTooltip,
   DeleteForm,
 } from "@/UI/Components";
-import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   isDisabled?: boolean;

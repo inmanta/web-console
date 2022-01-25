@@ -1,10 +1,10 @@
+import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import React from "react";
-import { ServiceInstanceForm } from "./ServiceInstanceForm";
 import * as Test from "@/Test";
+import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
-test("GIVEN ServiceInstanceForm WHEN passed a FlatField (text) THEN shows that field", () => {
+test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", () => {
   render(
     <ServiceInstanceForm
       fields={[Test.Field.text]}
@@ -14,7 +14,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a FlatField (text) THEN shows that f
   );
   expect(
     screen.getByRole("generic", {
-      name: `FlatFieldInput-${Test.Field.text.name}`,
+      name: `TextFieldInput-${Test.Field.text.name}`,
     })
   ).toBeVisible();
 
@@ -25,7 +25,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a FlatField (text) THEN shows that f
   expect(textBox).toHaveValue(value);
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed a FlatField (boolean) THEN shows that field", () => {
+test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", () => {
   render(
     <ServiceInstanceForm
       fields={[Test.Field.bool]}
@@ -35,7 +35,7 @@ test("GIVEN ServiceInstanceForm WHEN passed a FlatField (boolean) THEN shows tha
   );
   expect(
     screen.getByRole("generic", {
-      name: `FlatFieldInput-${Test.Field.bool.name}`,
+      name: `BooleanFieldInput-${Test.Field.bool.name}`,
     })
   ).toBeVisible();
 
@@ -44,6 +44,37 @@ test("GIVEN ServiceInstanceForm WHEN passed a FlatField (boolean) THEN shows tha
   const trueRadioButton = screen.getByRole("radio", { name: "True" });
   userEvent.click(trueRadioButton);
   expect(trueRadioButton).toBeChecked();
+});
+
+test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field", () => {
+  render(
+    <ServiceInstanceForm
+      fields={[Test.Field.enumField]}
+      onCancel={jest.fn()}
+      onSubmit={jest.fn()}
+    />
+  );
+  expect(
+    screen.getByRole("generic", {
+      name: `EnumFieldInput-${Test.Field.enumField.name}`,
+    })
+  ).toBeVisible();
+
+  const select = screen.getByRole("button", {
+    name: "enum_field-select-toggle",
+  });
+  expect(select).toHaveTextContent("local");
+  userEvent.click(select);
+
+  const dropdown = screen.getByRole("listbox", {
+    name: "enum_field-select-input",
+  });
+
+  const options = within(dropdown).getAllByRole("option");
+  expect(options).toHaveLength(2);
+
+  userEvent.click(options[0]);
+  expect(select).toHaveTextContent("ci");
 });
 
 test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN the nested FlatField is shown", () => {
@@ -99,7 +130,7 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   ).toBeVisible();
 });
 
-test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with fields & formState", () => {
+test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", () => {
   const nestedField = Test.Field.nested([
     { ...Test.Field.text, name: "flat_field_text_2" },
   ]);
@@ -138,7 +169,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
 
   userEvent.click(screen.getByRole("button", { name: "Confirm" }));
   expect(submitCb).toBeCalled();
-  expect(submitCb).toHaveBeenCalledWith(fields, {
+  expect(submitCb).toHaveBeenCalledWith({
     [Test.Field.text.name]: "test text",
     [Test.Field.bool.name]: true,
     [nestedField.name]: { [nestedField.fields[0].name]: "test text 2" },

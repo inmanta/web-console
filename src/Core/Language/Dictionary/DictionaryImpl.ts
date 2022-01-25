@@ -6,7 +6,10 @@ export class DictionaryImpl<Value> implements Dictionary<Value> {
 
   get(key: string): Maybe.Type<Value> {
     const lookup = this.state[key];
-    if (typeof lookup === "undefined") return Maybe.none();
+    if (typeof lookup === "undefined") {
+      console.error(`key ${key} could not be found in dictionary`);
+      return Maybe.none();
+    }
     return Maybe.some(lookup.value);
   }
 

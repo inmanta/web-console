@@ -12,9 +12,9 @@ import {
 } from "@patternfly/react-core";
 import { CaretDownIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
-import { words } from "@/UI/words";
-import { DependencyContext } from "@/UI/Dependency";
 import { ActionDisabledTooltip } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: string[] | null;

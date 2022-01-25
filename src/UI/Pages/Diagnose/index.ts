@@ -1,1 +1,1 @@
-export { Provider as DiagnoseWithProvider } from "./Provider";
+export { Page as DiagnosePage } from "./Page";

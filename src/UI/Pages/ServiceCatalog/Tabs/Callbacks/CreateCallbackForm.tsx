@@ -1,6 +1,4 @@
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
-import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import {
   TextInput,
   Button,
@@ -8,6 +6,8 @@ import {
   AlertActionCloseButton,
 } from "@patternfly/react-core";
 import inlineStyles from "@patternfly/react-styles/css/components/InlineEdit/inline-edit";
+import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
+import styled from "styled-components";
 import {
   Maybe,
   LogLevelsList,
@@ -15,9 +15,9 @@ import {
   LogLevelString,
   EventType,
 } from "@/Core";
+import { MultiTextSelect, SingleTextSelect } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { MultiTextSelect, SingleTextSelect } from "@/UI/Components";
 
 interface Props {
   service_entity: string;

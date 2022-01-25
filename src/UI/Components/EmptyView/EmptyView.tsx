@@ -1,5 +1,4 @@
 import React from "react";
-import { words } from "@/UI/words";
 import {
   EmptyState,
   EmptyStateBody,
@@ -7,6 +6,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { ExclamationCircleIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 interface Props {
   message: string;

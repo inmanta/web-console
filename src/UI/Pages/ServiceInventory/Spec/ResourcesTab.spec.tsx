@@ -1,19 +1,19 @@
 import { render, screen, act } from "@testing-library/react";
-import { ServiceInstance, Pagination, InstanceResource } from "@/Test";
-import { Either, Maybe } from "@/Core";
 import userEvent from "@testing-library/user-event";
+import { Either, Maybe } from "@/Core";
+import { ServiceInstance, Pagination, InstanceResource } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 jest.useFakeTimers("modern");
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN data is fetched immediately", async () => {
-  const { component, scheduler, serviceInstancesFetcher, resourcesFetcher } =
+  const { component, scheduler, apiHelper } =
     new ServiceInventoryPrepper().prep();
 
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
@@ -27,22 +27,23 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     userEvent.click(screen.getAllByRole("button", { name: "Resources" })[0]);
   });
 
-  expect(resourcesFetcher.getInvocations().length).toEqual(1);
-  expect(resourcesFetcher.getInvocations()[0][1]).toEqual(
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0].url).toEqual(
     "/lsm/v1/service_inventory/service_name_a/service_instance_id_a/resources?current_version=3"
   );
 
   await act(async () => {
-    await resourcesFetcher.resolve(
-      Either.right({ data: InstanceResource.listA })
-    );
+    await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
 
-  const tasks = scheduler.getTasks();
   const serviceInstancesTask = Maybe.orNull(
-    tasks.get(ServiceInstance.a.service_entity)
+    scheduler.tasks.get(
+      `GetServiceInstances_${ServiceInstance.a.service_entity}`
+    )
   );
-  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.a.id));
+  const resourcesTask = Maybe.orNull(
+    scheduler.tasks.get(`GetInstanceResources_${ServiceInstance.a.id}`)
+  );
 
   expect(serviceInstancesTask?.effect).not.toBeCalled();
   expect(resourcesTask?.effect).not.toBeCalled();
@@ -50,13 +51,12 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN the Resources auto-update happens in sync with the ServiceInstances", async () => {
   const prepper = new ServiceInventoryPrepper();
-  const { component, scheduler, serviceInstancesFetcher, resourcesFetcher } =
-    prepper.prep();
+  const { component, scheduler, apiHelper } = prepper.prep();
 
   render(component);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
@@ -71,21 +71,22 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
   });
 
   await act(async () => {
-    await resourcesFetcher.resolve(
-      Either.right({ data: InstanceResource.listA })
-    );
+    await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
 
-  const tasks = scheduler.getTasks();
   const serviceInstancesTask = Maybe.orNull(
-    tasks.get(ServiceInstance.a.service_entity)
+    scheduler.tasks.get(
+      `GetServiceInstances_${ServiceInstance.a.service_entity}`
+    )
   );
-  const resourcesTask = Maybe.orNull(tasks.get(ServiceInstance.a.id));
+  const resourcesTask = Maybe.orNull(
+    scheduler.tasks.get(`GetInstanceResources_${ServiceInstance.a.id}`)
+  );
 
   jest.advanceTimersByTime(5000);
 
   await act(async () => {
-    await serviceInstancesFetcher.resolve(
+    await apiHelper.resolve(
       Either.right({
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
@@ -94,9 +95,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     );
   });
   await act(async () => {
-    await resourcesFetcher.resolve(
-      Either.right({ data: InstanceResource.listA })
-    );
+    await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
 
   expect(serviceInstancesTask?.effect).toBeCalledTimes(1);

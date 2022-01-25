@@ -5,8 +5,8 @@ import {
   SelectVariant,
   SelectOption,
 } from "@patternfly/react-core";
-import { ServiceInstanceParams } from "@/Core";
 import { FilterIcon } from "@patternfly/react-icons";
+import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
   filterKind: ServiceInstanceParams.Kind | string;

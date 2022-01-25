@@ -1,6 +1,6 @@
-import { Kinds } from "./Kinds";
+import { RouteKind } from "@/Core";
 
-type Paths = Record<Kinds, string>;
+type Paths = Record<RouteKind, string>;
 
 export const paths: Paths = {
   Catalog: "/lsm/catalog",
@@ -12,6 +12,15 @@ export const paths: Paths = {
   Events: "/lsm/catalog/:service/inventory/:instance/events",
   Resources: "/resources",
   ResourceDetails: "/resources/:resourceId",
+  Agents: "/agents",
+  AgentProcess: "/agents/:id",
   CompileReports: "/compilereports",
   CompileDetails: "/compilereports/:id",
+  Settings: "/settings",
+  CreateEnvironment: "/environment/create",
+  Status: "/status",
+  DesiredState: "/desiredstate",
+  DesiredStateDetails: "/desiredstate/:version",
+  DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
+  Home: "/",
 };

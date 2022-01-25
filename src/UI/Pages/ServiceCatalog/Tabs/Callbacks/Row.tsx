@@ -1,13 +1,13 @@
 import React from "react";
-import { Callback, getShortUuidFromRaw } from "@/Core";
+import { Button } from "@patternfly/react-core";
+import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import { DeleteButton } from "./DeleteButton";
+import { Callback, getShortUuidFromRaw } from "@/Core";
 
 import { TextWithCopy } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Button } from "@patternfly/react-core";
+import { DeleteButton } from "./DeleteButton";
 import { Details } from "./Details";
-import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 
 interface Props {
   callback: Callback;

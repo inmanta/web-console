@@ -6,13 +6,17 @@ export interface Timestamp {
   time: string;
 }
 
-const TimestampLabel: React.FC<{ timestamp: Timestamp; className?: string }> =
-  ({ timestamp, className }) => (
-    <TimestampContainer className={className}>
-      <TimeLabel>{timestamp.time}</TimeLabel>
-      <DayLabel>{timestamp.day}</DayLabel>
-    </TimestampContainer>
-  );
+interface Props {
+  timestamp: Timestamp;
+  className?: string;
+}
+
+const TimestampLabel: React.FC<Props> = ({ timestamp, className }) => (
+  <TimestampContainer className={className}>
+    <TimeLabel>{timestamp.time}</TimeLabel>
+    <DayLabel>{timestamp.day}</DayLabel>
+  </TimestampContainer>
+);
 
 const TimeLabel = styled.p`
   display: inline-block;

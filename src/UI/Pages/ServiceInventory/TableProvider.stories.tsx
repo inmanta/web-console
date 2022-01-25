@@ -1,23 +1,27 @@
 import React from "react";
+import { MemoryRouter } from "react-router";
 import { Story } from "@storybook/react/types-6-0";
-import {
-  DynamicQueryManagerResolver,
-  InstantFetcher,
-  Service,
-  ServiceInstance,
-  StaticScheduler,
-} from "@/Test";
-import { TableProvider, Props } from "./TableProvider";
 import { StoreProvider } from "easy-peasy";
 import { ServiceModel } from "@/Core";
-import { DependencyProvider } from "@/UI/Dependency";
 import {
   QueryResolverImpl,
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
   getStoreInstance,
+  CommandResolverImpl,
 } from "@/Data";
-import { MemoryRouter } from "react-router";
+import {
+  dependencies,
+  DynamicCommandManagerResolver,
+  DynamicQueryManagerResolver,
+  InstantApiHelper,
+  MockCommandManager,
+  Service,
+  ServiceInstance,
+  StaticScheduler,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { TableProvider, Props } from "./TableProvider";
 
 export default {
   title: "TableProvider",
@@ -29,25 +33,38 @@ const Template: Story<Props> = (args) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new InstanceResourcesQueryManager(
-        new InstantFetcher<"InstanceResources">({
+        new InstantApiHelper({
           kind: "Success",
           data: { data: [] },
         }),
         new InstanceResourcesStateHelper(store),
-        new StaticScheduler(),
-        Service.a.environment
+        new StaticScheduler()
       ),
     ])
   );
 
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([new MockCommandManager()])
+  );
+
   return (
-    <DependencyProvider dependencies={{ queryResolver }}>
-      <MemoryRouter>
+    <MemoryRouter>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          commandResolver,
+        }}
+      >
         <StoreProvider store={store}>
-          <TableProvider {...args} />
+          <TableProvider
+            {...args}
+            sort={{ name: "created_at", order: "desc" }}
+            setSort={() => undefined}
+          />
         </StoreProvider>
-      </MemoryRouter>
-    </DependencyProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 };
 

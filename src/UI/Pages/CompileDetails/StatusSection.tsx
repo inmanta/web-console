@@ -1,6 +1,4 @@
-import { CompileDetails } from "@/Core";
-import { Timeline } from "@/UI/Components/Timeline";
-import { words } from "@/UI/words";
+import React from "react";
 import {
   CodeBlock,
   CodeBlockCode,
@@ -15,8 +13,10 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon,
 } from "@patternfly/react-icons";
-import React from "react";
 import styled from "styled-components";
+import { CompileDetails } from "@/Core";
+import { Timeline } from "@/UI/Components/Timeline";
+import { words } from "@/UI/words";
 
 interface Props {
   compileDetails: Pick<

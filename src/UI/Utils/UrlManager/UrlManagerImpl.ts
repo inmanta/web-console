@@ -1,52 +1,29 @@
-import { Maybe, UrlManager } from "@/Core";
+import { FeatureManager, Maybe, UrlManager } from "@/Core";
 
 export class UrlManagerImpl implements UrlManager {
-  private readonly versionPrefixLength = 3;
   private environment: Maybe.Type<string> = Maybe.none();
 
-  constructor(private readonly baseUrl: string, environment?: string) {
-    if (typeof environment === "undefined") return;
-    this.environment = Maybe.some(environment);
+  constructor(
+    private readonly featureManager: FeatureManager,
+    private readonly baseUrl: string
+  ) {}
+
+  getDashboardUrl(environment: string): string {
+    return `${this.baseUrl}/dashboard/#!/environment/${environment}`;
   }
 
-  setEnvironment(environment: string): void {
-    this.environment = Maybe.some(environment);
-  }
-
-  private getEnvironment(): string {
-    if (Maybe.isSome(this.environment)) return this.environment.value;
-    throw new Error("Environment not set");
-  }
-
-  getModelVersionUrl(version: string): string {
-    return `${
-      this.baseUrl
-    }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}`;
-  }
-
-  getResourceUrl(resourceId: string): string {
-    const indexOfVersionSeparator = resourceId.lastIndexOf(",");
-    const resourceName = resourceId.substring(0, indexOfVersionSeparator);
-    const version = resourceId.substring(
-      indexOfVersionSeparator + this.versionPrefixLength,
-      resourceId.length
-    );
-
-    return `${
-      this.baseUrl
-    }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}/${encodeURI(
-      resourceName
-    ).replace(/\//g, "~2F")}`;
-  }
-  getVersionedResourceUrl(resourceId: string, version: string): string {
-    return `${
-      this.baseUrl
-    }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}/${encodeURI(
-      resourceId
-    ).replace(/\//g, "~2F")}`;
+  getDocumentationLink(): string {
+    if (this.featureManager.getEdition().includes("Open Source")) {
+      return `https://docs.inmanta.com/community/${this.featureManager.getServerVersion()}`;
+    }
+    return `https://docs.inmanta.com/inmanta-service-orchestrator/${this.featureManager.getServerMajorVersion()}/`;
   }
 
   getServerStatusUrl(): string {
     return `${this.baseUrl}/dashboard/#!/serverstatus`;
+  }
+
+  getApiUrl(): string {
+    return this.baseUrl;
   }
 }

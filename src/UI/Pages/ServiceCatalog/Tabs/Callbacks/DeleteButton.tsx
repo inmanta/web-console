@@ -2,9 +2,9 @@ import React, { useContext, useState } from "react";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { Callback, Maybe } from "@/Core";
-import { words } from "@/UI/words";
-import { DependencyContext } from "@/UI/Dependency";
 import { DeleteForm, ErrorToastAlert } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface DeleteProps {
   callback: Callback;

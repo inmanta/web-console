@@ -1,5 +1,14 @@
+import React, { useCallback, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  Field,
+  Alert,
+  AlertActionCloseButton,
+  AlertGroup,
+  Text,
+  TextContent,
+  TextVariants,
+} from "@patternfly/react-core";
+import {
   InstanceAttributeModel,
   Maybe,
   ServiceInstanceModel,
@@ -12,18 +21,7 @@ import {
   EditModifierHandler,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { getUrl } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  Text,
-  TextContent,
-  TextVariants,
-} from "@patternfly/react-core";
-import React, { useCallback, useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
 
 interface Props {
   serviceEntity: ServiceModel;
@@ -31,19 +29,21 @@ interface Props {
 }
 
 export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
-  const { commandResolver, environmentModifier } =
+  const { commandResolver, environmentModifier, routeManager } =
     useContext(DependencyContext);
-  const fields = new FieldCreator(new EditModifierHandler()).create(
-    serviceEntity
-  );
+  const fieldCreator = new FieldCreator(new EditModifierHandler());
+  const fields = fieldCreator.create(serviceEntity);
   const isHalted = environmentModifier.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
-  const history = useHistory();
-  const url = `${getUrl("Inventory", { service: serviceEntity.name })}?env=${
-    serviceEntity.environment
-  }`;
+  const navigate = useNavigate();
+  const url = `${routeManager.getUrl("Inventory", {
+    service: serviceEntity.name,
+  })}?env=${serviceEntity.environment}`;
 
-  const handleRedirect = useCallback(() => history.push(url), [history]);
+  const handleRedirect = useCallback(
+    () => navigate(url),
+    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
+  );
   const attributeInputConverter = new AttributeInputConverterImpl();
   const currentAttributes =
     attributeInputConverter.getCurrentAttributes(instance);
@@ -54,10 +54,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     id: instance.id,
     version: instance.version,
   });
-  const onSubmit = async (
-    fields: Field[],
-    attributes: InstanceAttributeModel
-  ) => {
+  const onSubmit = async (attributes: InstanceAttributeModel) => {
     const result = await trigger(fields, currentAttributes, attributes);
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);

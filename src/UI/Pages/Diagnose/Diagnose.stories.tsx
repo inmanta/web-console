@@ -1,22 +1,22 @@
 import React from "react";
-import { RawDiagnostics } from "@/Core";
 import { StoreProvider } from "easy-peasy";
-import {
-  InstantFetcher,
-  InstanceLog,
-  Service,
-  StaticScheduler,
-  DynamicQueryManagerResolver,
-  Diagnose,
-} from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { RawDiagnostics } from "@/Core";
 import {
   QueryResolverImpl,
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,
   getStoreInstance,
 } from "@/Data";
-import { UrlManagerImpl } from "@/UI/Utils";
+import {
+  InstanceLog,
+  Service,
+  StaticScheduler,
+  DynamicQueryManagerResolver,
+  Diagnose,
+  InstantApiHelper,
+  dependencies,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 
 export default {
@@ -27,25 +27,23 @@ export default {
 const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   diagnostics,
 }) => {
-  const { service_instance_id, environment } = InstanceLog.a;
+  const { service_instance_id } = InstanceLog.a;
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new DiagnosticsQueryManager(
-        new InstantFetcher<"Diagnostics">({
+        new InstantApiHelper({
           kind: "Success",
           data: { data: diagnostics },
         }),
         new DiagnosticsStateHelper(store),
-        new StaticScheduler(),
-        environment
+        new StaticScheduler()
       ),
     ])
   );
-  const urlManager = new UrlManagerImpl("", environment);
 
   return (
-    <DependencyProvider dependencies={{ queryResolver, urlManager }}>
+    <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
       <StoreProvider store={store}>
         <DiagnoseComponent
           service={Service.a}

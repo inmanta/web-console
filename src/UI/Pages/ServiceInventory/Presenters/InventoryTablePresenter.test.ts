@@ -1,5 +1,3 @@
-import { InventoryTablePresenter } from "./InventoryTablePresenter";
-import { AttributesPresenter } from "./AttributesPresenter";
 import {
   ServiceInstance,
   DummyActionPresenter,
@@ -7,6 +5,8 @@ import {
   tablePresenter,
 } from "@/Test";
 import { DummyStatePresenter } from "@/Test/Mock/DummyStatePresenter";
+import { AttributesPresenter } from "./AttributesPresenter";
+import { InventoryTablePresenter } from "./InventoryTablePresenter";
 
 const presenter = new InventoryTablePresenter(
   new DummyDatePresenter(),
@@ -18,14 +18,6 @@ const rows = presenter.createRows([ServiceInstance.a]);
 
 test("TablePresenter short id", () => {
   expect(rows[0].id.short.length).toBe(4);
-});
-
-test("TablePresenter full date", () => {
-  expect(rows[0].createdAt.full).toMatch("full");
-});
-
-test("TablePresenter relative date", () => {
-  expect(rows[0].createdAt.relative).toMatch("relative");
 });
 
 test("TablePresenter converts column index to name correctly", () => {

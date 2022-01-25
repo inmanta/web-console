@@ -1,5 +1,4 @@
 import React from "react";
-import { CompileReport, CompileReportRow, SortDirection } from "@/Core";
 import {
   OnSort,
   TableComposable,
@@ -8,25 +7,26 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { CompileReportsTableRow } from "./CompileReportsTableRow";
+import { CompileReport, CompileReportRow, Sort } from "@/Core";
 import { TablePresenter } from "@/UI/Presenters";
+import { CompileReportsTableRow } from "./CompileReportsTableRow";
 
 interface Props {
   tablePresenter: TablePresenter<CompileReport, CompileReportRow>;
   rows: CompileReportRow[];
-  order: SortDirection;
-  setOrder: (order: SortDirection) => void;
+  sort: Sort.Type;
+  setSort: (sort: Sort.Type) => void;
 }
 
 export const CompileReportsTable: React.FC<Props> = ({
   tablePresenter,
   rows,
-  order,
-  setOrder,
+  sort,
+  setSort,
   ...props
 }) => {
-  const onSort: OnSort = (event, index, direction) => {
-    setOrder(direction);
+  const onSort: OnSort = (event, index, order) => {
+    setSort({ ...sort, order });
   };
   // The compile reports table is only sortable by one column
   const heads = tablePresenter
@@ -38,7 +38,7 @@ export const CompileReportsTable: React.FC<Props> = ({
               sort: {
                 sortBy: {
                   index: 0,
-                  direction: order,
+                  direction: sort.order,
                 },
                 onSort,
                 columnIndex,

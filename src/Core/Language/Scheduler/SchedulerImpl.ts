@@ -1,26 +1,35 @@
-import * as Maybe from "@/Core/Language/Maybe";
+import { forIn, mapValues, omit } from "lodash-es";
 import { Dictionary, DictionaryImpl } from "@/Core/Language/Dictionary";
+import { resolvePromiseRecord } from "@/Core/Language/Utils";
 import { Scheduler, Task } from "./Scheduler";
 
 export class SchedulerImpl implements Scheduler {
-  private readonly tasks = new DictionaryImpl<Task>();
+  tasks: Dictionary<Task>;
+  private nextEffects: Record<string, ReturnType<Task["effect"]>> = {};
+  private nextUpdates: Record<string, Task["update"]> = {};
   private ongoing = false;
 
   constructor(
     private readonly delay: number,
-    private readonly taskWrapper?: (task: Task) => Task
-  ) {}
+    private readonly taskWrapper?: (task: Task) => Task,
+    tasks?: Dictionary<Task>
+  ) {
+    this.tasks =
+      typeof tasks !== "undefined" ? tasks : new DictionaryImpl<Task>();
+  }
 
   unregister(id: string): void {
     this.tasks.drop(id);
+    this.nextEffects = omit(this.nextEffects, [id]);
+    this.nextUpdates = omit(this.nextUpdates, [id]);
     this.revalidateTicker();
   }
 
   register(id: string, task: Task): void {
-    if (Maybe.isSome(this.tasks.get(id))) {
-      throw new Error(`Task with id ${id} is already registered`);
+    const setCompleted = this.tasks.set(id, this.wrapTask(task));
+    if (!setCompleted) {
+      throw new Error(`A task with id ${id} is already registered`);
     }
-    this.tasks.set(id, this.wrapTask(task));
     this.revalidateTicker();
   }
 
@@ -30,25 +39,22 @@ export class SchedulerImpl implements Scheduler {
   }
 
   private async execute(): Promise<void> {
-    if (this.tasks.isEmpty()) return;
-    const list = Object.entries(this.tasks.toObject());
+    if (this.tasks.isEmpty()) {
+      this.ongoing = false;
+      return;
+    }
+    const taskRecord = this.tasks.toObject();
+    this.nextEffects = mapValues(taskRecord, (task) => task.effect());
+    this.nextUpdates = mapValues(taskRecord, (task) => task.update);
 
-    const promises = list.map(([, task]) => task.effect());
-    const results = await Promise.all(promises);
+    forIn(await resolvePromiseRecord(this.nextEffects), (data, key) => {
+      const update = this.nextUpdates[key];
+      if (typeof update === "undefined") return;
+      update(data);
+    });
 
-    const resultList: [string, unknown][] = results.map((result, index) => [
-      list[index][0],
-      result,
-    ]);
-    const resultDict = resultList.reduce<Record<string, unknown>>(
-      (acc, [id, result]) => {
-        acc[id] = result;
-        return acc;
-      },
-      {}
-    );
-
-    list.forEach(([id, task]) => task.update(resultDict[id]));
+    this.nextEffects = {};
+    this.nextUpdates = {};
 
     window.setTimeout(() => {
       this.execute();
@@ -63,9 +69,5 @@ export class SchedulerImpl implements Scheduler {
       this.execute();
     }, this.delay);
     this.ongoing = true;
-  }
-
-  getTasks(): Dictionary<Task> {
-    return this.tasks;
   }
 }

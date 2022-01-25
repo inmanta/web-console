@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { ServiceInstanceParams } from "@/Core";
-import { AttributeSets, AttributesFilter } from "./AttributesFilter";
-import { IdFilter } from "./IdFilter";
-import { SelectOptionFilter } from "@/UI/Components/Filters";
-import { FilterPicker } from "./FilterPicker";
-import { DeletedFilter } from "./DeletedFilter";
-import { IdentityFilter } from "./IdentityFilter";
 import { ToolbarGroup } from "@patternfly/react-core";
+import { ServiceInstanceParams } from "@/Core";
+import { SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
+import { AttributeSets, AttributesFilter } from "./AttributesFilter";
+import { DeletedFilter } from "./DeletedFilter";
+import { FilterPicker } from "./FilterPicker";
+import { IdFilter } from "./IdFilter";
+import { IdentityFilter } from "./IdentityFilter";
 
 interface Props {
   filter: ServiceInstanceParams.Filter;
