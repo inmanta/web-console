@@ -2,7 +2,6 @@ import React from "react";
 import {
   Card,
   CardBody,
-  CardFooter,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
@@ -11,29 +10,18 @@ import {
 import { words } from "@/UI/words";
 
 interface Props {
-  id: string;
   lastDeploy: string;
   firstGeneratedTime: string;
-  versionLink: React.ReactElement;
 }
 
 export const ResourceInfoContent: React.FC<Props> = ({
-  id,
   lastDeploy,
   firstGeneratedTime,
-  versionLink,
 }) => {
   return (
     <Card>
       <CardBody>
         <DescriptionList isHorizontal>
-          <DescriptionListGroup>
-            <DescriptionListTerm>
-              {words("resources.info.id")}
-            </DescriptionListTerm>
-            <DescriptionListDescription>{id}</DescriptionListDescription>
-          </DescriptionListGroup>
-
           <DescriptionListGroup>
             <DescriptionListTerm>
               {words("resources.info.lastDeploy")}
@@ -42,7 +30,6 @@ export const ResourceInfoContent: React.FC<Props> = ({
               {lastDeploy}
             </DescriptionListDescription>
           </DescriptionListGroup>
-
           <DescriptionListGroup>
             <DescriptionListTerm>
               {words("resources.info.firstTime")}
@@ -53,7 +40,6 @@ export const ResourceInfoContent: React.FC<Props> = ({
           </DescriptionListGroup>
         </DescriptionList>
       </CardBody>
-      <CardFooter>{versionLink}</CardFooter>
     </Card>
   );
 };

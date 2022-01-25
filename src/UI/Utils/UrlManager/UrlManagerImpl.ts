@@ -32,14 +32,6 @@ export class UrlManagerImpl implements UrlManager {
     throw new Error("Environment not set");
   }
 
-  getVersionedResourceUrl(resourceId: string, version: string): string {
-    return `${
-      this.baseUrl
-    }/dashboard/#!/environment/${this.getEnvironment()}/version/${version}/${encodeURI(
-      resourceId
-    ).replace(/\//g, "~2F")}`;
-  }
-
   getServerStatusUrl(): string {
     return `${this.baseUrl}/dashboard/#!/serverstatus`;
   }

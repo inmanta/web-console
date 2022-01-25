@@ -1,8 +1,12 @@
 import React from "react";
 import { TextContent, Text, TextVariants } from "@patternfly/react-core";
 
-export const Description: React.FC = ({ children }) => (
-  <TextContent>
+interface Props {
+  className?: string;
+}
+
+export const Description: React.FC<Props> = ({ children, className }) => (
+  <TextContent className={className}>
     <Text component={TextVariants.small}>{children}</Text>
   </TextContent>
 );
