@@ -5,12 +5,8 @@ export class UrlManagerImpl implements UrlManager {
 
   constructor(
     private readonly featureManager: FeatureManager,
-    private readonly baseUrl: string,
-    environment?: string
-  ) {
-    if (typeof environment === "undefined") return;
-    this.environment = Maybe.some(environment);
-  }
+    private readonly baseUrl: string
+  ) {}
 
   getDashboardUrl(environment: string): string {
     return `${this.baseUrl}/dashboard/#!/environment/${environment}`;
@@ -21,15 +17,6 @@ export class UrlManagerImpl implements UrlManager {
       return `https://docs.inmanta.com/community/${this.featureManager.getServerVersion()}`;
     }
     return `https://docs.inmanta.com/inmanta-service-orchestrator/${this.featureManager.getServerMajorVersion()}/`;
-  }
-
-  setEnvironment(environment: string): void {
-    this.environment = Maybe.some(environment);
-  }
-
-  private getEnvironment(): string {
-    if (Maybe.isSome(this.environment)) return this.environment.value;
-    throw new Error("Environment not set");
   }
 
   getServerStatusUrl(): string {
