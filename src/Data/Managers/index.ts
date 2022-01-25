@@ -41,3 +41,4 @@ export * from "./GetAgentProcess";
 export * from "./GetDesiredStates";
 export * from "./PromoteVersion";
 export * from "./GetVersionResources";
+export * from "./ControlAgent";

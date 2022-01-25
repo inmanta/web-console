@@ -391,6 +391,7 @@ const dict = {
   "agents.columns.unpause": "Unpause on resume",
   "agents.columns.actions": "Actions",
   "agents.actions.pause": "Pause",
+  "agents.actions.unpause": "Unpause",
   "agents.actions.deploy": "Force deploy",
   "agents.actions.repair": "Force repair",
   "agents.filters.status.placeholder": "Select status...",
