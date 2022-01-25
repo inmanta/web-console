@@ -38,6 +38,7 @@ export const Row: React.FC<Props> = ({
             onToggle,
           }}
         />
+        {/* The width values represent percentages */}
         <Td width={15}>{presentDate(log.timestamp)}</Td>
         <Td width={10}>{log.action}</Td>
         <Td width={10}>{log.level}</Td>
