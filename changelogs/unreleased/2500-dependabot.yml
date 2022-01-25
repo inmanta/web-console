@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump mini-css-extract-plugin from 2.5.2 to 2.5.3'
+destination-branches:
+- master
+- iso5
+- iso4
+sections: {}
