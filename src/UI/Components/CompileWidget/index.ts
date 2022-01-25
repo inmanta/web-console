@@ -1,1 +1,1 @@
-export * from "./CompileWidget";
+export { Provider as CompileWidget } from "./Provider";

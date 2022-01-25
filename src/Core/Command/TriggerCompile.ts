@@ -17,5 +17,5 @@ export interface TriggerCompileManifest {
   apiData: undefined;
   body: Body;
   command: TriggerCompile;
-  trigger: (updated: boolean) => Promise<Maybe.Type<string>>;
+  trigger: (update: boolean) => Promise<Maybe.Type<string>>;
 }

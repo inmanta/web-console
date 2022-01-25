@@ -8,6 +8,15 @@ export class BaseApiHelper implements ApiHelper {
     private readonly keycloak?: KeycloakInstance
   ) {}
 
+  async head(url: string): Promise<number> {
+    try {
+      const response = await fetch(this.getFullUrl(url), { method: "HEAD" });
+      return response.status;
+    } catch (error) {
+      return 500;
+    }
+  }
+
   private getHeaders(environment?: string): Record<string, string> {
     const { keycloak } = this;
     return {

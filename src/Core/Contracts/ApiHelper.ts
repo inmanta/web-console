@@ -33,4 +33,5 @@ export interface ApiHelper {
     body: Body
   ): Promise<Maybe.Type<string>>;
   delete(url: string, environment: string): Promise<Maybe.Type<string>>;
+  head(url: string): Promise<number>;
 }

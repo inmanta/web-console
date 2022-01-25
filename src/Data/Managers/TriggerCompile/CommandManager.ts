@@ -5,11 +5,11 @@ export class TriggerCompileCommandManager extends CommandManagerWithEnv<"Trigger
   constructor(private readonly apiHelper: ApiHelper) {
     super(
       "TriggerCompile",
-      (command, environment) => (updated) =>
+      (command, environment) => (update) =>
         this.apiHelper.postWithoutResponseAndEnvironment(
           `/api/v1/notify/${environment}`,
           {
-            updated,
+            update,
             metadata: {
               type: "console",
               message: "Compile triggered from the console",
