@@ -1,11 +1,17 @@
 import React, { useContext } from "react";
-import { Toolbar, ToolbarContent, ToolbarItem } from "@patternfly/react-core";
+import {
+  Divider,
+  Toolbar,
+  ToolbarContent,
+  ToolbarItem,
+} from "@patternfly/react-core";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { EmptyView, PaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { ResourceHistoryTable } from "./ResourceHistoryTable";
+import { ResourceTemporalData } from "./ResourceTemporalData";
 import { ResourceHistoryTablePresenter } from "./TablePresenter";
 
 interface Props {
@@ -30,6 +36,8 @@ export const ResourceHistoryView: React.FC<Props> = ({ resourceId }) => {
 
   return (
     <>
+      <ResourceTemporalData id={resourceId} />
+      <Divider />
       <Toolbar>
         <ToolbarContent>
           <ToolbarItem variant="pagination">
