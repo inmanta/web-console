@@ -7,7 +7,7 @@ interface Props {
 }
 export const ResourceDetailsView: React.FC<Props> = ({ resourceId }) => {
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKey>({
-    default: TabKey.Info,
+    default: TabKey.Attributes,
     key: `tab`,
     route: "ResourceDetails",
   });

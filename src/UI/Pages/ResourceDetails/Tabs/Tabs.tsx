@@ -2,7 +2,6 @@ import React from "react";
 import {
   ColumnsIcon,
   HistoryIcon,
-  InfoCircleIcon,
   ListIcon,
   ModuleIcon,
   TableIcon,
@@ -12,12 +11,10 @@ import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
 import { FactsTab } from "./FactsTab";
 import { ResourceHistoryView } from "./HistoryTab/ResourceHistoryView";
-import { InfoTab } from "./InfoTab";
 import { ResourceLogView } from "./LogTab";
 import { RequiresTab } from "./RequiresTab";
 
 export enum TabKey {
-  Info = "Info",
   Requires = "Requires",
   Attributes = "Attributes",
   History = "History",
@@ -37,9 +34,8 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab }) => {
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={[
-        infoTab(id),
-        requiresTab(id),
         attributesTab(id),
+        requiresTab(id),
         historyTab(id),
         logTab(id),
         factsTab(id),
@@ -47,13 +43,6 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab }) => {
     />
   );
 };
-
-const infoTab = (id: string): TabDescriptor<TabKey> => ({
-  id: TabKey.Info,
-  title: words("resources.info.title"),
-  icon: <InfoCircleIcon />,
-  view: <InfoTab id={id} />,
-});
 
 const requiresTab = (id: string): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
