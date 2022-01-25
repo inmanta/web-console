@@ -5,6 +5,7 @@ export * from "./ButtonWithCursorHandling";
 export * from "./ClipboardCopyButton";
 export * from "./CodeHighlighter";
 export * from "./CodeText";
+export * from "./CompileWidget";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
 export * from "./DeleteForm";

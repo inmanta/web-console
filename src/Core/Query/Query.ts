@@ -9,6 +9,10 @@ import {
   GetCompileReports,
   GetCompileReportsManifest,
 } from "./GetCompileReports";
+import {
+  GetCompilerStatus,
+  GetCompilerStatusManifest,
+} from "./GetCompilerStatus";
 import { GetDesiredStates, GetDesiredStatesManifest } from "./GetDesiredStates";
 import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
 import {
@@ -94,7 +98,8 @@ export type Query =
   | GetAgents
   | GetAgentProcess
   | GetDesiredStates
-  | GetVersionResources;
+  | GetVersionResources
+  | GetCompilerStatus;
 
 export type Type = Query;
 
@@ -131,6 +136,7 @@ interface Manifest {
   GetAgentProcess: GetAgentProcessManifest;
   GetDesiredStates: GetDesiredStatesManifest;
   GetVersionResources: GetVersionResourcesManifest;
+  GetCompilerStatus: GetCompilerStatusManifest;
 }
 
 /**

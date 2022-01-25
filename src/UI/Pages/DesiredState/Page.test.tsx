@@ -10,11 +10,11 @@ import {
   CommandResolverImpl,
   PromoteVersionCommandManager,
   DesiredStatesUpdater,
-} from "@/Data";
-import {
+  GetCompilerStatusQueryManager,
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
-} from "@/Data/Managers/GetDesiredStates";
+  TriggerCompileCommandManager,
+} from "@/Data";
 import {
   DynamicQueryManagerResolver,
   StaticScheduler,
@@ -42,11 +42,13 @@ function setup() {
         getDesiredStatesStateHelper,
         scheduler
       ),
+      new GetCompilerStatusQueryManager(apiHelper, scheduler),
     ])
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new PromoteVersionCommandManager(apiHelper, desiredStatesUpdater),
+      new TriggerCompileCommandManager(apiHelper),
     ])
   );
 
@@ -73,6 +75,8 @@ test("DesiredStatesView shows empty table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
+  apiHelper.resolve(204);
+
   expect(
     await screen.findByRole("generic", { name: "DesiredStatesView-Loading" })
   ).toBeInTheDocument();
@@ -94,6 +98,8 @@ test("DesiredStatesView shows failed table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
+  apiHelper.resolve(204);
+
   expect(
     await screen.findByRole("generic", { name: "DesiredStatesView-Loading" })
   ).toBeInTheDocument();
@@ -109,6 +115,8 @@ test("AgentsView shows success table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
+  apiHelper.resolve(204);
+
   expect(
     await screen.findByRole("generic", { name: "DesiredStatesView-Loading" })
   ).toBeInTheDocument();
@@ -123,6 +131,8 @@ test("AgentsView shows success table", async () => {
 test("When using the status filter then only the matching desired states should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  apiHelper.resolve(204);
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -168,9 +178,11 @@ test("When using the status filter then only the matching desired states should 
   expect(rowsAfter).toHaveLength(3);
 });
 
-it("When using the Date filter then the desired state versions within the range selected range should be fetched and shown", async () => {
+test("When using the Date filter then the desired state versions within the range selected range should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  apiHelper.resolve(204);
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -227,9 +239,11 @@ it("When using the Date filter then the desired state versions within the range 
   ).toBeVisible();
 });
 
-it("When using the Version filter then the desired state versions within the range selected range should be fetched and shown", async () => {
+test("When using the Version filter then the desired state versions within the range selected range should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  apiHelper.resolve(204);
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -286,6 +300,8 @@ test("Given the Desired states view When promoting a version, then the correct r
   const { component, apiHelper } = setup();
   render(component);
 
+  apiHelper.resolve(204);
+
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
@@ -315,18 +331,20 @@ test("Given the Desired states view When promoting a version, then the correct r
   await act(async () => {
     await apiHelper.resolve(Maybe.none());
   });
-  expect(apiHelper.resolvedRequests).toHaveLength(2);
+  expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
-  expect(apiHelper.resolvedRequests).toHaveLength(3);
+  expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
 
 test("Given the Desired states view with filters When promoting a version, then the correct request is be fired", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  apiHelper.resolve(204);
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -371,7 +389,7 @@ test("Given the Desired states view with filters When promoting a version, then 
   await act(async () => {
     await apiHelper.resolve(Maybe.none());
   });
-  expect(apiHelper.resolvedRequests).toHaveLength(3);
+  expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
@@ -381,13 +399,15 @@ test("Given the Desired states view with filters When promoting a version, then 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
-  expect(apiHelper.resolvedRequests).toHaveLength(4);
+  expect(apiHelper.resolvedRequests).toHaveLength(5);
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
 
 test("Given the Desired states view When promoting a version results in an error, then the error is shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  apiHelper.resolve(204);
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -413,4 +433,10 @@ test("Given the Desired states view When promoting a version results in an error
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
   expect(await screen.findByText("something happened")).toBeVisible();
+});
+
+test("DesiredStatesView shows CompileWidget", async () => {
+  const { component } = setup();
+  render(component);
+  expect(screen.getByRole("generic", { name: "CompileWidget" })).toBeVisible();
 });

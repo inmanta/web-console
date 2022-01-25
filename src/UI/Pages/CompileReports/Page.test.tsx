@@ -9,6 +9,9 @@ import {
   getStoreInstance,
   CompileReportsQueryManager,
   CompileReportsStateHelper,
+  GetCompilerStatusQueryManager,
+  CommandResolverImpl,
+  TriggerCompileCommandManager,
 } from "@/Data";
 import {
   DynamicQueryManagerResolver,
@@ -16,6 +19,7 @@ import {
   CompileReportsData,
   DeferredApiHelper,
   dependencies,
+  DynamicCommandManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
@@ -32,6 +36,13 @@ function setup() {
         new CompileReportsStateHelper(store),
         scheduler
       ),
+      new GetCompilerStatusQueryManager(apiHelper, scheduler),
+    ])
+  );
+
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      new TriggerCompileCommandManager(apiHelper),
     ])
   );
 
@@ -43,6 +54,7 @@ function setup() {
         dependencies={{
           ...dependencies,
           queryResolver,
+          commandResolver,
           routeManager,
         }}
       >
@@ -59,6 +71,8 @@ function setup() {
 test("CompileReportsView shows empty table", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  apiHelper.resolve(204);
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
@@ -81,6 +95,8 @@ test("CompileReportsView shows failed table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
+  apiHelper.resolve(204);
+
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
   ).toBeInTheDocument();
@@ -96,6 +112,8 @@ test("CompileReportsView shows success table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
+  apiHelper.resolve(204);
+
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
   ).toBeInTheDocument();
@@ -110,6 +128,8 @@ test("CompileReportsView shows success table", async () => {
 test("CompileReportsView shows updated table", async () => {
   const { component, apiHelper, scheduler } = setup();
   render(component);
+
+  apiHelper.resolve(204);
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
@@ -129,6 +149,7 @@ test("CompileReportsView shows updated table", async () => {
 
   scheduler.executeAll();
 
+  apiHelper.resolve(204);
   apiHelper.resolve(Either.right(CompileReportsData.response));
 
   expect(
@@ -139,6 +160,8 @@ test("CompileReportsView shows updated table", async () => {
 test("When using the result filter with the Successful option then the successful compile reports should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  apiHelper.resolve(204);
 
   await act(async () => {
     await apiHelper.resolve(Either.right(CompileReportsData.response));
@@ -186,6 +209,8 @@ test("When using the status filter with the In Progress opiton then the compile 
   const { component, apiHelper } = setup();
   render(component);
 
+  apiHelper.resolve(204);
+
   await act(async () => {
     await apiHelper.resolve(Either.right(CompileReportsData.response));
   });
@@ -231,6 +256,8 @@ test("When using the status filter with the In Progress opiton then the compile 
 it("When using the Date filter then the compile reports within the range selected range should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
+  apiHelper.resolve(204);
 
   await act(async () => {
     await apiHelper.resolve(Either.right(CompileReportsData.response));

@@ -5,6 +5,7 @@ type Request =
   | (WithMethod<"POST"> & UrlAndEnv & WithBody)
   | (WithMethod<"PATCH"> & UrlAndEnv & WithBody)
   | (WithMethod<"PUT"> & UrlAndEnv & WithBody)
+  | (WithMethod<"HEAD"> & UrlAndEnv)
   | (WithMethod<"DELETE"> & UrlAndEnv);
 
 interface WithMethod<Method extends string> {
@@ -146,5 +147,16 @@ export class DeferredApiHelper implements ApiHelper {
       promise,
     });
     return promise as Promise<Maybe.Type<string>>;
+  }
+
+  head(url: string): Promise<number> {
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "HEAD", url },
+      resolve,
+      promise,
+    });
+
+    return promise as Promise<number>;
   }
 }

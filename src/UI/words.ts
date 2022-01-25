@@ -430,6 +430,9 @@ const dict = {
   "common.serviceInstance.select": (attribute: string) =>
     `Select value for ${attribute}`,
   "common.environment.select": "Select an environment...",
+  "common.compileWidget.recompile": "Recompile",
+  "common.compileWidget.updateAndRecompile": "Update project & recompile",
+  "common.compileWidget.compiling": "Compiling",
 };
 
 type Key = keyof typeof dict;

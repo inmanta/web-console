@@ -34,6 +34,7 @@ import {
   ResumeEnvironment,
   ResumeEnvironmentManifest,
 } from "./ResumeEnvironment";
+import { TriggerCompile, TriggerCompileManifest } from "./TriggerCompile";
 import {
   TriggerInstanceUpdate,
   TriggerInstanceUpdateManifest,
@@ -75,7 +76,8 @@ export type Command =
   | Repair
   | GetSupportArchive
   | PromoteVersion
-  | ControlAgent;
+  | ControlAgent
+  | TriggerCompile;
 
 export type Type = Command;
 
@@ -107,6 +109,7 @@ interface Manifest {
   GetSupportArchive: GetSupportArchiveManifest;
   PromoteVersion: PromoteVersionManifest;
   ControlAgent: ControlAgentManifest;
+  TriggerCompile: TriggerCompileManifest;
 }
 
 /**
