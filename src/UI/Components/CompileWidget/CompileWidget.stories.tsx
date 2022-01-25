@@ -7,17 +7,17 @@ export default {
   component: CompileWidget,
 };
 
-export const Default = () => (
+export const NotCompiling = () => (
   <CompileWidget
-    compiling={RemoteData.success(false)}
+    data={RemoteData.success(false)}
     onRecompile={() => alert("Recompile")}
     onUpdateAndRecompile={() => alert("Update & Recompile")}
   />
 );
 
-export const Disabled = () => (
+export const Compiling = () => (
   <CompileWidget
-    compiling={RemoteData.success(true)}
+    data={RemoteData.success(true)}
     onRecompile={() => alert("Recompile")}
     onUpdateAndRecompile={() => alert("Update & Recompile")}
   />
@@ -25,24 +25,25 @@ export const Disabled = () => (
 
 export const Loading = () => (
   <CompileWidget
-    compiling={RemoteData.loading()}
+    data={RemoteData.loading()}
     onRecompile={() => alert("Recompile")}
     onUpdateAndRecompile={() => alert("Update & Recompile")}
   />
 );
 
 export const Scenario = () => {
-  const [compiling, setCompiling] = useState<
-    RemoteData.RemoteData<undefined, boolean>
-  >(RemoteData.success(false));
+  const [data, setData] = useState<RemoteData.RemoteData<undefined, boolean>>(
+    RemoteData.success(false)
+  );
 
   const onRecompile = () => {
-    setCompiling(RemoteData.loading());
-    setTimeout(() => setCompiling(RemoteData.success(false)), 2000);
+    setData(RemoteData.loading());
+    setTimeout(() => setData(RemoteData.success(false)), 2000);
   };
+
   return (
     <CompileWidget
-      compiling={compiling}
+      data={data}
       onRecompile={onRecompile}
       onUpdateAndRecompile={() => alert("Update & Recompile")}
     />

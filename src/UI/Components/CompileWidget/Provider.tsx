@@ -1,35 +1,32 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { CompileWidget } from "./CompileWidget";
 
 export const Provider: React.FC = () => {
+  const [isFakeCompiling, setFakeCompiling] = useState(false);
   const { commandResolver, queryResolver } = useContext(DependencyContext);
 
   const trigger = commandResolver.getTrigger<"TriggerCompile">({
     kind: "TriggerCompile",
   });
 
-  const [compiling, refetch] = queryResolver.useContinuous<"GetCompilerStatus">(
-    {
-      kind: "GetCompilerStatus",
-    }
-  );
+  const [data, refetch] = queryResolver.useContinuous<"GetCompilerStatus">({
+    kind: "GetCompilerStatus",
+  });
 
-  const onRecompile = async () => {
-    await trigger(false);
-    refetch();
-  };
-
-  const onUpdateAndRecompile = async () => {
-    await trigger(true);
+  const onRecompile = (update: boolean) => async () => {
+    setFakeCompiling(true);
+    await trigger(update);
+    setTimeout(() => setFakeCompiling(false), 1000);
     refetch();
   };
 
   return (
     <CompileWidget
-      compiling={compiling}
-      onRecompile={onRecompile}
-      onUpdateAndRecompile={onUpdateAndRecompile}
+      data={isFakeCompiling ? RemoteData.success(true) : data}
+      onRecompile={onRecompile(false)}
+      onUpdateAndRecompile={onRecompile(true)}
     />
   );
 };

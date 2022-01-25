@@ -26,19 +26,22 @@ export class GetCompilerStatusQueryManager
     const URL = `/api/v1/notify/${environment}`;
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [compiling, setCompiling] = useState<
+    const [compilerStatus, setCompilerStatus] = useState<
       RemoteData.RemoteData<undefined, boolean>
     >(RemoteData.notAsked());
 
+    const setCompilerStatusFromCode = (code: number) =>
+      setCompilerStatus(RemoteData.success(code === 200));
+
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
+      setCompilerStatus(RemoteData.loading());
       const task = {
         effect: async () => await this.apiHelper.head(URL),
-        update: (code: number) => setCompiling(getCompilingForStatusCode(code)),
+        update: setCompilerStatusFromCode,
       };
-      const update = async () => {
-        setCompiling(getCompilingForStatusCode(await this.apiHelper.head(URL)));
-      };
+      const update = async () =>
+        setCompilerStatusFromCode(await this.apiHelper.head(URL));
       update();
       this.scheduler.register(query.kind, task);
       return () => {
@@ -47,10 +50,10 @@ export class GetCompilerStatusQueryManager
     }, [URL, query.kind]);
 
     return [
-      compiling,
+      compilerStatus,
       () => async () => {
-        setCompiling(RemoteData.loading());
-        setCompiling(getCompilingForStatusCode(await this.apiHelper.head(URL)));
+        setCompilerStatus(RemoteData.loading());
+        setCompilerStatusFromCode(await this.apiHelper.head(URL));
       },
     ];
   }
@@ -62,8 +65,3 @@ export class GetCompilerStatusQueryManager
     return query.kind === "GetCompilerStatus" && kind === "Continuous";
   }
 }
-
-const getCompilingForStatusCode = (
-  statusCode: number
-): RemoteData.RemoteData<undefined, boolean> =>
-  statusCode === 200 ? RemoteData.success(true) : RemoteData.success(false);
