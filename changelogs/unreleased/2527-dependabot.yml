@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @testing-library/dom from 8.11.2 to 8.11.3'
+destination-branches:
+- master
+- iso5
+- iso4
+sections: {}
