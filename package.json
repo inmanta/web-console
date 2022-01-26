@@ -46,7 +46,7 @@
     "@storybook/addon-essentials": "^v6.4.14",
     "@storybook/addon-links": "^v6.4.14",
     "@storybook/react": "^v6.4.14",
-    "@testing-library/dom": "^8.11.2",
+    "@testing-library/dom": "^8.11.3",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
