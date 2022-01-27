@@ -1,4 +1,4 @@
-import { Fact } from "@/Core/Domain/Fact";
+import { Fact } from "@/Core/Domain";
 
 export interface GetResourceFacts {
   kind: "GetResourceFacts";
