@@ -17,6 +17,7 @@ import {
 } from "./EnvironmentSettingsSlice";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
+import { factsSlice, FactsSlice } from "./FactsSlice";
 import {
   InstanceConfigSlice,
   instanceConfigSlice,
@@ -80,6 +81,7 @@ export interface StoreModel {
   agentProcess: AgentProcessSlice;
   desiredStates: DesiredStatesSlice;
   versionResources: VersionResourcesSlice;
+  facts: FactsSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -108,4 +110,5 @@ export const storeModel: StoreModel = {
   agentProcess: agentProcessSlice,
   desiredStates: desiredStatesSlice,
   versionResources: versionResourcesSlice,
+  facts: factsSlice,
 };
