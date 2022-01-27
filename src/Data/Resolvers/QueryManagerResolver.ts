@@ -54,8 +54,8 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
-  GetFactsQueryManager,
-  GetFactsStateHelper,
+  GetResourceFactsQueryManager,
+  GetResourceFactsStateHelper,
   GetAgentsQueryManager,
   GetAgentsStateHelper,
   GetAgentProcessQueryManager,
@@ -208,9 +208,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new ResourceLogsStateHelper(this.store),
         scheduler
       ),
-      new GetFactsQueryManager(
+      new GetResourceFactsQueryManager(
         this.apiHelper,
-        new GetFactsStateHelper(this.store),
+        new GetResourceFactsStateHelper(this.store),
         scheduler
       ),
       new GetAgentsQueryManager(

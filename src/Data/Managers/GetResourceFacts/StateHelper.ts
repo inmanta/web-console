@@ -2,7 +2,7 @@ import { RemoteData } from "@/Core";
 import { PrimaryStateHelper } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export class GetFactsStateHelper extends PrimaryStateHelper<"GetFacts"> {
+export class GetResourceFactsStateHelper extends PrimaryStateHelper<"GetResourceFacts"> {
   constructor(store: Store) {
     super(
       store,
@@ -11,9 +11,9 @@ export class GetFactsStateHelper extends PrimaryStateHelper<"GetFacts"> {
           (wrapped) => wrapped.data,
           data
         );
-        store.dispatch.facts.setList({ resourceId, data: unwrapped });
+        store.dispatch.resourceFacts.setList({ resourceId, data: unwrapped });
       },
-      (state, { resourceId }) => state.facts.listByResource[resourceId]
+      (state, { resourceId }) => state.resourceFacts.listByResource[resourceId]
     );
   }
 }

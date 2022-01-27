@@ -1,12 +1,15 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData, Query } from "@/Core";
 
-type Data = RemoteData.Type<Query.Error<"GetFacts">, Query.Data<"GetFacts">>;
+type Data = RemoteData.Type<
+  Query.Error<"GetResourceFacts">,
+  Query.Data<"GetResourceFacts">
+>;
 
-export interface FactsSlice {
+export interface ResourceFactsSlice {
   listByResource: Record<string, Data>;
   setList: Action<
-    FactsSlice,
+    ResourceFactsSlice,
     {
       resourceId: string;
       data: Data;
@@ -14,7 +17,7 @@ export interface FactsSlice {
   >;
 }
 
-export const factsSlice: FactsSlice = {
+export const resourceFactsSlice: ResourceFactsSlice = {
   listByResource: {},
   setList: action(({ listByResource }, { resourceId, data }) => {
     listByResource[resourceId] = data;
