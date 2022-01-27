@@ -48,14 +48,14 @@ export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
         update={updateStatus}
       />
       <FreeTextFilter
-        isVisible={filterKind == AgentParams.Kind.Name}
+        isHidden={filterKind !== AgentParams.Kind.Name}
         filterPropertyName={AgentParams.Kind.Name}
         searchEntries={filter.name}
         update={updateName}
         placeholder={words("agents.filters.name.placeholder")}
       />
       <FreeTextFilter
-        isVisible={filterKind == AgentParams.Kind.ProcessName}
+        isHidden={filterKind !== AgentParams.Kind.ProcessName}
         filterPropertyName={AgentParams.Kind.ProcessName}
         searchEntries={filter.process_name}
         update={updateProcessName}
