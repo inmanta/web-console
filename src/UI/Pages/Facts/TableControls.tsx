@@ -1,6 +1,8 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
 import { GetFacts } from "@/Core";
+import { FreeTextFilter } from "@/UI/Components";
+import { words } from "@/UI/words";
 
 interface Props {
   filter: GetFacts.Filter;
@@ -9,15 +11,36 @@ interface Props {
 }
 
 export const TableControls: React.FC<Props> = ({
+  filter,
   setFilter,
   paginationWidget,
-}) => (
-  <Toolbar
-    clearAllFilters={() => setFilter({})}
-    collapseListedFiltersBreakpoint="xl"
-  >
-    <ToolbarContent>
-      <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
-    </ToolbarContent>
-  </Toolbar>
-);
+}) => {
+  const updateName = (names: string[]) =>
+    setFilter({ ...filter, name: names.length > 0 ? names : undefined });
+
+  const updateResourceId = (ids: string[]) =>
+    setFilter({ ...filter, resource_id: ids.length > 0 ? ids : undefined });
+
+  return (
+    <Toolbar
+      clearAllFilters={() => setFilter({})}
+      collapseListedFiltersBreakpoint="xl"
+    >
+      <ToolbarContent>
+        <FreeTextFilter
+          filterPropertyName={"Name"}
+          searchEntries={filter.name}
+          update={updateName}
+          placeholder={words("facts.filters.name.placeholder")}
+        />
+        <FreeTextFilter
+          filterPropertyName={"Resource Id"}
+          searchEntries={filter.resource_id}
+          update={updateResourceId}
+          placeholder={words("facts.filters.resourceId.placeholder")}
+        />
+        <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
+      </ToolbarContent>
+    </Toolbar>
+  );
+};

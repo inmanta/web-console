@@ -398,6 +398,8 @@ const dict = {
 
   /** Facts */
   "facts.title": "Facts",
+  "facts.filters.name.placeholder": "Name...",
+  "facts.filters.resourceId.placeholder": "Resource Id...",
 
   /** Agent Process */
   "agentProcess.title": "Agent Process",
