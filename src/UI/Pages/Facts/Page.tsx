@@ -5,17 +5,22 @@ import {
   useUrlStateWithPageSize,
   useUrlStateWithSort,
 } from "@/Data";
-import { PageContainer, RemoteDataView } from "@/UI/Components";
+import {
+  PageContainer,
+  PaginationWidget,
+  RemoteDataView,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [pageSize] = useUrlStateWithPageSize({
+  const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Facts",
   });
-  const [filter] = useUrlStateWithFilter<GetFacts.Filter>({
+  const [filter, setFilter] = useUrlStateWithFilter<GetFacts.Filter>({
     route: "Facts",
   });
   const [sort] = useUrlStateWithSort<GetFacts.SortKey>({
@@ -32,6 +37,17 @@ export const Page: React.FC = () => {
 
   return (
     <PageContainer title={words("facts.title")}>
+      <TableControls
+        filter={filter}
+        setFilter={setFilter}
+        paginationWidget={
+          <PaginationWidget
+            data={data}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
+      />
       <RemoteDataView
         data={data}
         SuccessView={(data) => (
