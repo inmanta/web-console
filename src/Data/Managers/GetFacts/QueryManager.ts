@@ -1,8 +1,8 @@
 import {
   Scheduler,
   ApiHelper,
-  stringifyObjectOrUndefined,
   StateHelperWithEnv,
+  stringifyObjectOrUndefined,
 } from "@/Core";
 import {
   getPaginationHandlers,
@@ -10,10 +10,10 @@ import {
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class GetAgentsQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetAgents"> {
+export class GetFactsQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetFacts"> {
   constructor(
     apiHelper: ApiHelper,
-    stateHelper: StateHelperWithEnv<"GetAgents">,
+    stateHelper: StateHelperWithEnv<"GetFacts">,
     scheduler: Scheduler
   ) {
     super(
@@ -21,15 +21,15 @@ export class GetAgentsQueryManager extends PrimaryContinuousQueryManagerWithEnvW
       stateHelper,
       scheduler,
       ({ kind }, environment) => `${kind}_${environment}`,
-      ({ pageSize, sort, filter }, environment) => [
+      ({ filter, sort, pageSize }, environment) => [
         environment,
         pageSize.value,
         sort?.name,
         sort?.order,
         stringifyObjectOrUndefined(filter),
       ],
-      "GetAgents",
-      (query) => getUrl(query),
+      "GetFacts",
+      getUrl,
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
           return { data: data, handlers: {}, metadata };

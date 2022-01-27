@@ -63,12 +63,12 @@ import {
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
-} from "@/Data/Managers";
-import { Store } from "@/Data/Store";
-import {
+  GetFactsQueryManager,
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
-} from "../Managers/GetDesiredStates";
+  GetFactsStateHelper,
+} from "@/Data/Managers";
+import { Store } from "@/Data/Store";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];
@@ -233,6 +233,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         scheduler
       ),
       new GetCompilerStatusQueryManager(this.apiHelper, scheduler),
+      new GetFactsQueryManager(
+        this.apiHelper,
+        new GetFactsStateHelper(this.store),
+        scheduler
+      ),
     ];
   }
 }
