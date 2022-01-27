@@ -396,6 +396,9 @@ const dict = {
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",
 
+  /** Facts */
+  "facts.title": "Facts",
+
   /** Agent Process */
   "agentProcess.title": "Agent Process",
   "agentProcess.hostname": "Hostname",
