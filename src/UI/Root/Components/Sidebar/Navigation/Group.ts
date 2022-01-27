@@ -77,6 +77,13 @@ export const resourceManager = (
       external: false,
       locked: !isEnvPresent,
     },
+    {
+      id: Route.Facts.kind,
+      label: Route.Facts.label,
+      url: Route.Facts.path,
+      external: false,
+      locked: !isEnvPresent,
+    },
   ],
 });
 
