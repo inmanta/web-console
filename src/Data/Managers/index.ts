@@ -36,7 +36,7 @@ export { TriggerInstanceUpdateCommandManager } from "./TriggerInstanceUpdate";
 export { TriggerSetStateCommandManager } from "./TriggerSetState";
 export * from "./Deploy";
 export * from "./Repair";
-export * from "./GetFacts";
+export * from "./GetResourceFacts";
 export * from "./GetAgents";
 export * from "./GetAgentProcess";
 export * from "./GetDesiredStates";

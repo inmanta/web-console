@@ -2,10 +2,10 @@ import { identity } from "lodash-es";
 import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { PrimaryContinuousQueryManagerWithEnv } from "@/Data/Managers/Helpers";
 
-export class GetFactsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetFacts"> {
+export class GetResourceFactsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetResourceFacts"> {
   constructor(
     apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetFacts">,
+    stateHelper: StateHelper<"GetResourceFacts">,
     scheduler: Scheduler
   ) {
     super(
@@ -14,7 +14,7 @@ export class GetFactsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"
       scheduler,
       ({ kind, resourceId }) => `${kind}_${resourceId}`,
       ({ resourceId }) => [resourceId],
-      "GetFacts",
+      "GetResourceFacts",
       ({ resourceId }) => `/api/v2/resource/${resourceId}/facts`,
       identity
     );
