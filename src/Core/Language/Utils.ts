@@ -5,14 +5,11 @@ export interface WithId {
 /**
  * The JSON data returned from the backend can contain big numbers.
  * JSON can hold these big numbers. But when parsing JSON,
- * javascript loses precision on these values.
- * Therefor we use a special library to parse these big numbers.
- * These numbers get turned into strings. We can't be sure which
- * values get turned into strings. So a number value coming from the
- * backend can end up as a string or a number.
- * But since only big numbers will be strings,
- * and because we can't do any arithmetic with these numbers anyway,
- * the type can still
+ * javascript loses precision on these values. Therefor a special
+ * library can be enabled to parse these big numbers. These numbers
+ * then get turned into strings. We can't be sure which values get
+ * turned into strings. So a number value coming from the backend
+ * can end up as a string or a number.
  *
  * When the value is a small number:
  * - it is kept as a number
@@ -25,8 +22,8 @@ export interface WithId {
  * - the number type is no longer correct
  *
  * Because we dont manipulate big numbers with arithmetic, and only
- * show them in the UI, it is safe to store these as strings and keep
- * the type as a number.
+ * show them in the UI, it is safe to store these as strings and
+ * keep the type as a number.
  */
 export type ParsedNumber = number;
 
