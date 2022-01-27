@@ -52,8 +52,10 @@ export const Page: React.FC = () => {
       />
       <RemoteDataView
         data={data}
+        label="Facts"
         SuccessView={(data) => (
           <FactsTable
+            aria-label="Facts-Success"
             rows={data.data}
             tablePresenter={new FactsTablePresenter()}
             sort={sort}
