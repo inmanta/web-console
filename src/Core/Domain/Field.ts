@@ -1,4 +1,5 @@
 import { TextInputTypes } from "@patternfly/react-core";
+import { ParsedNumber } from "@/Core/Language";
 
 /**
  * A field contains all the information required to setup a form field for an AttributeModel.
@@ -35,7 +36,7 @@ export interface EnumField extends BaseField {
   kind: "Enum";
   defaultValue: unknown;
   type: string;
-  options: Record<string, string | number>;
+  options: Record<string, string | ParsedNumber>;
 }
 
 export interface NestedField extends BaseField {
@@ -46,6 +47,6 @@ export interface NestedField extends BaseField {
 export interface DictListField extends BaseField {
   kind: "DictList";
   fields: Field[];
-  min: number;
-  max?: number;
+  min: ParsedNumber;
+  max?: ParsedNumber;
 }

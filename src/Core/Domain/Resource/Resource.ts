@@ -1,4 +1,5 @@
 import { Pagination } from "@/Core/Domain/Pagination";
+import { ParsedNumber } from "@/Core/Language";
 import { PageSize } from "../PageSize";
 import { Sort } from "../Sort";
 
@@ -46,7 +47,7 @@ export interface Row {
   type: string;
   agent: string;
   value: string;
-  numberOfDependencies: number;
+  numberOfDependencies: ParsedNumber;
   deployState: Status;
   id: string;
 }
@@ -62,7 +63,7 @@ export interface Details {
   status: Status;
   last_deploy?: string;
   first_generated_time: string;
-  first_generated_version: number;
+  first_generated_version: ParsedNumber;
   attributes: Record<string, unknown>;
   requires_status: Record<string, Status>;
 }
@@ -76,14 +77,14 @@ export interface RawDetails {
   status: string;
   last_deploy?: string;
   first_generated_time: string;
-  first_generated_version: number;
+  first_generated_version: ParsedNumber;
   attributes: Record<string, unknown>;
   requires_status: Record<string, string>;
 }
 
 export interface DeploySummary {
-  total: number;
-  by_state: Record<string, number>;
+  total: ParsedNumber;
+  by_state: Record<string, ParsedNumber>;
 }
 
 export interface Metadata extends Pagination.Metadata {

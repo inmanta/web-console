@@ -14,6 +14,7 @@ import {
   PrimaryArchiveHelper,
   PrimaryFileManager,
   PrimaryKeycloakController,
+  BigIntJsonParser,
 } from "@/Data";
 import {
   PrimaryBaseUrlManager,
@@ -41,6 +42,7 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = new PrimaryRouteManager(consoleBaseUrl);
   const apiHelper = new BaseApiHelper(
+    new BigIntJsonParser(),
     baseUrl,
     keycloakController.getInstance()
   );

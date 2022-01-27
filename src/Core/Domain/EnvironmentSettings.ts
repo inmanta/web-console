@@ -1,13 +1,13 @@
-import { Maybe } from "@/Core/Language";
+import { Maybe, ParsedNumber } from "@/Core/Language";
 
 export interface EnvironmentSettings {
   settings: ValuesMap;
   definition: DefinitionMap;
 }
 
-export type ValuesMap = Record<string, boolean | string | number | Dict>;
+export type ValuesMap = Record<string, boolean | string | ParsedNumber | Dict>;
 
-export type Dict = Record<string, boolean | string | number>;
+export type Dict = Record<string, boolean | string | ParsedNumber>;
 
 export type Value = ValuesMap[keyof ValuesMap];
 
@@ -40,7 +40,7 @@ interface EnumDefinition extends BaseDefinition {
 
 interface IntDefinition extends BaseDefinition {
   type: "int";
-  default: number;
+  default: ParsedNumber;
 }
 
 interface DictDefinition extends BaseDefinition {
@@ -58,7 +58,7 @@ interface WithHandlers<ValueType extends Value> {
 }
 
 export type BooleanInputInfo = WithHandlers<boolean> & BooleanDefinition;
-export type IntInputInfo = WithHandlers<number> & IntDefinition;
+export type IntInputInfo = WithHandlers<ParsedNumber> & IntDefinition;
 export type EnumInputInfo = WithHandlers<string> & EnumDefinition;
 export type DictInputInfo = WithHandlers<Dict> & DictDefinition;
 
