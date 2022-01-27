@@ -106,8 +106,6 @@ export const resolvePromiseRecord = async (
   }, {});
 };
 
-export const stringifyObject = (
-  obj: Record<string, unknown> | unknown
-): string => {
+export const stringifyObjectOrUndefined = (obj: unknown): string => {
   return typeof obj === "undefined" ? "undefined" : JSON.stringify(obj);
 };

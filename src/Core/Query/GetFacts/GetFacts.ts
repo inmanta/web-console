@@ -1,10 +1,13 @@
 import { Fact, PageSize, Pagination, Sort } from "@/Core/Domain";
 
-export interface GetFacts extends FactsParams {
+export interface Query {
   kind: "GetFacts";
+  sort?: Sort.Sort<SortKey>;
+  filter?: Filter;
+  pageSize: PageSize.PageSize;
 }
 
-export interface GetFactsManifest {
+export interface Manifest {
   error: string;
   apiResponse: {
     data: Fact[];
@@ -21,18 +24,12 @@ export interface GetFactsManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: GetFacts;
+  query: Query;
 }
 
-interface FactsParams {
-  sort?: Sort.Sort<SortKey>;
-  filter?: Filter;
-  pageSize: PageSize.PageSize;
-}
-
-interface Filter {
+export interface Filter {
   name?: string[];
   resource_id?: string[];
 }
 
-type SortKey = "name" | "resource_id";
+export type SortKey = "name" | "resource_id";
