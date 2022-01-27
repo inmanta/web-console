@@ -1,12 +1,12 @@
-import { WithId } from "@/Core/Language";
+import { ParsedNumber, WithId } from "@/Core/Language";
 
 export type InstanceAttributeModel = Record<string, unknown>;
 
 export interface DeploymentProgress {
-  total: number;
-  failed: number;
-  deployed: number;
-  waiting: number;
+  total: ParsedNumber;
+  failed: ParsedNumber;
+  deployed: ParsedNumber;
+  waiting: ParsedNumber;
 }
 
 export interface ServiceInstanceIdentifier extends WithId {
@@ -15,7 +15,7 @@ export interface ServiceInstanceIdentifier extends WithId {
 
 export interface VersionedServiceInstanceIdentifier
   extends ServiceInstanceIdentifier {
-  version: number;
+  version: ParsedNumber;
 }
 
 export interface ServiceInstanceModel
@@ -45,7 +45,7 @@ export interface FormAttributeResult {
 }
 
 export interface SetStateBody {
-  current_version: number;
+  current_version: ParsedNumber;
   target_state: string;
   message: string;
 }

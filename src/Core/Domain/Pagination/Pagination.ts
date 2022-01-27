@@ -1,3 +1,5 @@
+import { ParsedNumber } from "@/Core/Language";
+
 export interface Handlers {
   prev?: () => void;
   next?: () => void;
@@ -12,8 +14,8 @@ export interface Links {
 }
 
 export interface Metadata {
-  total: number;
-  before: number;
-  after: number;
-  page_size: number;
+  total: ParsedNumber;
+  before: ParsedNumber;
+  after: ParsedNumber;
+  page_size: ParsedNumber;
 }

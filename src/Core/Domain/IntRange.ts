@@ -1,8 +1,8 @@
-import { isNotUndefined } from "@/Core/Language";
+import { isNotUndefined, ParsedNumber } from "@/Core/Language";
 import { isValidOperator, Operator } from "./RangeOperator";
 
 export interface IntRange {
-  value: number;
+  value: ParsedNumber;
   operator: Operator;
 }
 
