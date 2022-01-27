@@ -12,6 +12,8 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { FactsTable } from "./FactsTable";
+import { FactsTablePresenter } from "./FactsTablePresenter";
 import { TableControls } from "./TableControls";
 
 export const Page: React.FC = () => {
@@ -23,7 +25,7 @@ export const Page: React.FC = () => {
   const [filter, setFilter] = useUrlStateWithFilter<GetFacts.Filter>({
     route: "Facts",
   });
-  const [sort] = useUrlStateWithSort<GetFacts.SortKey>({
+  const [sort, setSort] = useUrlStateWithSort<GetFacts.SortKey>({
     default: { name: "name", order: "asc" },
     route: "Facts",
   });
@@ -51,9 +53,12 @@ export const Page: React.FC = () => {
       <RemoteDataView
         data={data}
         SuccessView={(data) => (
-          <pre>
-            <code>{JSON.stringify(data, null, 4)}</code>
-          </pre>
+          <FactsTable
+            rows={data.data}
+            tablePresenter={new FactsTablePresenter()}
+            sort={sort}
+            setSort={setSort}
+          />
         )}
       />
     </PageContainer>
