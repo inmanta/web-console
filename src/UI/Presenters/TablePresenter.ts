@@ -5,6 +5,7 @@ export interface TablePresenter<S, T> {
 
   getNumberOfColumns(): number;
 }
+
 export interface ColumnHead {
   apiName: string;
   displayName: string;

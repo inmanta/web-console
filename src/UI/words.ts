@@ -400,6 +400,10 @@ const dict = {
   "facts.title": "Facts",
   "facts.filters.name.placeholder": "Name...",
   "facts.filters.resourceId.placeholder": "Resource Id...",
+  "facts.column.name": "Name",
+  "facts.column.updated": "Updated",
+  "facts.column.value": "Value",
+  "facts.column.resourceId": "Resource Id",
 
   /** Agent Process */
   "agentProcess.title": "Agent Process",
