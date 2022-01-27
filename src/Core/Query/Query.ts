@@ -28,7 +28,6 @@ import {
   GetEnvironmentSettingsManifest,
 } from "./GetEnvironmentSettings";
 import { GetEnvironments, GetEnvironmentsManifest } from "./GetEnvironments";
-import { GetFacts, GetFactsManifest } from "./GetFacts";
 import {
   GetInstanceConfig,
   GetInstanceConfigManifest,
@@ -47,6 +46,7 @@ import {
   GetResourceDetails,
   GetResourceDetailsManifest,
 } from "./GetResourceDetails";
+import { GetResourceFacts, GetResourceFactsManifest } from "./GetResourceFacts";
 import {
   GetResourceHistory,
   GetResourceHistoryManifest,
@@ -94,7 +94,7 @@ export type Query =
   | GetEnvironmentSettings
   | GetEnvironmentSetting
   | GetEnvironments
-  | GetFacts
+  | GetResourceFacts
   | GetAgents
   | GetAgentProcess
   | GetDesiredStates
@@ -131,7 +131,7 @@ interface Manifest {
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
   GetEnvironments: GetEnvironmentsManifest;
-  GetFacts: GetFactsManifest;
+  GetResourceFacts: GetResourceFactsManifest;
   GetAgents: GetAgentsManifest;
   GetAgentProcess: GetAgentProcessManifest;
   GetDesiredStates: GetDesiredStatesManifest;
