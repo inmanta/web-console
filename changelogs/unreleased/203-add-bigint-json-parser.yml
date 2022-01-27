@@ -1,0 +1,4 @@
+description: Add bigint json parser
+issue-nr: 203
+change-type: patch
+destination-branches: [master, iso4, iso5]

@@ -1,3 +1,4 @@
+import { ParsedNumber } from "@/Core/Language";
 import { AttributeValidation } from "./AttributeValidation";
 import { Config } from "./Config";
 
@@ -49,17 +50,17 @@ export interface ServiceIdentifier {
 }
 
 export interface InstancesByLabel {
-  danger: number;
-  warning: number;
-  success: number;
-  info: number;
-  no_label: number;
+  danger: ParsedNumber;
+  warning: ParsedNumber;
+  success: ParsedNumber;
+  info: ParsedNumber;
+  no_label: ParsedNumber;
 }
 
 export interface InstanceSummary {
-  by_state: Record<string, number>;
+  by_state: Record<string, ParsedNumber>;
   by_label: InstancesByLabel;
-  total: number;
+  total: ParsedNumber;
 }
 
 export interface ServiceModel extends ServiceIdentifier {
@@ -78,8 +79,8 @@ export interface EmbeddedEntity {
   name: string;
   description?: string;
   modifier: string;
-  lower_limit: number;
-  upper_limit?: number;
+  lower_limit: ParsedNumber;
+  upper_limit?: ParsedNumber;
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
 }

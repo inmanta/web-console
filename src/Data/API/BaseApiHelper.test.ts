@@ -1,5 +1,6 @@
 import { Either, Maybe } from "@/Core";
 import { BaseApiHelper } from "./BaseApiHelper";
+import { NativeJsonParser } from ".";
 
 test("BaseApiHelper.get executes a GET request with correct url & env", async () => {
   const apiHelper = new BaseApiHelper();
@@ -46,4 +47,20 @@ test("BaseApiHelper.delete executes a DELETE request with correct url & env", as
     "Content-Type": "application/json",
     "X-Inmanta-Tid": env,
   });
+});
+
+test("GIVEN BaseApiHelper with BigIntJsonParser WHEN response json contains large integers THEN parsing does not lose precision", async () => {
+  const apiHelper = new BaseApiHelper();
+  fetchMock.mockResponse(`{"foo": 9223372036854775807}`);
+  const response = await apiHelper.get<{ foo: number }>("", "");
+  if (response.kind === "Left") return;
+  expect(response.value.foo).toEqual("9223372036854775807");
+});
+
+test("GIVEN BaseApiHelper with NativeJsonParser WHEN response json contains large integers THEN parsing loses precision", async () => {
+  const apiHelper = new BaseApiHelper(new NativeJsonParser());
+  fetchMock.mockResponse(`{"foo": 9223372036854775807}`);
+  const response = await apiHelper.get<{ foo: number }>("", "");
+  if (response.kind === "Left") return;
+  expect(response.value.foo).not.toEqual("9223372036854775807");
 });

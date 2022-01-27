@@ -1,3 +1,4 @@
+import { ParsedNumber } from "@/Core/Language";
 import { DeploymentProgress } from "./ServiceInstanceModel";
 import { Uuid } from "./Uuid";
 
@@ -26,7 +27,7 @@ export interface Row {
   attributes: Attributes;
   createdAt: string;
   updatedAt: string;
-  version: number;
+  version: ParsedNumber;
   instanceSetStateTargets: string[];
   service_entity: string;
   environment: string;
