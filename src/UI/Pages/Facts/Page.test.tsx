@@ -109,7 +109,7 @@ test.each`
   ${"awsDeviceV2"} | ${"Name..."}        | ${"name"}
   ${"id123"}       | ${"Resource Id..."} | ${"resource_id"}
 `(
-  "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
+  "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the facts with that $filterUrlName should be fetched and shown",
   async ({ filterValue, placeholderText, filterUrlName }) => {
     const { component, apiHelper } = setup();
     render(component);
