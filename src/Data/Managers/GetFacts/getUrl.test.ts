@@ -1,7 +1,7 @@
 import { PageSize, Query } from "@/Core";
 import { getUrl } from "./getUrl";
 
-describe("getUrl for latest released resources ", () => {
+describe("getUrl for facts", () => {
   it.each`
     filter                          | sort                                      | size    | url
     ${undefined}                    | ${undefined}                              | ${"20"} | ${`/api/v2/facts?limit=20`}
