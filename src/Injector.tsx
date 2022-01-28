@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { isJsonParserId, JsonParserId } from "@/Core";
 import {
   KeycloakAuthHelper,
   PrimaryFeatureManager,
@@ -15,6 +16,8 @@ import {
   PrimaryFileManager,
   PrimaryKeycloakController,
   BigIntJsonParser,
+  NativeJsonParser,
+  PrimaryLogger,
 } from "@/Data";
 import {
   PrimaryBaseUrlManager,
@@ -32,6 +35,11 @@ interface Props {
 export const Injector: React.FC<Props> = ({ store, children }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const featureManager = new PrimaryFeatureManager(
+    new GetServerStatusStateHelper(store),
+    new PrimaryLogger(),
+    getJsonParserId(globalThis)
+  );
   const keycloakController = new PrimaryKeycloakController(
     process.env.SHOULD_USE_AUTH,
     globalThis && globalThis.auth,
@@ -42,7 +50,9 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
   const routeManager = new PrimaryRouteManager(consoleBaseUrl);
   const apiHelper = new BaseApiHelper(
-    new BigIntJsonParser(),
+    featureManager.getJsonParser() === "BigInt"
+      ? new BigIntJsonParser()
+      : new NativeJsonParser(),
     baseUrl,
     keycloakController.getInstance()
   );
@@ -52,9 +62,6 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   );
   const commandResolver = new CommandResolverImpl(
     new CommandManagerResolver(store, apiHelper, authHelper)
-  );
-  const featureManager = new PrimaryFeatureManager(
-    new GetServerStatusStateHelper(store)
   );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);
@@ -86,4 +93,13 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
       {children}
     </DependencyProvider>
   );
+};
+
+const getJsonParserId = (container: unknown): JsonParserId | undefined => {
+  if (typeof container !== "object") return undefined;
+  if (container === null) return undefined;
+  const id = container["jsonParserId"];
+  if (typeof id !== "string") return undefined;
+  if (!isJsonParserId(id)) return undefined;
+  return id;
 };

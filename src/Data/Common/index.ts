@@ -11,3 +11,5 @@ export * from "./PrimaryStateHelper";
 export * from "./CommandManagerWithoutEnv";
 export * from "./CommandManagerWithEnv";
 export * from "./UpdaterWithEnv";
+export * from "./VoidLogger";
+export * from "./PrimaryLogger";

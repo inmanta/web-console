@@ -23,3 +23,4 @@ export * from "./Updater";
 export * from "./UrlManager";
 export * from "./EnvironmentHandler";
 export * from "./JsonParser";
+export * from "./Logger";
