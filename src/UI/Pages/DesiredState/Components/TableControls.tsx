@@ -1,5 +1,10 @@
 import React from "react";
-import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
+import {
+  Toolbar,
+  ToolbarItem,
+  ToolbarContent,
+  ToolbarGroup,
+} from "@patternfly/react-core";
 import { DesiredStateParams } from "@/Core";
 import { CompileWidget } from "@/UI/Components";
 import { CompareSelectionWidget } from "./CompareSelectionWidget";
@@ -23,8 +28,13 @@ export const TableControls: React.FC<Props> = ({
     <ToolbarContent>
       <FilterWidget filter={filter} setFilter={setFilter} />
       <ToolbarItem variant="separator" />
-      <CompileWidget />
-      <CompareSelectionWidget />
+      <ToolbarGroup>
+        <CompileWidget />
+      </ToolbarGroup>
+      <ToolbarItem variant="separator" />
+      <ToolbarGroup>
+        <CompareSelectionWidget />
+      </ToolbarGroup>
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
     </ToolbarContent>
   </Toolbar>

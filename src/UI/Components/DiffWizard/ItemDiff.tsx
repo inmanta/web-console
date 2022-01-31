@@ -56,6 +56,10 @@ export const ItemDiff: React.FC<{ item: Item }> = ({ item }) => {
   );
 };
 
+/**
+ * When using the CHARS diffmethod, the diff part is pushed to the next line.
+ * This is fixable with display: inline; on wordDiff. But it breaks other styling.
+ */
 const Detail: React.FC<ItemDetail> = ({ title, source, target }) => {
   return (
     <Grid>
@@ -64,10 +68,17 @@ const Detail: React.FC<ItemDetail> = ({ title, source, target }) => {
         <ReactDiffViewer
           styles={{
             marker: { display: "none" },
+            // wordDiff: { display: "inline-flex" },
+            // wordDiff: { display: "inline" },
+            wordDiff: { paddingLeft: 0, paddingRight: 0 },
             line: { display: "flex" },
             content: { overflowWrap: "anywhere" },
           }}
-          compareMethod={DiffMethod.WORDS}
+          compareMethod={
+            isMultiLine(source) || isMultiLine(target)
+              ? DiffMethod.WORDS
+              : DiffMethod.CHARS
+          }
           oldValue={source}
           newValue={target}
           hideLineNumbers={true}
@@ -76,6 +87,8 @@ const Detail: React.FC<ItemDetail> = ({ title, source, target }) => {
     </Grid>
   );
 };
+
+const isMultiLine = (value: string): boolean => value.indexOf("\n") >= 0;
 
 const TitleItem = styled(GridItem)`
   line-height: 29px;

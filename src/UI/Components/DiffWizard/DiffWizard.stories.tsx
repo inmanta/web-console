@@ -27,3 +27,29 @@ const addFileName = (value: string): string => {
   const [, body] = value.split("--- \n+++ \n");
   return `--- a\n+++ a\n${body}`;
 };
+
+export const A: React.FC = () => {
+  const items: Item[] = [
+    {
+      id: "Test",
+      status: "Added",
+      details: [
+        {
+          title: "attr",
+          source: "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc",
+          target:
+            "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc",
+          diff: "",
+        },
+        {
+          title: "attr2",
+          source: "abcabcabcabcabcabcabcabc",
+          target: "abcdabcdabcdabcdabcdabcdabcdabcd",
+          diff: "",
+        },
+      ],
+    },
+  ];
+
+  return <DiffWizard items={items.slice(0, 10)} source="123" target="456" />;
+};
