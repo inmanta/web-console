@@ -19,6 +19,7 @@ const kinds = [
   "DesiredState",
   "DesiredStateDetails",
   "DesiredStateResourceDetails",
+  "Parameters",
 ] as const;
 
 export type RouteKind = typeof kinds[number];

@@ -53,6 +53,13 @@ export const orchestrationEngine = (
       external: false,
       locked: !isEnvPresent,
     },
+    {
+      id: Route.Parameters.kind,
+      label: Route.Parameters.label,
+      url: Route.Parameters.path,
+      external: false,
+      locked: !isEnvPresent,
+    },
   ],
 });
 

@@ -13,6 +13,7 @@ import { DiagnosePage } from "./Diagnose";
 import { EditInstancePage } from "./EditInstance";
 import { EventsPage } from "./Events";
 import { HomePage } from "./Home";
+import { ParametersPage } from "./Parameters";
 import { ResourceDetailsPage } from "./ResourceDetails";
 import { ResourcesPage } from "./Resources";
 import { ServiceCatalogPage } from "./ServiceCatalog";
@@ -70,6 +71,7 @@ export class PrimaryPageManager implements PageManager {
         ...this.routeDictionary.DesiredStateResourceDetails,
         element: <DesiredStateResourceDetailsPage />,
       },
+      { ...this.routeDictionary.Parameters, element: <ParametersPage /> },
     ];
   }
 }

@@ -43,3 +43,5 @@ export * from "./DesiredState";
 export * as DesiredStateParams from "./DesiredStateParams";
 export * as RangeOperator from "./RangeOperator";
 export * as IntRange from "./IntRange";
+export * as ParametersQueryParams from "./ParameterQueryParams";
+export * from "./Parameter";
