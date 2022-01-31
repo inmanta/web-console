@@ -14,7 +14,6 @@ export const AgentFilter: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <FreeTextFilter
-      isVisible={true}
       searchEntries={filter.agent}
       filterPropertyName={Resource.FilterKind.Agent}
       placeholder={words("resources.filters.agent.placeholder")}

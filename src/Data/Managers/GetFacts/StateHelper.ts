@@ -1,19 +1,17 @@
-import { RemoteData } from "@/Core";
-import { PrimaryStateHelper } from "@/Data/Common";
+import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export class GetFactsStateHelper extends PrimaryStateHelper<"GetFacts"> {
+export class GetFactsStateHelper extends PrimaryStateHelperWithEnv<"GetFacts"> {
   constructor(store: Store) {
     super(
       store,
-      (data, { resourceId }) => {
-        const unwrapped = RemoteData.mapSuccess(
-          (wrapped) => wrapped.data,
-          data
-        );
-        store.dispatch.facts.setList({ resourceId, data: unwrapped });
+      (data, query, environment) => {
+        store.dispatch.facts.setList({
+          environment,
+          data,
+        });
       },
-      (state, { resourceId }) => state.facts.listByResource[resourceId]
+      (state, query, environment) => state.facts.listByEnv[environment]
     );
   }
 }

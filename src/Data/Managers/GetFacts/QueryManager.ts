@@ -1,22 +1,45 @@
-import { identity } from "lodash-es";
-import { StateHelper, Scheduler, ApiHelper } from "@/Core";
-import { PrimaryContinuousQueryManagerWithEnv } from "@/Data/Managers/Helpers";
+import {
+  Scheduler,
+  ApiHelper,
+  StateHelperWithEnv,
+  stringifyObjectOrUndefined,
+} from "@/Core";
+import {
+  getPaginationHandlers,
+  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
+} from "@/Data/Managers/Helpers";
+import { getUrl } from "./getUrl";
 
-export class GetFactsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetFacts"> {
+export class GetFactsQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetFacts"> {
   constructor(
     apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetFacts">,
+    stateHelper: StateHelperWithEnv<"GetFacts">,
     scheduler: Scheduler
   ) {
     super(
       apiHelper,
       stateHelper,
       scheduler,
-      ({ kind, resourceId }) => `${kind}_${resourceId}`,
-      ({ resourceId }) => [resourceId],
+      ({ kind }, environment) => `${kind}_${environment}`,
+      ({ filter, sort, pageSize }, environment) => [
+        environment,
+        pageSize.value,
+        sort?.name,
+        sort?.order,
+        stringifyObjectOrUndefined(filter),
+      ],
       "GetFacts",
-      ({ resourceId }) => `/api/v2/resource/${resourceId}/facts`,
-      identity
+      getUrl,
+      ({ data, links, metadata }, setUrl) => {
+        if (typeof links === "undefined") {
+          return { data: data, handlers: {}, metadata };
+        }
+        return {
+          data: data,
+          handlers: getPaginationHandlers(links, metadata, setUrl),
+          metadata,
+        };
+      }
     );
   }
 }

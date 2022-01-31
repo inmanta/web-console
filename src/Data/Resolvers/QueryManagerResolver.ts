@@ -54,8 +54,8 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
-  GetFactsQueryManager,
-  GetFactsStateHelper,
+  GetResourceFactsQueryManager,
+  GetResourceFactsStateHelper,
   GetAgentsQueryManager,
   GetAgentsStateHelper,
   GetAgentProcessQueryManager,
@@ -63,12 +63,12 @@ import {
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
-} from "@/Data/Managers";
-import { Store } from "@/Data/Store";
-import {
+  GetFactsQueryManager,
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
-} from "../Managers/GetDesiredStates";
+  GetFactsStateHelper,
+} from "@/Data/Managers";
+import { Store } from "@/Data/Store";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];
@@ -208,9 +208,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new ResourceLogsStateHelper(this.store),
         scheduler
       ),
-      new GetFactsQueryManager(
+      new GetResourceFactsQueryManager(
         this.apiHelper,
-        new GetFactsStateHelper(this.store),
+        new GetResourceFactsStateHelper(this.store),
         scheduler
       ),
       new GetAgentsQueryManager(
@@ -233,6 +233,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         scheduler
       ),
       new GetCompilerStatusQueryManager(this.apiHelper, scheduler),
+      new GetFactsQueryManager(
+        this.apiHelper,
+        new GetFactsStateHelper(this.store),
+        scheduler
+      ),
     ];
   }
 }
