@@ -13,6 +13,7 @@ import {
   GetCompilerStatus,
   GetCompilerStatusManifest,
 } from "./GetCompilerStatus";
+import { GetDesiredStateDiff } from "./GetDesiredStateDiff";
 import { GetDesiredStates, GetDesiredStatesManifest } from "./GetDesiredStates";
 import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
 import {
@@ -103,7 +104,8 @@ export type Query =
   | GetDesiredStates
   | GetVersionResources
   | GetCompilerStatus
-  | GetParameters.Query;
+  | GetParameters.Query
+  | GetDesiredStateDiff.Query;
 
 export type Type = Query;
 
@@ -143,6 +145,7 @@ interface Manifest {
   GetCompilerStatus: GetCompilerStatusManifest;
   GetParameters: GetParameters.Manifest;
   GetFacts: GetFacts.Manifest;
+  GetDesiredStateDiff: GetDesiredStateDiff.Manifest;
 }
 
 /**

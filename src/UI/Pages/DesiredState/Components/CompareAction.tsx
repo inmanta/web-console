@@ -67,8 +67,8 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
     <DropdownItem
       onClick={() =>
         navigateTo("DesiredStateCompare", {
-          targetVersion: version.toString(),
-          sourceVersion: selection.value.toString(),
+          from: selection.value.toString(),
+          to: version.toString(),
         })
       }
       icon={<BalanceScaleIcon />}

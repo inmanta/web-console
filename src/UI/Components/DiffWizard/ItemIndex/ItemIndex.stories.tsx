@@ -12,7 +12,7 @@ export const Default: React.FC = () => {
     <ItemIndex
       items={resources.map((resource) => ({
         id: resource.resource_id,
-        status: "Added",
+        status: "added",
       }))}
     />
   );

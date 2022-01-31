@@ -5,12 +5,11 @@ import {
   SimpleListProps,
 } from "@patternfly/react-core";
 import styled, { css } from "styled-components";
-
-export type Status = "Added" | "Deleted" | "Modified";
+import { Diff } from "@/Core";
 
 export interface Item {
   id: string;
-  status: Status;
+  status: Diff.Status;
 }
 
 interface Props {
@@ -55,13 +54,13 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 
-const StatusDescriptor: React.FC<{ status: Status }> = ({ status }) => {
+const StatusDescriptor: React.FC<{ status: Diff.Status }> = ({ status }) => {
   switch (status) {
-    case "Added":
+    case "added":
       return <Added>A</Added>;
-    case "Deleted":
+    case "deleted":
       return <Deleted>D</Deleted>;
-    case "Modified":
+    case "modified":
       return <Modified>M</Modified>;
   }
 };

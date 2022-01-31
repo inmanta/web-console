@@ -1,7 +1,7 @@
 import React from "react";
 import resources from "@/UI/Pages/DesiredStateCompare/diff.json";
+import { DiffGroupInfo } from "./DiffGroup";
 import { DiffWizard } from "./DiffWizard";
-import { Item } from "./ItemDiff";
 
 export default {
   title: "DiffWizard",
@@ -9,47 +9,39 @@ export default {
 };
 
 export const Default: React.FC = () => {
-  const items: Item[] = resources.map((resource) => ({
+  const groups: DiffGroupInfo[] = resources.map((resource) => ({
     id: resource.resource_id,
-    status: "Added",
-    details: Object.entries(resource.attributes).map(([key, value]) => ({
+    status: "added",
+    entries: Object.entries(resource.attributes).map(([key, value]) => ({
       title: key,
       source: value.r1_compare === null ? "null" : value.r1_compare,
       target: value.r2_compare === null ? "null" : value.r2_compare,
-      diff: addFileName(value.diff),
     })),
   }));
 
-  return <DiffWizard items={items.slice(0, 10)} source="123" target="456" />;
-};
-
-const addFileName = (value: string): string => {
-  const [, body] = value.split("--- \n+++ \n");
-  return `--- a\n+++ a\n${body}`;
+  return <DiffWizard groups={groups.slice(0, 10)} source="123" target="456" />;
 };
 
 export const A: React.FC = () => {
-  const items: Item[] = [
+  const groups: DiffGroupInfo[] = [
     {
       id: "Test",
-      status: "Added",
-      details: [
+      status: "added",
+      entries: [
         {
           title: "attr",
           source: "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc",
           target:
             "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc",
-          diff: "",
         },
         {
           title: "attr2",
           source: "abcabcabcabcabcabcabcabc",
           target: "abcdabcdabcdabcdabcdabcdabcdabcd",
-          diff: "",
         },
       ],
     },
   ];
 
-  return <DiffWizard items={items.slice(0, 10)} source="123" target="456" />;
+  return <DiffWizard groups={groups.slice(0, 10)} source="123" target="456" />;
 };

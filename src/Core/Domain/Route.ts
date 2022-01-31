@@ -71,7 +71,7 @@ interface RouteParamKeysManifest {
   AgentProcess: "id";
   DesiredStateDetails: "version";
   DesiredStateResourceDetails: "version" | "resourceId";
-  DesiredStateCompare: "sourceVersion" | "targetVersion";
+  DesiredStateCompare: "from" | "to";
 }
 
 export type RouteParamKeys<K extends RouteKind> =

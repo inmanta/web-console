@@ -1,19 +1,19 @@
 import React from "react";
+import { DiffGroup, DiffGroupInfo } from "./DiffGroup";
 import { Intro } from "./Intro";
-import { Item, ItemDiff } from "./ItemDiff";
 
 interface Props {
-  items: Item[];
+  groups: DiffGroupInfo[];
   source: string;
   target: string;
 }
 
-export const DiffWizard: React.FC<Props> = ({ items, source, target }) => {
+export const DiffWizard: React.FC<Props> = ({ groups, source, target }) => {
   return (
     <div>
       <Intro source={source} target={target} />
-      {items.map((item) => (
-        <ItemDiff key={item.id} item={item} />
+      {groups.map((group) => (
+        <DiffGroup key={group.id} {...group} />
       ))}
     </div>
   );
