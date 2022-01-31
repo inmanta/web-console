@@ -1,22 +1,17 @@
 import React, { useState, MouseEvent } from "react";
 import { Popover } from "@patternfly/react-core";
-import { Td, TdProps } from "@patternfly/react-table";
+import { Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
 import { words } from "@/UI/words";
 
-interface Props extends Pick<TdProps, "width"> {
+interface Props {
   className: string;
   label: string;
   value: string;
 }
 
-export const CellWithCopy: React.FC<Props> = ({
-  label,
-  value,
-  className,
-  ...props
-}) => {
+export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
 
   const onMouseEnter = (event: MouseEvent<HTMLTableCellElement>) => {
@@ -29,7 +24,6 @@ export const CellWithCopy: React.FC<Props> = ({
   };
   const cell = (
     <Td
-      {...props}
       className={className}
       key={label}
       dataLabel={label}
