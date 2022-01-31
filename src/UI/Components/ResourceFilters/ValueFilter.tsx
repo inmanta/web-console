@@ -13,7 +13,6 @@ export const ValueFilter: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <FreeTextFilter
-      isVisible={true}
       searchEntries={filter.value}
       filterPropertyName={Resource.FilterKind.Value}
       placeholder={words("resources.filters.value.placeholder")}

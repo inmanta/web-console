@@ -33,6 +33,7 @@ import {
   resourceDetailsSlice,
   ResourceDetailsSlice,
 } from "./ResourceDetailsSlice";
+import { resourceFactsSlice, ResourceFactsSlice } from "./ResourceFactsSlice";
 import {
   resourceHistorySlice,
   ResourceHistorySlice,
@@ -76,12 +77,13 @@ export interface StoreModel {
   compileReports: CompileReportsSlice;
   compileDetails: CompileDetailsSlice;
   environmentSettings: EnvironmentSettingsSlice;
-  facts: FactsSlice;
+  resourceFacts: ResourceFactsSlice;
   agents: AgentsSlice;
   agentProcess: AgentProcessSlice;
   desiredStates: DesiredStatesSlice;
   versionResources: VersionResourcesSlice;
   parameters: ParametersSlice;
+  facts: FactsSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -105,10 +107,11 @@ export const storeModel: StoreModel = {
   compileReports: compileReportsSlice,
   compileDetails: compileDetailsSlice,
   environmentSettings: environmentSettingsSlice,
-  facts: factsSlice,
+  resourceFacts: resourceFactsSlice,
   agents: agentsSlice,
   agentProcess: agentProcessSlice,
   desiredStates: desiredStatesSlice,
   versionResources: versionResourcesSlice,
   parameters: parametersSlice,
+  facts: factsSlice,
 };

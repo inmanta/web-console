@@ -9,7 +9,7 @@ import {
 import { SearchIcon } from "@patternfly/react-icons";
 
 interface Props {
-  isVisible: boolean;
+  isHidden?: boolean;
   filterPropertyName: string;
   placeholder: string;
   searchEntries?: string[];
@@ -20,7 +20,7 @@ export const FreeTextFilter: React.FC<Props> = ({
   filterPropertyName,
   placeholder,
   searchEntries,
-  isVisible,
+  isHidden,
   update,
 }) => {
   const [textInput, setTextInput] = useState("");
@@ -40,7 +40,7 @@ export const FreeTextFilter: React.FC<Props> = ({
       chips={searchEntries ? searchEntries : []}
       deleteChip={removeChip}
       categoryName={filterPropertyName}
-      showToolbarItem={isVisible}
+      showToolbarItem={!isHidden}
     >
       <InputGroup>
         <TextInput

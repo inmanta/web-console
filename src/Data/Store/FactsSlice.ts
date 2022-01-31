@@ -4,19 +4,19 @@ import { RemoteData, Query } from "@/Core";
 type Data = RemoteData.Type<Query.Error<"GetFacts">, Query.Data<"GetFacts">>;
 
 export interface FactsSlice {
-  listByResource: Record<string, Data>;
+  listByEnv: Record<string, Data>;
   setList: Action<
     FactsSlice,
     {
-      resourceId: string;
+      environment: string;
       data: Data;
     }
   >;
 }
 
 export const factsSlice: FactsSlice = {
-  listByResource: {},
-  setList: action(({ listByResource }, { resourceId, data }) => {
-    listByResource[resourceId] = data;
+  listByEnv: {},
+  setList: action(({ listByEnv }, { environment, data }) => {
+    listByEnv[environment] = data;
   }),
 };

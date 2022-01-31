@@ -28,7 +28,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { ServiceCatalogPage } from "@/UI/Pages";
+import { Page } from "@/UI/Pages/ServiceCatalog/Page";
 
 function setup() {
   const store = getStoreInstance();
@@ -81,7 +81,7 @@ function setup() {
         dependencies={{ ...dependencies, queryResolver, commandResolver }}
       >
         <StoreProvider store={store}>
-          <ServiceCatalogPage />
+          <Page />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

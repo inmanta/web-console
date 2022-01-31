@@ -15,8 +15,17 @@ export class PrimaryRouteManager implements RouteManager {
 
   constructor(private readonly baseUrl: string) {
     this.routeDictionary = {
+      /**
+       * Main
+       */
       Home: Home(this.baseUrl),
       CreateEnvironment: CreateEnvironment(this.baseUrl),
+      Settings: Settings(this.baseUrl),
+      Status: Status(this.baseUrl),
+
+      /**
+       * LSM
+       */
       Catalog: Catalog(this.baseUrl),
       Inventory: Inventory(this.baseUrl),
       CreateInstance: CreateInstance(this.baseUrl),
@@ -24,14 +33,21 @@ export class PrimaryRouteManager implements RouteManager {
       History: History(this.baseUrl),
       Diagnose: Diagnose(this.baseUrl),
       Events: Events(this.baseUrl),
+
+      /**
+       * Resource Manager
+       */
       Resources: Resources(this.baseUrl),
       Agents: Agents(this.baseUrl),
+      Facts: Facts(this.baseUrl),
       AgentProcess: AgentProcess(this.baseUrl),
+      ResourceDetails: ResourceDetails(this.baseUrl),
+
+      /**
+       * Orchestration Engine
+       */
       CompileReports: CompileReports(this.baseUrl),
       CompileDetails: CompileDetails(this.baseUrl),
-      ResourceDetails: ResourceDetails(this.baseUrl),
-      Settings: Settings(this.baseUrl),
-      Status: Status(this.baseUrl),
       DesiredState: DesiredState(this.baseUrl),
       DesiredStateDetails: DesiredStateDetails(this.baseUrl),
       DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
@@ -182,6 +198,14 @@ const Agents = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.Agents}`,
   label: "Agents",
+  environmentRole: "Required",
+});
+
+const Facts = (base: string): Route => ({
+  kind: "Facts",
+  parent: "Home",
+  path: `${base}${paths.Facts}`,
+  label: "Facts",
   environmentRole: "Required",
 });
 
