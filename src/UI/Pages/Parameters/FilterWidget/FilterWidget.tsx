@@ -31,14 +31,14 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
     <ToolbarGroup variant="filter-group" aria-label="FilterBar">
       <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />
       <FreeTextFilter
-        isVisible={filterKind === ParametersQueryParams.Kind.Name}
+        isHidden={filterKind !== ParametersQueryParams.Kind.Name}
         searchEntries={filter.name}
         filterPropertyName={ParametersQueryParams.Kind.Name}
         placeholder={words("parameters.filters.name.placeholder")}
         update={updateName}
       />
       <FreeTextFilter
-        isVisible={filterKind === ParametersQueryParams.Kind.Source}
+        isHidden={filterKind !== ParametersQueryParams.Kind.Source}
         searchEntries={filter.source}
         filterPropertyName={ParametersQueryParams.Kind.Source}
         placeholder={words("parameters.filters.source.placeholder")}
