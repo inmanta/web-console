@@ -42,6 +42,7 @@ import {
   GetInstanceResources,
   GetInstanceResourcesManifest,
 } from "./GetInstanceResources";
+import { GetParameters } from "./GetParameters";
 import { GetProjects, GetProjectsManifest } from "./GetProjects";
 import {
   GetResourceDetails,
@@ -101,7 +102,8 @@ export type Query =
   | GetAgentProcess
   | GetDesiredStates
   | GetVersionResources
-  | GetCompilerStatus;
+  | GetCompilerStatus
+  | GetParameters.Query;
 
 export type Type = Query;
 
@@ -139,6 +141,7 @@ interface Manifest {
   GetDesiredStates: GetDesiredStatesManifest;
   GetVersionResources: GetVersionResourcesManifest;
   GetCompilerStatus: GetCompilerStatusManifest;
+  GetParameters: GetParameters.Manifest;
   GetFacts: GetFacts.Manifest;
 }
 

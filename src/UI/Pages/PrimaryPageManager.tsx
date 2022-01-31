@@ -14,6 +14,7 @@ import { EditInstancePage } from "./EditInstance";
 import { EventsPage } from "./Events";
 import { FactsPage } from "./Facts";
 import { HomePage } from "./Home";
+import { ParametersPage } from "./Parameters";
 import { ResourceDetailsPage } from "./ResourceDetails";
 import { ResourcesPage } from "./Resources";
 import { ServiceCatalogPage } from "./ServiceCatalog";
@@ -105,6 +106,10 @@ export class PrimaryPageManager implements PageManager {
       DesiredStateResourceDetails: {
         ...this.routeDictionary.DesiredStateResourceDetails,
         element: <DesiredStateResourceDetailsPage />,
+      },
+      Parameters: {
+        ...this.routeDictionary.Parameters,
+        element: <ParametersPage />,
       },
     };
   }

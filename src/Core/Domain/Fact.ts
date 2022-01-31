@@ -1,10 +1,5 @@
-export interface Fact {
-  id: string;
-  name: string;
-  value: string;
-  environment: string;
+import { Parameter } from "./Parameter";
+
+export interface Fact extends Parameter {
   resource_id: string;
-  source: string;
-  updated?: string;
-  metadata?: Record<string, string>;
 }

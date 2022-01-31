@@ -433,6 +433,16 @@ const dict = {
   "desiredState.details.title": "Details",
   "desiredState.resourceDetails.title": "Resource Details",
 
+  /** Parameters */
+  "parameters.title": "Parameters",
+  "parameters.empty.message": "No parameters found",
+  "parameters.columns.name": "Name",
+  "parameters.columns.updated": "Last Updated",
+  "parameters.columns.source": "Source",
+  "parameters.columns.value": "Value",
+  "parameters.filters.name.placeholder": "Filter by name",
+  "parameters.filters.source.placeholder": "Filter by source",
+
   /**
    * Common
    */

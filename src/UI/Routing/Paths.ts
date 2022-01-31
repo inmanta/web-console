@@ -39,4 +39,5 @@ export const paths: Paths = {
   DesiredState: "/desiredstate",
   DesiredStateDetails: "/desiredstate/:version",
   DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
+  Parameters: "/parameters",
 };

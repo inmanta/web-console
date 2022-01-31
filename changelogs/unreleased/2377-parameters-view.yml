@@ -1,0 +1,4 @@
+description: Add parameters view
+issue-nr: 2377
+change-type: minor
+destination-branches: [master, iso5]

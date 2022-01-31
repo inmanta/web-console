@@ -27,6 +27,7 @@ import {
   instanceResourcesSlice,
   InstanceResourcesSlice,
 } from "./InstanceResourcesSlice";
+import { parametersSlice, ParametersSlice } from "./ParametersSlice";
 import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
 import {
   resourceDetailsSlice,
@@ -81,6 +82,7 @@ export interface StoreModel {
   agentProcess: AgentProcessSlice;
   desiredStates: DesiredStatesSlice;
   versionResources: VersionResourcesSlice;
+  parameters: ParametersSlice;
   facts: FactsSlice;
 }
 
@@ -110,5 +112,6 @@ export const storeModel: StoreModel = {
   agentProcess: agentProcessSlice,
   desiredStates: desiredStatesSlice,
   versionResources: versionResourcesSlice,
+  parameters: parametersSlice,
   facts: factsSlice,
 };

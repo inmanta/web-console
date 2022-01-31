@@ -63,6 +63,8 @@ import {
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
+  GetParametersQueryManager,
+  GetParametersStateHelper,
   GetFactsQueryManager,
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
@@ -233,6 +235,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         scheduler
       ),
       new GetCompilerStatusQueryManager(this.apiHelper, scheduler),
+      new GetParametersQueryManager(
+        this.apiHelper,
+        new GetParametersStateHelper(this.store),
+        scheduler
+      ),
       new GetFactsQueryManager(
         this.apiHelper,
         new GetFactsStateHelper(this.store),
