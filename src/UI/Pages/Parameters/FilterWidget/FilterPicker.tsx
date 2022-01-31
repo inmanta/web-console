@@ -6,11 +6,11 @@ import {
   SelectOption,
 } from "@patternfly/react-core";
 import { FilterIcon } from "@patternfly/react-icons";
-import { ParametersQueryParams } from "@/Core";
+import { GetParameters } from "@/Core";
 
 interface Props {
-  filterKind: ParametersQueryParams.Kind | string;
-  setFilterKind: (kind: ParametersQueryParams.Kind) => void;
+  filterKind: GetParameters.FilterKind | string;
+  setFilterKind: (kind: GetParameters.FilterKind) => void;
 }
 
 export const FilterPicker: React.FC<Props> = ({
@@ -21,10 +21,10 @@ export const FilterPicker: React.FC<Props> = ({
 
   const onSelect = (event, selection) => {
     setFilterOpen(false);
-    setFilterKind(selection as ParametersQueryParams.Kind);
+    setFilterKind(selection as GetParameters.FilterKind);
   };
 
-  const items = ParametersQueryParams.List;
+  const items = GetParameters.FilterList;
 
   return (
     <ToolbarItem>

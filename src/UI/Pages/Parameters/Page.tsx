@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ParametersQueryParams } from "@/Core";
+import { GetParameters } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -22,12 +22,11 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Parameters",
   });
-  const [filter, setFilter] =
-    useUrlStateWithFilter<ParametersQueryParams.Filter>({
-      route: "Parameters",
-      dateRangeKey: "updated",
-    });
-  const [sort, setSort] = useUrlStateWithSort<string>({
+  const [filter, setFilter] = useUrlStateWithFilter<GetParameters.Filter>({
+    route: "Parameters",
+    dateRangeKey: "updated",
+  });
+  const [sort, setSort] = useUrlStateWithSort<GetParameters.SortKey>({
     default: { name: "name", order: "asc" },
     route: "Parameters",
   });

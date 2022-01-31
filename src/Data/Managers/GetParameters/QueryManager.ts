@@ -2,7 +2,7 @@ import {
   Scheduler,
   ApiHelper,
   StateHelperWithEnv,
-  ParametersQueryParams,
+  GetParameters,
 } from "@/Core";
 import {
   getPaginationHandlers,
@@ -44,8 +44,6 @@ export class GetParametersQueryManager extends PrimaryContinuousQueryManagerWith
   }
 }
 
-function stringifyFilter(
-  filter: ParametersQueryParams.Filter | undefined
-): string {
+function stringifyFilter(filter: GetParameters.Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

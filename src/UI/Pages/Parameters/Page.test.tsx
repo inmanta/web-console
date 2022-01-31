@@ -52,57 +52,6 @@ function setup() {
   return { component, apiHelper, scheduler };
 }
 
-test("ParametersView shows empty table", async () => {
-  const { component, apiHelper } = setup();
-  render(component);
-
-  expect(
-    await screen.findByRole("generic", { name: "ParametersView-Loading" })
-  ).toBeInTheDocument();
-
-  apiHelper.resolve(
-    Either.right({
-      data: [],
-      links: { self: "" },
-      metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-    })
-  );
-
-  expect(
-    await screen.findByRole("generic", { name: "ParametersView-Empty" })
-  ).toBeInTheDocument();
-});
-
-test("ParametersView shows failed table", async () => {
-  const { component, apiHelper } = setup();
-  render(component);
-
-  expect(
-    await screen.findByRole("generic", { name: "ParametersView-Loading" })
-  ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.left("error"));
-
-  expect(
-    await screen.findByRole("generic", { name: "ParametersView-Failed" })
-  ).toBeInTheDocument();
-});
-
-test("ParametersView shows success table", async () => {
-  const { component, apiHelper } = setup();
-  render(component);
-
-  expect(
-    await screen.findByRole("generic", { name: "ParametersView-Loading" })
-  ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right(Parameters.response));
-
-  expect(
-    await screen.findByRole("grid", { name: "ParametersView-Success" })
-  ).toBeInTheDocument();
-});
-
 test("When using the name filter then only the matching parameters should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
