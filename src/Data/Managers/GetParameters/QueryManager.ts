@@ -2,7 +2,7 @@ import {
   Scheduler,
   ApiHelper,
   StateHelperWithEnv,
-  GetParameters,
+  stringifyObjectOrUndefined,
 } from "@/Core";
 import {
   getPaginationHandlers,
@@ -26,7 +26,7 @@ export class GetParametersQueryManager extends PrimaryContinuousQueryManagerWith
         pageSize.value,
         sort?.name,
         sort?.order,
-        stringifyFilter(filter),
+        stringifyObjectOrUndefined(filter),
       ],
       "GetParameters",
       (query) => getUrl(query),
@@ -42,8 +42,4 @@ export class GetParametersQueryManager extends PrimaryContinuousQueryManagerWith
       }
     );
   }
-}
-
-function stringifyFilter(filter: GetParameters.Filter | undefined): string {
-  return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }
