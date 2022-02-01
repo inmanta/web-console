@@ -1,18 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
+import { PageSection } from "@patternfly/react-core";
+import styled from "styled-components";
 import { Diff } from "@/Core";
-import {
-  PageContainer,
-  RemoteDataView,
-  DiffWizard,
-  DiffGroupInfo,
-} from "@/UI/Components";
+import { RemoteDataView, PageTitle, DiffItemList } from "@/UI/Components";
+import { Refs } from "@/UI/Components/DiffWizard/types";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
+import { Controls } from "./Controls";
+import { resourceToDiffItem } from "./resourceToDiffItem";
 
 export const Page: React.FC = () => {
   const { from, to } = useRouteParams<"DesiredStateCompare">();
+  return <View from={from} to={to} />;
+};
+
+export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   const { queryResolver } = useContext(DependencyContext);
+  const refs: Refs = useRef({});
 
   const [data] = queryResolver.useOneTime<"GetDesiredStateDiff">({
     kind: "GetDesiredStateDiff",
@@ -20,33 +25,30 @@ export const Page: React.FC = () => {
     to,
   });
 
-  console.log({ from, to, data });
-
   return (
-    <PageContainer title={words("desiredState.compare.title")}>
-      <RemoteDataView
-        data={data}
-        label="CompareView"
-        SuccessView={(resources) => (
-          <DiffWizard
-            groups={resources.map(resourceToDiffGroup)}
-            source={from}
-            target={to}
-          />
-        )}
-      />
-    </PageContainer>
+    <>
+      <StyledPageSection variant="light">
+        <PageTitle>{words("desiredState.compare.title")}</PageTitle>
+      </StyledPageSection>
+      <PageSection variant="light" hasShadowBottom sticky="top">
+        <Controls data={data} refs={refs} from={from} to={to} />
+      </PageSection>
+      <PageSection isFilled>
+        <RemoteDataView
+          data={data}
+          label="CompareView"
+          SuccessView={(resources) => (
+            <DiffItemList
+              items={resources.map(resourceToDiffItem)}
+              refs={refs}
+            />
+          )}
+        />
+      </PageSection>
+    </>
   );
 };
 
-const resourceToDiffGroup = (resource: Diff.Resource): DiffGroupInfo => {
-  return {
-    id: resource.resource_id,
-    status: resource.status,
-    entries: Object.entries(resource.attributes).map(([key, value]) => ({
-      title: key,
-      source: value.from_value_compare,
-      target: value.to_value_compare,
-    })),
-  };
-};
+const StyledPageSection = styled(PageSection)`
+  padding-bottom: 0;
+`;

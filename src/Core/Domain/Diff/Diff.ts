@@ -12,3 +12,8 @@ export interface Resource {
   attributes: Record<string, ValueSet>;
   status: Status;
 }
+
+export interface Identifiers {
+  from: string;
+  to: string;
+}

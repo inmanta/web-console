@@ -25,3 +25,4 @@ export * as Agents from "./Agents";
 export * as AgentProcessData from "./AgentProcess";
 export * as DesiredStateVersions from "./DesiredStateVersions";
 export * as Parameters from "./Parameters";
+export * as DesiredStateDiff from "./DesiredStateDiff";
