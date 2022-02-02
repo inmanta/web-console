@@ -2,7 +2,7 @@ export const response = {
   data: [
     {
       resource_id:
-        "lsm::LifecycleTransfer[internal,instance_id=095339a2-54af-491e-9450-000000000001]",
+        "lsm::LifecycleTransfer[internal,instance_id=095339a2-54af-491e-9450-00000001]",
       attributes: {
         next_version: {
           from_value: 9,
@@ -15,7 +15,7 @@ export const response = {
     },
     {
       resource_id:
-        "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-000000000002]",
+        "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-000000002]",
       attributes: {
         next_version: {
           from_value: 7,
@@ -28,7 +28,7 @@ export const response = {
     },
     {
       resource_id:
-        "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-000000000003]",
+        "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-0000000003]",
       attributes: {
         next_version: {
           from_value: null,
@@ -43,7 +43,7 @@ export const response = {
     },
     {
       resource_id:
-        "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-000000000004]",
+        "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-00000000004]",
       attributes: {
         next_version: {
           from_value: null,
@@ -104,6 +104,18 @@ export const response = {
           to_value: "192.168.1.92",
           from_value_compare: "192.168.1.91",
           to_value_compare: "192.168.1.92",
+        },
+        name: {
+          from_value: "data-network-internet1-1",
+          to_value: "data-network-internet2-1",
+          from_value_compare: "data-network-internet1-1",
+          to_value_compare: "data-network-internet2-1",
+        },
+        as_number: {
+          from_value: null,
+          to_value: 65000,
+          from_value_compare: null,
+          to_value_compare: "65000",
         },
       },
       status: "modified",

@@ -8,11 +8,12 @@ import {
   Divider,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { StatusDescriptor } from "../JumpToAction/StatusDescriptor";
 import { DiffItem, Refs } from "../types";
 import { Entry } from "./Entry";
 
 interface Props {
-  item: Pick<DiffItem, "id" | "entries">;
+  item: DiffItem;
   refs: Refs;
 }
 
@@ -43,7 +44,10 @@ export const Block: React.FC<Props> = ({ item, refs }) => {
             "aria-expanded": isExpanded,
           }}
         >
-          <StyledTitle id="titleId">{item.id}</StyledTitle>
+          <StyledTitle id="titleId">
+            <StyledStatusDescriptor status={item.status} />
+            {item.id}
+          </StyledTitle>
         </StyledHeader>
         <CardExpandableContent>
           <Divider />
@@ -86,4 +90,9 @@ const StyledBody = styled(CardBody)`
   --pf-c-card--child--PaddingRight: 0;
   --pf-c-card--child--PaddingBottom: 0;
   --pf-c-card--child--PaddingLeft: 0;
+`;
+
+const StyledStatusDescriptor = styled(StatusDescriptor)`
+  display: inline-block;
+  margin-right: 32px;
 `;

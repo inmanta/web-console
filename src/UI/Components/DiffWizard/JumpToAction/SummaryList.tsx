@@ -24,13 +24,13 @@ export const SummaryList: React.FC<Props> = ({ items, refs }) => {
   };
 
   return (
-    <SimpleList onSelect={onSelect} aria-label="Simple List Example">
+    <StyledSimpleList onSelect={onSelect} aria-label="Simple List Example">
       {items.map((item) => (
         <SimpleListItem key={item.id} itemId={item.id}>
           <Descriptor {...item} />
         </SimpleListItem>
       ))}
-    </SimpleList>
+    </StyledSimpleList>
   );
 };
 
@@ -40,8 +40,8 @@ const Descriptor: React.FC<Pick<DiffItem, "id" | "status">> = ({
 }) => {
   return (
     <Container>
-      <div>{id}</div>
-      <StatusDescriptor status={status} />
+      <StyledStatusDescriptor status={status} />
+      <Id>{id}</Id>
     </Container>
   );
 };
@@ -49,6 +49,19 @@ const Descriptor: React.FC<Pick<DiffItem, "id" | "status">> = ({
 const Container = styled.div`
   display: flex;
   flex-shrink: 0;
-  justify-content: space-between;
   align-items: stretch;
+`;
+
+const StyledStatusDescriptor = styled(StatusDescriptor)`
+  margin-right: 8px;
+`;
+
+const StyledSimpleList = styled(SimpleList)`
+  width: fit-content;
+  max-height: 500px;
+  overflow: scroll;
+`;
+
+const Id = styled.div`
+  white-space: pre;
 `;

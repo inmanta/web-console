@@ -2,16 +2,19 @@ import React from "react";
 import styled, { css } from "styled-components";
 import { Diff } from "@/Core";
 
-export const StatusDescriptor: React.FC<{ status: Diff.Status }> = ({
-  status,
-}) => {
+interface Props {
+  status: Diff.Status;
+  className?: string;
+}
+
+export const StatusDescriptor: React.FC<Props> = ({ status, className }) => {
   switch (status) {
     case "added":
-      return <Added>A</Added>;
+      return <Added className={className}>A</Added>;
     case "deleted":
-      return <Deleted>D</Deleted>;
+      return <Deleted className={className}>D</Deleted>;
     case "modified":
-      return <Modified>M</Modified>;
+      return <Modified className={className}>M</Modified>;
     default:
       return null;
   }
@@ -27,7 +30,7 @@ const descriptorStyles = css`
   text-align: center;
   font-weight: bolder;
   color: white;
-  margin: 1.5px 8px;
+  margin: 1.5px 0;
 `;
 
 const Added = styled.div`

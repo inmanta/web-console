@@ -19,9 +19,13 @@ export const Entry: React.FC<DiffEntry> = ({ title, fromValue, toValue }) => {
             marker: { display: "none" },
             // wordDiff: { display: "inline-flex" },
             // wordDiff: { display: "inline" },
-            wordDiff: { paddingLeft: 0, paddingRight: 0 },
+            wordDiff: { padding: 0 },
+            contentText: { lineHeight: "29px !important" },
             line: { display: "flex" },
-            content: { overflowWrap: "anywhere", padding: "0 4px" },
+            content: {
+              overflowWrap: "anywhere",
+              padding: "0 4px",
+            },
           }}
           compareMethod={
             isMultiLine(fromValue) || isMultiLine(toValue)
