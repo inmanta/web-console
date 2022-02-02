@@ -1,7 +1,7 @@
 import {
   Scheduler,
   ApiHelper,
-  stringifyObject,
+  stringifyObjectOrUndefined,
   StateHelperWithEnv,
 } from "@/Core";
 import {
@@ -24,7 +24,7 @@ export class GetVersionResourcesQueryManager extends PrimaryContinuousQueryManag
       ({ pageSize, filter, sort }, environment) => [
         environment,
         pageSize.value,
-        stringifyObject(filter),
+        stringifyObjectOrUndefined(filter),
         sort?.name,
         sort?.order,
       ],

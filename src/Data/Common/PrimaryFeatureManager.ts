@@ -1,7 +1,21 @@
-import { FeatureManager, RemoteData, ServerStatus, StateHelper } from "@/Core";
+import {
+  FeatureManager,
+  JsonParserId,
+  Logger,
+  RemoteData,
+  ServerStatus,
+  StateHelper,
+} from "@/Core";
+import { VoidLogger } from "./VoidLogger";
 
 export class PrimaryFeatureManager implements FeatureManager {
-  constructor(private readonly stateHelper: StateHelper<"GetServerStatus">) {}
+  constructor(
+    private readonly stateHelper: StateHelper<"GetServerStatus">,
+    private readonly logger: Logger = new VoidLogger(),
+    private readonly jsonParserId: JsonParserId = "Native"
+  ) {
+    this.logger.log(`Application configured with ${jsonParserId} JSON parser`);
+  }
 
   private get(): ServerStatus {
     const serverStatus = this.stateHelper.getOnce({ kind: "GetServerStatus" });
@@ -17,6 +31,10 @@ export class PrimaryFeatureManager implements FeatureManager {
 
   private isExtensionEnabled(extension: string): boolean {
     return this.getExtensions().includes(extension);
+  }
+
+  getJsonParser(): JsonParserId {
+    return this.jsonParserId;
   }
 
   isSupportEnabled(): boolean {

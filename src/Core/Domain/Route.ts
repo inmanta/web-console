@@ -1,6 +1,15 @@
 const kinds = [
+  /**
+   * Main
+   */
   "Home",
   "CreateEnvironment",
+  "Settings",
+  "Status",
+
+  /**
+   * LSM
+   */
   "Catalog",
   "Inventory",
   "CreateInstance",
@@ -8,17 +17,25 @@ const kinds = [
   "History",
   "Diagnose",
   "Events",
+
+  /**
+   * Resource Manager
+   */
   "Resources",
   "Agents",
+  "Facts",
   "AgentProcess",
+  "ResourceDetails",
+
+  /**
+   * Orchestration Engine
+   */
   "CompileReports",
   "CompileDetails",
-  "ResourceDetails",
-  "Settings",
-  "Status",
   "DesiredState",
   "DesiredStateDetails",
   "DesiredStateResourceDetails",
+  "Parameters",
 ] as const;
 
 export type RouteKind = typeof kinds[number];
@@ -36,6 +53,9 @@ export interface Route {
   environmentRole: EnvironmentRole;
 }
 
+/**
+ * Only contains routes that have parameters (environment not included)
+ */
 interface RouteParamKeysManifest {
   Inventory: "service";
   CreateInstance: "service";

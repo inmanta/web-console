@@ -1,3 +1,4 @@
+import { ParsedNumber } from "@/Core/Language";
 import { DesiredStateVersionStatus } from "./DesiredStateVersionStatus";
 
 interface DesiredStateLabel {
@@ -6,9 +7,9 @@ interface DesiredStateLabel {
 }
 
 export interface DesiredStateVersion {
-  version: number;
+  version: ParsedNumber;
   date: string;
-  total: number;
+  total: ParsedNumber;
   labels: DesiredStateLabel[];
   status: DesiredStateVersionStatus;
 }

@@ -3,6 +3,31 @@ export interface WithId {
 }
 
 /**
+ * The JSON data returned from the backend can contain big numbers.
+ * JSON can hold these big numbers. But when parsing JSON,
+ * javascript loses precision on these values. Therefor a special
+ * library can be enabled to parse these big numbers. These numbers
+ * then get turned into strings. We can't be sure which values get
+ * turned into strings. So a number value coming from the backend
+ * can end up as a string or a number.
+ *
+ * When the value is a small number:
+ * - it is kept as a number
+ * - the number type is correct
+ * - everything is normal
+ *
+ * When the value is a big number:
+ * - it is turned into a string
+ * - it can be shown in the UI as a string
+ * - the number type is no longer correct
+ *
+ * Because we dont manipulate big numbers with arithmetic, and only
+ * show them in the UI, it is safe to store these as strings and
+ * keep the type as a number.
+ */
+export type ParsedNumber = number;
+
+/**
  * We define the TimerId type explicitly because for some reason
  * the return type of setInterval is not always the same. In a DOM
  * context it is a number. But in a NodeJS context, it is something
@@ -106,8 +131,6 @@ export const resolvePromiseRecord = async (
   }, {});
 };
 
-export const stringifyObject = (
-  obj: Record<string, unknown> | unknown
-): string => {
+export const stringifyObjectOrUndefined = (obj: unknown): string => {
   return typeof obj === "undefined" ? "undefined" : JSON.stringify(obj);
 };

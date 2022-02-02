@@ -1,3 +1,5 @@
+import { ParsedNumber } from "@/Core/Language";
+
 export type AttributeValidation =
   | EnumValidation
   | NoValidation
@@ -8,7 +10,7 @@ export type AttributeValidation =
 interface EnumValidation {
   validation_type: "enum";
   validation_parameters: {
-    names: Record<string, string | number>;
+    names: Record<string, string | ParsedNumber>;
     value: string;
   };
 }
@@ -25,7 +27,12 @@ interface StringValidation {
 
 interface IntValidation {
   validation_type: "pydantic.conint" | "pydantic.conint?" | "pydantic.conint[]";
-  validation_parameters: { gt?: number; ge?: number; le?: number; lt?: number };
+  validation_parameters: {
+    gt?: ParsedNumber;
+    ge?: ParsedNumber;
+    le?: ParsedNumber;
+    lt?: ParsedNumber;
+  };
 }
 
 interface IpValidation {

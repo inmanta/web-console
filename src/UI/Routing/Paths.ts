@@ -3,6 +3,17 @@ import { RouteKind } from "@/Core";
 type Paths = Record<RouteKind, string>;
 
 export const paths: Paths = {
+  /**
+   * Main
+   */
+  Home: "/",
+  CreateEnvironment: "/environment/create",
+  Settings: "/settings",
+  Status: "/status",
+
+  /**
+   * LSM
+   */
   Catalog: "/lsm/catalog",
   Inventory: "/lsm/catalog/:service/inventory",
   CreateInstance: "/lsm/catalog/:service/inventory/add",
@@ -10,17 +21,23 @@ export const paths: Paths = {
   History: "/lsm/catalog/:service/inventory/:instance/history",
   Diagnose: "/lsm/catalog/:service/inventory/:instance/diagnose",
   Events: "/lsm/catalog/:service/inventory/:instance/events",
+
+  /**
+   * Resource Manager
+   */
   Resources: "/resources",
-  ResourceDetails: "/resources/:resourceId",
   Agents: "/agents",
+  Facts: "/facts",
   AgentProcess: "/agents/:id",
+  ResourceDetails: "/resources/:resourceId",
+
+  /**
+   * Orchestration Engine
+   */
   CompileReports: "/compilereports",
   CompileDetails: "/compilereports/:id",
-  Settings: "/settings",
-  CreateEnvironment: "/environment/create",
-  Status: "/status",
   DesiredState: "/desiredstate",
   DesiredStateDetails: "/desiredstate/:version",
   DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
-  Home: "/",
+  Parameters: "/parameters",
 };

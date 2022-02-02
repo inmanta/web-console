@@ -28,4 +28,7 @@ export const GlobalStyles = createGlobalStyle`
   .pf-c-page__sidebar-body {
     height: 100%;
   }
+  .pf-c-chip__text {
+    max-width: fit-content;
+  }
 `;

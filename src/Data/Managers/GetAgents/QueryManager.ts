@@ -1,7 +1,7 @@
 import {
   Scheduler,
   ApiHelper,
-  stringifyObject,
+  stringifyObjectOrUndefined,
   StateHelperWithEnv,
 } from "@/Core";
 import {
@@ -26,7 +26,7 @@ export class GetAgentsQueryManager extends PrimaryContinuousQueryManagerWithEnvW
         pageSize.value,
         sort?.name,
         sort?.order,
-        stringifyObject(filter),
+        stringifyObjectOrUndefined(filter),
       ],
       "GetAgents",
       (query) => getUrl(query),

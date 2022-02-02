@@ -1,10 +1,11 @@
+import { ParsedNumber } from "@/Core/Language";
 import { EventType } from "./EventType";
 import { LogLevelNumber } from "./LogLevel";
 
 export interface InstanceEvent {
   id: string;
   service_instance_id: string;
-  service_instance_version: number;
+  service_instance_version: ParsedNumber;
   timestamp: string;
   source: string | null;
   destination: string | null;
@@ -20,7 +21,7 @@ export interface InstanceEvent {
 export interface EventRow {
   id: string;
   serviceInstanceId: string;
-  serviceInstanceVersion: number;
+  serviceInstanceVersion: ParsedNumber;
   timestamp: string;
   source: string | null;
   destination: string | null;

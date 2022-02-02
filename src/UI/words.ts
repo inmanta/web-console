@@ -188,11 +188,11 @@ const dict = {
 
   "diagnose.empty": (instanceId: string) =>
     `No errors were found for instance ${instanceId}`,
-  "diagnose.failure.title": "Validation failure",
+  "diagnose.failure.title": "Deployment failure",
   "diagnose.links.resourceDetails": "Resource Details",
   "diagnose.links.modelVersionDetails": "Model Version Details",
   "diagnose.links.compileReport": "Compile Report",
-  "diagnose.rejection.title": "Deployment failure",
+  "diagnose.rejection.title": "Validation failure",
   "diagnose.rejection.traceback": "Show full traceback",
   "diagnose.main.subtitle": (instanceId: string) =>
     `The following errors were found related to instance ${instanceId}`,
@@ -396,6 +396,15 @@ const dict = {
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",
 
+  /** Facts */
+  "facts.title": "Facts",
+  "facts.filters.name.placeholder": "Name...",
+  "facts.filters.resourceId.placeholder": "Resource Id...",
+  "facts.column.name": "Name",
+  "facts.column.updated": "Updated",
+  "facts.column.value": "Value",
+  "facts.column.resourceId": "Resource Id",
+
   /** Agent Process */
   "agentProcess.title": "Agent Process",
   "agentProcess.hostname": "Hostname",
@@ -423,6 +432,16 @@ const dict = {
   /** Desired State Details */
   "desiredState.details.title": "Details",
   "desiredState.resourceDetails.title": "Resource Details",
+
+  /** Parameters */
+  "parameters.title": "Parameters",
+  "parameters.empty.message": "No parameters found",
+  "parameters.columns.name": "Name",
+  "parameters.columns.updated": "Last Updated",
+  "parameters.columns.source": "Source",
+  "parameters.columns.value": "Value",
+  "parameters.filters.name.placeholder": "Filter by name",
+  "parameters.filters.source.placeholder": "Filter by source",
 
   /**
    * Common

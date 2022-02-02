@@ -1,3 +1,4 @@
+import { ParsedNumber } from "@/Core/Language";
 import { CompileError } from "./CompileError";
 
 export interface RawDiagnostics {
@@ -11,16 +12,16 @@ export interface Diagnostics {
 }
 
 export interface RawRejection {
-  instance_version: number;
-  model_version?: number;
+  instance_version: ParsedNumber;
+  model_version?: ParsedNumber;
   compile_id: string;
   errors: CompileError[];
   trace?: string;
 }
 
 export interface Rejection {
-  instance_version: number;
-  model_version?: number;
+  instance_version: ParsedNumber;
+  model_version?: ParsedNumber;
   compile_id: string;
   error?: CompileError;
   trace?: string;
@@ -32,8 +33,8 @@ interface FailureGroup {
 }
 
 export interface Failure {
-  instance_version: number;
-  model_version: number;
+  instance_version: ParsedNumber;
+  model_version: ParsedNumber;
   resource_id: string;
   time: Date;
   message: string;

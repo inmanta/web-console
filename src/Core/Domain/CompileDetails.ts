@@ -1,3 +1,4 @@
+import { ParsedNumber } from "@/Core/Language";
 import { CompileError } from "./CompileError";
 import { CompileReport } from "./CompileReport";
 
@@ -18,7 +19,7 @@ export interface CompileStageReport {
   name: string;
   errstream: string;
   outstream: string;
-  returncode?: number | null;
+  returncode?: ParsedNumber | null;
 }
 
 export interface CompileStageReportRow {
@@ -32,5 +33,5 @@ export interface CompileStageReportRow {
   duration?: string;
   errstream: string;
   outstream: string;
-  returncode?: number | null;
+  returncode?: ParsedNumber | null;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { PageManager, Page, RouteDictionary } from "@/Core";
+import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
 import { AgentProcessPage } from "./AgentProcess";
 import { AgentsPage } from "./Agents";
 import { CompileDetailsPage } from "./CompileDetails";
@@ -12,7 +12,9 @@ import { DesiredStateResourceDetailsPage } from "./DesiredStateResourceDetails";
 import { DiagnosePage } from "./Diagnose";
 import { EditInstancePage } from "./EditInstance";
 import { EventsPage } from "./Events";
+import { FactsPage } from "./Facts";
 import { HomePage } from "./Home";
+import { ParametersPage } from "./Parameters";
 import { ResourceDetailsPage } from "./ResourceDetails";
 import { ResourcesPage } from "./Resources";
 import { ServiceCatalogPage } from "./ServiceCatalog";
@@ -22,54 +24,97 @@ import { SettingsPage } from "./Settings";
 import { StatusPage } from "./Status";
 
 export class PrimaryPageManager implements PageManager {
-  constructor(private readonly routeDictionary: RouteDictionary) {}
+  private pageDictionary: PageDictionary;
 
-  getPages(): Page[] {
-    return [
-      { ...this.routeDictionary.Home, element: <HomePage /> },
-      {
+  constructor(private readonly routeDictionary: RouteDictionary) {
+    this.pageDictionary = {
+      /**
+       * Main
+       */
+      Home: { ...this.routeDictionary.Home, element: <HomePage /> },
+      CreateEnvironment: {
         ...this.routeDictionary.CreateEnvironment,
         element: <CreateEnvironmentPage />,
       },
-      { ...this.routeDictionary.Status, element: <StatusPage /> },
-      { ...this.routeDictionary.Catalog, element: <ServiceCatalogPage /> },
-      { ...this.routeDictionary.Inventory, element: <ServiceInventoryPage /> },
-      {
+      Status: { ...this.routeDictionary.Status, element: <StatusPage /> },
+      Settings: { ...this.routeDictionary.Settings, element: <SettingsPage /> },
+
+      /**
+       * LSM
+       */
+      Catalog: {
+        ...this.routeDictionary.Catalog,
+        element: <ServiceCatalogPage />,
+      },
+      Inventory: {
+        ...this.routeDictionary.Inventory,
+        element: <ServiceInventoryPage />,
+      },
+      CreateInstance: {
         ...this.routeDictionary.CreateInstance,
         element: <CreateInstancePage />,
       },
-      { ...this.routeDictionary.EditInstance, element: <EditInstancePage /> },
-      {
+      EditInstance: {
+        ...this.routeDictionary.EditInstance,
+        element: <EditInstancePage />,
+      },
+      History: {
         ...this.routeDictionary.History,
         element: <ServiceInstanceHistoryPage />,
       },
-      { ...this.routeDictionary.Diagnose, element: <DiagnosePage /> },
-      { ...this.routeDictionary.Events, element: <EventsPage /> },
-      { ...this.routeDictionary.Resources, element: <ResourcesPage /> },
-      {
-        ...this.routeDictionary.CompileReports,
-        element: <CompileReportsPage />,
+      Diagnose: { ...this.routeDictionary.Diagnose, element: <DiagnosePage /> },
+      Events: { ...this.routeDictionary.Events, element: <EventsPage /> },
+
+      /**
+       * Resource Manager
+       */
+      Resources: {
+        ...this.routeDictionary.Resources,
+        element: <ResourcesPage />,
       },
-      {
-        ...this.routeDictionary.CompileDetails,
-        element: <CompileDetailsPage />,
+      Agents: { ...this.routeDictionary.Agents, element: <AgentsPage /> },
+      Facts: { ...this.routeDictionary.Facts, element: <FactsPage /> },
+      AgentProcess: {
+        ...this.routeDictionary.AgentProcess,
+        element: <AgentProcessPage />,
       },
-      {
+      ResourceDetails: {
         ...this.routeDictionary.ResourceDetails,
         element: <ResourceDetailsPage />,
       },
-      { ...this.routeDictionary.Settings, element: <SettingsPage /> },
-      { ...this.routeDictionary.Agents, element: <AgentsPage /> },
-      { ...this.routeDictionary.AgentProcess, element: <AgentProcessPage /> },
-      { ...this.routeDictionary.DesiredState, element: <DesiredStatePage /> },
-      {
+
+      /**
+       * Orchestration Engine
+       */
+
+      CompileReports: {
+        ...this.routeDictionary.CompileReports,
+        element: <CompileReportsPage />,
+      },
+      CompileDetails: {
+        ...this.routeDictionary.CompileDetails,
+        element: <CompileDetailsPage />,
+      },
+      DesiredState: {
+        ...this.routeDictionary.DesiredState,
+        element: <DesiredStatePage />,
+      },
+      DesiredStateDetails: {
         ...this.routeDictionary.DesiredStateDetails,
         element: <DesiredStateDetailsPage />,
       },
-      {
+      DesiredStateResourceDetails: {
         ...this.routeDictionary.DesiredStateResourceDetails,
         element: <DesiredStateResourceDetailsPage />,
       },
-    ];
+      Parameters: {
+        ...this.routeDictionary.Parameters,
+        element: <ParametersPage />,
+      },
+    };
+  }
+
+  getPages(): Page[] {
+    return Object.values(this.pageDictionary);
   }
 }
