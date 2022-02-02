@@ -41,7 +41,7 @@ export const Default: React.FC = () => {
   return (
     <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
       <StoreProvider store={store}>
-        <Page>
+        <Page style={{ height: "100vh" }}>
           <View from="123" to="456" />
         </Page>
       </StoreProvider>

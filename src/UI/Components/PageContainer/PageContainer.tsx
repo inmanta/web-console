@@ -1,7 +1,7 @@
 import React from "react";
 import { PageSection, PageSectionProps } from "@patternfly/react-core";
-import styled from "styled-components";
 import { PageTitle } from "../PageTitle";
+import { PagePadder } from "./PagePadder";
 
 interface Props extends PageSectionProps {
   title: string;
@@ -13,13 +13,9 @@ export const PageContainer: React.FC<Props> = ({
   ...props
 }) => (
   <PageSection variant="light" {...props}>
-    <Wrapper>
+    <PagePadder>
       <PageTitle>{title}</PageTitle>
       {children}
-    </Wrapper>
+    </PagePadder>
   </PageSection>
 );
-
-export const Wrapper = styled.div`
-  padding-bottom: 300px;
-`;

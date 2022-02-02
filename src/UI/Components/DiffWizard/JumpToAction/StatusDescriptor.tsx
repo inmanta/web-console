@@ -12,6 +12,8 @@ export const StatusDescriptor: React.FC<{ status: Diff.Status }> = ({
       return <Deleted>D</Deleted>;
     case "modified":
       return <Modified>M</Modified>;
+    default:
+      return null;
   }
 };
 

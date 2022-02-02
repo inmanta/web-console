@@ -2,7 +2,12 @@ import React, { useContext, useRef } from "react";
 import { PageSection } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Diff } from "@/Core";
-import { RemoteDataView, PageTitle, DiffItemList } from "@/UI/Components";
+import {
+  RemoteDataView,
+  PageTitle,
+  DiffItemList,
+  PagePadder,
+} from "@/UI/Components";
 import { Refs } from "@/UI/Components/DiffWizard/types";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
@@ -34,16 +39,18 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
         <Controls data={data} refs={refs} from={from} to={to} />
       </PageSection>
       <PageSection isFilled>
-        <RemoteDataView
-          data={data}
-          label="CompareView"
-          SuccessView={(resources) => (
-            <DiffItemList
-              items={resources.map(resourceToDiffItem)}
-              refs={refs}
-            />
-          )}
-        />
+        <PagePadder>
+          <RemoteDataView
+            data={data}
+            label="CompareView"
+            SuccessView={(resources) => (
+              <DiffItemList
+                items={resources.map(resourceToDiffItem)}
+                refs={refs}
+              />
+            )}
+          />
+        </PagePadder>
       </PageSection>
     </>
   );
