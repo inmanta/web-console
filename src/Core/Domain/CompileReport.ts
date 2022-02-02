@@ -1,3 +1,5 @@
+import { ParsedNumber } from "@/Core/Language";
+
 export interface CompileReport {
   id: string;
   remote_id?: string;
@@ -10,7 +12,7 @@ export interface CompileReport {
   force_update: boolean;
   metadata: Record<string, unknown>;
   environment_variables: Record<string, string>;
-  version: number;
+  version: ParsedNumber;
 }
 
 export interface CompileReportRow {

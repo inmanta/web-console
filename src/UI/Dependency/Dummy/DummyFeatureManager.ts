@@ -1,6 +1,9 @@
-import { FeatureManager } from "@/Core";
+import { FeatureManager, JsonParserId } from "@/Core";
 
 export class DummyFeatureManager implements FeatureManager {
+  getJsonParser(): JsonParserId {
+    throw new Error("Method not implemented.");
+  }
   getServerVersion(): string {
     throw new Error("Method not implemented.");
   }

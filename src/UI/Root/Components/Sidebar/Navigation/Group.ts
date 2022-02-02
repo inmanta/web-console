@@ -53,6 +53,13 @@ export const orchestrationEngine = (
       external: false,
       locked: !isEnvPresent,
     },
+    {
+      id: Route.Parameters.kind,
+      label: Route.Parameters.label,
+      url: Route.Parameters.path,
+      external: false,
+      locked: !isEnvPresent,
+    },
   ],
 });
 
@@ -74,6 +81,13 @@ export const resourceManager = (
       id: Route.Agents.kind,
       label: Route.Agents.label,
       url: Route.Agents.path,
+      external: false,
+      locked: !isEnvPresent,
+    },
+    {
+      id: Route.Facts.kind,
+      label: Route.Facts.label,
+      url: Route.Facts.path,
       external: false,
       locked: !isEnvPresent,
     },

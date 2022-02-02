@@ -1,0 +1,6 @@
+description: Add overview of resource facts
+issue-nr: 2379
+change-type: minor
+destination-branches: [master, iso5]
+sections:
+  feature: "{{description}}"

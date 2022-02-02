@@ -1,0 +1,102 @@
+export const response = {
+  data: [
+    {
+      id: "447c3d3e-6f68-401e-bafa-48551850f34f",
+      name: "different_param",
+      value:
+        "very very very very very very very very very very very very very very very very very very very very very very very very  very very  very very  very very  very very  very very  very very  very very  very very  very very long value",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "user",
+      updated: "2022-01-20T10:09:00.000000",
+      metadata: { meta: "success" },
+    },
+    {
+      id: "58c04f9b-5f0d-4050-b159-b7fac32bbb61",
+      name: "param0",
+      value:
+        "very very very very very very very very very very very very very very very very very very very very very very very very  very very  very very  very very  very very  very very  very very  very very  very very  very very long value",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "plugin",
+      updated: null,
+      metadata: null,
+    },
+    {
+      id: "2c4ceead-48c8-4545-a643-b6c736308832",
+      name: "param1",
+      value: "42",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "report",
+      updated: "2022-01-20T10:01:00.000000",
+      metadata: null,
+    },
+    {
+      id: "581f2429-fb0a-4d05-b40f-9b5fe372d7e7",
+      name: "param2",
+      value:
+        "very very very very very very very very very very very very very very very very very very very very very very very very  very very  very very  very very  very very  very very  very very  very very  very very  very very long value",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "plugin",
+      updated: null,
+      metadata: null,
+    },
+    {
+      id: "79458935-6c22-474a-bc9d-c6ed280f4794",
+      name: "param3",
+      value: "42",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "plugin",
+      updated: "2022-01-20T10:03:00.000000",
+      metadata: null,
+    },
+    {
+      id: "812012ba-1bff-400f-b6a2-f510fc130e6f",
+      name: "param4",
+      value:
+        "very very very very very very very very very very very very very very very very very very very very very very very very  very very  very very  very very  very very  very very  very very  very very  very very  very very long value",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "report",
+      updated: null,
+      metadata: null,
+    },
+    {
+      id: "e363af59-1b29-4808-b439-cf9869ea843e",
+      name: "param5",
+      value: "42",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "report",
+      updated: "2022-01-20T10:05:00.000000",
+      metadata: null,
+    },
+    {
+      id: "d59d875f-2d55-4935-812c-e09751d47e4b",
+      name: "param6",
+      value:
+        "very very very very very very very very very very very very very very very very very very very very very very very very  very very  very very  very very  very very  very very  very very  very very  very very  very very long value",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "plugin",
+      updated: null,
+      metadata: null,
+    },
+    {
+      id: "3883833d-477a-485a-965f-59fc3c161f21",
+      name: "param7",
+      value: "42",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "plugin",
+      updated: "2022-01-20T10:07:00.000000",
+      metadata: null,
+    },
+    {
+      id: "0aaf0f47-422f-492e-a0c9-29567673122b",
+      name: "param8",
+      value:
+        "very very very very very very very very very very very very very very very very very very very very very very very very  very very  very very  very very  very very  very very  very very  very very  very very  very very long value",
+      environment: "fac84dcb-536f-4f65-8a37-3388608844ee",
+      source: "plugin",
+      updated: null,
+      metadata: null,
+    },
+  ],
+  links: { self: "/api/v2/parameters?limit=20&sort=name.ASC" },
+  metadata: { total: 10, before: 0, after: 0, page_size: 20 },
+};

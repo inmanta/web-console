@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump clean-css from 5.2.2 to 5.2.3'
+destination-branches:
+- master
+- iso5
+- iso4
+sections: {}

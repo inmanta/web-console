@@ -48,6 +48,7 @@ export const TimestampPicker: React.FC<Props> = ({
     }
   };
 
+  const time = timestamp !== undefined ? moment(timestamp).format("HH:mm") : "";
   return (
     <>
       <DatePicker
@@ -61,14 +62,11 @@ export const TimestampPicker: React.FC<Props> = ({
       <TimePicker
         style={{ width: "150px" }}
         onChange={onTimeChange}
-        time={
-          timestamp !== undefined
-            ? moment(timestamp).format("HH:mm")
-            : undefined
-        }
+        time={time}
         is24Hour
         isDisabled={!timestamp || !isValidDate(timestamp)}
         aria-label={timePickerLabel}
+        inputProps={{ value: time }}
       />
     </>
   );

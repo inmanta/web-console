@@ -1,3 +1,4 @@
+import { ParsedNumber } from "@/Core/Language";
 import { InstanceEvent } from "./EventModel";
 import { InstanceAttributeModel } from "./ServiceInstanceModel";
 
@@ -5,7 +6,7 @@ export interface InstanceLog {
   service_instance_id: string;
   environment: string;
   service_entity: string;
-  version: number;
+  version: ParsedNumber;
   timestamp: string;
   state: string;
   candidate_attributes: InstanceAttributeModel | null;

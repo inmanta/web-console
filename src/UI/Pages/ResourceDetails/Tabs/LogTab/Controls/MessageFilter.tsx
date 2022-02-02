@@ -18,7 +18,6 @@ export const MessageFilter: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <FreeTextFilter
-      isVisible
       searchEntries={filter.message}
       filterPropertyName={"Message"}
       placeholder={words("resources.logs.message.placeholder")}

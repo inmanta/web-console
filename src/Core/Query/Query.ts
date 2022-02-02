@@ -28,7 +28,7 @@ import {
   GetEnvironmentSettingsManifest,
 } from "./GetEnvironmentSettings";
 import { GetEnvironments, GetEnvironmentsManifest } from "./GetEnvironments";
-import { GetFacts, GetFactsManifest } from "./GetFacts";
+import { GetFacts } from "./GetFacts";
 import {
   GetInstanceConfig,
   GetInstanceConfigManifest,
@@ -42,11 +42,13 @@ import {
   GetInstanceResources,
   GetInstanceResourcesManifest,
 } from "./GetInstanceResources";
+import { GetParameters } from "./GetParameters";
 import { GetProjects, GetProjectsManifest } from "./GetProjects";
 import {
   GetResourceDetails,
   GetResourceDetailsManifest,
 } from "./GetResourceDetails";
+import { GetResourceFacts, GetResourceFactsManifest } from "./GetResourceFacts";
 import {
   GetResourceHistory,
   GetResourceHistoryManifest,
@@ -94,12 +96,14 @@ export type Query =
   | GetEnvironmentSettings
   | GetEnvironmentSetting
   | GetEnvironments
-  | GetFacts
+  | GetFacts.Query
+  | GetResourceFacts
   | GetAgents
   | GetAgentProcess
   | GetDesiredStates
   | GetVersionResources
-  | GetCompilerStatus;
+  | GetCompilerStatus
+  | GetParameters.Query;
 
 export type Type = Query;
 
@@ -131,12 +135,14 @@ interface Manifest {
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
   GetEnvironments: GetEnvironmentsManifest;
-  GetFacts: GetFactsManifest;
+  GetResourceFacts: GetResourceFactsManifest;
   GetAgents: GetAgentsManifest;
   GetAgentProcess: GetAgentProcessManifest;
   GetDesiredStates: GetDesiredStatesManifest;
   GetVersionResources: GetVersionResourcesManifest;
   GetCompilerStatus: GetCompilerStatusManifest;
+  GetParameters: GetParameters.Manifest;
+  GetFacts: GetFacts.Manifest;
 }
 
 /**
