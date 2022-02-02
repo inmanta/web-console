@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import {
+  Bullseye,
+  Button,
   Card,
   CardBody,
   CardExpandableContent,
@@ -8,6 +10,7 @@ import {
   Divider,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { words } from "@/UI/words";
 import { StatusDescriptor } from "../JumpToAction/StatusDescriptor";
 import { DiffItem, Refs } from "../types";
 import { Entry } from "./Entry";
@@ -20,6 +23,9 @@ interface Props {
 export const Block: React.FC<Props> = ({ item, refs }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const onExpand = () => setIsExpanded(!isExpanded);
+  const [isShown, setIsShown] = useState(item.status !== "deleted");
+
+  const onShow = () => setIsShown(true);
 
   return (
     <>
@@ -52,9 +58,18 @@ export const Block: React.FC<Props> = ({ item, refs }) => {
         <CardExpandableContent>
           <Divider />
           <StyledBody>
-            {item.entries.map((entry) => (
-              <Entry key={entry.title} {...entry} />
-            ))}
+            {item.status === "deleted" && !isShown && (
+              <DeletedMessage>
+                {words("desiredState.compare.deleted")}
+                <ShowButton onClick={onShow} variant="link" isInline>
+                  {words("desiredState.compare.deleted.action")}
+                </ShowButton>
+              </DeletedMessage>
+            )}
+            {isShown &&
+              item.entries.map((entry) => (
+                <Entry key={entry.title} {...entry} />
+              ))}
           </StyledBody>
         </CardExpandableContent>
       </StyledCard>
@@ -94,5 +109,14 @@ const StyledBody = styled(CardBody)`
 
 const StyledStatusDescriptor = styled(StatusDescriptor)`
   display: inline-block;
-  margin-right: 32px;
+  margin-right: 16px;
+`;
+
+const DeletedMessage = styled(Bullseye)`
+  line-height: 29px;
+  padding: 16px 0;
+`;
+
+const ShowButton = styled(Button)`
+  margin-left: 4px;
 `;

@@ -436,6 +436,8 @@ const dict = {
   "desiredState.compare.action.compare": "Select for compare",
   "desiredState.compare.action.compareWith": "Compare with selected",
   "desiredState.compare.selectionLabel": "Compare versions",
+  "desiredState.compare.deleted": "This resource has been deleted.",
+  "desiredState.compare.deleted.action": "Show attributes",
 
   /** Parameters */
   "parameters.title": "Parameters",
