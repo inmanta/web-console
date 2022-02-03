@@ -4,10 +4,6 @@ import { Grid, GridItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { DiffEntry } from "../types";
 
-/**
- * When using the CHARS diffmethod, the diff part is pushed to the next line.
- * This is fixable with display: inline; on wordDiff. But it breaks other styling.
- */
 export const Entry: React.FC<DiffEntry> = ({ title, fromValue, toValue }) => {
   return (
     <Grid>
@@ -17,8 +13,6 @@ export const Entry: React.FC<DiffEntry> = ({ title, fromValue, toValue }) => {
           showDiffOnly={false}
           styles={{
             marker: { display: "none" },
-            // wordDiff: { display: "inline-flex" },
-            // wordDiff: { display: "inline" },
             wordDiff: { padding: 0 },
             contentText: { lineHeight: "29px !important" },
             line: { display: "flex" },
