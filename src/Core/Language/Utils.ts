@@ -134,3 +134,14 @@ export const resolvePromiseRecord = async (
 export const stringifyObjectOrUndefined = (obj: unknown): string => {
   return typeof obj === "undefined" ? "undefined" : JSON.stringify(obj);
 };
+
+export const stringToBoolean = (value: unknown): boolean | undefined => {
+  switch (value) {
+    case "true":
+      return true;
+    case "false":
+      return false;
+    default:
+      return undefined;
+  }
+};
