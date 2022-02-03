@@ -1,5 +1,5 @@
 import React from "react";
-import { Resource } from "@/Core";
+import { ParsedNumber, Resource } from "@/Core";
 import { words } from "@/UI";
 import { LegendBar, LegendItemDetails } from "@/UI/Components";
 import { colorConfig } from "./DeployStateColorConfig";
@@ -34,10 +34,12 @@ export const DeployStateBar: React.FC<Props> = ({ summary, updateFilter }) => {
   );
 };
 
-function getResourcesInDoneState(by_state: Record<string, number>): number {
+function getResourcesInDoneState(
+  by_state: Record<string, ParsedNumber>
+): number {
   return Object.entries(by_state)
     .filter(([key]) => !Resource.TRANSIENT_STATES.includes(key))
-    .map(([, value]) => value)
+    .map(([, value]) => Number(value))
     .reduce((acc, current) => acc + current, 0);
 }
 
@@ -54,11 +56,14 @@ function infoToLegendItem(
   };
 }
 
-function addTotal(info: Info, byState: Record<string, number>): InfoWithTotal {
+function addTotal(
+  info: Info,
+  byState: Record<string, ParsedNumber>
+): InfoWithTotal {
   return {
     ...info,
     total: info.keys
-      .map((key) => (byState[key] === undefined ? 0 : byState[key]))
+      .map((key) => (byState[key] === undefined ? 0 : Number(byState[key])))
       .reduce((acc, cur) => acc + cur, 0),
   };
 }

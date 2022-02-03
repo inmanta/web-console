@@ -22,7 +22,7 @@ export const Details: React.FC<Props> = ({ serviceName, instanceSummary }) => {
           {instanceSummary ? (
             <SummaryChart
               by_label={instanceSummary.by_label}
-              total={instanceSummary.total}
+              total={instanceSummary.total.toString()}
             />
           ) : (
             <EmptyView message={words("catalog.summary.empty")} />

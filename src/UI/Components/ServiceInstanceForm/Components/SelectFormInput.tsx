@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { FormGroup, Select, SelectOption } from "@patternfly/react-core";
+import { ParsedNumber } from "@/Core";
 import { words } from "@/UI/words";
 
 interface Props {
-  options: Record<string, string | number>;
+  options: Record<string, string | ParsedNumber>;
   attributeName: string;
   attributeValue: string;
   description?: string;

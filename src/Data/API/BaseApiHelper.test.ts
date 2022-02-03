@@ -49,12 +49,12 @@ test("BaseApiHelper.delete executes a DELETE request with correct url & env", as
   });
 });
 
-test("GIVEN BaseApiHelper with BigIntJsonParser WHEN response json contains large integers THEN parsing does not lose precision", async () => {
+test("GIVEN BaseApiHelper with BigIntJsonParser WHEN response json contains large integers THEN integers are converted to bigints", async () => {
   const apiHelper = new BaseApiHelper();
   fetchMock.mockResponse(`{"foo": 9223372036854775807}`);
   const response = await apiHelper.get<{ foo: number }>("", "");
   if (response.kind === "Left") return;
-  expect(response.value.foo).toEqual("9223372036854775807");
+  expect(response.value.foo).toEqual(9223372036854775807n);
 });
 
 test("GIVEN BaseApiHelper with NativeJsonParser WHEN response json contains large integers THEN parsing loses precision", async () => {
@@ -62,5 +62,5 @@ test("GIVEN BaseApiHelper with NativeJsonParser WHEN response json contains larg
   fetchMock.mockResponse(`{"foo": 9223372036854775807}`);
   const response = await apiHelper.get<{ foo: number }>("", "");
   if (response.kind === "Left") return;
-  expect(response.value.foo).not.toEqual("9223372036854775807");
+  expect(response.value.foo).not.toEqual(9223372036854775807n);
 });

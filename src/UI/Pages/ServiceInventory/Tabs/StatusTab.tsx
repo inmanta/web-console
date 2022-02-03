@@ -10,13 +10,14 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
+import { ParsedNumber } from "@/Core";
 import { TextWithCopy } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface StatusInfo {
   instanceId: string;
   state: React.ReactElement | null;
-  version: number;
+  version: ParsedNumber;
   createdAt: string;
   updatedAt: string;
   actions: React.ReactElement | null;
@@ -62,7 +63,7 @@ export const StatusTab: React.FC<Props> = ({ statusInfo }) => (
                   {words("inventory.statustab.version")}
                 </DescriptionListTerm>
                 <DescriptionListDescription>
-                  {statusInfo.version}
+                  {statusInfo.version.toString()}
                 </DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
