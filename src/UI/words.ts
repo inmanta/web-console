@@ -439,6 +439,7 @@ const dict = {
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
   "desiredState.compare.empty": "No changes found",
+  "desiredState.complianceCheck.title": "Compliance Check",
 
   /** Parameters */
   "parameters.title": "Parameters",

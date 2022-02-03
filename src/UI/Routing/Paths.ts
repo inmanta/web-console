@@ -41,4 +41,5 @@ export const paths: Paths = {
   DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
   DesiredStateCompare: "/desiredstate/compare/:from/:to",
   Parameters: "/parameters",
+  ComplianceCheck: "/desiredstate/:version/compliancecheck",
 };
