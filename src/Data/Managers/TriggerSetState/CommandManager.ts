@@ -1,4 +1,4 @@
-import { ApiHelper, AuthHelper, SetStateBody } from "@/Core";
+import { ApiHelper, AuthHelper, ParsedNumber, SetStateBody } from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class TriggerSetStateCommandManager extends CommandManagerWithEnv<"TriggerSetState"> {
@@ -22,7 +22,7 @@ export class TriggerSetStateCommandManager extends CommandManagerWithEnv<"Trigge
 export const getBody = (
   username: string | null,
   targetState: string,
-  version: number
+  version: ParsedNumber
 ): SetStateBody => {
   const message = username
     ? `Triggered from the console by ${username}`

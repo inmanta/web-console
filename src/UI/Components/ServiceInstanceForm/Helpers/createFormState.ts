@@ -20,7 +20,9 @@ export const createFormState = (fields: Field[]): InstanceAttributeModel => {
         if (curr.min <= 0) {
           acc[curr.name] = [];
         } else {
-          acc[curr.name] = times(curr.min, () => createFormState(curr.fields));
+          acc[curr.name] = times(Number(curr.min), () =>
+            createFormState(curr.fields)
+          );
         }
 
         return acc;

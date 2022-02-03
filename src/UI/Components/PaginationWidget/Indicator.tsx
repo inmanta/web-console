@@ -25,6 +25,6 @@ export function getCurrent({
   after,
 }: Pagination.Metadata): string {
   if (total === 0) return "0";
-  if (after === 0) return `${before + 1} - ${total}`;
-  return `${before + 1} - ${before + page_size}`;
+  if (after === 0) return `${Number(before) + 1} - ${total}`;
+  return `${Number(before) + 1} - ${Number(before) + Number(page_size)}`;
 }

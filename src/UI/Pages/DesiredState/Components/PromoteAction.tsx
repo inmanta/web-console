@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
 import { CheckIcon } from "@patternfly/react-icons";
-import { Maybe } from "@/Core";
+import { Maybe, ParsedNumber } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { GetDesiredStatesContext } from "@/UI/Pages/DesiredState/GetDesiredStatesContext";
 import { words } from "@/UI/words";
 
 interface Props {
-  version: number;
+  version: ParsedNumber;
   isDisabled: boolean;
 }
 

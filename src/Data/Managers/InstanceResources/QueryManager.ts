@@ -13,7 +13,7 @@ export class InstanceResourcesQueryManager extends PrimaryContinuousQueryManager
       stateHelper,
       scheduler,
       ({ kind, id }) => `${kind}_${id}`,
-      ({ id, version }) => [id, version],
+      ({ id, version }) => [id, version.toString()],
       "GetInstanceResources",
       ({ service_entity, id, version }) =>
         `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`,
