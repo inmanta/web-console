@@ -16782,10 +16782,10 @@ ws@^8.2.3, ws@^8.4.2:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.4.2.tgz#18e749868d8439f2268368829042894b6907aa0b"
   integrity sha512-Kbk4Nxyq7/ZWqr/tarI9yIt/+iNNFOjBXEWgTb4ydaNHBNGgvf2QHbS9fdfsndfjFlFwEd4Al+mw83YkaD10ZA==
 
-xml-formatter@*, xml-formatter@^2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-2.6.0.tgz#502cf34889584baae0d9580632dc0cbc73de5b49"
-  integrity sha512-+bQeoiE5W3CJdDCHTlveYSWFfQWnYB3uHGeRJ6LlEsL5kT++mWy9iN1cMeEDfBbgOnXO2DNUbmQ6elkR/mCcjg==
+xml-formatter@*, xml-formatter@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-2.6.1.tgz#066ef3a100bd58ee3b943f0c503be63176d3d497"
+  integrity sha512-dOiGwoqm8y22QdTNI7A+N03tyVfBlQ0/oehAzxIZtwnFAHGeSlrfjF73YQvzSsa/Kt6+YZasKsrdu6OIpuBggw==
   dependencies:
     xml-parser-xo "^3.2.0"
 
