@@ -22,7 +22,11 @@ export const Page: React.FC = () => {
     route: "CompileReports",
   });
   const [filter, setFilter] = useUrlStateWithFilter<CompileReportParams.Filter>(
-    { route: "CompileReports", dateRangeKey: "requested" }
+    {
+      route: "CompileReports",
+      dateRangeKey: "requested",
+      booleanKey: "success",
+    }
   );
   const [sort, setSort] = useUrlStateWithSort<string>({
     default: { name: "requested", order: "desc" },
