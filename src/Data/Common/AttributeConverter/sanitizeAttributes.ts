@@ -49,7 +49,7 @@ export function sanitizeAttributes(
         if (!Array.isArray(list)) return;
         if (field.max && list.length > field.max) {
           sanitized[field.name] = list
-            .slice(0, field.max + 1)
+            .slice(0, Number(field.max) + 1)
             .map((item) => sanitizeAttributes(field.fields, item));
         } else {
           sanitized[field.name] = list.map((item) =>

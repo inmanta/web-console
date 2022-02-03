@@ -1,0 +1,4 @@
+description: Add support for bigint
+issue-nr: 2544
+change-type: patch
+destination-branches: [master, iso5]

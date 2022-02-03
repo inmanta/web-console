@@ -13,10 +13,10 @@ export class DeploymentProgressPresenter {
     }
     return (
       <StackedProgressBar
-        total={deploymentProgress.total}
-        failed={deploymentProgress.failed}
-        success={deploymentProgress.deployed}
-        waiting={deploymentProgress.waiting}
+        total={Number(deploymentProgress.total)}
+        failed={Number(deploymentProgress.failed)}
+        success={Number(deploymentProgress.deployed)}
+        waiting={Number(deploymentProgress.waiting)}
       />
     );
   }

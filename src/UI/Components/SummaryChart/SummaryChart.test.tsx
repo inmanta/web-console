@@ -9,7 +9,7 @@ test("SummaryChart renders with multiple instances", () => {
   render(
     <SummaryChart
       by_label={Service.withInstanceSummary.instance_summary.by_label}
-      total={Service.withInstanceSummary.instance_summary.total}
+      total={Service.withInstanceSummary.instance_summary.total.toString()}
     />
   );
   expect(
@@ -21,7 +21,7 @@ test("SummaryChart renders with no instances", () => {
   render(
     <SummaryChart
       by_label={{ danger: 0, no_label: 0, warning: 0, info: 0, success: 0 }}
-      total={0}
+      total="0"
     />
   );
   expect(

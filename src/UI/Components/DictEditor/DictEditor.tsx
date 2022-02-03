@@ -4,8 +4,9 @@ import { TrashAltIcon } from "@patternfly/react-icons";
 import { TableComposable, Tbody, Td, Tr } from "@patternfly/react-table";
 import { omit } from "lodash-es";
 import styled from "styled-components";
+import { ParsedNumber } from "@/Core";
 
-export type Dict = Record<string, string | number | boolean>;
+export type Dict = Record<string, string | ParsedNumber | boolean>;
 export type Entry = [string, string];
 
 interface Props {
