@@ -5,6 +5,7 @@ import {
   SelectVariant,
   ToolbarFilter,
 } from "@patternfly/react-core";
+import { stringToBoolean } from "@/Core";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -21,7 +22,7 @@ export const ResultFilter: React.FC<Props> = ({
   const [isFilterOpen, setFilterOpen] = useState(false);
 
   const onSelect = (event, selection) => {
-    if (selection === success) {
+    if (stringToBoolean(selection) === success) {
       update(undefined);
     } else {
       update(selection);
@@ -51,14 +52,14 @@ export const ResultFilter: React.FC<Props> = ({
         toggleAriaLabel="Select Result"
         onToggle={setFilterOpen}
         onSelect={onSelect}
-        selections={success}
+        selections={success !== undefined ? success.toString() : undefined}
         isOpen={isFilterOpen}
         placeholderText={words("compileReports.filters.result.placeholder")}
       >
-        <SelectOption value={true} aria-label="Successful">
+        <SelectOption value="true" aria-label="Successful">
           {words("compileReports.filters.result.success")}
         </SelectOption>
-        <SelectOption value={false} aria-label="Not Successful">
+        <SelectOption value="false" aria-label="Not Successful">
           {words("compileReports.filters.result.failed")}
         </SelectOption>
       </Select>
