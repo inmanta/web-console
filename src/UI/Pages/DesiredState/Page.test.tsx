@@ -309,16 +309,25 @@ test("Given the Desired states view When promoting a version, then the correct r
     name: "DesiredStates Table Row",
   });
 
-  const skippedCandidatePromoteButton = await within(rows[8]).findByRole(
-    "button",
-    { name: "Promote" }
+  userEvent.click(
+    within(rows[8]).getByRole("button", {
+      name: "Actions",
+    })
   );
-  expect(skippedCandidatePromoteButton).toBeDisabled();
 
-  const candidatePromoteButton = await within(rows[0]).findByRole("button", {
-    name: "Promote",
-  });
-  userEvent.click(candidatePromoteButton);
+  expect(
+    within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
+  ).toHaveAttribute("aria-disabled", "true");
+
+  userEvent.click(
+    within(rows[0]).getByRole("button", {
+      name: "Actions",
+    })
+  );
+
+  userEvent.click(
+    within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
+  );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
@@ -372,11 +381,16 @@ test("Given the Desired states view with filters When promoting a version, then 
   const rows = await screen.findAllByRole("row", {
     name: "DesiredStates Table Row",
   });
-  const candidatePromoteButton = await within(rows[0]).findByRole("button", {
-    name: "Promote",
-  });
 
-  userEvent.click(candidatePromoteButton);
+  userEvent.click(
+    within(rows[0]).getByRole("button", {
+      name: "Actions",
+    })
+  );
+
+  userEvent.click(
+    within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
+  );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
@@ -415,11 +429,17 @@ test("Given the Desired states view When promoting a version results in an error
   const rows = await screen.findAllByRole("row", {
     name: "DesiredStates Table Row",
   });
-  const candidatePromoteButton = await within(rows[0]).findByRole("button", {
-    name: "Promote",
-  });
 
-  userEvent.click(candidatePromoteButton);
+  userEvent.click(
+    within(rows[0]).getByRole("button", {
+      name: "Actions",
+    })
+  );
+
+  userEvent.click(
+    within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
+  );
+
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
