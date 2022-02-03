@@ -5,6 +5,7 @@ import { Maybe } from "@/Core";
 import { GetDesiredStatesContext } from "@/UI/Pages/DesiredState/GetDesiredStatesContext";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
+import { sanitizeFromTo } from "./fromTo";
 
 interface Props {
   version: number;
@@ -66,10 +67,10 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
   return (
     <DropdownItem
       onClick={() =>
-        navigateTo("DesiredStateCompare", {
-          from: selection.value.toString(),
-          to: version.toString(),
-        })
+        navigateTo(
+          "DesiredStateCompare",
+          sanitizeFromTo(selection.value, version)
+        )
       }
       icon={<BalanceScaleIcon />}
     >

@@ -10,9 +10,9 @@ import {
   Divider,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { StatusDescriptor } from "@/UI/Components/DiffWizard/JumpToAction/StatusDescriptor";
+import { DiffItem, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
-import { StatusDescriptor } from "../JumpToAction/StatusDescriptor";
-import { DiffItem, Refs } from "../types";
 import { Entry } from "./Entry";
 
 interface Props {

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 import { Grid, GridItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import { DiffEntry } from "../types";
+import { DiffEntry } from "@/UI/Components/DiffWizard/types";
 
 export const Entry: React.FC<DiffEntry> = ({ title, fromValue, toValue }) => {
   return (
