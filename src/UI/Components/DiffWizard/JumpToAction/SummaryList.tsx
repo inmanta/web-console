@@ -24,9 +24,13 @@ export const SummaryList: React.FC<Props> = ({ items, refs }) => {
   };
 
   return (
-    <StyledSimpleList onSelect={onSelect} aria-label="Simple List Example">
+    <StyledSimpleList onSelect={onSelect} aria-label="DiffSummaryList">
       {items.map((item) => (
-        <SimpleListItem key={item.id} itemId={item.id}>
+        <SimpleListItem
+          key={item.id}
+          itemId={item.id}
+          aria-label="DiffSummaryListItem"
+        >
           <Descriptor {...item} />
         </SimpleListItem>
       ))}

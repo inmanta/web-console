@@ -39,7 +39,7 @@ export const Block: React.FC<Props> = ({ item, refs }) => {
         isFlat
         isCompact
         isRounded
-        aria-label="DiffGroup"
+        aria-label="DiffBlock"
       >
         <StyledHeader
           onExpand={onExpand}

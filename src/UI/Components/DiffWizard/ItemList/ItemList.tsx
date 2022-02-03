@@ -9,9 +9,8 @@ interface Props {
 }
 
 export const ItemList: React.FC<Props> = ({ items, refs }) => {
-  console.log({ items });
   return (
-    <Container aria-label="DiffWizard">
+    <Container aria-label="DiffItemList">
       {items.map((item) => (
         <Block key={item.id} item={item} refs={refs} />
       ))}
