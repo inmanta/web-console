@@ -9,6 +9,10 @@ import {
   compileReportsSlice,
   CompileReportsSlice,
 } from "./CompileReportsSlice";
+import {
+  desiredStateDiffSlice,
+  DesiredStateDiffSlice,
+} from "./DesiredStateDiffSlice";
 import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
 import {
@@ -84,6 +88,7 @@ export interface StoreModel {
   versionResources: VersionResourcesSlice;
   parameters: ParametersSlice;
   facts: FactsSlice;
+  desiredStateDiff: DesiredStateDiffSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -114,4 +119,5 @@ export const storeModel: StoreModel = {
   versionResources: versionResourcesSlice,
   parameters: parametersSlice,
   facts: factsSlice,
+  desiredStateDiff: desiredStateDiffSlice,
 };

@@ -1,0 +1,6 @@
+description: Add Desired State Compare page
+issue-nr: 2374
+change-type: minor
+destination-branches: [master, iso5]
+sections:
+  feature: "{{description}}"
