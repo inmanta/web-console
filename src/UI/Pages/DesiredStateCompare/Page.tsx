@@ -7,6 +7,7 @@ import {
   PageTitle,
   DiffItemList,
   PagePadder,
+  EmptyView,
 } from "@/UI/Components";
 import { Refs } from "@/UI/Components/DiffWizard/types";
 import { DependencyContext } from "@/UI/Dependency";
@@ -43,12 +44,16 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
           <RemoteDataView
             data={data}
             label="CompareView"
-            SuccessView={(resources) => (
-              <DiffItemList
-                items={resources.map(resourceToDiffItem)}
-                refs={refs}
-              />
-            )}
+            SuccessView={(resources) =>
+              resources.length <= 0 ? (
+                <EmptyView message={words("desiredState.compare.empty")} />
+              ) : (
+                <DiffItemList
+                  items={resources.map(resourceToDiffItem)}
+                  refs={refs}
+                />
+              )
+            }
           />
         </PagePadder>
       </PageSection>
