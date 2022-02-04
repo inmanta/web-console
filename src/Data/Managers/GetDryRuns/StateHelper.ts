@@ -18,7 +18,6 @@ export class GetDryRunsStateHelper extends PrimaryStateHelperWithEnv<"GetDryRuns
         });
       },
       (state, { version }, environment) => {
-        console.log({ state: state.dryRuns });
         const slice = state.dryRuns.listByEnvAndVersion[environment];
         if (slice === undefined) return undefined;
         return slice[version];

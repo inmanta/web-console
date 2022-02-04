@@ -1,10 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { PageSection } from "@patternfly/react-core";
 import styled from "styled-components";
-import { PageTitle, PagePadder } from "@/UI/Components";
+import { RemoteData } from "@/Core";
+import { PageTitle } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
+import { DiffPageSection } from "./DiffPageSection";
+import { DryRunActions } from "./DryRunActions";
 
 export const Page: React.FC = () => {
   const { version } = useRouteParams<"ComplianceCheck">();
@@ -17,29 +20,41 @@ interface Props {
 
 export const View: React.FC<Props> = ({ version }) => {
   const { queryResolver } = useContext(DependencyContext);
-  // Continuous, GET list of dryruns
-  const [data] = queryResolver.useContinuous<"GetDryRuns">({
+  const [dryRunListData, refetch] = queryResolver.useContinuous<"GetDryRuns">({
     kind: "GetDryRuns",
     version: parseInt(version),
   });
+  const [reportId, setReportId] = useState<
+    RemoteData.RemoteData<never, string>
+  >(RemoteData.notAsked());
 
-  console.log({ data });
-  // on success => select 1st
+  useEffect(() => {
+    if (!RemoteData.isNotAsked(reportId)) return;
+    if (!RemoteData.isSuccess(dryRunListData)) return;
+    setForcedReportId(dryRunListData.value[0].id);
+  }, [reportId, dryRunListData]);
 
-  // useEffect, refresh refs when different diff
+  const setForcedReportId = (id: string) => setReportId(RemoteData.success(id));
+
+  const updateList = async () => {
+    await refetch();
+    setReportId;
+  };
 
   return (
     <>
       <StyledPageSection variant="light">
         <PageTitle>{words("desiredState.complianceCheck.title")}</PageTitle>
       </StyledPageSection>
-      <PageSection variant="light">dryrun actions and list</PageSection>
-      <PageSection variant="light" hasShadowBottom sticky="top">
-        jump to resource dropdown + title {version}
+      <PageSection variant="light">
+        <DryRunActions
+          updateList={updateList}
+          setReportId={setForcedReportId}
+          reportId={reportId}
+          reportsData={dryRunListData}
+        />
       </PageSection>
-      <PageSection isFilled>
-        <PagePadder>RemoteDataView with diffed resources</PagePadder>
-      </PageSection>
+      <DiffPageSection reportId={reportId} />
     </>
   );
 };

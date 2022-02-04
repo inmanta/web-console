@@ -75,7 +75,6 @@ import {
   GetDryRunsStateHelper,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import { InstantApiHelper } from "@/Test";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];
@@ -255,7 +254,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetDesiredStateDiffStateHelper(this.store)
       ),
       new GetDryRunsQueryManager(
-        new InstantApiHelper({ kind: "Success", data: { data: [] } }),
+        this.apiHelper,
         new GetDryRunsStateHelper(this.store),
         scheduler
       ),
