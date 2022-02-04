@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import {
   Bullseye,
   Card,
-  CardActions,
   CardBody,
   CardFooter,
   CardHeader,
+  CardTitle,
   EmptyState,
   EmptyStateIcon,
   EmptyStateVariant,
@@ -58,20 +58,20 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
 };
 
 const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
-  <Card isHoverable isCompact>
+  <StyledCard isHoverable isCompact>
     <Bullseye>
       <Link pathname={url}>
         <StyledCardContent>
-          <EmptyState variant={EmptyStateVariant.xs}>
+          <AlignedEmptyState variant={EmptyStateVariant.xs}>
             <EmptyStateIcon icon={PlusCircleIcon} />
             <Title headingLevel="h2" size="md">
               {words("home.create.env.desciption")}
             </Title>
-          </EmptyState>
+          </AlignedEmptyState>
         </StyledCardContent>
       </Link>
     </Bullseye>
-  </Card>
+  </StyledCard>
 );
 
 interface EnvironmentCardProps {
@@ -97,9 +97,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
             {environment.name[0].toUpperCase()}
           </FillerIcon>
         )}
-        <StyledTitle hasNoOffset className="pf-c-card__title">
-          {environment.name}
-        </StyledTitle>
+        <StyledTitle>{environment.name}</StyledTitle>
       </StyledHeader>
       <CardBody>
         <StyledCardContent>{environment.description}</StyledCardContent>
@@ -146,9 +144,14 @@ const StyledHeader = styled(CardHeader)`
   height: 64px;
 `;
 
-const StyledTitle = styled(CardActions)`
-  margin-top: 9px;
+const StyledTitle = styled(CardTitle)`
+  margin-left: 9px;
 `;
+
 const StyledCard = styled(Card)`
   height: 30ch;
+`;
+
+const AlignedEmptyState = styled(EmptyState)`
+  margin-top: 54px;
 `;
