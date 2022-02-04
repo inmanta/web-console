@@ -32,7 +32,16 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
 
   return (
     <PageSection isFilled>
-      <Gallery hasGutter {...props}>
+      <Gallery
+        hasGutter
+        minWidths={{
+          default: "30ch",
+        }}
+        maxWidths={{
+          default: "30ch",
+        }}
+        {...props}
+      >
         <CreateNewEnvironmentCard
           url={routeManager.getUrl("CreateEnvironment", undefined)}
         />
@@ -49,20 +58,20 @@ export const CardView: React.FC<Props> = ({ environments, ...props }) => {
 };
 
 const CreateNewEnvironmentCard: React.FC<{ url: string }> = ({ url }) => (
-  <Card isHoverable isCompact>
+  <StyledCard isHoverable isCompact>
     <Bullseye>
       <Link pathname={url}>
         <StyledCardContent>
-          <EmptyState variant={EmptyStateVariant.xs}>
+          <AlignedEmptyState variant={EmptyStateVariant.xs}>
             <EmptyStateIcon icon={PlusCircleIcon} />
             <Title headingLevel="h2" size="md">
               {words("home.create.env.desciption")}
             </Title>
-          </EmptyState>
+          </AlignedEmptyState>
         </StyledCardContent>
       </Link>
     </Bullseye>
-  </Card>
+  </StyledCard>
 );
 
 interface EnvironmentCardProps {
@@ -74,7 +83,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
   environment,
   pathname,
 }) => (
-  <Card isHoverable isCompact aria-label={"Environment card"}>
+  <StyledCard isHoverable isCompact aria-label={"Environment card"}>
     <StyledLink pathname={pathname} search={`env=${environment.id}`}>
       <StyledHeader>
         {environment.icon ? (
@@ -88,8 +97,8 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
             {environment.name[0].toUpperCase()}
           </FillerIcon>
         )}
+        <StyledTitle>{environment.name}</StyledTitle>
       </StyledHeader>
-      <CardTitle>{environment.name}</CardTitle>
       <CardBody>
         <StyledCardContent>{environment.description}</StyledCardContent>
       </CardBody>
@@ -97,7 +106,7 @@ const EnvironmentCard: React.FC<EnvironmentCardProps> = ({
         <StyledFooterDiv>{environment.projectName}</StyledFooterDiv>
       </CardFooter>
     </StyledLink>
-  </Card>
+  </StyledCard>
 );
 
 const StyledLink = styled(Link)`
@@ -107,6 +116,7 @@ const StyledLink = styled(Link)`
 
 const StyledCardContent = styled.div`
   white-space: pre-wrap;
+  height: 20ch;
 `;
 
 const StyledFooterDiv = styled.div`
@@ -131,5 +141,17 @@ const FillerIcon = styled.div`
 `;
 
 const StyledHeader = styled(CardHeader)`
-  min-height: 64px;
+  height: 64px;
+`;
+
+const StyledTitle = styled(CardTitle)`
+  margin-left: 9px;
+`;
+
+const StyledCard = styled(Card)`
+  height: 30ch;
+`;
+
+const AlignedEmptyState = styled(EmptyState)`
+  margin-top: 54px;
 `;
