@@ -1,5 +1,6 @@
-export * as Query from "./Query";
+import { GetDryRuns } from "./GetDryRuns";
 import { GetFacts } from "./GetFacts";
-export { GetFacts };
 import { GetParameters } from "./GetParameters";
-export { GetParameters };
+
+export { GetFacts, GetParameters, GetDryRuns };
+export * as Query from "./Query";

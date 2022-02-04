@@ -47,3 +47,4 @@ export * from "./GetCompilerStatus";
 export * from "./GetParameters";
 export * from "./GetFacts";
 export * from "./GetDesiredStateDiff";
+export * from "./GetDryRuns";

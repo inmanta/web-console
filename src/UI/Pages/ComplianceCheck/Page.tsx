@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { PageSection } from "@patternfly/react-core";
 import styled from "styled-components";
 import { PageTitle, PagePadder } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 
@@ -15,7 +16,14 @@ interface Props {
 }
 
 export const View: React.FC<Props> = ({ version }) => {
+  const { queryResolver } = useContext(DependencyContext);
   // Continuous, GET list of dryruns
+  const [data] = queryResolver.useContinuous<"GetDryRuns">({
+    kind: "GetDryRuns",
+    version: parseInt(version),
+  });
+
+  console.log({ data });
   // on success => select 1st
 
   // useEffect, refresh refs when different diff

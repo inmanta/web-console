@@ -45,3 +45,4 @@ export * as DesiredStateParams from "./DesiredStateParams";
 export * as RangeOperator from "./RangeOperator";
 export * as IntRange from "./IntRange";
 export * from "./Parameter";
+export * from "./DryRun";
