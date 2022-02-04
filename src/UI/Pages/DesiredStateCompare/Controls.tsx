@@ -1,7 +1,12 @@
 import React from "react";
 import { Grid, GridItem } from "@patternfly/react-core";
 import { Diff, Query, RemoteData } from "@/Core";
-import { DiffVersus, JumpToAction, LoadingJumpToAction } from "@/UI/Components";
+import {
+  DiffVersus,
+  EmptyJumpToAction,
+  JumpToAction,
+  LoadingJumpToAction,
+} from "@/UI/Components";
 import { Refs } from "@/UI/Components/DiffWizard/types";
 import { resourceToDiffItem } from "./resourceToDiffItem";
 
@@ -23,12 +28,15 @@ export const Controls: React.FC<Props> = ({ data, refs, from, to }) => (
           notAsked: () => null,
           loading: () => <LoadingJumpToAction />,
           failed: () => null,
-          success: (resources) => (
-            <JumpToAction
-              items={resources.map(resourceToDiffItem)}
-              refs={refs}
-            />
-          ),
+          success: (resources) =>
+            resources.length <= 0 ? (
+              <EmptyJumpToAction />
+            ) : (
+              <JumpToAction
+                items={resources.map(resourceToDiffItem)}
+                refs={refs}
+              />
+            ),
         },
         data
       )}

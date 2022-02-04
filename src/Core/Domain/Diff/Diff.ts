@@ -1,4 +1,4 @@
-export type Status = "added" | "modified" | "deleted";
+export type Status = "added" | "modified" | "deleted" | "unmodified";
 
 export interface ValueSet {
   from_value: unknown;

@@ -35,3 +35,7 @@ export const LoadingJumpToAction: React.FC = () => (
     }
   ></Dropdown>
 );
+
+export const EmptyJumpToAction: React.FC = () => (
+  <Dropdown toggle={<DropdownToggle isDisabled />}></Dropdown>
+);
