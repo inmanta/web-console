@@ -73,6 +73,7 @@ import {
   GetDesiredStateDiffStateHelper,
   GetDryRunsQueryManager,
   GetDryRunsStateHelper,
+  GetDryRunReport,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -257,6 +258,10 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.apiHelper,
         new GetDryRunsStateHelper(this.store),
         scheduler
+      ),
+      new GetDryRunReport.QueryManager(
+        this.apiHelper,
+        new GetDryRunReport.StateHelper(this.store)
       ),
     ];
   }

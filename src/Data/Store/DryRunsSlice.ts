@@ -4,14 +4,14 @@ import { DryRun, RemoteData } from "@/Core";
 export interface DryRunsSlice {
   listByEnvAndVersion: Record<
     string,
-    Record<string, RemoteData.Type<string, DryRun[]>>
+    Record<string, RemoteData.Type<string, DryRun.Model[]>>
   >;
   setList: Action<
     DryRunsSlice,
     {
       environment: string;
       version: number;
-      data: RemoteData.Type<string, DryRun[]>;
+      data: RemoteData.Type<string, DryRun.Model[]>;
     }
   >;
 }

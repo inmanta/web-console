@@ -16,6 +16,7 @@ import {
 import { GetDesiredStateDiff } from "./GetDesiredStateDiff";
 import { GetDesiredStates, GetDesiredStatesManifest } from "./GetDesiredStates";
 import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
+import { GetDryRunReport } from "./GetDryRunReport";
 import { GetDryRuns } from "./GetDryRuns";
 import {
   GetEnvironmentDetails,
@@ -107,7 +108,8 @@ export type Query =
   | GetCompilerStatus
   | GetParameters.Query
   | GetDesiredStateDiff.Query
-  | GetDryRuns.Query;
+  | GetDryRuns.Query
+  | GetDryRunReport.Query;
 
 export type Type = Query;
 
@@ -149,6 +151,7 @@ interface Manifest {
   GetFacts: GetFacts.Manifest;
   GetDesiredStateDiff: GetDesiredStateDiff.Manifest;
   GetDryRuns: GetDryRuns.Manifest;
+  GetDryRunReport: GetDryRunReport.Manifest;
 }
 
 /**

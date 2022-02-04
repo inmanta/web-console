@@ -7,8 +7,9 @@ import {
   ToolbarContent,
   ToolbarGroup,
 } from "@patternfly/react-core";
+import { DryRun } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { ProgressReport, RemoteReportId, RemoteReportList } from "./types";
+import { RemoteReportId, RemoteReportList } from "./types";
 
 interface Props {
   updateList(): void;
@@ -69,7 +70,7 @@ export const DryRunActions: React.FC<Props> = ({
   );
 };
 
-const Progress: React.FC<{ report: ProgressReport }> = ({
+const Progress: React.FC<{ report: DryRun.Progress }> = ({
   report: { todo, total },
 }) => {
   const tot = Number(total);

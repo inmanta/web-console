@@ -1,16 +1,16 @@
 import { DryRun } from "@/Core/Domain";
 
 export interface Query {
-  kind: "GetDryRuns";
-  version: number;
+  kind: "GetDryRunReport";
+  reportId: string;
 }
 
 export interface Manifest {
   error: string;
   apiResponse: {
-    data: DryRun.Model[];
+    data: DryRun.Report;
   };
-  data: DryRun.Model[];
-  usedData: DryRun.Model[];
+  data: DryRun.Report;
+  usedData: DryRun.Report;
   query: Query;
 }
