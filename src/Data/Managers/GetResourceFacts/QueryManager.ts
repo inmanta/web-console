@@ -13,7 +13,7 @@ export class GetResourceFactsQueryManager extends PrimaryContinuousQueryManagerW
       stateHelper,
       scheduler,
       ({ kind, resourceId }) => `${kind}_${resourceId}`,
-      ({ resourceId }) => [resourceId],
+      ({ resourceId }) => [resourceId.toString()],
       "GetResourceFacts",
       ({ resourceId }) => `/api/v2/resource/${resourceId}/facts`,
       identity

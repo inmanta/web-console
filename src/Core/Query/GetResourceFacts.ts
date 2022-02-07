@@ -1,8 +1,9 @@
 import { Fact } from "@/Core/Domain";
+import { EncodableParam } from "..";
 
 export interface GetResourceFacts {
   kind: "GetResourceFacts";
-  resourceId: string;
+  resourceId: EncodableParam;
 }
 
 export interface GetResourceFactsManifest {
