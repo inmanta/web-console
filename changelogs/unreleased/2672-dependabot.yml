@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @types/styled-components from 5.1.21 to 5.1.22'
+destination-branches:
+- master
+- iso5
+sections: {}
