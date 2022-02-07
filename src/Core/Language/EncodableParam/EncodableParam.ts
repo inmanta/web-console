@@ -1,5 +1,8 @@
 export class EncodableParam {
-  constructor(private value: string) {}
+  value: string;
+  constructor(value: string) {
+    this.value = value;
+  }
   toString() {
     return encodeURIComponent(this.value);
   }
