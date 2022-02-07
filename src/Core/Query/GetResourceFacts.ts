@@ -1,5 +1,5 @@
 import { Fact } from "@/Core/Domain";
-import { EncodableParam } from "..";
+import { EncodableParam } from "@/Core/Language";
 
 export interface GetResourceFacts {
   kind: "GetResourceFacts";
