@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { cloneDeep } from "lodash";
 import { Either } from "@/Core";
 import {
   QueryResolverImpl,
@@ -67,7 +68,7 @@ function setup() {
   return { component, apiHelper, scheduler };
 }
 
-test("Edit Instance View shows failed table", async () => {
+test("Edit Instance View shows failed state", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -85,13 +86,13 @@ test("Edit Instance View shows failed table", async () => {
 test("EditInstance View shows success form", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  const { service_entity, id, version } = ServiceInstance.nestedEditable;
+  const { service_entity, id, version } = ServiceInstance.a;
 
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right({ data: ServiceInstance.nestedEditable }));
+  apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
 
   expect(
     await screen.findByRole("generic", { name: "EditInstance-Success" })
@@ -110,9 +111,59 @@ test("EditInstance View shows success form", async () => {
     body: {
       attributes: {
         bandwidth: "2",
-        circuits: [{}],
       },
     },
     environment: "env",
   });
+});
+
+test("Given the EditInstance View When changing an embedded entity Then the correct request is fired", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  const { service_entity, id, version } = ServiceInstance.a;
+
+  expect(
+    await screen.findByRole("generic", { name: "EditInstance-Loading" })
+  ).toBeInTheDocument();
+
+  apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
+
+  expect(
+    await screen.findByRole("generic", { name: "EditInstance-Success" })
+  ).toBeInTheDocument();
+
+  userEvent.click(screen.getByRole("button", { name: "circuits" }));
+  userEvent.click(screen.getByRole("button", { name: "1" }));
+  const serviceIdField = screen.getByText("service_id");
+  userEvent.type(serviceIdField, "{backspace}7");
+
+  const bandwidthField = screen.getByText("bandwidth");
+  expect(bandwidthField).toBeVisible();
+
+  userEvent.type(bandwidthField, "2");
+  userEvent.click(screen.getByText("Confirm"));
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  if (ServiceInstance.a.active_attributes) {
+    const expectedCircuits: Record<string, unknown>[] = cloneDeep(
+      ServiceInstance.a.active_attributes["circuits"] as Record<
+        string,
+        unknown
+      >[]
+    );
+    expectedCircuits[0]["service_id"] = 9489784967;
+    expect(apiHelper.pendingRequests[0]).toEqual({
+      method: "PATCH",
+      url: `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
+      body: {
+        attributes: {
+          bandwidth: "2",
+          circuits: expectedCircuits,
+        },
+      },
+      environment: "env",
+    });
+  } else {
+    throw Error("Active attributes should be defined");
+  }
 });
