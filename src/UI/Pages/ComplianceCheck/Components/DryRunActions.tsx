@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Button,
   Select,
   SelectOption,
   Toolbar,
@@ -9,9 +8,11 @@ import {
 } from "@patternfly/react-core";
 import { DryRun } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { RemoteReportId, RemoteReportList } from "./types";
+import { RemoteReportId, RemoteReportList } from "../types";
+import { TriggerDryRunAction } from "./TriggerDryRunAction";
 
 interface Props {
+  version: string;
   updateList(): void;
   setReportId(reportId: string): void;
   reportId: RemoteReportId;
@@ -21,6 +22,7 @@ interface Props {
 const datePresenter = new MomentDatePresenter();
 
 export const DryRunActions: React.FC<Props> = ({
+  version,
   setReportId,
   reportId,
   updateList,
@@ -28,14 +30,6 @@ export const DryRunActions: React.FC<Props> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   // This should be the trigger from the command
-  const trigger = async () => {
-    console.log("trigger");
-  };
-
-  const onTrigger = async () => {
-    await trigger();
-    updateList();
-  };
 
   const onSelect = (event, value) => {
     setReportId(value);
@@ -63,7 +57,7 @@ export const DryRunActions: React.FC<Props> = ({
           )}
         </ToolbarGroup>
         <ToolbarGroup alignment={{ default: "alignRight" }}>
-          <Button onClick={onTrigger}>Trigger new dryrun</Button>
+          <TriggerDryRunAction version={version} updateList={updateList} />
         </ToolbarGroup>
       </ToolbarContent>
     </Toolbar>

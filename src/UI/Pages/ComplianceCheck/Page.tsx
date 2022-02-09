@@ -6,8 +6,8 @@ import { PageTitle } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
+import { DryRunActions } from "./Components";
 import { DiffPageSection } from "./DiffPageSection";
-import { DryRunActions } from "./DryRunActions";
 
 export const Page: React.FC = () => {
   const { version } = useRouteParams<"ComplianceCheck">();
@@ -48,6 +48,7 @@ export const View: React.FC<Props> = ({ version }) => {
       </StyledPageSection>
       <PageSection variant="light">
         <DryRunActions
+          version={version}
           updateList={updateList}
           setReportId={setForcedReportId}
           reportId={reportId}
