@@ -79,7 +79,7 @@ test("GIVEN CompileButton THEN is live updated", async () => {
   expect(button).toBeDisabled();
 });
 
-test.only("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
+test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
