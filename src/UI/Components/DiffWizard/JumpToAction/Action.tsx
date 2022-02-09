@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownToggle, Spinner } from "@patternfly/react-core";
-import { DiffItem, Refs } from "../types";
+import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { SummaryList } from "./SummaryList";
 
 interface Props {
-  items: Pick<DiffItem, "id" | "status">[];
+  items: Pick<Item, "id" | "status">[];
   refs: Refs;
 }
 

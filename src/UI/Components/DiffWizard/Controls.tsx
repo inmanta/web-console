@@ -1,22 +1,17 @@
 import React from "react";
 import { Grid, GridItem } from "@patternfly/react-core";
-import { Diff, Query, RemoteData } from "@/Core";
+import { Diff, RemoteData } from "@/Core";
 import {
-  DiffVersus,
   EmptyJumpToAction,
   JumpToAction,
   LoadingJumpToAction,
-} from "@/UI/Components";
-import { Refs } from "@/UI/Components/DiffWizard/types";
-import { resourceToDiffItem } from "./resourceToDiffItem";
-
-type Data<K extends Query.Kind> = RemoteData.Type<
-  Query.Error<K>,
-  Query.UsedData<K>
->;
+} from "./JumpToAction";
+import { Versus } from "./Versus";
+import { fromResourceToItem } from "./fromResourceToItem";
+import { Refs } from "./types";
 
 interface Props extends Diff.Identifiers {
-  data: Data<"GetDesiredStateDiff">;
+  data: RemoteData.RemoteData<string, Diff.Resource[]>;
   refs: Refs;
 }
 
@@ -33,7 +28,7 @@ export const Controls: React.FC<Props> = ({ data, refs, from, to }) => (
               <EmptyJumpToAction />
             ) : (
               <JumpToAction
-                items={resources.map(resourceToDiffItem)}
+                items={resources.map(fromResourceToItem)}
                 refs={refs}
               />
             ),
@@ -42,7 +37,7 @@ export const Controls: React.FC<Props> = ({ data, refs, from, to }) => (
       )}
     </GridItem>
     <GridItem span={10}>
-      <DiffVersus from={from} to={to} />
+      <Versus from={from} to={to} />
     </GridItem>
   </Grid>
 );

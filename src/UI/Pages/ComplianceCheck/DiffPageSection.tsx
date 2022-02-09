@@ -2,28 +2,35 @@ import React, { useContext, useEffect, useRef } from "react";
 import { Bullseye, PageSection, Spinner } from "@patternfly/react-core";
 import { Maybe, RemoteData } from "@/Core";
 import {
-  DiffItemList,
   EmptyView,
   PagePadder,
   RemoteDataView,
+  DiffWizard,
 } from "@/UI/Components";
-import { Refs } from "@/UI/Components/DiffWizard/types";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { resourceToDiffItem } from "../DesiredStateCompare/resourceToDiffItem";
 import { MaybeReport } from "./types";
 
 interface Props {
   report: MaybeReport;
+  version: string;
 }
 
-export const DiffPageSection: React.FC<Props> = ({ report }) =>
+export const DiffPageSection: React.FC<Props> = ({ report, version }) =>
   Maybe.isNone(report) ? null : (
-    <DiffView id={report.value.id} todo={report.value.todo as number} />
+    <DiffView
+      id={report.value.id}
+      todo={report.value.todo as number}
+      version={version}
+    />
   );
 
-const DiffView: React.FC<{ id: string; todo: number }> = ({ id, todo }) => {
-  const refs: Refs = useRef({});
+const DiffView: React.FC<{ id: string; todo: number; version: string }> = ({
+  id,
+  todo,
+  version,
+}) => {
+  const refs: DiffWizard.Refs = useRef({});
   const { queryResolver } = useContext(DependencyContext);
   const [reportData, refetch] = queryResolver.useOneTime<"GetDryRunReport">({
     kind: "GetDryRunReport",
@@ -36,10 +43,17 @@ const DiffView: React.FC<{ id: string; todo: number }> = ({ id, todo }) => {
     refetch();
   }, [todo, id, reportData, refetch]);
 
+  const diffData = RemoteData.mapSuccess((report) => report.diff, reportData);
+
   return (
     <>
       <PageSection variant="light" hasShadowBottom sticky="top">
-        controls for {id}
+        <DiffWizard.Controls
+          data={diffData}
+          refs={refs}
+          from={version}
+          to={"current"}
+        />
       </PageSection>
       <PageSection isFilled>
         <PagePadder>
@@ -51,8 +65,8 @@ const DiffView: React.FC<{ id: string; todo: number }> = ({ id, todo }) => {
                 {data.diff.length <= 0 ? (
                   <EmptyView message={words("desiredState.compare.empty")} />
                 ) : (
-                  <DiffItemList
-                    items={data.diff.map(resourceToDiffItem)}
+                  <DiffWizard.ItemList
+                    items={data.diff.map(DiffWizard.fromResourceToItem)}
                     refs={refs}
                   />
                 )}

@@ -11,12 +11,12 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/JumpToAction/StatusDescriptor";
-import { DiffItem, Refs } from "@/UI/Components/DiffWizard/types";
+import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry";
 
 interface Props {
-  item: DiffItem;
+  item: Item;
   refs: Refs;
 }
 
@@ -61,7 +61,7 @@ export const Block: React.FC<Props> = ({ item, refs }) => {
   );
 };
 
-const Body: React.FC<{ item: DiffItem }> = ({ item }) => {
+const Body: React.FC<{ item: Item }> = ({ item }) => {
   switch (item.status) {
     case "deleted":
       return <DeletedBody item={item} />;
@@ -75,9 +75,7 @@ const Body: React.FC<{ item: DiffItem }> = ({ item }) => {
   }
 };
 
-const DeletedBody: React.FC<{ item: Pick<DiffItem, "entries"> }> = ({
-  item,
-}) => {
+const DeletedBody: React.FC<{ item: Pick<Item, "entries"> }> = ({ item }) => {
   const [isShown, setIsShown] = useState(false);
 
   return (
@@ -96,9 +94,7 @@ const DeletedBody: React.FC<{ item: Pick<DiffItem, "entries"> }> = ({
   );
 };
 
-const ModifiedBody: React.FC<{ item: Pick<DiffItem, "entries"> }> = ({
-  item,
-}) => (
+const ModifiedBody: React.FC<{ item: Pick<Item, "entries"> }> = ({ item }) => (
   <StyledBody>
     {item.entries.map((entry) => (
       <Entry key={entry.title} {...entry} />

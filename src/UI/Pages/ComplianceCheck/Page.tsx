@@ -88,7 +88,7 @@ export const View: React.FC<Props> = ({ version }) => {
           </ToolbarContent>
         </Toolbar>
       </PageSection>
-      <DiffPageSection report={selectedReport} />
+      <DiffPageSection report={selectedReport} version={version} />
     </>
   );
 };
