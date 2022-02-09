@@ -79,7 +79,7 @@ test("GIVEN CompileButton THEN is live updated", async () => {
   expect(button).toBeDisabled();
 });
 
-test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
+test.only("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -106,6 +106,20 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
       },
     },
   });
+  await act(async () => {
+    await apiHelper.resolve({});
+  });
+  // Check if update to the compiler status is triggered
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "HEAD",
+    url: "/api/v1/notify/env",
+  });
+  expect(button).toBeDisabled();
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
+  expect(button).toBeEnabled();
 });
 
 test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompile option THEN triggers recompile with update", async () => {
