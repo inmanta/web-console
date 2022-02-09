@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button } from "@patternfly/react-core";
+import { Button, ToolbarGroup } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { ErrorToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -30,14 +30,14 @@ export const TriggerDryRunAction: React.FC<Props> = ({
   };
 
   return (
-    <>
+    <ToolbarGroup alignment={{ default: "alignRight" }}>
       <ErrorToastAlert
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
       />
-      <Button onClick={onTrigger}>
+      <Button variant="secondary" onClick={onTrigger}>
         {words("desiredState.complianceCheck.action.dryRun")}
       </Button>
-    </>
+    </ToolbarGroup>
   );
 };
