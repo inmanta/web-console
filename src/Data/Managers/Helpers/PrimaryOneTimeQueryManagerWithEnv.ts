@@ -18,7 +18,7 @@ import {
 import { DependencyContext } from "@/UI";
 import { Data, GetDependenciesWithEnv, GetUrlWithEnv, ToUsed } from "./types";
 import { usePrevious } from "./usePrevious";
-import { getEncodedUrlWithEnv } from "./utils";
+import { urlEncodeParams } from "./utils";
 
 export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
   implements OneTimeQueryManager<Kind>
@@ -47,12 +47,12 @@ export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
     const [url, setUrl] = useState(
-      getEncodedUrlWithEnv(this.getUrl, query, environment)
+      this.getUrl(urlEncodeParams(query), environment)
     );
     const previousEnvironment = usePrevious(environment);
 
     useEffect(() => {
-      setUrl(getEncodedUrlWithEnv(this.getUrl, query, environment));
+      setUrl(this.getUrl(urlEncodeParams(query), environment));
     }, this.getDependencies(query, environment));
 
     useEffect(() => {
@@ -61,7 +61,7 @@ export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
       // Otherwise the url has changed, use it to not lose e.g. paging state
       const urlToUse =
         environment !== previousEnvironment
-          ? getEncodedUrlWithEnv(this.getUrl, query, environment)
+          ? this.getUrl(urlEncodeParams(query), environment)
           : url;
       this.update(query, urlToUse, environment);
     }, [url, environment]);
@@ -109,12 +109,12 @@ export class PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv<
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
     const [url, setUrl] = useState(
-      getEncodedUrlWithEnv(this.getUrl, query, environment)
+      this.getUrl(urlEncodeParams(query), environment)
     );
     const previousEnvironment = usePrevious(environment);
 
     useEffect(() => {
-      setUrl(getEncodedUrlWithEnv(this.getUrl, query, environment));
+      setUrl(this.getUrl(urlEncodeParams(query), environment));
     }, this.getDependencies(query, environment));
 
     useEffect(() => {
@@ -123,7 +123,7 @@ export class PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv<
       // Otherwise the url has changed, use it to not lose e.g. paging state
       const urlToUse =
         environment !== previousEnvironment
-          ? getEncodedUrlWithEnv(this.getUrl, query, environment)
+          ? this.getUrl(urlEncodeParams(query), environment)
           : url;
       this.update(query, urlToUse, environment);
     }, [url, environment]);

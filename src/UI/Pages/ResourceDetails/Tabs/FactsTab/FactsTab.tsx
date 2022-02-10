@@ -12,7 +12,7 @@ export const FactsTab: React.FC<Props> = ({ resourceId }) => {
 
   const [data] = queryResolver.useContinuous<"GetResourceFacts">({
     kind: "GetResourceFacts",
-    resourceId: resourceId,
+    resourceId,
   });
 
   return (
