@@ -144,26 +144,22 @@ test("Given the EditInstance View When changing an embedded entity Then the corr
   userEvent.click(screen.getByText("Confirm"));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
-  if (ServiceInstance.a.active_attributes) {
-    const expectedCircuits: Record<string, unknown>[] = cloneDeep(
-      ServiceInstance.a.active_attributes["circuits"] as Record<
-        string,
-        unknown
-      >[]
-    );
-    expectedCircuits[0]["service_id"] = 9489784967;
-    expect(apiHelper.pendingRequests[0]).toEqual({
-      method: "PATCH",
-      url: `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
-      body: {
-        attributes: {
-          bandwidth: "2",
-          circuits: expectedCircuits,
-        },
-      },
-      environment: "env",
-    });
-  } else {
-    throw Error("Active attributes should be defined");
+  if (!ServiceInstance.a.active_attributes) {
+    throw Error("Active attributes for this instance should be defined");
   }
+  const expectedCircuits: Record<string, unknown>[] = cloneDeep(
+    ServiceInstance.a.active_attributes["circuits"] as Record<string, unknown>[]
+  );
+  expectedCircuits[0]["service_id"] = 9489784967;
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "PATCH",
+    url: `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`,
+    body: {
+      attributes: {
+        bandwidth: "2",
+        circuits: expectedCircuits,
+      },
+    },
+    environment: "env",
+  });
 });
