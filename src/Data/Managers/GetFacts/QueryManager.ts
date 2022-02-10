@@ -4,13 +4,10 @@ import {
   StateHelperWithEnv,
   stringifyObjectOrUndefined,
 } from "@/Core";
-import {
-  getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnv,
-} from "@/Data/Managers/Helpers";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class GetFactsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetFacts"> {
+export class GetFactsQueryManager extends QueryManager.ContinuousWithEnv<"GetFacts"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetFacts">,

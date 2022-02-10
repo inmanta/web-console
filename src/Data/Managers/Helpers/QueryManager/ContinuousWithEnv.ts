@@ -9,29 +9,38 @@ import { useContext, useEffect, useState } from "react";
 import {
   RemoteData,
   Query,
-  OneTimeQueryManager,
+  ContinuousQueryManager,
   QueryManagerKind,
+  Scheduler,
   ApiHelper,
   StateHelperWithEnv,
 } from "@/Core";
 import { DependencyContext } from "@/UI";
-import { Data, GetDependenciesWithEnv, GetUrlWithEnv, ToUsed } from "./types";
+import {
+  Data,
+  GetUniqueWithEnv,
+  GetDependenciesWithEnv,
+  GetUrlWithEnv,
+  ToUsed,
+} from "./types";
 import { usePrevious } from "./usePrevious";
 import { urlEncodeParams } from "./utils";
 
-export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
-  implements OneTimeQueryManager<Kind>
+export class ContinuousWithEnv<Kind extends Query.Kind>
+  implements ContinuousQueryManager<Kind>
 {
   constructor(
-    protected readonly apiHelper: ApiHelper,
-    protected readonly stateHelper: StateHelperWithEnv<Kind>,
+    private readonly apiHelper: ApiHelper,
+    private readonly stateHelper: StateHelperWithEnv<Kind>,
+    private readonly scheduler: Scheduler,
+    private readonly getUnique: GetUniqueWithEnv<Kind>,
     private readonly getDependencies: GetDependenciesWithEnv<Kind>,
     private readonly kind: Kind,
     private readonly getUrl: GetUrlWithEnv<Kind>,
     private readonly toUsed: ToUsed<Kind>
   ) {}
 
-  async update(
+  private async update(
     query: Query.SubQuery<Kind>,
     url: string,
     environment: string
@@ -43,7 +52,7 @@ export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
     );
   }
 
-  useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
+  useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
     const [url, setUrl] = useState(
@@ -55,6 +64,12 @@ export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
       setUrl(this.getUrl(urlEncodeParams(query), environment));
     }, this.getDependencies(query, environment));
 
+    const task = {
+      effect: async () =>
+        RemoteData.fromEither(await this.apiHelper.get(url, environment)),
+      update: (data) => this.stateHelper.set(data, query, environment),
+    };
+
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query, environment);
       // If the environment changed, use the url derived from the query
@@ -64,11 +79,15 @@ export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
           ? this.getUrl(urlEncodeParams(query), environment)
           : url;
       this.update(query, urlToUse, environment);
+      this.scheduler.register(this.getUnique(query, environment), task);
+      return () => {
+        this.scheduler.unregister(this.getUnique(query, environment));
+      };
     }, [url, environment]);
 
     return [
       RemoteData.mapSuccess(
-        (d) => this.toUsed(d, setUrl),
+        (data) => this.toUsed(data, setUrl),
         this.stateHelper.getHooked(query, environment)
       ),
       () => this.update(query, url, environment),
@@ -76,6 +95,6 @@ export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
   }
 
   matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
-    return query.kind === this.kind && kind === "OneTime";
+    return query.kind === this.kind && kind === "Continuous";
   }
 }

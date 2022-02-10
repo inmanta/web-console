@@ -4,13 +4,10 @@ import {
   ApiHelper,
   StateHelperWithEnv,
 } from "@/Core";
-import {
-  getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnv,
-} from "@/Data/Managers/Helpers";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ServiceInstancesQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetServiceInstances"> {
+export class ServiceInstancesQueryManager extends QueryManager.ContinuousWithEnv<"GetServiceInstances"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetServiceInstances">,

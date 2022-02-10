@@ -9,54 +9,64 @@ import { useEffect, useState } from "react";
 import {
   RemoteData,
   Query,
-  OneTimeQueryManager,
+  ContinuousQueryManager,
   QueryManagerKind,
   StateHelper,
+  Scheduler,
   ApiHelper,
 } from "@/Core";
-import { GetDependencies, Data, GetUrl, ToUsed } from "./types";
+import { GetDependencies, Data, GetUnique, GetUrl, ToUsed } from "./types";
 import { urlEncodeParams } from "./utils";
 
-export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
-  implements OneTimeQueryManager<Kind>
+export class Continuous<Kind extends Query.Kind>
+  implements ContinuousQueryManager<Kind>
 {
   constructor(
-    protected readonly apiHelper: ApiHelper,
-    protected readonly stateHelper: StateHelper<Kind>,
+    private readonly apiHelper: ApiHelper,
+    private readonly stateHelper: StateHelper<Kind>,
+    private readonly scheduler: Scheduler,
+    private readonly getUnique: GetUnique<Kind>,
     private readonly getDependencies: GetDependencies<Kind>,
     private readonly kind: Kind,
     private readonly getUrl: GetUrl<Kind>,
-    private readonly toUsed: ToUsed<Kind>,
-    private readonly strategy: "MERGE" | "RELOAD"
+    private readonly toUsed: ToUsed<Kind>
   ) {}
 
-  async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
+  private async update(
+    query: Query.SubQuery<Kind>,
+    url: string
+  ): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(await this.apiHelper.getWithoutEnvironment(url)),
       query
     );
   }
 
-  useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
+  useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
     const [url, setUrl] = useState(this.getUrl(urlEncodeParams(query)));
 
     useEffect(() => {
       setUrl(this.getUrl(urlEncodeParams(query)));
     }, this.getDependencies(query));
 
+    const task = {
+      effect: async () =>
+        RemoteData.fromEither(await this.apiHelper.getWithoutEnvironment(url)),
+      update: (data) => this.stateHelper.set(data, query),
+    };
+
     useEffect(() => {
-      if (
-        this.strategy === "RELOAD" ||
-        RemoteData.isNotAsked(this.stateHelper.getOnce(query))
-      ) {
-        this.stateHelper.set(RemoteData.loading(), query);
-      }
+      this.stateHelper.set(RemoteData.loading(), query);
       this.update(query, url);
+      this.scheduler.register(this.getUnique(query), task);
+      return () => {
+        this.scheduler.unregister(this.getUnique(query));
+      };
     }, [url]);
 
     return [
       RemoteData.mapSuccess(
-        (d) => this.toUsed(d, setUrl),
+        (data) => this.toUsed(data, setUrl),
         this.stateHelper.getHooked(query)
       ),
       () => this.update(query, url),
@@ -64,6 +74,6 @@ export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
   }
 
   matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
-    return query.kind === this.kind && kind === "OneTime";
+    return query.kind === this.kind && kind === "Continuous";
   }
 }

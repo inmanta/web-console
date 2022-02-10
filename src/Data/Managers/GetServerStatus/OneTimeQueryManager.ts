@@ -1,8 +1,8 @@
 import { identity } from "lodash-es";
 import { StateHelper, ApiHelper } from "@/Core";
-import { PrimaryOneTimeQueryManager } from "@/Data/Managers/Helpers";
+import { QueryManager } from "@/Data/Managers/Helpers";
 
-export class GetServerStatusOneTimeQueryManager extends PrimaryOneTimeQueryManager<"GetServerStatus"> {
+export class GetServerStatusOneTimeQueryManager extends QueryManager.OneTime<"GetServerStatus"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetServerStatus">

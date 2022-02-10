@@ -1,9 +1,9 @@
 import { identity } from "lodash-es";
 import { ApiHelper, StateHelperWithEnv } from "@/Core";
-import { PrimaryOneTimeQueryManagerWithEnv } from "@/Data/Managers/Helpers";
+import { QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class EnvironmentDetailsOneTimeQueryManager extends PrimaryOneTimeQueryManagerWithEnv<"GetEnvironmentDetails"> {
+export class EnvironmentDetailsOneTimeQueryManager extends QueryManager.OneTimeWithEnv<"GetEnvironmentDetails"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">

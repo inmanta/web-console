@@ -4,13 +4,10 @@ import {
   stringifyObjectOrUndefined,
   StateHelperWithEnv,
 } from "@/Core";
-import {
-  getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnv,
-} from "@/Data/Managers/Helpers";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class GetVersionResourcesQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetVersionResources"> {
+export class GetVersionResourcesQueryManager extends QueryManager.ContinuousWithEnv<"GetVersionResources"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetVersionResources">,
