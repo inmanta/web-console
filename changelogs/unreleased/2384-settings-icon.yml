@@ -1,0 +1,4 @@
+description: Remove settings icon from environment overview page
+issue-nr: 2384
+change-type: patch
+destination-branches: [master, iso5]
