@@ -44,6 +44,7 @@ const StyledAlert = styled(Alert)`
 
 const Wrapper = styled.div`
   padding-top: 1rem;
+  overflow-x: auto;
 `;
 
 const StyledTable = styled(TableComposable)`
