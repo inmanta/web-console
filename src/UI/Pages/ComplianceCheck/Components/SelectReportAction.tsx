@@ -36,6 +36,8 @@ export const SelectReportAction: React.FC<Props> = ({
           onSelect={onSelect}
           selections={selectedReport.value.id}
           isOpen={isOpen}
+          aria-label="ReportList"
+          toggleAriaLabel="ReportListSelect"
         >
           {reportsData.value.map((report) => (
             <SelectOption key={report.id} value={report.id}>

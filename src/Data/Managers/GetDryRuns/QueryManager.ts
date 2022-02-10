@@ -1,17 +1,15 @@
 import { identity } from "lodash";
-import { Scheduler, ApiHelper, StateHelperWithEnv } from "@/Core";
+import { Scheduler, ApiHelper } from "@/Core";
+import { Store } from "@/Data";
 import { PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv } from "@/Data/Managers/Helpers";
+import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class GetDryRunsQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetDryRuns"> {
-  constructor(
-    apiHelper: ApiHelper,
-    stateHelper: StateHelperWithEnv<"GetDryRuns">,
-    scheduler: Scheduler
-  ) {
+export class QueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetDryRuns"> {
+  constructor(apiHelper: ApiHelper, store: Store, scheduler: Scheduler) {
     super(
       apiHelper,
-      stateHelper,
+      new StateHelper(store),
       scheduler,
       ({ kind }, environment) => `${kind}_${environment}`,
       ({ version }, environment) => [environment, version],

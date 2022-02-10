@@ -50,5 +50,5 @@ export * from "./GetCompilerStatus";
 export * from "./GetParameters";
 export * from "./GetFacts";
 export * from "./GetDesiredStateDiff";
-export * from "./GetDryRuns";
+export * as GetDryRuns from "./GetDryRuns";
 export * as GetDryRunReport from "./GetDryRunReport";
