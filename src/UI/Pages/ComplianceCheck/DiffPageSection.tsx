@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { Bullseye, PageSection, Spinner } from "@patternfly/react-core";
-import { Maybe, RemoteData } from "@/Core";
+import { PageSection } from "@patternfly/react-core";
+import { Maybe, ParsedNumber, RemoteData } from "@/Core";
 import {
   EmptyView,
   PagePadder,
@@ -9,6 +9,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { LoadingIndicator } from "./Components";
 import { MaybeReport } from "./types";
 
 interface Props {
@@ -61,7 +62,9 @@ const DiffView: React.FC<{ id: string; todo: number; version: string }> = ({
             data={reportData}
             SuccessView={(data) => (
               <>
-                {data.summary.todo > 0 && <LoadingView />}
+                {data.summary.todo > 0 && (
+                  <LoadingIndicator progress={getProgress(data.summary)} />
+                )}
                 {data.diff.length <= 0 ? (
                   <EmptyView message={words("desiredState.compare.empty")} />
                 ) : (
@@ -79,8 +82,8 @@ const DiffView: React.FC<{ id: string; todo: number; version: string }> = ({
   );
 };
 
-const LoadingView: React.FC = () => (
-  <Bullseye style={{ paddingBottom: "24px" }}>
-    <Spinner isSVG size="lg" />
-  </Bullseye>
-);
+const getProgress = (summary: {
+  todo: ParsedNumber;
+  total: ParsedNumber;
+}): string =>
+  `${Number(summary.total) - Number(summary.todo)}/${summary.total}`;

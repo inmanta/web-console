@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Select, SelectOption, ToolbarGroup } from "@patternfly/react-core";
+import {
+  Label,
+  Select,
+  SelectOption,
+  Spinner,
+  ToolbarGroup,
+} from "@patternfly/react-core";
+import { global_Color_100 } from "@patternfly/react-tokens";
+import styled from "styled-components";
 import { DryRun, Maybe, RemoteData } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { MaybeReport, RemoteReportList } from "../types";
@@ -41,7 +49,7 @@ export const SelectReportAction: React.FC<Props> = ({
         >
           {reportsData.value.map((report) => (
             <SelectOption key={report.id} value={report.id}>
-              {datePresenter.getFull(report.date)} <Progress report={report} />
+              <Progress report={report} /> {datePresenter.getFull(report.date)}
             </SelectOption>
           ))}
         </Select>
@@ -55,9 +63,23 @@ const Progress: React.FC<{ report: DryRun.Progress }> = ({
 }) => {
   const tot = Number(total);
   const current = tot - Number(todo);
-  return (
-    <span>
+  const done = current === tot;
+  return done ? (
+    <StyledLabel variant="outline" isCompact>
       {current} / {tot}
-    </span>
+    </StyledLabel>
+  ) : (
+    <StyledLabel variant="filled" color="orange" isCompact>
+      <StyledSpinner isSVG size="sm" /> {current} / {tot}
+    </StyledLabel>
   );
 };
+
+const StyledLabel = styled(Label)`
+  margin-right: 4px;
+`;
+
+const StyledSpinner = styled(Spinner)`
+  --pf-c-spinner--Color: ${global_Color_100.var};
+  margin-right: 8px;
+`;
