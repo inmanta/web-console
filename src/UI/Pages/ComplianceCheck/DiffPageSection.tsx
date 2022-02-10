@@ -36,6 +36,7 @@ const DiffView: React.FC<{ id: string; todo: number; version: string }> = ({
   const [reportData, refetch] = queryResolver.useOneTime<"GetDryRunReport">({
     kind: "GetDryRunReport",
     reportId: id,
+    version,
   });
 
   useEffect(() => {

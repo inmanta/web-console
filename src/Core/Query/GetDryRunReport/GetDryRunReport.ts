@@ -2,6 +2,7 @@ import { DryRun } from "@/Core/Domain";
 
 export interface Query {
   kind: "GetDryRunReport";
+  version: string;
   reportId: string;
 }
 
