@@ -19,9 +19,8 @@ import { Data, GetDependenciesWithEnv, GetUrlWithEnv, ToUsed } from "./types";
 import { usePrevious } from "./usePrevious";
 import { urlEncodeParams } from "./utils";
 
-export class PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv<
-  Kind extends Query.Kind
-> implements OneTimeQueryManager<Kind>
+export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
+  implements OneTimeQueryManager<Kind>
 {
   constructor(
     protected readonly apiHelper: ApiHelper,

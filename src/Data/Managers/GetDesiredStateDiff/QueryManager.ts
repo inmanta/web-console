@@ -1,8 +1,8 @@
 import { identity } from "lodash-es";
 import { ApiHelper, StateHelperWithEnv } from "@/Core";
-import { PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv } from "@/Data/Managers/Helpers";
+import { PrimaryOneTimeQueryManagerWithEnv } from "@/Data/Managers/Helpers";
 
-export class GetDesiredStateDiffQueryManager extends PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv<"GetDesiredStateDiff"> {
+export class GetDesiredStateDiffQueryManager extends PrimaryOneTimeQueryManagerWithEnv<"GetDesiredStateDiff"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetDesiredStateDiff">
