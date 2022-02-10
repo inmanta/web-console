@@ -70,7 +70,7 @@ export const nestedEditable: ServiceInstanceModelWithTargetStates = {
     another_embedded: [
       {
         my_other_attr: "asdasd",
-        another_embedded_single: { attr5: 3.14, attr6: 1 },
+        another_embedded_single: { attr5: 3.14 },
       },
     ],
   },

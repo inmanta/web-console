@@ -64,7 +64,9 @@ export const createEditFormState = (
         }
       }
     } else {
-      return createFormState(fields);
+      const defaultFormStateForField = createFormState([curr]);
+      acc[curr.name] = defaultFormStateForField[curr.name];
+      return acc;
     }
   }, {});
 };

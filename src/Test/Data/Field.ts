@@ -167,7 +167,7 @@ export const nestedEditable: Field[] = [
             defaultValue: "",
             inputType: TextInputTypes.number,
             type: "number",
-            isOptional: false,
+            isOptional: true,
           },
           {
             kind: "Text",
