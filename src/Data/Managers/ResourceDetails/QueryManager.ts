@@ -1,9 +1,9 @@
 import { identity } from "lodash-es";
 import { StateHelper, Scheduler, ApiHelper } from "@/Core";
-import { PrimaryContinuousQueryManagerWithEnv } from "@/Data/Managers/Helpers";
+import { PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ResourceDetailsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetResourceDetails"> {
+export class ResourceDetailsQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetResourceDetails"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetResourceDetails">,
