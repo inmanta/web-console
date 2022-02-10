@@ -27,7 +27,6 @@ test("Given fieldsToFormState WHEN passed editable nested fields and current sta
         my_other_attr: "asdasd",
         another_embedded_single: {
           attr5: 3.14,
-          attr6: 1,
         },
       },
     ],

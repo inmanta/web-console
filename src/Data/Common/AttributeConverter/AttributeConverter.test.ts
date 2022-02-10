@@ -98,6 +98,39 @@ describe("AttributeResultConverter ", () => {
       );
       expect(diff).toEqual({ name: "inmanta2", another_attribute: null });
     });
+    it("Changing values of embedded entities", () => {
+      const originalAttributes = {
+        name: "inmanta",
+        embedded: [{ a: 1, unchanged: "same" }],
+      };
+      const afterChanges = {
+        name: "inmanta2",
+        embedded: [{ a: 2 }, { a: { c: "d" } }],
+      };
+      const diff = attributeResultConverter.calculateDiff(
+        afterChanges,
+        originalAttributes
+      );
+      expect(diff).toEqual({
+        name: "inmanta2",
+        embedded: [{ a: 2, unchanged: "same" }, { a: { c: "d" } }],
+      });
+    });
+    it("Having embedded entities but only changing the values of the first level attributes", () => {
+      const originalAttributes = {
+        name: "inmanta",
+        embedded: [{ a: 1, unchanged: "same" }],
+      };
+      const afterChanges = {
+        name: "inmanta2",
+        embedded: [{ a: 1, unchanged: "same" }],
+      };
+      const diff = attributeResultConverter.calculateDiff(
+        afterChanges,
+        originalAttributes
+      );
+      expect(diff).toEqual({ name: "inmanta2" });
+    });
   });
 
   describe("Converts attributes to proper types ", () => {

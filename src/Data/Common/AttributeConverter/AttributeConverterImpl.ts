@@ -1,5 +1,5 @@
 import { TextInputTypes } from "@patternfly/react-core";
-import { isEmpty, isEqual } from "lodash-es";
+import { cloneDeep, isEmpty, isEqual, merge } from "lodash-es";
 import {
   AttributeModel,
   FormAttributeResult,
@@ -168,21 +168,22 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
     if (!originalAttributes) {
       return attributesAfterChanges;
     }
+    // Make sure that we include values of nested embedded entities when checking the difference if only a part of them has changed
+    // Otherwise a partial update might not be valid or might remove previously set nested attributes
+    const richDiff = cloneDeep(originalAttributes);
+    merge(richDiff, attributesAfterChanges);
     // Don't include changes from undefined to null, but allow setting a value explicitly to null
-    const changedAttributeNames = Object.keys(attributesAfterChanges).filter(
+    const changedAttributeNames = Object.keys(richDiff).filter(
       (attributeName) =>
         !(
           originalAttributes[attributeName] === undefined &&
-          attributesAfterChanges[attributeName] === null
+          richDiff[attributeName] === null
         ) &&
-        !isEqual(
-          attributesAfterChanges[attributeName],
-          originalAttributes[attributeName]
-        )
+        !isEqual(richDiff[attributeName], originalAttributes[attributeName])
     );
     const updatedAttributes = {};
     for (const attribute of changedAttributeNames) {
-      updatedAttributes[attribute] = attributesAfterChanges[attribute];
+      updatedAttributes[attribute] = richDiff[attribute];
     }
     return updatedAttributes;
   }
