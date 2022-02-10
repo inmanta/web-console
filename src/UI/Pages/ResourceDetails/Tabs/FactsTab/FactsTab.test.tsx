@@ -14,6 +14,7 @@ import {
   dependencies,
   DynamicQueryManagerResolver,
   Facts,
+  Resource,
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -43,7 +44,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <FactsTab resourceId={"123"} />
+          <FactsTab resourceId={Resource.id} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -74,6 +75,13 @@ test("Given the FactsTab When the backend response is successful Then shows succ
   expect(
     await screen.findByRole("generic", { name: "Facts-Loading" })
   ).toBeInTheDocument();
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    environment: "env",
+    url: `/api/v2/resource/${Resource.encodedId}/facts`,
+    method: "GET",
+  });
 
   apiHelper.resolve(Either.right(Facts.response));
 

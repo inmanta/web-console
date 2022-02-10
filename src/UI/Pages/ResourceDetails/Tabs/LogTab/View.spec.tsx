@@ -11,6 +11,7 @@ import {
   ResourceLogsQueryManager,
 } from "@/Data";
 import {
+  Resource,
   DynamicQueryManagerResolver,
   StaticScheduler,
   ResourceLogs,
@@ -38,7 +39,7 @@ function setup() {
     <MemoryRouter>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
-          <View resourceId="resourceId1" />
+          <View resourceId={Resource.id} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -57,6 +58,13 @@ test("GIVEN ResourceLogsView THEN shows resource logs", async () => {
   expect(
     screen.getByRole("generic", { name: "ResourceLogs-Loading" })
   ).toBeVisible();
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    environment: "env",
+    url: `/api/v2/resource/${Resource.encodedId}/logs?limit=20&sort=timestamp.desc`,
+    method: "GET",
+  });
 
   await act(async () => {
     apiHelper.resolve(Either.right(ResourceLogs.response));
