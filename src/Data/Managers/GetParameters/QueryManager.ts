@@ -6,11 +6,11 @@ import {
 } from "@/Core";
 import {
   getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
+  PrimaryContinuousQueryManagerWithEnv,
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class GetParametersQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetParameters"> {
+export class GetParametersQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetParameters"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetParameters">,

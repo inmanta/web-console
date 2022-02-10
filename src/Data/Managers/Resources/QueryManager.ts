@@ -1,11 +1,11 @@
 import { Scheduler, Resource, ApiHelper, StateHelperWithEnv } from "@/Core";
 import {
   getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
+  PrimaryContinuousQueryManagerWithEnv,
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ResourcesQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetResources"> {
+export class ResourcesQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetResources"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetResources">,

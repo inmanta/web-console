@@ -26,9 +26,8 @@ import {
 import { usePrevious } from "./usePrevious";
 import { urlEncodeParams } from "./utils";
 
-export class PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<
-  Kind extends Query.Kind
-> implements ContinuousQueryManager<Kind>
+export class PrimaryContinuousQueryManagerWithEnv<Kind extends Query.Kind>
+  implements ContinuousQueryManager<Kind>
 {
   constructor(
     private readonly apiHelper: ApiHelper,

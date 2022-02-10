@@ -6,11 +6,11 @@ import {
 } from "@/Core";
 import {
   getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
+  PrimaryContinuousQueryManagerWithEnv,
 } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class GetVersionResourcesQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetVersionResources"> {
+export class GetVersionResourcesQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetVersionResources"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetVersionResources">,
