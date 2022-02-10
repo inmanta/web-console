@@ -1,9 +1,7 @@
 import { FileFetcher, Either, Maybe, ApiHelper } from "@/Core";
 
 interface RawResponse {
-  data?: {
-    content: string;
-  };
+  content?: string;
   message?: string;
 }
 
@@ -49,11 +47,8 @@ export class FileFetcherImpl implements FileFetcher {
       if (typeof response.message !== "undefined") {
         return Either.left(response.message);
       }
-      if (
-        typeof response.data !== "undefined" &&
-        typeof response.data.content !== "undefined"
-      ) {
-        return Either.right(response.data.content);
+      if (typeof response.content !== "undefined") {
+        return Either.right(response.content);
       }
 
       return Either.left("No data");
