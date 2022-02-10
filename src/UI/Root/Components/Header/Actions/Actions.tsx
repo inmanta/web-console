@@ -11,9 +11,9 @@ export const Actions: React.FC<{ noEnv: boolean }> = ({ noEnv }) => {
   return (
     <PageHeaderTools>
       <PageHeaderToolsGroup>
+        {!noEnv && <SettingsButton />}
         <StatusButton />
         <DocumentationLink />
-        <SettingsButton isDisabled={noEnv} />
       </PageHeaderToolsGroup>
       {keycloakController.isEnabled() && (
         <Profile keycloak={keycloakController.getInstance()} />
