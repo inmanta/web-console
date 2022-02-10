@@ -53,7 +53,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: "/api/v2/dryrun?version=123",
+    url: "/api/v2/dryrun/123",
     environment: "env",
   });
   await act(async () => {
@@ -75,7 +75,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/api/v2/dryrun/${DryRun.b.id}`,
+    url: `/api/v2/dryrun/123/${DryRun.b.id}`,
     environment: "env",
   });
   await act(async () => {
@@ -114,7 +114,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: "/api/v2/dryrun?version=123",
+    url: "/api/v2/dryrun/123",
     environment: "env",
   });
 
@@ -137,7 +137,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/api/v2/dryrun/${DryRun.a.id}`,
+    url: `/api/v2/dryrun/123/${DryRun.a.id}`,
     environment: "env",
   });
 });
