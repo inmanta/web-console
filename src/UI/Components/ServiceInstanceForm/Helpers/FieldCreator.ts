@@ -29,7 +29,6 @@ export class FieldCreator {
     const fieldsFromEmbeddedEntities = service.embedded_entities
       .map((entity) => this.embeddedEntityToField(entity))
       .filter(isNotNull);
-
     return [...fieldsFromAttributes, ...fieldsFromEmbeddedEntities];
   }
 
@@ -42,11 +41,12 @@ export class FieldCreator {
   }
 
   private embeddedEntityToField(entity: EmbeddedEntity): Field | null {
-    if (!this.fieldModifierHandler.validateModifier(entity.modifier))
+    if (!this.fieldModifierHandler.validateModifier(entity.modifier, true))
       return null;
 
     const fieldsFromAttributes: Field[] = this.attributesToFields(
-      entity.attributes
+      entity.attributes,
+      true
     );
 
     const fieldsFromEmbeddedEntities = entity.embedded_entities
@@ -73,11 +73,14 @@ export class FieldCreator {
     };
   }
 
-  private attributesToFields(attributes: AttributeModel[]): Field[] {
+  private attributesToFields(
+    attributes: AttributeModel[],
+    embedded?: boolean
+  ): Field[] {
     const converter = new AttributeInputConverterImpl();
     return attributes
       .filter((attribute) =>
-        this.fieldModifierHandler.validateModifier(attribute.modifier)
+        this.fieldModifierHandler.validateModifier(attribute.modifier, embedded)
       )
       .map((attribute) => {
         const type = converter.getInputType(attribute);
@@ -86,7 +89,6 @@ export class FieldCreator {
           attribute.default_value_set,
           attribute.default_value
         );
-
         if (type === "bool") {
           return {
             kind: "Boolean",
