@@ -49,13 +49,12 @@ export class GetCompilerStatusQueryManager
       };
     }, [URL, query.kind]);
 
-    return [
-      compilerStatus,
-      () => async () => {
-        setCompilerStatus(RemoteData.loading());
-        setCompilerStatusFromCode(await this.apiHelper.head(URL));
-      },
-    ];
+    const refetch = async () => {
+      setCompilerStatus(RemoteData.loading());
+      setCompilerStatusFromCode(await this.apiHelper.head(URL));
+    };
+
+    return [compilerStatus, () => refetch()];
   }
 
   matches(
