@@ -7,4 +7,3 @@ export * from "./TreeNode";
 export * from "./Utils";
 export * from "./Dictionary";
 export * from "./Scheduler";
-export * from "./EncodableParam";

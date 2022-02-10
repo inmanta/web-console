@@ -15,6 +15,7 @@ import {
   ApiHelper,
 } from "@/Core";
 import { GetDependencies, Data, GetUrl, ToUsed } from "./types";
+import { getEncodedUrl } from "./utils";
 
 export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
   implements OneTimeQueryManager<Kind>
@@ -37,10 +38,10 @@ export class PrimaryOneTimeQueryManager<Kind extends Query.Kind>
   }
 
   useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
-    const [url, setUrl] = useState(this.getUrl(query));
+    const [url, setUrl] = useState(getEncodedUrl(this.getUrl, query));
 
     useEffect(() => {
-      setUrl(this.getUrl(query));
+      setUrl(getEncodedUrl(this.getUrl, query));
     }, this.getDependencies(query));
 
     useEffect(() => {

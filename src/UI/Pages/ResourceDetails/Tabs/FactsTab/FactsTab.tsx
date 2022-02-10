@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { EncodableParam } from "@/Core";
 import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { FactsTable } from "./FactsTable";
@@ -13,7 +12,7 @@ export const FactsTab: React.FC<Props> = ({ resourceId }) => {
 
   const [data] = queryResolver.useContinuous<"GetResourceFacts">({
     kind: "GetResourceFacts",
-    resourceId: new EncodableParam(resourceId),
+    resourceId: resourceId,
   });
 
   return (

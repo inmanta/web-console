@@ -16,6 +16,7 @@ import {
   ApiHelper,
 } from "@/Core";
 import { GetDependencies, Data, GetUnique, GetUrl, ToUsed } from "./types";
+import { getEncodedUrl } from "./utils";
 
 export class PrimaryContinuousQueryManager<Kind extends Query.Kind>
   implements ContinuousQueryManager<Kind>
@@ -42,10 +43,10 @@ export class PrimaryContinuousQueryManager<Kind extends Query.Kind>
   }
 
   useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
-    const [url, setUrl] = useState(this.getUrl(query));
+    const [url, setUrl] = useState(getEncodedUrl(this.getUrl, query));
 
     useEffect(() => {
-      setUrl(this.getUrl(query));
+      setUrl(getEncodedUrl(this.getUrl, query));
     }, this.getDependencies(query));
 
     const task = {

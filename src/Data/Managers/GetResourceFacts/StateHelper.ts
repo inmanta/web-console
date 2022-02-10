@@ -12,12 +12,11 @@ export class GetResourceFactsStateHelper extends PrimaryStateHelper<"GetResource
           data
         );
         store.dispatch.resourceFacts.setList({
-          resourceId: resourceId.value,
+          resourceId: resourceId,
           data: unwrapped,
         });
       },
-      (state, { resourceId }) =>
-        state.resourceFacts.listByResource[resourceId.value]
+      (state, { resourceId }) => state.resourceFacts.listByResource[resourceId]
     );
   }
 }
