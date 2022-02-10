@@ -11,7 +11,10 @@ export class GetResourceFactsStateHelper extends PrimaryStateHelper<"GetResource
           (wrapped) => wrapped.data,
           data
         );
-        store.dispatch.resourceFacts.setList({ resourceId, data: unwrapped });
+        store.dispatch.resourceFacts.setList({
+          resourceId,
+          data: unwrapped,
+        });
       },
       (state, { resourceId }) => state.resourceFacts.listByResource[resourceId]
     );

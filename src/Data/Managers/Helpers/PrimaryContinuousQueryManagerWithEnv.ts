@@ -25,6 +25,7 @@ import {
   ToUsed,
 } from "./types";
 import { usePrevious } from "./usePrevious";
+import { urlEncodeParams } from "./utils";
 
 export class PrimaryContinuousQueryManagerWithEnv<Kind extends Query.Kind>
   implements ContinuousQueryManager<Kind>
@@ -54,11 +55,13 @@ export class PrimaryContinuousQueryManagerWithEnv<Kind extends Query.Kind>
   useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
-    const [url, setUrl] = useState(this.getUrl(query, environment));
+    const [url, setUrl] = useState(
+      this.getUrl(urlEncodeParams(query), environment)
+    );
     const previousEnvironment = usePrevious(environment);
 
     useEffect(() => {
-      setUrl(this.getUrl(query, environment));
+      setUrl(this.getUrl(urlEncodeParams(query), environment));
     }, this.getDependencies(query, environment));
 
     const task = {
@@ -73,7 +76,7 @@ export class PrimaryContinuousQueryManagerWithEnv<Kind extends Query.Kind>
       // Otherwise the url has changed, use it to not lose e.g. paging state
       const urlToUse =
         environment !== previousEnvironment
-          ? this.getUrl(query, environment)
+          ? this.getUrl(urlEncodeParams(query), environment)
           : url;
       this.update(query, urlToUse, environment);
       this.scheduler.register(this.getUnique(query, environment), task);
@@ -126,11 +129,13 @@ export class PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<
   useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
-    const [url, setUrl] = useState(this.getUrl(query, environment));
+    const [url, setUrl] = useState(
+      this.getUrl(urlEncodeParams(query), environment)
+    );
     const previousEnvironment = usePrevious(environment);
 
     useEffect(() => {
-      setUrl(this.getUrl(query, environment));
+      setUrl(this.getUrl(urlEncodeParams(query), environment));
     }, this.getDependencies(query, environment));
 
     const task = {
@@ -145,7 +150,7 @@ export class PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<
       // Otherwise the url has changed, use it to not lose e.g. paging state
       const urlToUse =
         environment !== previousEnvironment
-          ? this.getUrl(query, environment)
+          ? this.getUrl(urlEncodeParams(query), environment)
           : url;
       this.update(query, urlToUse, environment);
       this.scheduler.register(this.getUnique(query, environment), task);
