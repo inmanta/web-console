@@ -1,1 +1,1 @@
-export * from "./QueryManager";
+export { Manager as QueryManager } from "./QueryManager";
