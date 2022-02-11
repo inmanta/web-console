@@ -9,7 +9,6 @@ import {
   EmptyView,
   ErrorView,
   LoadingView,
-  PageContainer,
   PaginationWidget,
   ServiceProvider,
 } from "@/UI/Components";
@@ -18,12 +17,7 @@ import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Chart, TableControls } from "./Components";
 import { TableProvider } from "./TableProvider";
-
-const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageContainer {...props} title={words("inventory.title")}>
-    {children}
-  </PageContainer>
-);
+import { Wrapper } from "./Wrapper";
 
 export const Page: React.FC = () => {
   const { service: serviceName } = useRouteParams<"Inventory">();
@@ -75,7 +69,7 @@ export const ServiceInventory: React.FunctionComponent<{
   });
 
   return (
-    <Wrapper>
+    <Wrapper name={serviceName}>
       {intro}
       <TableControls
         serviceName={serviceName}
