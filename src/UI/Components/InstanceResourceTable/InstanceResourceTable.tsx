@@ -1,12 +1,9 @@
-import React, { useContext } from "react";
-import { Button } from "@patternfly/react-core";
+import React from "react";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { InstanceResourceModel } from "@/Core";
-import { Link } from "@/UI/Components/Link";
+import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { ResourceStatusCell } from "@/UI/Components/ResourceStatusCell";
-import { DependencyContext } from "@/UI/Dependency";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
-import { words } from "@/UI/words";
 
 interface Props {
   resources: InstanceResourceModel[];
@@ -15,26 +12,20 @@ interface Props {
 }
 
 export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
-  const { routeManager } = useContext(DependencyContext);
-  const columns = ["Resource Id", "Details", "State"];
+  const columns = ["Resource Id", "State"];
   const rows = resources.map((resource) => {
-    const linkToDetails = (
-      <Link
-        pathname={routeManager.getUrl("ResourceDetails", {
-          resourceId: getResourceIdFromResourceVersionId(resource.resource_id),
-        })}
-        envOnly
-      >
-        <Button variant="secondary" isInline>
-          {words("inventory.resourcesTab.detailsLink")}
-        </Button>
-      </Link>
-    );
-
     return {
       cells: [
-        resource.resource_id,
-        { title: linkToDetails },
+        {
+          title: (
+            <ResourceLink
+              resourceId={getResourceIdFromResourceVersionId(
+                resource.resource_id
+              )}
+              linkText={resource.resource_id}
+            />
+          ),
+        },
         { title: <ResourceStatusCell state={resource.resource_state} /> },
       ],
     };

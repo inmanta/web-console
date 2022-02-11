@@ -47,3 +47,4 @@ export * from "./DesiredStateAttributes";
 export * from "./ResourceFilters";
 export * from "./RequiresTable";
 export * from "./LegendBar";
+export * from "./ResourceLink";
