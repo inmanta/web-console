@@ -87,4 +87,4 @@ const getProgress = (summary: {
   todo: ParsedNumber;
   total: ParsedNumber;
 }): string =>
-  `${Number(summary.total) - Number(summary.todo)}/${summary.total}`;
+  `${Number(summary.total) - Number(summary.todo)}/${Number(summary.total)}`;
