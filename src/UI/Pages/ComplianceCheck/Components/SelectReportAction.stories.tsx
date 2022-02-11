@@ -9,12 +9,7 @@ export default {
   component: SelectReportAction,
 };
 
-const list = [
-  { ...DryRun.a, total: 23, todo: 23 },
-  { ...DryRun.b, total: 10, todo: 5 },
-  DryRun.c,
-  { ...DryRun.d, total: 100, todo: 2 },
-];
+const list = [DryRun.a, ...DryRun.listOfReports];
 
 export const Default: React.FC = () => {
   const [selectedReport, setSelectedReport] = useState<MaybeReport>(
