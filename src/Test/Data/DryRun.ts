@@ -15,7 +15,7 @@ export const b: DryRun.Model = {
   model: 32,
   date: "2022-02-09T16:58:17.098544",
   total: 10,
-  todo: 5,
+  todo: 0,
 };
 export const c: DryRun.Model = {
   id: "0d88ed3a-e2ee-4590-a127-1d587f5824a3",
