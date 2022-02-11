@@ -7,6 +7,7 @@ import { DateWithTooltip, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Actions } from "./Actions";
+import { StatusLabel } from "./Components";
 
 interface Props {
   row: AgentRow;
@@ -25,13 +26,15 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
                 id: row.process_id,
               })}
             >
-              <Button variant="secondary" isSmall icon={<InfoCircleIcon />}>
+              <Button variant="tertiary" isSmall icon={<InfoCircleIcon />}>
                 {row.process_name}
               </Button>
             </Link>
           )}
         </Td>
-        <Td dataLabel={words("agents.columns.status")}>{row.status}</Td>
+        <Td dataLabel={words("agents.columns.status")}>
+          <StatusLabel status={row.status} />
+        </Td>
         <Td dataLabel={words("agents.columns.failover")}>
           {row.last_failover && (
             <DateWithTooltip timestamp={row.last_failover} />
