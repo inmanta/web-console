@@ -7,25 +7,14 @@ export interface WithId {
  * JSON can hold these big numbers. But when parsing JSON,
  * javascript loses precision on these values. Therefor a special
  * library can be enabled to parse these big numbers. These numbers
- * then get turned into strings. We can't be sure which values get
- * turned into strings. So a number value coming from the backend
- * can end up as a string or a number.
- *
- * When the value is a small number:
- * - it is kept as a number
- * - the number type is correct
- * - everything is normal
- *
- * When the value is a big number:
- * - it is turned into a string
- * - it can be shown in the UI as a string
- * - the number type is no longer correct
+ * then get turned into bigints. We can't be sure which values get
+ * turned into bigints. So a number value coming from the backend
+ * can end up as a bigint or a number.
  *
  * Because we dont manipulate big numbers with arithmetic, and only
- * show them in the UI, it is safe to store these as strings and
- * keep the type as a number.
+ * show them in the UI, it is safe to do all math explictly as numbers.
  */
-export type ParsedNumber = number;
+export type ParsedNumber = number | bigint;
 
 /**
  * We define the TimerId type explicitly because for some reason
@@ -133,4 +122,15 @@ export const resolvePromiseRecord = async (
 
 export const stringifyObjectOrUndefined = (obj: unknown): string => {
   return typeof obj === "undefined" ? "undefined" : JSON.stringify(obj);
+};
+
+export const stringToBoolean = (value: unknown): boolean | undefined => {
+  switch (value) {
+    case "true":
+      return true;
+    case "false":
+      return false;
+    default:
+      return undefined;
+  }
 };

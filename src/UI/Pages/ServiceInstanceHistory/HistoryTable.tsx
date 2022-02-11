@@ -13,7 +13,7 @@ interface Props {
 
 export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
   const columnHeads = ["Version", "Timestamp", "State", "Attributes"];
-  const sorted = logs.sort((a, b) => a.version - b.version);
+  const sorted = logs.sort((a, b) => Number(a.version) - Number(b.version));
   const ids = sorted.map((log) => log.version.toString());
   const dict: Record<string, InstanceLog> = {};
   sorted.forEach((log) => (dict[log.version.toString()] = log));

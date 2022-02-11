@@ -16,7 +16,8 @@ test("GIVEN FieldCreator for edit form WHEN create is provided with a service TH
     Service.nestedEditable
   );
 
-  expect(fields).toHaveLength(5);
+  expect(fields).toHaveLength(7);
   expect((fields[3] as NestedField).fields).toHaveLength(4);
   expect((fields[4] as NestedField).fields).toHaveLength(2);
+  expect((fields[5] as NestedField).fields).toHaveLength(1);
 });

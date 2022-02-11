@@ -45,6 +45,7 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({
       ...filter,
       requested: timestampFilters.length > 0 ? timestampFilters : undefined,
     });
+
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar">
       <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />

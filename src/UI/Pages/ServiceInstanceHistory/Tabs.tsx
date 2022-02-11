@@ -1,6 +1,6 @@
 import React from "react";
 import { InfoCircleIcon, ListIcon, PortIcon } from "@patternfly/react-icons";
-import { InstanceLog } from "@/Core";
+import { InstanceLog, ParsedNumber } from "@/Core";
 import {
   AttributesTable,
   EmptyView,
@@ -49,7 +49,7 @@ export const Tabs: React.FC<Props> = ({
 
 const detailsTab = (
   state: React.ReactElement,
-  version: number,
+  version: ParsedNumber,
   timestamp: string
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Details,

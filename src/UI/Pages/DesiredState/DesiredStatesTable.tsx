@@ -34,7 +34,7 @@ export const DesiredStatesTable: React.FC<Props> = ({ rows, ...props }) => {
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
-        <DesiredStatesTableRow row={row} key={row.version} />
+        <DesiredStatesTableRow row={row} key={row.version.toString()} />
       ))}
     </TableComposable>
   );

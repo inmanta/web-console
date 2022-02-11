@@ -69,6 +69,8 @@ import {
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
   GetFactsStateHelper,
+  GetDesiredStateDiffQueryManager,
+  GetDesiredStateDiffStateHelper,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -244,6 +246,10 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.apiHelper,
         new GetFactsStateHelper(this.store),
         scheduler
+      ),
+      new GetDesiredStateDiffQueryManager(
+        this.apiHelper,
+        new GetDesiredStateDiffStateHelper(this.store)
       ),
     ];
   }

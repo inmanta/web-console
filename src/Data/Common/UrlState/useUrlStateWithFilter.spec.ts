@@ -40,11 +40,18 @@ test.each`
   ${fromAndToDate.search}                     | ${"timestamp=from&to"} | ${{ timestamp: fromAndToDate.value }} | ${"timestamp=from&to"}
   ${fromInt.search}                           | ${"version=from"}      | ${{ version: fromInt.value }}         | ${"version=from"}
   ${fromAndToInt.search}                      | ${"version=from&to"}   | ${{ version: fromAndToInt.value }}    | ${"version=from&to"}
+  ${"?state.Inventory.filter.success=false"}  | ${"success=false"}     | ${{ success: false }}                 | ${"success=false"}
+  ${"?state.Inventory.filter.success=true"}   | ${"success=true"}      | ${{ success: true }}                  | ${"success=true"}
 `(
   "GIVEN handleUrlState with Filter WHEN search is $searchText THEN returns $valueText",
   async ({ search, expectedValue }) => {
     const [value] = handleUrlStateWithFilter(
-      { route: "Inventory", dateRangeKey: "timestamp", intRangeKey: "version" },
+      {
+        route: "Inventory",
+        dateRangeKey: "timestamp",
+        intRangeKey: "version",
+        booleanKey: "success",
+      },
       { pathname: "", search, hash: "" },
       () => undefined
     );

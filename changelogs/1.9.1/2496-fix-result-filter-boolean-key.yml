@@ -1,0 +1,4 @@
+description: Fix result filter on Compile Reports page by handling boolean values
+issue-nr: 2496
+change-type: patch
+destination-branches: [master, iso5]

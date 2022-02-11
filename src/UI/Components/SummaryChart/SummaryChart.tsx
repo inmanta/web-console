@@ -12,7 +12,7 @@ import { words } from "@/UI/words";
 
 interface Props {
   by_label: InstancesByLabel;
-  total: number;
+  total: string;
 }
 
 export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
@@ -42,7 +42,7 @@ export const SummaryChart: React.FC<Props> = ({ by_label, total }) => {
       }}
       colorScale={colorScale}
       subTitle={words("catalog.instances")}
-      title={`${total}`}
+      title={total}
       width={350}
     />
   );

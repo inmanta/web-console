@@ -75,12 +75,12 @@ const IntInput: React.FC<{ info: EnvironmentSettings.IntInputInfo }> = ({
   const onChange = (event) => {
     info.set(Number(event.target.value));
   };
-  const onMinus = () => info.set(info.value - 1);
-  const onPlus = () => info.set(info.value + 1);
+  const onMinus = () => info.set(Number(info.value) - 1);
+  const onPlus = () => info.set(Number(info.value) + 1);
 
   return (
     <NumberInput
-      value={info.value}
+      value={Number(info.value)}
       onMinus={onMinus}
       onChange={onChange}
       onPlus={onPlus}

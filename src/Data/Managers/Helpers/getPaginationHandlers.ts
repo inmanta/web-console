@@ -27,4 +27,4 @@ const getPaginationHandlerUrls = (
 });
 
 const shouldUseFirst = (metadata: Pagination.Metadata): boolean =>
-  metadata.before < metadata.page_size * 2;
+  Number(metadata.before) < Number(metadata.page_size) * 2;

@@ -7,6 +7,7 @@ import {
   DescriptionListTerm,
   DescriptionListDescription,
 } from "@patternfly/react-core";
+import { ParsedNumber } from "@/Core";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -14,7 +15,7 @@ interface Props {
 }
 
 interface Info {
-  version: number;
+  version: ParsedNumber;
   state: React.ReactElement | null;
   timestamp: string;
 }
@@ -29,7 +30,7 @@ export const DetailsTab: React.FC<Props> = ({ info }) => (
             {words("inventory.statustab.version")}
           </DescriptionListTerm>
           <DescriptionListDescription>
-            {info.version}
+            {info.version.toString()}
           </DescriptionListDescription>
         </DescriptionListGroup>
 
