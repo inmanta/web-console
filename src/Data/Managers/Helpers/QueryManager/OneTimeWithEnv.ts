@@ -11,7 +11,6 @@ import {
   Query,
   OneTimeQueryManager,
   QueryManagerKind,
-  StateHelper,
   ApiHelper,
   StateHelperWithEnv,
 } from "@/Core";
@@ -20,69 +19,8 @@ import { Data, GetDependenciesWithEnv, GetUrlWithEnv, ToUsed } from "./types";
 import { usePrevious } from "./usePrevious";
 import { urlEncodeParams } from "./utils";
 
-export class PrimaryOneTimeQueryManagerWithEnv<Kind extends Query.Kind>
+export class OneTimeWithEnv<Kind extends Query.Kind>
   implements OneTimeQueryManager<Kind>
-{
-  constructor(
-    protected readonly apiHelper: ApiHelper,
-    protected readonly stateHelper: StateHelper<Kind>,
-    private readonly getDependencies: GetDependenciesWithEnv<Kind>,
-    private readonly kind: Kind,
-    private readonly getUrl: GetUrlWithEnv<Kind>,
-    private readonly toUsed: ToUsed<Kind>
-  ) {}
-
-  async update(
-    query: Query.SubQuery<Kind>,
-    url: string,
-    environment: string
-  ): Promise<void> {
-    this.stateHelper.set(
-      RemoteData.fromEither(await this.apiHelper.get(url, environment)),
-      query
-    );
-  }
-
-  useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
-    const { environmentHandler } = useContext(DependencyContext);
-    const environment = environmentHandler.useId();
-    const [url, setUrl] = useState(
-      this.getUrl(urlEncodeParams(query), environment)
-    );
-    const previousEnvironment = usePrevious(environment);
-
-    useEffect(() => {
-      setUrl(this.getUrl(urlEncodeParams(query), environment));
-    }, this.getDependencies(query, environment));
-
-    useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), query);
-      // If the environment changed, use the url derived from the query
-      // Otherwise the url has changed, use it to not lose e.g. paging state
-      const urlToUse =
-        environment !== previousEnvironment
-          ? this.getUrl(urlEncodeParams(query), environment)
-          : url;
-      this.update(query, urlToUse, environment);
-    }, [url, environment]);
-
-    return [
-      RemoteData.mapSuccess(
-        (d) => this.toUsed(d, setUrl),
-        this.stateHelper.getHooked(query)
-      ),
-      () => this.update(query, url, environment),
-    ];
-  }
-
-  matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
-    return query.kind === this.kind && kind === "OneTime";
-  }
-}
-
-export class PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv<
-  Kind extends Query.Kind
-> implements OneTimeQueryManager<Kind>
 {
   constructor(
     protected readonly apiHelper: ApiHelper,

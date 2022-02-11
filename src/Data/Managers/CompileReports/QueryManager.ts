@@ -4,13 +4,10 @@ import {
   ApiHelper,
   StateHelperWithEnv,
 } from "@/Core";
-import {
-  getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv,
-} from "@/Data/Managers/Helpers";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class CompileReportsQueryManager extends PrimaryContinuousQueryManagerWithEnvWithStateHelperWithEnv<"GetCompileReports"> {
+export class CompileReportsQueryManager extends QueryManager.ContinuousWithEnv<"GetCompileReports"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetCompileReports">,

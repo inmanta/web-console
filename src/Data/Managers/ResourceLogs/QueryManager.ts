@@ -1,11 +1,8 @@
 import { Scheduler, StateHelper, ResourceLogFilter, ApiHelper } from "@/Core";
-import {
-  getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnv,
-} from "@/Data/Managers/Helpers";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ResourceLogsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetResourceLogs"> {
+export class ResourceLogsQueryManager extends QueryManager.ContinuousWithEnv<"GetResourceLogs"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetResourceLogs">,

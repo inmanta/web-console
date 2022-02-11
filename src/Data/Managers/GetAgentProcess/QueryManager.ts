@@ -1,8 +1,8 @@
 import { identity } from "lodash-es";
 import { StateHelper, ApiHelper } from "@/Core";
-import { PrimaryOneTimeQueryManagerWithEnv } from "@/Data/Managers/Helpers";
+import { QueryManager } from "@/Data/Managers/Helpers";
 
-export class GetAgentProcessQueryManager extends PrimaryOneTimeQueryManagerWithEnv<"GetAgentProcess"> {
+export class GetAgentProcessQueryManager extends QueryManager.OneTimeWithEnv<"GetAgentProcess"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetAgentProcess">
