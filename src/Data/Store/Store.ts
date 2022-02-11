@@ -15,6 +15,8 @@ import {
 } from "./DesiredStateDiffSlice";
 import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
+import { dryRunReportSlice, DryRunReportSlice } from "./DryRunReportSlice";
+import { dryRunsSlice, DryRunsSlice } from "./DryRunsSlice";
 import {
   environmentSettingsSlice,
   EnvironmentSettingsSlice,
@@ -89,6 +91,8 @@ export interface StoreModel {
   parameters: ParametersSlice;
   facts: FactsSlice;
   desiredStateDiff: DesiredStateDiffSlice;
+  dryRuns: DryRunsSlice;
+  dryRunReport: DryRunReportSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -120,4 +124,6 @@ export const storeModel: StoreModel = {
   parameters: parametersSlice,
   facts: factsSlice,
   desiredStateDiff: desiredStateDiffSlice,
+  dryRuns: dryRunsSlice,
+  dryRunReport: dryRunReportSlice,
 };

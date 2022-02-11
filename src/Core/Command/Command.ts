@@ -35,6 +35,7 @@ import {
   ResumeEnvironmentManifest,
 } from "./ResumeEnvironment";
 import { TriggerCompile, TriggerCompileManifest } from "./TriggerCompile";
+import { TriggerDryRun } from "./TriggerDryRun";
 import {
   TriggerInstanceUpdate,
   TriggerInstanceUpdateManifest,
@@ -77,7 +78,8 @@ export type Command =
   | GetSupportArchive
   | PromoteVersion
   | ControlAgent
-  | TriggerCompile;
+  | TriggerCompile
+  | TriggerDryRun.Command;
 
 export type Type = Command;
 
@@ -110,6 +112,7 @@ interface Manifest {
   PromoteVersion: PromoteVersionManifest;
   ControlAgent: ControlAgentManifest;
   TriggerCompile: TriggerCompileManifest;
+  TriggerDryRun: TriggerDryRun.Manifest;
 }
 
 /**

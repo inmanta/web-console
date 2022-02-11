@@ -1,0 +1,6 @@
+description: Add the Compliance Check page
+issue-nr: 2558
+change-type: minor
+destination-branches: [master, iso5]
+sections:
+  feature: "{{description}}"

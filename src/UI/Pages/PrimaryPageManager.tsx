@@ -4,6 +4,7 @@ import { AgentProcessPage } from "./AgentProcess";
 import { AgentsPage } from "./Agents";
 import { CompileDetailsPage } from "./CompileDetails";
 import { CompileReportsPage } from "./CompileReports";
+import { ComplianceCheckPage } from "./ComplianceCheck";
 import { CreateEnvironmentPage } from "./CreateEnvironment";
 import { CreateInstancePage } from "./CreateInstance";
 import { DesiredStatePage } from "./DesiredState";
@@ -115,6 +116,10 @@ export class PrimaryPageManager implements PageManager {
       Parameters: {
         ...this.routeDictionary.Parameters,
         element: <ParametersPage />,
+      },
+      ComplianceCheck: {
+        ...this.routeDictionary.ComplianceCheck,
+        element: <ComplianceCheckPage />,
       },
     };
   }

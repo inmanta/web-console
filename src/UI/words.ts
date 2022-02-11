@@ -438,7 +438,10 @@ const dict = {
   "desiredState.compare.selectionLabel": "Compare versions",
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
+  "desiredState.compare.unmodified": "This resource has not been modified.",
   "desiredState.compare.empty": "No changes found",
+  "desiredState.complianceCheck.title": "Compliance Check",
+  "desiredState.complianceCheck.action.dryRun": "Perform dry run",
 
   /** Parameters */
   "parameters.title": "Parameters",
