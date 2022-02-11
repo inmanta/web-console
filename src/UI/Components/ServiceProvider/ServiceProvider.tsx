@@ -6,7 +6,7 @@ import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   serviceName: string;
-  Wrapper: React.FC;
+  Wrapper: React.FC<{ name: string }>;
   Dependant: React.FC<{ service: ServiceModel }>;
 }
 
@@ -26,12 +26,12 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
     {
       notAsked: () => null,
       loading: () => (
-        <Wrapper aria-label="ServiceProvider-Loading">
+        <Wrapper aria-label="ServiceProvider-Loading" name={serviceName}>
           <LoadingView />
         </Wrapper>
       ),
       failed: (error) => (
-        <Wrapper aria-label="ServiceProvider-Failed">
+        <Wrapper aria-label="ServiceProvider-Failed" name={serviceName}>
           <ErrorView message={error} retry={retry} />
         </Wrapper>
       ),
