@@ -35,7 +35,7 @@ export const RequiresTable: React.FC<Props> = ({
       {Object.entries(requiresStatus).map(([resource_id, status], idx) => (
         <Tr key={idx}>
           <Td>
-            <ResourceLink resourceId={resource_id}>{resource_id}</ResourceLink>
+            <ResourceLink resourceId={resource_id} />
           </Td>
           <Td width={15}>
             <ResourceStatusCell state={status} />
