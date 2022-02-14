@@ -1,19 +1,24 @@
 import { BaseUrlManager } from "@/Core";
 
 export class PrimaryBaseUrlManager implements BaseUrlManager {
-  private readonly ANCHOR = "/console";
+  private readonly anchor = "/console";
 
-  constructor(private readonly url: string) {}
+  constructor(
+    private readonly origin: string,
+    private readonly pathname: string
+  ) {}
 
-  getConsoleBaseUrl(): string {
-    const { ANCHOR, url } = this;
-    if (!url.includes(ANCHOR)) return ANCHOR;
-    if (url.split(ANCHOR).length > 2) return ANCHOR;
-    const [pre] = this.url.split(ANCHOR);
-    return `${pre}${ANCHOR}`;
+  getBasePathname(): string {
+    const { pathname, anchor } = this;
+    if (!pathname.includes(anchor)) return anchor;
+    if (pathname.split(anchor).length > 2) return anchor;
+    const [pre] = pathname.split(anchor);
+    return `${pre}${anchor}`;
   }
 
   getBaseUrl(forcedUrl?: string): string {
-    return forcedUrl || this.getConsoleBaseUrl().replace(this.ANCHOR, "");
+    const { anchor, origin } = this;
+    const basePathname = this.getBasePathname().replace(anchor, "");
+    return forcedUrl || `${origin}${basePathname}`;
   }
 }

@@ -45,10 +45,13 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
     globalThis && globalThis.auth,
     process.env.KEYCLOAK_URL
   );
-  const baseUrlManager = new PrimaryBaseUrlManager(location.pathname);
-  const consoleBaseUrl = baseUrlManager.getConsoleBaseUrl();
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    location.pathname
+  );
+  const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const routeManager = new PrimaryRouteManager(consoleBaseUrl);
+  const routeManager = new PrimaryRouteManager(basePathname);
   const apiHelper = new BaseApiHelper(
     featureManager.getJsonParser() === "BigInt"
       ? new BigIntJsonParser()
