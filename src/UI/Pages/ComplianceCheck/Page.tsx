@@ -43,7 +43,7 @@ export const View: React.FC<Props> = ({ version }) => {
    * Setting the firstReport mutable ref when data changes
    */
   useEffect(() => {
-    if (!RemoteData.isSuccess(data)) {
+    if (!RemoteData.isSuccess(data) || data.value.length <= 0) {
       firstReport.current = Maybe.none();
       return;
     }
@@ -56,7 +56,7 @@ export const View: React.FC<Props> = ({ version }) => {
    */
   useEffect(() => {
     if (Maybe.isSome(selectedReport)) return;
-    if (!RemoteData.isSuccess(data)) return;
+    if (!RemoteData.isSuccess(data) || data.value.length <= 0) return;
     setSelectedReport(Maybe.some(data.value[0]));
   }, [selectedReport, data]);
 

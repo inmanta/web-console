@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
-import { BalanceScaleIcon } from "@patternfly/react-icons";
 import { Maybe } from "@/Core";
+import { Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { GetDesiredStatesContext } from "@/UI/Pages/DesiredState/GetDesiredStatesContext";
-import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { sanitizeFromTo } from "./fromTo";
 
@@ -25,7 +25,6 @@ export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
             ? undefined
             : () => setCompareSelection(Maybe.some(version))
         }
-        icon={<BalanceScaleIcon />}
         isDisabled={isDisabled}
       >
         {words("desiredState.compare.action.compare")}
@@ -35,6 +34,7 @@ export const CompareAction: React.FC<Props> = ({ version, isDisabled }) => {
         version={version}
         isDisabled={isDisabled}
       />
+      <CompareWithCurrentState version={version.toString()} />
     </>
   );
 };
@@ -50,7 +50,7 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
   version,
   isDisabled,
 }) => {
-  const navigateTo = useNavigateTo();
+  const { routeManager } = useContext(DependencyContext);
 
   if (
     isDisabled ||
@@ -58,23 +58,43 @@ const CompareWithSelected: React.FC<CompareWithSelectedProps> = ({
     (Maybe.isSome(selection) && selection.value === version)
   ) {
     return (
-      <DropdownItem isDisabled icon={<BalanceScaleIcon />}>
-        {words("desiredState.compare.action.compareWith")}
+      <DropdownItem isDisabled>
+        {words("desiredState.compare.action.compareWithSelected")}
       </DropdownItem>
     );
   }
 
   return (
     <DropdownItem
-      onClick={() =>
-        navigateTo(
-          "DesiredStateCompare",
-          sanitizeFromTo(selection.value, version)
-        )
+      component={
+        <Link
+          pathname={routeManager.getUrl(
+            "DesiredStateCompare",
+            sanitizeFromTo(selection.value, version)
+          )}
+        >
+          {words("desiredState.compare.action.compareWithSelected")}
+        </Link>
       }
-      icon={<BalanceScaleIcon />}
-    >
-      {words("desiredState.compare.action.compareWith")}
-    </DropdownItem>
+    />
+  );
+};
+
+const CompareWithCurrentState: React.FC<{ version: string }> = ({
+  version,
+}) => {
+  const { routeManager } = useContext(DependencyContext);
+  return (
+    <DropdownItem
+      component={
+        <Link
+          pathname={routeManager.getUrl("ComplianceCheck", {
+            version,
+          })}
+        >
+          {words("desiredState.compare.action.compareWithCurrentState")}
+        </Link>
+      }
+    />
   );
 };
