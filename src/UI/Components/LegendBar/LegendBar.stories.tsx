@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { colorConfig } from "@/UI/Pages/Resources/Components";
+import { colorConfig } from "@/UI/Components/ResourceStatus";
 import { LegendBar } from "./LegendBar";
 import { LegendItemDetails } from ".";
 
