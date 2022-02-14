@@ -10,7 +10,7 @@ export const ResourceTableWrapper: React.FC<Props> = ({
   children,
   ...props
 }) => {
-  const columns = ["Resource Id", "Details", "State"];
+  const columns = ["Resource Id", "State"];
   const rows = [
     { heightAuto: true, cells: [{ props: { colSpan: 8 }, title: children }] },
   ];

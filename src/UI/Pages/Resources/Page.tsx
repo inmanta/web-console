@@ -14,7 +14,6 @@ import {
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ResourceTableControls } from "./Components";
-import { ResourceFilterContext } from "./ResourceFilterContext";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { Summary } from "./Summary";
 
@@ -65,29 +64,27 @@ export const Page: React.FC = () => {
 
   return (
     <Wrapper>
-      <ResourceFilterContext.Provider value={{ setFilter }}>
-        {tableControls}
-        <RemoteDataView
-          data={data}
-          label="ResourcesView"
-          retry={retry}
-          SuccessView={(resources) =>
-            resources.data.length <= 0 ? (
-              <EmptyView
-                message={words("resources.empty.message")}
-                aria-label="ResourcesView-Empty"
-              />
-            ) : (
-              <ResourcesTableProvider
-                sort={sort}
-                setSort={setSort}
-                resources={resources.data}
-                aria-label="ResourcesView-Success"
-              />
-            )
-          }
-        />
-      </ResourceFilterContext.Provider>
+      {tableControls}
+      <RemoteDataView
+        data={data}
+        label="ResourcesView"
+        retry={retry}
+        SuccessView={(resources) =>
+          resources.data.length <= 0 ? (
+            <EmptyView
+              message={words("resources.empty.message")}
+              aria-label="ResourcesView-Empty"
+            />
+          ) : (
+            <ResourcesTableProvider
+              sort={sort}
+              setSort={setSort}
+              resources={resources.data}
+              aria-label="ResourcesView-Success"
+            />
+          )
+        }
+      />
     </Wrapper>
   );
 };
