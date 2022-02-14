@@ -53,6 +53,7 @@ export class PrimaryRouteManager implements RouteManager {
       DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
       DesiredStateCompare: DesiredStateCompare(this.baseUrl),
       Parameters: Parameters(this.baseUrl),
+      ComplianceCheck: ComplianceCheck(this.baseUrl),
     };
   }
   isBaseUrlDefined(): boolean {
@@ -310,5 +311,13 @@ const Parameters = (base: string): Route => ({
   parent: "Home",
   path: `${base}${paths.Parameters}`,
   label: "Parameters",
+  environmentRole: "Required",
+});
+
+const ComplianceCheck = (base: string): Route => ({
+  kind: "ComplianceCheck",
+  parent: "DesiredState",
+  path: `${base}${paths.ComplianceCheck}`,
+  label: "Compliance Check",
   environmentRole: "Required",
 });

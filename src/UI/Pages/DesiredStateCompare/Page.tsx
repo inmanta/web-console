@@ -5,16 +5,13 @@ import { Diff } from "@/Core";
 import {
   RemoteDataView,
   PageTitle,
-  DiffItemList,
+  DiffWizard,
   PagePadder,
   EmptyView,
 } from "@/UI/Components";
-import { Refs } from "@/UI/Components/DiffWizard/types";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
-import { Controls } from "./Controls";
-import { resourceToDiffItem } from "./resourceToDiffItem";
 
 export const Page: React.FC = () => {
   const { from, to } = useRouteParams<"DesiredStateCompare">();
@@ -23,7 +20,7 @@ export const Page: React.FC = () => {
 
 export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const refs: Refs = useRef({});
+  const refs: DiffWizard.Refs = useRef({});
 
   const [data] = queryResolver.useOneTime<"GetDesiredStateDiff">({
     kind: "GetDesiredStateDiff",
@@ -37,7 +34,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
         <PageTitle>{words("desiredState.compare.title")}</PageTitle>
       </StyledPageSection>
       <PageSection variant="light" hasShadowBottom sticky="top">
-        <Controls data={data} refs={refs} from={from} to={to} />
+        <DiffWizard.Controls data={data} refs={refs} from={from} to={to} />
       </PageSection>
       <PageSection isFilled>
         <PagePadder>
@@ -48,8 +45,8 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
               resources.length <= 0 ? (
                 <EmptyView message={words("desiredState.compare.empty")} />
               ) : (
-                <DiffItemList
-                  items={resources.map(resourceToDiffItem)}
+                <DiffWizard.ItemList
+                  items={resources.map(DiffWizard.fromResourceToItem)}
                   refs={refs}
                 />
               )

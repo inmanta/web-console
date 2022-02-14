@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { isJsonParserId, JsonParserId } from "@/Core";
+import { isJsonParserId, JsonParserId, SchedulerImpl } from "@/Core";
 import {
   KeycloakAuthHelper,
   PrimaryFeatureManager,
@@ -58,7 +58,12 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   );
   const authHelper = new KeycloakAuthHelper(keycloakController.getInstance());
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper)
+    new QueryManagerResolver(
+      store,
+      apiHelper,
+      new SchedulerImpl(5000),
+      new SchedulerImpl(10000)
+    )
   );
   const commandResolver = new CommandResolverImpl(
     new CommandManagerResolver(store, apiHelper, authHelper)

@@ -1,12 +1,12 @@
 import { Diff } from "@/Core";
 
-export interface DiffItem {
+export interface Item {
   id: string;
   status: Diff.Status;
-  entries: DiffEntry[];
+  entries: EntryInfo[];
 }
 
-export interface DiffEntry {
+export interface EntryInfo {
   title: string;
   fromValue: string;
   toValue: string;

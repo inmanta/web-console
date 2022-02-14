@@ -1,3 +1,6 @@
+import { TriggerDryRun } from "./TriggerDryRun";
+export { TriggerDryRun };
+
 export * from "./Callbacks";
 export * from "./CompileDetails";
 export * from "./CompileReports";
@@ -47,3 +50,5 @@ export * from "./GetCompilerStatus";
 export * from "./GetParameters";
 export * from "./GetFacts";
 export * from "./GetDesiredStateDiff";
+export * as GetDryRuns from "./GetDryRuns";
+export * as GetDryRunReport from "./GetDryRunReport";

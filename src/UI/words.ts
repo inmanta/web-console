@@ -75,7 +75,7 @@ const dict = {
   "catalog.empty.message": "No services found",
   "empty.title": "There is nothing here",
   "inventory.intro": (service: string) => `Showing instances of ${service}`,
-  "inventory.title": "Service Inventory",
+  "inventory.title": (name: string) => `Service Inventory: ${name}`,
   "inventory.empty.message": (service: string) =>
     `No instances found for service ${service}`,
   "inventory.column.id": "Id",
@@ -438,7 +438,10 @@ const dict = {
   "desiredState.compare.selectionLabel": "Compare versions",
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
+  "desiredState.compare.unmodified": "This resource has not been modified.",
   "desiredState.compare.empty": "No changes found",
+  "desiredState.complianceCheck.title": "Compliance Check",
+  "desiredState.complianceCheck.action.dryRun": "Perform dry run",
 
   /** Parameters */
   "parameters.title": "Parameters",

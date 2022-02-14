@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { DiffItem, Refs } from "@/UI/Components/DiffWizard/types";
+import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { Block } from "./Block";
 
 interface Props {
-  items: DiffItem[];
+  items: Item[];
   refs: Refs;
 }
 

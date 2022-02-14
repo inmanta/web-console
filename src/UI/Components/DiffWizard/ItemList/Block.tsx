@@ -11,21 +11,18 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/JumpToAction/StatusDescriptor";
-import { DiffItem, Refs } from "@/UI/Components/DiffWizard/types";
+import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry";
 
 interface Props {
-  item: DiffItem;
+  item: Item;
   refs: Refs;
 }
 
 export const Block: React.FC<Props> = ({ item, refs }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const onExpand = () => setIsExpanded(!isExpanded);
-  const [isShown, setIsShown] = useState(item.status !== "deleted");
-
-  const onShow = () => setIsShown(true);
 
   return (
     <>
@@ -57,23 +54,59 @@ export const Block: React.FC<Props> = ({ item, refs }) => {
         </StyledHeader>
         <CardExpandableContent>
           <Divider />
-          <StyledBody>
-            {item.status === "deleted" && !isShown && (
-              <DeletedMessage>
-                {words("desiredState.compare.deleted")}
-                <ShowButton onClick={onShow} variant="link" isInline>
-                  {words("desiredState.compare.deleted.action")}
-                </ShowButton>
-              </DeletedMessage>
-            )}
-            {isShown &&
-              item.entries.map((entry) => (
-                <Entry key={entry.title} {...entry} />
-              ))}
-          </StyledBody>
+          <Body item={item} />
         </CardExpandableContent>
       </StyledCard>
     </>
+  );
+};
+
+const Body: React.FC<{ item: Item }> = ({ item }) => {
+  switch (item.status) {
+    case "deleted":
+      return <DeletedBody item={item} />;
+    case "unmodified":
+      return <UnmodifiedBody />;
+    case "added":
+    case "modified":
+      return <ModifiedBody item={item} />;
+    default:
+      return null;
+  }
+};
+
+const DeletedBody: React.FC<{ item: Pick<Item, "entries"> }> = ({ item }) => {
+  const [isShown, setIsShown] = useState(false);
+
+  return (
+    <StyledBody>
+      {isShown ? (
+        item.entries.map((entry) => <Entry key={entry.title} {...entry} />)
+      ) : (
+        <Message>
+          {words("desiredState.compare.deleted")}
+          <ShowButton onClick={() => setIsShown(true)} variant="link" isInline>
+            {words("desiredState.compare.deleted.action")}
+          </ShowButton>
+        </Message>
+      )}
+    </StyledBody>
+  );
+};
+
+const ModifiedBody: React.FC<{ item: Pick<Item, "entries"> }> = ({ item }) => (
+  <StyledBody>
+    {item.entries.map((entry) => (
+      <Entry key={entry.title} {...entry} />
+    ))}
+  </StyledBody>
+);
+
+const UnmodifiedBody: React.FC = () => {
+  return (
+    <StyledBody>
+      <Message>{words("desiredState.compare.unmodified")}</Message>
+    </StyledBody>
   );
 };
 
@@ -112,7 +145,7 @@ const StyledStatusDescriptor = styled(StatusDescriptor)`
   margin-right: 16px;
 `;
 
-const DeletedMessage = styled(Bullseye)`
+const Message = styled(Bullseye)`
   line-height: 29px;
   padding: 16px 0;
 `;

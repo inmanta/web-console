@@ -15,6 +15,8 @@ export const StatusDescriptor: React.FC<Props> = ({ status, className }) => {
       return <Deleted className={className}>D</Deleted>;
     case "modified":
       return <Modified className={className}>M</Modified>;
+    case "unmodified":
+      return <Unmodified className={className}>?</Unmodified>;
     default:
       return null;
   }
@@ -46,4 +48,9 @@ const Deleted = styled.div`
 const Modified = styled.div`
   ${descriptorStyles};
   background-color: var(--pf-global--warning-color--100);
+`;
+
+const Unmodified = styled.div`
+  ${descriptorStyles};
+  background-color: var(--pf-global--default-color--100);
 `;

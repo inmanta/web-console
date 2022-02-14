@@ -1,5 +1,4 @@
-import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
-import { BaseApiHelper } from "@/Data/API";
+import { ApiHelper, AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
@@ -41,6 +40,7 @@ import {
   GetAgentsUpdater,
   GetAgentsStateHelper,
   TriggerCompileCommandManager,
+  TriggerDryRun,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -49,7 +49,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
 
   constructor(
     private readonly store: Store,
-    private readonly apiHelper: BaseApiHelper,
+    private readonly apiHelper: ApiHelper,
     private readonly authHelper: AuthHelper
   ) {
     this.managers = this.getManagers();
@@ -158,6 +158,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         )
       ),
       new TriggerCompileCommandManager(this.apiHelper),
+      new TriggerDryRun.CommandManager(this.apiHelper),
     ];
   }
 }

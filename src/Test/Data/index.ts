@@ -26,3 +26,4 @@ export * as AgentProcessData from "./AgentProcess";
 export * as DesiredStateVersions from "./DesiredStateVersions";
 export * as Parameters from "./Parameters";
 export * as DesiredStateDiff from "./DesiredStateDiff";
+export * as DryRun from "./DryRun";

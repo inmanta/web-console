@@ -1,7 +1,7 @@
 import { Diff } from "@/Core";
-import { DiffItem } from "@/UI/Components";
+import { Item } from "./types";
 
-export const resourceToDiffItem = (resource: Diff.Resource): DiffItem => {
+export const fromResourceToItem = (resource: Diff.Resource): Item => {
   return {
     id: resource.resource_id,
     status: resource.status,
