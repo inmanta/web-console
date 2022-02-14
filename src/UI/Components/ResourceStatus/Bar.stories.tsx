@@ -1,14 +1,14 @@
 import React from "react";
-import { DeployStateBar } from "./DeployStateBar";
-import { colorConfig } from "./DeployStateColorConfig";
+import { ResourceStatusBar } from "./Bar";
+import { colorConfig } from "./ColorConfig";
 
 export default {
-  title: "DeployStateBar",
-  component: DeployStateBar,
+  title: "ResourceStatusBar",
+  component: ResourceStatusBar,
 };
 
 export const Default = () => (
-  <DeployStateBar
+  <ResourceStatusBar
     summary={{
       total: 200,
       by_state: {

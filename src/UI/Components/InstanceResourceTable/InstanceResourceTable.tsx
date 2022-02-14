@@ -2,7 +2,7 @@ import React from "react";
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import { InstanceResourceModel } from "@/Core";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
-import { ResourceStatusCell } from "@/UI/Components/ResourceStatusCell";
+import { ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
 import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 
 interface Props {
@@ -26,7 +26,7 @@ export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
             />
           ),
         },
-        { title: <ResourceStatusCell state={resource.resource_state} /> },
+        { title: <ResourceStatusLabel status={resource.resource_state} /> },
       ],
     };
   });

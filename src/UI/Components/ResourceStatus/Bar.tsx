@@ -1,15 +1,18 @@
 import React from "react";
 import { ParsedNumber, Resource } from "@/Core";
 import { words } from "@/UI";
-import { LegendBar, LegendItemDetails } from "@/UI/Components";
-import { colorConfig } from "./DeployStateColorConfig";
+import { LegendBar, LegendItemDetails } from "@/UI/Components/LegendBar";
+import { colorConfig } from "./ColorConfig";
 
 interface Props {
   summary: Resource.DeploySummary;
   updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
 
-export const DeployStateBar: React.FC<Props> = ({ summary, updateFilter }) => {
+export const ResourceStatusBar: React.FC<Props> = ({
+  summary,
+  updateFilter,
+}) => {
   const done = getResourcesInDoneState(summary.by_state || {});
 
   const onClick = (ids: Resource.Status[]) =>
