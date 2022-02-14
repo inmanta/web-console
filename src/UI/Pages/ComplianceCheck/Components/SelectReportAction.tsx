@@ -36,27 +36,44 @@ export const SelectReportAction: React.FC<Props> = ({
     setSelectedReport(Maybe.some(report));
   };
 
+  const Picker: React.FC = () => {
+    if (!RemoteData.isSuccess(reportsData)) return null;
+    if (reportsData.value.length <= 0) return <EmptyPicker />;
+    if (Maybe.isNone(selectedReport)) return null;
+    return (
+      <Select
+        onToggle={setIsOpen}
+        onSelect={onSelect}
+        selections={selectedReport.value.id}
+        isOpen={isOpen}
+        aria-label="ReportList"
+        toggleAriaLabel="ReportListSelect"
+      >
+        {reportsData.value.map((report) => (
+          <SelectOption key={report.id} value={report.id}>
+            <Progress report={report} /> {datePresenter.getFull(report.date)}
+          </SelectOption>
+        ))}
+      </Select>
+    );
+  };
+
   return (
     <ToolbarGroup alignment={{ default: "alignLeft" }}>
-      {RemoteData.isSuccess(reportsData) && Maybe.isSome(selectedReport) && (
-        <Select
-          onToggle={setIsOpen}
-          onSelect={onSelect}
-          selections={selectedReport.value.id}
-          isOpen={isOpen}
-          aria-label="ReportList"
-          toggleAriaLabel="ReportListSelect"
-        >
-          {reportsData.value.map((report) => (
-            <SelectOption key={report.id} value={report.id}>
-              <Progress report={report} /> {datePresenter.getFull(report.date)}
-            </SelectOption>
-          ))}
-        </Select>
-      )}
+      <Picker />
     </ToolbarGroup>
   );
 };
+
+const EmptyPicker: React.FC = () => (
+  <Select
+    isDisabled
+    onToggle={() => undefined}
+    aria-label="ReportList"
+    toggleAriaLabel="ReportListSelect"
+    placeholderText="No dry runs exist"
+  />
+);
 
 const Progress: React.FC<{ report: DryRun.Progress }> = ({
   report: { todo, total },

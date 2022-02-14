@@ -434,7 +434,9 @@ const dict = {
   "desiredState.resourceDetails.title": "Resource Details",
   "desiredState.compare.title": "Compare",
   "desiredState.compare.action.compare": "Select for compare",
-  "desiredState.compare.action.compareWith": "Compare with selected",
+  "desiredState.compare.action.compareWithSelected": "Compare with selected",
+  "desiredState.compare.action.compareWithCurrentState":
+    "Compare with current state",
   "desiredState.compare.selectionLabel": "Compare versions",
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
@@ -442,6 +444,7 @@ const dict = {
   "desiredState.compare.empty": "No changes found",
   "desiredState.complianceCheck.title": "Compliance Check",
   "desiredState.complianceCheck.action.dryRun": "Perform dry run",
+  "desiredState.complianceCheck.noDryRuns": "No dry runs exist",
 
   /** Parameters */
   "parameters.title": "Parameters",
