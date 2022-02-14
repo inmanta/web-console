@@ -10,7 +10,7 @@ import {
 } from "@patternfly/react-table";
 import { Resource } from "@/Core";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
-import { ResourceStatusCell } from "@/UI/Components/ResourceStatusCell";
+import { ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -38,7 +38,7 @@ export const RequiresTable: React.FC<Props> = ({
             <ResourceLink resourceId={resource_id} />
           </Td>
           <Td width={15}>
-            <ResourceStatusCell state={status} />
+            <ResourceStatusLabel status={status} />
           </Td>
         </Tr>
       ))}
