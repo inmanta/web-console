@@ -5,7 +5,7 @@ import {
   Button,
   Tooltip,
 } from "@patternfly/react-core";
-import { CheckIcon, UndoIcon } from "@patternfly/react-icons";
+import { SaveIcon, UndoIcon } from "@patternfly/react-icons";
 import { EnvironmentSettings } from "@/Core";
 import { words } from "@/UI/words";
 
@@ -15,9 +15,7 @@ type Info<Properties extends keyof EnvironmentSettings.InputInfo> = Pick<
 >;
 
 interface Props {
-  info: Info<
-    "value" | "initial" | "update" | "reset" | "default" | "isUpdateable"
-  >;
+  info: Info<"value" | "initial" | "update" | "reset" | "default">;
 }
 
 export const InputActions: React.FC<Props> = ({ info }) => (
@@ -32,16 +30,16 @@ export const InputActions: React.FC<Props> = ({ info }) => (
 );
 
 const InputUpdateAction: React.FC<{
-  info: Info<"value" | "initial" | "update" | "isUpdateable">;
+  info: Info<"value" | "initial" | "update">;
 }> = ({ info }) => (
   <Tooltip content={words("settings.tabs.configuration.save")}>
     <Button
-      variant={!info.isUpdateable(info) ? "plain" : "link"}
+      variant="link"
       aria-label="SaveAction"
       onClick={() => info.update(info.value as never)}
-      isDisabled={!info.isUpdateable(info)}
+      icon={<SaveIcon />}
     >
-      <CheckIcon />
+      Save
     </Button>
   </Tooltip>
 );
@@ -55,7 +53,7 @@ const InputResetAction: React.FC<{
       aria-label="ResetAction"
       onClick={() => info.reset()}
     >
-      <UndoIcon />
+      <UndoIcon /> Reset
     </Button>
   </Tooltip>
 );

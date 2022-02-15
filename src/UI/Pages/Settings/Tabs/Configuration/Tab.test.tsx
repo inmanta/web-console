@@ -101,10 +101,6 @@ test("GIVEN ConfigurationTab THEN shows all settings", async () => {
     })
   ).toBeVisible();
 
-  expect(
-    within(row).getByRole("generic", { name: "DefaultStatus" })
-  ).toBeVisible();
-
   expect(within(row).getByRole("button", { name: "SaveAction" })).toBeVisible();
 
   expect(

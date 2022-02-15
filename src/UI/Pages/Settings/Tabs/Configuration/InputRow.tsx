@@ -135,7 +135,6 @@ const DictInputWithRow: React.FC<{
       if (Maybe.isNone(error)) setNewEntry(["", ""]);
       return error;
     },
-    isUpdateable: () => info.isUpdateable(info) || newEntry[0].length > 0,
   };
   const isDeleteEntryAllowed = (value: Dict, key: string) =>
     !Object.keys(info.default).includes(key);

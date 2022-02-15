@@ -62,10 +62,6 @@ export class InputInfoCreator {
       }
     };
 
-    const isUpdateable = (
-      info: Pick<EnvironmentSettings.InputInfo, "initial" | "value">
-    ) => info.value !== info.initial;
-
     switch (definition.type) {
       case "bool":
         return {
@@ -76,7 +72,6 @@ export class InputInfoCreator {
           set: (value) => setValue(value),
           update,
           reset,
-          isUpdateable,
         };
       case "int":
         return {
@@ -87,7 +82,6 @@ export class InputInfoCreator {
           set: (value) => setValue(value),
           update,
           reset,
-          isUpdateable,
         };
       case "enum":
         return {
@@ -98,7 +92,6 @@ export class InputInfoCreator {
           set: (value) => setValue(value),
           update,
           reset,
-          isUpdateable,
         };
       case "dict":
         return {
@@ -112,7 +105,6 @@ export class InputInfoCreator {
           set: (value) => setValue(value),
           update,
           reset,
-          isUpdateable,
         };
     }
   }
