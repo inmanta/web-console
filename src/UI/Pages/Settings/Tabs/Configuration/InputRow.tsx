@@ -73,12 +73,15 @@ const EnumInput: React.FC<{ info: EnvironmentSettings.EnumInputInfo }> = ({
 }) => {
   const setSelected = (value) => (value !== null ? info.set(value) : undefined);
   return (
-    <StyledSingleTextSelect
-      selected={info.value}
-      setSelected={setSelected}
-      options={info.allowed_values}
-      toggleAriaLabel={`EnumInput-${info.name}`}
-    />
+    <>
+      <StyledSingleTextSelect
+        selected={info.value}
+        setSelected={setSelected}
+        options={info.allowed_values}
+        toggleAriaLabel={`EnumInput-${info.name}`}
+      />
+      {info.isUpdateable(info) && <Warning />}
+    </>
   );
 };
 
@@ -135,6 +138,7 @@ const Warning: React.FC = () => (
 );
 
 const IconWrapper = styled.span`
+  font-size: 16px;
   margin-left: 16px;
   height: 24px;
   display: inline-block;
