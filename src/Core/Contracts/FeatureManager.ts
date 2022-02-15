@@ -7,4 +7,5 @@ export interface FeatureManager {
   getServerVersion(): string;
   getEdition(): string;
   getJsonParser(): JsonParserId;
+  getCommitHash(): string;
 }

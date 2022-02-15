@@ -12,9 +12,14 @@ export class PrimaryFeatureManager implements FeatureManager {
   constructor(
     private readonly stateHelper: StateHelper<"GetServerStatus">,
     private readonly logger: Logger = new VoidLogger(),
-    private readonly jsonParserId: JsonParserId = "Native"
+    private readonly jsonParserId: JsonParserId = "Native",
+    private readonly commitHash: string = ""
   ) {
     this.logger.log(`Application configured with ${jsonParserId} JSON parser`);
+  }
+
+  getCommitHash(): string {
+    return this.commitHash;
   }
 
   private get(): ServerStatus {

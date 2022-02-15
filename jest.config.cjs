@@ -50,9 +50,4 @@ module.exports = {
 
   // The react-syntax-highlighter esm modules have to be handled by jest
   transformIgnorePatterns: ["node_modules/(?!react-syntax-highlighter)"],
-
-  // Provide a dummy value of the commit hash injected by webpack for testing
-  globals: {
-    COMMITHASH: "abcde123456789",
-  },
 };

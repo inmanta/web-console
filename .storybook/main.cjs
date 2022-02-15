@@ -5,6 +5,11 @@ module.exports = {
   addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
   webpackFinal: async (config) => {
     config.resolve.plugins.push(new TsconfigPathsPlugin());
+    config.module.rules.push({
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: "javascript/auto",
+    });
     return config;
   },
   babel: async (options) => ({
