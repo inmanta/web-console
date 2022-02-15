@@ -1,0 +1,4 @@
+description: Fix width of support archive button
+issue-nr: 2698
+change-type: patch
+destination-branches: [master, iso5, iso4]
