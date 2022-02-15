@@ -28,6 +28,11 @@ export const classified: ClassifiedAttribute[] = [
     value: `<note>\n    <to>Tove</to>\n    <from>Jani</from>\n</note>`,
   },
   {
+    kind: "SingleLine",
+    key: "use_get_schema_invalid_namespaces_workaround",
+    value: "test",
+  },
+  {
     kind: "Json",
     key: "d",
     value: `{\n    "key": "value"\n}`,
@@ -54,5 +59,10 @@ export const classified: ClassifiedAttribute[] = [
     kind: "Password",
     key: "some_password",
     value: "****",
+  },
+  {
+    kind: "MultiLine",
+    key: "use_get_schema_invalid_namespaces_workaround 123456",
+    value: "test",
   },
 ];
