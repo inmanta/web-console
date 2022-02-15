@@ -92,14 +92,14 @@ export const Widget: React.FC<WidgetProps> = ({
       <DropdownToggle
         aria-label="Toggle"
         splitButtonItems={[
-          <DropdownToggleAction
+          <StyledDropdownToggleAction
             key="action"
             onClick={onRecompile}
             aria-label="RecompileButton"
             isDisabled={isDisabled}
           >
             {label}
-          </DropdownToggleAction>,
+          </StyledDropdownToggleAction>,
         ]}
         splitButtonVariant="action"
         onToggle={onToggle}
@@ -120,3 +120,7 @@ export const Widget: React.FC<WidgetProps> = ({
     ]}
   />
 );
+
+const StyledDropdownToggleAction = styled(DropdownToggleAction)`
+  width: 120px;
+`;

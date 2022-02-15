@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { RemoteData } from "@/Core";
+import { Spacer } from "@/UI/Components/Spacer";
 import { CompileWidget } from "./CompileWidget";
 
 export default {
@@ -7,7 +8,19 @@ export default {
   component: CompileWidget,
 };
 
-export const NotCompiling = () => (
+export const Default = () => (
+  <>
+    <NotCompiling />
+    <Spacer />
+    <Compiling />
+    <Spacer />
+    <Loading />
+    <Spacer />
+    <Scenario />
+  </>
+);
+
+const NotCompiling = () => (
   <CompileWidget
     data={RemoteData.success(false)}
     onRecompile={() => alert("Recompile")}
@@ -15,7 +28,7 @@ export const NotCompiling = () => (
   />
 );
 
-export const Compiling = () => (
+const Compiling = () => (
   <CompileWidget
     data={RemoteData.success(true)}
     onRecompile={() => alert("Recompile")}
@@ -23,7 +36,7 @@ export const Compiling = () => (
   />
 );
 
-export const Loading = () => (
+const Loading = () => (
   <CompileWidget
     data={RemoteData.loading()}
     onRecompile={() => alert("Recompile")}
@@ -31,7 +44,7 @@ export const Loading = () => (
   />
 );
 
-export const Scenario = () => {
+const Scenario = () => {
   const [data, setData] = useState<RemoteData.RemoteData<undefined, boolean>>(
     RemoteData.success(false)
   );

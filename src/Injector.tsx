@@ -38,7 +38,8 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   const featureManager = new PrimaryFeatureManager(
     new GetServerStatusStateHelper(store),
     new PrimaryLogger(),
-    getJsonParserId(globalThis)
+    getJsonParserId(globalThis),
+    COMMITHASH
   );
   const keycloakController = new PrimaryKeycloakController(
     process.env.SHOULD_USE_AUTH,
