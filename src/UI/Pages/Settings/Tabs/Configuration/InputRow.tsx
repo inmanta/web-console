@@ -96,17 +96,20 @@ const IntInput: React.FC<{ info: EnvironmentSettings.IntInputInfo }> = ({
   const onPlus = () => info.set(Number(info.value) + 1);
 
   return (
-    <NumberInput
-      value={Number(info.value)}
-      onMinus={onMinus}
-      onChange={onChange}
-      onPlus={onPlus}
-      inputName="input"
-      inputAriaLabel="number input"
-      minusBtnAriaLabel="minus"
-      plusBtnAriaLabel="plus"
-      widthChars={10}
-    />
+    <>
+      <NumberInput
+        value={Number(info.value)}
+        onMinus={onMinus}
+        onChange={onChange}
+        onPlus={onPlus}
+        inputName="input"
+        inputAriaLabel="number input"
+        minusBtnAriaLabel="minus"
+        plusBtnAriaLabel="plus"
+        widthChars={10}
+      />
+      {info.isUpdateable(info) && <Warning />}
+    </>
   );
 };
 
