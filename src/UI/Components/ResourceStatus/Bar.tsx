@@ -46,7 +46,7 @@ function getResourcesInDoneState(
     .reduce((acc, current) => acc + current, 0);
 }
 
-function infoToLegendItem(
+export function infoToLegendItem(
   info: InfoWithTotal,
   onClick: (ids: Resource.Status[]) => void
 ): LegendItemDetails {
@@ -76,7 +76,7 @@ interface Info {
   color: string;
 }
 
-interface InfoWithTotal extends Info {
+export interface InfoWithTotal extends Info {
   total: number;
 }
 
@@ -90,7 +90,7 @@ const groups: Array<Array<Resource.Status>> = [
   [Resource.Status.failed],
   [Resource.Status.unavailable, Resource.Status.undefined],
   [Resource.Status.deploying],
-  [Resource.Status.available, Resource.Status.processing_events],
+  [Resource.Status.available],
 ];
 
 const infos: Info[] = groups.map((group) => ({

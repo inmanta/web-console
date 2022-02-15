@@ -96,7 +96,6 @@ export const response = {
         undefined: 2,
         deploying: 2,
         available: 1,
-        processing_events: 0,
       },
     },
   },

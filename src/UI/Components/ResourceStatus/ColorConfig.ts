@@ -23,7 +23,6 @@ export const labelColorConfig: Record<
   [Resource.Status.undefined]: "orange",
   [Resource.Status.deploying]: "blue",
   [Resource.Status.available]: "grey",
-  [Resource.Status.processing_events]: "grey",
   [Resource.Status.dry]: "purple",
   [Resource.Status.orphaned]: "purple",
 };
@@ -38,7 +37,6 @@ export const colorConfig: Record<Resource.Status, string> = {
   [Resource.Status.undefined]: global_warning_color_100.var,
   [Resource.Status.deploying]: global_info_color_100.var,
   [Resource.Status.available]: global_disabled_color_200.var,
-  [Resource.Status.processing_events]: global_disabled_color_200.var,
   [Resource.Status.dry]: global_palette_purple_300.var,
   [Resource.Status.orphaned]: global_palette_purple_300.var,
 };

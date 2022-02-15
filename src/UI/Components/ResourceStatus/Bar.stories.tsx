@@ -13,7 +13,6 @@ export const Default = () => (
       total: 200,
       by_state: {
         unavailable: 50,
-        processing_events: 10,
         skipped: 40,
         deployed: 5,
         failed: 15,

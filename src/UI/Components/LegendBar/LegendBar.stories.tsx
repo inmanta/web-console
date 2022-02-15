@@ -47,7 +47,7 @@ const items: LegendItemDetails[] = [
   },
   {
     id: "available",
-    label: "available & processing_events",
+    label: "available",
     value: 54,
     backgroundColor: colorConfig["available"],
     color: "black",
