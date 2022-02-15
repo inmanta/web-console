@@ -3,16 +3,9 @@ import {
   ActionList,
   ActionListItem,
   Button,
-  InputGroupText,
   Tooltip,
 } from "@patternfly/react-core";
-import {
-  CheckIcon,
-  UndoIcon,
-  ClipboardCheckIcon,
-} from "@patternfly/react-icons";
-import { isEqual } from "lodash-es";
-import styled from "styled-components";
+import { CheckIcon, UndoIcon } from "@patternfly/react-icons";
 import { EnvironmentSettings } from "@/Core";
 import { words } from "@/UI/words";
 
@@ -29,9 +22,6 @@ interface Props {
 
 export const InputActions: React.FC<Props> = ({ info }) => (
   <ActionList isIconList>
-    <ActionListItem>
-      <InputDefaultStatus info={info} />
-    </ActionListItem>
     <ActionListItem>
       <InputUpdateAction info={info} />
     </ActionListItem>
@@ -69,27 +59,3 @@ const InputResetAction: React.FC<{
     </Button>
   </Tooltip>
 );
-
-const InputDefaultStatus: React.FC<{
-  info: Info<"value" | "default">;
-}> = ({ info }) => (
-  <PaddedInputGroupText aria-label="DefaultStatus" variant="plain">
-    <Tooltip
-      content={words("settings.tabs.configuration.default")(
-        typeof info.default === "object" ? "object" : info.default.toString()
-      )}
-    >
-      <DefaultIcon $isDisabled={!isEqual(info.value, info.default)} />
-    </Tooltip>
-  </PaddedInputGroupText>
-);
-
-const PaddedInputGroupText = styled(InputGroupText)`
-  padding: 6px 16px;
-`;
-
-const DefaultIcon = styled(ClipboardCheckIcon)<{
-  $isDisabled?: boolean;
-}>`
-  opacity: ${(p) => (p.$isDisabled ? "0.2" : "1")};
-`;

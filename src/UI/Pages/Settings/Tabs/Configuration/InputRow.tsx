@@ -40,9 +40,9 @@ const Row: React.FC<Props> = ({ info, children }) => (
   <Tr aria-label={`Row-${info.name}`}>
     <Td>
       {info.name}{" "}
-      <Tooltip content={info.doc}>
+      <StyledTooltip content={getDescription(info)}>
         <OutlinedQuestionCircleIcon />
-      </Tooltip>
+      </StyledTooltip>
     </Td>
     <Td>{children}</Td>
     <Td>
@@ -50,6 +50,19 @@ const Row: React.FC<Props> = ({ info, children }) => (
     </Td>
   </Tr>
 );
+
+const getDescription = (
+  info: Pick<EnvironmentSettings.InputInfo, "default" | "doc">
+): string => {
+  if (typeof info.default === "object") {
+    return `${info.doc}\ndefault: ${JSON.stringify(info.default)}`;
+  }
+  return `${info.doc}\ndefault: ${info.default}`;
+};
+
+const StyledTooltip = styled(Tooltip)`
+  white-space: pre-line;
+`;
 
 const EnumInput: React.FC<{ info: EnvironmentSettings.EnumInputInfo }> = ({
   info,

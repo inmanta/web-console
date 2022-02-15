@@ -9,15 +9,17 @@ interface Props {
   infos: EnvironmentSettings.InputInfo[];
   errorMessage: string;
   onErrorClose: () => void;
+  className?: string;
 }
 
 export const Container: React.FC<Props> = ({
   infos,
   errorMessage,
   onErrorClose,
+  className,
 }) => {
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       {errorMessage && (
         <StyledAlert
           variant="danger"
