@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { NumberInput, Switch, Tooltip } from "@patternfly/react-core";
-import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
+import {
+  ExclamationTriangleIcon,
+  OutlinedQuestionCircleIcon,
+} from "@patternfly/react-icons";
 import { Td, Tr } from "@patternfly/react-table";
+import { global_warning_color_100 } from "@patternfly/react-tokens";
 import styled from "styled-components";
 import { EnvironmentSettings, Maybe } from "@/Core";
 import { DictEditor, SingleTextSelect, Entry, Dict } from "@/UI/Components";
@@ -109,12 +113,29 @@ const IntInput: React.FC<{ info: EnvironmentSettings.IntInputInfo }> = ({
 const BooleanInput: React.FC<{
   info: EnvironmentSettings.BooleanInputInfo;
 }> = ({ info }) => (
-  <Switch
-    isChecked={info.value}
-    onChange={info.set}
-    aria-label={`Toggle-${info.name}`}
-  />
+  <>
+    <Switch
+      isChecked={info.value}
+      onChange={info.set}
+      aria-label={`Toggle-${info.name}`}
+    />
+    {info.isUpdateable(info) && <Warning />}
+  </>
 );
+
+const Warning: React.FC = () => (
+  <Tooltip content="Changed value has not been saved">
+    <IconWrapper>
+      <ExclamationTriangleIcon color={global_warning_color_100.var} />
+    </IconWrapper>
+  </Tooltip>
+);
+
+const IconWrapper = styled.span`
+  margin-left: 16px;
+  height: 24px;
+  display: inline-block;
+`;
 
 const DictInputWithRow: React.FC<{
   info: EnvironmentSettings.DictInputInfo;
@@ -135,6 +156,7 @@ const DictInputWithRow: React.FC<{
       if (Maybe.isNone(error)) setNewEntry(["", ""]);
       return error;
     },
+    isUpdateable: () => info.isUpdateable(info) || newEntry[0].length > 0,
   };
   const isDeleteEntryAllowed = (value: Dict, key: string) =>
     !Object.keys(info.default).includes(key);

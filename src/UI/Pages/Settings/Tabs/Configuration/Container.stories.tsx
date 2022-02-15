@@ -19,6 +19,7 @@ export const Default = () => {
     set: (value) => alert(value),
     update: async () => Maybe.none(),
     reset: async () => Maybe.none(),
+    isUpdateable: () => true,
   };
 
   const enumInfo: EnvironmentSettings.EnumInputInfo = {
