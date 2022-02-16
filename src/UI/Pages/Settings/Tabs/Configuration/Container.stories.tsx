@@ -64,13 +64,11 @@ export const Default = () => {
   };
 
   return (
-    <>
-      <StyledContainer
-        infos={[enumInfo, booleanInfo, intInfo, dictInfo]}
-        errorMessage={""}
-        onErrorClose={() => undefined}
-      />
-    </>
+    <StyledContainer
+      infos={[enumInfo, booleanInfo, intInfo, dictInfo]}
+      errorMessage={""}
+      onErrorClose={() => undefined}
+    />
   );
 };
 
