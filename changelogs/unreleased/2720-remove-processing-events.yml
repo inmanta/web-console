@@ -1,0 +1,4 @@
+description: Remove 'processing_events' resource status
+issue-nr: 2720
+change-type: patch
+destination-branches: [master, iso5]
