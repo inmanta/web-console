@@ -39,7 +39,7 @@ export const response = {
         resource_id_value: "/etc/file2",
       },
       requires: [],
-      status: "orphaned",
+      status: "processing_events",
     },
     {
       resource_id: "std::File[agent1,path=/etc/file1]",
@@ -96,6 +96,7 @@ export const response = {
         undefined: 2,
         deploying: 2,
         available: 1,
+        processing_events: 2,
       },
     },
   },

@@ -25,6 +25,7 @@ export const Item: React.FC<Props> = ({
   <Tooltip content={label} position="auto" distance={4} enableFlip>
     <Container
       value={value}
+      data-value={value}
       backgroundColor={backgroundColor}
       color={color}
       onClick={onClick ? () => onClick(id) : undefined}

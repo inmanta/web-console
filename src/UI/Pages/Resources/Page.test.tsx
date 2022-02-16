@@ -251,6 +251,24 @@ test("ResourcesView shows deploy state bar", async () => {
   ).toBeInTheDocument();
 });
 
+test("ResourcesView shows deploy state bar with available status without processing_events status", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  apiHelper.resolve(Either.right(Resource.response));
+
+  expect(
+    await screen.findByRole("generic", { name: "Deployment state summary" })
+  ).toBeInTheDocument();
+
+  const availableItem = screen.getByRole("generic", {
+    name: "LegendItem-available",
+  });
+  expect(availableItem).toBeVisible();
+  expect(availableItem).toHaveAttribute("data-value", "1");
+  expect(availableItem).not.toHaveAttribute("data-value", "3");
+  expect(screen.getByRole("cell", { name: "processing_events" })).toBeVisible();
+});
+
 test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async () => {
   const { component, apiHelper, environment } = setup();
   render(component);
