@@ -3,21 +3,23 @@ import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
 import { TableComposable, Tbody } from "@patternfly/react-table";
 import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
-import { InputRow } from "./InputRow";
+import { InputRow } from "./Components";
 
 interface Props {
   infos: EnvironmentSettings.InputInfo[];
   errorMessage: string;
   onErrorClose: () => void;
+  className?: string;
 }
 
 export const Container: React.FC<Props> = ({
   infos,
   errorMessage,
   onErrorClose,
+  className,
 }) => {
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       {errorMessage && (
         <StyledAlert
           variant="danger"
