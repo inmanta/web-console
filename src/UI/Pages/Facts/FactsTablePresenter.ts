@@ -1,6 +1,9 @@
 import { Fact } from "@/Core";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
+
+const datePresenter = new MomentDatePresenter();
 
 export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
   readonly columnHeads: ColumnHead[];
@@ -17,8 +20,14 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
   }
 
   createRows(sourceData: Fact[]): Fact[] {
-    return sourceData;
+    return sourceData.map((fact) => ({
+      ...fact,
+      updated: fact.updated
+        ? datePresenter.format(fact.updated, "YYYY-MM-DD HH:mm:ss")
+        : undefined,
+    }));
   }
+
   getColumnHeadDisplayNames(): string[] {
     return this.columnHeads.map((columnHead) => columnHead.displayName);
   }

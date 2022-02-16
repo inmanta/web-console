@@ -37,6 +37,8 @@ export const Page: React.FC = () => {
     pageSize,
   });
 
+  const tablePresenter = new FactsTablePresenter();
+
   return (
     <PageContainer title={words("facts.title")}>
       <TableControls
@@ -56,8 +58,8 @@ export const Page: React.FC = () => {
         SuccessView={(data) => (
           <FactsTable
             aria-label="Facts-Success"
-            rows={data.data}
-            tablePresenter={new FactsTablePresenter()}
+            rows={tablePresenter.createRows(data.data)}
+            tablePresenter={tablePresenter}
             sort={sort}
             setSort={setSort}
           />
