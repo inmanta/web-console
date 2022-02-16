@@ -3,6 +3,10 @@ import { DateInfo } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
 
 export class MomentDatePresenter implements DatePresenter {
+  format(timestamp: string, template: string): string {
+    return moment.utc(timestamp).tz(this.timezone).format(template);
+  }
+
   private readonly timezone: string = moment.tz.guess();
 
   diff(timestamp1: string, timestamp2: string): string {

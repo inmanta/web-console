@@ -2,6 +2,9 @@ import { DateInfo } from "@/Core";
 import { DatePresenter } from "@/UI/Presenters";
 
 export class DummyDatePresenter implements DatePresenter {
+  format(): string {
+    return "formatted";
+  }
   toUnixMs(): number {
     return 0;
   }
