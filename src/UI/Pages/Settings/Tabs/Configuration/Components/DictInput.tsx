@@ -33,7 +33,7 @@ export const DictInputWithRow: React.FC<Props> = ({ info }) => {
 
   return (
     <Row info={customInfo}>
-      <Container>
+      <Container hasWarning={customInfo.isUpdateable()}>
         <DictEditor
           value={info.value}
           setValue={info.set}
@@ -51,8 +51,9 @@ const StyledWarning = styled(Warning)`
   height: 36px;
 `;
 
-const Container = styled.div`
+const Container = styled.div<{ hasWarning: boolean }>`
   display: flex;
+  margin-right: ${(p) => (p.hasWarning ? "0" : "16px")};
 `;
 
 const getSanitizedNewEntry = ([key, value]: Entry) => {
