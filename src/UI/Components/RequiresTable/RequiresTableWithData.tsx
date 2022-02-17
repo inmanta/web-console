@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
-import { EmptyView, RemoteDataView, RequiresTable } from "@/UI/Components";
+import { EmptyView } from "@/UI/Components/EmptyView";
+import { RemoteDataView } from "@/UI/Components/RemoteDataView";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { RequiresTable } from "./RequiresTable";
 
 interface Props {
   id: string;
