@@ -8,6 +8,7 @@ import {
   Tr,
   Td,
 } from "@patternfly/react-table";
+import styled from "styled-components";
 import { Resource } from "@/Core";
 import { ResourceLink } from "@/UI/Components/ResourceLink";
 import { ResourceStatusLabel } from "@/UI/Components/ResourceStatus";
@@ -28,7 +29,9 @@ export const RequiresTable: React.FC<Props> = ({
     <Thead>
       <Tr>
         <Th>{words("resources.requires.resourceId")}</Th>
-        <Th width={15}>{words("resources.requires.deployState")}</Th>
+        <StyledTh width={15}>
+          {words("resources.requires.deployState")}
+        </StyledTh>
       </Tr>
     </Thead>
     <Tbody>
@@ -45,3 +48,7 @@ export const RequiresTable: React.FC<Props> = ({
     </Tbody>
   </TableComposable>
 );
+
+const StyledTh = styled(Th)`
+  --pf-c-table--cell--MinWidth: 16ch;
+`;

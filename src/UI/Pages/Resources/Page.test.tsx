@@ -1,51 +1,41 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
   CommandResolverImpl,
-  DeployCommandManager,
-  RepairCommandManager,
+  KeycloakAuthHelper,
+  QueryManagerResolver,
+  CommandManagerResolver,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
   EnvironmentDetails,
   MockEnvironmentHandler,
   Resource,
+  ResourceDetails,
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
 
 function setup() {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
+  const authHelper = new KeycloakAuthHelper();
+  const scheduler = new StaticScheduler();
+  const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new ResourcesQueryManager(
-        apiHelper,
-        new ResourcesStateHelper(store),
-        scheduler
-      ),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new DeployCommandManager(apiHelper),
-      new RepairCommandManager(apiHelper),
-    ])
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
+  const environment = "34a961ba-db3c-486e-8d85-1438d8e88909";
 
   const component = (
     <MemoryRouter>
@@ -129,6 +119,26 @@ test("ResourcesView shows success table", async () => {
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
+});
+
+test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requires is shown", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  apiHelper.resolve(Either.right(Resource.response));
+
+  const rows = await screen.findAllByRole("row", {
+    name: "Resource Table Row",
+  });
+
+  const toggle = within(rows[0]).getByRole("button", { name: "2" });
+  userEvent.click(toggle);
+
+  apiHelper.resolve(Either.right(ResourceDetails.response));
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourceRequires-Success" })
+  ).toBeVisible();
 });
 
 test("ResourcesView shows next page of resources", async () => {

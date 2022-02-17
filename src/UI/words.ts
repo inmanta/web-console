@@ -362,10 +362,6 @@ const dict = {
   "settings.tabs.environment.id": "Id",
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
-  "settings.tabs.configuration.default": (value: string) =>
-    `Default is ${value}`,
-  "settings.tabs.configuration.save": "Save",
-  "settings.tabs.configuration.reset": "Reset to default",
   "settings.tabs.token.disabledInfo":
     "An authenticated user is required to create tokens",
   "settings.tabs.token.description":
