@@ -74,6 +74,7 @@ import {
   GetVersionResources,
   GetVersionResourcesManifest,
 } from "./GetVersionResources";
+import { GetVersionedResourceDetails } from "./GetVersionedResourceDetails";
 
 export type Query =
   | GetServices
@@ -109,7 +110,8 @@ export type Query =
   | GetParameters.Query
   | GetDesiredStateDiff.Query
   | GetDryRuns.Query
-  | GetDryRunReport.Query;
+  | GetDryRunReport.Query
+  | GetVersionedResourceDetails.Query;
 
 export type Type = Query;
 
@@ -152,6 +154,7 @@ interface Manifest {
   GetDesiredStateDiff: GetDesiredStateDiff.Manifest;
   GetDryRuns: GetDryRuns.Manifest;
   GetDryRunReport: GetDryRunReport.Manifest;
+  GetVersionedResourceDetails: GetVersionedResourceDetails.Manifest;
 }
 
 /**

@@ -81,6 +81,17 @@ export interface RawDetails {
   requires_status: Record<string, string>;
 }
 
+export interface VersionedDetails {
+  resource_id: string;
+  resource_type: string;
+  agent: string;
+  id_attribute: string;
+  id_attribute_value: string;
+  version: ParsedNumber;
+  resource_version_id: string;
+  attributes: Record<string, unknown>;
+}
+
 export interface DeploySummary {
   total: ParsedNumber;
   by_state: Record<string, ParsedNumber>;

@@ -61,6 +61,10 @@ import {
   versionResourcesSlice,
   VersionResourcesSlice,
 } from "./VersionResourcesSlice";
+import {
+  versionedResourceDetailsSlice,
+  VersionedResourceDetailsSlice,
+} from "./VersionedResourceDetailsSlice";
 
 export interface StoreModel {
   environment: EnvironmentSlice;
@@ -93,6 +97,7 @@ export interface StoreModel {
   desiredStateDiff: DesiredStateDiffSlice;
   dryRuns: DryRunsSlice;
   dryRunReport: DryRunReportSlice;
+  versionedResourceDetails: VersionedResourceDetailsSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -126,4 +131,5 @@ export const storeModel: StoreModel = {
   desiredStateDiff: desiredStateDiffSlice,
   dryRuns: dryRunsSlice,
   dryRunReport: dryRunReportSlice,
+  versionedResourceDetails: versionedResourceDetailsSlice,
 };

@@ -1,33 +1,22 @@
 import React from "react";
-import { ExclamationCircleIcon } from "@patternfly/react-icons";
+import { PageSection, Title } from "@patternfly/react-core";
 import { Resource } from "@/Core";
 import { JsonFormatter, XmlFormatter } from "@/Data";
-import {
-  RequiresTable,
-  AttributeClassifier,
-  AttributeList,
-  PageSectionWithTitle,
-} from "@/UI/Components";
+import { AttributeClassifier, AttributeList } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
-  details: Resource.Details;
+  details: Resource.VersionedDetails;
 }
 
 export const Details: React.FC<Props> = ({ details, ...props }) => (
   <div {...props}>
-    <PageSectionWithTitle title={words("resources.requires.title")}>
-      {Object.keys(details.requires_status).length <= 0 ? (
-        <p>
-          <ExclamationCircleIcon /> {words("resources.requires.empty.message")}
-        </p>
-      ) : (
-        <RequiresTable requiresStatus={details.requires_status} />
-      )}
-    </PageSectionWithTitle>
-    <PageSectionWithTitle title={words("resources.attributes.title")}>
-      <AttributeList attributes={classifier.classify(details.attributes)} />
-    </PageSectionWithTitle>
+    <Title headingLevel="h2">{words("resources.attributes.title")}</Title>
+    <PageSection variant="light">
+      <AttributeList
+        attributes={classifier.classify(details.attributes, true)}
+      />
+    </PageSection>
   </div>
 );
 

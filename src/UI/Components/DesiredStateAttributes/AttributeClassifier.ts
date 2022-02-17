@@ -7,9 +7,12 @@ export class AttributeClassifier {
     private readonly xmlFormatter: Formatter
   ) {}
 
-  classify(attributesObject: Record<string, unknown>): ClassifiedAttribute[] {
+  classify(
+    attributesObject: Record<string, unknown>,
+    allowRequires?: boolean
+  ): ClassifiedAttribute[] {
     return Object.entries(attributesObject)
-      .map(([key, value]) => this.classifyKeyValue(key, value))
+      .map(([key, value]) => this.classifyKeyValue(key, value, allowRequires))
       .filter(Maybe.isSome)
       .map((some) => some.value)
       .sort((a, b) => (a.key < b.key ? -1 : 1));
@@ -17,9 +20,10 @@ export class AttributeClassifier {
 
   private classifyKeyValue(
     key: string,
-    value: unknown
+    value: unknown,
+    allowRequires?: boolean
   ): Maybe.Type<ClassifiedAttribute> {
-    if (key === "version" || key === "requires") {
+    if (!allowRequires && (key === "version" || key === "requires")) {
       return Maybe.none();
     } else if (this.isUndefined(value)) {
       return Maybe.some({ kind: "Undefined", key });

@@ -4,14 +4,19 @@ import { DependencyContext } from "@/UI/Dependency";
 import { Details } from "./Details";
 
 interface Props {
+  version: string;
   resourceId: string;
 }
 
-export const DetailsProvider: React.FC<Props> = ({ resourceId: id }) => {
+export const DetailsProvider: React.FC<Props> = ({
+  version,
+  resourceId: id,
+}) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useContinuous<"GetResourceDetails">({
-    kind: "GetResourceDetails",
+  const [data] = queryResolver.useContinuous<"GetVersionedResourceDetails">({
+    kind: "GetVersionedResourceDetails",
+    version,
     id,
   });
 

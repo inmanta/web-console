@@ -52,3 +52,4 @@ export * from "./GetFacts";
 export * from "./GetDesiredStateDiff";
 export * as GetDryRuns from "./GetDryRuns";
 export * as GetDryRunReport from "./GetDryRunReport";
+export * as GetVersionedResourceDetails from "./GetVersionedResourceDetails";
