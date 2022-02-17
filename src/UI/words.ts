@@ -464,6 +464,8 @@ const dict = {
   "common.compileWidget.recompile": "Recompile",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
   "common.compileWidget.compiling": "Compiling",
+  "common.compileWidget.compilationDisabled.hint":
+    "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
 };
 
 type Key = keyof typeof dict;

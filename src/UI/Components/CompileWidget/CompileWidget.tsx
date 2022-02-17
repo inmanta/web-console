@@ -5,6 +5,7 @@ import {
   DropdownToggleAction,
   DropdownItem,
   Spinner,
+  Tooltip,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
@@ -17,18 +18,22 @@ interface Data {
 interface Props extends Data {
   onRecompile(): void;
   onUpdateAndRecompile(): void;
+  isDisabled?: boolean;
+  hint?: string;
 }
 
 export const CompileWidget: React.FC<Props> = ({
   data,
   onRecompile,
   onUpdateAndRecompile,
+  isDisabled,
+  hint,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  return (
+  const widget = (
     <Widget
       label={<Label data={data} />}
-      isDisabled={!RemoteData.isSuccess(data) || data.value}
+      isDisabled={isDisabled || !RemoteData.isSuccess(data) || data.value}
       isOpen={isOpen}
       onSelect={() => setIsOpen(false)}
       onToggle={(open: boolean) => setIsOpen(open)}
@@ -36,6 +41,8 @@ export const CompileWidget: React.FC<Props> = ({
       onUpdateAndRecompile={onUpdateAndRecompile}
     />
   );
+
+  return hint ? <Tooltip content={hint}>{widget}</Tooltip> : widget;
 };
 
 const Label: React.FC<Data> = ({ data }) =>
