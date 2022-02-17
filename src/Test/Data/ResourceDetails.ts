@@ -24,3 +24,7 @@ export const a = {
     "std::File[internal,path=/tmp/dir1/file2]": "deploying",
   },
 };
+
+export const response = {
+  data: a,
+};
