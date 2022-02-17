@@ -13,14 +13,13 @@ export const Details: React.FC<Props> = ({ details, ...props }) => (
   <div {...props}>
     <Title headingLevel="h2">{words("resources.attributes.title")}</Title>
     <PageSection variant="light">
-      <AttributeList
-        attributes={classifier.classify(details.attributes, true)}
-      />
+      <AttributeList attributes={classifier.classify(details.attributes)} />
     </PageSection>
   </div>
 );
 
 const classifier = new AttributeClassifier(
   new JsonFormatter(),
-  new XmlFormatter()
+  new XmlFormatter(),
+  () => false
 );

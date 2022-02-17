@@ -1,6 +1,7 @@
 import { Query } from "@/Core";
 
-type Query = Query.SubQuery<"GetVersionedResourceDetails">;
-
-export const getUrl = ({ id, version }: Query) =>
+export const getUrl = ({
+  id,
+  version,
+}: Query.SubQuery<"GetVersionedResourceDetails">) =>
   `/api/v2/desiredstate/${version}/resource/${id}`;

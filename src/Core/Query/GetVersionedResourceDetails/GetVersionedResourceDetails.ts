@@ -1,8 +1,8 @@
 import { Resource } from "@/Core/Domain";
-import { WithId } from "@/Core/Language";
 
-export interface Query extends WithId {
+export interface Query {
   kind: "GetVersionedResourceDetails";
+  id: string;
   version: string;
 }
 

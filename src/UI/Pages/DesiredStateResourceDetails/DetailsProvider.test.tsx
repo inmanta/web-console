@@ -6,13 +6,12 @@ import { act } from "react-dom/test-utils";
 import { Either } from "@/Core";
 import {
   getStoreInstance,
-  GetVersionedResourceDetails,
+  QueryManagerResolver,
   QueryResolverImpl,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
   StaticScheduler,
   VersionedResourceDetails,
 } from "@/Test";
@@ -24,9 +23,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new GetVersionedResourceDetails.QueryManager(apiHelper, store, scheduler),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
 
   const component = (

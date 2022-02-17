@@ -4,15 +4,14 @@ import { ClassifiedAttribute } from "./ClassifiedAttribute";
 export class AttributeClassifier {
   constructor(
     private readonly jsonFormatter: Formatter<unknown>,
-    private readonly xmlFormatter: Formatter
+    private readonly xmlFormatter: Formatter,
+    private readonly isKeyIgnored: (key: string) => boolean = (key: string) =>
+      key === "version" || key === "requires"
   ) {}
 
-  classify(
-    attributesObject: Record<string, unknown>,
-    allowRequires?: boolean
-  ): ClassifiedAttribute[] {
+  classify(attributesObject: Record<string, unknown>): ClassifiedAttribute[] {
     return Object.entries(attributesObject)
-      .map(([key, value]) => this.classifyKeyValue(key, value, allowRequires))
+      .map(([key, value]) => this.classifyKeyValue(key, value))
       .filter(Maybe.isSome)
       .map((some) => some.value)
       .sort((a, b) => (a.key < b.key ? -1 : 1));
@@ -20,10 +19,9 @@ export class AttributeClassifier {
 
   private classifyKeyValue(
     key: string,
-    value: unknown,
-    allowRequires?: boolean
+    value: unknown
   ): Maybe.Type<ClassifiedAttribute> {
-    if (!allowRequires && (key === "version" || key === "requires")) {
+    if (this.isKeyIgnored(key)) {
       return Maybe.none();
     } else if (this.isUndefined(value)) {
       return Maybe.some({ kind: "Undefined", key });
