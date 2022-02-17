@@ -16,7 +16,7 @@ export class EnvironmentModifierImpl implements EnvironmentModifier {
     );
     if (Maybe.isSome(this.environment)) {
       const state = storeState[this.environment.value];
-      if (RemoteData.isSuccess(state)) {
+      if (state !== undefined && RemoteData.isSuccess(state)) {
         return state.value;
       }
     }
