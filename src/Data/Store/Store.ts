@@ -53,6 +53,10 @@ import {
   versionResourcesSlice,
   VersionResourcesSlice,
 } from "./VersionResourcesSlice";
+import {
+  versionedResourceDetailsSlice,
+  VersionedResourceDetailsSlice,
+} from "./VersionedResourceDetailsSlice";
 
 export interface StoreModel {
   environment: EnvironmentSlice;
@@ -80,6 +84,7 @@ export interface StoreModel {
   agentProcess: AgentProcessSlice;
   desiredStates: DesiredStatesSlice;
   versionResources: VersionResourcesSlice;
+  versionedResourceDetails: VersionedResourceDetailsSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -108,4 +113,5 @@ export const storeModel: StoreModel = {
   agentProcess: agentProcessSlice,
   desiredStates: desiredStatesSlice,
   versionResources: versionResourcesSlice,
+  versionedResourceDetails: versionedResourceDetailsSlice,
 };
