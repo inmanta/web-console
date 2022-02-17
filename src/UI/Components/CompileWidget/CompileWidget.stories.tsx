@@ -10,14 +10,43 @@ export default {
 
 export const Default = () => (
   <>
+    <p>NotCompiling:</p>
     <NotCompiling />
     <Spacer />
+    <p>Compiling:</p>
     <Compiling />
     <Spacer />
+    <p>Loading:</p>
     <Loading />
     <Spacer />
+    <p>Scenario:</p>
     <Scenario />
+    <Spacer />
+    <p>Disabled:</p>
+    <Disabled />
+    <Spacer />
+    <p>Hinted:</p>
+    <Hinted />
   </>
+);
+
+const Hinted = () => (
+  <CompileWidget
+    data={RemoteData.success(false)}
+    onRecompile={() => alert("Recompile")}
+    onUpdateAndRecompile={() => alert("Update & Recompile")}
+    isDisabled
+    hint="Some hint giving more information"
+  />
+);
+
+const Disabled = () => (
+  <CompileWidget
+    data={RemoteData.success(false)}
+    onRecompile={() => alert("Recompile")}
+    onUpdateAndRecompile={() => alert("Update & Recompile")}
+    isDisabled
+  />
 );
 
 const NotCompiling = () => (

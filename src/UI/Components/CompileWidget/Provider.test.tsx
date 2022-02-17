@@ -1,42 +1,51 @@
 import React from "react";
 import { render, screen, within, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
 import {
+  CommandManagerResolver,
   CommandResolverImpl,
+  getStoreInstance,
+  KeycloakAuthHelper,
+  QueryManagerResolver,
   QueryResolverImpl,
-  TriggerCompileCommandManager,
 } from "@/Data";
-import { GetCompilerStatusQueryManager } from "@/Data/Managers/GetCompilerStatus";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
+  MockEnvironmentModifier,
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Provider } from "./Provider";
 
-function setup() {
+function setup(details = { halted: false, server_compile: true }) {
   const apiHelper = new DeferredApiHelper();
+  const authHelper = new KeycloakAuthHelper();
   const scheduler = new StaticScheduler();
+  const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new GetCompilerStatusQueryManager(apiHelper, scheduler),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new TriggerCompileCommandManager(apiHelper),
-    ])
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
 
+  const environmentModifier = new MockEnvironmentModifier(details);
+
   const component = (
-    <DependencyProvider
-      dependencies={{ ...dependencies, commandResolver, queryResolver }}
-    >
-      <Provider />
-    </DependencyProvider>
+    <StoreProvider store={store}>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          environmentModifier,
+          commandResolver,
+          queryResolver,
+        }}
+      >
+        <Provider />
+      </DependencyProvider>
+    </StoreProvider>
   );
   return { component, apiHelper, scheduler };
 }
@@ -159,4 +168,23 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
       },
     },
   });
+});
+
+test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async () => {
+  const { component, apiHelper } = setup({
+    halted: false,
+    server_compile: false,
+  });
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
+
+  const widget = screen.getByRole("generic", { name: "CompileWidget" });
+  const button = within(widget).getByRole("button", {
+    name: "RecompileButton",
+  });
+
+  expect(button).toBeDisabled();
 });
