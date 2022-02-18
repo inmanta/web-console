@@ -8,7 +8,7 @@ import { DeploymentProgress } from "@/Core";
 import { LegendBar, LegendItemDetails } from "@/UI/Components";
 import { words } from "@/UI/words";
 
-type Progress = Omit<DeploymentProgress, "total"> | undefined;
+type Progress = Omit<DeploymentProgress, "total"> | undefined | null;
 
 interface Props {
   progress: Progress;
@@ -22,7 +22,7 @@ export const DeploymentProgressBar: React.FC<Props> = ({ progress }) => (
 );
 
 function fromProgressToItems(progress: Progress): LegendItemDetails[] {
-  if (progress === undefined) return [];
+  if (progress === undefined || progress === null) return [];
   return [
     {
       id: "deployed",
