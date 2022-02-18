@@ -1,0 +1,4 @@
+description: Refactor FilterPicker
+issue-nr: 2611
+change-type: patch
+destination-branches: [master, iso5]
