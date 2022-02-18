@@ -1,13 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  Text,
-  TextContent,
-  TextVariants,
-} from "@patternfly/react-core";
+import { Text, TextContent, TextVariants } from "@patternfly/react-core";
 import {
   InstanceAttributeModel,
   Maybe,
@@ -19,6 +12,7 @@ import {
   FieldCreator,
   ServiceInstanceForm,
   EditModifierHandler,
+  ErrorToastAlert,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -65,15 +59,11 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   return (
     <>
       {errorMessage && (
-        <AlertGroup isToast>
-          <Alert
-            variant={"danger"}
-            title={errorMessage}
-            actionClose={
-              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-            }
-          />
-        </AlertGroup>
+        <ErrorToastAlert
+          title={words("inventory.editInstance.failed")}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+        />
       )}
       <TextContent>
         <Text component={TextVariants.small}>

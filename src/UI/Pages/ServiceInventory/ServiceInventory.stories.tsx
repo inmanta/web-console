@@ -86,7 +86,10 @@ export const Failed: React.FC = () => {
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
     new InstantApiHelper({
       kind: "Failed",
-      error: "fake error message",
+      error: `The following error occured while communicating with the server: 400 Bad Request 
+Invalid request: Filter validation failed: 1 validation error for st_filter
+id -> 0
+  value is not a valid uuid (type=type_error.uuid), values provided: {'id': ['12']}`,
     }),
     new ServiceInstancesStateHelper(store),
     scheduler

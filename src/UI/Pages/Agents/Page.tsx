@@ -55,6 +55,7 @@ export const Page: React.FC = () => {
         value={{ filter, sort, pageSize, setErrorMessage }}
       >
         <ErrorToastAlert
+          title={words("agents.actions.failed")}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />

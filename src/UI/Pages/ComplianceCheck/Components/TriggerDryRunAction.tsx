@@ -32,6 +32,7 @@ export const TriggerDryRunAction: React.FC<Props> = ({
   return (
     <ToolbarGroup alignment={{ default: "alignRight" }}>
       <ErrorToastAlert
+        title={words("desiredState.complianceCheck.action.dryRun.failed")}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
       />
