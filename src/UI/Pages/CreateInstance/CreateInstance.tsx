@@ -1,16 +1,10 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  Text,
-  TextContent,
-  TextVariants,
-} from "@patternfly/react-core";
+import { Text, TextContent, TextVariants } from "@patternfly/react-core";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
+  ErrorToastAlert,
   FieldCreator,
   ServiceInstanceForm,
 } from "@/UI/Components";
@@ -54,15 +48,11 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   return (
     <>
       {errorMessage && (
-        <AlertGroup isToast>
-          <Alert
-            variant={"danger"}
-            title={errorMessage}
-            actionClose={
-              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-            }
-          />
-        </AlertGroup>
+        <ErrorToastAlert
+          title={words("inventory.addInstance.failed")}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+        />
       )}
       <TextContent>
         <Text component={TextVariants.small}>
