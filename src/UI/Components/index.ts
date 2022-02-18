@@ -28,7 +28,6 @@ export * from "./InstanceResourceTable";
 export * from "./ServiceInstanceForm";
 export * from "./ServiceProvider";
 export * from "./SettingsList";
-export * from "./StackedProgressBar";
 export * from "./Toggle";
 export * from "./TreeTable";
 export * from "./PaginationWidget";

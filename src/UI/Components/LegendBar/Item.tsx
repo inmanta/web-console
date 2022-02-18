@@ -36,7 +36,7 @@ export const Item: React.FC<Props> = ({
   </Tooltip>
 );
 
-const Container = styled.div<Omit<Props, "id" | "label">>`
+export const Container = styled.div<Omit<Props, "id" | "label">>`
   background-color: ${(p) => p.backgroundColor};
   color: ${(p) => p.color || "white"};
   flex-basis: auto;

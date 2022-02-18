@@ -5,8 +5,11 @@ import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
 import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { AttributesSummaryView, IdWithCopy } from "./Components";
-import { DeploymentProgressPresenter } from "./Presenters";
+import {
+  AttributesSummaryView,
+  DeploymentProgressBar,
+  IdWithCopy,
+} from "./Components";
 import { Tabs, TabKey } from "./Tabs";
 
 interface Props {
@@ -36,7 +39,6 @@ export const InstanceRow: React.FC<Props> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Status);
   const rowRef = useRef<HTMLSpanElement>(null);
-  const deploymentProgressPresenter = new DeploymentProgressPresenter();
   const openTabAndScrollTo = (tab: TabKey) => () => {
     setActiveTab(tab);
     if (!isExpanded) {
@@ -90,9 +92,7 @@ export const InstanceRow: React.FC<Props> = ({
             id={`instance-row-resources-${row.id.short}`}
             onClick={openTabAndScrollTo(TabKey.Resources)}
           >
-            {deploymentProgressPresenter.getDeploymentProgressBar(
-              row.deploymentProgress
-            )}
+            <DeploymentProgressBar progress={row.deploymentProgress} />
           </span>
         </Td>
         <Td dataLabel={words("inventory.column.createdAt")}>

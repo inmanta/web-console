@@ -3,7 +3,7 @@ import { ResourceStatusBar } from "./Bar";
 import { colorConfig } from "./ColorConfig";
 
 export default {
-  title: "ResourceStatusBar",
+  title: "Components/ResourceStatusBar",
   component: ResourceStatusBar,
 };
 
