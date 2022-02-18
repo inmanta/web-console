@@ -112,6 +112,7 @@ const dict = {
   "inventory.deploymentProgress.ready": "Ready",
   "inventory.deploymentProgress.total": "Total",
   "inventory.deploymentProgress.notFound": "No resources available yet",
+  "inventory.addInstance.failed": "Creating instance failed",
   "inventory.addInstance.title": (serviceName: string) =>
     `Create a new instance of ${serviceName} with the following parameters`,
   "inventory.addInstance.button": "Add instance",
@@ -120,6 +121,7 @@ const dict = {
     amount === 1 ? "1 item" : `${amount} items`,
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
+  "inventory.editInstance.failed": "Editing instance failed",
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
   "inventory.form.typeHint.list": (listBaseType: string) =>
@@ -131,6 +133,7 @@ const dict = {
   "inventory.form.placeholder.stringList": "value1,value2,value3",
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.deleteInstance.button": "Delete",
+  "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
   "inventory.deleteInstance.header": (
     instanceId: string,
@@ -208,9 +211,11 @@ const dict = {
   "catalog.button.inventory": "Inventory",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
+  "catalog.delete.failed": "Deleting service entity failed",
   "catalog.instances": "Instances",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
+  "catalog.callbacks.delete.failed": "Deleting callback failed",
   "catalog.callbacks.url": "Url",
   "catalog.callbacks.id": "Id",
   "catalog.callbacks.minimalLogLevel": "Minimal Log Level",
@@ -387,6 +392,7 @@ const dict = {
   "agents.columns.failover": "Last failover",
   "agents.columns.unpause": "Unpause on resume",
   "agents.columns.actions": "Actions",
+  "agents.actions.failed": "Agent action failed",
   "agents.actions.pause": "Pause",
   "agents.actions.unpause": "Unpause",
   "agents.actions.deploy": "Force deploy",
@@ -422,6 +428,8 @@ const dict = {
   "desiredState.columns.actions": "Actions",
   "desiredState.actions.details": "Details",
   "desiredState.actions.promote": "Promote",
+  "desiredState.actions.promote.failed":
+    "Promoting desired state version failed",
   "desiredState.actions.promote.disabledTooltip":
     "Promoting this version is not allowed",
   "desiredState.filters.status.placeholder": "Select status...",
@@ -442,7 +450,10 @@ const dict = {
   "desiredState.compare.unmodified": "This resource has not been modified.",
   "desiredState.compare.empty": "No changes found",
   "desiredState.complianceCheck.title": "Compliance Check",
+  "desiredState.complianceCheck.failed": "Getting list of dryruns failed",
   "desiredState.complianceCheck.action.dryRun": "Perform dry run",
+  "desiredState.complianceCheck.action.dryRun.failed":
+    "Triggering dryrun failed",
   "desiredState.complianceCheck.noDryRuns": "No dry runs exist",
 
   /** Parameters */

@@ -7,6 +7,7 @@ import {
   Title,
 } from "@patternfly/react-core";
 import { ExclamationTriangleIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 import { Delayed } from "@/UI/Utils";
 import { words } from "@/UI/words";
 
@@ -30,7 +31,9 @@ export const ErrorView: React.FC<Props> = ({
       <Title headingLevel="h4" size="lg">
         {title || words("error")}
       </Title>
-      <EmptyStateBody>{message}</EmptyStateBody>
+      <EmptyStateBody>
+        <StyledErrorMessage>{message}</StyledErrorMessage>
+      </EmptyStateBody>
       {retry && (
         <Button variant="primary" onClick={retry}>
           {words("retry")}
@@ -39,3 +42,8 @@ export const ErrorView: React.FC<Props> = ({
     </EmptyState>
   </Delayed>
 );
+
+const StyledErrorMessage = styled.div`
+  white-space: pre-wrap;
+  text-align: justify;
+`;
