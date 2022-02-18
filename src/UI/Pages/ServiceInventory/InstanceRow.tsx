@@ -88,12 +88,12 @@ export const InstanceRow: React.FC<Props> = ({
           />
         </Td>
         <Td dataLabel={words("inventory.collumn.deploymentProgress")}>
-          <span
+          <ActionWrapper
             id={`instance-row-resources-${row.id.short}`}
             onClick={openTabAndScrollTo(TabKey.Resources)}
           >
             <DeploymentProgressBar progress={row.deploymentProgress} />
-          </span>
+          </ActionWrapper>
         </Td>
         <Td dataLabel={words("inventory.column.createdAt")}>
           <DateWithTooltip timestamp={row.createdAt} />
@@ -123,6 +123,10 @@ export const InstanceRow: React.FC<Props> = ({
     </Tbody>
   );
 };
+
+const ActionWrapper = styled.span`
+  cursor: pointer;
+`;
 
 const StyledRow = styled(Tr)<{ $deleted: boolean }>`
   ${(p) =>

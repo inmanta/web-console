@@ -46,6 +46,6 @@ export const Container = styled.div<Omit<Props, "id" | "label">>`
   text-align: center;
   line-height: 36px;
   padding: 0 8px;
-  cursor: ${(p) => (p.onClick ? "pointer" : "text")};
+  cursor: ${(p) => (p.onClick ? "pointer" : "inherit")};
   user-select: none;
 `;
