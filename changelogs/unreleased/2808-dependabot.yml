@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump webpack from 5.69.0 to 5.69.1'
+destination-branches:
+- master
+- iso5
+sections: {}
