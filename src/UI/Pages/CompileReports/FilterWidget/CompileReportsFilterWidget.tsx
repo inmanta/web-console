@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
 import { CompileReportParams, DateRange } from "@/Core";
+import { FilterPicker } from "@/UI/Components";
 import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { FilterPicker } from "./FilterPicker";
 import { ResultFilter } from "./ResultFilter";
 
 interface Props {
@@ -48,7 +48,11 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({
 
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar">
-      <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />
+      <FilterPicker
+        setFilterKind={setFilterKind}
+        filterKind={filterKind}
+        items={CompileReportParams.List}
+      />
       <SelectOptionFilter
         filterPropertyName={CompileReportParams.Kind.Status}
         placeholder={words("compileReports.filters.status.placeholder")}

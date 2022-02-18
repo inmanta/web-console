@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
 import { DateRange, GetParameters } from "@/Core";
+import { FilterPicker } from "@/UI/Components";
 import { FreeTextFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { FilterPicker } from "./FilterPicker";
 
 interface Props {
   filter: GetParameters.Filter;
@@ -29,7 +29,11 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
     });
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar">
-      <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />
+      <FilterPicker
+        setFilterKind={setFilterKind}
+        filterKind={filterKind}
+        items={GetParameters.FilterList}
+      />
       <FreeTextFilter
         isHidden={filterKind !== GetParameters.FilterKind.Name}
         searchEntries={filter.name}
