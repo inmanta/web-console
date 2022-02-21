@@ -107,10 +107,9 @@ const dict = {
   "inventory.resourcesTab.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
   "inventory.resourcesTab.detailsLink": "Jump to Details",
-  "inventory.deploymentProgress.inProgress": "In Progress",
+  "inventory.deploymentProgress.waiting": "In Progress",
   "inventory.deploymentProgress.failed": "Failed",
-  "inventory.deploymentProgress.ready": "Ready",
-  "inventory.deploymentProgress.total": "Total",
+  "inventory.deploymentProgress.deployed": "Ready",
   "inventory.deploymentProgress.notFound": "No resources available yet",
   "inventory.addInstance.failed": "Creating instance failed",
   "inventory.addInstance.title": (serviceName: string) =>

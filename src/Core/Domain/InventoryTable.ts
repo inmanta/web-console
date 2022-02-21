@@ -31,7 +31,7 @@ export interface Row {
   instanceSetStateTargets: string[];
   service_entity: string;
   environment: string;
-  deploymentProgress?: DeploymentProgress;
+  deploymentProgress?: DeploymentProgress | null;
   serviceIdentityValue?: string;
   deleted: boolean;
 }

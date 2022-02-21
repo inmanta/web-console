@@ -36,7 +36,7 @@ export const Item: React.FC<Props> = ({
   </Tooltip>
 );
 
-const Container = styled.div<Omit<Props, "id" | "label">>`
+export const Container = styled.div<Omit<Props, "id" | "label">>`
   background-color: ${(p) => p.backgroundColor};
   color: ${(p) => p.color || "white"};
   flex-basis: auto;
@@ -46,6 +46,6 @@ const Container = styled.div<Omit<Props, "id" | "label">>`
   text-align: center;
   line-height: 36px;
   padding: 0 8px;
-  cursor: ${(p) => (p.onClick ? "pointer" : "text")};
+  cursor: ${(p) => (p.onClick ? "pointer" : "inherit")};
   user-select: none;
 `;
