@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
 import { ServiceInstanceParams } from "@/Core";
+import { FilterPicker } from "@/UI/Components";
 import { SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
 import { AttributeSets, AttributesFilter } from "./AttributesFilter";
 import { DeletedFilter } from "./DeletedFilter";
-import { FilterPicker } from "./FilterPicker";
 import { IdFilter } from "./IdFilter";
 import { IdentityFilter } from "./IdentityFilter";
 
@@ -59,7 +59,11 @@ export const FilterWidget: React.FC<Props> = ({
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}
-        identityAttributePretty={identityAttribute?.pretty}
+        items={
+          identityAttribute?.pretty
+            ? [...ServiceInstanceParams.List, identityAttribute.pretty]
+            : ServiceInstanceParams.List
+        }
       />
       <SelectOptionFilter
         isVisible={filterKind === ServiceInstanceParams.Kind.State}

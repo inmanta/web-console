@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
 import { EventParams, EventType, DateRange } from "@/Core";
+import { FilterPicker } from "@/UI/Components";
 import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import { FilterPicker } from "./FilterPicker";
 import { VersionFilter } from "./VersionFilter";
 
 interface Props {
@@ -54,7 +54,11 @@ export const EventsFilterWidget: React.FC<Props> = ({
     });
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar">
-      <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />
+      <FilterPicker
+        setFilterKind={setFilterKind}
+        filterKind={filterKind}
+        items={EventParams.List}
+      />
       <SelectOptionFilter
         filterPropertyName={EventParams.Kind.EventType}
         placeholder={words("events.filters.eventType.placeholder")}
