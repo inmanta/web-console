@@ -17,7 +17,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { EditForm } from "./EditForm";
 
 export default {
-  title: "EditInstanceForm",
+  title: "Service Inventory/EditInstanceForm",
   component: EditForm,
 };
 export const Default: React.FC = () => {

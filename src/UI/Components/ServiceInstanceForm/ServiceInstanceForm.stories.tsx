@@ -4,7 +4,7 @@ import { Story } from "@storybook/react/types-6-0";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 export default {
-  title: "ServiceInstanceForm",
+  title: "Service Inventory/ServiceInstanceForm",
   component: ServiceInstanceForm,
 };
 
