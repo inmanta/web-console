@@ -8,7 +8,7 @@ import {
 import { Td, Tr, Tbody } from "@patternfly/react-table";
 import styled from "styled-components";
 import { CompileStageReportRow } from "@/Core";
-import { CodeHighlighter, TextWithCopy } from "@/UI/Components";
+import { CodeHighlighter } from "@/UI/Components";
 import { words } from "@/UI/words";
 
 interface Props {
@@ -64,12 +64,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.command")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                <code>
-                  <TextWithCopy
-                    value={row.command}
-                    tooltipContent={words("compileDetails.stages.copy")}
-                  />
-                </code>
+                <CodeHighlighter code={row.command} language="bash" />
               </DescriptionListDescription>
             </DescriptionListGroup>
             <DescriptionListGroup>
@@ -85,7 +80,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.outstream")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                <CodeHighlighter code={row.outstream} language="text" />
+                <CodeHighlighter code={row.outstream} language="python" />
               </DescriptionListDescription>
             </DescriptionListGroup>
             <DescriptionListGroup>
