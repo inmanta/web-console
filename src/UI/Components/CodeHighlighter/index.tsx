@@ -20,6 +20,7 @@ import {
   TextWidthIcon,
 } from "@patternfly/react-icons";
 import copy from "copy-to-clipboard";
+import bash from "react-syntax-highlighter/dist/esm/languages/hljs/bash";
 import json from "react-syntax-highlighter/dist/esm/languages/hljs/json";
 import xml from "react-syntax-highlighter/dist/esm/languages/hljs/xml";
 import docco from "react-syntax-highlighter/dist/esm/styles/hljs/docco";
@@ -29,10 +30,11 @@ import { words } from "@/UI/words";
 
 SyntaxHighlighter.registerLanguage("json", json);
 SyntaxHighlighter.registerLanguage("xml", xml);
+SyntaxHighlighter.registerLanguage("bash", bash);
 
 interface Props {
   code: string;
-  language: "json" | "xml" | "text" | "python";
+  language: "json" | "xml" | "text" | "python" | "bash";
   close?: () => void;
 }
 
