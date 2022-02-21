@@ -6,29 +6,25 @@ import {
   SelectOption,
 } from "@patternfly/react-core";
 import { FilterIcon } from "@patternfly/react-icons";
-import { ServiceInstanceParams } from "@/Core";
 
 interface Props {
-  filterKind: ServiceInstanceParams.Kind | string;
-  setFilterKind: (kind: ServiceInstanceParams.Kind) => void;
-  identityAttributePretty?: string;
+  filterKind: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setFilterKind: (kind: any) => void;
+  items: string[];
 }
 
 export const FilterPicker: React.FC<Props> = ({
   filterKind,
   setFilterKind,
-  identityAttributePretty,
+  items,
 }) => {
   const [isFilterOpen, setFilterOpen] = useState(false);
 
   const onSelect = (event, selection) => {
     setFilterOpen(false);
-    setFilterKind(selection as ServiceInstanceParams.Kind);
+    setFilterKind(selection);
   };
-
-  const items = identityAttributePretty
-    ? [...ServiceInstanceParams.List, identityAttributePretty]
-    : ServiceInstanceParams.List;
 
   return (
     <ToolbarItem>
