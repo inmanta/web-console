@@ -157,7 +157,7 @@ test("When using the Updated filter then the parameters within the range selecte
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
   userEvent.click(fromDatePicker);
-  userEvent.type(fromDatePicker, `2022-01-31`);
+  userEvent.type(fromDatePicker, `2022/01/31`);
   const toDatePicker = screen.getByLabelText("To Date Picker");
   userEvent.click(toDatePicker);
   userEvent.type(toDatePicker, `2022-02-01`);
