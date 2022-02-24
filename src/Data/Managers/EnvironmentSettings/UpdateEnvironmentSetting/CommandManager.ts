@@ -4,7 +4,8 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 export class UpdateEnvironmentSettingCommandManager extends CommandManagerWithEnv<"UpdateEnvironmentSetting"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: UpdaterWithEnv<"GetEnvironmentSetting">
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentSetting">,
+    private readonly environmentUpdater: UpdaterWithEnv<"GetEnvironmentDetails">
   ) {
     super("UpdateEnvironmentSetting", (command, environment) => {
       return async (id, value) => {
@@ -17,6 +18,10 @@ export class UpdateEnvironmentSettingCommandManager extends CommandManagerWithEn
         if (Maybe.isNone(error)) {
           await this.updater.update(
             { kind: "GetEnvironmentSetting", id },
+            environment
+          );
+          await this.environmentUpdater.update(
+            { kind: "GetEnvironmentDetails", details: false },
             environment
           );
         }

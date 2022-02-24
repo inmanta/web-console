@@ -11,7 +11,7 @@ export class GetEnvironmentSettingStateHelper extends PrimaryStateHelperWithEnv<
           (wrapped) => wrapped.data,
           data
         );
-        store.dispatch.environmentSettings.setData({
+        store.dispatch.environment.setSettingsData({
           environment,
           value: unwrapped,
           merge: true,
