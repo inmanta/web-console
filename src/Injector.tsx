@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { isJsonParserId, JsonParserId, SchedulerImpl } from "@/Core";
 import {
   KeycloakAuthHelper,
@@ -33,8 +33,6 @@ interface Props {
 }
 
 export const Injector: React.FC<Props> = ({ store, children }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
   const featureManager = new PrimaryFeatureManager(
     new GetServerStatusStateHelper(store),
     new PrimaryLogger(),
@@ -48,7 +46,7 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   );
   const baseUrlManager = new PrimaryBaseUrlManager(
     globalThis.location.origin,
-    location.pathname
+    globalThis.location.pathname
   );
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
@@ -77,7 +75,6 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   const environmentModifier = new EnvironmentModifierImpl();
   const environmentHandler = new EnvironmentHandlerImpl(
     useLocation,
-    navigate,
     routeManager
   );
   const fileManager = new PrimaryFileManager();

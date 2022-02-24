@@ -59,10 +59,8 @@ test("GIVEN ContinuousQueryManagerWithEnv WHEN environment changes THEN the api 
   const queryResolver = new QueryResolverImpl(queryManagerResolver);
 
   const Wrapper: React.FC = ({ children }) => {
-    const navigate = useNavigate();
     const environmentHandler = new EnvironmentHandlerImpl(
       useLocation,
-      navigate,
       new PrimaryRouteManager("")
     );
     return (

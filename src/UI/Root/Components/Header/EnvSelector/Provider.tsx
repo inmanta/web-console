@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithData } from "./EnvSelectorWithData";
 import { EnvironmentSelectorItem } from "./EnvSelectorWrapper";
@@ -8,6 +8,7 @@ export const Provider: React.FC = () => {
   const { environmentHandler, queryResolver, routeManager, featureManager } =
     useContext(DependencyContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const selected = environmentHandler.useSelected();
   const [data] = queryResolver.useOneTime<"GetEnvironments">({
     kind: "GetEnvironments",
@@ -16,7 +17,7 @@ export const Provider: React.FC = () => {
 
   const onSelectEnvironment = (item: EnvironmentSelectorItem) => {
     if (selected) {
-      environmentHandler.set(location, item.environmentId);
+      environmentHandler.set(navigate, location, item.environmentId);
       return;
     }
     const newLocation = {
@@ -25,7 +26,7 @@ export const Provider: React.FC = () => {
         ? routeManager.getUrl("Catalog", undefined)
         : routeManager.getUrl("CompileReports", undefined),
     };
-    environmentHandler.set(newLocation, item.environmentId);
+    environmentHandler.set(navigate, newLocation, item.environmentId);
   };
 
   return (

@@ -19,10 +19,9 @@ test("EnvironmentHandler updates environment correctly", () => {
 
   const environmentHandler = new EnvironmentHandlerImpl(
     () => history.location,
-    history.push,
     routeManager
   );
-  environmentHandler.set(history.location, env.id);
+  environmentHandler.set(history.push, history.location, env.id);
 
   expect(history.location.search).toEqual(`?env=${env.id}`);
 });
@@ -32,7 +31,6 @@ test("EnvironmentHandler determines selected environment correctly", () => {
 
   const environmentHandler = new EnvironmentHandlerImpl(
     () => history.location,
-    (path) => history.push(path),
     routeManager
   );
 
@@ -57,7 +55,11 @@ test("EnvironmentHandler determines selected environment correctly", () => {
     )
   ).toEqual(Environment.filterable[0]);
 
-  environmentHandler.set(history.location, Environment.filterable[1].id);
+  environmentHandler.set(
+    history.push,
+    history.location,
+    Environment.filterable[1].id
+  );
   expect(
     environmentHandler.determineSelected(
       RemoteData.success(Environment.filterable),
