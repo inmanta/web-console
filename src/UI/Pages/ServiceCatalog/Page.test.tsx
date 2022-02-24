@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, MemoryRouter, useLocation, useNavigate } from "react-router-dom";
+import { Link, MemoryRouter, useLocation } from "react-router-dom";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -48,7 +48,6 @@ function setup() {
 
   const environmentHandler = new EnvironmentHandlerImpl(
     useLocation,
-    (...args) => useNavigate()(...args),
     dependencies.routeManager
   );
 

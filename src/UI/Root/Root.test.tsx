@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -44,7 +44,6 @@ function setup() {
 
   const environmentHandler = new EnvironmentHandlerImpl(
     useLocation,
-    (...args) => useNavigate()(...args),
     dependencies.routeManager
   );
 

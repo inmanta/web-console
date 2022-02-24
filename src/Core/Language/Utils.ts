@@ -134,3 +134,5 @@ export const stringToBoolean = (value: unknown): boolean | undefined => {
       return undefined;
   }
 };
+
+export type Navigate = (pathname: string) => void;
