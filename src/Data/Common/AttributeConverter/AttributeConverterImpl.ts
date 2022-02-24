@@ -11,20 +11,19 @@ import {
   AttributeResultConverter,
   InputType,
 } from "./AttributeConverter";
+import { parseNumberWithType } from "./parseNumberWithType";
 
 function isNumberArray(type: string): boolean {
   return (
-    ["double", "float", "int", "integer", "number"].filter((numberLike) =>
-      type.includes(`${numberLike}[]`)
-    ).length > 0
+    ["float", "int"].filter((numberLike) => type.includes(`${numberLike}[]`))
+      .length > 0
   );
 }
 
 function isNumberType(type: string): boolean {
   return (
-    ["double", "float", "int", "integer", "number"].filter((numberLike) =>
-      type.includes(numberLike)
-    ).length > 0 && !isNumberArray(type)
+    ["float", "int"].filter((numberLike) => type.includes(numberLike)).length >
+      0 && !isNumberArray(type)
   );
 }
 
@@ -120,7 +119,7 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
         });
         parsedValue = parts;
       } else if (isNumberType(type)) {
-        parsedValue = Number(value);
+        parsedValue = parseNumberWithType(type, value);
       } else if (type.includes("[]")) {
         const parts = value.split(",").map((piece) => piece.trim());
         parsedValue = parts;

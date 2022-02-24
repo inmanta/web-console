@@ -16,7 +16,7 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { CreateInstance } from "./CreateInstance";
 
 export default {
-  title: "CreateInstance",
+  title: "Service Inventory/CreateInstance",
   component: CreateInstance,
 };
 
