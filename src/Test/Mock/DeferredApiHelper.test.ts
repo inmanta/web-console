@@ -84,3 +84,20 @@ test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching r
     data: { test: "def" },
   });
 });
+
+test("GIVEN DeferredApiHelper WHEN resolveRequest THEN resolves first matching request", async () => {
+  const helper = new DeferredApiHelper();
+  expect(() =>
+    helper.resolveRequest(
+      { method: "GET", url: "url2", environment: "env2" },
+      { test: 123 }
+    )
+  ).toThrow();
+  helper.get("url1", "env1");
+  expect(() =>
+    helper.resolveRequest(
+      { method: "GET", url: "url2", environment: "env2" },
+      { test: 123 }
+    )
+  ).toThrow();
+});
