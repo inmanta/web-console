@@ -34,4 +34,9 @@ export const GlobalStyles = createGlobalStyle`
   .pf-c-form__field-group-body {
     min-height: 0;
   }
+
+  .pf-c-calendar-month__header-year {
+    width: 9ch;
+  }
+
 `;
