@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
@@ -53,6 +53,7 @@
     "@types/fetch-mock": "^7.3.5",
     "@types/file-saver": "^2.0.5",
     "@types/jest": "^27.4.0",
+    "@types/json-bigint": "^1.0.1",
     "@types/lodash": "^4.14.178",
     "@types/lodash-es": "^4.17.5",
     "@types/node": "^17.0.10",
@@ -138,6 +139,7 @@
     "easy-peasy": "^5.0.4",
     "file-saver": "^2.0.5",
     "history": "5.2.0",
+    "json-bigint": "^1.0.0",
     "jszip": "^3.7.1",
     "keycloak-js": "16.1.0",
     "lodash": "^4.17.21",

@@ -523,4 +523,22 @@ export const nestedEditable: EmbeddedEntity[] = [
     lower_limit: 1,
     upper_limit: 1,
   },
+  {
+    attributes: [
+      {
+        name: "should_fill_in_on_create",
+        modifier: "rw",
+        type: "int",
+        default_value: null,
+        default_value_set: false,
+        validation_type: null,
+        validation_parameters: null,
+      },
+    ],
+    embedded_entities: [],
+    name: "editable_embedded_entity_relation_with_rw_attributes",
+    modifier: "rw+",
+    lower_limit: 1,
+    upper_limit: 4,
+  },
 ];

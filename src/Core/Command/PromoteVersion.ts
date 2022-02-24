@@ -1,9 +1,9 @@
-import { Maybe } from "@/Core/Language";
+import { Maybe, ParsedNumber } from "@/Core/Language";
 import { Query } from "@/Core/Query";
 
 export interface PromoteVersion {
   kind: "PromoteVersion";
-  version: number;
+  version: ParsedNumber;
 }
 
 export interface PromoteVersionManifest {

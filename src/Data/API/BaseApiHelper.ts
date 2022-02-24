@@ -1,9 +1,18 @@
 import { KeycloakInstance } from "keycloak-js";
-import { ApiHelper, Either, Maybe, objectHasKey, isObject } from "@/Core";
+import {
+  ApiHelper,
+  Either,
+  Maybe,
+  objectHasKey,
+  isObject,
+  JsonParser,
+} from "@/Core";
 import { words } from "@/UI/words";
+import { BigIntJsonParser } from "./BigIntJsonParser";
 
 export class BaseApiHelper implements ApiHelper {
   constructor(
+    private readonly jsonParser: JsonParser = new BigIntJsonParser(),
     private readonly baseUrl: string = "",
     private readonly keycloak?: KeycloakInstance
   ) {}
@@ -53,7 +62,10 @@ export class BaseApiHelper implements ApiHelper {
         return Either.right(data);
       }
       return Either.left(
-        this.formatError((await response.json()).message, response)
+        this.formatError(
+          this.jsonParser.parse(await response.text()).message,
+          response
+        )
       );
     } catch (error) {
       if (this.errorHasMessage(error)) return Either.left(error.message);
@@ -70,7 +82,10 @@ export class BaseApiHelper implements ApiHelper {
   private async executeJson<Data>(
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<string, Data>> {
-    return this.execute<Data>((response) => response.json(), ...params);
+    return this.execute<Data>(
+      async (response) => this.jsonParser.parse(await response.text()),
+      ...params
+    );
   }
 
   private async executeWithoutResponse(
