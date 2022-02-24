@@ -1,6 +1,11 @@
 import { Action, action } from "easy-peasy";
 import { FlatEnvironment, Query, RemoteData } from "@/Core";
 
+type EnvironmentSettingsData = RemoteData.Type<
+  Query.Error<"GetEnvironmentSettings">,
+  Query.Data<"GetEnvironmentSettings">
+>;
+
 export interface EnvironmentSlice {
   environments: RemoteData.Type<string, FlatEnvironment[]>;
   setEnvironments: Action<
@@ -46,21 +51,12 @@ export interface EnvironmentSlice {
       >;
     }
   >;
-  settingsByEnv: Record<
-    string,
-    RemoteData.Type<
-      Query.Error<"GetEnvironmentSettings">,
-      Query.Data<"GetEnvironmentSettings">
-    >
-  >;
+  settingsByEnv: Record<string, EnvironmentSettingsData>;
   setSettingsData: Action<
     EnvironmentSlice,
     {
       environment: string;
-      value: RemoteData.Type<
-        Query.Error<"GetEnvironmentSettings">,
-        Query.Data<"GetEnvironmentSettings">
-      >;
+      value: EnvironmentSettingsData;
       merge?: boolean;
     }
   >;
@@ -92,18 +88,9 @@ export const environmentSlice: EnvironmentSlice = {
 };
 
 function mergeData(
-  prev: RemoteData.Type<
-    Query.Error<"GetEnvironmentSettings">,
-    Query.Data<"GetEnvironmentSettings">
-  >,
-  next: RemoteData.Type<
-    Query.Error<"GetEnvironmentSettings">,
-    Query.Data<"GetEnvironmentSettings">
-  >
-): RemoteData.Type<
-  Query.Error<"GetEnvironmentSettings">,
-  Query.Data<"GetEnvironmentSettings">
-> {
+  prev: EnvironmentSettingsData,
+  next: EnvironmentSettingsData
+): EnvironmentSettingsData {
   if (RemoteData.isSuccess(prev) && RemoteData.isSuccess(next)) {
     return RemoteData.success({
       settings: {
