@@ -19,7 +19,7 @@ export class ResetEnvironmentSettingCommandManager extends CommandManagerWithEnv
             environment
           );
           await this.environmentUpdater.update(
-            { kind: "GetEnvironmentDetails", details: false },
+            { kind: "GetEnvironmentDetails", details: false, id: environment },
             environment
           );
         }

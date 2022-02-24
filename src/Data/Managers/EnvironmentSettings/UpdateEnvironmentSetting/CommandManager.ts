@@ -21,7 +21,7 @@ export class UpdateEnvironmentSettingCommandManager extends CommandManagerWithEn
             environment
           );
           await this.environmentUpdater.update(
-            { kind: "GetEnvironmentDetails", details: false },
+            { kind: "GetEnvironmentDetails", details: false, id: environment },
             environment
           );
         }
