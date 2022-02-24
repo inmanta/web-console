@@ -4,19 +4,10 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
-import { QueryResolverImpl } from "@/Data";
-import {
-  EnvironmentDetailsQueryManager,
-  EnvironmentDetailsStateHelper,
-} from "@/Data/Managers/EnvironmentDetails";
+import { QueryManagerResolver, QueryResolverImpl } from "@/Data";
+
 import { getStoreInstance } from "@/Data/Store";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolver,
-  EnvironmentDetails,
-  StaticScheduler,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import {
   DependencyContext,
   DependencyProvider,
@@ -24,9 +15,13 @@ import {
 } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 
-test("GIVEN ContinuousQueryManagerWithEnv WHEN environment changes THEN the api call uses the correct url", async () => {
+test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api call uses the correct url", async () => {
   const apiHelper = new DeferredApiHelper();
   const store = getStoreInstance();
+  const scheduler = new StaticScheduler();
+  const queryResolver = new QueryResolverImpl(
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+  );
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -47,16 +42,6 @@ test("GIVEN ContinuousQueryManagerWithEnv WHEN environment changes THEN the api 
       },
     ])
   );
-  const stateHelper = new EnvironmentDetailsStateHelper(store);
-  const scheduler = new StaticScheduler();
-  const queryManager = new EnvironmentDetailsQueryManager(
-    apiHelper,
-    stateHelper,
-    scheduler
-  );
-
-  const queryManagerResolver = new DynamicQueryManagerResolver([queryManager]);
-  const queryResolver = new QueryResolverImpl(queryManagerResolver);
 
   const Wrapper: React.FC = ({ children }) => {
     const environmentHandler = new EnvironmentHandlerImpl(
@@ -87,16 +72,12 @@ test("GIVEN ContinuousQueryManagerWithEnv WHEN environment changes THEN the api 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
+    url: "/api/v2/compilereport/123",
     environment: "aaa",
-    url: "/api/v2/environment/aaa?details=false",
   });
 
   await act(async () => {
-    await apiHelper.resolve(
-      Either.right({
-        data: { ...EnvironmentDetails.a, halted: true, id: "aaa" },
-      })
-    );
+    await apiHelper.resolve(Either.right({ data: null }));
   });
 
   const button = screen.getByRole("button", { name: "change-env" });
@@ -104,8 +85,8 @@ test("GIVEN ContinuousQueryManagerWithEnv WHEN environment changes THEN the api 
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
+    url: "/api/v2/compilereport/123",
     environment: "bbb",
-    url: "/api/v2/environment/bbb?details=false",
   });
 });
 
@@ -114,9 +95,9 @@ const Component: React.FC = () => {
 
   const { queryResolver } = useContext(DependencyContext);
 
-  queryResolver.useContinuous<"GetEnvironmentDetails">({
-    kind: "GetEnvironmentDetails",
-    details: false,
+  queryResolver.useContinuous<"GetCompileDetails">({
+    kind: "GetCompileDetails",
+    id: "123",
   });
 
   return (
