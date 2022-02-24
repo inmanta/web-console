@@ -46,6 +46,24 @@ export interface EnvironmentSlice {
       >;
     }
   >;
+  settingsByEnv: Record<
+    string,
+    RemoteData.Type<
+      Query.Error<"GetEnvironmentSettings">,
+      Query.Data<"GetEnvironmentSettings">
+    >
+  >;
+  setSettingsData: Action<
+    EnvironmentSlice,
+    {
+      environment: string;
+      value: RemoteData.Type<
+        Query.Error<"GetEnvironmentSettings">,
+        Query.Data<"GetEnvironmentSettings">
+      >;
+      merge?: boolean;
+    }
+  >;
 }
 
 export const environmentSlice: EnvironmentSlice = {
@@ -65,4 +83,36 @@ export const environmentSlice: EnvironmentSlice = {
   setEnvironmentDetailsWithIconById: action((state, payload) => {
     state.environmentDetailsWithIconById[payload.id] = payload.value;
   }),
+  settingsByEnv: {},
+  setSettingsData: action((state, { environment, value, merge }) => {
+    state.settingsByEnv[environment] = merge
+      ? mergeData(state.settingsByEnv[environment], value)
+      : value;
+  }),
 };
+
+function mergeData(
+  prev: RemoteData.Type<
+    Query.Error<"GetEnvironmentSettings">,
+    Query.Data<"GetEnvironmentSettings">
+  >,
+  next: RemoteData.Type<
+    Query.Error<"GetEnvironmentSettings">,
+    Query.Data<"GetEnvironmentSettings">
+  >
+): RemoteData.Type<
+  Query.Error<"GetEnvironmentSettings">,
+  Query.Data<"GetEnvironmentSettings">
+> {
+  if (RemoteData.isSuccess(prev) && RemoteData.isSuccess(next)) {
+    return RemoteData.success({
+      settings: {
+        ...prev.value.settings,
+        ...next.value.settings,
+      },
+      definition: next.value.definition,
+    });
+  }
+
+  return next;
+}

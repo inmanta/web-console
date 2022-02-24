@@ -78,6 +78,10 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new CallbacksStateHelper(this.store),
       this.apiHelper
     );
+    const environmentDetailsUpdater = new EnvironmentDetailsUpdater(
+      environmentDetailsStateHelper,
+      this.apiHelper
+    );
 
     return [
       new DeleteEnvironmentCommandManager(
@@ -112,18 +116,12 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new HaltEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,
-        new EnvironmentDetailsUpdater(
-          environmentDetailsStateHelper,
-          this.apiHelper
-        )
+        environmentDetailsUpdater
       ),
       new ResumeEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,
-        new EnvironmentDetailsUpdater(
-          environmentDetailsStateHelper,
-          this.apiHelper
-        )
+        environmentDetailsUpdater
       ),
       new DeleteCallbackCommandManager(this.apiHelper, callbacksUpdater),
       new CreateCallbackCommandManager(this.apiHelper, callbacksUpdater),
@@ -140,11 +138,13 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new UpdateEnvironmentSettingCommandManager(
         this.apiHelper,
-        environmentSettingUpdater
+        environmentSettingUpdater,
+        environmentDetailsUpdater
       ),
       new ResetEnvironmentSettingCommandManager(
         this.apiHelper,
-        environmentSettingUpdater
+        environmentSettingUpdater,
+        environmentDetailsUpdater
       ),
       new GenerateTokenCommandManager(this.apiHelper),
       new DeployCommandManager(this.apiHelper),

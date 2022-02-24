@@ -19,6 +19,7 @@ export class EnvironmentDetailsUpdater
     query: Query.SubQuery<"GetEnvironmentDetails">,
     environment: string
   ): Promise<void> {
+    this.stateHelper.set(RemoteData.loading(), query, environment);
     this.stateHelper.set(
       RemoteData.fromEither(
         await this.apiHelper.get(

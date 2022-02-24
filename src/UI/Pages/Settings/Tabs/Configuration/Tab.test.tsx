@@ -15,6 +15,7 @@ import {
 import {
   DeferredApiHelper,
   dependencies,
+  Environment,
   EnvironmentSettings,
   StaticScheduler,
 } from "@/Test";
@@ -348,6 +349,14 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
     await apiHelper.resolve(
       Either.right({
         data: EnvironmentSettings.autostart_agent_map({ testKey: "testValue" }),
+      })
+    );
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: Environment.a,
       })
     );
   });

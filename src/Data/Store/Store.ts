@@ -17,10 +17,6 @@ import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
 import { dryRunReportSlice, DryRunReportSlice } from "./DryRunReportSlice";
 import { dryRunsSlice, DryRunsSlice } from "./DryRunsSlice";
-import {
-  environmentSettingsSlice,
-  EnvironmentSettingsSlice,
-} from "./EnvironmentSettingsSlice";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
 import { factsSlice, FactsSlice } from "./FactsSlice";
@@ -86,7 +82,6 @@ export interface StoreModel {
   callbacks: CallbacksSlice;
   compileReports: CompileReportsSlice;
   compileDetails: CompileDetailsSlice;
-  environmentSettings: EnvironmentSettingsSlice;
   resourceFacts: ResourceFactsSlice;
   agents: AgentsSlice;
   agentProcess: AgentProcessSlice;
@@ -120,7 +115,6 @@ export const storeModel: StoreModel = {
   callbacks: callbacksSlice,
   compileReports: compileReportsSlice,
   compileDetails: compileDetailsSlice,
-  environmentSettings: environmentSettingsSlice,
   resourceFacts: resourceFactsSlice,
   agents: agentsSlice,
   agentProcess: agentProcessSlice,

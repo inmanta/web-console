@@ -11,13 +11,13 @@ export class GetEnvironmentSettingsStateHelper extends PrimaryStateHelperWithEnv
           (wrapped) => wrapped.data,
           data
         );
-        store.dispatch.environmentSettings.setData({
+        store.dispatch.environment.setSettingsData({
           environment,
           value: unwrapped,
         });
       },
       (state, query, environment) =>
-        state.environmentSettings.byEnv[environment]
+        state.environment.settingsByEnv[environment]
     );
   }
 }
