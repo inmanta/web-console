@@ -50,4 +50,9 @@ module.exports = {
 
   // The react-syntax-highlighter esm modules have to be handled by jest
   transformIgnorePatterns: ["node_modules/(?!react-syntax-highlighter)"],
+  globals: {
+    "ts-jest": {
+      isolatedModules: true,
+    },
+  },
 };
