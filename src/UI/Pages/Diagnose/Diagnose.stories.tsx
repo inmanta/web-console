@@ -46,8 +46,9 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
     <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
       <StoreProvider store={store}>
         <DiagnoseComponent
-          service={Service.a}
+          serviceName={Service.a.name}
           instanceId={service_instance_id}
+          instanceIdentity={service_instance_id}
         />
       </StoreProvider>
     </DependencyProvider>
