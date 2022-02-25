@@ -8,6 +8,7 @@ interface Props {
   serviceName: string;
   getDescription(id: string): string;
   data?: RemoteData.RemoteData<string, Query.Data<"GetServiceInstance">>;
+  withSpace?: boolean;
   className?: string;
 }
 
@@ -40,8 +41,13 @@ const DescriptionView: React.FC<ViewProps> = ({
   getDescription,
   data,
   className,
+  withSpace,
 }) => {
   if (!RemoteData.isSuccess(data)) return null;
   const id = data.value.service_identity_attribute_value || instanceId;
-  return <Description className={className}>{getDescription(id)}</Description>;
+  return (
+    <Description className={className} withSpace={withSpace}>
+      {getDescription(id)}
+    </Description>
+  );
 };

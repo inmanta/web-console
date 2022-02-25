@@ -24,6 +24,7 @@ export const EditInstancePage: React.FC<{
         serviceName={serviceEntity.name}
         getDescription={words("inventory.editInstance.header")}
         data={data}
+        withSpace
       />
       <RemoteDataView
         data={data}
