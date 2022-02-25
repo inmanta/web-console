@@ -33,24 +33,28 @@ const fromAndToInt = {
 };
 
 test.each`
-  search                                      | searchText             | expectedValue                         | valueText
-  ${""}                                       | ${"empty"}             | ${{}}                                 | ${"default"}
-  ${"?state.Inventory.filter.action=getfact"} | ${"action=getfact"}    | ${{ action: "getfact" }}              | ${"action=getfact"}
-  ${fromDate.search}                          | ${"timestamp=from"}    | ${{ timestamp: fromDate.value }}      | ${"timestamp=from"}
-  ${fromAndToDate.search}                     | ${"timestamp=from&to"} | ${{ timestamp: fromAndToDate.value }} | ${"timestamp=from&to"}
-  ${fromInt.search}                           | ${"version=from"}      | ${{ version: fromInt.value }}         | ${"version=from"}
-  ${fromAndToInt.search}                      | ${"version=from&to"}   | ${{ version: fromAndToInt.value }}    | ${"version=from&to"}
-  ${"?state.Inventory.filter.success=false"}  | ${"success=false"}     | ${{ success: false }}                 | ${"success=false"}
-  ${"?state.Inventory.filter.success=true"}   | ${"success=true"}      | ${{ success: true }}                  | ${"success=true"}
+  search                                                                        | searchText                     | expectedValue                         | valueText
+  ${""}                                                                         | ${"empty"}                     | ${{}}                                 | ${"default"}
+  ${"?state.Inventory.filter.action=getfact"}                                   | ${"action=getfact"}            | ${{ action: "getfact" }}              | ${"action=getfact"}
+  ${fromDate.search}                                                            | ${"timestamp=from"}            | ${{ timestamp: fromDate.value }}      | ${"timestamp=from"}
+  ${fromAndToDate.search}                                                       | ${"timestamp=from&to"}         | ${{ timestamp: fromAndToDate.value }} | ${"timestamp=from&to"}
+  ${fromInt.search}                                                             | ${"version=from"}              | ${{ version: fromInt.value }}         | ${"version=from"}
+  ${fromAndToInt.search}                                                        | ${"version=from&to"}           | ${{ version: fromAndToInt.value }}    | ${"version=from&to"}
+  ${"?state.Inventory.filter.success=false"}                                    | ${"success=false"}             | ${{ success: false }}                 | ${"success=false"}
+  ${"?state.Inventory.filter.success=true"}                                     | ${"success=true"}              | ${{ success: true }}                  | ${"success=true"}
+  ${"?state.Inventory.filter.success=true&state.Inventory.filter.details=true"} | ${"success=true&details=true"} | ${{ success: true, details: true }}   | ${"success=true&details=true"}
 `(
   "GIVEN handleUrlState with Filter WHEN search is $searchText THEN returns $valueText",
   async ({ search, expectedValue }) => {
     const [value] = handleUrlStateWithFilter(
       {
         route: "Inventory",
-        dateRangeKey: "timestamp",
-        intRangeKey: "version",
-        booleanKey: "success",
+        keys: {
+          timestamp: "DateRange",
+          version: "IntRange",
+          success: "Boolean",
+          details: "Boolean",
+        },
       },
       { pathname: "", search, hash: "" },
       () => undefined

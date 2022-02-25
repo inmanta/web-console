@@ -1,0 +1,4 @@
+description: Refactor useUrlStateWithFilter hook
+issue-nr: 2632
+change-type: patch
+destination-branches: [master, iso5]

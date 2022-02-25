@@ -24,7 +24,7 @@ export const Page: React.FC = () => {
   });
   const [filter, setFilter] = useUrlStateWithFilter<GetParameters.Filter>({
     route: "Parameters",
-    dateRangeKey: "updated",
+    keys: { updated: "DateRange" },
   });
   const [sort, setSort] = useUrlStateWithSort<GetParameters.SortKey>({
     default: { name: "name", order: "asc" },
