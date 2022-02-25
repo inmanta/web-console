@@ -14,7 +14,7 @@ interface Props {
 export const ServiceInstanceDescription: React.FC<Props> = (props) => {
   const { data } = props;
   if (data === undefined) return <DescriptionWithQuery {...props} />;
-  return <Description {...props} />;
+  return <DescriptionView {...props} data={data} />;
 };
 
 const DescriptionWithQuery: React.FC<Omit<Props, "data">> = ({
