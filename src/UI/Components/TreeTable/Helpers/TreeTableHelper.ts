@@ -55,8 +55,8 @@ export class TreeTableHelper {
 
     const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
 
-    return Object.entries(nodes).map(([key, node]) =>
-      treeRowCreator.create(key, node)
-    );
+    return Object.entries(nodes)
+      .map(([key, node]) => treeRowCreator.create(key, node))
+      .sort((a, b) => a.id.localeCompare(b.id));
   }
 }
