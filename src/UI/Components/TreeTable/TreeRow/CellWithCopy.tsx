@@ -32,13 +32,12 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
       {value}
     </Td>
   );
-  const formattedValue = formatValue(value);
 
   return wrapWithPopover ? (
     <Popover
       bodyContent={
         <>
-          <StyledPopoverBody>{formattedValue}</StyledPopoverBody>
+          <StyledPopoverBody>{formatValue(value)}</StyledPopoverBody>
           <StyledButton
             value={value}
             tooltipContent={words("attribute.value.copy")}
