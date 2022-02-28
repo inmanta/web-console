@@ -32,9 +32,7 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
       {value}
     </Td>
   );
-  const formattedValue = isJson(value)
-    ? JSON.stringify(JSON.parse(value), null, 2)
-    : value;
+  const formattedValue = formatValue(value);
 
   return wrapWithPopover ? (
     <Popover
@@ -66,6 +64,10 @@ const StyledButton = styled(ClipboardCopyButton)`
   top: var(--pf-c-popover--c-button--Top);
   right: var(--pf-c-popover--c-button--Right);
 `;
+
+function formatValue(value: string): string {
+  return isJson(value) ? JSON.stringify(JSON.parse(value), null, 2) : value;
+}
 
 function isJson(value: string): boolean {
   try {
