@@ -12,11 +12,11 @@ export const Description: React.FC<Props> = ({
   className,
   withSpace,
 }) => (
-  <StyledTextContent className={className} withSpace={withSpace}>
+  <StyledTextContent className={className} $withSpace={withSpace}>
     <Text component={TextVariants.small}>{children}</Text>
   </StyledTextContent>
 );
 
-const StyledTextContent = styled(TextContent)<{ withSpace?: boolean }>`
-  ${(p) => (p.withSpace ? "padding-bottom: 16px" : "")};
+const StyledTextContent = styled(TextContent)<{ $withSpace?: boolean }>`
+  ${(p) => (p.$withSpace ? "padding-bottom: 16px" : "")};
 `;
