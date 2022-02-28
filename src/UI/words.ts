@@ -185,6 +185,8 @@ const dict = {
   "history.title": "Service Instance History",
   "history.missing": (instanceId: string) =>
     `No history could be found for instance ${instanceId}`,
+  "history.caption": (instanceId: string) =>
+    `Showing history for instance ${instanceId}`,
   "history.tabs.details": "Details",
   "history.tabs.attributes": "Attributes",
   "history.tabs.events": "Events",

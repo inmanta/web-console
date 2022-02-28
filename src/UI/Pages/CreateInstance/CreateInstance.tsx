@@ -1,9 +1,9 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Text, TextContent, TextVariants } from "@patternfly/react-core";
 import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
+  Description,
   ErrorToastAlert,
   FieldCreator,
   ServiceInstanceForm,
@@ -54,11 +54,9 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
           setErrorMessage={setErrorMessage}
         />
       )}
-      <TextContent>
-        <Text component={TextVariants.small}>
-          {words("inventory.addInstance.title")(serviceEntity.name)}
-        </Text>
-      </TextContent>
+      <Description withSpace>
+        {words("inventory.addInstance.title")(serviceEntity.name)}
+      </Description>
       <ServiceInstanceForm
         fields={fields}
         onSubmit={onSubmit}
