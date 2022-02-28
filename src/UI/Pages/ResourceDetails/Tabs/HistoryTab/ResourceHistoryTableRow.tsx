@@ -44,7 +44,7 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
           <DateWithTooltip timestamp={row.date} />
         </Td>
         <Td
-          dataLabel={words("resources.history.column.numberOfDependencies")}
+          dataLabel={words("resources.column.requires")}
           onClick={openTabAndScrollTo(TabKey.Requires)}
         >
           <span ref={rowRef} style={{ cursor: "pointer" }}>

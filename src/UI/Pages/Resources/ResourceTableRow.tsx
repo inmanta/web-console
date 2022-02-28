@@ -32,11 +32,11 @@ export const ResourceTableRow: React.FC<Props> = ({
         <Td dataLabel={words("resources.column.type")}>{row.type}</Td>
         <Td dataLabel={words("resources.column.agent")}>{row.agent}</Td>
         <Td dataLabel={words("resources.column.value")}>{row.value}</Td>
-        <Td dataLabel={words("resources.column.numberOfDependencies")}>
+        <Td dataLabel={words("resources.column.requires")}>
           <Button
             variant="link"
             icon={isExpanded ? <AngleDownIcon /> : <AngleRightIcon />}
-            iconPosition="right"
+            iconPosition="left"
             isDisabled={row.numberOfDependencies <= 0}
             onClick={onToggle}
           >
