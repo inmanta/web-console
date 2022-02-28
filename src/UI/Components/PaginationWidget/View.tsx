@@ -10,9 +10,15 @@ export const View: React.FC<{
   metadata: Pagination.Metadata;
   pageSize: PageSize.Type;
   setPageSize: (pageSize: PageSize.Type) => void;
-}> = ({ handlers: { prev, next }, metadata, pageSize, setPageSize }) => {
+}> = ({
+  handlers: { prev, next },
+  metadata,
+  pageSize,
+  setPageSize,
+  ...props
+}) => {
   return (
-    <>
+    <div {...props}>
       <Indicator metadata={metadata} />
       <PageSizeSelector currentPageSize={pageSize} setPageSize={setPageSize} />
       <Button
@@ -31,6 +37,6 @@ export const View: React.FC<{
       >
         <AngleRightIcon />
       </Button>
-    </>
+    </div>
   );
 };
