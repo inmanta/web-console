@@ -32,7 +32,12 @@ export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
   });
 
   return (
-    <Table cells={columns} rows={rows} aria-label={props["aria-label"]}>
+    <Table
+      cells={columns}
+      rows={rows}
+      aria-label={props["aria-label"]}
+      variant="compact"
+    >
       <TableHeader id={id ? `resource-table-header-${id}` : undefined} />
       <TableBody />
     </Table>
