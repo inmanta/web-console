@@ -284,6 +284,12 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     await screen.findByRole("generic", { name: "Deployment state summary" })
   ).toBeInTheDocument();
 
+  expect(
+    screen.getByRole("generic", {
+      name: "LegendItem-available",
+    })
+  ).toHaveAttribute("data-value", "1");
+
   const nextButton = screen.getByRole("button", { name: "Next" });
   expect(nextButton).toBeEnabled();
   userEvent.click(nextButton);
@@ -300,6 +306,28 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
   expect(
     screen.getByRole("generic", { name: "PaginationWidget" })
   ).toBeVisible();
+
+  apiHelper.resolve(
+    Either.right({
+      ...Resource.response,
+      metadata: {
+        ...Resource.response.metadata,
+        deploy_summary: {
+          ...Resource.response.metadata.deploy_summary,
+          by_state: {
+            ...Resource.response.metadata.deploy_summary.by_state,
+            available: 2,
+          },
+        },
+      },
+    })
+  );
+
+  expect(
+    await screen.findByRole("generic", {
+      name: "LegendItem-available",
+    })
+  ).toHaveAttribute("data-value", "2");
 });
 
 test("ResourcesView shows deploy state bar with available status without processing_events status", async () => {
