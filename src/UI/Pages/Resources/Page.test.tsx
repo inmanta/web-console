@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
@@ -159,7 +159,7 @@ test("ResourcesView shows next page of resources", async () => {
     })
   ).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole("button", { name: "Next" }));
+  userEvent.click(screen.getByRole("button", { name: "Next" }));
 
   apiHelper.resolve(
     Either.right({
@@ -259,6 +259,75 @@ test("ResourcesView shows deploy state bar", async () => {
   expect(
     await screen.findByRole("generic", { name: "Deployment state summary" })
   ).toBeInTheDocument();
+});
+
+test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  expect(
+    await screen.findByRole("generic", { name: "ResourcesView-Loading" })
+  ).toBeInTheDocument();
+
+  apiHelper.resolve(
+    Either.right({
+      ...Resource.response,
+      links: { ...Resource.response.links, next: "/fake-link" },
+    })
+  );
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourcesView-Success" })
+  ).toBeInTheDocument();
+
+  expect(
+    await screen.findByRole("generic", { name: "Deployment state summary" })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole("generic", {
+      name: "LegendItem-available",
+    })
+  ).toHaveAttribute("data-value", "1");
+
+  const nextButton = screen.getByRole("button", { name: "Next" });
+  expect(nextButton).toBeEnabled();
+  userEvent.click(nextButton);
+
+  expect(
+    await screen.findByRole("generic", { name: "ResourcesView-Loading" })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole("generic", { name: "Deployment state summary" })
+  ).toBeVisible();
+  expect(screen.getByRole("button", { name: "Repair" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Deploy" })).toBeVisible();
+  expect(
+    screen.getByRole("generic", { name: "PaginationWidget" })
+  ).toBeVisible();
+
+  apiHelper.resolve(
+    Either.right({
+      ...Resource.response,
+      metadata: {
+        ...Resource.response.metadata,
+        deploy_summary: {
+          ...Resource.response.metadata.deploy_summary,
+          by_state: {
+            ...Resource.response.metadata.deploy_summary.by_state,
+            available: 2,
+          },
+        },
+      },
+    })
+  );
+
+  expect(
+    await screen.findByRole("generic", {
+      name: "LegendItem-available",
+    })
+  ).toHaveAttribute("data-value", "2");
 });
 
 test("ResourcesView shows deploy state bar with available status without processing_events status", async () => {

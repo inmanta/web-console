@@ -80,10 +80,10 @@ export const response = {
   ],
   links: { self: "/api/v2/resource?limit=20&sort=resource_type.DESC" },
   metadata: {
-    total: 6,
+    total: 12,
     before: 0,
-    after: 0,
-    page_size: 20,
+    after: 2,
+    page_size: 10,
     deploy_summary: {
       total: 20,
       by_state: {
