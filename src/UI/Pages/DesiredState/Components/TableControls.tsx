@@ -29,11 +29,11 @@ export const TableControls: React.FC<Props> = ({
       <FilterWidget filter={filter} setFilter={setFilter} />
       <ToolbarItem variant="separator" />
       <ToolbarGroup>
-        <CompileWidget />
+        <CompareSelectionWidget />
       </ToolbarGroup>
       <ToolbarItem variant="separator" />
       <ToolbarGroup>
-        <CompareSelectionWidget />
+        <CompileWidget />
       </ToolbarGroup>
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
     </ToolbarContent>
