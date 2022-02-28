@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Text, TextContent, TextVariants } from "@patternfly/react-core";
 import {
   InstanceAttributeModel,
   Maybe,
@@ -65,11 +64,6 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
           setErrorMessage={setErrorMessage}
         />
       )}
-      <TextContent>
-        <Text component={TextVariants.small}>
-          {words("inventory.editInstance.header")(instance.id)}
-        </Text>
-      </TextContent>
       <ServiceInstanceForm
         fields={fields}
         onSubmit={onSubmit}

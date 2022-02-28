@@ -116,3 +116,6 @@ export const merge = <F1, S1, F2, S2>(
   if (isFailed(data2)) return failed(data2.value);
   return success([data1.value, data2.value] as [S1, S2]);
 };
+
+export const withFallback = <F, S>(data: RemoteData<F, S>, fallback: S): S =>
+  isSuccess(data) ? data.value : fallback;

@@ -48,3 +48,4 @@ export * from "./LegendBar";
 export * from "./ResourceLink";
 export * from "./ResourceStatus";
 export * from "./FilterPicker";
+export * from "./ServiceInstanceDescription";
