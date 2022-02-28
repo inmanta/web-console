@@ -32,12 +32,15 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
       {value}
     </Td>
   );
+  const formattedValue = isJson(value)
+    ? JSON.stringify(JSON.parse(value), null, 2)
+    : value;
 
   return wrapWithPopover ? (
     <Popover
       bodyContent={
         <>
-          <StyledPopoverBody>{value}</StyledPopoverBody>
+          <StyledPopoverBody>{formattedValue}</StyledPopoverBody>
           <StyledButton
             value={value}
             tooltipContent={words("attribute.value.copy")}
@@ -55,6 +58,7 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
 
 const StyledPopoverBody = styled.div`
   padding-right: var(--pf-c-popover--c-button--sibling--PaddingRight);
+  white-space: pre-wrap;
 `;
 
 const StyledButton = styled(ClipboardCopyButton)`
@@ -62,3 +66,12 @@ const StyledButton = styled(ClipboardCopyButton)`
   top: var(--pf-c-popover--c-button--Top);
   right: var(--pf-c-popover--c-button--Right);
 `;
+
+function isJson(value: string): boolean {
+  try {
+    JSON.parse(value);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
