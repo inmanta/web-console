@@ -1,27 +1,26 @@
 import React, { useContext } from "react";
-import { ServiceModel } from "@/Core";
-import {
-  Description,
-  EmptyView,
-  RemoteDataView,
-  Spacer,
-} from "@/UI/Components";
+import { EmptyView, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { DiagnoseCardLayout } from "./DiagnoseCardLayout";
 
 interface Props {
-  service: ServiceModel;
+  serviceName: string;
   instanceId: string;
+  instanceIdentity: string;
 }
 
-export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
+export const Diagnose: React.FC<Props> = ({
+  serviceName,
+  instanceId,
+  instanceIdentity,
+}) => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [data] = queryResolver.useContinuous<"GetDiagnostics">({
     kind: "GetDiagnostics",
     id: instanceId,
-    service_entity: service.name,
+    service_entity: serviceName,
   });
 
   return (
@@ -35,20 +34,13 @@ export const Diagnose: React.FC<Props> = ({ service, instanceId }) => {
         ) {
           return (
             <div aria-label="Diagnostics-Empty">
-              <Description>
-                {words("diagnose.main.subtitle")(instanceId)}
-              </Description>
-              <EmptyView message={words("diagnose.empty")(instanceId)} />
+              <EmptyView message={words("diagnose.empty")(instanceIdentity)} />
             </div>
           );
         }
 
         return (
           <div aria-label="Diagnostics-Success">
-            <Description>
-              {words("diagnose.main.subtitle")(instanceId)}
-            </Description>
-            <Spacer />
             <DiagnoseCardLayout diagnostics={diagnostics} />
           </div>
         );
