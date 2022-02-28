@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Query, RemoteData } from "@/Core";
-import { Description } from "@/UI/Components";
+import { Description } from "@/UI/Components/Description";
 import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
