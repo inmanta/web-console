@@ -4,6 +4,7 @@ import { InstanceLog, ServiceModel } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { InstanceState } from "@/UI/Components";
 import { AttributesPresenter } from "@/UI/Pages/ServiceInventory/Presenters";
+import { words } from "@/UI/words";
 import { InstanceLogRow } from "./InstanceLogRow";
 
 interface Props {
@@ -12,7 +13,12 @@ interface Props {
 }
 
 export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
-  const columnHeads = ["Version", "Timestamp", "State", "Attributes"];
+  const columnHeads = [
+    words("inventory.statustab.version"),
+    words("inventory.column.createdAt"),
+    words("inventory.column.state"),
+    words("inventory.column.attributesSummary"),
+  ];
   const sorted = logs.sort((a, b) => Number(a.version) - Number(b.version));
   const ids = sorted.map((log) => log.version.toString());
   const dict: Record<string, InstanceLog> = {};
