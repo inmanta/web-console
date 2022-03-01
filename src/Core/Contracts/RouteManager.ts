@@ -22,4 +22,9 @@ export interface RouteManager {
    */
   getLineageFromRoute(route: Route, routes?: Route[]): Route[];
   getRouteMatchFromUrl(url: string): RouteMatch | undefined;
+  /**
+   * Generates a url based the provided routeKind and routeParams
+   * while preserving the current search.
+   */
+  useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
 }
