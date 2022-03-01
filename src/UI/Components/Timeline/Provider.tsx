@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { useTickerWithInterval } from "@/UI/Utils";
+import { MomentDatePresenter, useTickerWithInterval } from "@/UI/Utils";
 import { Timeline } from "./Timeline";
 
 interface Props {
@@ -8,6 +8,8 @@ interface Props {
   started?: string | null;
   completed?: string | null;
 }
+
+const datePresenter = new MomentDatePresenter();
 
 export const Provider: React.FC<Props> = ({
   requested,
@@ -18,10 +20,18 @@ export const Provider: React.FC<Props> = ({
   const now = new Date(Date.now()).toISOString();
   return (
     <Timeline
-      requested={{ day: getDay(requested), time: getTime(requested) }}
+      requested={{
+        day: datePresenter.getDay(requested),
+        time: datePresenter.getTime(requested),
+      }}
       requestedDiff={getDiff(started ? started : now, requested)}
       started={
-        !started ? undefined : { day: getDay(started), time: getTime(started) }
+        !started
+          ? undefined
+          : {
+              day: datePresenter.getDay(started),
+              time: datePresenter.getTime(started),
+            }
       }
       startedDiff={
         !started ? undefined : getDiff(completed ? completed : now, started)
@@ -29,17 +39,14 @@ export const Provider: React.FC<Props> = ({
       completed={
         !completed
           ? undefined
-          : { day: getDay(completed), time: getTime(completed) }
+          : {
+              day: datePresenter.getDay(completed),
+              time: datePresenter.getTime(completed),
+            }
       }
     />
   );
 };
-
-const getDay = (timestamp: string): string =>
-  moment.utc(timestamp).tz(moment.tz.guess()).format("DD/MM/YYYY");
-
-const getTime = (timestamp: string): string =>
-  moment.utc(timestamp).tz(moment.tz.guess()).format("HH:mm:ss.SSS");
 
 const getDiff = (timestampA: string, timestampB: string): string => {
   const seconds = moment

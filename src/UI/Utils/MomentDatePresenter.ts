@@ -23,22 +23,23 @@ export class MomentDatePresenter implements DatePresenter {
   }
 
   getFull(timestamp: string): string {
-    return moment
-      .utc(timestamp)
-      .tz(this.timezone)
-      .format("MMMM Do YYYY, h:mm:ss a z");
+    return this.format(timestamp, "YYYY/MM/DD HH:mm:ss");
+  }
+
+  getDay(timestamp: string): string {
+    return this.format(timestamp, "YYYY/MM/DD");
+  }
+
+  getTime(timestamp: string): string {
+    return this.format(timestamp, "HH:mm:ss");
   }
 
   private getRelative(timestamp: string): string {
     return moment.utc(timestamp).tz(this.timezone).fromNow();
   }
 
-  getShort(timestamp: Date): string {
-    return moment.tz(timestamp, this.timezone).format("YYYY-MM-DD+HH:mm z");
-  }
-
-  parseShort(timestamp: string): Date {
-    return moment.tz(timestamp, "YYYY-MM-DD+HH:mm z", this.timezone).toDate();
+  parseFull(timestamp: string): Date {
+    return moment.tz(timestamp, "YYYY/MM/DD HH:mm:ss", this.timezone).toDate();
   }
 
   toUnixMs(timestamp: string): number {
