@@ -54,7 +54,9 @@ export const ResourceTableRow: React.FC<Props> = ({
       <Tr isExpanded={isExpanded}>
         <Td colSpan={numberOfColumns}>
           <ExpandableRowContent>
-            <RequiresTableWithData id={row.id} />
+            <Wrapper deps={row.numberOfDependencies as number}>
+              <RequiresTableWithData id={row.id} />
+            </Wrapper>
           </ExpandableRowContent>
         </Td>
       </Tr>
@@ -64,4 +66,10 @@ export const ResourceTableRow: React.FC<Props> = ({
 
 const StyledCell = styled(Td)`
   text-align: right;
+`;
+
+const Wrapper = styled.div<{
+  deps: number;
+}>`
+  min-height: ${(p) => p.deps * 53 + 41.5}px;
 `;
