@@ -1,10 +1,9 @@
 import React, { useRef } from "react";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
-import moment from "moment";
 import { AttributesSummary, InstanceLog } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
 import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
-import { scrollRowIntoView } from "@/UI/Utils";
+import { MomentDatePresenter, scrollRowIntoView } from "@/UI/Utils";
 import { Tabs, TabKey } from "./Tabs";
 
 interface Props {
@@ -56,10 +55,7 @@ export const InstanceLogRow: React.FC<Props> = ({
         />
         <Td dataLabel={"version"}>{id}</Td>
         <Td dataLabel={"timestamp"}>
-          {moment
-            .utc(timestamp)
-            .tz(moment.tz.guess())
-            .format("YYYY/MM/DD HH:mm:ss")}
+          {new MomentDatePresenter().getFull(timestamp)}
         </Td>
         <Td dataLabel={"state"}>{state}</Td>
         <Td dataLabel={"Attributes"} ref={rowRef}>
