@@ -1,2 +1,2 @@
 export * from "./RequiresTable";
-export * from "./RequiresTableWithData";
+export * from "./LoadingRequiresTable";
