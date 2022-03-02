@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Button } from "@patternfly/react-core";
+import { ArrowsAltHIcon, CompressAltIcon } from "@patternfly/react-icons";
 import { Th } from "@patternfly/react-table";
+import { isEqual } from "lodash";
 import styled from "styled-components";
 import { ColumnExpansionHelper } from "./Helpers";
 
@@ -25,6 +26,14 @@ export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
           key={column}
           column={column}
           width={columnWidths[column]}
+          isExpandable={!columnExpansionHelper.isExpanded(columnWidths[column])}
+          isCollapsible={
+            columnExpansionHelper.isExpanded(columnWidths[column]) &&
+            !isEqual(
+              columnWidths,
+              columnExpansionHelper.getDefaultState(columns, emptyColumns)
+            )
+          }
           onClick={() =>
             columnExpansionHelper.isExpanded(columnWidths[column])
               ? setColumnWidths(
@@ -43,26 +52,34 @@ export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
 interface SingleHeaderProps {
   column: string;
   width: number;
+  isExpandable: boolean;
+  isCollapsible: boolean;
   onClick: () => void;
 }
 
 const ColumnHeader: React.FC<SingleHeaderProps> = ({
   column,
   width,
+  isExpandable,
+  isCollapsible,
   onClick,
 }) => (
-  <StyledHeader key={column} $width={width}>
-    <StyledButton variant="plain" onClick={onClick}>
-      {column}
-    </StyledButton>
+  <StyledHeader key={column} $width={width} className="pf-c-table__sort">
+    <button onClick={onClick} className="pf-c-table__button">
+      <div className="pf-c-table__button-content">
+        <span className="pf-c-table__text">{column}</span>
+        <span className="pf-c-table__sort-indicator">
+          {isExpandable && <ArrowsAltHIcon />}
+          {isCollapsible && <HorizontalCompressIcon />}
+        </span>
+      </div>
+    </button>
   </StyledHeader>
 );
 
-const StyledButton = styled(Button)`
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: no-wrap;
-  width: 100%;
+const HorizontalCompressIcon = styled(CompressAltIcon)`
+  transform: rotate(45deg);
+  vertical-align: -0.125em;
 `;
 
 const StyledHeader = styled(Th)<{
