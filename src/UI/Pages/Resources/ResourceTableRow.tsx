@@ -1,14 +1,14 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "@patternfly/react-core";
-import {
-  AngleDownIcon,
-  AngleRightIcon,
-  InfoCircleIcon,
-} from "@patternfly/react-icons";
+import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
+import styled from "styled-components";
 import { Resource } from "@/Core";
-import { RequiresTableWithData, ResourceStatusLabel } from "@/UI/Components";
+import {
+  Link,
+  RequiresTableWithData,
+  ResourceStatusLabel,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -46,20 +46,15 @@ export const ResourceTableRow: React.FC<Props> = ({
         <Td dataLabel={words("resources.column.deployState")}>
           <ResourceStatusLabel status={row.deployState} />
         </Td>
-        <Td>
+        <StyledCell>
           <Link
-            to={{
-              pathname: routeManager.getUrl("ResourceDetails", {
-                resourceId: row.id,
-              }),
-              search: location.search,
-            }}
+            pathname={routeManager.getUrl("ResourceDetails", {
+              resourceId: row.id,
+            })}
           >
-            <Button variant="secondary" isSmall icon={<InfoCircleIcon />}>
-              {words("compileReports.links.details")}
-            </Button>
+            <Button variant="link">{words("resources.link.details")}</Button>
           </Link>
-        </Td>
+        </StyledCell>
       </Tr>
       {isExpanded && (
         <Tr isExpanded={isExpanded}>
@@ -73,3 +68,7 @@ export const ResourceTableRow: React.FC<Props> = ({
     </Tbody>
   );
 };
+
+const StyledCell = styled(Td)`
+  text-align: right;
+`;

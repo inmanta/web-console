@@ -255,6 +255,7 @@ const dict = {
   "resources.deploySummary.title": "Deployment state summary",
   "resources.deploySummary.deploy": "Deploy",
   "resources.deploySummary.repair": "Repair",
+  "resources.link.details": "Show details",
   "resources.details.title": "Resource Details",
   "resources.info.id": "Id",
   "resources.info.lastDeploy": "Last Deploy",
