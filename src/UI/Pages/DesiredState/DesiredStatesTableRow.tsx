@@ -6,7 +6,7 @@ import { DesiredStateVersion } from "@/Core";
 import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersionStatus";
 import { DateWithTooltip } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Actions } from "./Components";
+import { Actions, ResourcesLink } from "./Components";
 
 interface Props {
   row: DesiredStateVersion;
@@ -18,30 +18,35 @@ export const DesiredStatesTableRow: React.FC<Props> = ({ row }) => (
       <StyledCell
         dataLabel={words("desiredState.columns.date")}
         $status={row.status}
+        width={20}
       >
         <DateWithTooltip timestamp={row.date} />
       </StyledCell>
       <StyledCell
         dataLabel={words("desiredState.columns.version")}
         $status={row.status}
+        width={20}
       >
         {row.version}
       </StyledCell>
       <StyledCell
         dataLabel={words("desiredState.columns.status")}
         $status={row.status}
+        width={20}
       >
         {row.status}
       </StyledCell>
       <StyledCell
         dataLabel={words("desiredState.columns.resources")}
         $status={row.status}
+        width={20}
       >
         {row.total}
       </StyledCell>
       <StyledCell
         dataLabel={words("desiredState.columns.labels")}
         $status={row.status}
+        width={20}
       >
         {row.labels && row.labels.length > 0
           ? row.labels.map(({ name, message }, idx) => (
@@ -55,11 +60,10 @@ export const DesiredStatesTableRow: React.FC<Props> = ({ row }) => (
             ))
           : null}
       </StyledCell>
-      <StyledCell
-        dataLabel={words("desiredState.columns.actions")}
-        width={20}
-        $status={row.status}
-      >
+      <StyledCell $status={row.status}>
+        <ResourcesLink version={row.version} />
+      </StyledCell>
+      <StyledCell $status={row.status}>
         <Actions
           version={row.version}
           isPromoteDisabled={row.status != DesiredStateVersionStatus.candidate}

@@ -425,8 +425,7 @@ const dict = {
   "desiredState.columns.status": "Status",
   "desiredState.columns.resources": "Number of resources",
   "desiredState.columns.labels": "Labels",
-  "desiredState.columns.actions": "Actions",
-  "desiredState.actions.details": "Details",
+  "desiredState.actions.showResources": "Show Resources",
   "desiredState.actions.promote": "Promote",
   "desiredState.actions.promote.failed":
     "Promoting desired state version failed",
