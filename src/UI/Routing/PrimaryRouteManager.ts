@@ -1,4 +1,9 @@
-import { generatePath, matchPath, PathMatch } from "react-router-dom";
+import {
+  generatePath,
+  matchPath,
+  PathMatch,
+  useLocation,
+} from "react-router-dom";
 import {
   RouteDictionary,
   RouteManager,
@@ -37,6 +42,7 @@ export class PrimaryRouteManager implements RouteManager {
       DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
     };
   }
+
   isBaseUrlDefined(): boolean {
     return this.baseUrl !== "";
   }
@@ -109,6 +115,17 @@ export class PrimaryRouteManager implements RouteManager {
           ? undefined
           : (match.params as RouteParams<typeof route.kind>),
     };
+  }
+
+  useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { search } = useLocation();
+    const route = this.getRoute(kind);
+    const path = generatePath(
+      route.path,
+      params === undefined ? params : encodeParams(params)
+    );
+    return `${path}${search}`;
   }
 }
 
