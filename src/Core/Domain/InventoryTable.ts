@@ -34,6 +34,7 @@ export interface Row {
   deploymentProgress?: DeploymentProgress | null;
   serviceIdentityValue?: string;
   deleted: boolean;
+  configDisabled?: boolean;
 }
 
 export interface State {

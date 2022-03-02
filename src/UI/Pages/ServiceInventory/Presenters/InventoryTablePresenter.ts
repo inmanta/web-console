@@ -31,7 +31,8 @@ export class InventoryTablePresenter
     private actionPresenter: ActionPresenter,
     private statePresenter: StatePresenter,
     private serviceIdentity?: string,
-    private serviceIdentityDisplayName?: string
+    private serviceIdentityDisplayName?: string,
+    private isConfigDisabled?: boolean
   ) {
     this.columnHeads = [
       {
@@ -164,6 +165,7 @@ export class InventoryTablePresenter
       deploymentProgress: deployment_progress,
       serviceIdentityValue: service_identity_attribute_value,
       deleted,
+      configDisabled: this.isConfigDisabled,
     };
   }
 }
