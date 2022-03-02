@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import { Button } from "@patternfly/react-core";
-import { CaretLeftIcon, CaretRightIcon } from "@patternfly/react-icons";
-import { Th, ThProps } from "@patternfly/react-table";
+import { Th } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ColumnExpansionHelper } from "./Helpers";
 
 interface Props {
   columns: string[];
+  emptyColumns: string[];
 }
 
-export const ColumnHeaders: React.FC<Props> = ({ columns }) => {
+export const ColumnHeaders: React.FC<Props> = ({ columns, emptyColumns }) => {
   const columnExpansionHelper = new ColumnExpansionHelper(
     60,
     columns.length,
     10
   );
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>(
-    columnExpansionHelper.getDefaultState(columns)
+    columnExpansionHelper.getDefaultState(columns, emptyColumns)
   );
   return (
     <>
@@ -25,17 +25,14 @@ export const ColumnHeaders: React.FC<Props> = ({ columns }) => {
           key={column}
           column={column}
           width={columnWidths[column]}
-          minWidth={columnExpansionHelper.getMinColumnWidth()}
-          maxWidth={columnExpansionHelper.getMaxColumnWidth()}
-          collapseColumn={() =>
-            setColumnWidths(
-              columnExpansionHelper.collapseColumn(columnWidths, column)
-            )
-          }
-          expandColumn={() =>
-            setColumnWidths(
-              columnExpansionHelper.expandColumn(columnWidths, column)
-            )
+          onClick={() =>
+            columnExpansionHelper.isExpanded(columnWidths[column])
+              ? setColumnWidths(
+                  columnExpansionHelper.getDefaultState(columns, emptyColumns)
+                )
+              : setColumnWidths(
+                  columnExpansionHelper.expandColumn(columnWidths, column)
+                )
           }
         />
       ))}
@@ -46,51 +43,33 @@ export const ColumnHeaders: React.FC<Props> = ({ columns }) => {
 interface SingleHeaderProps {
   column: string;
   width: number;
-  minWidth: number;
-  maxWidth: number;
-  collapseColumn: () => void;
-  expandColumn: () => void;
+  onClick: () => void;
 }
 
 const ColumnHeader: React.FC<SingleHeaderProps> = ({
   column,
   width,
-  minWidth,
-  maxWidth,
-  collapseColumn,
-  expandColumn,
+  onClick,
 }) => (
-  <Th key={column} {...({ width: width } as Pick<ThProps, "width">)}>
-    {column}
-    <CollapseButton
-      isVisible={width !== minWidth}
-      collapseColumn={collapseColumn}
-    />
-    <ExpandButton isVisible={width !== maxWidth} expandColumn={expandColumn} />
-  </Th>
+  <StyledHeader key={column} $width={width}>
+    <StyledButton variant="plain" onClick={onClick}>
+      {column}
+    </StyledButton>
+  </StyledHeader>
 );
 
-const CollapseButton: React.FC<{
-  isVisible: boolean;
-  collapseColumn: () => void;
-}> = ({ isVisible, collapseColumn }) =>
-  isVisible ? (
-    <SmallButton variant="plain" onClick={collapseColumn} isSmall>
-      <CaretLeftIcon />
-    </SmallButton>
-  ) : null;
+const StyledButton = styled(Button)`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: no-wrap;
+  width: 100%;
+`;
 
-const ExpandButton: React.FC<{
-  isVisible: boolean;
-  expandColumn: () => void;
-}> = ({ isVisible, expandColumn }) =>
-  isVisible ? (
-    <SmallButton variant="plain" onClick={expandColumn} isSmall>
-      <CaretRightIcon />
-    </SmallButton>
-  ) : null;
-
-const SmallButton = styled(Button)`
-  padding-left: 6px;
-  padding-right: 6px;
+const StyledHeader = styled(Th)<{
+  $width: number;
+}>`
+  ${({ $width }) =>
+    `&& {
+    width: ${$width}%;
+  }`}
 `;

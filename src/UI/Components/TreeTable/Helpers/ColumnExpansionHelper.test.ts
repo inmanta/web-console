@@ -1,65 +1,52 @@
 import { ColumnExpansionHelper } from "./ColumnExpansionHelper";
 
-test("Given the ColumnExpansionHelper with parameters used by the attributes table, When collapsing and expanding columns Then returns the correct column widths", () => {
+test("Given the ColumnExpansionHelper with parameters used by the attributes table, When expanding columns and resetting their state Then returns the correct column widths", () => {
   const columnExpansionHelper = new ColumnExpansionHelper(60, 3, 10);
-  const defaultState = columnExpansionHelper.getDefaultState([
-    "candidate",
-    "active",
-    "rollback",
-  ]);
+  const defaultState = columnExpansionHelper.getDefaultState(
+    ["candidate", "active", "rollback"],
+    []
+  );
   expect(defaultState).toEqual({ candidate: 20, active: 20, rollback: 20 });
-
-  const candidateCollapsed = columnExpansionHelper.collapseColumn(
-    defaultState,
-    "candidate"
-  );
-  expect(candidateCollapsed).toEqual({
-    candidate: 10,
-    active: 25,
-    rollback: 25,
-  });
-
-  const candidateAndRollbackCollapsed = columnExpansionHelper.collapseColumn(
-    candidateCollapsed,
-    "rollback"
-  );
-  expect(candidateAndRollbackCollapsed).toEqual({
-    candidate: 10,
-    active: 40,
-    rollback: 10,
-  });
-
-  const allCollapsed = columnExpansionHelper.collapseColumn(
-    candidateAndRollbackCollapsed,
-    "active"
-  );
-  expect(allCollapsed).toEqual(defaultState);
 
   const activeExpanded = columnExpansionHelper.expandColumn(
     defaultState,
     "active"
   );
-  expect(activeExpanded).toEqual(candidateAndRollbackCollapsed);
+  expect(activeExpanded).toEqual({ candidate: 10, active: 40, rollback: 10 });
 
-  const multipleExpanded = columnExpansionHelper.expandColumn(
+  const anotherExpanded = columnExpansionHelper.expandColumn(
     activeExpanded,
     "candidate"
   );
-  expect(multipleExpanded).toEqual(defaultState);
+  expect(anotherExpanded).toEqual({ candidate: 40, active: 10, rollback: 10 });
 
-  const candidateCollapsedTwice = columnExpansionHelper.collapseColumn(
-    candidateCollapsed,
-    "candidate"
+  const defaultWithOneEmpty = columnExpansionHelper.getDefaultState(
+    ["candidate", "active", "rollback"],
+    ["candidate"]
   );
-  expect(candidateCollapsedTwice).toEqual(candidateCollapsed);
+  expect(defaultWithOneEmpty).toEqual({
+    candidate: 10,
+    active: 25,
+    rollback: 25,
+  });
 
-  const activeExpandedTwice = columnExpansionHelper.expandColumn(
-    activeExpanded,
-    "active"
+  const defaultWithTwoEmpty = columnExpansionHelper.getDefaultState(
+    ["candidate", "active", "rollback"],
+    ["candidate", "active"]
   );
-  expect(activeExpandedTwice).toEqual(activeExpanded);
+  expect(defaultWithTwoEmpty).toEqual({
+    candidate: 10,
+    active: 10,
+    rollback: 40,
+  });
 
-  const candidateCollapsedAndActiveExpanded =
-    columnExpansionHelper.expandColumn(candidateCollapsed, "active");
-  expect(candidateCollapsedAndActiveExpanded).toEqual(activeExpanded);
+  const defaultWithAllEmpty = columnExpansionHelper.getDefaultState(
+    ["candidate", "active", "rollback"],
+    ["candidate", "active", "rollback"]
+  );
+  expect(defaultWithAllEmpty).toEqual({
+    candidate: 20,
+    active: 20,
+    rollback: 20,
+  });
 });

@@ -17,6 +17,7 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper, id }) => {
 
   const [firstColumn, ...columns] = treeTableHelper.getColumns();
   const rows = treeTableHelper.createRows(expansionState, setExpansionState);
+  const emptyColumns = treeTableHelper.getEmptyAttributeSets();
 
   return (
     <StyledTableComposable
@@ -30,7 +31,7 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper, id }) => {
               {firstColumn}
             </Indent>
           </Th>
-          <ColumnHeaders columns={columns} />
+          <ColumnHeaders columns={columns} emptyColumns={emptyColumns} />
         </Tr>
       </Thead>
       <Tbody>

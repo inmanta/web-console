@@ -1,4 +1,4 @@
-import { Attributes } from "@/Core";
+import { Attributes, isObjectEmpty } from "@/Core";
 import { TreeRow, TreeRowCreator } from "@/UI/Components/TreeTable/TreeRow";
 import { words } from "@/UI/words";
 import { AttributeHelper } from "./AttributeHelper";
@@ -58,5 +58,15 @@ export class TreeTableHelper {
     return Object.entries(nodes)
       .map(([key, node]) => treeRowCreator.create(key, node))
       .sort((a, b) => a.id.localeCompare(b.id));
+  }
+
+  getEmptyAttributeSets(): string[] {
+    const emptySets = Object.entries(this.attributes)
+      .filter(([, value]) => this.isEmpty(value))
+      .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1));
+    return emptySets;
+  }
+  private isEmpty(attributeSet: Record<string, unknown>): boolean {
+    return !attributeSet || isObjectEmpty(attributeSet);
   }
 }
