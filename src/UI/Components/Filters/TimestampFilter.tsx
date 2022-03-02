@@ -69,12 +69,12 @@ export const TimestampFilter: React.FC<Props> = ({
   };
 
   const rawToPretty = ({ date, operator }: DateRange.Type): string => {
-    return `${operator} | ${datePresenter.getShort(date)}`;
+    return `${operator} | ${datePresenter.getFull(date.toISOString())}`;
   };
   const prettyToRaw = (pretty: string): DateRange.Type => {
     const [operator, date] = pretty.split("|");
     return {
-      date: datePresenter.parseShort(date),
+      date: datePresenter.parseFull(date),
       operator: operator.trim() as RangeOperator.Operator,
     };
   };
