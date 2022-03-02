@@ -55,7 +55,7 @@ export const InstanceLogRow: React.FC<Props> = ({
         />
         <Td dataLabel={"version"}>{id}</Td>
         <Td dataLabel={"timestamp"}>
-          {new MomentDatePresenter().format(timestamp, "YYYY/MM/DD HH:mm:ss")}
+          {new MomentDatePresenter().getFull(timestamp)}
         </Td>
         <Td dataLabel={"state"}>{state}</Td>
         <Td dataLabel={"Attributes"} ref={rowRef}>
