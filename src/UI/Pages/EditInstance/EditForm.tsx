@@ -29,10 +29,9 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const isHalted = environmentModifier.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const url = `${routeManager.getUrl("Inventory", {
+  const url = routeManager.useUrl("Inventory", {
     service: serviceEntity.name,
-  })}?env=${serviceEntity.environment}`;
-
+  });
   const handleRedirect = useCallback(
     () => navigate(url),
     [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
