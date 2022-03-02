@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ArrowsAltHIcon, CompressAltIcon } from "@patternfly/react-icons";
 import { Th } from "@patternfly/react-table";
-import { isEqual } from "lodash";
+import { isEqual } from "lodash-es";
 import styled from "styled-components";
 import { ColumnExpansionHelper } from "./Helpers";
 
