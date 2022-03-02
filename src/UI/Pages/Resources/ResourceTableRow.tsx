@@ -7,6 +7,7 @@ import {
   InfoCircleIcon,
 } from "@patternfly/react-icons";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
+import styled from "styled-components";
 import { Resource } from "@/Core";
 import { RequiresTableWithData, ResourceStatusLabel } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -65,7 +66,9 @@ export const ResourceTableRow: React.FC<Props> = ({
         <Tr isExpanded={isExpanded}>
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
-              <RequiresTableWithData id={row.id} />
+              <Wrapper deps={row.numberOfDependencies as number}>
+                <RequiresTableWithData id={row.id} />
+              </Wrapper>
             </ExpandableRowContent>
           </Td>
         </Tr>
@@ -73,3 +76,9 @@ export const ResourceTableRow: React.FC<Props> = ({
     </Tbody>
   );
 };
+
+const Wrapper = styled.div<{
+  deps: number;
+}>`
+  min-height: ${(p) => p.deps * 53 + 41.5}px;
+`;
