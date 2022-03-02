@@ -1,6 +1,9 @@
 import { RouteManager, Route, RouteKind, RouteMatch } from "@/Core";
 
 export class DummyRouteManager implements RouteManager {
+  useUrl(): string {
+    throw new Error("Method not implemented.");
+  }
   isBaseUrlDefined(): boolean {
     throw new Error("Method not implemented.");
   }
