@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import styled from "styled-components";
+import { ColumnHeaders } from "./ColumnHeaders";
 import { TreeTableHelper } from "./Helpers";
 import { TreeRowView, Indent } from "./TreeRow";
 
@@ -16,6 +17,7 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper, id }) => {
 
   const [firstColumn, ...columns] = treeTableHelper.getColumns();
   const rows = treeTableHelper.createRows(expansionState, setExpansionState);
+  const emptyColumns = treeTableHelper.getEmptyAttributeSets();
 
   return (
     <StyledTableComposable
@@ -29,11 +31,7 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper, id }) => {
               {firstColumn}
             </Indent>
           </Th>
-          {columns.map((column) => (
-            <Th key={column} className="pf-m-width-20">
-              {column}
-            </Th>
-          ))}
+          <ColumnHeaders columns={columns} emptyColumns={emptyColumns} />
         </Tr>
       </Thead>
       <Tbody>
