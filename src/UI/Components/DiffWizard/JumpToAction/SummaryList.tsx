@@ -60,7 +60,7 @@ const StyledStatusDescriptor = styled(StatusDescriptor)`
 const StyledSimpleList = styled(SimpleList)`
   width: fit-content;
   max-height: 500px;
-  overflow: scroll;
+  overflow-y: auto;
 `;
 
 const Id = styled.div`
