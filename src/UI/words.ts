@@ -121,6 +121,8 @@ const dict = {
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
   "inventory.editInstance.failed": "Editing instance failed",
+  "inventory.editInstance.noAttributes":
+    "There are no attributes to edit. Click confirm to move into the update state",
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
   "inventory.form.typeHint.list": (listBaseType: string) =>

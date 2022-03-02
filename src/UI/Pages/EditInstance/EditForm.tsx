@@ -67,7 +67,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         fields={fields}
         onSubmit={onSubmit}
         onCancel={handleRedirect}
-        isSubmitDisabled={isHalted}
+        isSubmitDisabled={fields.length > 0 && isHalted}
         originalAttributes={currentAttributes ? currentAttributes : undefined}
       />
     </>
