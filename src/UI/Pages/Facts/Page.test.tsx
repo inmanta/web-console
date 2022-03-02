@@ -79,7 +79,7 @@ test("GIVEN Facts page THEN shows table", async () => {
   const rows = await screen.findAllByRole("row", { name: "FactsRow" });
   expect(rows).toHaveLength(8);
   expect(
-    within(rows[0]).getByRole("cell", { name: "2021-03-18 18:10:43" })
+    within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" })
   ).toBeVisible();
 });
 

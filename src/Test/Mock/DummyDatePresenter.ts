@@ -14,6 +14,12 @@ export class DummyDatePresenter implements DatePresenter {
   getFull(): string {
     return "full";
   }
+  getDate(): string {
+    return "day";
+  }
+  getTime(): string {
+    return "time";
+  }
   getRelative(): string {
     return "relative";
   }
@@ -23,10 +29,7 @@ export class DummyDatePresenter implements DatePresenter {
       relative: "relative",
     };
   }
-  getShort(): string {
-    return "short";
-  }
-  parseShort(): Date {
+  parseFull(): Date {
     return new Date();
   }
 }

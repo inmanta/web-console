@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Resource } from "@/Core";
+import React, { useContext, useEffect, useState } from "react";
+import { RemoteData, Resource } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -43,28 +43,32 @@ export const Page: React.FC = () => {
     pageSize,
   });
 
+  const [staleData, setStaleData] = useState(data);
+
+  useEffect(() => {
+    if (RemoteData.isLoading(data)) return;
+    setStaleData(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.kind]);
+
   const updateFilter = (
     updater: (filter: Resource.Filter) => Resource.Filter
   ): void => setFilter(updater(filter));
 
-  const tableControls = (
-    <ResourceTableControls
-      summaryWidget={<Summary data={data} updateFilter={updateFilter} />}
-      paginationWidget={
-        <PaginationWidget
-          data={data}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
-      }
-      filter={filter}
-      setFilter={setFilter}
-    />
-  );
-
   return (
     <Wrapper>
-      {tableControls}
+      <ResourceTableControls
+        summaryWidget={<Summary data={staleData} updateFilter={updateFilter} />}
+        paginationWidget={
+          <PaginationWidget
+            data={staleData}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        }
+        filter={filter}
+        setFilter={setFilter}
+      />
       <RemoteDataView
         data={data}
         label="ResourcesView"

@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump react-router-dom from 6.2.1 to 6.2.2'
+destination-branches:
+- master
+- iso5
+sections: {}

@@ -111,6 +111,7 @@ export const Widget: React.FC<WidgetProps> = ({
         splitButtonVariant="action"
         onToggle={onToggle}
         isDisabled={isDisabled}
+        isPrimary
       />
     }
     isOpen={isOpen}
