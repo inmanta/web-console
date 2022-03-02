@@ -22,9 +22,7 @@ export class FactsTablePresenter implements TablePresenter<Fact, Fact> {
   createRows(sourceData: Fact[]): Fact[] {
     return sourceData.map((fact) => ({
       ...fact,
-      updated: fact.updated
-        ? datePresenter.format(fact.updated, "YYYY-MM-DD HH:mm:ss")
-        : undefined,
+      updated: fact.updated ? datePresenter.getFull(fact.updated) : undefined,
     }));
   }
 
