@@ -34,7 +34,7 @@ export const RequiresTableWithData: React.FC<Props> = ({ id, deps }) => {
       failed: (error) => (
         <ErrorView
           message={words("error.general")(error)}
-          aria-label="ResourceRequires--Failed"
+          aria-label="ResourceRequires-Failed"
         />
       ),
       success: (resourceDetails) =>
