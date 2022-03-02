@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
+import moment from "moment";
 import { AttributesSummary, InstanceLog } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
-import { DateWithTooltip } from "@/UI/Components";
 import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { Tabs, TabKey } from "./Tabs";
@@ -31,7 +31,7 @@ export const InstanceLogRow: React.FC<Props> = ({
   state,
 }) => {
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKey>({
-    default: TabKey.Details,
+    default: TabKey.Attributes,
     key: `tab-${id}`,
     route: "History",
   });
@@ -56,7 +56,10 @@ export const InstanceLogRow: React.FC<Props> = ({
         />
         <Td dataLabel={"version"}>{id}</Td>
         <Td dataLabel={"timestamp"}>
-          <DateWithTooltip timestamp={timestamp} />
+          {moment
+            .utc(timestamp)
+            .tz(moment.tz.guess())
+            .format("YYYY/MM/DD HH:mm:ss")}
         </Td>
         <Td dataLabel={"state"}>{state}</Td>
         <Td dataLabel={"Attributes"} ref={rowRef}>
