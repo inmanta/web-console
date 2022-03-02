@@ -26,7 +26,7 @@ export class MomentDatePresenter implements DatePresenter {
     return this.format(timestamp, "YYYY/MM/DD HH:mm:ss");
   }
 
-  getDay(timestamp: string): string {
+  getDate(timestamp: string): string {
     return this.format(timestamp, "YYYY/MM/DD");
   }
 

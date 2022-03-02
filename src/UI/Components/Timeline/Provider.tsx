@@ -21,7 +21,7 @@ export const Provider: React.FC<Props> = ({
   return (
     <Timeline
       requested={{
-        day: datePresenter.getDay(requested),
+        day: datePresenter.getDate(requested),
         time: datePresenter.getTime(requested),
       }}
       requestedDiff={getDiff(started ? started : now, requested)}
@@ -29,7 +29,7 @@ export const Provider: React.FC<Props> = ({
         !started
           ? undefined
           : {
-              day: datePresenter.getDay(started),
+              day: datePresenter.getDate(started),
               time: datePresenter.getTime(started),
             }
       }
@@ -40,7 +40,7 @@ export const Provider: React.FC<Props> = ({
         !completed
           ? undefined
           : {
-              day: datePresenter.getDay(completed),
+              day: datePresenter.getDate(completed),
               time: datePresenter.getTime(completed),
             }
       }

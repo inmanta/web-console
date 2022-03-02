@@ -14,7 +14,7 @@ export class DummyDatePresenter implements DatePresenter {
   getFull(): string {
     return "full";
   }
-  getDay(): string {
+  getDate(): string {
     return "day";
   }
   getTime(): string {
