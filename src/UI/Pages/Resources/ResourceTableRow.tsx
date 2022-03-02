@@ -9,9 +9,10 @@ import {
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Resource } from "@/Core";
-import { RequiresTableWithData, ResourceStatusLabel } from "@/UI/Components";
+import { ResourceStatusLabel } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { RequiresTableWithData } from "./Components";
 
 interface Props {
   row: Resource.Row;
@@ -67,7 +68,10 @@ export const ResourceTableRow: React.FC<Props> = ({
           <Td colSpan={numberOfColumns}>
             <ExpandableRowContent>
               <Wrapper deps={row.numberOfDependencies as number}>
-                <RequiresTableWithData id={row.id} />
+                <RequiresTableWithData
+                  id={row.id}
+                  deps={row.numberOfDependencies as number}
+                />
               </Wrapper>
             </ExpandableRowContent>
           </Td>
