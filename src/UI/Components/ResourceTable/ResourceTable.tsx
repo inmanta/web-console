@@ -18,7 +18,7 @@ export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
     return {
       cells: [
         {
-          title: <ResourceLink resourceId={resourceId} linkText={resourceId} />,
+          title: <ResourceLink resourceId={resourceId} />,
         },
         { title: <ResourceStatusLabel status={resource.resource_state} /> },
       ],
