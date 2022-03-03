@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActionGroup, Button, Form } from "@patternfly/react-core";
+import { ActionGroup, Alert, Button, Form } from "@patternfly/react-core";
 import { set } from "lodash-es";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
@@ -54,6 +54,14 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           path={null}
         />
       ))}
+
+      {fields.length <= 0 && (
+        <Alert
+          variant="info"
+          isInline
+          title={words("inventory.editInstance.noAttributes")}
+        />
+      )}
 
       <ActionGroup>
         <ActionDisabledTooltip
