@@ -52,7 +52,7 @@ export const Tabs: React.FC<Props> = ({
           attributesTab(row),
           resourcesTab(serviceInstanceIdentifier),
           configTab(
-            row.deleted || !!row.configDisabled,
+            configTabDisabled,
             serviceInstanceIdentifier,
             configTooltipRef
           ),
