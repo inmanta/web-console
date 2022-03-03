@@ -12,19 +12,13 @@ interface Props {
 }
 
 export const ResourceTable: React.FC<Props> = ({ resources, id, ...props }) => {
-  const columns = ["Resource Id", "State"];
+  const columns = ["Resource", "State"];
   const rows = resources.map((resource) => {
+    const resourceId = getResourceIdFromResourceVersionId(resource.resource_id);
     return {
       cells: [
         {
-          title: (
-            <ResourceLink
-              resourceId={getResourceIdFromResourceVersionId(
-                resource.resource_id
-              )}
-              linkText={resource.resource_id}
-            />
-          ),
+          title: <ResourceLink resourceId={resourceId} linkText={resourceId} />,
         },
         { title: <ResourceStatusLabel status={resource.resource_state} /> },
       ],
