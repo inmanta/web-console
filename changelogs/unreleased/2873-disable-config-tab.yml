@@ -1,0 +1,4 @@
+description: Disable config tab in inventory when there are no options
+issue-nr: 2873
+change-type: patch
+destination-branches: [master, iso5]

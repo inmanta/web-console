@@ -152,7 +152,7 @@ const dict = {
   "config.reset": "Reset",
   "config.reset.description": "Reset to service defaults",
   "config.empty": "No settings found",
-  "config.disabled": "Changing settings is disabled for deleted instances",
+  "config.disabled": "Configuration is not available",
 
   /**
    * Events related text
