@@ -264,7 +264,7 @@ const dict = {
   "resources.info.firstTime": "Created",
   "resources.requires.title": "Requires",
   "resources.requires.empty.message": "No requirements found",
-  "resources.requires.resourceId": "Resource Id",
+  "resources.requires.resource": "Resource",
   "resources.requires.deployState": "Deploy State",
   "resources.history.title": "History",
   "resources.history.column.date": "Date",
