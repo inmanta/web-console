@@ -17,7 +17,7 @@ export const RequiresTableWrapper: React.FC = ({ children, ...props }) => (
   >
     <Thead>
       <Tr>
-        <Th>{words("resources.requires.resourceId")}</Th>
+        <Th>{words("resources.requires.resource")}</Th>
         <StyledTh width={15}>
           {words("resources.requires.deployState")}
         </StyledTh>
