@@ -1,9 +1,16 @@
 import React, { useContext } from "react";
-import { render } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { Either } from "@/Core";
 import { QueryManagerResolver, QueryResolverImpl } from "@/Data/Resolvers";
 import { getStoreInstance } from "@/Data/Store";
-import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import {
+  DeferredApiHelper,
+  dependencies,
+  InstanceResource,
+  ServiceInstance,
+  StaticScheduler,
+} from "@/Test";
 import { DependencyContext, DependencyProvider } from "@/UI";
 import { RemoteDataView } from "@/UI/Components";
 
@@ -35,8 +42,9 @@ const Dummy: React.FC = ({}) => {
   });
   return (
     <RemoteDataView
+      label="Dummy"
       data={data}
-      SuccessView={() => <label aria-label="success">success</label>}
+      SuccessView={() => <div aria-label="Dummy-Success">success</div>}
     />
   );
 };
@@ -46,4 +54,37 @@ test("Given the InstanceResourceQueryManager When used Then handles 409", async 
   render(component);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: "/lsm/v1/service_inventory/service/abc/resources?current_version=1",
+    environment: "env",
+  });
+  await act(async () => {
+    apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
+  });
+  expect(
+    await screen.findByRole("generic", { name: "Dummy-Loading" })
+  ).toBeVisible();
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: "/lsm/v1/service_inventory/service/abc",
+    environment: "env",
+  });
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: { ...ServiceInstance.a, version: 2 } })
+    );
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: "/lsm/v1/service_inventory/service/abc/resources?current_version=2",
+    environment: "env",
+  });
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
+  });
+  expect(
+    await screen.findByRole("generic", { name: "Dummy-Success" })
+  ).toBeVisible();
 });

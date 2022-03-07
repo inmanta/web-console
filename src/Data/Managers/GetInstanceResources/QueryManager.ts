@@ -7,6 +7,7 @@ import {
   Query,
   RemoteData,
   StateHelperWithEnv,
+  Either,
 } from "@/Core";
 import { GetInstanceResources } from "@/Core/Query/GetInstanceResources";
 import { Data } from "@/Data/Managers/Helpers/QueryManager/types";
@@ -29,6 +30,10 @@ export class InstanceResourcesQueryManager
     url: string,
     environment: string
   ): Promise<void> {
+    const response = await this.apiHelper.getWithHTTPCode(url, environment);
+    if (Either.isRight(response)) {
+      // Return success
+    }
     this.stateHelper.set(
       RemoteData.fromEither(await this.apiHelper.get(url, environment)),
       query,
@@ -41,29 +46,130 @@ export class InstanceResourcesQueryManager
     const environment = environmentHandler.useId();
     const url = this.getUrl(urlEncodeParams<"GetInstanceResources">(query));
 
-    const task = {
-      effect: async () =>
-        RemoteData.fromEither(await this.apiHelper.get(url, environment)),
-      update: (data) => this.stateHelper.set(data, query, environment),
-    };
+    // const task = {
+    //   effect: async () =>
+    //     RemoteData.fromEither(await this.apiHelper.get(url, environment)),
+    //   update: (data) => this.stateHelper.set(data, query, environment),
+    // };
+
+    // Do the request
+    // If successful, do the scheduling
+    // If not, fetch instance,
+    //         if that fails, show error
+    //         else fetch resources with latest data
+    //              if that succeeds, show success, start scheduling
+    //              else restart loop
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query, environment);
-      this.update(
-        query,
-        this.getUrl(urlEncodeParams<"GetInstanceResources">(query)),
-        environment
-      );
-      this.scheduler.register(this.getUnique(query), task);
-      return () => {
-        this.scheduler.unregister(this.getUnique(query));
+      const whatever = async () => {
+        const response = await this.apiHelper.getWithHTTPCode<
+          Query.ApiResponse<"GetInstanceResources">
+        >(url, environment);
+        if (Either.isLeft(response)) {
+          if (response.value.status === 409) {
+            const instanceResponse = await this.getInstance(
+              query.service_entity,
+              query.id,
+              environment
+            );
+            if (Either.isLeft(instanceResponse)) {
+              this.stateHelper.set(
+                RemoteData.failed(instanceResponse.value),
+                query,
+                environment
+              );
+            } else {
+              const secondRequest = await this.apiHelper.getWithHTTPCode<
+                Query.ApiResponse<"GetInstanceResources">
+              >(
+                this.getUrl({
+                  ...query,
+                  version: instanceResponse.value.data.version,
+                }),
+                environment
+              );
+              if (Either.isRight(secondRequest)) {
+                this.stateHelper.set(
+                  RemoteData.success(secondRequest.value),
+                  query,
+                  environment
+                );
+              }
+            }
+          }
+        }
       };
+      whatever();
+      // this.scheduler.register(this.getUnique(query), task);
+      // return () => {
+      //   this.scheduler.unregister(this.getUnique(query));
+      // };
     }, [environment]);
 
     return [
       this.stateHelper.getHooked(query, environment),
       () => this.update(query, url, environment),
     ];
+  }
+
+  private async getInitialData(
+    query: Query.SubQuery<"GetInstanceResources">,
+    environment: string
+  ) {
+    const response = await this.apiHelper.getWithHTTPCode<
+      Query.ApiResponse<"GetInstanceResources">
+    >(this.getUrl(query), environment);
+    if (Either.isLeft(response) && response.value.status === 409) {
+      const instanceResponse = await this.getInstance(
+        query.service_entity,
+        query.id,
+        environment
+      );
+      if (Either.isLeft(instanceResponse)) {
+        this.stateHelper.set(
+          RemoteData.failed(instanceResponse.value),
+          query,
+          environment
+        );
+      } else {
+        const secondRequest = await this.apiHelper.getWithHTTPCode<
+          Query.ApiResponse<"GetInstanceResources">
+        >(
+          this.getUrl({
+            ...query,
+            version: instanceResponse.value.data.version,
+          }),
+          environment
+        );
+        if (Either.isRight(secondRequest)) {
+          this.stateHelper.set(
+            RemoteData.success(secondRequest.value),
+            query,
+            environment
+          );
+        }
+      }
+    } else {
+      this.stateHelper.set(
+        RemoteData.fromEither(
+          Either.mapLeft((error) => error.message, response)
+        ),
+        query,
+        environment
+      );
+    }
+  }
+
+  private async getInstance(
+    serviceEntity: string,
+    id: string,
+    environment: string
+  ) {
+    return this.apiHelper.get<Query.ApiResponse<"GetServiceInstance">>(
+      `/lsm/v1/service_inventory/${serviceEntity}/${id}`,
+      environment
+    );
   }
 
   matches(
