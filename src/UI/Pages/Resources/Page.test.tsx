@@ -180,10 +180,16 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
   const { component, apiHelper } = setup();
   render(component);
   apiHelper.resolve(Either.right(Resource.response));
-  expect(await screen.findByRole("button", { name: /type/i })).toBeVisible();
-  expect(screen.getByRole("button", { name: /agent/i })).toBeVisible();
-  expect(screen.getByRole("button", { name: /value/i })).toBeVisible();
-  expect(screen.getByRole("button", { name: /Deploy state/i })).toBeVisible();
+  const table = await screen.findByRole("grid", {
+    name: "ResourcesView-Success",
+  });
+  expect(table).toBeVisible();
+  expect(within(table).getByRole("button", { name: /type/i })).toBeVisible();
+  expect(within(table).getByRole("button", { name: /agent/i })).toBeVisible();
+  expect(within(table).getByRole("button", { name: /value/i })).toBeVisible();
+  expect(
+    within(table).getByRole("button", { name: /Deploy state/i })
+  ).toBeVisible();
 });
 
 test("ResourcesView sets sorting parameters correctly on click", async () => {
@@ -197,11 +203,10 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
 });
 
 it.each`
-  filterType  | filterValue   | placeholderText      | filterUrlName
-  ${"select"} | ${"deployed"} | ${"Deploy State..."} | ${"status"}
-  ${"search"} | ${"agent2"}   | ${"Agent..."}        | ${"agent"}
-  ${"search"} | ${"File"}     | ${"Type..."}         | ${"resource_type"}
-  ${"search"} | ${"tmp"}      | ${"Value..."}        | ${"resource_id_value"}
+  filterType  | filterValue | placeholderText | filterUrlName
+  ${"search"} | ${"agent2"} | ${"Agent..."}   | ${"agent"}
+  ${"search"} | ${"File"}   | ${"Type..."}    | ${"resource_type"}
+  ${"search"} | ${"tmp"}    | ${"Value..."}   | ${"resource_id_value"}
 `(
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
   async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
@@ -226,8 +231,69 @@ it.each`
       userEvent.type(input, `${filterValue}${specialChars.enter}`);
     }
 
+    expect(
+      apiHelper.pendingRequests[0].url.includes(`filter.status=%21orphaned`)
+    ).toBeTruthy();
+    expect(
+      apiHelper.pendingRequests[0].url.includes(
+        `filter.${filterUrlName}=${filterValue}`
+      )
+    ).toBeTruthy();
+
+    await act(async () => {
+      await apiHelper.resolve(
+        Either.right({
+          data: Resource.response.data.slice(4),
+          links: Resource.response.links,
+          metadata: Resource.response.metadata,
+        })
+      );
+    });
+
+    const rowsAfter = await screen.findAllByRole("row", {
+      name: "Resource Table Row",
+    });
+    expect(rowsAfter).toHaveLength(2);
+  }
+);
+
+test.each`
+  filterValue      | option
+  ${"deployed"}    | ${"include"}
+  ${"unavailable"} | ${"exclude"}
+`(
+  "When using the Deploy state filter with value $filterValue and option $option then the matching resources should be fetched and shown",
+  async ({ filterValue, option }) => {
+    const { component, apiHelper } = setup();
+    render(component);
+
+    await act(async () => {
+      await apiHelper.resolve(Either.right(Resource.response));
+    });
+
+    const initialRows = await screen.findAllByRole("row", {
+      name: "Resource Table Row",
+    });
+    expect(initialRows).toHaveLength(6);
+
+    const toolbar = await screen.findByRole("generic", {
+      name: "Resources-toolbar",
+    });
+
+    const input = await within(toolbar).findByRole("button", {
+      name: "Deploy State-toggle",
+    });
+    userEvent.click(input);
+
+    const toggle = await screen.findByRole("generic", {
+      name: `${filterValue}-${option}-toggle`,
+    });
+    userEvent.click(toggle);
+
     expect(apiHelper.pendingRequests[0].url).toEqual(
-      `/api/v2/resource?deploy_summary=True&limit=20&filter.${filterUrlName}=${filterValue}&sort=resource_type.asc`
+      `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&filter.status=${
+        option === "include" ? filterValue : `%21${filterValue}`
+      }&sort=resource_type.asc`
     );
 
     await act(async () => {
@@ -246,6 +312,47 @@ it.each`
     expect(rowsAfter).toHaveLength(2);
   }
 );
+
+test("When clicking the clear and reset filters then the state filter is updated correctly", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  expect(apiHelper.pendingRequests[0].url).toEqual(
+    `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc`
+  );
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
+
+  const initialRows = await screen.findAllByRole("row", {
+    name: "Resource Table Row",
+  });
+  expect(initialRows).toHaveLength(6);
+  const clearButtons = await screen.findAllByText("Clear all filters");
+  const visibleClearButton = clearButtons[clearButtons.length - 1];
+  expect(visibleClearButton).toBeVisible();
+  userEvent.click(visibleClearButton);
+
+  expect(apiHelper.pendingRequests[0].url).toEqual(
+    `/api/v2/resource?deploy_summary=True&limit=20&&sort=resource_type.asc`
+  );
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: Resource.response.data.slice(4),
+        links: Resource.response.links,
+        metadata: Resource.response.metadata,
+      })
+    );
+  });
+  userEvent.click(await screen.findByRole("button", { name: "Reset-filters" }));
+
+  expect(apiHelper.pendingRequests[0].url).toEqual(
+    `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc`
+  );
+});
 
 test("ResourcesView shows deploy state bar", async () => {
   const { component, apiHelper } = setup();

@@ -1,25 +1,23 @@
 import React from "react";
 import { Resource } from "@/Core";
-import { SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
+import { SelectIncludeExcludeFilter } from "./SelectIncludeExcludeFilter";
 
 interface Props {
   filter: Resource.Filter;
-  setFilter: (filter: Resource.Filter) => void;
+  setFilter: (filter: Resource.FilterWithDefaultHandling) => void;
 }
 
 export const DeployStateFilter: React.FC<Props> = ({ filter, setFilter }) => {
-  const updateStatus = (statuses: string[]) =>
+  const updateStatus = (statuses: string[]) => {
     setFilter({
       ...filter,
-      status:
-        statuses.length > 0
-          ? statuses.map((status) => Resource.Status[status])
-          : undefined,
+      status: statuses.length > 0 ? statuses : undefined,
+      disregardDefault: true,
     });
-
+  };
   return (
-    <SelectOptionFilter
+    <SelectIncludeExcludeFilter
       isVisible={true}
       filterPropertyName={words("resources.column.deployState")}
       placeholder={words("resources.filters.status.placeholder")}

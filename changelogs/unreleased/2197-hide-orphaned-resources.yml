@@ -1,0 +1,4 @@
+description: Hide orphaned resources and support exclude filters on resources page
+issue-nr: 2197
+change-type: minor
+destination-branches: [master, iso5]
