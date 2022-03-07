@@ -19,6 +19,8 @@ import { urlEncodeParams } from "../Helpers/QueryManager/utils";
 export class InstanceResourcesQueryManager
   implements ContinuousQueryManager<"GetInstanceResources">
 {
+  private RUNS_LIMIT = 3;
+
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelperWithEnv<"GetInstanceResources">,
@@ -62,45 +64,14 @@ export class InstanceResourcesQueryManager
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query, environment);
-      const whatever = async () => {
-        const response = await this.apiHelper.getWithHTTPCode<
-          Query.ApiResponse<"GetInstanceResources">
-        >(url, environment);
-        if (Either.isLeft(response)) {
-          if (response.value.status === 409) {
-            const instanceResponse = await this.getInstance(
-              query.service_entity,
-              query.id,
-              environment
-            );
-            if (Either.isLeft(instanceResponse)) {
-              this.stateHelper.set(
-                RemoteData.failed(instanceResponse.value),
-                query,
-                environment
-              );
-            } else {
-              const secondRequest = await this.apiHelper.getWithHTTPCode<
-                Query.ApiResponse<"GetInstanceResources">
-              >(
-                this.getUrl({
-                  ...query,
-                  version: instanceResponse.value.data.version,
-                }),
-                environment
-              );
-              if (Either.isRight(secondRequest)) {
-                this.stateHelper.set(
-                  RemoteData.success(secondRequest.value),
-                  query,
-                  environment
-                );
-              }
-            }
-          }
-        }
-      };
-      whatever();
+      (async () => {
+        this.stateHelper.set(
+          await this.getInitialData(query, environment, 0),
+          query,
+          environment
+        );
+      })();
+
       // this.scheduler.register(this.getUnique(query), task);
       // return () => {
       //   this.scheduler.unregister(this.getUnique(query));
@@ -115,50 +86,45 @@ export class InstanceResourcesQueryManager
 
   private async getInitialData(
     query: Query.SubQuery<"GetInstanceResources">,
-    environment: string
-  ) {
-    const response = await this.apiHelper.getWithHTTPCode<
+    environment: string,
+    runs: number
+  ): Promise<
+    RemoteData.RemoteData<
+      Query.Error<"GetInstanceResources">,
+      Query.ApiResponse<"GetInstanceResources">
+    >
+  > {
+    if (runs >= this.RUNS_LIMIT) {
+      return RemoteData.failed("Retry limit reached.");
+    }
+
+    const resources = await this.apiHelper.getWithHTTPCode<
       Query.ApiResponse<"GetInstanceResources">
     >(this.getUrl(query), environment);
-    if (Either.isLeft(response) && response.value.status === 409) {
-      const instanceResponse = await this.getInstance(
-        query.service_entity,
-        query.id,
-        environment
-      );
-      if (Either.isLeft(instanceResponse)) {
-        this.stateHelper.set(
-          RemoteData.failed(instanceResponse.value),
-          query,
-          environment
-        );
-      } else {
-        const secondRequest = await this.apiHelper.getWithHTTPCode<
-          Query.ApiResponse<"GetInstanceResources">
-        >(
-          this.getUrl({
-            ...query,
-            version: instanceResponse.value.data.version,
-          }),
-          environment
-        );
-        if (Either.isRight(secondRequest)) {
-          this.stateHelper.set(
-            RemoteData.success(secondRequest.value),
-            query,
-            environment
-          );
-        }
-      }
-    } else {
-      this.stateHelper.set(
-        RemoteData.fromEither(
-          Either.mapLeft((error) => error.message, response)
-        ),
-        query,
-        environment
-      );
+
+    if (Either.isRight(resources)) {
+      return RemoteData.success(resources.value);
     }
+
+    if (Either.isLeft(resources) && resources.value.status !== 409) {
+      return RemoteData.failed(resources.value.message);
+    }
+
+    const instance = await this.getInstance(
+      query.service_entity,
+      query.id,
+      environment
+    );
+
+    if (Either.isLeft(instance)) {
+      return RemoteData.failed(instance.value);
+    }
+
+    return this.getInitialData(
+      { ...query, version: instance.value.data.version },
+      environment,
+      runs + 1
+    );
   }
 
   private async getInstance(

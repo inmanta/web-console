@@ -53,24 +53,27 @@ test("Given the InstanceResourceQueryManager When used Then handles 409", async 
   const { component, apiHelper } = setup();
   render(component);
 
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: "/lsm/v1/service_inventory/service/abc/resources?current_version=1",
-    environment: "env",
-  });
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "GET",
+      url: "/lsm/v1/service_inventory/service/abc/resources?current_version=1",
+      environment: "env",
+    },
+  ]);
   await act(async () => {
     apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
   });
   expect(
     await screen.findByRole("generic", { name: "Dummy-Loading" })
   ).toBeVisible();
-  expect(apiHelper.pendingRequests).toHaveLength(1);
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: "/lsm/v1/service_inventory/service/abc",
-    environment: "env",
-  });
+
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "GET",
+      url: "/lsm/v1/service_inventory/service/abc",
+      environment: "env",
+    },
+  ]);
   await act(async () => {
     apiHelper.resolve(
       Either.right({ data: { ...ServiceInstance.a, version: 2 } })
