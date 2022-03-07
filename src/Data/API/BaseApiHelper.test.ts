@@ -80,3 +80,11 @@ test("GIVEN BaseApiHelper with NativeJsonParser WHEN response json contains larg
   if (response.kind === "Left") return;
   expect(response.value.foo).not.toEqual(9223372036854775807n);
 });
+
+test("GIVEN BaseApiHelper with getWithHTTPCode WHEN request fails with 409 THEN response has code 409", async () => {
+  const apiHelper = new BaseApiHelper(new NativeJsonParser());
+  fetchMock.mockResponse(`{"foo": 9223372036854775807}`, { status: 409 });
+  const response = await apiHelper.getWithHTTPCode<{ foo: number }>("", "");
+  if (response.kind === "Right") return;
+  expect(response.value.status).toEqual(409);
+});

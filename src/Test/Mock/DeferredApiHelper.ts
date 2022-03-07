@@ -1,5 +1,5 @@
 import { isEqual, remove } from "lodash-es";
-import { ApiHelper, Deferred, Either, Maybe } from "@/Core";
+import { ApiHelper, Deferred, Either, ErrorWithHTTPCode, Maybe } from "@/Core";
 
 type Request =
   | (WithMethod<"GET"> & UrlAndEnv)
@@ -112,6 +112,20 @@ export class DeferredApiHelper implements ApiHelper {
     });
 
     return promise as Promise<Either.Type<string, Data>>;
+  }
+
+  getWithHTTPCode<Data>(
+    url: string,
+    environment: string
+  ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "GET", url, environment },
+      resolve,
+      promise,
+    });
+
+    return promise as Promise<Either.Type<ErrorWithHTTPCode, Data>>;
   }
 
   getWithoutEnvironment<Data>(url: string): Promise<Either.Type<string, Data>> {

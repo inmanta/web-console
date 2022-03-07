@@ -6,6 +6,7 @@ import {
   objectHasKey,
   isObject,
   JsonParser,
+  ErrorWithHTTPCode,
 } from "@/Core";
 import { words } from "@/UI/words";
 import { BigIntJsonParser } from "./BigIntJsonParser";
@@ -195,5 +196,50 @@ export class BaseApiHelper implements ApiHelper {
       },
       method: "DELETE",
     });
+  }
+
+  getWithHTTPCode<Data>(
+    url: string,
+    environment: string
+  ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
+    return this.executeJsonWithHTTPCode<Data>(this.getFullUrl(url), {
+      headers: this.getHeaders(environment),
+    });
+  }
+
+  private async executeWithHTTPCode<Data>(
+    transform: (response: Response) => Promise<Data>,
+    ...params: Parameters<typeof fetch>
+  ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
+    try {
+      const response = await fetch(...params);
+      if (response.ok) {
+        const data = await transform(response);
+        return Either.right(data);
+      }
+      return Either.left({
+        message: this.formatError(
+          this.jsonParser.parse(await response.text()).message,
+          response
+        ),
+        status: response.status,
+      });
+    } catch (error) {
+      return Either.left({
+        status: 0,
+        message: this.errorHasMessage(error)
+          ? error.message
+          : `Error: ${error}`,
+      });
+    }
+  }
+
+  private async executeJsonWithHTTPCode<Data>(
+    ...params: Parameters<typeof fetch>
+  ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
+    return this.executeWithHTTPCode<Data>(
+      async (response) => this.jsonParser.parse(await response.text()),
+      ...params
+    );
   }
 }
