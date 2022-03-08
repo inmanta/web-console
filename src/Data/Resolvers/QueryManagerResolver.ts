@@ -95,6 +95,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       this.store,
       serviceKeyMaker
     );
+    const serviceInstancesStateHelper = new ServiceInstancesStateHelper(
+      this.store
+    );
 
     return [
       new GetProjectsQueryManager(
@@ -131,7 +134,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new ServiceInstancesQueryManager(
         this.apiHelper,
-        new ServiceInstancesStateHelper(this.store),
+        serviceInstancesStateHelper,
         this.scheduler
       ),
       new ServiceConfigQueryManager(
@@ -142,6 +145,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new InstanceResourcesQueryManager(
         this.apiHelper,
         new InstanceResourcesStateHelper(this.store),
+        serviceInstancesStateHelper,
         this.scheduler,
         this.instanceResourcesRetryLimit
       ),

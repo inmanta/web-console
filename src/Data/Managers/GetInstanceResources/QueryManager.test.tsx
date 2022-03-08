@@ -215,6 +215,9 @@ test.only("Given the InstanceResourcesQueryManager When instance call is success
       Either.right({ data: { ...ServiceInstance.a, version: 4 } })
     );
   });
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
+  });
   const services = store.getState().serviceInstances.byId[`env__?__service`];
   if (!RemoteData.isSuccess(services)) {
     fail();

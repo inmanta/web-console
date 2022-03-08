@@ -10,12 +10,20 @@ import {
   Either,
   ErrorWithHTTPCode,
   Task,
+  PageSize,
 } from "@/Core";
 import { GetInstanceResources } from "@/Core/Query/GetInstanceResources";
 import { Data } from "@/Data/Managers/Helpers/QueryManager/types";
 import { DependencyContext } from "@/UI/Dependency";
 import { urlEncodeParams } from "../Helpers/QueryManager/utils";
 
+type TupleData = [
+  RemoteData.RemoteData<
+    Query.Error<"GetInstanceResources">,
+    Query.ApiResponse<"GetInstanceResources">
+  >,
+  Query.UsedData<"GetServiceInstance"> | undefined
+];
 /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
 /**
@@ -29,6 +37,7 @@ export class InstanceResourcesQueryManager
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelperWithEnv<"GetInstanceResources">,
+    private readonly instancesStateHelper: StateHelperWithEnv<"GetServiceInstances">,
     private readonly scheduler: Scheduler,
     private readonly retryLimit: number = 20
   ) {}
@@ -89,39 +98,40 @@ export class InstanceResourcesQueryManager
   private async getEventualData(
     query: Query.SubQuery<"GetInstanceResources">,
     environment: string,
-    retries: number
-  ): Promise<
-    RemoteData.RemoteData<
-      Query.Error<"GetInstanceResources">,
-      Query.ApiResponse<"GetInstanceResources">
-    >
-  > {
+    retries: number,
+    instance?: Query.UsedData<"GetServiceInstance">
+  ): Promise<TupleData> {
     const resources = await this.getResources(query, environment);
     if (Either.isRight(resources)) {
-      return RemoteData.success(resources.value);
+      return [RemoteData.success(resources.value), instance];
     }
 
     if (Either.isLeft(resources) && resources.value.status !== 409) {
-      return RemoteData.failed(resources.value.message);
+      return [RemoteData.failed(resources.value.message), undefined];
     }
 
     if (retries >= this.retryLimit) {
-      return RemoteData.failed("Retry limit reached.");
+      return [RemoteData.failed("Retry limit reached."), undefined];
     }
 
-    const instance = await this.getInstance(
+    const instanceResult = await this.getInstance(
       query.service_entity,
       query.id,
       environment
     );
 
-    if (Either.isLeft(instance)) {
-      return RemoteData.failed(instance.value);
+    if (Either.isLeft(instanceResult)) {
+      return [RemoteData.failed(instanceResult.value), undefined];
     }
 
-    const nextQuery = { ...query, version: instance.value.data.version };
+    const nextQuery = { ...query, version: instanceResult.value.data.version };
 
-    return this.getEventualData(nextQuery, environment, retries + 1);
+    return this.getEventualData(
+      nextQuery,
+      environment,
+      retries + 1,
+      instanceResult.value.data
+    );
   }
 
   useContinuous(query: GetInstanceResources): Data<"GetInstanceResources"> {
@@ -129,26 +139,24 @@ export class InstanceResourcesQueryManager
     const environment = environmentHandler.useId();
     const url = this.getUrl(urlEncodeParams(query));
 
-    const task: Task<
-      RemoteData.RemoteData<
-        Query.Error<"GetInstanceResources">,
-        Query.ApiResponse<"GetInstanceResources">
-      >
-    > = {
+    const task: Task<TupleData> = {
       effect: async () => this.getEventualData(query, environment, 0),
       update: (data) => {
-        this.stateHelper.set(data, query, environment);
+        this.stateHelper.set(data[0], query, environment);
+        this.updateInstance(data[1], query.service_entity, environment);
       },
     };
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query, environment);
       (async () => {
-        this.stateHelper.set(
-          await this.getEventualData(query, environment, 0),
+        const [resources, instance] = await this.getEventualData(
           query,
-          environment
+          environment,
+          0
         );
+        this.stateHelper.set(resources, query, environment);
+        this.updateInstance(instance, query.service_entity, environment);
       })();
       this.scheduler.register(this.getUnique(query), task);
 
@@ -161,6 +169,40 @@ export class InstanceResourcesQueryManager
       this.stateHelper.getHooked(query, environment),
       () => this.update(query, url, environment),
     ];
+  }
+
+  private updateInstance(
+    latest: Query.UsedData<"GetServiceInstance"> | undefined,
+    serviceEntity: string,
+    environment: string
+  ) {
+    if (latest !== undefined) {
+      const currentState = this.instancesStateHelper.getOnce(
+        {
+          kind: "GetServiceInstances",
+          name: serviceEntity,
+          pageSize: PageSize.initial,
+        },
+        environment
+      );
+      if (RemoteData.isSuccess(currentState)) {
+        const updatedState = currentState.value.data.map((instance) =>
+          instance.id === latest.id ? latest : instance
+        );
+        this.instancesStateHelper.set(
+          {
+            value: { ...currentState.value, data: updatedState },
+            kind: "Success",
+          },
+          {
+            kind: "GetServiceInstances",
+            name: serviceEntity,
+            pageSize: PageSize.initial,
+          },
+          environment
+        );
+      }
+    }
   }
 
   matches(
