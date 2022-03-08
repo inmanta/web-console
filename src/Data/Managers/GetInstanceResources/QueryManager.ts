@@ -17,13 +17,14 @@ import { Data } from "@/Data/Managers/Helpers/QueryManager/types";
 import { DependencyContext } from "@/UI/Dependency";
 import { urlEncodeParams } from "../Helpers/QueryManager/utils";
 
-type TupleData = [
-  RemoteData.RemoteData<
+interface ResponseGroup {
+  resources: RemoteData.RemoteData<
     Query.Error<"GetInstanceResources">,
     Query.ApiResponse<"GetInstanceResources">
-  >,
-  Query.UsedData<"GetServiceInstance"> | undefined
-];
+  >;
+  instance?: Query.UsedData<"GetServiceInstance">;
+}
+
 /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
 /**
@@ -100,18 +101,19 @@ export class InstanceResourcesQueryManager
     environment: string,
     retries: number,
     instance?: Query.UsedData<"GetServiceInstance">
-  ): Promise<TupleData> {
+  ): Promise<ResponseGroup> {
     const resources = await this.getResources(query, environment);
+
     if (Either.isRight(resources)) {
-      return [RemoteData.success(resources.value), instance];
+      return { resources: RemoteData.success(resources.value), instance };
     }
 
     if (Either.isLeft(resources) && resources.value.status !== 409) {
-      return [RemoteData.failed(resources.value.message), undefined];
+      return { resources: RemoteData.failed(resources.value.message) };
     }
 
     if (retries >= this.retryLimit) {
-      return [RemoteData.failed("Retry limit reached."), undefined];
+      return { resources: RemoteData.failed("Retry limit reached.") };
     }
 
     const instanceResult = await this.getInstance(
@@ -121,7 +123,7 @@ export class InstanceResourcesQueryManager
     );
 
     if (Either.isLeft(instanceResult)) {
-      return [RemoteData.failed(instanceResult.value), undefined];
+      return { resources: RemoteData.failed(instanceResult.value) };
     }
 
     const nextQuery = { ...query, version: instanceResult.value.data.version };
@@ -139,18 +141,18 @@ export class InstanceResourcesQueryManager
     const environment = environmentHandler.useId();
     const url = this.getUrl(urlEncodeParams(query));
 
-    const task: Task<TupleData> = {
+    const task: Task<ResponseGroup> = {
       effect: async () => this.getEventualData(query, environment, 0),
-      update: (data) => {
-        this.stateHelper.set(data[0], query, environment);
-        this.updateInstance(data[1], query.service_entity, environment);
+      update: ({ resources, instance }) => {
+        this.stateHelper.set(resources, query, environment);
+        this.updateInstance(instance, query.service_entity, environment);
       },
     };
 
     useEffect(() => {
       this.stateHelper.set(RemoteData.loading(), query, environment);
       (async () => {
-        const [resources, instance] = await this.getEventualData(
+        const { resources, instance } = await this.getEventualData(
           query,
           environment,
           0
@@ -176,8 +178,24 @@ export class InstanceResourcesQueryManager
     serviceEntity: string,
     environment: string
   ) {
-    if (latest !== undefined) {
-      const currentState = this.instancesStateHelper.getOnce(
+    if (latest === undefined) return;
+    const currentState = this.instancesStateHelper.getOnce(
+      {
+        kind: "GetServiceInstances",
+        name: serviceEntity,
+        pageSize: PageSize.initial,
+      },
+      environment
+    );
+    if (RemoteData.isSuccess(currentState)) {
+      const updatedState = currentState.value.data.map((instance) =>
+        instance.id === latest.id ? latest : instance
+      );
+      this.instancesStateHelper.set(
+        {
+          value: { ...currentState.value, data: updatedState },
+          kind: "Success",
+        },
         {
           kind: "GetServiceInstances",
           name: serviceEntity,
@@ -185,23 +203,6 @@ export class InstanceResourcesQueryManager
         },
         environment
       );
-      if (RemoteData.isSuccess(currentState)) {
-        const updatedState = currentState.value.data.map((instance) =>
-          instance.id === latest.id ? latest : instance
-        );
-        this.instancesStateHelper.set(
-          {
-            value: { ...currentState.value, data: updatedState },
-            kind: "Success",
-          },
-          {
-            kind: "GetServiceInstances",
-            name: serviceEntity,
-            pageSize: PageSize.initial,
-          },
-          environment
-        );
-      }
     }
   }
 

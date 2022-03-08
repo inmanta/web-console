@@ -190,7 +190,7 @@ test("Given the InstanceResourcesQueryManager Then a task is registered on the s
   expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
 });
 
-test.only("Given the InstanceResourcesQueryManager When instance call is successful Then the store is updated", async () => {
+test("Given the InstanceResourcesQueryManager When instance call is successful Then the store is updated", async () => {
   const { component, store, apiHelper, instanceRequest } = setup();
   render(component);
   store.dispatch.serviceInstances.setData({

@@ -5,16 +5,14 @@ import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import {
   QueryResolverImpl,
-  InstanceResourcesQueryManager,
-  InstanceResourcesStateHelper,
   getStoreInstance,
+  QueryManagerResolver,
 } from "@/Data";
 import {
   Row,
   tablePresenter,
   tablePresenterWithIdentity,
   StaticScheduler,
-  DynamicQueryManagerResolver,
   InstantApiHelper,
   dependencies,
 } from "@/Test";
@@ -26,26 +24,24 @@ const dummySetter = () => {
 };
 
 test("InventoryTable can be expanded", async () => {
-  // Arrange
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new InstanceResourcesQueryManager(
-        new InstantApiHelper({
-          kind: "Success",
-          data: {
-            data: [
-              {
-                resource_id: "resource_id_1",
-                resource_state: "resource_state",
-              },
-            ],
-          },
-        }),
-        new InstanceResourcesStateHelper(store),
-        new StaticScheduler()
-      ),
-    ])
+    new QueryManagerResolver(
+      store,
+      new InstantApiHelper({
+        kind: "Success",
+        data: {
+          data: [
+            {
+              resource_id: "resource_id_1",
+              resource_state: "resource_state",
+            },
+          ],
+        },
+      }),
+      new StaticScheduler(),
+      new StaticScheduler()
+    )
   );
   render(
     <MemoryRouter>
@@ -75,23 +71,22 @@ test("InventoryTable can be expanded", async () => {
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new InstanceResourcesQueryManager(
-        new InstantApiHelper({
-          kind: "Success",
-          data: {
-            data: [
-              {
-                resource_id: "resource_id_1,v=1",
-                resource_state: "resource_state",
-              },
-            ],
-          },
-        }),
-        new InstanceResourcesStateHelper(store),
-        new StaticScheduler()
-      ),
-    ])
+    new QueryManagerResolver(
+      store,
+      new InstantApiHelper({
+        kind: "Success",
+        data: {
+          data: [
+            {
+              resource_id: "resource_id_1,v=1",
+              resource_state: "resource_state",
+            },
+          ],
+        },
+      }),
+      new StaticScheduler(),
+      new StaticScheduler()
+    )
   );
 
   render(
