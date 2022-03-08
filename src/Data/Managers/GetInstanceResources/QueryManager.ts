@@ -8,6 +8,8 @@ import {
   RemoteData,
   StateHelperWithEnv,
   Either,
+  ErrorWithHTTPCode,
+  Task,
 } from "@/Core";
 import { GetInstanceResources } from "@/Core/Query/GetInstanceResources";
 import { Data } from "@/Data/Managers/Helpers/QueryManager/types";
@@ -31,6 +33,9 @@ export class InstanceResourcesQueryManager
     private readonly retryLimit: number = 20
   ) {}
 
+  /**
+   * @TODO implement this for the retry callback
+   */
   private async update(
     query: Query.SubQuery<"GetInstanceResources">,
     url: string,
@@ -47,48 +52,41 @@ export class InstanceResourcesQueryManager
     );
   }
 
-  useContinuous(query: GetInstanceResources): Data<"GetInstanceResources"> {
-    const { environmentHandler } = useContext(DependencyContext);
-    const environment = environmentHandler.useId();
-    const url = this.getUrl(urlEncodeParams<"GetInstanceResources">(query));
-
-    // const task = {
-    //   effect: async () =>
-    //     RemoteData.fromEither(await this.apiHelper.get(url, environment)),
-    //   update: (data) => this.stateHelper.set(data, query, environment),
-    // };
-
-    // Do the request
-    // If successful, do the scheduling
-    // If not, fetch instance,
-    //         if that fails, show error
-    //         else fetch resources with latest data
-    //              if that succeeds, show success, start scheduling
-    //              else restart loop
-
-    useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), query, environment);
-      (async () => {
-        this.stateHelper.set(
-          await this.getInitialData(query, environment, 0),
-          query,
-          environment
-        );
-      })();
-
-      // this.scheduler.register(this.getUnique(query), task);
-      // return () => {
-      //   this.scheduler.unregister(this.getUnique(query));
-      // };
-    }, [environment]);
-
-    return [
-      this.stateHelper.getHooked(query, environment),
-      () => this.update(query, url, environment),
-    ];
+  private async getResources(
+    query: Query.SubQuery<"GetInstanceResources">,
+    environment: string
+  ): Promise<
+    Either.Either<ErrorWithHTTPCode, Query.ApiResponse<"GetInstanceResources">>
+  > {
+    return this.apiHelper.getWithHTTPCode<
+      Query.ApiResponse<"GetInstanceResources">
+    >(this.getUrl(query), environment);
   }
 
-  private async getInitialData(
+  private async getInstance(
+    serviceEntity: string,
+    id: string,
+    environment: string
+  ) {
+    return this.apiHelper.get<Query.ApiResponse<"GetServiceInstance">>(
+      `/lsm/v1/service_inventory/${serviceEntity}/${id}`,
+      environment
+    );
+  }
+
+  private getUrl({
+    service_entity,
+    id,
+    version,
+  }: Query.SubQuery<"GetInstanceResources">) {
+    return `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`;
+  }
+
+  private getUnique({ kind, id }: Query.SubQuery<"GetInstanceResources">) {
+    return `${kind}_${id}`;
+  }
+
+  private async getEventualData(
     query: Query.SubQuery<"GetInstanceResources">,
     environment: string,
     retries: number
@@ -98,10 +96,7 @@ export class InstanceResourcesQueryManager
       Query.ApiResponse<"GetInstanceResources">
     >
   > {
-    const resources = await this.apiHelper.getWithHTTPCode<
-      Query.ApiResponse<"GetInstanceResources">
-    >(this.getUrl(query), environment);
-
+    const resources = await this.getResources(query, environment);
     if (Either.isRight(resources)) {
       return RemoteData.success(resources.value);
     }
@@ -124,22 +119,48 @@ export class InstanceResourcesQueryManager
       return RemoteData.failed(instance.value);
     }
 
-    return this.getInitialData(
-      { ...query, version: instance.value.data.version },
-      environment,
-      retries + 1
-    );
+    const nextQuery = { ...query, version: instance.value.data.version };
+
+    return this.getEventualData(nextQuery, environment, retries + 1);
   }
 
-  private async getInstance(
-    serviceEntity: string,
-    id: string,
-    environment: string
-  ) {
-    return this.apiHelper.get<Query.ApiResponse<"GetServiceInstance">>(
-      `/lsm/v1/service_inventory/${serviceEntity}/${id}`,
-      environment
-    );
+  useContinuous(query: GetInstanceResources): Data<"GetInstanceResources"> {
+    const { environmentHandler } = useContext(DependencyContext);
+    const environment = environmentHandler.useId();
+    const url = this.getUrl(urlEncodeParams(query));
+
+    const task: Task<
+      RemoteData.RemoteData<
+        Query.Error<"GetInstanceResources">,
+        Query.ApiResponse<"GetInstanceResources">
+      >
+    > = {
+      effect: async () => this.getEventualData(query, environment, 0),
+      update: (data) => {
+        this.stateHelper.set(data, query, environment);
+      },
+    };
+
+    useEffect(() => {
+      this.stateHelper.set(RemoteData.loading(), query, environment);
+      (async () => {
+        this.stateHelper.set(
+          await this.getEventualData(query, environment, 0),
+          query,
+          environment
+        );
+      })();
+      this.scheduler.register(this.getUnique(query), task);
+
+      return () => {
+        this.scheduler.unregister(this.getUnique(query));
+      };
+    }, [environment]);
+
+    return [
+      this.stateHelper.getHooked(query, environment),
+      () => this.update(query, url, environment),
+    ];
   }
 
   matches(
@@ -147,17 +168,5 @@ export class InstanceResourcesQueryManager
     kind: QueryManagerKind
   ): boolean {
     return query.kind === "GetInstanceResources" && kind === "Continuous";
-  }
-
-  getUrl({
-    service_entity,
-    id,
-    version,
-  }: Query.SubQuery<"GetInstanceResources">) {
-    return `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`;
-  }
-
-  getUnique({ kind, id }: Query.SubQuery<"GetInstanceResources">) {
-    return `${kind}_${id}`;
   }
 }

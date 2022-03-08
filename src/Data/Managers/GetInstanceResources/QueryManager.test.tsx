@@ -41,7 +41,7 @@ function setup() {
     environment: "env",
   });
 
-  return { component, apiHelper, resourcesRequest, instanceRequest };
+  return { component, apiHelper, resourcesRequest, instanceRequest, scheduler };
 }
 
 const Component: React.FC = ({}) => {
@@ -61,7 +61,7 @@ const Component: React.FC = ({}) => {
   );
 };
 
-test("Given the InstanceResourcesQueryManager When used Then handles 409", async () => {
+test("Given the InstanceResourcesQueryManager When initial request fails with 409 Then requests are retried", async () => {
   const { component, apiHelper, resourcesRequest, instanceRequest } = setup();
   render(component);
 
@@ -156,4 +156,25 @@ test("Given the InstanceResourcesQueryManager When it keeps failing Then it stop
   expect(
     await screen.findByRole("generic", { name: "Dummy-Failed" })
   ).toBeVisible();
+  expect(apiHelper.pendingRequests).toHaveLength(0);
+});
+
+test("Given the InstanceResourcesQueryManager Then a task is registered on the scheduler", async () => {
+  const { component, apiHelper, resourcesRequest, instanceRequest, scheduler } =
+    setup();
+  render(component);
+
+  expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
+  });
+  expect(scheduler.getIds()).toEqual(["GetInstanceResources_abc"]);
+
+  scheduler.executeAll();
+  expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
+  await act(async () => {
+    apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
+  });
+  expect(scheduler.getIds()).toEqual(["GetInstanceResources_abc"]);
+  expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
 });

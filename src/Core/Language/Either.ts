@@ -1,4 +1,4 @@
-type Either<L, R> = Left<L> | Right<R>;
+export type Either<L, R> = Left<L> | Right<R>;
 
 export type Type<L, R> = Either<L, R>;
 
