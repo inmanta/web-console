@@ -104,7 +104,11 @@ export interface Filter {
   type?: string[];
   agent?: string[];
   value?: string[];
-  status?: Status[];
+  status?: string[];
+}
+
+export interface FilterWithDefaultHandling extends Filter {
+  disregardDefault?: boolean;
 }
 
 export enum FilterKind {

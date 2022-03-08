@@ -28,18 +28,25 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Resources",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<Resource.Filter>({
-    route: "Resources",
-  });
+  const [filter, setFilter] =
+    useUrlStateWithFilter<Resource.FilterWithDefaultHandling>({
+      route: "Resources",
+      keys: { disregardDefault: "Boolean" },
+    });
   const [sort, setSort] = useUrlStateWithSort<Resource.SortKey>({
     default: { name: "resource_type", order: "asc" },
     route: "Resources",
   });
 
+  const filterWithDefaults =
+    !filter.disregardDefault && !filter.status
+      ? { ...filter, status: ["!orphaned"] }
+      : filter;
+
   const [data, retry] = queryResolver.useContinuous<"GetResources">({
     kind: "GetResources",
     sort,
-    filter,
+    filter: filterWithDefaults,
     pageSize,
   });
 
@@ -53,7 +60,7 @@ export const Page: React.FC = () => {
 
   const updateFilter = (
     updater: (filter: Resource.Filter) => Resource.Filter
-  ): void => setFilter(updater(filter));
+  ): void => setFilter(updater(filterWithDefaults));
 
   return (
     <Wrapper>
@@ -66,7 +73,7 @@ export const Page: React.FC = () => {
             setPageSize={setPageSize}
           />
         }
-        filter={filter}
+        filter={filterWithDefaults}
         setFilter={setFilter}
       />
       <RemoteDataView
