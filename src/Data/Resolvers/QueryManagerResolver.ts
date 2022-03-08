@@ -79,7 +79,8 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     private readonly store: Store,
     private readonly apiHelper: ApiHelper,
     private readonly scheduler: Scheduler,
-    private readonly slowScheduler: Scheduler
+    private readonly slowScheduler: Scheduler,
+    private readonly instanceResourcesRetryLimit: number = 20
   ) {
     this.managers = this.getManagers();
   }
@@ -141,7 +142,8 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new InstanceResourcesQueryManager(
         this.apiHelper,
         new InstanceResourcesStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
+        this.instanceResourcesRetryLimit
       ),
       new EventsQueryManager(
         this.apiHelper,

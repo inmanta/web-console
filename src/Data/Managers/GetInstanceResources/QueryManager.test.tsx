@@ -19,20 +19,32 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler, 2)
   );
   const component = (
     <StoreProvider store={store}>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
-        <Dummy />
+        <Component />
       </DependencyProvider>
     </StoreProvider>
   );
 
-  return { component, apiHelper };
+  const resourcesRequest = (version) => ({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/service/abc/resources?current_version=${version}`,
+    environment: "env",
+  });
+
+  const instanceRequest = () => ({
+    method: "GET",
+    url: "/lsm/v1/service_inventory/service/abc",
+    environment: "env",
+  });
+
+  return { component, apiHelper, resourcesRequest, instanceRequest };
 }
 
-const Dummy: React.FC = ({}) => {
+const Component: React.FC = ({}) => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useContinuous<"GetInstanceResources">({
     kind: "GetInstanceResources",
@@ -49,17 +61,11 @@ const Dummy: React.FC = ({}) => {
   );
 };
 
-test("Given the InstanceResourceQueryManager When used Then handles 409", async () => {
-  const { component, apiHelper } = setup();
+test("Given the InstanceResourcesQueryManager When used Then handles 409", async () => {
+  const { component, apiHelper, resourcesRequest, instanceRequest } = setup();
   render(component);
 
-  expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      url: "/lsm/v1/service_inventory/service/abc/resources?current_version=1",
-      environment: "env",
-    },
-  ]);
+  expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
   await act(async () => {
     apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
   });
@@ -67,27 +73,87 @@ test("Given the InstanceResourceQueryManager When used Then handles 409", async 
     await screen.findByRole("generic", { name: "Dummy-Loading" })
   ).toBeVisible();
 
-  expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      url: "/lsm/v1/service_inventory/service/abc",
-      environment: "env",
-    },
-  ]);
+  expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
   await act(async () => {
     apiHelper.resolve(
       Either.right({ data: { ...ServiceInstance.a, version: 2 } })
     );
   });
-  expect(apiHelper.pendingRequests[0]).toEqual({
-    method: "GET",
-    url: "/lsm/v1/service_inventory/service/abc/resources?current_version=2",
-    environment: "env",
-  });
+  expect(apiHelper.pendingRequests).toEqual([resourcesRequest(2)]);
   await act(async () => {
     apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
   expect(
     await screen.findByRole("generic", { name: "Dummy-Success" })
+  ).toBeVisible();
+});
+
+test("Given the InstanceResourcesQueryManager When instance fails Then error is shown", async () => {
+  const { component, apiHelper, resourcesRequest, instanceRequest } = setup();
+  render(component);
+
+  expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
+  await act(async () => {
+    apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
+  });
+  expect(
+    await screen.findByRole("generic", { name: "Dummy-Loading" })
+  ).toBeVisible();
+
+  expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
+  await act(async () => {
+    apiHelper.resolve(Either.left("error"));
+  });
+  expect(
+    await screen.findByRole("generic", { name: "Dummy-Failed" })
+  ).toBeVisible();
+});
+
+test("Given the InstanceResourcesQueryManager When it keeps failing Then it stops at the runsLimit", async () => {
+  const { component, apiHelper, resourcesRequest, instanceRequest } = setup();
+  render(component);
+
+  // 1st resources
+  expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
+  await act(async () => {
+    apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
+  });
+  expect(
+    await screen.findByRole("generic", { name: "Dummy-Loading" })
+  ).toBeVisible();
+
+  // 1st instance
+  expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: { ...ServiceInstance.a, version: 2 } })
+    );
+  });
+
+  // 2nd resources
+  expect(apiHelper.pendingRequests).toEqual([resourcesRequest(2)]);
+  await act(async () => {
+    apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
+  });
+
+  expect(
+    await screen.findByRole("generic", { name: "Dummy-Loading" })
+  ).toBeVisible();
+
+  // 2nd instance
+  expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: { ...ServiceInstance.a, version: 3 } })
+    );
+  });
+
+  // 3rd resources
+  expect(apiHelper.pendingRequests).toEqual([resourcesRequest(3)]);
+  await act(async () => {
+    apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
+  });
+  expect(
+    await screen.findByRole("generic", { name: "Dummy-Failed" })
   ).toBeVisible();
 });

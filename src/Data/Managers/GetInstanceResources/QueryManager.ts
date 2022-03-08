@@ -16,15 +16,19 @@ import { urlEncodeParams } from "../Helpers/QueryManager/utils";
 
 /* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
 
+/**
+ * @param {number} retryLimit The amount of times the queryManager will retry
+ * after the first failed request. So with a retryLimit of 2, there will be
+ * an initial request followed by 2 retries. This makes a total of 3 requests.
+ */
 export class InstanceResourcesQueryManager
   implements ContinuousQueryManager<"GetInstanceResources">
 {
-  private RUNS_LIMIT = 3;
-
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly stateHelper: StateHelperWithEnv<"GetInstanceResources">,
-    private readonly scheduler: Scheduler
+    private readonly scheduler: Scheduler,
+    private readonly retryLimit: number = 20
   ) {}
 
   private async update(
@@ -87,17 +91,13 @@ export class InstanceResourcesQueryManager
   private async getInitialData(
     query: Query.SubQuery<"GetInstanceResources">,
     environment: string,
-    runs: number
+    retries: number
   ): Promise<
     RemoteData.RemoteData<
       Query.Error<"GetInstanceResources">,
       Query.ApiResponse<"GetInstanceResources">
     >
   > {
-    if (runs >= this.RUNS_LIMIT) {
-      return RemoteData.failed("Retry limit reached.");
-    }
-
     const resources = await this.apiHelper.getWithHTTPCode<
       Query.ApiResponse<"GetInstanceResources">
     >(this.getUrl(query), environment);
@@ -108,6 +108,10 @@ export class InstanceResourcesQueryManager
 
     if (Either.isLeft(resources) && resources.value.status !== 409) {
       return RemoteData.failed(resources.value.message);
+    }
+
+    if (retries >= this.retryLimit) {
+      return RemoteData.failed("Retry limit reached.");
     }
 
     const instance = await this.getInstance(
@@ -123,7 +127,7 @@ export class InstanceResourcesQueryManager
     return this.getInitialData(
       { ...query, version: instance.value.data.version },
       environment,
-      runs + 1
+      retries + 1
     );
   }
 
