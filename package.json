@@ -103,7 +103,7 @@
     "mochawesome-report-generator": "^6.0.1",
     "moment-locales-webpack-plugin": "^1.2.0",
     "moment-timezone-data-webpack-plugin": "^1.5.0",
-    "node-fetch": "^3.2.1",
+    "node-fetch": "^3.2.2",
     "prettier": "^2.5.1",
     "raw-loader": "^4.0.2",
     "react-axe": "3.5.4",
