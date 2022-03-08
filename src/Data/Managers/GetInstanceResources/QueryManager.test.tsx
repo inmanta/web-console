@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { Either, PageSize, RemoteData } from "@/Core";
 import { QueryManagerResolver, QueryResolverImpl } from "@/Data/Resolvers";
 import { getStoreInstance } from "@/Data/Store";
 import {
@@ -31,24 +31,31 @@ function setup() {
 
   const resourcesRequest = (version) => ({
     method: "GET",
-    url: `/lsm/v1/service_inventory/service/abc/resources?current_version=${version}`,
+    url: `/lsm/v1/service_inventory/service/${ServiceInstance.a.id}/resources?current_version=${version}`,
     environment: "env",
   });
 
   const instanceRequest = () => ({
     method: "GET",
-    url: "/lsm/v1/service_inventory/service/abc",
+    url: `/lsm/v1/service_inventory/service/${ServiceInstance.a.id}`,
     environment: "env",
   });
 
-  return { component, apiHelper, resourcesRequest, instanceRequest, scheduler };
+  return {
+    component,
+    apiHelper,
+    resourcesRequest,
+    instanceRequest,
+    scheduler,
+    store,
+  };
 }
 
 const Component: React.FC = ({}) => {
   const { queryResolver } = useContext(DependencyContext);
   const [data] = queryResolver.useContinuous<"GetInstanceResources">({
     kind: "GetInstanceResources",
-    id: "abc",
+    id: ServiceInstance.a.id,
     service_entity: "service",
     version: 1,
   });
@@ -168,13 +175,54 @@ test("Given the InstanceResourcesQueryManager Then a task is registered on the s
   await act(async () => {
     apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
-  expect(scheduler.getIds()).toEqual(["GetInstanceResources_abc"]);
+  expect(scheduler.getIds()).toEqual([
+    `GetInstanceResources_${ServiceInstance.a.id}`,
+  ]);
 
   scheduler.executeAll();
   expect(apiHelper.pendingRequests).toEqual([resourcesRequest(1)]);
   await act(async () => {
     apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
   });
-  expect(scheduler.getIds()).toEqual(["GetInstanceResources_abc"]);
+  expect(scheduler.getIds()).toEqual([
+    `GetInstanceResources_${ServiceInstance.a.id}`,
+  ]);
   expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
+});
+
+test.only("Given the InstanceResourcesQueryManager When instance call is successful Then the store is updated", async () => {
+  const { component, store, apiHelper, instanceRequest } = setup();
+  render(component);
+  store.dispatch.serviceInstances.setData({
+    query: {
+      kind: "GetServiceInstances",
+      name: "service",
+      pageSize: PageSize.initial,
+    },
+    value: RemoteData.success({
+      data: [ServiceInstance.a, ServiceInstance.b],
+      links: { self: "self" },
+      metadata: { before: 0, after: 0, page_size: 20, total: 2 },
+    }),
+    environment: "env",
+  });
+  await act(async () => {
+    apiHelper.resolve(Either.left({ status: 409, message: "conflict" }));
+  });
+  expect(apiHelper.pendingRequests).toEqual([instanceRequest()]);
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({ data: { ...ServiceInstance.a, version: 4 } })
+    );
+  });
+  const services = store.getState().serviceInstances.byId[`env__?__service`];
+  if (!RemoteData.isSuccess(services)) {
+    fail();
+  }
+
+  const instance = services.value.data.find(
+    (instance) => instance.id === ServiceInstance.a.id
+  );
+  expect(instance).not.toBeUndefined();
+  expect(instance?.version).toEqual(4);
 });
