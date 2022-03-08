@@ -7135,10 +7135,10 @@ escodegen@^2.0.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-prettier@^8.4.0:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.4.0.tgz#8e6d17c7436649e98c4c2189868562921ef563de"
-  integrity sha512-CFotdUcMY18nGRo5KGsnNxpznzhkopOcOo0InID+sgQssPrzjvsyKZPvOgymTFeHrFuC3Tzdf2YndhXtULK9Iw==
+eslint-config-prettier@^8.5.0:
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.5.0.tgz#5a81680ec934beca02c7b1a61cf8ca34b66feab1"
+  integrity sha512-obmWKLUNCnhtQRKc+tmnYuQl0pFU1ibYJQ5BGhTVB08bHe9wC8qUeG7c08dj9XX+AuPj1YSGSQIHl1pnDHZR0Q==
 
 eslint-import-resolver-node@^0.3.6:
   version "0.3.6"
@@ -7224,10 +7224,10 @@ eslint-plugin-react-hooks@^4.3.0:
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.3.0.tgz#318dbf312e06fab1c835a4abef00121751ac1172"
   integrity sha512-XslZy0LnMn+84NEG9jSGR6eGqaZB3133L8xewQo3fQagbQuGt7a63gf+P1NGKZavEYEC3UXaWEAA/AqDkuN6xA==
 
-eslint-plugin-react@^7.29.2:
-  version "7.29.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.29.2.tgz#2d4da69d30d0a736efd30890dc6826f3e91f3f7c"
-  integrity sha512-ypEBTKOy5liFQXZWMchJ3LN0JX1uPI6n7MN7OPHKacqXAxq5gYC30TdO7wqGYQyxD1OrzpobdHC3hDmlRWDg9w==
+eslint-plugin-react@^7.29.3:
+  version "7.29.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.29.3.tgz#f4eab757f2756d25d6d4c2a58a9e20b004791f05"
+  integrity sha512-MzW6TuCnDOcta67CkpDyRfRsEVx9FNMDV8wZsDqe1luHPdGTrQIUaUXD27Ja3gHsdOIs/cXzNchWGlqm+qRVRg==
   dependencies:
     array-includes "^3.1.4"
     array.prototype.flatmap "^1.2.5"
@@ -10391,10 +10391,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-lint-staged@^12.3.4:
-  version "12.3.4"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.3.4.tgz#4b1ff8c394c3e6da436aaec5afd4db18b5dac360"
-  integrity sha512-yv/iK4WwZ7/v0GtVkNb3R82pdL9M+ScpIbJLJNyCXkJ1FGaXvRCOg/SeL59SZtPpqZhE7BD6kPKFLIDUhDx2/w==
+lint-staged@^12.3.5:
+  version "12.3.5"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.3.5.tgz#8048ce048c3cac12f57200a06344a54dc91c8fa9"
+  integrity sha512-oOH36RUs1It7b9U/C7Nl/a0sLfoIBcMB8ramiB3nuJ6brBqzsWiUAFSR5DQ3yyP/OR7XKMpijtgKl2DV1lQ3lA==
   dependencies:
     cli-truncate "^3.1.0"
     colorette "^2.0.16"
@@ -11072,10 +11072,10 @@ mocha@^9.2.1:
     yargs-parser "20.2.4"
     yargs-unparser "2.0.0"
 
-mochawesome-report-generator@^6.0.1, mochawesome-report-generator@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/mochawesome-report-generator/-/mochawesome-report-generator-6.1.0.tgz#b15dda48671fea8a152525a972cf1b2492c3f773"
-  integrity sha512-qzSZu7gpddeFzRv1dCEQSFhmePg1sYzKfwXMSd5jSlthw5yDPdRV89yMc3NBpfPY/JjclZiHvDtz5S4HgWZ0Rg==
+mochawesome-report-generator@^6.0.1, mochawesome-report-generator@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/mochawesome-report-generator/-/mochawesome-report-generator-6.1.1.tgz#2a68cb016271122032747b8b556f7fb2d5d54dc3"
+  integrity sha512-wTYGAH2KHOSDi7eSvwniq+h4Wvrvt+Bd4mz8774HOHTcxRTECh5zjvG5fP+/VvPbhzsjOlIsylZaOVEdwZlfJg==
   dependencies:
     chalk "^4.1.2"
     dateformat "^4.5.1"
@@ -11090,10 +11090,10 @@ mochawesome-report-generator@^6.0.1, mochawesome-report-generator@^6.1.0:
     validator "^13.6.0"
     yargs "^17.2.1"
 
-mochawesome@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/mochawesome/-/mochawesome-7.1.1.tgz#e165a764eff8c15135332e9ce508e1529b0c66e2"
-  integrity sha512-fCWhFhTxTYZLNPpX1SXVRPOKWPluvhi9bhSfMUypHFn4p5pWYY96SniERDCgXjsBXtTklXm8F53S63AjWxRjxw==
+mochawesome@^7.1.2:
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/mochawesome/-/mochawesome-7.1.2.tgz#7e9e1c464f3f427b8a927e8374d3fa52dd4d82f4"
+  integrity sha512-kZBHRYoiV+zPrqMO0TU4LOiYDCMR5ciBZEE6fvS6RFMtB2MMndeOQ2LQEpFHtPG8yxFsqg1F6gym5qo3rPs/XA==
   dependencies:
     chalk "^4.1.2"
     diff "^5.0.0"
@@ -11102,7 +11102,7 @@ mochawesome@^7.1.1:
     lodash.isfunction "^3.0.9"
     lodash.isobject "^3.0.2"
     lodash.isstring "^4.0.1"
-    mochawesome-report-generator "^6.1.0"
+    mochawesome-report-generator "^6.1.1"
     strip-ansi "^6.0.1"
     uuid "^8.3.2"
 
@@ -11286,10 +11286,10 @@ node-fetch@2.6.7, node-fetch@^2.6.1, node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-fetch@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.2.1.tgz#002177382810cfb77858857f69a3621a86c45f26"
-  integrity sha512-Ef3SPFtRWFCDyhvcwCSvacLpkwmYZcD57mmZzAsMiks9TpHpIghe32U9H06tMICnr+X7YCpzH7WvUlUoml2urA==
+node-fetch@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.2.2.tgz#16d33fbe32ca7c6ca1ca8ba5dfea1dd885c59f04"
+  integrity sha512-Cwhq1JFIoon15wcIkFzubVNFE5GvXGV82pKf4knXXjvGmn7RJKcypeuqcVNZMGDZsAFWyIRya/anwAJr7TWJ7w==
   dependencies:
     data-uri-to-buffer "^4.0.0"
     fetch-blob "^3.1.4"
