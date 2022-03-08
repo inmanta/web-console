@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
-import userEvent, { specialChars } from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
 import {
@@ -228,14 +228,14 @@ it.each`
       const option = await screen.findByRole("option", { name: filterValue });
       userEvent.click(option);
     } else {
-      userEvent.type(input, `${filterValue}${specialChars.enter}`);
+      userEvent.type(input, `${filterValue}{enter}`);
     }
 
-    expect(apiHelper.pendingRequests[0].url).toEqual(
-      expect.stringContaining(`filter.status=%21orphaned`)
+    expect(apiHelper.pendingRequests[0].url).toContain(
+      `filter.status=%21orphaned`
     );
-    expect(apiHelper.pendingRequests[0].url).toEqual(
-      expect.stringContaining(`filter.${filterUrlName}=${filterValue}`)
+    expect(apiHelper.pendingRequests[0].url).toContain(
+      `filter.${filterUrlName}=${filterValue}`
     );
 
     await act(async () => {

@@ -156,9 +156,8 @@ const ensureInvertedFilterIsNotPresent = (
   return selectedStates;
 };
 
-const invertFilter = (selection: string) => {
-  return selection.startsWith("!") ? selection.slice(1) : `!${selection}`;
-};
+const invertFilter = (selection: string) =>
+  selection.startsWith("!") ? selection.slice(1) : `!${selection}`;
 
 const UnborderedRow = styled(Tr)`
   &&& {
