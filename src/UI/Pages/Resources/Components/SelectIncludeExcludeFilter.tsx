@@ -60,7 +60,7 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
         onToggle={setIsFilterOpen}
         selections={selectedStates}
         isOpen={isFilterOpen}
-        placeholderText={placeholder}
+        placeholderText={<Placeholder> {placeholder}</Placeholder>}
         toggleIcon={<SearchIcon />}
         toggleAriaLabel={`${filterPropertyName}-toggle`}
         chipGroupProps={{ numChips: 0 }}
@@ -157,11 +157,7 @@ const ensureInvertedFilterIsNotPresent = (
 };
 
 const invertFilter = (selection: string) => {
-  if (selection.startsWith("!")) {
-    return selection.slice(1);
-  } else {
-    return `!${selection}`;
-  }
+  return selection.startsWith("!") ? selection.slice(1) : `!${selection}`;
 };
 
 const UnborderedRow = styled(Tr)`
@@ -193,6 +189,10 @@ const InactiveExcludeIcon = styled(TimesCircleIcon)`
 
 const ClickableMenuItem = styled.span`
   cursor: pointer;
+`;
+
+const Placeholder = styled.span`
+  color: var(--pf-global--Color--dark-200);
 `;
 
 const MenuNameItem = styled.span`

@@ -37,10 +37,9 @@ export const Page: React.FC = () => {
     default: { name: "resource_type", order: "asc" },
     route: "Resources",
   });
-  const defaultStateFilterUsed = !filter.disregardDefault;
 
   const filterWithDefaults =
-    defaultStateFilterUsed === true && !filter.status
+    !filter.disregardDefault && !filter.status
       ? { ...filter, status: ["!orphaned"] }
       : filter;
 

@@ -231,14 +231,12 @@ it.each`
       userEvent.type(input, `${filterValue}${specialChars.enter}`);
     }
 
-    expect(
-      apiHelper.pendingRequests[0].url.includes(`filter.status=%21orphaned`)
-    ).toBeTruthy();
-    expect(
-      apiHelper.pendingRequests[0].url.includes(
-        `filter.${filterUrlName}=${filterValue}`
-      )
-    ).toBeTruthy();
+    expect(apiHelper.pendingRequests[0].url).toEqual(
+      expect.stringContaining(`filter.status=%21orphaned`)
+    );
+    expect(apiHelper.pendingRequests[0].url).toEqual(
+      expect.stringContaining(`filter.${filterUrlName}=${filterValue}`)
+    );
 
     await act(async () => {
       await apiHelper.resolve(

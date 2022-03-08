@@ -9,13 +9,12 @@ interface Props {
 }
 
 export const DeployStateFilter: React.FC<Props> = ({ filter, setFilter }) => {
-  const updateStatus = (statuses: string[]) => {
+  const updateStatus = (statuses: string[]) =>
     setFilter({
       ...filter,
       status: statuses.length > 0 ? statuses : undefined,
       disregardDefault: true,
     });
-  };
   return (
     <SelectIncludeExcludeFilter
       isVisible={true}

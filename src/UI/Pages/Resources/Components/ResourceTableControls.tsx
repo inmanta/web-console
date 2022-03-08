@@ -49,7 +49,8 @@ export const ResourceTableControls: React.FC<Props> = ({
         </ToolbarItem>
         <ToolbarItem>
           <Button
-            variant="tertiary"
+            variant="link"
+            isInline
             onClick={() => setFilter({})}
             aria-label="Reset-filters"
           >
