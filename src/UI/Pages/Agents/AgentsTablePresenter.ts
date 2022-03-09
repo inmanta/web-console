@@ -21,7 +21,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
         apiName: "unpause_on_resume",
       },
     ];
-    this.numberOfColumns = this.columnHeads.length + 3;
+    this.numberOfColumns = this.columnHeads.length + 2;
   }
 
   createRows(sourceData: Agent[]): AgentRow[] {
