@@ -1,0 +1,4 @@
+description: Make agents table styling consistent with the other tables
+issue-nr: 2998
+change-type: patch
+destination-branches: [master, iso5, iso4]

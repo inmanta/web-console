@@ -394,7 +394,7 @@ const dict = {
   "agents.columns.process": "Process",
   "agents.columns.status": "Status",
   "agents.columns.failover": "Last failover",
-  "agents.columns.unpause": "Unpause on resume",
+  "agents.columns.unpause": "On resume",
   "agents.columns.actions": "Actions",
   "agents.actions.failed": "Agent action failed",
   "agents.actions.pause": "Pause",
