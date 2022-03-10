@@ -22,7 +22,7 @@ export const Row: React.FC<Props> = ({ row, version }) => {
         <Td dataLabel={words("resources.column.requires")}>
           {row.numberOfDependencies}
         </Td>
-        <Td width={10}>
+        <Td modifier="fitContent" isActionCell>
           <Link
             pathname={routeManager.getUrl("DesiredStateResourceDetails", {
               resourceId: row.id,
