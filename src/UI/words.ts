@@ -284,7 +284,6 @@ const dict = {
   "resources.logs.logLevel.placeholder": "Minimal Log Level...",
   "resources.logs.message": "Message",
   "resources.logs.message.placeholder": "Message...",
-  "resources.logs.options": "Options",
   "resources.facts.title": "Facts",
   "resources.facts.columns.name": "Name",
   "resources.facts.columns.updated": "Last Updated",
