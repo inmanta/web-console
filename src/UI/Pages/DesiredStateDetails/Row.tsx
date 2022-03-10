@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { InfoCircleIcon } from "@patternfly/react-icons";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
 import { Resource } from "@/Core";
 import { Link } from "@/UI/Components";
@@ -23,16 +22,14 @@ export const Row: React.FC<Props> = ({ row, version }) => {
         <Td dataLabel={words("resources.column.requires")}>
           {row.numberOfDependencies}
         </Td>
-        <Td>
+        <Td modifier="fitContent" isActionCell>
           <Link
             pathname={routeManager.getUrl("DesiredStateResourceDetails", {
               resourceId: row.id,
               version,
             })}
           >
-            <Button variant="secondary" isSmall icon={<InfoCircleIcon />}>
-              {words("compileReports.links.details")}
-            </Button>
+            <Button variant="link">{words("resources.link.details")}</Button>
           </Link>
         </Td>
       </Tr>
