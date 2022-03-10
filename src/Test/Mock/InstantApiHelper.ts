@@ -1,4 +1,4 @@
-import { ApiHelper, Either, Maybe } from "@/Core";
+import { ApiHelper, Either, ErrorWithHTTPCode, Maybe } from "@/Core";
 import * as Outcome from "./Outcome";
 
 export class InstantApiHelper<Data> implements ApiHelper {
@@ -9,6 +9,11 @@ export class InstantApiHelper<Data> implements ApiHelper {
       this.outcome as Outcome.Type<string, Data>
     );
   }
+
+  getWithHTTPCode<Data>(): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
+    throw new Error("Method not implemented.");
+  }
+
   getWithoutEnvironment<Data>(): Promise<Either.Type<string, Data>> {
     return Outcome.handle<string, Data>(
       this.outcome as Outcome.Type<string, Data>

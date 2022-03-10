@@ -1,5 +1,10 @@
 import { Either, Maybe } from "@/Core/Language";
 
+export interface ErrorWithHTTPCode {
+  message: string;
+  status: number;
+}
+
 /**
  * The ApiHelper provides basic api helper methods.
  */
@@ -34,4 +39,8 @@ export interface ApiHelper {
   ): Promise<Maybe.Type<string>>;
   delete(url: string, environment: string): Promise<Maybe.Type<string>>;
   head(url: string): Promise<number>;
+  getWithHTTPCode<Data>(
+    url: string,
+    environment: string
+  ): Promise<Either.Type<ErrorWithHTTPCode, Data>>;
 }

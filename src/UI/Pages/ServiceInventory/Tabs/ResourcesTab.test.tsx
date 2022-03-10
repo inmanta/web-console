@@ -5,16 +5,10 @@ import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
   QueryResolverImpl,
-  InstanceResourcesStateHelper,
-  InstanceResourcesQueryManager,
   getStoreInstance,
+  QueryManagerResolver,
 } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolver,
-  StaticScheduler,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourcesTab } from "./ResourcesTab";
 
@@ -23,13 +17,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new InstanceResourcesQueryManager(
-        apiHelper,
-        new InstanceResourcesStateHelper(store),
-        scheduler
-      ),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
 
   const component = (

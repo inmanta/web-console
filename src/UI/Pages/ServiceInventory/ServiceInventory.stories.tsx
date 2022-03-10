@@ -50,6 +50,7 @@ export const Basic: React.FC = () => {
   const resourcesHelper = new InstanceResourcesQueryManager(
     apiHelper,
     new InstanceResourcesStateHelper(store),
+    new ServiceInstancesStateHelper(store),
     scheduler
   );
 

@@ -51,6 +51,7 @@ export class ServiceInventoryPrepper {
     const resourcesHelper = new InstanceResourcesQueryManager(
       apiHelper,
       new InstanceResourcesStateHelper(store),
+      new ServiceInstancesStateHelper(store),
       scheduler
     );
 
