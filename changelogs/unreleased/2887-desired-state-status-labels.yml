@@ -1,0 +1,4 @@
+description: Use status labels in desired state view
+issue-nr: 2887
+change-type: patch
+destination-branches: [master, iso5]
