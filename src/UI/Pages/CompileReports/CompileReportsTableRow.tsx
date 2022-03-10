@@ -36,7 +36,7 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
         <Td dataLabel={words("compileReports.columns.compileTime")}>
           {row.compileTime}
         </Td>
-        <Td width={10}>
+        <Td modifier="fitContent" isActionCell>
           <Link
             to={{
               pathname: routeManager.getUrl("CompileDetails", {
