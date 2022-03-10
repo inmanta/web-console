@@ -42,7 +42,7 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
             ? JSON.stringify(row.unpause_on_resume)
             : null}
         </Td>
-        <Td width={15}>
+        <Td isActionCell modifier="fitContent">
           <Actions name={row.name} paused={row.paused} />
         </Td>
       </Tr>
