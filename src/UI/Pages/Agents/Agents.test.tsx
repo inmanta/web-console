@@ -405,8 +405,7 @@ test("Given the Agents view with the environment halted, When setting keep_pause
   expect(onResumeToggle).toBeVisible();
   expect(onResumeToggle).toBeChecked();
   userEvent.click(onResumeToggle);
-  const request = apiHelper.pendingRequests[0];
-  expect(request).toEqual({
+  expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
     environment: "env",
     url: "/api/v2/agent/aws/keep_paused_on_resume",
@@ -445,8 +444,7 @@ test("Given the Agents view with the environment halted, When setting unpause_on
   expect(onResumeToggle).toBeVisible();
   expect(onResumeToggle).not.toBeChecked();
   userEvent.click(onResumeToggle);
-  const request = apiHelper.pendingRequests[0];
-  expect(request).toEqual({
+  expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
     environment: "env",
     url: "/api/v2/agent/ecx/unpause_on_resume",
