@@ -5,8 +5,7 @@ import { AgentRow } from "@/Core";
 import { DateWithTooltip, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Actions } from "./Actions";
-import { StatusLabel } from "./Components";
+import { ActionButton, StatusLabel, KebabDropdown } from "./Components";
 
 interface Props {
   row: AgentRow;
@@ -42,8 +41,11 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
             ? JSON.stringify(row.unpause_on_resume)
             : null}
         </Td>
-        <Td isActionCell modifier="fitContent">
-          <Actions name={row.name} paused={row.paused} />
+        <Td modifier="fitContent">
+          <ActionButton name={row.name} paused={row.paused} />
+        </Td>
+        <Td isActionCell>
+          <KebabDropdown name={row.name} paused={row.paused} />
         </Td>
       </Tr>
     </Tbody>
