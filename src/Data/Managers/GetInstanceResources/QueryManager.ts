@@ -15,7 +15,6 @@ import {
 import { GetInstanceResources } from "@/Core/Query/GetInstanceResources";
 import { Data } from "@/Data/Managers/Helpers/QueryManager/types";
 import { DependencyContext } from "@/UI/Dependency";
-import { urlEncodeParams } from "../Helpers/QueryManager/utils";
 
 interface ResponseGroup {
   resources: RemoteData.RemoteData<
@@ -42,25 +41,6 @@ export class InstanceResourcesQueryManager
     private readonly scheduler: Scheduler,
     private readonly retryLimit: number = 20
   ) {}
-
-  /**
-   * @TODO implement this for the retry callback
-   */
-  private async update(
-    query: Query.SubQuery<"GetInstanceResources">,
-    url: string,
-    environment: string
-  ): Promise<void> {
-    const response = await this.apiHelper.getWithHTTPCode(url, environment);
-    if (Either.isRight(response)) {
-      // Return success
-    }
-    this.stateHelper.set(
-      RemoteData.fromEither(await this.apiHelper.get(url, environment)),
-      query,
-      environment
-    );
-  }
 
   private async getResources(
     query: Query.SubQuery<"GetInstanceResources">,
@@ -139,8 +119,6 @@ export class InstanceResourcesQueryManager
   useContinuous(query: GetInstanceResources): Data<"GetInstanceResources"> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
-    const url = this.getUrl(urlEncodeParams(query));
-
     const task: Task<ResponseGroup> = {
       effect: async () => this.getEventualData(query, environment, 0),
       update: ({ resources, instance }) => {
@@ -167,10 +145,7 @@ export class InstanceResourcesQueryManager
       };
     }, [environment]);
 
-    return [
-      this.stateHelper.getHooked(query, environment),
-      () => this.update(query, url, environment),
-    ];
+    return [this.stateHelper.getHooked(query, environment), () => undefined];
   }
 
   private updateInstance(
