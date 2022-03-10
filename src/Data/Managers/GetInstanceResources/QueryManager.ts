@@ -179,6 +179,7 @@ export class InstanceResourcesQueryManager
     environment: string
   ) {
     if (latest === undefined) return;
+
     const currentState = this.instancesStateHelper.getOnce(
       {
         kind: "GetServiceInstances",
