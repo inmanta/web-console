@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either, Maybe } from "@/Core";
+import { Either, Maybe, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
@@ -22,6 +22,7 @@ import {
   dependencies,
   Agents,
   DynamicCommandManagerResolver,
+  EnvironmentDetails,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
@@ -50,6 +51,7 @@ function setup() {
       ),
     ])
   );
+  dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
     <MemoryRouter>
@@ -67,7 +69,7 @@ function setup() {
     </MemoryRouter>
   );
 
-  return { component, apiHelper, scheduler };
+  return { component, apiHelper, scheduler, store };
 }
 
 test("AgentsView shows empty table", async () => {
@@ -383,4 +385,84 @@ test("Given the Agents view When pausing an agent results in an error, then the 
     await apiHelper.resolve(Either.right(Agents.response));
   });
   expect(await screen.findByText("something happened")).toBeVisible();
+});
+
+test("Given the Agents view with the environment halted, When setting keep_paused_on_resume on an agent, Then the correct request is fired", async () => {
+  const { component, apiHelper, store } = setup();
+  store.dispatch.environment.setEnvironmentDetailsById({
+    id: "env",
+    value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
+  });
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+
+  const onResumeToggle = await screen.findByRole("checkbox", {
+    name: "aws-on-resume-toggle",
+  });
+  expect(onResumeToggle).toBeVisible();
+  expect(onResumeToggle).toBeChecked();
+  userEvent.click(onResumeToggle);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "POST",
+    environment: "env",
+    url: "/api/v2/agent/aws/keep_paused_on_resume",
+    body: null,
+  });
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    environment: "env",
+    url: "/api/v2/agents?limit=20&sort=name.asc",
+  });
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+  expect(apiHelper.pendingRequests).toHaveLength(0);
+});
+
+test("Given the Agents view with the environment halted, When setting unpause_on_resume on an agent, Then the correct request is fired", async () => {
+  const { component, apiHelper, store } = setup();
+  store.dispatch.environment.setEnvironmentDetailsById({
+    id: "env",
+    value: RemoteData.success({ ...EnvironmentDetails.halted, id: "env" }),
+  });
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+
+  const onResumeToggle = await screen.findByRole("checkbox", {
+    name: "ecx-on-resume-toggle",
+  });
+  expect(onResumeToggle).toBeVisible();
+  expect(onResumeToggle).not.toBeChecked();
+  userEvent.click(onResumeToggle);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    method: "POST",
+    environment: "env",
+    url: "/api/v2/agent/ecx/unpause_on_resume",
+    body: null,
+  });
+  await act(async () => {
+    await apiHelper.resolve(Maybe.none());
+  });
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    environment: "env",
+    url: "/api/v2/agents?limit=20&sort=name.asc",
+  });
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Agents.response));
+  });
+  expect(apiHelper.pendingRequests).toHaveLength(0);
 });

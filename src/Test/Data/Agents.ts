@@ -31,7 +31,7 @@ export const response = {
       name: "ecx",
       last_failover: "2021-03-18T17:30:41.382721",
       paused: true,
-      unpause_on_resume: true,
+      unpause_on_resume: false,
       status: "paused",
     },
     {

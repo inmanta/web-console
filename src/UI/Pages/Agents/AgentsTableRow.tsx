@@ -5,14 +5,20 @@ import { AgentRow } from "@/Core";
 import { DateWithTooltip, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { ActionButton, StatusLabel, KebabDropdown } from "./Components";
+import {
+  ActionButton,
+  StatusLabel,
+  KebabDropdown,
+  OnResumeToggle,
+} from "./Components";
 
 interface Props {
   row: AgentRow;
 }
 
 export const AgentsTableRow: React.FC<Props> = ({ row }) => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, environmentModifier } = useContext(DependencyContext);
+  const isHalted = environmentModifier.useIsHalted();
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label="Agents Table Row">
@@ -31,7 +37,7 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
         <Td width={10} dataLabel={words("agents.columns.status")}>
           <StatusLabel status={row.status} />
         </Td>
-        <Td width={10} dataLabel={words("agents.columns.failover")}>
+        <Td width={15} dataLabel={words("agents.columns.failover")}>
           {row.last_failover && (
             <DateWithTooltip timestamp={row.last_failover} />
           )}
@@ -41,6 +47,14 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
             ? JSON.stringify(row.unpause_on_resume)
             : null}
         </Td>
+        {isHalted && (
+          <Td width={10} dataLabel={words("agents.columns.unpause")}>
+            <OnResumeToggle
+              name={row.name}
+              unpauseOnResume={row.unpause_on_resume}
+            />
+          </Td>
+        )}
         <Td modifier="fitContent">
           <ActionButton name={row.name} paused={row.paused} />
         </Td>
