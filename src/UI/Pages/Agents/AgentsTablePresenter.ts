@@ -20,9 +20,8 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
         displayName: words("agents.columns.unpause"),
         apiName: "unpause_on_resume",
       },
-      { displayName: words("agents.columns.actions"), apiName: "actions" },
     ];
-    this.numberOfColumns = this.columnHeads.length + 1;
+    this.numberOfColumns = this.columnHeads.length + 3;
   }
 
   createRows(sourceData: Agent[]): AgentRow[] {
