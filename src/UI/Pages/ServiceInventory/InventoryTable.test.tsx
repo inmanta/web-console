@@ -1,8 +1,9 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, fireEvent, within, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
@@ -13,8 +14,8 @@ import {
   tablePresenter,
   tablePresenterWithIdentity,
   StaticScheduler,
-  InstantApiHelper,
   dependencies,
+  DeferredApiHelper,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { InventoryTable } from "./InventoryTable";
@@ -28,17 +29,7 @@ test("InventoryTable can be expanded", async () => {
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolver(
       store,
-      new InstantApiHelper({
-        kind: "Success",
-        data: {
-          data: [
-            {
-              resource_id: "resource_id_1",
-              resource_state: "resource_state",
-            },
-          ],
-        },
-      }),
+      new DeferredApiHelper(),
       new StaticScheduler(),
       new StaticScheduler()
     )
@@ -70,20 +61,11 @@ test("InventoryTable can be expanded", async () => {
 
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
+  const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolver(
       store,
-      new InstantApiHelper({
-        kind: "Success",
-        data: {
-          data: [
-            {
-              resource_id: "resource_id_1,v=1",
-              resource_state: "resource_state",
-            },
-          ],
-        },
-      }),
+      apiHelper,
       new StaticScheduler(),
       new StaticScheduler()
     )
@@ -106,9 +88,21 @@ test("ServiceInventory can show resources for instance", async () => {
 
   const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
 
-  fireEvent.click(within(expandCell).getByRole("button"));
+  userEvent.click(within(expandCell).getByRole("button"));
 
-  fireEvent.click(screen.getByRole("button", { name: "Resources" }));
+  userEvent.click(screen.getByRole("button", { name: "Resources" }));
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [
+          {
+            resource_id: "resource_id_1,v=1",
+            resource_state: "resource_state",
+          },
+        ],
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Success" })
