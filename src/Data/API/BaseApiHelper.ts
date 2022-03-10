@@ -1,4 +1,5 @@
 import { KeycloakInstance } from "keycloak-js";
+import { identity } from "lodash-es";
 import {
   ApiHelper,
   Either,
@@ -50,28 +51,6 @@ export class BaseApiHelper implements ApiHelper {
     );
   }
 
-  private async execute<Data>(
-    transform: (response: Response) => Promise<Data>,
-    ...params: Parameters<typeof fetch>
-  ): Promise<Either.Type<string, Data>> {
-    try {
-      const response = await fetch(...params);
-      if (response.ok) {
-        const data = await transform(response);
-        return Either.right(data);
-      }
-      return Either.left(
-        this.formatError(
-          this.jsonParser.parse(await response.text()).message,
-          response
-        )
-      );
-    } catch (error) {
-      if (this.errorHasMessage(error)) return Either.left(error.message);
-      return Either.left(`Error: ${error}`);
-    }
-  }
-
   private errorHasMessage(error: unknown): error is { message: string } {
     if (!isObject(error)) return false;
     if (!objectHasKey(error, "message")) return false;
@@ -81,8 +60,9 @@ export class BaseApiHelper implements ApiHelper {
   private async executeJson<Data>(
     ...params: Parameters<typeof fetch>
   ): Promise<Either.Type<string, Data>> {
-    return this.execute<Data>(
+    return this.execute<Data, string>(
       async (response) => this.jsonParser.parse(await response.text()),
+      identity,
       ...params
     );
   }
@@ -90,7 +70,11 @@ export class BaseApiHelper implements ApiHelper {
   private async executeWithoutResponse(
     ...params: Parameters<typeof fetch>
   ): Promise<Maybe.Type<string>> {
-    const result = await this.execute((response) => response.text(), ...params);
+    const result = await this.execute<string, string>(
+      (response) => response.text(),
+      identity,
+      ...params
+    );
     return Either.isLeft(result) ? Maybe.some(result.value) : Maybe.none();
   }
 
@@ -202,44 +186,41 @@ export class BaseApiHelper implements ApiHelper {
     url: string,
     environment: string
   ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
-    return this.executeJsonWithHTTPCode<Data>(this.getFullUrl(url), {
-      headers: this.getHeaders(environment),
-    });
+    return this.execute<Data, ErrorWithHTTPCode>(
+      async (response) => this.jsonParser.parse(await response.text()),
+      async (message, status) => ({ message, status }),
+      this.getFullUrl(url),
+      { headers: this.getHeaders(environment) }
+    );
   }
 
-  private async executeWithHTTPCode<Data>(
+  private async execute<Data, Error>(
     transform: (response: Response) => Promise<Data>,
+    transformError: (message: string, status: number) => Promise<Error>,
     ...params: Parameters<typeof fetch>
-  ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
+  ): Promise<Either.Type<Error, Data>> {
     try {
       const response = await fetch(...params);
       if (response.ok) {
         const data = await transform(response);
         return Either.right(data);
       }
-      return Either.left({
-        message: this.formatError(
-          this.jsonParser.parse(await response.text()).message,
-          response
-        ),
-        status: response.status,
-      });
+      return Either.left(
+        await transformError(
+          this.formatError(
+            this.jsonParser.parse(await response.text()).message,
+            response
+          ),
+          response.status
+        )
+      );
     } catch (error) {
-      return Either.left({
-        status: 0,
-        message: this.errorHasMessage(error)
-          ? error.message
-          : `Error: ${error}`,
-      });
+      return Either.left(
+        await transformError(
+          this.errorHasMessage(error) ? error.message : `Error: ${error}`,
+          0
+        )
+      );
     }
-  }
-
-  private async executeJsonWithHTTPCode<Data>(
-    ...params: Parameters<typeof fetch>
-  ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
-    return this.executeWithHTTPCode<Data>(
-      async (response) => this.jsonParser.parse(await response.text()),
-      ...params
-    );
   }
 }
