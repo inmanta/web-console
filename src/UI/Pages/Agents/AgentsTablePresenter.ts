@@ -7,7 +7,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor() {
+  constructor(isHalted: boolean) {
     this.columnHeads = [
       { displayName: words("agents.columns.name"), apiName: "name" },
       { displayName: words("agents.columns.process"), apiName: "process_name" },
@@ -21,6 +21,9 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
         apiName: "unpause_on_resume",
       },
     ];
+    if (!isHalted) {
+      this.columnHeads.pop();
+    }
     this.numberOfColumns = this.columnHeads.length + 3;
   }
 

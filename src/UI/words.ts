@@ -401,6 +401,7 @@ const dict = {
   "agents.actions.unpause": "Unpause",
   "agents.actions.deploy": "Force deploy",
   "agents.actions.repair": "Force repair",
+  "agents.actions.onResume": "Unpause agent when environment is resumed",
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",

@@ -4,7 +4,7 @@ import { Query } from "@/Core/Query";
 export interface ControlAgent {
   kind: "ControlAgent";
   name: string;
-  action: "pause" | "unpause";
+  action: "pause" | "unpause" | "keep_paused_on_resume" | "unpause_on_resume";
 }
 
 export interface ControlAgentManifest {
