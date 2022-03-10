@@ -288,6 +288,7 @@ const dict = {
   "resources.facts.columns.name": "Name",
   "resources.facts.columns.updated": "Last Updated",
   "resources.facts.columns.value": "Value",
+  "resources.link.details": "Show Details",
 
   /** Compile report related text */
   "compileReports.title": "Compile Reports",
