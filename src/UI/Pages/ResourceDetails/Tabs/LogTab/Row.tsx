@@ -47,7 +47,7 @@ export const Row: React.FC<Props> = ({
         <Td modifier="truncate">
           <CodeText singleLine>{log.msg}</CodeText>
         </Td>
-        <Td width={10}>
+        <Td isActionCell>
           <RowOptions toggleActionType={toggleActionType} action={log.action} />
         </Td>
       </Tr>
