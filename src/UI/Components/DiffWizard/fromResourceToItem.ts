@@ -7,8 +7,8 @@ export const fromResourceToItem = (resource: Diff.Resource): Item => {
     status: resource.status,
     entries: Object.entries(resource.attributes).map(([key, value]) => ({
       title: key,
-      fromValue: value.from_value_compare || "",
-      toValue: value.to_value_compare || "",
+      fromValue: value.from_value_compare,
+      toValue: value.to_value_compare,
     })),
   };
 };

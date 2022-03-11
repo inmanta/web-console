@@ -55,7 +55,7 @@ test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async () => {
   });
 
   const blocks = await screen.findAllByRole("article", { name: "DiffBlock" });
-  expect(blocks).toHaveLength(8);
+  expect(blocks).toHaveLength(12);
 });
 
 test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async () => {
@@ -80,5 +80,5 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
   const items = screen.getAllByRole("listitem", {
     name: "DiffSummaryListItem",
   });
-  expect(items).toHaveLength(8);
+  expect(items).toHaveLength(12);
 });
