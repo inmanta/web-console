@@ -1,5 +1,5 @@
 import { Maybe } from "@/Core";
-import { IdParser } from "./IdParser";
+import { IdParser } from "./Resource";
 
 test("Parse resource id with valid resource id", () => {
   const id = IdParser.parse("std::File[internal,path=/tmp/dir1/file2]");
