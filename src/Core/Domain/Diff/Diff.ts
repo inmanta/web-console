@@ -1,4 +1,11 @@
-export type Status = "added" | "modified" | "deleted" | "unmodified";
+export type Status =
+  | "added"
+  | "modified"
+  | "deleted"
+  | "unmodified"
+  | "agent_down"
+  | "undefined"
+  | "skipped_for_undefined";
 
 export interface ValueSet {
   from_value: unknown;

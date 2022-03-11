@@ -2,6 +2,7 @@ import { Pagination } from "@/Core/Domain/Pagination";
 import { ParsedNumber } from "@/Core/Language";
 import { PageSize } from "../PageSize";
 import { Sort } from "../Sort";
+export * from "./IdParser";
 
 export interface Resource {
   resource_id: string;
@@ -131,4 +132,11 @@ export interface ResponseFromVersion {
   data: FromVersion[];
   links: Pagination.Links;
   metadata: Pagination.Metadata;
+}
+
+export interface Id {
+  entityType: string;
+  agentName: string;
+  attribute: string;
+  attributeValue: string;
 }

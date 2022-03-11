@@ -83,7 +83,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   });
 
   const blocks = await screen.findAllByRole("article", { name: "DiffBlock" });
-  expect(blocks).toHaveLength(8);
+  expect(blocks).toHaveLength(12);
 });
 
 test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
