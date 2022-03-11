@@ -11,7 +11,7 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Maybe, Resource } from "@/Core";
-import { StatusDescriptor } from "@/UI/Components/DiffWizard/JumpToAction/StatusDescriptor";
+import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry";

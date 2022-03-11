@@ -5,8 +5,8 @@ import {
   SimpleListProps,
 } from "@patternfly/react-core";
 import styled from "styled-components";
+import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
-import { StatusDescriptor } from "./StatusDescriptor";
 
 interface Props {
   items: Pick<Item, "id" | "status">[];
