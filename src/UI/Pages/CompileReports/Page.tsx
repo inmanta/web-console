@@ -50,6 +50,7 @@ export const Page: React.FC = () => {
             setPageSize={setPageSize}
           />
         }
+        afterRecompile={retry}
       />
       <RemoteDataView
         data={data}
