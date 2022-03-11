@@ -54,32 +54,34 @@ export interface Row {
 
 export type RowFromVersion = Omit<Row, "deployState">;
 
-export interface Details {
+interface BaseDetails {
   resource_id: string;
   resource_type: string;
   agent: string;
   id_attribute: string;
   id_attribute_value: string;
-  status: Status;
+  attributes: Record<string, unknown>;
+}
+
+interface ReleasedDetails extends BaseDetails {
   last_deploy?: string;
   first_generated_time: string;
   first_generated_version: ParsedNumber;
-  attributes: Record<string, unknown>;
+}
+
+export interface Details extends ReleasedDetails {
+  status: Status;
   requires_status: Record<string, Status>;
 }
 
-export interface RawDetails {
-  resource_id: string;
-  resource_type: string;
-  agent: string;
-  id_attribute: string;
-  id_attribute_value: string;
+export interface RawDetails extends ReleasedDetails {
   status: string;
-  last_deploy?: string;
-  first_generated_time: string;
-  first_generated_version: ParsedNumber;
-  attributes: Record<string, unknown>;
   requires_status: Record<string, string>;
+}
+
+export interface VersionedDetails extends BaseDetails {
+  version: ParsedNumber;
+  resource_version_id: string;
 }
 
 export interface DeploySummary {
