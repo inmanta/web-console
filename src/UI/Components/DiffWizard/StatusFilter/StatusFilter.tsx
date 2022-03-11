@@ -4,6 +4,7 @@ import {
   Select,
   SelectOption,
   SelectVariant,
+  ToolbarGroup,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Diff } from "@/Core";
@@ -31,27 +32,29 @@ export const StatusFilter: React.FC<Props> = ({ statuses, setStatuses }) => {
       : ["Show All", () => setStatuses(Diff.statuses)];
 
   return (
-    <Select
-      variant={SelectVariant.checkbox}
-      aria-label="Select Input"
-      onToggle={onToggle}
-      onSelect={onSelect}
-      selections={statuses}
-      isCheckboxSelectionBadgeHidden
-      isOpen={isOpen}
-      placeholderText="Filter by Status"
-      footer={
-        <Button variant="link" isInline onClick={allCallback}>
-          {allLabel}
-        </Button>
-      }
-    >
-      {Diff.statuses.map((status) => (
-        <SelectOption key={status} value={status}>
-          <StyledStatusDescriptor status={status} /> {status}
-        </SelectOption>
-      ))}
-    </Select>
+    <ToolbarGroup alignment={{ default: "alignLeft" }}>
+      <Select
+        variant={SelectVariant.checkbox}
+        aria-label="Select Input"
+        onToggle={onToggle}
+        onSelect={onSelect}
+        selections={statuses}
+        isCheckboxSelectionBadgeHidden
+        isOpen={isOpen}
+        placeholderText="Filter by Status"
+        footer={
+          <Button variant="link" isInline onClick={allCallback}>
+            {allLabel}
+          </Button>
+        }
+      >
+        {Diff.statuses.map((status) => (
+          <SelectOption key={status} value={status}>
+            <StyledStatusDescriptor status={status} /> {status}
+          </SelectOption>
+        ))}
+      </Select>
+    </ToolbarGroup>
   );
 };
 
