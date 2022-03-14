@@ -48,12 +48,20 @@ export class FileFetcherImpl implements FileFetcher {
         return Either.left(response.message);
       }
       if (typeof response.content !== "undefined") {
-        return Either.right(response.content);
+        return Either.right(this.decodeBase64String(response.content));
       }
 
       return Either.left("No data");
     }
 
     return either;
+  }
+
+  private decodeBase64String(data: string): string {
+    try {
+      return window.atob(data);
+    } catch (e) {
+      return data;
+    }
   }
 }
