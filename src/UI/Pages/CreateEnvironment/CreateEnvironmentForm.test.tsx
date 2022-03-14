@@ -167,8 +167,9 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
   );
   userEvent.type(
     await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
-    "new-project{enter}"
+    "new-project"
   );
+  userEvent.click(screen.getByRole("option", { name: 'Create "new-project"' }));
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
     method: "PUT",
@@ -219,8 +220,9 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
   );
   userEvent.type(
     await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
-    "new-project{enter}"
+    "new-project"
   );
+  userEvent.click(screen.getByRole("option", { name: 'Create "new-project"' }));
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
     method: "PUT",
