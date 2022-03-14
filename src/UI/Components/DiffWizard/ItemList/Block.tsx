@@ -12,16 +12,17 @@ import {
 import styled from "styled-components";
 import { Maybe, Resource } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
-import { Item, Refs } from "@/UI/Components/DiffWizard/types";
+import { Item, Refs, Transform } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry";
 
 interface Props {
   item: Item;
   refs: Refs;
+  transform?: Transform;
 }
 
-export const Block: React.FC<Props> = ({ item, refs }) => {
+export const Block: React.FC<Props> = ({ item, refs, transform }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const onExpand = () => setIsExpanded(!isExpanded);
 
@@ -55,14 +56,17 @@ export const Block: React.FC<Props> = ({ item, refs }) => {
         </StyledHeader>
         <CardExpandableContent>
           <Divider />
-          <Body item={item} />
+          <Body item={item} transform={transform} />
         </CardExpandableContent>
       </StyledCard>
     </>
   );
 };
 
-const Body: React.FC<{ item: Item }> = ({ item }) => {
+const Body: React.FC<{ item: Item; transform?: Transform }> = ({
+  item,
+  transform,
+}) => {
   switch (item.status) {
     case "deleted":
       return (
@@ -74,7 +78,7 @@ const Body: React.FC<{ item: Item }> = ({ item }) => {
       );
     case "added":
     case "modified":
-      return <BodyWithChanges item={item} />;
+      return <BodyWithChanges item={item} transform={transform} />;
 
     case "unmodified":
       return (
@@ -129,12 +133,21 @@ const BodyWithToggle: React.FC<{
   );
 };
 
-const BodyWithChanges: React.FC<{ item: Pick<Item, "entries"> }> = ({
-  item,
-}) => (
+const BodyWithChanges: React.FC<{
+  item: Pick<Item, "entries" | "id">;
+  transform?: Transform;
+}> = ({ item, transform }) => (
   <StyledBody>
     {item.entries.map((entry) => (
-      <Entry key={entry.title} {...entry} />
+      <Entry
+        key={entry.title}
+        {...entry}
+        transform={
+          transform
+            ? (title, to, from) => transform(item.id, title, to, from)
+            : undefined
+        }
+      />
     ))}
   </StyledBody>
 );

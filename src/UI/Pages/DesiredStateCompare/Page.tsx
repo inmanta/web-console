@@ -70,6 +70,22 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
                 <DiffWizard.ItemList
                   items={resources.map(DiffWizard.fromResourceToItem)}
                   refs={refs}
+                  transform={(title: string, attribute, from, to) => {
+                    if (
+                      !title.startsWith("std::File") ||
+                      attribute !== "hash"
+                    ) {
+                      return { kind: "Default" };
+                    }
+                    return {
+                      kind: "Custom",
+                      component: (
+                        <span>
+                          {title} {attribute} {from} {to}
+                        </span>
+                      ),
+                    };
+                  }}
                 />
               )
             }

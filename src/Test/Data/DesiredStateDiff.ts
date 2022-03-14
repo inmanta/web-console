@@ -15,9 +15,14 @@ export const resources: Diff.Resource[] = [
     status: "modified",
   },
   {
-    resource_id:
-      "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-000000002]",
+    resource_id: "std::File[example.com,path=/etc/hosts/000000002]",
     attributes: {
+      hash: {
+        from_value: "a47be15ee60a88c7bcc4bce900d921a8d34d1234",
+        to_value: "a47be15ee60a88c7bcc4bce900d921a8d34d5678",
+        from_value_compare: "a47be15ee60a88c7bcc4bce900d921a8d34d1234",
+        to_value_compare: "a47be15ee60a88c7bcc4bce900d921a8d34d5678",
+      },
       next_version: {
         from_value: 7,
         to_value: 8,

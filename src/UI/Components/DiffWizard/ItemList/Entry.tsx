@@ -2,9 +2,30 @@ import React from "react";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 import { Grid, GridItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import { EntryInfo } from "@/UI/Components/DiffWizard/types";
+import {
+  EntryInfo,
+  TransformEntry,
+  TransformResult,
+} from "@/UI/Components/DiffWizard/types";
 
-export const Entry: React.FC<EntryInfo> = ({ title, fromValue, toValue }) => {
+interface Props extends EntryInfo {
+  transform?: TransformEntry;
+}
+
+export const Entry: React.FC<Props> = ({
+  title,
+  fromValue,
+  toValue,
+  transform,
+}) => {
+  const transformValue: TransformResult = transform
+    ? transform(title, fromValue, toValue)
+    : { kind: "Default" };
+
+  if (transformValue.kind === "Custom") {
+    return transformValue.component;
+  }
+
   return (
     <Grid>
       <TitleItem span={2}>{title}</TitleItem>

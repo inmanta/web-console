@@ -13,3 +13,20 @@ export interface EntryInfo {
 }
 
 export type Refs = React.MutableRefObject<Record<string, HTMLElement>>;
+
+export type TransformResult =
+  | { kind: "Default" }
+  | { kind: "Custom"; component: JSX.Element };
+
+export type Transform = (
+  title: string,
+  entryTitle: string,
+  from: string,
+  to: string
+) => TransformResult;
+
+export type TransformEntry = (
+  title: string,
+  from: string,
+  to: string
+) => TransformResult;
