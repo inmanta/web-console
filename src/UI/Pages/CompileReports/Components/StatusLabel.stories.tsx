@@ -10,12 +10,12 @@ export default {
 
 export const Default = () => (
   <>
-    <StatusLabel status={CompileStatus.Success} />
+    <StatusLabel status={CompileStatus.success} />
     <Spacer />
-    <StatusLabel status={CompileStatus.Failed} />
+    <StatusLabel status={CompileStatus.failed} />
     <Spacer />
-    <StatusLabel status={CompileStatus.InProgress} />
+    <StatusLabel status={CompileStatus.inprogress} />
     <Spacer />
-    <StatusLabel status={CompileStatus.Queued} />
+    <StatusLabel status={CompileStatus.queued} />
   </>
 );

@@ -48,13 +48,13 @@ export class CompileReportsTablePresenter
     started,
   }: CompileReport): CompileStatus {
     if (!started) {
-      return CompileStatus.Queued;
+      return CompileStatus.queued;
     } else if (!!started && !completed) {
-      return CompileStatus.InProgress;
+      return CompileStatus.inprogress;
     } else if (success) {
-      return CompileStatus.Success;
+      return CompileStatus.success;
     } else {
-      return CompileStatus.Failed;
+      return CompileStatus.failed;
     }
   }
 

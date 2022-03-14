@@ -8,17 +8,17 @@ export const StatusLabel: React.FC<{ status: CompileStatus }> = ({
   status,
 }) => {
   switch (status) {
-    case CompileStatus.Success:
+    case CompileStatus.success:
       return <Label color="green">{status}</Label>;
-    case CompileStatus.Failed:
+    case CompileStatus.failed:
       return <Label color="red">{status}</Label>;
-    case CompileStatus.InProgress:
+    case CompileStatus.inprogress:
       return (
         <Label color="blue">
           <PaddedLabel>{status}</PaddedLabel> {<Spinner variant="small" />}
         </Label>
       );
-    case CompileStatus.Queued:
+    case CompileStatus.queued:
       return <Label variant="outline">{status}</Label>;
   }
 };
