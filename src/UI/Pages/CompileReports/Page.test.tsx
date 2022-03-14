@@ -152,7 +152,7 @@ test("CompileReportsView shows updated table", async () => {
   ).toBeInTheDocument();
 });
 
-test("When using the result filter with the Successful option then the successful compile reports should be fetched and shown", async () => {
+test("When using the status filter with the Success option then the successful compile reports should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -173,12 +173,11 @@ test("When using the result filter with the Successful option then the successfu
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Result" }));
 
-  const input = screen.getByRole("button", { name: "Select Result" });
+  const input = screen.getByPlaceholderText("Select compile status...");
   userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "Successful" });
+  const option = await screen.findByRole("option", { name: "success" });
   await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -226,11 +225,11 @@ test("When using the status filter with the In Progress opiton then the compile 
   const input = screen.getByPlaceholderText("Select compile status...");
   userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "In Progress" });
+  const option = await screen.findByRole("option", { name: "in progress" });
   await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.completed=false&filter.started=true`
+    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.started=true&filter.completed=false`
   );
 
   await act(async () => {

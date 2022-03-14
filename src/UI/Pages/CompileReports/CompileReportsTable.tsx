@@ -55,10 +55,7 @@ export const CompileReportsTable: React.FC<Props> = ({
   return (
     <TableComposable {...props} variant={TableVariant.compact}>
       <Thead>
-        <Tr>
-          <Th> </Th>
-          {heads}
-        </Tr>
+        <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
         <CompileReportsTableRow row={row} key={row.id} />

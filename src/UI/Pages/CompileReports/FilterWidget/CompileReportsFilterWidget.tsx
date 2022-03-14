@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
-import { CompileReportParams, DateRange } from "@/Core";
+import { CompileReportParams, CompileStatus, DateRange } from "@/Core";
 import { FilterPicker } from "@/UI/Components";
-import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
+import { TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { words } from "@/UI/words";
-import { ResultFilter } from "./ResultFilter";
+import { StatusFilter } from "./StatusFilter";
 
 interface Props {
   filter: CompileReportParams.Filter;
@@ -17,27 +16,15 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({
   setFilter,
 }) => {
   const [filterKind, setFilterKind] = useState<CompileReportParams.Kind>(
-    CompileReportParams.Kind.Result
+    CompileReportParams.Kind.Status
   );
 
-  const updateResult = (success?: boolean) => setFilter({ ...filter, success });
-
-  const compileStatuses = Object.keys(CompileReportParams.CompileStatus).map(
-    (k) => CompileReportParams.CompileStatus[k]
-  );
-
-  const updateCompileStatus = (selectedCompileStatuses: string[]) =>
+  const updateCompileStatus = (selectedCompileStatus: string | null) =>
     setFilter({
       ...filter,
-      status:
-        selectedCompileStatuses.length > 0
-          ? selectedCompileStatuses.map(
-              (compileStatus) =>
-                CompileReportParams.CompileStatus[
-                  compileStatus.replace(/\s+/g, "")
-                ]
-            )
-          : undefined,
+      status: selectedCompileStatus
+        ? CompileStatus[selectedCompileStatus.replace(/\s+/g, "")]
+        : undefined,
     });
 
   const updateRequested = (timestampFilters: DateRange.Type[]) =>
@@ -53,18 +40,10 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({
         filterKind={filterKind}
         items={CompileReportParams.List}
       />
-      <SelectOptionFilter
-        filterPropertyName={CompileReportParams.Kind.Status}
-        placeholder={words("compileReports.filters.status.placeholder")}
+      <StatusFilter
         isVisible={filterKind === CompileReportParams.Kind.Status}
-        possibleStates={compileStatuses}
-        selectedStates={filter.status ? filter.status : []}
-        update={updateCompileStatus}
-      />
-      <ResultFilter
-        isVisible={filterKind == CompileReportParams.Kind.Result}
-        success={filter.success}
-        update={updateResult}
+        selected={filter.status ? filter.status : null}
+        setSelected={updateCompileStatus}
       />
       <TimestampFilter
         datePresenter={new MomentDatePresenter()}

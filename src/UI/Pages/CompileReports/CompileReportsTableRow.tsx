@@ -4,9 +4,10 @@ import { Button } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { CompileReportRow } from "@/Core";
-import { DateWithTooltip, Spinner } from "@/UI/Components";
+import { DateWithTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { StatusLabel } from "./Components";
 
 interface Props {
   row: CompileReportRow;
@@ -15,18 +16,14 @@ interface Props {
 export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
   const { routeManager } = useContext(DependencyContext);
   return (
-    <StyledBody
-      isExpanded={false}
-      $completed={row.completed}
-      $success={row.success}
-    >
+    <Tbody isExpanded={false}>
       <Tr aria-label="Compile Reports Table Row">
-        <Td dataLabel={words("compileReports.columns.inProgress")}>
-          {row.inProgress && <Spinner variant="small" />}
-        </Td>
-        <Td dataLabel={words("compileReports.columns.requested")}>
+        <Td width={15} dataLabel={words("compileReports.columns.requested")}>
           <DateWithTooltip timestamp={row.requested} />
         </Td>
+        <StyledCell dataLabel={words("compileReports.columns.status")}>
+          <StatusLabel status={row.status} />
+        </StyledCell>
         <Td dataLabel={words("compileReports.columns.message")}>
           {row.message}
         </Td>
@@ -51,18 +48,12 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
           </Link>
         </Td>
       </Tr>
-    </StyledBody>
+    </Tbody>
   );
 };
 
-const StyledBody = styled(Tbody)<{
-  $completed?: string | null;
-  $success?: boolean;
-}>`
-  ${({ $completed, $success }) =>
-    !$completed
-      ? ""
-      : $success
-      ? "background-color: var(--pf-global--palette--green-50)"
-      : "background-color: var(--pf-global--palette--red-50)"};
+const StyledCell = styled(Td)`
+  && {
+    width: 120px;
+  }
 `;
