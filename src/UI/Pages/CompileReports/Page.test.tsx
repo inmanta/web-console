@@ -182,7 +182,7 @@ test("When using the status filter with the Success option then the successful c
   const input = screen.getByPlaceholderText("Select compile status...");
   userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "Success" });
+  const option = await screen.findByRole("option", { name: "success" });
   await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -230,7 +230,7 @@ test("When using the status filter with the In Progress opiton then the compile 
   const input = screen.getByPlaceholderText("Select compile status...");
   userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "In Progress" });
+  const option = await screen.findByRole("option", { name: "in progress" });
   await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
