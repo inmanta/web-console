@@ -293,6 +293,7 @@ const dict = {
   "compileReports.title": "Compile Reports",
   "compileReports.empty.message": "No compile reports found",
   "compileReports.columns.requested": "Requested",
+  "compileReports.columns.status": "Status",
   "compileReports.columns.message": "Message",
   "compileReports.columns.waitTime": "Wait Time",
   "compileReports.columns.compileTime": "Compile Time",
