@@ -3,7 +3,11 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CompileWidget } from "./CompileWidget";
 
-export const Provider: React.FC = () => {
+interface Props {
+  afterTrigger?(): void;
+}
+
+export const Provider: React.FC<Props> = ({ afterTrigger }) => {
   const { commandResolver, queryResolver, environmentModifier } =
     useContext(DependencyContext);
   const isServerCompileEnabled =
@@ -19,6 +23,7 @@ export const Provider: React.FC = () => {
   const onRecompile = (update: boolean) => async () => {
     await trigger(update);
     refetch();
+    afterTrigger && afterTrigger();
   };
 
   return (

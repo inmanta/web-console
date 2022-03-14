@@ -21,7 +21,7 @@ export * from "./GetServerStatus";
 export * from "./HaltEnvironment";
 export * from "./InstanceConfig";
 export * from "./GetInstanceLogs";
-export * from "./InstanceResources";
+export * from "./GetInstanceResources";
 export * from "./ModifyEnvironment";
 export * from "./GetProjects";
 export * from "./GetEnvironments";

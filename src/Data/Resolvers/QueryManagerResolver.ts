@@ -79,7 +79,8 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     private readonly store: Store,
     private readonly apiHelper: ApiHelper,
     private readonly scheduler: Scheduler,
-    private readonly slowScheduler: Scheduler
+    private readonly slowScheduler: Scheduler,
+    private readonly instanceResourcesRetryLimit: number = 20
   ) {
     this.managers = this.getManagers();
   }
@@ -93,6 +94,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     const serviceStateHelper = new ServiceStateHelper(
       this.store,
       serviceKeyMaker
+    );
+    const serviceInstancesStateHelper = new ServiceInstancesStateHelper(
+      this.store
     );
 
     return [
@@ -130,7 +134,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new ServiceInstancesQueryManager(
         this.apiHelper,
-        new ServiceInstancesStateHelper(this.store),
+        serviceInstancesStateHelper,
         this.scheduler
       ),
       new ServiceConfigQueryManager(
@@ -141,7 +145,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new InstanceResourcesQueryManager(
         this.apiHelper,
         new InstanceResourcesStateHelper(this.store),
-        this.scheduler
+        serviceInstancesStateHelper,
+        this.scheduler,
+        this.instanceResourcesRetryLimit
       ),
       new EventsQueryManager(
         this.apiHelper,

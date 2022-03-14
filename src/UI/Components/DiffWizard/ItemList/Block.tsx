@@ -10,7 +10,8 @@ import {
   Divider,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { StatusDescriptor } from "@/UI/Components/DiffWizard/JumpToAction/StatusDescriptor";
+import { Maybe, Resource } from "@/Core";
+import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry";
@@ -64,29 +65,63 @@ export const Block: React.FC<Props> = ({ item, refs }) => {
 const Body: React.FC<{ item: Item }> = ({ item }) => {
   switch (item.status) {
     case "deleted":
-      return <DeletedBody item={item} />;
-    case "unmodified":
-      return <UnmodifiedBody />;
+      return (
+        <BodyWithToggle
+          item={item}
+          message={words("desiredState.compare.deleted")}
+          actionLabel={words("desiredState.compare.deleted.action")}
+        />
+      );
     case "added":
     case "modified":
-      return <ModifiedBody item={item} />;
+      return <BodyWithChanges item={item} />;
+
+    case "unmodified":
+      return (
+        <BodyWithMessage message={words("desiredState.compare.unmodified")} />
+      );
+    case "agent_down": {
+      const agent = Maybe.withFallback(
+        Resource.IdParser.getAgentName(item.id),
+        "???"
+      );
+      return (
+        <BodyWithMessage
+          message={words("desiredState.compare.agent_down")(agent)}
+        />
+      );
+    }
+
+    case "undefined":
+      return (
+        <BodyWithMessage message={words("desiredState.compare.undefined")} />
+      );
+    case "skipped_for_undefined":
+      return (
+        <BodyWithMessage
+          message={words("desiredState.compare.skipped_for_undefined")}
+        />
+      );
     default:
       return null;
   }
 };
 
-const DeletedBody: React.FC<{ item: Pick<Item, "entries"> }> = ({ item }) => {
+const BodyWithToggle: React.FC<{
+  item: Pick<Item, "entries">;
+  message: string;
+  actionLabel: string;
+}> = ({ item, message, actionLabel }) => {
   const [isShown, setIsShown] = useState(false);
-
   return (
     <StyledBody>
       {isShown ? (
         item.entries.map((entry) => <Entry key={entry.title} {...entry} />)
       ) : (
         <Message>
-          {words("desiredState.compare.deleted")}
+          {message}
           <ShowButton onClick={() => setIsShown(true)} variant="link" isInline>
-            {words("desiredState.compare.deleted.action")}
+            {actionLabel}
           </ShowButton>
         </Message>
       )}
@@ -94,7 +129,9 @@ const DeletedBody: React.FC<{ item: Pick<Item, "entries"> }> = ({ item }) => {
   );
 };
 
-const ModifiedBody: React.FC<{ item: Pick<Item, "entries"> }> = ({ item }) => (
+const BodyWithChanges: React.FC<{ item: Pick<Item, "entries"> }> = ({
+  item,
+}) => (
   <StyledBody>
     {item.entries.map((entry) => (
       <Entry key={entry.title} {...entry} />
@@ -102,10 +139,10 @@ const ModifiedBody: React.FC<{ item: Pick<Item, "entries"> }> = ({ item }) => (
   </StyledBody>
 );
 
-const UnmodifiedBody: React.FC = () => {
+const BodyWithMessage: React.FC<{ message: string }> = ({ message }) => {
   return (
     <StyledBody>
-      <Message>{words("desiredState.compare.unmodified")}</Message>
+      <Message>{message}</Message>
     </StyledBody>
   );
 };

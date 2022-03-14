@@ -13,6 +13,6 @@ test("GIVEN FileFetcher WHEN executing get THEN the result is correctly returned
     environment: "env",
     url: "/api/v1/file/id1",
   });
-  apiHelper.resolve(Either.right({ content: "abcdefgh" }));
+  apiHelper.resolve(Either.right({ content: window.btoa("abcdefgh") }));
   await expect(fetchResult).resolves.toEqual(Either.right("abcdefgh"));
 });

@@ -452,6 +452,12 @@ const dict = {
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
   "desiredState.compare.unmodified": "This resource has not been modified.",
+  "desiredState.compare.agent_down": (agentName: string) =>
+    `Could not determine difference because agent ${agentName} is down`,
+  "desiredState.compare.undefined":
+    "Could not determine difference because this resource has undefined values",
+  "desiredState.compare.skipped_for_undefined":
+    "Could not determine difference because this resource requires a resource that has undefined values",
   "desiredState.compare.empty": "No changes found",
   "desiredState.complianceCheck.title": "Compliance Check",
   "desiredState.complianceCheck.failed": "Getting list of dryruns failed",

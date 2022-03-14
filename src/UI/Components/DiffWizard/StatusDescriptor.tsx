@@ -17,6 +17,10 @@ export const StatusDescriptor: React.FC<Props> = ({ status, className }) => {
       return <Modified className={className}>M</Modified>;
     case "unmodified":
       return <Unmodified className={className}>?</Unmodified>;
+    case "agent_down":
+    case "undefined":
+    case "skipped_for_undefined":
+      return <Missing className={className}>!</Missing>;
     default:
       return null;
   }
@@ -53,4 +57,9 @@ const Modified = styled.div`
 const Unmodified = styled.div`
   ${descriptorStyles};
   background-color: var(--pf-global--default-color--100);
+`;
+
+const Missing = styled.div`
+  ${descriptorStyles};
+  background-color: var(--pf-global--info-color--100);
 `;

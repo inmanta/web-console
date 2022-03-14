@@ -121,6 +121,30 @@ export const resources: Diff.Resource[] = [
     },
     status: "modified",
   },
+  {
+    resource_id:
+      "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-000000000009]",
+    attributes: {},
+    status: "unmodified",
+  },
+  {
+    resource_id:
+      "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-000000000010]",
+    attributes: {},
+    status: "agent_down",
+  },
+  {
+    resource_id:
+      "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-000000000011]",
+    attributes: {},
+    status: "undefined",
+  },
+  {
+    resource_id:
+      "lsm::LifecycleTransfer[internal,instance_id=5d25ffbe-c59c-4d03-8f7c-000000000012]",
+    attributes: {},
+    status: "skipped_for_undefined",
+  },
 ];
 
 export const response = {

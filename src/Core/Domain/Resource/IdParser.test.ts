@@ -1,8 +1,8 @@
 import { Maybe } from "@/Core";
-import { ResourceIdParser } from "./ResourceId";
+import { IdParser } from "./Resource";
 
 test("Parse resource id with valid resource id", () => {
-  const id = ResourceIdParser.parse("std::File[internal,path=/tmp/dir1/file2]");
+  const id = IdParser.parse("std::File[internal,path=/tmp/dir1/file2]");
   expect(Maybe.isSome(id)).toBeTruthy();
   if (Maybe.isSome(id)) {
     expect(id.value.entityType).toEqual("std::File");
@@ -12,9 +12,7 @@ test("Parse resource id with valid resource id", () => {
 });
 
 test("Parse resource id with valid resource version id", () => {
-  const id = ResourceIdParser.parse(
-    "std::File[internal,path=/tmp/dir1/file2],v=2"
-  );
+  const id = IdParser.parse("std::File[internal,path=/tmp/dir1/file2],v=2");
   expect(Maybe.isSome(id)).toBeTruthy();
   if (Maybe.isSome(id)) {
     expect(id.value.entityType).toEqual("std::File");
@@ -24,11 +22,11 @@ test("Parse resource id with valid resource version id", () => {
 });
 
 test("Parse resource id with partial resource id", () => {
-  const id = ResourceIdParser.parse("std::File[internal,path]");
+  const id = IdParser.parse("std::File[internal,path]");
   expect(Maybe.isNone(id)).toBeTruthy();
 });
 
 test("Parse resource id with empty string", () => {
-  const id = ResourceIdParser.parse("");
+  const id = IdParser.parse("");
   expect(Maybe.isNone(id)).toBeTruthy();
 });

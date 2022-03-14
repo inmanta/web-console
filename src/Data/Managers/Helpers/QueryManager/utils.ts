@@ -1,8 +1,4 @@
-import { Query } from "@/Core";
-
-export function urlEncodeParams<Kind extends Query.Kind>(
-  query: Query.SubQuery<Kind>
-) {
+export function urlEncodeParams<Q>(query: Q) {
   const encodedQuery = Object.fromEntries(
     Object.entries(query).map(([key, value]) => {
       const encodedValue =
@@ -10,5 +6,5 @@ export function urlEncodeParams<Kind extends Query.Kind>(
       return [key, encodedValue];
     })
   );
-  return encodedQuery as Query.SubQuery<Kind>;
+  return encodedQuery as Q;
 }
