@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import { PageSection } from "@patternfly/react-core";
-import { Maybe, ParsedNumber, RemoteData } from "@/Core";
+import { Diff, Maybe, ParsedNumber, RemoteData } from "@/Core";
 import {
   EmptyView,
   PagePadder,
@@ -15,22 +15,29 @@ import { MaybeReport } from "./types";
 interface Props {
   report: MaybeReport;
   version: string;
+  statuses: Diff.Status[];
 }
 
-export const DiffPageSection: React.FC<Props> = ({ report, version }) =>
+export const DiffPageSection: React.FC<Props> = ({
+  report,
+  version,
+  statuses,
+}) =>
   Maybe.isNone(report) ? null : (
     <DiffView
       id={report.value.id}
       todo={report.value.todo as number}
       version={version}
+      statuses={statuses}
     />
   );
 
-const DiffView: React.FC<{ id: string; todo: number; version: string }> = ({
-  id,
-  todo,
-  version,
-}) => {
+const DiffView: React.FC<{
+  id: string;
+  todo: number;
+  version: string;
+  statuses: Diff.Status[];
+}> = ({ id, todo, version, statuses }) => {
   const refs: DiffWizard.Refs = useRef({});
   const { queryResolver } = useContext(DependencyContext);
   const [reportData, refetch] = queryResolver.useOneTime<"GetDryRunReport">({
@@ -45,7 +52,11 @@ const DiffView: React.FC<{ id: string; todo: number; version: string }> = ({
     refetch();
   }, [todo, id, reportData, refetch]);
 
-  const diffData = RemoteData.mapSuccess((report) => report.diff, reportData);
+  const diffData = RemoteData.mapSuccess(
+    (report) =>
+      report.diff.filter((resource) => statuses.includes(resource.status)),
+    reportData
+  );
 
   return (
     <>
@@ -70,7 +81,9 @@ const DiffView: React.FC<{ id: string; todo: number; version: string }> = ({
                   <EmptyView message={words("desiredState.compare.empty")} />
                 ) : (
                   <DiffWizard.ItemList
-                    items={data.diff.map(DiffWizard.fromResourceToItem)}
+                    items={data.diff
+                      .filter((resource) => statuses.includes(resource.status))
+                      .map(DiffWizard.fromResourceToItem)}
                     refs={refs}
                   />
                 )}

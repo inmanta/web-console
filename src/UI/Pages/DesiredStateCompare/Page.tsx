@@ -1,7 +1,7 @@
-import React, { useContext, useRef } from "react";
-import { PageSection } from "@patternfly/react-core";
+import React, { useContext, useRef, useState } from "react";
+import { PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Diff } from "@/Core";
+import { Diff, RemoteData } from "@/Core";
 import {
   RemoteDataView,
   PageTitle,
@@ -21,6 +21,7 @@ export const Page: React.FC = () => {
 export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   const { queryResolver } = useContext(DependencyContext);
   const refs: DiffWizard.Refs = useRef({});
+  const [statuses, setStatuses] = useState(Diff.statuses);
 
   const [data] = queryResolver.useOneTime<"GetDesiredStateDiff">({
     kind: "GetDesiredStateDiff",
@@ -28,18 +29,39 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
     to,
   });
 
+  const filteredData = RemoteData.mapSuccess(
+    (resources) =>
+      resources.filter((resource) => statuses.includes(resource.status)),
+    data
+  );
+
   return (
     <>
       <StyledPageSection variant="light">
         <PageTitle>{words("desiredState.compare.title")}</PageTitle>
       </StyledPageSection>
+      <PageSection variant="light">
+        <Toolbar>
+          <ToolbarContent style={{ padding: 0 }}>
+            <DiffWizard.StatusFilter
+              statuses={statuses}
+              setStatuses={setStatuses}
+            />
+          </ToolbarContent>
+        </Toolbar>
+      </PageSection>
       <PageSection variant="light" hasShadowBottom sticky="top">
-        <DiffWizard.Controls data={data} refs={refs} from={from} to={to} />
+        <DiffWizard.Controls
+          data={filteredData}
+          refs={refs}
+          from={from}
+          to={to}
+        />
       </PageSection>
       <PageSection isFilled>
         <PagePadder>
           <RemoteDataView
-            data={data}
+            data={filteredData}
             label="CompareView"
             SuccessView={(resources) =>
               resources.length <= 0 ? (

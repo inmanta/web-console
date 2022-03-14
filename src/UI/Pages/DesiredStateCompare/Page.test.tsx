@@ -82,3 +82,48 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
   });
   expect(items).toHaveLength(12);
 });
+
+test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
+  const { apiHelper, component } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(DesiredStateDiff.response));
+  });
+
+  userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+
+  expect(
+    screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
+  ).toHaveLength(12);
+
+  expect(
+    await screen.findAllByRole("article", { name: "DiffBlock" })
+  ).toHaveLength(12);
+
+  expect(
+    screen.queryByRole("listbox", { name: "StatusFilterOptions" })
+  ).not.toBeInTheDocument();
+
+  userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
+
+  expect(
+    screen.getByRole("listbox", { name: "StatusFilterOptions" })
+  ).toBeVisible();
+
+  const statusOptions = screen.getAllByRole("checkbox", {
+    name: "StatusFilterOption",
+  });
+  expect(statusOptions).toHaveLength(7);
+  userEvent.click(screen.getByRole("button", { name: "Hide All" }));
+  userEvent.click(statusOptions[0]);
+
+  userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+  expect(
+    await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" })
+  ).toHaveLength(2);
+
+  expect(
+    await screen.findAllByRole("article", { name: "DiffBlock" })
+  ).toHaveLength(2);
+});

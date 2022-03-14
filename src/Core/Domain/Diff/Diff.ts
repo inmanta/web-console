@@ -7,6 +7,16 @@ export type Status =
   | "undefined"
   | "skipped_for_undefined";
 
+export const statuses: Status[] = [
+  "added",
+  "modified",
+  "deleted",
+  "unmodified",
+  "agent_down",
+  "undefined",
+  "skipped_for_undefined",
+];
+
 export interface ValueSet {
   from_value: unknown;
   to_value: unknown;

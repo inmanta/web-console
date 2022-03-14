@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Maybe, RemoteData } from "@/Core";
-import { ErrorToastAlert, PageTitle } from "@/UI/Components";
+import { Diff, Maybe, RemoteData } from "@/Core";
+import { DiffWizard, ErrorToastAlert, PageTitle } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -26,6 +26,7 @@ export const View: React.FC<Props> = ({ version }) => {
     version: parseInt(version),
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [statuses, setStatuses] = useState(Diff.statuses);
   const [selectedReport, setSelectedReport] = useState<MaybeReport>(
     Maybe.none()
   );
@@ -85,11 +86,19 @@ export const View: React.FC<Props> = ({ version }) => {
               selectedReport={selectedReport}
               reportsData={data}
             />
+            <DiffWizard.StatusFilter
+              statuses={statuses}
+              setStatuses={setStatuses}
+            />
             <TriggerDryRunAction version={version} updateList={updateList} />
           </ToolbarContent>
         </Toolbar>
       </PageSection>
-      <DiffPageSection report={selectedReport} version={version} />
+      <DiffPageSection
+        report={selectedReport}
+        version={version}
+        statuses={statuses}
+      />
     </>
   );
 };
