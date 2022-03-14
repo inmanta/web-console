@@ -35,7 +35,8 @@ export const StatusFilter: React.FC<Props> = ({ statuses, setStatuses }) => {
     <ToolbarGroup alignment={{ default: "alignLeft" }}>
       <Select
         variant={SelectVariant.checkbox}
-        aria-label="Select Input"
+        toggleAriaLabel="StatusFilter"
+        aria-label="StatusFilterOptions"
         onToggle={onToggle}
         onSelect={onSelect}
         selections={statuses}
@@ -49,7 +50,11 @@ export const StatusFilter: React.FC<Props> = ({ statuses, setStatuses }) => {
         }
       >
         {Diff.statuses.map((status) => (
-          <SelectOption key={status} value={status}>
+          <SelectOption
+            key={status}
+            value={status}
+            aria-label="StatusFilterOption"
+          >
             <StyledStatusDescriptor status={status} /> {status}
           </SelectOption>
         ))}
