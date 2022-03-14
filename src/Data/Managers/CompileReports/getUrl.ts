@@ -41,17 +41,15 @@ const filterToParam = (filter: Filter, timezone: string) => {
 };
 
 function translateStatusFilter(status?: CompileStatus) {
-  if (status) {
-    switch (status) {
-      case CompileStatus.Success:
-        return { success: true };
-      case CompileStatus.Failed:
-        return { success: false };
-      case CompileStatus.InProgress:
-        return { started: true, completed: false };
-      case CompileStatus.Queued:
-        return { started: false };
-    }
+  if (!status) return {};
+  switch (status) {
+    case CompileStatus.Success:
+      return { success: true };
+    case CompileStatus.Failed:
+      return { success: false };
+    case CompileStatus.InProgress:
+      return { started: true, completed: false };
+    case CompileStatus.Queued:
+      return { started: false };
   }
-  return {};
 }
