@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump mocha from 9.2.1 to 9.2.2'
+destination-branches:
+- master
+- iso5
+sections: {}
