@@ -1,10 +1,8 @@
 import React from "react";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
+import { Diff } from "@/Core";
 
-export const DiffView: React.FC<{ from: string; to: string }> = ({
-  from,
-  to,
-}) => (
+export const DiffView: React.FC<Diff.Values> = ({ from, to }) => (
   <ReactDiffViewer
     showDiffOnly={false}
     styles={{

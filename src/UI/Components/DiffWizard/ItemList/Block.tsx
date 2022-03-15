@@ -14,7 +14,7 @@ import { Maybe, Resource } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
 import { Item, Refs, Transform } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
-import { Entry } from "./Entry";
+import { Entry } from "./Entry/Entry";
 
 interface Props {
   item: Item;
