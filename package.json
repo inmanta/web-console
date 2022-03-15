@@ -66,7 +66,7 @@
     "@types/webpack": "^5.28.0",
     "@types/xml-formatter": "^2.1.1",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
-    "@typescript-eslint/parser": "^5.14.0",
+    "@typescript-eslint/parser": "^5.15.0",
     "babel-loader": "^8.2.3",
     "clean-css": "^5.2.4",
     "copy-webpack-plugin": "^10.2.4",
@@ -126,7 +126,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@patternfly/react-charts": "^6.51.5",
+    "@patternfly/react-charts": "^6.51.19",
     "@patternfly/react-core": "^4.198.19",
     "@patternfly/react-icons": "^4.26.4",
     "@patternfly/react-styles": "^4.48.19",
