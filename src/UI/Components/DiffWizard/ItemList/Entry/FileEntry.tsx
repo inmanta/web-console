@@ -21,7 +21,6 @@ export const FileEntry: React.FC<EntryInfo> = ({
 
   const onShow = async () => {
     setFiles(RemoteData.loading());
-    setFiles(RemoteData.loading());
     const [from, to] = await Promise.all([
       fromValue.length > 0
         ? fileFetcher.get(fromValue)
@@ -82,7 +81,7 @@ const FailedView: React.FC<{ error: string; onShow(): void }> = ({
   error,
   onShow,
 }) => (
-  <ErrorMessage>
+  <ErrorMessage aria-label="ErrorDiffView">
     <p>
       {words("error")}
       <RetryButton variant="link" isInline onClick={onShow}>
