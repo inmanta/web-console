@@ -25,36 +25,34 @@ export default {
   },
 };
 
-const content1 = `127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
-::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-
-
-0.0.0.1 test.test0.example.com`;
-const content2 = `127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
-::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-
-
-1.2.3.4 test.test0.example.com`;
-const encoded1 = window.btoa(content1);
-const encoded2 = window.btoa(content2);
-console.log({ content1, encoded1, content2, encoded2 });
-
 export const Default: React.FC = () => {
+  const encoded1 =
+    window.btoa(`127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+0.0.0.1 test.test0.example.com`);
+  const encoded2 =
+    window.btoa(`127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+1.2.3.4 test.test0.example.com`);
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new GetDesiredStateDiffQueryManager(
-        new InstantApiHelper({
+        new InstantApiHelper(() => ({
           kind: "Success",
           data: DesiredStateDiff.response,
-        }),
+        })),
         new GetDesiredStateDiffStateHelper(store)
       ),
     ])
   );
 
   const fileFetcher = new FileFetcherImpl(
-    new InstantApiHelper({ kind: "Success", data: { content: encoded1 } }),
+    new InstantApiHelper((url) =>
+      url.endsWith("1234")
+        ? { kind: "Success", data: { content: encoded1 } }
+        : { kind: "Success", data: { content: encoded2 } }
+    ),
     "env"
   );
 

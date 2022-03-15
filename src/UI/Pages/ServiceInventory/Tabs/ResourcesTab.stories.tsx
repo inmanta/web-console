@@ -33,7 +33,7 @@ const Template: React.FC<{
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolver(
       store,
-      new InstantApiHelper(outcome),
+      new InstantApiHelper(() => outcome),
       scheduler,
       scheduler
     )

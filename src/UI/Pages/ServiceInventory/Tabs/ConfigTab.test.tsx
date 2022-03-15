@@ -59,10 +59,10 @@ function setup(
   };
 
   const instanceConfigHelper = new InstanceConfigQueryManager(
-    new InstantApiHelper({
+    new InstantApiHelper(() => ({
       kind: "Success",
       data: { data: { auto_creating: false } },
-    }),
+    })),
     instanceConfigStateHelper,
     new InstanceConfigFinalizer(
       new ServiceStateHelper(storeInstance, serviceKeyMaker)

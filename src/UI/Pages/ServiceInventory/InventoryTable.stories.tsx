@@ -21,10 +21,10 @@ const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolver(
       store,
-      new InstantApiHelper({
+      new InstantApiHelper(() => ({
         kind: "Success",
         data: { data: [] },
-      }),
+      })),
       new StaticScheduler(),
       new StaticScheduler()
     )

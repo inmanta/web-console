@@ -14,9 +14,7 @@ export interface EntryInfo {
 
 export type Refs = React.MutableRefObject<Record<string, HTMLElement>>;
 
-export type TransformResult =
-  | { kind: "Default" }
-  | { kind: "Custom"; component: JSX.Element };
+type TransformResult = "Default" | "File";
 
 export type Transform = (
   title: string,

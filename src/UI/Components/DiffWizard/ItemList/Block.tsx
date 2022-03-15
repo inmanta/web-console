@@ -74,6 +74,7 @@ const Body: React.FC<{ item: Item; transform?: Transform }> = ({
           item={item}
           message={words("desiredState.compare.deleted")}
           actionLabel={words("desiredState.compare.deleted.action")}
+          transform={transform}
         />
       );
     case "added":
@@ -112,23 +113,22 @@ const Body: React.FC<{ item: Item; transform?: Transform }> = ({
 };
 
 const BodyWithToggle: React.FC<{
-  item: Pick<Item, "entries">;
+  item: Item;
   message: string;
   actionLabel: string;
-}> = ({ item, message, actionLabel }) => {
+  transform?: Transform;
+}> = ({ item, message, actionLabel, transform }) => {
   const [isShown, setIsShown] = useState(false);
-  return (
+  return isShown ? (
+    <BodyWithChanges {...{ item, transform }} />
+  ) : (
     <StyledBody>
-      {isShown ? (
-        item.entries.map((entry) => <Entry key={entry.title} {...entry} />)
-      ) : (
-        <Message>
-          {message}
-          <ShowButton onClick={() => setIsShown(true)} variant="link" isInline>
-            {actionLabel}
-          </ShowButton>
-        </Message>
-      )}
+      <Message>
+        {message}
+        <ShowButton onClick={() => setIsShown(true)} variant="link" isInline>
+          {actionLabel}
+        </ShowButton>
+      </Message>
     </StyledBody>
   );
 };
@@ -201,5 +201,6 @@ const Message = styled(Bullseye)`
 `;
 
 const ShowButton = styled(Button)`
+  line-height: 29px;
   margin-left: 4px;
 `;
