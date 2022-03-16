@@ -62,7 +62,6 @@ export const TimestampPicker: React.FC<Props> = ({
     }
   };
 
-  const time = timestamp !== undefined ? moment(timestamp).format("HH:mm") : "";
   return (
     <StyledInputGroup>
       <DatePicker
