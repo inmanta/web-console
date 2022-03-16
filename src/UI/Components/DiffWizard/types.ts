@@ -13,3 +13,5 @@ export interface EntryInfo {
 }
 
 export type Refs = React.MutableRefObject<Record<string, HTMLElement>>;
+
+export type Classification = "Default" | "File";

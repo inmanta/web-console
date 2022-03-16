@@ -34,3 +34,5 @@ export interface Identifiers {
   from: string;
   to: string;
 }
+
+export type Values = Identifiers;

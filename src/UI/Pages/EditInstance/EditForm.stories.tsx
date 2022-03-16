@@ -22,7 +22,10 @@ export default {
 };
 export const Default: React.FC = () => {
   const store = getStoreInstance();
-  const apiHelper = new InstantApiHelper({ kind: "Success", data: null });
+  const apiHelper = new InstantApiHelper(() => ({
+    kind: "Success",
+    data: null,
+  }));
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new TriggerInstanceUpdateCommandManager(apiHelper),

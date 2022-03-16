@@ -12,7 +12,16 @@ export const ItemList: React.FC<Props> = ({ items, refs }) => {
   return (
     <Container aria-label="DiffItemList">
       {items.map((item) => (
-        <Block key={item.id} item={item} refs={refs} />
+        <Block
+          key={item.id}
+          item={item}
+          refs={refs}
+          classify={(title, attribute) =>
+            title.startsWith("std::File") && attribute === "hash"
+              ? "File"
+              : "Default"
+          }
+        />
       ))}
     </Container>
   );

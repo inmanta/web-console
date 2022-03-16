@@ -12,16 +12,24 @@ import {
 import styled from "styled-components";
 import { Maybe, Resource } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
-import { Item, Refs } from "@/UI/Components/DiffWizard/types";
+import { Classification, Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
-import { Entry } from "./Entry";
+import { Entry } from "./Entry/Entry";
+
+type Classify = (
+  title: string,
+  entryTitle: string,
+  from: string,
+  to: string
+) => Classification;
 
 interface Props {
   item: Item;
   refs: Refs;
+  classify?: Classify;
 }
 
-export const Block: React.FC<Props> = ({ item, refs }) => {
+export const Block: React.FC<Props> = ({ item, refs, classify }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const onExpand = () => setIsExpanded(!isExpanded);
 
@@ -55,14 +63,17 @@ export const Block: React.FC<Props> = ({ item, refs }) => {
         </StyledHeader>
         <CardExpandableContent>
           <Divider />
-          <Body item={item} />
+          <Body item={item} classify={classify} />
         </CardExpandableContent>
       </StyledCard>
     </>
   );
 };
 
-const Body: React.FC<{ item: Item }> = ({ item }) => {
+const Body: React.FC<{ item: Item; classify?: Classify }> = ({
+  item,
+  classify,
+}) => {
   switch (item.status) {
     case "deleted":
       return (
@@ -70,11 +81,12 @@ const Body: React.FC<{ item: Item }> = ({ item }) => {
           item={item}
           message={words("desiredState.compare.deleted")}
           actionLabel={words("desiredState.compare.deleted.action")}
+          classify={classify}
         />
       );
     case "added":
     case "modified":
-      return <BodyWithChanges item={item} />;
+      return <BodyWithChanges item={item} classify={classify} />;
 
     case "unmodified":
       return (
@@ -108,33 +120,41 @@ const Body: React.FC<{ item: Item }> = ({ item }) => {
 };
 
 const BodyWithToggle: React.FC<{
-  item: Pick<Item, "entries">;
+  item: Item;
   message: string;
   actionLabel: string;
-}> = ({ item, message, actionLabel }) => {
+  classify?: Classify;
+}> = ({ item, message, actionLabel, classify }) => {
   const [isShown, setIsShown] = useState(false);
-  return (
+  return isShown ? (
+    <BodyWithChanges {...{ item, classify }} />
+  ) : (
     <StyledBody>
-      {isShown ? (
-        item.entries.map((entry) => <Entry key={entry.title} {...entry} />)
-      ) : (
-        <Message>
-          {message}
-          <ShowButton onClick={() => setIsShown(true)} variant="link" isInline>
-            {actionLabel}
-          </ShowButton>
-        </Message>
-      )}
+      <Message>
+        {message}
+        <ShowButton onClick={() => setIsShown(true)} variant="link" isInline>
+          {actionLabel}
+        </ShowButton>
+      </Message>
     </StyledBody>
   );
 };
 
-const BodyWithChanges: React.FC<{ item: Pick<Item, "entries"> }> = ({
-  item,
-}) => (
+const BodyWithChanges: React.FC<{
+  item: Pick<Item, "entries" | "id">;
+  classify?: Classify;
+}> = ({ item, classify }) => (
   <StyledBody>
     {item.entries.map((entry) => (
-      <Entry key={entry.title} {...entry} />
+      <Entry
+        key={entry.title}
+        {...entry}
+        classify={
+          classify
+            ? (title, to, from) => classify(item.id, title, to, from)
+            : undefined
+        }
+      />
     ))}
   </StyledBody>
 );
@@ -188,5 +208,6 @@ const Message = styled(Bullseye)`
 `;
 
 const ShowButton = styled(Button)`
+  line-height: 29px;
   margin-left: 4px;
 `;

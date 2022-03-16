@@ -2,11 +2,13 @@ import { ApiHelper, Either, ErrorWithHTTPCode, Maybe } from "@/Core";
 import * as Outcome from "./Outcome";
 
 export class InstantApiHelper<Data> implements ApiHelper {
-  constructor(private outcome: Outcome.Type<string, Data>) {}
+  constructor(
+    private getOutcome: (url: string) => Outcome.Type<string, Data>
+  ) {}
 
-  get<Data>(): Promise<Either.Type<string, Data>> {
+  get<Data>(url): Promise<Either.Type<string, Data>> {
     return Outcome.handle<string, Data>(
-      this.outcome as Outcome.Type<string, Data>
+      this.getOutcome(url) as Outcome.Type<string, Data>
     );
   }
 
@@ -14,9 +16,9 @@ export class InstantApiHelper<Data> implements ApiHelper {
     throw new Error("Method not implemented.");
   }
 
-  getWithoutEnvironment<Data>(): Promise<Either.Type<string, Data>> {
+  getWithoutEnvironment<Data>(url): Promise<Either.Type<string, Data>> {
     return Outcome.handle<string, Data>(
-      this.outcome as Outcome.Type<string, Data>
+      this.getOutcome(url) as Outcome.Type<string, Data>
     );
   }
   post<Data>(): Promise<Either.Type<string, Data>> {
