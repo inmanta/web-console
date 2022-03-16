@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @storybook/react from 6.4.14 to 6.4.15'
+destination-branches:
+- master
+- iso5
+- iso4
+sections: {}

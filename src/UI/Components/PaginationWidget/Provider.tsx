@@ -26,6 +26,7 @@ export const Provider: React.FC<Props> = ({ data, pageSize, setPageSize }) =>
           metadata={metadata}
           pageSize={pageSize}
           setPageSize={setPageSize}
+          aria-label="PaginationWidget"
         />
       ),
     },

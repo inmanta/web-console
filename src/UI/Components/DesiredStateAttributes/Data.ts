@@ -56,3 +56,49 @@ export const classified: ClassifiedAttribute[] = [
     value: "****",
   },
 ];
+
+export const longNames: ClassifiedAttribute[] = [
+  {
+    kind: "Xml",
+    key: "c",
+    value: `<note>\n    <to>Tove</to>\n    <from>Jani</from>\n</note>`,
+  },
+  {
+    kind: "SingleLine",
+    key: "use_get_schema_invalid_namespaces_workaround",
+    value: "test",
+  },
+  {
+    kind: "Json",
+    key: "d",
+    value: `{\n    "key": "value"\n}`,
+  },
+  { kind: "Undefined", key: "e" },
+  {
+    kind: "MultiLine",
+    key: "f",
+    value:
+      "This text has a length longer than 80. abcdefghijklmnopqrstvuwxyz abcdefghijklmnopqrstvuwxyz",
+  },
+  {
+    kind: "MultiLine",
+    key: "ff",
+    value: "This text contains a newline.\nblablabla...",
+  },
+  { kind: "Json", key: "g", value: "{}" },
+  {
+    kind: "File",
+    key: "hash",
+    value: "filehash",
+  },
+  {
+    kind: "Password",
+    key: "some_password",
+    value: "****",
+  },
+  {
+    kind: "MultiLine",
+    key: "use_get_schema_invalid_namespaces_workaround 123456",
+    value: "test\ntest",
+  },
+];

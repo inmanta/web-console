@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@patternfly/react-core";
-import { InfoCircleIcon } from "@patternfly/react-icons";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
 import { CompileReportRow } from "@/Core";
@@ -37,7 +36,7 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
         <Td dataLabel={words("compileReports.columns.compileTime")}>
           {row.compileTime}
         </Td>
-        <Td dataLabel={words("compileReports.columns.actions")}>
+        <Td modifier="fitContent" isActionCell>
           <Link
             to={{
               pathname: routeManager.getUrl("CompileDetails", {
@@ -46,7 +45,7 @@ export const CompileReportsTableRow: React.FC<Props> = ({ row }) => {
               search: location.search,
             }}
           >
-            <Button variant="secondary" isSmall icon={<InfoCircleIcon />}>
+            <Button variant="link">
               {words("compileReports.links.details")}
             </Button>
           </Link>

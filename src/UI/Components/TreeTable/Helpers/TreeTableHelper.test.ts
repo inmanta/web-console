@@ -64,3 +64,81 @@ test("TreeTableHelper createRows returns correct list", () => {
   ];
   expect(rows).toMatchObject(expectedRows);
 });
+
+test("TreeTableHelper createRows returns correctly ordered list", () => {
+  // Arrange
+  const treeTableHelper = new TreeTableHelper(
+    new PathHelper("$"),
+    new TreeExpansionManager("$"),
+    new AttributeHelper("$"),
+    {
+      candidate: null,
+      active: {
+        deallocation_ctx: {
+          "network_interfaces[name=eth0].allocated_id": 123456,
+        },
+        description: "Server",
+      },
+      rollback: {
+        description: "Server",
+        deallocation_ctx: {
+          "network_interfaces[name=eth0].allocated_id": 123456,
+          "network_interfaces[name=eth1].allocated_id": 456789,
+        },
+      },
+    }
+  );
+  // Act
+  const cb = jest.fn;
+  const rows = treeTableHelper.createRows({ deallocation_ctx: false }, cb);
+  // Assert
+  const expectedRows = [
+    {
+      kind: "Root",
+      id: "deallocation_ctx",
+      isChildExpanded: false,
+      primaryCell: { label: "name", value: "deallocation_ctx" },
+    },
+    {
+      kind: "Leaf",
+      id: "deallocation_ctx$network_interfaces[name=eth0].allocated_id",
+      isExpandedByParent: false,
+      level: 1,
+      primaryCell: {
+        label: "name",
+        value: "network_interfaces[name=eth0].allocated_id",
+      },
+      valueCells: [
+        { label: "candidate", value: "" },
+        { label: "active", value: "123456" },
+        { label: "rollback", value: "123456" },
+      ],
+    },
+    {
+      kind: "Leaf",
+      id: "deallocation_ctx$network_interfaces[name=eth1].allocated_id",
+      isExpandedByParent: false,
+      level: 1,
+      primaryCell: {
+        label: "name",
+        value: "network_interfaces[name=eth1].allocated_id",
+      },
+      valueCells: [
+        { label: "candidate", value: "" },
+        { label: "active", value: "" },
+        { label: "rollback", value: "456789" },
+      ],
+    },
+    {
+      kind: "Flat",
+      id: "description",
+      primaryCell: { label: "name", value: "description" },
+      valueCells: [
+        { label: "candidate", value: "" },
+        { label: "active", value: "Server" },
+        { label: "rollback", value: "Server" },
+      ],
+    },
+  ];
+  expect(rows).toMatchObject(expectedRows);
+});

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { ActionGroup, Button, Form } from "@patternfly/react-core";
+import { ActionGroup, Alert, Button, Form } from "@patternfly/react-core";
 import { set } from "lodash-es";
+import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
 import { words } from "@/UI/words";
@@ -43,7 +44,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   const onConfirm = () => onSubmit(formState);
 
   return (
-    <Form onSubmit={preventDefault}>
+    <StyledForm onSubmit={preventDefault}>
       {fields.map((field) => (
         <FieldInput
           key={field.name}
@@ -53,6 +54,14 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           path={null}
         />
       ))}
+
+      {fields.length <= 0 && (
+        <Alert
+          variant="info"
+          isInline
+          title={words("inventory.editInstance.noAttributes")}
+        />
+      )}
 
       <ActionGroup>
         <ActionDisabledTooltip
@@ -73,6 +82,10 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           {words("cancel")}
         </Button>
       </ActionGroup>
-    </Form>
+    </StyledForm>
   );
 };
+
+const StyledForm = styled(Form)`
+  min-height: 0;
+`;

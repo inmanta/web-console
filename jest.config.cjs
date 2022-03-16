@@ -54,5 +54,8 @@ module.exports = {
   // Provide a dummy value of the commit hash injected by webpack for testing
   globals: {
     COMMITHASH: "abcde123456789",
+    "ts-jest": {
+      isolatedModules: true,
+    },
   },
 };

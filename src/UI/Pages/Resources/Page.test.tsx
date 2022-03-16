@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent, { specialChars } from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
@@ -149,7 +149,7 @@ test("ResourcesView shows next page of resources", async () => {
     })
   ).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole("button", { name: "Next" }));
+  userEvent.click(screen.getByRole("button", { name: "Next" }));
 
   apiHelper.resolve(
     Either.right({
@@ -249,6 +249,47 @@ test("ResourcesView shows deploy state bar", async () => {
   expect(
     await screen.findByRole("generic", { name: "Deployment state summary" })
   ).toBeInTheDocument();
+});
+
+test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  expect(
+    await screen.findByRole("generic", { name: "ResourcesView-Loading" })
+  ).toBeInTheDocument();
+
+  apiHelper.resolve(
+    Either.right({
+      ...Resource.response,
+      links: { ...Resource.response.links, next: "/fake-link" },
+    })
+  );
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourcesView-Success" })
+  ).toBeInTheDocument();
+
+  expect(
+    await screen.findByRole("generic", { name: "Deployment state summary" })
+  ).toBeInTheDocument();
+
+  const nextButton = screen.getByRole("button", { name: "Next" });
+  expect(nextButton).toBeEnabled();
+  userEvent.click(nextButton);
+
+  expect(
+    await screen.findByRole("generic", { name: "ResourcesView-Loading" })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole("generic", { name: "Deployment state summary" })
+  ).toBeVisible();
+  expect(screen.getByRole("button", { name: "Repair" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Deploy" })).toBeVisible();
+  expect(
+    screen.getByRole("generic", { name: "PaginationWidget" })
+  ).toBeVisible();
 });
 
 test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async () => {

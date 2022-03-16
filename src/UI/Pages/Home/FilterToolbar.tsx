@@ -53,3 +53,13 @@ export const FilterToolbar: React.FC<Props> = ({
     </Toolbar>
   );
 };
+
+export const EmptyFilterToolbar: React.FC = () => (
+  <Toolbar>
+    <ToolbarContent>
+      <ToolbarGroup variant="filter-group" aria-label="FilterBar">
+        <ToolbarItem style={{ height: "36px" }} />
+      </ToolbarGroup>
+    </ToolbarContent>
+  </Toolbar>
+);

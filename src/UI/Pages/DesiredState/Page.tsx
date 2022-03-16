@@ -47,6 +47,7 @@ export const Page: React.FC = () => {
         value={{ filter, pageSize, setErrorMessage }}
       >
         <ErrorToastAlert
+          title={words("desiredState.actions.promote.failed")}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />

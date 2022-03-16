@@ -15,7 +15,7 @@ export class ResourceHistoryTablePresenter
         apiName: "date",
       },
       {
-        displayName: words("resources.history.column.numberOfDependencies"),
+        displayName: words("resources.column.requires"),
         apiName: "requires",
       },
     ];

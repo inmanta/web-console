@@ -6,6 +6,7 @@ import {
   SelectOption,
 } from "@patternfly/react-core";
 import { FilterIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 import { CompileReportParams } from "@/Core";
 
 interface Props {
@@ -27,7 +28,7 @@ export const FilterPicker: React.FC<Props> = ({
   const items = CompileReportParams.List;
 
   return (
-    <ToolbarItem>
+    <StyledToolbarItem>
       <Select
         variant={SelectVariant.single}
         toggleAriaLabel="FilterPicker"
@@ -43,6 +44,10 @@ export const FilterPicker: React.FC<Props> = ({
           </SelectOption>
         ))}
       </Select>
-    </ToolbarItem>
+    </StyledToolbarItem>
   );
 };
+
+const StyledToolbarItem = styled(ToolbarItem)`
+  align-self: start;
+`;

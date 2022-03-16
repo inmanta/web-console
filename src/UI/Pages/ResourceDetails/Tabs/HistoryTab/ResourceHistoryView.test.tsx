@@ -18,7 +18,7 @@ import {
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
-import { ResourceDetails, ResourceHistory } from "@/Test/Data";
+import { Resource, ResourceDetails, ResourceHistory } from "@/Test/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
@@ -50,9 +50,7 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <ResourceHistoryView
-            resourceId={ResourceHistory.response.data[0].resource_id}
-          />
+          <ResourceHistoryView resourceId={Resource.id} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -110,6 +108,13 @@ test("ResourceHistory shows success table", async () => {
   expect(
     await screen.findByRole("generic", { name: "ResourceHistory-Loading" })
   ).toBeInTheDocument();
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    environment: "env",
+    url: `/api/v2/resource/${Resource.encodedId}/history?limit=20&sort=date.desc`,
+    method: "GET",
+  });
 
   apiHelper.resolve(Either.right(ResourceHistory.response));
 

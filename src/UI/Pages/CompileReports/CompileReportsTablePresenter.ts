@@ -14,9 +14,8 @@ export class CompileReportsTablePresenter
       words("compileReports.columns.message"),
       words("compileReports.columns.waitTime"),
       words("compileReports.columns.compileTime"),
-      words("compileReports.columns.actions"),
     ];
-    this.numberOfColumns = this.columnHeads.length + 1;
+    this.numberOfColumns = this.columnHeads.length + 2;
   }
 
   createRows(sourceData: CompileReport[]): CompileReportRow[] {

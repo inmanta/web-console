@@ -37,7 +37,7 @@ export class BaseApiHelper implements ApiHelper {
   }
 
   private formatError(message: string, response: Response): string {
-    let errorMessage = message.replace(/\n/g, " ");
+    let errorMessage = message;
 
     if (this.keycloak && (response.status === 401 || response.status === 403)) {
       errorMessage += ` ${words("error.authorizationFailed")}`;
@@ -45,9 +45,7 @@ export class BaseApiHelper implements ApiHelper {
     }
 
     return words("error.server.intro")(
-      `${response.status} ${response.statusText} ${
-        errorMessage ? JSON.stringify(errorMessage) : ""
-      }`
+      `${response.status} ${response.statusText} \n${errorMessage}`
     );
   }
 

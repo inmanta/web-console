@@ -69,6 +69,7 @@ import {
   GetVersionResources,
   GetVersionResourcesManifest,
 } from "./GetVersionResources";
+import { GetVersionedResourceDetails } from "./GetVersionedResourceDetails";
 
 export type Query =
   | GetServices
@@ -99,7 +100,8 @@ export type Query =
   | GetAgentProcess
   | GetDesiredStates
   | GetVersionResources
-  | GetCompilerStatus;
+  | GetCompilerStatus
+  | GetVersionedResourceDetails.Query;
 
 export type Type = Query;
 
@@ -137,6 +139,7 @@ interface Manifest {
   GetDesiredStates: GetDesiredStatesManifest;
   GetVersionResources: GetVersionResourcesManifest;
   GetCompilerStatus: GetCompilerStatusManifest;
+  GetVersionedResourceDetails: GetVersionedResourceDetails.Manifest;
 }
 
 /**

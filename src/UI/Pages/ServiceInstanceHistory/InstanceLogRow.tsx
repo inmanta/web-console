@@ -2,9 +2,8 @@ import React, { useRef } from "react";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { AttributesSummary, InstanceLog } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
-import { DateWithTooltip } from "@/UI/Components";
 import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
-import { scrollRowIntoView } from "@/UI/Utils";
+import { MomentDatePresenter, scrollRowIntoView } from "@/UI/Utils";
 import { Tabs, TabKey } from "./Tabs";
 
 interface Props {
@@ -31,7 +30,7 @@ export const InstanceLogRow: React.FC<Props> = ({
   state,
 }) => {
   const [activeTab, setActiveTab] = useUrlStateWithString<TabKey>({
-    default: TabKey.Details,
+    default: TabKey.Attributes,
     key: `tab-${id}`,
     route: "History",
   });
@@ -56,7 +55,7 @@ export const InstanceLogRow: React.FC<Props> = ({
         />
         <Td dataLabel={"version"}>{id}</Td>
         <Td dataLabel={"timestamp"}>
-          <DateWithTooltip timestamp={timestamp} />
+          {new MomentDatePresenter().getFull(timestamp)}
         </Td>
         <Td dataLabel={"state"}>{state}</Td>
         <Td dataLabel={"Attributes"} ref={rowRef}>
