@@ -12,17 +12,24 @@ import {
 import styled from "styled-components";
 import { Maybe, Resource } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
-import { Item, Refs, Transform } from "@/UI/Components/DiffWizard/types";
+import { Classification, Item, Refs } from "@/UI/Components/DiffWizard/types";
 import { words } from "@/UI/words";
 import { Entry } from "./Entry/Entry";
+
+type Classify = (
+  title: string,
+  entryTitle: string,
+  from: string,
+  to: string
+) => Classification;
 
 interface Props {
   item: Item;
   refs: Refs;
-  transform?: Transform;
+  classify?: Classify;
 }
 
-export const Block: React.FC<Props> = ({ item, refs, transform }) => {
+export const Block: React.FC<Props> = ({ item, refs, classify }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const onExpand = () => setIsExpanded(!isExpanded);
 
@@ -56,16 +63,16 @@ export const Block: React.FC<Props> = ({ item, refs, transform }) => {
         </StyledHeader>
         <CardExpandableContent>
           <Divider />
-          <Body item={item} transform={transform} />
+          <Body item={item} classify={classify} />
         </CardExpandableContent>
       </StyledCard>
     </>
   );
 };
 
-const Body: React.FC<{ item: Item; transform?: Transform }> = ({
+const Body: React.FC<{ item: Item; classify?: Classify }> = ({
   item,
-  transform,
+  classify,
 }) => {
   switch (item.status) {
     case "deleted":
@@ -74,12 +81,12 @@ const Body: React.FC<{ item: Item; transform?: Transform }> = ({
           item={item}
           message={words("desiredState.compare.deleted")}
           actionLabel={words("desiredState.compare.deleted.action")}
-          transform={transform}
+          classify={classify}
         />
       );
     case "added":
     case "modified":
-      return <BodyWithChanges item={item} transform={transform} />;
+      return <BodyWithChanges item={item} classify={classify} />;
 
     case "unmodified":
       return (
@@ -116,11 +123,11 @@ const BodyWithToggle: React.FC<{
   item: Item;
   message: string;
   actionLabel: string;
-  transform?: Transform;
-}> = ({ item, message, actionLabel, transform }) => {
+  classify?: Classify;
+}> = ({ item, message, actionLabel, classify }) => {
   const [isShown, setIsShown] = useState(false);
   return isShown ? (
-    <BodyWithChanges {...{ item, transform }} />
+    <BodyWithChanges {...{ item, classify }} />
   ) : (
     <StyledBody>
       <Message>
@@ -135,16 +142,16 @@ const BodyWithToggle: React.FC<{
 
 const BodyWithChanges: React.FC<{
   item: Pick<Item, "entries" | "id">;
-  transform?: Transform;
-}> = ({ item, transform }) => (
+  classify?: Classify;
+}> = ({ item, classify }) => (
   <StyledBody>
     {item.entries.map((entry) => (
       <Entry
         key={entry.title}
         {...entry}
-        transform={
-          transform
-            ? (title, to, from) => transform(item.id, title, to, from)
+        classify={
+          classify
+            ? (title, to, from) => classify(item.id, title, to, from)
             : undefined
         }
       />

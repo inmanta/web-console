@@ -14,17 +14,4 @@ export interface EntryInfo {
 
 export type Refs = React.MutableRefObject<Record<string, HTMLElement>>;
 
-type TransformResult = "Default" | "File";
-
-export type Transform = (
-  title: string,
-  entryTitle: string,
-  from: string,
-  to: string
-) => TransformResult;
-
-export type TransformEntry = (
-  title: string,
-  from: string,
-  to: string
-) => TransformResult;
+export type Classification = "Default" | "File";

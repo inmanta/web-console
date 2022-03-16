@@ -459,7 +459,9 @@ const dict = {
   "desiredState.compare.skipped_for_undefined":
     "Could not determine difference because this resource requires a resource that has undefined values",
   "desiredState.compare.empty": "No changes found",
-  "desiredState.compare.fileAttribute.label": "content",
+  "desiredState.compare.file.attributeLabel": "content",
+  "desiredState.compare.file.hide": "Hide file contents",
+  "desiredState.compare.file.show": "Show file contents",
   "desiredState.complianceCheck.title": "Compliance Check",
   "desiredState.complianceCheck.failed": "Getting list of dryruns failed",
   "desiredState.complianceCheck.action.dryRun": "Perform dry run",

@@ -1,4 +1,4 @@
-export type { Refs, Transform } from "./types";
+export type { Refs } from "./types";
 export * from "./ItemList";
 export * from "./fromResourceToItem";
 export * from "./StatusFilter";

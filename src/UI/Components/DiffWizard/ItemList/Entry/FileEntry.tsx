@@ -42,7 +42,7 @@ export const FileEntry: React.FC<EntryInfo> = ({
       <DefaultEntry {...{ title, fromValue, toValue }} />
       <Grid>
         <GridItem span={2}>
-          <Title>{words("desiredState.compare.fileAttribute.label")}</Title>
+          <Title>{words("desiredState.compare.file.attributeLabel")}</Title>
         </GridItem>
         <GridItem span={10}>
           {RemoteData.fold(
@@ -72,7 +72,7 @@ const DefaultView: React.FC<{ isLoading?: boolean; onShow(): void }> = ({
       style={{ lineHeight: "29px" }}
       isDisabled={isLoading}
     >
-      Show file contents
+      {words("desiredState.compare.file.show")}
     </Button>
   </Message>
 );
@@ -85,7 +85,7 @@ const FailedView: React.FC<{ error: string; onShow(): void }> = ({
     <p>
       {words("error")}
       <RetryButton variant="link" isInline onClick={onShow}>
-        Retry
+        {words("retry")}
       </RetryButton>
     </p>
     <div>{error}</div>
@@ -100,7 +100,7 @@ const SuccessView: React.FC<{
     <div>
       <Message>
         <StyledButton variant="link" isInline onClick={onHide}>
-          Hide file contents
+          {words("desiredState.compare.file.hide")}
         </StyledButton>
       </Message>
     </div>

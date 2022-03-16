@@ -1,25 +1,27 @@
 import React from "react";
-import { EntryInfo, TransformEntry } from "@/UI/Components/DiffWizard/types";
+import { Classification, EntryInfo } from "@/UI/Components/DiffWizard/types";
 import { DefaultEntry } from "./DefaultEntry";
 import { FileEntry } from "./FileEntry";
 
+type Classify = (title: string, from: string, to: string) => Classification;
+
 interface Props extends EntryInfo {
-  transform?: TransformEntry;
+  classify?: Classify;
 }
 
 export const Entry: React.FC<Props> = ({
   title,
   fromValue,
   toValue,
-  transform,
+  classify,
 }) => {
-  if (transform === undefined) {
+  if (classify === undefined) {
     return <DefaultEntry {...{ title, fromValue, toValue }} />;
   }
 
-  const transformed = transform(title, fromValue, toValue);
+  const classification = classify(title, fromValue, toValue);
 
-  if (transformed === "Default") {
+  if (classification === "Default") {
     return <DefaultEntry {...{ title, fromValue, toValue }} />;
   }
 
