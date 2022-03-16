@@ -1,3 +1,7 @@
+import {
+  notificationSlice,
+  NotificationSlice,
+} from "@S/Notification/Data/Store";
 import { agentProcessSlice, AgentProcessSlice } from "./AgentProcessSlice";
 import { agentsSlice, AgentsSlice } from "./AgentsSlice";
 import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
@@ -93,6 +97,7 @@ export interface StoreModel {
   dryRuns: DryRunsSlice;
   dryRunReport: DryRunReportSlice;
   versionedResourceDetails: VersionedResourceDetailsSlice;
+  notification: NotificationSlice;
 }
 
 export const storeModel: StoreModel = {
@@ -126,4 +131,5 @@ export const storeModel: StoreModel = {
   dryRuns: dryRunsSlice,
   dryRunReport: dryRunReportSlice,
   versionedResourceDetails: versionedResourceDetailsSlice,
+  notification: notificationSlice,
 };

@@ -20,6 +20,7 @@ export const ErrorToastAlert: React.FC<Props> = ({
   return errorMessage ? (
     <AlertGroup isToast>
       <Alert
+        aria-label="ErrorToastAlert"
         variant={"danger"}
         title={title}
         actionClose={

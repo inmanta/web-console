@@ -10,3 +10,8 @@ export const metadata: Pagination.Metadata = {
 export const links: Pagination.Links = {
   self: "fake-url",
 };
+
+export const handlers: Pagination.Handlers = {
+  prev: () => undefined,
+  next: () => undefined,
+};
