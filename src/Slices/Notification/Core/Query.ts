@@ -1,5 +1,5 @@
 import { PageSize, Pagination } from "@/Core/Domain";
-import * as Notification from "./Model";
+import { Model, Severity } from "./Model";
 
 export type Origin = "drawer" | "center";
 
@@ -13,17 +13,17 @@ export interface Query {
 export interface Manifest {
   error: string;
   apiResponse: {
-    data: Notification.Model[];
+    data: Model[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   data: {
-    data: Notification.Model[];
+    data: Model[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   usedData: {
-    data: Notification.Model[];
+    data: Model[];
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
@@ -35,5 +35,5 @@ export interface Filter {
   message?: string[];
   read?: boolean;
   cleared?: boolean;
-  severity?: boolean;
+  severity?: Severity;
 }

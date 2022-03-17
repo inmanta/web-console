@@ -1,6 +1,6 @@
 type Timestamp = string;
 
-type SeverityLevel = "message" | "info" | "success" | "warning" | "error";
+export type Severity = "message" | "info" | "success" | "warning" | "error";
 
 export interface Model {
   environment: string;
@@ -8,7 +8,7 @@ export interface Model {
   created: Timestamp;
   title: string;
   message: string;
-  severity: SeverityLevel;
+  severity: Severity;
   uri: string;
   read: boolean;
   cleared: boolean;
