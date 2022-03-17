@@ -9,5 +9,10 @@ export default {
 };
 
 export const Default = () => (
-  <View data={RemoteData.success(Mock.data)} onClose={() => alert("close")} />
+  <View
+    data={RemoteData.success(Mock.data)}
+    onClose={() => alert("close")}
+    trigger={() => undefined}
+    drawerRef={{ current: undefined }}
+  />
 );

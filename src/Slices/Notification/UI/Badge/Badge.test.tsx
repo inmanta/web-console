@@ -25,7 +25,7 @@ function setup() {
   const component = (
     <StoreProvider store={store}>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
-        <Badge />
+        <Badge onClick={() => undefined} />
       </DependencyProvider>
     </StoreProvider>
   );
@@ -40,7 +40,7 @@ test("Given Badge WHEN request fails THEN error is shown", async () => {
     {
       method: "GET",
       environment: "env",
-      url: "/api/v2/notification?limit=100",
+      url: "/api/v2/notification?limit=100&filter.cleared=false",
     },
   ]);
   await act(async () => {
@@ -67,7 +67,7 @@ test.each`
       {
         method: "GET",
         environment: "env",
-        url: "/api/v2/notification?limit=100",
+        url: "/api/v2/notification?limit=100&filter.cleared=false",
       },
     ]);
     await act(async () => {

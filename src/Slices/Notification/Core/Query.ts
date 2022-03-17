@@ -37,3 +37,10 @@ export interface Filter {
   cleared?: boolean;
   severity?: Severity;
 }
+
+export const drawerQuery: Query = {
+  kind: "GetNotifications",
+  origin: "drawer",
+  pageSize: PageSize.from("100"),
+  filter: { cleared: false },
+};

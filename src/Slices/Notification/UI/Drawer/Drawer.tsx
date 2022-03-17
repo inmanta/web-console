@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { MutableRefObject, useContext, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -9,31 +9,40 @@ import {
   NotificationDrawerHeader,
   NotificationDrawerList,
 } from "@patternfly/react-core";
-import { PageSize, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import { Body } from "@S/Notification/Core/Model";
+import { drawerQuery } from "@S/Notification/Core/Query";
 import { ViewData } from "@S/Notification/Core/Utils";
 import { Item, OnUpdate } from "./Item";
 
 interface Props {
   onClose(): void;
+  drawerRef: MutableRefObject<HTMLDivElement | undefined>;
 }
 
-export const Drawer: React.FC<Props> = ({ onClose }) => {
-  const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useContinuous<"GetNotifications">({
-    kind: "GetNotifications",
-    origin: "drawer",
-    pageSize: PageSize.from("100"),
+export const Drawer: React.FC<Props> = ({ onClose, drawerRef }) => {
+  const { commandResolver, queryResolver } = useContext(DependencyContext);
+  const data = queryResolver.useReadOnly<"GetNotifications">(drawerQuery);
+
+  const trigger = commandResolver.getTrigger<"UpdateNotification">({
+    kind: "UpdateNotification",
   });
 
-  return <View {...{ data, onClose }} />;
+  return <View {...{ data, onClose, trigger, drawerRef }} />;
 };
 
 interface ViewProps extends Props {
   data: ViewData;
+  trigger(body: Body, ids: string[]): void;
 }
 
-export const View: React.FC<ViewProps> = ({ data, onClose }) => {
+export const View: React.FC<ViewProps> = ({
+  data,
+  onClose,
+  trigger,
+  drawerRef,
+}) => {
   const count = RemoteData.withFallback(
     RemoteData.mapSuccess(
       (info) => info.data.filter((n) => !n.read).length,
@@ -44,12 +53,12 @@ export const View: React.FC<ViewProps> = ({ data, onClose }) => {
 
   const getOnUpdate =
     (id: string): OnUpdate =>
-    async (key, value) => {
-      alert(`${id} ${key} ${value}`);
+    async (body) => {
+      trigger(body, [id]);
     };
 
   return (
-    <NotificationDrawer>
+    <NotificationDrawer ref={drawerRef}>
       <NotificationDrawerHeader count={count} onClose={onClose}>
         <ActionList />
       </NotificationDrawerHeader>

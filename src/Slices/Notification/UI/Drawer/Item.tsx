@@ -9,7 +9,7 @@ import {
   NotificationDrawerListItemHeader,
 } from "@patternfly/react-core";
 import { MomentDatePresenter } from "@/UI";
-import { Model, Severity } from "@S/Notification/Core/Model";
+import { Model, Severity, Body } from "@S/Notification/Core/Model";
 
 interface Props {
   notification: Model;
@@ -20,7 +20,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
   return (
     <NotificationDrawerListItem
       variant={getSeverityForNotification(notification.severity)}
-      onClick={notification.read ? undefined : () => onUpdate("read", true)}
+      onClick={notification.read ? undefined : () => onUpdate({ read: true })}
       isRead={notification.read}
     >
       <NotificationDrawerListItemHeader
@@ -63,7 +63,7 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
         <DropdownItem
           key="read"
           component="button"
-          onClick={() => onUpdate("read", false)}
+          onClick={() => onUpdate({ read: false })}
           isDisabled={!notification.read}
         >
           Mark as Unread
@@ -71,7 +71,7 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
         <DropdownItem
           key="cleared"
           component="button"
-          onClick={() => onUpdate("cleared", true)}
+          onClick={() => onUpdate({ cleared: true })}
         >
           Clear
         </DropdownItem>,
@@ -86,4 +86,4 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
 
 type VisualSeverity = "default" | "success" | "danger" | "warning" | "info";
 
-export type OnUpdate = (key: "cleared" | "read", value: boolean) => void;
+export type OnUpdate = (body: Body) => void;

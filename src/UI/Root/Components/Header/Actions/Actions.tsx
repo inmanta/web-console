@@ -7,12 +7,17 @@ import { Profile } from "./Profile";
 import { SettingsButton } from "./SettingsButton";
 import { StatusButton } from "./StatusButton";
 
-export const Actions: React.FC<{ noEnv: boolean }> = ({ noEnv }) => {
+interface Props {
+  onNotificationsToggle(): void;
+  noEnv: boolean;
+}
+
+export const Actions: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   const { keycloakController } = useContext(DependencyContext);
   return (
     <PageHeaderTools>
       <PageHeaderToolsGroup>
-        {!noEnv && <Badge />}
+        {!noEnv && <Badge onClick={onNotificationsToggle} />}
         {!noEnv && <SettingsButton />}
         <StatusButton />
         <DocumentationLink />

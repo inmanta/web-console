@@ -4,29 +4,27 @@ import {
   NotificationBadgeVariant,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { PageSize, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
 import { ErrorToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Model } from "@S/Notification/Core/Model";
+import { drawerQuery } from "@S/Notification/Core/Query";
 import { ViewData } from "@S/Notification/Core/Utils";
 
-export const Badge: React.FC = () => {
+export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useContinuous<"GetNotifications">({
-    kind: "GetNotifications",
-    origin: "drawer",
-    pageSize: PageSize.from("100"),
-  });
+  const [data] = queryResolver.useContinuous<"GetNotifications">(drawerQuery);
 
-  return <View {...{ data }} />;
+  return <View {...{ data, onClick }} />;
 };
 
 interface Props {
+  onClick(): void;
   data: ViewData;
 }
 
-export const View: React.FC<Props> = ({ data }) => {
+export const View: React.FC<Props> = ({ data, onClick }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -58,6 +56,7 @@ export const View: React.FC<Props> = ({ data }) => {
           <NotificationBadge
             aria-label={getAriaLabelForVariant(variant)}
             variant={variant}
+            onClick={onClick}
           />
         );
       },
