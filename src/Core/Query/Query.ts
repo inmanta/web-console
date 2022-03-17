@@ -1,3 +1,4 @@
+import * as GetNotifications from "@/Slices/Notification/Core/Query";
 import { GetAgentProcess, GetAgentProcessManifest } from "./GetAgentProcess";
 import { GetAgents, GetAgentsManifest } from "./GetAgents";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
@@ -111,7 +112,8 @@ export type Query =
   | GetDesiredStateDiff.Query
   | GetDryRuns.Query
   | GetDryRunReport.Query
-  | GetVersionedResourceDetails.Query;
+  | GetVersionedResourceDetails.Query
+  | GetNotifications.Query;
 
 export type Type = Query;
 
@@ -155,6 +157,7 @@ interface Manifest {
   GetDryRuns: GetDryRuns.Manifest;
   GetDryRunReport: GetDryRunReport.Manifest;
   GetVersionedResourceDetails: GetVersionedResourceDetails.Manifest;
+  GetNotifications: GetNotifications.Manifest;
 }
 
 /**

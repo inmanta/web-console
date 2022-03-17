@@ -22,7 +22,8 @@
     "paths": {
       "@assets/*": ["node_modules/@patternfly/react-core/dist/styles/assets/*"],
       "@images/*": ["public/images/*"],
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@S/*": ["src/Slices/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs"],
