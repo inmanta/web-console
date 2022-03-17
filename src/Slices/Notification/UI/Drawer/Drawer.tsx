@@ -8,15 +8,11 @@ import {
   NotificationDrawerBody,
   NotificationDrawerHeader,
   NotificationDrawerList,
-  NotificationDrawerListItem,
-  NotificationDrawerListItemBody,
-  NotificationDrawerListItemHeader,
 } from "@patternfly/react-core";
 import { PageSize, RemoteData } from "@/Core";
-import { MomentDatePresenter } from "@/UI";
 import { DependencyContext } from "@/UI/Dependency";
-import { Model, SeverityLevel } from "@S/Notification/Core/Model";
 import { ViewData } from "@S/Notification/Core/Utils";
+import { Item, OnUpdate } from "./Item";
 
 interface Props {
   onClose(): void;
@@ -55,7 +51,7 @@ export const View: React.FC<ViewProps> = ({ data, onClose }) => {
   return (
     <NotificationDrawer>
       <NotificationDrawerHeader count={count} onClose={onClose}>
-        <HeaderKebap />
+        <ActionList />
       </NotificationDrawerHeader>
       <NotificationDrawerBody>
         <NotificationDrawerList>
@@ -66,7 +62,7 @@ export const View: React.FC<ViewProps> = ({ data, onClose }) => {
               failed: () => null,
               success: ({ data }) =>
                 data.map((notification) => (
-                  <ListItem
+                  <Item
                     {...{ notification }}
                     key={notification.id}
                     onUpdate={getOnUpdate(notification.id)}
@@ -81,7 +77,7 @@ export const View: React.FC<ViewProps> = ({ data, onClose }) => {
   );
 };
 
-const HeaderKebap: React.FC = ({}) => {
+const ActionList: React.FC = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Dropdown
@@ -101,85 +97,6 @@ const HeaderKebap: React.FC = ({}) => {
       ]}
       id="notification-0"
       position="right"
-    />
-  );
-};
-
-type VisualSeverity = "default" | "success" | "danger" | "warning" | "info";
-
-type OnUpdate = (key: "cleared" | "read", value: boolean) => void;
-
-interface ItemProps {
-  notification: Model;
-  onUpdate: OnUpdate;
-}
-
-const ListItem: React.FC<ItemProps> = ({ notification, onUpdate }) => {
-  return (
-    <NotificationDrawerListItem
-      variant={getSeverityForNotification(notification.severity)}
-      onClick={notification.read ? undefined : () => onUpdate("read", true)}
-      isRead={notification.read}
-    >
-      <NotificationDrawerListItemHeader
-        variant={getSeverityForNotification(notification.severity)}
-        title={notification.title}
-      >
-        <ItemKebap {...{ notification, onUpdate }} />
-      </NotificationDrawerListItemHeader>
-      <NotificationDrawerListItemBody
-        timestamp={new MomentDatePresenter().get(notification.created).relative}
-      >
-        {notification.message}
-      </NotificationDrawerListItemBody>
-    </NotificationDrawerListItem>
-  );
-};
-
-const getSeverityForNotification = (
-  severity: SeverityLevel
-): VisualSeverity => {
-  switch (severity) {
-    case "error":
-      return "danger";
-    case "message":
-      return "default";
-    default:
-      return severity;
-  }
-};
-
-const ItemKebap: React.FC<ItemProps> = ({ notification, onUpdate }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <Dropdown
-      position="right"
-      onSelect={() => setIsOpen(false)}
-      toggle={<KebabToggle onToggle={setIsOpen} />}
-      isOpen={isOpen}
-      isPlain
-      dropdownItems={[
-        <DropdownItem
-          key="read"
-          component="button"
-          onClick={() => onUpdate("read", false)}
-          isDisabled={!notification.read}
-        >
-          Mark as Unread
-        </DropdownItem>,
-        <DropdownItem
-          key="cleared"
-          component="button"
-          onClick={() => onUpdate("cleared", true)}
-        >
-          Clear
-        </DropdownItem>,
-        <DropdownSeparator key="separator" />,
-        <DropdownItem key="disabled link" isDisabled>
-          Details
-        </DropdownItem>,
-      ]}
     />
   );
 };
