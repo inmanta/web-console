@@ -5,7 +5,7 @@ import * as Mock from "@S/Notification/Core/Mock";
 import { View } from "./Badge";
 
 export default {
-  title: "Badge",
+  title: "Notification/Badge",
   component: View,
 };
 
