@@ -8,7 +8,7 @@ export const unread: Model = {
   created: "2021-01-11T12:56:56.205131",
   title: "Something happened",
   message: "",
-  severity_level: "info",
+  severity: "info",
   uri: "",
   read: false,
   cleared: false,
@@ -17,13 +17,13 @@ export const unread: Model = {
 export const error: Model = {
   ...unread,
   id: "abcdefgh02",
-  severity_level: "error",
+  severity: "error",
 };
 
 export const read: Model = {
   ...unread,
-  id: "abcdefgh04",
-  severity_level: "info",
+  id: "abcdefgh03",
+  severity: "info",
   read: true,
 };
 

@@ -8,7 +8,7 @@ export interface Model {
   created: Timestamp;
   title: string;
   message: string;
-  severity_level: SeverityLevel;
+  severity: SeverityLevel;
   uri: string;
   read: boolean;
   cleared: boolean;

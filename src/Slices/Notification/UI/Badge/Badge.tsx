@@ -36,8 +36,12 @@ export const View: React.FC<Props> = ({ data }) => {
 
   return RemoteData.fold(
     {
-      notAsked: () => <PlainBadge variant={NotificationBadgeVariant.read} />,
-      loading: () => <PlainBadge variant={NotificationBadgeVariant.read} />,
+      notAsked: () => (
+        <PlainBadge variant={NotificationBadgeVariant.read} isDisabled />
+      ),
+      loading: () => (
+        <PlainBadge variant={NotificationBadgeVariant.read} isDisabled />
+      ),
       failed: () => (
         <>
           <ErrorToastAlert
@@ -45,7 +49,7 @@ export const View: React.FC<Props> = ({ data }) => {
             title={words("error")}
             setErrorMessage={setError}
           />
-          <PlainBadge variant={NotificationBadgeVariant.read} />
+          <PlainBadge variant={NotificationBadgeVariant.read} isDisabled />
         </>
       ),
       success: ({ data: notifications }) => {
@@ -65,13 +69,17 @@ export const View: React.FC<Props> = ({ data }) => {
 const getVariantFromNotifications = (
   notifications: Model[]
 ): NotificationBadgeVariant => {
-  if (notifications.some(isError)) return NotificationBadgeVariant.attention;
+  if (notifications.some(isUnreadError)) {
+    return NotificationBadgeVariant.attention;
+  }
   if (notifications.some(isUnread)) return NotificationBadgeVariant.unread;
   return NotificationBadgeVariant.read;
 };
 
-const isError = (notification: Model) =>
-  notification.severity_level === "error";
+const isUnreadError = (notification: Model) =>
+  isUnread(notification) && isError(notification);
+
+const isError = (notification: Model) => notification.severity === "error";
 
 const isUnread = (notification: Model) => notification.read === false;
 
