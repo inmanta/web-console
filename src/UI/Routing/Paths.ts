@@ -10,6 +10,7 @@ export const paths: Paths = {
   CreateEnvironment: "/environment/create",
   Settings: "/settings",
   Status: "/status",
+  NotificationCenter: "/notificationcenter",
 
   /**
    * LSM

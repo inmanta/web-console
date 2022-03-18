@@ -2,7 +2,6 @@ import React, { MutableRefObject, useContext, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
-  DropdownSeparator,
   KebabToggle,
   NotificationDrawer,
   NotificationDrawerBody,
@@ -11,6 +10,8 @@ import {
 } from "@patternfly/react-core";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import { useNavigateTo } from "@/UI/Routing";
+import { words } from "@/UI/words";
 import { Body } from "@S/Notification/Core/Model";
 import { drawerQuery } from "@S/Notification/Core/Query";
 import { ViewData } from "@S/Notification/Core/Utils";
@@ -52,15 +53,19 @@ export const View: React.FC<ViewProps> = ({
   );
 
   const getOnUpdate =
-    (id: string): OnUpdate =>
+    (ids: string[]): OnUpdate =>
     async (body) => {
-      trigger(body, [id]);
+      trigger(body, ids);
     };
+
+  const onUpdateForAll = !RemoteData.isSuccess(data)
+    ? () => undefined
+    : getOnUpdate(data.value.data.map((notification) => notification.id));
 
   return (
     <NotificationDrawer ref={drawerRef}>
       <NotificationDrawerHeader count={count} onClose={onClose}>
-        <ActionList />
+        <ActionList {...{ onUpdateForAll, onClose }} />
       </NotificationDrawerHeader>
       <NotificationDrawerBody>
         <NotificationDrawerList>
@@ -74,7 +79,7 @@ export const View: React.FC<ViewProps> = ({
                   <Item
                     {...{ notification }}
                     key={notification.id}
-                    onUpdate={getOnUpdate(notification.id)}
+                    onUpdate={getOnUpdate([notification.id])}
                   />
                 )),
             },
@@ -86,8 +91,19 @@ export const View: React.FC<ViewProps> = ({
   );
 };
 
-const ActionList: React.FC = ({}) => {
+interface ActionListProps {
+  onUpdateForAll: OnUpdate;
+  onClose(): void;
+}
+
+const ActionList: React.FC<ActionListProps> = ({ onUpdateForAll, onClose }) => {
+  const navigateTo = useNavigateTo();
   const [isOpen, setIsOpen] = useState(false);
+
+  const onShowAll = () => {
+    navigateTo("NotificationCenter", undefined);
+    onClose();
+  };
   return (
     <Dropdown
       onSelect={() => setIsOpen(false)}
@@ -95,13 +111,22 @@ const ActionList: React.FC = ({}) => {
       isOpen={isOpen}
       isPlain
       dropdownItems={[
-        <DropdownItem key="link">Link</DropdownItem>,
-        <DropdownItem key="action" component="button">
-          Action
+        <DropdownItem
+          key="readAll"
+          component="button"
+          onClick={() => onUpdateForAll({ read: true })}
+        >
+          {words("notification.drawer.readAll")}
         </DropdownItem>,
-        <DropdownSeparator key="separator" />,
-        <DropdownItem key="disabled link" isDisabled>
-          Disabled link
+        <DropdownItem
+          key="clearAll"
+          component="button"
+          onClick={() => onUpdateForAll({ cleared: true })}
+        >
+          {words("notification.drawer.clearAll")}
+        </DropdownItem>,
+        <DropdownItem key="seeAll" component="button" onClick={onShowAll}>
+          {words("notification.drawer.showAll")}
         </DropdownItem>,
       ]}
       id="notification-0"

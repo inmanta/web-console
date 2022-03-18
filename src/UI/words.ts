@@ -480,6 +480,14 @@ const dict = {
   "parameters.filters.source.placeholder": "Filter by source",
 
   /**
+   * Notification
+   */
+  "notification.center.title": "Notification Center",
+  "notification.drawer.showAll": "Show all notifications",
+  "notification.drawer.readAll": "Mark all as read",
+  "notification.drawer.clearAll": "Clear all",
+
+  /**
    * Common
    */
   "common.serviceInstance.select": (attribute: string) =>

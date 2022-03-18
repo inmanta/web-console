@@ -27,6 +27,7 @@ export class PrimaryRouteManager implements RouteManager {
       CreateEnvironment: CreateEnvironment(this.baseUrl),
       Settings: Settings(this.baseUrl),
       Status: Status(this.baseUrl),
+      NotificationCenter: NotificationCenter(this.baseUrl),
 
       /**
        * LSM
@@ -338,5 +339,13 @@ const ComplianceCheck = (base: string): Route<"ComplianceCheck"> => ({
   parent: "DesiredState",
   path: `${base}${paths.ComplianceCheck}`,
   generateLabel: () => "Compliance Check",
+  environmentRole: "Required",
+});
+
+const NotificationCenter = (base: string): Route => ({
+  kind: "NotificationCenter",
+  parent: "Home",
+  path: `${base}${paths.NotificationCenter}`,
+  label: "Notification Center",
   environmentRole: "Required",
 });

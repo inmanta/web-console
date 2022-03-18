@@ -1,5 +1,6 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
+import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { AgentProcessPage } from "./AgentProcess";
 import { AgentsPage } from "./Agents";
 import { CompileDetailsPage } from "./CompileDetails";
@@ -40,6 +41,10 @@ export class PrimaryPageManager implements PageManager {
       },
       Status: { ...this.routeDictionary.Status, element: <StatusPage /> },
       Settings: { ...this.routeDictionary.Settings, element: <SettingsPage /> },
+      NotificationCenter: {
+        ...this.routeDictionary.NotificationCenter,
+        element: <NotificationCenterPage />,
+      },
 
       /**
        * LSM

@@ -6,6 +6,7 @@ const kinds = [
   "CreateEnvironment",
   "Settings",
   "Status",
+  "NotificationCenter",
 
   /**
    * LSM
