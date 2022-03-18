@@ -22,6 +22,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
       variant={getSeverityForNotification(notification.severity)}
       onClick={notification.read ? undefined : () => onUpdate({ read: true })}
       isRead={notification.read}
+      aria-label="NotificationItem"
     >
       <NotificationDrawerListItemHeader
         variant={getSeverityForNotification(notification.severity)}
@@ -56,7 +57,12 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
     <Dropdown
       position="right"
       onSelect={() => setIsOpen(false)}
-      toggle={<KebabToggle onToggle={setIsOpen} />}
+      toggle={
+        <KebabToggle
+          onToggle={setIsOpen}
+          aria-label="NotificationItemActions"
+        />
+      }
       isOpen={isOpen}
       isPlain
       dropdownItems={[

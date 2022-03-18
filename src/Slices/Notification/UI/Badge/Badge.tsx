@@ -35,10 +35,18 @@ export const View: React.FC<Props> = ({ data, onClick }) => {
   return RemoteData.fold(
     {
       notAsked: () => (
-        <PlainBadge variant={NotificationBadgeVariant.read} isDisabled />
+        <PlainBadge
+          aria-label="Badge"
+          variant={NotificationBadgeVariant.read}
+          isDisabled
+        />
       ),
       loading: () => (
-        <PlainBadge variant={NotificationBadgeVariant.read} isDisabled />
+        <PlainBadge
+          aria-label="Badge"
+          variant={NotificationBadgeVariant.read}
+          isDisabled
+        />
       ),
       failed: () => (
         <>
@@ -47,14 +55,19 @@ export const View: React.FC<Props> = ({ data, onClick }) => {
             title={words("error")}
             setErrorMessage={setError}
           />
-          <PlainBadge variant={NotificationBadgeVariant.read} isDisabled />
+          <PlainBadge
+            aria-label="Badge"
+            variant={NotificationBadgeVariant.read}
+            isDisabled
+          />
         </>
       ),
       success: ({ data: notifications }) => {
         const variant = getVariantFromNotifications(notifications);
         return (
           <NotificationBadge
-            aria-label={getAriaLabelForVariant(variant)}
+            aria-label="Badge"
+            data-variant={variant}
             variant={variant}
             onClick={onClick}
           />
@@ -81,17 +94,6 @@ const isUnreadError = (notification: Model) =>
 const isError = (notification: Model) => notification.severity === "error";
 
 const isUnread = (notification: Model) => notification.read === false;
-
-const getAriaLabelForVariant = (variant: NotificationBadgeVariant): string => {
-  switch (variant) {
-    case NotificationBadgeVariant.attention:
-      return "Badge-Error";
-    case NotificationBadgeVariant.unread:
-      return "Badge-Unread";
-    case NotificationBadgeVariant.read:
-      return "Badge-Read";
-  }
-};
 
 const PlainBadge = styled(NotificationBadge)`
   --pf-c-button--m-plain--hover--Color: var(--pf-global--Color--200);

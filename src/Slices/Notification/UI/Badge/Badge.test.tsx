@@ -52,15 +52,15 @@ test("Given Badge WHEN request fails THEN error is shown", async () => {
 });
 
 test.each`
-  data                                    | condition                  | variant     | label
-  ${[Mock.read]}                          | ${"only read"}             | ${"read"}   | ${"Badge-Read"}
-  ${[Mock.unread]}                        | ${"an unread"}             | ${"unread"} | ${"Badge-Unread"}
-  ${[Mock.unread, Mock.read]}             | ${"unread + read"}         | ${"unread"} | ${"Badge-Unread"}
-  ${[Mock.error]}                         | ${"an unread error"}       | ${"error"}  | ${"Badge-Error"}
-  ${[Mock.error, Mock.unread, Mock.read]} | ${"error + unread + read"} | ${"error"}  | ${"Badge-Error"}
+  data                                    | condition                  | variant
+  ${[Mock.read]}                          | ${"only read"}             | ${"read"}
+  ${[Mock.unread]}                        | ${"an unread"}             | ${"unread"}
+  ${[Mock.unread, Mock.read]}             | ${"unread + read"}         | ${"unread"}
+  ${[Mock.error]}                         | ${"an unread error"}       | ${"attention"}
+  ${[Mock.error, Mock.unread, Mock.read]} | ${"error + unread + read"} | ${"attention"}
 `(
   "Given Badge WHEN notifications contain $condition THEN $variant variant is shown",
-  async ({ data, label }) => {
+  async ({ data, variant }) => {
     const { component, apiHelper } = setup();
     render(component);
     expect(apiHelper.pendingRequests).toEqual([
@@ -73,6 +73,8 @@ test.each`
     await act(async () => {
       await apiHelper.resolve(Either.right({ ...Mock.response, data }));
     });
-    expect(screen.getByRole("button", { name: label })).toBeVisible();
+    const button = screen.getByRole("button", { name: "Badge" });
+    expect(button).toBeVisible();
+    expect(button).toHaveAttribute("data-variant", variant);
   }
 );

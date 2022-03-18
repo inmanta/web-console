@@ -58,14 +58,26 @@ export const View: React.FC<ViewProps> = ({
       trigger(body, ids);
     };
 
-  const onUpdateForAll = !RemoteData.isSuccess(data)
-    ? () => undefined
-    : getOnUpdate(data.value.data.map((notification) => notification.id));
+  const onClearAll = () => {
+    if (!RemoteData.isSuccess(data)) return;
+    getOnUpdate(data.value.data.map((notification) => notification.id))({
+      cleared: true,
+    });
+  };
+
+  const onReadAll = () => {
+    if (!RemoteData.isSuccess(data)) return;
+    getOnUpdate(
+      data.value.data
+        .filter((notification) => !notification.read)
+        .map((notification) => notification.id)
+    )({ read: true });
+  };
 
   return (
-    <NotificationDrawer ref={drawerRef}>
+    <NotificationDrawer ref={drawerRef} aria-label="NotificationDrawer">
       <NotificationDrawerHeader count={count} onClose={onClose}>
-        <ActionList {...{ onUpdateForAll, onClose }} />
+        <ActionList {...{ onClearAll, onReadAll, onClose }} />
       </NotificationDrawerHeader>
       <NotificationDrawerBody>
         <NotificationDrawerList>
@@ -92,11 +104,16 @@ export const View: React.FC<ViewProps> = ({
 };
 
 interface ActionListProps {
-  onUpdateForAll: OnUpdate;
+  onClearAll(): void;
+  onReadAll(): void;
   onClose(): void;
 }
 
-const ActionList: React.FC<ActionListProps> = ({ onUpdateForAll, onClose }) => {
+const ActionList: React.FC<ActionListProps> = ({
+  onClearAll,
+  onReadAll,
+  onClose,
+}) => {
   const navigateTo = useNavigateTo();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -104,25 +121,23 @@ const ActionList: React.FC<ActionListProps> = ({ onUpdateForAll, onClose }) => {
     navigateTo("NotificationCenter", undefined);
     onClose();
   };
+
   return (
     <Dropdown
       onSelect={() => setIsOpen(false)}
-      toggle={<KebabToggle onToggle={setIsOpen} />}
+      toggle={
+        <KebabToggle
+          onToggle={setIsOpen}
+          aria-label="NotificationListActions"
+        />
+      }
       isOpen={isOpen}
       isPlain
       dropdownItems={[
-        <DropdownItem
-          key="readAll"
-          component="button"
-          onClick={() => onUpdateForAll({ read: true })}
-        >
+        <DropdownItem key="readAll" component="button" onClick={onReadAll}>
           {words("notification.drawer.readAll")}
         </DropdownItem>,
-        <DropdownItem
-          key="clearAll"
-          component="button"
-          onClick={() => onUpdateForAll({ cleared: true })}
-        >
+        <DropdownItem key="clearAll" component="button" onClick={onClearAll}>
           {words("notification.drawer.clearAll")}
         </DropdownItem>,
         <DropdownItem key="seeAll" component="button" onClick={onShowAll}>
