@@ -85,7 +85,7 @@ export const ServiceInventory: React.FunctionComponent<{
           />
         }
       />
-      <GetInstancesContext.Provider value={{ filter, sort, pageSize }}>
+      <GetInstancesContext.Provider value={{ refetch: retry }}>
         {RemoteData.fold(
           {
             notAsked: () => null,

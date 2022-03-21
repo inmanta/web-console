@@ -28,7 +28,7 @@ export const DeleteModal: React.FC<Props> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const { filter, sort, pageSize } = useContext(GetInstancesContext);
+  const { refetch } = useContext(GetInstancesContext);
 
   const trigger = commandResolver.getTrigger<"DeleteInstance">({
     kind: "DeleteInstance",
@@ -39,13 +39,7 @@ export const DeleteModal: React.FC<Props> = ({
   const isHalted = environmentModifier.useIsHalted();
   const onSubmit = async () => {
     setIsOpen(false);
-    const result = await trigger({
-      kind: "GetServiceInstances",
-      name: service_entity,
-      filter,
-      sort,
-      pageSize,
-    });
+    const result = await trigger(refetch);
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }

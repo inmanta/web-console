@@ -11,6 +11,7 @@ import {
 } from "@/Data";
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { GetInstancesContext } from "../../GetInstancesContext";
 import { DeleteModal } from "./DeleteModal";
 
 function setup() {
@@ -29,6 +30,7 @@ function setup() {
   const commandResolver = new CommandResolverImpl(
     new CommandManagerResolver(storeInstance, apiHelper, authHelper)
   );
+  const refetch = jest.fn();
   return {
     component: (isDisabled = false) => (
       <StoreProvider store={storeInstance}>
@@ -38,17 +40,20 @@ function setup() {
             commandResolver,
           }}
         >
-          <DeleteModal
-            id={ServiceInstance.a.id}
-            version={ServiceInstance.a.version}
-            isDisabled={isDisabled}
-            service_entity={ServiceInstance.a.service_entity}
-          />
+          <GetInstancesContext.Provider value={{ refetch }}>
+            <DeleteModal
+              id={ServiceInstance.a.id}
+              version={ServiceInstance.a.version}
+              isDisabled={isDisabled}
+              service_entity={ServiceInstance.a.service_entity}
+            />
+          </GetInstancesContext.Provider>
         </DependencyProvider>
       </StoreProvider>
     ),
     storeInstance,
     apiHelper,
+    refetch,
   };
 }
 
@@ -71,7 +76,7 @@ describe("DeleteModal ", () => {
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
   });
   it("Sends request when submitted", async () => {
-    const { component, apiHelper } = setup();
+    const { component, apiHelper, refetch } = setup();
     render(component());
     const modalButton = await screen.findByText("Delete");
     userEvent.click(modalButton);
@@ -84,11 +89,7 @@ describe("DeleteModal ", () => {
       url: `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}?current_version=${ServiceInstance.a.version}`,
     });
     await apiHelper.resolve(Either.right(null));
-    expect(apiHelper.pendingRequests[0]).toEqual({
-      environment: "env",
-      method: "GET",
-      url: `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}?include_deployment_progress=True&limit=20&&sort=created_at.desc`,
-    });
+    expect(refetch).toHaveBeenCalled();
   });
   it("Takes environment halted status in account", async () => {
     const { component, storeInstance } = setup();
