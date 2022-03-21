@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { PageContainer, RemoteDataView } from "@/UI/Components";
+import { PageSection } from "@patternfly/react-core";
+import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
-import { words } from "@/UI/words";
 import { AgentProcessDetails } from "./AgentProcessDetails";
 
 export const Page: React.FC = () => {
@@ -15,7 +15,7 @@ export const Page: React.FC = () => {
   });
 
   return (
-    <PageContainer title={words("agentProcess.title")}>
+    <PageSection variant="light">
       <RemoteDataView
         data={data}
         label="AgentProcessView"
@@ -26,6 +26,6 @@ export const Page: React.FC = () => {
           />
         )}
       />
-    </PageContainer>
+    </PageSection>
   );
 };
