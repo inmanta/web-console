@@ -10,8 +10,6 @@ export interface Model extends Flags {
   message: string;
   severity: Severity;
   uri: string;
-  read: boolean;
-  cleared: boolean;
 }
 
 export interface Flags {
