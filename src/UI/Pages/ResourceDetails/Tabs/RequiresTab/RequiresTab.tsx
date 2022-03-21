@@ -1,20 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
+import { Query } from "@/Core";
 import { EmptyView, RemoteDataView, RequiresTable } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
 interface Props {
-  id: string;
+  data: Query.UsedApiData<"GetResourceDetails">;
 }
 
-export const RequiresTab: React.FC<Props> = ({ id }) => {
-  const { queryResolver } = useContext(DependencyContext);
-
-  const [data] = queryResolver.useContinuous<"GetResourceDetails">({
-    kind: "GetResourceDetails",
-    id,
-  });
-
+export const RequiresTab: React.FC<Props> = ({ data }) => {
   return (
     <RemoteDataView
       data={data}

@@ -1,3 +1,4 @@
+import { RemoteData } from "@/Core/Language";
 import * as GetNotifications from "@/Slices/Notification/Core/Query";
 import { GetAgentProcess, GetAgentProcessManifest } from "./GetAgentProcess";
 import { GetAgents, GetAgentsManifest } from "./GetAgents";
@@ -169,3 +170,7 @@ export type Data<K extends Kind> = Manifest[K]["data"];
 export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
 export type UsedData<K extends Kind> = Manifest[K]["usedData"];
+export type UsedApiData<K extends Kind> = RemoteData.RemoteData<
+  Error<K>,
+  UsedData<K>
+>;

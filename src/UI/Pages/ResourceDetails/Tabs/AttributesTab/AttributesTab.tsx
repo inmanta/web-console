@@ -1,26 +1,18 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Card, CardBody } from "@patternfly/react-core";
-import { RemoteData } from "@/Core";
+import { Query, RemoteData } from "@/Core";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import {
   AttributeClassifier,
   AttributeList,
   RemoteDataView,
 } from "@/UI/Components";
-import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
-  id: string;
+  data: Query.UsedApiData<"GetResourceDetails">;
 }
 
-export const AttributesTab: React.FC<Props> = ({ id }) => {
-  const { queryResolver } = useContext(DependencyContext);
-
-  const [data] = queryResolver.useContinuous<"GetResourceDetails">({
-    kind: "GetResourceDetails",
-    id,
-  });
-
+export const AttributesTab: React.FC<Props> = ({ data }) => {
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
     new XmlFormatter()

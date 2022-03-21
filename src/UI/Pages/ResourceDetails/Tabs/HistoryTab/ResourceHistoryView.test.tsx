@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
@@ -18,7 +18,7 @@ import {
   DynamicQueryManagerResolver,
   StaticScheduler,
 } from "@/Test";
-import { Resource, ResourceDetails, ResourceHistory } from "@/Test/Data";
+import { Resource, ResourceHistory } from "@/Test/Data";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceHistoryView } from "./ResourceHistoryView";
 
@@ -50,7 +50,10 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <ResourceHistoryView resourceId={Resource.id} />
+          <ResourceHistoryView
+            resourceId={Resource.id}
+            details={RemoteData.notAsked()}
+          />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -62,8 +65,6 @@ function setup() {
 test("ResourceHistoryView shows empty table", async () => {
   const { component, apiHelper } = setup();
   render(component);
-
-  apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
 
   expect(
     await screen.findByRole("generic", { name: "ResourceHistory-Loading" })
@@ -86,8 +87,6 @@ test("ResourceHistoryView shows failed table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
-
   expect(
     await screen.findByRole("generic", { name: "ResourceHistory-Loading" })
   ).toBeInTheDocument();
@@ -102,8 +101,6 @@ test("ResourceHistoryView shows failed table", async () => {
 test("ResourceHistory shows success table", async () => {
   const { component, apiHelper } = setup();
   render(component);
-
-  apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
 
   expect(
     await screen.findByRole("generic", { name: "ResourceHistory-Loading" })
@@ -126,7 +123,6 @@ test("ResourceHistory shows success table", async () => {
 test("ResourceHistoryView shows sorting buttons for sortable columns", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   apiHelper.resolve(Either.right(ResourceHistory.response));
   expect(await screen.findByRole("button", { name: /Date/i })).toBeVisible();
 });
@@ -134,7 +130,6 @@ test("ResourceHistoryView shows sorting buttons for sortable columns", async () 
 test("ResourcesView sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   apiHelper.resolve(Either.right(ResourceHistory.response));
   const stateButton = await screen.findByRole("button", { name: /date/i });
   expect(stateButton).toBeVisible();
@@ -144,15 +139,10 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
 
 test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
   const { component, apiHelper } = setup();
-
   render(component);
-
-  apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
-
   await act(async () => {
     await apiHelper.resolve(Either.right(ResourceHistory.response));
   });
-
   userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
   expect(
     screen.getAllByRole("button", { name: "Desired State" })[0]

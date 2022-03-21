@@ -8,5 +8,7 @@ interface Props {
 }
 
 export const ResourceStatusLabel: React.FC<Props> = ({ status }) => (
-  <Label color={labelColorConfig[status]}>{status}</Label>
+  <Label color={labelColorConfig[status]} aria-label={`Status-${status}`}>
+    {status}
+  </Label>
 );
