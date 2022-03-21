@@ -14,14 +14,13 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({
 }) => {
   const { featureManager, routeManager, urlManager } =
     useContext(DependencyContext);
-  const routeDict = routeManager.getRouteDictionary();
   const isEnvPresent = typeof environment !== "undefined";
   const groups = [
     ...(featureManager.isLsmEnabled()
-      ? [lifecycleServiceManager(routeDict, isEnvPresent)]
+      ? [lifecycleServiceManager(routeManager, isEnvPresent)]
       : []),
-    orchestrationEngine(routeDict, isEnvPresent),
-    resourceManager(routeDict, isEnvPresent),
+    orchestrationEngine(routeManager, isEnvPresent),
+    resourceManager(routeManager, isEnvPresent),
     otherSites(
       environment ? urlManager.getDashboardUrl(environment) : "",
       isEnvPresent

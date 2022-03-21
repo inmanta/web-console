@@ -105,8 +105,8 @@ export class PrimaryRouteManager implements RouteManager {
     return this.routeDictionary;
   }
 
-  getRoute(kind: RouteKind): Route {
-    return this.routeDictionary[kind];
+  getRoute<K extends RouteKind>(kind: K): Route<K> {
+    return this.routeDictionary[kind] as Route<K>;
   }
 
   getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {

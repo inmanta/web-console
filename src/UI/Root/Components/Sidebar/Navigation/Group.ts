@@ -1,4 +1,4 @@
-import { RouteDictionary } from "@/Core";
+import { RouteManager } from "@/Core";
 import { words } from "@/UI/words";
 
 interface Group {
@@ -16,16 +16,16 @@ interface Link {
 }
 
 export const lifecycleServiceManager = (
-  Route: RouteDictionary,
+  routeManager: RouteManager,
   isEnvPresent: boolean
 ): Group => ({
   id: "LifecycleServiceManager",
   title: words("navigation.lifecycleServiceManager"),
   links: [
     {
-      id: Route.Catalog.kind,
-      label: Route.Catalog.generateLabel(undefined),
-      url: Route.Catalog.path,
+      id: "Catalog",
+      label: routeManager.getRoute("Catalog").generateLabel(undefined),
+      url: routeManager.getRoute("Catalog").path,
       external: false,
       locked: !isEnvPresent,
     },
@@ -33,30 +33,30 @@ export const lifecycleServiceManager = (
 });
 
 export const orchestrationEngine = (
-  Route: RouteDictionary,
+  routeManager: RouteManager,
   isEnvPresent: boolean
 ): Group => ({
   id: "OrchestrationEngine",
   title: words("navigation.orchestrationEngine"),
   links: [
     {
-      id: Route.DesiredState.kind,
-      label: Route.DesiredState.generateLabel(undefined),
-      url: Route.DesiredState.path,
+      id: "DesiredState",
+      label: routeManager.getRoute("DesiredState").generateLabel(undefined),
+      url: routeManager.getRoute("DesiredState").path,
       external: false,
       locked: !isEnvPresent,
     },
     {
-      id: Route.CompileReports.kind,
-      label: Route.CompileReports.generateLabel(undefined),
-      url: Route.CompileReports.path,
+      id: "CompileReports",
+      label: routeManager.getRoute("CompileReports").generateLabel(undefined),
+      url: routeManager.getRoute("CompileReports").path,
       external: false,
       locked: !isEnvPresent,
     },
     {
-      id: Route.Parameters.kind,
-      label: Route.Parameters.generateLabel(undefined),
-      url: Route.Parameters.path,
+      id: "Parameters",
+      label: routeManager.getRoute("Parameters").generateLabel(undefined),
+      url: routeManager.getRoute("Parameters").path,
       external: false,
       locked: !isEnvPresent,
     },
@@ -64,30 +64,30 @@ export const orchestrationEngine = (
 });
 
 export const resourceManager = (
-  Route: RouteDictionary,
+  routeManager: RouteManager,
   isEnvPresent: boolean
 ): Group => ({
   id: "ResourceManager",
   title: words("navigation.resourceManager"),
   links: [
     {
-      id: Route.Resources.kind,
-      label: Route.Resources.generateLabel(undefined),
-      url: Route.Resources.path,
+      id: "Resources",
+      label: routeManager.getRoute("Resources").generateLabel(undefined),
+      url: routeManager.getRoute("Resources").path,
       external: false,
       locked: !isEnvPresent,
     },
     {
-      id: Route.Agents.kind,
-      label: Route.Agents.generateLabel(undefined),
-      url: Route.Agents.path,
+      id: "Agents",
+      label: routeManager.getRoute("Agents").generateLabel(undefined),
+      url: routeManager.getRoute("Agents").path,
       external: false,
       locked: !isEnvPresent,
     },
     {
-      id: Route.Facts.kind,
-      label: Route.Facts.generateLabel(undefined),
-      url: Route.Facts.path,
+      id: "Facts",
+      label: routeManager.getRoute("Facts").generateLabel(undefined),
+      url: routeManager.getRoute("Facts").path,
       external: false,
       locked: !isEnvPresent,
     },

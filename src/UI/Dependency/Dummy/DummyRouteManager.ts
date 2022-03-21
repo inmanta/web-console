@@ -1,6 +1,9 @@
 import { RouteManager, Route, RouteKind, RouteMatch } from "@/Core";
 
 export class DummyRouteManager implements RouteManager {
+  getRoute<K extends RouteKind>(): Route<K> {
+    throw new Error("Method not implemented.");
+  }
   useUrl(): string {
     throw new Error("Method not implemented.");
   }
@@ -23,9 +26,6 @@ export class DummyRouteManager implements RouteManager {
     throw new Error("Method not implemented.");
   }
   getRouteDictionary(): Record<RouteKind, Route> {
-    throw new Error("Method not implemented.");
-  }
-  getRoute(): Route {
     throw new Error("Method not implemented.");
   }
 }
