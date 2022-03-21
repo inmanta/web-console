@@ -16,6 +16,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Chart, TableControls } from "./Components";
+import { GetInstancesContext } from "./GetInstancesContext";
 import { TableProvider } from "./TableProvider";
 import { Wrapper } from "./Wrapper";
 
@@ -84,35 +85,39 @@ export const ServiceInventory: React.FunctionComponent<{
           />
         }
       />
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => <LoadingView aria-label="ServiceInventory-Loading" />,
-          failed: (error) => (
-            <ErrorView
-              message={error}
-              retry={retry}
-              aria-label="ServiceInventory-Failed"
-            />
-          ),
-          success: ({ data: instances }) =>
-            instances.length > 0 ? (
-              <TableProvider
-                aria-label="ServiceInventory-Success"
-                instances={instances}
-                serviceEntity={service}
-                sort={sort}
-                setSort={setSort}
-              />
-            ) : (
-              <EmptyView
-                message={words("inventory.empty.message")(serviceName)}
-                aria-label="ServiceInventory-Empty"
+      <GetInstancesContext.Provider value={{ filter, sort, pageSize }}>
+        {RemoteData.fold(
+          {
+            notAsked: () => null,
+            loading: () => (
+              <LoadingView aria-label="ServiceInventory-Loading" />
+            ),
+            failed: (error) => (
+              <ErrorView
+                message={error}
+                retry={retry}
+                aria-label="ServiceInventory-Failed"
               />
             ),
-        },
-        data
-      )}
+            success: ({ data: instances }) =>
+              instances.length > 0 ? (
+                <TableProvider
+                  aria-label="ServiceInventory-Success"
+                  instances={instances}
+                  serviceEntity={service}
+                  sort={sort}
+                  setSort={setSort}
+                />
+              ) : (
+                <EmptyView
+                  message={words("inventory.empty.message")(serviceName)}
+                  aria-label="ServiceInventory-Empty"
+                />
+              ),
+          },
+          data
+        )}
+      </GetInstancesContext.Provider>
     </Wrapper>
   );
 };

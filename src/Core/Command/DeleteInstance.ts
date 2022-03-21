@@ -1,5 +1,6 @@
 import { VersionedServiceInstanceIdentifier } from "@/Core/Domain";
 import { Maybe } from "@/Core/Language";
+import { Query } from "@/Core/Query";
 
 export interface DeleteInstance extends VersionedServiceInstanceIdentifier {
   kind: "DeleteInstance";
@@ -10,5 +11,7 @@ export interface DeleteInstanceManifest {
   apiData: string;
   body: null;
   command: DeleteInstance;
-  trigger: () => Promise<Maybe.Type<string>>;
+  trigger: (
+    query: Query.SubQuery<"GetServiceInstances">
+  ) => Promise<Maybe.Type<string>>;
 }

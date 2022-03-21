@@ -41,6 +41,8 @@ import {
   GetAgentsStateHelper,
   TriggerCompileCommandManager,
   TriggerDryRun,
+  ServiceInstancesStateHelper,
+  GetServiceInstancesUpdater,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 
@@ -110,7 +112,13 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new CreateInstanceCommandManager(this.apiHelper),
       new TriggerInstanceUpdateCommandManager(this.apiHelper),
-      new DeleteInstanceCommandManager(this.apiHelper),
+      new DeleteInstanceCommandManager(
+        this.apiHelper,
+        new GetServiceInstancesUpdater(
+          new ServiceInstancesStateHelper(this.store),
+          this.apiHelper
+        )
+      ),
       new DeleteServiceCommandManager(this.apiHelper),
       new TriggerSetStateCommandManager(this.authHelper, this.apiHelper),
       new HaltEnvironmentCommandManager(

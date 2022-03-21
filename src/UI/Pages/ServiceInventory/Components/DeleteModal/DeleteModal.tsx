@@ -9,6 +9,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { GetInstancesContext } from "../../GetInstancesContext";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   isDisabled?: boolean;
@@ -27,6 +28,8 @@ export const DeleteModal: React.FC<Props> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
+  const { filter, sort, pageSize } = useContext(GetInstancesContext);
+
   const trigger = commandResolver.getTrigger<"DeleteInstance">({
     kind: "DeleteInstance",
     service_entity,
@@ -36,7 +39,13 @@ export const DeleteModal: React.FC<Props> = ({
   const isHalted = environmentModifier.useIsHalted();
   const onSubmit = async () => {
     setIsOpen(false);
-    const result = await trigger();
+    const result = await trigger({
+      kind: "GetServiceInstances",
+      name: service_entity,
+      filter,
+      sort,
+      pageSize,
+    });
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
