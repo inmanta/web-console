@@ -7,7 +7,7 @@ export interface RouteManager {
   getRoutes(): Route[];
   getRouteDictionary(): RouteDictionary;
   getRoute(routeKind: RouteKind): Route;
-  getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
+  getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string;
   /**
    * Gets the closest url in the lineage without params.
    * When switching environments, we can't go to pages with params,
