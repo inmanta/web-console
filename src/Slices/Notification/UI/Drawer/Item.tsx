@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -8,7 +8,10 @@ import {
   NotificationDrawerListItemBody,
   NotificationDrawerListItemHeader,
 } from "@patternfly/react-core";
-import { MomentDatePresenter } from "@/UI";
+import { words } from "@/UI";
+import { Link } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { Model, Severity, Body } from "@S/Notification/Core/Model";
 
 interface Props {
@@ -51,7 +54,10 @@ const getSeverityForNotification = (severity: Severity): VisualSeverity => {
 };
 
 const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
+  const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
+
+  const detailsLink = routeManager.getUrlForApiUri(notification.uri);
 
   return (
     <Dropdown
@@ -72,19 +78,27 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
           onClick={() => onUpdate({ read: false })}
           isDisabled={!notification.read}
         >
-          Mark as Unread
+          {words("notification.drawer.unread")}
         </DropdownItem>,
         <DropdownItem
           key="cleared"
           component="button"
           onClick={() => onUpdate({ cleared: true })}
         >
-          Clear
+          {words("notification.drawer.clear")}
         </DropdownItem>,
         <DropdownSeparator key="separator" />,
-        <DropdownItem key="disabled link" isDisabled>
-          Details
-        </DropdownItem>,
+        <DropdownItem
+          key="details"
+          isDisabled={detailsLink === undefined}
+          component={
+            detailsLink ? (
+              <Link pathname={detailsLink}>
+                {words("notification.drawer.details")}
+              </Link>
+            ) : undefined
+          }
+        />,
       ]}
     />
   );

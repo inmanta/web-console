@@ -110,12 +110,21 @@ export class PrimaryRouteManager implements RouteManager {
     return this.routeDictionary[kind] as Route<K>;
   }
 
-  getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
+  getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string {
     const route = this.getRoute(kind);
     return generatePath(
       route.path,
       params === undefined ? params : encodeParams(params)
     );
+  }
+
+  getUrlForApiUri(uri: string): string | undefined {
+    if (uri.length <= 0) return undefined;
+    const pattern = "/api/v2/compilereport/:id";
+    const match = matchPath(pattern, uri);
+    if (match === null) return undefined;
+    if (match.params.id === undefined) return undefined;
+    return this.getUrl("CompileDetails", { id: match.params.id });
   }
 
   getRouteMatchFromUrl(url: string): RouteMatch | undefined {
