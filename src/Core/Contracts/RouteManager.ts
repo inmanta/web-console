@@ -6,8 +6,8 @@ export interface RouteManager {
   isBaseUrlDefined(): boolean;
   getRoutes(): Route[];
   getRouteDictionary(): RouteDictionary;
-  getRoute(routeKind: RouteKind): Route;
-  getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
+  getRoute<K extends RouteKind>(routeKind: K): Route<K>;
+  getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string;
   /**
    * Gets the closest url in the lineage without params.
    * When switching environments, we can't go to pages with params,

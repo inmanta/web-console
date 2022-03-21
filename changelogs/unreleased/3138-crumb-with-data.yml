@@ -1,0 +1,4 @@
+description: Add data to service inventory crumb
+issue-nr: 3138
+change-type: minor
+destination-branches: [master, iso5]

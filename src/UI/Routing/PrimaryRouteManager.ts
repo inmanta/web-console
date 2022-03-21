@@ -105,8 +105,8 @@ export class PrimaryRouteManager implements RouteManager {
     return this.routeDictionary;
   }
 
-  getRoute(kind: RouteKind): Route {
-    return this.routeDictionary[kind];
+  getRoute<K extends RouteKind>(kind: K): Route<K> {
+    return this.routeDictionary[kind] as Route<K>;
   }
 
   getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
@@ -148,193 +148,195 @@ export class PrimaryRouteManager implements RouteManager {
   }
 }
 
-const Catalog = (base: string): Route => ({
+const Catalog = (base: string): Route<"Catalog"> => ({
   kind: "Catalog",
   parent: "Home",
   path: `${base}${paths.Catalog}`,
-  label: "Service Catalog",
+  generateLabel: () => "Service Catalog",
   environmentRole: "Required",
 });
 
-const Inventory = (base: string): Route => ({
+const Inventory = (base: string): Route<"Inventory"> => ({
   kind: "Inventory",
   parent: "Catalog",
   path: `${base}${paths.Inventory}`,
-  label: "Service Inventory",
+  generateLabel: (params) => `Service Inventory: ${params.service}`,
   environmentRole: "Required",
 });
 
-const CreateInstance = (base: string): Route => ({
+const CreateInstance = (base: string): Route<"CreateInstance"> => ({
   kind: "CreateInstance",
   parent: "Inventory",
   path: `${base}${paths.CreateInstance}`,
-  label: "Create Instance",
+  generateLabel: () => "Create Instance",
   environmentRole: "Required",
 });
 
-const EditInstance = (base: string): Route => ({
+const EditInstance = (base: string): Route<"EditInstance"> => ({
   kind: "EditInstance",
   parent: "Inventory",
   path: `${base}${paths.EditInstance}`,
-  label: "Edit Instance",
+  generateLabel: () => "Edit Instance",
   environmentRole: "Required",
 });
 
-const History = (base: string): Route => ({
+const History = (base: string): Route<"History"> => ({
   kind: "History",
   parent: "Inventory",
   path: `${base}${paths.History}`,
-  label: "Service Instance History",
+  generateLabel: () => "Service Instance History",
   environmentRole: "Required",
 });
 
-const Diagnose = (base: string): Route => ({
+const Diagnose = (base: string): Route<"Diagnose"> => ({
   kind: "Diagnose",
   parent: "Inventory",
   path: `${base}${paths.Diagnose}`,
-  label: "Diagnose Service Instance",
+  generateLabel: () => "Diagnose Service Instance",
   environmentRole: "Required",
 });
 
-const Events = (base: string): Route => ({
+const Events = (base: string): Route<"Events"> => ({
   kind: "Events",
   parent: "Inventory",
-  label: "Service Instance Events",
+  generateLabel: () => "Service Instance Events",
   path: `${base}${paths.Events}`,
   environmentRole: "Required",
 });
 
-const Resources = (base: string): Route => ({
+const Resources = (base: string): Route<"Resources"> => ({
   kind: "Resources",
   parent: "Home",
   path: `${base}${paths.Resources}`,
-  label: "Resources",
+  generateLabel: () => "Resources",
   environmentRole: "Required",
 });
 
-const Agents = (base: string): Route => ({
+const Agents = (base: string): Route<"Agents"> => ({
   kind: "Agents",
   parent: "Home",
   path: `${base}${paths.Agents}`,
-  label: "Agents",
+  generateLabel: () => "Agents",
   environmentRole: "Required",
 });
 
-const Facts = (base: string): Route => ({
+const Facts = (base: string): Route<"Facts"> => ({
   kind: "Facts",
   parent: "Home",
   path: `${base}${paths.Facts}`,
-  label: "Facts",
+  generateLabel: () => "Facts",
   environmentRole: "Required",
 });
 
-const AgentProcess = (base: string): Route => ({
+const AgentProcess = (base: string): Route<"AgentProcess"> => ({
   kind: "AgentProcess",
   parent: "Agents",
   path: `${base}${paths.AgentProcess}`,
-  label: "Agent Process",
+  generateLabel: () => "Agent Process",
   environmentRole: "Required",
 });
 
-const DesiredState = (base: string): Route => ({
+const DesiredState = (base: string): Route<"DesiredState"> => ({
   kind: "DesiredState",
   parent: "Home",
   path: `${base}${paths.DesiredState}`,
-  label: "Desired State",
+  generateLabel: () => "Desired State",
   environmentRole: "Required",
 });
 
-const DesiredStateDetails = (base: string): Route => ({
+const DesiredStateDetails = (base: string): Route<"DesiredStateDetails"> => ({
   kind: "DesiredStateDetails",
   parent: "DesiredState",
   path: `${base}${paths.DesiredStateDetails}`,
-  label: "Details",
+  generateLabel: () => "Details",
   environmentRole: "Required",
 });
 
-const DesiredStateResourceDetails = (base: string): Route => ({
+const DesiredStateResourceDetails = (
+  base: string
+): Route<"DesiredStateResourceDetails"> => ({
   kind: "DesiredStateResourceDetails",
   parent: "DesiredStateDetails",
   path: `${base}${paths.DesiredStateResourceDetails}`,
-  label: "Resource Details",
+  generateLabel: () => "Resource Details",
   environmentRole: "Required",
 });
 
-const DesiredStateCompare = (base: string): Route => ({
+const DesiredStateCompare = (base: string): Route<"DesiredStateCompare"> => ({
   kind: "DesiredStateCompare",
   parent: "DesiredState",
   path: `${base}${paths.DesiredStateCompare}`,
-  label: "Compare",
+  generateLabel: () => "Compare",
   environmentRole: "Required",
 });
 
-const CompileReports = (base: string): Route => ({
+const CompileReports = (base: string): Route<"CompileReports"> => ({
   kind: "CompileReports",
   parent: "Home",
   path: `${base}${paths.CompileReports}`,
-  label: "Compile Reports",
+  generateLabel: () => "Compile Reports",
   environmentRole: "Required",
 });
 
-const CompileDetails = (base: string): Route => ({
+const CompileDetails = (base: string): Route<"CompileDetails"> => ({
   kind: "CompileDetails",
   parent: "CompileReports",
   path: `${base}${paths.CompileDetails}`,
-  label: "Compile Details",
+  generateLabel: () => "Compile Details",
   environmentRole: "Required",
 });
 
-const ResourceDetails = (base: string): Route => ({
+const ResourceDetails = (base: string): Route<"ResourceDetails"> => ({
   kind: "ResourceDetails",
   parent: "Resources",
   path: `${base}${paths.ResourceDetails}`,
-  label: "Resource Details",
+  generateLabel: () => "Resource Details",
   environmentRole: "Required",
 });
 
-const Home = (base: string): Route => ({
+const Home = (base: string): Route<"Home"> => ({
   kind: "Home",
   path: `${base}${paths.Home}`,
-  label: "Home",
+  generateLabel: () => "Home",
   environmentRole: "Forbidden",
 });
 
-const CreateEnvironment = (base: string): Route => ({
+const CreateEnvironment = (base: string): Route<"CreateEnvironment"> => ({
   kind: "CreateEnvironment",
   parent: "Home",
   path: `${base}${paths.CreateEnvironment}`,
-  label: "Create Environment",
+  generateLabel: () => "Create Environment",
   environmentRole: "Forbidden",
 });
 
-const Settings = (base: string): Route => ({
+const Settings = (base: string): Route<"Settings"> => ({
   kind: "Settings",
   parent: "Home",
   path: `${base}${paths.Settings}`,
-  label: "Settings",
+  generateLabel: () => "Settings",
   environmentRole: "Required",
 });
 
-const Status = (base: string): Route => ({
+const Status = (base: string): Route<"Status"> => ({
   kind: "Status",
   parent: "Home",
   path: `${base}${paths.Status}`,
-  label: "Status",
+  generateLabel: () => "Status",
   environmentRole: "Optional",
 });
 
-const Parameters = (base: string): Route => ({
+const Parameters = (base: string): Route<"Parameters"> => ({
   kind: "Parameters",
   parent: "Home",
   path: `${base}${paths.Parameters}`,
-  label: "Parameters",
+  generateLabel: () => "Parameters",
   environmentRole: "Required",
 });
 
-const ComplianceCheck = (base: string): Route => ({
+const ComplianceCheck = (base: string): Route<"ComplianceCheck"> => ({
   kind: "ComplianceCheck",
   parent: "DesiredState",
   path: `${base}${paths.ComplianceCheck}`,
-  label: "Compliance Check",
+  generateLabel: () => "Compliance Check",
   environmentRole: "Required",
 });

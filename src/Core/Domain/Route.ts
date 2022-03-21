@@ -47,11 +47,11 @@ export const isValidKind = (value: string): value is RouteKind =>
 
 export type EnvironmentRole = "Forbidden" | "Optional" | "Required";
 
-export interface Route {
-  kind: RouteKind;
+export interface Route<K extends RouteKind = RouteKind> {
+  kind: K;
   parent?: RouteKind;
   path: string;
-  label: string;
+  generateLabel(params: RouteParams<K>): string;
   environmentRole: EnvironmentRole;
 }
 
@@ -75,9 +75,6 @@ interface RouteParamKeysManifest {
   DesiredStateCompare: "from" | "to";
   ComplianceCheck: "version";
 }
-
-export type RouteParamKeys<K extends RouteKind> =
-  K extends keyof RouteParamKeysManifest ? RouteParamKeysManifest[K] : never;
 
 export type RouteParams<K extends RouteKind> =
   K extends keyof RouteParamKeysManifest
