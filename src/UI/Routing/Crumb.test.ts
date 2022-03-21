@@ -40,7 +40,7 @@ test("GIVEN '/lsm/catalog/xyz/inventory' THEN breadcrumbs should be ['Home', 'Ca
     },
     {
       kind: "Inventory",
-      label: "Service Inventory",
+      label: "Service Inventory: xyz",
       url: "/lsm/catalog/xyz/inventory",
       active: true,
     },
@@ -68,7 +68,7 @@ test("GIVEN '/lsm/catalog/xyz/inventory/123/history' THEN breadcrumbs should be 
     },
     {
       kind: "Inventory",
-      label: "Service Inventory",
+      label: "Service Inventory: xyz",
       url: "/lsm/catalog/xyz/inventory",
       active: false,
     },
