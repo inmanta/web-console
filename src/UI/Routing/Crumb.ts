@@ -13,9 +13,9 @@ export function getCrumbs(routeManager: RouteManager, url: string): Crumb[] {
   if (typeof routeMatch === "undefined") return [];
   const { route, params } = routeMatch;
   const lineage = routeManager.getLineageFromRoute(route);
-  return lineage.map(({ kind, label, path }, idx) => ({
+  return lineage.map(({ kind, generateLabel, path }, idx) => ({
     kind,
-    label,
+    label: generateLabel(params),
     url: generatePath(path, params),
     active: idx === lineage.length - 1,
   }));

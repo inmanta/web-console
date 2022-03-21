@@ -24,7 +24,7 @@ export const lifecycleServiceManager = (
   links: [
     {
       id: Route.Catalog.kind,
-      label: Route.Catalog.label,
+      label: Route.Catalog.generateLabel(undefined),
       url: Route.Catalog.path,
       external: false,
       locked: !isEnvPresent,
@@ -41,21 +41,21 @@ export const orchestrationEngine = (
   links: [
     {
       id: Route.DesiredState.kind,
-      label: Route.DesiredState.label,
+      label: Route.DesiredState.generateLabel(undefined),
       url: Route.DesiredState.path,
       external: false,
       locked: !isEnvPresent,
     },
     {
       id: Route.CompileReports.kind,
-      label: Route.CompileReports.label,
+      label: Route.CompileReports.generateLabel(undefined),
       url: Route.CompileReports.path,
       external: false,
       locked: !isEnvPresent,
     },
     {
       id: Route.Parameters.kind,
-      label: Route.Parameters.label,
+      label: Route.Parameters.generateLabel(undefined),
       url: Route.Parameters.path,
       external: false,
       locked: !isEnvPresent,
@@ -72,21 +72,21 @@ export const resourceManager = (
   links: [
     {
       id: Route.Resources.kind,
-      label: Route.Resources.label,
+      label: Route.Resources.generateLabel(undefined),
       url: Route.Resources.path,
       external: false,
       locked: !isEnvPresent,
     },
     {
       id: Route.Agents.kind,
-      label: Route.Agents.label,
+      label: Route.Agents.generateLabel(undefined),
       url: Route.Agents.path,
       external: false,
       locked: !isEnvPresent,
     },
     {
       id: Route.Facts.kind,
-      label: Route.Facts.label,
+      label: Route.Facts.generateLabel(undefined),
       url: Route.Facts.path,
       external: false,
       locked: !isEnvPresent,
