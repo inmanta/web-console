@@ -8,6 +8,7 @@ import {
   NotificationDrawerHeader,
   NotificationDrawerList,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
@@ -79,8 +80,8 @@ export const View: React.FC<ViewProps> = ({
       <NotificationDrawerHeader count={count} onClose={onClose}>
         <ActionList {...{ onClearAll, onReadAll, onClose }} />
       </NotificationDrawerHeader>
-      <NotificationDrawerBody>
-        <NotificationDrawerList>
+      <CustomNotificationDrawerBody>
+        <CustomNotificationDrawerList>
           {RemoteData.fold(
             {
               notAsked: () => null,
@@ -97,11 +98,20 @@ export const View: React.FC<ViewProps> = ({
             },
             data
           )}
-        </NotificationDrawerList>
-      </NotificationDrawerBody>
+        </CustomNotificationDrawerList>
+      </CustomNotificationDrawerBody>
     </NotificationDrawer>
   );
 };
+
+const CustomNotificationDrawerBody = styled(NotificationDrawerBody)`
+  padding-bottom: 300px;
+  background-color: var(--pf-global--BackgroundColor--200);
+`;
+
+const CustomNotificationDrawerList = styled(NotificationDrawerList)`
+  overflow-y: visible;
+`;
 
 interface ActionListProps {
   onClearAll(): void;
