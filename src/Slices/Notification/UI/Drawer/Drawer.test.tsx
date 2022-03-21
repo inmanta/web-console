@@ -195,7 +195,7 @@ test("Given Drawer When user clicks a notification Then it becomes read", async 
   ).toHaveLength(3);
 });
 
-test("Given Drawer When user clicks on 'Unread' for 1 notification Then it becomes unread", async () => {
+test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async () => {
   const { component, apiHelper, getAllRequest, updateRequest } = setup();
   render(component);
   await act(async () => {
@@ -207,7 +207,7 @@ test("Given Drawer When user clicks on 'Unread' for 1 notification Then it becom
     name: "NotificationItemActions",
   });
   userEvent.click(actions);
-  userEvent.click(screen.getByRole("button", { name: "Mark as Unread" }));
+  userEvent.click(screen.getByRole("button", { name: "Mark as unread" }));
   expect(apiHelper.pendingRequests).toEqual([
     updateRequest("abcdefgh03", { read: false }),
   ]);
