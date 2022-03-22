@@ -5,6 +5,7 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
+import { Query } from "@/Core";
 import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { EmptyView, PaginationWidget, RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -16,9 +17,13 @@ import { ResourceHistoryTablePresenter } from "./TablePresenter";
 
 interface Props {
   resourceId: string;
+  details: Query.UsedApiData<"GetResourceDetails">;
 }
 
-export const ResourceHistoryView: React.FC<Props> = ({ resourceId }) => {
+export const ResourceHistoryView: React.FC<Props> = ({
+  resourceId,
+  details,
+}) => {
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "ResourceDetails",
@@ -36,7 +41,7 @@ export const ResourceHistoryView: React.FC<Props> = ({ resourceId }) => {
 
   return (
     <>
-      <ResourceTemporalData id={resourceId} />
+      <ResourceTemporalData data={details} />
       <Divider />
       <Toolbar>
         <ToolbarContent>

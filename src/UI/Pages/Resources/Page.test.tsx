@@ -450,7 +450,9 @@ test("ResourcesView shows deploy state bar with available status without process
   expect(availableItem).toBeVisible();
   expect(availableItem).toHaveAttribute("data-value", "1");
   expect(availableItem).not.toHaveAttribute("data-value", "3");
-  expect(screen.getByRole("cell", { name: "processing_events" })).toBeVisible();
+  expect(
+    screen.getByRole("cell", { name: "Status-processing_events" })
+  ).toBeVisible();
 });
 
 test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async () => {

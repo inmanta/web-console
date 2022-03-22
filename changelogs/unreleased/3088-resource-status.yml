@@ -1,0 +1,4 @@
+description: Add resource status of resource details page
+issue-nr: 3088
+change-type: minor
+destination-branches: [master, iso5]
