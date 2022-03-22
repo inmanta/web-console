@@ -10,5 +10,5 @@ export interface DeleteInstanceManifest {
   apiData: string;
   body: null;
   command: DeleteInstance;
-  trigger: () => Promise<Maybe.Type<string>>;
+  trigger: (refetch: () => void) => Promise<Maybe.Type<string>>;
 }
