@@ -355,6 +355,6 @@ const NotificationCenter = (base: string): Route => ({
   kind: "NotificationCenter",
   parent: "Home",
   path: `${base}${paths.NotificationCenter}`,
-  label: "Notification Center",
+  generateLabel: () => "Notification Center",
   environmentRole: "Required",
 });
