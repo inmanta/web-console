@@ -143,11 +143,11 @@ export class BaseApiHelper implements ApiHelper {
     });
   }
 
-  putWithoutResponseAndEnvironment<Body>(
+  putWithoutEnvironment<Data, Body>(
     url: string,
     body: Body
-  ): Promise<Maybe.Type<string>> {
-    return this.executeWithoutResponse(this.getFullUrl(url), {
+  ): Promise<Either.Type<string, Data>> {
+    return this.executeJson(this.getFullUrl(url), {
       headers: {
         "Content-Type": "application/json",
         ...this.getHeaders(),

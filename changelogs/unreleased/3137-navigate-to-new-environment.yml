@@ -1,0 +1,4 @@
+description: Navigate to new environment when creating one
+issue-nr: 3137
+change-type: minor
+destination-branches: [master, iso5]

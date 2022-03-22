@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import styled from "styled-components";
-import { CreateEnvironmentParams, Maybe, ProjectModel } from "@/Core";
+import { CreateEnvironmentParams, Either, ProjectModel } from "@/Core";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
@@ -18,9 +18,10 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   projects,
   ...props
 }) => {
-  const { commandResolver } = useContext(DependencyContext);
+  const { commandResolver, featureManager } = useContext(DependencyContext);
+  const isLsmEnabled = featureManager.isLsmEnabled();
   const navigateTo = useNavigateTo();
-  const handleRedirect = () => navigateTo("Home", undefined);
+  const navigateToHome = () => navigateTo("Home", undefined);
   const createProject = commandResolver.getTrigger<"CreateProject">({
     kind: "CreateProject",
   });
@@ -61,10 +62,11 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
           project_id: matchingProject.id,
         };
         const result = await createEnvironment(fullBody);
-        if (Maybe.isSome(result)) {
+        if (Either.isLeft(result)) {
           setErrorMessage(result.value);
         } else {
-          handleRedirect();
+          const target = isLsmEnabled ? "Catalog" : "CompileReports";
+          navigateTo(target, undefined, `?env=${result.value.data.id}`);
         }
       }
     }
@@ -124,7 +126,7 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
       />
       <FormControls
         onSubmit={onSubmitCreate}
-        onCancel={handleRedirect}
+        onCancel={navigateToHome}
         isSubmitDisabled={!(projectName && createEnvironmentBody.name)}
       />
     </Form>

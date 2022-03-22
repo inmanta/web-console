@@ -98,7 +98,13 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
           this.apiHelper
         )
       ),
-      new CreateEnvironmentCommandManager(this.apiHelper),
+      new CreateEnvironmentCommandManager(
+        this.apiHelper,
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(this.store),
+          this.apiHelper
+        )
+      ),
       new GetSupportArchiveCommandManager(this.apiHelper),
       new ServiceConfigCommandManager(
         this.apiHelper,
