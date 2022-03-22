@@ -1,6 +1,5 @@
 import { Action, action } from "easy-peasy";
-import { Origin } from "@S/Notification/Core/Query";
-import { ApiData } from "@S/Notification/Core/Utils";
+import { ApiData, Origin } from "@S/Notification/Core/Utils";
 
 export interface NotificationSlice {
   listByEnvForDrawer: Record<string, ApiData>;

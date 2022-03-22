@@ -38,3 +38,5 @@ export const data: Manifest["usedData"] = {
   metadata: Pagination.metadata,
   handlers: Pagination.handlers,
 };
+
+export const list: Model[] = [unread, read, error];

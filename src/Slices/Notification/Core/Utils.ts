@@ -10,3 +10,5 @@ export type ApiData = RemoteData.RemoteData<
   Manifest["error"],
   Manifest["apiResponse"]
 >;
+
+export type Origin = "drawer" | "center";

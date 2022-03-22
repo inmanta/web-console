@@ -9,13 +9,28 @@ export class CommandManager extends CommandManagerWithEnv<"UpdateNotification"> 
     private readonly apiHelper: ApiHelper,
     private readonly store: Store
   ) {
-    super("UpdateNotification", (command, environment) => async (body, ids) => {
-      await Promise.all(
-        ids.map((id) =>
-          this.apiHelper.patch(`/api/v2/notification/${id}`, environment, body)
-        )
-      );
-      new Updater(this.apiHelper, this.store).update(drawerQuery, environment);
-    });
+    super(
+      "UpdateNotification",
+      ({ origin }, environment) =>
+        async (body, ids, cb) => {
+          await Promise.all(
+            ids.map((id) =>
+              this.apiHelper.patch(
+                `/api/v2/notification/${id}`,
+                environment,
+                body
+              )
+            )
+          );
+          if (origin === "drawer") {
+            new Updater(this.apiHelper, this.store).update(
+              drawerQuery,
+              environment
+            );
+          } else {
+            cb && cb();
+          }
+        }
+    );
   }
 }

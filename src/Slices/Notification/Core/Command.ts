@@ -1,7 +1,9 @@
 import { Body, Model } from "./Model";
+import { Origin } from "./Utils";
 
 export interface Command {
   kind: "UpdateNotification";
+  origin: Origin;
 }
 
 export interface Manifest {
@@ -9,5 +11,5 @@ export interface Manifest {
   apiData: { data: Model };
   body: Body;
   command: Command;
-  trigger: (body: Body, ids: string[]) => void;
+  trigger: (body: Body, ids: string[], cb?: () => void) => void;
 }

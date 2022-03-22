@@ -29,6 +29,7 @@ export const Drawer: React.FC<Props> = ({ onClose, drawerRef }) => {
 
   const trigger = commandResolver.getTrigger<"UpdateNotification">({
     kind: "UpdateNotification",
+    origin: "drawer",
   });
 
   return <View {...{ data, onClose, trigger, drawerRef }} />;

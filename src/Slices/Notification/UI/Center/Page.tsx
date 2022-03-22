@@ -1,7 +1,39 @@
-import React from "react";
+import React, { useContext } from "react";
+
+import { RemoteData } from "@/Core";
+import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import { PageContainer } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Filter } from "@S/Notification/Core/Query";
+import { List } from "./List";
 
 export const Page: React.FC = () => {
-  return <PageContainer title={words("notification.center.title")} />;
+  const { queryResolver } = useContext(DependencyContext);
+  const [pageSize] = useUrlStateWithPageSize({
+    route: "NotificationCenter",
+  });
+  const [filter] = useUrlStateWithFilter<Filter>({
+    route: "NotificationCenter",
+  });
+  const [data, retry] = queryResolver.useContinuous<"GetNotifications">({
+    kind: "GetNotifications",
+    origin: "center",
+    pageSize,
+    filter,
+  });
+
+  return (
+    <PageContainer title={words("notification.center.title")}>
+      {RemoteData.fold(
+        {
+          notAsked: () => null,
+          loading: () => null,
+          failed: () => null,
+          success: ({ data }) => <List {...{ data }} onUpdate={retry} />,
+        },
+        data
+      )}
+    </PageContainer>
+  );
 };

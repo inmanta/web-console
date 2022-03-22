@@ -1,7 +1,6 @@
 import { PageSize, Pagination } from "@/Core/Domain";
 import { Model, Severity } from "./Model";
-
-export type Origin = "drawer" | "center";
+import { Origin } from "./Utils";
 
 export interface Query {
   kind: "GetNotifications";

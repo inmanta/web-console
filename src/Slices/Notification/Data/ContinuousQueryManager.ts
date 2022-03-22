@@ -11,7 +11,7 @@ export class ContinuousManager extends QueryManager.ContinuousWithEnv<"GetNotifi
       apiHelper,
       new StateHelper(store),
       scheduler,
-      ({ kind }, environment) => `${kind}_${environment}_${origin}`,
+      ({ kind, origin }, environment) => `${kind}_${environment}_${origin}`,
       (query, environment) => [environment],
       "GetNotifications",
       getUrl,

@@ -12,7 +12,8 @@ import { words } from "@/UI";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { Model, Severity, Body } from "@S/Notification/Core/Model";
+import { Model, Body } from "@S/Notification/Core/Model";
+import { getSeverityForNotification } from "@S/Notification/UI/Utils";
 
 interface Props {
   notification: Model;
@@ -40,17 +41,6 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
       </NotificationDrawerListItemBody>
     </NotificationDrawerListItem>
   );
-};
-
-const getSeverityForNotification = (severity: Severity): VisualSeverity => {
-  switch (severity) {
-    case "error":
-      return "danger";
-    case "message":
-      return "default";
-    default:
-      return severity;
-  }
 };
 
 const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
@@ -103,7 +93,5 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
     />
   );
 };
-
-type VisualSeverity = "default" | "success" | "danger" | "warning" | "info";
 
 export type OnUpdate = (body: Body) => void;
