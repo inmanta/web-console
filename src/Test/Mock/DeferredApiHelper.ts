@@ -179,17 +179,17 @@ export class DeferredApiHelper implements ApiHelper {
     return promise as Promise<Maybe.Type<string>>;
   }
 
-  putWithoutResponseAndEnvironment<Body>(
+  putWithoutEnvironment<Data, Body>(
     url: string,
     body: Body
-  ): Promise<Maybe.Type<string>> {
+  ): Promise<Either.Type<string, Data>> {
     const { promise, resolve } = new Deferred();
     this._pendingRequests.push({
       request: { method: "PUT", url, body },
       resolve,
       promise,
     });
-    return promise as Promise<Maybe.Type<string>>;
+    return promise as Promise<Either.Type<string, Data>>;
   }
 
   patch<Body = unknown>(

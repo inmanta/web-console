@@ -1,5 +1,5 @@
 import React from "react";
-import { Maybe } from "@/Core";
+import { Either } from "@/Core";
 import { CreatableSelectInput } from "./CreatableSelectInput";
 import {
   EditableField,
@@ -10,7 +10,7 @@ import { InlineValue } from "./InlineFillers";
 
 interface Props extends FieldProps {
   options: string[];
-  onCreate: (value: string) => Promise<Maybe.Type<string>>;
+  onCreate: (value: string) => Promise<Either.Type<string, unknown>>;
 }
 
 export const EditableSelectField: React.FC<Props> = ({

@@ -30,7 +30,7 @@ export class InstantApiHelper<Data> implements ApiHelper {
   postWithoutResponseAndEnvironment(): Promise<Maybe.Type<string>> {
     throw new Error("Method not implemented.");
   }
-  putWithoutResponseAndEnvironment(): Promise<Maybe.Type<string>> {
+  putWithoutEnvironment<Data>(): Promise<Either.Type<string, Data>> {
     throw new Error("Method not implemented.");
   }
   patch(): Promise<Maybe.Type<string>> {
