@@ -3,12 +3,10 @@ import {
   Alert,
   AlertActionCloseButton,
   AlertGroup,
-  Button,
 } from "@patternfly/react-core";
 import { Either } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-
-type Phase = "Default" | "Downloading" | "Generating";
+import { DownloadButton, Phase } from "./Components";
 
 export const SupportArchive: React.FC = () => {
   const { commandResolver, archiveHelper } = useContext(DependencyContext);
@@ -35,16 +33,7 @@ export const SupportArchive: React.FC = () => {
 
   return (
     <>
-      <Button
-        spinnerAriaValueText={phaseLabelRecord[phase]}
-        isLoading={phase !== "Default"}
-        variant="primary"
-        onClick={onClick}
-        isDisabled={phase !== "Default"}
-        aria-label="DownloadArchiveButton"
-      >
-        {phaseLabelRecord[phase]}
-      </Button>
+      <DownloadButton phase={phase} onClick={onClick} />
       {error && (
         <AlertGroup isToast isLiveRegion>
           <Alert
@@ -61,10 +50,4 @@ export const SupportArchive: React.FC = () => {
       )}
     </>
   );
-};
-
-const phaseLabelRecord: Record<Phase, string> = {
-  Default: "Download support archive",
-  Downloading: "Fetching support data",
-  Generating: "Generating support archive",
 };

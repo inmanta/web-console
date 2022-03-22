@@ -4,13 +4,16 @@ import {
   AlertActionCloseButton,
   AlertGroup,
 } from "@patternfly/react-core";
+import styled from "styled-components";
 
 interface Props {
+  title: string;
   errorMessage: string;
   setErrorMessage: (message: string) => void;
 }
 
 export const ErrorToastAlert: React.FC<Props> = ({
+  title,
   errorMessage,
   setErrorMessage,
 }) => {
@@ -18,11 +21,17 @@ export const ErrorToastAlert: React.FC<Props> = ({
     <AlertGroup isToast>
       <Alert
         variant={"danger"}
-        title={errorMessage}
+        title={title}
         actionClose={
           <AlertActionCloseButton onClose={() => setErrorMessage("")} />
         }
-      />
+      >
+        <StyledErrorMessage>{errorMessage}</StyledErrorMessage>
+      </Alert>
     </AlertGroup>
   ) : null;
 };
+
+const StyledErrorMessage = styled.div`
+  white-space: pre-wrap;
+`;

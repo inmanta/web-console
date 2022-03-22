@@ -307,9 +307,9 @@ it("When using the Date filter then the compile reports within the range selecte
   window = Object.assign(window, { innerWidth: 1200 });
   window.dispatchEvent(new Event("resize"));
   expect(
-    await screen.findByText("from | 2021-09-28+00:00", { exact: false })
+    await screen.findByText("from | 2021/09/28 00:00:00", { exact: false })
   ).toBeVisible();
   expect(
-    await screen.findByText("to | 2021-09-30+00:00", { exact: false })
+    await screen.findByText("to | 2021/09/30 00:00:00", { exact: false })
   ).toBeVisible();
 });

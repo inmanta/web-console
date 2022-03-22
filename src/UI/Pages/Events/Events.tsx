@@ -10,7 +10,6 @@ import {
   EventsTableWrapper,
   EmptyView,
   EventsTableBody,
-  Description,
   PaginationWidget,
   RemoteDataView,
 } from "@/UI/Components";
@@ -47,7 +46,6 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
 
   return (
     <div>
-      <Description>{words("events.caption")(instanceId)}</Description>
       <EventsTableControls
         filter={filter}
         setFilter={setFilter}

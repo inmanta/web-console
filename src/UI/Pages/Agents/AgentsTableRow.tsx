@@ -1,12 +1,11 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
-import { InfoCircleIcon } from "@patternfly/react-icons";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { AgentRow } from "@/Core";
 import { DateWithTooltip, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Actions } from "./Actions";
+import { ActionButton, StatusLabel, KebabDropdown } from "./Components";
 
 interface Props {
   row: AgentRow;
@@ -25,25 +24,28 @@ export const AgentsTableRow: React.FC<Props> = ({ row }) => {
                 id: row.process_id,
               })}
             >
-              <Button variant="secondary" isSmall icon={<InfoCircleIcon />}>
-                {row.process_name}
-              </Button>
+              <Button variant="link">{row.process_name}</Button>
             </Link>
           )}
         </Td>
-        <Td dataLabel={words("agents.columns.status")}>{row.status}</Td>
-        <Td dataLabel={words("agents.columns.failover")}>
+        <Td width={10} dataLabel={words("agents.columns.status")}>
+          <StatusLabel status={row.status} />
+        </Td>
+        <Td width={10} dataLabel={words("agents.columns.failover")}>
           {row.last_failover && (
             <DateWithTooltip timestamp={row.last_failover} />
           )}
         </Td>
-        <Td dataLabel={words("agents.columns.unpause")}>
+        <Td width={10} dataLabel={words("agents.columns.unpause")}>
           {row.unpause_on_resume !== null && row.unpause_on_resume !== undefined
             ? JSON.stringify(row.unpause_on_resume)
             : null}
         </Td>
-        <Td dataLabel={words("agents.columns.actions")}>
-          <Actions name={row.name} paused={row.paused} />
+        <Td modifier="fitContent">
+          <ActionButton name={row.name} paused={row.paused} />
+        </Td>
+        <Td isActionCell>
+          <KebabDropdown name={row.name} paused={row.paused} />
         </Td>
       </Tr>
     </Tbody>

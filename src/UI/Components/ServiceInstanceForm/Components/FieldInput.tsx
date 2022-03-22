@@ -6,6 +6,7 @@ import {
 } from "@patternfly/react-core";
 import { PlusIcon } from "@patternfly/react-icons";
 import { get } from "lodash-es";
+import styled from "styled-components";
 import {
   InstanceAttributeModel,
   DictListField,
@@ -139,7 +140,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   getUpdate,
   path,
 }) => (
-  <FormFieldGroupExpandable
+  <StyledFormFieldGroupExpandable
     aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
     header={
       <FormFieldGroupHeader
@@ -160,7 +161,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
         path={makePath(path, field.name)}
       />
     ))}
-  </FormFieldGroupExpandable>
+  </StyledFormFieldGroupExpandable>
 );
 
 interface DictListProps {
@@ -193,7 +194,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     ]);
 
   return (
-    <FormFieldGroupExpandable
+    <StyledFormFieldGroupExpandable
       aria-label={`DictListFieldInput-${makePath(path, field.name)}`}
       header={
         <FormFieldGroupHeader
@@ -218,7 +219,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
       }
     >
       {list.map((item, index) => (
-        <FormFieldGroupExpandable
+        <StyledFormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
             `${field.name}.${index + 1}`
@@ -254,8 +255,12 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               path={makePath(path, `${field.name}.${index}`)}
             />
           ))}
-        </FormFieldGroupExpandable>
+        </StyledFormFieldGroupExpandable>
       ))}
-    </FormFieldGroupExpandable>
+    </StyledFormFieldGroupExpandable>
   );
 };
+
+const StyledFormFieldGroupExpandable = styled(FormFieldGroupExpandable)`
+  min-height: 0;
+`;

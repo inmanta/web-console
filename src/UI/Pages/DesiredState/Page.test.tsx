@@ -232,10 +232,10 @@ test("When using the Date filter then the desired state versions within the rang
   window = Object.assign(window, { innerWidth: 1200 });
   window.dispatchEvent(new Event("resize"));
   expect(
-    await screen.findByText("from | 2021-12-06+00:00", { exact: false })
+    await screen.findByText("from | 2021/12/06 00:00:00", { exact: false })
   ).toBeVisible();
   expect(
-    await screen.findByText("to | 2021-12-07+00:00", { exact: false })
+    await screen.findByText("to | 2021/12/07 00:00:00", { exact: false })
   ).toBeVisible();
 });
 

@@ -20,7 +20,7 @@ export class ResourcesTablePresenter
         apiName: "resource_id_value",
       },
       {
-        displayName: words("resources.column.numberOfDependencies"),
+        displayName: words("resources.column.requires"),
         apiName: "requires",
       },
       {

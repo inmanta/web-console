@@ -1,0 +1,4 @@
+description: Speed up testing with jest
+issue-nr: 2629
+change-type: patch
+destination-branches: [iso4]

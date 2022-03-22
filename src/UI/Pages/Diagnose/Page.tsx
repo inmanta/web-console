@@ -1,27 +1,42 @@
-import React from "react";
-import { PageContainer, ServiceProvider } from "@/UI/Components";
+import React, { useContext } from "react";
+import { RemoteData } from "@/Core";
+import { PageContainer, ServiceInstanceDescription } from "@/UI/Components";
+import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Diagnose } from "./Diagnose";
 
-const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageContainer {...props} title={words("diagnose.title")}>
-    {children}
-  </PageContainer>
-);
-
 export const Page: React.FC = () => {
-  const { service: serviceName, instance } = useRouteParams<"Diagnose">();
+  const { service, instance } = useRouteParams<"Diagnose">();
+  const { queryResolver } = useContext(DependencyContext);
+
+  const [data] = queryResolver.useContinuous<"GetServiceInstance">({
+    kind: "GetServiceInstance",
+    service_entity: service,
+    id: instance,
+  });
 
   return (
-    <ServiceProvider
-      serviceName={serviceName}
-      Wrapper={Wrapper}
-      Dependant={({ service }) => (
-        <Wrapper>
-          <Diagnose service={service} instanceId={instance} />
-        </Wrapper>
-      )}
-    />
+    <PageContainer title={words("diagnose.title")}>
+      <ServiceInstanceDescription
+        instanceId={instance}
+        serviceName={service}
+        getDescription={words("diagnose.main.subtitle")}
+        data={data}
+        withSpace
+      />
+      <Diagnose
+        serviceName={service}
+        instanceId={instance}
+        instanceIdentity={RemoteData.withFallback(
+          RemoteData.mapSuccess(
+            (instanceData) =>
+              instanceData.service_identity_attribute_value || instanceData.id,
+            data
+          ),
+          instance
+        )}
+      />
+    </PageContainer>
   );
 };

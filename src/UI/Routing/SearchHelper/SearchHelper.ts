@@ -15,7 +15,10 @@ export class SearchHelper {
    * The search string can have a leading question mark.
    */
   parse(search: string): Record<string, unknown> {
-    return qs.parse(this.clearQuestionMark(search), { allowDots: true });
+    return qs.parse(this.clearQuestionMark(search), {
+      allowDots: true,
+      arrayLimit: 200,
+    });
   }
 
   /**
