@@ -2,53 +2,58 @@ import React from "react";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { EnvironmentDetails, RemoteData } from "@/Core";
+import { Either, EnvironmentDetails, RemoteData } from "@/Core";
 import {
-  BaseApiHelper,
+  CommandManagerResolver,
   CommandResolverImpl,
-  DeleteInstanceCommandManager,
   getStoreInstance,
+  KeycloakAuthHelper,
 } from "@/Data";
-import {
-  dependencies,
-  DynamicCommandManagerResolver,
-  ServiceInstance,
-} from "@/Test";
-import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
+import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
+import { GetInstancesContext } from "../../GetInstancesContext";
 import { DeleteModal } from "./DeleteModal";
 
 function setup() {
-  const commandManager = new DeleteInstanceCommandManager(new BaseApiHelper());
-  const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager])
-  );
+  const apiHelper = new DeferredApiHelper();
+  const authHelper = new KeycloakAuthHelper();
   const storeInstance = getStoreInstance();
   storeInstance.dispatch.environment.setEnvironmentDetailsById({
     id: ServiceInstance.a.environment,
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
-  const environmentModifier = new EnvironmentModifierImpl();
-  environmentModifier.setEnvironment(ServiceInstance.a.environment);
+
+  dependencies.environmentModifier.setEnvironment(
+    ServiceInstance.a.environment
+  );
+
+  const commandResolver = new CommandResolverImpl(
+    new CommandManagerResolver(storeInstance, apiHelper, authHelper)
+  );
+  const refetch = jest.fn();
   return {
     component: (isDisabled = false) => (
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          commandResolver,
-          environmentModifier,
-        }}
-      >
-        <StoreProvider store={storeInstance}>
-          <DeleteModal
-            id={ServiceInstance.a.id}
-            version={ServiceInstance.a.version}
-            isDisabled={isDisabled}
-            service_entity={ServiceInstance.a.service_entity}
-          />
-        </StoreProvider>
-      </DependencyProvider>
+      <StoreProvider store={storeInstance}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            commandResolver,
+          }}
+        >
+          <GetInstancesContext.Provider value={{ refetch }}>
+            <DeleteModal
+              id={ServiceInstance.a.id}
+              version={ServiceInstance.a.version}
+              isDisabled={isDisabled}
+              service_entity={ServiceInstance.a.service_entity}
+            />
+          </GetInstancesContext.Provider>
+        </DependencyProvider>
+      </StoreProvider>
     ),
     storeInstance,
+    apiHelper,
+    refetch,
   };
 }
 
@@ -71,18 +76,20 @@ describe("DeleteModal ", () => {
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
   });
   it("Sends request when submitted", async () => {
-    const { component } = setup();
+    const { component, apiHelper, refetch } = setup();
     render(component());
     const modalButton = await screen.findByText("Delete");
     userEvent.click(modalButton);
     const yesButton = await screen.findByText("Yes");
     userEvent.click(yesButton);
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
-    const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
-    expect(receivedUrl).toEqual(
-      `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}?current_version=${ServiceInstance.a.version}`
-    );
-    expect(requestInit?.method).toEqual("DELETE");
+    expect(apiHelper.pendingRequests[0]).toEqual({
+      environment: "env",
+      method: "DELETE",
+      url: `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}?current_version=${ServiceInstance.a.version}`,
+    });
+    await apiHelper.resolve(Either.right(null));
+    expect(refetch).toHaveBeenCalled();
   });
   it("Takes environment halted status in account", async () => {
     const { component, storeInstance } = setup();
