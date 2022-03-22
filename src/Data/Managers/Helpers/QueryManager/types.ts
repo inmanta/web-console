@@ -39,3 +39,7 @@ export type ToUsed<Kind extends Query.Kind> = (
   data: Query.Data<Kind>,
   setUrl: (url: string) => void
 ) => Query.UsedData<Kind>;
+
+export type ReadOnlyToUsed<Kind extends Query.Kind> = (
+  data: Query.Data<Kind>
+) => Query.UsedData<Kind>;

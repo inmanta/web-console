@@ -7,9 +7,9 @@ export const unread: Model = {
   id: "abcdefgh01",
   created: "2021-01-11T12:56:56.205131",
   title: "Something happened",
-  message: "",
+  message: "An exporting compile has failed",
   severity: "info",
-  uri: "",
+  uri: "/api/v2/compilereport/f2c68117-24bd-43cf-a9dc-ce42b934a614",
   read: false,
   cleared: false,
 };

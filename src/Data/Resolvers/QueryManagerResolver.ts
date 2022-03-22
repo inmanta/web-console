@@ -71,7 +71,7 @@ import {
   GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import * as GetNotifications from "@/Slices/Notification/Data/QueryManager";
+import * as GetNotifications from "@/Slices/Notification/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];
@@ -264,7 +264,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.store,
         this.scheduler
       ),
-      new GetNotifications.Manager(this.apiHelper, this.store, this.scheduler),
+      new GetNotifications.ContinuousManager(
+        this.apiHelper,
+        this.store,
+        this.scheduler
+      ),
+      new GetNotifications.ReadOnlyManager(this.store),
     ];
   }
 }

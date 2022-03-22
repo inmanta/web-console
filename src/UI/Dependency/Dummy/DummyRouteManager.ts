@@ -4,6 +4,9 @@ export class DummyRouteManager implements RouteManager {
   getRoute<K extends RouteKind>(): Route<K> {
     throw new Error("Method not implemented.");
   }
+  getUrlForApiUri(): string | undefined {
+    throw new Error("Method not implemented.");
+  }
   useUrl(): string {
     throw new Error("Method not implemented.");
   }

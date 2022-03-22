@@ -1,3 +1,4 @@
+import * as UpdateNotification from "@S/Notification/Core/Command";
 import { ControlAgent, ControlAgentManifest } from "./ControlAgent";
 import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
 import {
@@ -79,7 +80,8 @@ export type Command =
   | PromoteVersion
   | ControlAgent
   | TriggerCompile
-  | TriggerDryRun.Command;
+  | TriggerDryRun.Command
+  | UpdateNotification.Command;
 
 export type Type = Command;
 
@@ -113,6 +115,7 @@ interface Manifest {
   ControlAgent: ControlAgentManifest;
   TriggerCompile: TriggerCompileManifest;
   TriggerDryRun: TriggerDryRun.Manifest;
+  UpdateNotification: UpdateNotification.Manifest;
 }
 
 /**

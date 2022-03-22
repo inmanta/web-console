@@ -43,6 +43,7 @@ import {
   TriggerDryRun,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
+import * as UpdateNotification from "@/Slices/Notification/Data/CommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -159,6 +160,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new TriggerCompileCommandManager(this.apiHelper),
       new TriggerDryRun.CommandManager(this.apiHelper),
+      new UpdateNotification.CommandManager(this.apiHelper, this.store),
     ];
   }
 }

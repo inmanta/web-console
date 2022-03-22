@@ -5,7 +5,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class Manager extends QueryManager.ContinuousWithEnv<"GetNotifications"> {
+export class ContinuousManager extends QueryManager.ContinuousWithEnv<"GetNotifications"> {
   constructor(apiHelper: ApiHelper, store: Store, scheduler: Scheduler) {
     super(
       apiHelper,

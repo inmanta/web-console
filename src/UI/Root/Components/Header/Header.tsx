@@ -11,9 +11,15 @@ interface Props {
   noEnv: boolean;
   isNavOpen: boolean;
   onToggle(): void;
+  onNotificationsToggle(): void;
 }
 
-export const Header: React.FC<Props> = ({ noEnv, isNavOpen, onToggle }) => {
+export const Header: React.FC<Props> = ({
+  noEnv,
+  isNavOpen,
+  onToggle,
+  onNotificationsToggle,
+}) => {
   const { routeManager } = useContext(DependencyContext);
   return (
     <>
@@ -21,7 +27,7 @@ export const Header: React.FC<Props> = ({ noEnv, isNavOpen, onToggle }) => {
       <StyledHeader
         logo={<img src={logo} alt="Inmanta Logo" aria-label="Inmanta Logo" />}
         logoProps={{ href: routeManager.getUrl("Home", undefined) }}
-        headerTools={<Actions noEnv={noEnv} />}
+        headerTools={<Actions {...{ noEnv, onNotificationsToggle }} />}
         showNavToggle
         topNav={<EnvSelectorWithProvider />}
         isNavOpen={isNavOpen}
