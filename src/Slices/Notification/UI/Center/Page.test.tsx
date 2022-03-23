@@ -29,6 +29,12 @@ const setup = () => {
     new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper())
   );
 
+  const request = (query: string) => ({
+    method: "GET",
+    environment: "env",
+    url: `/api/v2/notification${query}`,
+  });
+
   const component = (
     <MemoryRouter>
       <StoreProvider store={store}>
@@ -41,27 +47,23 @@ const setup = () => {
     </MemoryRouter>
   );
 
-  return { component, apiHelper };
+  return { component, apiHelper, request };
 };
 
 test("Given Notification Center page Then fetches notifications", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper, request } = setup();
   render(component);
-  expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", environment: "env", url: "/api/v2/notification?limit=20" },
-  ]);
+  expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
-
-  const items = screen.getAllByRole("listitem", {
-    name: "NotificationItem",
-  });
-  expect(items).toHaveLength(3);
+  expect(
+    screen.getAllByRole("listitem", { name: "NotificationItem" })
+  ).toHaveLength(3);
 });
 
 test("Given Notification Center page When user filters on severity Then executes correct request", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper, request } = setup();
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -71,11 +73,7 @@ test("Given Notification Center page When user filters on severity Then executes
   userEvent.click(screen.getByRole("option", { name: "message" }));
 
   expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      environment: "env",
-      url: "/api/v2/notification?limit=20&filter.severity=message",
-    },
+    request("?limit=20&filter.severity=message"),
   ]);
 
   await act(async () => {
@@ -84,25 +82,17 @@ test("Given Notification Center page When user filters on severity Then executes
     );
   });
 
-  const items = screen.getAllByRole("listitem", {
-    name: "NotificationItem",
-  });
-  expect(items).toHaveLength(2);
+  expect(
+    screen.getAllByRole("listitem", { name: "NotificationItem" })
+  ).toHaveLength(2);
 
   userEvent.click(screen.getByRole("button", { name: "Severity" }));
   userEvent.click(screen.getByRole("option", { name: "message" }));
-
-  expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      environment: "env",
-      url: "/api/v2/notification?limit=20",
-    },
-  ]);
+  expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 });
 
 test("Given Notification Center page When user filters on read Then executes correct request", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper, request } = setup();
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -112,11 +102,7 @@ test("Given Notification Center page When user filters on read Then executes cor
   userEvent.click(screen.getByRole("option", { name: "read" }));
 
   expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      environment: "env",
-      url: "/api/v2/notification?limit=20&filter.read=true",
-    },
+    request("?limit=20&filter.read=true"),
   ]);
 
   await act(async () => {
@@ -125,38 +111,31 @@ test("Given Notification Center page When user filters on read Then executes cor
     );
   });
 
-  const items = screen.getAllByRole("listitem", {
-    name: "NotificationItem",
-  });
-  expect(items).toHaveLength(2);
+  expect(
+    screen.getAllByRole("listitem", {
+      name: "NotificationItem",
+    })
+  ).toHaveLength(2);
 
   userEvent.click(screen.getByRole("button", { name: "Read" }));
   userEvent.click(screen.getByRole("option", { name: "read" }));
-  expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      environment: "env",
-      url: "/api/v2/notification?limit=20",
-    },
-  ]);
+  expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 });
 
 test("Given Notification Center page When user filters on message Then executes correct request", async () => {
-  const { component, apiHelper } = setup();
+  const { component, apiHelper, request } = setup();
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  const input = screen.getByRole("searchbox", { name: "MessageFilter" });
-  userEvent.type(input, "abc{enter}");
+  userEvent.type(
+    screen.getByRole("searchbox", { name: "MessageFilter" }),
+    "abc{enter}"
+  );
 
   expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      environment: "env",
-      url: "/api/v2/notification?limit=20&filter.message=abc",
-    },
+    request("?limit=20&filter.message=abc"),
   ]);
 
   await act(async () => {
@@ -165,36 +144,62 @@ test("Given Notification Center page When user filters on message Then executes 
     );
   });
 
-  const items = screen.getAllByRole("listitem", {
-    name: "NotificationItem",
-  });
-  expect(items).toHaveLength(2);
+  expect(
+    screen.getAllByRole("listitem", {
+      name: "NotificationItem",
+    })
+  ).toHaveLength(2);
 
   userEvent.click(screen.getByRole("button", { name: "close abc" }));
-  expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      environment: "env",
-      url: "/api/v2/notification?limit=20",
-    },
-  ]);
+  expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 });
 
 test("Given Notification Center page When user filters on title Then executes correct request", async () => {
+  const { component, apiHelper, request } = setup();
+  render(component);
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
+
+  userEvent.type(
+    screen.getByRole("searchbox", { name: "TitleFilter" }),
+    "abc{enter}"
+  );
+
+  expect(apiHelper.pendingRequests).toEqual([
+    request("?limit=20&filter.title=abc"),
+  ]);
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] })
+    );
+  });
+
+  expect(
+    screen.getAllByRole("listitem", {
+      name: "NotificationItem",
+    })
+  ).toHaveLength(2);
+
+  userEvent.click(screen.getByRole("button", { name: "close abc" }));
+  expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
+});
+
+test("Given Notification Center page When user clicks next page Then fetches next page", async () => {
   const { component, apiHelper } = setup();
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  const input = screen.getByRole("searchbox", { name: "TitleFilter" });
-  userEvent.type(input, "abc{enter}");
+  userEvent.click(screen.getByRole("button", { name: "Next" }));
 
   expect(apiHelper.pendingRequests).toEqual([
     {
       method: "GET",
       environment: "env",
-      url: "/api/v2/notification?limit=20&filter.title=abc",
+      url: "next-url",
     },
   ]);
 
@@ -204,21 +209,9 @@ test("Given Notification Center page When user filters on title Then executes co
     );
   });
 
-  const items = screen.getAllByRole("listitem", {
-    name: "NotificationItem",
-  });
-  expect(items).toHaveLength(2);
-
-  userEvent.click(screen.getByRole("button", { name: "close abc" }));
-  expect(apiHelper.pendingRequests).toEqual([
-    {
-      method: "GET",
-      environment: "env",
-      url: "/api/v2/notification?limit=20",
-    },
-  ]);
+  expect(
+    screen.getAllByRole("listitem", {
+      name: "NotificationItem",
+    })
+  ).toHaveLength(2);
 });
-
-test.todo(
-  "Given Notification Center page When user selects 2nd page Then fetches 2nd page"
-);
