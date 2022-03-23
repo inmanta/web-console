@@ -14,8 +14,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { Body } from "@S/Notification/Core/Model";
-import { drawerQuery } from "@S/Notification/Core/Query";
-import { ViewData } from "@S/Notification/Core/Utils";
+import { drawerQuery, ViewData } from "@S/Notification/Core/Query";
 import { Item, OnUpdate } from "./Item";
 
 interface Props {
