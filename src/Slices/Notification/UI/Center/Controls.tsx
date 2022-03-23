@@ -4,6 +4,7 @@ import { Filter } from "@S/Notification/Core/Query";
 import { MessageFilter } from "./MessageFilter";
 import { ReadFilter } from "./ReadFilter";
 import { SeverityFilter } from "./SeverityFilter";
+import { TitleFilter } from "./TitleFilter";
 
 interface Props {
   paginationWidget: React.ReactNode;
@@ -26,6 +27,9 @@ export const Controls: React.FC<Props> = ({
       </ToolbarItem>
       <ToolbarItem>
         <MessageFilter filter={filter} setFilter={setFilter} />
+      </ToolbarItem>
+      <ToolbarItem>
+        <TitleFilter filter={filter} setFilter={setFilter} />
       </ToolbarItem>
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
     </ToolbarContent>
