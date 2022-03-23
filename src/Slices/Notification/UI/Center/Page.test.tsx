@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -52,6 +52,11 @@ test("Given Notification Center page Then fetches notifications", async () => {
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
+
+  const items = screen.getAllByRole("listitem", {
+    name: "NotificationItem",
+  });
+  expect(items).toHaveLength(3);
 });
 
 test.todo(
