@@ -2,7 +2,7 @@ import React from "react";
 import { ToolbarFilter } from "@patternfly/react-core";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { Severity, severityList } from "@S/Notification/Core/Model";
+import { severityList } from "@S/Notification/Core/Model";
 import { Filter } from "@S/Notification/Core/Query";
 
 interface Props {
@@ -11,14 +11,11 @@ interface Props {
 }
 
 export const SeverityFilter: React.FC<Props> = ({ filter, setFilter }) => {
-  const update = (severity: Severity) =>
+  const onSelect = (selection) => {
     setFilter({
       ...filter,
-      severity: filter.severity === severity ? undefined : severity,
+      severity: selection === null ? undefined : selection,
     });
-
-  const onSelect = (selection) => {
-    update(selection === null ? undefined : selection);
   };
 
   const deleteChip = () =>

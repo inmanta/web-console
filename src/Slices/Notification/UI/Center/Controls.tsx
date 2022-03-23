@@ -1,6 +1,7 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
 import { Filter } from "@S/Notification/Core/Query";
+import { ReadFilter } from "./ReadFilter";
 import { SeverityFilter } from "./SeverityFilter";
 
 interface Props {
@@ -18,6 +19,9 @@ export const Controls: React.FC<Props> = ({
     <ToolbarContent>
       <ToolbarItem>
         <SeverityFilter filter={filter} setFilter={setFilter} />
+      </ToolbarItem>
+      <ToolbarItem>
+        <ReadFilter filter={filter} setFilter={setFilter} />
       </ToolbarItem>
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
     </ToolbarContent>

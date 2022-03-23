@@ -63,15 +63,11 @@ test("Given Notification Center page Then fetches notifications", async () => {
 test("Given Notification Center page When user filters on severity Then executes correct request", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  expect(apiHelper.pendingRequests).toEqual([
-    { method: "GET", environment: "env", url: "/api/v2/notification?limit=20" },
-  ]);
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  const toggle = screen.getByRole("button", { name: "Severity" });
-  userEvent.click(toggle);
+  userEvent.click(screen.getByRole("button", { name: "Severity" }));
   userEvent.click(screen.getByRole("option", { name: "message" }));
 
   expect(apiHelper.pendingRequests).toEqual([
@@ -92,11 +88,58 @@ test("Given Notification Center page When user filters on severity Then executes
     name: "NotificationItem",
   });
   expect(items).toHaveLength(2);
+
+  userEvent.click(screen.getByRole("button", { name: "Severity" }));
+  userEvent.click(screen.getByRole("option", { name: "message" }));
+
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "GET",
+      environment: "env",
+      url: "/api/v2/notification?limit=20",
+    },
+  ]);
 });
 
-test.todo(
-  "Given Notification Center page When user filters on title Then executes correct request"
-);
+test("Given Notification Center page When user filters on title Then executes correct request", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
+
+  userEvent.click(screen.getByRole("button", { name: "Read" }));
+  userEvent.click(screen.getByRole("option", { name: "read" }));
+
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "GET",
+      environment: "env",
+      url: "/api/v2/notification?limit=20&filter.read=true",
+    },
+  ]);
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] })
+    );
+  });
+
+  const items = screen.getAllByRole("listitem", {
+    name: "NotificationItem",
+  });
+  expect(items).toHaveLength(2);
+
+  userEvent.click(screen.getByRole("button", { name: "Read" }));
+  userEvent.click(screen.getByRole("option", { name: "read" }));
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "GET",
+      environment: "env",
+      url: "/api/v2/notification?limit=20",
+    },
+  ]);
+});
 
 test.todo(
   "Given Notification Center page When user filters on message Then executes correct request"

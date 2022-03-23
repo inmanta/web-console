@@ -16,6 +16,7 @@ export const Page: React.FC = () => {
   });
   const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "NotificationCenter",
+    keys: { read: "Boolean" },
   });
   const [data, retry] = queryResolver.useContinuous<"GetNotifications">({
     kind: "GetNotifications",
