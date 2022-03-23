@@ -101,7 +101,7 @@ test("Given Notification Center page When user filters on severity Then executes
   ]);
 });
 
-test("Given Notification Center page When user filters on title Then executes correct request", async () => {
+test("Given Notification Center page When user filters on read Then executes correct request", async () => {
   const { component, apiHelper } = setup();
   render(component);
   await act(async () => {
@@ -141,12 +141,47 @@ test("Given Notification Center page When user filters on title Then executes co
   ]);
 });
 
-test.todo(
-  "Given Notification Center page When user filters on message Then executes correct request"
-);
+test("Given Notification Center page When user filters on message Then executes correct request", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
+
+  const input = screen.getByRole("searchbox", { name: "MessageFilter" });
+  userEvent.type(input, "abc{enter}");
+
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "GET",
+      environment: "env",
+      url: "/api/v2/notification?limit=20&filter.message=abc",
+    },
+  ]);
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] })
+    );
+  });
+
+  const items = screen.getAllByRole("listitem", {
+    name: "NotificationItem",
+  });
+  expect(items).toHaveLength(2);
+
+  userEvent.click(screen.getByRole("button", { name: "close abc" }));
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "GET",
+      environment: "env",
+      url: "/api/v2/notification?limit=20",
+    },
+  ]);
+});
 
 test.todo(
-  "Given Notification Center page When user filters on read Then executes correct request"
+  "Given Notification Center page When user filters on title Then executes correct request"
 );
 
 test.todo(
