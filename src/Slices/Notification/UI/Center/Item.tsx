@@ -84,8 +84,8 @@ interface CustomItemProps {
 }
 
 const CustomItem = styled(DataListItem)<CustomItemProps>`
-  --pf-c-data-list__item-row--PaddingRight: 16px;
-  --pf-c-data-list__item-row--PaddingLeft: 16px;
+  --pf-c-data-list__item-row--PaddingRight: 24px;
+  --pf-c-data-list__item-row--PaddingLeft: 24px;
   --pf-c-data-list__item-content--md--PaddingBottom: 16px;
   --pf-c-data-list__cell--PaddingTop: 16px;
   --pf-c-data-list__item-action--PaddingBottom: 16px;

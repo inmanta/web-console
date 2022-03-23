@@ -1,5 +1,5 @@
 import { identity } from "lodash";
-import { Scheduler, ApiHelper } from "@/Core";
+import { Scheduler, ApiHelper, stringifyObjectOrUndefined } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
 import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
@@ -12,7 +12,10 @@ export class ContinuousManager extends QueryManager.ContinuousWithEnv<"GetNotifi
       new StateHelper(store),
       scheduler,
       ({ kind, origin }, environment) => `${kind}_${environment}_${origin}`,
-      (query, environment) => [environment],
+      ({ filter }, environment) => [
+        environment,
+        stringifyObjectOrUndefined(filter),
+      ],
       "GetNotifications",
       getUrl,
       identity

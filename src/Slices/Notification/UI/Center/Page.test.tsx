@@ -1,6 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -59,9 +60,39 @@ test("Given Notification Center page Then fetches notifications", async () => {
   expect(items).toHaveLength(3);
 });
 
-test.todo(
-  "Given Notification Center page When user filters on severity Then executes correct request"
-);
+test("Given Notification Center page When user filters on severity Then executes correct request", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  expect(apiHelper.pendingRequests).toEqual([
+    { method: "GET", environment: "env", url: "/api/v2/notification?limit=20" },
+  ]);
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
+
+  const toggle = screen.getByRole("button", { name: "Severity" });
+  userEvent.click(toggle);
+  userEvent.click(screen.getByRole("option", { name: "message" }));
+
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "GET",
+      environment: "env",
+      url: "/api/v2/notification?limit=20&filter.severity=message",
+    },
+  ]);
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({ ...Mock.response, data: [Mock.read, Mock.unread] })
+    );
+  });
+
+  const items = screen.getAllByRole("listitem", {
+    name: "NotificationItem",
+  });
+  expect(items).toHaveLength(2);
+});
 
 test.todo(
   "Given Notification Center page When user filters on title Then executes correct request"

@@ -6,6 +6,7 @@ import { PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Filter } from "@S/Notification/Core/Query";
+import { Controls } from "./Controls";
 import { List } from "./List";
 
 export const Page: React.FC = () => {
@@ -13,7 +14,7 @@ export const Page: React.FC = () => {
   const [pageSize] = useUrlStateWithPageSize({
     route: "NotificationCenter",
   });
-  const [filter] = useUrlStateWithFilter<Filter>({
+  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "NotificationCenter",
   });
   const [data, retry] = queryResolver.useContinuous<"GetNotifications">({
@@ -25,6 +26,11 @@ export const Page: React.FC = () => {
 
   return (
     <PageContainer title={words("notification.center.title")}>
+      <Controls
+        paginationWidget={undefined}
+        filter={filter}
+        setFilter={setFilter}
+      />
       {RemoteData.fold(
         {
           notAsked: () => null,
