@@ -15,6 +15,8 @@ import { MomentDatePresenter } from "@/UI/Utils";
 import { Model, Body } from "@S/Notification/Core/Model";
 import { getSeverityForNotification } from "@S/Notification/UI/Utils";
 
+export type OnUpdate = (body: Body) => void;
+
 interface Props {
   notification: Model;
   onUpdate: OnUpdate;
@@ -68,7 +70,7 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
           onClick={() => onUpdate({ read: false })}
           isDisabled={!notification.read}
         >
-          {words("notification.drawer.unread")}
+          {words("notification.unread")}
         </DropdownItem>,
         <DropdownItem
           key="cleared"
@@ -93,5 +95,3 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
     />
   );
 };
-
-export type OnUpdate = (body: Body) => void;

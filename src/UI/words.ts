@@ -483,10 +483,12 @@ const dict = {
    * Notification
    */
   "notification.center.title": "Notification Center",
+  "notification.read": "Mark as read",
+  "notification.center.unread": "Mark as read",
   "notification.drawer.showAll": "Show all notifications",
   "notification.drawer.readAll": "Mark all as read",
   "notification.drawer.clearAll": "Clear all",
-  "notification.drawer.unread": "Mark as unread",
+  "notification.unread": "Mark as unread",
   "notification.drawer.details": "Details",
   "notification.drawer.clear": "Clear",
 
