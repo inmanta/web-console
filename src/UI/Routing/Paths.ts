@@ -1,4 +1,7 @@
 import { RouteKind } from "@/Core";
+import { AgentProcess } from "@S/Agent";
+import { Notification } from "@S/Notification";
+import { Resource } from "@S/Resource";
 
 type Paths = Record<RouteKind, string>;
 
@@ -10,7 +13,7 @@ export const paths: Paths = {
   CreateEnvironment: "/environment/create",
   Settings: "/settings",
   Status: "/status",
-  NotificationCenter: "/notificationcenter",
+  NotificationCenter: Notification.path,
 
   /**
    * LSM
@@ -26,10 +29,10 @@ export const paths: Paths = {
   /**
    * Resource Manager
    */
-  Resources: "/resources",
+  Resources: Resource.path,
   Agents: "/agents",
   Facts: "/facts",
-  AgentProcess: "/agents/:id",
+  AgentProcess: AgentProcess.path,
   ResourceDetails: "/resources/:resourceId",
 
   /**

@@ -13,6 +13,9 @@ import {
   RouteMatch,
   Crumb,
 } from "@/Core";
+import { AgentProcess } from "@S/Agent";
+import { Notification } from "@S/Notification";
+import { Resource } from "@S/Resource";
 import { paths } from "./Paths";
 import { encodeParams } from "./Utils";
 
@@ -28,7 +31,7 @@ export class PrimaryRouteManager implements RouteManager {
       CreateEnvironment: CreateEnvironment(this.baseUrl),
       Settings: Settings(this.baseUrl),
       Status: Status(this.baseUrl),
-      NotificationCenter: NotificationCenter(this.baseUrl),
+      NotificationCenter: Notification.route(this.baseUrl),
 
       /**
        * LSM
@@ -44,10 +47,10 @@ export class PrimaryRouteManager implements RouteManager {
       /**
        * Resource Manager
        */
-      Resources: Resources(this.baseUrl),
+      Resources: Resource.route(this.baseUrl),
       Agents: Agents(this.baseUrl),
       Facts: Facts(this.baseUrl),
-      AgentProcess: AgentProcess(this.baseUrl),
+      AgentProcess: AgentProcess.route(this.baseUrl),
       ResourceDetails: ResourceDetails(this.baseUrl),
 
       /**
@@ -228,14 +231,6 @@ const Events = (base: string): Route<"Events"> => ({
   environmentRole: "Required",
 });
 
-const Resources = (base: string): Route<"Resources"> => ({
-  kind: "Resources",
-  parent: "Home",
-  path: `${base}${paths.Resources}`,
-  generateLabel: () => "Resources",
-  environmentRole: "Required",
-});
-
 const Agents = (base: string): Route<"Agents"> => ({
   kind: "Agents",
   parent: "Home",
@@ -249,14 +244,6 @@ const Facts = (base: string): Route<"Facts"> => ({
   parent: "Home",
   path: `${base}${paths.Facts}`,
   generateLabel: () => "Facts",
-  environmentRole: "Required",
-});
-
-const AgentProcess = (base: string): Route<"AgentProcess"> => ({
-  kind: "AgentProcess",
-  parent: "Agents",
-  path: `${base}${paths.AgentProcess}`,
-  generateLabel: () => "Agent Process",
   environmentRole: "Required",
 });
 
@@ -362,13 +349,5 @@ const ComplianceCheck = (base: string): Route<"ComplianceCheck"> => ({
   parent: "DesiredState",
   path: `${base}${paths.ComplianceCheck}`,
   generateLabel: () => "Compliance Check",
-  environmentRole: "Required",
-});
-
-const NotificationCenter = (base: string): Route => ({
-  kind: "NotificationCenter",
-  parent: "Home",
-  path: `${base}${paths.NotificationCenter}`,
-  generateLabel: () => "Notification Center",
   environmentRole: "Required",
 });
