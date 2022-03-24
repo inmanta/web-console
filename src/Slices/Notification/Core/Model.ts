@@ -1,6 +1,13 @@
 type Timestamp = string;
 
 export type Severity = "message" | "info" | "success" | "warning" | "error";
+export const severityList: Severity[] = [
+  "message",
+  "info",
+  "success",
+  "warning",
+  "error",
+];
 
 export interface Model extends Flags {
   environment: string;
