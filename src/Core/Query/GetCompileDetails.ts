@@ -1,8 +1,8 @@
 import { CompileDetails } from "@/Core/Domain";
-import { WithId } from "@/Core/Language";
 
-export interface GetCompileDetails extends WithId {
+export interface GetCompileDetails {
   kind: "GetCompileDetails";
+  id: string;
 }
 
 export interface GetCompileDetailsManifest {

@@ -5,10 +5,10 @@ import {
   PageSize,
   Sort,
 } from "@/Core/Domain";
-import { WithId } from "@/Core/Language";
 
-export interface GetResourceLogs extends WithId {
+export interface GetResourceLogs {
   kind: "GetResourceLogs";
+  id: string;
   filter?: ResourceLogFilter;
   sort?: Sort.Type;
   pageSize: PageSize.Type;

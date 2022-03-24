@@ -1,8 +1,8 @@
 import { Pagination, ResourceHistory, PageSize, Sort } from "@/Core/Domain";
-import { WithId } from "@/Core/Language";
 
-export interface GetResourceHistory extends WithId {
+export interface GetResourceHistory {
   kind: "GetResourceHistory";
+  id: string;
   sort?: Sort.Type;
   pageSize: PageSize.Type;
 }

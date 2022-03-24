@@ -1,8 +1,8 @@
-import { WithId } from "@/Core/Language";
 import { AgentProcess } from "./Model";
 
-export interface Query extends WithId {
+export interface Query {
   kind: "GetAgentProcess";
+  id: string;
 }
 
 export interface Manifest {
