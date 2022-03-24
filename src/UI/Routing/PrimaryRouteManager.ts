@@ -11,6 +11,7 @@ import {
   RouteKind,
   RouteParams,
   RouteMatch,
+  Crumb,
 } from "@/Core";
 import { paths } from "./Paths";
 import { encodeParams } from "./Utils";
@@ -155,6 +156,19 @@ export class PrimaryRouteManager implements RouteManager {
       params === undefined ? params : encodeParams(params)
     );
     return `${path}${search}`;
+  }
+
+  getCrumbs(url: string): Crumb[] {
+    const routeMatch = this.getRouteMatchFromUrl(url);
+    if (typeof routeMatch === "undefined") return [];
+    const { route, params } = routeMatch;
+    const lineage = this.getLineageFromRoute(route);
+    return lineage.map(({ kind, generateLabel, path }, idx) => ({
+      kind,
+      label: generateLabel(params),
+      url: generatePath(path, params),
+      active: idx === lineage.length - 1,
+    }));
   }
 }
 

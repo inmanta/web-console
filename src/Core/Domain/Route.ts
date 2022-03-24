@@ -86,3 +86,10 @@ export interface RouteMatch {
   route: Route;
   params: RouteParams<RouteKind>;
 }
+
+export interface Crumb {
+  kind: RouteKind;
+  label: string;
+  url: string;
+  active: boolean;
+}

@@ -1,4 +1,10 @@
-import { RouteKind, Route, RouteParams, RouteMatch } from "@/Core/Domain";
+import {
+  RouteKind,
+  Route,
+  RouteParams,
+  RouteMatch,
+  Crumb,
+} from "@/Core/Domain";
 
 export type RouteDictionary = Record<RouteKind, Route>;
 
@@ -36,4 +42,5 @@ export interface RouteManager {
    * while preserving the current search.
    */
   useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
+  getCrumbs(url: string): Crumb[];
 }
