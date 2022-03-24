@@ -1,5 +1,3 @@
-import { AgentStatus } from "./AgentStatus";
-
 export interface AgentRow {
   name: string;
   last_failover?: string;
@@ -13,3 +11,11 @@ export interface AgentRow {
 export interface Agent extends AgentRow {
   environment: string;
 }
+
+export enum AgentStatus {
+  paused = "paused",
+  up = "up",
+  down = "down",
+}
+
+export const AgentStatusList = Object.values(AgentStatus);

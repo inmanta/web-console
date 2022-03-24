@@ -7,49 +7,31 @@ import { Either, Maybe, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  GetAgentsQueryManager,
-  GetAgentsStateHelper,
   CommandResolverImpl,
-  DeployCommandManager,
-  RepairCommandManager,
-  ControlAgentCommandManager,
-  GetAgentsUpdater,
+  KeycloakAuthHelper,
+  QueryManagerResolver,
+  CommandManagerResolver,
 } from "@/Data";
 import {
-  DynamicQueryManagerResolver,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
-  Agents,
-  DynamicCommandManagerResolver,
   EnvironmentDetails,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import * as AgentsMock from "@S/Agents/Core/Mock";
 import { Page } from "./Page";
 
 function setup() {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const stateHelper = new GetAgentsStateHelper(store);
+  const authHelper = new KeycloakAuthHelper();
+  const scheduler = new StaticScheduler();
+  const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new GetAgentsQueryManager(
-        apiHelper,
-        new GetAgentsStateHelper(store),
-        scheduler
-      ),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new DeployCommandManager(apiHelper),
-      new RepairCommandManager(apiHelper),
-      new ControlAgentCommandManager(
-        apiHelper,
-        new GetAgentsUpdater(stateHelper, apiHelper)
-      ),
-    ])
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
   dependencies.environmentModifier.setEnvironment("env");
 
@@ -116,7 +98,7 @@ test("AgentsView shows success table", async () => {
     await screen.findByRole("generic", { name: "AgentsView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right(Agents.response));
+  apiHelper.resolve(Either.right(AgentsMock.response));
 
   expect(
     await screen.findByRole("grid", { name: "AgentsView-Success" })
@@ -128,7 +110,7 @@ test("When using the name filter then only the matching agents should be fetched
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
   const initialRows = await screen.findAllByRole("row", {
@@ -156,8 +138,8 @@ test("When using the name filter then only the matching agents should be fetched
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
-        ...Agents.response,
-        data: Agents.response.data.slice(0, 3),
+        ...AgentsMock.response,
+        data: AgentsMock.response.data.slice(0, 3),
       })
     );
   });
@@ -173,7 +155,7 @@ test("When using the process name filter then only the matching agents should be
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
   const initialRows = await screen.findAllByRole("row", {
@@ -201,8 +183,8 @@ test("When using the process name filter then only the matching agents should be
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
-        ...Agents.response,
-        data: Agents.response.data.slice(0, 3),
+        ...AgentsMock.response,
+        data: AgentsMock.response.data.slice(0, 3),
       })
     );
   });
@@ -218,7 +200,7 @@ test("When using the status filter with the 'up' option then the agents in the '
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
   const initialRows = await screen.findAllByRole("row", {
@@ -247,8 +229,8 @@ test("When using the status filter with the 'up' option then the agents in the '
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
-        ...Agents.response,
-        data: Agents.response.data.slice(0, 3),
+        ...AgentsMock.response,
+        data: AgentsMock.response.data.slice(0, 3),
       })
     );
   });
@@ -264,7 +246,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
   const input = screen.getByPlaceholderText("Filter by name");
@@ -272,7 +254,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
   userEvent.type(input, "aws{enter}");
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   const rows = await screen.findAllByRole("row", {
     name: "Agents Table Row",
@@ -302,7 +284,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
     url: "/api/v2/agents?limit=20&filter.name=aws&sort=name.asc",
   });
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(0);
@@ -313,7 +295,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
   const input = screen.getByPlaceholderText("Filter by name");
@@ -321,7 +303,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
   userEvent.type(input, "bru{enter}");
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   const rows = await screen.findAllByRole("row", {
     name: "Agents Table Row",
@@ -351,7 +333,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
     url: "/api/v2/agents?limit=20&filter.name=bru&sort=name.asc",
   });
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(0);
@@ -362,7 +344,7 @@ test("Given the Agents view When pausing an agent results in an error, then the 
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   const rows = await screen.findAllByRole("row", {
     name: "Agents Table Row",
@@ -382,7 +364,7 @@ test("Given the Agents view When pausing an agent results in an error, then the 
   });
   await act(async () => {
     await apiHelper.resolve(Maybe.some("something happened"));
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   expect(await screen.findByText("something happened")).toBeVisible();
 });
@@ -396,7 +378,7 @@ test("Given the Agents view with the environment halted, When setting keep_pause
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
   const onResumeToggle = await screen.findByRole("checkbox", {
@@ -421,7 +403,7 @@ test("Given the Agents view with the environment halted, When setting keep_pause
     url: "/api/v2/agents?limit=20&sort=name.asc",
   });
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
@@ -435,7 +417,7 @@ test("Given the Agents view with the environment halted, When setting unpause_on
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
   const onResumeToggle = await screen.findByRole("checkbox", {
@@ -460,7 +442,7 @@ test("Given the Agents view with the environment halted, When setting unpause_on
     url: "/api/v2/agents?limit=20&sort=name.asc",
   });
   await act(async () => {
-    await apiHelper.resolve(Either.right(Agents.response));
+    await apiHelper.resolve(Either.right(AgentsMock.response));
   });
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });

@@ -1,10 +1,14 @@
-import { Pagination, AgentParams, Agent } from "@/Core/Domain";
+import { Pagination, Sort, PageSize } from "@/Core/Domain";
+import { Agent, AgentStatus } from "./Model";
 
-export interface GetAgents extends AgentParams.AgentParams {
+export interface Query {
   kind: "GetAgents";
+  filter?: Filter;
+  sort?: Sort.Sort;
+  pageSize: PageSize.PageSize;
 }
 
-export interface GetAgentsManifest {
+export interface Manifest {
   error: string;
   apiResponse: {
     data: Agent[];
@@ -21,5 +25,11 @@ export interface GetAgentsManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: GetAgents;
+  query: Query;
+}
+
+export interface Filter {
+  name?: string[];
+  process_name?: string[];
+  status?: AgentStatus[];
 }

@@ -37,13 +37,12 @@ import {
   GetDesiredStatesStateHelper,
   DesiredStatesUpdater,
   ControlAgentCommandManager,
-  GetAgentsUpdater,
-  GetAgentsStateHelper,
   TriggerCompileCommandManager,
   TriggerDryRun,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import * as UpdateNotification from "@/Slices/Notification/Data/CommandManager";
+import * as Agents from "@S/Agents/Data";
+import * as UpdateNotification from "@S/Notification/Data/CommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -159,8 +158,8 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new PromoteVersionCommandManager(this.apiHelper, desiredStatesUpdater),
       new ControlAgentCommandManager(
         this.apiHelper,
-        new GetAgentsUpdater(
-          new GetAgentsStateHelper(this.store),
+        new Agents.GetAgentsUpdater(
+          new Agents.GetAgentsStateHelper(this.store),
           this.apiHelper
         )
       ),

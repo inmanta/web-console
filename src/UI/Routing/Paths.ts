@@ -1,5 +1,6 @@
 import { RouteKind } from "@/Core";
 import { AgentProcess } from "@S/AgentProcess";
+import { Agents } from "@S/Agents";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
 
@@ -30,7 +31,7 @@ export const paths: Paths = {
    * Resource Manager
    */
   Resources: Resource.path,
-  Agents: "/agents",
+  Agents: Agents.path,
   Facts: "/facts",
   AgentProcess: AgentProcess.path,
   ResourceDetails: "/resources/:resourceId",

@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { AgentParams } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -14,6 +13,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Filter } from "@S/Agents/Core/Query";
 import { AgentsTableControls } from "./AgentsTableControls";
 import { GetAgentsContext } from "./GetAgentsContext";
 import { TableProvider } from "./TableProvider";
@@ -24,7 +24,7 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Agents",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<AgentParams.Filter>({
+  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "Agents",
   });
   const [sort, setSort] = useUrlStateWithSort<string>({

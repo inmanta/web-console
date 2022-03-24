@@ -2,11 +2,11 @@ import {
   agentProcessSlice,
   AgentProcessSlice,
 } from "@S/AgentProcess/Data/Store";
+import { agentsSlice, AgentsSlice } from "@S/Agents/Data/Store";
 import {
   notificationSlice,
   NotificationSlice,
 } from "@S/Notification/Data/Store";
-import { agentsSlice, AgentsSlice } from "./AgentsSlice";
 import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
 import {
   compileDetailsSlice,

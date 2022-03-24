@@ -7,7 +7,8 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { AgentRow, Sort } from "@/Core";
+import { Sort } from "@/Core";
+import { AgentRow } from "@S/Agents/Core/Model";
 import { AgentsTablePresenter } from "./AgentsTablePresenter";
 import { AgentsTableRow } from "./AgentsTableRow";
 

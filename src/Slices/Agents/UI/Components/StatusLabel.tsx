@@ -5,7 +5,7 @@ import {
   ExclamationCircleIcon,
   PauseCircleIcon,
 } from "@patternfly/react-icons";
-import { AgentStatus } from "@/Core";
+import { AgentStatus } from "@S/Agents/Core/Model";
 
 export const StatusLabel: React.FC<{ status: AgentStatus }> = ({ status }) => {
   switch (status) {

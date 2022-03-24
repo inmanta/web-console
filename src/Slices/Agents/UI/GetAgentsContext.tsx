@@ -1,8 +1,9 @@
 import { createContext } from "react";
-import { AgentParams, PageSize, Sort } from "@/Core";
+import { PageSize, Sort } from "@/Core";
+import { Filter } from "@S/Agents/Core/Query";
 
 interface GetAgentsProvider {
-  filter: AgentParams.Filter;
+  filter: Filter;
   sort: Sort.Type;
   pageSize: PageSize.Type;
   setErrorMessage: (message: string) => void;

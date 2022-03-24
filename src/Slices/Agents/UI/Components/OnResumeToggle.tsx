@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { Switch, Tooltip } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { GetAgentsContext } from "@/UI/Pages/Agents/GetAgentsContext";
 import { words } from "@/UI/words";
+import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
 
 interface Props {
   name: string;

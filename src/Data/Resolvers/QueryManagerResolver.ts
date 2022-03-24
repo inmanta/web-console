@@ -49,8 +49,6 @@ import {
   GetEnvironmentsStateHelper,
   GetResourceFactsQueryManager,
   GetResourceFactsStateHelper,
-  GetAgentsQueryManager,
-  GetAgentsStateHelper,
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
@@ -67,7 +65,8 @@ import {
   GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import * as Agent from "@S/AgentProcess/Data";
+import * as AgentProcess from "@S/AgentProcess/Data";
+import * as Agents from "@S/Agents/Data";
 import * as Notification from "@S/Notification/Data";
 import * as Resource from "@S/Resource/Data";
 
@@ -221,14 +220,14 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetResourceFactsStateHelper(this.store),
         this.scheduler
       ),
-      new GetAgentsQueryManager(
+      new Agents.GetAgentsQueryManager(
         this.apiHelper,
-        new GetAgentsStateHelper(this.store),
+        new Agents.GetAgentsStateHelper(this.store),
         this.scheduler
       ),
-      new Agent.GetAgentProcessQueryManager(
+      new AgentProcess.GetAgentProcessQueryManager(
         this.apiHelper,
-        new Agent.GetAgentProcessStateHelper(this.store)
+        new AgentProcess.GetAgentProcessStateHelper(this.store)
       ),
       new GetDesiredStatesQueryManager(
         this.apiHelper,

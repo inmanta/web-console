@@ -3,7 +3,8 @@ import { Button } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { DependencyContext, words } from "@/UI";
 import { ActionDisabledTooltip } from "@/UI/Components";
-import { GetAgentsContext } from "@/UI/Pages/Agents/GetAgentsContext";
+import { GetAgentsContext } from "@S/Agents/UI/GetAgentsContext";
+
 interface Props {
   name: string;
   paused: boolean;

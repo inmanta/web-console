@@ -1,11 +1,11 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { AgentParams } from "@/Core";
+import { Filter } from "@S/Agents/Core/Query";
 import { AgentsFilterWidget } from "./FilterWidget/AgentsFilterWidget";
 
 interface Props {
-  filter: AgentParams.Filter;
-  setFilter: (filter: AgentParams.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
   paginationWidget: React.ReactNode;
 }
 

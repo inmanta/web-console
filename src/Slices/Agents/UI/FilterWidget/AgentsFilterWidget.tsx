@@ -1,19 +1,24 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
-import { AgentParams, AgentStatus } from "@/Core";
 import { FilterPicker } from "@/UI/Components";
 import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
+import { AgentStatus } from "@S/Agents/Core/Model";
+import { Filter } from "@S/Agents/Core/Query";
+
+enum Kind {
+  Name = "Name",
+  ProcessName = "Process Name",
+  Status = "Status",
+}
 
 interface Props {
-  filter: AgentParams.Filter;
-  setFilter: (filter: AgentParams.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
 }
 
 export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
-  const [filterKind, setFilterKind] = useState<AgentParams.Kind>(
-    AgentParams.Kind.Name
-  );
+  const [filterKind, setFilterKind] = useState<Kind>(Kind.Name);
 
   const updateName = (names: string[]) =>
     setFilter({ ...filter, name: names.length > 0 ? names : undefined });
@@ -41,26 +46,26 @@ export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}
-        items={AgentParams.List}
+        items={[Kind.Name, Kind.ProcessName, Kind.Status]}
       />
       <SelectOptionFilter
-        filterPropertyName={AgentParams.Kind.Status}
+        filterPropertyName={Kind.Status}
         placeholder={words("agents.filters.status.placeholder")}
-        isVisible={filterKind === AgentParams.Kind.Status}
+        isVisible={filterKind === Kind.Status}
         possibleStates={agentStatuses}
         selectedStates={filter.status ? filter.status : []}
         update={updateStatus}
       />
       <FreeTextFilter
-        isHidden={filterKind !== AgentParams.Kind.Name}
-        filterPropertyName={AgentParams.Kind.Name}
+        isHidden={filterKind !== Kind.Name}
+        filterPropertyName={Kind.Name}
         searchEntries={filter.name}
         update={updateName}
         placeholder={words("agents.filters.name.placeholder")}
       />
       <FreeTextFilter
-        isHidden={filterKind !== AgentParams.Kind.ProcessName}
-        filterPropertyName={AgentParams.Kind.ProcessName}
+        isHidden={filterKind !== Kind.ProcessName}
+        filterPropertyName={Kind.ProcessName}
         searchEntries={filter.process_name}
         update={updateProcessName}
         placeholder={words("agents.filters.processName.placeholder")}

@@ -1,7 +1,7 @@
 import { omit } from "lodash-es";
-import { Agent, AgentRow } from "@/Core";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
+import { Agent, AgentRow } from "@S/Agents/Core/Model";
 
 export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   readonly columnHeads: ColumnHead[];

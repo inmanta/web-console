@@ -1,4 +1,5 @@
-import { AgentStatus, PageSize, Query } from "@/Core";
+import { PageSize, Query } from "@/Core";
+import { AgentStatus } from "@S/Agents/Core/Model";
 import { getUrl } from "./getUrl";
 
 it.each`

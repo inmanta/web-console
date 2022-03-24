@@ -39,7 +39,6 @@ export { TriggerSetStateCommandManager } from "./TriggerSetState";
 export * from "./Deploy";
 export * from "./Repair";
 export * from "./GetResourceFacts";
-export * from "./GetAgents";
 export * from "./GetDesiredStates";
 export * from "./PromoteVersion";
 export * from "./GetVersionResources";

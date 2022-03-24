@@ -1,6 +1,6 @@
 import React from "react";
-import { AgentStatus } from "@/Core";
 import { Spacer } from "@/UI/Components";
+import { AgentStatus } from "@S/Agents/Core/Model";
 import { StatusLabel } from "./StatusLabel";
 
 export default {

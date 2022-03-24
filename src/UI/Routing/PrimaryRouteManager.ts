@@ -14,6 +14,7 @@ import {
   Crumb,
 } from "@/Core";
 import { AgentProcess } from "@S/AgentProcess";
+import { Agents } from "@S/Agents";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
 import { paths } from "./Paths";
@@ -48,7 +49,7 @@ export class PrimaryRouteManager implements RouteManager {
        * Resource Manager
        */
       Resources: Resource.route(this.baseUrl),
-      Agents: Agents(this.baseUrl),
+      Agents: Agents.route(this.baseUrl),
       Facts: Facts(this.baseUrl),
       AgentProcess: AgentProcess.route(this.baseUrl),
       ResourceDetails: ResourceDetails(this.baseUrl),
@@ -228,14 +229,6 @@ const Events = (base: string): Route<"Events"> => ({
   parent: "Inventory",
   generateLabel: () => "Service Instance Events",
   path: `${base}${paths.Events}`,
-  environmentRole: "Required",
-});
-
-const Agents = (base: string): Route<"Agents"> => ({
-  kind: "Agents",
-  parent: "Home",
-  path: `${base}${paths.Agents}`,
-  generateLabel: () => "Agents",
   environmentRole: "Required",
 });
 
