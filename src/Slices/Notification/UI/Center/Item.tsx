@@ -8,7 +8,7 @@ import {
   variantIcons,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { MomentDatePresenter } from "@/UI/Utils";
+import { DateWithTooltip } from "@/UI/Components";
 import { Model, Severity } from "@S/Notification/Core/Model";
 import {
   getColorForVisualSeverity,
@@ -39,9 +39,8 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
                 <Title $read={notification.read}>{notification.title}</Title>
               </div>
               <p>{notification.message}</p>
-              <Timestamp>
-                {new MomentDatePresenter().get(notification.created).relative}
-              </Timestamp>
+
+              <CustomDateWithTooltip timestamp={notification.created} />
             </DataListCell>,
           ]}
         />
@@ -94,7 +93,7 @@ const CustomItem = styled(DataListItem)<CustomItemProps>`
     p.$read ? "transparent" : getColorForVisualSeverity(p.$severity)};
 `;
 
-const Timestamp = styled.div`
+const CustomDateWithTooltip = styled(DateWithTooltip)`
   color: var(--pf-global--Color--200);
   font-size: var(--pf-global--FontSize--sm);
 `;
