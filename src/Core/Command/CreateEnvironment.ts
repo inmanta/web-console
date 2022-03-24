@@ -1,5 +1,5 @@
-import { CreateEnvironmentParams } from "@/Core/Domain";
-import { Maybe } from "@/Core/Language";
+import { CreateEnvironmentParams, EnvironmentModel } from "@/Core/Domain";
+import { Either } from "@/Core/Language";
 
 export interface CreateEnvironment {
   kind: "CreateEnvironment";
@@ -10,5 +10,7 @@ export interface CreateEnvironmentManifest {
   apiData: string;
   body: CreateEnvironmentParams;
   command: CreateEnvironment;
-  trigger: (body: CreateEnvironmentParams) => Promise<Maybe.Type<string>>;
+  trigger: (
+    body: CreateEnvironmentParams
+  ) => Promise<Either.Type<string, { data: EnvironmentModel }>>;
 }

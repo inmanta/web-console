@@ -6,6 +6,7 @@ import {
   ModuleIcon,
   TableIcon,
 } from "@patternfly/react-icons";
+import { Query } from "@/Core";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
@@ -26,17 +27,23 @@ interface Props {
   id: string;
   activeTab: TabKey;
   setActiveTab: (tab: TabKey) => void;
+  data: Query.UsedApiData<"GetResourceDetails">;
 }
 
-export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab }) => {
+export const Tabs: React.FC<Props> = ({
+  id,
+  activeTab,
+  setActiveTab,
+  data,
+}) => {
   return (
     <IconTabs
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={[
-        attributesTab(id),
-        requiresTab(id),
-        historyTab(id),
+        attributesTab(data),
+        requiresTab(data),
+        historyTab(id, data),
         logTab(id),
         factsTab(id),
       ]}
@@ -44,25 +51,32 @@ export const Tabs: React.FC<Props> = ({ id, activeTab, setActiveTab }) => {
   );
 };
 
-const requiresTab = (id: string): TabDescriptor<TabKey> => ({
+const requiresTab = (
+  data: Query.UsedApiData<"GetResourceDetails">
+): TabDescriptor<TabKey> => ({
   id: TabKey.Requires,
   title: words("resources.requires.title"),
   icon: <ModuleIcon />,
-  view: <RequiresTab id={id} />,
+  view: <RequiresTab {...{ data }} />,
 });
 
-const attributesTab = (id: string): TabDescriptor<TabKey> => ({
+const attributesTab = (
+  data: Query.UsedApiData<"GetResourceDetails">
+): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.attributes.title"),
   icon: <ListIcon />,
-  view: <AttributesTab id={id} />,
+  view: <AttributesTab {...{ data }} />,
 });
 
-const historyTab = (id: string): TabDescriptor<TabKey> => ({
+const historyTab = (
+  id: string,
+  data: Query.UsedApiData<"GetResourceDetails">
+): TabDescriptor<TabKey> => ({
   id: TabKey.History,
   title: words("resources.history.title"),
   icon: <HistoryIcon />,
-  view: <ResourceHistoryView resourceId={id} />,
+  view: <ResourceHistoryView resourceId={id} details={data} />,
 });
 
 const logTab = (id: string): TabDescriptor<TabKey> => ({

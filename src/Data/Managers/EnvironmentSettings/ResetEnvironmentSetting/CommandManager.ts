@@ -1,10 +1,11 @@
-import { ApiHelper, Maybe, UpdaterWithEnv } from "@/Core";
+import { ApiHelper, Maybe, Updater, UpdaterWithEnv } from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class ResetEnvironmentSettingCommandManager extends CommandManagerWithEnv<"ResetEnvironmentSetting"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: UpdaterWithEnv<"GetEnvironmentSetting">
+    private readonly updater: UpdaterWithEnv<"GetEnvironmentSetting">,
+    private readonly environmentUpdater: Updater<"GetEnvironmentDetails">
   ) {
     super("ResetEnvironmentSetting", (command, environment) => {
       return async (id) => {
@@ -17,6 +18,11 @@ export class ResetEnvironmentSettingCommandManager extends CommandManagerWithEnv
             { kind: "GetEnvironmentSetting", id },
             environment
           );
+          await this.environmentUpdater.update({
+            kind: "GetEnvironmentDetails",
+            details: false,
+            id: environment,
+          });
         }
         return error;
       };

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Agent, Sort } from "@/Core";
+import { DependencyContext } from "@/UI/Dependency";
 import { AgentsTable } from "./AgentsTable";
 import { AgentsTablePresenter } from "./AgentsTablePresenter";
 
@@ -10,7 +11,9 @@ interface Props {
 }
 
 export const TableProvider: React.FC<Props> = ({ agents, ...props }) => {
-  const tablePresenter = new AgentsTablePresenter();
+  const { environmentModifier } = useContext(DependencyContext);
+  const isHalted = environmentModifier.useIsHalted();
+  const tablePresenter = new AgentsTablePresenter(isHalted);
   const rows = tablePresenter.createRows(agents);
   return <AgentsTable {...props} tablePresenter={tablePresenter} rows={rows} />;
 };

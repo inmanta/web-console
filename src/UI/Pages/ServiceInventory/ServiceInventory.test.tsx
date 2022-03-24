@@ -1,6 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { fireEvent, render, screen, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -46,6 +47,7 @@ function setup(service = Service.a) {
   const resourcesHelper = new InstanceResourcesQueryManager(
     apiHelper,
     new InstanceResourcesStateHelper(store),
+    new ServiceInstancesStateHelper(store),
     scheduler
   );
 
@@ -210,15 +212,15 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
     await screen.findByRole("grid", { name: "ServiceInventory-Success" })
   ).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole("button", { name: "Details" }));
-  fireEvent.click(await screen.findByRole("button", { name: "Resources" }));
+  userEvent.click(screen.getByRole("button", { name: "Details" }));
+  userEvent.click(await screen.findByRole("button", { name: "Resources" }));
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
   });
 
   expect(
-    screen.getByRole("cell", { name: InstanceResource.listA[0].resource_id })
+    screen.getByRole("cell", { name: "resource_id_a" })
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -233,11 +235,24 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
     );
   });
 
+  expect(apiHelper.pendingRequests[0].url).toMatch(
+    `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=3`
+  );
   await act(async () => {
-    await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
+    await apiHelper.resolve(Either.left({ message: "Conflict", status: 409 }));
   });
 
-  expect(apiHelper.resolvedRequests).toHaveLength(4);
+  expect(apiHelper.pendingRequests[0].url).toMatch(
+    "/lsm/v1/service_inventory/service_name_a/service_instance_id_a"
+  );
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: { ...ServiceInstance.a, version: 4 },
+      })
+    );
+  });
+
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/resources?current_version=4`
   );

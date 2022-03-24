@@ -8,6 +8,7 @@ import {
   DeleteForm,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { GetInstancesContext } from "@/UI/Pages/ServiceInventory/GetInstancesContext";
 import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
@@ -27,6 +28,8 @@ export const DeleteModal: React.FC<Props> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
+  const { refetch } = useContext(GetInstancesContext);
+
   const trigger = commandResolver.getTrigger<"DeleteInstance">({
     kind: "DeleteInstance",
     service_entity,
@@ -36,7 +39,7 @@ export const DeleteModal: React.FC<Props> = ({
   const isHalted = environmentModifier.useIsHalted();
   const onSubmit = async () => {
     setIsOpen(false);
-    const result = await trigger();
+    const result = await trigger(refetch);
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
@@ -44,6 +47,7 @@ export const DeleteModal: React.FC<Props> = ({
   return (
     <>
       <ErrorToastAlert
+        title={words("inventory.deleteInstance.failed")}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
       />

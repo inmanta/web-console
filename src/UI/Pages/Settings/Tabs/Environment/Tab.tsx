@@ -10,14 +10,17 @@ import { RemoteDataView } from "@/UI/Components";
 import { EnvironmentSettings } from "./EnvironmentSettings";
 
 export const Tab: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { queryResolver, environmentHandler } = useContext(DependencyContext);
   const [data] = queryResolver.useOneTime<"GetProjects">({
     kind: "GetProjects",
     environmentDetails: false,
   });
+
+  const id = environmentHandler.useId();
   const [envData] = queryResolver.useOneTime<"GetEnvironmentDetails">({
     kind: "GetEnvironmentDetails",
     details: true,
+    id,
   });
 
   return (

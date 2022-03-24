@@ -1,15 +1,10 @@
-import {
-  ModifyEnvironmentParams,
-  ApiHelper,
-  UpdaterWithEnv,
-  Updater,
-} from "@/Core";
+import { ModifyEnvironmentParams, ApiHelper, Updater } from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
 export class ModifyEnvironmentCommandManager extends CommandManagerWithEnv<"ModifyEnvironment"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: UpdaterWithEnv<"GetEnvironmentDetails">,
+    private readonly updater: Updater<"GetEnvironmentDetails">,
     private readonly listUpdater: Updater<"GetEnvironments">
   ) {
     super(
@@ -19,13 +14,11 @@ export class ModifyEnvironmentCommandManager extends CommandManagerWithEnv<"Modi
           `/api/v2/environment/${environment}`,
           body
         );
-        await this.updater.update(
-          {
-            kind: "GetEnvironmentDetails",
-            details: true,
-          },
-          environment
-        );
+        await this.updater.update({
+          kind: "GetEnvironmentDetails",
+          details: true,
+          id: environment,
+        });
         await this.listUpdater.update({
           kind: "GetEnvironments",
           details: true,

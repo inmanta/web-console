@@ -1,8 +1,8 @@
 import { identity } from "lodash-es";
 import { StateHelper, Scheduler, ApiHelper } from "@/Core";
-import { PrimaryContinuousQueryManagerWithEnv } from "@/Data/Managers/Helpers";
+import { QueryManager } from "@/Data/Managers/Helpers";
 
-export class DiagnosticsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetDiagnostics"> {
+export class DiagnosticsQueryManager extends QueryManager.ContinuousWithEnv<"GetDiagnostics"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetDiagnostics">,

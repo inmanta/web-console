@@ -1,5 +1,4 @@
-import { AuthHelper, CommandManager, ManagerResolver } from "@/Core";
-import { BaseApiHelper } from "@/Data/API";
+import { ApiHelper, AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
   CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
@@ -41,15 +40,17 @@ import {
   GetAgentsUpdater,
   GetAgentsStateHelper,
   TriggerCompileCommandManager,
+  TriggerDryRun,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
+import * as UpdateNotification from "@/Slices/Notification/Data/CommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
 
   constructor(
     private readonly store: Store,
-    private readonly apiHelper: BaseApiHelper,
+    private readonly apiHelper: ApiHelper,
     private readonly authHelper: AuthHelper
   ) {
     this.managers = this.getManagers();
@@ -78,6 +79,10 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new CallbacksStateHelper(this.store),
       this.apiHelper
     );
+    const environmentDetailsUpdater = new EnvironmentDetailsUpdater(
+      environmentDetailsStateHelper,
+      this.apiHelper
+    );
 
     return [
       new DeleteEnvironmentCommandManager(
@@ -94,7 +99,13 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
           this.apiHelper
         )
       ),
-      new CreateEnvironmentCommandManager(this.apiHelper),
+      new CreateEnvironmentCommandManager(
+        this.apiHelper,
+        new EnvironmentsUpdater(
+          new GetEnvironmentsStateHelper(this.store),
+          this.apiHelper
+        )
+      ),
       new GetSupportArchiveCommandManager(this.apiHelper),
       new ServiceConfigCommandManager(
         this.apiHelper,
@@ -112,18 +123,12 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new HaltEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,
-        new EnvironmentDetailsUpdater(
-          environmentDetailsStateHelper,
-          this.apiHelper
-        )
+        environmentDetailsUpdater
       ),
       new ResumeEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,
-        new EnvironmentDetailsUpdater(
-          environmentDetailsStateHelper,
-          this.apiHelper
-        )
+        environmentDetailsUpdater
       ),
       new DeleteCallbackCommandManager(this.apiHelper, callbacksUpdater),
       new CreateCallbackCommandManager(this.apiHelper, callbacksUpdater),
@@ -140,11 +145,13 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       new UpdateEnvironmentSettingCommandManager(
         this.apiHelper,
-        environmentSettingUpdater
+        environmentSettingUpdater,
+        environmentDetailsUpdater
       ),
       new ResetEnvironmentSettingCommandManager(
         this.apiHelper,
-        environmentSettingUpdater
+        environmentSettingUpdater,
+        environmentDetailsUpdater
       ),
       new GenerateTokenCommandManager(this.apiHelper),
       new DeployCommandManager(this.apiHelper),
@@ -158,6 +165,8 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
         )
       ),
       new TriggerCompileCommandManager(this.apiHelper),
+      new TriggerDryRun.CommandManager(this.apiHelper),
+      new UpdateNotification.CommandManager(this.apiHelper, this.store),
     ];
   }
 }

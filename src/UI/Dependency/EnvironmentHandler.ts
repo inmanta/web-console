@@ -2,6 +2,7 @@ import { Location } from "history";
 import {
   EnvironmentHandler,
   FlatEnvironment,
+  Navigate,
   RemoteData,
   RouteManager,
 } from "@/Core";
@@ -11,16 +12,15 @@ import { SearchHelper } from "@/UI/Routing/SearchHelper";
 export class EnvironmentHandlerImpl implements EnvironmentHandler {
   constructor(
     private readonly useLocation: () => Location,
-    private readonly navigate: (pathname: string) => void,
     private readonly routeManager: RouteManager
   ) {}
 
-  set(location: Location, environmentId: string): void {
+  set(navigate: Navigate, location: Location, environmentId: string): void {
     const { pathname, search } = location;
     const params = new URLSearchParams(search);
     if (params.get("env") !== environmentId) {
       params.set("env", environmentId);
-      this.navigate(
+      navigate(
         this.routeManager.getRelatedUrlWithoutParams(pathname) + `?${params}`
       );
     }

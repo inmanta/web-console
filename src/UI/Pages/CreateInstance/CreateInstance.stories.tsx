@@ -16,13 +16,16 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { CreateInstance } from "./CreateInstance";
 
 export default {
-  title: "CreateInstance",
+  title: "Service Inventory/CreateInstance",
   component: CreateInstance,
 };
 
 export const Default: React.FC = () => {
   const store = getStoreInstance();
-  const apiHelper = new InstantApiHelper({ kind: "Success", data: null });
+  const apiHelper = new InstantApiHelper(() => ({
+    kind: "Success",
+    data: null,
+  }));
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new CreateInstanceCommandManager(apiHelper),

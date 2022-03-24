@@ -39,7 +39,7 @@ export const response = {
         resource_id_value: "/etc/file2",
       },
       requires: [],
-      status: "orphaned",
+      status: "processing_events",
     },
     {
       resource_id: "std::File[agent1,path=/etc/file1]",
@@ -80,10 +80,10 @@ export const response = {
   ],
   links: { self: "/api/v2/resource?limit=20&sort=resource_type.DESC" },
   metadata: {
-    total: 6,
+    total: 12,
     before: 0,
-    after: 0,
-    page_size: 20,
+    after: 2,
+    page_size: 10,
     deploy_summary: {
       total: 20,
       by_state: {
@@ -96,7 +96,7 @@ export const response = {
         undefined: 2,
         deploying: 2,
         available: 1,
-        processing_events: 0,
+        processing_events: 2,
       },
     },
   },

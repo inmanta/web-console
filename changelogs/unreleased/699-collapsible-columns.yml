@@ -1,0 +1,4 @@
+description: Make the columns of the attributes table collapsible
+issue-nr: 699
+change-type: minor
+destination-branches: [master, iso5]

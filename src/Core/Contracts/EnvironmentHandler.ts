@@ -1,8 +1,9 @@
 import { Location } from "history";
 import { FlatEnvironment } from "@/Core/Domain";
+import { Navigate } from "@/Core/Language";
 
 export interface EnvironmentHandler {
-  set(location: Location, environmentId: string): void;
+  set(navigate: Navigate, location: Location, environmentId: string): void;
   useSelected(): FlatEnvironment | undefined;
   /**
    * If this function is called, it means the environment is required.

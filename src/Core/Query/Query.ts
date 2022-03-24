@@ -1,3 +1,5 @@
+import { RemoteData } from "@/Core/Language";
+import * as GetNotifications from "@/Slices/Notification/Core/Query";
 import { GetAgentProcess, GetAgentProcessManifest } from "./GetAgentProcess";
 import { GetAgents, GetAgentsManifest } from "./GetAgents";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
@@ -16,6 +18,8 @@ import {
 import { GetDesiredStateDiff } from "./GetDesiredStateDiff";
 import { GetDesiredStates, GetDesiredStatesManifest } from "./GetDesiredStates";
 import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
+import { GetDryRunReport } from "./GetDryRunReport";
+import { GetDryRuns } from "./GetDryRuns";
 import {
   GetEnvironmentDetails,
   GetEnvironmentDetailsManifest,
@@ -72,6 +76,7 @@ import {
   GetVersionResources,
   GetVersionResourcesManifest,
 } from "./GetVersionResources";
+import { GetVersionedResourceDetails } from "./GetVersionedResourceDetails";
 
 export type Query =
   | GetServices
@@ -105,7 +110,11 @@ export type Query =
   | GetVersionResources
   | GetCompilerStatus
   | GetParameters.Query
-  | GetDesiredStateDiff.Query;
+  | GetDesiredStateDiff.Query
+  | GetDryRuns.Query
+  | GetDryRunReport.Query
+  | GetVersionedResourceDetails.Query
+  | GetNotifications.Query;
 
 export type Type = Query;
 
@@ -146,6 +155,10 @@ interface Manifest {
   GetParameters: GetParameters.Manifest;
   GetFacts: GetFacts.Manifest;
   GetDesiredStateDiff: GetDesiredStateDiff.Manifest;
+  GetDryRuns: GetDryRuns.Manifest;
+  GetDryRunReport: GetDryRunReport.Manifest;
+  GetVersionedResourceDetails: GetVersionedResourceDetails.Manifest;
+  GetNotifications: GetNotifications.Manifest;
 }
 
 /**
@@ -157,3 +170,7 @@ export type Data<K extends Kind> = Manifest[K]["data"];
 export type ApiResponse<K extends Kind> = Manifest[K]["apiResponse"];
 export type SubQuery<K extends Kind> = Manifest[K]["query"];
 export type UsedData<K extends Kind> = Manifest[K]["usedData"];
+export type UsedApiData<K extends Kind> = RemoteData.RemoteData<
+  Error<K>,
+  UsedData<K>
+>;

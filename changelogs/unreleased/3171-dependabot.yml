@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump babel-loader from 8.2.3 to 8.2.4'
+destination-branches:
+- master
+- iso5
+sections: {}

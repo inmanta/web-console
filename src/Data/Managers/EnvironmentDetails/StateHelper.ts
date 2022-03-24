@@ -1,5 +1,5 @@
 import { Query, RemoteData } from "@/Core";
-import { PrimaryStateHelperWithEnv } from "@/Data/Common";
+import { PrimaryStateHelper } from "@/Data/Common";
 import { Store, State, Dispatch } from "@/Data/Store";
 
 type Data = RemoteData.Type<
@@ -7,25 +7,24 @@ type Data = RemoteData.Type<
   Query.Data<"GetEnvironmentDetails">
 >;
 
-export class EnvironmentDetailsStateHelper extends PrimaryStateHelperWithEnv<"GetEnvironmentDetails"> {
+export class EnvironmentDetailsStateHelper extends PrimaryStateHelper<"GetEnvironmentDetails"> {
   constructor(store: Store) {
     super(
       store,
-      (data, query, environment) => {
+      (data, query) => {
         const unwrapped = RemoteData.mapSuccess(
           (wrapped) => wrapped.data,
           data
         );
-        this.setData(store.dispatch, query, environment, unwrapped);
+        this.setData(store.dispatch, query, unwrapped);
       },
-      (state, query, environment) => this.getData(state, query, environment)
+      (state, query) => this.getData(state, query)
     );
   }
 
   private getData(
     state: State,
-    { details }: Query.SubQuery<"GetEnvironmentDetails">,
-    id: string
+    { details, id }: Query.SubQuery<"GetEnvironmentDetails">
   ): Data {
     return details
       ? state.environment.environmentDetailsWithIconById[id]
@@ -34,24 +33,23 @@ export class EnvironmentDetailsStateHelper extends PrimaryStateHelperWithEnv<"Ge
 
   private setData(
     store: Dispatch,
-    { details }: Query.SubQuery<"GetEnvironmentDetails">,
-    environment: string,
+    { details, id }: Query.SubQuery<"GetEnvironmentDetails">,
     data: Data
   ) {
     if (details) {
       store.environment.setEnvironmentDetailsWithIconById({
-        id: environment,
+        id,
         value: data,
       });
       if (RemoteData.isSuccess(data)) {
         store.environment.setEnvironmentDetailsById({
-          id: environment,
+          id,
           value: data,
         });
       }
     } else {
       store.environment.setEnvironmentDetailsById({
-        id: environment,
+        id,
         value: data,
       });
     }

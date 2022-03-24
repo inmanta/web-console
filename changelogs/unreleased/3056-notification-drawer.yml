@@ -1,0 +1,6 @@
+description: Add notification drawer
+issue-nr: 3056
+change-type: minor
+destination-branches: [master, iso5]
+sections:
+  feature: "{{description}}"

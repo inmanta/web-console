@@ -35,14 +35,14 @@ export const Basic: React.FC = () => {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
-    new InstantApiHelper({
+    new InstantApiHelper(() => ({
       kind: "Success",
       data: {
         data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
       },
-    }),
+    })),
     new ServiceInstancesStateHelper(store),
     scheduler
   );
@@ -50,6 +50,7 @@ export const Basic: React.FC = () => {
   const resourcesHelper = new InstanceResourcesQueryManager(
     apiHelper,
     new InstanceResourcesStateHelper(store),
+    new ServiceInstancesStateHelper(store),
     scheduler
   );
 
@@ -84,10 +85,13 @@ export const Failed: React.FC = () => {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const serviceInstancesHelper = new ServiceInstancesQueryManager(
-    new InstantApiHelper({
+    new InstantApiHelper(() => ({
       kind: "Failed",
-      error: "fake error message",
-    }),
+      error: `The following error occured while communicating with the server: 400 Bad Request 
+Invalid request: Filter validation failed: 1 validation error for st_filter
+id -> 0
+  value is not a valid uuid (type=type_error.uuid), values provided: {'id': ['12']}`,
+    })),
     new ServiceInstancesStateHelper(store),
     scheduler
   );

@@ -8,7 +8,7 @@ type Data<K extends Query.Kind> = RemoteData.Type<
 
 type Pair<K extends Query.Kind> = [Data<K>, () => void];
 
-export type QueryManagerKind = "OneTime" | "Continuous";
+export type QueryManagerKind = "OneTime" | "Continuous" | "ReadOnly";
 
 /**
  * The QueryManager defines data hooks for a specific 'kind' of query.
@@ -17,7 +17,8 @@ export type QueryManagerKind = "OneTime" | "Continuous";
  */
 export type QueryManager =
   | OneTimeQueryManager<Query.Kind>
-  | ContinuousQueryManager<Query.Kind>;
+  | ContinuousQueryManager<Query.Kind>
+  | ReadOnlyQueryManager<Query.Kind>;
 
 export interface OneTimeQueryManager<K extends Query.Kind> {
   useOneTime(query: Query.SubQuery<K>): Pair<K>;
@@ -26,5 +27,10 @@ export interface OneTimeQueryManager<K extends Query.Kind> {
 
 export interface ContinuousQueryManager<K extends Query.Kind> {
   useContinuous(query: Query.SubQuery<K>): Pair<K>;
+  matches(query: Query.Type, kind: QueryManagerKind): boolean;
+}
+
+export interface ReadOnlyQueryManager<K extends Query.Kind> {
+  useReadOnly(query: Query.SubQuery<K>): Data<K>;
   matches(query: Query.Type, kind: QueryManagerKind): boolean;
 }

@@ -5,9 +5,6 @@ module.exports = {
   // Automatically clear mock calls and instances between every test
   clearMocks: true,
 
-  // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
-
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
   coverageReporters: ["text", "cobertura"],
@@ -24,6 +21,7 @@ module.exports = {
     "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
       "<rootDir>/__mocks__/fileMock.js",
     "@/(.*)": "<rootDir>/src/$1",
+    "@S/(.*)": "<rootDir>/src/Slices/$1",
     "^lodash-es$": "<rootDir>/node_modules/lodash/index.js", // Use CommonJS version of lodash in the test cases instead of ESM
   },
 
@@ -50,9 +48,9 @@ module.exports = {
 
   // The react-syntax-highlighter esm modules have to be handled by jest
   transformIgnorePatterns: ["node_modules/(?!react-syntax-highlighter)"],
-
-  // Provide a dummy value of the commit hash injected by webpack for testing
   globals: {
-    COMMITHASH: "abcde123456789",
+    "ts-jest": {
+      isolatedModules: true,
+    },
   },
 };

@@ -10,7 +10,7 @@ interface Props {
 
 export const LoadingView: React.FC<Props> = ({ instant, ...props }) => (
   <EmptyState isFullHeight {...props}>
-    <Delayed delay={instant ? undefined : 500}>
+    <Delayed delay={instant ? undefined : 200}>
       <EmptyStateIcon variant="container" component={Spinner} />
       <Title size="lg" headingLevel="h4">
         {words("loading")}

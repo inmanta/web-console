@@ -1,0 +1,4 @@
+description: Make sure the inventory resources request syncs up with the latest instance version
+issue-nr: 2861
+change-type: patch
+destination-branches: [master, iso5]

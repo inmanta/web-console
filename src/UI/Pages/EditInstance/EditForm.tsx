@@ -1,14 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  Text,
-  TextContent,
-  TextVariants,
-} from "@patternfly/react-core";
-import {
   InstanceAttributeModel,
   Maybe,
   ServiceInstanceModel,
@@ -19,6 +11,7 @@ import {
   FieldCreator,
   ServiceInstanceForm,
   EditModifierHandler,
+  ErrorToastAlert,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -36,10 +29,9 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const isHalted = environmentModifier.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const url = `${routeManager.getUrl("Inventory", {
+  const url = routeManager.useUrl("Inventory", {
     service: serviceEntity.name,
-  })}?env=${serviceEntity.environment}`;
-
+  });
   const handleRedirect = useCallback(
     () => navigate(url),
     [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
@@ -65,21 +57,12 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   return (
     <>
       {errorMessage && (
-        <AlertGroup isToast>
-          <Alert
-            variant={"danger"}
-            title={errorMessage}
-            actionClose={
-              <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-            }
-          />
-        </AlertGroup>
+        <ErrorToastAlert
+          title={words("inventory.editInstance.failed")}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+        />
       )}
-      <TextContent>
-        <Text component={TextVariants.small}>
-          {words("inventory.editInstance.header")(instance.id)}
-        </Text>
-      </TextContent>
       <ServiceInstanceForm
         fields={fields}
         onSubmit={onSubmit}

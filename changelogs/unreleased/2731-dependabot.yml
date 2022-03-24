@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump follow-redirects from 1.14.7 to 1.14.8'
+destination-branches:
+- master
+- iso5
+sections: {}

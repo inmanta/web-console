@@ -1,3 +1,4 @@
+import { CompileStatus } from "./CompileStatus";
 import { DateRange } from "./DateRange";
 import { PageSize } from "./PageSize";
 import { Sort } from "./Sort";
@@ -10,20 +11,12 @@ export interface CompileReportParams {
 
 export interface Filter {
   requested?: DateRange[];
-  success?: boolean;
-  status?: CompileStatus[];
-}
-
-export enum CompileStatus {
-  InProgress = "In Progress",
-  Finished = "Finished",
-  Queued = "Queued",
+  status?: CompileStatus;
 }
 
 export enum Kind {
   Requested = "Requested",
-  Result = "Result",
   Status = "Status",
 }
 
-export const List: Kind[] = [Kind.Requested, Kind.Result, Kind.Status];
+export const List: Kind[] = [Kind.Requested, Kind.Status];

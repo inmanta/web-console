@@ -22,11 +22,14 @@ import { HaltDialog } from "./HaltDialog";
 import { ResumeDialog } from "./ResumeDialog";
 
 export const EnvironmentControls: React.FC = () => {
-  const { queryResolver, urlManager, routeManager } =
+  const { queryResolver, urlManager, routeManager, environmentHandler } =
     useContext(DependencyContext);
+
+  const id = environmentHandler.useId();
   const [data] = queryResolver.useContinuous<"GetEnvironmentDetails">({
     kind: "GetEnvironmentDetails",
     details: false,
+    id,
   });
 
   return RemoteData.fold(

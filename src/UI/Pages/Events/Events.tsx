@@ -10,7 +10,6 @@ import {
   EventsTableWrapper,
   EmptyView,
   EventsTableBody,
-  Description,
   PaginationWidget,
   RemoteDataView,
 } from "@/UI/Components";
@@ -31,7 +30,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
   });
   const [filter, setFilter] = useUrlStateWithFilter<EventParams.Filter>({
     route: "Events",
-    dateRangeKey: "timestamp",
+    keys: { timestamp: "DateRange" },
   });
   const [pageSize, setPageSize] = useUrlStateWithPageSize({ route: "Events" });
   const [data] = queryResolver.useContinuous<"GetInstanceEvents">({
@@ -47,7 +46,6 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
 
   return (
     <div>
-      <Description>{words("events.caption")(instanceId)}</Description>
       <EventsTableControls
         filter={filter}
         setFilter={setFilter}

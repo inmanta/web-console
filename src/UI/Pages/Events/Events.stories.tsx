@@ -32,7 +32,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new EventsQueryManager(
-        new InstantApiHelper({
+        new InstantApiHelper(() => ({
           kind: "Success",
           data: {
             data: events,
@@ -44,7 +44,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
               page_size: 10,
             },
           },
-        }),
+        })),
         new EventsStateHelper(store),
         scheduler
       ),

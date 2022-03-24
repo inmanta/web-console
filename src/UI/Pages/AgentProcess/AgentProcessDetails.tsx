@@ -2,7 +2,12 @@ import React from "react";
 import { AgentProcess } from "@/Core";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import { MomentDatePresenter, words } from "@/UI";
-import { AttributeClassifier, AttributeList } from "@/UI/Components";
+import {
+  AttributeClassifier,
+  AttributeList,
+  PagePadder,
+  PageTitle,
+} from "@/UI/Components";
 
 interface Props {
   agentProcess: AgentProcess;
@@ -40,9 +45,12 @@ export const AgentProcessDetails: React.FC<Props> = ({
   );
 
   return (
-    <div {...props}>
+    <PagePadder {...props}>
+      <PageTitle>{`${words("agentProcess.title")} ${
+        agentProcess.hostname
+      }`}</PageTitle>
       <AttributeList attributes={classifiedReport} />
-    </div>
+    </PagePadder>
   );
 };
 

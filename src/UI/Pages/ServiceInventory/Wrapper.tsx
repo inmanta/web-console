@@ -2,8 +2,12 @@ import React from "react";
 import { PageContainer } from "@/UI/Components";
 import { words } from "@/UI/words";
 
-export const Wrapper: React.FC = ({ children, ...props }) => (
-  <PageContainer {...props} title={words("inventory.title")}>
+interface Props {
+  name: string;
+}
+
+export const Wrapper: React.FC<Props> = ({ children, name, ...props }) => (
+  <PageContainer {...props} title={words("inventory.title")(name)}>
     {children}
   </PageContainer>
 );

@@ -75,7 +75,7 @@ const dict = {
   "catalog.empty.message": "No services found",
   "empty.title": "There is nothing here",
   "inventory.intro": (service: string) => `Showing instances of ${service}`,
-  "inventory.title": "Service Inventory",
+  "inventory.title": (name: string) => `Service Inventory: ${name}`,
   "inventory.empty.message": (service: string) =>
     `No instances found for service ${service}`,
   "inventory.column.id": "Id",
@@ -107,11 +107,11 @@ const dict = {
   "inventory.resourcesTab.failed.body": (error: string) =>
     `There was an error retrieving data: ${error}`,
   "inventory.resourcesTab.detailsLink": "Jump to Details",
-  "inventory.deploymentProgress.inProgress": "In Progress",
+  "inventory.deploymentProgress.waiting": "In Progress",
   "inventory.deploymentProgress.failed": "Failed",
-  "inventory.deploymentProgress.ready": "Ready",
-  "inventory.deploymentProgress.total": "Total",
+  "inventory.deploymentProgress.deployed": "Ready",
   "inventory.deploymentProgress.notFound": "No resources available yet",
+  "inventory.addInstance.failed": "Creating instance failed",
   "inventory.addInstance.title": (serviceName: string) =>
     `Create a new instance of ${serviceName} with the following parameters`,
   "inventory.addInstance.button": "Add instance",
@@ -120,6 +120,9 @@ const dict = {
     amount === 1 ? "1 item" : `${amount} items`,
   "inventory.editInstance.button": "Edit",
   "inventory.editInstance.title": "Edit instance",
+  "inventory.editInstance.failed": "Editing instance failed",
+  "inventory.editInstance.noAttributes":
+    "There are no attributes to edit. Click confirm to move into the update state",
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
   "inventory.form.typeHint.list": (listBaseType: string) =>
@@ -131,6 +134,7 @@ const dict = {
   "inventory.form.placeholder.stringList": "value1,value2,value3",
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.deleteInstance.button": "Delete",
+  "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
   "inventory.deleteInstance.header": (
     instanceId: string,
@@ -150,7 +154,7 @@ const dict = {
   "config.reset": "Reset",
   "config.reset.description": "Reset to service defaults",
   "config.empty": "No settings found",
-  "config.disabled": "Changing settings is disabled for deleted instances",
+  "config.disabled": "Configuration is not available",
 
   /**
    * Events related text
@@ -182,6 +186,8 @@ const dict = {
   "history.title": "Service Instance History",
   "history.missing": (instanceId: string) =>
     `No history could be found for instance ${instanceId}`,
+  "history.caption": (instanceId: string) =>
+    `Showing history for instance ${instanceId}`,
   "history.tabs.details": "Details",
   "history.tabs.attributes": "Attributes",
   "history.tabs.events": "Events",
@@ -208,9 +214,11 @@ const dict = {
   "catalog.button.inventory": "Inventory",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
+  "catalog.delete.failed": "Deleting service entity failed",
   "catalog.instances": "Instances",
   "catalog.callbacks.delete": (url: string) =>
     `Are you sure you want to delete callback with url "${url}"?`,
+  "catalog.callbacks.delete.failed": "Deleting callback failed",
   "catalog.callbacks.url": "Url",
   "catalog.callbacks.id": "Id",
   "catalog.callbacks.minimalLogLevel": "Minimal Log Level",
@@ -240,25 +248,26 @@ const dict = {
   "resources.column.type": "Type",
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
-  "resources.column.numberOfDependencies": "Number of dependencies",
+  "resources.column.requires": "Dependencies",
   "resources.column.deployState": "Deploy State",
   "resources.filters.status.placeholder": "Deploy State...",
   "resources.filters.agent.placeholder": "Agent...",
   "resources.filters.value.placeholder": "Value...",
   "resources.filters.type.placeholder": "Type...",
+  "resources.filters.reset": "Reset filters",
   "resources.deploySummary.title": "Deployment state summary",
   "resources.deploySummary.deploy": "Deploy",
   "resources.deploySummary.repair": "Repair",
+  "resources.link.details": "Show details",
   "resources.details.title": "Resource Details",
   "resources.info.id": "Id",
   "resources.info.lastDeploy": "Last Deploy",
   "resources.info.firstTime": "Created",
   "resources.requires.title": "Requires",
   "resources.requires.empty.message": "No requirements found",
-  "resources.requires.resourceId": "Resource Id",
+  "resources.requires.resource": "Resource",
   "resources.requires.deployState": "Deploy State",
   "resources.history.title": "History",
-  "resources.history.column.numberOfDependencies": "Number of dependencies",
   "resources.history.column.date": "Date",
   "resources.history.tabs.attributes": "Desired State",
   "resources.history.tabs.requires": "Requires",
@@ -275,7 +284,6 @@ const dict = {
   "resources.logs.logLevel.placeholder": "Minimal Log Level...",
   "resources.logs.message": "Message",
   "resources.logs.message.placeholder": "Message...",
-  "resources.logs.options": "Options",
   "resources.facts.title": "Facts",
   "resources.facts.columns.name": "Name",
   "resources.facts.columns.updated": "Last Updated",
@@ -285,12 +293,13 @@ const dict = {
   "compileReports.title": "Compile Reports",
   "compileReports.empty.message": "No compile reports found",
   "compileReports.columns.requested": "Requested",
+  "compileReports.columns.status": "Status",
   "compileReports.columns.message": "Message",
   "compileReports.columns.waitTime": "Wait Time",
   "compileReports.columns.compileTime": "Compile Time",
   "compileReports.columns.actions": "Actions",
   "compileReports.columns.inProgress": "In Progress",
-  "compileReports.links.details": "Details",
+  "compileReports.links.details": "Show Details",
   "compileReports.filters.status.placeholder": "Select compile status...",
   "compileReports.filters.result.placeholder": "Select result...",
   "compileReports.filters.result.success": "Successful",
@@ -362,10 +371,6 @@ const dict = {
   "settings.tabs.environment.id": "Id",
   "settings.tabs.configuration": "Configuration",
   "settings.tabs.tokens": "Tokens",
-  "settings.tabs.configuration.default": (value: string) =>
-    `Default is ${value}`,
-  "settings.tabs.configuration.save": "Save",
-  "settings.tabs.configuration.reset": "Reset to default",
   "settings.tabs.token.disabledInfo":
     "An authenticated user is required to create tokens",
   "settings.tabs.token.description":
@@ -378,6 +383,9 @@ const dict = {
   "status.title": "Orchestrator Status",
   "status.description":
     "The status of the orchestration server, loaded extensions and active components.",
+  "status.supportArchive.action.download": "Download support archive",
+  "status.supportArchive.action.downloading": "Fetching support data",
+  "status.supportArchive.action.generating": "Generating support archive",
 
   /** Agents */
   "agents.title": "Agents",
@@ -386,12 +394,14 @@ const dict = {
   "agents.columns.process": "Process",
   "agents.columns.status": "Status",
   "agents.columns.failover": "Last failover",
-  "agents.columns.unpause": "Unpause on resume",
+  "agents.columns.unpause": "On resume",
   "agents.columns.actions": "Actions",
+  "agents.actions.failed": "Agent action failed",
   "agents.actions.pause": "Pause",
   "agents.actions.unpause": "Unpause",
   "agents.actions.deploy": "Force deploy",
   "agents.actions.repair": "Force repair",
+  "agents.actions.onResume": "Unpause agent when environment is resumed",
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",
@@ -420,9 +430,10 @@ const dict = {
   "desiredState.columns.status": "Status",
   "desiredState.columns.resources": "Number of resources",
   "desiredState.columns.labels": "Labels",
-  "desiredState.columns.actions": "Actions",
-  "desiredState.actions.details": "Details",
+  "desiredState.actions.showResources": "Show Resources",
   "desiredState.actions.promote": "Promote",
+  "desiredState.actions.promote.failed":
+    "Promoting desired state version failed",
   "desiredState.actions.promote.disabledTooltip":
     "Promoting this version is not allowed",
   "desiredState.filters.status.placeholder": "Select status...",
@@ -434,11 +445,29 @@ const dict = {
   "desiredState.resourceDetails.title": "Resource Details",
   "desiredState.compare.title": "Compare",
   "desiredState.compare.action.compare": "Select for compare",
-  "desiredState.compare.action.compareWith": "Compare with selected",
+  "desiredState.compare.action.compareWithSelected": "Compare with selected",
+  "desiredState.compare.action.compareWithCurrentState":
+    "Compare with current state",
   "desiredState.compare.selectionLabel": "Compare versions",
   "desiredState.compare.deleted": "This resource has been deleted.",
   "desiredState.compare.deleted.action": "Show attributes",
+  "desiredState.compare.unmodified": "This resource has not been modified.",
+  "desiredState.compare.agent_down": (agentName: string) =>
+    `Could not determine difference because agent ${agentName} is down`,
+  "desiredState.compare.undefined":
+    "Could not determine difference because this resource has undefined values",
+  "desiredState.compare.skipped_for_undefined":
+    "Could not determine difference because this resource requires a resource that has undefined values",
   "desiredState.compare.empty": "No changes found",
+  "desiredState.compare.file.attributeLabel": "content",
+  "desiredState.compare.file.hide": "Hide file contents",
+  "desiredState.compare.file.show": "Show file contents",
+  "desiredState.complianceCheck.title": "Compliance Check",
+  "desiredState.complianceCheck.failed": "Getting list of dryruns failed",
+  "desiredState.complianceCheck.action.dryRun": "Perform dry run",
+  "desiredState.complianceCheck.action.dryRun.failed":
+    "Triggering dryrun failed",
+  "desiredState.complianceCheck.noDryRuns": "No dry runs exist",
 
   /** Parameters */
   "parameters.title": "Parameters",
@@ -451,6 +480,17 @@ const dict = {
   "parameters.filters.source.placeholder": "Filter by source",
 
   /**
+   * Notification
+   */
+  "notification.center.title": "Notification Center",
+  "notification.drawer.showAll": "Show all notifications",
+  "notification.drawer.readAll": "Mark all as read",
+  "notification.drawer.clearAll": "Clear all",
+  "notification.drawer.unread": "Mark as unread",
+  "notification.drawer.details": "Details",
+  "notification.drawer.clear": "Clear",
+
+  /**
    * Common
    */
   "common.serviceInstance.select": (attribute: string) =>
@@ -459,6 +499,8 @@ const dict = {
   "common.compileWidget.recompile": "Recompile",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
   "common.compileWidget.compiling": "Compiling",
+  "common.compileWidget.compilationDisabled.hint":
+    "The server_compile setting is disabled. You can enable it on the settings page under the configuration tab.",
 };
 
 type Key = keyof typeof dict;

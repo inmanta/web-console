@@ -6,6 +6,9 @@ type Data = RemoteData.Type<
 >;
 
 export class DummyQueryResolver implements QueryResolver {
+  useReadOnly(): Data {
+    throw new Error("Method not implemented.");
+  }
   useOneTime(): [Data, () => void] {
     throw new Error("Method not implemented.");
   }

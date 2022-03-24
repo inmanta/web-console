@@ -1,17 +1,24 @@
-import { ApiHelper, Either, Maybe } from "@/Core";
+import { ApiHelper, Either, ErrorWithHTTPCode, Maybe } from "@/Core";
 import * as Outcome from "./Outcome";
 
 export class InstantApiHelper<Data> implements ApiHelper {
-  constructor(private outcome: Outcome.Type<string, Data>) {}
+  constructor(
+    private getOutcome: (url: string) => Outcome.Type<string, Data>
+  ) {}
 
-  get<Data>(): Promise<Either.Type<string, Data>> {
+  get<Data>(url): Promise<Either.Type<string, Data>> {
     return Outcome.handle<string, Data>(
-      this.outcome as Outcome.Type<string, Data>
+      this.getOutcome(url) as Outcome.Type<string, Data>
     );
   }
-  getWithoutEnvironment<Data>(): Promise<Either.Type<string, Data>> {
+
+  getWithHTTPCode<Data>(): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
+    throw new Error("Method not implemented.");
+  }
+
+  getWithoutEnvironment<Data>(url): Promise<Either.Type<string, Data>> {
     return Outcome.handle<string, Data>(
-      this.outcome as Outcome.Type<string, Data>
+      this.getOutcome(url) as Outcome.Type<string, Data>
     );
   }
   post<Data>(): Promise<Either.Type<string, Data>> {
@@ -23,7 +30,7 @@ export class InstantApiHelper<Data> implements ApiHelper {
   postWithoutResponseAndEnvironment(): Promise<Maybe.Type<string>> {
     throw new Error("Method not implemented.");
   }
-  putWithoutResponseAndEnvironment(): Promise<Maybe.Type<string>> {
+  putWithoutEnvironment<Data>(): Promise<Either.Type<string, Data>> {
     throw new Error("Method not implemented.");
   }
   patch(): Promise<Maybe.Type<string>> {

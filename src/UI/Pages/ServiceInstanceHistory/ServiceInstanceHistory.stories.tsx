@@ -29,10 +29,10 @@ const Template: React.FC<{ logs: InstanceLogModel[] }> = ({ logs }) => {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       new GetInstanceLogsQueryManager(
-        new InstantApiHelper({
+        new InstantApiHelper(() => ({
           kind: "Success",
           data: { data: logs },
-        }),
+        })),
         new GetInstanceLogsStateHelper(store),
         new StaticScheduler()
       ),

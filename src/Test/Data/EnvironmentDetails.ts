@@ -12,6 +12,7 @@ export const a: EnvironmentDetails = {
     push_on_auto_deploy: false,
     resource_action_logs_retention: 7,
     agent_trigger_method_on_auto_deploy: "push_full_deploy",
+    server_compile: true,
   },
   halted: false,
 };

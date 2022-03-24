@@ -5,11 +5,11 @@ import {
   SimpleListProps,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { DiffItem, Refs } from "../types";
-import { StatusDescriptor } from "./StatusDescriptor";
+import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
+import { Item, Refs } from "@/UI/Components/DiffWizard/types";
 
 interface Props {
-  items: Pick<DiffItem, "id" | "status">[];
+  items: Pick<Item, "id" | "status">[];
   refs: Refs;
 }
 
@@ -38,10 +38,7 @@ export const SummaryList: React.FC<Props> = ({ items, refs }) => {
   );
 };
 
-const Descriptor: React.FC<Pick<DiffItem, "id" | "status">> = ({
-  id,
-  status,
-}) => {
+const Descriptor: React.FC<Pick<Item, "id" | "status">> = ({ id, status }) => {
   return (
     <Container>
       <StyledStatusDescriptor status={status} />
@@ -63,7 +60,7 @@ const StyledStatusDescriptor = styled(StatusDescriptor)`
 const StyledSimpleList = styled(SimpleList)`
   width: fit-content;
   max-height: 500px;
-  overflow: scroll;
+  overflow-y: auto;
 `;
 
 const Id = styled.div`

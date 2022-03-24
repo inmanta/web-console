@@ -47,6 +47,14 @@ export const failed = <V>(value: V): Failed<V> => ({ kind: "Failed", value });
 export const isFailed = <F, S>(data: RemoteData<F, S>): data is Failed<F> =>
   data.kind === "Failed";
 
+export const mapFailed = <F, S, N>(
+  mapper: (f: F) => N,
+  data: RemoteData<F, S>
+): RemoteData<N, S> => {
+  if (!isFailed(data)) return data;
+  return failed(mapper(data.value));
+};
+
 interface Success<V> {
   kind: "Success";
   value: V;
@@ -116,3 +124,9 @@ export const merge = <F1, S1, F2, S2>(
   if (isFailed(data2)) return failed(data2.value);
   return success([data1.value, data2.value] as [S1, S2]);
 };
+
+/**
+ * Returns the success value or the fallback when the data is not in a success state
+ */
+export const withFallback = <F, S>(data: RemoteData<F, S>, fallback: S): S =>
+  isSuccess(data) ? data.value : fallback;

@@ -15,6 +15,22 @@ test("BaseApiHelper.get executes a GET request with correct url & env", async ()
   expect(requestInit?.headers).toEqual({ "X-Inmanta-Tid": env });
 });
 
+test("BaseApiHelper.get handles a failed a GET request", async () => {
+  const apiHelper = new BaseApiHelper();
+  const url = "/test-url";
+  const env = "environment_a";
+
+  fetchMock.mockResponse(JSON.stringify({ message: "Something happened" }), {
+    status: 400,
+  });
+  const response = await apiHelper.get(url, env);
+  expect(response).toEqual(
+    Either.left(
+      `The following error occured while communicating with the server: 400 Bad Request \nSomething happened`
+    )
+  );
+});
+
 test("BaseApiHelper.post executes a POST request with correct url & env", async () => {
   const apiHelper = new BaseApiHelper();
   const url = "/test-url";
@@ -63,4 +79,12 @@ test("GIVEN BaseApiHelper with NativeJsonParser WHEN response json contains larg
   const response = await apiHelper.get<{ foo: number }>("", "");
   if (response.kind === "Left") return;
   expect(response.value.foo).not.toEqual(9223372036854775807n);
+});
+
+test("GIVEN BaseApiHelper with getWithHTTPCode WHEN request fails with 409 THEN response has code 409", async () => {
+  const apiHelper = new BaseApiHelper(new NativeJsonParser());
+  fetchMock.mockResponse(`{"foo": 9223372036854775807}`, { status: 409 });
+  const response = await apiHelper.getWithHTTPCode<{ foo: number }>("", "");
+  if (response.kind === "Right") return;
+  expect(response.value.status).toEqual(409);
 });

@@ -1,6 +1,11 @@
 import { Action, action } from "easy-peasy";
 import { FlatEnvironment, Query, RemoteData } from "@/Core";
 
+type EnvironmentSettingsData = RemoteData.Type<
+  Query.Error<"GetEnvironmentSettings">,
+  Query.Data<"GetEnvironmentSettings">
+>;
+
 export interface EnvironmentSlice {
   environments: RemoteData.Type<string, FlatEnvironment[]>;
   setEnvironments: Action<
@@ -46,6 +51,15 @@ export interface EnvironmentSlice {
       >;
     }
   >;
+  settingsByEnv: Record<string, EnvironmentSettingsData>;
+  setSettingsData: Action<
+    EnvironmentSlice,
+    {
+      environment: string;
+      value: EnvironmentSettingsData;
+      merge?: boolean;
+    }
+  >;
 }
 
 export const environmentSlice: EnvironmentSlice = {
@@ -65,4 +79,27 @@ export const environmentSlice: EnvironmentSlice = {
   setEnvironmentDetailsWithIconById: action((state, payload) => {
     state.environmentDetailsWithIconById[payload.id] = payload.value;
   }),
+  settingsByEnv: {},
+  setSettingsData: action((state, { environment, value, merge }) => {
+    state.settingsByEnv[environment] = merge
+      ? mergeData(state.settingsByEnv[environment], value)
+      : value;
+  }),
 };
+
+function mergeData(
+  prev: EnvironmentSettingsData,
+  next: EnvironmentSettingsData
+): EnvironmentSettingsData {
+  if (RemoteData.isSuccess(prev) && RemoteData.isSuccess(next)) {
+    return RemoteData.success({
+      settings: {
+        ...prev.value.settings,
+        ...next.value.settings,
+      },
+      definition: next.value.definition,
+    });
+  }
+
+  return next;
+}

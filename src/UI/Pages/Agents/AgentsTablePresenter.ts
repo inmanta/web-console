@@ -7,7 +7,7 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
   readonly columnHeads: ColumnHead[];
   readonly numberOfColumns: number;
 
-  constructor() {
+  constructor(isHalted: boolean) {
     this.columnHeads = [
       { displayName: words("agents.columns.name"), apiName: "name" },
       { displayName: words("agents.columns.process"), apiName: "process_name" },
@@ -20,9 +20,11 @@ export class AgentsTablePresenter implements TablePresenter<Agent, AgentRow> {
         displayName: words("agents.columns.unpause"),
         apiName: "unpause_on_resume",
       },
-      { displayName: words("agents.columns.actions"), apiName: "actions" },
     ];
-    this.numberOfColumns = this.columnHeads.length + 1;
+    if (!isHalted) {
+      this.columnHeads.pop();
+    }
+    this.numberOfColumns = this.columnHeads.length + 3;
   }
 
   createRows(sourceData: Agent[]): AgentRow[] {

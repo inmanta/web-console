@@ -1,4 +1,5 @@
 import { ParsedNumber } from "@/Core/Language";
+import { CompileStatus } from "./CompileStatus";
 
 export interface CompileReport {
   id: string;
@@ -19,9 +20,8 @@ export interface CompileReportRow {
   id: string;
   requested: string;
   completed?: string | null;
-  success?: boolean;
-  inProgress: boolean;
   message: string;
   waitTime: string;
   compileTime: string;
+  status: CompileStatus;
 }

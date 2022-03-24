@@ -4,15 +4,13 @@ import { StoreProvider } from "easy-peasy";
 import { Query } from "@/Core";
 import {
   QueryResolverImpl,
-  InstanceResourcesStateHelper,
-  InstanceResourcesQueryManager,
   getStoreInstance,
+  QueryManagerResolver,
 } from "@/Data";
 import {
   StaticScheduler,
   Outcome,
   InstanceResource,
-  DynamicQueryManagerResolver,
   InstantApiHelper,
   dependencies,
 } from "@/Test";
@@ -31,14 +29,14 @@ const Template: React.FC<{
   >;
 }> = ({ outcome }) => {
   const store = getStoreInstance();
+  const scheduler = new StaticScheduler();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new InstanceResourcesQueryManager(
-        new InstantApiHelper(outcome),
-        new InstanceResourcesStateHelper(store),
-        new StaticScheduler()
-      ),
-    ])
+    new QueryManagerResolver(
+      store,
+      new InstantApiHelper(() => outcome),
+      scheduler,
+      scheduler
+    )
   );
 
   return (

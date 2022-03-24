@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { RemoteData } from "@/Core";
+import { Spacer } from "@/UI/Components/Spacer";
 import { CompileWidget } from "./CompileWidget";
 
 export default {
@@ -7,7 +8,48 @@ export default {
   component: CompileWidget,
 };
 
-export const NotCompiling = () => (
+export const Default = () => (
+  <>
+    <p>NotCompiling:</p>
+    <NotCompiling />
+    <Spacer />
+    <p>Compiling:</p>
+    <Compiling />
+    <Spacer />
+    <p>Loading:</p>
+    <Loading />
+    <Spacer />
+    <p>Scenario:</p>
+    <Scenario />
+    <Spacer />
+    <p>Disabled:</p>
+    <Disabled />
+    <Spacer />
+    <p>Hinted:</p>
+    <Hinted />
+  </>
+);
+
+const Hinted = () => (
+  <CompileWidget
+    data={RemoteData.success(false)}
+    onRecompile={() => alert("Recompile")}
+    onUpdateAndRecompile={() => alert("Update & Recompile")}
+    isDisabled
+    hint="Some hint giving more information"
+  />
+);
+
+const Disabled = () => (
+  <CompileWidget
+    data={RemoteData.success(false)}
+    onRecompile={() => alert("Recompile")}
+    onUpdateAndRecompile={() => alert("Update & Recompile")}
+    isDisabled
+  />
+);
+
+const NotCompiling = () => (
   <CompileWidget
     data={RemoteData.success(false)}
     onRecompile={() => alert("Recompile")}
@@ -15,7 +57,7 @@ export const NotCompiling = () => (
   />
 );
 
-export const Compiling = () => (
+const Compiling = () => (
   <CompileWidget
     data={RemoteData.success(true)}
     onRecompile={() => alert("Recompile")}
@@ -23,7 +65,7 @@ export const Compiling = () => (
   />
 );
 
-export const Loading = () => (
+const Loading = () => (
   <CompileWidget
     data={RemoteData.loading()}
     onRecompile={() => alert("Recompile")}
@@ -31,7 +73,7 @@ export const Loading = () => (
   />
 );
 
-export const Scenario = () => {
+const Scenario = () => {
   const [data, setData] = useState<RemoteData.RemoteData<undefined, boolean>>(
     RemoteData.success(false)
   );

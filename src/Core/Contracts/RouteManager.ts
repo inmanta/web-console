@@ -6,8 +6,17 @@ export interface RouteManager {
   isBaseUrlDefined(): boolean;
   getRoutes(): Route[];
   getRouteDictionary(): RouteDictionary;
-  getRoute(routeKind: RouteKind): Route;
-  getUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
+  getRoute<K extends RouteKind>(routeKind: K): Route<K>;
+  /**
+   * Generates a url based on the provided routeKind and routeParams
+   */
+  getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string;
+  /**
+   * Generates a url based on the provided api uri.
+   * If the api uri does not correspond to an existing route,
+   * undefined is returned.
+   */
+  getUrlForApiUri(uri: string): string | undefined;
   /**
    * Gets the closest url in the lineage without params.
    * When switching environments, we can't go to pages with params,
@@ -22,4 +31,9 @@ export interface RouteManager {
    */
   getLineageFromRoute(route: Route, routes?: Route[]): Route[];
   getRouteMatchFromUrl(url: string): RouteMatch | undefined;
+  /**
+   * Generates a url based the provided routeKind and routeParams
+   * while preserving the current search.
+   */
+  useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
 }

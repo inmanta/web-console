@@ -1,4 +1,4 @@
-import { CompileReport, CompileReportRow } from "@/Core";
+import { CompileReport, CompileReportRow, CompileStatus } from "@/Core";
 import { DatePresenter, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
 
@@ -11,12 +11,12 @@ export class CompileReportsTablePresenter
   constructor(private datePresenter: DatePresenter) {
     this.columnHeads = [
       words("compileReports.columns.requested"),
+      words("compileReports.columns.status"),
       words("compileReports.columns.message"),
       words("compileReports.columns.waitTime"),
       words("compileReports.columns.compileTime"),
-      words("compileReports.columns.actions"),
     ];
-    this.numberOfColumns = this.columnHeads.length + 1;
+    this.numberOfColumns = this.columnHeads.length + 2;
   }
 
   createRows(sourceData: CompileReport[]): CompileReportRow[] {
@@ -38,9 +38,24 @@ export class CompileReportsTablePresenter
         : "",
       completed: compileReport.completed,
       message: compileReport.metadata["message"] as string,
-      success: compileReport.success,
-      inProgress: !!compileReport.started && !compileReport.completed,
+      status: this.getStatusFromReport(compileReport),
     }));
+  }
+
+  private getStatusFromReport({
+    completed,
+    success,
+    started,
+  }: CompileReport): CompileStatus {
+    if (!started) {
+      return CompileStatus.queued;
+    } else if (!!started && !completed) {
+      return CompileStatus.inprogress;
+    } else if (success) {
+      return CompileStatus.success;
+    } else {
+      return CompileStatus.failed;
+    }
   }
 
   getColumnHeadDisplayNames(): string[] {

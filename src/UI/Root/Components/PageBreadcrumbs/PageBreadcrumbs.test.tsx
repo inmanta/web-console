@@ -48,7 +48,7 @@ test("GIVEN Breadcrumbs WHEN url is '/lsm/catalog/service/inventory' THEN linked
   expect(within(catalogCrumb).getByRole("link")).toBeInTheDocument();
   expect(within(inventoryCrumb).queryByRole("link")).not.toBeInTheDocument();
   expect(
-    within(inventoryCrumb).getByText("Service Inventory")
+    within(inventoryCrumb).getByText("Service Inventory: service")
   ).toBeInTheDocument();
 });
 
@@ -87,7 +87,7 @@ test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb li
   });
   expect(crumbsBefore.length).toEqual(4);
 
-  const link = screen.getByRole("link", { name: "Service Inventory" });
+  const link = screen.getByRole("link", { name: "Service Inventory: service" });
   userEvent.click(link);
 
   const crumbsAfter = screen.getAllByRole("listitem", {
@@ -98,6 +98,6 @@ test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb li
     within(crumbsAfter[1]).getByText("Service Catalog")
   ).toBeInTheDocument();
   expect(
-    within(crumbsAfter[2]).getByText("Service Inventory")
+    within(crumbsAfter[2]).getByText("Service Inventory: service")
   ).toBeInTheDocument();
 });

@@ -1,0 +1,4 @@
+description: Add notification badge
+issue-nr: 3055
+change-type: minor
+destination-branches: [master, iso5]

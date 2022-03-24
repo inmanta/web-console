@@ -4,7 +4,9 @@ import { ClassifiedAttribute } from "./ClassifiedAttribute";
 export class AttributeClassifier {
   constructor(
     private readonly jsonFormatter: Formatter<unknown>,
-    private readonly xmlFormatter: Formatter
+    private readonly xmlFormatter: Formatter,
+    private readonly isKeyIgnored: (key: string) => boolean = (key: string) =>
+      key === "version" || key === "requires"
   ) {}
 
   classify(attributesObject: Record<string, unknown>): ClassifiedAttribute[] {
@@ -19,7 +21,7 @@ export class AttributeClassifier {
     key: string,
     value: unknown
   ): Maybe.Type<ClassifiedAttribute> {
-    if (key === "version" || key === "requires") {
+    if (this.isKeyIgnored(key)) {
       return Maybe.none();
     } else if (this.isUndefined(value)) {
       return Maybe.some({ kind: "Undefined", key });

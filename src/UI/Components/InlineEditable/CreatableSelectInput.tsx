@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FormGroup, Select, SelectOption } from "@patternfly/react-core";
-import { Maybe } from "@/Core";
+import { Either } from "@/Core";
 import { InlinePlainAlert } from "./InlinePlainAlert";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
   options: string[];
   isRequired?: boolean;
   withLabel?: boolean;
-  onCreate: (name: string) => Promise<Maybe.Type<string>>;
+  onCreate: (name: string) => Promise<Either.Type<string, unknown>>;
   onSelect: (value: string) => void;
 }
 
@@ -30,7 +30,7 @@ export const CreatableSelectInput: React.FC<Props> = ({
   };
   const onCreateOption = async (newValue: string) => {
     const result = await onCreate(newValue);
-    if (Maybe.isSome(result)) {
+    if (Either.isLeft(result)) {
       setSubmitError(result.value);
       onSelect("");
     } else {

@@ -28,6 +28,7 @@ export const DeleteEntityModal: React.FunctionComponent<{
   return (
     <>
       <ErrorToastAlert
+        title={words("catalog.delete.failed")}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
       />

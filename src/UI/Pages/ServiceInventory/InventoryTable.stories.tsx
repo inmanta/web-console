@@ -4,17 +4,10 @@ import { Story } from "@storybook/react/types-6-0";
 import { StoreProvider } from "easy-peasy";
 import {
   QueryResolverImpl,
-  InstanceResourcesQueryManager,
-  InstanceResourcesStateHelper,
   getStoreInstance,
+  QueryManagerResolver,
 } from "@/Data";
-import {
-  DynamicQueryManagerResolver,
-  InstantApiHelper,
-  Row,
-  StaticScheduler,
-  tablePresenter,
-} from "@/Test";
+import { InstantApiHelper, Row, StaticScheduler, tablePresenter } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { InventoryTable } from "./InventoryTable";
 
@@ -26,16 +19,15 @@ export default {
 const Template: Story<ComponentProps<typeof InventoryTable>> = (args) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new InstanceResourcesQueryManager(
-        new InstantApiHelper({
-          kind: "Success",
-          data: { data: [] },
-        }),
-        new InstanceResourcesStateHelper(store),
-        new StaticScheduler()
-      ),
-    ])
+    new QueryManagerResolver(
+      store,
+      new InstantApiHelper(() => ({
+        kind: "Success",
+        data: { data: [] },
+      })),
+      new StaticScheduler(),
+      new StaticScheduler()
+    )
   );
 
   return (

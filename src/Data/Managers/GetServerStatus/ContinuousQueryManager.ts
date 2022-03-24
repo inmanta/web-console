@@ -1,8 +1,8 @@
 import { identity } from "lodash-es";
 import { StateHelper, ApiHelper, Scheduler } from "@/Core";
-import { PrimaryContinuousQueryManager } from "@/Data/Managers/Helpers";
+import { QueryManager } from "@/Data/Managers/Helpers";
 
-export class GetServerStatusContinuousQueryManager extends PrimaryContinuousQueryManager<"GetServerStatus"> {
+export class GetServerStatusContinuousQueryManager extends QueryManager.Continuous<"GetServerStatus"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetServerStatus">,

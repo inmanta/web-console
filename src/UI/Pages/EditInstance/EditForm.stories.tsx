@@ -17,12 +17,15 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { EditForm } from "./EditForm";
 
 export default {
-  title: "EditInstanceForm",
+  title: "Service Inventory/EditInstanceForm",
   component: EditForm,
 };
 export const Default: React.FC = () => {
   const store = getStoreInstance();
-  const apiHelper = new InstantApiHelper({ kind: "Success", data: null });
+  const apiHelper = new InstantApiHelper(() => ({
+    kind: "Success",
+    data: null,
+  }));
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new TriggerInstanceUpdateCommandManager(apiHelper),

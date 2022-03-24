@@ -4,7 +4,7 @@ import {
   BaseApiHelper,
   CommandResolverImpl,
 } from "@/Data";
-import { Service, DynamicCommandManagerResolver } from "@/Test";
+import { Service, DynamicCommandManagerResolver, dependencies } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Details } from "./Details";
 
@@ -21,7 +21,7 @@ const Template: React.FC<ComponentProps<typeof Details>> = (args) => {
   );
 
   return (
-    <DependencyProvider dependencies={{ commandResolver }}>
+    <DependencyProvider dependencies={{ ...dependencies, commandResolver }}>
       <Details {...args} />
     </DependencyProvider>
   );

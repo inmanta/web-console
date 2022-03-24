@@ -1,3 +1,6 @@
+import { TriggerDryRun } from "./TriggerDryRun";
+export { TriggerDryRun };
+
 export * from "./Callbacks";
 export * from "./CompileDetails";
 export * from "./CompileReports";
@@ -18,7 +21,7 @@ export * from "./GetServerStatus";
 export * from "./HaltEnvironment";
 export * from "./InstanceConfig";
 export * from "./GetInstanceLogs";
-export * from "./InstanceResources";
+export * from "./GetInstanceResources";
 export * from "./ModifyEnvironment";
 export * from "./GetProjects";
 export * from "./GetEnvironments";
@@ -47,3 +50,6 @@ export * from "./GetCompilerStatus";
 export * from "./GetParameters";
 export * from "./GetFacts";
 export * from "./GetDesiredStateDiff";
+export * as GetDryRuns from "./GetDryRuns";
+export * as GetDryRunReport from "./GetDryRunReport";
+export * as GetVersionedResourceDetails from "./GetVersionedResourceDetails";

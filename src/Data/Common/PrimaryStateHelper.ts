@@ -63,7 +63,7 @@ export class PrimaryStateHelperWithEnv<Kind extends Query.Kind>
       state: State<StoreModel>,
       query: Query.SubQuery<Kind>,
       environment: string
-    ) => Data<Kind>
+    ) => Data<Kind> | undefined
   ) {}
 
   set(

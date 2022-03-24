@@ -5,15 +5,13 @@ import { StoreProvider } from "easy-peasy";
 import { ServiceModel } from "@/Core";
 import {
   QueryResolverImpl,
-  InstanceResourcesQueryManager,
-  InstanceResourcesStateHelper,
   getStoreInstance,
   CommandResolverImpl,
+  QueryManagerResolver,
 } from "@/Data";
 import {
   dependencies,
   DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
   InstantApiHelper,
   MockCommandManager,
   Service,
@@ -31,16 +29,15 @@ export default {
 const Template: Story<Props> = (args) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new InstanceResourcesQueryManager(
-        new InstantApiHelper({
-          kind: "Success",
-          data: { data: [] },
-        }),
-        new InstanceResourcesStateHelper(store),
-        new StaticScheduler()
-      ),
-    ])
+    new QueryManagerResolver(
+      store,
+      new InstantApiHelper(() => ({
+        kind: "Success",
+        data: { data: [] },
+      })),
+      new StaticScheduler(),
+      new StaticScheduler()
+    )
   );
 
   const commandResolver = new CommandResolverImpl(

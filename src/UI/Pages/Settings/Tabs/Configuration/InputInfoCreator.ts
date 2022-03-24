@@ -62,9 +62,12 @@ export class InputInfoCreator {
       }
     };
 
-    const isUpdateable = (
-      info: Pick<EnvironmentSettings.InputInfo, "initial" | "value">
-    ) => info.value !== info.initial;
+    const isUpdateable: EnvironmentSettings.IsUpdateable = (info) => {
+      if (info.initial === undefined && info.value === info.default) {
+        return false;
+      }
+      return info.value !== info.initial;
+    };
 
     switch (definition.type) {
       case "bool":
