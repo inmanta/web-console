@@ -1,7 +1,7 @@
 import { PageSize, Pagination } from "@/Core/Domain";
+import { RemoteData } from "@/Core/Language";
 import { Model, Severity } from "./Model";
-
-export type Origin = "drawer" | "center";
+import { Origin } from "./Utils";
 
 export interface Query {
   kind: "GetNotifications";
@@ -44,3 +44,13 @@ export const drawerQuery: Query = {
   pageSize: PageSize.from("100"),
   filter: { cleared: false },
 };
+
+export type ViewData = RemoteData.RemoteData<
+  Manifest["error"],
+  Manifest["usedData"]
+>;
+
+export type ApiData = RemoteData.RemoteData<
+  Manifest["error"],
+  Manifest["apiResponse"]
+>;

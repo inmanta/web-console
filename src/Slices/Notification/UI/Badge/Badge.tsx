@@ -9,8 +9,7 @@ import { ErrorToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Model } from "@S/Notification/Core/Model";
-import { drawerQuery } from "@S/Notification/Core/Query";
-import { ViewData } from "@S/Notification/Core/Utils";
+import { drawerQuery, ViewData } from "@S/Notification/Core/Query";
 
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
   const { queryResolver } = useContext(DependencyContext);

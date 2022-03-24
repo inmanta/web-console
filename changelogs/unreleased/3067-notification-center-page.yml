@@ -1,0 +1,6 @@
+description: Add notification center page
+issue-nr: 3067
+change-type: minor
+destination-branches: [master, iso5]
+sections:
+  feature: "{{description}}"

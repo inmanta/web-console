@@ -482,11 +482,17 @@ const dict = {
   /**
    * Notification
    */
+  "notification.read": "Mark as read",
+  "notification.unread": "Mark as unread",
   "notification.center.title": "Notification Center",
+  "notification.center.empty": "No notifications found",
+  "notification.severity.placeholder": "Severity...",
+  "notification.read.placeholder": "Read...",
+  "notification.message.placeholder": "Message...",
+  "notification.title.placeholder": "Title...",
   "notification.drawer.showAll": "Show all notifications",
   "notification.drawer.readAll": "Mark all as read",
   "notification.drawer.clearAll": "Clear all",
-  "notification.drawer.unread": "Mark as unread",
   "notification.drawer.details": "Details",
   "notification.drawer.clear": "Clear",
 
