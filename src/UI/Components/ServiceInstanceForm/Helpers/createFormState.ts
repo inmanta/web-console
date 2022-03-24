@@ -7,7 +7,9 @@ export const createFormState = (fields: Field[]): InstanceAttributeModel => {
       case "Boolean":
       case "Enum":
       case "Text": {
-        acc[curr.name] = curr.defaultValue;
+        acc[curr.name] = curr.type.includes("dict")
+          ? JSON.stringify(curr.defaultValue)
+          : curr.defaultValue;
         return acc;
       }
 
