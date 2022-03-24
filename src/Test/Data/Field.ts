@@ -50,6 +50,16 @@ export const number: TextField = {
   type: "float?",
 };
 
+export const dictionary: TextField = {
+  kind: "Text",
+  name: "dictionary_field",
+  description: "description",
+  isOptional: false,
+  defaultValue: {},
+  inputType: TextInputTypes.text,
+  type: "dict",
+};
+
 export const nested = (fields?: Field[]): NestedField => ({
   kind: "Nested",
   name: "nested_field",
