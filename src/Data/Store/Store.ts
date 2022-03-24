@@ -1,4 +1,7 @@
-import { agentProcessSlice, AgentProcessSlice } from "@S/Agent/Data/Store";
+import {
+  agentProcessSlice,
+  AgentProcessSlice,
+} from "@S/AgentProcess/Data/Store";
 import {
   notificationSlice,
   NotificationSlice,

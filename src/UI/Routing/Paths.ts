@@ -1,5 +1,5 @@
 import { RouteKind } from "@/Core";
-import { AgentProcess } from "@S/Agent";
+import { AgentProcess } from "@S/AgentProcess";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
 

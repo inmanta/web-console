@@ -67,7 +67,7 @@ import {
   GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import * as Agent from "@S/Agent/Data";
+import * as Agent from "@S/AgentProcess/Data";
 import * as Notification from "@S/Notification/Data";
 import * as Resource from "@S/Resource/Data";
 

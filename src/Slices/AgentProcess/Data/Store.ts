@@ -1,6 +1,6 @@
 import { Action, action } from "easy-peasy";
 import { RemoteData } from "@/Core";
-import { AgentProcess } from "@S/Agent/Core/Model";
+import { AgentProcess } from "@/Slices/AgentProcess/Core/Model";
 
 export interface AgentProcessSlice {
   byId: Record<string, RemoteData.Type<string, AgentProcess>>;

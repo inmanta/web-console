@@ -1,6 +1,6 @@
 import { RemoteData } from "@/Core/Language";
-import * as GetNotifications from "@/Slices/Notification/Core/Query";
-import * as GetAgentProcess from "@S/Agent/Core/Query";
+import * as GetAgentProcess from "@S/AgentProcess/Core/Query";
+import * as GetNotifications from "@S/Notification/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
 import { GetAgents, GetAgentsManifest } from "./GetAgents";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";

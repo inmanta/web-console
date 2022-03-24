@@ -10,7 +10,7 @@ import {
 } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import * as AgentProcessMock from "@S/Agent/Core/Mock";
+import * as AgentProcessMock from "@S/AgentProcess/Core/Mock";
 import { Page } from "./Page";
 
 function setup() {

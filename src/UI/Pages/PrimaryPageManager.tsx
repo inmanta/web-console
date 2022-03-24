@@ -1,6 +1,6 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
-import { AgentProcessPage } from "@S/Agent/UI/AgentProcessPage";
+import { AgentProcessPage } from "@S/AgentProcess/UI/AgentProcessPage";
 import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
 import { AgentsPage } from "./Agents";
