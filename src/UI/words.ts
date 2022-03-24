@@ -485,6 +485,7 @@ const dict = {
   "notification.read": "Mark as read",
   "notification.unread": "Mark as unread",
   "notification.center.title": "Notification Center",
+  "notification.center.empty": "No notifications found",
   "notification.severity.placeholder": "Severity...",
   "notification.read.placeholder": "Read...",
   "notification.message.placeholder": "Message...",

@@ -1,8 +1,11 @@
 import React, { useContext } from "react";
-
-import { RemoteData } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
-import { PageContainer, PaginationWidget } from "@/UI/Components";
+import {
+  EmptyView,
+  PageContainer,
+  PaginationWidget,
+  RemoteDataView,
+} from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Filter } from "@S/Notification/Core/Query";
@@ -38,15 +41,16 @@ export const Page: React.FC = () => {
         filter={filter}
         setFilter={setFilter}
       />
-      {RemoteData.fold(
-        {
-          notAsked: () => null,
-          loading: () => null,
-          failed: () => null,
-          success: ({ data }) => <List {...{ data }} onUpdate={retry} />,
-        },
-        data
-      )}
+      <RemoteDataView
+        data={data}
+        SuccessView={({ data }) =>
+          data.length <= 0 ? (
+            <EmptyView message={words("notification.center.empty")} />
+          ) : (
+            <List {...{ data }} onUpdate={retry} />
+          )
+        }
+      />
     </PageContainer>
   );
 };
