@@ -28,7 +28,6 @@ export * from "./GetEnvironments";
 export * from "./ResourceDetails";
 export * from "./ResourceHistory";
 export * from "./ResourceLogs";
-export * from "./Resources";
 export * from "./ResumeEnvironment";
 export * from "./Service";
 export * from "./ServiceConfig";

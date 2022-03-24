@@ -1,13 +1,13 @@
 import { Pagination, Resource } from "@/Core/Domain";
 
-export interface GetResources extends Resource.ResourceParams {
+export interface Query extends Resource.ResourceParams {
   kind: "GetResources";
 }
 
-export interface GetResourcesManifest {
+export interface Manifest {
   error: string;
   apiResponse: {
-    data: Resource.Raw[];
+    data: Raw[];
     links: Pagination.Links;
     metadata: Resource.Metadata;
   };
@@ -21,5 +21,12 @@ export interface GetResourcesManifest {
     handlers: Pagination.Handlers;
     metadata: Resource.Metadata;
   };
-  query: GetResources;
+  query: Query;
+}
+
+export interface Raw {
+  resource_id: string;
+  requires: string[];
+  status: string;
+  id_details: Resource.IdDetails;
 }

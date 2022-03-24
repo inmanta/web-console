@@ -23,8 +23,6 @@ import {
   ServiceConfigQueryManager,
   ServiceConfigStateHelper,
   ServiceConfigFinalizer,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
   ResourceDetailsQueryManager,
   ResourceDetailsStateHelper,
   ResourceHistoryStateHelper,
@@ -71,7 +69,8 @@ import {
   GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import * as GetNotifications from "@/Slices/Notification/Data";
+import * as Notification from "@/Slices/Notification/Data";
+import * as Resource from "@/Slices/Resource/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];
@@ -170,9 +169,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new DiagnosticsStateHelper(this.store),
         this.scheduler
       ),
-      new ResourcesQueryManager(
+      new Resource.GetResourcesQueryManager(
         this.apiHelper,
-        new ResourcesStateHelper(this.store),
+        new Resource.GetResourcesStateHelper(this.store),
         this.scheduler
       ),
       new ResourceDetailsQueryManager(
@@ -264,12 +263,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.store,
         this.scheduler
       ),
-      new GetNotifications.ContinuousManager(
+      new Notification.ContinuousManager(
         this.apiHelper,
         this.store,
         this.scheduler
       ),
-      new GetNotifications.ReadOnlyManager(this.store),
+      new Notification.ReadOnlyManager(this.store),
     ];
   }
 }

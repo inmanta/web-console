@@ -2,7 +2,7 @@ import { Scheduler, Resource, ApiHelper, StateHelperWithEnv } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class ResourcesQueryManager extends QueryManager.ContinuousWithEnv<"GetResources"> {
+export class GetResourcesQueryManager extends QueryManager.ContinuousWithEnv<"GetResources"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelperWithEnv<"GetResources">,

@@ -1,15 +1,13 @@
 import React from "react";
 import { ToolbarItem } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Query, RemoteData, Resource } from "@/Core";
+import { RemoteData, Resource } from "@/Core";
 import { ResourceStatusBar } from "@/UI/Components";
+import { ViewData } from "@S/Resource/Core/Utils";
 import { DeployButton, RepairButton } from "./Components";
 
 interface Props {
-  data: RemoteData.Type<
-    Query.Error<"GetResources">,
-    Query.UsedData<"GetResources">
-  >;
+  data: ViewData;
   updateFilter: (updater: (filter: Resource.Filter) => Resource.Filter) => void;
 }
 

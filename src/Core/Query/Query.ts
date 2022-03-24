@@ -1,5 +1,6 @@
 import { RemoteData } from "@/Core/Language";
 import * as GetNotifications from "@/Slices/Notification/Core/Query";
+import * as GetResources from "@S/Resource/Core/Query";
 import { GetAgentProcess, GetAgentProcessManifest } from "./GetAgentProcess";
 import { GetAgents, GetAgentsManifest } from "./GetAgents";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
@@ -59,7 +60,6 @@ import {
   GetResourceHistoryManifest,
 } from "./GetResourceHistory";
 import { GetResourceLogs, GetResourceLogsManifest } from "./GetResourceLogs";
-import { GetResources, GetResourcesManifest } from "./GetResources";
 import { GetServerStatus, GetServerStatusManifest } from "./GetServerStatus";
 import { GetService, GetServiceManifest } from "./GetService";
 import { GetServiceConfig, GetServiceConfigManifest } from "./GetServiceConfig";
@@ -90,7 +90,7 @@ export type Query =
   | GetInstanceConfig
   | GetDiagnostics
   | GetProjects
-  | GetResources
+  | GetResources.Query
   | GetResourceDetails
   | GetResourceHistory
   | GetResourceLogs
@@ -135,7 +135,7 @@ interface Manifest {
   GetDiagnostics: GetDiagnosticsManifest;
   GetProjects: GetProjectsManifest;
   GetServerStatus: GetServerStatusManifest;
-  GetResources: GetResourcesManifest;
+  GetResources: GetResources.Manifest;
   GetResourceDetails: GetResourceDetailsManifest;
   GetResourceHistory: GetResourceHistoryManifest;
   GetResourceLogs: GetResourceLogsManifest;

@@ -1,6 +1,7 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
 import { NotificationCenterPage } from "@S/Notification/UI/Center";
+import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
 import { AgentProcessPage } from "./AgentProcess";
 import { AgentsPage } from "./Agents";
 import { CompileDetailsPage } from "./CompileDetails";
@@ -19,7 +20,6 @@ import { FactsPage } from "./Facts";
 import { HomePage } from "./Home";
 import { ParametersPage } from "./Parameters";
 import { ResourceDetailsPage } from "./ResourceDetails";
-import { ResourcesPage } from "./Resources";
 import { ServiceCatalogPage } from "./ServiceCatalog";
 import { ServiceInstanceHistoryPage } from "./ServiceInstanceHistory";
 import { ServiceInventoryPage } from "./ServiceInventory";
