@@ -1,5 +1,4 @@
 import React from "react";
-import { AgentProcess } from "@/Core";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import { MomentDatePresenter, words } from "@/UI";
 import {
@@ -8,6 +7,7 @@ import {
   PagePadder,
   PageTitle,
 } from "@/UI/Components";
+import { AgentProcess } from "@S/Agent/Core/Model";
 
 interface Props {
   agentProcess: AgentProcess;

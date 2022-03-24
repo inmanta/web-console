@@ -4,19 +4,13 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
-  GetAgentProcessStateHelper,
-  GetAgentProcessQueryManager,
   getStoreInstance,
   QueryResolverImpl,
+  QueryManagerResolver,
 } from "@/Data";
-import {
-  AgentProcessData,
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolver,
-  StaticScheduler,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import * as AgentProcessMock from "@S/Agent/Core/Mock";
 import { Page } from "./Page";
 
 function setup() {
@@ -24,12 +18,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new GetAgentProcessQueryManager(
-        apiHelper,
-        new GetAgentProcessStateHelper(store)
-      ),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
 
   const component = (
@@ -68,7 +57,7 @@ test("Agent Process Page shows success view", async () => {
     await screen.findByRole("generic", { name: "AgentProcessView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right({ data: AgentProcessData.data }));
+  apiHelper.resolve(Either.right({ data: AgentProcessMock.data }));
 
   expect(
     await screen.findByRole("generic", { name: "AgentProcessView-Success" })

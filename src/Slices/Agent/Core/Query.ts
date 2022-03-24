@@ -1,16 +1,16 @@
-import { AgentProcess } from "@/Core/Domain";
 import { WithId } from "@/Core/Language";
+import { AgentProcess } from "./Model";
 
-export interface GetAgentProcess extends WithId {
+export interface Query extends WithId {
   kind: "GetAgentProcess";
 }
 
-export interface GetAgentProcessManifest {
+export interface Manifest {
   error: string;
   apiResponse: {
     data: AgentProcess;
   };
   data: AgentProcess;
   usedData: AgentProcess;
-  query: GetAgentProcess;
+  query: Query;
 }

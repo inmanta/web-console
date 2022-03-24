@@ -40,7 +40,6 @@ export * from "./Fact";
 export * from "./Agent";
 export * from "./AgentStatus";
 export * as AgentParams from "./AgentParams";
-export * from "./AgentProcess";
 export * from "./DesiredState";
 export * as DesiredStateParams from "./DesiredStateParams";
 export * as RangeOperator from "./RangeOperator";
