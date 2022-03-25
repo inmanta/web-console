@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump styled-components from 5.3.3 to 5.3.5'
+destination-branches:
+- master
+- iso5
+sections: {}
