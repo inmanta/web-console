@@ -14,7 +14,6 @@ export * as ResourceHistory from "./ResourceHistory";
 export * as ResourceLogs from "./ResourceLogs";
 export * as EnvironmentDetails from "./EnvironmentDetails";
 export * as Callback from "./Callback";
-export * as CompileReportsData from "./CompileReports";
 export * as ServerStatus from "./ServerStatus";
 export * as EnvironmentSettings from "./EnvironmentSettings";
 export * as Environment from "./Environment";

@@ -7,8 +7,9 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { CompileReport, CompileReportRow, Sort } from "@/Core";
+import { Sort } from "@/Core";
 import { TablePresenter } from "@/UI/Presenters";
+import { CompileReport, CompileReportRow } from "@S/CompileReports/Core/Domain";
 import { CompileReportsTableRow } from "./CompileReportsTableRow";
 
 interface Props {

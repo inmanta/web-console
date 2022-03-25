@@ -1,5 +1,5 @@
+import { CompileStatus } from "@/Core/Domain";
 import { ParsedNumber } from "@/Core/Language";
-import { CompileStatus } from "./CompileStatus";
 
 export interface CompileReport {
   id: string;

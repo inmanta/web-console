@@ -1,6 +1,7 @@
 import React from "react";
-import { CompileReport, Sort } from "@/Core";
+import { Sort } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
+import { CompileReport } from "@S/CompileReports/Core/Domain";
 import { CompileReportsTable } from "./CompileReportsTable";
 import { CompileReportsTablePresenter } from "./CompileReportsTablePresenter";
 

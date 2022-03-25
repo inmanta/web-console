@@ -1,10 +1,6 @@
-import {
-  Scheduler,
-  CompileReportParams,
-  ApiHelper,
-  StateHelperWithEnv,
-} from "@/Core";
+import { Scheduler, ApiHelper, StateHelperWithEnv } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
+import { Filter } from "@S/CompileReports/Core/Query";
 import { getUrl } from "./getUrl";
 
 export class CompileReportsQueryManager extends QueryManager.ContinuousWithEnv<"GetCompileReports"> {
@@ -41,8 +37,6 @@ export class CompileReportsQueryManager extends QueryManager.ContinuousWithEnv<"
   }
 }
 
-function stringifyFilter(
-  filter: CompileReportParams.Filter | undefined
-): string {
+function stringifyFilter(filter: Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

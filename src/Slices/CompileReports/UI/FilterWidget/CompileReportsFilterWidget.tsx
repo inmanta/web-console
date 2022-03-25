@@ -1,23 +1,22 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
-import { CompileReportParams, CompileStatus, DateRange } from "@/Core";
+import { CompileStatus, DateRange } from "@/Core";
 import { FilterPicker } from "@/UI/Components";
 import { TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
+import { Filter, Kind, List } from "@S/CompileReports/Core/Query";
 import { StatusFilter } from "./StatusFilter";
 
 interface Props {
-  filter: CompileReportParams.Filter;
-  setFilter: (filter: CompileReportParams.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
 }
 
 export const CompileReportsFilterWidget: React.FC<Props> = ({
   filter,
   setFilter,
 }) => {
-  const [filterKind, setFilterKind] = useState<CompileReportParams.Kind>(
-    CompileReportParams.Kind.Status
-  );
+  const [filterKind, setFilterKind] = useState<Kind>(Kind.Status);
 
   const updateCompileStatus = (selectedCompileStatus: string | null) =>
     setFilter({
@@ -38,16 +37,16 @@ export const CompileReportsFilterWidget: React.FC<Props> = ({
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}
-        items={CompileReportParams.List}
+        items={List}
       />
       <StatusFilter
-        isVisible={filterKind === CompileReportParams.Kind.Status}
+        isVisible={filterKind === Kind.Status}
         selected={filter.status ? filter.status : null}
         setSelected={updateCompileStatus}
       />
       <TimestampFilter
         datePresenter={new MomentDatePresenter()}
-        isVisible={filterKind === CompileReportParams.Kind.Requested}
+        isVisible={filterKind === Kind.Requested}
         timestampFilters={filter.requested ? filter.requested : []}
         update={updateRequested}
       />

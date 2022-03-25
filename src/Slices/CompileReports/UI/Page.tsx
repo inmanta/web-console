@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { CompileReportParams } from "@/Core";
+
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -13,6 +13,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Filter } from "@S/CompileReports/Core/Query";
 import { CompileReportsTableControls } from "./CompileReportsTableControls";
 import { TableProvider } from "./TableProvider";
 
@@ -21,12 +22,10 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "CompileReports",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<CompileReportParams.Filter>(
-    {
-      route: "CompileReports",
-      keys: { requested: "DateRange", success: "Boolean" },
-    }
-  );
+  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
+    route: "CompileReports",
+    keys: { requested: "DateRange", success: "Boolean" },
+  });
   const [sort, setSort] = useUrlStateWithSort<string>({
     default: { name: "requested", order: "desc" },
     route: "CompileReports",

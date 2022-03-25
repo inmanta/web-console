@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Td, Tr } from "@patternfly/react-table";
 import styled from "styled-components";
-import { CompileReportRow } from "@/Core";
 import { DateWithTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { CompileReportRow } from "@S/CompileReports/Core/Domain";
 import { StatusLabel } from "./Components";
 
 interface Props {

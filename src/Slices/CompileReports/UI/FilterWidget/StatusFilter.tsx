@@ -1,8 +1,9 @@
 import React from "react";
 import { ToolbarFilter } from "@patternfly/react-core";
-import { CompileReportParams, CompileStatus } from "@/Core";
+import { CompileStatus } from "@/Core";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { Kind } from "@S/CompileReports/Core/Query";
 
 interface Props {
   isVisible: boolean;
@@ -23,11 +24,11 @@ export const StatusFilter: React.FC<Props> = ({
     <ToolbarFilter
       chips={selected ? [selected] : []}
       showToolbarItem={isVisible}
-      categoryName={CompileReportParams.Kind.Status}
+      categoryName={Kind.Status}
       deleteChip={deleteChip}
     >
       <SingleTextSelect
-        toggleAriaLabel={CompileReportParams.Kind.Status}
+        toggleAriaLabel={Kind.Status}
         placeholderText={words("compileReports.filters.status.placeholder")}
         options={compileStatuses}
         selected={selected}

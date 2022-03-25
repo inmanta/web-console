@@ -8,14 +8,14 @@ import {
   CompileDetailsSlice,
 } from "@S/CompileDetails/Data/Store";
 import {
+  compileReportsSlice,
+  CompileReportsSlice,
+} from "@S/CompileReports/Data/Store";
+import {
   notificationSlice,
   NotificationSlice,
 } from "@S/Notification/Data/Store";
 import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
-import {
-  compileReportsSlice,
-  CompileReportsSlice,
-} from "./CompileReportsSlice";
 import {
   desiredStateDiffSlice,
   DesiredStateDiffSlice,

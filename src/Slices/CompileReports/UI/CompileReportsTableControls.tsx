@@ -1,12 +1,12 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { CompileReportParams } from "@/Core";
 import { CompileWidget } from "@/UI/Components";
+import { Filter } from "@S/CompileReports/Core/Query";
 import { CompileReportsFilterWidget } from "./FilterWidget";
 
 interface Props {
-  filter: CompileReportParams.Filter;
-  setFilter: (filter: CompileReportParams.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
   paginationWidget: React.ReactNode;
   afterRecompile(): void;
 }

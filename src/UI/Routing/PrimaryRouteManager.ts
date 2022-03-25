@@ -16,6 +16,7 @@ import {
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
+import { CompileReports } from "@S/CompileReports";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
 import { paths } from "./Paths";
@@ -58,7 +59,7 @@ export class PrimaryRouteManager implements RouteManager {
       /**
        * Orchestration Engine
        */
-      CompileReports: CompileReports(this.baseUrl),
+      CompileReports: CompileReports.route(this.baseUrl),
       CompileDetails: CompileDetails.route(this.baseUrl),
       DesiredState: DesiredState(this.baseUrl),
       DesiredStateDetails: DesiredStateDetails(this.baseUrl),
@@ -272,14 +273,6 @@ const DesiredStateCompare = (base: string): Route<"DesiredStateCompare"> => ({
   parent: "DesiredState",
   path: `${base}${paths.DesiredStateCompare}`,
   generateLabel: () => "Compare",
-  environmentRole: "Required",
-});
-
-const CompileReports = (base: string): Route<"CompileReports"> => ({
-  kind: "CompileReports",
-  parent: "Home",
-  path: `${base}${paths.CompileReports}`,
-  generateLabel: () => "Compile Reports",
   environmentRole: "Required",
 });
 

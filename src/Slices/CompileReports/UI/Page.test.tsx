@@ -14,13 +14,13 @@ import {
 } from "@/Data";
 import {
   StaticScheduler,
-  CompileReportsData,
   DeferredApiHelper,
   dependencies,
   EnvironmentDetails,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
+import * as Mock from "@S/CompileReports/Core/Mock";
 import { Page } from "./Page";
 
 function setup() {
@@ -113,7 +113,7 @@ test("CompileReportsView shows success table", async () => {
     await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right(CompileReportsData.response));
+  apiHelper.resolve(Either.right(Mock.response));
 
   expect(
     await screen.findByRole("grid", { name: "CompileReportsView-Success" })
@@ -145,7 +145,7 @@ test("CompileReportsView shows updated table", async () => {
   scheduler.executeAll();
 
   apiHelper.resolve(204);
-  apiHelper.resolve(Either.right(CompileReportsData.response));
+  apiHelper.resolve(Either.right(Mock.response));
 
   expect(
     await screen.findByRole("grid", { name: "CompileReportsView-Success" })
@@ -159,7 +159,7 @@ test("When using the status filter with the Success option then the successful c
   apiHelper.resolve(204);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(CompileReportsData.response));
+    await apiHelper.resolve(Either.right(Mock.response));
   });
 
   const initialRows = await screen.findAllByRole("row", {
@@ -187,8 +187,8 @@ test("When using the status filter with the Success option then the successful c
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
-        ...CompileReportsData.response,
-        data: CompileReportsData.response.data.slice(0, 3),
+        ...Mock.response,
+        data: Mock.response.data.slice(0, 3),
       })
     );
   });
@@ -206,7 +206,7 @@ test("When using the status filter with the In Progress opiton then the compile 
   apiHelper.resolve(204);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(CompileReportsData.response));
+    await apiHelper.resolve(Either.right(Mock.response));
   });
 
   const initialRows = await screen.findAllByRole("row", {
@@ -235,8 +235,8 @@ test("When using the status filter with the In Progress opiton then the compile 
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
-        ...CompileReportsData.response,
-        data: CompileReportsData.response.data.slice(0, 3),
+        ...Mock.response,
+        data: Mock.response.data.slice(0, 3),
       })
     );
   });
@@ -254,7 +254,7 @@ it("When using the Date filter then the compile reports within the range selecte
   apiHelper.resolve(204);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(CompileReportsData.response));
+    await apiHelper.resolve(Either.right(Mock.response));
   });
 
   const initialRows = await screen.findAllByRole("row", {
@@ -286,8 +286,8 @@ it("When using the Date filter then the compile reports within the range selecte
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
-        ...CompileReportsData.response,
-        data: CompileReportsData.response.data.slice(0, 3),
+        ...Mock.response,
+        data: Mock.response.data.slice(0, 3),
       })
     );
   });
@@ -315,7 +315,7 @@ test("Given CompileReportsView When recompile is triggered Then table is updated
   apiHelper.resolve(204);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(CompileReportsData.response));
+    await apiHelper.resolve(Either.right(Mock.response));
   });
 
   const button = screen.getByRole("button", { name: "RecompileButton" });

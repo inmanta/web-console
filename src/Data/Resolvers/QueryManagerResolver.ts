@@ -34,8 +34,6 @@ import {
   ServiceInstanceStateHelper,
   CallbacksQueryManager,
   CallbacksStateHelper,
-  CompileReportsQueryManager,
-  CompileReportsStateHelper,
   ResourceLogsQueryManager,
   ResourceLogsStateHelper,
   GetServerStatusOneTimeQueryManager,
@@ -66,6 +64,7 @@ import { Store } from "@/Data/Store";
 import * as AgentProcess from "@S/AgentProcess/Data";
 import * as Agents from "@S/Agents/Data";
 import * as CompileDetails from "@S/CompileDetails/Data";
+import * as CompileReports from "@S/CompileReports/Data";
 import * as Notification from "@S/Notification/Data";
 import * as Resource from "@S/Resource/Data";
 
@@ -199,9 +198,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.apiHelper,
         new CallbacksStateHelper(this.store)
       ),
-      new CompileReportsQueryManager(
+      new CompileReports.CompileReportsQueryManager(
         this.apiHelper,
-        new CompileReportsStateHelper(this.store),
+        new CompileReports.CompileReportsStateHelper(this.store),
         this.scheduler
       ),
       new CompileDetails.CompileDetailsQueryManager(
