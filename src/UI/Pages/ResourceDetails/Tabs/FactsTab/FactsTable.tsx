@@ -8,11 +8,12 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import styled from "styled-components";
-import { Fact, Sort } from "@/Core";
+import { Sort } from "@/Core";
 import { Order } from "@/Core/Domain/Sort";
 import { ColumnHead } from "@/UI/Presenters";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import { Fact } from "@S/Facts/Core/Domain";
 
 type FactRow = Pick<Fact, "id" | "name" | "updated" | "value">;
 

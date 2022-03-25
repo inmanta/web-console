@@ -1,5 +1,4 @@
-import { GetFacts } from "./GetFacts";
 import { GetParameters } from "./GetParameters";
 
-export { GetFacts, GetParameters };
+export { GetParameters };
 export * as Query from "./Query";

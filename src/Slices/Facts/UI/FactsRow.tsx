@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Button } from "@patternfly/react-core";
 import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { Fact } from "@/Core";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Fact } from "@S/Facts/Core/Domain";
 
 interface Props {
   row: Pick<Fact, "name" | "updated" | "value" | "resource_id">;

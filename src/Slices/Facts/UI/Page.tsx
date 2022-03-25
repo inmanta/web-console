@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { GetFacts } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -12,6 +11,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Filter, SortKey } from "@S/Facts/Core/Query";
 import { FactsTable } from "./FactsTable";
 import { FactsTablePresenter } from "./FactsTablePresenter";
 import { TableControls } from "./TableControls";
@@ -22,10 +22,10 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Facts",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<GetFacts.Filter>({
+  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "Facts",
   });
-  const [sort, setSort] = useUrlStateWithSort<GetFacts.SortKey>({
+  const [sort, setSort] = useUrlStateWithSort<SortKey>({
     default: { name: "name", order: "asc" },
     route: "Facts",
   });

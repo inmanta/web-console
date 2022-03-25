@@ -1,7 +1,7 @@
 import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export class GetFactsStateHelper extends PrimaryStateHelperWithEnv<"GetFacts"> {
+export class StateHelper extends PrimaryStateHelperWithEnv<"GetFacts"> {
   constructor(store: Store) {
     super(
       store,

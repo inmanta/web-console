@@ -8,15 +8,17 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import styled from "styled-components";
-import { Fact, GetFacts, Sort } from "@/Core";
+import { Sort } from "@/Core";
+import { Fact } from "@S/Facts/Core/Domain";
+import { SortKey } from "@S/Facts/Core/Query";
 import { FactsRow } from "./FactsRow";
 import { FactsTablePresenter } from "./FactsTablePresenter";
 
 interface Props {
   rows: Fact[];
   tablePresenter: FactsTablePresenter;
-  sort: Sort.Type<GetFacts.SortKey>;
-  setSort: (sort: Sort.Type<GetFacts.SortKey>) => void;
+  sort: Sort.Type<SortKey>;
+  setSort: (sort: Sort.Type<SortKey>) => void;
 }
 export const FactsTable: React.FC<Props> = ({
   rows,
@@ -27,7 +29,7 @@ export const FactsTable: React.FC<Props> = ({
 }) => {
   const onSort: OnSort = (event, index, order) => {
     setSort({
-      name: tablePresenter.getColumnNameForIndex(index) as GetFacts.SortKey,
+      name: tablePresenter.getColumnNameForIndex(index) as SortKey,
       order,
     });
   };

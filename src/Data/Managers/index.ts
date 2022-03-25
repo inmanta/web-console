@@ -43,6 +43,5 @@ export * from "./GetVersionResources";
 export * from "./ControlAgent";
 export * from "./GetCompilerStatus";
 export * from "./GetParameters";
-export * from "./GetFacts";
 export * from "./GetDesiredStateDiff";
 export * as GetVersionedResourceDetails from "./GetVersionedResourceDetails";

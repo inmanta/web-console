@@ -18,6 +18,7 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
 import { paths } from "./Paths";
@@ -53,7 +54,7 @@ export class PrimaryRouteManager implements RouteManager {
        */
       Resources: Resource.route(this.baseUrl),
       Agents: Agents.route(this.baseUrl),
-      Facts: Facts(this.baseUrl),
+      Facts: Facts.route(this.baseUrl),
       AgentProcess: AgentProcess.route(this.baseUrl),
       ResourceDetails: ResourceDetails(this.baseUrl),
 
@@ -232,14 +233,6 @@ const Events = (base: string): Route<"Events"> => ({
   parent: "Inventory",
   generateLabel: () => "Service Instance Events",
   path: `${base}${paths.Events}`,
-  environmentRole: "Required",
-});
-
-const Facts = (base: string): Route<"Facts"> => ({
-  kind: "Facts",
-  parent: "Home",
-  path: `${base}${paths.Facts}`,
-  generateLabel: () => "Facts",
   environmentRole: "Required",
 });
 

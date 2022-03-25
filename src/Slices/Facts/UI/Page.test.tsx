@@ -7,31 +7,19 @@ import { Either } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  GetFactsQueryManager,
-  GetFactsStateHelper,
+  QueryManagerResolver,
 } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolver,
-  Facts,
-  StaticScheduler,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { Mock } from "@S/Facts/Test";
 import { Page } from "./Page";
 
 function setup() {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
+  const scheduler = new StaticScheduler();
+  const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new GetFactsQueryManager(
-        apiHelper,
-        new GetFactsStateHelper(store),
-        scheduler
-      ),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
 
   const component = (
@@ -65,7 +53,7 @@ test("GIVEN Facts page THEN shows table", async () => {
 
   apiHelper.resolve(
     Either.right({
-      data: Facts.list,
+      data: Mock.list,
       metadata: {
         total: 8,
         before: 0,
@@ -88,7 +76,7 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
   render(component);
   apiHelper.resolve(
     Either.right({
-      data: Facts.list,
+      data: Mock.list,
       metadata: {
         total: 8,
         before: 0,
@@ -118,7 +106,7 @@ test.each`
 
     apiHelper.resolve(
       Either.right({
-        data: Facts.list,
+        data: Mock.list,
         metadata: {
           total: 8,
           before: 0,
@@ -144,7 +132,7 @@ test.each`
 
     apiHelper.resolve(
       Either.right({
-        data: Facts.list.slice(undefined, 4),
+        data: Mock.list.slice(undefined, 4),
         metadata: {
           total: 4,
           before: 0,

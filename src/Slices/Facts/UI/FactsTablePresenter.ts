@@ -1,7 +1,7 @@
-import { Fact } from "@/Core";
 import { ColumnHead, TablePresenter } from "@/UI/Presenters";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import { Fact } from "@S/Facts/Core/Domain";
 
 const datePresenter = new MomentDatePresenter();
 

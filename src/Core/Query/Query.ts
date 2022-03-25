@@ -5,6 +5,7 @@ import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
 import * as GetCompileReports from "@S/CompileReports/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
+import * as GetFacts from "@S/Facts/Core/Query";
 import * as GetNotifications from "@S/Notification/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
@@ -28,7 +29,7 @@ import {
   GetEnvironmentSettingsManifest,
 } from "./GetEnvironmentSettings";
 import { GetEnvironments, GetEnvironmentsManifest } from "./GetEnvironments";
-import { GetFacts } from "./GetFacts";
+
 import {
   GetInstanceConfig,
   GetInstanceConfigManifest,

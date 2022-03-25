@@ -1,12 +1,12 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { GetFacts } from "@/Core";
 import { FreeTextFilter } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { Filter } from "@S/Facts/Core/Query";
 
 interface Props {
-  filter: GetFacts.Filter;
-  setFilter: (filter: GetFacts.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
   paginationWidget: React.ReactNode;
 }
 

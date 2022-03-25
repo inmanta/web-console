@@ -1,4 +1,5 @@
-import { Fact, PageSize, Pagination, Sort } from "@/Core/Domain";
+import { PageSize, Pagination, Sort } from "@/Core/Domain";
+import { Fact } from "./Domain";
 
 export interface Query {
   kind: "GetFacts";

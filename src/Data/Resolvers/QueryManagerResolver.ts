@@ -50,10 +50,8 @@ import {
   GetCompilerStatusQueryManager,
   GetParametersQueryManager,
   GetParametersStateHelper,
-  GetFactsQueryManager,
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
-  GetFactsStateHelper,
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
   GetVersionedResourceDetails,
@@ -65,6 +63,7 @@ import * as CompileDetails from "@S/CompileDetails/Data";
 import * as CompileReports from "@S/CompileReports/Data";
 import * as DryRunReport from "@S/ComplianceCheck/Data/GetDryRunReport";
 import * as DryRun from "@S/ComplianceCheck/Data/GetDryRuns";
+import { GetFactsQueryManager } from "@S/Facts/Data";
 import * as Notification from "@S/Notification/Data";
 import * as Resource from "@S/Resource/Data";
 
@@ -243,11 +242,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetParametersStateHelper(this.store),
         this.scheduler
       ),
-      new GetFactsQueryManager(
-        this.apiHelper,
-        new GetFactsStateHelper(this.store),
-        this.scheduler
-      ),
+      new GetFactsQueryManager(this.store, this.apiHelper, this.scheduler),
       new GetDesiredStateDiffQueryManager(
         this.apiHelper,
         new GetDesiredStateDiffStateHelper(this.store)

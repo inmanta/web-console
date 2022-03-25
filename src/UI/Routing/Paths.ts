@@ -4,6 +4,7 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
 
@@ -35,7 +36,7 @@ export const paths: Paths = {
    */
   Resources: Resource.path,
   Agents: Agents.path,
-  Facts: "/facts",
+  Facts: Facts.path,
   AgentProcess: AgentProcess.path,
   ResourceDetails: "/resources/:resourceId",
 
