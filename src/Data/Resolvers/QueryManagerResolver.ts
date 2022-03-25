@@ -1,7 +1,5 @@
 import { QueryManager, ManagerResolver, ApiHelper, Scheduler } from "@/Core";
 import {
-  GetProjectsQueryManager,
-  GetProjectsStateHelper,
   ServiceQueryManager,
   ServiceKeyMaker,
   ServiceStateHelper,
@@ -27,9 +25,6 @@ import {
   ResourceDetailsStateHelper,
   ResourceHistoryStateHelper,
   ResourceHistoryQueryManager,
-  EnvironmentDetailsQueryManager,
-  EnvironmentDetailsOneTimeQueryManager,
-  EnvironmentDetailsStateHelper,
   ServiceInstanceQueryManager,
   ServiceInstanceStateHelper,
   CallbacksQueryManager,
@@ -57,6 +52,11 @@ import {
   GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
+import {
+  EnvironmentDetailsContinuousQueryManager,
+  EnvironmentDetailsOneTimeQueryManager,
+} from "@/Slices/Settings/Data/GetEnvironmentDetails";
+import { GetProjectsQueryManager } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentProcessQueryManager } from "@S/AgentProcess/Data";
 import { GetAgentsQueryManager } from "@S/Agents/Data";
 import { CompileDetailsQueryManager } from "@S/CompileDetails/Data";
@@ -100,10 +100,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     );
 
     return [
-      new GetProjectsQueryManager(
-        this.apiHelper,
-        new GetProjectsStateHelper(this.store)
-      ),
+      new GetProjectsQueryManager(this.store, this.apiHelper),
       new GetEnvironmentsQueryManager(
         this.apiHelper,
         new GetEnvironmentsStateHelper(this.store)
@@ -180,15 +177,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new ResourceHistoryStateHelper(this.store),
         this.scheduler
       ),
-      new EnvironmentDetailsQueryManager(
+      new EnvironmentDetailsContinuousQueryManager(
+        this.store,
         this.apiHelper,
-        new EnvironmentDetailsStateHelper(this.store),
         this.scheduler
       ),
-      new EnvironmentDetailsOneTimeQueryManager(
-        this.apiHelper,
-        new EnvironmentDetailsStateHelper(this.store)
-      ),
+      new EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
       new ServiceInstanceQueryManager(
         this.apiHelper,
         new ServiceInstanceStateHelper(this.store),

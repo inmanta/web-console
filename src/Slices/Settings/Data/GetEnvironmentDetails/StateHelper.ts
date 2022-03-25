@@ -7,7 +7,7 @@ type Data = RemoteData.Type<
   Query.Data<"GetEnvironmentDetails">
 >;
 
-export class EnvironmentDetailsStateHelper extends PrimaryStateHelper<"GetEnvironmentDetails"> {
+export class StateHelper extends PrimaryStateHelper<"GetEnvironmentDetails"> {
   constructor(store: Store) {
     super(
       store,

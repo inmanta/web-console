@@ -5,44 +5,31 @@ import userEvent from "@testing-library/user-event";
 import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
-  DeleteEnvironmentCommandManager,
   getStoreInstance,
-  GetProjectsQueryManager,
-  GetProjectsStateHelper,
   QueryResolverImpl,
-  EnvironmentsUpdater,
-  GetEnvironmentsStateHelper,
+  CommandManagerResolver,
+  QueryManagerResolver,
+  KeycloakAuthHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
-  DynamicQueryManagerResolver,
   Project,
+  StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI";
 import { DeleteModal } from "./DeleteModal";
 
 function setup() {
-  const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsStateHelper = new GetProjectsStateHelper(store);
+  const authHelper = new KeycloakAuthHelper();
+  const scheduler = new StaticScheduler();
+  const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new GetProjectsQueryManager(apiHelper, projectsStateHelper),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
-
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new DeleteEnvironmentCommandManager(
-        apiHelper,
-        new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(store),
-          apiHelper
-        )
-      ),
-    ])
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
 
   const onClose = jest.fn();

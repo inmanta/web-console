@@ -15,11 +15,8 @@ import {
   CallbacksStateHelper,
   CallbacksUpdater,
   CreateCallbackCommandManager,
-  EnvironmentDetailsUpdater,
-  EnvironmentDetailsStateHelper,
   DeleteEnvironmentCommandManager,
   ProjectsUpdater,
-  GetProjectsStateHelper,
   ModifyEnvironmentCommandManager,
   CreateProjectCommandManager,
   CreateEnvironmentCommandManager,
@@ -41,6 +38,11 @@ import {
   TriggerDryRun,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
+import {
+  EnvironmentDetailsUpdater,
+  GetEnvironmentDetailsStateHelper,
+} from "@/Slices/Settings/Data/GetEnvironmentDetails";
+import { GetProjectsStateHelper } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentsUpdater } from "@S/Agents/Data";
 import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
 
@@ -60,7 +62,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   }
 
   private getManagers(): CommandManager[] {
-    const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
+    const environmentDetailsStateHelper = new GetEnvironmentDetailsStateHelper(
       this.store
     );
     const environmentSettingUpdater = new EnvironmentSettingUpdater(
@@ -79,7 +81,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       this.apiHelper
     );
     const environmentDetailsUpdater = new EnvironmentDetailsUpdater(
-      environmentDetailsStateHelper,
+      this.store,
       this.apiHelper
     );
 
@@ -133,10 +135,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new CreateCallbackCommandManager(this.apiHelper, callbacksUpdater),
       new ModifyEnvironmentCommandManager(
         this.apiHelper,
-        new EnvironmentDetailsUpdater(
-          new EnvironmentDetailsStateHelper(this.store),
-          this.apiHelper
-        ),
+        new EnvironmentDetailsUpdater(this.store, this.apiHelper),
         new EnvironmentsUpdater(
           new GetEnvironmentsStateHelper(this.store),
           this.apiHelper

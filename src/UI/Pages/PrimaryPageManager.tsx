@@ -8,6 +8,7 @@ import { ComplianceCheckPage } from "@S/ComplianceCheck/UI";
 import { FactsPage } from "@S/Facts/UI";
 import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
+import { SettingsPage } from "@S/Settings/UI";
 import { CreateEnvironmentPage } from "./CreateEnvironment";
 import { CreateInstancePage } from "./CreateInstance";
 import { DesiredStatePage } from "./DesiredState";
@@ -23,7 +24,6 @@ import { ResourceDetailsPage } from "./ResourceDetails";
 import { ServiceCatalogPage } from "./ServiceCatalog";
 import { ServiceInstanceHistoryPage } from "./ServiceInstanceHistory";
 import { ServiceInventoryPage } from "./ServiceInventory";
-import { SettingsPage } from "./Settings";
 import { StatusPage } from "./Status";
 
 export class PrimaryPageManager implements PageManager {

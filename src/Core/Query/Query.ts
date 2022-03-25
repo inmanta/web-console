@@ -8,6 +8,8 @@ import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
 import * as GetFacts from "@S/Facts/Core/Query";
 import * as GetNotifications from "@S/Notification/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
+import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
+import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
 import {
   GetCompilerStatus,
@@ -16,10 +18,6 @@ import {
 import { GetDesiredStateDiff } from "./GetDesiredStateDiff";
 import { GetDesiredStates, GetDesiredStatesManifest } from "./GetDesiredStates";
 import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
-import {
-  GetEnvironmentDetails,
-  GetEnvironmentDetailsManifest,
-} from "./GetEnvironmentDetails";
 import {
   GetEnvironmentSetting,
   GetEnvironmentSettingManifest,
@@ -44,7 +42,6 @@ import {
   GetInstanceResourcesManifest,
 } from "./GetInstanceResources";
 import { GetParameters } from "./GetParameters";
-import { GetProjects, GetProjectsManifest } from "./GetProjects";
 import {
   GetResourceDetails,
   GetResourceDetailsManifest,
@@ -84,12 +81,12 @@ export type Query =
   | GetInstanceLogs
   | GetInstanceConfig
   | GetDiagnostics
-  | GetProjects
+  | GetProjects.Query
   | GetResources.Query
   | GetResourceDetails
   | GetResourceHistory
   | GetResourceLogs
-  | GetEnvironmentDetails
+  | GetEnvironmentDetails.Query
   | GetCompileReports.Query
   | GetCompileDetails.Query
   | GetServerStatus
@@ -128,13 +125,13 @@ interface Manifest {
   GetInstanceLogs: GetInstanceLogsManifest;
   GetInstanceConfig: GetInstanceConfigManifest;
   GetDiagnostics: GetDiagnosticsManifest;
-  GetProjects: GetProjectsManifest;
+  GetProjects: GetProjects.Manifest;
   GetServerStatus: GetServerStatusManifest;
   GetResources: GetResources.Manifest;
   GetResourceDetails: GetResourceDetailsManifest;
   GetResourceHistory: GetResourceHistoryManifest;
   GetResourceLogs: GetResourceLogsManifest;
-  GetEnvironmentDetails: GetEnvironmentDetailsManifest;
+  GetEnvironmentDetails: GetEnvironmentDetails.Manifest;
   GetCompileReports: GetCompileReports.Manifest;
   GetCompileDetails: GetCompileDetails.Manifest;
   GetCallbacks: GetCallbacksManifest;

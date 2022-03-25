@@ -1,7 +1,7 @@
 import { identity } from "lodash-es";
 import { StateHelper, ApiHelper } from "@/Core";
-import { getUrl } from "@/Data/Managers/GetProjects/getUrl";
 import { QueryManager } from "@/Data/Managers/Helpers";
+import { getUrl } from "@S/Settings/Data/GetProjects/getUrl";
 
 export class GetEnvironmentsQueryManager extends QueryManager.OneTime<"GetEnvironments"> {
   constructor(

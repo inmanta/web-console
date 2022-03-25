@@ -1,15 +1,15 @@
 import { EnvironmentDetails } from "@/Core/Domain";
 
-export interface GetEnvironmentDetails {
+export interface Query {
   kind: "GetEnvironmentDetails";
   details: boolean;
   id: string;
 }
 
-export interface GetEnvironmentDetailsManifest {
+export interface Manifest {
   error: string;
   apiResponse: { data: EnvironmentDetails };
   data: EnvironmentDetails;
   usedData: EnvironmentDetails;
-  query: GetEnvironmentDetails;
+  query: Query;
 }

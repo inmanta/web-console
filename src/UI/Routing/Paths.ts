@@ -7,6 +7,7 @@ import { ComplianceCheck } from "@S/ComplianceCheck";
 import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
+import { Settings } from "@S/Settings";
 
 type Paths = Record<RouteKind, string>;
 
@@ -16,7 +17,7 @@ export const paths: Paths = {
    */
   Home: "/",
   CreateEnvironment: "/environment/create",
-  Settings: "/settings",
+  Settings: Settings.path,
   Status: "/status",
   NotificationCenter: Notification.path,
 

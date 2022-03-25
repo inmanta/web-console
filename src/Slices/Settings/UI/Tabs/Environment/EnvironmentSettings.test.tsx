@@ -6,20 +6,12 @@ import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
   getStoreInstance,
-  ModifyEnvironmentCommandManager,
-  CreateProjectCommandManager,
-  ProjectsUpdater,
-  GetProjectsStateHelper,
-  EnvironmentDetailsUpdater,
-  EnvironmentDetailsStateHelper,
-  DeleteEnvironmentCommandManager,
-  EnvironmentsUpdater,
-  GetEnvironmentsStateHelper,
+  KeycloakAuthHelper,
+  CommandManagerResolver,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
   Environment,
   MockEnvironmentHandler,
   Project,
@@ -29,34 +21,11 @@ import { EnvironmentSettings } from "./EnvironmentSettings";
 
 function setup() {
   const selectedEnvironment = Environment.filterable[0];
-  const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-
+  const authHelper = new KeycloakAuthHelper();
+  const store = getStoreInstance();
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new CreateProjectCommandManager(
-        apiHelper,
-        new ProjectsUpdater(new GetProjectsStateHelper(store), apiHelper)
-      ),
-      new ModifyEnvironmentCommandManager(
-        apiHelper,
-        new EnvironmentDetailsUpdater(
-          new EnvironmentDetailsStateHelper(store),
-          apiHelper
-        ),
-        new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(store),
-          apiHelper
-        )
-      ),
-      new DeleteEnvironmentCommandManager(
-        apiHelper,
-        new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(store),
-          apiHelper
-        )
-      ),
-    ])
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
 
   const component = (

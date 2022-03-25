@@ -1,13 +1,16 @@
-import { ApiHelper, Query, RemoteData, StateHelper, Updater } from "@/Core";
+import { ApiHelper, Query, RemoteData, Updater } from "@/Core";
+import { Store } from "@/Data";
+import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
 export class EnvironmentDetailsUpdater
   implements Updater<"GetEnvironmentDetails">
 {
-  constructor(
-    private readonly stateHelper: StateHelper<"GetEnvironmentDetails">,
-    private readonly apiHelper: ApiHelper
-  ) {}
+  stateHelper: StateHelper;
+
+  constructor(store: Store, private readonly apiHelper: ApiHelper) {
+    this.stateHelper = new StateHelper(store);
+  }
 
   async update(query: Query.SubQuery<"GetEnvironmentDetails">): Promise<void> {
     this.stateHelper.set(RemoteData.loading(), query);

@@ -1,14 +1,14 @@
 import { ProjectModel } from "@/Core/Domain";
 
-export interface GetProjects {
+export interface Query {
   kind: "GetProjects";
   environmentDetails: boolean;
 }
 
-export interface GetProjectsManifest {
+export interface Manifest {
   error: string;
   apiResponse: { data: ProjectModel[] };
   data: ProjectModel[];
   usedData: ProjectModel[];
-  query: GetProjects;
+  query: Query;
 }

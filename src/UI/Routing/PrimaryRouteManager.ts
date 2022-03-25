@@ -21,6 +21,7 @@ import { ComplianceCheck } from "@S/ComplianceCheck";
 import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
+import { Settings } from "@S/Settings";
 import { paths } from "./Paths";
 import { encodeParams } from "./Utils";
 
@@ -34,7 +35,7 @@ export class PrimaryRouteManager implements RouteManager {
        */
       Home: Home(this.baseUrl),
       CreateEnvironment: CreateEnvironment(this.baseUrl),
-      Settings: Settings(this.baseUrl),
+      Settings: Settings.route(this.baseUrl),
       Status: Status(this.baseUrl),
       NotificationCenter: Notification.route(this.baseUrl),
 
@@ -291,14 +292,6 @@ const CreateEnvironment = (base: string): Route<"CreateEnvironment"> => ({
   path: `${base}${paths.CreateEnvironment}`,
   generateLabel: () => "Create Environment",
   environmentRole: "Forbidden",
-});
-
-const Settings = (base: string): Route<"Settings"> => ({
-  kind: "Settings",
-  parent: "Home",
-  path: `${base}${paths.Settings}`,
-  generateLabel: () => "Settings",
-  environmentRole: "Required",
 });
 
 const Status = (base: string): Route<"Status"> => ({
