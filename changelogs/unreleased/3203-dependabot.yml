@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump mochawesome from 7.1.2 to 7.1.3'
+destination-branches:
+- master
+- iso5
+sections: {}
