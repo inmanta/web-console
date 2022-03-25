@@ -1,6 +1,6 @@
 import { Scheduler, ApiHelper, stringifyObjectOrUndefined } from "@/Core";
-import { Store } from "@/Data";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
+import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 

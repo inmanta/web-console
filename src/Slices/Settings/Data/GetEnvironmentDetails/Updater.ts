@@ -1,5 +1,5 @@
 import { ApiHelper, Query, RemoteData, Updater } from "@/Core";
-import { Store } from "@/Data";
+import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 

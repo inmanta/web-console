@@ -43,7 +43,7 @@ import {
   GetEnvironmentDetailsStateHelper,
 } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import { GetProjectsStateHelper } from "@/Slices/Settings/Data/GetProjects";
-import { GetAgentsUpdater } from "@S/Agents/Data";
+import { GetAgentsUpdater } from "@S/Agents/Data/Updater";
 import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
