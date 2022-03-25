@@ -1,15 +1,11 @@
-import {
-  ApiHelper,
-  Query,
-  RemoteData,
-  StateHelperWithEnv,
-  UpdaterWithEnv,
-} from "@/Core";
+import { ApiHelper, Query, RemoteData, UpdaterWithEnv } from "@/Core";
+import { Store } from "@/Data";
+import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
 export class GetAgentsUpdater implements UpdaterWithEnv<"GetAgents"> {
   constructor(
-    private readonly stateHelper: StateHelperWithEnv<"GetAgents">,
+    private readonly store: Store,
     private readonly apiHelper: ApiHelper
   ) {}
 
@@ -17,7 +13,7 @@ export class GetAgentsUpdater implements UpdaterWithEnv<"GetAgents"> {
     query: Query.SubQuery<"GetAgents">,
     environment: string
   ): Promise<void> {
-    this.stateHelper.set(
+    new StateHelper(this.store).set(
       RemoteData.fromEither(
         await this.apiHelper.get(getUrl(query), environment)
       ),

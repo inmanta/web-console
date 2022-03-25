@@ -41,8 +41,8 @@ import {
   TriggerDryRun,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import * as Agents from "@S/Agents/Data";
-import * as UpdateNotification from "@S/Notification/Data/CommandManager";
+import { GetAgentsUpdater } from "@S/Agents/Data";
+import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -158,14 +158,11 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new PromoteVersionCommandManager(this.apiHelper, desiredStatesUpdater),
       new ControlAgentCommandManager(
         this.apiHelper,
-        new Agents.GetAgentsUpdater(
-          new Agents.GetAgentsStateHelper(this.store),
-          this.apiHelper
-        )
+        new GetAgentsUpdater(this.store, this.apiHelper)
       ),
       new TriggerCompileCommandManager(this.apiHelper),
       new TriggerDryRun.CommandManager(this.apiHelper),
-      new UpdateNotification.CommandManager(this.apiHelper, this.store),
+      new UpdateNotificationCommandManager(this.apiHelper, this.store),
     ];
   }
 }

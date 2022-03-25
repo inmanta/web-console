@@ -1,21 +1,14 @@
-import {
-  Scheduler,
-  ApiHelper,
-  stringifyObjectOrUndefined,
-  StateHelperWithEnv,
-} from "@/Core";
+import { Scheduler, ApiHelper, stringifyObjectOrUndefined } from "@/Core";
+import { Store } from "@/Data";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
+import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
 export class GetAgentsQueryManager extends QueryManager.ContinuousWithEnv<"GetAgents"> {
-  constructor(
-    apiHelper: ApiHelper,
-    stateHelper: StateHelperWithEnv<"GetAgents">,
-    scheduler: Scheduler
-  ) {
+  constructor(store: Store, apiHelper: ApiHelper, scheduler: Scheduler) {
     super(
       apiHelper,
-      stateHelper,
+      new StateHelper(store),
       scheduler,
       ({ kind }, environment) => `${kind}_${environment}`,
       ({ pageSize, sort, filter }, environment) => [

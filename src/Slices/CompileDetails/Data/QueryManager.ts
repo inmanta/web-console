@@ -1,16 +1,14 @@
 import { identity } from "lodash-es";
-import { StateHelper, Scheduler, ApiHelper } from "@/Core";
+import { Scheduler, ApiHelper } from "@/Core";
+import { Store } from "@/Data";
 import { QueryManager } from "@/Data/Managers/Helpers";
+import { StateHelper } from "./StateHelper";
 
 export class CompileDetailsQueryManager extends QueryManager.ContinuousWithEnv<"GetCompileDetails"> {
-  constructor(
-    apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetCompileDetails">,
-    scheduler: Scheduler
-  ) {
+  constructor(store: Store, apiHelper: ApiHelper, scheduler: Scheduler) {
     super(
       apiHelper,
-      stateHelper,
+      new StateHelper(store),
       scheduler,
       ({ id, kind }) => `${kind}_${id}`,
       ({ id }) => [id],
