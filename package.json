@@ -47,7 +47,7 @@
     "@storybook/addon-links": "^v6.4.19",
     "@storybook/react": "^v6.4.19",
     "@testing-library/dom": "^8.11.4",
-    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "@types/fetch-mock": "^7.3.5",
