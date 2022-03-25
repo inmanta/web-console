@@ -2,12 +2,12 @@ import React, { useContext } from "react";
 import { useLocation, NavLink } from "react-router-dom";
 import { Breadcrumb, BreadcrumbItem } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
-import { getCrumbs, SearchSanitizer } from "@/UI/Routing";
+import { SearchSanitizer } from "@/UI/Routing";
 
 export const PageBreadcrumbs: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);
   const { pathname, search } = useLocation();
-  const crumbs = getCrumbs(routeManager, pathname);
+  const crumbs = routeManager.getCrumbs(pathname);
   const sanitizer = new SearchSanitizer.Sanitizer(routeManager);
   return (
     <Breadcrumb>

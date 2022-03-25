@@ -1,4 +1,11 @@
 import { RouteKind } from "@/Core";
+import { AgentProcess } from "@S/AgentProcess";
+import { Agents } from "@S/Agents";
+import { CompileDetails } from "@S/CompileDetails";
+import { CompileReports } from "@S/CompileReports";
+import { ComplianceCheck } from "@S/ComplianceCheck";
+import { Notification } from "@S/Notification";
+import { Resource } from "@S/Resource";
 
 type Paths = Record<RouteKind, string>;
 
@@ -10,7 +17,7 @@ export const paths: Paths = {
   CreateEnvironment: "/environment/create",
   Settings: "/settings",
   Status: "/status",
-  NotificationCenter: "/notificationcenter",
+  NotificationCenter: Notification.path,
 
   /**
    * LSM
@@ -26,21 +33,21 @@ export const paths: Paths = {
   /**
    * Resource Manager
    */
-  Resources: "/resources",
-  Agents: "/agents",
+  Resources: Resource.path,
+  Agents: Agents.path,
   Facts: "/facts",
-  AgentProcess: "/agents/:id",
+  AgentProcess: AgentProcess.path,
   ResourceDetails: "/resources/:resourceId",
 
   /**
    * Orchestration Engine
    */
-  CompileReports: "/compilereports",
-  CompileDetails: "/compilereports/:id",
+  CompileReports: CompileReports.path,
+  CompileDetails: CompileDetails.path,
   DesiredState: "/desiredstate",
   DesiredStateDetails: "/desiredstate/:version",
   DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
   DesiredStateCompare: "/desiredstate/compare/:from/:to",
   Parameters: "/parameters",
-  ComplianceCheck: "/desiredstate/:version/compliancecheck",
+  ComplianceCheck: ComplianceCheck.path,
 };

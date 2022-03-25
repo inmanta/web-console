@@ -1,9 +1,8 @@
 /** These imports are special because of a limitation with eslint plugin https://github.com/import-js/eslint-plugin-import/issues/2289 */
 import { Diff } from "./Diff";
-import { DryRun } from "./DryRun";
 import { Pagination } from "./Pagination";
 import { Resource } from "./Resource";
-export { Pagination, Resource, Diff, DryRun };
+export { Pagination, Resource, Diff };
 
 export * from "./ActionTypes";
 export * from "./Callback";
@@ -29,18 +28,11 @@ export * from "./Route";
 export * from "./EnvironmentDetailsModel";
 export * from "./Uuid";
 export * as Sort from "./Sort";
-export * from "./CompileReport";
-export * as CompileReportParams from "./CompileReportParams";
-export * from "./CompileDetails";
 export * from "./CompileError";
 export * as DateRange from "./DateRange";
 export * from "./ServerStatus";
 export * from "./Token";
 export * from "./Fact";
-export * from "./Agent";
-export * from "./AgentStatus";
-export * as AgentParams from "./AgentParams";
-export * from "./AgentProcess";
 export * from "./DesiredState";
 export * as DesiredStateParams from "./DesiredStateParams";
 export * as RangeOperator from "./RangeOperator";

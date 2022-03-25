@@ -1,26 +1,35 @@
 import {
-  notificationSlice,
-  NotificationSlice,
-} from "@S/Notification/Data/Store";
-import { agentProcessSlice, AgentProcessSlice } from "./AgentProcessSlice";
-import { agentsSlice, AgentsSlice } from "./AgentsSlice";
-import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
+  agentProcessSlice,
+  AgentProcessSlice,
+} from "@S/AgentProcess/Data/Store";
+import { agentsSlice, AgentsSlice } from "@S/Agents/Data/Store";
 import {
   compileDetailsSlice,
   CompileDetailsSlice,
-} from "./CompileDetailsSlice";
+} from "@S/CompileDetails/Data/Store";
 import {
   compileReportsSlice,
   CompileReportsSlice,
-} from "./CompileReportsSlice";
+} from "@S/CompileReports/Data/Store";
+import {
+  dryRunReportSlice,
+  DryRunReportSlice,
+} from "@S/ComplianceCheck/Data/DryRunReportSlice";
+import {
+  dryRunsSlice,
+  DryRunsSlice,
+} from "@S/ComplianceCheck/Data/DryRunsSlice";
+import {
+  notificationSlice,
+  NotificationSlice,
+} from "@S/Notification/Data/Store";
+import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
 import {
   desiredStateDiffSlice,
   DesiredStateDiffSlice,
 } from "./DesiredStateDiffSlice";
 import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
-import { dryRunReportSlice, DryRunReportSlice } from "./DryRunReportSlice";
-import { dryRunsSlice, DryRunsSlice } from "./DryRunsSlice";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
 import { factsSlice, FactsSlice } from "./FactsSlice";

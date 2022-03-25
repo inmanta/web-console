@@ -23,8 +23,6 @@ import {
   ServiceConfigQueryManager,
   ServiceConfigStateHelper,
   ServiceConfigFinalizer,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
   ResourceDetailsQueryManager,
   ResourceDetailsStateHelper,
   ResourceHistoryStateHelper,
@@ -36,10 +34,6 @@ import {
   ServiceInstanceStateHelper,
   CallbacksQueryManager,
   CallbacksStateHelper,
-  CompileReportsQueryManager,
-  CompileReportsStateHelper,
-  CompileDetailsQueryManager,
-  CompileDetailsStateHelper,
   ResourceLogsQueryManager,
   ResourceLogsStateHelper,
   GetServerStatusOneTimeQueryManager,
@@ -51,10 +45,6 @@ import {
   GetEnvironmentsStateHelper,
   GetResourceFactsQueryManager,
   GetResourceFactsStateHelper,
-  GetAgentsQueryManager,
-  GetAgentsStateHelper,
-  GetAgentProcessQueryManager,
-  GetAgentProcessStateHelper,
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
@@ -66,12 +56,17 @@ import {
   GetFactsStateHelper,
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
-  GetDryRuns,
-  GetDryRunReport,
   GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import * as GetNotifications from "@/Slices/Notification/Data";
+import * as AgentProcess from "@S/AgentProcess/Data";
+import * as Agents from "@S/Agents/Data";
+import * as CompileDetails from "@S/CompileDetails/Data";
+import * as CompileReports from "@S/CompileReports/Data";
+import * as DryRunReport from "@S/ComplianceCheck/Data/GetDryRunReport";
+import * as DryRun from "@S/ComplianceCheck/Data/GetDryRuns";
+import * as Notification from "@S/Notification/Data";
+import * as Resource from "@S/Resource/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];
@@ -170,9 +165,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new DiagnosticsStateHelper(this.store),
         this.scheduler
       ),
-      new ResourcesQueryManager(
+      new Resource.GetResourcesQueryManager(
         this.apiHelper,
-        new ResourcesStateHelper(this.store),
+        new Resource.GetResourcesStateHelper(this.store),
         this.scheduler
       ),
       new ResourceDetailsQueryManager(
@@ -203,14 +198,14 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.apiHelper,
         new CallbacksStateHelper(this.store)
       ),
-      new CompileReportsQueryManager(
+      new CompileReports.CompileReportsQueryManager(
         this.apiHelper,
-        new CompileReportsStateHelper(this.store),
+        new CompileReports.CompileReportsStateHelper(this.store),
         this.scheduler
       ),
-      new CompileDetailsQueryManager(
+      new CompileDetails.CompileDetailsQueryManager(
         this.apiHelper,
-        new CompileDetailsStateHelper(this.store),
+        new CompileDetails.CompileDetailsStateHelper(this.store),
         this.scheduler
       ),
       new ResourceLogsQueryManager(
@@ -223,14 +218,14 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetResourceFactsStateHelper(this.store),
         this.scheduler
       ),
-      new GetAgentsQueryManager(
+      new Agents.GetAgentsQueryManager(
         this.apiHelper,
-        new GetAgentsStateHelper(this.store),
+        new Agents.GetAgentsStateHelper(this.store),
         this.scheduler
       ),
-      new GetAgentProcessQueryManager(
+      new AgentProcess.GetAgentProcessQueryManager(
         this.apiHelper,
-        new GetAgentProcessStateHelper(this.store)
+        new AgentProcess.GetAgentProcessStateHelper(this.store)
       ),
       new GetDesiredStatesQueryManager(
         this.apiHelper,
@@ -257,19 +252,19 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.apiHelper,
         new GetDesiredStateDiffStateHelper(this.store)
       ),
-      new GetDryRuns.QueryManager(this.apiHelper, this.store, this.scheduler),
-      new GetDryRunReport.QueryManager(this.apiHelper, this.store),
+      new DryRun.QueryManager(this.apiHelper, this.store, this.scheduler),
+      new DryRunReport.QueryManager(this.apiHelper, this.store),
       new GetVersionedResourceDetails.QueryManager(
         this.apiHelper,
         this.store,
         this.scheduler
       ),
-      new GetNotifications.ContinuousManager(
+      new Notification.ContinuousManager(
         this.apiHelper,
         this.store,
         this.scheduler
       ),
-      new GetNotifications.ReadOnlyManager(this.store),
+      new Notification.ReadOnlyManager(this.store),
     ];
   }
 }

@@ -12,13 +12,13 @@ import { words } from "@/UI";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { Model, Body } from "@S/Notification/Core/Model";
+import { Notification, Body } from "@S/Notification/Core/Domain";
 import { getSeverityForNotification } from "@S/Notification/UI/Utils";
 
 export type OnUpdate = (body: Body) => void;
 
 interface Props {
-  notification: Model;
+  notification: Notification;
   onUpdate: OnUpdate;
 }
 

@@ -1,16 +1,13 @@
 import { RemoteData } from "@/Core/Language";
-import * as GetNotifications from "@/Slices/Notification/Core/Query";
-import { GetAgentProcess, GetAgentProcessManifest } from "./GetAgentProcess";
-import { GetAgents, GetAgentsManifest } from "./GetAgents";
+import * as GetAgentProcess from "@S/AgentProcess/Core/Query";
+import * as GetAgents from "@S/Agents/Core/Query";
+import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
+import * as GetCompileReports from "@S/CompileReports/Core/Query";
+import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
+import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
+import * as GetNotifications from "@S/Notification/Core/Query";
+import * as GetResources from "@S/Resource/Core/Query";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
-import {
-  GetCompileDetails,
-  GetCompileDetailsManifest,
-} from "./GetCompileDetails";
-import {
-  GetCompileReports,
-  GetCompileReportsManifest,
-} from "./GetCompileReports";
 import {
   GetCompilerStatus,
   GetCompilerStatusManifest,
@@ -18,8 +15,6 @@ import {
 import { GetDesiredStateDiff } from "./GetDesiredStateDiff";
 import { GetDesiredStates, GetDesiredStatesManifest } from "./GetDesiredStates";
 import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
-import { GetDryRunReport } from "./GetDryRunReport";
-import { GetDryRuns } from "./GetDryRuns";
 import {
   GetEnvironmentDetails,
   GetEnvironmentDetailsManifest,
@@ -59,7 +54,6 @@ import {
   GetResourceHistoryManifest,
 } from "./GetResourceHistory";
 import { GetResourceLogs, GetResourceLogsManifest } from "./GetResourceLogs";
-import { GetResources, GetResourcesManifest } from "./GetResources";
 import { GetServerStatus, GetServerStatusManifest } from "./GetServerStatus";
 import { GetService, GetServiceManifest } from "./GetService";
 import { GetServiceConfig, GetServiceConfigManifest } from "./GetServiceConfig";
@@ -90,13 +84,13 @@ export type Query =
   | GetInstanceConfig
   | GetDiagnostics
   | GetProjects
-  | GetResources
+  | GetResources.Query
   | GetResourceDetails
   | GetResourceHistory
   | GetResourceLogs
   | GetEnvironmentDetails
-  | GetCompileReports
-  | GetCompileDetails
+  | GetCompileReports.Query
+  | GetCompileDetails.Query
   | GetServerStatus
   | GetCallbacks
   | GetEnvironmentSettings
@@ -104,8 +98,8 @@ export type Query =
   | GetEnvironments
   | GetFacts.Query
   | GetResourceFacts
-  | GetAgents
-  | GetAgentProcess
+  | GetAgents.Query
+  | GetAgentProcess.Query
   | GetDesiredStates
   | GetVersionResources
   | GetCompilerStatus
@@ -135,20 +129,20 @@ interface Manifest {
   GetDiagnostics: GetDiagnosticsManifest;
   GetProjects: GetProjectsManifest;
   GetServerStatus: GetServerStatusManifest;
-  GetResources: GetResourcesManifest;
+  GetResources: GetResources.Manifest;
   GetResourceDetails: GetResourceDetailsManifest;
   GetResourceHistory: GetResourceHistoryManifest;
   GetResourceLogs: GetResourceLogsManifest;
   GetEnvironmentDetails: GetEnvironmentDetailsManifest;
-  GetCompileReports: GetCompileReportsManifest;
-  GetCompileDetails: GetCompileDetailsManifest;
+  GetCompileReports: GetCompileReports.Manifest;
+  GetCompileDetails: GetCompileDetails.Manifest;
   GetCallbacks: GetCallbacksManifest;
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
   GetEnvironments: GetEnvironmentsManifest;
   GetResourceFacts: GetResourceFactsManifest;
-  GetAgents: GetAgentsManifest;
-  GetAgentProcess: GetAgentProcessManifest;
+  GetAgents: GetAgents.Manifest;
+  GetAgentProcess: GetAgentProcess.Manifest;
   GetDesiredStates: GetDesiredStatesManifest;
   GetVersionResources: GetVersionResourcesManifest;
   GetCompilerStatus: GetCompilerStatusManifest;

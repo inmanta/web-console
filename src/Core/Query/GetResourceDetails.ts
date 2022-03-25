@@ -1,8 +1,8 @@
 import { Resource } from "@/Core/Domain";
-import { WithId } from "@/Core/Language";
 
-export interface GetResourceDetails extends WithId {
+export interface GetResourceDetails {
   kind: "GetResourceDetails";
+  id: string;
 }
 
 export interface GetResourceDetailsManifest {

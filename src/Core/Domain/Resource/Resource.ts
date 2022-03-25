@@ -35,13 +35,6 @@ export enum Status {
   orphaned = "orphaned",
 }
 
-export interface Raw {
-  resource_id: string;
-  requires: string[];
-  status: string;
-  id_details: IdDetails;
-}
-
 export interface Row {
   type: string;
   agent: string;

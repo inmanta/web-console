@@ -1,6 +1,5 @@
-import { WithId } from "@/Core/Language";
-
-export interface ProjectModel extends WithId {
+export interface ProjectModel {
+  id: string;
   name: string;
   environments: EnvironmentModel[];
 }
@@ -9,7 +8,8 @@ export interface EnvironmentIdentifier {
   environment: string;
 }
 
-export interface EnvironmentModel extends WithId {
+export interface EnvironmentModel {
+  id: string;
   name: string;
   project_id: string;
   repo_branch: string;
@@ -18,7 +18,8 @@ export interface EnvironmentModel extends WithId {
   icon?: string;
 }
 
-export interface FlatEnvironment extends WithId {
+export interface FlatEnvironment {
+  id: string;
   name: string;
   project_id: string;
   repo_branch: string;
