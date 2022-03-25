@@ -2,7 +2,7 @@ import React from "react";
 import { ToolbarFilter } from "@patternfly/react-core";
 import { SingleTextSelect } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { severityList } from "@S/Notification/Core/Model";
+import { severityList } from "@S/Notification/Core/Domain";
 import { Filter } from "@S/Notification/Core/Query";
 
 interface Props {

@@ -1,7 +1,7 @@
 import React from "react";
-import { CompileDetails } from "@/Core";
 import { PageSectionWithTitle } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { CompileDetails } from "@S/CompileDetails/Core/Domain";
 import { CompileErrorsSection } from "./CompileErrorsSection";
 import { CompileStageReportTable } from "./CompileStageReportTable";
 import { StatusSection } from "./StatusSection";

@@ -2,7 +2,6 @@ import { TriggerDryRun } from "./TriggerDryRun";
 export { TriggerDryRun };
 
 export * from "./Callbacks";
-export * from "./CompileDetails";
 export * from "./CompileReports";
 export * from "./CreateEnvironment";
 export * from "./CreateInstance";

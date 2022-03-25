@@ -1,6 +1,9 @@
-import { CompileStageReport, CompileStageReportRow } from "@/Core";
 import { DatePresenter, TablePresenter } from "@/UI/Presenters";
 import { words } from "@/UI/words";
+import {
+  CompileStageReport,
+  CompileStageReportRow,
+} from "@S/CompileDetails/Core/Domain";
 
 export class CompileStageReportTablePresenter
   implements TablePresenter<CompileStageReport, CompileStageReportRow>

@@ -1,5 +1,5 @@
 import { Pagination, Sort, PageSize } from "@/Core/Domain";
-import { Agent, AgentStatus } from "./Model";
+import { Agent, AgentStatus } from "./Domain";
 
 export interface Query {
   kind: "GetAgents";

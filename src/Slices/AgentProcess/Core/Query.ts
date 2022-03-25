@@ -1,4 +1,4 @@
-import { AgentProcess } from "./Model";
+import { AgentProcess } from "./Domain";
 
 export interface Query {
   kind: "GetAgentProcess";

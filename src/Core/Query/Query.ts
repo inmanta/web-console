@@ -1,13 +1,10 @@
 import { RemoteData } from "@/Core/Language";
 import * as GetAgentProcess from "@S/AgentProcess/Core/Query";
 import * as GetAgents from "@S/Agents/Core/Query";
+import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
 import * as GetNotifications from "@S/Notification/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
-import {
-  GetCompileDetails,
-  GetCompileDetailsManifest,
-} from "./GetCompileDetails";
 import {
   GetCompileReports,
   GetCompileReportsManifest,
@@ -96,7 +93,7 @@ export type Query =
   | GetResourceLogs
   | GetEnvironmentDetails
   | GetCompileReports
-  | GetCompileDetails
+  | GetCompileDetails.Query
   | GetServerStatus
   | GetCallbacks
   | GetEnvironmentSettings
@@ -141,7 +138,7 @@ interface Manifest {
   GetResourceLogs: GetResourceLogsManifest;
   GetEnvironmentDetails: GetEnvironmentDetailsManifest;
   GetCompileReports: GetCompileReportsManifest;
-  GetCompileDetails: GetCompileDetailsManifest;
+  GetCompileDetails: GetCompileDetails.Manifest;
   GetCallbacks: GetCallbacksManifest;
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;

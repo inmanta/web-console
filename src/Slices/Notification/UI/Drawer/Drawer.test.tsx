@@ -13,10 +13,10 @@ import {
   QueryManagerResolver,
   QueryResolverImpl,
 } from "@/Data";
+import { Body } from "@/Slices/Notification/Core/Domain";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
-import { Body } from "@S/Notification/Core/Model";
 import { Badge } from "@S/Notification/UI/Badge";
 import { Drawer } from "./Drawer";
 

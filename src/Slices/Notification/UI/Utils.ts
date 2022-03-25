@@ -5,7 +5,7 @@ import {
   global_success_color_100,
   global_warning_color_100,
 } from "@patternfly/react-tokens";
-import { Severity } from "@S/Notification/Core/Model";
+import { Severity } from "@S/Notification/Core/Domain";
 
 export const getSeverityForNotification = (
   severity: Severity

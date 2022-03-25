@@ -1,4 +1,4 @@
-import { AgentProcess } from "./Model";
+import { AgentProcess } from "./Domain";
 
 export const data: AgentProcess = {
   sid: "b2c8937e-5359-11ec-9c3f-98e743b19755",

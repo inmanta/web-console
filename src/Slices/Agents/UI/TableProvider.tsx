@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Sort } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { Agent } from "@S/Agents/Core/Model";
+import { Agent } from "@S/Agents/Core/Domain";
 import { AgentsTable } from "./AgentsTable";
 import { AgentsTablePresenter } from "./AgentsTablePresenter";
 

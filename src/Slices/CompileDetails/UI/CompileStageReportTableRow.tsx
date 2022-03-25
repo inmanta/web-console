@@ -7,9 +7,9 @@ import {
 } from "@patternfly/react-core";
 import { Td, Tr, Tbody } from "@patternfly/react-table";
 import styled from "styled-components";
-import { CompileStageReportRow } from "@/Core";
 import { CodeHighlighter } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { CompileStageReportRow } from "@S/CompileDetails/Core/Domain";
 
 interface Props {
   row: CompileStageReportRow;

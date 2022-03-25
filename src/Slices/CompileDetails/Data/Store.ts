@@ -1,5 +1,6 @@
 import { Action, action } from "easy-peasy";
-import { CompileDetails, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
+import { CompileDetails } from "@S/CompileDetails/Core/Domain";
 
 /**
  * The Compile Details Slice stores the details of compiles, by compile id.

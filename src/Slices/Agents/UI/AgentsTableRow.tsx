@@ -4,7 +4,7 @@ import { Tbody, Td, Tr } from "@patternfly/react-table";
 import { DateWithTooltip, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { AgentRow } from "@S/Agents/Core/Model";
+import { AgentRow } from "@S/Agents/Core/Domain";
 import {
   ActionButton,
   StatusLabel,

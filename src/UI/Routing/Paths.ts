@@ -1,6 +1,7 @@
 import { RouteKind } from "@/Core";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
+import { CompileDetails } from "@S/CompileDetails";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
 
@@ -40,7 +41,7 @@ export const paths: Paths = {
    * Orchestration Engine
    */
   CompileReports: "/compilereports",
-  CompileDetails: "/compilereports/:id",
+  CompileDetails: CompileDetails.path,
   DesiredState: "/desiredstate",
   DesiredStateDetails: "/desiredstate/:version",
   DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",

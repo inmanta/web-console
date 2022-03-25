@@ -3,7 +3,7 @@ import { ToolbarGroup } from "@patternfly/react-core";
 import { FilterPicker } from "@/UI/Components";
 import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
-import { AgentStatus } from "@S/Agents/Core/Model";
+import { AgentStatus } from "@S/Agents/Core/Domain";
 import { Filter } from "@S/Agents/Core/Query";
 
 enum Kind {

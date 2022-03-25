@@ -1,4 +1,4 @@
-import { CompileDetails } from "@/Core";
+import { CompileDetails } from "./Domain";
 
 export const data: CompileDetails = {
   id: "4878c413-be74-49cb-9519-8c1d55897e73",

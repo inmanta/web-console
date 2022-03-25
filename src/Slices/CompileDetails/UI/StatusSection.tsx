@@ -14,9 +14,9 @@ import {
   ExclamationCircleIcon,
 } from "@patternfly/react-icons";
 import styled from "styled-components";
-import { CompileDetails } from "@/Core";
 import { Timeline } from "@/UI/Components/Timeline";
 import { words } from "@/UI/words";
+import { CompileDetails } from "@S/CompileDetails/Core/Domain";
 
 interface Props {
   compileDetails: Pick<

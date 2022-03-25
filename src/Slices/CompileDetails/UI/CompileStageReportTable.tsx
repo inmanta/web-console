@@ -6,9 +6,9 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { CompileStageReport } from "@/Core";
 import { useExpansion } from "@/Data";
 import { MomentDatePresenter } from "@/UI/Utils";
+import { CompileStageReport } from "@S/CompileDetails/Core/Domain";
 import { CompileStageReportTablePresenter } from "./CompileStageReportTablePresenter";
 import { CompileStageReportTableRow } from "./CompileStageReportTableRow";
 

@@ -4,14 +4,14 @@ import {
 } from "@S/AgentProcess/Data/Store";
 import { agentsSlice, AgentsSlice } from "@S/Agents/Data/Store";
 import {
+  compileDetailsSlice,
+  CompileDetailsSlice,
+} from "@S/CompileDetails/Data/Store";
+import {
   notificationSlice,
   NotificationSlice,
 } from "@S/Notification/Data/Store";
 import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
-import {
-  compileDetailsSlice,
-  CompileDetailsSlice,
-} from "./CompileDetailsSlice";
 import {
   compileReportsSlice,
   CompileReportsSlice,

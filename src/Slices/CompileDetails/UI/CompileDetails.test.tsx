@@ -4,34 +4,22 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
-  CompileDetailsQueryManager,
-  CompileDetailsStateHelper,
   getStoreInstance,
+  QueryManagerResolver,
   QueryResolverImpl,
 } from "@/Data";
-import {
-  CompileDetailsData,
-  DeferredApiHelper,
-  dependencies,
-  DynamicQueryManagerResolver,
-  StaticScheduler,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { UrlManagerImpl } from "@/UI/Utils";
+import * as Mock from "@S/CompileDetails/Core/Mock";
 import { CompileDetails } from "./CompileDetails";
 
 function setup() {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
+  const scheduler = new StaticScheduler();
+  const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new CompileDetailsQueryManager(
-        apiHelper,
-        new CompileDetailsStateHelper(store),
-        scheduler
-      ),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
   const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
 
@@ -73,7 +61,7 @@ test("CompileDetailsView shows success table", async () => {
     await screen.findByRole("generic", { name: "CompileDetailsView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right({ data: CompileDetailsData.data }));
+  apiHelper.resolve(Either.right({ data: Mock.data }));
 
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" })

@@ -7,7 +7,7 @@ import {
   PagePadder,
   PageTitle,
 } from "@/UI/Components";
-import { AgentProcess } from "@S/AgentProcess/Core/Model";
+import { AgentProcess } from "@S/AgentProcess/Core/Domain";
 
 interface Props {
   agentProcess: AgentProcess;

@@ -1,16 +1,16 @@
-import { CompileDetails } from "@/Core/Domain";
+import { CompileDetails } from "./Domain";
 
-export interface GetCompileDetails {
+export interface Query {
   kind: "GetCompileDetails";
   id: string;
 }
 
-export interface GetCompileDetailsManifest {
+export interface Manifest {
   error: string;
   apiResponse: {
     data: CompileDetails;
   };
   data: CompileDetails;
   usedData: CompileDetails;
-  query: GetCompileDetails;
+  query: Query;
 }

@@ -36,8 +36,6 @@ import {
   CallbacksStateHelper,
   CompileReportsQueryManager,
   CompileReportsStateHelper,
-  CompileDetailsQueryManager,
-  CompileDetailsStateHelper,
   ResourceLogsQueryManager,
   ResourceLogsStateHelper,
   GetServerStatusOneTimeQueryManager,
@@ -67,6 +65,7 @@ import {
 import { Store } from "@/Data/Store";
 import * as AgentProcess from "@S/AgentProcess/Data";
 import * as Agents from "@S/Agents/Data";
+import * as CompileDetails from "@S/CompileDetails/Data";
 import * as Notification from "@S/Notification/Data";
 import * as Resource from "@S/Resource/Data";
 
@@ -205,9 +204,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new CompileReportsStateHelper(this.store),
         this.scheduler
       ),
-      new CompileDetailsQueryManager(
+      new CompileDetails.CompileDetailsQueryManager(
         this.apiHelper,
-        new CompileDetailsStateHelper(this.store),
+        new CompileDetails.CompileDetailsStateHelper(this.store),
         this.scheduler
       ),
       new ResourceLogsQueryManager(

@@ -9,7 +9,7 @@ export const severityList: Severity[] = [
   "error",
 ];
 
-export interface Model extends Flags {
+export interface Notification extends Flags {
   environment: string;
   id: string;
   created: Timestamp;
