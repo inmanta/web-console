@@ -1,13 +1,14 @@
 import { Action, action } from "easy-peasy";
-import { DryRun, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
+import { Report } from "@S/ComplianceCheck/Core/Domain";
 
 export interface DryRunReportSlice {
-  byId: Record<string, RemoteData.RemoteData<string, DryRun.Report>>;
+  byId: Record<string, RemoteData.RemoteData<string, Report>>;
   set: Action<
     DryRunReportSlice,
     {
       reportId: string;
-      data: RemoteData.RemoteData<string, DryRun.Report>;
+      data: RemoteData.RemoteData<string, Report>;
     }
   >;
 }

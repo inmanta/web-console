@@ -12,6 +12,14 @@ import {
   CompileReportsSlice,
 } from "@S/CompileReports/Data/Store";
 import {
+  dryRunReportSlice,
+  DryRunReportSlice,
+} from "@S/ComplianceCheck/Data/DryRunReportSlice";
+import {
+  dryRunsSlice,
+  DryRunsSlice,
+} from "@S/ComplianceCheck/Data/DryRunsSlice";
+import {
   notificationSlice,
   NotificationSlice,
 } from "@S/Notification/Data/Store";
@@ -22,8 +30,6 @@ import {
 } from "./DesiredStateDiffSlice";
 import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
-import { dryRunReportSlice, DryRunReportSlice } from "./DryRunReportSlice";
-import { dryRunsSlice, DryRunsSlice } from "./DryRunsSlice";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import { EventsSlice, eventsSlice } from "./EventsSlice";
 import { factsSlice, FactsSlice } from "./FactsSlice";

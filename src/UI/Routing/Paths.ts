@@ -3,6 +3,7 @@ import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
+import { ComplianceCheck } from "@S/ComplianceCheck";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
 
@@ -48,5 +49,5 @@ export const paths: Paths = {
   DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
   DesiredStateCompare: "/desiredstate/compare/:from/:to",
   Parameters: "/parameters",
-  ComplianceCheck: "/desiredstate/:version/compliancecheck",
+  ComplianceCheck: ComplianceCheck.path,
 };

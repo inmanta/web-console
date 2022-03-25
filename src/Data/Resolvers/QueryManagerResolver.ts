@@ -56,8 +56,6 @@ import {
   GetFactsStateHelper,
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
-  GetDryRuns,
-  GetDryRunReport,
   GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
@@ -65,6 +63,8 @@ import * as AgentProcess from "@S/AgentProcess/Data";
 import * as Agents from "@S/Agents/Data";
 import * as CompileDetails from "@S/CompileDetails/Data";
 import * as CompileReports from "@S/CompileReports/Data";
+import * as DryRunReport from "@S/ComplianceCheck/Data/GetDryRunReport";
+import * as DryRun from "@S/ComplianceCheck/Data/GetDryRuns";
 import * as Notification from "@S/Notification/Data";
 import * as Resource from "@S/Resource/Data";
 
@@ -252,8 +252,8 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.apiHelper,
         new GetDesiredStateDiffStateHelper(this.store)
       ),
-      new GetDryRuns.QueryManager(this.apiHelper, this.store, this.scheduler),
-      new GetDryRunReport.QueryManager(this.apiHelper, this.store),
+      new DryRun.QueryManager(this.apiHelper, this.store, this.scheduler),
+      new DryRunReport.QueryManager(this.apiHelper, this.store),
       new GetVersionedResourceDetails.QueryManager(
         this.apiHelper,
         this.store,

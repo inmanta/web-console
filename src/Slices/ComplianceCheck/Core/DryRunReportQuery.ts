@@ -1,4 +1,4 @@
-import { DryRun } from "@/Core/Domain";
+import { Report } from "./Domain";
 
 export interface Query {
   kind: "GetDryRunReport";
@@ -9,9 +9,9 @@ export interface Query {
 export interface Manifest {
   error: string;
   apiResponse: {
-    data: DryRun.Report;
+    data: Report;
   };
-  data: DryRun.Report;
-  usedData: DryRun.Report;
+  data: Report;
+  usedData: Report;
   query: Query;
 }

@@ -1,17 +1,18 @@
 import { Action, action } from "easy-peasy";
-import { DryRun, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
+import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 
 export interface DryRunsSlice {
   listByEnvAndVersion: Record<
     string,
-    Record<string, RemoteData.Type<string, DryRun.Model[]>>
+    Record<string, RemoteData.Type<string, DryRun[]>>
   >;
   setList: Action<
     DryRunsSlice,
     {
       environment: string;
       version: number;
-      data: RemoteData.Type<string, DryRun.Model[]>;
+      data: RemoteData.Type<string, DryRun[]>;
     }
   >;
 }

@@ -11,14 +11,10 @@ import {
   QueryManagerResolver,
   QueryResolverImpl,
 } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  StaticScheduler,
-  DryRun,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
+import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { View } from "./Page";
 
 function setup() {
@@ -57,13 +53,13 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
     environment: "env",
   });
   await act(async () => {
-    await apiHelper.resolve(Either.right(DryRun.listResponse));
+    await apiHelper.resolve(Either.right(Mock.listResponse));
   });
 
   const select = screen.getByRole("button", { name: "ReportListSelect" });
   expect(select).toBeInTheDocument();
   expect(select).toHaveTextContent(
-    datePresenter.getFull(DryRun.listResponse.data[0].date)
+    datePresenter.getFull(Mock.listResponse.data[0].date)
   );
 
   userEvent.click(select);
@@ -75,11 +71,11 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/api/v2/dryrun/123/${DryRun.b.id}`,
+    url: `/api/v2/dryrun/123/${Mock.b.id}`,
     environment: "env",
   });
   await act(async () => {
-    await apiHelper.resolve(Either.right(DryRun.reportResponse));
+    await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
   const blocks = await screen.findAllByRole("article", { name: "DiffBlock" });
@@ -91,11 +87,11 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(DryRun.listResponse));
+    await apiHelper.resolve(Either.right(Mock.listResponse));
   });
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(DryRun.reportResponse));
+    await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
   const dryRunButton = screen.getByRole("button", { name: "Perform dry run" });
@@ -120,13 +116,13 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
 
   await act(async () => {
     await apiHelper.resolve(
-      Either.right({ data: [DryRun.a, ...DryRun.listOfReports] })
+      Either.right({ data: [Mock.a, ...Mock.listOfReports] })
     );
   });
 
   const select = screen.getByRole("button", { name: "ReportListSelect" });
   expect(select).toBeInTheDocument();
-  expect(select).toHaveTextContent(datePresenter.getFull(DryRun.a.date));
+  expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date));
 
   userEvent.click(select);
   const dropdown = screen.getByRole("listbox", { name: "ReportList" });
@@ -137,7 +133,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
-    url: `/api/v2/dryrun/123/${DryRun.a.id}`,
+    url: `/api/v2/dryrun/123/${Mock.a.id}`,
     environment: "env",
   });
 });
@@ -147,11 +143,11 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(DryRun.listResponse));
+    await apiHelper.resolve(Either.right(Mock.listResponse));
   });
 
   await act(async () => {
-    await apiHelper.resolve(Either.right(DryRun.reportResponse));
+    await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
   userEvent.click(screen.getByRole("button", { name: "Jump to" }));

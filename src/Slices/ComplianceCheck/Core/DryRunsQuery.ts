@@ -1,4 +1,4 @@
-import { DryRun } from "@/Core/Domain";
+import { DryRun } from "@S/ComplianceCheck/Core/Domain";
 
 export interface Query {
   kind: "GetDryRuns";
@@ -8,9 +8,9 @@ export interface Query {
 export interface Manifest {
   error: string;
   apiResponse: {
-    data: DryRun.Model[];
+    data: DryRun[];
   };
-  data: DryRun.Model[];
-  usedData: DryRun.Model[];
+  data: DryRun[];
+  usedData: DryRun[];
   query: Query;
 }

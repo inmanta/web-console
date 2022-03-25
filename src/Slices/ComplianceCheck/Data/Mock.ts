@@ -1,7 +1,7 @@
-import { DryRun } from "@/Core";
-import { resources } from "./DesiredStateDiff";
+import { resources } from "@/Test/Data/DesiredStateDiff";
+import { DryRun, Report } from "@S/ComplianceCheck/Core/Domain";
 
-export const a: DryRun.Model = {
+export const a: DryRun = {
   id: "3eab9e22-4166-4145-80a8-587ccee4a9fc",
   environment: "040687c1-9ad6-4ebc-b146-513760ee4517",
   model: 32,
@@ -9,7 +9,7 @@ export const a: DryRun.Model = {
   total: 23,
   todo: 23,
 };
-export const b: DryRun.Model = {
+export const b: DryRun = {
   id: "a35064a3-42c1-4723-b60c-7e5942cad753",
   environment: "040687c1-9ad6-4ebc-b146-513760ee4517",
   model: 32,
@@ -17,7 +17,7 @@ export const b: DryRun.Model = {
   total: 10,
   todo: 0,
 };
-export const c: DryRun.Model = {
+export const c: DryRun = {
   id: "0d88ed3a-e2ee-4590-a127-1d587f5824a3",
   environment: "040687c1-9ad6-4ebc-b146-513760ee4517",
   model: 32,
@@ -26,7 +26,7 @@ export const c: DryRun.Model = {
   todo: 0,
 };
 
-export const d: DryRun.Model = {
+export const d: DryRun = {
   id: "086b2488-326f-4c6a-a5f4-a5843cb19346",
   environment: "040687c1-9ad6-4ebc-b146-513760ee4517",
   model: 32,
@@ -37,11 +37,11 @@ export const d: DryRun.Model = {
 
 export const listOfReports = [b, c, d];
 
-export const listResponse: { data: DryRun.Model[] } = {
+export const listResponse: { data: DryRun[] } = {
   data: listOfReports,
 };
 
-export const reportResponse: { data: DryRun.Report } = {
+export const reportResponse: { data: Report } = {
   data: {
     summary: a,
     diff: resources,

@@ -1,9 +1,8 @@
 /** These imports are special because of a limitation with eslint plugin https://github.com/import-js/eslint-plugin-import/issues/2289 */
 import { Diff } from "./Diff";
-import { DryRun } from "./DryRun";
 import { Pagination } from "./Pagination";
 import { Resource } from "./Resource";
-export { Pagination, Resource, Diff, DryRun };
+export { Pagination, Resource, Diff };
 
 export * from "./ActionTypes";
 export * from "./Callback";

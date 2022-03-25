@@ -3,6 +3,8 @@ import * as GetAgentProcess from "@S/AgentProcess/Core/Query";
 import * as GetAgents from "@S/Agents/Core/Query";
 import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
 import * as GetCompileReports from "@S/CompileReports/Core/Query";
+import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
+import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
 import * as GetNotifications from "@S/Notification/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
@@ -13,8 +15,6 @@ import {
 import { GetDesiredStateDiff } from "./GetDesiredStateDiff";
 import { GetDesiredStates, GetDesiredStatesManifest } from "./GetDesiredStates";
 import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
-import { GetDryRunReport } from "./GetDryRunReport";
-import { GetDryRuns } from "./GetDryRuns";
 import {
   GetEnvironmentDetails,
   GetEnvironmentDetailsManifest,

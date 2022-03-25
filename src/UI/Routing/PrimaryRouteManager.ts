@@ -17,6 +17,7 @@ import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
+import { ComplianceCheck } from "@S/ComplianceCheck";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
 import { paths } from "./Paths";
@@ -66,7 +67,7 @@ export class PrimaryRouteManager implements RouteManager {
       DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
       DesiredStateCompare: DesiredStateCompare(this.baseUrl),
       Parameters: Parameters(this.baseUrl),
-      ComplianceCheck: ComplianceCheck(this.baseUrl),
+      ComplianceCheck: ComplianceCheck.route(this.baseUrl),
     };
   }
 
@@ -320,13 +321,5 @@ const Parameters = (base: string): Route<"Parameters"> => ({
   parent: "Home",
   path: `${base}${paths.Parameters}`,
   generateLabel: () => "Parameters",
-  environmentRole: "Required",
-});
-
-const ComplianceCheck = (base: string): Route<"ComplianceCheck"> => ({
-  kind: "ComplianceCheck",
-  parent: "DesiredState",
-  path: `${base}${paths.ComplianceCheck}`,
-  generateLabel: () => "Compliance Check",
   environmentRole: "Required",
 });

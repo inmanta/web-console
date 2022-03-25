@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Maybe, RemoteData } from "@/Core";
-import { DryRun } from "@/Test";
+import * as Mock from "@S/ComplianceCheck/Data/Mock";
 import { MaybeReport } from "../types";
 import { SelectReportAction } from "./SelectReportAction";
 
@@ -9,7 +9,7 @@ export default {
   component: SelectReportAction,
 };
 
-const list = [DryRun.a, ...DryRun.listOfReports];
+const list = [Mock.a, ...Mock.listOfReports];
 
 export const Default: React.FC = () => {
   const [selectedReport, setSelectedReport] = useState<MaybeReport>(

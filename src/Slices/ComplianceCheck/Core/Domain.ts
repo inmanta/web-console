@@ -1,7 +1,7 @@
 import { Diff } from "@/Core/Domain/Diff";
 import { ParsedNumber } from "@/Core/Language";
 
-export interface Model extends Progress {
+export interface DryRun extends Progress {
   id: string;
   environment: string;
   model: ParsedNumber;
@@ -9,7 +9,7 @@ export interface Model extends Progress {
 }
 
 export interface Report {
-  summary: Model;
+  summary: DryRun;
   diff: Diff.Resource[];
 }
 
