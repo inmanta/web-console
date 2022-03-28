@@ -22,6 +22,7 @@ import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
+import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { Settings } from "@S/Settings";
 import { paths } from "./Paths";
 import { encodeParams } from "./Utils";
@@ -47,7 +48,7 @@ export class PrimaryRouteManager implements RouteManager {
       Inventory: Inventory(this.baseUrl),
       CreateInstance: CreateInstance(this.baseUrl),
       EditInstance: EditInstance(this.baseUrl),
-      History: History(this.baseUrl),
+      History: ServiceInstanceHistory.route(this.baseUrl),
       Diagnose: Diagnose(this.baseUrl),
       Events: Events.route(this.baseUrl),
 
@@ -211,14 +212,6 @@ const EditInstance = (base: string): Route<"EditInstance"> => ({
   parent: "Inventory",
   path: `${base}${paths.EditInstance}`,
   generateLabel: () => "Edit Instance",
-  environmentRole: "Required",
-});
-
-const History = (base: string): Route<"History"> => ({
-  kind: "History",
-  parent: "Inventory",
-  path: `${base}${paths.History}`,
-  generateLabel: () => "Service Instance History",
   environmentRole: "Required",
 });
 

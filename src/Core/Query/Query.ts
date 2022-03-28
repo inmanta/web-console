@@ -9,6 +9,7 @@ import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
 import * as GetNotifications from "@S/Notification/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
+import * as GetInstanceLogs from "@S/ServiceInstanceHistory/Core/Query";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
 import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
@@ -33,7 +34,6 @@ import {
   GetInstanceConfig,
   GetInstanceConfigManifest,
 } from "./GetInstanceConfig";
-import { GetInstanceLogs, GetInstanceLogsManifest } from "./GetInstanceLogs";
 import {
   GetInstanceResources,
   GetInstanceResourcesManifest,
@@ -75,7 +75,7 @@ export type Query =
   | GetServiceConfig
   | GetInstanceResources
   | GetInstanceEvents.Query
-  | GetInstanceLogs
+  | GetInstanceLogs.Query
   | GetInstanceConfig
   | GetDiagnostics
   | GetProjects.Query
@@ -119,7 +119,7 @@ interface Manifest {
   GetServiceConfig: GetServiceConfigManifest;
   GetInstanceResources: GetInstanceResourcesManifest;
   GetInstanceEvents: GetInstanceEvents.Manifest;
-  GetInstanceLogs: GetInstanceLogsManifest;
+  GetInstanceLogs: GetInstanceLogs.Manifest;
   GetInstanceConfig: GetInstanceConfigManifest;
   GetDiagnostics: GetDiagnosticsManifest;
   GetProjects: GetProjects.Manifest;

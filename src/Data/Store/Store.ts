@@ -25,6 +25,10 @@ import {
   notificationSlice,
   NotificationSlice,
 } from "@S/Notification/Data/Store";
+import {
+  InstanceLogsSlice,
+  instanceLogsSlice,
+} from "@S/ServiceInstanceHistory/Data/Store";
 import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
 import {
   desiredStateDiffSlice,
@@ -37,7 +41,6 @@ import {
   InstanceConfigSlice,
   instanceConfigSlice,
 } from "./InstanceConfigSlice";
-import { InstanceLogsSlice, instanceLogsSlice } from "./InstanceLogsSlice";
 import {
   instanceResourcesSlice,
   InstanceResourcesSlice,

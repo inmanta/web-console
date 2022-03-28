@@ -8,6 +8,7 @@ import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
+import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { Settings } from "@S/Settings";
 
 type Paths = Record<RouteKind, string>;
@@ -29,7 +30,7 @@ export const paths: Paths = {
   Inventory: "/lsm/catalog/:service/inventory",
   CreateInstance: "/lsm/catalog/:service/inventory/add",
   EditInstance: "/lsm/catalog/:service/inventory/:instance/edit",
-  History: "/lsm/catalog/:service/inventory/:instance/history",
+  History: ServiceInstanceHistory.path,
   Diagnose: "/lsm/catalog/:service/inventory/:instance/diagnose",
   Events: Events.path,
 

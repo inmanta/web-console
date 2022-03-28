@@ -8,13 +8,13 @@ import {
   getStoreInstance,
 } from "@/Data";
 import {
-  InstanceLog,
   Service,
   StaticScheduler,
   DynamicQueryManagerResolver,
   Diagnose,
   InstantApiHelper,
   dependencies,
+  ServiceInstance,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
@@ -27,7 +27,7 @@ export default {
 const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   diagnostics,
 }) => {
-  const { service_instance_id } = InstanceLog.a;
+  const { id } = ServiceInstance.a;
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
@@ -47,8 +47,8 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
       <StoreProvider store={store}>
         <DiagnoseComponent
           serviceName={Service.a.name}
-          instanceId={service_instance_id}
-          instanceIdentity={service_instance_id}
+          instanceId={id}
+          instanceIdentity={id}
         />
       </StoreProvider>
     </DependencyProvider>

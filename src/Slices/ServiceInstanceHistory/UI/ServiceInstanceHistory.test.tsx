@@ -3,22 +3,21 @@ import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
-import {
-  QueryResolverImpl,
-  GetInstanceLogsQueryManager,
-  GetInstanceLogsStateHelper,
-  getStoreInstance,
-} from "@/Data";
+import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolver,
-  InstanceLog,
   Service,
   ServiceInstance,
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import {
+  GetInstanceLogsQueryManager,
+  GetInstanceLogsStateHelper,
+} from "@S/ServiceInstanceHistory/Data";
+import * as InstanceLog from "@S/ServiceInstanceHistory/Data/Mock";
 import { ServiceInstanceHistory } from "./ServiceInstanceHistory";
 
 function setup() {

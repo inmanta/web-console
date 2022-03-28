@@ -4,12 +4,12 @@ import { StoreProvider } from "easy-peasy";
 import { InstanceEvent } from "@/Core";
 import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
-  InstanceLog,
   Service,
   StaticScheduler,
   DynamicQueryManagerResolver,
   InstantApiHelper,
   dependencies,
+  ServiceInstance,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
@@ -23,7 +23,7 @@ export default {
 
 const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const scheduler = new StaticScheduler();
-  const { service_instance_id } = InstanceLog.a;
+  const { id } = ServiceInstance.a;
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
@@ -51,7 +51,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
     <MemoryRouter>
       <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
         <StoreProvider store={store}>
-          <Events service={Service.a} instanceId={service_instance_id} />
+          <Events service={Service.a} instanceId={id} />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>

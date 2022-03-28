@@ -9,6 +9,7 @@ import { EventsPage } from "@S/Events/UI";
 import { FactsPage } from "@S/Facts/UI";
 import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
+import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { CreateEnvironmentPage } from "./CreateEnvironment";
 import { CreateInstancePage } from "./CreateInstance";
@@ -22,7 +23,6 @@ import { HomePage } from "./Home";
 import { ParametersPage } from "./Parameters";
 import { ResourceDetailsPage } from "./ResourceDetails";
 import { ServiceCatalogPage } from "./ServiceCatalog";
-import { ServiceInstanceHistoryPage } from "./ServiceInstanceHistory";
 import { ServiceInventoryPage } from "./ServiceInventory";
 import { StatusPage } from "./Status";
 

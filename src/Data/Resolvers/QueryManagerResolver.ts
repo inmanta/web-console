@@ -9,8 +9,6 @@ import {
   InstanceResourcesQueryManager,
   ServicesQueryManager,
   ServicesStateHelper,
-  GetInstanceLogsQueryManager,
-  GetInstanceLogsStateHelper,
   InstanceConfigQueryManager,
   InstanceConfigStateHelper,
   InstanceConfigFinalizer,
@@ -70,6 +68,10 @@ import {
   NotificationReadOnlyQueryManager,
 } from "@S/Notification/Data";
 import { GetResourcesQueryManager } from "@S/Resource/Data";
+import {
+  GetInstanceLogsQueryManager,
+  GetInstanceLogsStateHelper,
+} from "@S/ServiceInstanceHistory/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];

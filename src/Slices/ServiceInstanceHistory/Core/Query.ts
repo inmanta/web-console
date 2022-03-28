@@ -3,14 +3,14 @@ import { InstanceLog, ServiceInstanceIdentifier } from "@/Core/Domain";
 /**
  * The instanceLogs query describes logs belonging to one specific service instance
  */
-export interface GetInstanceLogs extends ServiceInstanceIdentifier {
+export interface Query extends ServiceInstanceIdentifier {
   kind: "GetInstanceLogs";
 }
 
-export interface GetInstanceLogsManifest {
+export interface Manifest {
   error: string;
   apiResponse: { data: InstanceLog[] };
   data: InstanceLog[];
   usedData: InstanceLog[];
-  query: GetInstanceLogs;
+  query: Query;
 }
