@@ -1,3 +1,4 @@
+import { EventsSlice, eventsSlice } from "@/Slices/Events/Data/Store";
 import {
   agentProcessSlice,
   AgentProcessSlice,
@@ -32,7 +33,6 @@ import {
 import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
 import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
-import { EventsSlice, eventsSlice } from "./EventsSlice";
 import {
   InstanceConfigSlice,
   instanceConfigSlice,

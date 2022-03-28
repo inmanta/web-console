@@ -7,8 +7,6 @@ import {
   ServiceInstancesStateHelper,
   InstanceResourcesStateHelper,
   InstanceResourcesQueryManager,
-  EventsQueryManager,
-  EventsStateHelper,
   ServicesQueryManager,
   ServicesStateHelper,
   GetInstanceLogsQueryManager,
@@ -65,6 +63,7 @@ import {
   GetDryRunReportQueryManager,
   GetDryRunsQueryManager,
 } from "@S/ComplianceCheck/Data";
+import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { GetFactsQueryManager } from "@S/Facts/Data";
 import {
   NotificationContinuousQueryManager,

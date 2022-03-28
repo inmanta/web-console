@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
-import { EventParams, EventType, DateRange } from "@/Core";
+import { EventType, DateRange } from "@/Core";
 import { FilterPicker } from "@/UI/Components";
 import { SelectOptionFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import { Filter, FilterKind, FilterList } from "@S/Events/Core/Query";
 import { VersionFilter } from "./VersionFilter";
 
 interface Props {
-  filter: EventParams.Filter;
-  setFilter: (filter: EventParams.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
   states: string[];
 }
 
@@ -18,8 +19,8 @@ export const EventsFilterWidget: React.FC<Props> = ({
   setFilter,
   states,
 }) => {
-  const [filterKind, setFilterKind] = useState<EventParams.Kind>(
-    EventParams.Kind.EventType
+  const [filterKind, setFilterKind] = useState<FilterKind>(
+    FilterKind.EventType
   );
 
   const updateSource = (sources: string[]) =>
@@ -57,40 +58,40 @@ export const EventsFilterWidget: React.FC<Props> = ({
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}
-        items={EventParams.List}
+        items={FilterList}
       />
       <SelectOptionFilter
-        filterPropertyName={EventParams.Kind.EventType}
+        filterPropertyName={FilterKind.EventType}
         placeholder={words("events.filters.eventType.placeholder")}
-        isVisible={filterKind === EventParams.Kind.EventType}
+        isVisible={filterKind === FilterKind.EventType}
         possibleStates={eventTypes}
         selectedStates={filter.event_type ? filter.event_type : []}
         update={updateEventType}
       />
       <SelectOptionFilter
-        filterPropertyName={EventParams.Kind.Source}
+        filterPropertyName={FilterKind.Source}
         placeholder={words("events.filters.source.placeholder")}
-        isVisible={filterKind === EventParams.Kind.Source}
+        isVisible={filterKind === FilterKind.Source}
         possibleStates={states}
         selectedStates={filter.source ? filter.source : []}
         update={updateSource}
       />
       <SelectOptionFilter
-        filterPropertyName={EventParams.Kind.Destination}
+        filterPropertyName={FilterKind.Destination}
         placeholder={words("events.filters.destination.placeholder")}
-        isVisible={filterKind === EventParams.Kind.Destination}
+        isVisible={filterKind === FilterKind.Destination}
         possibleStates={states}
         selectedStates={filter.destination ? filter.destination : []}
         update={updateDestination}
       />
       <VersionFilter
-        isVisible={filterKind === EventParams.Kind.Version}
+        isVisible={filterKind === FilterKind.Version}
         versions={filter.version ? filter.version : []}
         update={updateVersion}
       />
       <TimestampFilter
         datePresenter={new MomentDatePresenter()}
-        isVisible={filterKind === EventParams.Kind.Date}
+        isVisible={filterKind === FilterKind.Date}
         timestampFilters={filter.timestamp ? filter.timestamp : []}
         update={updateTimestamp}
       />

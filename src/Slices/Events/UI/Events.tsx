@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { EventParams, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -15,6 +15,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Filter } from "@S/Events/Core/Query";
 import { EventsTableControls } from "./EventsTableControls";
 
 interface Props {
@@ -28,7 +29,7 @@ export const Events: React.FC<Props> = ({ service, instanceId }) => {
     default: { name: "timestamp", order: "desc" },
     route: "Events",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<EventParams.Filter>({
+  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "Events",
     keys: { timestamp: "DateRange" },
   });

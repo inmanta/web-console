@@ -10,7 +10,6 @@ export * from "./DeleteInstance";
 export * from "./DeleteService";
 export * from "./Diagnostics";
 export * from "./EnvironmentSettings";
-export * from "./Events";
 export * from "./GenerateToken";
 export * from "./GetSupportArchive";
 export * from "./GetInstance";

@@ -21,7 +21,6 @@ export * from "./ServiceModel";
 export * from "./LogLevel";
 export * as PageSize from "./PageSize";
 export * from "./Diagnostics";
-export * as EventParams from "./EventParams";
 export * from "./ResourceLog";
 export * from "./ResourceHistory";
 export * from "./Route";

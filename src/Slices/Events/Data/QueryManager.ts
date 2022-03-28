@@ -1,5 +1,6 @@
-import { StateHelper, Scheduler, EventParams, ApiHelper } from "@/Core";
+import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
+import { Filter } from "@S/Events/Core/Query";
 import { getUrl } from "./getUrl";
 
 export class EventsQueryManager extends QueryManager.ContinuousWithEnv<"GetInstanceEvents"> {
@@ -36,6 +37,6 @@ export class EventsQueryManager extends QueryManager.ContinuousWithEnv<"GetInsta
   }
 }
 
-function stringifyFilter(filter: EventParams.Filter | undefined): string {
+function stringifyFilter(filter: Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

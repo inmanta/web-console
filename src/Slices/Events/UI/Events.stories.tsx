@@ -2,22 +2,18 @@ import React from "react";
 import { MemoryRouter } from "react-router";
 import { StoreProvider } from "easy-peasy";
 import { InstanceEvent } from "@/Core";
-import {
-  QueryResolverImpl,
-  EventsQueryManager,
-  EventsStateHelper,
-  getStoreInstance,
-} from "@/Data";
+import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   InstanceLog,
   Service,
   StaticScheduler,
-  Event,
   DynamicQueryManagerResolver,
   InstantApiHelper,
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
+import * as Event from "@S/Events/Data/Mock";
 import { Events } from "./Events";
 
 export default {

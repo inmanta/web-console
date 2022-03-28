@@ -3,12 +3,7 @@ import { MemoryRouter } from "react-router";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either, InstanceEvent, Pagination } from "@/Core";
-import {
-  QueryResolverImpl,
-  EventsQueryManager,
-  EventsStateHelper,
-  getStoreInstance,
-} from "@/Data";
+import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
@@ -17,6 +12,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { Events } from "./Events";
 
 function setup() {

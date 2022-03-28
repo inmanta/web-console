@@ -1,11 +1,11 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { EventParams } from "@/Core";
+import { Filter } from "@S/Events/Core/Query";
 import { EventsFilterWidget } from "./FilterWidget";
 
 interface Props {
-  filter: EventParams.Filter;
-  setFilter: (filter: EventParams.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
   paginationWidget: React.ReactNode;
   states: string[];
 }
