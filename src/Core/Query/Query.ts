@@ -5,6 +5,7 @@ import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
 import * as GetCompileReports from "@S/CompileReports/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
+import * as GetDiagnostics from "@S/Diagnose/Core/Query";
 import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
 import * as GetNotifications from "@S/Notification/Core/Query";
@@ -19,7 +20,6 @@ import {
 } from "./GetCompilerStatus";
 import { GetDesiredStateDiff } from "./GetDesiredStateDiff";
 import { GetDesiredStates, GetDesiredStatesManifest } from "./GetDesiredStates";
-import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
 import {
   GetEnvironmentSetting,
   GetEnvironmentSettingManifest,
@@ -77,7 +77,7 @@ export type Query =
   | GetInstanceEvents.Query
   | GetInstanceLogs.Query
   | GetInstanceConfig
-  | GetDiagnostics
+  | GetDiagnostics.Query
   | GetProjects.Query
   | GetResources.Query
   | GetResourceDetails
@@ -121,7 +121,7 @@ interface Manifest {
   GetInstanceEvents: GetInstanceEvents.Manifest;
   GetInstanceLogs: GetInstanceLogs.Manifest;
   GetInstanceConfig: GetInstanceConfigManifest;
-  GetDiagnostics: GetDiagnosticsManifest;
+  GetDiagnostics: GetDiagnostics.Manifest;
   GetProjects: GetProjects.Manifest;
   GetServerStatus: GetServerStatusManifest;
   GetResources: GetResources.Manifest;

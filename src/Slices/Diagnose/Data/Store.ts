@@ -1,5 +1,6 @@
 import { Action, action } from "easy-peasy";
-import { Diagnostics, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
+import { Diagnostics } from "@S/Diagnose/Core/Domain";
 
 /**
  * The DiagnosticsSlice stores the Diagnostic status for service instances, by service instance id.

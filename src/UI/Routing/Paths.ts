@@ -4,6 +4,7 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { Diagnose } from "@S/Diagnose";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
@@ -31,7 +32,7 @@ export const paths: Paths = {
   CreateInstance: "/lsm/catalog/:service/inventory/add",
   EditInstance: "/lsm/catalog/:service/inventory/:instance/edit",
   History: ServiceInstanceHistory.path,
-  Diagnose: "/lsm/catalog/:service/inventory/:instance/diagnose",
+  Diagnose: Diagnose.path,
   Events: Events.path,
 
   /**

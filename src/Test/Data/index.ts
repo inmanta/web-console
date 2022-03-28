@@ -1,4 +1,3 @@
-export * as Diagnose from "./Diagnose";
 export * as Field from "./Field";
 export * as Row from "./Row";
 export * as Service from "./Service";

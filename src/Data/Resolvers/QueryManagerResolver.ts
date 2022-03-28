@@ -12,8 +12,6 @@ import {
   InstanceConfigQueryManager,
   InstanceConfigStateHelper,
   InstanceConfigFinalizer,
-  DiagnosticsStateHelper,
-  DiagnosticsQueryManager,
   ServiceConfigQueryManager,
   ServiceConfigStateHelper,
   ServiceConfigFinalizer,
@@ -61,6 +59,10 @@ import {
   GetDryRunReportQueryManager,
   GetDryRunsQueryManager,
 } from "@S/ComplianceCheck/Data";
+import {
+  DiagnosticsQueryManager,
+  DiagnosticsStateHelper,
+} from "@S/Diagnose/Data";
 import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { GetFactsQueryManager } from "@S/Facts/Data";
 import {

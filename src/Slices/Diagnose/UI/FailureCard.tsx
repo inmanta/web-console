@@ -10,58 +10,53 @@ import {
   KebabToggle,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Rejection } from "@/Core";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
+import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import { Failure } from "@S/Diagnose/Core/Domain";
 import { Pre } from "./Pre";
-import { Traceback } from "./Traceback";
 
 interface Props {
-  rejection: Rejection;
+  resourceId: string;
+  failure: Failure;
 }
 
-export const RejectionCard: React.FC<Props> = ({
-  rejection: { model_version, compile_id, trace, error },
-}) => {
+export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
   const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownItems: React.ReactNode[] = [
+  const dropdownItems = [
     <DropdownItem
-      key="compileReportLink"
+      key="resourceDetailsLink"
       component={
         <Link
-          pathname={routeManager.getUrl("CompileDetails", {
-            id: compile_id,
+          pathname={routeManager.getUrl("ResourceDetails", {
+            resourceId: getResourceIdFromResourceVersionId(resourceId),
           })}
         >
-          {words("diagnose.links.compileReport")}
+          {words("diagnose.links.resourceDetails")}
         </Link>
       }
     />,
-    ...(model_version
-      ? [
-          <DropdownItem
-            key="modelVersionLink"
-            component={
-              <Link
-                pathname={routeManager.getUrl("DesiredStateDetails", {
-                  version: model_version.toString(),
-                })}
-              >
-                {words("diagnose.links.modelVersionDetails")}
-              </Link>
-            }
-          />,
-        ]
-      : []),
+    <DropdownItem
+      key="modelVersionLink"
+      component={
+        <Link
+          pathname={routeManager.getUrl("DesiredStateDetails", {
+            version: failure.model_version.toString(),
+          })}
+        >
+          {words("diagnose.links.modelVersionDetails")}
+        </Link>
+      }
+    />,
   ];
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{words("diagnose.rejection.title")}</CardTitle>
+        <CardTitle>{words("diagnose.failure.title")}</CardTitle>
         <CardActions>
           <Dropdown
             onSelect={() => setIsOpen((value) => !value)}
@@ -75,15 +70,14 @@ export const RejectionCard: React.FC<Props> = ({
           />
         </CardActions>
       </CardHeader>
-      {error && <StyledCardTitle>{error.type}</StyledCardTitle>}
+      <StyledCardTitle>{resourceId}</StyledCardTitle>
       <CardBody>
-        {error && <Pre>{error.message}</Pre>}
-        {trace && <Traceback trace={trace} />}
+        <Pre>{failure.message}</Pre>
       </CardBody>
     </Card>
   );
 };
 
 const StyledCardTitle = styled(CardTitle)`
-  ${greyText}
+  ${greyText};
 `;

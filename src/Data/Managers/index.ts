@@ -8,7 +8,6 @@ export * from "./CreateProject";
 export * from "./DeleteEnvironment";
 export * from "./DeleteInstance";
 export * from "./DeleteService";
-export * from "./Diagnostics";
 export * from "./EnvironmentSettings";
 export * from "./GenerateToken";
 export * from "./GetSupportArchive";

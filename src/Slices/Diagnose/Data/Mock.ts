@@ -1,4 +1,4 @@
-import { RawDiagnostics } from "@/Core";
+import { RawDiagnostics } from "@S/Diagnose/Core/Domain";
 
 export const failure: RawDiagnostics = {
   failures: [

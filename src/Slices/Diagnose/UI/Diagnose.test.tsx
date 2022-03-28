@@ -3,21 +3,20 @@ import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
-import {
-  QueryResolverImpl,
-  DiagnosticsQueryManager,
-  DiagnosticsStateHelper,
-  getStoreInstance,
-} from "@/Data";
+import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   DynamicQueryManagerResolver,
   Service,
   StaticScheduler,
-  Diagnose,
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import {
+  DiagnosticsQueryManager,
+  DiagnosticsStateHelper,
+} from "@S/Diagnose/Data";
+import * as Diagnose from "@S/Diagnose/Data/Mock";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 
 function setup() {

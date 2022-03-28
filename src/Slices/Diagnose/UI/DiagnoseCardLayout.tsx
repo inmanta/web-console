@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { Diagnostics } from "@/Core";
+import { Diagnostics } from "@S/Diagnose/Core/Domain";
 import { FailureCard } from "./FailureCard";
 import { RejectionCard } from "./RejectionCard";
 

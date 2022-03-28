@@ -1,22 +1,21 @@
 import React from "react";
 import { StoreProvider } from "easy-peasy";
-import { RawDiagnostics } from "@/Core";
-import {
-  QueryResolverImpl,
-  DiagnosticsQueryManager,
-  DiagnosticsStateHelper,
-  getStoreInstance,
-} from "@/Data";
+import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   Service,
   StaticScheduler,
   DynamicQueryManagerResolver,
-  Diagnose,
   InstantApiHelper,
   dependencies,
   ServiceInstance,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { RawDiagnostics } from "@S/Diagnose/Core/Domain";
+import {
+  DiagnosticsQueryManager,
+  DiagnosticsStateHelper,
+} from "@S/Diagnose/Data";
+import * as Diagnose from "@S/Diagnose/Data/Mock";
 import { Diagnose as DiagnoseComponent } from "./Diagnose";
 
 export default {

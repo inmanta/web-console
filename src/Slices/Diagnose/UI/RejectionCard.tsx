@@ -10,53 +10,58 @@ import {
   KebabToggle,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { Failure } from "@/Core";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
-import { getResourceIdFromResourceVersionId } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import { Rejection } from "@S/Diagnose/Core/Domain";
 import { Pre } from "./Pre";
+import { Traceback } from "./Traceback";
 
 interface Props {
-  resourceId: string;
-  failure: Failure;
+  rejection: Rejection;
 }
 
-export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
+export const RejectionCard: React.FC<Props> = ({
+  rejection: { model_version, compile_id, trace, error },
+}) => {
   const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownItems = [
+  const dropdownItems: React.ReactNode[] = [
     <DropdownItem
-      key="resourceDetailsLink"
+      key="compileReportLink"
       component={
         <Link
-          pathname={routeManager.getUrl("ResourceDetails", {
-            resourceId: getResourceIdFromResourceVersionId(resourceId),
+          pathname={routeManager.getUrl("CompileDetails", {
+            id: compile_id,
           })}
         >
-          {words("diagnose.links.resourceDetails")}
+          {words("diagnose.links.compileReport")}
         </Link>
       }
     />,
-    <DropdownItem
-      key="modelVersionLink"
-      component={
-        <Link
-          pathname={routeManager.getUrl("DesiredStateDetails", {
-            version: failure.model_version.toString(),
-          })}
-        >
-          {words("diagnose.links.modelVersionDetails")}
-        </Link>
-      }
-    />,
+    ...(model_version
+      ? [
+          <DropdownItem
+            key="modelVersionLink"
+            component={
+              <Link
+                pathname={routeManager.getUrl("DesiredStateDetails", {
+                  version: model_version.toString(),
+                })}
+              >
+                {words("diagnose.links.modelVersionDetails")}
+              </Link>
+            }
+          />,
+        ]
+      : []),
   ];
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{words("diagnose.failure.title")}</CardTitle>
+        <CardTitle>{words("diagnose.rejection.title")}</CardTitle>
         <CardActions>
           <Dropdown
             onSelect={() => setIsOpen((value) => !value)}
@@ -70,14 +75,15 @@ export const FailureCard: React.FC<Props> = ({ resourceId, failure }) => {
           />
         </CardActions>
       </CardHeader>
-      <StyledCardTitle>{resourceId}</StyledCardTitle>
+      {error && <StyledCardTitle>{error.type}</StyledCardTitle>}
       <CardBody>
-        <Pre>{failure.message}</Pre>
+        {error && <Pre>{error.message}</Pre>}
+        {trace && <Traceback trace={trace} />}
       </CardBody>
     </Card>
   );
 };
 
 const StyledCardTitle = styled(CardTitle)`
-  ${greyText};
+  ${greyText}
 `;
