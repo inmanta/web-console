@@ -1,17 +1,15 @@
-import { Scheduler, ApiHelper, StateHelperWithEnv } from "@/Core";
+import { Scheduler, ApiHelper } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
+import { Store } from "@/Data/Store";
 import { Filter } from "@S/CompileReports/Core/Query";
+import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
 export class CompileReportsQueryManager extends QueryManager.ContinuousWithEnv<"GetCompileReports"> {
-  constructor(
-    apiHelper: ApiHelper,
-    stateHelper: StateHelperWithEnv<"GetCompileReports">,
-    scheduler: Scheduler
-  ) {
+  constructor(store: Store, apiHelper: ApiHelper, scheduler: Scheduler) {
     super(
       apiHelper,
-      stateHelper,
+      new StateHelper(store),
       scheduler,
       ({ kind }, environment) => `${kind}_${environment}`,
       ({ pageSize, sort, filter }, environment) => [

@@ -4,7 +4,7 @@ import { Store } from "@/Data/Store";
 import { drawerQuery } from "@S/Notification/Core/Query";
 import { Updater } from "./Updater";
 
-export class CommandManager extends CommandManagerWithEnv<"UpdateNotification"> {
+export class UpdateNotificationCommandManager extends CommandManagerWithEnv<"UpdateNotification"> {
   constructor(
     private readonly apiHelper: ApiHelper,
     private readonly store: Store

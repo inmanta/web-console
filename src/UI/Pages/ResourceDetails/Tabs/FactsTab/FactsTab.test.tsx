@@ -13,11 +13,11 @@ import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolver,
-  Facts,
   Resource,
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { Mock } from "@S/Facts/Test";
 import { FactsTab } from "./FactsTab";
 import { sortFactRows } from "./FactsTable";
 
@@ -83,7 +83,7 @@ test("Given the FactsTab When the backend response is successful Then shows succ
     method: "GET",
   });
 
-  apiHelper.resolve(Either.right(Facts.response));
+  apiHelper.resolve(Either.right(Mock.response));
 
   expect(
     await screen.findByRole("grid", { name: "Facts-Success" })
@@ -91,39 +91,39 @@ test("Given the FactsTab When the backend response is successful Then shows succ
 });
 
 test("Given sortFactRows When sorting by different columns Then the result is correct", async () => {
-  const sortedByNameAsc = sortFactRows(Facts.response.data, "name", "asc");
+  const sortedByNameAsc = sortFactRows(Mock.response.data, "name", "asc");
   expect(sortedByNameAsc[0].name).toEqual("awsDevice");
   expect(sortedByNameAsc[sortedByNameAsc.length - 1].name).toEqual(
     "partnerName"
   );
-  const sortedByNameDesc = sortFactRows(Facts.response.data, "name", "desc");
+  const sortedByNameDesc = sortFactRows(Mock.response.data, "name", "desc");
   expect(sortedByNameDesc[0].name).toEqual("partnerName");
   expect(sortedByNameDesc[sortedByNameDesc.length - 1].name).toEqual(
     "awsDevice"
   );
 
-  const sortedByDateAsc = sortFactRows(Facts.response.data, "updated", "asc");
+  const sortedByDateAsc = sortFactRows(Mock.response.data, "updated", "asc");
   expect(sortedByDateAsc[0].name).toEqual("jumboFrameCapable");
   expect(sortedByDateAsc[sortedByDateAsc.length - 1].name).toEqual("location");
 
-  const sortedByDateDesc = sortFactRows(Facts.response.data, "updated", "desc");
+  const sortedByDateDesc = sortFactRows(Mock.response.data, "updated", "desc");
   expect(sortedByDateDesc[0].name).toEqual("location");
   expect(sortedByDateDesc[sortedByDateDesc.length - 1].name).toEqual(
     "jumboFrameCapable"
   );
 
-  const sortedByValueAsc = sortFactRows(Facts.response.data, "value", "asc");
+  const sortedByValueAsc = sortFactRows(Mock.response.data, "value", "asc");
   expect(sortedByValueAsc[0].value).toEqual("available");
   expect(sortedByValueAsc[sortedByValueAsc.length - 1].value).toEqual("no");
 
-  const sortedByValueDesc = sortFactRows(Facts.response.data, "value", "desc");
+  const sortedByValueDesc = sortFactRows(Mock.response.data, "value", "desc");
   expect(sortedByValueDesc[0].value).toEqual("no");
   expect(sortedByValueDesc[sortedByValueDesc.length - 1].value).toEqual(
     "available"
   );
 
   const factsWithUndefinedDate = [
-    ...Facts.response.data,
+    ...Mock.response.data,
     { name: "no_date", updated: undefined, value: "yes", id: "123" },
   ];
 

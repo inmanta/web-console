@@ -5,8 +5,10 @@ import { AgentsPage } from "@S/Agents/UI";
 import { CompileDetailsPage } from "@S/CompileDetails/UI";
 import { CompileReportsPage } from "@S/CompileReports/UI";
 import { ComplianceCheckPage } from "@S/ComplianceCheck/UI";
+import { FactsPage } from "@S/Facts/UI";
 import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
+import { SettingsPage } from "@S/Settings/UI";
 import { CreateEnvironmentPage } from "./CreateEnvironment";
 import { CreateInstancePage } from "./CreateInstance";
 import { DesiredStatePage } from "./DesiredState";
@@ -16,14 +18,12 @@ import { DesiredStateResourceDetailsPage } from "./DesiredStateResourceDetails";
 import { DiagnosePage } from "./Diagnose";
 import { EditInstancePage } from "./EditInstance";
 import { EventsPage } from "./Events";
-import { FactsPage } from "./Facts";
 import { HomePage } from "./Home";
 import { ParametersPage } from "./Parameters";
 import { ResourceDetailsPage } from "./ResourceDetails";
 import { ServiceCatalogPage } from "./ServiceCatalog";
 import { ServiceInstanceHistoryPage } from "./ServiceInstanceHistory";
 import { ServiceInventoryPage } from "./ServiceInventory";
-import { SettingsPage } from "./Settings";
 import { StatusPage } from "./Status";
 
 export class PrimaryPageManager implements PageManager {

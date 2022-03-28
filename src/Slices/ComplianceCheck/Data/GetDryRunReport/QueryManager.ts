@@ -5,7 +5,7 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class Manager extends QueryManager.OneTimeWithEnv<"GetDryRunReport"> {
+export class GetDryRunReportQueryManager extends QueryManager.OneTimeWithEnv<"GetDryRunReport"> {
   constructor(apiHelper: ApiHelper, store: Store) {
     super(
       apiHelper,

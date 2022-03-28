@@ -7,34 +7,31 @@ import { Either } from "@/Core";
 import {
   CommandResolverImpl,
   getStoreInstance,
-  GetProjectsQueryManager,
-  GetProjectsStateHelper,
   QueryResolverImpl,
   CommandManagerResolver,
   KeycloakAuthHelper,
+  QueryManagerResolver,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicQueryManagerResolver,
   Environment,
   Project,
+  StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
 
 function setup() {
-  const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const projectsStateHelper = new GetProjectsStateHelper(store);
+  const authHelper = new KeycloakAuthHelper();
+  const scheduler = new StaticScheduler();
+  const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new GetProjectsQueryManager(apiHelper, projectsStateHelper),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
-
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper())
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
 
   const component = (

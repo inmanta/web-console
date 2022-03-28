@@ -32,7 +32,6 @@ export * from "./CompileError";
 export * as DateRange from "./DateRange";
 export * from "./ServerStatus";
 export * from "./Token";
-export * from "./Fact";
 export * from "./DesiredState";
 export * as DesiredStateParams from "./DesiredStateParams";
 export * as RangeOperator from "./RangeOperator";

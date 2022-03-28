@@ -1,5 +1,5 @@
 import { ApiHelper, Query, RemoteData, StateHelper, Updater } from "@/Core";
-import { getUrl } from "@/Data/Managers/GetProjects/getUrl";
+import { getUrl } from "@S/Settings/Data/GetProjects/getUrl";
 
 export class EnvironmentsUpdater implements Updater<"GetEnvironments"> {
   constructor(

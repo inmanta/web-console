@@ -4,8 +4,10 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
 import { Resource } from "@S/Resource";
+import { Settings } from "@S/Settings";
 
 type Paths = Record<RouteKind, string>;
 
@@ -15,7 +17,7 @@ export const paths: Paths = {
    */
   Home: "/",
   CreateEnvironment: "/environment/create",
-  Settings: "/settings",
+  Settings: Settings.path,
   Status: "/status",
   NotificationCenter: Notification.path,
 
@@ -35,7 +37,7 @@ export const paths: Paths = {
    */
   Resources: Resource.path,
   Agents: Agents.path,
-  Facts: "/facts",
+  Facts: Facts.path,
   AgentProcess: AgentProcess.path,
   ResourceDetails: "/resources/:resourceId",
 

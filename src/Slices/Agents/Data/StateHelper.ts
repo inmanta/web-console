@@ -2,7 +2,7 @@ import { RemoteData } from "@/Core";
 import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export class GetAgentsStateHelper extends PrimaryStateHelperWithEnv<"GetAgents"> {
+export class StateHelper extends PrimaryStateHelperWithEnv<"GetAgents"> {
   constructor(store: Store) {
     super(
       store,

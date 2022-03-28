@@ -1,15 +1,14 @@
 import { identity } from "lodash-es";
-import { StateHelper, ApiHelper } from "@/Core";
+import { ApiHelper } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
+import { Store } from "@/Data/Store";
+import { StateHelper } from "./StateHelper";
 
 export class GetAgentProcessQueryManager extends QueryManager.OneTimeWithEnv<"GetAgentProcess"> {
-  constructor(
-    apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetAgentProcess">
-  ) {
+  constructor(store: Store, apiHelper: ApiHelper) {
     super(
       apiHelper,
-      stateHelper,
+      new StateHelper(store),
       ({ id }) => [id],
       "GetAgentProcess",
       ({ id }) => `/api/v2/agents/process/${id}?report=True`,
