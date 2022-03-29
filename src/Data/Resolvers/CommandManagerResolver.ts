@@ -1,6 +1,5 @@
 import { ApiHelper, AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
-  CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
   InstanceConfigCommandManager,
   InstanceConfigStateHelper,
@@ -43,6 +42,7 @@ import {
 } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import { GetProjectsStateHelper } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentsUpdater } from "@S/Agents/Data/Updater";
+import { CreateInstanceCommandManager } from "@S/CreateInstance/Data";
 import { GetDesiredStatesStateHelper } from "@S/DesiredState/Data";
 import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
 

@@ -3,7 +3,6 @@ export { TriggerDryRun };
 
 export * from "./Callbacks";
 export * from "./CreateEnvironment";
-export * from "./CreateInstance";
 export * from "./CreateProject";
 export * from "./DeleteEnvironment";
 export * from "./DeleteInstance";

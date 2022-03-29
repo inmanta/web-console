@@ -1,3 +1,4 @@
+import * as CreateInstance from "@S/CreateInstance/Core/Command";
 import * as UpdateNotification from "@S/Notification/Core/Command";
 import { ControlAgent, ControlAgentManifest } from "./ControlAgent";
 import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
@@ -5,7 +6,6 @@ import {
   CreateEnvironment,
   CreateEnvironmentManifest,
 } from "./CreateEnvironment";
-import { CreateInstance, CreateInstanceManifest } from "./CreateInstance";
 import { CreateProject, CreateProjectManifest } from "./CreateProject";
 import { DeleteCallback, DeleteCallbackManifest } from "./DeleteCallback";
 import {
@@ -58,7 +58,7 @@ import {
 export type Command =
   | UpdateServiceConfig
   | UpdateInstanceConfig
-  | CreateInstance
+  | CreateInstance.Command
   | TriggerInstanceUpdate
   | DeleteInstance
   | TriggerSetState
@@ -92,7 +92,7 @@ export type Type = Command;
 interface Manifest {
   UpdateServiceConfig: UpdateServiceConfigManifest;
   UpdateInstanceConfig: UpdateInstanceConfigManifest;
-  CreateInstance: CreateInstanceManifest;
+  CreateInstance: CreateInstance.Manifest;
   TriggerInstanceUpdate: TriggerInstanceUpdateManifest;
   DeleteInstance: DeleteInstanceManifest;
   TriggerSetState: TriggerSetStateManifest;

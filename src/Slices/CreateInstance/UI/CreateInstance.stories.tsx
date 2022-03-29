@@ -1,11 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
-import {
-  CommandResolverImpl,
-  CreateInstanceCommandManager,
-  getStoreInstance,
-} from "@/Data";
+import { CommandResolverImpl, getStoreInstance } from "@/Data";
 import {
   dependencies,
   DynamicCommandManagerResolver,
@@ -13,6 +9,7 @@ import {
   Service,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { CreateInstanceCommandManager } from "@S/CreateInstance/Data";
 import { CreateInstance } from "./CreateInstance";
 
 export default {

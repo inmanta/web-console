@@ -5,16 +5,16 @@ import {
 } from "@/Core/Domain";
 import { Either } from "@/Core/Language";
 
-export interface CreateInstance {
+export interface Command {
   kind: "CreateInstance";
   service_entity: string;
 }
 
-export interface CreateInstanceManifest {
+export interface Manifest {
   error: string;
   apiData: { data: ServiceInstanceModel };
   body: { attributes: InstanceAttributeModel };
-  command: CreateInstance;
+  command: Command;
   trigger: (
     fields: Field[],
     formState: InstanceAttributeModel

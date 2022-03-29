@@ -4,6 +4,7 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { CreateInstance } from "@S/CreateInstance";
 import { DesiredState } from "@S/DesiredState";
 import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { DesiredStateDetails } from "@S/DesiredStateDetails";
@@ -35,7 +36,7 @@ export const paths: Paths = {
    */
   Catalog: "/lsm/catalog",
   Inventory: "/lsm/catalog/:service/inventory",
-  CreateInstance: "/lsm/catalog/:service/inventory/add",
+  CreateInstance: CreateInstance.path,
   EditInstance: "/lsm/catalog/:service/inventory/:instance/edit",
   History: ServiceInstanceHistory.path,
   Diagnose: Diagnose.path,

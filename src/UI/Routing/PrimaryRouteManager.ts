@@ -19,6 +19,7 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { CreateInstance } from "@S/CreateInstance";
 import { DesiredState } from "@S/DesiredState";
 import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { DesiredStateDetails } from "@S/DesiredStateDetails";
@@ -53,7 +54,7 @@ export class PrimaryRouteManager implements RouteManager {
        */
       Catalog: Catalog(this.baseUrl),
       Inventory: Inventory(this.baseUrl),
-      CreateInstance: CreateInstance(this.baseUrl),
+      CreateInstance: CreateInstance.route(this.baseUrl),
       EditInstance: EditInstance(this.baseUrl),
       History: ServiceInstanceHistory.route(this.baseUrl),
       Diagnose: Diagnose.route(this.baseUrl),
@@ -205,14 +206,6 @@ const Inventory = (base: string): Route<"Inventory"> => ({
   parent: "Catalog",
   path: `${base}${paths.Inventory}`,
   generateLabel: (params) => `Service Inventory: ${params.service}`,
-  environmentRole: "Required",
-});
-
-const CreateInstance = (base: string): Route<"CreateInstance"> => ({
-  kind: "CreateInstance",
-  parent: "Inventory",
-  path: `${base}${paths.CreateInstance}`,
-  generateLabel: () => "Create Instance",
   environmentRole: "Required",
 });
 
