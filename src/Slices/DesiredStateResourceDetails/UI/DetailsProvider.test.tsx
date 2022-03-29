@@ -9,13 +9,9 @@ import {
   QueryManagerResolver,
   QueryResolverImpl,
 } from "@/Data";
-import {
-  DeferredApiHelper,
-  dependencies,
-  StaticScheduler,
-  VersionedResourceDetails,
-} from "@/Test";
+import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import * as VersionedResourceDetails from "@S/DesiredStateResourceDetails/Data/Mock";
 import { DetailsProvider } from "./DetailsProvider";
 
 function setup() {

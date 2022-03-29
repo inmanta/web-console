@@ -8,6 +8,7 @@ import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
 import * as GetDesiredStates from "@S/DesiredState/Core/Query";
 import * as GetDesiredStateDiff from "@S/DesiredStateCompare/Core/Query";
 import * as GetVersionResources from "@S/DesiredStateDetails/Core/Query";
+import * as GetVersionedResourceDetails from "@S/DesiredStateResourceDetails/Core/Query";
 import * as GetDiagnostics from "@S/Diagnose/Core/Query";
 import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
@@ -56,7 +57,6 @@ import {
   GetServiceInstancesManifest,
 } from "./GetServiceInstances";
 import { GetServices, GetServicesManifest } from "./GetServices";
-import { GetVersionedResourceDetails } from "./GetVersionedResourceDetails";
 
 export type Query =
   | GetServices

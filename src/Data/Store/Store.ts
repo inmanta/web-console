@@ -32,6 +32,10 @@ import {
   versionResourcesSlice,
   VersionResourcesSlice,
 } from "@S/DesiredStateDetails/Data/Store";
+import {
+  versionedResourceDetailsSlice,
+  VersionedResourceDetailsSlice,
+} from "@S/DesiredStateResourceDetails/Data/Store";
 import { diagnosticsSlice, DiagnosticsSlice } from "@S/Diagnose/Data/Store";
 import { factsSlice, FactsSlice } from "@S/Facts/Data/Store";
 import {
@@ -82,10 +86,6 @@ import {
   ServiceInstancesSlice,
 } from "./ServiceInstancesSlice";
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
-import {
-  versionedResourceDetailsSlice,
-  VersionedResourceDetailsSlice,
-} from "./VersionedResourceDetailsSlice";
 
 export interface StoreModel {
   environment: EnvironmentSlice;

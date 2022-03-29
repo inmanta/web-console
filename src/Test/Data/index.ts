@@ -13,4 +13,3 @@ export * as EnvironmentSettings from "./EnvironmentSettings";
 export * as Environment from "./Environment";
 export * as ServiceInventory from "./ServiceInventory";
 export * as DesiredStateDiff from "./DesiredStateDiff";
-export * as VersionedResourceDetails from "./VersionedResourceDetails";

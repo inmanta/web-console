@@ -13,6 +13,7 @@ import {
   RouteMatch,
   Crumb,
 } from "@/Core";
+import { DesiredStateResourceDetails } from "@/Slices/DesiredStateResourceDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -74,7 +75,9 @@ export class PrimaryRouteManager implements RouteManager {
       CompileDetails: CompileDetails.route(this.baseUrl),
       DesiredState: DesiredState.route(this.baseUrl),
       DesiredStateDetails: DesiredStateDetails.route(this.baseUrl),
-      DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
+      DesiredStateResourceDetails: DesiredStateResourceDetails.route(
+        this.baseUrl
+      ),
       DesiredStateCompare: DesiredStateCompare.route(this.baseUrl),
       Parameters: Parameters.route(this.baseUrl),
       ComplianceCheck: ComplianceCheck.route(this.baseUrl),
@@ -218,16 +221,6 @@ const EditInstance = (base: string): Route<"EditInstance"> => ({
   parent: "Inventory",
   path: `${base}${paths.EditInstance}`,
   generateLabel: () => "Edit Instance",
-  environmentRole: "Required",
-});
-
-const DesiredStateResourceDetails = (
-  base: string
-): Route<"DesiredStateResourceDetails"> => ({
-  kind: "DesiredStateResourceDetails",
-  parent: "DesiredStateDetails",
-  path: `${base}${paths.DesiredStateResourceDetails}`,
-  generateLabel: () => "Resource Details",
   environmentRole: "Required",
 });
 

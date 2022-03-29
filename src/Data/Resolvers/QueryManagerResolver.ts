@@ -27,7 +27,6 @@ import {
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
   GetCompilerStatusQueryManager,
-  GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import {
@@ -55,6 +54,7 @@ import {
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
 } from "@S/DesiredStateDetails/Data";
+import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
 import {
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,
@@ -251,7 +251,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new GetDryRunsQueryManager(this.apiHelper, this.store, this.scheduler),
       new GetDryRunReportQueryManager(this.apiHelper, this.store),
-      new GetVersionedResourceDetails.QueryManager(
+      new GetDesiredStateResourceDetailsQueryManager(
         this.apiHelper,
         this.store,
         this.scheduler

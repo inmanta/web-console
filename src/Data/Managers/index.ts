@@ -31,4 +31,3 @@ export * from "./Repair";
 export * from "./PromoteVersion";
 export * from "./ControlAgent";
 export * from "./GetCompilerStatus";
-export * as GetVersionedResourceDetails from "./GetVersionedResourceDetails";
