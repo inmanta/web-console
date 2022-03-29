@@ -1,4 +1,4 @@
-import { Callback } from "@/Core";
+import { Callback } from "@S/ServiceCatalog/Core/Callback";
 
 export const a: Callback = {
   callback_id: "79e7d0b6-5f81-43ce-ade6-a71bc5fb445f",

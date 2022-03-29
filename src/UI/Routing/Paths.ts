@@ -4,10 +4,26 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { CreateEnvironment } from "@S/CreateEnvironment";
+import { CreateInstance } from "@S/CreateInstance";
+import { DesiredState } from "@S/DesiredState";
+import { DesiredStateCompare } from "@S/DesiredStateCompare";
+import { DesiredStateDetails } from "@S/DesiredStateDetails";
+import { DesiredStateResourceDetails } from "@S/DesiredStateResourceDetails";
+import { Diagnose } from "@S/Diagnose";
+import { EditInstance } from "@S/EditInstance";
+import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
+import { Home } from "@S/Home";
 import { Notification } from "@S/Notification";
+import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
+import { ResourceDetails } from "@S/ResourceDetails";
+import { ServiceCatalog } from "@S/ServiceCatalog";
+import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
+import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
+import { Status } from "@S/Status";
 
 type Paths = Record<RouteKind, string>;
 
@@ -15,22 +31,22 @@ export const paths: Paths = {
   /**
    * Main
    */
-  Home: "/",
-  CreateEnvironment: "/environment/create",
+  Home: Home.path,
+  CreateEnvironment: CreateEnvironment.path,
   Settings: Settings.path,
-  Status: "/status",
+  Status: Status.path,
   NotificationCenter: Notification.path,
 
   /**
    * LSM
    */
-  Catalog: "/lsm/catalog",
-  Inventory: "/lsm/catalog/:service/inventory",
-  CreateInstance: "/lsm/catalog/:service/inventory/add",
-  EditInstance: "/lsm/catalog/:service/inventory/:instance/edit",
-  History: "/lsm/catalog/:service/inventory/:instance/history",
-  Diagnose: "/lsm/catalog/:service/inventory/:instance/diagnose",
-  Events: "/lsm/catalog/:service/inventory/:instance/events",
+  Catalog: ServiceCatalog.path,
+  Inventory: ServiceInventory.path,
+  CreateInstance: CreateInstance.path,
+  EditInstance: EditInstance.path,
+  History: ServiceInstanceHistory.path,
+  Diagnose: Diagnose.path,
+  Events: Events.path,
 
   /**
    * Resource Manager
@@ -39,17 +55,17 @@ export const paths: Paths = {
   Agents: Agents.path,
   Facts: Facts.path,
   AgentProcess: AgentProcess.path,
-  ResourceDetails: "/resources/:resourceId",
+  ResourceDetails: ResourceDetails.path,
 
   /**
    * Orchestration Engine
    */
   CompileReports: CompileReports.path,
   CompileDetails: CompileDetails.path,
-  DesiredState: "/desiredstate",
-  DesiredStateDetails: "/desiredstate/:version",
-  DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
-  DesiredStateCompare: "/desiredstate/compare/:from/:to",
-  Parameters: "/parameters",
+  DesiredState: DesiredState.path,
+  DesiredStateDetails: DesiredStateDetails.path,
+  DesiredStateResourceDetails: DesiredStateResourceDetails.path,
+  DesiredStateCompare: DesiredStateCompare.path,
+  Parameters: Parameters.path,
   ComplianceCheck: ComplianceCheck.path,
 };

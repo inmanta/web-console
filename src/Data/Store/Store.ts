@@ -1,3 +1,4 @@
+import { EventsSlice, eventsSlice } from "@/Slices/Events/Data/Store";
 import {
   agentProcessSlice,
   AgentProcessSlice,
@@ -19,43 +20,65 @@ import {
   dryRunsSlice,
   DryRunsSlice,
 } from "@S/ComplianceCheck/Data/DryRunsSlice";
+import {
+  DesiredStatesSlice,
+  desiredStatesSlice,
+} from "@S/DesiredState/Data/Store";
+import {
+  desiredStateDiffSlice,
+  DesiredStateDiffSlice,
+} from "@S/DesiredStateCompare/Data/Store";
+import {
+  versionResourcesSlice,
+  VersionResourcesSlice,
+} from "@S/DesiredStateDetails/Data/Store";
+import {
+  versionedResourceDetailsSlice,
+  VersionedResourceDetailsSlice,
+} from "@S/DesiredStateResourceDetails/Data/Store";
+import { diagnosticsSlice, DiagnosticsSlice } from "@S/Diagnose/Data/Store";
 import { factsSlice, FactsSlice } from "@S/Facts/Data/Store";
 import {
   notificationSlice,
   NotificationSlice,
 } from "@S/Notification/Data/Store";
-import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
+import { parametersSlice, ParametersSlice } from "@S/Parameters/Data/Store";
 import {
-  desiredStateDiffSlice,
-  DesiredStateDiffSlice,
-} from "./DesiredStateDiffSlice";
-import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
-import { diagnosticsSlice, DiagnosticsSlice } from "./DiagnosticsSlice";
+  resourceDetailsSlice,
+  ResourceDetailsSlice,
+} from "@S/ResourceDetails/Data/ResourceDetailsSlice";
+import {
+  resourceFactsSlice,
+  ResourceFactsSlice,
+} from "@S/ResourceDetails/Data/ResourceFactsSlice";
+import {
+  resourceHistorySlice,
+  ResourceHistorySlice,
+} from "@S/ResourceDetails/Data/ResourceHistorySlice";
+import {
+  resourceLogsSlice,
+  ResourceLogsSlice,
+} from "@S/ResourceDetails/Data/ResourceLogsSlice";
+import {
+  CallbacksSlice,
+  callbacksSlice,
+} from "@S/ServiceCatalog/Data/CallbacksSlice";
+import {
+  InstanceLogsSlice,
+  instanceLogsSlice,
+} from "@S/ServiceInstanceHistory/Data/Store";
+import { serverStatusSlice, ServerStatusSlice } from "@S/Status/Data/Store";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
-import { EventsSlice, eventsSlice } from "./EventsSlice";
 import {
   InstanceConfigSlice,
   instanceConfigSlice,
 } from "./InstanceConfigSlice";
-import { InstanceLogsSlice, instanceLogsSlice } from "./InstanceLogsSlice";
 import {
   instanceResourcesSlice,
   InstanceResourcesSlice,
 } from "./InstanceResourcesSlice";
-import { parametersSlice, ParametersSlice } from "./ParametersSlice";
 import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
-import {
-  resourceDetailsSlice,
-  ResourceDetailsSlice,
-} from "./ResourceDetailsSlice";
-import { resourceFactsSlice, ResourceFactsSlice } from "./ResourceFactsSlice";
-import {
-  resourceHistorySlice,
-  ResourceHistorySlice,
-} from "./ResourceHistorySlice";
-import { resourceLogsSlice, ResourceLogsSlice } from "./ResourceLogsSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
-import { serverStatusSlice, ServerStatusSlice } from "./ServerStatusSlice";
 import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";
 import {
   serviceInstanceSlice,
@@ -66,14 +89,6 @@ import {
   ServiceInstancesSlice,
 } from "./ServiceInstancesSlice";
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
-import {
-  versionResourcesSlice,
-  VersionResourcesSlice,
-} from "./VersionResourcesSlice";
-import {
-  versionedResourceDetailsSlice,
-  VersionedResourceDetailsSlice,
-} from "./VersionedResourceDetailsSlice";
 
 export interface StoreModel {
   environment: EnvironmentSlice;

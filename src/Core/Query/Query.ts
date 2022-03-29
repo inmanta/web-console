@@ -5,19 +5,28 @@ import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
 import * as GetCompileReports from "@S/CompileReports/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
+import * as GetDesiredStates from "@S/DesiredState/Core/Query";
+import * as GetDesiredStateDiff from "@S/DesiredStateCompare/Core/Query";
+import * as GetVersionResources from "@S/DesiredStateDetails/Core/Query";
+import * as GetVersionedResourceDetails from "@S/DesiredStateResourceDetails/Core/Query";
+import * as GetDiagnostics from "@S/Diagnose/Core/Query";
+import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
 import * as GetNotifications from "@S/Notification/Core/Query";
+import * as GetParameters from "@S/Parameters/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
+import * as GetResourceDetails from "@S/ResourceDetails/Core/GetResourceDetailsQuery";
+import * as GetResourceFacts from "@S/ResourceDetails/Core/GetResourceFactsQuery";
+import * as GetResourceHistory from "@S/ResourceDetails/Core/GetResourceHistoryQuery";
+import * as GetResourceLogs from "@S/ResourceDetails/Core/GetResourceLogsQuery";
+import * as GetCallbacks from "@S/ServiceCatalog/Core/GetCallbacksQuery";
+import * as GetInstanceLogs from "@S/ServiceInstanceHistory/Core/Query";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
-import { GetCallbacks, GetCallbacksManifest } from "./GetCallbacks";
 import {
   GetCompilerStatus,
   GetCompilerStatusManifest,
 } from "./GetCompilerStatus";
-import { GetDesiredStateDiff } from "./GetDesiredStateDiff";
-import { GetDesiredStates, GetDesiredStatesManifest } from "./GetDesiredStates";
-import { GetDiagnostics, GetDiagnosticsManifest } from "./GetDiagnostics";
 import {
   GetEnvironmentSetting,
   GetEnvironmentSettingManifest,
@@ -33,25 +42,9 @@ import {
   GetInstanceConfigManifest,
 } from "./GetInstanceConfig";
 import {
-  GetInstanceEvents,
-  GetInstanceEventsManifest,
-} from "./GetInstanceEvents";
-import { GetInstanceLogs, GetInstanceLogsManifest } from "./GetInstanceLogs";
-import {
   GetInstanceResources,
   GetInstanceResourcesManifest,
 } from "./GetInstanceResources";
-import { GetParameters } from "./GetParameters";
-import {
-  GetResourceDetails,
-  GetResourceDetailsManifest,
-} from "./GetResourceDetails";
-import { GetResourceFacts, GetResourceFactsManifest } from "./GetResourceFacts";
-import {
-  GetResourceHistory,
-  GetResourceHistoryManifest,
-} from "./GetResourceHistory";
-import { GetResourceLogs, GetResourceLogsManifest } from "./GetResourceLogs";
 import { GetServerStatus, GetServerStatusManifest } from "./GetServerStatus";
 import { GetService, GetServiceManifest } from "./GetService";
 import { GetServiceConfig, GetServiceConfigManifest } from "./GetServiceConfig";
@@ -64,11 +57,6 @@ import {
   GetServiceInstancesManifest,
 } from "./GetServiceInstances";
 import { GetServices, GetServicesManifest } from "./GetServices";
-import {
-  GetVersionResources,
-  GetVersionResourcesManifest,
-} from "./GetVersionResources";
-import { GetVersionedResourceDetails } from "./GetVersionedResourceDetails";
 
 export type Query =
   | GetServices
@@ -77,29 +65,29 @@ export type Query =
   | GetServiceInstances
   | GetServiceConfig
   | GetInstanceResources
-  | GetInstanceEvents
-  | GetInstanceLogs
+  | GetInstanceEvents.Query
+  | GetInstanceLogs.Query
   | GetInstanceConfig
-  | GetDiagnostics
+  | GetDiagnostics.Query
   | GetProjects.Query
   | GetResources.Query
-  | GetResourceDetails
-  | GetResourceHistory
-  | GetResourceLogs
+  | GetResourceDetails.Query
+  | GetResourceHistory.Query
+  | GetResourceLogs.Query
   | GetEnvironmentDetails.Query
   | GetCompileReports.Query
   | GetCompileDetails.Query
   | GetServerStatus
-  | GetCallbacks
+  | GetCallbacks.Query
   | GetEnvironmentSettings
   | GetEnvironmentSetting
   | GetEnvironments
   | GetFacts.Query
-  | GetResourceFacts
+  | GetResourceFacts.Query
   | GetAgents.Query
   | GetAgentProcess.Query
-  | GetDesiredStates
-  | GetVersionResources
+  | GetDesiredStates.Query
+  | GetVersionResources.Query
   | GetCompilerStatus
   | GetParameters.Query
   | GetDesiredStateDiff.Query
@@ -121,28 +109,28 @@ interface Manifest {
   GetServiceInstances: GetServiceInstancesManifest;
   GetServiceConfig: GetServiceConfigManifest;
   GetInstanceResources: GetInstanceResourcesManifest;
-  GetInstanceEvents: GetInstanceEventsManifest;
-  GetInstanceLogs: GetInstanceLogsManifest;
+  GetInstanceEvents: GetInstanceEvents.Manifest;
+  GetInstanceLogs: GetInstanceLogs.Manifest;
   GetInstanceConfig: GetInstanceConfigManifest;
-  GetDiagnostics: GetDiagnosticsManifest;
+  GetDiagnostics: GetDiagnostics.Manifest;
   GetProjects: GetProjects.Manifest;
   GetServerStatus: GetServerStatusManifest;
   GetResources: GetResources.Manifest;
-  GetResourceDetails: GetResourceDetailsManifest;
-  GetResourceHistory: GetResourceHistoryManifest;
-  GetResourceLogs: GetResourceLogsManifest;
+  GetResourceDetails: GetResourceDetails.Manifest;
+  GetResourceHistory: GetResourceHistory.Manifest;
+  GetResourceLogs: GetResourceLogs.Manifest;
   GetEnvironmentDetails: GetEnvironmentDetails.Manifest;
   GetCompileReports: GetCompileReports.Manifest;
   GetCompileDetails: GetCompileDetails.Manifest;
-  GetCallbacks: GetCallbacksManifest;
+  GetCallbacks: GetCallbacks.Manifest;
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
   GetEnvironments: GetEnvironmentsManifest;
-  GetResourceFacts: GetResourceFactsManifest;
+  GetResourceFacts: GetResourceFacts.Manifest;
   GetAgents: GetAgents.Manifest;
   GetAgentProcess: GetAgentProcess.Manifest;
-  GetDesiredStates: GetDesiredStatesManifest;
-  GetVersionResources: GetVersionResourcesManifest;
+  GetDesiredStates: GetDesiredStates.Manifest;
+  GetVersionResources: GetVersionResources.Manifest;
   GetCompilerStatus: GetCompilerStatusManifest;
   GetParameters: GetParameters.Manifest;
   GetFacts: GetFacts.Manifest;

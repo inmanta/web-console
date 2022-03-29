@@ -7,30 +7,16 @@ import {
   ServiceInstancesStateHelper,
   InstanceResourcesStateHelper,
   InstanceResourcesQueryManager,
-  EventsQueryManager,
-  EventsStateHelper,
   ServicesQueryManager,
   ServicesStateHelper,
-  GetInstanceLogsQueryManager,
-  GetInstanceLogsStateHelper,
   InstanceConfigQueryManager,
   InstanceConfigStateHelper,
   InstanceConfigFinalizer,
-  DiagnosticsStateHelper,
-  DiagnosticsQueryManager,
   ServiceConfigQueryManager,
   ServiceConfigStateHelper,
   ServiceConfigFinalizer,
-  ResourceDetailsQueryManager,
-  ResourceDetailsStateHelper,
-  ResourceHistoryStateHelper,
-  ResourceHistoryQueryManager,
   ServiceInstanceQueryManager,
   ServiceInstanceStateHelper,
-  CallbacksQueryManager,
-  CallbacksStateHelper,
-  ResourceLogsQueryManager,
-  ResourceLogsStateHelper,
   GetServerStatusOneTimeQueryManager,
   GetServerStatusContinuousQueryManager,
   GetServerStatusStateHelper,
@@ -38,18 +24,7 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
-  GetResourceFactsQueryManager,
-  GetResourceFactsStateHelper,
-  GetVersionResourcesQueryManager,
-  GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
-  GetParametersQueryManager,
-  GetParametersStateHelper,
-  GetDesiredStatesQueryManager,
-  GetDesiredStatesStateHelper,
-  GetDesiredStateDiffQueryManager,
-  GetDesiredStateDiffStateHelper,
-  GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import {
@@ -65,12 +40,52 @@ import {
   GetDryRunReportQueryManager,
   GetDryRunsQueryManager,
 } from "@S/ComplianceCheck/Data";
+import {
+  GetDesiredStatesQueryManager,
+  GetDesiredStatesStateHelper,
+} from "@S/DesiredState/Data";
+import {
+  GetDesiredStateDiffQueryManager,
+  GetDesiredStateDiffStateHelper,
+} from "@S/DesiredStateCompare/Data";
+import {
+  GetVersionResourcesQueryManager,
+  GetVersionResourcesStateHelper,
+} from "@S/DesiredStateDetails/Data";
+import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
+import {
+  DiagnosticsQueryManager,
+  DiagnosticsStateHelper,
+} from "@S/Diagnose/Data";
+import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
 import { GetFactsQueryManager } from "@S/Facts/Data";
 import {
   NotificationContinuousQueryManager,
   NotificationReadOnlyQueryManager,
 } from "@S/Notification/Data";
+import {
+  GetParametersQueryManager,
+  GetParametersStateHelper,
+} from "@S/Parameters/Data";
 import { GetResourcesQueryManager } from "@S/Resource/Data";
+import {
+  GetResourceFactsQueryManager,
+  GetResourceFactsStateHelper,
+  ResourceDetailsQueryManager,
+  ResourceDetailsStateHelper,
+  ResourceHistoryQueryManager,
+  ResourceHistoryStateHelper,
+  ResourceLogsQueryManager,
+  ResourceLogsStateHelper,
+} from "@S/ResourceDetails/Data";
+import {
+  CallbacksQueryManager,
+  CallbacksStateHelper,
+} from "@S/ServiceCatalog/Data";
+import {
+  GetInstanceLogsQueryManager,
+  GetInstanceLogsStateHelper,
+} from "@S/ServiceInstanceHistory/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];
@@ -238,7 +253,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new GetDryRunsQueryManager(this.apiHelper, this.store, this.scheduler),
       new GetDryRunReportQueryManager(this.apiHelper, this.store),
-      new GetVersionedResourceDetails.QueryManager(
+      new GetDesiredStateResourceDetailsQueryManager(
         this.apiHelper,
         this.store,
         this.scheduler

@@ -1,25 +1,15 @@
 import { ApiHelper, AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
-  CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
   InstanceConfigCommandManager,
   InstanceConfigStateHelper,
-  TriggerInstanceUpdateCommandManager,
   ServiceConfigStateHelper,
   ServiceConfigCommandManager,
   TriggerSetStateCommandManager,
   DeleteServiceCommandManager,
   HaltEnvironmentCommandManager,
   ResumeEnvironmentCommandManager,
-  DeleteCallbackCommandManager,
-  CallbacksStateHelper,
-  CallbacksUpdater,
-  CreateCallbackCommandManager,
-  DeleteEnvironmentCommandManager,
-  ProjectsUpdater,
   ModifyEnvironmentCommandManager,
-  CreateProjectCommandManager,
-  CreateEnvironmentCommandManager,
   UpdateEnvironmentSettingCommandManager,
   EnvironmentSettingUpdater,
   GetEnvironmentSettingStateHelper,
@@ -31,7 +21,6 @@ import {
   DeployCommandManager,
   GetSupportArchiveCommandManager,
   PromoteVersionCommandManager,
-  GetDesiredStatesStateHelper,
   DesiredStatesUpdater,
   ControlAgentCommandManager,
   TriggerCompileCommandManager,
@@ -44,7 +33,21 @@ import {
 } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import { GetProjectsStateHelper } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentsUpdater } from "@S/Agents/Data/Updater";
+import {
+  CreateEnvironmentCommandManager,
+  CreateProjectCommandManager,
+} from "@S/CreateEnvironment/Data";
+import { CreateInstanceCommandManager } from "@S/CreateInstance/Data";
+import { GetDesiredStatesStateHelper } from "@S/DesiredState/Data";
+import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
+import { DeleteEnvironmentCommandManager, ProjectsUpdater } from "@S/Home/Data";
 import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
+import {
+  CallbacksStateHelper,
+  CallbacksUpdater,
+  CreateCallbackCommandManager,
+  DeleteCallbackCommandManager,
+} from "@S/ServiceCatalog/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
