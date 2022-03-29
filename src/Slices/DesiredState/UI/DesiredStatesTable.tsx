@@ -6,8 +6,8 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { DesiredStateVersion } from "@/Core";
 import { words } from "@/UI/words";
+import { DesiredStateVersion } from "@S/DesiredState/Core/Domain";
 import { DesiredStatesTableRow } from "./DesiredStatesTableRow";
 
 interface Props {

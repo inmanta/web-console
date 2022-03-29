@@ -1,9 +1,10 @@
 import { createContext } from "react";
-import { DesiredStateParams, PageSize } from "@/Core";
+import { PageSize } from "@/Core";
+import { Filter } from "@S/DesiredState/Core/Query";
 import { CompareSelection } from "./Utils";
 
 interface GetDesiredStatesProvider {
-  filter: DesiredStateParams.Filter;
+  filter: Filter;
   pageSize: PageSize.Type;
   setErrorMessage(message: string): void;
   compareSelection: CompareSelection;

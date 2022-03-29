@@ -5,14 +5,14 @@ import {
   ToolbarContent,
   ToolbarGroup,
 } from "@patternfly/react-core";
-import { DesiredStateParams } from "@/Core";
 import { CompileWidget } from "@/UI/Components";
+import { Filter } from "@S/DesiredState/Core/Query";
 import { CompareSelectionWidget } from "./CompareSelectionWidget";
 import { FilterWidget } from "./FilterWidget";
 
 interface Props {
-  filter: DesiredStateParams.Filter;
-  setFilter: (filter: DesiredStateParams.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
   paginationWidget: React.ReactNode;
 }
 

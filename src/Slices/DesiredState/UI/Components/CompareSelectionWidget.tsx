@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Maybe } from "@/Core";
-import { GetDesiredStatesContext } from "@/UI/Pages/DesiredState/GetDesiredStatesContext";
+import { GetDesiredStatesContext } from "@S/DesiredState/UI/GetDesiredStatesContext";
 import { CompareSelectionLabel } from "./CompareSelectionLabel";
 
 export const CompareSelectionWidget: React.FC = () => {

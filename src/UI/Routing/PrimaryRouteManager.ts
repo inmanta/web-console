@@ -18,6 +18,7 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { DesiredState } from "@S/DesiredState";
 import { Diagnose } from "@S/Diagnose";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
@@ -69,7 +70,7 @@ export class PrimaryRouteManager implements RouteManager {
        */
       CompileReports: CompileReports.route(this.baseUrl),
       CompileDetails: CompileDetails.route(this.baseUrl),
-      DesiredState: DesiredState(this.baseUrl),
+      DesiredState: DesiredState.route(this.baseUrl),
       DesiredStateDetails: DesiredStateDetails(this.baseUrl),
       DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
       DesiredStateCompare: DesiredStateCompare(this.baseUrl),
@@ -215,14 +216,6 @@ const EditInstance = (base: string): Route<"EditInstance"> => ({
   parent: "Inventory",
   path: `${base}${paths.EditInstance}`,
   generateLabel: () => "Edit Instance",
-  environmentRole: "Required",
-});
-
-const DesiredState = (base: string): Route<"DesiredState"> => ({
-  kind: "DesiredState",
-  parent: "Home",
-  path: `${base}${paths.DesiredState}`,
-  generateLabel: () => "Desired State",
   environmentRole: "Required",
 });
 

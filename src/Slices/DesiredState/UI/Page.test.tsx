@@ -11,8 +11,6 @@ import {
   PromoteVersionCommandManager,
   DesiredStatesUpdater,
   GetCompilerStatusQueryManager,
-  GetDesiredStatesQueryManager,
-  GetDesiredStatesStateHelper,
   TriggerCompileCommandManager,
 } from "@/Data";
 import {
@@ -20,10 +18,14 @@ import {
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
-  DesiredStateVersions,
   DynamicCommandManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import {
+  GetDesiredStatesQueryManager,
+  GetDesiredStatesStateHelper,
+} from "@S/DesiredState/Data";
+import * as DesiredStateVersions from "@S/DesiredState/Data/Mock";
 import { Page } from "./Page";
 
 function setup() {

@@ -4,6 +4,7 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { DesiredState } from "@S/DesiredState";
 import { Diagnose } from "@S/Diagnose";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
@@ -51,7 +52,7 @@ export const paths: Paths = {
    */
   CompileReports: CompileReports.path,
   CompileDetails: CompileDetails.path,
-  DesiredState: "/desiredstate",
+  DesiredState: DesiredState.path,
   DesiredStateDetails: "/desiredstate/:version",
   DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
   DesiredStateCompare: "/desiredstate/compare/:from/:to",

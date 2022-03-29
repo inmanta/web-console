@@ -1,10 +1,6 @@
-import {
-  Scheduler,
-  ApiHelper,
-  DesiredStateParams,
-  StateHelperWithEnv,
-} from "@/Core";
+import { Scheduler, ApiHelper, StateHelperWithEnv } from "@/Core";
 import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
+import { Filter } from "@S/DesiredState/Core/Query";
 import { getUrl } from "./getUrl";
 
 export class GetDesiredStatesQueryManager extends QueryManager.ContinuousWithEnv<"GetDesiredStates"> {
@@ -39,8 +35,6 @@ export class GetDesiredStatesQueryManager extends QueryManager.ContinuousWithEnv
   }
 }
 
-function stringifyFilter(
-  filter: DesiredStateParams.Filter | undefined
-): string {
+function stringifyFilter(filter: Filter | undefined): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
 }

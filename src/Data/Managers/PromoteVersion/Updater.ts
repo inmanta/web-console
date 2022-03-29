@@ -5,7 +5,7 @@ import {
   StateHelperWithEnv,
   UpdaterWithEnv,
 } from "@/Core";
-import { getUrl } from "@/Data/Managers/GetDesiredStates/getUrl";
+import { getUrl } from "@S/DesiredState/Data/getUrl";
 
 export class DesiredStatesUpdater
   implements UpdaterWithEnv<"GetDesiredStates">

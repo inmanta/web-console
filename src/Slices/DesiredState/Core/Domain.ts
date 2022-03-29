@@ -1,5 +1,4 @@
 import { ParsedNumber } from "@/Core/Language";
-import { DesiredStateVersionStatus } from "./DesiredStateVersionStatus";
 
 interface DesiredStateLabel {
   name: string;
@@ -13,3 +12,14 @@ export interface DesiredStateVersion {
   labels: DesiredStateLabel[];
   status: DesiredStateVersionStatus;
 }
+
+export enum DesiredStateVersionStatus {
+  active = "active",
+  candidate = "candidate",
+  retired = "retired",
+  skipped_candidate = "skipped_candidate",
+}
+
+export const DesiredStateVersionStatusList = Object.values(
+  DesiredStateVersionStatus
+);

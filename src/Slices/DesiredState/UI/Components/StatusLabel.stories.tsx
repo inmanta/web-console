@@ -1,5 +1,5 @@
 import React from "react";
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersionStatus";
+import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { StatusLabel } from "./StatusLabel";
 
 export default {

@@ -31,7 +31,6 @@ import {
   DeployCommandManager,
   GetSupportArchiveCommandManager,
   PromoteVersionCommandManager,
-  GetDesiredStatesStateHelper,
   DesiredStatesUpdater,
   ControlAgentCommandManager,
   TriggerCompileCommandManager,
@@ -44,6 +43,7 @@ import {
 } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import { GetProjectsStateHelper } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentsUpdater } from "@S/Agents/Data/Updater";
+import { GetDesiredStatesStateHelper } from "@S/DesiredState/Data";
 import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {

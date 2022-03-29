@@ -29,8 +29,6 @@ import {
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
-  GetDesiredStatesQueryManager,
-  GetDesiredStatesStateHelper,
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
   GetVersionedResourceDetails,
@@ -49,6 +47,10 @@ import {
   GetDryRunReportQueryManager,
   GetDryRunsQueryManager,
 } from "@S/ComplianceCheck/Data";
+import {
+  GetDesiredStatesQueryManager,
+  GetDesiredStatesStateHelper,
+} from "@S/DesiredState/Data";
 import {
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,

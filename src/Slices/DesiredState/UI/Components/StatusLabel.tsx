@@ -1,6 +1,6 @@
 import React from "react";
 import { Label } from "@patternfly/react-core";
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersionStatus";
+import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 
 export const StatusLabel: React.FC<{ status: DesiredStateVersionStatus }> = ({
   status,

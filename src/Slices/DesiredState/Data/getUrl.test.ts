@@ -1,6 +1,6 @@
 import moment from "moment";
 import { PageSize, Query } from "@/Core";
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersionStatus";
+import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
 import { getUrl } from "./getUrl";
 
 it.each`

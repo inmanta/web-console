@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
-import { DateRange, DesiredStateParams, IntRange } from "@/Core";
-import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersionStatus";
+import { DateRange, IntRange } from "@/Core";
+
 import { MomentDatePresenter } from "@/UI";
 import { FilterPicker } from "@/UI/Components";
 import {
@@ -10,16 +10,16 @@ import {
   TimestampFilter,
 } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
+import { DesiredStateVersionStatus } from "@S/DesiredState/Core/Domain";
+import { Filter, FilterKind, FilterList } from "@S/DesiredState/Core/Query";
 
 interface Props {
-  filter: DesiredStateParams.Filter;
-  setFilter: (filter: DesiredStateParams.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
 }
 
 export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
-  const [filterKind, setFilterKind] = useState<DesiredStateParams.Kind>(
-    DesiredStateParams.Kind.Status
-  );
+  const [filterKind, setFilterKind] = useState<FilterKind>(FilterKind.Status);
 
   const desiredStateStatuses = Object.keys(DesiredStateVersionStatus).map(
     (k) => DesiredStateVersionStatus[k]
@@ -51,27 +51,27 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}
-        items={DesiredStateParams.List}
+        items={FilterList}
       />
       <SelectOptionFilter
-        filterPropertyName={DesiredStateParams.Kind.Status}
+        filterPropertyName={FilterKind.Status}
         placeholder={words("desiredState.filters.status.placeholder")}
-        isVisible={filterKind === DesiredStateParams.Kind.Status}
+        isVisible={filterKind === FilterKind.Status}
         possibleStates={desiredStateStatuses}
         selectedStates={filter.status ? filter.status : []}
         update={updateStatus}
       />
       <TimestampFilter
         datePresenter={new MomentDatePresenter()}
-        isVisible={filterKind === DesiredStateParams.Kind.Date}
+        isVisible={filterKind === FilterKind.Date}
         timestampFilters={filter.date ? filter.date : []}
         update={updateDate}
       />
       <IntRangeFilter
-        isVisible={filterKind == DesiredStateParams.Kind.Version}
+        isVisible={filterKind == FilterKind.Version}
         intRangeFilters={filter.version ? filter.version : []}
         update={updateVersion}
-        categoryName={DesiredStateParams.Kind.Version}
+        categoryName={FilterKind.Version}
       />
     </ToolbarGroup>
   );

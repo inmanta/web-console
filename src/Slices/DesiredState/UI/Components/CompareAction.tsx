@@ -3,8 +3,8 @@ import { DropdownItem } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
 import { Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { GetDesiredStatesContext } from "@/UI/Pages/DesiredState/GetDesiredStatesContext";
 import { words } from "@/UI/words";
+import { GetDesiredStatesContext } from "@S/DesiredState/UI/GetDesiredStatesContext";
 import { sanitizeFromTo } from "./fromTo";
 
 interface Props {

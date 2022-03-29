@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { DesiredStateParams } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import {
   EmptyView,
@@ -10,6 +9,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Filter } from "@S/DesiredState/Core/Query";
 import { TableControls } from "./Components";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
@@ -21,7 +21,7 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "DesiredState",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<DesiredStateParams.Filter>({
+  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "DesiredState",
     keys: { date: "DateRange", version: "IntRange" },
   });

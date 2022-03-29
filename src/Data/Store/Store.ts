@@ -20,6 +20,10 @@ import {
   dryRunsSlice,
   DryRunsSlice,
 } from "@S/ComplianceCheck/Data/DryRunsSlice";
+import {
+  DesiredStatesSlice,
+  desiredStatesSlice,
+} from "@S/DesiredState/Data/Store";
 import { diagnosticsSlice, DiagnosticsSlice } from "@S/Diagnose/Data/Store";
 import { factsSlice, FactsSlice } from "@S/Facts/Data/Store";
 import {
@@ -51,7 +55,6 @@ import {
   desiredStateDiffSlice,
   DesiredStateDiffSlice,
 } from "./DesiredStateDiffSlice";
-import { DesiredStatesSlice, desiredStatesSlice } from "./DesiredStatesSlice";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import {
   InstanceConfigSlice,
