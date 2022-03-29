@@ -21,10 +21,10 @@ import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
 import { ResourceDetailsPage } from "@S/ResourceDetails/UI";
 import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { SettingsPage } from "@S/Settings/UI";
+import { StatusPage } from "@S/Status/UI";
 import { HomePage } from "./Home";
 import { ServiceCatalogPage } from "./ServiceCatalog";
 import { ServiceInventoryPage } from "./ServiceInventory";
-import { StatusPage } from "./Status";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;

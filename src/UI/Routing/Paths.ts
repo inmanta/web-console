@@ -20,6 +20,7 @@ import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { Settings } from "@S/Settings";
+import { Status } from "@S/Status";
 
 type Paths = Record<RouteKind, string>;
 
@@ -30,7 +31,7 @@ export const paths: Paths = {
   Home: "/",
   CreateEnvironment: CreateEnvironment.path,
   Settings: Settings.path,
-  Status: "/status",
+  Status: Status.path,
   NotificationCenter: Notification.path,
 
   /**

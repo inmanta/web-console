@@ -34,6 +34,7 @@ import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { Settings } from "@S/Settings";
+import { Status } from "@S/Status";
 import { paths } from "./Paths";
 import { encodeParams } from "./Utils";
 
@@ -48,7 +49,7 @@ export class PrimaryRouteManager implements RouteManager {
       Home: Home(this.baseUrl),
       CreateEnvironment: CreateEnvironment.route(this.baseUrl),
       Settings: Settings.route(this.baseUrl),
-      Status: Status(this.baseUrl),
+      Status: Status.route(this.baseUrl),
       NotificationCenter: Notification.route(this.baseUrl),
 
       /**
@@ -216,12 +217,4 @@ const Home = (base: string): Route<"Home"> => ({
   path: `${base}${paths.Home}`,
   generateLabel: () => "Home",
   environmentRole: "Forbidden",
-});
-
-const Status = (base: string): Route<"Status"> => ({
-  kind: "Status",
-  parent: "Home",
-  path: `${base}${paths.Status}`,
-  generateLabel: () => "Status",
-  environmentRole: "Optional",
 });

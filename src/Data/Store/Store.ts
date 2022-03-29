@@ -62,6 +62,7 @@ import {
   InstanceLogsSlice,
   instanceLogsSlice,
 } from "@S/ServiceInstanceHistory/Data/Store";
+import { serverStatusSlice, ServerStatusSlice } from "@S/Status/Data/Store";
 import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import {
@@ -75,7 +76,6 @@ import {
 import { parametersSlice, ParametersSlice } from "./ParametersSlice";
 import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
-import { serverStatusSlice, ServerStatusSlice } from "./ServerStatusSlice";
 import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";
 import {
   serviceInstanceSlice,
