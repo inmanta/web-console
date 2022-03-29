@@ -2,14 +2,11 @@ import * as CreateEnvironment from "@S/CreateEnvironment/Core/CreateEnvironmentC
 import * as CreateProject from "@S/CreateEnvironment/Core/CreateProjectCommand";
 import * as CreateInstance from "@S/CreateInstance/Core/Command";
 import * as TriggerInstanceUpdate from "@S/EditInstance/Core/Command";
+import * as DeleteEnvironment from "@S/Home/Core/DeleteEnvironmentCommand";
 import * as UpdateNotification from "@S/Notification/Core/Command";
 import { ControlAgent, ControlAgentManifest } from "./ControlAgent";
 import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
 import { DeleteCallback, DeleteCallbackManifest } from "./DeleteCallback";
-import {
-  DeleteEnvironment,
-  DeleteEnvironmentManifest,
-} from "./DeleteEnvironment";
 import { DeleteInstance, DeleteInstanceManifest } from "./DeleteInstance";
 import { DeleteService, DeleteServiceManifest } from "./DeleteService";
 import { Deploy, DeployManifest } from "./Deploy";
@@ -62,7 +59,7 @@ export type Command =
   | ModifyEnvironment
   | DeleteCallback
   | CreateCallback
-  | DeleteEnvironment
+  | DeleteEnvironment.Command
   | CreateProject.Command
   | CreateEnvironment.Command
   | UpdateEnvironmentSetting
@@ -96,7 +93,7 @@ interface Manifest {
   ModifyEnvironment: ModifyEnvironmentManifest;
   DeleteCallback: DeleteCallbackManifest;
   CreateCallback: CreateCallbackManifest;
-  DeleteEnvironment: DeleteEnvironmentManifest;
+  DeleteEnvironment: DeleteEnvironment.Manifest;
   CreateProject: CreateProject.Manifest;
   CreateEnvironment: CreateEnvironment.Manifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;

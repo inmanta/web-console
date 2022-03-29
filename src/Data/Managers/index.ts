@@ -2,7 +2,6 @@ import { TriggerDryRun } from "./TriggerDryRun";
 export { TriggerDryRun };
 
 export * from "./Callbacks";
-export * from "./DeleteEnvironment";
 export * from "./DeleteInstance";
 export * from "./DeleteService";
 export * from "./EnvironmentSettings";

@@ -14,6 +14,7 @@ import { Diagnose } from "@S/Diagnose";
 import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
+import { Home } from "@S/Home";
 import { Notification } from "@S/Notification";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
@@ -28,7 +29,7 @@ export const paths: Paths = {
   /**
    * Main
    */
-  Home: "/",
+  Home: Home.path,
   CreateEnvironment: CreateEnvironment.path,
   Settings: Settings.path,
   Status: Status.path,

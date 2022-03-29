@@ -15,6 +15,7 @@ import { DiagnosePage } from "@S/Diagnose/UI";
 import { EditInstancePage } from "@S/EditInstance/UI";
 import { EventsPage } from "@S/Events/UI";
 import { FactsPage } from "@S/Facts/UI";
+import { HomePage } from "@S/Home/UI";
 import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { ParametersPage } from "@S/Parameters/UI";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
@@ -22,7 +23,6 @@ import { ResourceDetailsPage } from "@S/ResourceDetails/UI";
 import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
-import { HomePage } from "./Home";
 import { ServiceCatalogPage } from "./ServiceCatalog";
 import { ServiceInventoryPage } from "./ServiceInventory";
 

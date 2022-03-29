@@ -13,8 +13,6 @@ import {
   CallbacksStateHelper,
   CallbacksUpdater,
   CreateCallbackCommandManager,
-  DeleteEnvironmentCommandManager,
-  ProjectsUpdater,
   ModifyEnvironmentCommandManager,
   UpdateEnvironmentSettingCommandManager,
   EnvironmentSettingUpdater,
@@ -46,6 +44,7 @@ import {
 import { CreateInstanceCommandManager } from "@S/CreateInstance/Data";
 import { GetDesiredStatesStateHelper } from "@S/DesiredState/Data";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
+import { DeleteEnvironmentCommandManager, ProjectsUpdater } from "@S/Home/Data";
 import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {

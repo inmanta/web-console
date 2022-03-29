@@ -28,6 +28,7 @@ import { Diagnose } from "@S/Diagnose";
 import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
+import { Home } from "@S/Home";
 import { Notification } from "@S/Notification";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
@@ -46,7 +47,7 @@ export class PrimaryRouteManager implements RouteManager {
       /**
        * Main
        */
-      Home: Home(this.baseUrl),
+      Home: Home.route(this.baseUrl),
       CreateEnvironment: CreateEnvironment.route(this.baseUrl),
       Settings: Settings.route(this.baseUrl),
       Status: Status.route(this.baseUrl),
@@ -210,11 +211,4 @@ const Inventory = (base: string): Route<"Inventory"> => ({
   path: `${base}${paths.Inventory}`,
   generateLabel: (params) => `Service Inventory: ${params.service}`,
   environmentRole: "Required",
-});
-
-const Home = (base: string): Route<"Home"> => ({
-  kind: "Home",
-  path: `${base}${paths.Home}`,
-  generateLabel: () => "Home",
-  environmentRole: "Forbidden",
 });

@@ -1,14 +1,14 @@
 import { Maybe } from "@/Core/Language";
 
-export interface DeleteEnvironment {
+export interface Command {
   kind: "DeleteEnvironment";
   id: string;
 }
 
-export interface DeleteEnvironmentManifest {
+export interface Manifest {
   error: string;
   apiData: string;
   body: null;
-  command: DeleteEnvironment;
+  command: Command;
   trigger: () => Promise<Maybe.Type<string>>;
 }
