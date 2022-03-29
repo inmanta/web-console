@@ -20,10 +20,10 @@ import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { ParametersPage } from "@S/Parameters/UI";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
 import { ResourceDetailsPage } from "@S/ResourceDetails/UI";
+import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
 import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
-import { ServiceCatalogPage } from "./ServiceCatalog";
 import { ServiceInventoryPage } from "./ServiceInventory";
 
 export class PrimaryPageManager implements PageManager {

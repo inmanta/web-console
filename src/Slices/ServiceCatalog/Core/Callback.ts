@@ -1,5 +1,4 @@
-import { EventType } from "./EventType";
-import { LogLevelString } from "./LogLevel";
+import { EventType, LogLevelString } from "@/Core/Domain";
 
 export interface Callback {
   callback_id: string;

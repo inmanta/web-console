@@ -1,8 +1,8 @@
 import React from "react";
 import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
-import { Callback } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { words } from "@/UI/words";
+import { Callback } from "@S/ServiceCatalog/Core/Callback";
 import { CreateCallbackForm } from "./CreateCallbackForm";
 import { Row } from "./Row";
 

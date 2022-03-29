@@ -11,11 +11,6 @@ import {
   CommandResolverImpl,
   getStoreInstance,
   BaseApiHelper,
-  CallbacksStateHelper,
-  CallbacksQueryManager,
-  CreateCallbackCommandManager,
-  DeleteCallbackCommandManager,
-  CallbacksUpdater,
   DeleteServiceCommandManager,
 } from "@/Data";
 import {
@@ -28,7 +23,14 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { Page } from "@/UI/Pages/ServiceCatalog/Page";
+import {
+  CallbacksQueryManager,
+  CallbacksStateHelper,
+  CallbacksUpdater,
+  CreateCallbackCommandManager,
+  DeleteCallbackCommandManager,
+} from "@S/ServiceCatalog/Data";
+import { Page } from "@S/ServiceCatalog/UI/Page";
 
 function setup() {
   const store = getStoreInstance();

@@ -8,11 +8,6 @@ import {
   QueryResolverImpl,
   CommandResolverImpl,
   getStoreInstance,
-  CallbacksStateHelper,
-  CallbacksQueryManager,
-  CreateCallbackCommandManager,
-  DeleteCallbackCommandManager,
-  CallbacksUpdater,
 } from "@/Data";
 import {
   DynamicCommandManagerResolver,
@@ -23,7 +18,14 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { CallbacksView } from "@/UI/Pages/ServiceCatalog/Tabs/Callbacks";
+import {
+  CallbacksQueryManager,
+  CallbacksStateHelper,
+  CallbacksUpdater,
+  CreateCallbackCommandManager,
+  DeleteCallbackCommandManager,
+} from "@S/ServiceCatalog/Data";
+import { CallbacksView } from "@S/ServiceCatalog/UI/Tabs/Callbacks";
 
 function setup() {
   const store = getStoreInstance();

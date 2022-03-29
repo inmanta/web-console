@@ -33,6 +33,7 @@ import { Notification } from "@S/Notification";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
+import { ServiceCatalog } from "@S/ServiceCatalog";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
@@ -56,7 +57,7 @@ export class PrimaryRouteManager implements RouteManager {
       /**
        * LSM
        */
-      Catalog: Catalog(this.baseUrl),
+      Catalog: ServiceCatalog.route(this.baseUrl),
       Inventory: Inventory(this.baseUrl),
       CreateInstance: CreateInstance.route(this.baseUrl),
       EditInstance: EditInstance.route(this.baseUrl),
@@ -196,14 +197,6 @@ export class PrimaryRouteManager implements RouteManager {
     }));
   }
 }
-
-const Catalog = (base: string): Route<"Catalog"> => ({
-  kind: "Catalog",
-  parent: "Home",
-  path: `${base}${paths.Catalog}`,
-  generateLabel: () => "Service Catalog",
-  environmentRole: "Required",
-});
 
 const Inventory = (base: string): Route<"Inventory"> => ({
   kind: "Inventory",

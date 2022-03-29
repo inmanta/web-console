@@ -1,7 +1,7 @@
 import { identity } from "lodash-es";
 import { ApiHelper, StateHelperWithEnv } from "@/Core";
-import { getUrl } from "@/Data/Managers/Callbacks/getUrl";
 import { QueryManager } from "@/Data/Managers/Helpers";
+import { getUrl } from "@S/ServiceCatalog/Data/Callbacks/getUrl";
 
 export class CallbacksQueryManager extends QueryManager.OneTimeWithEnv<"GetCallbacks"> {
   constructor(

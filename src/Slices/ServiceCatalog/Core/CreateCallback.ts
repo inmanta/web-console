@@ -1,14 +1,14 @@
-import { CreateCallbackBody } from "@/Core/Domain";
 import { Maybe } from "@/Core/Language";
+import { CreateCallbackBody } from "./Callback";
 
-export interface CreateCallback extends CreateCallbackBody {
+export interface Command extends CreateCallbackBody {
   kind: "CreateCallback";
 }
 
-export interface CreateCallbackManifest {
+export interface Manifest {
   error: string;
   apiData: { data: string };
   body: CreateCallbackBody;
-  command: CreateCallback;
+  command: Command;
   trigger: () => Promise<Maybe.Type<string>>;
 }

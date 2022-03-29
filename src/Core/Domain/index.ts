@@ -5,7 +5,6 @@ import { Resource } from "./Resource";
 export { Pagination, Resource, Diff };
 
 export * from "./ActionTypes";
-export * from "./Callback";
 export * from "./Config";
 export * as EnvironmentSettings from "./EnvironmentSettings";
 export * from "./EventModel";

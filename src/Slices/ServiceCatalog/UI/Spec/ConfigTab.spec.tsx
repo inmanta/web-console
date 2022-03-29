@@ -30,7 +30,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { Page } from "@/UI/Pages/ServiceCatalog/Page";
+import { Page } from "@S/ServiceCatalog/UI/Page";
 
 function setup() {
   const store = getStoreInstance();

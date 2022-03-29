@@ -9,10 +9,6 @@ import {
   DeleteServiceCommandManager,
   HaltEnvironmentCommandManager,
   ResumeEnvironmentCommandManager,
-  DeleteCallbackCommandManager,
-  CallbacksStateHelper,
-  CallbacksUpdater,
-  CreateCallbackCommandManager,
   ModifyEnvironmentCommandManager,
   UpdateEnvironmentSettingCommandManager,
   EnvironmentSettingUpdater,
@@ -46,6 +42,12 @@ import { GetDesiredStatesStateHelper } from "@S/DesiredState/Data";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { DeleteEnvironmentCommandManager, ProjectsUpdater } from "@S/Home/Data";
 import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
+import {
+  CallbacksStateHelper,
+  CallbacksUpdater,
+  CreateCallbackCommandManager,
+  DeleteCallbackCommandManager,
+} from "@S/ServiceCatalog/Data";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];

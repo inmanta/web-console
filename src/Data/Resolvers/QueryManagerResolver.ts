@@ -17,8 +17,6 @@ import {
   ServiceConfigFinalizer,
   ServiceInstanceQueryManager,
   ServiceInstanceStateHelper,
-  CallbacksQueryManager,
-  CallbacksStateHelper,
   GetServerStatusOneTimeQueryManager,
   GetServerStatusContinuousQueryManager,
   GetServerStatusStateHelper,
@@ -80,6 +78,10 @@ import {
   ResourceLogsQueryManager,
   ResourceLogsStateHelper,
 } from "@S/ResourceDetails/Data";
+import {
+  CallbacksQueryManager,
+  CallbacksStateHelper,
+} from "@S/ServiceCatalog/Data";
 import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,

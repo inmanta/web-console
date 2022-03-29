@@ -1,14 +1,14 @@
-import { Callback } from "@/Core/Domain";
+import { Callback } from "./Callback";
 
-export interface GetCallbacks {
+export interface Query {
   kind: "GetCallbacks";
   service_entity: string;
 }
 
-export interface GetCallbacksManifest {
+export interface Manifest {
   error: string;
   apiResponse: { data: Callback[] };
   data: Callback[];
   usedData: Callback[];
-  query: GetCallbacks;
+  query: Query;
 }

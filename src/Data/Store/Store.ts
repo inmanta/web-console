@@ -59,11 +59,14 @@ import {
   ResourceLogsSlice,
 } from "@S/ResourceDetails/Data/ResourceLogsSlice";
 import {
+  CallbacksSlice,
+  callbacksSlice,
+} from "@S/ServiceCatalog/Data/CallbacksSlice";
+import {
   InstanceLogsSlice,
   instanceLogsSlice,
 } from "@S/ServiceInstanceHistory/Data/Store";
 import { serverStatusSlice, ServerStatusSlice } from "@S/Status/Data/Store";
-import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import {
   InstanceConfigSlice,
