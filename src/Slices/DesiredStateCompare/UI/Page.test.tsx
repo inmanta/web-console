@@ -4,13 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { act } from "react-dom/test-utils";
 import { Either } from "@/Core";
-import {
-  FileFetcherImpl,
-  GetDesiredStateDiffQueryManager,
-  GetDesiredStateDiffStateHelper,
-  getStoreInstance,
-  QueryResolverImpl,
-} from "@/Data";
+import { FileFetcherImpl, getStoreInstance, QueryResolverImpl } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
@@ -18,6 +12,10 @@ import {
   DynamicQueryManagerResolver,
 } from "@/Test";
 import { DependencyProvider } from "@/UI";
+import {
+  GetDesiredStateDiffQueryManager,
+  GetDesiredStateDiffStateHelper,
+} from "@S/DesiredStateCompare/Data";
 import { View } from "./Page";
 
 function setup() {

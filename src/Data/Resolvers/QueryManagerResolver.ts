@@ -29,8 +29,6 @@ import {
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
-  GetDesiredStateDiffQueryManager,
-  GetDesiredStateDiffStateHelper,
   GetVersionedResourceDetails,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
@@ -51,6 +49,10 @@ import {
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
 } from "@S/DesiredState/Data";
+import {
+  GetDesiredStateDiffQueryManager,
+  GetDesiredStateDiffStateHelper,
+} from "@S/DesiredStateCompare/Data";
 import {
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,

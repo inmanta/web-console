@@ -32,5 +32,4 @@ export * from "./PromoteVersion";
 export * from "./GetVersionResources";
 export * from "./ControlAgent";
 export * from "./GetCompilerStatus";
-export * from "./GetDesiredStateDiff";
 export * as GetVersionedResourceDetails from "./GetVersionedResourceDetails";

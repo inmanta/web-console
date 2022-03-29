@@ -19,6 +19,7 @@ import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
 import { DesiredState } from "@S/DesiredState";
+import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { Diagnose } from "@S/Diagnose";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
@@ -73,7 +74,7 @@ export class PrimaryRouteManager implements RouteManager {
       DesiredState: DesiredState.route(this.baseUrl),
       DesiredStateDetails: DesiredStateDetails(this.baseUrl),
       DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
-      DesiredStateCompare: DesiredStateCompare(this.baseUrl),
+      DesiredStateCompare: DesiredStateCompare.route(this.baseUrl),
       Parameters: Parameters.route(this.baseUrl),
       ComplianceCheck: ComplianceCheck.route(this.baseUrl),
     };
@@ -234,14 +235,6 @@ const DesiredStateResourceDetails = (
   parent: "DesiredStateDetails",
   path: `${base}${paths.DesiredStateResourceDetails}`,
   generateLabel: () => "Resource Details",
-  environmentRole: "Required",
-});
-
-const DesiredStateCompare = (base: string): Route<"DesiredStateCompare"> => ({
-  kind: "DesiredStateCompare",
-  parent: "DesiredState",
-  path: `${base}${paths.DesiredStateCompare}`,
-  generateLabel: () => "Compare",
   environmentRole: "Required",
 });
 

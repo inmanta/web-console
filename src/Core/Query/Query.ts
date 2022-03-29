@@ -6,6 +6,7 @@ import * as GetCompileReports from "@S/CompileReports/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
 import * as GetDesiredStates from "@S/DesiredState/Core/Query";
+import * as GetDesiredStateDiff from "@S/DesiredStateCompare/Core/Query";
 import * as GetDiagnostics from "@S/Diagnose/Core/Query";
 import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
@@ -24,7 +25,6 @@ import {
   GetCompilerStatus,
   GetCompilerStatusManifest,
 } from "./GetCompilerStatus";
-import { GetDesiredStateDiff } from "./GetDesiredStateDiff";
 import {
   GetEnvironmentSetting,
   GetEnvironmentSettingManifest,

@@ -1,13 +1,7 @@
 import React from "react";
 import { Page } from "@patternfly/react-core";
 import { StoreProvider } from "easy-peasy";
-import {
-  FileFetcherImpl,
-  GetDesiredStateDiffQueryManager,
-  GetDesiredStateDiffStateHelper,
-  getStoreInstance,
-  QueryResolverImpl,
-} from "@/Data";
+import { FileFetcherImpl, getStoreInstance, QueryResolverImpl } from "@/Data";
 import {
   dependencies,
   DesiredStateDiff,
@@ -15,6 +9,10 @@ import {
   InstantApiHelper,
 } from "@/Test";
 import { DependencyProvider } from "@/UI";
+import {
+  GetDesiredStateDiffQueryManager,
+  GetDesiredStateDiffStateHelper,
+} from "@S/DesiredStateCompare/Data";
 import { View } from "./Page";
 
 export default {

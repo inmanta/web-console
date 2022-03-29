@@ -24,6 +24,10 @@ import {
   DesiredStatesSlice,
   desiredStatesSlice,
 } from "@S/DesiredState/Data/Store";
+import {
+  desiredStateDiffSlice,
+  DesiredStateDiffSlice,
+} from "@S/DesiredStateCompare/Data/Store";
 import { diagnosticsSlice, DiagnosticsSlice } from "@S/Diagnose/Data/Store";
 import { factsSlice, FactsSlice } from "@S/Facts/Data/Store";
 import {
@@ -51,10 +55,6 @@ import {
   instanceLogsSlice,
 } from "@S/ServiceInstanceHistory/Data/Store";
 import { CallbacksSlice, callbacksSlice } from "./CallbacksSlice";
-import {
-  desiredStateDiffSlice,
-  DesiredStateDiffSlice,
-} from "./DesiredStateDiffSlice";
 import { environmentSlice, EnvironmentSlice } from "./EnvironmentSlice";
 import {
   InstanceConfigSlice,
