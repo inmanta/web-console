@@ -20,8 +20,6 @@ export * as ServiceInstanceParams from "./ServiceInstanceParams";
 export * from "./ServiceModel";
 export * from "./LogLevel";
 export * as PageSize from "./PageSize";
-export * from "./ResourceLog";
-export * from "./ResourceHistory";
 export * from "./Route";
 export * from "./EnvironmentDetailsModel";
 export * from "./Uuid";

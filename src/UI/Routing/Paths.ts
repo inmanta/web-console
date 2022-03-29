@@ -10,6 +10,7 @@ import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
+import { ResourceDetails } from "@S/ResourceDetails";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { Settings } from "@S/Settings";
 
@@ -43,7 +44,7 @@ export const paths: Paths = {
   Agents: Agents.path,
   Facts: Facts.path,
   AgentProcess: AgentProcess.path,
-  ResourceDetails: "/resources/:resourceId",
+  ResourceDetails: ResourceDetails.path,
 
   /**
    * Orchestration Engine

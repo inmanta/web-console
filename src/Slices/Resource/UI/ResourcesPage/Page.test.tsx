@@ -18,10 +18,10 @@ import {
   EnvironmentDetails,
   MockEnvironmentHandler,
   Resource,
-  ResourceDetails,
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { Page } from "./Page";
 
 function setup() {

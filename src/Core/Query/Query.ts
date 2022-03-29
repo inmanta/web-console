@@ -11,6 +11,10 @@ import * as GetFacts from "@S/Facts/Core/Query";
 import * as GetNotifications from "@S/Notification/Core/Query";
 import * as GetParameters from "@S/Parameters/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
+import * as GetResourceDetails from "@S/ResourceDetails/Core/GetResourceDetailsQuery";
+import * as GetResourceFacts from "@S/ResourceDetails/Core/GetResourceFactsQuery";
+import * as GetResourceHistory from "@S/ResourceDetails/Core/GetResourceHistoryQuery";
+import * as GetResourceLogs from "@S/ResourceDetails/Core/GetResourceLogsQuery";
 import * as GetInstanceLogs from "@S/ServiceInstanceHistory/Core/Query";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
@@ -39,16 +43,6 @@ import {
   GetInstanceResources,
   GetInstanceResourcesManifest,
 } from "./GetInstanceResources";
-import {
-  GetResourceDetails,
-  GetResourceDetailsManifest,
-} from "./GetResourceDetails";
-import { GetResourceFacts, GetResourceFactsManifest } from "./GetResourceFacts";
-import {
-  GetResourceHistory,
-  GetResourceHistoryManifest,
-} from "./GetResourceHistory";
-import { GetResourceLogs, GetResourceLogsManifest } from "./GetResourceLogs";
 import { GetServerStatus, GetServerStatusManifest } from "./GetServerStatus";
 import { GetService, GetServiceManifest } from "./GetService";
 import { GetServiceConfig, GetServiceConfigManifest } from "./GetServiceConfig";
@@ -80,9 +74,9 @@ export type Query =
   | GetDiagnostics.Query
   | GetProjects.Query
   | GetResources.Query
-  | GetResourceDetails
-  | GetResourceHistory
-  | GetResourceLogs
+  | GetResourceDetails.Query
+  | GetResourceHistory.Query
+  | GetResourceLogs.Query
   | GetEnvironmentDetails.Query
   | GetCompileReports.Query
   | GetCompileDetails.Query
@@ -92,7 +86,7 @@ export type Query =
   | GetEnvironmentSetting
   | GetEnvironments
   | GetFacts.Query
-  | GetResourceFacts
+  | GetResourceFacts.Query
   | GetAgents.Query
   | GetAgentProcess.Query
   | GetDesiredStates
@@ -125,9 +119,9 @@ interface Manifest {
   GetProjects: GetProjects.Manifest;
   GetServerStatus: GetServerStatusManifest;
   GetResources: GetResources.Manifest;
-  GetResourceDetails: GetResourceDetailsManifest;
-  GetResourceHistory: GetResourceHistoryManifest;
-  GetResourceLogs: GetResourceLogsManifest;
+  GetResourceDetails: GetResourceDetails.Manifest;
+  GetResourceHistory: GetResourceHistory.Manifest;
+  GetResourceLogs: GetResourceLogs.Manifest;
   GetEnvironmentDetails: GetEnvironmentDetails.Manifest;
   GetCompileReports: GetCompileReports.Manifest;
   GetCompileDetails: GetCompileDetails.Manifest;
@@ -135,7 +129,7 @@ interface Manifest {
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
   GetEnvironments: GetEnvironmentsManifest;
-  GetResourceFacts: GetResourceFactsManifest;
+  GetResourceFacts: GetResourceFacts.Manifest;
   GetAgents: GetAgents.Manifest;
   GetAgentProcess: GetAgentProcess.Manifest;
   GetDesiredStates: GetDesiredStatesManifest;

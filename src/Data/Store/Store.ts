@@ -27,6 +27,22 @@ import {
   NotificationSlice,
 } from "@S/Notification/Data/Store";
 import {
+  resourceDetailsSlice,
+  ResourceDetailsSlice,
+} from "@S/ResourceDetails/Data/ResourceDetailsSlice";
+import {
+  resourceFactsSlice,
+  ResourceFactsSlice,
+} from "@S/ResourceDetails/Data/ResourceFactsSlice";
+import {
+  resourceHistorySlice,
+  ResourceHistorySlice,
+} from "@S/ResourceDetails/Data/ResourceHistorySlice";
+import {
+  resourceLogsSlice,
+  ResourceLogsSlice,
+} from "@S/ResourceDetails/Data/ResourceLogsSlice";
+import {
   InstanceLogsSlice,
   instanceLogsSlice,
 } from "@S/ServiceInstanceHistory/Data/Store";
@@ -47,16 +63,6 @@ import {
 } from "./InstanceResourcesSlice";
 import { parametersSlice, ParametersSlice } from "./ParametersSlice";
 import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
-import {
-  resourceDetailsSlice,
-  ResourceDetailsSlice,
-} from "./ResourceDetailsSlice";
-import { resourceFactsSlice, ResourceFactsSlice } from "./ResourceFactsSlice";
-import {
-  resourceHistorySlice,
-  ResourceHistorySlice,
-} from "./ResourceHistorySlice";
-import { resourceLogsSlice, ResourceLogsSlice } from "./ResourceLogsSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 import { serverStatusSlice, ServerStatusSlice } from "./ServerStatusSlice";
 import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";

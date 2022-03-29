@@ -24,6 +24,7 @@ import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
+import { ResourceDetails } from "@S/ResourceDetails";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { Settings } from "@S/Settings";
 import { paths } from "./Paths";
@@ -61,7 +62,7 @@ export class PrimaryRouteManager implements RouteManager {
       Agents: Agents.route(this.baseUrl),
       Facts: Facts.route(this.baseUrl),
       AgentProcess: AgentProcess.route(this.baseUrl),
-      ResourceDetails: ResourceDetails(this.baseUrl),
+      ResourceDetails: ResourceDetails.route(this.baseUrl),
 
       /**
        * Orchestration Engine
@@ -248,14 +249,6 @@ const DesiredStateCompare = (base: string): Route<"DesiredStateCompare"> => ({
   parent: "DesiredState",
   path: `${base}${paths.DesiredStateCompare}`,
   generateLabel: () => "Compare",
-  environmentRole: "Required",
-});
-
-const ResourceDetails = (base: string): Route<"ResourceDetails"> => ({
-  kind: "ResourceDetails",
-  parent: "Resources",
-  path: `${base}${paths.ResourceDetails}`,
-  generateLabel: () => "Resource Details",
   environmentRole: "Required",
 });
 

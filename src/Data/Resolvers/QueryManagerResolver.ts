@@ -15,16 +15,10 @@ import {
   ServiceConfigQueryManager,
   ServiceConfigStateHelper,
   ServiceConfigFinalizer,
-  ResourceDetailsQueryManager,
-  ResourceDetailsStateHelper,
-  ResourceHistoryStateHelper,
-  ResourceHistoryQueryManager,
   ServiceInstanceQueryManager,
   ServiceInstanceStateHelper,
   CallbacksQueryManager,
   CallbacksStateHelper,
-  ResourceLogsQueryManager,
-  ResourceLogsStateHelper,
   GetServerStatusOneTimeQueryManager,
   GetServerStatusContinuousQueryManager,
   GetServerStatusStateHelper,
@@ -32,8 +26,6 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
-  GetResourceFactsQueryManager,
-  GetResourceFactsStateHelper,
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
@@ -72,6 +64,16 @@ import {
   GetParametersStateHelper,
 } from "@S/Parameters/Data";
 import { GetResourcesQueryManager } from "@S/Resource/Data";
+import {
+  GetResourceFactsQueryManager,
+  GetResourceFactsStateHelper,
+  ResourceDetailsQueryManager,
+  ResourceDetailsStateHelper,
+  ResourceHistoryQueryManager,
+  ResourceHistoryStateHelper,
+  ResourceLogsQueryManager,
+  ResourceLogsStateHelper,
+} from "@S/ResourceDetails/Data";
 import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,
