@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { GetParameters } from "@/Core";
 import {
   useUrlStateWithFilter,
   useUrlStateWithPageSize,
@@ -13,6 +12,7 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Filter, SortKey } from "@S/Parameters/Core/Query";
 import { ParametersTable } from "./ParametersTable";
 import { ParametersTablePresenter } from "./ParametersTablePresenter";
 import { TableControls } from "./TableControls";
@@ -22,11 +22,11 @@ export const Page: React.FC = () => {
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
     route: "Parameters",
   });
-  const [filter, setFilter] = useUrlStateWithFilter<GetParameters.Filter>({
+  const [filter, setFilter] = useUrlStateWithFilter<Filter>({
     route: "Parameters",
     keys: { updated: "DateRange" },
   });
-  const [sort, setSort] = useUrlStateWithSort<GetParameters.SortKey>({
+  const [sort, setSort] = useUrlStateWithSort<SortKey>({
     default: { name: "name", order: "asc" },
     route: "Parameters",
   });

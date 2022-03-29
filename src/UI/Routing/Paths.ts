@@ -8,6 +8,7 @@ import { Diagnose } from "@S/Diagnose";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
+import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { Settings } from "@S/Settings";
@@ -53,6 +54,6 @@ export const paths: Paths = {
   DesiredStateDetails: "/desiredstate/:version",
   DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
   DesiredStateCompare: "/desiredstate/compare/:from/:to",
-  Parameters: "/parameters",
+  Parameters: Parameters.path,
   ComplianceCheck: ComplianceCheck.path,
 };

@@ -7,15 +7,16 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { GetParameters, Parameter, Sort } from "@/Core";
+import { Sort, Parameter } from "@/Core";
+import { SortKey } from "@S/Parameters/Core/Query";
 import { ParametersTablePresenter } from "./ParametersTablePresenter";
 import { ParametersTableRow } from "./ParametersTableRow";
 
 interface Props {
   tablePresenter: ParametersTablePresenter;
   rows: Parameter[];
-  sort: Sort.Type<GetParameters.SortKey>;
-  setSort: (sort: Sort.Type<GetParameters.SortKey>) => void;
+  sort: Sort.Type<SortKey>;
+  setSort: (sort: Sort.Type<SortKey>) => void;
 }
 
 export const ParametersTable: React.FC<Props> = ({
@@ -27,9 +28,7 @@ export const ParametersTable: React.FC<Props> = ({
 }) => {
   const onSort: OnSort = (event, index, order) => {
     setSort({
-      name: tablePresenter.getColumnNameForIndex(
-        index
-      ) as GetParameters.SortKey,
+      name: tablePresenter.getColumnNameForIndex(index) as SortKey,
       order,
     });
   };

@@ -37,8 +37,6 @@ import {
   GetVersionResourcesQueryManager,
   GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
-  GetParametersQueryManager,
-  GetParametersStateHelper,
   GetDesiredStatesQueryManager,
   GetDesiredStatesStateHelper,
   GetDesiredStateDiffQueryManager,
@@ -69,6 +67,10 @@ import {
   NotificationContinuousQueryManager,
   NotificationReadOnlyQueryManager,
 } from "@S/Notification/Data";
+import {
+  GetParametersQueryManager,
+  GetParametersStateHelper,
+} from "@S/Parameters/Data";
 import { GetResourcesQueryManager } from "@S/Resource/Data";
 import {
   GetInstanceLogsQueryManager,

@@ -4,20 +4,19 @@ import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
-import {
-  QueryResolverImpl,
-  getStoreInstance,
-  GetParametersQueryManager,
-  GetParametersStateHelper,
-} from "@/Data";
+import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   DynamicQueryManagerResolver,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
-  Parameters,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import {
+  GetParametersQueryManager,
+  GetParametersStateHelper,
+} from "@S/Parameters/Data";
+import * as Parameters from "@S/Parameters/Data/Mock";
 import { Page } from "./Page";
 
 function setup() {

@@ -1,9 +1,9 @@
 import {
   Pagination,
-  Parameter,
   Sort,
   PageSize,
   DateRange,
+  Parameter,
 } from "@/Core/Domain";
 
 export interface Query {

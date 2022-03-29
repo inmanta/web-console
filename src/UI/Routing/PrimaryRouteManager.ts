@@ -22,6 +22,7 @@ import { Diagnose } from "@S/Diagnose";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
+import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { Settings } from "@S/Settings";
@@ -71,7 +72,7 @@ export class PrimaryRouteManager implements RouteManager {
       DesiredStateDetails: DesiredStateDetails(this.baseUrl),
       DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
       DesiredStateCompare: DesiredStateCompare(this.baseUrl),
-      Parameters: Parameters(this.baseUrl),
+      Parameters: Parameters.route(this.baseUrl),
       ComplianceCheck: ComplianceCheck.route(this.baseUrl),
     };
   }
@@ -279,12 +280,4 @@ const Status = (base: string): Route<"Status"> => ({
   path: `${base}${paths.Status}`,
   generateLabel: () => "Status",
   environmentRole: "Optional",
-});
-
-const Parameters = (base: string): Route<"Parameters"> => ({
-  kind: "Parameters",
-  parent: "Home",
-  path: `${base}${paths.Parameters}`,
-  generateLabel: () => "Parameters",
-  environmentRole: "Required",
 });

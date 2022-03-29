@@ -1,11 +1,12 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
-import { GetParameters } from "@/Core";
+import { Filter } from "@S/Parameters/Core/Query";
+
 import { FilterWidget } from "./FilterWidget";
 
 interface Props {
-  filter: GetParameters.Filter;
-  setFilter: (filter: GetParameters.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
   paginationWidget: React.ReactNode;
 }
 

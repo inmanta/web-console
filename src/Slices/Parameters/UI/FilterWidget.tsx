@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
-import { DateRange, GetParameters } from "@/Core";
+import { DateRange } from "@/Core";
 import { FilterPicker } from "@/UI/Components";
 import { FreeTextFilter, TimestampFilter } from "@/UI/Components/Filters";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
+import { FilterKind, Filter, FilterList } from "@S/Parameters/Core/Query";
 
 interface Props {
-  filter: GetParameters.Filter;
-  setFilter: (filter: GetParameters.Filter) => void;
+  filter: Filter;
+  setFilter: (filter: Filter) => void;
 }
 
 export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
-  const [filterKind, setFilterKind] = useState<GetParameters.FilterKind>(
-    GetParameters.FilterKind.Name
-  );
+  const [filterKind, setFilterKind] = useState<FilterKind>(FilterKind.Name);
 
   const updateSource = (sources: string[]) =>
     setFilter({ ...filter, source: sources.length > 0 ? sources : undefined });
@@ -32,25 +31,25 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
       <FilterPicker
         setFilterKind={setFilterKind}
         filterKind={filterKind}
-        items={GetParameters.FilterList}
+        items={FilterList}
       />
       <FreeTextFilter
-        isHidden={filterKind !== GetParameters.FilterKind.Name}
+        isHidden={filterKind !== FilterKind.Name}
         searchEntries={filter.name}
-        filterPropertyName={GetParameters.FilterKind.Name}
+        filterPropertyName={FilterKind.Name}
         placeholder={words("parameters.filters.name.placeholder")}
         update={updateName}
       />
       <FreeTextFilter
-        isHidden={filterKind !== GetParameters.FilterKind.Source}
+        isHidden={filterKind !== FilterKind.Source}
         searchEntries={filter.source}
-        filterPropertyName={GetParameters.FilterKind.Source}
+        filterPropertyName={FilterKind.Source}
         placeholder={words("parameters.filters.source.placeholder")}
         update={updateSource}
       />
       <TimestampFilter
         datePresenter={new MomentDatePresenter()}
-        isVisible={filterKind === GetParameters.FilterKind.Updated}
+        isVisible={filterKind === FilterKind.Updated}
         timestampFilters={filter.updated ? filter.updated : []}
         update={updateUpdated}
       />

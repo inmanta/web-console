@@ -9,6 +9,7 @@ import * as GetDiagnostics from "@S/Diagnose/Core/Query";
 import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
 import * as GetNotifications from "@S/Notification/Core/Query";
+import * as GetParameters from "@S/Parameters/Core/Query";
 import * as GetResources from "@S/Resource/Core/Query";
 import * as GetInstanceLogs from "@S/ServiceInstanceHistory/Core/Query";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
@@ -38,7 +39,6 @@ import {
   GetInstanceResources,
   GetInstanceResourcesManifest,
 } from "./GetInstanceResources";
-import { GetParameters } from "./GetParameters";
 import {
   GetResourceDetails,
   GetResourceDetailsManifest,
