@@ -1,6 +1,5 @@
 import React from "react";
 import { ListIcon, PortIcon } from "@patternfly/react-icons";
-import { InstanceLog } from "@/Core";
 import {
   AttributesTable,
   EmptyView,
@@ -11,6 +10,7 @@ import {
   TabDescriptor,
 } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { InstanceLog } from "@S/ServiceInstanceHistory/Core/Domain";
 
 export enum TabKey {
   Attributes = "Attributes",

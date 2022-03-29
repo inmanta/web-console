@@ -1,7 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
-import { InstanceLog as InstanceLogModel } from "@/Core";
 import { QueryResolverImpl, getStoreInstance } from "@/Data";
 import {
   Service,
@@ -11,6 +10,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { InstanceLog as InstanceLogModel } from "@S/ServiceInstanceHistory/Core/Domain";
 import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,

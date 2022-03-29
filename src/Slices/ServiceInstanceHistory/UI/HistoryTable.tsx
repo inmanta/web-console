@@ -1,9 +1,10 @@
 import React from "react";
 import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
-import { InstanceLog, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { InstanceState } from "@/UI/Components";
 import { words } from "@/UI/words";
+import { InstanceLog } from "@S/ServiceInstanceHistory/Core/Domain";
 import { AttributesPresenter } from "@S/ServiceInventory/UI/Presenters";
 import { InstanceLogRow } from "./InstanceLogRow";
 

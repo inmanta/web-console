@@ -16,3 +16,13 @@ export interface ResourceLogFilter {
   message?: string[];
   timestamp?: DateRange.DateRange[];
 }
+
+export const actionTypes = [
+  "store",
+  "push",
+  "pull",
+  "deploy",
+  "dryrun",
+  "getfact",
+  "other",
+];

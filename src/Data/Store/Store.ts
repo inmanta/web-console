@@ -42,6 +42,7 @@ import {
   notificationSlice,
   NotificationSlice,
 } from "@S/Notification/Data/Store";
+import { parametersSlice, ParametersSlice } from "@S/Parameters/Data/Store";
 import {
   resourceDetailsSlice,
   ResourceDetailsSlice,
@@ -76,7 +77,6 @@ import {
   instanceResourcesSlice,
   InstanceResourcesSlice,
 } from "./InstanceResourcesSlice";
-import { parametersSlice, ParametersSlice } from "./ParametersSlice";
 import { projectsSlice, ProjectsSlice } from "./ProjectsSlice";
 import { resourcesSlice, ResourcesSlice } from "./ResourcesSlice";
 import { serviceConfigSlice, ServiceConfigSlice } from "./ServiceConfigSlice";

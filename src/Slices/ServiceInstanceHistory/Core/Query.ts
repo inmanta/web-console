@@ -1,4 +1,5 @@
-import { InstanceLog, ServiceInstanceIdentifier } from "@/Core/Domain";
+import { ServiceInstanceIdentifier } from "@/Core/Domain";
+import { InstanceLog } from "./Domain";
 
 /**
  * The instanceLogs query describes logs belonging to one specific service instance

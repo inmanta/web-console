@@ -1,5 +1,6 @@
 import { Action, action } from "easy-peasy";
-import { InstanceLog, RemoteData } from "@/Core";
+import { RemoteData } from "@/Core";
+import { InstanceLog } from "@S/ServiceInstanceHistory/Core/Domain";
 
 /**
  * The instanceLogsSlice stores logs related to service instances.

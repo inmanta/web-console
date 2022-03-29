@@ -1,5 +1,6 @@
-import { InstanceLog, EventType } from "@/Core";
+import { EventType } from "@/Core";
 import * as ServiceInstance from "@/Test/Data/ServiceInstance";
+import { InstanceLog } from "@S/ServiceInstanceHistory/Core/Domain";
 
 export const a: InstanceLog = {
   ...ServiceInstance.a,

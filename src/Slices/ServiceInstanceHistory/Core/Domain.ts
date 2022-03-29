@@ -1,6 +1,6 @@
+import { InstanceEvent } from "@/Core/Domain/EventModel";
+import { InstanceAttributeModel } from "@/Core/Domain/ServiceInstanceModel";
 import { ParsedNumber } from "@/Core/Language";
-import { InstanceEvent } from "./EventModel";
-import { InstanceAttributeModel } from "./ServiceInstanceModel";
 
 export interface InstanceLog {
   service_instance_id: string;
