@@ -1,4 +1,5 @@
 import * as CreateInstance from "@S/CreateInstance/Core/Command";
+import * as TriggerInstanceUpdate from "@S/EditInstance/Core/Command";
 import * as UpdateNotification from "@S/Notification/Core/Command";
 import { ControlAgent, ControlAgentManifest } from "./ControlAgent";
 import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
@@ -37,10 +38,6 @@ import {
 } from "./ResumeEnvironment";
 import { TriggerCompile, TriggerCompileManifest } from "./TriggerCompile";
 import { TriggerDryRun } from "./TriggerDryRun";
-import {
-  TriggerInstanceUpdate,
-  TriggerInstanceUpdateManifest,
-} from "./TriggerInstanceUpdate";
 import { TriggerSetState, TriggerSetStateManifest } from "./TriggerSetState";
 import {
   UpdateEnvironmentSetting,
@@ -59,7 +56,7 @@ export type Command =
   | UpdateServiceConfig
   | UpdateInstanceConfig
   | CreateInstance.Command
-  | TriggerInstanceUpdate
+  | TriggerInstanceUpdate.Command
   | DeleteInstance
   | TriggerSetState
   | DeleteService
@@ -93,7 +90,7 @@ interface Manifest {
   UpdateServiceConfig: UpdateServiceConfigManifest;
   UpdateInstanceConfig: UpdateInstanceConfigManifest;
   CreateInstance: CreateInstance.Manifest;
-  TriggerInstanceUpdate: TriggerInstanceUpdateManifest;
+  TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
   DeleteInstance: DeleteInstanceManifest;
   TriggerSetState: TriggerSetStateManifest;
   DeleteService: DeleteServiceManifest;

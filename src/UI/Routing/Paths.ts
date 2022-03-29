@@ -10,6 +10,7 @@ import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { DesiredStateDetails } from "@S/DesiredStateDetails";
 import { DesiredStateResourceDetails } from "@S/DesiredStateResourceDetails";
 import { Diagnose } from "@S/Diagnose";
+import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
@@ -37,7 +38,7 @@ export const paths: Paths = {
   Catalog: "/lsm/catalog",
   Inventory: "/lsm/catalog/:service/inventory",
   CreateInstance: CreateInstance.path,
-  EditInstance: "/lsm/catalog/:service/inventory/:instance/edit",
+  EditInstance: EditInstance.path,
   History: ServiceInstanceHistory.path,
   Diagnose: Diagnose.path,
   Events: Events.path,

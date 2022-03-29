@@ -10,7 +10,6 @@ import {
   getStoreInstance,
   ServiceInstanceStateHelper,
   ServiceInstanceQueryManager,
-  TriggerInstanceUpdateCommandManager,
   CommandResolverImpl,
 } from "@/Data";
 import {
@@ -24,6 +23,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { EditInstancePage } from "./EditInstancePage";
 
 function setup() {

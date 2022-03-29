@@ -3,7 +3,6 @@ import {
   DeleteInstanceCommandManager,
   InstanceConfigCommandManager,
   InstanceConfigStateHelper,
-  TriggerInstanceUpdateCommandManager,
   ServiceConfigStateHelper,
   ServiceConfigCommandManager,
   TriggerSetStateCommandManager,
@@ -44,6 +43,7 @@ import { GetProjectsStateHelper } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentsUpdater } from "@S/Agents/Data/Updater";
 import { CreateInstanceCommandManager } from "@S/CreateInstance/Data";
 import { GetDesiredStatesStateHelper } from "@S/DesiredState/Data";
+import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {

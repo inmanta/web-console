@@ -10,7 +10,6 @@ import {
   InstanceResourcesStateHelper,
   ServiceInstancesQueryManager,
   ServiceInstancesStateHelper,
-  TriggerInstanceUpdateCommandManager,
   BaseApiHelper,
   TriggerSetStateCommandManager,
   KeycloakAuthHelper,
@@ -27,6 +26,7 @@ import {
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ServiceInventory } from "@/UI/Pages/ServiceInventory/ServiceInventory";
+import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 
 export interface Handles {
   component: React.ReactElement;

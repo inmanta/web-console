@@ -10,7 +10,6 @@ import {
   ServiceInstancesStateHelper,
   InstanceResourcesQueryManager,
   InstanceResourcesStateHelper,
-  TriggerInstanceUpdateCommandManager,
   CommandResolverImpl,
   DeleteInstanceCommandManager,
   BaseApiHelper,
@@ -31,6 +30,7 @@ import {
   dependencies,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
 

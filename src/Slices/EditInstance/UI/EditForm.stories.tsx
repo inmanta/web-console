@@ -1,11 +1,7 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
-import {
-  CommandResolverImpl,
-  getStoreInstance,
-  TriggerInstanceUpdateCommandManager,
-} from "@/Data";
+import { CommandResolverImpl, getStoreInstance } from "@/Data";
 import {
   dependencies,
   DynamicCommandManagerResolver,
@@ -14,6 +10,7 @@ import {
   ServiceInstance,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { EditForm } from "./EditForm";
 
 export default {

@@ -5,16 +5,15 @@ import {
 } from "@/Core/Domain";
 import { Maybe } from "@/Core/Language";
 
-export interface TriggerInstanceUpdate
-  extends VersionedServiceInstanceIdentifier {
+export interface Command extends VersionedServiceInstanceIdentifier {
   kind: "TriggerInstanceUpdate";
 }
 
-export interface TriggerInstanceUpdateManifest {
+export interface Manifest {
   error: string;
   apiData: string;
   body: { attributes: InstanceAttributeModel };
-  command: TriggerInstanceUpdate;
+  command: Command;
   trigger: (
     fields: Field[],
     currentAttributes: InstanceAttributeModel | null,

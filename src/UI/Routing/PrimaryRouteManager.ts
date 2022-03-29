@@ -24,6 +24,7 @@ import { DesiredState } from "@S/DesiredState";
 import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { DesiredStateDetails } from "@S/DesiredStateDetails";
 import { Diagnose } from "@S/Diagnose";
+import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
 import { Notification } from "@S/Notification";
@@ -55,7 +56,7 @@ export class PrimaryRouteManager implements RouteManager {
       Catalog: Catalog(this.baseUrl),
       Inventory: Inventory(this.baseUrl),
       CreateInstance: CreateInstance.route(this.baseUrl),
-      EditInstance: EditInstance(this.baseUrl),
+      EditInstance: EditInstance.route(this.baseUrl),
       History: ServiceInstanceHistory.route(this.baseUrl),
       Diagnose: Diagnose.route(this.baseUrl),
       Events: Events.route(this.baseUrl),
@@ -206,14 +207,6 @@ const Inventory = (base: string): Route<"Inventory"> => ({
   parent: "Catalog",
   path: `${base}${paths.Inventory}`,
   generateLabel: (params) => `Service Inventory: ${params.service}`,
-  environmentRole: "Required",
-});
-
-const EditInstance = (base: string): Route<"EditInstance"> => ({
-  kind: "EditInstance",
-  parent: "Inventory",
-  path: `${base}${paths.EditInstance}`,
-  generateLabel: () => "Edit Instance",
   environmentRole: "Required",
 });
 
