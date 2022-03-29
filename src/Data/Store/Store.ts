@@ -28,6 +28,10 @@ import {
   desiredStateDiffSlice,
   DesiredStateDiffSlice,
 } from "@S/DesiredStateCompare/Data/Store";
+import {
+  versionResourcesSlice,
+  VersionResourcesSlice,
+} from "@S/DesiredStateDetails/Data/Store";
 import { diagnosticsSlice, DiagnosticsSlice } from "@S/Diagnose/Data/Store";
 import { factsSlice, FactsSlice } from "@S/Facts/Data/Store";
 import {
@@ -78,10 +82,6 @@ import {
   ServiceInstancesSlice,
 } from "./ServiceInstancesSlice";
 import { servicesSlice, ServicesSlice } from "./ServicesSlice";
-import {
-  versionResourcesSlice,
-  VersionResourcesSlice,
-} from "./VersionResourcesSlice";
 import {
   versionedResourceDetailsSlice,
   VersionedResourceDetailsSlice,

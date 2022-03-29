@@ -1,6 +1,6 @@
 import { Pagination, PageSize, Sort, Resource } from "@/Core/Domain";
 
-export interface GetVersionResources {
+export interface Query {
   kind: "GetVersionResources";
   version: string;
   filter?: Resource.FilterFromVersion;
@@ -8,7 +8,7 @@ export interface GetVersionResources {
   pageSize: PageSize.Type;
 }
 
-export interface GetVersionResourcesManifest {
+export interface Manifest {
   error: string;
   apiResponse: Resource.ResponseFromVersion;
   data: Resource.ResponseFromVersion;
@@ -17,5 +17,5 @@ export interface GetVersionResourcesManifest {
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };
-  query: GetVersionResources;
+  query: Query;
 }

@@ -7,6 +7,7 @@ import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
 import * as GetDesiredStates from "@S/DesiredState/Core/Query";
 import * as GetDesiredStateDiff from "@S/DesiredStateCompare/Core/Query";
+import * as GetVersionResources from "@S/DesiredStateDetails/Core/Query";
 import * as GetDiagnostics from "@S/Diagnose/Core/Query";
 import * as GetInstanceEvents from "@S/Events/Core/Query";
 import * as GetFacts from "@S/Facts/Core/Query";
@@ -55,10 +56,6 @@ import {
   GetServiceInstancesManifest,
 } from "./GetServiceInstances";
 import { GetServices, GetServicesManifest } from "./GetServices";
-import {
-  GetVersionResources,
-  GetVersionResourcesManifest,
-} from "./GetVersionResources";
 import { GetVersionedResourceDetails } from "./GetVersionedResourceDetails";
 
 export type Query =
@@ -90,7 +87,7 @@ export type Query =
   | GetAgents.Query
   | GetAgentProcess.Query
   | GetDesiredStates.Query
-  | GetVersionResources
+  | GetVersionResources.Query
   | GetCompilerStatus
   | GetParameters.Query
   | GetDesiredStateDiff.Query
@@ -133,7 +130,7 @@ interface Manifest {
   GetAgents: GetAgents.Manifest;
   GetAgentProcess: GetAgentProcess.Manifest;
   GetDesiredStates: GetDesiredStates.Manifest;
-  GetVersionResources: GetVersionResourcesManifest;
+  GetVersionResources: GetVersionResources.Manifest;
   GetCompilerStatus: GetCompilerStatusManifest;
   GetParameters: GetParameters.Manifest;
   GetFacts: GetFacts.Manifest;

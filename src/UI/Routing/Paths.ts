@@ -6,6 +6,7 @@ import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
 import { DesiredState } from "@S/DesiredState";
 import { DesiredStateCompare } from "@S/DesiredStateCompare";
+import { DesiredStateDetails } from "@S/DesiredStateDetails";
 import { Diagnose } from "@S/Diagnose";
 import { Events } from "@S/Events";
 import { Facts } from "@S/Facts";
@@ -54,7 +55,7 @@ export const paths: Paths = {
   CompileReports: CompileReports.path,
   CompileDetails: CompileDetails.path,
   DesiredState: DesiredState.path,
-  DesiredStateDetails: "/desiredstate/:version",
+  DesiredStateDetails: DesiredStateDetails.path,
   DesiredStateResourceDetails: "/desiredstate/:version/resource/:resourceId",
   DesiredStateCompare: DesiredStateCompare.path,
   Parameters: Parameters.path,

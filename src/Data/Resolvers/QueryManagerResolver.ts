@@ -26,8 +26,6 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
-  GetVersionResourcesQueryManager,
-  GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
   GetVersionedResourceDetails,
 } from "@/Data/Managers";
@@ -53,6 +51,10 @@ import {
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
 } from "@S/DesiredStateCompare/Data";
+import {
+  GetVersionResourcesQueryManager,
+  GetVersionResourcesStateHelper,
+} from "@S/DesiredStateDetails/Data";
 import {
   DiagnosticsQueryManager,
   DiagnosticsStateHelper,

@@ -4,12 +4,7 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { act } from "react-dom/test-utils";
 import { Either } from "@/Core";
-import {
-  getStoreInstance,
-  GetVersionResourcesQueryManager,
-  GetVersionResourcesStateHelper,
-  QueryResolverImpl,
-} from "@/Data";
+import { getStoreInstance, QueryResolverImpl } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
@@ -18,6 +13,10 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import {
+  GetVersionResourcesQueryManager,
+  GetVersionResourcesStateHelper,
+} from "@S/DesiredStateDetails/Data";
 import { Page } from "./Page";
 
 function setup() {
