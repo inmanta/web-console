@@ -10,8 +10,8 @@ import {
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
-import { FilterWidget } from "@/UI/Pages/ServiceInventory/Components/FilterWidget";
 import { words } from "@/UI/words";
+import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
 
 interface Props {
   serviceName: string;

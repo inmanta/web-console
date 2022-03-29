@@ -25,8 +25,8 @@ import {
   Service,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { ServiceInventory } from "@/UI/Pages/ServiceInventory/ServiceInventory";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
+import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 
 export interface Handles {
   component: React.ReactElement;

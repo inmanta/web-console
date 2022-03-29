@@ -2,14 +2,14 @@ import React, { useRef, useState } from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
-import { DateWithTooltip, TextWithCopy } from "@/UI/Components";
+import {
+  DateWithTooltip,
+  TextWithCopy,
+  AttributesSummaryView,
+} from "@/UI/Components";
 import { scrollRowIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
-import {
-  AttributesSummaryView,
-  DeploymentProgressBar,
-  IdWithCopy,
-} from "./Components";
+import { DeploymentProgressBar, IdWithCopy } from "./Components";
 import { Tabs, TabKey } from "./Tabs";
 
 interface Props {

@@ -35,9 +35,9 @@ import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
 import { ServiceCatalog } from "@S/ServiceCatalog";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
+import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
-import { paths } from "./Paths";
 import { encodeParams } from "./Utils";
 
 export class PrimaryRouteManager implements RouteManager {
@@ -58,7 +58,7 @@ export class PrimaryRouteManager implements RouteManager {
        * LSM
        */
       Catalog: ServiceCatalog.route(this.baseUrl),
-      Inventory: Inventory(this.baseUrl),
+      Inventory: ServiceInventory.route(this.baseUrl),
       CreateInstance: CreateInstance.route(this.baseUrl),
       EditInstance: EditInstance.route(this.baseUrl),
       History: ServiceInstanceHistory.route(this.baseUrl),
@@ -197,11 +197,3 @@ export class PrimaryRouteManager implements RouteManager {
     }));
   }
 }
-
-const Inventory = (base: string): Route<"Inventory"> => ({
-  kind: "Inventory",
-  parent: "Catalog",
-  path: `${base}${paths.Inventory}`,
-  generateLabel: (params) => `Service Inventory: ${params.service}`,
-  environmentRole: "Required",
-});

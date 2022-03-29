@@ -3,8 +3,8 @@ import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
 import { InstanceLog, ServiceModel } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { InstanceState } from "@/UI/Components";
-import { AttributesPresenter } from "@/UI/Pages/ServiceInventory/Presenters";
 import { words } from "@/UI/words";
+import { AttributesPresenter } from "@S/ServiceInventory/UI/Presenters";
 import { InstanceLogRow } from "./InstanceLogRow";
 
 interface Props {

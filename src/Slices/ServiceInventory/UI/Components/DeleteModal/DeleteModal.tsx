@@ -8,8 +8,8 @@ import {
   DeleteForm,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
-import { GetInstancesContext } from "@/UI/Pages/ServiceInventory/GetInstancesContext";
 import { words } from "@/UI/words";
+import { GetInstancesContext } from "@S/ServiceInventory/UI/GetInstancesContext";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   isDisabled?: boolean;

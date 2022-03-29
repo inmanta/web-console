@@ -3,8 +3,8 @@ import {
   DummyDatePresenter,
   DummyStatePresenter,
 } from "@/Test/Mock";
-import { AttributesPresenter } from "@/UI/Pages/ServiceInventory/Presenters/AttributesPresenter";
-import { InventoryTablePresenter } from "@/UI/Pages/ServiceInventory/Presenters/InventoryTablePresenter";
+import { AttributesPresenter } from "@S/ServiceInventory/UI/Presenters/AttributesPresenter";
+import { InventoryTablePresenter } from "@S/ServiceInventory/UI/Presenters/InventoryTablePresenter";
 
 export const tablePresenter = new InventoryTablePresenter(
   new DummyDatePresenter(),

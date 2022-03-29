@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
 import { AttributesSummary, InstanceLog } from "@/Core";
 import { useUrlStateWithString } from "@/Data";
-import { AttributesSummaryView } from "@/UI/Pages/ServiceInventory/Components";
+import { AttributesSummaryView } from "@/UI/Components";
 import { MomentDatePresenter, scrollRowIntoView } from "@/UI/Utils";
 import { Tabs, TabKey } from "./Tabs";
 

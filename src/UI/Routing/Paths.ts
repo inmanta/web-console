@@ -21,6 +21,7 @@ import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
 import { ServiceCatalog } from "@S/ServiceCatalog";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
+import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
 
@@ -40,7 +41,7 @@ export const paths: Paths = {
    * LSM
    */
   Catalog: ServiceCatalog.path,
-  Inventory: "/lsm/catalog/:service/inventory",
+  Inventory: ServiceInventory.path,
   CreateInstance: CreateInstance.path,
   EditInstance: EditInstance.path,
   History: ServiceInstanceHistory.path,

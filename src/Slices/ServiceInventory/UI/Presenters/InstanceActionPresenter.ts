@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { ServiceModel } from "@/Core";
-import { InstanceActions } from "@/UI/Pages/ServiceInventory/Components";
 import { ActionPresenter, ServiceInstanceForAction } from "@/UI/Presenters";
+import { InstanceActions } from "@S/ServiceInventory/UI/Components";
 
 export class InstanceActionPresenter implements ActionPresenter {
   constructor(

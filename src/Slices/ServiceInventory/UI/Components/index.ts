@@ -1,4 +1,3 @@
-export * from "./AttributesSummaryView";
 export * from "./AttributesList";
 export * from "./Chart";
 export * from "./IdWithCopy";
