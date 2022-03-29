@@ -16,8 +16,6 @@ import {
   DeleteEnvironmentCommandManager,
   ProjectsUpdater,
   ModifyEnvironmentCommandManager,
-  CreateProjectCommandManager,
-  CreateEnvironmentCommandManager,
   UpdateEnvironmentSettingCommandManager,
   EnvironmentSettingUpdater,
   GetEnvironmentSettingStateHelper,
@@ -41,6 +39,10 @@ import {
 } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import { GetProjectsStateHelper } from "@/Slices/Settings/Data/GetProjects";
 import { GetAgentsUpdater } from "@S/Agents/Data/Updater";
+import {
+  CreateEnvironmentCommandManager,
+  CreateProjectCommandManager,
+} from "@S/CreateEnvironment/Data";
 import { CreateInstanceCommandManager } from "@S/CreateInstance/Data";
 import { GetDesiredStatesStateHelper } from "@S/DesiredState/Data";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";

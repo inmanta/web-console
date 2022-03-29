@@ -4,6 +4,7 @@ import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { CreateEnvironment } from "@S/CreateEnvironment";
 import { CreateInstance } from "@S/CreateInstance";
 import { DesiredState } from "@S/DesiredState";
 import { DesiredStateCompare } from "@S/DesiredStateCompare";
@@ -27,7 +28,7 @@ export const paths: Paths = {
    * Main
    */
   Home: "/",
-  CreateEnvironment: "/environment/create",
+  CreateEnvironment: CreateEnvironment.path,
   Settings: Settings.path,
   Status: "/status",
   NotificationCenter: Notification.path,

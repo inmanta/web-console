@@ -1,13 +1,10 @@
+import * as CreateEnvironment from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
+import * as CreateProject from "@S/CreateEnvironment/Core/CreateProjectCommand";
 import * as CreateInstance from "@S/CreateInstance/Core/Command";
 import * as TriggerInstanceUpdate from "@S/EditInstance/Core/Command";
 import * as UpdateNotification from "@S/Notification/Core/Command";
 import { ControlAgent, ControlAgentManifest } from "./ControlAgent";
 import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
-import {
-  CreateEnvironment,
-  CreateEnvironmentManifest,
-} from "./CreateEnvironment";
-import { CreateProject, CreateProjectManifest } from "./CreateProject";
 import { DeleteCallback, DeleteCallbackManifest } from "./DeleteCallback";
 import {
   DeleteEnvironment,
@@ -66,8 +63,8 @@ export type Command =
   | DeleteCallback
   | CreateCallback
   | DeleteEnvironment
-  | CreateProject
-  | CreateEnvironment
+  | CreateProject.Command
+  | CreateEnvironment.Command
   | UpdateEnvironmentSetting
   | ResetEnvironmentSetting
   | GenerateToken
@@ -100,8 +97,8 @@ interface Manifest {
   DeleteCallback: DeleteCallbackManifest;
   CreateCallback: CreateCallbackManifest;
   DeleteEnvironment: DeleteEnvironmentManifest;
-  CreateProject: CreateProjectManifest;
-  CreateEnvironment: CreateEnvironmentManifest;
+  CreateProject: CreateProject.Manifest;
+  CreateEnvironment: CreateEnvironment.Manifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
   ResetEnvironmentSetting: ResetEnvironmentSettingManifest;
   GenerateToken: GenerateTokenManifest;

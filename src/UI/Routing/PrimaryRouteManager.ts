@@ -13,16 +13,17 @@ import {
   RouteMatch,
   Crumb,
 } from "@/Core";
-import { DesiredStateResourceDetails } from "@/Slices/DesiredStateResourceDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
 import { CompileReports } from "@S/CompileReports";
 import { ComplianceCheck } from "@S/ComplianceCheck";
+import { CreateEnvironment } from "@S/CreateEnvironment";
 import { CreateInstance } from "@S/CreateInstance";
 import { DesiredState } from "@S/DesiredState";
 import { DesiredStateCompare } from "@S/DesiredStateCompare";
 import { DesiredStateDetails } from "@S/DesiredStateDetails";
+import { DesiredStateResourceDetails } from "@S/DesiredStateResourceDetails";
 import { Diagnose } from "@S/Diagnose";
 import { EditInstance } from "@S/EditInstance";
 import { Events } from "@S/Events";
@@ -45,7 +46,7 @@ export class PrimaryRouteManager implements RouteManager {
        * Main
        */
       Home: Home(this.baseUrl),
-      CreateEnvironment: CreateEnvironment(this.baseUrl),
+      CreateEnvironment: CreateEnvironment.route(this.baseUrl),
       Settings: Settings.route(this.baseUrl),
       Status: Status(this.baseUrl),
       NotificationCenter: Notification.route(this.baseUrl),
@@ -214,14 +215,6 @@ const Home = (base: string): Route<"Home"> => ({
   kind: "Home",
   path: `${base}${paths.Home}`,
   generateLabel: () => "Home",
-  environmentRole: "Forbidden",
-});
-
-const CreateEnvironment = (base: string): Route<"CreateEnvironment"> => ({
-  kind: "CreateEnvironment",
-  parent: "Home",
-  path: `${base}${paths.CreateEnvironment}`,
-  generateLabel: () => "Create Environment",
   environmentRole: "Forbidden",
 });
 

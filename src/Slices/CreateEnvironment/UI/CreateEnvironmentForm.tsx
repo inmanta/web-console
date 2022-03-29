@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
 import { Button, Flex, FlexItem, Form } from "@patternfly/react-core";
 import styled from "styled-components";
-import { CreateEnvironmentParams, Either, ProjectModel } from "@/Core";
+import { Either, ProjectModel } from "@/Core";
 import { CreatableSelectInput, InlinePlainAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useNavigateTo } from "@/UI/Routing";
 import { words } from "@/UI/words";
+import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
 import { ImageField } from "./ImageField";
 import { TextAreaField } from "./TextAreaField";
 import { TextField } from "./TextField";

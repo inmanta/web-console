@@ -1,12 +1,6 @@
-import {
-  ApiHelper,
-  Command,
-  CreateEnvironmentParams,
-  Either,
-  EnvironmentModel,
-  Updater,
-} from "@/Core";
+import { ApiHelper, Command, Either, EnvironmentModel, Updater } from "@/Core";
 import { CommandManagerWithoutEnv } from "@/Data/Common";
+import { CreateEnvironmentParams } from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
 
 export class CreateEnvironmentCommandManager extends CommandManagerWithoutEnv<"CreateEnvironment"> {
   constructor(
