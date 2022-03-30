@@ -95,8 +95,8 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   });
   const stopButton = await screen.findByText("STOP");
   expect(stopButton).toBeVisible();
-  userEvent.click(stopButton);
-  userEvent.click(await screen.findByText("Yes"));
+  await userEvent.click(stopButton);
+  await userEvent.click(await screen.findByText("Yes"));
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/halt`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
@@ -112,8 +112,8 @@ test("EnvironmentControls don\\t trigger backend call when dialog is not confirm
   });
   const stopButton = await screen.findByText("STOP");
   expect(stopButton).toBeVisible();
-  userEvent.click(stopButton);
-  userEvent.click(await screen.findByText("No"));
+  await userEvent.click(stopButton);
+  await userEvent.click(await screen.findByText("No"));
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
 
@@ -128,8 +128,8 @@ test("EnvironmentControls resume the environment when clicked and the environmen
   expect(await screen.findByText("Operations halted")).toBeVisible();
   const start = await screen.findByText("Resume");
   expect(start).toBeVisible();
-  userEvent.click(start);
-  userEvent.click(await screen.findByText("Yes"));
+  await userEvent.click(start);
+  await userEvent.click(await screen.findByText("Yes"));
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/resume`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(

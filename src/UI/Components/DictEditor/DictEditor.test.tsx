@@ -33,7 +33,7 @@ test("GIVEN DictEditor WHEN given data THEN shows keys and values", () => {
   expect(valueInput).toHaveValue("valA");
 });
 
-test("GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed", () => {
+test("GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed", async () => {
   const { component, setValue } = setup();
   const { rerender } = render(component({ keyA: "valA", keyB: "valB" }));
 
@@ -43,7 +43,7 @@ test("GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed", () 
     name: "DeleteEntryAction",
   });
   expect(deleteA).toBeEnabled();
-  userEvent.click(deleteA);
+  await userEvent.click(deleteA);
   expect(setValue).toHaveBeenCalledTimes(1);
   rerender(component({ keyB: "valB" }));
   expect(rowA).not.toBeInTheDocument();

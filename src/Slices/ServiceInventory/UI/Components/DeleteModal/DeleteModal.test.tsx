@@ -62,7 +62,7 @@ describe("DeleteModal ", () => {
     const { component } = setup();
     render(component());
     const modalButton = await screen.findByText("Delete");
-    userEvent.click(modalButton);
+    await userEvent.click(modalButton);
     expect(await screen.findByText("Yes")).toBeVisible();
     expect(await screen.findByText("No")).toBeVisible();
   });
@@ -70,18 +70,18 @@ describe("DeleteModal ", () => {
     const { component } = setup();
     render(component());
     const modalButton = await screen.findByText("Delete");
-    userEvent.click(modalButton);
+    await userEvent.click(modalButton);
     const noButton = await screen.findByText("No");
-    userEvent.click(noButton);
+    await userEvent.click(noButton);
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
   });
   it("Sends request when submitted", async () => {
     const { component, apiHelper, refetch } = setup();
     render(component());
     const modalButton = await screen.findByText("Delete");
-    userEvent.click(modalButton);
+    await userEvent.click(modalButton);
     const yesButton = await screen.findByText("Yes");
-    userEvent.click(yesButton);
+    await userEvent.click(yesButton);
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
     expect(apiHelper.pendingRequests[0]).toEqual({
       environment: "env",

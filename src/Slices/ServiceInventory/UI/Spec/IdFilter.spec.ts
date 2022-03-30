@@ -1,5 +1,5 @@
 import { render, screen, act, within } from "@testing-library/react";
-import userEvent, { specialChars } from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { Service, ServiceInstance, Pagination } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
@@ -24,13 +24,13 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   const picker = within(filterBar).getByRole("button", {
     name: "FilterPicker",
   });
-  userEvent.click(picker);
+  await userEvent.click(picker);
 
   const id = screen.getByRole("option", { name: "Id" });
-  userEvent.click(id);
+  await userEvent.click(id);
 
   const input = screen.getByRole("searchbox", { name: "IdFilter" });
-  userEvent.type(input, `${ServiceInstance.a.id}${specialChars.enter}`);
+  await userEvent.type(input, `${ServiceInstance.a.id}{enter}`);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.a.id}&sort=created_at.desc`

@@ -69,8 +69,8 @@ test("Given Notification Center page When user filters on severity Then executes
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  userEvent.click(screen.getByRole("button", { name: "Severity" }));
-  userEvent.click(screen.getByRole("option", { name: "message" }));
+  await userEvent.click(screen.getByRole("button", { name: "Severity" }));
+  await userEvent.click(screen.getByRole("option", { name: "message" }));
 
   expect(apiHelper.pendingRequests).toEqual([
     request("?limit=20&filter.severity=message"),
@@ -86,8 +86,8 @@ test("Given Notification Center page When user filters on severity Then executes
     screen.getAllByRole("listitem", { name: "NotificationItem" })
   ).toHaveLength(2);
 
-  userEvent.click(screen.getByRole("button", { name: "Severity" }));
-  userEvent.click(screen.getByRole("option", { name: "message" }));
+  await userEvent.click(screen.getByRole("button", { name: "Severity" }));
+  await userEvent.click(screen.getByRole("option", { name: "message" }));
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 });
 
@@ -98,8 +98,8 @@ test("Given Notification Center page When user filters on read Then executes cor
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  userEvent.click(screen.getByRole("button", { name: "Read" }));
-  userEvent.click(screen.getByRole("option", { name: "read" }));
+  await userEvent.click(screen.getByRole("button", { name: "Read" }));
+  await userEvent.click(screen.getByRole("option", { name: "read" }));
 
   expect(apiHelper.pendingRequests).toEqual([
     request("?limit=20&filter.read=true"),
@@ -117,8 +117,8 @@ test("Given Notification Center page When user filters on read Then executes cor
     })
   ).toHaveLength(2);
 
-  userEvent.click(screen.getByRole("button", { name: "Read" }));
-  userEvent.click(screen.getByRole("option", { name: "read" }));
+  await userEvent.click(screen.getByRole("button", { name: "Read" }));
+  await userEvent.click(screen.getByRole("option", { name: "read" }));
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 });
 
@@ -129,7 +129,7 @@ test("Given Notification Center page When user filters on message Then executes 
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole("searchbox", { name: "MessageFilter" }),
     "abc{enter}"
   );
@@ -150,7 +150,7 @@ test("Given Notification Center page When user filters on message Then executes 
     })
   ).toHaveLength(2);
 
-  userEvent.click(screen.getByRole("button", { name: "close abc" }));
+  await userEvent.click(screen.getByRole("button", { name: "close abc" }));
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 });
 
@@ -161,7 +161,7 @@ test("Given Notification Center page When user filters on title Then executes co
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole("searchbox", { name: "TitleFilter" }),
     "abc{enter}"
   );
@@ -182,7 +182,7 @@ test("Given Notification Center page When user filters on title Then executes co
     })
   ).toHaveLength(2);
 
-  userEvent.click(screen.getByRole("button", { name: "close abc" }));
+  await userEvent.click(screen.getByRole("button", { name: "close abc" }));
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 });
 
@@ -193,7 +193,7 @@ test("Given Notification Center page When user clicks next page Then fetches nex
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  userEvent.click(screen.getByRole("button", { name: "Next" }));
+  await userEvent.click(screen.getByRole("button", { name: "Next" }));
 
   expect(apiHelper.pendingRequests).toEqual([
     {

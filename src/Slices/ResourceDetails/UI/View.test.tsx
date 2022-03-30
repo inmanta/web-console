@@ -80,7 +80,7 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
-  userEvent.click(screen.getAllByRole("button", { name: "Requires" })[0]);
+  await userEvent.click(screen.getAllByRole("button", { name: "Requires" })[0]);
 
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(0);

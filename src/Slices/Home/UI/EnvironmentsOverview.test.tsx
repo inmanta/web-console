@@ -32,8 +32,8 @@ it.each`
     });
     expect(initialCards).toHaveLength(4);
     const input = await screen.findByPlaceholderText("Filter by name");
-    userEvent.click(input);
-    userEvent.type(input, filterValue);
+    await userEvent.click(input);
+    await userEvent.type(input, filterValue);
     expect(
       screen.queryAllByRole("article", {
         name: "Environment card",
@@ -50,9 +50,9 @@ test("Given environments overview When filtering by project Then only the matchi
   });
   expect(initialCards).toHaveLength(4);
   const input = await screen.findByPlaceholderText("Filter by project");
-  userEvent.click(input);
+  await userEvent.click(input);
   const option = await screen.findByRole("option", { name: "default" });
-  await userEvent.click(option);
+  await await userEvent.click(option);
   expect(
     screen.queryAllByRole("article", {
       name: "Environment card",
@@ -68,12 +68,12 @@ test("Given environments overview When filtering by name and project Then only t
   });
   expect(initialCards).toHaveLength(4);
   const projectInput = await screen.findByPlaceholderText("Filter by project");
-  userEvent.click(projectInput);
+  await userEvent.click(projectInput);
   const option = await screen.findByRole("option", { name: "default" });
-  await userEvent.click(option);
+  await await userEvent.click(option);
   const nameInput = await screen.findByPlaceholderText("Filter by name");
-  userEvent.click(nameInput);
-  userEvent.type(nameInput, "test");
+  await userEvent.click(nameInput);
+  await userEvent.type(nameInput, "test");
   expect(
     await screen.findByRole("article", {
       name: "Environment card",

@@ -7,6 +7,7 @@ import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 jest.useFakeTimers("modern");
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN data is fetched immediately", async () => {
+  const user = userEvent.setup({ delay: null });
   const { component, scheduler, apiHelper } =
     new ServiceInventoryPrepper().prep();
 
@@ -22,9 +23,9 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     );
   });
 
-  userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
+  await user.click(screen.getAllByRole("button", { name: "Details" })[0]);
   await act(async () => {
-    userEvent.click(screen.getAllByRole("button", { name: "Resources" })[0]);
+    await user.click(screen.getAllByRole("button", { name: "Resources" })[0]);
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -50,6 +51,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 });
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN the Resources auto-update happens in sync with the ServiceInstances", async () => {
+  const user = userEvent.setup({ delay: null });
   const prepper = new ServiceInventoryPrepper();
   const { component, scheduler, apiHelper } = prepper.prep();
 
@@ -65,9 +67,9 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     );
   });
 
-  userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
+  await user.click(screen.getAllByRole("button", { name: "Details" })[0]);
   await act(async () => {
-    userEvent.click(screen.getAllByRole("button", { name: "Resources" })[0]);
+    await user.click(screen.getAllByRole("button", { name: "Resources" })[0]);
   });
 
   await act(async () => {

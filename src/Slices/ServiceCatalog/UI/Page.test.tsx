@@ -181,7 +181,7 @@ test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is trigg
     await apiHelper.resolve(Either.right({ data: [Service.a] }));
   });
 
-  userEvent.click(screen.getByText("change environment"));
+  await userEvent.click(screen.getByText("change environment"));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.resolvedRequests).toHaveLength(1);

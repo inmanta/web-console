@@ -25,10 +25,10 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   expect(initialRows.length).toEqual(2);
 
   const input = await screen.findByPlaceholderText("Select a state...");
-  userEvent.click(input);
+  await userEvent.click(input);
 
   const option = await screen.findByRole("option", { name: "creating" });
-  await userEvent.click(option);
+  await await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.state=creating&sort=created_at.desc`

@@ -62,7 +62,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
     datePresenter.getFull(Mock.listResponse.data[0].date)
   );
 
-  userEvent.click(select);
+  await userEvent.click(select);
   const dropdown = screen.getByRole("listbox", { name: "ReportList" });
   const options = within(dropdown).getAllByRole<HTMLButtonElement>("option");
   expect(options).toHaveLength(3);
@@ -95,7 +95,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   });
 
   const dryRunButton = screen.getByRole("button", { name: "Perform dry run" });
-  userEvent.click(dryRunButton);
+  await userEvent.click(dryRunButton);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -124,7 +124,7 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   expect(select).toBeInTheDocument();
   expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date));
 
-  userEvent.click(select);
+  await userEvent.click(select);
   const dropdown = screen.getByRole("listbox", { name: "ReportList" });
   const options = within(dropdown).getAllByRole<HTMLButtonElement>("option");
   expect(options).toHaveLength(4);
@@ -150,7 +150,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
-  userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+  await userEvent.click(screen.getByRole("button", { name: "Jump to" }));
 
   expect(
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
@@ -164,7 +164,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     screen.queryByRole("listbox", { name: "StatusFilterOptions" })
   ).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
+  await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
 
   expect(
     screen.getByRole("listbox", { name: "StatusFilterOptions" })
@@ -174,10 +174,10 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     name: "StatusFilterOption",
   });
   expect(statusOptions).toHaveLength(7);
-  userEvent.click(screen.getByRole("button", { name: "Hide All" }));
-  userEvent.click(statusOptions[0]);
+  await userEvent.click(screen.getByRole("button", { name: "Hide All" }));
+  await userEvent.click(statusOptions[0]);
 
-  userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+  await userEvent.click(screen.getByRole("button", { name: "Jump to" }));
   expect(
     await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" })
   ).toHaveLength(2);

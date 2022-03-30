@@ -24,18 +24,18 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
   const picker = within(filterBar).getByRole("button", {
     name: "FilterPicker",
   });
-  userEvent.click(picker);
+  await userEvent.click(picker);
 
   const id = screen.getByRole("option", { name: "Deleted" });
-  userEvent.click(id);
+  await userEvent.click(id);
 
   const rule = within(filterBar).getByRole("button", {
     name: "Select Deleted",
   });
-  userEvent.click(rule);
+  await userEvent.click(rule);
 
   const only = screen.getByRole("option", { name: "Only" });
-  userEvent.click(only);
+  await userEvent.click(only);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.deleted=true&sort=created_at.desc`

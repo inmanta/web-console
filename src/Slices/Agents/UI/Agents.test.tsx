@@ -118,18 +118,18 @@ test("When using the name filter then only the matching agents should be fetched
   });
   expect(initialRows).toHaveLength(6);
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Name" }));
+  await userEvent.click(screen.getByRole("option", { name: "Name" }));
 
   const input = screen.getByPlaceholderText("Filter by name");
-  userEvent.click(input);
+  await userEvent.click(input);
 
-  userEvent.type(input, "internal{enter}");
+  await userEvent.type(input, "internal{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/agents?limit=20&filter.name=internal&sort=name.asc`
@@ -163,18 +163,18 @@ test("When using the process name filter then only the matching agents should be
   });
   expect(initialRows).toHaveLength(6);
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Process Name" }));
+  await userEvent.click(screen.getByRole("option", { name: "Process Name" }));
 
   const input = screen.getByPlaceholderText("Filter by process name");
-  userEvent.click(input);
+  await userEvent.click(input);
 
-  userEvent.type(input, "internal{enter}");
+  await userEvent.type(input, "internal{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/agents?limit=20&filter.process_name=internal&sort=name.asc`
@@ -208,19 +208,19 @@ test("When using the status filter with the 'up' option then the agents in the '
   });
   expect(initialRows).toHaveLength(6);
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Status" }));
+  await userEvent.click(screen.getByRole("option", { name: "Status" }));
 
   const input = screen.getByPlaceholderText("Select status...");
-  userEvent.click(input);
+  await userEvent.click(input);
 
   const option = await screen.findByRole("option", { name: "up" });
-  await userEvent.click(option);
+  await await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/agents?limit=20&filter.status=up&sort=name.asc`
@@ -250,8 +250,8 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
   });
 
   const input = screen.getByPlaceholderText("Filter by name");
-  userEvent.click(input);
-  userEvent.type(input, "aws{enter}");
+  await userEvent.click(input);
+  await userEvent.type(input, "aws{enter}");
 
   await act(async () => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
@@ -263,7 +263,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
     name: "Pause",
   });
 
-  userEvent.click(pauseAgentButton);
+  await userEvent.click(pauseAgentButton);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
@@ -299,8 +299,8 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
   });
 
   const input = screen.getByPlaceholderText("Filter by name");
-  userEvent.click(input);
-  userEvent.type(input, "bru{enter}");
+  await userEvent.click(input);
+  await userEvent.type(input, "bru{enter}");
 
   await act(async () => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
@@ -312,7 +312,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
     name: "Unpause",
   });
 
-  userEvent.click(unpauseAgentButton);
+  await userEvent.click(unpauseAgentButton);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
@@ -353,7 +353,7 @@ test("Given the Agents view When pausing an agent results in an error, then the 
     name: "Pause",
   });
 
-  userEvent.click(pauseAgentButton);
+  await userEvent.click(pauseAgentButton);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
@@ -386,7 +386,7 @@ test("Given the Agents view with the environment halted, When setting keep_pause
   });
   expect(onResumeToggle).toBeVisible();
   expect(onResumeToggle).toBeChecked();
-  userEvent.click(onResumeToggle);
+  await userEvent.click(onResumeToggle);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
     environment: "env",
@@ -425,7 +425,7 @@ test("Given the Agents view with the environment halted, When setting unpause_on
   });
   expect(onResumeToggle).toBeVisible();
   expect(onResumeToggle).not.toBeChecked();
-  userEvent.click(onResumeToggle);
+  await userEvent.click(onResumeToggle);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
     environment: "env",

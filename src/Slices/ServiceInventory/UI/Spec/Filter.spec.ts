@@ -25,10 +25,10 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   expect(beforeRows.length).toEqual(2);
 
   const input = await screen.findByPlaceholderText("Select a state...");
-  userEvent.click(input);
+  await userEvent.click(input);
 
   const option = await screen.findByRole("option", { name: "creating" });
-  userEvent.click(option);
+  await userEvent.click(option);
 
   expect(
     await screen.findByRole("generic", { name: "ServiceInventory-Loading" })
