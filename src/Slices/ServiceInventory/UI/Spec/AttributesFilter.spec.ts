@@ -19,17 +19,19 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
     );
   });
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "AttributeSet" }));
-  userEvent.click(screen.getByRole("button", { name: "Select AttributeSet" }));
-  userEvent.click(screen.getByRole("option", { name: "Active" }));
-  userEvent.click(screen.getByRole("button", { name: "Select Quality" }));
-  userEvent.click(screen.getByRole("option", { name: "Not Empty" }));
+  await userEvent.click(screen.getByRole("option", { name: "AttributeSet" }));
+  await userEvent.click(
+    screen.getByRole("button", { name: "Select AttributeSet" })
+  );
+  await userEvent.click(screen.getByRole("option", { name: "Active" }));
+  await userEvent.click(screen.getByRole("button", { name: "Select Quality" }));
+  await userEvent.click(screen.getByRole("option", { name: "Not Empty" }));
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.attribute_set_not_empty=active_attributes&sort=created_at.desc`

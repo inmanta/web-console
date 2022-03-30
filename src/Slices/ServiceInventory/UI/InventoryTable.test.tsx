@@ -88,9 +88,9 @@ test("ServiceInventory can show resources for instance", async () => {
 
   const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
 
-  userEvent.click(within(expandCell).getByRole("button"));
+  await userEvent.click(within(expandCell).getByRole("button"));
 
-  userEvent.click(screen.getByRole("button", { name: "Resources" }));
+  await userEvent.click(screen.getByRole("button", { name: "Resources" }));
   await act(async () => {
     apiHelper.resolve(
       Either.right({
@@ -161,7 +161,7 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
   );
   const stateButton = await screen.findByRole("button", { name: /state/i });
   expect(stateButton).toBeVisible();
-  userEvent.click(stateButton);
+  await userEvent.click(stateButton);
   expect(sort.name).toEqual("state");
   expect(sort.order).toEqual("asc");
 });

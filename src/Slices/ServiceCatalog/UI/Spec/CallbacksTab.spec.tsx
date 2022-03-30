@@ -104,10 +104,10 @@ test("GIVEN ServiceCatalog WHEN click on callbacks tab THEN shows callbacks tab"
   const details = await screen.findByRole("button", {
     name: `${Service.a.name} Details`,
   });
-  userEvent.click(details);
+  await userEvent.click(details);
 
   const callbacksButton = screen.getByRole("button", { name: "Callbacks" });
-  userEvent.click(callbacksButton);
+  await userEvent.click(callbacksButton);
 
   expect(
     screen.getByRole("generic", { name: "Callbacks-Loading" })

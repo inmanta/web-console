@@ -107,7 +107,7 @@ test("GIVEN ConfigurationTab WHEN editing a dict field THEN shows warning icon",
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  userEvent.type(newKeyInput, "testKey");
+  await userEvent.type(newKeyInput, "testKey");
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -125,7 +125,7 @@ test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon"
     name: "Row-agent_trigger_method_on_auto_deploy",
   });
 
-  userEvent.click(
+  await userEvent.click(
     within(row).getByRole("button", {
       name: "EnumInput-agent_trigger_method_on_auto_deploy",
     })
@@ -133,7 +133,7 @@ test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon"
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  userEvent.click(
+  await userEvent.click(
     within(row).getByRole("option", { name: "push_full_deploy" })
   );
   expect(
@@ -156,7 +156,7 @@ test("GIVEN ConfigurationTab WHEN editing a boolean field THEN shows warning ico
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  userEvent.click(
+  await userEvent.click(
     within(row).getByRole<HTMLInputElement>("checkbox", {
       name: "Toggle-auto_deploy",
     })
@@ -181,7 +181,7 @@ test("GIVEN ConfigurationTab WHEN editing a number field THEN shows warning icon
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  userEvent.click(within(row).getByRole("button", { name: "plus" }));
+  await userEvent.click(within(row).getByRole("button", { name: "plus" }));
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -204,14 +204,15 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
   });
 
   expect(toggle.checked).toBeFalsy();
-  userEvent.click(toggle);
+  await userEvent.click(toggle);
   expect(toggle.checked).toBeTruthy();
   expect(apiHelper.resolvedRequests).toHaveLength(1);
 
-  userEvent.click(
+  await userEvent.click(
     within(row).getByRole("button", { name: "SaveAction" }),
-    undefined,
-    { skipHover: true }
+    {
+      skipHover: true,
+    }
   );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -263,10 +264,11 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
 
   expect(toggle.checked).toBeFalsy();
 
-  userEvent.click(
+  await userEvent.click(
     within(row).getByRole("button", { name: "ResetAction" }),
-    undefined,
-    { skipHover: true }
+    {
+      skipHover: true,
+    }
   );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -312,16 +314,17 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
   const newKeyInput = within(newEntryRow).getByRole("textbox", {
     name: "editEntryKey",
   });
-  userEvent.type(newKeyInput, "testKey");
+  await userEvent.type(newKeyInput, "testKey");
   const newValueInput = within(newEntryRow).getByRole("textbox", {
     name: "editEntryValue",
   });
-  userEvent.type(newValueInput, "testValue");
+  await userEvent.type(newValueInput, "testValue");
 
-  userEvent.click(
+  await userEvent.click(
     within(row).getByRole("button", { name: "SaveAction" }),
-    undefined,
-    { skipHover: true }
+    {
+      skipHover: true,
+    }
   );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);

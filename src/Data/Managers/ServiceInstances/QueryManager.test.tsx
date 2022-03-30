@@ -66,6 +66,7 @@ const setup = () => {
 };
 
 test("GIVEN QueryManager WHEN first page request is started and user clicks next page THEN first request update is not executed", async () => {
+  const user = userEvent.setup({ delay: null });
   const { component, apiHelper, tasks } = setup();
 
   render(component);
@@ -98,7 +99,7 @@ test("GIVEN QueryManager WHEN first page request is started and user clicks next
   expect(task1?.effect).toHaveBeenCalledTimes(2);
   expect(task1?.update).toHaveBeenCalledTimes(1);
 
-  userEvent.click(screen.getByText("next"));
+  await user.click(screen.getByText("next"));
   const task2 = Maybe.orUndefined(tasks.get("GetServiceInstances_name"));
   expect(task2?.effect).not.toHaveBeenCalled();
   expect(task2?.update).not.toHaveBeenCalled();

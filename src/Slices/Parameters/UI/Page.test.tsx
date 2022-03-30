@@ -66,8 +66,8 @@ test("When using the name filter then only the matching parameters should be fet
 
   const input = screen.getByPlaceholderText("Filter by name");
 
-  userEvent.click(input);
-  userEvent.type(input, "param{enter}");
+  await userEvent.click(input);
+  await userEvent.type(input, "param{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.name=param`
@@ -101,18 +101,18 @@ test("When using the source filter then only the matching parameters should be f
   });
   expect(initialRows).toHaveLength(10);
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Source" }));
+  await userEvent.click(screen.getByRole("option", { name: "Source" }));
 
   const input = screen.getByPlaceholderText("Filter by source");
 
-  userEvent.click(input);
-  userEvent.type(input, "plugin{enter}");
+  await userEvent.click(input);
+  await userEvent.type(input, "plugin{enter}");
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin`
@@ -146,22 +146,22 @@ test("When using the Updated filter then the parameters within the range selecte
   });
   expect(initialRows).toHaveLength(10);
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Updated" }));
+  await userEvent.click(screen.getByRole("option", { name: "Updated" }));
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
-  userEvent.click(fromDatePicker);
-  userEvent.type(fromDatePicker, `2022/01/31`);
+  await userEvent.click(fromDatePicker);
+  await userEvent.type(fromDatePicker, `2022/01/31`);
   const toDatePicker = screen.getByLabelText("To Date Picker");
-  userEvent.click(toDatePicker);
-  userEvent.type(toDatePicker, `2022-02-01`);
+  await userEvent.click(toDatePicker);
+  await userEvent.type(toDatePicker, `2022-02-01`);
 
-  userEvent.click(screen.getByLabelText("Apply date filter"));
+  await userEvent.click(screen.getByLabelText("Apply date filter"));
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00`

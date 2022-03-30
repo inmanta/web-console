@@ -133,7 +133,7 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   apiHelper.resolve(Either.right(ResourceHistory.response));
   const stateButton = await screen.findByRole("button", { name: /date/i });
   expect(stateButton).toBeVisible();
-  userEvent.click(stateButton);
+  await userEvent.click(stateButton);
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=date.asc");
 });
 
@@ -143,7 +143,7 @@ test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THE
   await act(async () => {
     await apiHelper.resolve(Either.right(ResourceHistory.response));
   });
-  userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
+  await userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
   expect(
     screen.getAllByRole("button", { name: "Desired State" })[0]
   ).toBeVisible();

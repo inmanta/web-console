@@ -105,10 +105,10 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
   const details = await screen.findByRole("button", {
     name: `${Service.a.name} Details`,
   });
-  userEvent.click(details);
+  await userEvent.click(details);
 
   const configButton = screen.getByRole("button", { name: "Config" });
-  userEvent.click(configButton);
+  await userEvent.click(configButton);
 
   expect(screen.getByRole("article", { name: "ServiceConfig" })).toBeVisible();
 });
@@ -122,11 +122,11 @@ test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", a
   const details = await screen.findByRole("button", {
     name: `${Service.a.name} Details`,
   });
-  userEvent.click(details);
+  await userEvent.click(details);
 
   const configButton = screen.getByRole("button", { name: "Config" });
   await act(async () => {
-    userEvent.click(configButton);
+    await userEvent.click(configButton);
   });
 
   apiHelper.resolve(Either.right({ data: {} }));

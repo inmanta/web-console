@@ -80,7 +80,7 @@ test("GIVEN CatalogDataList WHEN description available THEN should show descript
   expect(description).toBeVisible();
 });
 
-test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", () => {
+test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", async () => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -88,7 +88,7 @@ test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", () 
   const button = within(listItem).getByRole("button", {
     name: `${Service.a.name} Details`,
   });
-  userEvent.click(button);
+  await userEvent.click(button);
 
   const details = within(listItem).queryByRole("region", {
     name: "Primary Content Details",
@@ -96,7 +96,7 @@ test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", () 
   expect(details).toBeVisible();
 });
 
-test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hidden", () => {
+test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hidden", async () => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -104,8 +104,8 @@ test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hid
   const button = within(listItem).getByRole("button", {
     name: `${Service.a.name} Details`,
   });
-  userEvent.click(button);
-  userEvent.click(button);
+  await userEvent.click(button);
+  await userEvent.click(button);
 
   const details = within(listItem).queryByRole("region", {
     name: "Primary Content Details",
@@ -113,7 +113,7 @@ test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hid
   expect(details).not.toBeInTheDocument();
 });
 
-test("GIVEN CatalogDataList with 2 services WHEN user clicks on both toggles THEN both details are shown", () => {
+test("GIVEN CatalogDataList with 2 services WHEN user clicks on both toggles THEN both details are shown", async () => {
   render(Component([Service.a, Service.b]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
@@ -137,8 +137,8 @@ test("GIVEN CatalogDataList with 2 services WHEN user clicks on both toggles THE
     name: `${Service.b.name} Details`,
   });
 
-  userEvent.click(toggle1);
-  userEvent.click(toggle2);
+  await userEvent.click(toggle1);
+  await userEvent.click(toggle2);
 
   const details1 = within(listItem1).queryByRole("region", {
     name: "Primary Content Details",

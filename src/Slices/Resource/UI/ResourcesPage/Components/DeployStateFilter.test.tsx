@@ -23,7 +23,7 @@ test("Given the deploy state filter When changing the include/exclude options Th
   const menuToggle = await screen.findByRole("button", {
     name: "Deploy State-toggle",
   });
-  userEvent.click(menuToggle);
+  await userEvent.click(menuToggle);
   // Both options are inactive at the start
 
   expect(
@@ -34,12 +34,12 @@ test("Given the deploy state filter When changing the include/exclude options Th
   ).toBeVisible();
 
   // Select include for skipped state
-  userEvent.click(
+  await userEvent.click(
     await screen.findByRole("generic", { name: "skipped-include-toggle" })
   );
 
   // The include active icon is shown
-  userEvent.click(menuToggle);
+  await userEvent.click(menuToggle);
   expect(
     screen.queryByRole("generic", { name: "skipped-include-inactive" })
   ).not.toBeInTheDocument();
@@ -51,12 +51,12 @@ test("Given the deploy state filter When changing the include/exclude options Th
   expect(
     screen.queryByRole("generic", { name: "skipped-exclude-active" })
   ).not.toBeInTheDocument();
-  userEvent.click(
+  await userEvent.click(
     await screen.findByRole("generic", { name: "skipped-exclude-toggle" })
   );
 
   // The include icon inactive one again and the exclude is active
-  userEvent.click(menuToggle);
+  await userEvent.click(menuToggle);
   expect(
     await screen.findByRole("generic", { name: "skipped-include-inactive" })
   ).toBeVisible();
@@ -65,10 +65,10 @@ test("Given the deploy state filter When changing the include/exclude options Th
   ).toBeVisible();
 
   // Include and exclude filters for different options can be combined
-  userEvent.click(
+  await userEvent.click(
     await screen.findByRole("generic", { name: "deployed-include-toggle" })
   );
-  userEvent.click(menuToggle);
+  await userEvent.click(menuToggle);
   expect(
     await screen.findByRole("generic", { name: "deployed-include-active" })
   ).toBeVisible();
@@ -77,10 +77,10 @@ test("Given the deploy state filter When changing the include/exclude options Th
   ).toBeVisible();
 
   // Clicking a toggle again removes that filter
-  userEvent.click(
+  await userEvent.click(
     await screen.findByRole("generic", { name: "deployed-include-toggle" })
   );
-  userEvent.click(menuToggle);
+  await userEvent.click(menuToggle);
   expect(
     screen.queryByRole("generic", { name: "deployed-include-active" })
   ).not.toBeInTheDocument();

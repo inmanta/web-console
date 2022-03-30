@@ -61,7 +61,7 @@ test("GIVEN DeleteModal WHEN empty or wrong env THEN delete disabled", async () 
   expect(input.value).toHaveLength(0);
   expect(deleteButton).toBeDisabled();
 
-  userEvent.type(input, "wrong");
+  await userEvent.type(input, "wrong");
   expect(input.value).toMatch("wrong");
   expect(deleteButton).toBeDisabled();
 });
@@ -76,7 +76,7 @@ test("GIVEN DeleteModal WHEN correct env THEN delete enabled", async () => {
   expect(input.value).toHaveLength(0);
   expect(deleteButton).toBeDisabled();
 
-  userEvent.type(input, "connect");
+  await userEvent.type(input, "connect");
   expect(input.value).toMatch("connect");
   expect(deleteButton).toBeEnabled();
 });
@@ -88,8 +88,8 @@ test("GIVEN DeleteModal WHEN correct env & delete button pressed THEN delete exe
     name: "Delete Environment Check",
   });
   const deleteButton = screen.getByRole("button", { name: "Delete" });
-  userEvent.type(input, "connect");
-  userEvent.click(deleteButton);
+  await userEvent.type(input, "connect");
+  await userEvent.click(deleteButton);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
@@ -116,8 +116,8 @@ test("GIVEN DeleteModal WHEN delete executed and error THEN error is shown", asy
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "Delete Environment Check",
   });
-  userEvent.type(input, "connect");
-  userEvent.click(screen.getByRole("button", { name: "Delete" }));
+  await userEvent.type(input, "connect");
+  await userEvent.click(screen.getByRole("button", { name: "Delete" }));
   await act(async () => {
     await apiHelper.resolve(Maybe.some("error message"));
   });
@@ -130,7 +130,7 @@ test("GIVEN DeleteModal WHEN delete executed and error THEN error is shown", asy
 test("GIVEN DeleteModal WHEN enter is pressed and form is invalid THEN modal is not closed", async () => {
   const { component, onClose } = setup();
   render(component);
-  userEvent.keyboard("{enter}");
+  await userEvent.keyboard("{enter}");
   expect(onClose).not.toBeCalled();
 });
 
@@ -147,7 +147,7 @@ test("GIVEN DeleteModal THEN focus is on the input field", async () => {
 test("GIVEN DeleteModal WHEN form is valid and enter is pressed THEN delete is executed", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  userEvent.keyboard("connect{enter}");
+  await userEvent.keyboard("connect{enter}");
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "DELETE",

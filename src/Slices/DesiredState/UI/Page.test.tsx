@@ -145,21 +145,21 @@ test("When using the status filter then only the matching desired states should 
   });
   expect(initialRows).toHaveLength(9);
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Status" }));
+  await userEvent.click(screen.getByRole("option", { name: "Status" }));
 
   const input = screen.getByPlaceholderText("Select status...");
-  userEvent.click(input);
+  await userEvent.click(input);
 
   const option = await screen.findByRole("option", {
     name: "skipped_candidate",
   });
-  await userEvent.click(option);
+  await await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=skipped_candidate`
@@ -195,22 +195,22 @@ test("When using the Date filter then the desired state versions within the rang
   });
   expect(initialRows).toHaveLength(9);
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Date" }));
+  await userEvent.click(screen.getByRole("option", { name: "Date" }));
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
-  userEvent.click(fromDatePicker);
-  userEvent.type(fromDatePicker, `2021-12-06`);
+  await userEvent.click(fromDatePicker);
+  await userEvent.type(fromDatePicker, `2021-12-06`);
   const toDatePicker = screen.getByLabelText("To Date Picker");
-  userEvent.click(toDatePicker);
-  userEvent.type(toDatePicker, `2021-12-07`);
+  await userEvent.click(toDatePicker);
+  await userEvent.type(toDatePicker, `2021-12-07`);
 
-  userEvent.click(screen.getByLabelText("Apply date filter"));
+  await userEvent.click(screen.getByLabelText("Apply date filter"));
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-05%2B23%3A00%3A00&filter.date=le%3A2021-12-06%2B23%3A00%3A00`
@@ -256,22 +256,22 @@ test("When using the Version filter then the desired state versions within the r
   });
   expect(initialRows).toHaveLength(9);
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Version" }));
+  await userEvent.click(screen.getByRole("option", { name: "Version" }));
 
   const fromDatePicker = await screen.findByLabelText("Version range from");
-  userEvent.click(fromDatePicker);
-  userEvent.type(fromDatePicker, `3`);
+  await userEvent.click(fromDatePicker);
+  await userEvent.type(fromDatePicker, `3`);
   const toDatePicker = await screen.findByLabelText("Version range to");
-  userEvent.click(toDatePicker);
-  userEvent.type(toDatePicker, `5`);
+  await userEvent.click(toDatePicker);
+  await userEvent.type(toDatePicker, `5`);
 
-  userEvent.click(await screen.findByLabelText("Apply Version filter"));
+  await userEvent.click(await screen.findByLabelText("Apply Version filter"));
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.version=ge%3A3&filter.version=le%3A5`
@@ -311,7 +311,7 @@ test("Given the Desired states view When promoting a version, then the correct r
     name: "DesiredStates Table Row",
   });
 
-  userEvent.click(
+  await userEvent.click(
     within(rows[8]).getByRole("button", {
       name: "Actions",
     })
@@ -321,13 +321,13 @@ test("Given the Desired states view When promoting a version, then the correct r
     within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
   ).toHaveAttribute("aria-disabled", "true");
 
-  userEvent.click(
+  await userEvent.click(
     within(rows[0]).getByRole("button", {
       name: "Actions",
     })
   );
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
   );
 
@@ -361,21 +361,21 @@ test("Given the Desired states view with filters When promoting a version, then 
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
       "button",
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Status" }));
+  await userEvent.click(screen.getByRole("option", { name: "Status" }));
 
   const input = screen.getByPlaceholderText("Select status...");
-  userEvent.click(input);
+  await userEvent.click(input);
 
   const option = await screen.findByRole("option", {
     name: "candidate",
   });
-  userEvent.click(option);
+  await userEvent.click(option);
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -384,13 +384,13 @@ test("Given the Desired states view with filters When promoting a version, then 
     name: "DesiredStates Table Row",
   });
 
-  userEvent.click(
+  await userEvent.click(
     within(rows[0]).getByRole("button", {
       name: "Actions",
     })
   );
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
   );
 
@@ -432,13 +432,13 @@ test("Given the Desired states view When promoting a version results in an error
     name: "DesiredStates Table Row",
   });
 
-  userEvent.click(
+  await userEvent.click(
     within(rows[0]).getByRole("button", {
       name: "Actions",
     })
   );
 
-  userEvent.click(
+  await userEvent.click(
     within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
   );
 

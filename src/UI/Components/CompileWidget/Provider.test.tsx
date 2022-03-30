@@ -101,7 +101,7 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
     name: "RecompileButton",
   });
 
-  userEvent.click(button);
+  await userEvent.click(button);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -148,13 +148,13 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
 
   expect(toggle).toBeEnabled();
 
-  userEvent.click(toggle);
+  await userEvent.click(toggle);
 
   const button = within(widget).getByRole("button", {
     name: "UpdateAndRecompileButton",
   });
 
-  userEvent.click(button);
+  await userEvent.click(button);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({

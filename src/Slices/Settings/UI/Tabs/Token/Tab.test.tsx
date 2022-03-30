@@ -35,7 +35,7 @@ test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is execu
   expect(generateButton).toBeEnabled();
 
   expect(apiHelper.pendingRequests).toHaveLength(0);
-  userEvent.click(generateButton);
+  await userEvent.click(generateButton);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
@@ -48,8 +48,8 @@ test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is execu
 test("GIVEN TokenTab WHEN api clientType is selected and generate button is clicked THEN generate call is executed with clientType set", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  userEvent.click(screen.getByRole("button", { name: "AgentOption" }));
-  userEvent.click(screen.getByRole("button", { name: "Generate" }));
+  await userEvent.click(screen.getByRole("button", { name: "AgentOption" }));
+  await userEvent.click(screen.getByRole("button", { name: "Generate" }));
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
     body: { client_types: ["agent"] },
@@ -61,7 +61,7 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
 test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  userEvent.click(screen.getByRole("button", { name: "Generate" }));
+  await userEvent.click(screen.getByRole("button", { name: "Generate" }));
 
   await act(async () => {
     await apiHelper.resolve(Either.left("error message"));
@@ -81,7 +81,7 @@ test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () =
   const tokenOutput = screen.getByRole("textbox", { name: "TokenOutput" });
   expect(copyButton).toBeDisabled();
   expect(tokenOutput).toHaveValue("");
-  userEvent.click(screen.getByRole("button", { name: "Generate" }));
+  await userEvent.click(screen.getByRole("button", { name: "Generate" }));
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: "tokenstring123" }));
   });

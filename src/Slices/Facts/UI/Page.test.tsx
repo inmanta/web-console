@@ -90,7 +90,7 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
     name: "Resource Id",
   });
   expect(resourceIdButton).toBeVisible();
-  userEvent.click(resourceIdButton);
+  await userEvent.click(resourceIdButton);
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=resource_id.asc");
 });
 
@@ -122,9 +122,9 @@ test.each`
     ).toHaveLength(8);
 
     const input = await screen.findByPlaceholderText(placeholderText);
-    userEvent.click(input);
+    await userEvent.click(input);
 
-    userEvent.type(input, `${filterValue}{enter}`);
+    await userEvent.type(input, `${filterValue}{enter}`);
 
     expect(apiHelper.pendingRequests[0].url).toEqual(
       `/api/v2/facts?limit=20&filter.${filterUrlName}=${filterValue}&sort=name.asc`

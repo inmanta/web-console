@@ -1,5 +1,5 @@
 import { render, screen, act, within } from "@testing-library/react";
-import userEvent, { specialChars } from "@testing-library/user-event";
+import userEvent from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { Service, Pagination } from "@/Test";
 import * as InstanceEvent from "@S/Events/Data/Mock";
@@ -42,21 +42,21 @@ describe("Given the Events Page", () => {
       });
       expect(initialRows).toHaveLength(14);
 
-      userEvent.click(
+      await userEvent.click(
         within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
           "button",
           { name: "FilterPicker" }
         )
       );
-      userEvent.click(screen.getByRole("option", { name: filterName }));
+      await userEvent.click(screen.getByRole("option", { name: filterName }));
 
       const input = await screen.findByPlaceholderText(placeholderText);
-      userEvent.click(input);
+      await userEvent.click(input);
       if (filterType === "select") {
         const option = await screen.findByRole("option", { name: filterValue });
-        await userEvent.click(option);
+        await await userEvent.click(option);
       } else {
-        userEvent.type(input, `${filterValue}${specialChars.enter}`);
+        await userEvent.type(input, `${filterValue}{enter}`);
       }
 
       expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -100,22 +100,22 @@ describe("Given the Events Page", () => {
     });
     expect(initialRows).toHaveLength(14);
 
-    userEvent.click(
+    await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
         { name: "FilterPicker" }
       )
     );
-    userEvent.click(screen.getByRole("option", { name: "Date" }));
+    await userEvent.click(screen.getByRole("option", { name: "Date" }));
 
     const fromDatePicker = await screen.findByLabelText("From Date Picker");
-    userEvent.click(fromDatePicker);
-    userEvent.type(fromDatePicker, `2021-04-28`);
+    await userEvent.click(fromDatePicker);
+    await userEvent.type(fromDatePicker, `2021-04-28`);
     const toDatePicker = await screen.findByLabelText("To Date Picker");
-    userEvent.click(toDatePicker);
-    userEvent.type(toDatePicker, `2021-04-30`);
+    await userEvent.click(toDatePicker);
+    await userEvent.type(toDatePicker, `2021-04-30`);
 
-    userEvent.click(await screen.findByLabelText("Apply date filter"));
+    await userEvent.click(await screen.findByLabelText("Apply date filter"));
 
     expect(apiHelper.pendingRequests[0].url).toMatch(
       `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=ge%3A2021-04-`
@@ -174,21 +174,21 @@ describe("Given the Events Page", () => {
       });
       expect(initialRows).toHaveLength(14);
 
-      userEvent.click(
+      await userEvent.click(
         within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
           "button",
           { name: "FilterPicker" }
         )
       );
-      userEvent.click(screen.getByRole("option", { name: "Date" }));
+      await userEvent.click(screen.getByRole("option", { name: "Date" }));
 
       const toDatePicker = await screen.findByLabelText(
         `${filterType} Date Picker`
       );
-      userEvent.click(toDatePicker);
-      userEvent.type(toDatePicker, value);
+      await userEvent.click(toDatePicker);
+      await userEvent.type(toDatePicker, value);
 
-      userEvent.click(await screen.findByLabelText("Apply date filter"));
+      await userEvent.click(await screen.findByLabelText("Apply date filter"));
 
       expect(apiHelper.pendingRequests[0].url).toMatch(
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=${operator}%3A2021-05-`
@@ -214,7 +214,7 @@ describe("Given the Events Page", () => {
       window.dispatchEvent(new Event("resize"));
 
       expect(await screen.findByText(chip, { exact: false })).toBeVisible();
-      userEvent.click(await screen.findByLabelText("close"));
+      await userEvent.click(await screen.findByLabelText("close"));
 
       expect(apiHelper.pendingRequests[0].url).toMatch(
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc`

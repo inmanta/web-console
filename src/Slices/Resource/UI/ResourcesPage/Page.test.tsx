@@ -132,7 +132,7 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
   });
 
   const toggle = within(rows[0]).getByRole("button", { name: "2" });
-  userEvent.click(toggle);
+  await userEvent.click(toggle);
 
   apiHelper.resolve(Either.right(ResourceDetails.response));
 
@@ -159,7 +159,7 @@ test("ResourcesView shows next page of resources", async () => {
     })
   ).toBeInTheDocument();
 
-  userEvent.click(screen.getByRole("button", { name: "Next" }));
+  await userEvent.click(screen.getByRole("button", { name: "Next" }));
 
   apiHelper.resolve(
     Either.right({
@@ -198,7 +198,7 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   apiHelper.resolve(Either.right(Resource.response));
   const stateButton = await screen.findByRole("button", { name: /agent/i });
   expect(stateButton).toBeVisible();
-  userEvent.click(stateButton);
+  await userEvent.click(stateButton);
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=agent.asc");
 });
 
@@ -223,12 +223,12 @@ it.each`
     expect(initialRows).toHaveLength(6);
 
     const input = await screen.findByPlaceholderText(placeholderText);
-    userEvent.click(input);
+    await userEvent.click(input);
     if (filterType === "select") {
       const option = await screen.findByRole("option", { name: filterValue });
-      userEvent.click(option);
+      await userEvent.click(option);
     } else {
-      userEvent.type(input, `${filterValue}{enter}`);
+      await userEvent.type(input, `${filterValue}{enter}`);
     }
 
     expect(apiHelper.pendingRequests[0].url).toContain(
@@ -281,12 +281,12 @@ test.each`
     const input = await within(toolbar).findByRole("button", {
       name: "Deploy State-toggle",
     });
-    userEvent.click(input);
+    await userEvent.click(input);
 
     const toggle = await screen.findByRole("generic", {
       name: `${filterValue}-${option}-toggle`,
     });
-    userEvent.click(toggle);
+    await userEvent.click(toggle);
 
     expect(apiHelper.pendingRequests[0].url).toEqual(
       `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&filter.status=${
@@ -330,7 +330,7 @@ test("When clicking the clear and reset filters then the state filter is updated
   const clearButtons = await screen.findAllByText("Clear all filters");
   const visibleClearButton = clearButtons[clearButtons.length - 1];
   expect(visibleClearButton).toBeVisible();
-  userEvent.click(visibleClearButton);
+  await userEvent.click(visibleClearButton);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/resource?deploy_summary=True&limit=20&&sort=resource_type.asc`
@@ -345,7 +345,9 @@ test("When clicking the clear and reset filters then the state filter is updated
       })
     );
   });
-  userEvent.click(await screen.findByRole("button", { name: "Reset-filters" }));
+  await userEvent.click(
+    await screen.findByRole("button", { name: "Reset-filters" })
+  );
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc`
@@ -397,7 +399,7 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
 
   const nextButton = screen.getByRole("button", { name: "Next" });
   expect(nextButton).toBeEnabled();
-  userEvent.click(nextButton);
+  await userEvent.click(nextButton);
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
@@ -464,7 +466,7 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
 
-  userEvent.click(await screen.findByRole("button", { name: "Deploy" }));
+  await userEvent.click(await screen.findByRole("button", { name: "Deploy" }));
   expect(apiHelper.pendingRequests).toEqual([
     {
       method: "POST",
@@ -486,7 +488,7 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
 
-  userEvent.click(await screen.findByRole("button", { name: "Repair" }));
+  await userEvent.click(await screen.findByRole("button", { name: "Repair" }));
   expect(apiHelper.pendingRequests).toEqual([
     {
       method: "POST",

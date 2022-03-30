@@ -141,7 +141,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
     name: "DownloadArchiveButton",
   });
   expect(downloadButton).toHaveTextContent("Download support archive");
-  userEvent.click(downloadButton);
+  await userEvent.click(downloadButton);
   expect(downloadButton).toHaveTextContent("Fetching support data");
 
   expect(apiHelper.pendingRequests).toEqual([
@@ -171,7 +171,7 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
   const downloadButton = screen.getByRole("button", {
     name: "DownloadArchiveButton",
   });
-  userEvent.click(downloadButton);
+  await userEvent.click(downloadButton);
 
   await act(async () => {
     await apiHelper.resolve(Either.left("error"));

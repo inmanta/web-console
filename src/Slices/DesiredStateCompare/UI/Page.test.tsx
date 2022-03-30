@@ -74,7 +74,7 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
   expect(
     screen.queryByRole("generic", { name: "DiffSummaryList" })
   ).not.toBeInTheDocument();
-  userEvent.click(button);
+  await userEvent.click(button);
   expect(
     screen.getByRole("generic", {
       name: "DiffSummaryList",
@@ -94,7 +94,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+  await userEvent.click(screen.getByRole("button", { name: "Jump to" }));
 
   expect(
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
@@ -108,7 +108,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     screen.queryByRole("listbox", { name: "StatusFilterOptions" })
   ).not.toBeInTheDocument();
 
-  userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
+  await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
 
   expect(
     screen.getByRole("listbox", { name: "StatusFilterOptions" })
@@ -118,10 +118,10 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     name: "StatusFilterOption",
   });
   expect(statusOptions).toHaveLength(7);
-  userEvent.click(screen.getByRole("button", { name: "Hide All" }));
-  userEvent.click(statusOptions[0]);
+  await userEvent.click(screen.getByRole("button", { name: "Hide All" }));
+  await userEvent.click(statusOptions[0]);
 
-  userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+  await userEvent.click(screen.getByRole("button", { name: "Jump to" }));
   expect(
     await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" })
   ).toHaveLength(2);
@@ -140,7 +140,7 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   });
 
   const blocks = screen.getAllByRole("article", { name: "DiffBlock" });
-  userEvent.click(
+  await userEvent.click(
     within(blocks[1]).getByRole("button", { name: "Show file contents" })
   );
   expect(apiHelper.pendingRequests).toEqual([
@@ -165,7 +165,7 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     await apiHelper.resolve(Either.right({ content: window.btoa("efghijkl") }));
   });
 
-  userEvent.click(
+  await userEvent.click(
     within(blocks[1]).getByRole("button", { name: "Hide file contents" })
   );
 
@@ -173,7 +173,7 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     within(blocks[1]).getByRole("button", { name: "Show file contents" })
   ).toBeVisible();
 
-  userEvent.click(
+  await userEvent.click(
     within(blocks[1]).getByRole("button", { name: "Show file contents" })
   );
 
