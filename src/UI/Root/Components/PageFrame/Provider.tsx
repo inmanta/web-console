@@ -32,9 +32,10 @@ export const Provider: React.FC<Props> = ({ children, environmentRole }) => {
   return (
     <>
       {environmentId && (
-        <PageInitializer environment={environmentId}>
+        <>
+          <PageInitializer environment={environmentId} />
           <DependencyResolver environment={environmentId} />
-        </PageInitializer>
+        </>
       )}
       <PageFrame environmentId={environmentId}>
         {Either.isLeft(eitherEnvironmentId) ? (
