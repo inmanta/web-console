@@ -84,7 +84,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
-    "eslint-plugin-testing-library": "^5.1.0",
+    "eslint-plugin-testing-library": "^5.2.0",
     "fetch-mock": "^9.11.0",
     "file-loader": "^6.2.0",
     "git-revision-webpack-plugin": "^5.0.0",
