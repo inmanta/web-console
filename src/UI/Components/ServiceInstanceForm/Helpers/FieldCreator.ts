@@ -126,7 +126,7 @@ export class FieldCreator {
   private isTextFieldOptional(attribute: AttributeModel): boolean {
     return (
       attribute.type.includes("?") ||
-      (attribute.default_value_set && attribute.default_value == "")
+      (attribute.default_value_set && attribute.default_value === "")
     );
   }
 }
