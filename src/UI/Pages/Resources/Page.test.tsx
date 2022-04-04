@@ -290,6 +290,111 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
   expect(
     screen.getByRole("generic", { name: "PaginationWidget" })
   ).toBeVisible();
+
+  apiHelper.resolve(
+    Either.right({
+      ...Resource.response,
+      metadata: {
+        ...Resource.response.metadata,
+        deploy_summary: {
+          ...Resource.response.metadata.deploy_summary,
+          by_state: {
+            ...Resource.response.metadata.deploy_summary.by_state,
+            available: 2,
+          },
+        },
+      },
+    })
+  );
+
+  expect(
+    await screen.findByRole("generic", {
+      name: "LegendItem-available",
+    })
+  ).toHaveAttribute("data-value", "2");
+});
+
+test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar", async () => {
+  const { component, apiHelper, scheduler } = setup();
+  render(component);
+
+  expect(
+    await screen.findByRole("generic", { name: "ResourcesView-Loading" })
+  ).toBeInTheDocument();
+
+  apiHelper.resolve(
+    Either.right({
+      ...Resource.response,
+      links: { ...Resource.response.links, next: "/fake-link" },
+    })
+  );
+
+  expect(
+    await screen.findByRole("grid", { name: "ResourcesView-Success" })
+  ).toBeInTheDocument();
+
+  expect(
+    await screen.findByRole("generic", { name: "Deployment state summary" })
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole("generic", {
+      name: "LegendItem-available",
+    })
+  ).toHaveAttribute("data-value", "1");
+
+  scheduler.executeAll();
+
+  expect(
+    screen.getByRole("generic", { name: "Deployment state summary" })
+  ).toBeVisible();
+  expect(screen.getByRole("button", { name: "Repair" })).toBeVisible();
+  expect(screen.getByRole("button", { name: "Deploy" })).toBeVisible();
+  expect(
+    screen.getByRole("generic", { name: "PaginationWidget" })
+  ).toBeVisible();
+
+  await apiHelper.resolve(
+    Either.right({
+      ...Resource.response,
+      metadata: {
+        ...Resource.response.metadata,
+        deploy_summary: {
+          ...Resource.response.metadata.deploy_summary,
+          by_state: {
+            ...Resource.response.metadata.deploy_summary.by_state,
+            available: 2,
+          },
+        },
+      },
+    })
+  );
+
+  expect(
+    await screen.findByRole("generic", {
+      name: "LegendItem-available",
+    })
+  ).toHaveAttribute("data-value", "2");
+});
+
+test("ResourcesView shows deploy state bar with available status without processing_events status", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  apiHelper.resolve(Either.right(Resource.response));
+
+  expect(
+    await screen.findByRole("generic", { name: "Deployment state summary" })
+  ).toBeInTheDocument();
+
+  const availableItem = screen.getByRole("generic", {
+    name: "LegendItem-available",
+  });
+  expect(availableItem).toBeVisible();
+  expect(availableItem).toHaveAttribute("data-value", "1");
+  expect(availableItem).not.toHaveAttribute("data-value", "3");
+  expect(
+    screen.getByRole("cell", { name: "Status-processing_events" })
+  ).toBeVisible();
 });
 
 test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async () => {
