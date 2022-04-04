@@ -56,7 +56,7 @@ export const Page: React.FC = () => {
     if (RemoteData.isLoading(data)) return;
     setStaleData(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.kind, JSON.stringify(data)]);
+  }, [JSON.stringify(data)]);
 
   const updateFilter = (
     updater: (filter: Resource.Filter) => Resource.Filter
