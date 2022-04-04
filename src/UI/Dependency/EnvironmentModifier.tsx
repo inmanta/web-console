@@ -1,6 +1,7 @@
 import {
   EnvironmentDetails,
   EnvironmentModifier,
+  EnvironmentSettings,
   Maybe,
   RemoteData,
 } from "@/Core";
@@ -24,6 +25,20 @@ export class EnvironmentModifierImpl implements EnvironmentModifier {
     return null;
   }
 
+  private useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
+    const storeState = useStoreState(
+      (state) => state.environment.settingsByEnv
+    );
+    if (Maybe.isSome(this.environment)) {
+      const state = storeState[this.environment.value];
+      if (state !== undefined && RemoteData.isSuccess(state)) {
+        return state.value;
+      }
+    }
+    return null;
+  }
+
   setEnvironment(environment: string): void {
     this.environment = Maybe.some(environment);
   }
@@ -36,7 +51,16 @@ export class EnvironmentModifierImpl implements EnvironmentModifier {
 
   useIsServerCompileEnabled(): boolean {
     const environmentDetails = this.useCurrentEnvironment();
-    if (environmentDetails === null) return false;
-    return Boolean(environmentDetails.settings.server_compile);
+    const environmentSettings = this.useEnvironmentSettings();
+    if (environmentDetails === null || environmentSettings === null)
+      return false;
+    if (
+      environmentDetails.settings.server_compile !== undefined &&
+      environmentDetails.settings.server_compile !== null
+    ) {
+      return Boolean(environmentDetails.settings.server_compile);
+    } else {
+      return Boolean(environmentSettings.definition.server_compile.default);
+    }
   }
 }

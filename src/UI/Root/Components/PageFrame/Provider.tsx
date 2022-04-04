@@ -4,6 +4,7 @@ import { Either, EnvironmentRole, FlatEnvironment } from "@/Core";
 import { DependencyContext, DependencyResolver } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { PageFrame } from "./PageFrame";
+import { PageInitializer } from "./PageInitializer";
 
 interface Props {
   environmentRole: EnvironmentRole;
@@ -30,7 +31,12 @@ export const Provider: React.FC<Props> = ({ children, environmentRole }) => {
 
   return (
     <>
-      {environmentId && <DependencyResolver environment={environmentId} />}
+      {environmentId && (
+        <>
+          <PageInitializer environment={environmentId} />
+          <DependencyResolver environment={environmentId} />
+        </>
+      )}
       <PageFrame environmentId={environmentId}>
         {Either.isLeft(eitherEnvironmentId) ? (
           <Navigate to={routeManager.getUrl("Home", undefined)} />

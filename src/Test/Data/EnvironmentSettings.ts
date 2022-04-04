@@ -1,6 +1,6 @@
 import { EnvironmentSettings } from "@/Core";
 
-const definition: EnvironmentSettings.DefinitionMap = {
+export const definition: EnvironmentSettings.DefinitionMap = {
   auto_deploy: {
     name: "auto_deploy",
     type: "bool",
