@@ -8,7 +8,7 @@ interface Props {
 export const PageInitializer: React.FC<Props> = ({ environment }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [] = queryResolver.useOneTime<"GetEnvironmentSettings">({
+  queryResolver.useOneTime<"GetEnvironmentSettings">({
     kind: "GetEnvironmentSettings",
     environment: environment,
   });
