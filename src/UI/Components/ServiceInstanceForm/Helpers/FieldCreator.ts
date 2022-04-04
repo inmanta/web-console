@@ -119,8 +119,14 @@ export class FieldCreator {
           inputType: type,
           description: attribute.description,
           type: attribute.type,
-          isOptional: attribute.type.includes("?"),
+          isOptional: this.isTextFieldOptional(attribute),
         };
       });
+  }
+  private isTextFieldOptional(attribute: AttributeModel): boolean {
+    return (
+      attribute.type.includes("?") ||
+      (attribute.default_value_set && attribute.default_value === "")
+    );
   }
 }
