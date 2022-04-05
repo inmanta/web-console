@@ -1,4 +1,4 @@
-import { Attributes, AttributeContainer } from "@/Core";
+import { Attributes, EntityLike } from "@/Core";
 import {
   CatalogAttributes,
   InventoryAttributes,
@@ -12,6 +12,6 @@ export interface InventoryAttributeTree {
 }
 
 export interface CatalogAttributeTree {
-  source: AttributeContainer;
+  source: EntityLike;
   target: CatalogAttributes;
 }
