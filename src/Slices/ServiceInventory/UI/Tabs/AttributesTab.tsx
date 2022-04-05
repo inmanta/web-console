@@ -2,11 +2,13 @@ import React from "react";
 import { Attributes } from "@/Core";
 import { TreeTable } from "@/UI/Components";
 import {
-  AttributeHelper,
   PathHelper,
   TreeExpansionManager,
-  TreeTableHelper,
 } from "@/UI/Components/TreeTable/Helpers";
+import {
+  InventoryAttributeHelper,
+  InventoryTreeTableHelper,
+} from "@/UI/Components/TreeTable/Inventory";
 
 interface Props {
   attributes: Attributes;
@@ -16,10 +18,10 @@ interface Props {
 export const AttributesTab: React.FC<Props> = ({ attributes, id }) => (
   <TreeTable
     treeTableHelper={
-      new TreeTableHelper(
+      new InventoryTreeTableHelper(
         new PathHelper("$"),
         new TreeExpansionManager("$"),
-        new AttributeHelper("$"),
+        new InventoryAttributeHelper("$"),
         attributes
       )
     }

@@ -1,29 +1,34 @@
 import React from "react";
-import { Table, TableBody, TableHeader } from "@patternfly/react-table";
-import { AttributeModel } from "@/Core";
+import { ServiceModel } from "@/Core";
+import { TreeTable } from "@/UI/Components";
+import {
+  CatalogAttributeHelper,
+  CatalogTreeTableHelper,
+} from "@/UI/Components/TreeTable/Catalog";
+import {
+  PathHelper,
+  TreeExpansionManager,
+} from "@/UI/Components/TreeTable/Helpers";
 
 interface Props {
-  attributes: AttributeModel[];
+  service: ServiceModel;
 }
 
-export const AttributeTable: React.FunctionComponent<Props> = ({
-  attributes,
-}) => {
-  if (attributes.length > 0) {
-    const columns = Object.keys(attributes[0]);
-    const rows = attributes.map((attribute) =>
-      Object.values(attribute).map((attributeValue) =>
-        typeof attributeValue === "object" && attributeValue !== null
-          ? JSON.stringify(attributeValue)
-          : attributeValue
-      )
-    );
+export const AttributeTable: React.FunctionComponent<Props> = ({ service }) => {
+  if (service.attributes.length > 0) {
     return (
-      <Table aria-label="Attributes" cells={columns} rows={rows}>
-        <TableHeader aria-label="TableHeader" />
-        <TableBody aria-label="TableBody" />
-      </Table>
+      <TreeTable
+        treeTableHelper={
+          new CatalogTreeTableHelper(
+            new PathHelper("$"),
+            new TreeExpansionManager("$"),
+            new CatalogAttributeHelper("$"),
+            service
+          )
+        }
+      />
     );
   }
+
   return <div>No attributes found for the service</div>;
 };

@@ -10,7 +10,7 @@ import { global_Color_100 } from "@patternfly/react-tokens";
 import styled from "styled-components";
 import { Maybe, RemoteData } from "@/Core";
 import { MomentDatePresenter } from "@/UI/Utils";
-import { Progress } from "@S/ComplianceCheck/Core/Domain";
+import { Progress as DomainProgress } from "@S/ComplianceCheck/Core/Domain";
 import { MaybeReport, RemoteReportList } from "../types";
 
 interface Props {
@@ -76,7 +76,7 @@ const EmptyPicker: React.FC = () => (
   />
 );
 
-const Progress: React.FC<{ report: Progress }> = ({
+const Progress: React.FC<{ report: DomainProgress }> = ({
   report: { todo, total },
 }) => {
   const tot = Number(total);

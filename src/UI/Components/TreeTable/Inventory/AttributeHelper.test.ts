@@ -1,12 +1,12 @@
 import {
-  AttributeHelper,
+  InventoryAttributeHelper,
   getValue,
   isLeaf,
   isMultiLeaf,
 } from "./AttributeHelper";
 
 test("AttributeHelper getPaths", () => {
-  const attributeHelper = new AttributeHelper(".");
+  const attributeHelper = new InventoryAttributeHelper(".");
   const attributes = {
     candidate: null,
     active: {
@@ -28,7 +28,7 @@ test("AttributeHelper getPaths", () => {
 });
 
 test("AttributeHelper getPaths sorts paths", () => {
-  const attributeHelper = new AttributeHelper(".");
+  const attributeHelper = new InventoryAttributeHelper(".");
   const attributes = {
     candidate: null,
     active: {
@@ -50,7 +50,7 @@ test("AttributeHelper getPaths sorts paths", () => {
 });
 
 test("AttributeHelper getMultiAttributeNodes", () => {
-  const attributeHelper = new AttributeHelper(".");
+  const attributeHelper = new InventoryAttributeHelper(".");
   const attributes = {
     candidate: null,
     active: {

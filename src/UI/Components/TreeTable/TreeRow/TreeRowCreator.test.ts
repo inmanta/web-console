@@ -1,7 +1,10 @@
-import { MultiAttributeNode } from "@/UI/Components/TreeTable/Helpers/AttributeNode";
+import {
+  InventoryAttributes,
+  MultiAttributeNode,
+} from "@/UI/Components/TreeTable/Helpers/AttributeNode";
 import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
 import { TreeRow } from "./TreeRow";
-import { TreeRowCreator } from "./TreeRowCreator";
+import { extractInventoryValues, TreeRowCreator } from "./TreeRowCreator";
 
 const onToggle = () => {
   undefined;
@@ -11,11 +14,12 @@ const treeRowCreator = new TreeRowCreator(
   new PathHelper("."),
   () => false,
   () => false,
-  () => onToggle
+  () => onToggle,
+  extractInventoryValues
 );
 
 test("TreeRowCreator create returns Leaf for Leaf node", () => {
-  const node: MultiAttributeNode = {
+  const node: MultiAttributeNode<InventoryAttributes> = {
     kind: "Leaf",
     value: {
       candidate: "a",
@@ -39,7 +43,7 @@ test("TreeRowCreator create returns Leaf for Leaf node", () => {
 });
 
 test("TreeRowCreator create returns Flat for flat Leaf node", () => {
-  const node: MultiAttributeNode = {
+  const node: MultiAttributeNode<InventoryAttributes> = {
     kind: "Leaf",
     value: {
       candidate: "a",
