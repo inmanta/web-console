@@ -64,3 +64,18 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
     await screen.findByRole("row", { name: "Row-service_mtu" })
   ).toBeVisible();
 });
+
+test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities THEN the rows are shown", async () => {
+  render(
+    <AttributeTable
+      service={{
+        ...Service.a,
+        attributes: [],
+      }}
+    />
+  );
+
+  expect(
+    await screen.findByRole("row", { name: "Row-circuits" })
+  ).toBeVisible();
+});
