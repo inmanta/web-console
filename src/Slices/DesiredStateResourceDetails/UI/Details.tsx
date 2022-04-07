@@ -21,5 +21,6 @@ export const Details: React.FC<Props> = ({ details, ...props }) => (
 const classifier = new AttributeClassifier(
   new JsonFormatter(),
   new XmlFormatter(),
+  undefined,
   () => false
 );

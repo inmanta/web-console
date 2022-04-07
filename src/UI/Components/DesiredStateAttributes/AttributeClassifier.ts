@@ -5,6 +5,11 @@ export class AttributeClassifier {
   constructor(
     private readonly jsonFormatter: Formatter<unknown>,
     private readonly xmlFormatter: Formatter,
+    private readonly multilineClassifier: (
+      key: string,
+      value: string
+    ) => Maybe.Type<ClassifiedAttribute> = (key, value) =>
+      Maybe.some({ kind: "MultiLine", key, value }),
     private readonly isKeyIgnored: (key: string) => boolean = (key: string) =>
       key === "version" || key === "requires"
   ) {}
@@ -41,7 +46,7 @@ export class AttributeClassifier {
           value: this.xmlFormatter.format(value),
         });
       } else if (this.isMultiLine(value)) {
-        return Maybe.some({ kind: "MultiLine", key, value });
+        return this.multilineClassifier(key, value);
       }
       return Maybe.some({ kind: "SingleLine", key, value });
     } else if (this.isObject(value)) {
