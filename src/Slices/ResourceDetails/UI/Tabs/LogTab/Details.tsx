@@ -6,7 +6,7 @@ import {
   DescriptionListTerm,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { isObjectEmpty } from "@/Core";
+import { isObjectEmpty, Maybe } from "@/Core";
 import { JsonFormatter, XmlFormatter } from "@/Data";
 import { AttributeClassifier, AttributeList, CodeText } from "@/UI/Components";
 import { ResourceLog } from "@S/ResourceDetails/Core/ResourceLog";
@@ -28,7 +28,10 @@ export const Details: React.FC<Props> = ({ log }) => {
         <DescriptionListGroup>
           <StyledTerm>Kwargs</StyledTerm>
           <DescriptionListDescription>
-            <AttributeList attributes={classifier.classify(log.kwargs)} />
+            <AttributeList
+              attributes={classifier.classify(log.kwargs)}
+              variant="monospace"
+            />
           </DescriptionListDescription>
         </DescriptionListGroup>
       )}
@@ -42,5 +45,6 @@ const StyledTerm = styled(DescriptionListTerm)`
 
 const classifier = new AttributeClassifier(
   new JsonFormatter(),
-  new XmlFormatter()
+  new XmlFormatter(),
+  (key: string, value: string) => Maybe.some({ kind: "Python", key, value })
 );

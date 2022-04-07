@@ -17,6 +17,7 @@ import {
   DeferredApiHelper,
   dependencies,
   EnvironmentDetails,
+  EnvironmentSettings,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
@@ -40,6 +41,13 @@ function setup() {
   store.dispatch.environment.setEnvironmentDetailsById({
     id: "env",
     value: RemoteData.success(EnvironmentDetails.a),
+  });
+  store.dispatch.environment.setSettingsData({
+    environment: "env",
+    value: RemoteData.success({
+      settings: {},
+      definition: EnvironmentSettings.definition,
+    }),
   });
   dependencies.environmentModifier.setEnvironment("env");
 
