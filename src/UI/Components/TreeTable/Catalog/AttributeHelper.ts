@@ -7,13 +7,13 @@ export class CatalogAttributeHelper
 {
   constructor(private readonly separator: string) {}
 
-  getPaths(container: CatalogAttributeTree["source"]): string[] {
+  public getPaths(container: CatalogAttributeTree["source"]): string[] {
     return Object.keys(this.getNodesFromEntities("", container)).sort(
       (pathA, pathB) => pathA.localeCompare(pathB)
     );
   }
 
-  getMultiAttributeNodes(
+  public getMultiAttributeNodes(
     container: CatalogAttributeTree["source"]
   ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
     return this.getNodesFromEntities("", container);

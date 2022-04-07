@@ -27,7 +27,7 @@ export class CatalogTreeTableHelper implements TreeTableHelper {
     private readonly attributes: CatalogAttributeTree["source"]
   ) {}
 
-  getColumns(): string[] {
+  public getColumns(): string[] {
     return this.columns;
   }
 
@@ -37,7 +37,7 @@ export class CatalogTreeTableHelper implements TreeTableHelper {
     );
   }
 
-  createRows(
+  public createRows(
     expansionState: ExpansionState,
     setState: (state: ExpansionState) => void
   ): TreeRow[] {
@@ -68,7 +68,7 @@ export class CatalogTreeTableHelper implements TreeTableHelper {
       .sort((a, b) => a.id.localeCompare(b.id));
   }
 
-  getEmptyAttributeSets(): string[] {
+  public getEmptyAttributeSets(): string[] {
     return [];
   }
 }

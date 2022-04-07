@@ -12,7 +12,7 @@ export class InventoryAttributeHelper
 {
   constructor(private readonly separator: string) {}
 
-  getPaths(attributes: Attributes): string[] {
+  public getPaths(attributes: Attributes): string[] {
     return Object.keys(
       this.getSingleAttributeNodes("", {
         ...attributes.candidate,
@@ -22,7 +22,7 @@ export class InventoryAttributeHelper
     );
   }
 
-  getMultiAttributeNodes(
+  public getMultiAttributeNodes(
     attributes: Attributes
   ): MultiAttributeNodeDict<InventoryAttributes> {
     return this.mergeNodes(

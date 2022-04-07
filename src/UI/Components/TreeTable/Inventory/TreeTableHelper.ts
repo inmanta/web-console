@@ -70,7 +70,7 @@ export class InventoryTreeTableHelper implements TreeTableHelper {
       .sort((a, b) => a.id.localeCompare(b.id));
   }
 
-  getEmptyAttributeSets(): string[] {
+  public getEmptyAttributeSets(): string[] {
     const emptySets = Object.entries(this.attributes)
       .filter(([, value]) => this.isEmpty(value))
       .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1));
