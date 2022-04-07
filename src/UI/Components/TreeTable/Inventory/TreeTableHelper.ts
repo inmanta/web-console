@@ -2,19 +2,14 @@ import { isObjectEmpty } from "@/Core";
 import {
   AttributeHelper,
   PathHelper,
-  TreeTableHelper,
-  ExpansionState,
   TreeExpansionManager,
+  BaseTreeTableHelper,
 } from "@/UI/Components/TreeTable/Helpers";
-import {
-  TreeRow,
-  extractInventoryValues,
-  TreeRowCreator,
-} from "@/UI/Components/TreeTable/TreeRow";
+import { extractInventoryValues } from "@/UI/Components/TreeTable/TreeRow";
 import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
 import { words } from "@/UI/words";
 
-export class InventoryTreeTableHelper implements TreeTableHelper {
+export class InventoryTreeTableHelper extends BaseTreeTableHelper<InventoryAttributeTree> {
   private readonly columns = [
     words("attribute.name"),
     words("attributesTab.candidate"),
@@ -23,51 +18,22 @@ export class InventoryTreeTableHelper implements TreeTableHelper {
   ];
 
   constructor(
-    private readonly pathHelper: PathHelper,
-    private readonly expansionManager: TreeExpansionManager,
-    private readonly attributeHelper: AttributeHelper<InventoryAttributeTree>,
-    private readonly attributes: InventoryAttributeTree["source"]
-  ) {}
+    pathHelper: PathHelper,
+    expansionManager: TreeExpansionManager,
+    attributeHelper: AttributeHelper<InventoryAttributeTree>,
+    attributes: InventoryAttributeTree["source"]
+  ) {
+    super(
+      pathHelper,
+      expansionManager,
+      attributeHelper,
+      attributes,
+      extractInventoryValues
+    );
+  }
 
   public getColumns(): string[] {
     return this.columns;
-  }
-
-  public getExpansionState(): ExpansionState {
-    return this.expansionManager.create(
-      this.attributeHelper.getPaths(this.attributes)
-    );
-  }
-
-  public createRows(
-    expansionState: ExpansionState,
-    setState: (state: ExpansionState) => void
-  ): TreeRow[] {
-    const createOnToggle = (key: string) => () =>
-      setState(this.expansionManager.toggle(expansionState, key));
-
-    const isExpandedByParent = (path: string) =>
-      this.expansionManager.get(
-        expansionState,
-        this.pathHelper.getParent(path)
-      );
-
-    const isChildExpanded = (path: string) =>
-      this.expansionManager.get(expansionState, path);
-
-    const treeRowCreator = new TreeRowCreator<InventoryAttributeTree["target"]>(
-      this.pathHelper,
-      isExpandedByParent,
-      isChildExpanded,
-      createOnToggle,
-      extractInventoryValues
-    );
-
-    const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
-
-    return Object.entries(nodes)
-      .map(([key, node]) => treeRowCreator.create(key, node))
-      .sort((a, b) => a.id.localeCompare(b.id));
   }
 
   public getEmptyAttributeSets(): string[] {
