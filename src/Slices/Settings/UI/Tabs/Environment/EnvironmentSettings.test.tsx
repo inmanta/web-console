@@ -2,6 +2,7 @@ import React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { StoreProvider } from "easy-peasy";
 import { Either, Maybe } from "@/Core";
 import {
   CommandResolverImpl,
@@ -29,22 +30,24 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          commandResolver,
-          environmentHandler: new MockEnvironmentHandler(
-            selectedEnvironment.id
-          ),
-        }}
-      >
-        <EnvironmentSettings
-          environment={selectedEnvironment}
-          projects={Project.list}
-        />
-      </DependencyProvider>
-    </MemoryRouter>
+    <StoreProvider store={store}>
+      <MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            commandResolver,
+            environmentHandler: new MockEnvironmentHandler(
+              selectedEnvironment.id
+            ),
+          }}
+        >
+          <EnvironmentSettings
+            environment={selectedEnvironment}
+            projects={Project.list}
+          />
+        </DependencyProvider>
+      </MemoryRouter>
+    </StoreProvider>
   );
 
   return { component, apiHelper, selectedEnvironment };

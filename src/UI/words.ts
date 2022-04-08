@@ -242,6 +242,8 @@ const dict = {
   "environment.resume.title": "Resume environment",
   "environment.resume.details":
     "Are you sure you want to resume all operations in the current environment?",
+  "environment.protected.tooltip":
+    "This action is not allowed because the environment is protected",
 
   /**
    * Latest released resource view
@@ -339,9 +341,12 @@ const dict = {
   "home.environment.select": "Select this environment",
   "home.environment.edit": "Edit environment",
   "home.environment.delete": "Delete environment",
+  "home.environment.clear": "Clear environment",
   "home.environment.delete.warning": "Are you absolutely sure?",
   "home.environment.delete.warning.action":
     "I understand the consequences, delete this environment",
+  "home.environment.clear.warning.action":
+    "I understand the consequences, clear this environment",
   "home.filters.project.placeholder": "Filter by project",
   "home.filters.env.placeholder": "Filter by name",
   "home.environment.copy": "Copy id",

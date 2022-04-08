@@ -19,7 +19,13 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 import { Provider } from "./Provider";
 
-function setup(details = { halted: false, server_compile: true }) {
+function setup(
+  details = {
+    halted: false,
+    server_compile: true,
+    protected_environment: false,
+  }
+) {
   const apiHelper = new DeferredApiHelper();
   const authHelper = new KeycloakAuthHelper();
   const scheduler = new StaticScheduler();
@@ -174,6 +180,7 @@ test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THE
   const { component, apiHelper } = setup({
     halted: false,
     server_compile: false,
+    protected_environment: false,
   });
   render(component);
 

@@ -48,6 +48,7 @@ import {
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
 } from "@S/ServiceCatalog/Data";
+import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -96,6 +97,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
           this.apiHelper
         )
       ),
+      new ClearEnvironmentCommandManager(this.apiHelper),
       new CreateProjectCommandManager(
         this.apiHelper,
         new ProjectsUpdater(
