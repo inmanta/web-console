@@ -98,6 +98,7 @@ test("AttributeHelper getMultiAttributeNodes", () => {
       kind: "Leaf",
       value: {
         type: "test_service",
+        description: "",
       },
       hasOnClick: true,
     },
