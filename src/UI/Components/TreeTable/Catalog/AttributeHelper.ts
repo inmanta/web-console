@@ -43,7 +43,7 @@ export class CatalogAttributeHelper
             kind: "Leaf",
             value: {
               type: cur.entity_type,
-              description: cur.description,
+              description: cur.description ? cur.description : "",
             },
             hasOnClick: true,
           };
