@@ -19,10 +19,11 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value }) => (
+          {row.valueCells.map(({ label, value, hasOnClick }) => (
             <CellWithCopy
               label={label}
               value={value}
+              hasOnClick={hasOnClick}
               className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
               key={`${label}-${value}`}
             />
@@ -69,10 +70,11 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value }) => (
+          {row.valueCells.map(({ label, value, hasOnClick }) => (
             <CellWithCopy
               label={label}
               value={value}
+              hasOnClick={hasOnClick}
               className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
               key={`${label}-${value}`}
             />

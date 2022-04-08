@@ -78,7 +78,11 @@ export function extractCatalogValues(
   node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: "Leaf" }>
 ): Cell[] {
   return [
-    { label: "type", value: format(node.value.type) },
+    {
+      label: "type",
+      value: format(node.value.type),
+      hasOnClick: node.hasOnClick,
+    },
     {
       label: "description",
       value: format(node.value.description),

@@ -1,18 +1,26 @@
-import React, { useState, MouseEvent } from "react";
-import { Popover } from "@patternfly/react-core";
+import React, { useState, MouseEvent, useContext } from "react";
+import { Button, Popover } from "@patternfly/react-core";
 import { Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
+import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
 import { words } from "@/UI/words";
 
 interface Props {
   className: string;
   label: string;
   value: string;
+  hasOnClick?: boolean;
 }
 
-export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
+export const CellWithCopy: React.FC<Props> = ({
+  label,
+  value,
+  className,
+  hasOnClick,
+}) => {
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
+  const { onClick } = useContext(TreeTableCellContext);
 
   const onMouseEnter = (event: MouseEvent<HTMLTableCellElement>) => {
     // Check if overflown
@@ -29,7 +37,13 @@ export const CellWithCopy: React.FC<Props> = ({ label, value, className }) => {
       dataLabel={label}
       onMouseEnter={onMouseEnter}
     >
-      {value}
+      {hasOnClick ? (
+        <Button variant="link" isInline onClick={() => onClick(value)}>
+          {value}
+        </Button>
+      ) : (
+        value
+      )}
     </Td>
   );
 

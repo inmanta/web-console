@@ -51,6 +51,7 @@ export const withInstanceSummary: ServiceModel = {
 export const nestedEditable: ServiceModel = {
   attributes: Attribute.nestedEditable,
   embedded_entities: EmbeddedEntity.nestedEditable,
+  inter_service_relations: [{ name: "related", entity_type: "subnet" }],
   environment: "36d188da-a30d-411b-892f-35808ad9b6e1",
   name: "test_service",
   description: "Description of test service",

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   Button,
@@ -20,6 +20,7 @@ import { useUrlStateWithExpansion } from "@/Data";
 import { Spacer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
+import { scrollElementIntoView } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { SummaryIcons } from "./SummaryIcons";
 import { CatalogTabs } from "./Tabs";
@@ -35,6 +36,17 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     route: "Catalog",
   });
+  const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
+
+  const scrollIntoView = (serviceName: string) => {
+    if (!isExpanded(serviceName)) {
+      onExpansion(serviceName)();
+    }
+    scrollElementIntoView(
+      rowRefs.current[serviceName] ? rowRefs.current[serviceName] : null,
+      { block: "start" }
+    );
+  };
 
   const Description = (descriptionProps) => {
     if (descriptionProps.service.description) {
@@ -61,6 +73,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
         aria-labelledby={serviceKey}
         isExpanded={isExpanded(service.name)}
       >
+        <span ref={(element) => (rowRefs.current[service.name] = element)} />
         <DataListItemRow>
           <DataListToggle
             onClick={onExpansion(service.name)}
@@ -103,7 +116,7 @@ export const CatalogDataList: React.FunctionComponent<Props> = ({
           id={expandKey}
           isHidden={!isExpanded(service.name)}
         >
-          <CatalogTabs service={service} />
+          <CatalogTabs service={service} scrollIntoView={scrollIntoView} />
         </DataListContent>
       </DataListItem>
     );

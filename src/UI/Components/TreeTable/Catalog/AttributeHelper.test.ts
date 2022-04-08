@@ -41,6 +41,7 @@ test("AttributeHelper getMultiAttributeNodes", () => {
         description: "description",
         attributes: [{ name: "g", type: "dict?", description: "sample" }],
         embedded_entities: [],
+        inter_service_relations: [{ name: "h", entity_type: "test_service" }],
       },
       {
         name: "a",
@@ -92,6 +93,13 @@ test("AttributeHelper getMultiAttributeNodes", () => {
         type: "dict?",
         description: "sample",
       },
+    },
+    "f.h": {
+      kind: "Leaf",
+      value: {
+        type: "test_service",
+      },
+      hasOnClick: true,
     },
   });
 });
