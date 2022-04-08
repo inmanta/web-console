@@ -226,6 +226,8 @@ const dict = {
   "catalog.callbacks.actions": "Actions",
   "catalog.callbacks.uuid.copy": "Copy full callback id to clipboard",
   "catalog.callbacks.add": "Add",
+  "catalog.table.type": "Type",
+  "catalog.table.description": "Description",
 
   /**
    * Environment controls

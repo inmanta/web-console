@@ -1,12 +1,11 @@
 import React, { ComponentProps } from "react";
 import { Story } from "@storybook/react/types-6-0";
 import { ServiceInstance } from "@/Test";
+import { PathHelper, TreeExpansionManager } from "./Helpers";
 import {
-  AttributeHelper,
-  PathHelper,
-  TreeExpansionManager,
-  TreeTableHelper,
-} from "./Helpers";
+  InventoryAttributeHelper,
+  InventoryTreeTableHelper,
+} from "./Inventory";
 import { TreeTable } from "./TreeTable";
 
 export default {
@@ -20,10 +19,10 @@ const Template: Story<ComponentProps<typeof TreeTable>> = (args) => (
 
 export const Simple = Template.bind({});
 Simple.args = {
-  treeTableHelper: new TreeTableHelper(
+  treeTableHelper: new InventoryTreeTableHelper(
     new PathHelper("$"),
     new TreeExpansionManager("$"),
-    new AttributeHelper("$"),
+    new InventoryAttributeHelper("$"),
     {
       candidate: {
         a: {
@@ -45,10 +44,10 @@ Simple.args = {
 
 export const FlatOnly = Template.bind({});
 FlatOnly.args = {
-  treeTableHelper: new TreeTableHelper(
+  treeTableHelper: new InventoryTreeTableHelper(
     new PathHelper("$"),
     new TreeExpansionManager("$"),
-    new AttributeHelper("$"),
+    new InventoryAttributeHelper("$"),
     {
       candidate: {
         b: 1234,
@@ -63,10 +62,10 @@ FlatOnly.args = {
 
 export const RealData = Template.bind({});
 RealData.args = {
-  treeTableHelper: new TreeTableHelper(
+  treeTableHelper: new InventoryTreeTableHelper(
     new PathHelper("$"),
     new TreeExpansionManager("$"),
-    new AttributeHelper("$"),
+    new InventoryAttributeHelper("$"),
     {
       candidate: null,
       active: ServiceInstance.a.active_attributes,
@@ -77,10 +76,10 @@ RealData.args = {
 
 export const MultipleAttributes = Template.bind({});
 MultipleAttributes.args = {
-  treeTableHelper: new TreeTableHelper(
+  treeTableHelper: new InventoryTreeTableHelper(
     new PathHelper("$"),
     new TreeExpansionManager("$"),
-    new AttributeHelper("$"),
+    new InventoryAttributeHelper("$"),
     {
       candidate: {
         a: {
@@ -99,10 +98,10 @@ MultipleAttributes.args = {
 export const LongJsonAttributes = () => (
   <TreeTable
     treeTableHelper={
-      new TreeTableHelper(
+      new InventoryTreeTableHelper(
         new PathHelper("$"),
         new TreeExpansionManager("$"),
-        new AttributeHelper("$"),
+        new InventoryAttributeHelper("$"),
         {
           candidate: {
             a: {

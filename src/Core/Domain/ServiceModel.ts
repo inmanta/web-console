@@ -84,3 +84,15 @@ export interface EmbeddedEntity {
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
 }
+
+interface MinimalEmbeddedEntity {
+  name: string;
+  description?: string;
+  attributes: Pick<AttributeModel, "name" | "type" | "description">[];
+  embedded_entities: MinimalEmbeddedEntity[];
+}
+
+export type EntityLike = {
+  attributes: Pick<AttributeModel, "name" | "type" | "description">[];
+  embedded_entities: MinimalEmbeddedEntity[];
+};

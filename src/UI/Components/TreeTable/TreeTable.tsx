@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ColumnHeaders } from "./ColumnHeaders";
-import { TreeTableHelper } from "./Helpers";
+import { TreeTableHelper } from "./Helpers/TreeTableHelper";
 import { TreeRowView, Indent } from "./TreeRow";
 
 interface Props {

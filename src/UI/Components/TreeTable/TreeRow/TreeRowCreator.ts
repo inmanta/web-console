@@ -1,30 +1,24 @@
-import { MultiAttributeNode } from "@/UI/Components/TreeTable/Helpers/AttributeNode";
+import {
+  CatalogAttributes,
+  InventoryAttributes,
+  MultiAttributeNode,
+} from "@/UI/Components/TreeTable/Helpers/AttributeNode";
 import { PathHelper } from "@/UI/Components/TreeTable/Helpers/PathHelper";
+import { AttributeTree } from "@/UI/Components/TreeTable/types";
+import { Cell, TreeRow } from "./TreeRow";
 
-import { TreeRow } from "./TreeRow";
-
-export class TreeRowCreator {
+export class TreeRowCreator<T extends AttributeTree["target"]> {
   constructor(
     private readonly pathHelper: PathHelper,
     private readonly isExpandedByParent: (path: string) => boolean,
     private readonly isChildExpanded: (path: string) => boolean,
-    private readonly createOnToggle: (path: string) => () => void
+    private readonly createOnToggle: (path: string) => () => void,
+    private readonly extractValues: (
+      node: Extract<MultiAttributeNode<T>, { kind: "Leaf" }>
+    ) => Cell[]
   ) {}
 
-  format(value: unknown): string {
-    if (typeof value === "string") return value;
-    if (typeof value === "number") return value.toString();
-    if (typeof value === "boolean") return value ? "true" : "false";
-    if (typeof value === "undefined") return "";
-    if (typeof value === "object") {
-      if (value === null) return "null";
-      if (Object.keys(value).length === 0) return "{}";
-      if (Array.isArray(value)) return value.join(", ");
-    }
-    return "";
-  }
-
-  create(path: string, node: MultiAttributeNode): TreeRow {
+  create(path: string, node: MultiAttributeNode<T>): TreeRow {
     if (node.kind === "Leaf") {
       if (this.pathHelper.isNested(path)) {
         return {
@@ -33,22 +27,14 @@ export class TreeRowCreator {
           isExpandedByParent: this.isExpandedByParent(path),
           level: this.pathHelper.getLevel(path),
           primaryCell: { label: "name", value: this.pathHelper.getSelf(path) },
-          valueCells: [
-            { label: "candidate", value: this.format(node.value.candidate) },
-            { label: "active", value: this.format(node.value.active) },
-            { label: "rollback", value: this.format(node.value.rollback) },
-          ],
+          valueCells: this.extractValues(node),
         };
       } else {
         return {
           kind: "Flat",
           id: path,
           primaryCell: { label: "name", value: path },
-          valueCells: [
-            { label: "candidate", value: this.format(node.value.candidate) },
-            { label: "active", value: this.format(node.value.active) },
-            { label: "rollback", value: this.format(node.value.rollback) },
-          ],
+          valueCells: this.extractValues(node),
         };
       }
     } else {
@@ -73,4 +59,39 @@ export class TreeRowCreator {
       }
     }
   }
+}
+
+function format(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (typeof value === "number") return value.toString();
+  if (typeof value === "boolean") return value ? "true" : "false";
+  if (typeof value === "undefined") return "";
+  if (typeof value === "object") {
+    if (value === null) return "null";
+    if (Object.keys(value).length === 0) return "{}";
+    if (Array.isArray(value)) return value.join(", ");
+  }
+  return "";
+}
+
+export function extractCatalogValues(
+  node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: "Leaf" }>
+): Cell[] {
+  return [
+    { label: "type", value: format(node.value.type) },
+    {
+      label: "description",
+      value: format(node.value.description),
+    },
+  ];
+}
+
+export function extractInventoryValues(
+  node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: "Leaf" }>
+): Cell[] {
+  return [
+    { label: "candidate", value: format(node.value.candidate) },
+    { label: "active", value: format(node.value.active) },
+    { label: "rollback", value: format(node.value.rollback) },
+  ];
 }

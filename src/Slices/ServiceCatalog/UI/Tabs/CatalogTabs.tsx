@@ -37,7 +37,7 @@ export const CatalogTabs: React.FunctionComponent<{
       </Tab>
       <Tab eventKey="attributes" title="Attributes">
         <OverflowContainer>
-          <AttributeTable attributes={service.attributes} />
+          <AttributeTable service={service} />
         </OverflowContainer>
       </Tab>
       <Tab eventKey="lifecycle_states" title="Lifecycle States">

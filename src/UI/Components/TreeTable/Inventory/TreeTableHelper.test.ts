@@ -1,14 +1,16 @@
-import { AttributeHelper } from "./AttributeHelper";
-import { PathHelper } from "./PathHelper";
-import { TreeExpansionManager } from "./TreeExpansionManager";
-import { TreeTableHelper } from "./TreeTableHelper";
+import {
+  PathHelper,
+  TreeExpansionManager,
+} from "@/UI/Components/TreeTable/Helpers";
+import { InventoryAttributeHelper } from "./AttributeHelper";
+import { InventoryTreeTableHelper } from "./TreeTableHelper";
 
 test("TreeTableHelper getExpansionState returns correct expansionState", () => {
   // Arrange
-  const treeTableHelper = new TreeTableHelper(
+  const treeTableHelper = new InventoryTreeTableHelper(
     new PathHelper("."),
     new TreeExpansionManager("."),
-    new AttributeHelper("."),
+    new InventoryAttributeHelper("."),
     { candidate: null, active: { a: "b" }, rollback: null }
   );
   // Act
@@ -21,10 +23,10 @@ test("TreeTableHelper getExpansionState returns correct expansionState", () => {
 
 test("TreeTableHelper createRows returns correct list", () => {
   // Arrange
-  const treeTableHelper = new TreeTableHelper(
+  const treeTableHelper = new InventoryTreeTableHelper(
     new PathHelper("."),
     new TreeExpansionManager("."),
-    new AttributeHelper("."),
+    new InventoryAttributeHelper("."),
     { candidate: null, active: { a: "b", c: { d: "e" } }, rollback: null }
   );
   // Act
@@ -67,10 +69,10 @@ test("TreeTableHelper createRows returns correct list", () => {
 
 test("TreeTableHelper createRows returns correctly ordered list", () => {
   // Arrange
-  const treeTableHelper = new TreeTableHelper(
+  const treeTableHelper = new InventoryTreeTableHelper(
     new PathHelper("$"),
     new TreeExpansionManager("$"),
-    new AttributeHelper("$"),
+    new InventoryAttributeHelper("$"),
     {
       candidate: null,
       active: {
