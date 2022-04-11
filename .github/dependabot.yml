@@ -9,3 +9,6 @@ updates:
     # Serialize all Dependabot PRs to prevent merge conflicts
     # on the package.json and yarn.lock files
     open-pull-requests-limit: 1
+    ignore:
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
