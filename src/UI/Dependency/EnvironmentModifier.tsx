@@ -49,18 +49,28 @@ export class EnvironmentModifierImpl implements EnvironmentModifier {
     return environmentDetails.halted;
   }
 
-  useIsServerCompileEnabled(): boolean {
+  private useSetting(
+    settingName: keyof EnvironmentSettings.DefinitionMap
+  ): boolean {
     const environmentDetails = this.useCurrentEnvironment();
     const environmentSettings = this.useEnvironmentSettings();
     if (environmentDetails === null || environmentSettings === null)
       return false;
     if (
-      environmentDetails.settings.server_compile !== undefined &&
-      environmentDetails.settings.server_compile !== null
+      environmentDetails.settings[settingName] !== undefined &&
+      environmentDetails.settings[settingName] !== null
     ) {
-      return Boolean(environmentDetails.settings.server_compile);
+      return Boolean(environmentDetails.settings[settingName]);
     } else {
-      return Boolean(environmentSettings.definition.server_compile.default);
+      return Boolean(environmentSettings.definition[settingName].default);
     }
+  }
+
+  useIsServerCompileEnabled(): boolean {
+    return this.useSetting("server_compile");
+  }
+
+  useIsProtectedEnvironment(): boolean {
+    return this.useSetting("protected_environment");
   }
 }

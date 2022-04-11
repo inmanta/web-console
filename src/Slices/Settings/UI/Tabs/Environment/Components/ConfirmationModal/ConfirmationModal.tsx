@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Button,
@@ -9,49 +9,47 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { EnvironmentModel, Maybe } from "@/Core";
-import { DependencyContext } from "@/UI/Dependency";
-import { useNavigateTo } from "@/UI/Routing";
+import { Maybe } from "@/Core";
 import { words } from "@/UI/words";
 
 interface Props {
-  environment: Pick<EnvironmentModel, "id" | "name">;
+  actionType: "delete" | "clear";
+  environment: string;
   isOpen: boolean;
+  onConfirm: () => Promise<Maybe.Type<string>>;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-/**
- * @TODO Replace content once we support markdown in the words module
- */
-export const DeleteModal: React.FC<Props> = ({
+export const ConfirmationModal: React.FC<Props> = ({
+  actionType,
   environment,
   isOpen,
+  onConfirm,
   onClose,
+  onSuccess,
 }) => {
-  const { commandResolver } = useContext(DependencyContext);
-  const navigateTo = useNavigateTo();
-  const redirectToHome = () => navigateTo("Home", undefined);
   const [candidateEnv, setCandidateEnv] = useState("");
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
   const [isBusy, setIsBusy] = useState(false);
-  const trigger = commandResolver.getTrigger<"DeleteEnvironment">({
-    kind: "DeleteEnvironment",
-    id: environment.id,
-  });
-  const validated = environment.name === candidateEnv ? "success" : "default";
+  const validated = environment === candidateEnv ? "success" : "default";
 
   const onCloseWithClear = () => {
     setCandidateEnv("");
+    onClose();
+  };
+  const onCloseFullClear = () => {
+    setCandidateEnv("");
+    setIsBusy(false);
     onClose();
   };
 
   const onDelete = async () => {
     setIsBusy(true);
     setErrorMessage(null);
-    const error = await trigger();
+    const error = await onConfirm();
     if (Maybe.isNone(error)) {
-      onClose();
-      redirectToHome();
+      onSuccess ? onSuccess() : onCloseFullClear();
     } else {
       setIsBusy(false);
       setErrorMessage(error.value);
@@ -67,12 +65,13 @@ export const DeleteModal: React.FC<Props> = ({
   return (
     <Modal
       variant="small"
-      aria-label="Delete Environment Modal"
+      aria-label={`${actionType} environment modal`}
       title={words("home.environment.delete.warning")}
       description={
         <p>
-          This action cannot be undone. This will permanently delete the{" "}
-          <b>{environment.name}</b> environment.
+          {actionType === "delete"
+            ? words("home.environment.delete.confirmation")(environment)
+            : words("home.environment.clear.confirmation")(environment)}
         </p>
       }
       titleIconVariant="danger"
@@ -80,16 +79,16 @@ export const DeleteModal: React.FC<Props> = ({
       onClose={onCloseWithClear}
       actions={[
         <Button
-          aria-label="Delete"
+          aria-label={actionType}
           key="confirm"
           variant="danger"
           onClick={onDelete}
           isDisabled={validated !== "success" || isBusy}
         >
-          {words("home.environment.delete.warning.action")}
+          {words(`home.environment.${actionType}.warning.action`)}
         </Button>,
         <Button key="cancel" variant="plain" onClick={onCloseWithClear}>
-          Cancel
+          {words("cancel")}
         </Button>,
       ]}
     >
@@ -109,7 +108,7 @@ export const DeleteModal: React.FC<Props> = ({
         <FormGroup
           label={
             <CustomLabel>
-              Please type <b>{environment.name}</b> to confirm
+              {words("home.environment.promtInput")(environment)}
             </CustomLabel>
           }
           type="text"
@@ -118,7 +117,7 @@ export const DeleteModal: React.FC<Props> = ({
         >
           <TextInput
             id="environmentName"
-            aria-label="Delete Environment Check"
+            aria-label={`${actionType} environment check`}
             value={candidateEnv}
             validated={validated}
             onChange={setCandidateEnv}
