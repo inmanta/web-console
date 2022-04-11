@@ -9,6 +9,7 @@
  * seperated by dots. Using this method, you can have a
  * value for "inventory", but also for "inventory.state".
  */
+import React from "react";
 
 const dict = {
   /**
@@ -343,6 +344,23 @@ const dict = {
   "home.environment.delete": "Delete environment",
   "home.environment.clear": "Clear environment",
   "home.environment.delete.warning": "Are you absolutely sure?",
+  "home.environment.delete.confirmation": (environment: string) => (
+    <>
+      This action cannot be undone. This will permanently delete the{" "}
+      <b>{environment}</b> environment.
+    </>
+  ),
+  "home.environment.clear.confirmation": (environment: string) => (
+    <>
+      This action cannot be undone. This will permanently remove everything from
+      the <b>{environment}</b> environment and reset it to its initial state.
+    </>
+  ),
+  "home.environment.promtInput": (environment: string) => (
+    <>
+      Please type <b>{environment}</b> to confirm
+    </>
+  ),
   "home.environment.delete.warning.action":
     "I understand the consequences, delete this environment",
   "home.environment.clear.warning.action":

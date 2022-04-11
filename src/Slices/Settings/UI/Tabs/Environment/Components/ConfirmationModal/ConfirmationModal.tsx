@@ -68,18 +68,11 @@ export const ConfirmationModal: React.FC<Props> = ({
       aria-label={`${actionType} environment modal`}
       title={words("home.environment.delete.warning")}
       description={
-        actionType === "delete" ? (
-          <p>
-            This action cannot be undone. This will permanently delete the{" "}
-            <b>{environment}</b> environment.
-          </p>
-        ) : (
-          <p>
-            This action cannot be undone. This will permanently remove
-            everything from the <b>{environment}</b> environment and reset it to
-            its initial state.
-          </p>
-        )
+        <p>
+          {actionType === "delete"
+            ? words("home.environment.delete.confirmation")(environment)
+            : words("home.environment.clear.confirmation")(environment)}
+        </p>
       }
       titleIconVariant="danger"
       isOpen={isOpen}
@@ -95,7 +88,7 @@ export const ConfirmationModal: React.FC<Props> = ({
           {words(`home.environment.${actionType}.warning.action`)}
         </Button>,
         <Button key="cancel" variant="plain" onClick={onCloseWithClear}>
-          Cancel
+          {words("cancel")}
         </Button>,
       ]}
     >
@@ -115,7 +108,7 @@ export const ConfirmationModal: React.FC<Props> = ({
         <FormGroup
           label={
             <CustomLabel>
-              Please type <b>{environment}</b> to confirm
+              {words("home.environment.promtInput")(environment)}
             </CustomLabel>
           }
           type="text"
