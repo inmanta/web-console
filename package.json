@@ -126,11 +126,11 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@patternfly/react-charts": "^6.51.19",
+    "@patternfly/react-charts": "^6.55.16",
     "@patternfly/react-core": "^4.198.19",
     "@patternfly/react-icons": "^4.53.16",
     "@patternfly/react-styles": "^4.48.19",
-    "@patternfly/react-table": "^4.67.19",
+    "@patternfly/react-table": "^4.71.16",
     "@patternfly/react-tokens": "^4.54.16",
     "copy-to-clipboard": "^3.3.1",
     "easy-peasy": "^5.0.4",
