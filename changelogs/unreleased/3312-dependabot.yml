@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump @patternfly/react-icons from 4.49.19 to 4.53.16'
+destination-branches:
+- master
+- iso5
+sections: {}
