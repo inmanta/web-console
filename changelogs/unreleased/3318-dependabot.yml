@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump @patternfly/react-tokens from 4.50.19 to 4.54.16'
+destination-branches:
+- master
+- iso5
+sections: {}
