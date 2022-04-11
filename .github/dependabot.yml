@@ -11,4 +11,4 @@ updates:
     open-pull-requests-limit: 1
     ignore:
       - dependency-name: "@types/react"
-        versions: [">=18.0"]
+        update-types: ["version-update:semver-major"]
