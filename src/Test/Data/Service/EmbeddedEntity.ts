@@ -498,6 +498,13 @@ export const nestedEditable: EmbeddedEntity[] = [
         modifier: "rw+",
         lower_limit: 0,
         upper_limit: 1,
+        inter_service_relations: [
+          {
+            name: "related_service",
+            entity_type: "test_entity",
+            description: "description",
+          },
+        ],
       },
     ],
     name: "another_embedded",

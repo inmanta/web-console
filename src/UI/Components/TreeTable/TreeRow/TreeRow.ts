@@ -3,6 +3,7 @@ export type TreeRow = Flat | Root | Branch | Leaf;
 export interface Cell {
   label: string;
   value: string;
+  hasOnClick?: boolean;
 }
 
 interface Flat {

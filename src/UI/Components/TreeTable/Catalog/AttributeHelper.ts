@@ -33,6 +33,26 @@ export class CatalogAttributeHelper
       };
       return acc;
     }, {});
+    if (
+      container.inter_service_relations &&
+      container.inter_service_relations.length > 0
+    ) {
+      const entriesFromRelations = container.inter_service_relations.reduce(
+        (acc, cur) => {
+          acc[`${prefix}${cur.name}`] = {
+            kind: "Leaf",
+            value: {
+              type: cur.entity_type,
+              description: cur.description ? cur.description : "",
+            },
+            hasOnClick: true,
+          };
+          return acc;
+        },
+        {}
+      );
+      entries = { ...entries, ...entriesFromRelations };
+    }
     if (container.embedded_entities.length > 0) {
       container.embedded_entities.forEach((entity) => {
         entries[`${prefix}${entity.name}`] = { kind: "Branch" };

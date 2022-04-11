@@ -73,6 +73,13 @@ export interface ServiceModel extends ServiceIdentifier {
   config: Config;
   instance_summary?: InstanceSummary | null;
   embedded_entities: EmbeddedEntity[];
+  inter_service_relations?: InterServiceRelation[];
+}
+
+interface InterServiceRelation {
+  name: string;
+  description?: string;
+  entity_type: string;
 }
 
 export interface EmbeddedEntity {
@@ -83,16 +90,19 @@ export interface EmbeddedEntity {
   upper_limit?: ParsedNumber;
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
+  inter_service_relations?: InterServiceRelation[];
 }
 
 interface MinimalEmbeddedEntity {
   name: string;
   description?: string;
   attributes: Pick<AttributeModel, "name" | "type" | "description">[];
+  inter_service_relations?: InterServiceRelation[];
   embedded_entities: MinimalEmbeddedEntity[];
 }
 
 export type EntityLike = {
   attributes: Pick<AttributeModel, "name" | "type" | "description">[];
   embedded_entities: MinimalEmbeddedEntity[];
+  inter_service_relations?: InterServiceRelation[];
 };

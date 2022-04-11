@@ -26,6 +26,7 @@ test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is
   render(
     <AttributeTable
       service={{ ...Service.a, attributes: [], embedded_entities: [] }}
+      scrollIntoView={jest.fn}
     />
   );
   expect(screen.getByText("No attributes found for the service")).toBeVisible();
@@ -39,6 +40,7 @@ test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async (
         attributes: [attribute1],
         embedded_entities: [],
       }}
+      scrollIntoView={jest.fn}
     />
   );
   expect(
@@ -54,6 +56,7 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
         attributes: [attribute1, attribute2],
         embedded_entities: [],
       }}
+      scrollIntoView={jest.fn}
     />
   );
 
@@ -72,6 +75,7 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
         ...Service.a,
         attributes: [],
       }}
+      scrollIntoView={jest.fn}
     />
   );
 

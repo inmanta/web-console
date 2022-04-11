@@ -1,6 +1,7 @@
 interface Leaf<Value> {
   kind: "Leaf";
   value: Value;
+  hasOnClick?: boolean;
 }
 
 interface Branch {

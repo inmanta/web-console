@@ -7,6 +7,20 @@ export default {
   component: AttributeTable,
 };
 
-export const RealData = () => <AttributeTable service={Service.a} />;
+export const RealData = () => (
+  <AttributeTable
+    service={Service.a}
+    scrollIntoView={() => {
+      return;
+    }}
+  />
+);
 
-export const Nested = () => <AttributeTable service={Service.nestedEditable} />;
+export const Nested = () => (
+  <AttributeTable
+    service={Service.nestedEditable}
+    scrollIntoView={() => {
+      return;
+    }}
+  />
+);
