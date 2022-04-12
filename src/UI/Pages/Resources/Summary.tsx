@@ -2,7 +2,8 @@ import React from "react";
 import { ToolbarItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Query, RemoteData, Resource } from "@/Core";
-import { DeployStateBar, DeployButton, RepairButton } from "./Components";
+import { ResourceStatusBar } from "@/UI/Components";
+import { DeployButton, RepairButton } from "./Components";
 
 interface Props {
   data: RemoteData.Type<
@@ -21,7 +22,7 @@ export const Summary: React.FC<Props> = ({ data, updateFilter }) =>
       success: (result) => (
         <>
           <StretchedToolbarItem>
-            <DeployStateBar
+            <ResourceStatusBar
               summary={result.metadata.deploy_summary}
               updateFilter={updateFilter}
             />

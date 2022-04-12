@@ -157,7 +157,7 @@ test("When using the Updated filter then the parameters within the range selecte
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
   userEvent.click(fromDatePicker);
-  userEvent.type(fromDatePicker, `2022-01-31`);
+  userEvent.type(fromDatePicker, `2022/01/31`);
   const toDatePicker = screen.getByLabelText("To Date Picker");
   userEvent.click(toDatePicker);
   userEvent.type(toDatePicker, `2022-02-01`);
@@ -186,9 +186,9 @@ test("When using the Updated filter then the parameters within the range selecte
   window = Object.assign(window, { innerWidth: 1200 });
   window.dispatchEvent(new Event("resize"));
   expect(
-    await screen.findByText("from | 2022-01-31+00:00", { exact: false })
+    await screen.findByText("from | 2022/01/31 00:00:00", { exact: false })
   ).toBeVisible();
   expect(
-    await screen.findByText("to | 2022-02-01+00:00", { exact: false })
+    await screen.findByText("to | 2022/02/01 00:00:00", { exact: false })
   ).toBeVisible();
 });

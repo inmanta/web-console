@@ -1,5 +1,5 @@
 import { Pagination } from "@/Core/Domain/Pagination";
-import { ParsedNumber } from "@/Core/Language";
+import { Maybe, ParsedNumber } from "@/Core/Language";
 import { PageSize } from "../PageSize";
 import { Sort } from "../Sort";
 
@@ -33,7 +33,6 @@ export enum Status {
   undefined = "undefined",
   skipped_for_undefined = "skipped_for_undefined",
   orphaned = "orphaned",
-  processing_events = "processing_events",
 }
 
 export interface Raw {
@@ -54,32 +53,34 @@ export interface Row {
 
 export type RowFromVersion = Omit<Row, "deployState">;
 
-export interface Details {
+interface BaseDetails {
   resource_id: string;
   resource_type: string;
   agent: string;
   id_attribute: string;
   id_attribute_value: string;
-  status: Status;
+  attributes: Record<string, unknown>;
+}
+
+interface ReleasedDetails extends BaseDetails {
   last_deploy?: string;
   first_generated_time: string;
   first_generated_version: ParsedNumber;
-  attributes: Record<string, unknown>;
+}
+
+export interface Details extends ReleasedDetails {
+  status: Status;
   requires_status: Record<string, Status>;
 }
 
-export interface RawDetails {
-  resource_id: string;
-  resource_type: string;
-  agent: string;
-  id_attribute: string;
-  id_attribute_value: string;
+export interface RawDetails extends ReleasedDetails {
   status: string;
-  last_deploy?: string;
-  first_generated_time: string;
-  first_generated_version: ParsedNumber;
-  attributes: Record<string, unknown>;
   requires_status: Record<string, string>;
+}
+
+export interface VersionedDetails extends BaseDetails {
+  version: ParsedNumber;
+  resource_version_id: string;
 }
 
 export interface DeploySummary {
@@ -103,7 +104,11 @@ export interface Filter {
   type?: string[];
   agent?: string[];
   value?: string[];
-  status?: Status[];
+  status?: string[];
+}
+
+export interface FilterWithDefaultHandling extends Filter {
+  disregardDefault?: boolean;
 }
 
 export enum FilterKind {
@@ -126,4 +131,34 @@ export interface ResponseFromVersion {
   data: FromVersion[];
   links: Pagination.Links;
   metadata: Pagination.Metadata;
+}
+
+export interface Id {
+  entityType: string;
+  agentName: string;
+  attribute: string;
+  attributeValue: string;
+}
+
+export class IdParser {
+  private static readonly parseIdRegex =
+    /^(?<id>(?<type>(?<ns>[\w-]+(::[\w-]+)*)::(?<class>[\w-]+))\[(?<hostname>[^,]+),(?<attr>[^=]+)=(?<value>[^\]]+)\])(,v=(?<version>[0-9]+))?$/;
+
+  public static parse(idStr: string): Maybe.Maybe<Id> {
+    const groups = idStr.match(IdParser.parseIdRegex)?.groups;
+    if (!groups) {
+      return Maybe.none();
+    }
+    return Maybe.some({
+      entityType: groups.type,
+      agentName: groups.hostname,
+      attribute: groups.attr,
+      attributeValue: groups.value,
+    });
+  }
+
+  public static getAgentName(idStr: string): Maybe.Maybe<Id["agentName"]> {
+    const id = IdParser.parse(idStr);
+    return Maybe.isSome(id) ? Maybe.some(id.value.agentName) : Maybe.none();
+  }
 }

@@ -8,12 +8,14 @@ interface Props {
   filter: CompileReportParams.Filter;
   setFilter: (filter: CompileReportParams.Filter) => void;
   paginationWidget: React.ReactNode;
+  afterRecompile(): void;
 }
 
 export const CompileReportsTableControls: React.FC<Props> = ({
   filter,
   setFilter,
   paginationWidget,
+  afterRecompile,
 }) => {
   return (
     <Toolbar
@@ -23,7 +25,7 @@ export const CompileReportsTableControls: React.FC<Props> = ({
       <ToolbarContent>
         <CompileReportsFilterWidget filter={filter} setFilter={setFilter} />
         <ToolbarItem variant="separator" />
-        <CompileWidget />
+        <CompileWidget afterTrigger={afterRecompile} />
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
     </Toolbar>

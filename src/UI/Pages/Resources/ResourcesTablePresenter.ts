@@ -20,19 +20,15 @@ export class ResourcesTablePresenter
         apiName: "resource_id_value",
       },
       {
-        displayName: words("resources.column.numberOfDependencies"),
+        displayName: words("resources.column.requires"),
         apiName: "requires",
       },
       {
         displayName: words("resources.column.deployState"),
         apiName: "status",
       },
-      {
-        displayName: words("compileReports.columns.actions"),
-        apiName: "",
-      },
     ];
-    this.numberOfColumns = this.columnHeads.length + 1;
+    this.numberOfColumns = this.columnHeads.length + 2;
   }
 
   createRows(sourceData: Resource.Resource[]): Resource.Row[] {

@@ -1,22 +1,21 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, fireEvent, within, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { Either } from "@/Core";
 import {
   QueryResolverImpl,
-  InstanceResourcesQueryManager,
-  InstanceResourcesStateHelper,
   getStoreInstance,
+  QueryManagerResolver,
 } from "@/Data";
 import {
   Row,
   tablePresenter,
   tablePresenterWithIdentity,
   StaticScheduler,
-  DynamicQueryManagerResolver,
-  InstantApiHelper,
   dependencies,
+  DeferredApiHelper,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { InventoryTable } from "./InventoryTable";
@@ -26,26 +25,14 @@ const dummySetter = () => {
 };
 
 test("InventoryTable can be expanded", async () => {
-  // Arrange
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new InstanceResourcesQueryManager(
-        new InstantApiHelper({
-          kind: "Success",
-          data: {
-            data: [
-              {
-                resource_id: "resource_id_1",
-                resource_state: "resource_state",
-              },
-            ],
-          },
-        }),
-        new InstanceResourcesStateHelper(store),
-        new StaticScheduler()
-      ),
-    ])
+    new QueryManagerResolver(
+      store,
+      new DeferredApiHelper(),
+      new StaticScheduler(),
+      new StaticScheduler()
+    )
   );
   render(
     <MemoryRouter>
@@ -74,24 +61,14 @@ test("InventoryTable can be expanded", async () => {
 
 test("ServiceInventory can show resources for instance", async () => {
   const store = getStoreInstance();
+  const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new InstanceResourcesQueryManager(
-        new InstantApiHelper({
-          kind: "Success",
-          data: {
-            data: [
-              {
-                resource_id: "resource_id_1,v=1",
-                resource_state: "resource_state",
-              },
-            ],
-          },
-        }),
-        new InstanceResourcesStateHelper(store),
-        new StaticScheduler()
-      ),
-    ])
+    new QueryManagerResolver(
+      store,
+      apiHelper,
+      new StaticScheduler(),
+      new StaticScheduler()
+    )
   );
 
   render(
@@ -111,15 +88,27 @@ test("ServiceInventory can show resources for instance", async () => {
 
   const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
 
-  fireEvent.click(within(expandCell).getByRole("button"));
+  userEvent.click(within(expandCell).getByRole("button"));
 
-  fireEvent.click(screen.getByRole("button", { name: "Resources" }));
+  userEvent.click(screen.getByRole("button", { name: "Resources" }));
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [
+          {
+            resource_id: "resource_id_1,v=1",
+            resource_state: "resource_state",
+          },
+        ],
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Success" })
   ).toBeInTheDocument();
 
-  expect(screen.getByText("resource_id_1,v=1")).toBeInTheDocument();
+  expect(screen.getByText("resource_id_1")).toBeInTheDocument();
 });
 
 test("ServiceInventory shows service identity if it's defined", async () => {

@@ -1,4 +1,21 @@
-export type Status = "added" | "modified" | "deleted";
+export type Status =
+  | "added"
+  | "modified"
+  | "deleted"
+  | "unmodified"
+  | "agent_down"
+  | "undefined"
+  | "skipped_for_undefined";
+
+export const statuses: Status[] = [
+  "added",
+  "modified",
+  "deleted",
+  "unmodified",
+  "agent_down",
+  "undefined",
+  "skipped_for_undefined",
+];
 
 export interface ValueSet {
   from_value: unknown;
@@ -17,3 +34,5 @@ export interface Identifiers {
   from: string;
   to: string;
 }
+
+export type Values = Identifiers;

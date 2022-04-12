@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ToolbarGroup } from "@patternfly/react-core";
 import { AgentParams, AgentStatus } from "@/Core";
+import { FilterPicker } from "@/UI/Components";
 import { FreeTextFilter, SelectOptionFilter } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
-import { FilterPicker } from "./FilterPicker";
 
 interface Props {
   filter: AgentParams.Filter;
@@ -38,7 +38,11 @@ export const AgentsFilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar">
-      <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />
+      <FilterPicker
+        setFilterKind={setFilterKind}
+        filterKind={filterKind}
+        items={AgentParams.List}
+      />
       <SelectOptionFilter
         filterPropertyName={AgentParams.Kind.Status}
         placeholder={words("agents.filters.status.placeholder")}

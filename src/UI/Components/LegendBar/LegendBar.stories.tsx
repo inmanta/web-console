@@ -1,13 +1,13 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { colorConfig } from "@/UI/Pages/Resources/Components";
+import { Spacer } from "@/UI/Components";
+import { colorConfig } from "@/UI/Components/ResourceStatus";
 import { LegendBar } from "./LegendBar";
 import { LegendItemDetails } from ".";
 
 export default {
-  title: "LegendBar",
+  title: "Components/LegendBar",
   component: LegendBar,
-} as ComponentMeta<typeof LegendBar>;
+};
 
 const items: LegendItemDetails[] = [
   {
@@ -47,59 +47,62 @@ const items: LegendItemDetails[] = [
   },
   {
     id: "available",
-    label: "available & processing_events",
+    label: "available",
     value: 54,
     backgroundColor: colorConfig["available"],
     color: "black",
   },
 ];
 
-export const Primary: ComponentStory<typeof LegendBar> = () => (
-  <LegendBar
-    items={items}
-    total={{ label: "hello", format: (total) => `? / ${total}` }}
-  />
-);
-
-export const NoTotal: ComponentStory<typeof LegendBar> = () => (
-  <LegendBar items={items} />
-);
-
-export const One: ComponentStory<typeof LegendBar> = () => (
-  <LegendBar
-    items={[
-      {
-        id: "deployed",
-        value: 1,
-        backgroundColor: colorConfig["deployed"],
-        label: "deployed",
-      },
-    ]}
-  />
-);
-
-export const Equal: ComponentStory<typeof LegendBar> = () => (
-  <LegendBar
-    items={[
-      {
-        id: "deployed",
-        value: 2,
-        backgroundColor: colorConfig["deployed"],
-        label: "deployed",
-      },
-      {
-        id: "skipped",
-        value: 2,
-        backgroundColor: colorConfig["skipped"],
-        color: "black",
-        label: "skipped & skipped_for_undefined & cancelled",
-      },
-      {
-        id: "failed",
-        value: 100,
-        backgroundColor: colorConfig["failed"],
-        label: "failed",
-      },
-    ]}
-  />
+export const Default = () => (
+  <>
+    <p>Primary:</p>
+    <LegendBar
+      items={items}
+      total={{ label: "hello", format: (total) => `? / ${total}` }}
+    />
+    <Spacer />
+    <p>No total:</p>
+    <LegendBar items={items} />
+    <Spacer />
+    <p>Zero:</p>
+    <LegendBar items={[]} label="No items" />
+    <Spacer />
+    <p>One:</p>
+    <LegendBar
+      items={[
+        {
+          id: "deployed",
+          value: 1,
+          backgroundColor: colorConfig["deployed"],
+          label: "deployed",
+        },
+      ]}
+    />
+    <Spacer />
+    <p>Equal:</p>
+    <LegendBar
+      items={[
+        {
+          id: "deployed",
+          value: 2,
+          backgroundColor: colorConfig["deployed"],
+          label: "deployed",
+        },
+        {
+          id: "skipped",
+          value: 2,
+          backgroundColor: colorConfig["skipped"],
+          color: "black",
+          label: "skipped & skipped_for_undefined & cancelled",
+        },
+        {
+          id: "failed",
+          value: 100,
+          backgroundColor: colorConfig["failed"],
+          label: "failed",
+        },
+      ]}
+    />
+  </>
 );

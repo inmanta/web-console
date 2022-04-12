@@ -1,6 +1,6 @@
-import React, { ComponentProps } from "react";
-import { Story } from "@storybook/react/types-6-0";
-import { ServerStatus } from "@/Test";
+import React from "react";
+import { dependencies, ServerStatus } from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { StatusList } from "./StatusList";
 
 export default {
@@ -8,12 +8,8 @@ export default {
   component: StatusList,
 };
 
-const Template: Story<ComponentProps<typeof StatusList>> = (args) => {
-  return <StatusList {...args} />;
-};
-
-export const Default = Template.bind({});
-Default.args = {
-  status: ServerStatus.withLsm,
-  apiUrl: "www.example.com",
-};
+export const Default = () => (
+  <DependencyProvider dependencies={dependencies}>
+    <StatusList status={ServerStatus.withLsm} apiUrl="www.example.com" />
+  </DependencyProvider>
+);

@@ -1,9 +1,9 @@
 import React from "react";
 import { Tbody, Td, Tr, ExpandableRowContent } from "@patternfly/react-table";
-import moment from "moment";
 import styled, { css } from "styled-components";
 import { ResourceLog } from "@/Core";
 import { CodeText } from "@/UI/Components";
+import { MomentDatePresenter } from "@/UI/Utils";
 import { Details } from "./Details";
 import { RowOptions, ToggleActionType } from "./RowOptions";
 
@@ -15,6 +15,8 @@ interface Props {
   index: number;
   toggleActionType: ToggleActionType;
 }
+
+const datePresenter = new MomentDatePresenter();
 
 export const Row: React.FC<Props> = ({
   log,
@@ -39,13 +41,13 @@ export const Row: React.FC<Props> = ({
           }}
         />
         {/* The width values represent percentages */}
-        <Td width={15}>{presentDate(log.timestamp)}</Td>
+        <Td width={15}>{datePresenter.getFull(log.timestamp)}</Td>
         <Td width={10}>{log.action}</Td>
         <Td width={10}>{log.level}</Td>
         <Td modifier="truncate">
           <CodeText singleLine>{log.msg}</CodeText>
         </Td>
-        <Td width={10}>
+        <Td isActionCell>
           <RowOptions toggleActionType={toggleActionType} action={log.action} />
         </Td>
       </Tr>
@@ -86,11 +88,4 @@ const getStyleForLevel = (level: string) => {
     default:
       return "";
   }
-};
-
-const presentDate = (timestamp: string): string => {
-  return moment
-    .utc(timestamp)
-    .tz(moment.tz.guess())
-    .format("DD/MM/YYYY HH:mm:ss.SSS");
 };

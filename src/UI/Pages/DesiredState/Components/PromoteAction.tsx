@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { DropdownItem } from "@patternfly/react-core";
-import { CheckIcon } from "@patternfly/react-icons";
 import { Maybe, ParsedNumber } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -43,11 +42,7 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
           : words("desiredState.actions.promote.disabledTooltip")
       }
     >
-      <DropdownItem
-        isDisabled={isDisabled || isHalted}
-        onClick={onSubmit}
-        icon={<CheckIcon />}
-      >
+      <DropdownItem isDisabled={isDisabled || isHalted} onClick={onSubmit}>
         {words("desiredState.actions.promote")}
       </DropdownItem>
     </ActionDisabledTooltip>

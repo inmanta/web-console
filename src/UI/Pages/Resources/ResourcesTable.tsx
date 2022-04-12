@@ -9,6 +9,7 @@ import {
 } from "@patternfly/react-table";
 import styled from "styled-components";
 import { Resource, Sort } from "@/Core";
+import { useExpansion } from "@/Data";
 import { ResourceTableRow } from "./ResourceTableRow";
 import { ResourcesTablePresenter } from "./ResourcesTablePresenter";
 
@@ -25,6 +26,7 @@ export const ResourcesTable: React.FC<Props> = ({
   setSort,
   ...props
 }) => {
+  const [isExpanded, onExpansion] = useExpansion();
   const onSort: OnSort = (event, index, order) => {
     setSort({
       name: tablePresenter.getColumnNameForIndex(index) as Resource.SortKey,
@@ -66,7 +68,13 @@ export const ResourcesTable: React.FC<Props> = ({
         <Tr>{heads}</Tr>
       </Thead>
       {rows.map((row) => (
-        <ResourceTableRow row={row} key={row.id} />
+        <ResourceTableRow
+          row={row}
+          key={row.id}
+          isExpanded={isExpanded(row.id)}
+          onToggle={onExpansion(row.id)}
+          numberOfColumns={tablePresenter.getNumberOfColumns()}
+        />
       ))}
     </TableComposable>
   );

@@ -56,3 +56,13 @@ it.each`
     expect(routeManager.getRouteMatchFromUrl(url)).toEqual(result);
   }
 );
+
+test("Given getUrlForApiUri When uri is unknown Then returns undefined", () => {
+  expect(routeManager.getUrlForApiUri("/api/v2/service/123")).toBeUndefined();
+});
+
+test("Given getUrlForApiUri When uri is known Then returns url", () => {
+  expect(routeManager.getUrlForApiUri("/api/v2/compilereport/123")).toMatch(
+    "/compilereports/123"
+  );
+});

@@ -6,3 +6,5 @@
 - [Auto-updating](./auto-updating.md)
 - [Notes](./notes.md)
 - [Desired State Diff](./desired-state-diff/index.md)
+- [BigInt](./big-int.md)
+- [Instance Resources](./instance-resources.md)

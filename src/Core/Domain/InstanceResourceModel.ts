@@ -1,6 +1,8 @@
+import { Resource } from "./Resource";
+
 export interface InstanceResourceModel {
   resource_id: string;
-  resource_state: string;
+  resource_state: Resource.Status;
 }
 
 export interface InstanceResourceModelWithInstance

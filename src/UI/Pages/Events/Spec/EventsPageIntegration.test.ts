@@ -139,17 +139,17 @@ describe("Given the Events Page", () => {
     window = Object.assign(window, { innerWidth: 1200 });
     window.dispatchEvent(new Event("resize"));
     expect(
-      await screen.findByText("from | 2021-04-28+00:00", { exact: false })
+      await screen.findByText("from | 2021/04/28 00:00:00", { exact: false })
     ).toBeVisible();
     expect(
-      await screen.findByText("to | 2021-04-30+00:00", { exact: false })
+      await screen.findByText("to | 2021/04/30 00:00:00", { exact: false })
     ).toBeVisible();
   });
 
   it.each`
     filterType | value           | operator | chip
-    ${"From"}  | ${"2021-05-30"} | ${"ge"}  | ${"from | 2021-05-30+00:00"}
-    ${"To"}    | ${"2021-05-30"} | ${"le"}  | ${"to | 2021-05-30+00:00"}
+    ${"From"}  | ${"2021-05-30"} | ${"ge"}  | ${"from | 2021/05/30 00:00:00"}
+    ${"To"}    | ${"2021-05-30"} | ${"le"}  | ${"to | 2021/05/30 00:00:00"}
   `(
     "When using the Date filter then the events with only $filterType filter, the matching should be fetched and a chip shown",
     async ({ filterType, value, operator, chip }) => {

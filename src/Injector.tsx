@@ -1,6 +1,6 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { isJsonParserId, JsonParserId } from "@/Core";
+import { useLocation } from "react-router-dom";
+import { isJsonParserId, JsonParserId, SchedulerImpl } from "@/Core";
 import {
   KeycloakAuthHelper,
   PrimaryFeatureManager,
@@ -33,22 +33,24 @@ interface Props {
 }
 
 export const Injector: React.FC<Props> = ({ store, children }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
   const featureManager = new PrimaryFeatureManager(
     new GetServerStatusStateHelper(store),
     new PrimaryLogger(),
-    getJsonParserId(globalThis)
+    getJsonParserId(globalThis),
+    COMMITHASH
   );
   const keycloakController = new PrimaryKeycloakController(
     process.env.SHOULD_USE_AUTH,
     globalThis && globalThis.auth,
     process.env.KEYCLOAK_URL
   );
-  const baseUrlManager = new PrimaryBaseUrlManager(location.pathname);
-  const consoleBaseUrl = baseUrlManager.getConsoleBaseUrl();
+  const baseUrlManager = new PrimaryBaseUrlManager(
+    globalThis.location.origin,
+    globalThis.location.pathname
+  );
+  const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const routeManager = new PrimaryRouteManager(consoleBaseUrl);
+  const routeManager = new PrimaryRouteManager(basePathname);
   const apiHelper = new BaseApiHelper(
     featureManager.getJsonParser() === "BigInt"
       ? new BigIntJsonParser()
@@ -58,7 +60,12 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   );
   const authHelper = new KeycloakAuthHelper(keycloakController.getInstance());
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper)
+    new QueryManagerResolver(
+      store,
+      apiHelper,
+      new SchedulerImpl(5000),
+      new SchedulerImpl(10000)
+    )
   );
   const commandResolver = new CommandResolverImpl(
     new CommandManagerResolver(store, apiHelper, authHelper)
@@ -68,7 +75,6 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   const environmentModifier = new EnvironmentModifierImpl();
   const environmentHandler = new EnvironmentHandlerImpl(
     useLocation,
-    navigate,
     routeManager
   );
   const fileManager = new PrimaryFileManager();

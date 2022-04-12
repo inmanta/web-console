@@ -6,6 +6,7 @@ import {
   ContinuousQueryManager,
   QueryManager,
   ManagerResolver,
+  ReadOnlyQueryManager,
 } from "@/Core";
 
 type Data<K extends Query.Kind> = RemoteData.Type<
@@ -50,5 +51,22 @@ export class QueryResolverImpl implements QueryResolver {
   useContinuous(query: Query.Type): [Data<typeof query.kind>, () => void] {
     const helper = this.getContinuousQueryManager(query);
     return helper.useContinuous(query);
+  }
+
+  private getReadOnlyQueryManager(
+    query: Query.Type
+  ): ReadOnlyQueryManager<typeof query.kind> {
+    const manager = this.managerResolver
+      .get()
+      .find((helper) => helper.matches(query, "ReadOnly"));
+    if (typeof manager !== "undefined") {
+      return manager as ReadOnlyQueryManager<typeof query.kind>;
+    }
+    throw new Error(`Can't find ReadOnlyQueryManager for query ${query.kind}`);
+  }
+
+  useReadOnly(query: Query.Type): Data<typeof query.kind> {
+    const helper = this.getReadOnlyQueryManager(query);
+    return helper.useReadOnly(query);
   }
 }

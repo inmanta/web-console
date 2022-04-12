@@ -13,3 +13,4 @@ export * from "./CommandManagerWithEnv";
 export * from "./UpdaterWithEnv";
 export * from "./VoidLogger";
 export * from "./PrimaryLogger";
+export * from "./utils";

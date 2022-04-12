@@ -1,0 +1,4 @@
+description: Refresh environment details on settings change
+issue-nr: 2792
+change-type: patch
+destination-branches: [master, iso5]

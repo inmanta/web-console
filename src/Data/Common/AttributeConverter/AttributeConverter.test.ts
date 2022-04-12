@@ -135,25 +135,27 @@ describe("AttributeResultConverter ", () => {
 
   describe("Converts attributes to proper types ", () => {
     it.each`
-      value               | type          | parsedValue
-      ${"5"}              | ${"number"}   | ${5}
-      ${"5oooo"}          | ${"number"}   | ${NaN}
-      ${'{"key": "val"}'} | ${"dict"}     | ${{ key: "val" }}
-      ${'{"key: "val"}'}  | ${"dict"}     | ${'{"key: "val"}'}
-      ${"first, "}        | ${"string[]"} | ${["first", ""]}
-      ${""}               | ${"string[]"} | ${[""]}
-      ${""}               | ${"int?"}     | ${null}
-      ${""}               | ${"int"}      | ${null}
-      ${"50"}             | ${"int?"}     | ${50}
-      ${""}               | ${"bool?"}    | ${null}
-      ${"true"}           | ${"bool?"}    | ${true}
-      ${"false"}          | ${"bool?"}    | ${false}
-      ${"false"}          | ${"bool"}     | ${false}
-      ${"randomValue"}    | ${"bool"}     | ${null}
-      ${true}             | ${"bool"}     | ${true}
-      ${"1,2"}            | ${"int[]"}    | ${[1, 2]}
-      ${"1, 2 ,a"}        | ${"int[]"}    | ${[1, 2, "a"]}
-      ${"1.2,3.4"}        | ${"float[]"}  | ${[1.2, 3.4]}
+      value                    | type          | parsedValue
+      ${"5"}                   | ${"int"}      | ${5}
+      ${"5oooo"}               | ${"int"}      | ${"5oooo"}
+      ${"9223372036854775807"} | ${"int"}      | ${9223372036854775807n}
+      ${"9223372036854775807"} | ${"float"}    | ${9223372036854775807n}
+      ${'{"key": "val"}'}      | ${"dict"}     | ${{ key: "val" }}
+      ${'{"key: "val"}'}       | ${"dict"}     | ${'{"key: "val"}'}
+      ${"first, "}             | ${"string[]"} | ${["first", ""]}
+      ${""}                    | ${"string[]"} | ${[""]}
+      ${""}                    | ${"int?"}     | ${null}
+      ${""}                    | ${"int"}      | ${null}
+      ${"50"}                  | ${"int?"}     | ${50}
+      ${""}                    | ${"bool?"}    | ${null}
+      ${"true"}                | ${"bool?"}    | ${true}
+      ${"false"}               | ${"bool?"}    | ${false}
+      ${"false"}               | ${"bool"}     | ${false}
+      ${"randomValue"}         | ${"bool"}     | ${null}
+      ${true}                  | ${"bool"}     | ${true}
+      ${"1,2"}                 | ${"int[]"}    | ${[1, 2]}
+      ${"1, 2 ,a"}             | ${"int[]"}    | ${[1, 2, "a"]}
+      ${"1.2,3.4"}             | ${"float[]"}  | ${[1.2, 3.4]}
     `(
       "converts $value of type $type to $parsedValue",
       ({ value, type, parsedValue }) => {

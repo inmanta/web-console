@@ -22,7 +22,6 @@ export const DesiredStatesTable: React.FC<Props> = ({ rows, ...props }) => {
     words("desiredState.columns.status"),
     words("desiredState.columns.resources"),
     words("desiredState.columns.labels"),
-    words("desiredState.columns.actions"),
   ];
   const heads = columnNames.map((displayName) => (
     <Th key={displayName}>{displayName}</Th>

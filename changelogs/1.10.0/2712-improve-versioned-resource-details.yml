@@ -1,0 +1,4 @@
+description: Improve versioned resource details
+issue-nr: 2712
+change-type: patch
+destination-branches: [master, iso5]

@@ -1,6 +1,10 @@
 import { FeatureManager, JsonParserId } from "@/Core";
 
 export class MockFeatureManager implements FeatureManager {
+  getCommitHash(): string {
+    return "123456abcdef";
+  }
+
   getJsonParser(): JsonParserId {
     return "Native";
   }

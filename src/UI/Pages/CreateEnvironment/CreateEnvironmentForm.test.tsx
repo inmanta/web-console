@@ -3,22 +3,21 @@ import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either, Maybe } from "@/Core";
+import { Either } from "@/Core";
 import {
   CommandResolverImpl,
-  CreateEnvironmentCommandManager,
-  CreateProjectCommandManager,
   getStoreInstance,
   GetProjectsQueryManager,
   GetProjectsStateHelper,
-  ProjectsUpdater,
   QueryResolverImpl,
+  CommandManagerResolver,
+  KeycloakAuthHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
+  Environment,
   Project,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -35,13 +34,7 @@ function setup() {
   );
 
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new CreateProjectCommandManager(
-        apiHelper,
-        new ProjectsUpdater(projectsStateHelper, apiHelper)
-      ),
-      new CreateEnvironmentCommandManager(apiHelper),
-    ])
+    new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper())
   );
 
   const component = (
@@ -167,8 +160,9 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
   );
   userEvent.type(
     await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
-    "new-project{enter}"
+    "new-project"
   );
+  userEvent.click(screen.getByRole("option", { name: 'Create "new-project"' }));
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
     method: "PUT",
@@ -178,7 +172,7 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     url: `/api/v2/project`,
   });
   await act(async () => {
-    await apiHelper.resolve(Maybe.none());
+    await apiHelper.resolve(Either.right({ data: Project.a }));
   });
   expect(apiHelper.resolvedRequests).toHaveLength(2);
   const updatedProjects = [
@@ -204,6 +198,13 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     },
     url: `/api/v2/environment`,
   });
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: Environment.a }));
+  });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/api/v2/project?environment_details=false`,
+  });
 });
 
 test("Given CreateEnvironmentForm When creating a new project is not successful Then shows error message", async () => {
@@ -219,8 +220,9 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
   );
   userEvent.type(
     await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
-    "new-project{enter}"
+    "new-project"
   );
+  userEvent.click(screen.getByRole("option", { name: 'Create "new-project"' }));
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
     method: "PUT",
@@ -231,7 +233,7 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
   });
   await act(async () => {
     await apiHelper.resolve(
-      Maybe.some("Unexpected error while trying to create new project")
+      Either.left("Unexpected error while trying to create new project")
     );
   });
 
@@ -279,7 +281,7 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
     url: `/api/v2/environment`,
   });
   await act(async () => {
-    await apiHelper.resolve(Maybe.some("Environment already exists"));
+    await apiHelper.resolve(Either.left("Environment already exists"));
   });
   expect(apiHelper.pendingRequests).toHaveLength(0);
   // Alert is visible and can be closed

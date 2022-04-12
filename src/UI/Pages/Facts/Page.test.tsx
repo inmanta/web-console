@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -76,9 +76,11 @@ test("GIVEN Facts page THEN shows table", async () => {
     })
   );
 
-  expect(await screen.findAllByRole("row", { name: "FactsRow" })).toHaveLength(
-    8
-  );
+  const rows = await screen.findAllByRole("row", { name: "FactsRow" });
+  expect(rows).toHaveLength(8);
+  expect(
+    within(rows[0]).getByRole("cell", { name: "2021/03/18 18:10:43" })
+  ).toBeVisible();
 });
 
 test("GIVEN Facts page THEN sets sorting parameters correctly on click", async () => {

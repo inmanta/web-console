@@ -23,8 +23,7 @@ export const Page: React.FC = () => {
   });
   const [filter, setFilter] = useUrlStateWithFilter<DesiredStateParams.Filter>({
     route: "DesiredState",
-    dateRangeKey: "date",
-    intRangeKey: "version",
+    keys: { date: "DateRange", version: "IntRange" },
   });
   const [data, retry] = queryResolver.useContinuous<"GetDesiredStates">({
     kind: "GetDesiredStates",
@@ -58,6 +57,7 @@ export const Page: React.FC = () => {
           }
         />
         <ErrorToastAlert
+          title={words("desiredState.actions.promote.failed")}
           errorMessage={errorMessage}
           setErrorMessage={setErrorMessage}
         />

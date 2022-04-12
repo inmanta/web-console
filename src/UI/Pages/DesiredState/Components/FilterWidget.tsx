@@ -3,13 +3,13 @@ import { ToolbarGroup } from "@patternfly/react-core";
 import { DateRange, DesiredStateParams, IntRange } from "@/Core";
 import { DesiredStateVersionStatus } from "@/Core/Domain/DesiredStateVersionStatus";
 import { MomentDatePresenter } from "@/UI";
+import { FilterPicker } from "@/UI/Components";
 import {
   IntRangeFilter,
   SelectOptionFilter,
   TimestampFilter,
 } from "@/UI/Components/Filters";
 import { words } from "@/UI/words";
-import { FilterPicker } from "./FilterPicker";
 
 interface Props {
   filter: DesiredStateParams.Filter;
@@ -48,7 +48,11 @@ export const FilterWidget: React.FC<Props> = ({ filter, setFilter }) => {
 
   return (
     <ToolbarGroup variant="filter-group" aria-label="FilterBar">
-      <FilterPicker setFilterKind={setFilterKind} filterKind={filterKind} />
+      <FilterPicker
+        setFilterKind={setFilterKind}
+        filterKind={filterKind}
+        items={DesiredStateParams.List}
+      />
       <SelectOptionFilter
         filterPropertyName={DesiredStateParams.Kind.Status}
         placeholder={words("desiredState.filters.status.placeholder")}

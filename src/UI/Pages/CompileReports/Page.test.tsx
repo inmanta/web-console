@@ -3,50 +3,53 @@ import { MemoryRouter } from "react-router-dom";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   getStoreInstance,
-  CompileReportsQueryManager,
-  CompileReportsStateHelper,
-  GetCompilerStatusQueryManager,
   CommandResolverImpl,
-  TriggerCompileCommandManager,
+  KeycloakAuthHelper,
+  QueryManagerResolver,
+  CommandManagerResolver,
 } from "@/Data";
 import {
-  DynamicQueryManagerResolver,
   StaticScheduler,
   CompileReportsData,
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
+  EnvironmentDetails,
+  EnvironmentSettings,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { Page } from "./Page";
 
 function setup() {
-  const store = getStoreInstance();
-  const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
+  const authHelper = new KeycloakAuthHelper();
+  const scheduler = new StaticScheduler();
+  const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([
-      new CompileReportsQueryManager(
-        apiHelper,
-        new CompileReportsStateHelper(store),
-        scheduler
-      ),
-      new GetCompilerStatusQueryManager(apiHelper, scheduler),
-    ])
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
-
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new TriggerCompileCommandManager(apiHelper),
-    ])
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
 
   const routeManager = new PrimaryRouteManager("");
+
+  store.dispatch.environment.setEnvironmentDetailsById({
+    id: "env",
+    value: RemoteData.success(EnvironmentDetails.a),
+  });
+  store.dispatch.environment.setSettingsData({
+    environment: "env",
+    value: RemoteData.success({
+      settings: {},
+      definition: EnvironmentSettings.definition,
+    }),
+  });
+  dependencies.environmentModifier.setEnvironment("env");
 
   const component = (
     <MemoryRouter>
@@ -157,7 +160,7 @@ test("CompileReportsView shows updated table", async () => {
   ).toBeInTheDocument();
 });
 
-test("When using the result filter with the Successful option then the successful compile reports should be fetched and shown", async () => {
+test("When using the status filter with the Success option then the successful compile reports should be fetched and shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -178,12 +181,11 @@ test("When using the result filter with the Successful option then the successfu
       { name: "FilterPicker" }
     )
   );
-  userEvent.click(screen.getByRole("option", { name: "Result" }));
 
-  const input = screen.getByRole("button", { name: "Select Result" });
+  const input = screen.getByPlaceholderText("Select compile status...");
   userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "Successful" });
+  const option = await screen.findByRole("option", { name: "success" });
   await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -231,11 +233,11 @@ test("When using the status filter with the In Progress opiton then the compile 
   const input = screen.getByPlaceholderText("Select compile status...");
   userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "In Progress" });
+  const option = await screen.findByRole("option", { name: "in progress" });
   await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.completed=false&filter.started=true`
+    `/api/v2/compilereport?limit=20&sort=requested.desc&filter.started=true&filter.completed=false`
   );
 
   await act(async () => {
@@ -307,9 +309,40 @@ it("When using the Date filter then the compile reports within the range selecte
   window = Object.assign(window, { innerWidth: 1200 });
   window.dispatchEvent(new Event("resize"));
   expect(
-    await screen.findByText("from | 2021-09-28+00:00", { exact: false })
+    await screen.findByText("from | 2021/09/28 00:00:00", { exact: false })
   ).toBeVisible();
   expect(
-    await screen.findByText("to | 2021-09-30+00:00", { exact: false })
+    await screen.findByText("to | 2021/09/30 00:00:00", { exact: false })
   ).toBeVisible();
+});
+
+test("Given CompileReportsView When recompile is triggered Then table is updated", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  apiHelper.resolve(204);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(CompileReportsData.response));
+  });
+
+  const button = screen.getByRole("button", { name: "RecompileButton" });
+  expect(button).toBeEnabled();
+  userEvent.click(button);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({}));
+  });
+
+  await act(async () => {
+    await apiHelper.resolve(200);
+  });
+
+  expect(apiHelper.pendingRequests).toEqual([
+    {
+      method: "GET",
+      url: "/api/v2/compilereport?limit=20&sort=requested.desc",
+      environment: "env",
+    },
+  ]);
 });

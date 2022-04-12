@@ -3,7 +3,7 @@ import { Story } from "@storybook/react/types-6-0";
 import { InstantFileFetcher } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
 import { AttributeList } from "./AttributeList";
-import { classified } from "./Data";
+import { longNames } from "./Data";
 
 export default {
   title: "AttributeList",
@@ -18,5 +18,5 @@ const Template: Story<ComponentProps<typeof AttributeList>> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  attributes: classified,
+  attributes: longNames,
 };

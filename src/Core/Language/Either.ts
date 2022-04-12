@@ -1,4 +1,4 @@
-type Either<L, R> = Left<L> | Right<R>;
+export type Either<L, R> = Left<L> | Right<R>;
 
 export type Type<L, R> = Either<L, R>;
 
@@ -28,6 +28,14 @@ export const mapRight = <L, R, NR>(
 ): Either<L, NR> => {
   if (isLeft(either)) return either;
   return right(mapper(either.value));
+};
+
+export const mapLeft = <L, R, NL>(
+  mapper: (value: L) => NL,
+  either: Either<L, R>
+): Either<NL, R> => {
+  if (isRight(either)) return either;
+  return left(mapper(either.value));
 };
 
 export const withFallback = <L, R, F>(

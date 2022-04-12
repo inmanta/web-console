@@ -1,12 +1,10 @@
-import { uniq } from "lodash-es";
 import {
   Config,
   RemoteData,
-  ServiceModel,
   ConfigFinalizer,
-  isNotNull,
   StateHelperWithEnv,
 } from "@/Core";
+import { getOptionsFromService } from "@/Data/Common";
 
 export class ServiceConfigFinalizer
   implements ConfigFinalizer<"GetServiceConfig">
@@ -39,12 +37,4 @@ export class ServiceConfigFinalizer
     }, {});
     return RemoteData.success(fullConfig);
   }
-}
-
-function getOptionsFromService(service: ServiceModel): string[] {
-  return uniq(
-    service.lifecycle.transfers
-      .map((transfer) => transfer.config_name)
-      .filter(isNotNull)
-  );
 }

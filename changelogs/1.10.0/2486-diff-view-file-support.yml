@@ -1,0 +1,4 @@
+description: Add file support to diff view
+issue-nr: 2486
+change-type: minor
+destination-branches: [master, iso5]

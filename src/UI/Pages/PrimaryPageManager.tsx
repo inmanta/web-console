@@ -1,9 +1,11 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
+import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { AgentProcessPage } from "./AgentProcess";
 import { AgentsPage } from "./Agents";
 import { CompileDetailsPage } from "./CompileDetails";
 import { CompileReportsPage } from "./CompileReports";
+import { ComplianceCheckPage } from "./ComplianceCheck";
 import { CreateEnvironmentPage } from "./CreateEnvironment";
 import { CreateInstancePage } from "./CreateInstance";
 import { DesiredStatePage } from "./DesiredState";
@@ -39,6 +41,10 @@ export class PrimaryPageManager implements PageManager {
       },
       Status: { ...this.routeDictionary.Status, element: <StatusPage /> },
       Settings: { ...this.routeDictionary.Settings, element: <SettingsPage /> },
+      NotificationCenter: {
+        ...this.routeDictionary.NotificationCenter,
+        element: <NotificationCenterPage />,
+      },
 
       /**
        * LSM
@@ -115,6 +121,10 @@ export class PrimaryPageManager implements PageManager {
       Parameters: {
         ...this.routeDictionary.Parameters,
         element: <ParametersPage />,
+      },
+      ComplianceCheck: {
+        ...this.routeDictionary.ComplianceCheck,
+        element: <ComplianceCheckPage />,
       },
     };
   }

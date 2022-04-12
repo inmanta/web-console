@@ -26,10 +26,14 @@ Simple.args = {
     new AttributeHelper("$"),
     {
       candidate: {
-        a: { b: { c: "c" } },
+        a: {
+          b: {
+            c: `{"attr1":["a","b"],"attr2":{"val1":"val2"},"attr10":15,"id_attr":"test1","embedded_multi":[{"attr3":0,"embedded_single":{"attr4":1}}]}`,
+          },
+        },
         b: 1234,
         c: false,
-        d: "blabla",
+        d: "blabla long longlonglonglonglonglonglong value that's not a json",
         e: { f: true, g: [], h: { i: { j: 1234 } } },
         f: { g: "123" },
       },
@@ -91,3 +95,27 @@ MultipleAttributes.args = {
     }
   ),
 };
+
+export const LongJsonAttributes = () => (
+  <TreeTable
+    treeTableHelper={
+      new TreeTableHelper(
+        new PathHelper("$"),
+        new TreeExpansionManager("$"),
+        new AttributeHelper("$"),
+        {
+          candidate: {
+            a: {
+              b: {
+                c: `{"attr1":["a","b"],"attr2":{"val1":"val2"},"attr10":15,"id_attr":"test1","embedded_multi":[{"attr3":0,"embedded_single":{"attr4":1}}]}`,
+              },
+            },
+            d: "long long long long long long long long value that's not a json",
+          },
+          active: null,
+          rollback: null,
+        }
+      )
+    }
+  />
+);

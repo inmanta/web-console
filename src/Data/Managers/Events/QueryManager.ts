@@ -1,11 +1,8 @@
 import { StateHelper, Scheduler, EventParams, ApiHelper } from "@/Core";
-import {
-  getPaginationHandlers,
-  PrimaryContinuousQueryManagerWithEnv,
-} from "@/Data/Managers/Helpers";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class EventsQueryManager extends PrimaryContinuousQueryManagerWithEnv<"GetInstanceEvents"> {
+export class EventsQueryManager extends QueryManager.ContinuousWithEnv<"GetInstanceEvents"> {
   constructor(
     apiHelper: ApiHelper,
     stateHelper: StateHelper<"GetInstanceEvents">,

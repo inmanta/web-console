@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useRef } from "react";
+import { Tooltip } from "@patternfly/react-core";
 import {
   AutomationIcon,
   CogIcon,
@@ -10,7 +11,7 @@ import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
 import { AttributesTab } from "./AttributesTab";
-import { ConfigTab, DisabledConfigTab } from "./ConfigTab";
+import { ConfigTab } from "./ConfigTab";
 import { ResourcesTab } from "./ResourcesTab";
 import { StatusTab } from "./StatusTab";
 
@@ -38,18 +39,34 @@ export const Tabs: React.FC<Props> = ({
   actions,
   state,
   serviceInstanceIdentifier,
-}) => (
-  <IconTabs
-    activeTab={activeTab}
-    onChange={setActiveTab}
-    tabs={[
-      statusTab(row, state, actions),
-      attributesTab(row),
-      resourcesTab(serviceInstanceIdentifier),
-      configTab(row.deleted, serviceInstanceIdentifier),
-    ]}
-  />
-);
+}) => {
+  const configTooltipRef = useRef<HTMLElement>();
+  const configTabDisabled = row.deleted || !!row.configDisabled;
+  return (
+    <>
+      <IconTabs
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        tabs={[
+          statusTab(row, state, actions),
+          attributesTab(row),
+          resourcesTab(serviceInstanceIdentifier),
+          configTab(
+            configTabDisabled,
+            serviceInstanceIdentifier,
+            configTooltipRef
+          ),
+        ]}
+      />
+      {configTabDisabled && (
+        <Tooltip
+          content={words("config.disabled")}
+          reference={configTooltipRef}
+        />
+      )}
+    </>
+  );
+};
 
 const datePresenter = new MomentDatePresenter();
 
@@ -93,14 +110,13 @@ const resourcesTab = (
 
 const configTab = (
   isDisabled: boolean,
-  serviceInstanceIdentifier: VersionedServiceInstanceIdentifier
+  serviceInstanceIdentifier: VersionedServiceInstanceIdentifier,
+  ref: React.MutableRefObject<HTMLElement | undefined>
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Config,
   title: words("config.title"),
   icon: <CogIcon />,
-  view: isDisabled ? (
-    <DisabledConfigTab />
-  ) : (
-    <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />
-  ),
+  view: <ConfigTab serviceInstanceIdentifier={serviceInstanceIdentifier} />,
+  isDisabled,
+  ref,
 });

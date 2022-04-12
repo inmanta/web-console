@@ -31,4 +31,12 @@ export const GlobalStyles = createGlobalStyle`
   .pf-c-chip__text {
     max-width: fit-content;
   }
+  .pf-c-form__field-group-body {
+    min-height: 0;
+  }
+
+  .pf-c-calendar-month__header-year {
+    width: 9ch;
+  }
+
 `;

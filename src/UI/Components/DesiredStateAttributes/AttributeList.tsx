@@ -20,7 +20,7 @@ export const AttributeList: React.FC<Props> = ({ attributes }) => (
   <StyledDescriptionList isHorizontal isAutoColumnWidths>
     {attributes.map((attribute) => (
       <DescriptionListGroup key={attribute.key}>
-        <DescriptionListTerm>{attribute.key}</DescriptionListTerm>
+        <StyledDescriptionListTerm>{attribute.key}</StyledDescriptionListTerm>
         <DescriptionListDescription>
           <AttributeValue attribute={attribute} />
         </DescriptionListDescription>
@@ -73,6 +73,10 @@ const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
 const StyledDescriptionList = styled(DescriptionList)`
   --pf-c-description-list--m-horizontal__term--width: 24ch;
   --pf-c-description-list--RowGap: 0.5rem;
+`;
+
+const StyledDescriptionListTerm = styled(DescriptionListTerm)`
+  overflow-wrap: anywhere;
 `;
 
 const MultiTextWithCopy = styled(TextWithCopy)`

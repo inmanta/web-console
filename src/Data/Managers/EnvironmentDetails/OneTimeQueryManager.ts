@@ -1,20 +1,21 @@
 import { identity } from "lodash-es";
-import { ApiHelper, StateHelperWithEnv } from "@/Core";
-import { PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv } from "@/Data/Managers/Helpers";
+import { ApiHelper, StateHelper } from "@/Core";
+import { QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "./getUrl";
 
-export class EnvironmentDetailsOneTimeQueryManager extends PrimaryOneTimeQueryManagerWithEnvWithStateHelperWithEnv<"GetEnvironmentDetails"> {
+export class EnvironmentDetailsOneTimeQueryManager extends QueryManager.OneTime<"GetEnvironmentDetails"> {
   constructor(
     apiHelper: ApiHelper,
-    stateHelper: StateHelperWithEnv<"GetEnvironmentDetails">
+    stateHelper: StateHelper<"GetEnvironmentDetails">
   ) {
     super(
       apiHelper,
       stateHelper,
-      (query, environment) => [environment],
+      ({ id }) => [id],
       "GetEnvironmentDetails",
-      ({ details }, environment) => getUrl(details, environment),
-      identity
+      ({ details, id }) => getUrl(details, id),
+      identity,
+      "MERGE"
     );
   }
 }

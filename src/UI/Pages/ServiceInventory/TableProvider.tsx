@@ -4,6 +4,7 @@ import {
   ServiceInstanceModelWithTargetStates,
   Sort,
 } from "@/Core";
+import { getOptionsFromService } from "@/Data";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { InventoryTable } from "./InventoryTable";
 import {
@@ -37,7 +38,8 @@ export const TableProvider: React.FC<Props> = ({
     actionPresenter,
     statePresenter,
     serviceEntity.service_identity,
-    serviceEntity.service_identity_display_name
+    serviceEntity.service_identity_display_name,
+    getOptionsFromService(serviceEntity).length === 0
   );
   const rows = tablePresenter.createRows(instances);
   return (

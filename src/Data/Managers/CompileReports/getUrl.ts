@@ -1,7 +1,6 @@
-import { omit } from "lodash-es";
 import moment from "moment";
 import qs from "qs";
-import { CompileReportParams, Query, RangeOperator } from "@/Core";
+import { CompileStatus, Query, RangeOperator } from "@/Core";
 
 export function getUrl(
   { pageSize, sort, filter }: Query.SubQuery<"GetCompileReports">,
@@ -22,7 +21,7 @@ type Filter = NonNullable<Query.SubQuery<"GetCompileReports">["filter"]>;
 
 const filterToParam = (filter: Filter, timezone: string) => {
   if (typeof filter === "undefined") return {};
-  const { status, success, requested } = filter;
+  const { status, requested } = filter;
   const serializedTimestampOperatorFilters = requested?.map(
     (timestampWithOperator) =>
       `${RangeOperator.serializeOperator(
@@ -33,45 +32,24 @@ const filterToParam = (filter: Filter, timezone: string) => {
         .format("YYYY-MM-DD+HH:mm:ss")}`
   );
 
-  const combinedFilters = combineStatusFilters(status);
+  const statusFilter = translateStatusFilter(status);
 
   return {
-    ...combinedFilters,
-    success,
+    ...statusFilter,
     requested: serializedTimestampOperatorFilters,
   };
 };
 
-function combineStatusFilters(status?: CompileReportParams.CompileStatus[]) {
-  if (status && status.length > 0) {
-    const processedFilters = status.map((state) => {
-      switch (state) {
-        case CompileReportParams.CompileStatus.Finished:
-          return { completed: true };
-        case CompileReportParams.CompileStatus.InProgress:
-          return { started: true, completed: false };
-        case CompileReportParams.CompileStatus.Queued:
-          return { started: false };
-      }
-    });
-    const combinedFilters = processedFilters.reduce((acc, curr) => {
-      if (curr.completed !== undefined) {
-        if (acc["completed"] !== undefined) {
-          acc = omit(acc, "completed");
-        } else {
-          acc["completed"] = curr.completed;
-        }
-      }
-      if (curr.started !== undefined) {
-        if (acc["started"] !== undefined) {
-          acc = omit(acc, "started");
-        } else {
-          acc["started"] = curr.started;
-        }
-      }
-      return acc;
-    }, {});
-    return combinedFilters;
+function translateStatusFilter(status?: CompileStatus) {
+  if (!status) return {};
+  switch (status) {
+    case CompileStatus.success:
+      return { success: true };
+    case CompileStatus.failed:
+      return { success: false };
+    case CompileStatus.inprogress:
+      return { started: true, completed: false };
+    case CompileStatus.queued:
+      return { started: false };
   }
-  return {};
 }

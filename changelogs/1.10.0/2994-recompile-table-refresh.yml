@@ -1,0 +1,4 @@
+description: Refetch table data after recompile
+issue-nr: 2994
+change-type: patch
+destination-branches: [master, iso5]

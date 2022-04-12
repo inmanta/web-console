@@ -52,7 +52,6 @@ export const ResourceLogsTable: React.FC<Props> = ({
           <ActionTypeTh>{words("resources.logs.actionType")}</ActionTypeTh>
           <LogLevelTh>{words("resources.logs.logLevel")}</LogLevelTh>
           <Th>{words("resources.logs.message")}</Th>
-          <Th>{words("resources.logs.options")}</Th>
         </Tr>
       </Thead>
       {logs.map((log, index) => (
