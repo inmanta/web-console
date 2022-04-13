@@ -8,13 +8,27 @@ export const createFormState = (fields: Field[]): InstanceAttributeModel => {
       case "Enum":
       case "Text": {
         acc[curr.name] = curr.type.includes("dict")
-          ? JSON.stringify(curr.defaultValue)
+          ? stringifyDict(curr.defaultValue)
           : curr.defaultValue;
         return acc;
       }
 
+      case "InterServiceRelation": {
+        return "";
+      }
+
       case "Nested": {
         acc[curr.name] = createFormState(curr.fields);
+        return acc;
+      }
+
+      case "RelationList": {
+        if (curr.min <= 0) {
+          acc[curr.name] = [];
+        } else {
+          acc[curr.name] = times(Number(curr.min), () => "");
+        }
+
         return acc;
       }
 
@@ -44,10 +58,18 @@ export const createEditFormState = (
         case "Enum":
         case "Text": {
           acc[curr.name] = curr.type.includes("dict")
-            ? JSON.stringify(originalAttributes?.[curr.name])
+            ? stringifyDict(originalAttributes?.[curr.name])
             : cloneDeep(originalAttributes?.[curr.name]);
           return acc;
         }
+
+        case "InterServiceRelation": {
+          acc[curr.name] = originalAttributes?.[curr.name]
+            ? originalAttributes?.[curr.name]
+            : "";
+          return acc;
+        }
+
         case "Nested": {
           acc[curr.name] = createEditFormState(
             curr.fields,
@@ -55,6 +77,12 @@ export const createEditFormState = (
           );
           return acc;
         }
+
+        case "RelationList": {
+          acc[curr.name] = originalAttributes?.[curr.name] as string[];
+          return acc;
+        }
+
         case "DictList": {
           acc[curr.name] = (
             originalAttributes?.[curr.name] as InstanceAttributeModel[]
@@ -74,3 +102,7 @@ export const createEditFormState = (
     }
   }, {});
 };
+
+function stringifyDict(value: unknown) {
+  return value === "" ? "" : JSON.stringify(value);
+}

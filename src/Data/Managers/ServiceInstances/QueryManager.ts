@@ -26,7 +26,7 @@ export class ServiceInstancesQueryManager extends QueryManager.ContinuousWithEnv
         pageSize.value,
       ],
       "GetServiceInstances",
-      getUrl,
+      (query) => getUrl(query),
       ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
           return { data: data, handlers: {}, metadata };
@@ -45,4 +45,35 @@ function stringifyFilter(
   filter: ServiceInstanceParams.Filter | undefined
 ): string {
   return typeof filter === "undefined" ? "undefined" : JSON.stringify(filter);
+}
+
+export class GetServiceInstancesOneTimeQueryManager extends QueryManager.OneTimeWithEnv<"GetServiceInstances"> {
+  constructor(
+    apiHelper: ApiHelper,
+    stateHelper: StateHelperWithEnv<"GetServiceInstances">
+  ) {
+    super(
+      apiHelper,
+      stateHelper,
+      ({ name, filter, sort, pageSize }) => [
+        name,
+        stringifyFilter(filter),
+        sort?.name,
+        sort?.order,
+        pageSize.value,
+      ],
+      "GetServiceInstances",
+      (query) => getUrl(query, false),
+      ({ data, links, metadata }, setUrl) => {
+        if (typeof links === "undefined") {
+          return { data: data, handlers: {}, metadata };
+        }
+        return {
+          data: data,
+          handlers: getPaginationHandlers(links, metadata, setUrl),
+          metadata,
+        };
+      }
+    );
+  }
 }

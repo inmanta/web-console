@@ -21,3 +21,19 @@ export class ServiceQueryManager extends QueryManager.ContinuousWithEnv<"GetServ
     );
   }
 }
+
+export class GetServiceOneTimeQueryManager extends QueryManager.OneTimeWithEnv<"GetService"> {
+  constructor(
+    apiHelper: ApiHelper,
+    stateHelper: StateHelperWithEnv<"GetService">
+  ) {
+    super(
+      apiHelper,
+      stateHelper,
+      ({ name }, environment) => [name, environment],
+      "GetService",
+      ({ name }) => `/lsm/v1/service_catalog/${name}?instance_summary=True`,
+      identity
+    );
+  }
+}

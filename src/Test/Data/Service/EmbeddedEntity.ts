@@ -503,6 +503,8 @@ export const nestedEditable: EmbeddedEntity[] = [
             name: "related_service",
             entity_type: "test_entity",
             description: "description",
+            lower_limit: 0,
+            modifier: "rw",
           },
         ],
       },

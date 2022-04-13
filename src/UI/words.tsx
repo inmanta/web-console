@@ -526,6 +526,7 @@ const dict = {
    */
   "common.serviceInstance.select": (attribute: string) =>
     `Select value for ${attribute}`,
+  "common.serviceInstance.relation": `Select an instance`,
   "common.environment.select": "Select an environment...",
   "common.compileWidget.recompile": "Recompile",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
