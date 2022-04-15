@@ -61,7 +61,7 @@ test("Given the CreateInstance View When creating an instance with relations The
 
   await userEvent.click(screen.getByRole("button", { name: "relation1" }));
   const firstRelationFieldGroup = screen.getByRole("generic", {
-    name: "DictListFieldInput-relation1",
+    name: "RelationListFieldInput-relation1",
   });
   await userEvent.click(
     within(firstRelationFieldGroup).getByRole("button", { name: "Add" })
@@ -115,11 +115,6 @@ test("Given the CreateInstance View When creating an instance with relations The
     apiHelper.resolve(Either.right({ data: Service.withIdentity }));
   });
 
-  await act(async () => {
-    apiHelper.resolve(
-      Either.right({ data: [ServiceInstance.a, ServiceInstance.b] })
-    );
-  });
   const secondRelationInputField =
     screen.getByPlaceholderText("Select an instance");
   await userEvent.type(secondRelationInputField, "t");

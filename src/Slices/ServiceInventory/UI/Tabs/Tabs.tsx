@@ -6,7 +6,7 @@ import {
   InfoCircleIcon,
   ListIcon,
 } from "@patternfly/react-icons";
-import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
+import { Row, ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import { IconTabs, TabDescriptor } from "@/UI/Components";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { words } from "@/UI/words";
@@ -29,6 +29,7 @@ interface Props {
   row: Row;
   actions: React.ReactElement | null;
   state: React.ReactElement | null;
+  service?: ServiceModel;
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
 }
 
@@ -38,6 +39,7 @@ export const Tabs: React.FC<Props> = ({
   row,
   actions,
   state,
+  service,
   serviceInstanceIdentifier,
 }) => {
   const configTooltipRef = useRef<HTMLElement>();
@@ -49,7 +51,7 @@ export const Tabs: React.FC<Props> = ({
         onChange={setActiveTab}
         tabs={[
           statusTab(row, state, actions),
-          attributesTab(row),
+          attributesTab(row, service),
           resourcesTab(serviceInstanceIdentifier),
           configTab(
             configTabDisabled,
@@ -92,11 +94,20 @@ const statusTab = (
   ),
 });
 
-const attributesTab = (row: Row): TabDescriptor<TabKey> => ({
+const attributesTab = (
+  row: Row,
+  service?: ServiceModel
+): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("inventory.tabs.attributes"),
   icon: <ListIcon />,
-  view: <AttributesTab attributes={row.attributes} id={row.id.short} />,
+  view: (
+    <AttributesTab
+      attributes={row.attributes}
+      id={row.id.short}
+      service={service}
+    />
+  ),
 });
 
 const resourcesTab = (

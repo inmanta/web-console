@@ -1,6 +1,7 @@
 import React from "react";
-import { Attributes } from "@/Core";
-import { TreeTable } from "@/UI/Components";
+import { Attributes, ServiceModel } from "@/Core";
+import { useNavigateTo } from "@/UI";
+import { TreeTable, TreeTableCellContext } from "@/UI/Components";
 import {
   PathHelper,
   TreeExpansionManager,
@@ -12,19 +13,34 @@ import {
 
 interface Props {
   attributes: Attributes;
+  service?: ServiceModel;
   id?: string;
 }
 
-export const AttributesTab: React.FC<Props> = ({ attributes, id }) => (
-  <TreeTable
-    treeTableHelper={
-      new InventoryTreeTableHelper(
-        new PathHelper("$"),
-        new TreeExpansionManager("$"),
-        new InventoryAttributeHelper("$"),
-        attributes
-      )
-    }
-    id={id}
-  />
-);
+export const AttributesTab: React.FC<Props> = ({ attributes, id, service }) => {
+  const navigate = useNavigateTo();
+  return (
+    <TreeTableCellContext.Provider
+      value={{
+        onClick: (value, serviceName) =>
+          navigate(
+            "Inventory",
+            { service: serviceName as string },
+            `?env=${service?.environment}&state.Inventory.filter.id[0]=${value}`
+          ),
+      }}
+    >
+      <TreeTable
+        treeTableHelper={
+          new InventoryTreeTableHelper(
+            new PathHelper("$"),
+            new TreeExpansionManager("$"),
+            new InventoryAttributeHelper("$", service),
+            attributes
+          )
+        }
+        id={id}
+      />
+    </TreeTableCellContext.Provider>
+  );
+};

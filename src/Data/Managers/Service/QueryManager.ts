@@ -33,7 +33,8 @@ export class GetServiceOneTimeQueryManager extends QueryManager.OneTimeWithEnv<"
       ({ name }, environment) => [name, environment],
       "GetService",
       ({ name }) => `/lsm/v1/service_catalog/${name}?instance_summary=True`,
-      identity
+      identity,
+      "MERGE"
     );
   }
 }

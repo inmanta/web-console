@@ -1,7 +1,9 @@
 import { times, cloneDeep } from "lodash-es";
-import { Field, InstanceAttributeModel } from "@/Core";
+import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
 
-export const createFormState = (fields: Field[]): InstanceAttributeModel => {
+export const createFormState = (
+  fields: FieldLikeWithFormState[]
+): InstanceAttributeModel => {
   return fields.reduce((acc, curr) => {
     switch (curr.kind) {
       case "Boolean":
@@ -48,7 +50,7 @@ export const createFormState = (fields: Field[]): InstanceAttributeModel => {
 };
 
 export const createEditFormState = (
-  fields: Field[],
+  fields: FieldLikeWithFormState[],
   originalAttributes?: InstanceAttributeModel | null
 ): InstanceAttributeModel => {
   return fields.reduce((acc, curr) => {

@@ -1,4 +1,10 @@
-import { Attributes, TreeNode } from "@/Core";
+import {
+  Attributes,
+  EntityLike,
+  isNotUndefined,
+  ServiceModel,
+  TreeNode,
+} from "@/Core";
 import { AttributeHelper } from "@/UI/Components/TreeTable/Helpers/AttributeHelper";
 import {
   MultiAttributeNodeDict,
@@ -10,7 +16,10 @@ import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
 export class InventoryAttributeHelper
   implements AttributeHelper<InventoryAttributeTree>
 {
-  constructor(private readonly separator: string) {}
+  constructor(
+    private readonly separator: string,
+    private readonly service?: ServiceModel
+  ) {}
 
   public getPaths(attributes: Attributes): string[] {
     return Object.keys(
@@ -32,6 +41,53 @@ export class InventoryAttributeHelper
     );
   }
 
+  private findKeyInService(prefix: string, key: string) {
+    if (!this.service) {
+      return;
+    }
+    if (prefix.length === 0) {
+      return this.findInRelations(this.service, key);
+    }
+    const prefixParts = prefix
+      .split(this.separator)
+      .filter((part) => isNaN(part as unknown as number));
+    const val = this.findInServiceLike(this.service, prefixParts, key);
+    return val;
+  }
+
+  private findInServiceLike(
+    service: Pick<EntityLike, "embedded_entities" | "inter_service_relations">,
+    prefix: string[],
+    key: string
+  ) {
+    const matchingEmbeddedEntity = service.embedded_entities.find(
+      (entity) => entity.name === prefix[0]
+    );
+    if (matchingEmbeddedEntity)
+      return this.findInServiceLike(
+        matchingEmbeddedEntity,
+        prefix.slice(1),
+        key
+      );
+    if (!matchingEmbeddedEntity) {
+      const fromRelations = this.findInRelations(service, key);
+      if (fromRelations) {
+        return fromRelations;
+      }
+      return;
+    }
+  }
+
+  private findInRelations(
+    service: Pick<EntityLike, "inter_service_relations">,
+    key: string
+  ) {
+    const matchingRelation = service.inter_service_relations?.find(
+      (relation) => relation.name === key
+    );
+    return matchingRelation;
+  }
+
   private getSingleAttributeNodes(
     prefix: string,
     subject: unknown
@@ -41,7 +97,13 @@ export class InventoryAttributeHelper
     const primaryKeys = Object.keys(subject).sort();
     primaryKeys.forEach((key) => {
       if (!this.isNested(subject[key])) {
-        keys[`${prefix}${key}`] = { kind: "Leaf", value: subject[key] };
+        const relation = this.findKeyInService(prefix, key);
+        keys[`${prefix}${key}`] = {
+          kind: "Leaf",
+          value: subject[key],
+          hasOnClick: !!relation,
+          entity: relation?.entity_type,
+        };
       } else {
         keys[`${prefix}${key}`] = { kind: "Branch" };
         keys = {
@@ -117,6 +179,15 @@ export class InventoryAttributeHelper
             active: getValue(activeNodes[cur]),
             rollback: getValue(rollbackNodes[cur]),
           },
+          hasOnClick:
+            getHasOnClick(candidateNodes[cur]) ||
+            getHasOnClick(activeNodes[cur]) ||
+            getHasOnClick(rollbackNodes[cur]),
+          entity: chooseEntity([
+            getEntity(candidateNodes[cur]),
+            getEntity(activeNodes[cur]),
+            getEntity(rollbackNodes[cur]),
+          ]),
         };
         return acc;
       },
@@ -142,4 +213,25 @@ export function getValue(node: TreeNode | undefined): unknown {
 export function isLeaf(node: TreeNode | undefined): boolean {
   if (typeof node === "undefined") return true;
   return node.kind === "Leaf";
+}
+
+function getHasOnClick(node: TreeNode | undefined): boolean | undefined {
+  if (typeof node === "undefined") return undefined;
+  if (node.kind !== "Leaf") return undefined;
+  return node.hasOnClick;
+}
+
+function getEntity(node: TreeNode | undefined): string | undefined {
+  if (typeof node === "undefined") return undefined;
+  if (node.kind !== "Leaf") return undefined;
+  return node.entity;
+}
+
+function chooseEntity(entities: (string | undefined)[]): string | undefined {
+  // If there is an entity for either of the { candidate, active, rollback } attributes, it will be the same
+  const notUndefined = entities.filter(isNotUndefined);
+  if (notUndefined.length > 0) {
+    return notUndefined[0];
+  }
+  return undefined;
 }

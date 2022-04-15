@@ -94,8 +94,23 @@ export function extractInventoryValues(
   node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: "Leaf" }>
 ): Cell[] {
   return [
-    { label: "candidate", value: format(node.value.candidate) },
-    { label: "active", value: format(node.value.active) },
-    { label: "rollback", value: format(node.value.rollback) },
+    {
+      label: "candidate",
+      value: format(node.value.candidate),
+      hasOnClick: node.hasOnClick,
+      serviceName: node.entity,
+    },
+    {
+      label: "active",
+      value: format(node.value.active),
+      hasOnClick: node.hasOnClick,
+      serviceName: node.entity,
+    },
+    {
+      label: "rollback",
+      value: format(node.value.rollback),
+      hasOnClick: node.hasOnClick,
+      serviceName: node.entity,
+    },
   ];
 }

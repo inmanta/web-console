@@ -73,7 +73,8 @@ export class GetServiceInstancesOneTimeQueryManager extends QueryManager.OneTime
           handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
-      }
+      },
+      "MERGE"
     );
   }
 }

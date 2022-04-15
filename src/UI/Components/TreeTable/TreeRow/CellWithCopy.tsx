@@ -1,16 +1,18 @@
 import React, { useState, MouseEvent, useContext } from "react";
-import { Button, Popover } from "@patternfly/react-core";
+import { Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
 import { words } from "@/UI/words";
+import { InstanceCellValue } from "./InstanceCellValue";
 
 interface Props {
   className: string;
   label: string;
   value: string;
   hasOnClick?: boolean;
+  serviceName?: string;
 }
 
 export const CellWithCopy: React.FC<Props> = ({
@@ -18,6 +20,7 @@ export const CellWithCopy: React.FC<Props> = ({
   value,
   className,
   hasOnClick,
+  serviceName,
 }) => {
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
   const { onClick } = useContext(TreeTableCellContext);
@@ -37,10 +40,12 @@ export const CellWithCopy: React.FC<Props> = ({
       dataLabel={label}
       onMouseEnter={onMouseEnter}
     >
-      {hasOnClick ? (
-        <Button variant="link" isInline onClick={() => onClick(value)}>
-          {value}
-        </Button>
+      {shouldRenderLink(value, hasOnClick) ? (
+        <MultiLinkCell
+          value={value}
+          serviceName={serviceName}
+          onClick={onClick}
+        />
       ) : (
         value
       )}
@@ -90,3 +95,60 @@ function isJson(value: string): boolean {
   }
   return true;
 }
+
+function shouldRenderLink(value: string, hasOnClick?: boolean): boolean {
+  return !!(hasOnClick && value.length > 0 && value !== "{}");
+}
+
+function splitValue(value: string) {
+  const parts = value.split(",").map((val) => val.trim());
+  return parts;
+}
+function isValueOfMultipleIds(value: string) {
+  return splitValue(value).length > 0;
+}
+
+interface LinkCellProps {
+  value: string;
+  serviceName?: string;
+  onClick: (cellValue: string, serviceName?: string | undefined) => void;
+}
+
+const MultiLinkCell: React.FC<LinkCellProps> = ({
+  value,
+  serviceName,
+  onClick,
+}) => {
+  if (isValueOfMultipleIds(value)) {
+    const ids = splitValue(value);
+    return (
+      <Flex
+        direction={{ default: "column" }}
+        spaceItems={{ default: "spaceItemsNone" }}
+      >
+        {ids.map((id) => (
+          <FlexItem key={id}>
+            <LinkCell value={id} serviceName={serviceName} onClick={onClick} />
+          </FlexItem>
+        ))}
+      </Flex>
+    );
+  }
+  return <LinkCell value={value} serviceName={serviceName} onClick={onClick} />;
+};
+
+const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) => (
+  <Button
+    variant="link"
+    isInline
+    onClick={
+      serviceName ? () => onClick(value, serviceName) : () => onClick(value)
+    }
+  >
+    {serviceName && value.length > 0 ? (
+      <InstanceCellValue id={value} serviceName={serviceName} />
+    ) : (
+      value
+    )}
+  </Button>
+);

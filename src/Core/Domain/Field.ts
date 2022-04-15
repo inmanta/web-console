@@ -12,8 +12,9 @@ export type Field =
   | EnumField
   | NestedField
   | DictListField
-  | RelationListField
-  | InterServiceRelationField;
+  | RelationListField;
+
+export type FieldLikeWithFormState = Field | InterServiceRelationField;
 
 interface BaseField {
   name: string;

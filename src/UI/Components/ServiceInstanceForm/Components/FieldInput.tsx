@@ -17,7 +17,6 @@ import {
 import { toOptionalBoolean } from "@/Data";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
-import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 import { BooleanFormInput } from "./BooleanFormInput";
 import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
@@ -110,18 +109,6 @@ export const FieldInput: React.FC<Props> = ({
           formState={formState}
           getUpdate={getUpdate}
           path={path}
-        />
-      );
-    case "InterServiceRelation":
-      return (
-        <AutoCompleteInputProvider
-          alreadySelected={[]}
-          serviceName={field.serviceEntity}
-          attributeName={field.name}
-          description={field.description}
-          attributeValue={get(formState, path as string) as string}
-          isOptional={field.isOptional}
-          handleInputChange={getUpdate(path as string)}
         />
       );
   }
@@ -316,12 +303,12 @@ const RelationListFieldInput: React.FC<RelationListProps> = ({
 
   return (
     <StyledFormFieldGroupExpandable
-      aria-label={`DictListFieldInput-${makePath(path, field.name)}`}
+      aria-label={`RelationListFieldInput-${makePath(path, field.name)}`}
       header={
         <FormFieldGroupHeader
           titleText={{
             text: field.name,
-            id: `DictListFieldInput-${makePath(path, field.name)}`,
+            id: `RelationListFieldInput-${makePath(path, field.name)}`,
           }}
           titleDescription={`${field.description} (${words(
             "inventory.createInstance.items"
@@ -341,7 +328,7 @@ const RelationListFieldInput: React.FC<RelationListProps> = ({
     >
       {list.map((item, index) => (
         <StyledFormFieldGroupExpandable
-          aria-label={`DictListFieldInputItem-${makePath(
+          aria-label={`RelationListFieldInputItem-${makePath(
             path,
             `${field.name}.${index + 1}`
           )}`}
@@ -350,7 +337,7 @@ const RelationListFieldInput: React.FC<RelationListProps> = ({
             <FormFieldGroupHeader
               titleText={{
                 text: index + 1,
-                id: `DictListFieldInputItem-${makePath(
+                id: `RelationListFieldInputItem-${makePath(
                   path,
                   `${field.name}.${index + 1}`
                 )}`,
@@ -368,32 +355,6 @@ const RelationListFieldInput: React.FC<RelationListProps> = ({
           }
         >
           {field.fields.map((childField) => (
-            // <FieldInput
-            //   field={childField}
-            //   key={makePath(path, `${field.name}.${index}`)}
-            //   formState={formState}
-            //   getUpdate={getUpdate}
-            //   path={makePath(path, `${field.name}.${index}`)}
-            // />
-            // <AutoCompleteInputProvider
-            //   alreadySelected={
-            //     get(formState, makePath(path, `${field.name}`)) as string[]
-            //   }
-            //   key={makePath(path, `${field.name}.${index}`)}
-            //   serviceName={childField.serviceEntity}
-            //   attributeName={childField.name}
-            //   description={childField.description}
-            //   attributeValue={
-            //     get(
-            //       formState,
-            //       makePath(path, `${field.name}.${index}`) as string
-            //     ) as string
-            //   }
-            //   isOptional={childField.isOptional}
-            //   handleInputChange={getUpdate(
-            //     makePath(path, `${field.name}.${index}`) as string
-            //   )}
-            // />
             <RelatedServiceProvider
               alreadySelected={
                 get(formState, makePath(path, `${field.name}`)) as string[]

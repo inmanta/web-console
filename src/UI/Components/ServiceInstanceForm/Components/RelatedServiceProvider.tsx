@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
+import { Alert, Button } from "@patternfly/react-core";
 import { RemoteData } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 
 interface Props {
@@ -23,7 +25,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
   alreadySelected,
 }) => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"GetService">({
+  const [data, retry] = queryResolver.useOneTime<"GetService">({
     kind: "GetService",
     name: serviceName,
   });
@@ -31,7 +33,20 @@ export const RelatedServiceProvider: React.FC<Props> = ({
     {
       notAsked: () => null,
       loading: () => null,
-      failed: () => null,
+      failed: (message) => (
+        <Alert
+          variant="danger"
+          isInline
+          title="Something went wrong with fetching the service"
+        >
+          {message}
+          <div>
+            <Button variant="link" isInline onClick={retry}>
+              {words("retry")}
+            </Button>
+          </div>
+        </Alert>
+      ),
       success: (service) => {
         return (
           <AutoCompleteInputProvider
