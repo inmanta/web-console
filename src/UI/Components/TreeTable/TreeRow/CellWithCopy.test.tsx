@@ -68,9 +68,6 @@ test("Given CellWithCopy When a cell has on click Then it is rendered as a link"
   const { component, onClickFn } = setup(props);
   render(component);
 
-  // await act(async () => {
-  //   apiHelper.resolve(Either.right({ data: ServiceInstance.a }));
-  // });
   const cell = await screen.findByText(props.value);
   expect(cell).toBeVisible();
   await userEvent.click(cell);
