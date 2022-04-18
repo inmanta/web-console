@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @storybook/addon-actions from 6.4.21 to 6.4.22'
+destination-branches:
+- master
+- iso5
+sections: {}
