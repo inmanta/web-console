@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
 import { ServiceModel } from "@/Core";
 import { ActionPresenter, ServiceInstanceForAction } from "@/UI/Presenters";
 import { InstanceActions } from "@S/ServiceInventory/UI/Components";
@@ -16,7 +16,7 @@ export class InstanceActionPresenter implements ActionPresenter {
   getForId(id: string): ReactElement | null {
     const instance = this.getInstanceForId(id);
     if (typeof instance === "undefined") return null;
-    return InstanceActions({
+    return React.createElement(InstanceActions, {
       instance,
       editDisabled: this.isTransferDisabled(id, "on_update"),
       deleteDisabled: this.isTransferDisabled(id, "on_delete"),
