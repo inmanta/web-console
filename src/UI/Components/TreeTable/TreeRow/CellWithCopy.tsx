@@ -69,13 +69,15 @@ export const CellWithCopy: React.FC<Props> = ({
 
 const StyledPopoverBody = styled.div`
   padding-right: var(--pf-c-popover--c-button--sibling--PaddingRight);
+  overflow-y: auto;
+  max-height: 50vh;
   white-space: pre-wrap;
 `;
 
 const StyledButton = styled(ClipboardCopyButton)`
   position: absolute;
   top: var(--pf-c-popover--c-button--Top);
-  right: var(--pf-c-popover--c-button--Right);
+  right: calc(var(--pf-c-popover--c-button--Right) + 0.5rem);
 `;
 
 function formatValue(value: string): string {
