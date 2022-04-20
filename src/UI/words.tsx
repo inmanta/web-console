@@ -112,6 +112,7 @@ const dict = {
   "inventory.deploymentProgress.failed": "Failed",
   "inventory.deploymentProgress.deployed": "Ready",
   "inventory.deploymentProgress.notFound": "No resources available yet",
+  "inventory.service.failed": "Something went wrong with fetching the service",
   "inventory.addInstance.failed": "Creating instance failed",
   "inventory.addInstance.title": (serviceName: string) =>
     `Create a new instance of ${serviceName} with the following parameters`,

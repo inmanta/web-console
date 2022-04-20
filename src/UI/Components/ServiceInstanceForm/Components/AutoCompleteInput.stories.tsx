@@ -27,16 +27,13 @@ export const DefaultWithWrapper = () => {
       attributeValue={value}
       isOptional={false}
       handleInputChange={(value) => {
-        console.log(value);
         setValue(value);
       }}
       onSearchTextChanged={(searchText) => {
-        console.log(searchText);
         if (searchText.length > 0) {
           const filtered = allPossibleOptions.filter(({ displayName }) =>
             displayName.includes(searchText)
           );
-          console.log(filtered);
           setOptions(filtered);
         }
       }}

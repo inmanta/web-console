@@ -1,6 +1,7 @@
 import {
   Attributes,
   EntityLike,
+  InterServiceRelation,
   isNotUndefined,
   ServiceModel,
   TreeNode,
@@ -41,7 +42,12 @@ export class InventoryAttributeHelper
     );
   }
 
-  private findKeyInService(prefix: string, key: string) {
+  private findKeyInService(
+    prefix: string,
+    key: string
+  ):
+    | Pick<InterServiceRelation, "name" | "entity_type" | "description">
+    | undefined {
     if (!this.service) {
       return;
     }
@@ -59,7 +65,9 @@ export class InventoryAttributeHelper
     service: Pick<EntityLike, "embedded_entities" | "inter_service_relations">,
     prefix: string[],
     key: string
-  ) {
+  ):
+    | Pick<InterServiceRelation, "name" | "entity_type" | "description">
+    | undefined {
     const matchingEmbeddedEntity = service.embedded_entities.find(
       (entity) => entity.name === prefix[0]
     );
@@ -69,19 +77,20 @@ export class InventoryAttributeHelper
         prefix.slice(1),
         key
       );
-    if (!matchingEmbeddedEntity) {
-      const fromRelations = this.findInRelations(service, key);
-      if (fromRelations) {
-        return fromRelations;
-      }
-      return;
+
+    const fromRelations = this.findInRelations(service, key);
+    if (fromRelations) {
+      return fromRelations;
     }
+    return undefined;
   }
 
   private findInRelations(
     service: Pick<EntityLike, "inter_service_relations">,
     key: string
-  ) {
+  ):
+    | Pick<InterServiceRelation, "name" | "entity_type" | "description">
+    | undefined {
     const matchingRelation = service.inter_service_relations?.find(
       (relation) => relation.name === key
     );

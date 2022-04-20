@@ -37,7 +37,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
         <Alert
           variant="danger"
           isInline
-          title="Something went wrong with fetching the service"
+          title={words("inventory.service.failed")}
         >
           {message}
           <div>

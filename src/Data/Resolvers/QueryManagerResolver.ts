@@ -116,6 +116,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     const serviceInstancesStateHelper = new ServiceInstancesStateHelper(
       this.store
     );
+    const serviceInstanceStateHelper = new ServiceInstanceStateHelper(
+      this.store
+    );
 
     return [
       new GetProjectsQueryManager(this.store, this.apiHelper),
@@ -158,7 +161,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       ),
       new GetServiceInstanceOneTimeQueryManager(
         this.apiHelper,
-        new ServiceInstanceStateHelper(this.store)
+        serviceInstanceStateHelper
       ),
       new GetServiceOneTimeQueryManager(this.apiHelper, serviceStateHelper),
       new ServiceConfigQueryManager(
@@ -212,7 +215,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
       new ServiceInstanceQueryManager(
         this.apiHelper,
-        new ServiceInstanceStateHelper(this.store),
+        serviceInstanceStateHelper,
         this.scheduler
       ),
       new CallbacksQueryManager(

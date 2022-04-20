@@ -102,11 +102,11 @@ function shouldRenderLink(value: string, hasOnClick?: boolean): boolean {
   return !!(hasOnClick && value.length > 0 && value !== "{}");
 }
 
-function splitValue(value: string) {
+function splitValue(value: string): string[] {
   const parts = value.split(",").map((val) => val.trim());
   return parts;
 }
-function isValueOfMultipleIds(value: string) {
+function isValueOfMultipleIds(value: string): boolean {
   return splitValue(value).length > 0;
 }
 

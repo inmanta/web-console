@@ -90,6 +90,11 @@ test("Given the CreateInstance View When creating an instance with relations The
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] })
     );
   });
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=ab`,
+    environment: "env",
+  });
   await act(async () => {
     apiHelper.resolve(
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] })
