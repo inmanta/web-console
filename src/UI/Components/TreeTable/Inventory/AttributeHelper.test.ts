@@ -323,7 +323,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
   };
   const attributeHelper = new InventoryAttributeHelper("$", service);
   const nodes = attributeHelper.getMultiAttributeNodes(attributes);
-  console.log(JSON.stringify(nodes, null, 2));
+
   expect(nodes).toEqual({
     embedded: {
       kind: "Branch",
