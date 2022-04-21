@@ -25,6 +25,9 @@ import {
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
   GetCompilerStatusQueryManager,
+  GetServiceInstancesOneTimeQueryManager,
+  GetServiceOneTimeQueryManager,
+  GetServiceInstanceOneTimeQueryManager,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import {
@@ -113,6 +116,9 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     const serviceInstancesStateHelper = new ServiceInstancesStateHelper(
       this.store
     );
+    const serviceInstanceStateHelper = new ServiceInstanceStateHelper(
+      this.store
+    );
 
     return [
       new GetProjectsQueryManager(this.store, this.apiHelper),
@@ -149,6 +155,15 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         serviceInstancesStateHelper,
         this.scheduler
       ),
+      new GetServiceInstancesOneTimeQueryManager(
+        this.apiHelper,
+        serviceInstancesStateHelper
+      ),
+      new GetServiceInstanceOneTimeQueryManager(
+        this.apiHelper,
+        serviceInstanceStateHelper
+      ),
+      new GetServiceOneTimeQueryManager(this.apiHelper, serviceStateHelper),
       new ServiceConfigQueryManager(
         this.apiHelper,
         new ServiceConfigStateHelper(this.store),
@@ -200,7 +215,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       new EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
       new ServiceInstanceQueryManager(
         this.apiHelper,
-        new ServiceInstanceStateHelper(this.store),
+        serviceInstanceStateHelper,
         this.scheduler
       ),
       new CallbacksQueryManager(

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Tbody, Tr, Td, ExpandableRowContent } from "@patternfly/react-table";
 import styled from "styled-components";
-import { Row, VersionedServiceInstanceIdentifier } from "@/Core";
+import { Row, ServiceModel, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
   DateWithTooltip,
   TextWithCopy,
@@ -20,6 +20,7 @@ interface Props {
   numberOfColumns: number;
   actions: React.ReactElement | null;
   state: React.ReactElement | null;
+  service?: ServiceModel;
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
   shouldUseServiceIdentity?: boolean;
   idDataLabel: string;
@@ -36,6 +37,7 @@ export const InstanceRow: React.FC<Props> = ({
   serviceInstanceIdentifier,
   shouldUseServiceIdentity,
   idDataLabel,
+  service,
 }) => {
   const [activeTab, setActiveTab] = useState<TabKey>(TabKey.Status);
   const rowRef = useRef<HTMLSpanElement>(null);
@@ -116,6 +118,7 @@ export const InstanceRow: React.FC<Props> = ({
               state={state}
               actions={actions}
               serviceInstanceIdentifier={serviceInstanceIdentifier}
+              service={service}
             />
           </ExpandableRowContent>
         </Td>

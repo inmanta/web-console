@@ -6,13 +6,14 @@ import {
   Th,
   OnSort,
 } from "@patternfly/react-table";
-import { Row, Sort } from "@/Core";
+import { Row, ServiceModel, Sort } from "@/Core";
 import { useUrlStateWithExpansion } from "@/Data";
 import { InstanceRow } from "./InstanceRow";
 import { InventoryTablePresenter } from "./Presenters";
 
 interface Props {
   rows: Row[];
+  service?: ServiceModel;
   tablePresenter: InventoryTablePresenter;
   sort: Sort.Type;
   setSort: (sort: Sort.Type) => void;
@@ -20,6 +21,7 @@ interface Props {
 
 export const InventoryTable: React.FC<Props> = ({
   rows,
+  service,
   tablePresenter,
   sort,
   setSort,
@@ -82,6 +84,7 @@ export const InventoryTable: React.FC<Props> = ({
           }}
           shouldUseServiceIdentity={tablePresenter.shouldUseServiceIdentity()}
           idDataLabel={tablePresenter.getIdColumnName()}
+          service={service}
         />
       ))}
     </TableComposable>

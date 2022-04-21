@@ -46,6 +46,7 @@ export const TableProvider: React.FC<Props> = ({
     <InventoryTable
       {...props}
       rows={rows}
+      service={serviceEntity}
       tablePresenter={tablePresenter}
       sort={sort}
       setSort={setSort}

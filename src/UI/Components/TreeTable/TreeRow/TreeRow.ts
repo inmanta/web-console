@@ -4,6 +4,7 @@ export interface Cell {
   label: string;
   value: string;
   hasOnClick?: boolean;
+  serviceName?: string;
 }
 
 interface Flat {

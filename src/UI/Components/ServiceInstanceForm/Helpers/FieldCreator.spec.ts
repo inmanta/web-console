@@ -1,5 +1,7 @@
-import { NestedField } from "@/Core";
+import { EmbeddedEntity, NestedField } from "@/Core";
 import { Service } from "@/Test";
+import { InterServiceRelationFields } from "@/Test/Data/Field";
+import { InterServiceRelations } from "@/Test/Data/Service";
 import { FieldCreator } from "./FieldCreator";
 import { CreateModifierHandler, EditModifierHandler } from "./ModifierHandler";
 
@@ -64,4 +66,50 @@ test("GIVEN FieldCreator WHEN an attribute has the empty string as default value
   expect(fields[1].isOptional).toBeFalsy();
   expect(fields[2].isOptional).toBeFalsy();
   expect(fields[3].isOptional).toBeTruthy();
+});
+
+test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they are classified correctly", () => {
+  const embedded: EmbeddedEntity[] = [
+    {
+      attributes: [],
+      inter_service_relations: InterServiceRelations.listWithAll,
+      lower_limit: 0,
+      modifier: "rw",
+      name: "embedded_not_editable",
+      embedded_entities: [],
+    },
+    {
+      attributes: [],
+      inter_service_relations: InterServiceRelations.listWithAll,
+      lower_limit: 0,
+      modifier: "rw+",
+      name: "embedded_editable",
+      embedded_entities: [],
+    },
+  ];
+  const fields = new FieldCreator(new CreateModifierHandler()).create({
+    attributes: [],
+    embedded_entities: embedded,
+    inter_service_relations: InterServiceRelations.listWithAll,
+  });
+  expect(fields).toHaveLength(
+    embedded.length + InterServiceRelations.listWithAll.length
+  );
+  expect(fields).toEqual([
+    {
+      kind: "DictList",
+      name: "embedded_not_editable",
+      isOptional: true,
+      fields: InterServiceRelationFields,
+      min: 0,
+    },
+    {
+      kind: "DictList",
+      name: "embedded_editable",
+      isOptional: true,
+      fields: InterServiceRelationFields,
+      min: 0,
+    },
+    ...InterServiceRelationFields,
+  ]);
 });
