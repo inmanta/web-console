@@ -145,7 +145,7 @@ test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THE
   });
   await userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
   expect(
-    screen.getAllByRole("button", { name: "Desired State" })[0]
+    screen.getAllByRole("tab", { name: "Desired State" })[0]
   ).toBeVisible();
-  expect(screen.getAllByRole("button", { name: "Requires" })[0]).toBeVisible();
+  expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
 });

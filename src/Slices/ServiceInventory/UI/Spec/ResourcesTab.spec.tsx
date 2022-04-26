@@ -25,7 +25,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
   await user.click(screen.getAllByRole("button", { name: "Details" })[0]);
   await act(async () => {
-    await user.click(screen.getAllByRole("button", { name: "Resources" })[0]);
+    await user.click(screen.getAllByRole("tab", { name: "Resources" })[0]);
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -69,7 +69,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
   await user.click(screen.getAllByRole("button", { name: "Details" })[0]);
   await act(async () => {
-    await user.click(screen.getAllByRole("button", { name: "Resources" })[0]);
+    await user.click(screen.getAllByRole("tab", { name: "Resources" })[0]);
   });
 
   await act(async () => {

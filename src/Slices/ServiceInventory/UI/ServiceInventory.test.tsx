@@ -213,9 +213,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   ).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole("button", { name: "Details" }));
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Resources" })
-  );
+  await userEvent.click(await screen.findByRole("tab", { name: "Resources" }));
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
