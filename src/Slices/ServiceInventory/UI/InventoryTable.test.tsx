@@ -90,7 +90,7 @@ test("ServiceInventory can show resources for instance", async () => {
 
   await userEvent.click(within(expandCell).getByRole("button"));
 
-  await userEvent.click(screen.getByRole("button", { name: "Resources" }));
+  await userEvent.click(screen.getByRole("tab", { name: "Resources" }));
   await act(async () => {
     apiHelper.resolve(
       Either.right({

@@ -107,7 +107,7 @@ test("GIVEN ServiceCatalog WHEN click on config tab THEN shows config tab", asyn
   });
   await userEvent.click(details);
 
-  const configButton = screen.getByRole("button", { name: "Config" });
+  const configButton = screen.getByRole("tab", { name: "Config" });
   await userEvent.click(configButton);
 
   expect(screen.getByRole("article", { name: "ServiceConfig" })).toBeVisible();
@@ -124,7 +124,7 @@ test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", a
   });
   await userEvent.click(details);
 
-  const configButton = screen.getByRole("button", { name: "Config" });
+  const configButton = screen.getByRole("tab", { name: "Config" });
   await act(async () => {
     await userEvent.click(configButton);
   });
