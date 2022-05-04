@@ -64,8 +64,8 @@ const DiffView: React.FC<{
         <DiffWizard.Controls
           data={diffData}
           refs={refs}
-          from={version}
-          to={"current"}
+          from={"current"}
+          to={version}
         />
       </PageSection>
       <PageSection isFilled>
