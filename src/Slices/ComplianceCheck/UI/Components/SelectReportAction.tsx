@@ -3,6 +3,7 @@ import {
   Label,
   Select,
   SelectOption,
+  SelectOptionObject,
   Spinner,
   ToolbarGroup,
 } from "@patternfly/react-core";
@@ -30,39 +31,62 @@ export const SelectReportAction: React.FC<Props> = ({
   // This should be the trigger from the command
 
   const onSelect = (event, value) => {
-    setIsOpen(false);
     if (!RemoteData.isSuccess(reportsData)) return;
     const report = reportsData.value.find((report) => report.id === value);
     if (report === undefined) return;
     setSelectedReport(Maybe.some(report));
-  };
-
-  const Picker: React.FC = () => {
-    if (!RemoteData.isSuccess(reportsData)) return null;
-    if (reportsData.value.length <= 0) return <EmptyPicker />;
-    if (Maybe.isNone(selectedReport)) return null;
-    return (
-      <Select
-        onToggle={setIsOpen}
-        onSelect={onSelect}
-        selections={selectedReport.value.id}
-        isOpen={isOpen}
-        aria-label="ReportList"
-        toggleAriaLabel="ReportListSelect"
-      >
-        {reportsData.value.map((report) => (
-          <SelectOption key={report.id} value={report.id}>
-            <Progress report={report} /> {datePresenter.getFull(report.date)}
-          </SelectOption>
-        ))}
-      </Select>
-    );
+    setIsOpen(false);
   };
 
   return (
     <ToolbarGroup alignment={{ default: "alignLeft" }}>
-      <Picker />
+      <Picker
+        reportsData={reportsData}
+        selectedReport={selectedReport}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        onSelect={onSelect}
+      />
     </ToolbarGroup>
+  );
+};
+
+interface PickerProps {
+  reportsData: RemoteReportList;
+  selectedReport: MaybeReport;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+  onSelect: (
+    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
+    value: string | SelectOptionObject
+  ) => void;
+}
+
+const Picker: React.FC<PickerProps> = ({
+  reportsData,
+  selectedReport,
+  isOpen,
+  setIsOpen,
+  onSelect,
+}) => {
+  if (!RemoteData.isSuccess(reportsData)) return null;
+  if (reportsData.value.length <= 0) return <EmptyPicker />;
+  if (Maybe.isNone(selectedReport)) return null;
+  return (
+    <Select
+      onToggle={setIsOpen}
+      onSelect={onSelect}
+      selections={selectedReport.value.id}
+      isOpen={isOpen}
+      aria-label="ReportList"
+      toggleAriaLabel="ReportListSelect"
+    >
+      {reportsData.value.map((report) => (
+        <SelectOption key={report.id} value={report.id}>
+          <Progress report={report} /> {datePresenter.getFull(report.date)}
+        </SelectOption>
+      ))}
+    </Select>
   );
 };
 

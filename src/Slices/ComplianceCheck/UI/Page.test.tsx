@@ -82,6 +82,78 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   expect(blocks).toHaveLength(12);
 });
 
+test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.listResponse));
+  });
+  // The first dryrun is selected by default
+  // Verify the request
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/api/v2/dryrun/123/${Mock.b.id}`,
+    environment: "env",
+  });
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.reportResponse));
+  });
+
+  // Also verify that the option shows the selected icon
+  const select = screen.getByRole("button", { name: "ReportListSelect" });
+  await userEvent.click(select);
+
+  const dropdown = screen.getByRole("listbox", { name: "ReportList" });
+  const options = within(dropdown).getAllByRole<HTMLButtonElement>("option");
+  expect(options).toHaveLength(3);
+  expect(options[0]).toHaveAttribute("aria-selected", "true");
+
+  // Select a different report
+  await userEvent.click(options[1]);
+  // Verify the request
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/api/v2/dryrun/123/${Mock.c.id}`,
+    environment: "env",
+  });
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.reportResponse));
+  });
+  // Verify that it's selected
+  await userEvent.click(select);
+  expect(
+    within(
+      screen.getByRole("listbox", { name: "ReportList" })
+    ).getAllByRole<HTMLButtonElement>("option")[1]
+  ).toHaveAttribute("aria-selected", "true");
+  // Go back to the first one
+  await userEvent.click(
+    within(
+      screen.getByRole("listbox", { name: "ReportList" })
+    ).getAllByRole<HTMLButtonElement>("option")[0]
+  );
+  // Verify the request
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    method: "GET",
+    url: `/api/v2/dryrun/123/${Mock.b.id}`,
+    environment: "env",
+  });
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.reportResponse));
+  });
+  // Verify that it's selected
+  await userEvent.click(select);
+  expect(
+    within(
+      screen.getByRole("listbox", { name: "ReportList" })
+    ).getAllByRole<HTMLButtonElement>("option")[0]
+  ).toHaveAttribute("aria-selected", "true");
+});
+
 test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
   const { component, apiHelper, datePresenter } = setup();
   render(component);
