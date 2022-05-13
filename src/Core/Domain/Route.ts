@@ -23,6 +23,7 @@ const kinds = [
    * Resource Manager
    */
   "Resources",
+  "ResourcesV2",
   "Agents",
   "Facts",
   "AgentProcess",

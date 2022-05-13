@@ -33,6 +33,7 @@ import { Notification } from "@S/Notification";
 import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
+import { ResourceV2 } from "@S/ResourceV2";
 import { ServiceCatalog } from "@S/ServiceCatalog";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
@@ -69,6 +70,7 @@ export class PrimaryRouteManager implements RouteManager {
        * Resource Manager
        */
       Resources: Resource.route(this.baseUrl),
+      ResourcesV2: ResourceV2.route(this.baseUrl),
       Agents: Agents.route(this.baseUrl),
       Facts: Facts.route(this.baseUrl),
       AgentProcess: AgentProcess.route(this.baseUrl),

@@ -20,6 +20,7 @@ import { NotificationCenterPage } from "@S/Notification/UI/Center";
 import { ParametersPage } from "@S/Parameters/UI";
 import { ResourcesPage } from "@S/Resource/UI/ResourcesPage";
 import { ResourceDetailsPage } from "@S/ResourceDetails/UI";
+import { ResourceV2Page } from "@S/ResourceV2/UI";
 import { ServiceCatalogPage } from "@S/ServiceCatalog/UI";
 import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
@@ -78,6 +79,10 @@ export class PrimaryPageManager implements PageManager {
       Resources: {
         ...this.routeDictionary.Resources,
         element: <ResourcesPage />,
+      },
+      ResourcesV2: {
+        ...this.routeDictionary.ResourcesV2,
+        element: <ResourceV2Page />,
       },
       Agents: { ...this.routeDictionary.Agents, element: <AgentsPage /> },
       Facts: { ...this.routeDictionary.Facts, element: <FactsPage /> },

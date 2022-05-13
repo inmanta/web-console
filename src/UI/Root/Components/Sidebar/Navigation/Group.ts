@@ -78,6 +78,13 @@ export const resourceManager = (
       locked: !isEnvPresent,
     },
     {
+      id: "ResourcesV2",
+      label: routeManager.getRoute("ResourcesV2").generateLabel(undefined),
+      url: routeManager.getRoute("ResourcesV2").path,
+      external: false,
+      locked: !isEnvPresent,
+    },
+    {
       id: "Agents",
       label: routeManager.getRoute("Agents").generateLabel(undefined),
       url: routeManager.getRoute("Agents").path,

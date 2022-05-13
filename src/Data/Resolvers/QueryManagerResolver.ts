@@ -81,6 +81,7 @@ import {
   ResourceLogsQueryManager,
   ResourceLogsStateHelper,
 } from "@S/ResourceDetails/Data";
+import { GetResourcesV2QueryManager } from "@S/ResourceV2/Data";
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
@@ -197,6 +198,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.scheduler
       ),
       new GetResourcesQueryManager(this.store, this.apiHelper, this.scheduler),
+      new GetResourcesV2QueryManager(
+        this.store,
+        this.apiHelper,
+        this.scheduler
+      ),
       new ResourceDetailsQueryManager(
         this.apiHelper,
         new ResourceDetailsStateHelper(this.store),
