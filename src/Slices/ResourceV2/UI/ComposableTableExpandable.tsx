@@ -42,23 +42,6 @@ export const ComposableTableExpandable: React.FunctionComponent<
     deployState: "Deploy state",
   };
 
-  // const [expandedresourceNames, setExpandedresourceNames] = React.useState<
-  //   string[]
-  // >([]);
-
-  // const setresourceExpanded = (resource: RessourceRow, isExpanding = true) =>
-  //   setExpandedresourceNames((prevExpanded) => {
-  //     const otherExpandedresourceNames = prevExpanded.filter(
-  //       (r) => r !== resource.id
-  //     );
-  //     return isExpanding
-  //       ? [...otherExpandedresourceNames, resource.id]
-  //       : otherExpandedresourceNames;
-  //   });
-
-  // const isresourceExpanded = (resource: RessourceRow) =>
-  //   expandedresourceNames.includes(resource.id);
-
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     route: "ResourcesV2",
   });
@@ -132,9 +115,7 @@ export const ComposableTableExpandable: React.FunctionComponent<
                   expand={{
                     rowIndex,
                     isExpanded: isExpanded(resource.id),
-                    onToggle: () => {
-                      onExpansion(resource.id);
-                    },
+                    onToggle: onExpansion(resource.id),
                   }}
                 />
                 <Td dataLabel={columnNames.type}>{resource.type}</Td>

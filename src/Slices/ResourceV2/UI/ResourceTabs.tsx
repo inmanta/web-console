@@ -11,13 +11,13 @@ export const ResourceTabs: React.FunctionComponent<ResourceTabsProps> = ({
   resource,
 }) => {
   const [activeTabKey, setActiveTabKey] = useUrlStateWithString({
-    default: "tab1",
+    default: "details",
     key: `tab-${resource.id}`,
     route: "ResourcesV2",
   });
 
-  console.log(activeTabKey);
   const handleTabClick = (event, tabIndex) => {
+    console.log(tabIndex);
     setActiveTabKey(tabIndex);
   };
 
