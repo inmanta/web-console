@@ -1,7 +1,13 @@
 import { Pagination, Resource } from "@/Core/Domain";
+import { PageSize } from "@/Core/Domain/PageSize";
+import { Sort } from "@/Core/Domain/Sort";
+
+export type SortKeyV2 = "status" | "resource_type";
 
 export interface Query {
   kind: "GetResourcesV2";
+  pageSize: PageSize;
+  sort?: Sort<SortKeyV2>;
 }
 
 export interface Manifest {

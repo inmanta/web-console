@@ -7,12 +7,13 @@ import {
   Tbody,
   Td,
   ExpandableRowContent,
-  ThProps,
+  OnSort,
 } from "@patternfly/react-table";
+import { Sort } from "@/Core";
 import { Status } from "@/Core/Domain/Resource/Resource";
 import { useUrlStateWithExpansion } from "@/Data";
-import { ResourceLink, ResourceStatusLabel } from "@/UI/Components";
-import { words } from "@/UI/words";
+import { ResourceStatusLabel } from "@/UI/Components";
+import { SortKeyV2 } from "../Core/Query";
 import { ResourceTabs } from "./ResourceTabs";
 
 export interface RessourceRow {
@@ -26,88 +27,81 @@ export interface RessourceRow {
 
 interface ComposableTableExpandableProps {
   rows: RessourceRow[];
+  sort: Sort.Type<SortKeyV2>;
+  setSort: (sort: Sort.Type<SortKeyV2>) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const ComposableTableExpandable: React.FunctionComponent<
   ComposableTableExpandableProps
-> = ({ rows }) => {
+> = ({ rows, sort, setSort }) => {
   const ressourceRows: RessourceRow[] = rows;
 
   const columnNames = {
-    type: "Type",
+    expend: "",
+    resource_type: "Type",
     agent: "Agent",
-    value: "Value",
+    resource_id_value: "Value",
     dependeciesNbr: "Number of Dependecies",
-    deployState: "Deploy state",
+    status: "Deploy state",
   };
+  const sortableColumnNames = ["resource_type", "status"];
 
   const [isExpanded, onExpansion] = useUrlStateWithExpansion({
     route: "ResourcesV2",
   });
 
-  const [activeSortIndex, setActiveSortIndex] = React.useState<
-    number | undefined
-  >(undefined);
-
-  const [activeSortDirection, setActiveSortDirection] = React.useState<
-    "asc" | "desc" | undefined
-  >(undefined);
-
-  const getSortableRowValues = (row: RessourceRow): (string | number)[] => {
-    const { type, agent, value, dependeciesNbr, deployState } = row;
-    return [type, agent, value, dependeciesNbr, deployState];
+  const getColumnNameForIndex = (index: number): string | undefined => {
+    const columnNamesArray = Object.keys(columnNames);
+    if (index > -1 && index < columnNamesArray.length) {
+      return columnNamesArray[index];
+    }
+    return undefined;
   };
 
-  let sortedRows = ressourceRows;
-  if (activeSortIndex !== undefined) {
-    sortedRows = ressourceRows.sort((a, b) => {
-      const aValue = getSortableRowValues(a)[activeSortIndex];
-      const bValue = getSortableRowValues(b)[activeSortIndex];
-      if (typeof aValue === "number") {
-        // Numeric sort
-        if (activeSortDirection === "asc") {
-          return (aValue as number) - (bValue as number);
-        }
-        return (bValue as number) - (aValue as number);
-      } else {
-        // String sort
-        if (activeSortDirection === "asc") {
-          return (aValue as string).localeCompare(bValue as string);
-        }
-        return (bValue as string).localeCompare(aValue as string);
-      }
-    });
-  }
+  const getIndexForColumnName = (columnName?: string): number => {
+    const columnNamesArray = Object.keys(columnNames);
+    return columnNamesArray.findIndex(
+      (columnHead) => columnHead === columnName
+    );
+  };
 
-  const getSortParams = (columnIndex: number): ThProps["sort"] => ({
-    sortBy: {
-      index: activeSortIndex,
-      direction: activeSortDirection,
-      defaultDirection: "asc",
-    },
-    onSort: (_event, index, direction) => {
-      setActiveSortIndex(index);
-      setActiveSortDirection(direction);
-    },
-    columnIndex,
+  const onSort: OnSort = (event, index, order) => {
+    setSort({
+      name: getColumnNameForIndex(index) as SortKeyV2,
+      order,
+    });
+  };
+  const activeSortIndex = getIndexForColumnName(sort.name);
+
+  const heads = Object.entries(columnNames).map(([key, value], columnIndex) => {
+    const hasSort = sortableColumnNames.includes(key);
+    const sortParams = hasSort
+      ? {
+          sort: {
+            sortBy: {
+              index: activeSortIndex,
+              direction: sort.order,
+            },
+            onSort,
+            columnIndex,
+          },
+        }
+      : {};
+    return (
+      <Th key={columnIndex} {...sortParams}>
+        {value}
+      </Th>
+    );
   });
 
   return (
     <React.Fragment>
       <TableComposable aria-label="Ressources table V2">
         <Thead>
-          <Tr>
-            <Th />
-            <Th sort={getSortParams(0)}>{columnNames.type}</Th>
-            <Th>{columnNames.agent}</Th>
-            <Th>{columnNames.value}</Th>
-            <Th sort={getSortParams(3)}>{columnNames.dependeciesNbr}</Th>
-            <Th sort={getSortParams(4)}>{columnNames.deployState}</Th>
-            <Th></Th>
-          </Tr>
+          <Tr>{heads}</Tr>
         </Thead>
-        {sortedRows.map((resource, rowIndex) => {
+        {ressourceRows.map((resource, rowIndex) => {
           return (
             <Tbody key={resource.id} isExpanded={isExpanded(resource.id)}>
               <Tr>
@@ -118,20 +112,16 @@ export const ComposableTableExpandable: React.FunctionComponent<
                     onToggle: onExpansion(resource.id),
                   }}
                 />
-                <Td dataLabel={columnNames.type}>{resource.type}</Td>
+                <Td dataLabel={columnNames.resource_type}>{resource.type}</Td>
                 <Td dataLabel={columnNames.agent}>{resource.agent}</Td>
-                <Td dataLabel={columnNames.value}>{resource.value}</Td>
+                <Td dataLabel={columnNames.resource_id_value}>
+                  {resource.value}
+                </Td>
                 <Td dataLabel={columnNames.dependeciesNbr}>
                   {resource.dependeciesNbr}
                 </Td>
-                <Td dataLabel={columnNames.deployState}>
+                <Td dataLabel={columnNames.status}>
                   <ResourceStatusLabel status={resource.deployState} />
-                </Td>
-                <Td>
-                  <ResourceLink
-                    resourceId={resource.id}
-                    linkText={words("resources.link.details")}
-                  />
                 </Td>
               </Tr>
               <Tr isExpanded={isExpanded(resource.id)}>

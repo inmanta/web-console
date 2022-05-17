@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Resource } from "@/Core";
-import { useUrlStateWithPageSize } from "@/Data";
+import { useUrlStateWithPageSize, useUrlStateWithSort } from "@/Data";
 import { words } from "@/UI";
 import {
   EmptyView,
@@ -9,6 +9,7 @@ import {
   RemoteDataView,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
+import { SortKeyV2 } from "../Core/Query";
 import {
   ComposableTableExpandable,
   RessourceRow,
@@ -21,8 +22,15 @@ export const Page: React.FC = () => {
     route: "ResourcesV2",
   });
 
+  const [sort, setSort] = useUrlStateWithSort<SortKeyV2>({
+    default: { name: "resource_type", order: "asc" },
+    route: "ResourcesV2",
+  });
+
   const [data, retry] = queryResolver.useContinuous<"GetResourcesV2">({
     kind: "GetResourcesV2",
+    sort,
+    pageSize,
   });
 
   const createRows = (sourceData: Resource.Resource[]): RessourceRow[] => {
@@ -59,7 +67,11 @@ export const Page: React.FC = () => {
               aria-label="ResourcesView-Empty"
             />
           ) : (
-            <ComposableTableExpandable rows={createRows(rows.data)} />
+            <ComposableTableExpandable
+              rows={createRows(rows.data)}
+              sort={sort}
+              setSort={setSort}
+            />
           )
         }
       />

@@ -1,7 +1,9 @@
 import React from "react";
 import { Tabs, Tab } from "@patternfly/react-core";
+import QueryString from "qs";
 import { useUrlStateWithString } from "@/Data";
 import { RessourceRow } from "./ComposableTableExpandable";
+import { ResourceDetailsTab } from "./resourceDetailsTab";
 
 interface ResourceTabsProps {
   resource: RessourceRow;
@@ -12,12 +14,11 @@ export const ResourceTabs: React.FunctionComponent<ResourceTabsProps> = ({
 }) => {
   const [activeTabKey, setActiveTabKey] = useUrlStateWithString({
     default: "details",
-    key: `tab-${resource.id}`,
+    key: `tab-${QueryString.stringify(resource.id)}`,
     route: "ResourcesV2",
   });
 
   const handleTabClick = (event, tabIndex) => {
-    console.log(tabIndex);
     setActiveTabKey(tabIndex);
   };
 
@@ -30,7 +31,7 @@ export const ResourceTabs: React.FunctionComponent<ResourceTabsProps> = ({
       mountOnEnter
     >
       <Tab eventKey="details" title="Details">
-        hello
+        <ResourceDetailsTab resourceId={resource.id} />
       </Tab>
       <Tab eventKey="tab2" title="Second tab">
         world

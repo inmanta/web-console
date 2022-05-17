@@ -1,5 +1,5 @@
 import { Scheduler, ApiHelper } from "@/Core";
-import { QueryManager } from "@/Data/Managers/Helpers";
+import { getPaginationHandlers, QueryManager } from "@/Data/Managers/Helpers";
 import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrlResources";
@@ -11,16 +11,21 @@ export class GetResourcesV2QueryManager extends QueryManager.ContinuousWithEnv<"
       new StateHelper(store),
       scheduler,
       ({ kind }, environment) => `${kind}_${environment}`,
-      ({}, environment) => [environment],
+      ({ sort, pageSize }, environment) => [
+        environment,
+        pageSize.value,
+        sort?.name,
+        sort?.order,
+      ],
       "GetResourcesV2",
       getUrl,
-      ({ data, links, metadata }) => {
+      ({ data, links, metadata }, setUrl) => {
         if (typeof links === "undefined") {
           return { data: data, handlers: {}, metadata };
         }
         return {
           data: data,
-          handlers: {},
+          handlers: getPaginationHandlers(links, metadata, setUrl),
           metadata,
         };
       }
