@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -103,9 +103,7 @@ test("GIVEN ResourcesViewV2 WHEN user clicks on expend THEN details are shown", 
 
   const toggle = within(rows[0]).getByRole("button", { name: "Details" });
   await userEvent.click(toggle);
-  act(() => {
-    apiHelper.resolve(Either.right(ResourceDetails.response));
-  });
+  apiHelper.resolve(Either.right(ResourceDetails.response));
   expect(
     await screen.findByRole("generic", { name: "ResourceDetailsTabs" })
   ).toBeVisible();
