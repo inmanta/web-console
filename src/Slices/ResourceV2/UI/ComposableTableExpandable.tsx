@@ -6,7 +6,6 @@ import {
   Th,
   Tbody,
   Td,
-  ExpandableRowContent,
   OnSort,
 } from "@patternfly/react-table";
 import { Sort } from "@/Core";
@@ -126,9 +125,10 @@ export const ComposableTableExpandable: React.FunctionComponent<
               </Tr>
               <Tr isExpanded={isExpanded(resource.id)}>
                 <Td noPadding colSpan={6}>
-                  <ExpandableRowContent>
-                    <ResourceTabs resource={resource} />
-                  </ExpandableRowContent>
+                  <ResourceTabs
+                    resource={resource}
+                    isExpanded={isExpanded(resource.id)}
+                  />
                 </Td>
               </Tr>
             </Tbody>

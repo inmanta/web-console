@@ -91,7 +91,7 @@ test("ResourcesViewV2 shows empty table", async () => {
   ).toBeInTheDocument();
 });
 
-test("GIVEN ResourcesViewV2 WHEN user clicks on requires toggle THEN list of requires is shown", async () => {
+test("GIVEN ResourcesViewV2 WHEN user clicks on expend THEN details are shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -106,6 +106,42 @@ test("GIVEN ResourcesViewV2 WHEN user clicks on requires toggle THEN list of req
   act(() => {
     apiHelper.resolve(Either.right(ResourceDetails.response));
   });
-  // expect(apiHelper.pendingRequests).toHaveLength(0);
-  expect(await screen.findByText("ResourceDetailsTab")).toBeVisible();
+  expect(
+    await screen.findByRole("generic", { name: "ResourceDetailsTabs" })
+  ).toBeVisible();
+});
+
+test("ResourcesView shows sorting buttons for sortable columns", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  apiHelper.resolve(Either.right(Resource.response));
+  const table = await screen.findByRole("grid", {
+    name: "Ressources table V2",
+  });
+  expect(table).toBeVisible();
+  expect(within(table).getByRole("button", { name: /type/i })).toBeVisible();
+  expect(
+    within(table).queryByRole("button", { name: /agent/i })
+  ).not.toBeInTheDocument();
+  expect(
+    within(table).queryByRole("button", { name: /value/i })
+  ).not.toBeInTheDocument();
+  expect(
+    within(table).queryByRole("button", { name: /Number of Dependecies/i })
+  ).not.toBeInTheDocument();
+  expect(
+    within(table).getByRole("button", { name: /Deploy state/i })
+  ).toBeVisible();
+});
+
+test("ResourcesView sets sorting parameters correctly on click", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  apiHelper.resolve(Either.right(Resource.response));
+  const stateButton = await screen.findByRole("button", {
+    name: /Deploy state/i,
+  });
+  expect(stateButton).toBeVisible();
+  await userEvent.click(stateButton);
+  expect(apiHelper.pendingRequests[0].url).toContain("&sort=status.asc");
 });

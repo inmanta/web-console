@@ -7,10 +7,12 @@ import { ResourceDetailsTab } from "./resourceDetailsTab";
 
 interface ResourceTabsProps {
   resource: RessourceRow;
+  isExpanded: boolean;
 }
 
 export const ResourceTabs: React.FunctionComponent<ResourceTabsProps> = ({
   resource,
+  isExpanded,
 }) => {
   const [activeTabKey, setActiveTabKey] = useUrlStateWithString({
     default: "details",
@@ -23,23 +25,27 @@ export const ResourceTabs: React.FunctionComponent<ResourceTabsProps> = ({
   };
 
   return (
-    <Tabs
-      title=""
-      activeKey={activeTabKey}
-      onSelect={handleTabClick}
-      isFilled
-      mountOnEnter
-      unmountOnExit
-    >
-      <Tab eventKey="details" title="Details">
-        <ResourceDetailsTab
-          aria-label="ResourceDetailsTab"
-          resourceId={resource.id}
-        />
-      </Tab>
-      <Tab eventKey="tab2" title="Second tab">
-        world
-      </Tab>
-    </Tabs>
+    <React.Fragment>
+      {isExpanded ? (
+        <Tabs
+          title=""
+          activeKey={activeTabKey}
+          onSelect={handleTabClick}
+          isFilled
+          mountOnEnter
+          unmountOnExit
+          aria-label="ResourceDetailsTabs"
+        >
+          <Tab eventKey="details" title="Details">
+            <ResourceDetailsTab resourceId={resource.id} />
+          </Tab>
+          <Tab eventKey="tab2" title="Second tab">
+            world
+          </Tab>
+        </Tabs>
+      ) : (
+        <div></div>
+      )}
+    </React.Fragment>
   );
 };
