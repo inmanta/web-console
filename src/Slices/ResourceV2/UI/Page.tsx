@@ -10,10 +10,8 @@ import {
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { SortKeyV2 } from "../Core/Query";
-import {
-  ComposableTableExpandable,
-  RessourceRow,
-} from "./ComposableTableExpandable";
+import { ComposableTableExpandable } from "./ComposableTableExpandable";
+import { ResourceRow } from "./ResourceRow";
 import { ResourcTableControlV2 } from "./ResourceTableControlV2";
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
@@ -33,7 +31,7 @@ export const Page: React.FC = () => {
     pageSize,
   });
 
-  const createRows = (sourceData: Resource.Resource[]): RessourceRow[] => {
+  const createRows = (sourceData: Resource.Resource[]): ResourceRow[] => {
     const data: Resource.Resource[] = sourceData;
     return data.map((resource) => ({
       type: resource.id_details.resource_type,

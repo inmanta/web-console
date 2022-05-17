@@ -9,23 +9,13 @@ import {
   OnSort,
 } from "@patternfly/react-table";
 import { Sort } from "@/Core";
-import { Status } from "@/Core/Domain/Resource/Resource";
 import { useUrlStateWithExpansion } from "@/Data";
 import { ResourceStatusLabel } from "@/UI/Components";
 import { SortKeyV2 } from "../Core/Query";
+import { ResourceRow } from "./ResourceRow";
 import { ResourceTabs } from "./ResourceTabs";
-
-export interface RessourceRow {
-  id: string;
-  type: string;
-  agent: string;
-  value: string;
-  dependeciesNbr: number;
-  deployState: Status;
-}
-
 interface ComposableTableExpandableProps {
-  rows: RessourceRow[];
+  rows: ResourceRow[];
   sort: Sort.Type<SortKeyV2>;
   setSort: (sort: Sort.Type<SortKeyV2>) => void;
 }
@@ -34,7 +24,7 @@ interface ComposableTableExpandableProps {
 export const ComposableTableExpandable: React.FunctionComponent<
   ComposableTableExpandableProps
 > = ({ rows, sort, setSort }) => {
-  const ressourceRows: RessourceRow[] = rows;
+  const ressourceRows: ResourceRow[] = rows;
 
   const columnNames = {
     expend: "",

@@ -2,11 +2,11 @@ import React from "react";
 import { Tabs, Tab } from "@patternfly/react-core";
 import QueryString from "qs";
 import { useUrlStateWithString } from "@/Data";
-import { RessourceRow } from "./ComposableTableExpandable";
+import { ResourceRow } from "./ResourceRow";
 import { ResourceDetailsTab } from "./resourceDetailsTab";
 
 interface ResourceTabsProps {
-  resource: RessourceRow;
+  resource: ResourceRow;
   isExpanded: boolean;
 }
 
