@@ -104,7 +104,7 @@ export const ComposableTableExpandable: React.FunctionComponent<
         {ressourceRows.map((resource, rowIndex) => {
           return (
             <Tbody key={resource.id} isExpanded={isExpanded(resource.id)}>
-              <Tr>
+              <Tr aria-label="Resource V2 Table Row">
                 <Td
                   expand={{
                     rowIndex,

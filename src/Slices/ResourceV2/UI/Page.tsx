@@ -58,13 +58,13 @@ export const Page: React.FC = () => {
       />
       <RemoteDataView
         data={data}
-        label="ResourcesView"
+        label="ResourcesViewV2"
         retry={retry}
         SuccessView={(rows) =>
           rows.data.length <= 0 ? (
             <EmptyView
               message={words("resources.empty.message")}
-              aria-label="ResourcesView-Empty"
+              aria-label="ResourcesViewV2-Empty"
             />
           ) : (
             <ComposableTableExpandable

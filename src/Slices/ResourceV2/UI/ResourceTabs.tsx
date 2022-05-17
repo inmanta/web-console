@@ -29,9 +29,13 @@ export const ResourceTabs: React.FunctionComponent<ResourceTabsProps> = ({
       onSelect={handleTabClick}
       isFilled
       mountOnEnter
+      unmountOnExit
     >
       <Tab eventKey="details" title="Details">
-        <ResourceDetailsTab resourceId={resource.id} />
+        <ResourceDetailsTab
+          aria-label="ResourceDetailsTab"
+          resourceId={resource.id}
+        />
       </Tab>
       <Tab eventKey="tab2" title="Second tab">
         world
