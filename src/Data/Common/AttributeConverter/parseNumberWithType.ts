@@ -1,7 +1,7 @@
 export function parseNumberWithType(
   type: string,
   value: string
-): BigInt | number | string | null {
+): bigint | number | string | null {
   try {
     const number = Number(value);
     if (Number.isInteger(number)) {
