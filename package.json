@@ -43,7 +43,7 @@
     "@babel/core": "^7.17.12",
     "@babel/plugin-transform-typescript": "^7.17.12",
     "@storybook/addon-actions": "^v6.4.22",
-    "@storybook/addon-essentials": "^v6.4.22",
+    "@storybook/addon-essentials": "^v6.5.0",
     "@storybook/addon-links": "^v6.4.22",
     "@storybook/react": "^v6.4.22",
     "@testing-library/dom": "^8.13.0",
