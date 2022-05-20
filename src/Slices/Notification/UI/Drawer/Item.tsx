@@ -8,7 +8,7 @@ import {
   NotificationDrawerListItemBody,
   NotificationDrawerListItemHeader,
 } from "@patternfly/react-core";
-import { RouteKind } from "@/Core";
+import { RouteKindWithId } from "@/Core";
 import { useNavigateTo, words } from "@/UI";
 import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
@@ -24,17 +24,16 @@ interface Props {
 
 export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
   const { routeManager } = useContext(DependencyContext);
-  const detailsLink = routeManager.getUrlFromKindWithId(
-    "CompileDetails",
-    notification.uri
-  );
+  const detailsLink: RouteKindWithId<"CompileDetails"> | undefined =
+    routeManager.getUrlFromKindWithId(
+      notification.uri
+    ) as RouteKindWithId<"CompileDetails">;
   const navigate = useNavigateTo();
 
   const onClick = (notification: Notification): void => {
     if (!notification.read) onUpdate({ read: true });
     if (detailsLink) {
-      // navigate(detailsLink.kind as RouteKind, { id: detailsLink.id });
-      navigate(detailsLink.kind as RouteKind, { id: "aaaaaaa" });
+      navigate(detailsLink.kind, { id: detailsLink.params.id });
     }
   };
   return (

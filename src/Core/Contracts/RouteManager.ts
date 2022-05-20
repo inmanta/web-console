@@ -45,8 +45,5 @@ export interface RouteManager {
   useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
   getCrumbs(url: string): Crumb[];
 
-  getUrlFromKindWithId(
-    kind: RouteKind,
-    uri: string
-  ): RouteKindWithId | undefined;
+  getUrlFromKindWithId(uri: string): RouteKindWithId | undefined;
 }
