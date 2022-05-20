@@ -56,6 +56,11 @@ export interface Route<K extends RouteKind = RouteKind> {
   environmentRole: EnvironmentRole;
 }
 
+export interface RouteKindWithId<K extends RouteKind = RouteKind> {
+  kind: K;
+  params: RouteParams<K>;
+}
+
 /**
  * Only contains routes that have parameters (environment not included)
  */

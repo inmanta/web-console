@@ -12,7 +12,9 @@ import {
   RouteParams,
   RouteMatch,
   Crumb,
+  RouteKindWithId,
 } from "@/Core";
+
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -152,6 +154,23 @@ export class PrimaryRouteManager implements RouteManager {
     if (match === null) return undefined;
     if (match.params.id === undefined) return undefined;
     return this.getUrl("CompileDetails", { id: match.params.id });
+  }
+
+  getUrlFromKindWithId<K extends RouteKind>(
+    kind: K,
+    uri: string
+  ): RouteKindWithId<K> | undefined {
+    if (uri.length <= 0) return undefined;
+    const pattern = "/api/v2/compilereport/:id";
+    const match = matchPath(pattern, uri);
+    if (match === null) return undefined;
+    if (match.params.id === undefined) return undefined;
+    if (kind == "CompileDetails") {
+      const params = { id: match.params.id };
+      console.log(params);
+      // return { kind, params: params as RouteParams<"CompileDetails"> };
+    }
+    return undefined;
   }
 
   getRouteMatchFromUrl(url: string): RouteMatch | undefined {

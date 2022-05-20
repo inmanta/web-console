@@ -4,6 +4,7 @@ import {
   RouteParams,
   RouteMatch,
   Crumb,
+  RouteKindWithId,
 } from "@/Core/Domain";
 
 export type RouteDictionary = Record<RouteKind, Route>;
@@ -43,4 +44,9 @@ export interface RouteManager {
    */
   useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string;
   getCrumbs(url: string): Crumb[];
+
+  getUrlFromKindWithId(
+    kind: RouteKind,
+    uri: string
+  ): RouteKindWithId | undefined;
 }

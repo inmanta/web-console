@@ -197,6 +197,19 @@ test("Given Drawer When user clicks a notification Then it becomes read", async 
   ).toHaveLength(3);
 });
 
+test("Given Drawer When user clicks a notification with an uri then go to the uri", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
+
+  const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+  await userEvent.click(items[0]);
+
+  //verify call to
+});
+
 test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async () => {
   const { component, apiHelper, getAllRequest, updateRequest } = setup();
   render(component);

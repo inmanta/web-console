@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
+// import { Navigate } from "react-router-dom";
 import {
   Dropdown,
   DropdownItem,
-  DropdownSeparator,
   KebabToggle,
   NotificationDrawerListItem,
   NotificationDrawerListItemBody,
   NotificationDrawerListItemHeader,
 } from "@patternfly/react-core";
-import { words } from "@/UI";
-import { Link } from "@/UI/Components";
+import { RouteKind } from "@/Core";
+import { useNavigateTo, words } from "@/UI";
 import { DependencyContext } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import { Notification, Body } from "@S/Notification/Core/Domain";
@@ -23,10 +23,24 @@ interface Props {
 }
 
 export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
+  const { routeManager } = useContext(DependencyContext);
+  const detailsLink = routeManager.getUrlFromKindWithId(
+    "CompileDetails",
+    notification.uri
+  );
+  const navigate = useNavigateTo();
+
+  const onClick = (notification: Notification): void => {
+    if (!notification.read) onUpdate({ read: true });
+    if (detailsLink) {
+      // navigate(detailsLink.kind as RouteKind, { id: detailsLink.id });
+      navigate(detailsLink.kind as RouteKind, { id: "aaaaaaa" });
+    }
+  };
   return (
     <NotificationDrawerListItem
       variant={getSeverityForNotification(notification.severity)}
-      onClick={notification.read ? undefined : () => onUpdate({ read: true })}
+      onClick={() => onClick(notification)}
       isRead={notification.read}
       aria-label="NotificationItem"
     >
@@ -34,7 +48,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
         variant={getSeverityForNotification(notification.severity)}
         title={notification.title}
       >
-        <ActionList {...{ notification, onUpdate }} />
+        <ActionList {...{ notification, onUpdate, detailsLink }} />
       </NotificationDrawerListItemHeader>
       <NotificationDrawerListItemBody
         timestamp={new MomentDatePresenter().get(notification.created).relative}
@@ -46,20 +60,19 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
 };
 
 const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
-  const { routeManager } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
 
-  const detailsLink = routeManager.getUrlForApiUri(notification.uri);
+  const onToggle = (value: boolean, e: React.ChangeEvent): void => {
+    e.stopPropagation();
+    setIsOpen(value);
+  };
 
   return (
     <Dropdown
       position="right"
       onSelect={() => setIsOpen(false)}
       toggle={
-        <KebabToggle
-          onToggle={setIsOpen}
-          aria-label="NotificationItemActions"
-        />
+        <KebabToggle onToggle={onToggle} aria-label="NotificationItemActions" />
       }
       isOpen={isOpen}
       isPlain
@@ -79,18 +92,18 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
         >
           {words("notification.drawer.clear")}
         </DropdownItem>,
-        <DropdownSeparator key="separator" />,
-        <DropdownItem
-          key="details"
-          isDisabled={detailsLink === undefined}
-          component={
-            detailsLink ? (
-              <Link pathname={detailsLink}>
-                {words("notification.drawer.details")}
-              </Link>
-            ) : undefined
-          }
-        />,
+        // <DropdownSeparator key="separator" />,
+        // <DropdownItem
+        //   key="details"
+        //   isDisabled={detailsLink === undefined}
+        //   component={
+        //     detailsLink ? (
+        //       <Link pathname={detailsLink}>
+        //         {words("notification.drawer.details")}
+        //       </Link>
+        //     ) : undefined
+        //   }
+        // />,
       ]}
     />
   );
