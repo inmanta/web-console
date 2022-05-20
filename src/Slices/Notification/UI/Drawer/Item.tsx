@@ -24,12 +24,10 @@ interface Props {
 export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
   const { routeManager } = useContext(DependencyContext);
   const detailsLink: RouteKindWithId<"CompileDetails"> | undefined =
-    routeManager.getUrlCompileDetailsId(
-      notification.uri
-    ) as RouteKindWithId<"CompileDetails">;
+    routeManager.getUrlCompileDetailsId(notification.uri);
   const navigate = useNavigateTo();
 
-  const onClick = (notification: Notification): void => {
+  const onClick = (): void => {
     if (!notification.read) onUpdate({ read: true });
     if (detailsLink) {
       navigate(detailsLink.kind, { id: detailsLink.params.id });
@@ -38,7 +36,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
   return (
     <NotificationDrawerListItem
       variant={getSeverityForNotification(notification.severity)}
-      onClick={() => onClick(notification)}
+      onClick={onClick}
       isRead={notification.read}
       aria-label="NotificationItem"
     >
@@ -46,7 +44,7 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
         variant={getSeverityForNotification(notification.severity)}
         title={notification.title}
       >
-        <ActionList {...{ notification, onUpdate, detailsLink }} />
+        <ActionList {...{ notification, onUpdate }} />
       </NotificationDrawerListItemHeader>
       <NotificationDrawerListItemBody
         timestamp={new MomentDatePresenter().get(notification.created).relative}
