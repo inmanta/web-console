@@ -41,7 +41,7 @@ export class DummyRouteManager implements RouteManager {
   getRouteDictionary(): Record<RouteKind, Route> {
     throw new Error("Method not implemented.");
   }
-  getUrlFromKindWithId(): RouteKindWithId | undefined {
+  getUrlCompileDetailsId(): RouteKindWithId | undefined {
     throw new Error("Method not implemented.");
   }
 }

@@ -156,7 +156,7 @@ export class PrimaryRouteManager implements RouteManager {
     return this.getUrl("CompileDetails", { id: match.params.id });
   }
 
-  getUrlFromKindWithId(
+  getUrlCompileDetailsId(
     uri: string
   ): RouteKindWithId<"CompileDetails"> | undefined {
     if (uri.length <= 0) return undefined;
