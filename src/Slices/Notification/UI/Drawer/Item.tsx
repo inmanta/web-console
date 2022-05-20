@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-// import { Navigate } from "react-router-dom";
 import {
   Dropdown,
   DropdownItem,
@@ -91,18 +90,6 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
         >
           {words("notification.drawer.clear")}
         </DropdownItem>,
-        // <DropdownSeparator key="separator" />,
-        // <DropdownItem
-        //   key="details"
-        //   isDisabled={detailsLink === undefined}
-        //   component={
-        //     detailsLink ? (
-        //       <Link pathname={detailsLink}>
-        //         {words("notification.drawer.details")}
-        //       </Link>
-        //     ) : undefined
-        //   }
-        // />,
       ]}
     />
   );
