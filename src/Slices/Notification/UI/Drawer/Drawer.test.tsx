@@ -1,9 +1,10 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { Page, PageHeader } from "@patternfly/react-core";
 import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
+import { createMemoryHistory } from "history";
 import { Either, Maybe } from "@/Core";
 import {
   CommandManagerResolver,
@@ -19,10 +20,9 @@ import { DependencyProvider } from "@/UI/Dependency";
 import * as Mock from "@S/Notification/Core/Mock";
 import { Badge } from "@S/Notification/UI/Badge";
 import { Drawer } from "./Drawer";
-
 function setup() {
   const apiHelper = new DeferredApiHelper();
-
+  const history = createMemoryHistory();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
 
@@ -52,7 +52,7 @@ function setup() {
 
   const component = (
     <StoreProvider store={store}>
-      <MemoryRouter>
+      <Router location={history.location} navigator={history}>
         <DependencyProvider
           dependencies={{ ...dependencies, queryResolver, commandResolver }}
         >
@@ -69,11 +69,18 @@ function setup() {
             }
           />
         </DependencyProvider>
-      </MemoryRouter>
+      </Router>
     </StoreProvider>
   );
 
-  return { component, apiHelper, closeCallback, updateRequest, getAllRequest };
+  return {
+    component,
+    apiHelper,
+    closeCallback,
+    updateRequest,
+    getAllRequest,
+    history,
+  };
 }
 
 test("Given Drawer Then a list of notifications are shown", async () => {
@@ -195,6 +202,34 @@ test("Given Drawer When user clicks a notification Then it becomes read", async 
   expect(
     screen.getAllByRole("listitem", { name: "NotificationItem" })
   ).toHaveLength(3);
+});
+
+test("Given Drawer When user clicks a notification with an uri then go to the uri", async () => {
+  const { component, apiHelper, history } = setup();
+  render(component);
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
+
+  const items = screen.getAllByRole("listitem", { name: "NotificationItem" });
+  await userEvent.click(items[0]);
+  expect(history.location.pathname).toBe(
+    "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614"
+  );
+});
+
+test("Given Drawer When user clicks a notification toggle with an uri then do not go to uri", async () => {
+  const { component, apiHelper, history } = setup();
+  render(component);
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
+
+  const items = screen.getAllByRole("button", {
+    name: "NotificationItemActions",
+  });
+  await userEvent.click(items[0]);
+  expect(history.location.pathname).toBe("/");
 });
 
 test("Given Drawer When user clicks on 'unread' for 1 notification Then it becomes unread", async () => {
