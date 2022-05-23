@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump eslint-plugin-jest-dom from 4.0.1 to 4.0.2'
+destination-branches:
+- master
+- iso5
+sections: {}
