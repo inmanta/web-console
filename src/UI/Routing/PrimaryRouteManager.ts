@@ -155,9 +155,7 @@ export class PrimaryRouteManager implements RouteManager {
     return this.getUrl("CompileDetails", { id: match.params.id });
   }
 
-  getUrlCompileDetailsId(
-    uri: string
-  ): RouteKindWithId<"CompileDetails"> | undefined {
+  getParamsFromUrl(uri: string): RouteKindWithId<"CompileDetails"> | undefined {
     if (uri.length <= 0) return undefined;
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);

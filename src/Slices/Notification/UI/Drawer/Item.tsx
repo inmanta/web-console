@@ -24,7 +24,7 @@ interface Props {
 export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
   const { routeManager } = useContext(DependencyContext);
   const detailsLink: RouteKindWithId<"CompileDetails"> | undefined =
-    routeManager.getUrlCompileDetailsId(notification.uri);
+    routeManager.getParamsFromUrl(notification.uri);
   const navigate = useNavigateTo();
 
   const onClick = (): void => {
