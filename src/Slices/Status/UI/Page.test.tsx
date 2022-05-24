@@ -9,6 +9,7 @@ import {
   GetServerStatusStateHelper,
   getStoreInstance,
   GetSupportArchiveCommandManager,
+  PrimaryArchiveHelper,
   PrimaryFeatureManager,
   QueryResolverImpl,
 } from "@/Data";
@@ -65,10 +66,9 @@ function setup(useMockArchiveHelper = false) {
     new GetServerStatusStateHelper(store)
   );
 
-  let mockArchiveHelper: MockArchiveHelper | undefined = undefined;
-  if (useMockArchiveHelper) {
-    mockArchiveHelper = new MockArchiveHelper();
-  }
+  const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper =
+    useMockArchiveHelper ? new MockArchiveHelper() : dependencies.archiveHelper;
+
   const component = (
     <DependencyProvider
       dependencies={{
@@ -76,9 +76,7 @@ function setup(useMockArchiveHelper = false) {
         queryResolver,
         commandResolver,
         featureManager,
-        archiveHelper: mockArchiveHelper
-          ? mockArchiveHelper
-          : dependencies.archiveHelper,
+        archiveHelper,
       }}
     >
       <StoreProvider store={store}>
@@ -90,7 +88,7 @@ function setup(useMockArchiveHelper = false) {
   return {
     component,
     apiHelper,
-    mockArchiveHelper,
+    archiveHelper,
   };
 }
 
@@ -184,7 +182,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
 });
 
 test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
-  const { component, apiHelper, mockArchiveHelper } = setup(true);
+  const { component, apiHelper, archiveHelper } = setup(true);
   render(component);
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
@@ -207,7 +205,7 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
     );
   });
   expect(downloadButton).toHaveTextContent("Generating support archive");
-  (mockArchiveHelper as MockArchiveHelper).resolve(
+  (archiveHelper as MockArchiveHelper).resolve(
     new Blob(["testing"], { type: "application/octet-stream" })
   );
   await waitFor(() =>
