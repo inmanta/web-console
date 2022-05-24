@@ -2,7 +2,7 @@ import React from "react";
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either, RemoteData } from "@/Core";
+import { ArchiveHelper, Deferred, Either, RemoteData } from "@/Core";
 import {
   CommandResolverImpl,
   GetServerStatusContinuousQueryManager,
@@ -23,7 +23,24 @@ import {
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
 
-function setup() {
+export class MockArchiveHelper implements ArchiveHelper {
+  private promise;
+  public resolve;
+  constructor() {
+    const { promise, resolve } = new Deferred();
+    this.promise = promise;
+    this.resolve = resolve;
+  }
+  async generateBlob(): Promise<Blob> {
+    return this.promise as Promise<Blob>;
+  }
+
+  triggerDownload(): void {
+    return;
+  }
+}
+
+function setup(useMockArchiveHelper = false) {
   const store = getStoreInstance();
   store.dispatch.serverStatus.setData(
     RemoteData.success(ServerStatus.withoutLsm)
@@ -48,15 +65,26 @@ function setup() {
     new GetServerStatusStateHelper(store)
   );
 
-  const component = (
-    <DependencyProvider
-      dependencies={{
+  let mockArchiveHelper: MockArchiveHelper | undefined = undefined;
+  if (useMockArchiveHelper) {
+    mockArchiveHelper = new MockArchiveHelper();
+  }
+  const dep = mockArchiveHelper
+    ? {
         ...dependencies,
         queryResolver,
         commandResolver,
         featureManager,
-      }}
-    >
+        archiveHelper: mockArchiveHelper,
+      }
+    : {
+        ...dependencies,
+        queryResolver,
+        commandResolver,
+        featureManager,
+      };
+  const component = (
+    <DependencyProvider dependencies={dep}>
       <StoreProvider store={store}>
         <Page />
       </StoreProvider>
@@ -66,6 +94,7 @@ function setup() {
   return {
     component,
     apiHelper,
+    mockArchiveHelper,
   };
 }
 
@@ -129,7 +158,7 @@ test("GIVEN StatusPage with support extension THEN download button is present", 
   ).toBeVisible();
 });
 
-test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
+test("GIVEN StatusPage with support extension WHEN user click download THEN an archive is created", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -153,8 +182,38 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
       Either.right({ data: ServerStatus.supportArchiveBase64 })
     );
   });
+  await waitFor(() =>
+    expect(downloadButton).toHaveTextContent("Download support archive")
+  );
+});
 
+test("GIVEN StatusPage with support extension WHEN user click download THEN button goes through correct phases", async () => {
+  const { component, apiHelper, mockArchiveHelper } = setup(true);
+  render(component);
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: ServerStatus.withSupport }));
+  });
+
+  const downloadButton = screen.getByRole("button", {
+    name: "DownloadArchiveButton",
+  });
+  expect(downloadButton).toHaveTextContent("Download support archive");
+  await userEvent.click(downloadButton);
+  expect(downloadButton).toHaveTextContent("Fetching support data");
+
+  expect(apiHelper.pendingRequests).toEqual([
+    { method: "GET", url: "/api/v1/support/full" },
+  ]);
+
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({ data: ServerStatus.supportArchiveBase64 })
+    );
+  });
   expect(downloadButton).toHaveTextContent("Generating support archive");
+  (mockArchiveHelper as MockArchiveHelper).resolve(
+    new Blob(["testing"], { type: "application/octet-stream" })
+  );
   await waitFor(() =>
     expect(downloadButton).toHaveTextContent("Download support archive")
   );
