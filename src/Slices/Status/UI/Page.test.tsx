@@ -69,22 +69,18 @@ function setup(useMockArchiveHelper = false) {
   if (useMockArchiveHelper) {
     mockArchiveHelper = new MockArchiveHelper();
   }
-  const dep = mockArchiveHelper
-    ? {
-        ...dependencies,
-        queryResolver,
-        commandResolver,
-        featureManager,
-        archiveHelper: mockArchiveHelper,
-      }
-    : {
-        ...dependencies,
-        queryResolver,
-        commandResolver,
-        featureManager,
-      };
   const component = (
-    <DependencyProvider dependencies={dep}>
+    <DependencyProvider
+      dependencies={{
+        ...dependencies,
+        queryResolver,
+        commandResolver,
+        featureManager,
+        archiveHelper: mockArchiveHelper
+          ? mockArchiveHelper
+          : dependencies.archiveHelper,
+      }}
+    >
       <StoreProvider store={store}>
         <Page />
       </StoreProvider>
