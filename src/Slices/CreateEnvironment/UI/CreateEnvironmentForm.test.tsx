@@ -340,3 +340,54 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
     url: `/api/v2/environment`,
   });
 });
+
+test(`Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set then removed and submit is clicked Then sends the correct request`, async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+  apiHelper.resolve(
+    Either.right({
+      data: Project.filterable,
+    })
+  );
+
+  await userEvent.click(
+    await screen.findByRole("button", { name: "Project Name-select-toggle" })
+  );
+  await userEvent.click(
+    await screen.findByRole("option", { name: Project.filterable[0].name })
+  );
+
+  const textBox = await screen.findByRole("textbox", { name: "Name-input" });
+  await userEvent.clear(textBox);
+  await userEvent.type(textBox, `dev{enter}`);
+
+  const branch = "dev";
+  const branchTextBox = await screen.findByRole("textbox", {
+    name: "Branch-input",
+  });
+  await userEvent.clear(branchTextBox);
+  await userEvent.type(branchTextBox, branch);
+
+  const repository = "github.com/test-env";
+  const urlTextBox = await screen.findByRole("textbox", {
+    name: "Repository-input",
+  });
+  await userEvent.clear(urlTextBox);
+  await userEvent.type(urlTextBox, repository);
+
+  await userEvent.clear(branchTextBox);
+  await userEvent.clear(urlTextBox);
+
+  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  const request = apiHelper.pendingRequests[0];
+  expect(request).toEqual({
+    //branch and repository should not be present in th body
+    method: "PUT",
+    body: {
+      name: "dev",
+      project_id: "1",
+    },
+    url: `/api/v2/environment`,
+  });
+});
