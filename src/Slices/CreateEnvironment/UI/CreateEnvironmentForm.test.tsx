@@ -382,7 +382,7 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
-    //branch and repository should not be present in th body
+    //branch and repository should not be present in the body
     method: "PUT",
     body: {
       name: "dev",
