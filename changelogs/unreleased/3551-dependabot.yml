@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @babel/plugin-transform-typescript from 7.18.1
+    to 7.18.4'
+destination-branches:
+- master
+- iso5
+sections: {}
