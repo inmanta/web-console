@@ -37,18 +37,27 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
     setCreateEnvironmentBody({ ...createEnvironmentBody, name });
   };
   const setDescription = (description: string) => {
-    setCreateEnvironmentBody({ ...createEnvironmentBody, description });
+    setCreateEnvironmentBody({
+      ...createEnvironmentBody,
+      description: description ? description : undefined,
+    });
   };
   const setRepository = (repository: string) => {
-    setCreateEnvironmentBody({ ...createEnvironmentBody, repository });
+    setCreateEnvironmentBody({
+      ...createEnvironmentBody,
+      repository: repository ? repository : undefined,
+    });
   };
   const setBranch = (branch: string) => {
-    setCreateEnvironmentBody({ ...createEnvironmentBody, branch });
+    setCreateEnvironmentBody({
+      ...createEnvironmentBody,
+      branch: branch ? branch : undefined,
+    });
   };
   const setIcon = (icon: string) => {
     setCreateEnvironmentBody({
       ...createEnvironmentBody,
-      icon,
+      icon: icon ? icon : undefined,
     });
   };
 
