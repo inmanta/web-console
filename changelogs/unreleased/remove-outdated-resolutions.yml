@@ -1,0 +1,3 @@
+description: Remove outdated manual dependency resolutions
+change-type: patch
+destination-branches: [master, iso5]
