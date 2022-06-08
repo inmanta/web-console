@@ -42,7 +42,7 @@
   "devDependencies": {
     "@babel/core": "^7.18.2",
     "@babel/plugin-transform-typescript": "^7.18.4",
-    "@storybook/addon-actions": "^v6.4.22",
+    "@storybook/addon-actions": "^v6.5.8",
     "@storybook/addon-essentials": "^v6.5.7",
     "@storybook/addon-links": "^v6.5.7",
     "@storybook/react": "^v6.4.22",
