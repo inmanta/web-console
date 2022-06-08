@@ -42,7 +42,7 @@
   "devDependencies": {
     "@babel/core": "^7.18.2",
     "@babel/plugin-transform-typescript": "^7.18.4",
-    "@storybook/addon-actions": "^v6.4.22",
+    "@storybook/addon-actions": "^v6.5.8",
     "@storybook/addon-essentials": "^v6.5.7",
     "@storybook/addon-links": "^v6.5.7",
     "@storybook/react": "^v6.4.22",
@@ -103,7 +103,7 @@
     "mochawesome-report-generator": "^6.2.0",
     "moment-locales-webpack-plugin": "^1.2.0",
     "moment-timezone-data-webpack-plugin": "^1.5.0",
-    "node-fetch": "^3.2.4",
+    "node-fetch": "^3.2.5",
     "prettier": "^2.6.2",
     "raw-loader": "^4.0.2",
     "react-axe": "3.5.4",
