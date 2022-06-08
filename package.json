@@ -122,14 +122,14 @@
     "webpack": "^5.72.1",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.9.1",
+    "webpack-dev-server": "^4.9.2",
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "@patternfly/react-charts": "^6.67.1",
     "@patternfly/react-core": "^4.206.2",
     "@patternfly/react-icons": "^4.53.16",
-    "@patternfly/react-styles": "^4.56.2",
+    "@patternfly/react-styles": "^4.71.3",
     "@patternfly/react-table": "^4.83.1",
     "@patternfly/react-tokens": "^4.66.1",
     "copy-to-clipboard": "^3.3.1",
