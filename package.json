@@ -65,7 +65,7 @@
     "@types/styled-components": "^5.1.25",
     "@types/webpack": "^5.28.0",
     "@types/xml-formatter": "^2.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.0",
     "babel-loader": "^8.2.5",
     "clean-css": "^5.3.0",
@@ -127,7 +127,7 @@
   },
   "dependencies": {
     "@patternfly/react-charts": "^6.67.1",
-    "@patternfly/react-core": "^4.206.2",
+    "@patternfly/react-core": "^4.221.3",
     "@patternfly/react-icons": "^4.53.16",
     "@patternfly/react-styles": "^4.71.3",
     "@patternfly/react-table": "^4.83.1",
