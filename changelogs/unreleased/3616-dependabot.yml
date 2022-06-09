@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @storybook/addon-links from 6.5.7 to 6.5.8'
+destination-branches:
+- master
+- iso5
+sections: {}
