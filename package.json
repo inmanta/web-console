@@ -40,7 +40,7 @@
   ],
   "type": "module",
   "devDependencies": {
-    "@babel/core": "^7.18.2",
+    "@babel/core": "^7.18.5",
     "@babel/plugin-transform-typescript": "^7.18.4",
     "@storybook/addon-actions": "^v6.5.8",
     "@storybook/addon-essentials": "^v6.5.8",
