@@ -26,8 +26,7 @@
       "@S/*": ["src/Slices/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs"],
-  "exclude": ["node_modules", "cypress"],
+  "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS",
