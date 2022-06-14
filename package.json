@@ -42,7 +42,7 @@
   "devDependencies": {
     "@babel/core": "^7.18.5",
     "@babel/plugin-transform-typescript": "^7.18.4",
-    "@storybook/addon-actions": "^v6.5.8",
+    "@storybook/addon-actions": "^v6.5.9",
     "@storybook/addon-essentials": "^v6.5.8",
     "@storybook/addon-links": "^v6.5.8",
     "@storybook/react": "^v6.4.22",
@@ -104,7 +104,7 @@
     "moment-locales-webpack-plugin": "^1.2.0",
     "moment-timezone-data-webpack-plugin": "^1.5.0",
     "node-fetch": "^3.2.6",
-    "prettier": "^2.6.2",
+    "prettier": "^2.7.0",
     "raw-loader": "^4.0.2",
     "react-axe": "3.5.4",
     "react-svg-loader": "^3.0.3",
