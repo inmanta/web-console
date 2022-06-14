@@ -27,7 +27,7 @@
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "cypress"],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS",
