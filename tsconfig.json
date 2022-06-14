@@ -26,12 +26,12 @@
       "@S/*": ["src/Slices/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs", "cypress.config.cjs"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs"],
   "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {
-      "module": "CommonJS",
-      "target": "es5",
+      "module": "ES2020",
+      "target": "ES2020",
       "esModuleInterop": true
     }
   }
