@@ -1,0 +1,3 @@
+description: Update the developer docs
+change-type: patch
+destination-branches: [master, iso5]
