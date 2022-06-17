@@ -22,7 +22,7 @@ import { HaltDialog } from "./HaltDialog";
 import { ResumeDialog } from "./ResumeDialog";
 
 export const EnvironmentControls: React.FC = () => {
-  const { queryResolver, urlManager, routeManager, environmentHandler } =
+  const { queryResolver, routeManager, environmentHandler } =
     useContext(DependencyContext);
 
   const id = environmentHandler.useId();
@@ -42,23 +42,15 @@ export const EnvironmentControls: React.FC = () => {
       ),
       failed: () => (
         <PaddedStack>
-          <StackItem>
-            <Flex>
-              <FlexItem>
-                <Button
-                  variant="danger"
-                  aria-label="Server status"
-                  icon={<TimesIcon />}
-                  component="a"
-                  href={urlManager.getServerStatusUrl()}
-                  target="_blank"
-                />
-              </FlexItem>
-              <FlexItem>
-                <Button variant="danger" isDisabled />
-              </FlexItem>
-            </Flex>
-          </StackItem>
+          <PaddedStackItem>
+            <Link pathname={routeManager.getUrl("Status", undefined)}>
+              <Button
+                variant="danger"
+                aria-label="Server status"
+                icon={<TimesIcon />}
+              />
+            </Link>
+          </PaddedStackItem>
         </PaddedStack>
       ),
       success: (data) => {
