@@ -72,7 +72,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.0.0",
-    "cypress": "^10.2.0",
+    "cypress": "^10.3.0",
     "cypress-multi-reporters": "^1.6.1",
     "dotenv-webpack": "^7.1.0",
     "eslint": "^8.18.0",
