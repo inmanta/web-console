@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump dotenv-webpack from 7.1.0 to 7.1.1'
+destination-branches:
+- master
+- iso5
+sections: {}
