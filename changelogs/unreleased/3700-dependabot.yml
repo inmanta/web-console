@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump eslint-plugin-prettier from 4.1.0 to 4.2.1'
+destination-branches:
+- master
+- iso5
+sections: {}
