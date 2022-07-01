@@ -129,7 +129,7 @@
     "@patternfly/react-charts": "^6.74.3",
     "@patternfly/react-core": "^4.221.3",
     "@patternfly/react-icons": "^4.53.16",
-    "@patternfly/react-styles": "^4.71.3",
+    "@patternfly/react-styles": "^4.74.1",
     "@patternfly/react-table": "^4.90.3",
     "@patternfly/react-tokens": "^4.66.1",
     "copy-to-clipboard": "^3.3.1",
