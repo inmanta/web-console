@@ -244,7 +244,9 @@ test("Given Drawer When user clicks on 'unread' for 1 notification Then it becom
     name: "NotificationItemActions",
   });
   await userEvent.click(actions);
-  await userEvent.click(screen.getByRole("button", { name: "Mark as unread" }));
+  await userEvent.click(
+    screen.getByRole("menuitem", { name: "Mark as unread" })
+  );
   expect(apiHelper.pendingRequests).toEqual([
     updateRequest("abcdefgh03", { read: false }),
   ]);
@@ -279,7 +281,7 @@ test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cle
     name: "NotificationItemActions",
   });
   await userEvent.click(actions);
-  await userEvent.click(screen.getByRole("button", { name: "Clear" }));
+  await userEvent.click(screen.getByRole("menuitem", { name: "Clear" }));
   expect(apiHelper.pendingRequests).toEqual([
     updateRequest("abcdefgh03", { cleared: true }),
   ]);

@@ -154,7 +154,8 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
   ).toHaveAttribute("aria-selected", "true");
 });
 
-test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
+// test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new dry run is selected", async () => {
+test("aaaa", async () => {
   const { component, apiHelper, datePresenter } = setup();
   render(component);
 
@@ -168,7 +169,6 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
 
   const dryRunButton = screen.getByRole("button", { name: "Perform dry run" });
   await userEvent.click(dryRunButton);
-
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
