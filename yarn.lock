@@ -1954,13 +1954,13 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@patternfly/react-charts@^6.74.3":
-  version "6.74.3"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-charts/-/react-charts-6.74.3.tgz#be8da604f767ae73bf1ccedd5df675561b41bf44"
-  integrity sha512-kMjLUQkdgWOR2ZsKFdsCLAu8Z4aXg6Cl/Wz2alm08mr8KR/R05CzFbQTME/blhsZmreTpUW+59Rx+h3Q0/tMJw==
+"@patternfly/react-charts@^6.77.1":
+  version "6.77.1"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-charts/-/react-charts-6.77.1.tgz#79a249af277cc4ade635260d83aa4db5104046df"
+  integrity sha512-zKKQa9nLbsQ8ZaYlEAYq+EcAZBl7g8CxAAduSENgG3HaHFGqfVHGQGSOK9+lNg9NacDr/v4cn9DwDaK7l0S9gA==
   dependencies:
-    "@patternfly/react-styles" "^4.71.3"
-    "@patternfly/react-tokens" "^4.73.3"
+    "@patternfly/react-styles" "^4.74.1"
+    "@patternfly/react-tokens" "^4.76.1"
     hoist-non-react-statics "^3.3.0"
     lodash "^4.17.19"
     tslib "^2.0.0"
@@ -1998,7 +1998,7 @@
   resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-4.75.1.tgz#3567b5a21a7f52c6a272f0330357fac87083867a"
   integrity sha512-1ly8SVi/kcc0zkiViOjUd8D5BEr7GeqWGmDPuDSBtD60l1dYf3hZc44IWFVkRM/oHZML/musdrJkLfh4MDqX9w==
 
-"@patternfly/react-styles@^4.71.3", "@patternfly/react-styles@^4.74.1":
+"@patternfly/react-styles@^4.74.1":
   version "4.74.1"
   resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-4.74.1.tgz#3cd19cd31dd896bfd046f79241e8a8aefbfb1152"
   integrity sha512-9eWvKrjtrJ3qhJkhY2GQKyYA13u/J0mU1befH49SYbvxZtkbuHdpKmXBAeQoHmcx1hcOKtiYXeKb+dVoRRNx0A==
@@ -2015,7 +2015,7 @@
     lodash "^4.17.19"
     tslib "^2.0.0"
 
-"@patternfly/react-tokens@^4.73.3", "@patternfly/react-tokens@^4.76.1":
+"@patternfly/react-tokens@^4.76.1":
   version "4.76.1"
   resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-4.76.1.tgz#ed85c3f6c6e779398579467e566d6750d01e8319"
   integrity sha512-gLEezRSzQeflaPu3SCgYmWtuiqDIRtxNNFP1+ES7P2o56YHXJ5o1Pki7LpNCPk/VOzHy2+vRFE/7l+hBEweugw==
