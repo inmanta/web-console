@@ -26,6 +26,7 @@ export const View: React.FC<Props> = ({ version }) => {
     version: parseInt(version),
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [updatedList, setUpdatedList] = useState(false);
   const [statuses, setStatuses] = useState(Diff.statuses);
   const [selectedReport, setSelectedReport] = useState<MaybeReport>(
     Maybe.none()
@@ -61,11 +62,17 @@ export const View: React.FC<Props> = ({ version }) => {
     setSelectedReport(Maybe.some(data.value[0]));
   }, [selectedReport, data]);
 
-  const updateList = async () => {
-    await (refetch as () => Promise<void>)();
+  useEffect(() => {
+    if (!updatedList) return;
     if (RemoteData.isSuccess(data)) {
       setSelectedReport(firstReport.current);
     }
+    setUpdatedList(false);
+  }, [updatedList, data]);
+
+  const updateList = async () => {
+    await (refetch as () => Promise<void>)();
+    setUpdatedList(true);
   };
 
   return (

@@ -60,8 +60,8 @@ test("Given the CreateInstance View When creating an instance with relations The
   render(component);
 
   await userEvent.click(screen.getByRole("button", { name: "relation1" }));
-  const firstRelationFieldGroup = screen.getByRole("generic", {
-    name: "RelationListFieldInput-relation1",
+  const firstRelationFieldGroup = screen.getByRole("group", {
+    name: "relation1",
   });
   await userEvent.click(
     within(firstRelationFieldGroup).getByRole("button", { name: "Add" })

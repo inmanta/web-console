@@ -156,7 +156,7 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
 
   await userEvent.click(toggle);
 
-  const button = within(widget).getByRole("button", {
+  const button = within(widget).getByRole("menuitem", {
     name: "UpdateAndRecompileButton",
   });
 

@@ -86,8 +86,8 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
     />
   );
 
-  const group = screen.getByRole("generic", {
-    name: "NestedFieldInput-nested_field",
+  const group = screen.getByRole("group", {
+    name: "nested_field",
   });
 
   expect(group).toBeVisible();
@@ -112,8 +112,8 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
     />
   );
 
-  const group = screen.getByRole("generic", {
-    name: "DictListFieldInput-dict_list_field",
+  const group = screen.getByRole("group", {
+    name: "dict_list_field",
   });
 
   expect(group).toBeVisible();
