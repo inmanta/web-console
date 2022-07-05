@@ -168,8 +168,8 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
 
   const dryRunButton = screen.getByRole("button", { name: "Perform dry run" });
   await userEvent.click(dryRunButton);
-  expect(apiHelper.pendingRequests).toHaveLength(1);
 
+  expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
     url: "/api/v2/dryrun/123",
