@@ -3174,10 +3174,10 @@
     resolve-from "^5.0.0"
     store2 "^2.12.0"
 
-"@testing-library/dom@^8.0.0", "@testing-library/dom@^8.11.1", "@testing-library/dom@^8.14.0":
-  version "8.14.0"
-  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.14.0.tgz#c9830a21006d87b9ef6e1aae306cf49b0283e28e"
-  integrity sha512-m8FOdUo77iMTwVRCyzWcqxlEIk+GnopbrRI15a0EaLbpZSCinIVI4kSQzWhkShK83GogvEFJSsHF3Ws0z1vrqA==
+"@testing-library/dom@^8.0.0", "@testing-library/dom@^8.11.1", "@testing-library/dom@^8.16.0":
+  version "8.16.0"
+  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.16.0.tgz#d6fc50250aed17b1035ca1bd64655e342db3936a"
+  integrity sha512-uxF4zmnLHHDlmW4l+0WDjcgLVwCvH+OVLpD8Dfp+Bjfz85prwxWGbwXgJdLtkgjD0qfOzkJF9SmA6YZPsMYX4w==
   dependencies:
     "@babel/code-frame" "^7.10.4"
     "@babel/runtime" "^7.12.5"
@@ -6991,10 +6991,10 @@ dotenv-expand@^5.1.0:
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
   integrity sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
 
-dotenv-webpack@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/dotenv-webpack/-/dotenv-webpack-7.1.1.tgz#ee8a699e1d736fd8eb9363fbc7054cfff1bd9dbf"
-  integrity sha512-xw/19VqHDkXALtBOJAnnrSU/AZDIQRXczAmJyp0lZv6SH2aBLzUTl96W1MVryJZ7okZ+djZS4Gj4KlZ0xP7deA==
+dotenv-webpack@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv-webpack/-/dotenv-webpack-8.0.0.tgz#bde8750eebda8fd1c6d7134f02bf56ad1f865772"
+  integrity sha512-vsWj11yWbIxLUPcQDbifCGW1+Mp03XfApFHJTC+/Ag9g3D/AnxoaVZcp76LpuBmReRwIJ+YO1fVdhmpzh+LL1A==
   dependencies:
     dotenv-defaults "^2.0.2"
 
