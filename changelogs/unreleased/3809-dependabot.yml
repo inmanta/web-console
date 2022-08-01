@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump eslint-import-resolver-typescript from 3.3.0 to
+    3.4.0'
+destination-branches:
+- master
+- iso5
+sections: {}
