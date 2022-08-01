@@ -7471,10 +7471,10 @@ eslint-import-resolver-node@^0.3.6:
     debug "^3.2.7"
     resolve "^1.20.0"
 
-eslint-import-resolver-typescript@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/eslint-import-resolver-typescript/-/eslint-import-resolver-typescript-3.3.0.tgz#c2b9f420563bdcb4b84d550d81e579f8dc867d5b"
-  integrity sha512-vlooCGKfDX59rH5TbtluOekinPlIS5Ab+dyQUoCCJoE1IV11R/kn6J+RoMBuBkJhzJEIKJ4myQJhw6lGIXfkRA==
+eslint-import-resolver-typescript@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/eslint-import-resolver-typescript/-/eslint-import-resolver-typescript-3.4.0.tgz#a7e334b86d638f49956f2b0dfbde29daa9c32dcd"
+  integrity sha512-rBCgiEovwX/HQ8ESWV+XIWZaFiRtDeAXNZdcTATB8UbMuadc9qfGOlIP+vy+c7nsgfEBN4NTwy5qunGNptDP0Q==
   dependencies:
     debug "^4.3.4"
     enhanced-resolve "^5.10.0"
@@ -10656,10 +10656,10 @@ junk@^3.1.0:
   resolved "https://registry.yarnpkg.com/junk/-/junk-3.1.0.tgz#31499098d902b7e98c5d9b9c80f43457a88abfa1"
   integrity sha512-pBxcB3LFc8QVgdggvZWyeys+hnrNWg4OcZIU/1X59k5jQdLBlCsYGRQaz234SqoRLTCgMH00fY0xRJH+F9METQ==
 
-keycloak-js@19.0.0:
-  version "19.0.0"
-  resolved "https://registry.yarnpkg.com/keycloak-js/-/keycloak-js-19.0.0.tgz#95d5fc5c3249c8bead6e15557bafa97ca1b1cb5d"
-  integrity sha512-ZGCw/oVW5rxd23SXiNco6q4UwRGcgtPsWqGljSzTBJROm6yYjEv7TZvj+uOooqc+LNIZzIQWYaYgCEqmzOByfg==
+keycloak-js@19.0.1:
+  version "19.0.1"
+  resolved "https://registry.yarnpkg.com/keycloak-js/-/keycloak-js-19.0.1.tgz#9df871f6b1aff338139fd870bbe6e8db39592ee5"
+  integrity sha512-/GNJcgCb4OsMW+pI2EEQU8PWd4tkXCABqLHkVHbfU+r7XaU9E+zFkD960TItIEarCR0JP6iD8fhKchgxkV+W8w==
   dependencies:
     base64-js "^1.5.1"
     js-sha256 "^0.9.0"
