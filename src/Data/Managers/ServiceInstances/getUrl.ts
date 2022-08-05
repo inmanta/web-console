@@ -1,12 +1,11 @@
+import { capitalize } from "@patternfly/react-core";
 import qs from "qs";
 import { Query, Sort } from "@/Core";
 
-export function getUrl({
-  name,
-  filter,
-  sort,
-  pageSize,
-}: Query.SubQuery<"GetServiceInstances">): string {
+export function getUrl(
+  { name, filter, sort, pageSize }: Query.SubQuery<"GetServiceInstances">,
+  includeDeploymentProgress = true
+): string {
   const filterParam = filter
     ? `&${qs.stringify(
         { filter: filterToRaw(filter) },
@@ -16,7 +15,9 @@ export function getUrl({
   const sortParam = sort ? `&sort=${Sort.serialize(sort)}` : "";
   const includeDeletedParam =
     filter?.deleted === "Include" ? "&include_deleted=true" : "";
-  return `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=${pageSize.value}${filterParam}${sortParam}${includeDeletedParam}`;
+  return `/lsm/v1/service_inventory/${name}?include_deployment_progress=${capitalize(
+    includeDeploymentProgress.toString()
+  )}&limit=${pageSize.value}${filterParam}${sortParam}${includeDeletedParam}`;
 }
 
 type Filter = NonNullable<Query.SubQuery<"GetServiceInstances">["filter"]>;

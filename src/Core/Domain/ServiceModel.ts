@@ -73,14 +73,45 @@ export interface ServiceModel extends ServiceIdentifier {
   config: Config;
   instance_summary?: InstanceSummary | null;
   embedded_entities: EmbeddedEntity[];
+  inter_service_relations?: InterServiceRelation[];
 }
 
-export interface EmbeddedEntity {
-  name: string;
-  description?: string;
-  modifier: string;
+export interface RelationAttribute {
   lower_limit: ParsedNumber;
   upper_limit?: ParsedNumber;
+  modifier: string;
+}
+
+export interface InterServiceRelation extends RelationAttribute {
+  name: string;
+  description?: string;
+  entity_type: string;
+}
+
+export interface EmbeddedEntity extends RelationAttribute {
+  name: string;
+  description?: string;
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
+  inter_service_relations?: InterServiceRelation[];
 }
+
+interface MinimalEmbeddedEntity {
+  name: string;
+  description?: string;
+  attributes: Pick<AttributeModel, "name" | "type" | "description">[];
+  inter_service_relations?: Pick<
+    InterServiceRelation,
+    "name" | "entity_type" | "description"
+  >[];
+  embedded_entities: MinimalEmbeddedEntity[];
+}
+
+export type EntityLike = {
+  attributes: Pick<AttributeModel, "name" | "type" | "description">[];
+  embedded_entities: MinimalEmbeddedEntity[];
+  inter_service_relations?: Pick<
+    InterServiceRelation,
+    "name" | "entity_type" | "description"
+  >[];
+};

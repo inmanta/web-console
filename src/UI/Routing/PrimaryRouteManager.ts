@@ -11,8 +11,34 @@ import {
   RouteKind,
   RouteParams,
   RouteMatch,
+  Crumb,
+  RouteKindWithId,
 } from "@/Core";
-import { paths } from "./Paths";
+import { AgentProcess } from "@S/AgentProcess";
+import { Agents } from "@S/Agents";
+import { CompileDetails } from "@S/CompileDetails";
+import { CompileReports } from "@S/CompileReports";
+import { ComplianceCheck } from "@S/ComplianceCheck";
+import { CreateEnvironment } from "@S/CreateEnvironment";
+import { CreateInstance } from "@S/CreateInstance";
+import { DesiredState } from "@S/DesiredState";
+import { DesiredStateCompare } from "@S/DesiredStateCompare";
+import { DesiredStateDetails } from "@S/DesiredStateDetails";
+import { DesiredStateResourceDetails } from "@S/DesiredStateResourceDetails";
+import { Diagnose } from "@S/Diagnose";
+import { EditInstance } from "@S/EditInstance";
+import { Events } from "@S/Events";
+import { Facts } from "@S/Facts";
+import { Home } from "@S/Home";
+import { Notification } from "@S/Notification";
+import { Parameters } from "@S/Parameters";
+import { Resource } from "@S/Resource";
+import { ResourceDetails } from "@S/ResourceDetails";
+import { ServiceCatalog } from "@S/ServiceCatalog";
+import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
+import { ServiceInventory } from "@S/ServiceInventory";
+import { Settings } from "@S/Settings";
+import { Status } from "@S/Status";
 import { encodeParams } from "./Utils";
 
 export class PrimaryRouteManager implements RouteManager {
@@ -23,43 +49,45 @@ export class PrimaryRouteManager implements RouteManager {
       /**
        * Main
        */
-      Home: Home(this.baseUrl),
-      CreateEnvironment: CreateEnvironment(this.baseUrl),
-      Settings: Settings(this.baseUrl),
-      Status: Status(this.baseUrl),
-      NotificationCenter: NotificationCenter(this.baseUrl),
+      Home: Home.route(this.baseUrl),
+      CreateEnvironment: CreateEnvironment.route(this.baseUrl),
+      Settings: Settings.route(this.baseUrl),
+      Status: Status.route(this.baseUrl),
+      NotificationCenter: Notification.route(this.baseUrl),
 
       /**
        * LSM
        */
-      Catalog: Catalog(this.baseUrl),
-      Inventory: Inventory(this.baseUrl),
-      CreateInstance: CreateInstance(this.baseUrl),
-      EditInstance: EditInstance(this.baseUrl),
-      History: History(this.baseUrl),
-      Diagnose: Diagnose(this.baseUrl),
-      Events: Events(this.baseUrl),
+      Catalog: ServiceCatalog.route(this.baseUrl),
+      Inventory: ServiceInventory.route(this.baseUrl),
+      CreateInstance: CreateInstance.route(this.baseUrl),
+      EditInstance: EditInstance.route(this.baseUrl),
+      History: ServiceInstanceHistory.route(this.baseUrl),
+      Diagnose: Diagnose.route(this.baseUrl),
+      Events: Events.route(this.baseUrl),
 
       /**
        * Resource Manager
        */
-      Resources: Resources(this.baseUrl),
-      Agents: Agents(this.baseUrl),
-      Facts: Facts(this.baseUrl),
-      AgentProcess: AgentProcess(this.baseUrl),
-      ResourceDetails: ResourceDetails(this.baseUrl),
+      Resources: Resource.route(this.baseUrl),
+      Agents: Agents.route(this.baseUrl),
+      Facts: Facts.route(this.baseUrl),
+      AgentProcess: AgentProcess.route(this.baseUrl),
+      ResourceDetails: ResourceDetails.route(this.baseUrl),
 
       /**
        * Orchestration Engine
        */
-      CompileReports: CompileReports(this.baseUrl),
-      CompileDetails: CompileDetails(this.baseUrl),
-      DesiredState: DesiredState(this.baseUrl),
-      DesiredStateDetails: DesiredStateDetails(this.baseUrl),
-      DesiredStateResourceDetails: DesiredStateResourceDetails(this.baseUrl),
-      DesiredStateCompare: DesiredStateCompare(this.baseUrl),
-      Parameters: Parameters(this.baseUrl),
-      ComplianceCheck: ComplianceCheck(this.baseUrl),
+      CompileReports: CompileReports.route(this.baseUrl),
+      CompileDetails: CompileDetails.route(this.baseUrl),
+      DesiredState: DesiredState.route(this.baseUrl),
+      DesiredStateDetails: DesiredStateDetails.route(this.baseUrl),
+      DesiredStateResourceDetails: DesiredStateResourceDetails.route(
+        this.baseUrl
+      ),
+      DesiredStateCompare: DesiredStateCompare.route(this.baseUrl),
+      Parameters: Parameters.route(this.baseUrl),
+      ComplianceCheck: ComplianceCheck.route(this.baseUrl),
     };
   }
 
@@ -127,6 +155,19 @@ export class PrimaryRouteManager implements RouteManager {
     return this.getUrl("CompileDetails", { id: match.params.id });
   }
 
+  getParamsFromUrl(uri: string): RouteKindWithId<"CompileDetails"> | undefined {
+    if (uri.length <= 0) return undefined;
+    const pattern = "/api/v2/compilereport/:id";
+    const match = matchPath(pattern, uri);
+    if (match === null) return undefined;
+    if (match.params.id === undefined) return undefined;
+    const params = { id: match.params.id };
+    return {
+      kind: "CompileDetails",
+      params,
+    };
+  }
+
   getRouteMatchFromUrl(url: string): RouteMatch | undefined {
     const routeMatchPairs = this.getRoutes().map((route) => [
       route,
@@ -156,205 +197,17 @@ export class PrimaryRouteManager implements RouteManager {
     );
     return `${path}${search}`;
   }
+
+  getCrumbs(url: string): Crumb[] {
+    const routeMatch = this.getRouteMatchFromUrl(url);
+    if (typeof routeMatch === "undefined") return [];
+    const { route, params } = routeMatch;
+    const lineage = this.getLineageFromRoute(route);
+    return lineage.map(({ kind, generateLabel, path }, idx) => ({
+      kind,
+      label: generateLabel(params),
+      url: generatePath(path, params),
+      active: idx === lineage.length - 1,
+    }));
+  }
 }
-
-const Catalog = (base: string): Route<"Catalog"> => ({
-  kind: "Catalog",
-  parent: "Home",
-  path: `${base}${paths.Catalog}`,
-  generateLabel: () => "Service Catalog",
-  environmentRole: "Required",
-});
-
-const Inventory = (base: string): Route<"Inventory"> => ({
-  kind: "Inventory",
-  parent: "Catalog",
-  path: `${base}${paths.Inventory}`,
-  generateLabel: (params) => `Service Inventory: ${params.service}`,
-  environmentRole: "Required",
-});
-
-const CreateInstance = (base: string): Route<"CreateInstance"> => ({
-  kind: "CreateInstance",
-  parent: "Inventory",
-  path: `${base}${paths.CreateInstance}`,
-  generateLabel: () => "Create Instance",
-  environmentRole: "Required",
-});
-
-const EditInstance = (base: string): Route<"EditInstance"> => ({
-  kind: "EditInstance",
-  parent: "Inventory",
-  path: `${base}${paths.EditInstance}`,
-  generateLabel: () => "Edit Instance",
-  environmentRole: "Required",
-});
-
-const History = (base: string): Route<"History"> => ({
-  kind: "History",
-  parent: "Inventory",
-  path: `${base}${paths.History}`,
-  generateLabel: () => "Service Instance History",
-  environmentRole: "Required",
-});
-
-const Diagnose = (base: string): Route<"Diagnose"> => ({
-  kind: "Diagnose",
-  parent: "Inventory",
-  path: `${base}${paths.Diagnose}`,
-  generateLabel: () => "Diagnose Service Instance",
-  environmentRole: "Required",
-});
-
-const Events = (base: string): Route<"Events"> => ({
-  kind: "Events",
-  parent: "Inventory",
-  generateLabel: () => "Service Instance Events",
-  path: `${base}${paths.Events}`,
-  environmentRole: "Required",
-});
-
-const Resources = (base: string): Route<"Resources"> => ({
-  kind: "Resources",
-  parent: "Home",
-  path: `${base}${paths.Resources}`,
-  generateLabel: () => "Resources",
-  environmentRole: "Required",
-});
-
-const Agents = (base: string): Route<"Agents"> => ({
-  kind: "Agents",
-  parent: "Home",
-  path: `${base}${paths.Agents}`,
-  generateLabel: () => "Agents",
-  environmentRole: "Required",
-});
-
-const Facts = (base: string): Route<"Facts"> => ({
-  kind: "Facts",
-  parent: "Home",
-  path: `${base}${paths.Facts}`,
-  generateLabel: () => "Facts",
-  environmentRole: "Required",
-});
-
-const AgentProcess = (base: string): Route<"AgentProcess"> => ({
-  kind: "AgentProcess",
-  parent: "Agents",
-  path: `${base}${paths.AgentProcess}`,
-  generateLabel: () => "Agent Process",
-  environmentRole: "Required",
-});
-
-const DesiredState = (base: string): Route<"DesiredState"> => ({
-  kind: "DesiredState",
-  parent: "Home",
-  path: `${base}${paths.DesiredState}`,
-  generateLabel: () => "Desired State",
-  environmentRole: "Required",
-});
-
-const DesiredStateDetails = (base: string): Route<"DesiredStateDetails"> => ({
-  kind: "DesiredStateDetails",
-  parent: "DesiredState",
-  path: `${base}${paths.DesiredStateDetails}`,
-  generateLabel: () => "Details",
-  environmentRole: "Required",
-});
-
-const DesiredStateResourceDetails = (
-  base: string
-): Route<"DesiredStateResourceDetails"> => ({
-  kind: "DesiredStateResourceDetails",
-  parent: "DesiredStateDetails",
-  path: `${base}${paths.DesiredStateResourceDetails}`,
-  generateLabel: () => "Resource Details",
-  environmentRole: "Required",
-});
-
-const DesiredStateCompare = (base: string): Route<"DesiredStateCompare"> => ({
-  kind: "DesiredStateCompare",
-  parent: "DesiredState",
-  path: `${base}${paths.DesiredStateCompare}`,
-  generateLabel: () => "Compare",
-  environmentRole: "Required",
-});
-
-const CompileReports = (base: string): Route<"CompileReports"> => ({
-  kind: "CompileReports",
-  parent: "Home",
-  path: `${base}${paths.CompileReports}`,
-  generateLabel: () => "Compile Reports",
-  environmentRole: "Required",
-});
-
-const CompileDetails = (base: string): Route<"CompileDetails"> => ({
-  kind: "CompileDetails",
-  parent: "CompileReports",
-  path: `${base}${paths.CompileDetails}`,
-  generateLabel: () => "Compile Details",
-  environmentRole: "Required",
-});
-
-const ResourceDetails = (base: string): Route<"ResourceDetails"> => ({
-  kind: "ResourceDetails",
-  parent: "Resources",
-  path: `${base}${paths.ResourceDetails}`,
-  generateLabel: () => "Resource Details",
-  environmentRole: "Required",
-});
-
-const Home = (base: string): Route<"Home"> => ({
-  kind: "Home",
-  path: `${base}${paths.Home}`,
-  generateLabel: () => "Home",
-  environmentRole: "Forbidden",
-});
-
-const CreateEnvironment = (base: string): Route<"CreateEnvironment"> => ({
-  kind: "CreateEnvironment",
-  parent: "Home",
-  path: `${base}${paths.CreateEnvironment}`,
-  generateLabel: () => "Create Environment",
-  environmentRole: "Forbidden",
-});
-
-const Settings = (base: string): Route<"Settings"> => ({
-  kind: "Settings",
-  parent: "Home",
-  path: `${base}${paths.Settings}`,
-  generateLabel: () => "Settings",
-  environmentRole: "Required",
-});
-
-const Status = (base: string): Route<"Status"> => ({
-  kind: "Status",
-  parent: "Home",
-  path: `${base}${paths.Status}`,
-  generateLabel: () => "Status",
-  environmentRole: "Optional",
-});
-
-const Parameters = (base: string): Route<"Parameters"> => ({
-  kind: "Parameters",
-  parent: "Home",
-  path: `${base}${paths.Parameters}`,
-  generateLabel: () => "Parameters",
-  environmentRole: "Required",
-});
-
-const ComplianceCheck = (base: string): Route<"ComplianceCheck"> => ({
-  kind: "ComplianceCheck",
-  parent: "DesiredState",
-  path: `${base}${paths.ComplianceCheck}`,
-  generateLabel: () => "Compliance Check",
-  environmentRole: "Required",
-});
-
-const NotificationCenter = (base: string): Route => ({
-  kind: "NotificationCenter",
-  parent: "Home",
-  path: `${base}${paths.NotificationCenter}`,
-  generateLabel: () => "Notification Center",
-  environmentRole: "Required",
-});

@@ -5,7 +5,8 @@ export type ClassifiedAttribute =
   | Password
   | File
   | Json
-  | Xml;
+  | Xml
+  | Python;
 
 interface Base<Kind> {
   kind: Kind;
@@ -19,6 +20,7 @@ type Json = Base<"Json">;
 type Xml = Base<"Xml">;
 type Password = Base<"Password">;
 type File = Base<"File">;
+type Python = Base<"Python">;
 
 interface Undefined {
   kind: "Undefined";

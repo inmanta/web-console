@@ -1,4 +1,4 @@
-import { ParsedNumber, WithId } from "@/Core/Language";
+import { ParsedNumber } from "@/Core/Language";
 
 export type InstanceAttributeModel = Record<string, unknown>;
 
@@ -9,7 +9,8 @@ export interface DeploymentProgress {
   waiting: ParsedNumber;
 }
 
-export interface ServiceInstanceIdentifier extends WithId {
+export interface ServiceInstanceIdentifier {
+  id: string;
   service_entity: string;
 }
 

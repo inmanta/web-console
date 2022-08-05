@@ -1,7 +1,3 @@
-export interface WithId {
-  id: string;
-}
-
 /**
  * The JSON data returned from the backend can contain big numbers.
  * JSON can hold these big numbers. But when parsing JSON,

@@ -1,6 +1,8 @@
 interface Leaf<Value> {
   kind: "Leaf";
   value: Value;
+  hasOnClick?: boolean;
+  entity?: string;
 }
 
 interface Branch {

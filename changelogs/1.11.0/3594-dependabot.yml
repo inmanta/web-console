@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump node-fetch from 3.2.4 to 3.2.5'
+destination-branches:
+- master
+- iso5
+sections: {}

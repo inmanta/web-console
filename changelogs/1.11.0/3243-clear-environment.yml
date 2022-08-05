@@ -1,0 +1,4 @@
+description: Add functionality to clear an environment
+issue-nr: 3243
+change-type: minor
+destination-branches: [master, iso5]

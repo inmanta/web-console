@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { DependencyContext } from "@/UI/Dependency";
-import { NotFoundPage, PrimaryPageManager } from "@/UI/Pages";
 import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
+import { NotFoundPage } from "@S/NotFound/UI";
 import { AuthProvider, PageFrame, Initializer } from "./Components";
+import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
   const { routeManager } = useContext(DependencyContext);

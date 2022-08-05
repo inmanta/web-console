@@ -38,9 +38,9 @@ The `ResourcesQuery` describes a `resources` data source with its unique identif
 
 ## Task
 
-A task is a unique id coupled with a effect function and an update function.  
+A task is a unique id coupled with an effect function and an update function.  
 Registering a task will invoke the effect and update on each next tick.  
-As long as there are tasks, the ticks will execute after 5seconds.  
+As long as there are tasks, the ticks will execute after 5 seconds.  
 Once all the data is resolved. We schedule a next tick to be executed after 5s.  
 Flow: (5s) -> execute -> wait for all to resolve -> schedule next tick -> (5s) -> execute -> ...  
 The scheduler uses nested `setTimeout`s under the hood.

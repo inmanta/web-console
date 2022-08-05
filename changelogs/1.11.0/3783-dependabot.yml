@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump file-type from 16.5.3 to 16.5.4'
+destination-branches:
+- master
+- iso5
+sections: {}

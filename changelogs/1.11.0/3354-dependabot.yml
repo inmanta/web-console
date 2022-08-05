@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump async from 2.6.3 to 2.6.4'
+destination-branches:
+- master
+- iso5
+sections: {}

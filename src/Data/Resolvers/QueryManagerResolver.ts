@@ -1,7 +1,5 @@
 import { QueryManager, ManagerResolver, ApiHelper, Scheduler } from "@/Core";
 import {
-  GetProjectsQueryManager,
-  GetProjectsStateHelper,
   ServiceQueryManager,
   ServiceKeyMaker,
   ServiceStateHelper,
@@ -9,39 +7,16 @@ import {
   ServiceInstancesStateHelper,
   InstanceResourcesStateHelper,
   InstanceResourcesQueryManager,
-  EventsQueryManager,
-  EventsStateHelper,
   ServicesQueryManager,
   ServicesStateHelper,
-  GetInstanceLogsQueryManager,
-  GetInstanceLogsStateHelper,
   InstanceConfigQueryManager,
   InstanceConfigStateHelper,
   InstanceConfigFinalizer,
-  DiagnosticsStateHelper,
-  DiagnosticsQueryManager,
   ServiceConfigQueryManager,
   ServiceConfigStateHelper,
   ServiceConfigFinalizer,
-  ResourcesQueryManager,
-  ResourcesStateHelper,
-  ResourceDetailsQueryManager,
-  ResourceDetailsStateHelper,
-  ResourceHistoryStateHelper,
-  ResourceHistoryQueryManager,
-  EnvironmentDetailsQueryManager,
-  EnvironmentDetailsOneTimeQueryManager,
-  EnvironmentDetailsStateHelper,
   ServiceInstanceQueryManager,
   ServiceInstanceStateHelper,
-  CallbacksQueryManager,
-  CallbacksStateHelper,
-  CompileReportsQueryManager,
-  CompileReportsStateHelper,
-  CompileDetailsQueryManager,
-  CompileDetailsStateHelper,
-  ResourceLogsQueryManager,
-  ResourceLogsStateHelper,
   GetServerStatusOneTimeQueryManager,
   GetServerStatusContinuousQueryManager,
   GetServerStatusStateHelper,
@@ -49,29 +24,71 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
-  GetResourceFactsQueryManager,
-  GetResourceFactsStateHelper,
-  GetAgentsQueryManager,
-  GetAgentsStateHelper,
-  GetAgentProcessQueryManager,
-  GetAgentProcessStateHelper,
-  GetVersionResourcesQueryManager,
-  GetVersionResourcesStateHelper,
   GetCompilerStatusQueryManager,
-  GetParametersQueryManager,
-  GetParametersStateHelper,
-  GetFactsQueryManager,
-  GetDesiredStatesQueryManager,
-  GetDesiredStatesStateHelper,
-  GetFactsStateHelper,
-  GetDesiredStateDiffQueryManager,
-  GetDesiredStateDiffStateHelper,
-  GetDryRuns,
-  GetDryRunReport,
-  GetVersionedResourceDetails,
+  GetServiceInstancesOneTimeQueryManager,
+  GetServiceOneTimeQueryManager,
+  GetServiceInstanceOneTimeQueryManager,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import * as GetNotifications from "@/Slices/Notification/Data";
+import {
+  EnvironmentDetailsContinuousQueryManager,
+  EnvironmentDetailsOneTimeQueryManager,
+} from "@/Slices/Settings/Data/GetEnvironmentDetails";
+import { GetProjectsQueryManager } from "@/Slices/Settings/Data/GetProjects";
+import { GetAgentProcessQueryManager } from "@S/AgentProcess/Data";
+import { GetAgentsQueryManager } from "@S/Agents/Data";
+import { CompileDetailsQueryManager } from "@S/CompileDetails/Data";
+import { CompileReportsQueryManager } from "@S/CompileReports/Data";
+import {
+  GetDryRunReportQueryManager,
+  GetDryRunsQueryManager,
+} from "@S/ComplianceCheck/Data";
+import {
+  GetDesiredStatesQueryManager,
+  GetDesiredStatesStateHelper,
+} from "@S/DesiredState/Data";
+import {
+  GetDesiredStateDiffQueryManager,
+  GetDesiredStateDiffStateHelper,
+} from "@S/DesiredStateCompare/Data";
+import {
+  GetVersionResourcesQueryManager,
+  GetVersionResourcesStateHelper,
+} from "@S/DesiredStateDetails/Data";
+import { GetDesiredStateResourceDetailsQueryManager } from "@S/DesiredStateResourceDetails/Data";
+import {
+  DiagnosticsQueryManager,
+  DiagnosticsStateHelper,
+} from "@S/Diagnose/Data";
+import { EventsQueryManager, EventsStateHelper } from "@S/Events/Data";
+import { GetFactsQueryManager } from "@S/Facts/Data";
+import {
+  NotificationContinuousQueryManager,
+  NotificationReadOnlyQueryManager,
+} from "@S/Notification/Data";
+import {
+  GetParametersQueryManager,
+  GetParametersStateHelper,
+} from "@S/Parameters/Data";
+import { GetResourcesQueryManager } from "@S/Resource/Data";
+import {
+  GetResourceFactsQueryManager,
+  GetResourceFactsStateHelper,
+  ResourceDetailsQueryManager,
+  ResourceDetailsStateHelper,
+  ResourceHistoryQueryManager,
+  ResourceHistoryStateHelper,
+  ResourceLogsQueryManager,
+  ResourceLogsStateHelper,
+} from "@S/ResourceDetails/Data";
+import {
+  CallbacksQueryManager,
+  CallbacksStateHelper,
+} from "@S/ServiceCatalog/Data";
+import {
+  GetInstanceLogsQueryManager,
+  GetInstanceLogsStateHelper,
+} from "@S/ServiceInstanceHistory/Data";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
   private managers: QueryManager[] = [];
@@ -99,12 +116,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     const serviceInstancesStateHelper = new ServiceInstancesStateHelper(
       this.store
     );
+    const serviceInstanceStateHelper = new ServiceInstanceStateHelper(
+      this.store
+    );
 
     return [
-      new GetProjectsQueryManager(
-        this.apiHelper,
-        new GetProjectsStateHelper(this.store)
-      ),
+      new GetProjectsQueryManager(this.store, this.apiHelper),
       new GetEnvironmentsQueryManager(
         this.apiHelper,
         new GetEnvironmentsStateHelper(this.store)
@@ -138,6 +155,15 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         serviceInstancesStateHelper,
         this.scheduler
       ),
+      new GetServiceInstancesOneTimeQueryManager(
+        this.apiHelper,
+        serviceInstancesStateHelper
+      ),
+      new GetServiceInstanceOneTimeQueryManager(
+        this.apiHelper,
+        serviceInstanceStateHelper
+      ),
+      new GetServiceOneTimeQueryManager(this.apiHelper, serviceStateHelper),
       new ServiceConfigQueryManager(
         this.apiHelper,
         new ServiceConfigStateHelper(this.store),
@@ -170,11 +196,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new DiagnosticsStateHelper(this.store),
         this.scheduler
       ),
-      new ResourcesQueryManager(
-        this.apiHelper,
-        new ResourcesStateHelper(this.store),
-        this.scheduler
-      ),
+      new GetResourcesQueryManager(this.store, this.apiHelper, this.scheduler),
       new ResourceDetailsQueryManager(
         this.apiHelper,
         new ResourceDetailsStateHelper(this.store),
@@ -185,18 +207,15 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new ResourceHistoryStateHelper(this.store),
         this.scheduler
       ),
-      new EnvironmentDetailsQueryManager(
+      new EnvironmentDetailsContinuousQueryManager(
+        this.store,
         this.apiHelper,
-        new EnvironmentDetailsStateHelper(this.store),
         this.scheduler
       ),
-      new EnvironmentDetailsOneTimeQueryManager(
-        this.apiHelper,
-        new EnvironmentDetailsStateHelper(this.store)
-      ),
+      new EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
       new ServiceInstanceQueryManager(
         this.apiHelper,
-        new ServiceInstanceStateHelper(this.store),
+        serviceInstanceStateHelper,
         this.scheduler
       ),
       new CallbacksQueryManager(
@@ -204,13 +223,14 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new CallbacksStateHelper(this.store)
       ),
       new CompileReportsQueryManager(
+        this.store,
         this.apiHelper,
-        new CompileReportsStateHelper(this.store),
         this.scheduler
       ),
       new CompileDetailsQueryManager(
+        this.store,
         this.apiHelper,
-        new CompileDetailsStateHelper(this.store),
+
         this.scheduler
       ),
       new ResourceLogsQueryManager(
@@ -223,15 +243,8 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetResourceFactsStateHelper(this.store),
         this.scheduler
       ),
-      new GetAgentsQueryManager(
-        this.apiHelper,
-        new GetAgentsStateHelper(this.store),
-        this.scheduler
-      ),
-      new GetAgentProcessQueryManager(
-        this.apiHelper,
-        new GetAgentProcessStateHelper(this.store)
-      ),
+      new GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
+      new GetAgentProcessQueryManager(this.store, this.apiHelper),
       new GetDesiredStatesQueryManager(
         this.apiHelper,
         new GetDesiredStatesStateHelper(this.store),
@@ -248,28 +261,24 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetParametersStateHelper(this.store),
         this.scheduler
       ),
-      new GetFactsQueryManager(
-        this.apiHelper,
-        new GetFactsStateHelper(this.store),
-        this.scheduler
-      ),
+      new GetFactsQueryManager(this.store, this.apiHelper, this.scheduler),
       new GetDesiredStateDiffQueryManager(
         this.apiHelper,
         new GetDesiredStateDiffStateHelper(this.store)
       ),
-      new GetDryRuns.QueryManager(this.apiHelper, this.store, this.scheduler),
-      new GetDryRunReport.QueryManager(this.apiHelper, this.store),
-      new GetVersionedResourceDetails.QueryManager(
+      new GetDryRunsQueryManager(this.apiHelper, this.store, this.scheduler),
+      new GetDryRunReportQueryManager(this.apiHelper, this.store),
+      new GetDesiredStateResourceDetailsQueryManager(
         this.apiHelper,
         this.store,
         this.scheduler
       ),
-      new GetNotifications.ContinuousManager(
+      new NotificationContinuousQueryManager(
         this.apiHelper,
         this.store,
         this.scheduler
       ),
-      new GetNotifications.ReadOnlyManager(this.store),
+      new NotificationReadOnlyQueryManager(this.store),
     ];
   }
 }

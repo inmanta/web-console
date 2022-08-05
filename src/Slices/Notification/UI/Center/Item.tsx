@@ -9,7 +9,7 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { DateWithTooltip } from "@/UI/Components";
-import { Model, Severity } from "@S/Notification/Core/Model";
+import { Notification, Severity } from "@S/Notification/Core/Domain";
 import {
   getColorForVisualSeverity,
   getSeverityForNotification,
@@ -18,7 +18,7 @@ import {
 import { ActionList } from "./ActionList";
 
 interface Props {
-  notification: Model;
+  notification: Notification;
   onUpdate(): void;
 }
 

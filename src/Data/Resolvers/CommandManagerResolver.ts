@@ -1,28 +1,15 @@
 import { ApiHelper, AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
-  CreateInstanceCommandManager,
   DeleteInstanceCommandManager,
   InstanceConfigCommandManager,
   InstanceConfigStateHelper,
-  TriggerInstanceUpdateCommandManager,
   ServiceConfigStateHelper,
   ServiceConfigCommandManager,
   TriggerSetStateCommandManager,
   DeleteServiceCommandManager,
   HaltEnvironmentCommandManager,
   ResumeEnvironmentCommandManager,
-  DeleteCallbackCommandManager,
-  CallbacksStateHelper,
-  CallbacksUpdater,
-  CreateCallbackCommandManager,
-  EnvironmentDetailsUpdater,
-  EnvironmentDetailsStateHelper,
-  DeleteEnvironmentCommandManager,
-  ProjectsUpdater,
-  GetProjectsStateHelper,
   ModifyEnvironmentCommandManager,
-  CreateProjectCommandManager,
-  CreateEnvironmentCommandManager,
   UpdateEnvironmentSettingCommandManager,
   EnvironmentSettingUpdater,
   GetEnvironmentSettingStateHelper,
@@ -34,16 +21,34 @@ import {
   DeployCommandManager,
   GetSupportArchiveCommandManager,
   PromoteVersionCommandManager,
-  GetDesiredStatesStateHelper,
   DesiredStatesUpdater,
   ControlAgentCommandManager,
-  GetAgentsUpdater,
-  GetAgentsStateHelper,
   TriggerCompileCommandManager,
   TriggerDryRun,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
-import * as UpdateNotification from "@/Slices/Notification/Data/CommandManager";
+import {
+  EnvironmentDetailsUpdater,
+  GetEnvironmentDetailsStateHelper,
+} from "@/Slices/Settings/Data/GetEnvironmentDetails";
+import { GetProjectsStateHelper } from "@/Slices/Settings/Data/GetProjects";
+import { GetAgentsUpdater } from "@S/Agents/Data/Updater";
+import {
+  CreateEnvironmentCommandManager,
+  CreateProjectCommandManager,
+} from "@S/CreateEnvironment/Data";
+import { CreateInstanceCommandManager } from "@S/CreateInstance/Data";
+import { GetDesiredStatesStateHelper } from "@S/DesiredState/Data";
+import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
+import { DeleteEnvironmentCommandManager, ProjectsUpdater } from "@S/Home/Data";
+import { UpdateNotificationCommandManager } from "@S/Notification/Data/CommandManager";
+import {
+  CallbacksStateHelper,
+  CallbacksUpdater,
+  CreateCallbackCommandManager,
+  DeleteCallbackCommandManager,
+} from "@S/ServiceCatalog/Data";
+import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -61,7 +66,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   }
 
   private getManagers(): CommandManager[] {
-    const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
+    const environmentDetailsStateHelper = new GetEnvironmentDetailsStateHelper(
       this.store
     );
     const environmentSettingUpdater = new EnvironmentSettingUpdater(
@@ -80,7 +85,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       this.apiHelper
     );
     const environmentDetailsUpdater = new EnvironmentDetailsUpdater(
-      environmentDetailsStateHelper,
+      this.store,
       this.apiHelper
     );
 
@@ -92,6 +97,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
           this.apiHelper
         )
       ),
+      new ClearEnvironmentCommandManager(this.apiHelper),
       new CreateProjectCommandManager(
         this.apiHelper,
         new ProjectsUpdater(
@@ -134,10 +140,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new CreateCallbackCommandManager(this.apiHelper, callbacksUpdater),
       new ModifyEnvironmentCommandManager(
         this.apiHelper,
-        new EnvironmentDetailsUpdater(
-          new EnvironmentDetailsStateHelper(this.store),
-          this.apiHelper
-        ),
+        new EnvironmentDetailsUpdater(this.store, this.apiHelper),
         new EnvironmentsUpdater(
           new GetEnvironmentsStateHelper(this.store),
           this.apiHelper
@@ -159,14 +162,11 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new PromoteVersionCommandManager(this.apiHelper, desiredStatesUpdater),
       new ControlAgentCommandManager(
         this.apiHelper,
-        new GetAgentsUpdater(
-          new GetAgentsStateHelper(this.store),
-          this.apiHelper
-        )
+        new GetAgentsUpdater(this.store, this.apiHelper)
       ),
       new TriggerCompileCommandManager(this.apiHelper),
       new TriggerDryRun.CommandManager(this.apiHelper),
-      new UpdateNotification.CommandManager(this.apiHelper, this.store),
+      new UpdateNotificationCommandManager(this.apiHelper, this.store),
     ];
   }
 }

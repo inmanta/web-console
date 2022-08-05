@@ -1,6 +1,16 @@
-import { RouteManager, Route, RouteKind, RouteMatch } from "@/Core";
+import {
+  RouteManager,
+  Route,
+  RouteKind,
+  RouteMatch,
+  Crumb,
+  RouteKindWithId,
+} from "@/Core";
 
 export class DummyRouteManager implements RouteManager {
+  getCrumbs(): Crumb[] {
+    throw new Error("Method not implemented.");
+  }
   getRoute<K extends RouteKind>(): Route<K> {
     throw new Error("Method not implemented.");
   }
@@ -29,6 +39,9 @@ export class DummyRouteManager implements RouteManager {
     throw new Error("Method not implemented.");
   }
   getRouteDictionary(): Record<RouteKind, Route> {
+    throw new Error("Method not implemented.");
+  }
+  getParamsFromUrl(): RouteKindWithId<"CompileDetails"> | undefined {
     throw new Error("Method not implemented.");
   }
 }

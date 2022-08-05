@@ -1,36 +1,47 @@
-import { Attributes, isObjectEmpty } from "@/Core";
-import { TreeRow, TreeRowCreator } from "@/UI/Components/TreeTable/TreeRow";
-import { words } from "@/UI/words";
+import {
+  Cell,
+  TreeRow,
+  TreeRowCreator,
+} from "@/UI/Components/TreeTable/TreeRow";
+import { AttributeTree } from "@/UI/Components/TreeTable/types";
 import { AttributeHelper } from "./AttributeHelper";
+import { MultiAttributeNode } from "./AttributeNode";
 import { PathHelper } from "./PathHelper";
 import { ExpansionState, TreeExpansionManager } from "./TreeExpansionManager";
 
-export class TreeTableHelper {
-  private readonly columns = [
-    words("attribute.name"),
-    words("attributesTab.candidate"),
-    words("attributesTab.active"),
-    words("attributesTab.rollback"),
-  ];
+export interface TreeTableHelper {
+  getColumns(): string[];
 
+  getExpansionState(): ExpansionState;
+
+  createRows(
+    expansionState: ExpansionState,
+    setState: (state: ExpansionState) => void
+  ): TreeRow[];
+
+  getEmptyAttributeSets(): string[];
+}
+
+export abstract class BaseTreeTableHelper<A extends AttributeTree>
+  implements TreeTableHelper
+{
   constructor(
     private readonly pathHelper: PathHelper,
     private readonly expansionManager: TreeExpansionManager,
-    private readonly attributeHelper: AttributeHelper,
-    private readonly attributes: Attributes
+    private readonly attributeHelper: AttributeHelper<A>,
+    protected readonly attributes: A["source"],
+    private readonly extractValues: (
+      node: Extract<MultiAttributeNode<A["target"]>, { kind: "Leaf" }>
+    ) => Cell[]
   ) {}
+  abstract getColumns(): string[];
 
-  public getColumns(): string[] {
-    return this.columns;
-  }
-
-  public getExpansionState(): ExpansionState {
+  getExpansionState(): ExpansionState {
     return this.expansionManager.create(
       this.attributeHelper.getPaths(this.attributes)
     );
   }
-
-  public createRows(
+  createRows(
     expansionState: ExpansionState,
     setState: (state: ExpansionState) => void
   ): TreeRow[] {
@@ -46,11 +57,12 @@ export class TreeTableHelper {
     const isChildExpanded = (path: string) =>
       this.expansionManager.get(expansionState, path);
 
-    const treeRowCreator = new TreeRowCreator(
+    const treeRowCreator = new TreeRowCreator<A["target"]>(
       this.pathHelper,
       isExpandedByParent,
       isChildExpanded,
-      createOnToggle
+      createOnToggle,
+      this.extractValues
     );
 
     const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
@@ -59,14 +71,7 @@ export class TreeTableHelper {
       .map(([key, node]) => treeRowCreator.create(key, node))
       .sort((a, b) => a.id.localeCompare(b.id));
   }
-
   getEmptyAttributeSets(): string[] {
-    const emptySets = Object.entries(this.attributes)
-      .filter(([, value]) => this.isEmpty(value))
-      .map(([key]) => key.charAt(0).toUpperCase() + key.slice(1));
-    return emptySets;
-  }
-  private isEmpty(attributeSet: Record<string, unknown>): boolean {
-    return !attributeSet || isObjectEmpty(attributeSet);
+    return [];
   }
 }

@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump terser from 4.6.10 to 4.8.1'
+destination-branches:
+- master
+- iso5
+sections: {}

@@ -1,6 +1,6 @@
 import { PageSize, Pagination } from "@/Core/Domain";
 import { RemoteData } from "@/Core/Language";
-import { Model, Severity } from "./Model";
+import { Notification, Severity } from "./Domain";
 import { Origin } from "./Utils";
 
 export interface Query {
@@ -13,17 +13,17 @@ export interface Query {
 export interface Manifest {
   error: string;
   apiResponse: {
-    data: Model[];
+    data: Notification[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   data: {
-    data: Model[];
+    data: Notification[];
     links: Pagination.Links;
     metadata: Pagination.Metadata;
   };
   usedData: {
-    data: Model[];
+    data: Notification[];
     handlers: Pagination.Handlers;
     metadata: Pagination.Metadata;
   };

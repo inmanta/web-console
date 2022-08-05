@@ -1,0 +1,4 @@
+description: Show embedded entities on the catalog view
+issue-nr: 3214
+change-type: minor
+destination-branches: [master, iso5]

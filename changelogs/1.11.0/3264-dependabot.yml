@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump moment from 2.29.1 to 2.29.2'
+destination-branches:
+- master
+- iso5
+sections: {}

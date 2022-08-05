@@ -27,7 +27,7 @@ test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", 
   expect(history.location.pathname).toEqual("/");
 });
 
-test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", () => {
+test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN list of projects is shown", async () => {
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
   render(
@@ -47,7 +47,7 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   const toggle = screen.getByRole("button", {
     name: `Selected Project: ${envA.name} (${envA.projectName})`,
   });
-  userEvent.click(toggle);
+  await userEvent.click(toggle);
   const listItem = screen.queryByRole("menuitem", {
     name: `${envB.name} (${envB.projectName})`,
   });
@@ -55,7 +55,7 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   expect(listItem).toBeVisible();
 });
 
-test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", () => {
+test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item THEN selected environment is changed", async () => {
   let selectedEnv;
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
@@ -76,7 +76,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   const toggle = screen.getByRole("button", {
     name: `Selected Project: ${envA.name} (${envA.projectName})`,
   });
-  userEvent.click(toggle);
+  await userEvent.click(toggle);
 
   const listItem = screen.getByRole("menuitem", {
     name: `${envB.name} (${envB.projectName})`,
@@ -84,7 +84,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
 
   expect(listItem).toBeVisible();
 
-  userEvent.click(listItem);
+  await userEvent.click(listItem);
 
   expect(
     screen.queryByRole("button", {
@@ -100,7 +100,7 @@ test.each`
   ${"dev-env2"} | ${1}
 `(
   "GIVEN EnvironmentSelector and populated store WHEN user types in '$inputValue' THEN shows $numberOfMatchedItems items",
-  ({ inputValue, numberOfMatchedItems }) => {
+  async ({ inputValue, numberOfMatchedItems }) => {
     const env = Environment.filterable[0];
 
     render(
@@ -120,20 +120,20 @@ test.each`
     const toggle = screen.getByRole("button", {
       name: `Selected Project: ${env.name} (${env.projectName})`,
     });
-    userEvent.click(toggle);
+    await userEvent.click(toggle);
 
     const menuItemsBefore = screen.getAllByRole("menuitem");
     expect(menuItemsBefore).toHaveLength(Environment.filterable.length);
 
     const input = screen.getByRole("searchbox", { name: "Filter Projects" });
-    userEvent.type(input, inputValue);
+    await userEvent.type(input, inputValue);
 
     const menuItemsAfter = screen.getAllByRole("menuitem");
     expect(menuItemsAfter).toHaveLength(numberOfMatchedItems);
   }
 );
 
-test("GIVEN EnvironmentSelector and populated store WHEN user types in non matching text THEN shows no items", () => {
+test("GIVEN EnvironmentSelector and populated store WHEN user types in non matching text THEN shows no items", async () => {
   const env = Environment.filterable[0];
   render(
     <MemoryRouter>
@@ -152,19 +152,19 @@ test("GIVEN EnvironmentSelector and populated store WHEN user types in non match
   const toggle = screen.getByRole("button", {
     name: `Selected Project: ${env.name} (${env.projectName})`,
   });
-  userEvent.click(toggle);
+  await userEvent.click(toggle);
 
   const menuItemsBefore = screen.getAllByRole("menuitem");
   expect(menuItemsBefore).toHaveLength(Environment.filterable.length);
 
   const input = screen.getByRole("searchbox", { name: "Filter Projects" });
-  userEvent.type(input, "non_existing_project_name");
+  await userEvent.type(input, "non_existing_project_name");
 
   const menuItemsAfter = screen.queryByRole("menuitem");
   expect(menuItemsAfter).not.toBeInTheDocument();
 });
 
-test("GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected", () => {
+test("GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected", async () => {
   let selectedEnv;
   const envA = Environment.filterable[0];
   const envB = Environment.filterable[2];
@@ -184,10 +184,10 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   const toggle = screen.getByRole("button", {
     name: `Selected Project: ${envA.name} (${envA.projectName})`,
   });
-  userEvent.click(toggle);
+  await userEvent.click(toggle);
 
   const menuItems = screen.getAllByRole("menuitem");
-  userEvent.click(menuItems[2]);
+  await userEvent.click(menuItems[2]);
 
   expect(
     screen.getByRole("button", {

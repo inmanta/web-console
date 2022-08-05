@@ -1,8 +1,8 @@
 import { Pagination } from "@/Test";
-import { Model } from "./Model";
+import { Notification } from "./Domain";
 import { Manifest } from "./Query";
 
-export const unread: Model = {
+export const unread: Notification = {
   environment: "env",
   id: "abcdefgh01",
   created: "2021-01-11T12:56:56.205131",
@@ -14,13 +14,13 @@ export const unread: Model = {
   cleared: false,
 };
 
-export const error: Model = {
+export const error: Notification = {
   ...unread,
   id: "abcdefgh02",
   severity: "error",
 };
 
-export const read: Model = {
+export const read: Notification = {
   ...unread,
   id: "abcdefgh03",
   severity: "info",
@@ -39,4 +39,4 @@ export const data: Manifest["usedData"] = {
   handlers: Pagination.handlers,
 };
 
-export const list: Model[] = [unread, read, error];
+export const list: Notification[] = [unread, read, error];

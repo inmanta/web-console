@@ -1,5 +1,6 @@
 export * from "./ActionDisabledTooltip";
 export * from "./AttributesTable";
+export * from "./AttributesSummaryView";
 export * from "./BooleanSwitch";
 export * from "./ButtonWithCursorHandling";
 export * from "./ClipboardCopyButton";

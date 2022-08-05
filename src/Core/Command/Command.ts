@@ -1,17 +1,13 @@
+import * as CreateEnvironment from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
+import * as CreateProject from "@S/CreateEnvironment/Core/CreateProjectCommand";
+import * as CreateInstance from "@S/CreateInstance/Core/Command";
+import * as TriggerInstanceUpdate from "@S/EditInstance/Core/Command";
+import * as DeleteEnvironment from "@S/Home/Core/DeleteEnvironmentCommand";
 import * as UpdateNotification from "@S/Notification/Core/Command";
+import * as CreateCallback from "@S/ServiceCatalog/Core/CreateCallback";
+import * as DeleteCallback from "@S/ServiceCatalog/Core/DeleteCallback";
+import * as ClearEnvironment from "@S/Settings/Core/ClearEnvironmentCommand";
 import { ControlAgent, ControlAgentManifest } from "./ControlAgent";
-import { CreateCallback, CreateCallbackManifest } from "./CreateCallback";
-import {
-  CreateEnvironment,
-  CreateEnvironmentManifest,
-} from "./CreateEnvironment";
-import { CreateInstance, CreateInstanceManifest } from "./CreateInstance";
-import { CreateProject, CreateProjectManifest } from "./CreateProject";
-import { DeleteCallback, DeleteCallbackManifest } from "./DeleteCallback";
-import {
-  DeleteEnvironment,
-  DeleteEnvironmentManifest,
-} from "./DeleteEnvironment";
 import { DeleteInstance, DeleteInstanceManifest } from "./DeleteInstance";
 import { DeleteService, DeleteServiceManifest } from "./DeleteService";
 import { Deploy, DeployManifest } from "./Deploy";
@@ -37,10 +33,6 @@ import {
 } from "./ResumeEnvironment";
 import { TriggerCompile, TriggerCompileManifest } from "./TriggerCompile";
 import { TriggerDryRun } from "./TriggerDryRun";
-import {
-  TriggerInstanceUpdate,
-  TriggerInstanceUpdateManifest,
-} from "./TriggerInstanceUpdate";
 import { TriggerSetState, TriggerSetStateManifest } from "./TriggerSetState";
 import {
   UpdateEnvironmentSetting,
@@ -58,19 +50,20 @@ import {
 export type Command =
   | UpdateServiceConfig
   | UpdateInstanceConfig
-  | CreateInstance
-  | TriggerInstanceUpdate
+  | CreateInstance.Command
+  | TriggerInstanceUpdate.Command
   | DeleteInstance
   | TriggerSetState
   | DeleteService
   | HaltEnvironment
   | ResumeEnvironment
   | ModifyEnvironment
-  | DeleteCallback
-  | CreateCallback
-  | DeleteEnvironment
-  | CreateProject
-  | CreateEnvironment
+  | DeleteCallback.Command
+  | CreateCallback.Command
+  | DeleteEnvironment.Command
+  | ClearEnvironment.Command
+  | CreateProject.Command
+  | CreateEnvironment.Command
   | UpdateEnvironmentSetting
   | ResetEnvironmentSetting
   | GenerateToken
@@ -92,19 +85,20 @@ export type Type = Command;
 interface Manifest {
   UpdateServiceConfig: UpdateServiceConfigManifest;
   UpdateInstanceConfig: UpdateInstanceConfigManifest;
-  CreateInstance: CreateInstanceManifest;
-  TriggerInstanceUpdate: TriggerInstanceUpdateManifest;
+  CreateInstance: CreateInstance.Manifest;
+  TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
   DeleteInstance: DeleteInstanceManifest;
   TriggerSetState: TriggerSetStateManifest;
   DeleteService: DeleteServiceManifest;
   HaltEnvironment: HaltEnvironmentManifest;
   ResumeEnvironment: ResumeEnvironmentManifest;
   ModifyEnvironment: ModifyEnvironmentManifest;
-  DeleteCallback: DeleteCallbackManifest;
-  CreateCallback: CreateCallbackManifest;
-  DeleteEnvironment: DeleteEnvironmentManifest;
-  CreateProject: CreateProjectManifest;
-  CreateEnvironment: CreateEnvironmentManifest;
+  DeleteCallback: DeleteCallback.Manifest;
+  CreateCallback: CreateCallback.Manifest;
+  DeleteEnvironment: DeleteEnvironment.Manifest;
+  ClearEnvironment: ClearEnvironment.Manifest;
+  CreateProject: CreateProject.Manifest;
+  CreateEnvironment: CreateEnvironment.Manifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
   ResetEnvironmentSetting: ResetEnvironmentSettingManifest;
   GenerateToken: GenerateTokenManifest;

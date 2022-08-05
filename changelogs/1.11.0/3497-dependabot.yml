@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @types/node from 17.0.33 to 17.0.34'
+destination-branches:
+- master
+- iso5
+sections: {}
