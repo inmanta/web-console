@@ -14,41 +14,52 @@ import { FileBlock } from "./FileBlock";
 
 interface Props {
   attributes: ClassifiedAttribute[];
+  variant?: AttributeTextVariant;
 }
 
-export const AttributeList: React.FC<Props> = ({ attributes }) => (
+type AttributeTextVariant = "default" | "monospace";
+
+export const AttributeList: React.FC<Props> = ({
+  attributes,
+  variant = "default",
+}) => (
   <StyledDescriptionList isHorizontal isAutoColumnWidths>
     {attributes.map((attribute) => (
       <DescriptionListGroup key={attribute.key}>
         <StyledDescriptionListTerm>{attribute.key}</StyledDescriptionListTerm>
         <DescriptionListDescription>
-          <AttributeValue attribute={attribute} />
+          <AttributeValue attribute={attribute} variant={variant} />
         </DescriptionListDescription>
       </DescriptionListGroup>
     ))}
   </StyledDescriptionList>
 );
 
-const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
-  attribute,
-}) => {
+const AttributeValue: React.FC<{
+  attribute: ClassifiedAttribute;
+  variant?: AttributeTextVariant;
+}> = ({ attribute, variant }) => {
   switch (attribute.kind) {
     case "Undefined":
       return (
-        <>
+        <TextContainer $variant={variant}>
           <OutlinedQuestionCircleIcon /> undefined
-        </>
+        </TextContainer>
       );
 
     case "Password":
-      return <span>{attribute.value}</span>;
+      return (
+        <TextContainer $variant={variant}>{attribute.value}</TextContainer>
+      );
 
     case "SingleLine":
       return (
         <TextWithCopy
           value={attribute.value}
           tooltipContent="Copy to clipboard"
-        />
+        >
+          <TextContainer $variant={variant}>{attribute.value}</TextContainer>
+        </TextWithCopy>
       );
 
     case "MultiLine":
@@ -56,7 +67,9 @@ const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
         <MultiTextWithCopy
           value={attribute.value}
           tooltipContent="Copy to clipboard"
-        />
+        >
+          <TextContainer $variant={variant}>{attribute.value}</TextContainer>
+        </MultiTextWithCopy>
       );
 
     case "File":
@@ -67,6 +80,8 @@ const AttributeValue: React.FC<{ attribute: ClassifiedAttribute }> = ({
 
     case "Xml":
       return <CodeHighlighter code={attribute.value} language="xml" />;
+    case "Python":
+      return <CodeHighlighter code={attribute.value} language="python" />;
   }
 };
 
@@ -83,4 +98,8 @@ const MultiTextWithCopy = styled(TextWithCopy)`
   display: block;
   max-width: 80ch;
   white-space: pre-wrap;
+`;
+
+const TextContainer = styled.span<{ $variant?: AttributeTextVariant }>`
+  ${(p) => (p.$variant === "monospace" ? "font-family: monospace;" : "")};
 `;

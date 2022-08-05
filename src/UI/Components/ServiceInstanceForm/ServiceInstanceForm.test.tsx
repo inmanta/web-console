@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import * as Test from "@/Test";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
-test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", () => {
+test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", async () => {
   render(
     <ServiceInstanceForm
       fields={[Test.Field.text]}
@@ -21,11 +21,11 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
   const textBox = screen.getByRole("textbox", { name: Test.Field.text.name });
   const value = "test text";
   expect(textBox).toBeVisible();
-  userEvent.type(textBox, value);
+  await userEvent.type(textBox, value);
   expect(textBox).toHaveValue(value);
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", () => {
+test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field", async () => {
   render(
     <ServiceInstanceForm
       fields={[Test.Field.bool]}
@@ -42,11 +42,11 @@ test("GIVEN ServiceInstanceForm WHEN passed a BooleanField THEN shows that field
   expect(screen.getAllByRole("radio")).toHaveLength(3);
 
   const trueRadioButton = screen.getByRole("radio", { name: "True" });
-  userEvent.click(trueRadioButton);
+  await userEvent.click(trueRadioButton);
   expect(trueRadioButton).toBeChecked();
 });
 
-test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field", () => {
+test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field", async () => {
   render(
     <ServiceInstanceForm
       fields={[Test.Field.enumField]}
@@ -64,7 +64,7 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
     name: "enum_field-select-toggle",
   });
   expect(select).toHaveTextContent("local");
-  userEvent.click(select);
+  await userEvent.click(select);
 
   const dropdown = screen.getByRole("listbox", {
     name: "enum_field-select-input",
@@ -73,11 +73,11 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
   const options = within(dropdown).getAllByRole("option");
   expect(options).toHaveLength(2);
 
-  userEvent.click(options[0]);
+  await userEvent.click(options[0]);
   expect(select).toHaveTextContent("ci");
 });
 
-test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN the nested FlatField is shown", () => {
+test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN the nested FlatField is shown", async () => {
   render(
     <ServiceInstanceForm
       fields={[Test.Field.nested([Test.Field.text])]}
@@ -86,8 +86,8 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
     />
   );
 
-  const group = screen.getByRole("generic", {
-    name: "NestedFieldInput-nested_field",
+  const group = screen.getByRole("group", {
+    name: "nested_field",
   });
 
   expect(group).toBeVisible();
@@ -95,13 +95,15 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
   expect(
     screen.queryByRole("textbox", { name: Test.Field.text.name })
   ).not.toBeInTheDocument();
-  userEvent.click(within(group).getByRole("button", { name: "nested_field" }));
+  await userEvent.click(
+    within(group).getByRole("button", { name: "nested_field" })
+  );
   expect(
     screen.getByRole("textbox", { name: Test.Field.text.name })
   ).toBeVisible();
 });
 
-test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", () => {
+test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles open THEN the nested FlatField is shown", async () => {
   render(
     <ServiceInstanceForm
       fields={[Test.Field.dictList([Test.Field.text])]}
@@ -110,8 +112,8 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
     />
   );
 
-  const group = screen.getByRole("generic", {
-    name: "DictListFieldInput-dict_list_field",
+  const group = screen.getByRole("group", {
+    name: "dict_list_field",
   });
 
   expect(group).toBeVisible();
@@ -119,18 +121,18 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   expect(
     screen.queryByRole("textbox", { name: Test.Field.text.name })
   ).not.toBeInTheDocument();
-  userEvent.click(
+  await userEvent.click(
     within(group).getByRole("button", {
       name: "dict_list_field",
     })
   );
-  userEvent.click(within(group).getByRole("button", { name: "1" }));
+  await userEvent.click(within(group).getByRole("button", { name: "1" }));
   expect(
     screen.getByRole("textbox", { name: Test.Field.text.name })
   ).toBeVisible();
 });
 
-test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", () => {
+test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is executed with formState", async () => {
   const nestedField = Test.Field.nested([
     { ...Test.Field.text, name: "flat_field_text_2" },
   ]);
@@ -148,26 +150,28 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     />
   );
 
-  userEvent.type(
+  await userEvent.type(
     screen.getByRole("textbox", { name: fields[0].name }),
     "test text"
   );
-  userEvent.click(screen.getByRole("radio", { name: "True" }));
+  await userEvent.click(screen.getByRole("radio", { name: "True" }));
 
-  userEvent.click(screen.getByRole("button", { name: nestedField.name }));
-  userEvent.type(
+  await userEvent.click(screen.getByRole("button", { name: nestedField.name }));
+  await userEvent.type(
     screen.getByRole("textbox", { name: nestedField.fields[0].name }),
     "test text 2"
   );
 
-  userEvent.click(screen.getByRole("button", { name: dictListField.name }));
-  userEvent.click(screen.getByRole("button", { name: "1" }));
-  userEvent.type(
+  await userEvent.click(
+    screen.getByRole("button", { name: dictListField.name })
+  );
+  await userEvent.click(screen.getByRole("button", { name: "1" }));
+  await userEvent.type(
     screen.getByRole("textbox", { name: dictListField.fields[0].name }),
     "test text 3"
   );
 
-  userEvent.click(screen.getByRole("button", { name: "Confirm" }));
+  await userEvent.click(screen.getByRole("button", { name: "Confirm" }));
   expect(submitCb).toBeCalled();
   expect(submitCb).toHaveBeenCalledWith({
     [Test.Field.text.name]: "test text",

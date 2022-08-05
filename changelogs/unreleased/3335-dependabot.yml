@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @testing-library/react from 12.1.4 to 12.1.5'
+destination-branches:
+- master
+- iso5
+sections: {}

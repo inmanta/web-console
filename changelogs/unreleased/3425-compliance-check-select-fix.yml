@@ -1,0 +1,4 @@
+description: Fix issue with the select dropdown on the compliance check page
+issue-nr: 3425
+change-type: patch
+destination-branches: [master, iso5]

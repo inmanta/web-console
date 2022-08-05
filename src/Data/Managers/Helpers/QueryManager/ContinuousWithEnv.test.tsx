@@ -81,7 +81,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   });
 
   const button = screen.getByRole("button", { name: "change-env" });
-  userEvent.click(button);
+  await userEvent.click(button);
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",

@@ -28,7 +28,8 @@ export class OneTimeWithEnv<Kind extends Query.Kind>
     private readonly getDependencies: GetDependenciesWithEnv<Kind>,
     private readonly kind: Kind,
     private readonly getUrl: GetUrlWithEnv<Kind>,
-    private readonly toUsed: ToUsed<Kind>
+    private readonly toUsed: ToUsed<Kind>,
+    private readonly strategy: "MERGE" | "RELOAD" = "RELOAD"
   ) {}
 
   async update(
@@ -56,7 +57,12 @@ export class OneTimeWithEnv<Kind extends Query.Kind>
     }, this.getDependencies(query, environment));
 
     useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), query, environment);
+      if (
+        this.strategy === "RELOAD" ||
+        RemoteData.isNotAsked(this.stateHelper.getOnce(query, environment))
+      ) {
+        this.stateHelper.set(RemoteData.loading(), query, environment);
+      }
       // If the environment changed, use the url derived from the query
       // Otherwise the url has changed, use it to not lose e.g. paging state
       const urlToUse =

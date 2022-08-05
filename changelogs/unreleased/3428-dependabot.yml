@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump typescript from 4.6.3 to 4.6.4'
+destination-branches:
+- master
+- iso5
+sections: {}

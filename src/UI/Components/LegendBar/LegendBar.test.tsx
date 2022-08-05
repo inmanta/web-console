@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LegendBar } from "./LegendBar";
 
-test("GIVEN LegendBar WHEN items have an onClick handler THEN handler is executed on click", () => {
+test("GIVEN LegendBar WHEN items have an onClick handler THEN handler is executed on click", async () => {
   const onClick = jest.fn();
   render(
     <LegendBar
@@ -20,6 +20,8 @@ test("GIVEN LegendBar WHEN items have an onClick handler THEN handler is execute
   );
 
   expect(onClick).not.toHaveBeenCalled();
-  userEvent.click(screen.getByRole("generic", { name: "LegendItem-test" }));
+  await userEvent.click(
+    screen.getByRole("generic", { name: "LegendItem-test" })
+  );
   expect(onClick).toHaveBeenCalledWith("test");
 });

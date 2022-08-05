@@ -5,7 +5,7 @@
 ## Entities
 
 Entities relate to all different data requirements within the application.  
-These are all different entities within our design:
+These are some of the entities within our design:
 
 - Projects
 - Environments

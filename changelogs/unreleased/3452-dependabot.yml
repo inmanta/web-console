@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @types/react from 17.0.44 to 17.0.45'
+destination-branches:
+- master
+- iso5
+sections: {}

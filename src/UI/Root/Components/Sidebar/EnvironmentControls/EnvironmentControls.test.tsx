@@ -7,14 +7,16 @@ import { Either } from "@/Core";
 import {
   BaseApiHelper,
   CommandResolverImpl,
-  EnvironmentDetailsQueryManager,
-  EnvironmentDetailsStateHelper,
-  EnvironmentDetailsUpdater,
   getStoreInstance,
   HaltEnvironmentCommandManager,
   QueryResolverImpl,
   ResumeEnvironmentCommandManager,
 } from "@/Data";
+import {
+  EnvironmentDetailsContinuousQueryManager,
+  EnvironmentDetailsUpdater,
+  GetEnvironmentDetailsStateHelper,
+} from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import {
   DeferredApiHelper,
   dependencies,
@@ -31,14 +33,11 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const environmentDetailsStateHelper = new EnvironmentDetailsStateHelper(
+  const environmentDetailsStateHelper = new GetEnvironmentDetailsStateHelper(
     store
   );
-  const environmentDetailsQueryManager = new EnvironmentDetailsQueryManager(
-    apiHelper,
-    environmentDetailsStateHelper,
-    scheduler
-  );
+  const environmentDetailsQueryManager =
+    new EnvironmentDetailsContinuousQueryManager(store, apiHelper, scheduler);
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([environmentDetailsQueryManager])
@@ -47,13 +46,13 @@ function setup() {
   const haltEnvironmentManager = new HaltEnvironmentCommandManager(
     new BaseApiHelper(),
     environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(environmentDetailsStateHelper, apiHelper)
+    new EnvironmentDetailsUpdater(store, apiHelper)
   );
 
   const resumeEnvironmentManager = new ResumeEnvironmentCommandManager(
     new BaseApiHelper(),
     environmentDetailsStateHelper,
-    new EnvironmentDetailsUpdater(environmentDetailsStateHelper, apiHelper)
+    new EnvironmentDetailsUpdater(store, apiHelper)
   );
 
   const commandResolver = new CommandResolverImpl(
@@ -96,8 +95,8 @@ test("EnvironmentControls halt the environment when clicked and the environment 
   });
   const stopButton = await screen.findByText("STOP");
   expect(stopButton).toBeVisible();
-  userEvent.click(stopButton);
-  userEvent.click(await screen.findByText("Yes"));
+  await userEvent.click(stopButton);
+  await userEvent.click(await screen.findByText("Yes"));
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/halt`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
@@ -113,8 +112,8 @@ test("EnvironmentControls don\\t trigger backend call when dialog is not confirm
   });
   const stopButton = await screen.findByText("STOP");
   expect(stopButton).toBeVisible();
-  userEvent.click(stopButton);
-  userEvent.click(await screen.findByText("No"));
+  await userEvent.click(stopButton);
+  await userEvent.click(await screen.findByText("No"));
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
 
@@ -129,8 +128,8 @@ test("EnvironmentControls resume the environment when clicked and the environmen
   expect(await screen.findByText("Operations halted")).toBeVisible();
   const start = await screen.findByText("Resume");
   expect(start).toBeVisible();
-  userEvent.click(start);
-  userEvent.click(await screen.findByText("Yes"));
+  await userEvent.click(start);
+  await userEvent.click(await screen.findByText("Yes"));
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/resume`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(

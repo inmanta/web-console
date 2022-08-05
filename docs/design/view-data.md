@@ -15,7 +15,7 @@ This component is now subscribed to a specific path in the Redux State.
 When data in this path changes, the component is rerendered.
 
 This is why it's important that components subscribe to very specific paths.  
-If they would subscribe to very general high level paths, than would cause a lot of unnecessary rerenders.
+If they would subscribe to very general high level paths, that would cause a lot of unnecessary rerenders.
 
 ## Path
 

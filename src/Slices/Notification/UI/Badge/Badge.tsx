@@ -8,7 +8,7 @@ import { RemoteData } from "@/Core";
 import { ErrorToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Model } from "@S/Notification/Core/Model";
+import { Notification } from "@S/Notification/Core/Domain";
 import { drawerQuery, ViewData } from "@S/Notification/Core/Query";
 
 export const Badge: React.FC<{ onClick(): void }> = ({ onClick }) => {
@@ -78,7 +78,7 @@ export const View: React.FC<Props> = ({ data, onClick }) => {
 };
 
 const getVariantFromNotifications = (
-  notifications: Model[]
+  notifications: Notification[]
 ): NotificationBadgeVariant => {
   if (notifications.some(isUnreadError)) {
     return NotificationBadgeVariant.attention;
@@ -87,12 +87,13 @@ const getVariantFromNotifications = (
   return NotificationBadgeVariant.read;
 };
 
-const isUnreadError = (notification: Model) =>
+const isUnreadError = (notification: Notification) =>
   isUnread(notification) && isError(notification);
 
-const isError = (notification: Model) => notification.severity === "error";
+const isError = (notification: Notification) =>
+  notification.severity === "error";
 
-const isUnread = (notification: Model) => notification.read === false;
+const isUnread = (notification: Notification) => notification.read === false;
 
 const PlainBadge = styled(NotificationBadge)`
   --pf-c-button--m-plain--hover--Color: var(--pf-global--Color--200);

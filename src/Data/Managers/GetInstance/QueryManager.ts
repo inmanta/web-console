@@ -21,3 +21,21 @@ export class ServiceInstanceQueryManager extends QueryManager.ContinuousWithEnv<
     );
   }
 }
+
+export class GetServiceInstanceOneTimeQueryManager extends QueryManager.OneTimeWithEnv<"GetServiceInstance"> {
+  constructor(
+    apiHelper: ApiHelper,
+    stateHelper: StateHelper<"GetServiceInstance">
+  ) {
+    super(
+      apiHelper,
+      stateHelper,
+      ({ id }) => [id],
+      "GetServiceInstance",
+      ({ service_entity, id }) =>
+        `/lsm/v1/service_inventory/${service_entity}/${id}`,
+      identity,
+      "MERGE"
+    );
+  }
+}

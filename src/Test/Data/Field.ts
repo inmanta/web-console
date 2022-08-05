@@ -193,3 +193,106 @@ export const nestedEditable: Field[] = [
     min: 0,
   },
 ];
+
+export const InterServiceRelationFields: Field[] = [
+  {
+    kind: "RelationList",
+    name: "relation1",
+    description: "desc",
+    isOptional: true,
+    fields: [
+      {
+        kind: "InterServiceRelation",
+        name: "relation1",
+        description: "desc",
+        isOptional: false,
+        serviceEntity: "test_entity",
+      },
+    ],
+    min: 0,
+  },
+  {
+    kind: "RelationList",
+    name: "relation2",
+    description: "desc",
+    isOptional: true,
+    fields: [
+      {
+        kind: "InterServiceRelation",
+        name: "relation2",
+        description: "desc",
+        isOptional: false,
+        serviceEntity: "test_entity2",
+      },
+    ],
+    min: 0,
+  },
+  {
+    kind: "RelationList",
+    name: "relation3",
+    description: "desc",
+    isOptional: true,
+    fields: [
+      {
+        kind: "InterServiceRelation",
+        name: "relation3",
+        description: "desc",
+        isOptional: false,
+        serviceEntity: "test_entity",
+      },
+    ],
+    min: 0,
+    max: 3,
+  },
+  {
+    kind: "RelationList",
+    name: "relation4",
+    description: "desc",
+    isOptional: true,
+    fields: [
+      {
+        kind: "InterServiceRelation",
+        name: "relation4",
+        description: "desc",
+        isOptional: false,
+        serviceEntity: "test_entity2",
+      },
+    ],
+    min: 0,
+    max: 3,
+  },
+  {
+    kind: "RelationList",
+    name: "relation5",
+    description: "desc",
+    isOptional: false,
+    fields: [
+      {
+        kind: "InterServiceRelation",
+        name: "relation5",
+        description: "desc",
+        isOptional: false,
+        serviceEntity: "test_entity",
+      },
+    ],
+    min: 1,
+    max: 3,
+  },
+  {
+    kind: "RelationList",
+    name: "relation6",
+    description: "desc",
+    isOptional: false,
+    fields: [
+      {
+        kind: "InterServiceRelation",
+        name: "relation6",
+        description: "desc",
+        isOptional: false,
+        serviceEntity: "test_entity2",
+      },
+    ],
+    min: 1,
+    max: 3,
+  },
+];

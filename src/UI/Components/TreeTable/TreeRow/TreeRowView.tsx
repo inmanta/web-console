@@ -3,7 +3,7 @@ import { Tr, Td } from "@patternfly/react-table";
 import { Toggle } from "@/UI/Components/Toggle";
 import { CellWithCopy } from "./CellWithCopy";
 import { Indent } from "./Indent";
-import { TreeRow, isRowOfMultipleValues } from "./TreeRow";
+import { TreeRow } from "./TreeRow";
 
 interface RowProps {
   row: TreeRow;
@@ -19,11 +19,13 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value }) => (
+          {row.valueCells.map(({ label, value, hasOnClick, serviceName }) => (
             <CellWithCopy
               label={label}
               value={value}
-              className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
+              hasOnClick={hasOnClick}
+              serviceName={serviceName}
+              className={"pf-m-truncate"}
               key={`${label}-${value}`}
             />
           ))}
@@ -69,11 +71,13 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value }) => (
+          {row.valueCells.map(({ label, value, hasOnClick, serviceName }) => (
             <CellWithCopy
               label={label}
               value={value}
-              className={isRowOfMultipleValues(row) ? "" : "pf-m-truncate"}
+              hasOnClick={hasOnClick}
+              serviceName={serviceName}
+              className={"pf-m-truncate"}
               key={`${label}-${value}`}
             />
           ))}

@@ -11,7 +11,10 @@ export type Field =
   | TextField
   | EnumField
   | NestedField
-  | DictListField;
+  | DictListField
+  | RelationListField;
+
+export type FieldLikeWithFormState = Field | InterServiceRelationField;
 
 interface BaseField {
   name: string;
@@ -49,4 +52,16 @@ export interface DictListField extends BaseField {
   fields: Field[];
   min: ParsedNumber;
   max?: ParsedNumber;
+}
+
+export interface RelationListField extends BaseField {
+  kind: "RelationList";
+  fields: InterServiceRelationField[];
+  min: ParsedNumber;
+  max?: ParsedNumber;
+}
+
+export interface InterServiceRelationField extends BaseField {
+  kind: "InterServiceRelation";
+  serviceEntity: string;
 }

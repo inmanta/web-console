@@ -3,8 +3,10 @@ import * as Environment from "@/Test/Data/Environment";
 import * as Attribute from "./Attribute";
 import * as EmbeddedEntity from "./EmbeddedEntity";
 import * as InstanceSummary from "./InstanceSummary";
+import { editable } from "./InterServiceRelations";
 import * as State from "./State";
 import * as Transfer from "./Transfer";
+export * as InterServiceRelations from "./InterServiceRelations";
 
 export const a: ServiceModel = {
   environment: Environment.a.id,
@@ -51,6 +53,9 @@ export const withInstanceSummary: ServiceModel = {
 export const nestedEditable: ServiceModel = {
   attributes: Attribute.nestedEditable,
   embedded_entities: EmbeddedEntity.nestedEditable,
+  inter_service_relations: [
+    { name: "related", entity_type: "subnet", lower_limit: 0, modifier: "rw" },
+  ],
   environment: "36d188da-a30d-411b-892f-35808ad9b6e1",
   name: "test_service",
   description: "Description of test service",
@@ -66,4 +71,12 @@ export const nestedEditable: ServiceModel = {
     by_label: { no_label: 0, info: 0, success: 0, danger: 0, warning: 0 },
     total: 1,
   },
+};
+
+export const withRelationsOnly: ServiceModel = {
+  ...a,
+  name: "with_relations",
+  attributes: [],
+  embedded_entities: [],
+  inter_service_relations: [editable],
 };
