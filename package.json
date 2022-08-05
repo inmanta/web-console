@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "1.11.0",
+  "version": "1.11.1",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
