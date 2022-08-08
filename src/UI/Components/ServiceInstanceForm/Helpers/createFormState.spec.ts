@@ -13,6 +13,14 @@ test("GIVEN fieldsToFormState WHEN passed a DictListField THEN creates formState
   });
 });
 
+test("GIVEN createFormState WHEN passed a dict field with a default value THEN creates formState correctly", () => {
+  const fields = [Field.dictionary];
+  const formState = createFormState(fields);
+  expect(formState).toEqual({
+    [Field.dictionary.name]: "{}",
+  });
+});
+
 test("Given fieldsToFormState WHEN passed editable nested fields and current state THEN creates formState correctly", () => {
   const formState = createEditFormState(
     Field.nestedEditable,

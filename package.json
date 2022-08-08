@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
@@ -167,7 +167,8 @@
     "json-schema": "^0.4.0",
     "node-forge": "^1.0.0",
     "cross-fetch": "^3.1.5",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "minimist": "^1.2.6"
   },
   "madge": {
     "fileExtensions": [
