@@ -85,9 +85,7 @@ export const FieldInput: React.FC<Props> = ({
             get(formState, makePath(path, field.name) as string) as string
           }
           isOptional={field.isOptional}
-          handleInputChange={getUpdate(
-            makePath(path, field.name) as string
-          )}
+          handleInputChange={getUpdate(makePath(path, field.name) as string)}
         />
       );
     case "Enum":
@@ -130,7 +128,7 @@ export const FieldInput: React.FC<Props> = ({
           path={path}
         />
       );
-  };
+  }
 };
 
 const getPlaceholderForType = (typeName: string): string | undefined => {
