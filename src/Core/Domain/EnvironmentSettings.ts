@@ -76,7 +76,6 @@ export type InputInfo =
   | DictInputInfo
   | StrInputInfo;
 
-
 export type IsUpdateable = (
   info: Pick<InputInfo, "initial" | "value" | "default">
 ) => boolean;
