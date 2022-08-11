@@ -117,6 +117,17 @@ export class InputInfoCreator {
           reset,
           isUpdateable,
         };
+      case "str":
+        return {
+          ...definition,
+          type: "str",
+          initial: initial as string,
+          value: this.undefinedFallback(value, definition.default),
+          set: (value) => setValue(value),
+          update,
+          reset,
+          isUpdateable,
+        };
     }
   }
 

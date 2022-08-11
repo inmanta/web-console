@@ -17,7 +17,8 @@ export type Definition =
   | BooleanDefinition
   | EnumDefinition
   | IntDefinition
-  | DictDefinition;
+  | DictDefinition
+  | StrDefinition;
 
 interface BaseDefinition {
   name: string;
@@ -48,6 +49,11 @@ interface DictDefinition extends BaseDefinition {
   default: Dict;
 }
 
+interface StrDefinition extends BaseDefinition {
+  type: "str";
+  default: string;
+}
+
 interface WithHandlers<ValueType extends Value> {
   initial: ValueType;
   value: ValueType;
@@ -60,13 +66,16 @@ interface WithHandlers<ValueType extends Value> {
 export type BooleanInputInfo = WithHandlers<boolean> & BooleanDefinition;
 export type IntInputInfo = WithHandlers<ParsedNumber> & IntDefinition;
 export type EnumInputInfo = WithHandlers<string> & EnumDefinition;
+export type StrInputInfo = WithHandlers<string> & StrDefinition;
 export type DictInputInfo = WithHandlers<Dict> & DictDefinition;
 
 export type InputInfo =
   | BooleanInputInfo
   | IntInputInfo
   | EnumInputInfo
-  | DictInputInfo;
+  | DictInputInfo
+  | StrInputInfo;
+
 
 export type IsUpdateable = (
   info: Pick<InputInfo, "initial" | "value" | "default">
