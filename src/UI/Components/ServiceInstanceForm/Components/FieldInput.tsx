@@ -82,10 +82,7 @@ export const FieldInput: React.FC<Props> = ({
           attributeName={field.name}
           description={field.description}
           attributeValue={
-            get(
-              formState,
-              makePath(path, field.name) as string
-            ) as string
+            get(formState, makePath(path, field.name) as string) as string
           }
           isOptional={field.isOptional}
           handleInputChange={getUpdate(
@@ -133,7 +130,7 @@ export const FieldInput: React.FC<Props> = ({
           path={path}
         />
       );
-  }
+  };
 };
 
 const getPlaceholderForType = (typeName: string): string | undefined => {
