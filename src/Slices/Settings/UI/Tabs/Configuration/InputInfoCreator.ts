@@ -92,6 +92,17 @@ export class InputInfoCreator {
           reset,
           isUpdateable,
         };
+      case "positive_float":
+        return {
+          ...definition,
+          type: "positive_float",
+          initial: initial as number,
+          value: this.undefinedFallback(value, definition.default),
+          set: (value) => setValue(value),
+          update,
+          reset,
+          isUpdateable,
+        };
       case "enum":
         return {
           ...definition,

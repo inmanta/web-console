@@ -17,6 +17,7 @@ export type Definition =
   | BooleanDefinition
   | EnumDefinition
   | IntDefinition
+  | PositiveFloatDefinition
   | DictDefinition
   | StrDefinition;
 
@@ -44,6 +45,11 @@ interface IntDefinition extends BaseDefinition {
   default: ParsedNumber;
 }
 
+interface PositiveFloatDefinition extends BaseDefinition {
+  type: "positive_float";
+  default: ParsedNumber;
+}
+
 interface DictDefinition extends BaseDefinition {
   type: "dict";
   default: Dict;
@@ -68,13 +74,16 @@ export type IntInputInfo = WithHandlers<ParsedNumber> & IntDefinition;
 export type EnumInputInfo = WithHandlers<string> & EnumDefinition;
 export type StrInputInfo = WithHandlers<string> & StrDefinition;
 export type DictInputInfo = WithHandlers<Dict> & DictDefinition;
+export type PositiveFloatInputInfo = WithHandlers<ParsedNumber> &
+  PositiveFloatDefinition;
 
 export type InputInfo =
   | BooleanInputInfo
   | IntInputInfo
   | EnumInputInfo
   | DictInputInfo
-  | StrInputInfo;
+  | StrInputInfo
+  | PositiveFloatInputInfo;
 
 export type IsUpdateable = (
   info: Pick<InputInfo, "initial" | "value" | "default">
