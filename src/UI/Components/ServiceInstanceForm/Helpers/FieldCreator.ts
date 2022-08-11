@@ -132,7 +132,7 @@ export class FieldCreator {
         description: interServiceRelation.description,
         isOptional: this.isOptional(interServiceRelation),
         serviceEntity: interServiceRelation.entity_type,
-      }
+      };
 
     return {
       kind: "RelationList",
