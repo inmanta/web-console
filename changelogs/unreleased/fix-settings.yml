@@ -1,0 +1,7 @@
+description: Fixed error on settings page resulting in blank page
+change-type: patch
+sections:
+  bugfix: "{{description}}"
+destination-branches:
+  - master
+  - iso5
