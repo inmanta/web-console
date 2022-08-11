@@ -1,5 +1,5 @@
 import React from "react";
-import { NumberInput, TextInput } from "@patternfly/react-core";
+import { TextInput } from "@patternfly/react-core";
 import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
 import { Warning } from "./Warning";
