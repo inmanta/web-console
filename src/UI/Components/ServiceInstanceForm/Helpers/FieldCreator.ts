@@ -124,6 +124,16 @@ export class FieldCreator {
       )
     )
       return null;
+
+    if (interServiceRelation.upper_limit === 1)
+      return {
+        kind: "InterServiceRelation",
+        name: interServiceRelation.name,
+        description: interServiceRelation.description,
+        isOptional: interServiceRelation.lower_limit === 0,
+        serviceEntity: interServiceRelation.entity_type,
+      }
+
     return {
       kind: "RelationList",
       name: interServiceRelation.name,
