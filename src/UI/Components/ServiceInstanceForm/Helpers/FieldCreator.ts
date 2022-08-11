@@ -130,7 +130,7 @@ export class FieldCreator {
         kind: "InterServiceRelation",
         name: interServiceRelation.name,
         description: interServiceRelation.description,
-        isOptional: interServiceRelation.lower_limit === 0,
+        isOptional: this.isOptional(interServiceRelation),
         serviceEntity: interServiceRelation.entity_type,
       }
 
