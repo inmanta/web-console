@@ -71,6 +71,23 @@ export const FieldInput: React.FC<Props> = ({
           key={field.name}
         />
       );
+    case "InterServiceRelation":
+      return (
+        <RelatedServiceProvider
+          alreadySelected={
+            get(formState, makePath(path, field.name), []) as string[]
+          }
+          key={makePath(path, field.name)}
+          serviceName={field.serviceEntity}
+          attributeName={field.name}
+          description={field.description}
+          attributeValue={
+            get(formState, makePath(path, field.name) as string) as string
+          }
+          isOptional={field.isOptional}
+          handleInputChange={getUpdate(makePath(path, field.name) as string)}
+        />
+      );
     case "Enum":
       return (
         <SelectFormInput
@@ -357,7 +374,7 @@ const RelationListFieldInput: React.FC<RelationListProps> = ({
           {field.fields.map((childField) => (
             <RelatedServiceProvider
               alreadySelected={
-                get(formState, makePath(path, `${field.name}`)) as string[]
+                get(formState, makePath(path, `${field.name}`), []) as string[]
               }
               key={makePath(path, `${field.name}.${index}`)}
               serviceName={childField.serviceEntity}
