@@ -1,0 +1,7 @@
+description: Fixed behavior of instance creation and update for services with inter-service relations
+change-type: patch
+sections:
+  bugfix: "{{description}}"
+destination-branches:
+  - iso5
+  - master
