@@ -232,6 +232,23 @@ test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon
   ).toBeInTheDocument();
 });
 
+test("ConfigurationTab can display unknown settings", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: EnvironmentSettings.base }));
+  });
+
+  const row = screen.getByRole("row", {
+    name: "Row-an_unknown_setting_type",
+  });
+
+  expect(
+    within(row).getByRole("textbox", { name: "string input" })
+  ).toBeInTheDocument();
+});
+
 test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and saving THEN update is performed", async () => {
   const { component, apiHelper } = setup();
   render(component);

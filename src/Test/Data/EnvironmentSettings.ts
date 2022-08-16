@@ -167,6 +167,15 @@ export const definition: EnvironmentSettings.DefinitionMap = {
     update_model: false,
     agent_restart: false,
   },
+  an_unknown_setting_type: {
+    name: "an_unknown_setting_type",
+    type: "something_new",
+    default: "",
+    doc: "a new setting",
+    recompile: false,
+    update_model: false,
+    agent_restart: false,
+  },
 };
 
 export const base: EnvironmentSettings.EnvironmentSettings = {
