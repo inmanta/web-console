@@ -170,7 +170,7 @@ export const definition: EnvironmentSettings.DefinitionMap = {
   an_unknown_setting_type: {
     name: "an_unknown_setting_type",
     type: "something_new",
-    default: "",
+    default: false,
     doc: "a new setting",
     recompile: false,
     update_model: false,

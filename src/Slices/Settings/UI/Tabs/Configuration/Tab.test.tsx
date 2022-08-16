@@ -244,9 +244,9 @@ test("ConfigurationTab can display unknown settings as strings", async () => {
     name: "Row-an_unknown_setting_type",
   });
 
-  expect(
-    within(row).getByRole("textbox", { name: "string input" })
-  ).toBeInTheDocument();
+  const field = within(row).getByRole("textbox", { name: "string input" });
+  expect(field).toBeInTheDocument();
+  expect(field).toHaveValue("false");
 });
 
 test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and saving THEN update is performed", async () => {

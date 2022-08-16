@@ -32,7 +32,8 @@ interface BaseDefinition {
 
 export interface UnknownDefinition extends BaseDefinition {
   type: string;
-  default: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default: any;
 }
 
 export interface BooleanDefinition extends BaseDefinition {
