@@ -232,7 +232,7 @@ test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon
   ).toBeInTheDocument();
 });
 
-test("ConfigurationTab can display unknown settings", async () => {
+test("ConfigurationTab can display unknown settings as strings", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
