@@ -4,15 +4,20 @@ import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
 import { Warning } from "./Warning";
 
+const MINVALUE = 0;
+
 interface Props {
-  info: EnvironmentSettings.IntInputInfo;
+  info: EnvironmentSettings.PositiveFloatInputInfo;
 }
 
-export const IntInput: React.FC<Props> = ({ info }) => {
+export const PositiveFloatInput: React.FC<Props> = ({ info }) => {
   const onChange = (event) => {
     info.set(Number(event.target.value));
   };
-  const onMinus = () => info.set(Number(info.value) - 1);
+  const onMinus = () =>
+    info.set(
+      Number(info.value) - 1 >= MINVALUE ? Number(info.value) - 1 : MINVALUE
+    );
   const onPlus = () => info.set(Number(info.value) + 1);
 
   return (
@@ -22,6 +27,7 @@ export const IntInput: React.FC<Props> = ({ info }) => {
         onMinus={onMinus}
         onChange={onChange}
         onPlus={onPlus}
+        min={MINVALUE}
         inputName="input"
         inputAriaLabel="number input"
         minusBtnAriaLabel="minus"

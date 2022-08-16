@@ -187,6 +187,51 @@ test("GIVEN ConfigurationTab WHEN editing a number field THEN shows warning icon
   ).toBeInTheDocument();
 });
 
+test("GIVEN ConfigurationTab WHEN editing a positiveFloat field THEN shows warning icon", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: EnvironmentSettings.base }));
+  });
+
+  const row = screen.getByRole("row", {
+    name: "Row-recompile_backoff",
+  });
+
+  expect(
+    within(row).queryByRole("generic", { name: "Warning" })
+  ).not.toBeInTheDocument();
+  await userEvent.click(within(row).getByRole("button", { name: "plus" }));
+  expect(
+    within(row).getByRole("generic", { name: "Warning" })
+  ).toBeInTheDocument();
+});
+
+test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: EnvironmentSettings.base }));
+  });
+
+  const row = screen.getByRole("row", {
+    name: "Row-auto_full_compile",
+  });
+  const textbox = within(row).getByRole("textbox", {
+    name: "string input",
+  });
+
+  expect(
+    within(row).queryByRole("generic", { name: "Warning" })
+  ).not.toBeInTheDocument();
+  await userEvent.type(textbox, "testString");
+  expect(
+    within(row).getByRole("generic", { name: "Warning" })
+  ).toBeInTheDocument();
+});
+
 test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and saving THEN update is performed", async () => {
   const { component, apiHelper } = setup();
   render(component);
