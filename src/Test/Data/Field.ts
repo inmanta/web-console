@@ -196,6 +196,23 @@ export const nestedEditable: Field[] = [
 
 export const InterServiceRelationFields: Field[] = [
   {
+    kind: "InterServiceRelation",
+    name: "relation7",
+    description: "desc",
+    isOptional: false,
+    serviceEntity: "test_entity",
+  },
+  {
+    kind: "InterServiceRelation",
+    name: "relation8",
+    description: "desc",
+    isOptional: false,
+    serviceEntity: "test_entity2",
+  },
+];
+
+export const RelationListFields: Field[] = [
+  {
     kind: "RelationList",
     name: "relation1",
     description: "desc",
