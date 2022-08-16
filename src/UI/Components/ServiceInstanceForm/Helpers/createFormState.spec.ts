@@ -52,7 +52,7 @@ test("Given fieldsToFormState WHEN passed editable nested fields and current sta
 });
 
 test("GIVEN fieldsToFormState WHEN passed a interservice relations THEN creates formState correctly", () => {
-  const fields = Field.InterServiceRelationFields;
+  const fields = Field.RelationListFields;
   const formState = createFormState(fields);
   expect(formState).toMatchObject({
     relation1: [],
@@ -65,7 +65,7 @@ test("GIVEN fieldsToFormState WHEN passed a interservice relations THEN creates 
 });
 
 test("GIVEN fieldsToFormState WHEN passed a interservice relations and current state THEN creates formState correctly", () => {
-  const fields = Field.InterServiceRelationFields;
+  const fields = Field.RelationListFields;
   const formState = createEditFormState(fields, {
     relation1: ["id123", "id456"],
     relation2: [],
