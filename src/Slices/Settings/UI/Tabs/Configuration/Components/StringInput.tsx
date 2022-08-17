@@ -10,7 +10,7 @@ interface Props {
 
 export const StringInput: React.FC<Props> = ({ info }) => {
   return (
-    <>
+    <Container hasWarning={info.isUpdateable(info)}>
       <TextInput
         value={info.value}
         onChange={info.set}
@@ -18,11 +18,15 @@ export const StringInput: React.FC<Props> = ({ info }) => {
         type="text"
       />
       {info.isUpdateable(info) && <StyledWarning />}
-    </>
+    </Container>
   );
 };
 
 const StyledWarning = styled(Warning)`
   height: 36px;
   margin-left: 16px;
+`;
+const Container = styled.div<{ hasWarning: boolean }>`
+  display: flex;
+  margin-right: ${(p) => (p.hasWarning ? "0" : "16px")};
 `;

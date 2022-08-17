@@ -19,7 +19,8 @@ export type Definition =
   | IntDefinition
   | PositiveFloatDefinition
   | DictDefinition
-  | StrDefinition;
+  | StrDefinition
+  | UnknownDefinition;
 
 interface BaseDefinition {
   name: string;
@@ -29,33 +30,39 @@ interface BaseDefinition {
   agent_restart: boolean;
 }
 
-interface BooleanDefinition extends BaseDefinition {
+export interface UnknownDefinition extends BaseDefinition {
+  type: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  default: any;
+}
+
+export interface BooleanDefinition extends BaseDefinition {
   type: "bool";
   default: boolean;
 }
 
-interface EnumDefinition extends BaseDefinition {
+export interface EnumDefinition extends BaseDefinition {
   type: "enum";
   default: string;
   allowed_values: string[];
 }
 
-interface IntDefinition extends BaseDefinition {
+export interface IntDefinition extends BaseDefinition {
   type: "int";
   default: ParsedNumber;
 }
 
-interface PositiveFloatDefinition extends BaseDefinition {
+export interface PositiveFloatDefinition extends BaseDefinition {
   type: "positive_float";
   default: ParsedNumber;
 }
 
-interface DictDefinition extends BaseDefinition {
+export interface DictDefinition extends BaseDefinition {
   type: "dict";
   default: Dict;
 }
 
-interface StrDefinition extends BaseDefinition {
+export interface StrDefinition extends BaseDefinition {
   type: "str";
   default: string;
 }
