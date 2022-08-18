@@ -57,6 +57,17 @@ export const classified: ClassifiedAttribute[] = [
     key: "some_password",
     value: "****",
   },
+  {
+    kind: "Xml",
+    key: "wrongXml1",
+    value:
+      "<class 'AttributeError'>: 'RPCError' object has no attribute '_tag'",
+  },
+  {
+    kind: "Xml",
+    key: "wrongXml2",
+    value: "<class 'AttributeError'>",
+  },
 ];
 
 export const longNames: ClassifiedAttribute[] = [
