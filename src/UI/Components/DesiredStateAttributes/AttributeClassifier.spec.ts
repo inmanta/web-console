@@ -35,35 +35,3 @@ test("GIVEN AttributeClassifier WHEN provided with a custom multiline classifier
     },
   ]);
 });
-
-test("GIVEN AttributeClassifier WHEN provided with a wrong xml THEN return the string without formating to prevent crash", () => {
-  const classifier = new AttributeClassifier(
-    new JsonFormatter(),
-    new XmlFormatter()
-  );
-
-  expect(
-    classifier.classify({
-      goodXml: attributes["c"],
-      wrongXml1: attributes["wrongXml1"],
-      wrongXml2: attributes["wrongXml2"],
-    })
-  ).toEqual([
-    {
-      kind: "Xml",
-      key: "goodXml",
-      value: "<note>\n    <to>Tove</to>\n    <from>Jani</from>\n</note>",
-    },
-    {
-      kind: "Xml",
-      key: "wrongXml1",
-      value:
-        "<class 'AttributeError'>: 'RPCError' object has no attribute '_tag'",
-    },
-    {
-      kind: "Xml",
-      key: "wrongXml2",
-      value: "<class 'AttributeError'>",
-    },
-  ]);
-});
