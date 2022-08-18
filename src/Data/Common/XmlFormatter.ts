@@ -3,9 +3,13 @@ import { Formatter } from "@/Core";
 
 export class XmlFormatter implements Formatter {
   format(source: string): string {
-    return formatXml(source, {
-      collapseContent: true,
-      lineSeparator: "\n",
-    });
+    try {
+      return formatXml(source, {
+        collapseContent: true,
+        lineSeparator: "\n",
+      });
+    } catch {
+      return source;
+    }
   }
 }
