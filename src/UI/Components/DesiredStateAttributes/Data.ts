@@ -15,6 +15,8 @@ export const attributes = {
   g: {},
   hash: "filehash",
   some_password: "abcde",
+  wrongXml1: `<class 'AttributeError'>: 'RPCError' object has no attribute '_tag'`,
+  wrongXml2: `<class 'AttributeError'>`,
 };
 
 export const classified: ClassifiedAttribute[] = [
