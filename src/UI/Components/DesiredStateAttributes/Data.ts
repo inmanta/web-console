@@ -58,7 +58,7 @@ export const classified: ClassifiedAttribute[] = [
     value: "****",
   },
   {
-    kind: "Xml",
+    kind: "SingleLine",
     key: "wrongXml1",
     value:
       "<class 'AttributeError'>: 'RPCError' object has no attribute '_tag'",
