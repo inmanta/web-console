@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump webpack-bundle-analyzer from 4.6.0 to 4.6.1'
+destination-branches:
+- master
+- iso5
+sections: {}
