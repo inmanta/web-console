@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @typescript-eslint/eslint-plugin from 5.35.1 to
+    5.36.1'
+destination-branches:
+- master
+- iso5
+sections: {}
