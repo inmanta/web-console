@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump @patternfly/react-table from 4.100.8 to 4.104.7'
+destination-branches:
+- master
+- iso5
+sections: {}
