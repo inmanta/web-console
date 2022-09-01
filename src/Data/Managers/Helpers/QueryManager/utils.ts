@@ -1,4 +1,6 @@
-export function urlEncodeParams<Q>(query: Q) {
+import { Kind, SubQuery } from "@/Core/Query/Query";
+
+export function urlEncodeParams<Q extends SubQuery<Kind>>(query: Q) {
   const encodedQuery = Object.fromEntries(
     Object.entries(query).map(([key, value]) => {
       const encodedValue =
