@@ -40,7 +40,7 @@
   ],
   "type": "module",
   "devDependencies": {
-    "@babel/core": "^7.18.13",
+    "@babel/core": "^7.19.0",
     "@babel/plugin-transform-typescript": "^7.18.12",
     "@storybook/addon-actions": "^v6.5.10",
     "@storybook/addon-essentials": "^v6.5.10",
@@ -65,7 +65,7 @@
     "@types/styled-components": "^5.1.26",
     "@types/webpack": "^5.28.0",
     "@types/xml-formatter": "^2.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
     "@typescript-eslint/parser": "^5.36.2",
     "babel-loader": "^8.2.5",
     "clean-css": "^5.3.1",
