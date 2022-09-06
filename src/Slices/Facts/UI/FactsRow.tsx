@@ -17,7 +17,9 @@ export const FactsRow: React.FC<Props> = ({ row }) => {
       <Tr aria-label="FactsRow">
         <Td dataLabel={words("facts.column.name")}>{row.name}</Td>
         <Td dataLabel={words("facts.column.updated")}>{row.updated}</Td>
-        <Td dataLabel={words("facts.column.value")}>{row.value}</Td>
+        <Td modifier="breakWord" dataLabel={words("facts.column.value")}>
+          {row.value}
+        </Td>
         <Td>
           <Link
             pathname={routeManager.getUrl("ResourceDetails", {
