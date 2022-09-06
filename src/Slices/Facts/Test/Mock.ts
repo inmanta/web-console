@@ -65,8 +65,7 @@ export const list = [
   {
     id: "f6270940-6f40-43ff-bfca-452677e202d1",
     name: "location",
-    value:
-      "ValueThatIsSupposedToBeLong::IP189.837.38:192.0.2.1,192.0.2.249,192.0.2.254,192.168.126.10,192.168.126.111,192.168.126.112,192.168.126.113,192.168.126.121,192.168.126.131,192.168.126.132,192.168.126.133,192.168.126.134",
+    value: "EqDC12345",
     environment: "80a8d40c-0323-4305-822d-d377ada8ce04",
     resource_id: "aws_dc::HostedConnection[aws,hcid=abcd]",
     source: "fact",
