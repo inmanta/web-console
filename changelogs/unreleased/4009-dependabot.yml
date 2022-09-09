@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump typescript from 4.8.2 to 4.8.3'
+destination-branches:
+- master
+- iso5
+sections: {}
