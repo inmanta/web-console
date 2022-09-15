@@ -48,7 +48,7 @@
     "@storybook/react": "^v6.4.22",
     "@testing-library/dom": "^8.17.1",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^12.1.5",
+    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/fetch-mock": "^7.3.5",
     "@types/file-saver": "^2.0.5",
