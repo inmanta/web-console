@@ -12,8 +12,8 @@ import { words } from "@/UI/words";
 import { GetInstancesContext } from "@S/ServiceInventory/UI/GetInstancesContext";
 
 interface Props extends VersionedServiceInstanceIdentifier {
-  isDisabled?: boolean;
   instance_identity: string;
+  isDisabled?: boolean;
 }
 
 export const DeleteModal: React.FC<Props> = ({
