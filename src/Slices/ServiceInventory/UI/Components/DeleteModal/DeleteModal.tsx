@@ -13,11 +13,13 @@ import { GetInstancesContext } from "@S/ServiceInventory/UI/GetInstancesContext"
 
 interface Props extends VersionedServiceInstanceIdentifier {
   isDisabled?: boolean;
+  instance_identity: string;
 }
 
 export const DeleteModal: React.FC<Props> = ({
   isDisabled,
   id,
+  instance_identity,
   version,
   service_entity,
 }) => {
@@ -75,7 +77,10 @@ export const DeleteModal: React.FC<Props> = ({
         variant={"small"}
         onClose={handleModalToggle}
       >
-        {words("inventory.deleteInstance.header")(id, service_entity)}
+        {words("inventory.deleteInstance.header")(
+          instance_identity,
+          service_entity
+        )}
         <DeleteForm onSubmit={onSubmit} onCancel={() => setIsOpen(false)} />
       </Modal>
     </>
