@@ -49,7 +49,7 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <>
+        <React.Fragment>
           <ErrorView
             message={
               this.state.error?.message || "Something unexpected happened."
@@ -78,7 +78,7 @@ class ErrorBoundary extends Component<Props, State> {
               </this.StyledParagraph>
             </this.StyledCenteredContainer>
           </this.StyledClipboardContainer>
-        </>
+        </React.Fragment>
       );
     }
 
