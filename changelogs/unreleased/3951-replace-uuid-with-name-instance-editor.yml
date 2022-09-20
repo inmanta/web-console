@@ -1,0 +1,8 @@
+---
+description: replace instance uuid with instance identity when possible in action modals(Delete and set State Action)
+change-type: patch
+destination-branches: 
+ - master
+ - iso5
+sections: 
+  bugfix: "{{description}}"

@@ -43,6 +43,10 @@ function setup() {
           <GetInstancesContext.Provider value={{ refetch }}>
             <DeleteModal
               id={ServiceInstance.a.id}
+              instance_identity={
+                ServiceInstance.a.service_identity_attribute_value ??
+                ServiceInstance.a.id
+              }
               version={ServiceInstance.a.version}
               isDisabled={isDisabled}
               service_entity={ServiceInstance.a.service_entity}
