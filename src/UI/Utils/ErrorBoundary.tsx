@@ -30,22 +30,6 @@ class ErrorBoundary extends Component<Props, State> {
     console.error("Uncaught error:", error, errorInfo);
   }
 
-  public StyledClipboardContainer = styled.div`
-    max-width: 1200px;
-    margin: 0 auto;
-  `;
-  public StyledCenteredContainer = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-direction: column;
-    margin-top: 20px;
-  `;
-  public StyledParagraph = styled.p`
-    font-style: italic;
-    color: var(--pf-global--palette--blue-400);
-  `;
-
   public render() {
     if (this.state.hasError) {
       return (
@@ -84,6 +68,22 @@ class ErrorBoundary extends Component<Props, State> {
 
     return this.props.children;
   }
+
+  public StyledClipboardContainer = styled.div`
+    max-width: 1200px;
+    margin: 0 auto;
+  `;
+  public StyledCenteredContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-direction: column;
+    margin-top: 20px;
+  `;
+  public StyledParagraph = styled.p`
+    font-style: italic;
+    color: var(--pf-global--palette--blue-400);
+  `;
 }
 
 export default ErrorBoundary;
