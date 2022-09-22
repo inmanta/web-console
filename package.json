@@ -128,7 +128,7 @@
   },
   "dependencies": {
     "@patternfly/react-charts": "^6.88.7",
-    "@patternfly/react-core": "^4.235.7",
+    "@patternfly/react-core": "^4.239.0",
     "@patternfly/react-icons": "^4.82.8",
     "@patternfly/react-styles": "^4.81.8",
     "@patternfly/react-table": "^4.104.7",
