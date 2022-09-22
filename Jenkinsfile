@@ -18,7 +18,10 @@ pipeline {
                     dir('web-console') {
                         checkout scm
                         GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
-                        println(GIT_COMMIT_HASH)
+                        println('Commit Hash being added: ',GIT_COMMIT_HASH)
+                        def fileContent = '{"version_hash": ' + '"' + GIT_COMMIT_HASH + '"}'
+
+                        println(fileContent)
                     }
                 }
             }
