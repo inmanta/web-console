@@ -47,7 +47,7 @@
     "@storybook/addon-essentials": "^v6.5.12",
     "@storybook/addon-links": "^v6.5.12",
     "@storybook/react": "^v6.4.22",
-    "@testing-library/dom": "^8.17.1",
+    "@testing-library/dom": "^8.18.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.4.3",
@@ -128,7 +128,7 @@
   },
   "dependencies": {
     "@patternfly/react-charts": "^6.88.7",
-    "@patternfly/react-core": "^4.235.7",
+    "@patternfly/react-core": "^4.239.0",
     "@patternfly/react-icons": "^4.82.8",
     "@patternfly/react-styles": "^4.81.8",
     "@patternfly/react-table": "^4.104.7",
