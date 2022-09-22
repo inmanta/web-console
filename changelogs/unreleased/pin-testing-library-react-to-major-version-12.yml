@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Pin testing library react to major version 12'
+destination-branches:
+- master
+- iso5
+sections: {}
