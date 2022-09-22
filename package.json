@@ -134,7 +134,7 @@
     "@patternfly/react-table": "^4.104.7",
     "@patternfly/react-tokens": "^4.91.0",
     "copy-to-clipboard": "^3.3.2",
-    "easy-peasy": "^5.0.4",
+    "easy-peasy": "^5.1.0",
     "file-saver": "^2.0.5",
     "history": "5.3.0",
     "json-bigint": "^1.0.0",
