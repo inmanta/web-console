@@ -12,6 +12,14 @@ pipeline {
     }
 
     stages {
+        stage('Write') {
+            steps {
+                script {
+                    GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
+                    println(GIT_COMMIT_HASH)
+                }
+            }
+        }
         stage('Build & Unit Test') {
             steps {
                 deleteDir()
