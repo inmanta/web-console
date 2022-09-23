@@ -10,6 +10,7 @@ import * as ClearEnvironment from "@S/Settings/Core/ClearEnvironmentCommand";
 import { ControlAgent, ControlAgentManifest } from "./ControlAgent";
 import { DeleteInstance, DeleteInstanceManifest } from "./DeleteInstance";
 import { DeleteService, DeleteServiceManifest } from "./DeleteService";
+import { DeleteVersion, DeleteVersionManifest } from "./DeleteVersion";
 import { Deploy, DeployManifest } from "./Deploy";
 import { GenerateToken, GenerateTokenManifest } from "./GenerateToken";
 import {
@@ -71,6 +72,7 @@ export type Command =
   | Repair
   | GetSupportArchive
   | PromoteVersion
+  | DeleteVersion
   | ControlAgent
   | TriggerCompile
   | TriggerDryRun.Command
@@ -96,6 +98,7 @@ interface Manifest {
   DeleteCallback: DeleteCallback.Manifest;
   CreateCallback: CreateCallback.Manifest;
   DeleteEnvironment: DeleteEnvironment.Manifest;
+  DeleteVersion: DeleteVersionManifest;
   ClearEnvironment: ClearEnvironment.Manifest;
   CreateProject: CreateProject.Manifest;
   CreateEnvironment: CreateEnvironment.Manifest;
