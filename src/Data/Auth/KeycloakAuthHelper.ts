@@ -1,8 +1,8 @@
-import { KeycloakInstance } from "keycloak-js";
+import Keycloak from "keycloak-js";
 import { AuthHelper } from "@/Core";
 
 export class KeycloakAuthHelper implements AuthHelper {
-  constructor(private readonly keycloak?: KeycloakInstance) {}
+  constructor(private readonly keycloak?: Keycloak) {}
 
   isDisabled(): boolean {
     return this.getUsername() === null;
