@@ -20,9 +20,8 @@ pipeline {
                         GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
 
                         def fileContent = '{"version_hash": ' + '"' + GIT_COMMIT_HASH + '"}'
-                        if (fileExists('./version.json')) {
-                            echo "file Exist"
-                        }
+                        def versionFile = find f "version.json"
+                        echo versionFile
 
 
                     }
