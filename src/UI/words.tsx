@@ -10,6 +10,7 @@
  * value for "inventory", but also for "inventory.state".
  */
 import React from "react";
+import { ParsedNumber } from "@/Core";
 
 const dict = {
   /**
@@ -143,6 +144,10 @@ const dict = {
     serviceName: string
   ) =>
     `Are you sure you want to delete instance ${instanceName} of service entity ${serviceName}?`,
+  "inventory.deleteVersion.failed": "Deleting version failed",
+  "inventory.deleteVersion.title": "Delete version",
+  "inventory.deleteVersion.header": (version: ParsedNumber) =>
+    `Are you sure you want to delete version ${version}?`,
   "inventory.filters.state.placeholder": "Select a state...",
 
   /**
@@ -456,6 +461,7 @@ const dict = {
   "desiredState.columns.status": "Status",
   "desiredState.columns.resources": "Number of resources",
   "desiredState.columns.labels": "Labels",
+  "desiredState.actions.delete": "Delete",
   "desiredState.actions.showResources": "Show Resources",
   "desiredState.actions.promote": "Promote",
   "desiredState.actions.promote.failed":

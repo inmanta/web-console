@@ -49,6 +49,7 @@ import {
   DeleteCallbackCommandManager,
 } from "@S/ServiceCatalog/Data";
 import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
+import { DeleteVersionCommandManager } from "../Managers/DeleteVersion";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -160,6 +161,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new DeployCommandManager(this.apiHelper),
       new RepairCommandManager(this.apiHelper),
       new PromoteVersionCommandManager(this.apiHelper, desiredStatesUpdater),
+      new DeleteVersionCommandManager(this.apiHelper),
       new ControlAgentCommandManager(
         this.apiHelper,
         new GetAgentsUpdater(this.store, this.apiHelper)
