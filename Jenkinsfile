@@ -12,22 +12,6 @@ pipeline {
     }
 
     stages {
-        stage('Write') {
-            steps {
-                script {
-                    dir('web-console') {
-                        checkout scm
-                        GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
-
-                        def fileContent = '{"version_hash": ' + '"' + GIT_COMMIT_HASH + '"}'
-                        def versionFile = sh (script: "find \"version.json\"", returnStdout: true)
-                        echo versionFile
-
-
-                    }
-                }
-            }
-        }
         stage('Build & Unit Test') {
             steps {
                 deleteDir()
