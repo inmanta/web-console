@@ -13,6 +13,7 @@ export type ServiceInstanceForAction = Pick<
   | "environment"
   | "instanceSetStateTargets"
   | "deleted"
+  | "service_identity_attribute_value"
 >;
 
 /**

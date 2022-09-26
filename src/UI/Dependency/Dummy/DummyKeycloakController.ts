@@ -1,11 +1,11 @@
-import { KeycloakInitOptions, KeycloakInstance } from "keycloak-js";
+import Keycloak, { KeycloakInitOptions } from "keycloak-js";
 import { KeycloakController } from "@/Core";
 
 export class DummyKeycloakController implements KeycloakController {
   getInitConfig(): KeycloakInitOptions {
     throw new Error("Method not implemented.");
   }
-  getInstance(): KeycloakInstance {
+  getInstance(): Keycloak {
     throw new Error("Method not implemented.");
   }
   isEnabled(): boolean {
