@@ -39,4 +39,7 @@ export const GlobalStyles = createGlobalStyle`
     width: 9ch;
   }
 
+  .pointer {
+    cursor: pointer;
+  }
 `;

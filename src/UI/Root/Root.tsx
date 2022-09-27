@@ -4,6 +4,7 @@ import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
 import { NotFoundPage } from "@S/NotFound/UI";
+import { UpdateBanner } from "../Components/UpdateBanner";
 import { AuthProvider, PageFrame, Initializer } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
@@ -18,6 +19,7 @@ export const Root: React.FC = () => {
       <GlobalStyles />
       <Initializer>
         <SearchSanitizer.Provider>
+          <UpdateBanner />
           <AuthProvider>
             <Routes>
               {routeManager.isBaseUrlDefined() && (
