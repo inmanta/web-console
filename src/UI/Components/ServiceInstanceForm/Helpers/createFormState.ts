@@ -16,7 +16,7 @@ export const createFormState = (
       }
 
       case "InterServiceRelation": {
-        return "";
+        return acc;
       }
 
       case "Nested": {
@@ -43,6 +43,9 @@ export const createFormState = (
           );
         }
 
+        return acc;
+      }
+      default: {
         return acc;
       }
     }
