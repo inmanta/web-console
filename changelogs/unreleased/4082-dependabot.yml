@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump easy-peasy from 5.0.4 to 5.1.0'
+destination-branches:
+- master
+- iso5
+sections: {}

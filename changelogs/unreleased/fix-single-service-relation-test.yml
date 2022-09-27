@@ -1,0 +1,5 @@
+description: Add a test to the previous fix(commit ae65702734280625dc0cb712abac32d87e913fca) about single service relations.
+change-type: patch
+destination-branches:
+  - iso5
+  - master

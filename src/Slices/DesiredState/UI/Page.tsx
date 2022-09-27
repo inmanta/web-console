@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { ParsedNumber } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import {
   EmptyView,
@@ -11,11 +12,14 @@ import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Filter } from "@S/DesiredState/Core/Query";
 import { TableControls } from "./Components";
+import { DeleteModal } from "./Components/DeleteModal";
 import { DesiredStatesTable } from "./DesiredStatesTable";
 import { GetDesiredStatesContext } from "./GetDesiredStatesContext";
 import { CompareSelection } from "./Utils";
 
 export const Page: React.FC = () => {
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [versionToDelete, setVersionToDelete] = useState<ParsedNumber>(0);
   const [errorMessage, setErrorMessage] = useState("");
   const { queryResolver } = useContext(DependencyContext);
   const [pageSize, setPageSize] = useUrlStateWithPageSize({
@@ -33,6 +37,10 @@ export const Page: React.FC = () => {
   const [compareSelection, setCompareSelection] = useState<CompareSelection>({
     kind: "None",
   });
+  function setDeleteModal(version: ParsedNumber, modalState: boolean) {
+    setIsModalOpened(modalState);
+    setVersionToDelete(modalState ? version : 0);
+  }
 
   return (
     <PageContainer title={words("desiredState.title")}>
@@ -43,6 +51,7 @@ export const Page: React.FC = () => {
           setErrorMessage,
           compareSelection,
           setCompareSelection,
+          setDeleteModal,
         }}
       >
         <TableControls
@@ -78,6 +87,11 @@ export const Page: React.FC = () => {
               />
             )
           }
+        />
+        <DeleteModal
+          kind="DeleteVersion"
+          version={versionToDelete}
+          isOpened={isModalOpened}
         />
       </GetDesiredStatesContext.Provider>
     </PageContainer>

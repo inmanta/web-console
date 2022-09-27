@@ -4,6 +4,7 @@ import { BooleanInput } from "./BooleanInput";
 import { DictInputWithRow } from "./DictInput";
 import { EnumInput } from "./EnumInput";
 import { IntInput } from "./IntInput";
+import { PositiveFloatInput } from "./PositiveFloatInput";
 import { Row } from "./Row";
 import { StringInput } from "./StringInput";
 
@@ -28,7 +29,7 @@ export const InputRow: React.FC<Props> = ({ info }) => {
     case "positive_float":
       return (
         <Row info={info}>
-          <IntInput info={info} />
+          <PositiveFloatInput info={info} />
         </Row>
       );
     case "enum":

@@ -1,0 +1,9 @@
+description: Add error handling for uncaught errors.
+sections: 
+  bugfix: "{{description}}"
+  other-note: updated the jenkins scripts for tests to be slightly more performant
+issue-nr: 3924
+change-type: patch
+destination-branches:
+  - master
+  - iso5

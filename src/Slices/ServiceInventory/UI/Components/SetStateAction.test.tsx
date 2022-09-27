@@ -42,6 +42,10 @@ function setupComponent() {
       >
         <SetStateAction
           id={ServiceInstance.a.id}
+          instance_identity={
+            ServiceInstance.a.service_identity_attribute_value ??
+            ServiceInstance.a.id
+          }
           service_entity={ServiceInstance.a.service_entity}
           version={ServiceInstance.a.version}
           targets={ServiceInstance.a.instanceSetStateTargets}
@@ -64,6 +68,10 @@ test("SetStateAction dropdown is disabled when no targets are found", async () =
     >
       <SetStateAction
         id={ServiceInstance.b.id}
+        instance_identity={
+          ServiceInstance.b.service_identity_attribute_value ??
+          ServiceInstance.b.id
+        }
         service_entity={ServiceInstance.b.service_entity}
         version={ServiceInstance.b.version}
         targets={[]}
@@ -95,6 +103,10 @@ test("SetStateAction dropdown takes environment halted status in account", async
       <StoreProvider store={storeInstance}>
         <SetStateAction
           id={ServiceInstance.b.id}
+          instance_identity={
+            ServiceInstance.b.service_identity_attribute_value ??
+            ServiceInstance.b.id
+          }
           service_entity={ServiceInstance.b.service_entity}
           version={ServiceInstance.b.version}
           targets={targets}

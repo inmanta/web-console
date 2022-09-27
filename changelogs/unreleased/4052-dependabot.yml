@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @babel/core from 7.19.0 to 7.19.1'
+destination-branches:
+- master
+- iso5
+sections: {}

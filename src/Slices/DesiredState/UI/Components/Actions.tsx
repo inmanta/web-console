@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Dropdown, KebabToggle } from "@patternfly/react-core";
 import { ParsedNumber } from "@/Core";
 import { CompareAction } from "./CompareAction";
+import { DeleteAction } from "./DeleteAction";
 import { PromoteAction } from "./PromoteAction";
 
 interface Props {
@@ -20,6 +21,7 @@ export const Actions: React.FC<Props> = ({ version, isPromoteDisabled }) => {
       position="right"
       onSelect={() => setIsOpen(false)}
       dropdownItems={[
+        <DeleteAction key="delete" version={version} />,
         <PromoteAction
           key="promote"
           version={version}
