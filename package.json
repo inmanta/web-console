@@ -42,7 +42,7 @@
   "type": "module",
   "devDependencies": {
     "@babel/core": "^7.19.3",
-    "@babel/plugin-transform-typescript": "^7.19.1",
+    "@babel/plugin-transform-typescript": "^7.19.3",
     "@storybook/addon-actions": "^v6.5.11",
     "@storybook/addon-essentials": "^v6.5.12",
     "@storybook/addon-links": "^v6.5.12",
@@ -153,7 +153,7 @@
     "react-keycloak": "^6.1.1",
     "react-router-dom": "^6.4.1",
     "react-syntax-highlighter": "^15.5.0",
-    "styled-components": "^5.3.5",
+    "styled-components": "^5.3.6",
     "xml-formatter": "^2.6.1"
   },
   "resolutions": {
