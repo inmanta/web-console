@@ -42,7 +42,7 @@
   "type": "module",
   "devDependencies": {
     "@babel/core": "^7.19.3",
-    "@babel/plugin-transform-typescript": "^7.19.1",
+    "@babel/plugin-transform-typescript": "^7.19.3",
     "@storybook/addon-actions": "^v6.5.11",
     "@storybook/addon-essentials": "^v6.5.12",
     "@storybook/addon-links": "^v6.5.12",
@@ -118,7 +118,7 @@
     "ts-loader": "^9.4.1",
     "ts-prune": "^0.10.3",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
-    "typescript": "^4.8.3",
+    "typescript": "^4.8.4",
     "url-loader": "^4.1.1",
     "webpack": "^5.74.0",
     "webpack-bundle-analyzer": "^4.6.1",
