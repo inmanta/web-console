@@ -41,7 +41,7 @@
   ],
   "type": "module",
   "devDependencies": {
-    "@babel/core": "^7.19.1",
+    "@babel/core": "^7.19.3",
     "@babel/plugin-transform-typescript": "^7.19.1",
     "@storybook/addon-actions": "^v6.5.11",
     "@storybook/addon-essentials": "^v6.5.12",
@@ -73,7 +73,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.1.0",
-    "cypress": "^10.8.0",
+    "cypress": "^10.9.0",
     "cypress-multi-reporters": "^1.6.1",
     "dotenv-webpack": "^8.0.1",
     "eslint": "^8.24.0",
