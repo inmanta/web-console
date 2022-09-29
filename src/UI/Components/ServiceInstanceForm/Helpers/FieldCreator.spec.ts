@@ -1,6 +1,9 @@
 import { EmbeddedEntity, NestedField } from "@/Core";
 import { Service } from "@/Test";
-import { InterServiceRelationFields } from "@/Test/Data/Field";
+import {
+  InterServiceRelationFields,
+  RelationListFields,
+} from "@/Test/Data/Field";
 import { InterServiceRelations } from "@/Test/Data/Service";
 import { FieldCreator } from "./FieldCreator";
 import { CreateModifierHandler, EditModifierHandler } from "./ModifierHandler";
@@ -100,16 +103,17 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
       kind: "DictList",
       name: "embedded_not_editable",
       isOptional: true,
-      fields: InterServiceRelationFields,
+      fields: [...RelationListFields, ...InterServiceRelationFields],
       min: 0,
     },
     {
       kind: "DictList",
       name: "embedded_editable",
       isOptional: true,
-      fields: InterServiceRelationFields,
+      fields: [...RelationListFields, ...InterServiceRelationFields],
       min: 0,
     },
+    ...RelationListFields,
     ...InterServiceRelationFields,
   ]);
 });

@@ -1,13 +1,9 @@
-import Keycloak, {
-  KeycloakInstance,
-  KeycloakConfig,
-  KeycloakInitOptions,
-} from "keycloak-js";
+import Keycloak, { KeycloakConfig, KeycloakInitOptions } from "keycloak-js";
 import { KeycloakController } from "@/Core";
 import keycloakConf from "./keycloak.json";
 
 export class PrimaryKeycloakController implements KeycloakController {
-  private instance: KeycloakInstance;
+  private instance: Keycloak;
 
   constructor(
     private readonly shouldUseAuth: string | undefined,
@@ -24,7 +20,7 @@ export class PrimaryKeycloakController implements KeycloakController {
     };
   }
 
-  getInstance(): KeycloakInstance {
+  getInstance(): Keycloak {
     return this.instance;
   }
 

@@ -13,6 +13,7 @@ import {
   GetCompilerStatusQueryManager,
   TriggerCompileCommandManager,
 } from "@/Data";
+import { DeleteVersionCommandManager } from "@/Data/Managers/DeleteVersion";
 import {
   DynamicQueryManagerResolver,
   StaticScheduler,
@@ -50,6 +51,7 @@ function setup() {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       new PromoteVersionCommandManager(apiHelper, desiredStatesUpdater),
+      new DeleteVersionCommandManager(apiHelper),
       new TriggerCompileCommandManager(apiHelper),
     ])
   );
@@ -461,4 +463,109 @@ test("DesiredStatesView shows CompileWidget", async () => {
   const { component } = setup();
   render(component);
   expect(screen.getByRole("generic", { name: "CompileWidget" })).toBeVisible();
+});
+
+describe("DeleteModal ", () => {
+  it("Shows form when clicking on modal button", async () => {
+    const { component, apiHelper } = setup();
+    render(component);
+
+    apiHelper.resolve(204);
+
+    await act(async () => {
+      await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+    });
+    const rows = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
+
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "Actions",
+      })
+    );
+
+    await userEvent.click(
+      within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
+    );
+    expect(
+      await screen.findByText("Are you sure you want to delete version 9?")
+    ).toBeVisible();
+    expect(await screen.findByText("Yes")).toBeVisible();
+    expect(await screen.findByText("No")).toBeVisible();
+  });
+  it("Closes modal when cancelled(both cancel buttons scenario)", async () => {
+    const { component, apiHelper } = setup();
+    render(component);
+
+    apiHelper.resolve(204);
+
+    await act(async () => {
+      await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+    });
+    const rows = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
+
+    //close by "no" button scenario
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "Actions",
+      })
+    );
+
+    await userEvent.click(
+      within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
+    );
+    const noButton = await screen.findByText("No");
+    await userEvent.click(noButton);
+    expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+
+    //close by close button scenario
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "Actions",
+      })
+    );
+    await userEvent.click(
+      within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
+    );
+
+    const closeButton = await screen.findByLabelText("Close");
+    await userEvent.click(closeButton);
+    expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+  });
+  it("Sends request when submitted then request is executed and modal closed", async () => {
+    const { component, apiHelper } = setup();
+    render(component);
+
+    apiHelper.resolve(204);
+
+    await act(async () => {
+      await apiHelper.resolve(Either.right(DesiredStateVersions.response));
+    });
+    const rows = await screen.findAllByRole("row", {
+      name: "DesiredStates Table Row",
+    });
+    expect(rows).toHaveLength(9);
+
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "Actions",
+      })
+    );
+
+    await userEvent.click(
+      within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
+    );
+    const yesButton = await screen.findByText("Yes");
+    await userEvent.click(yesButton);
+    expect(apiHelper.pendingRequests[0]).toEqual({
+      environment: "env",
+      method: "DELETE",
+      url: `/api/v1/version/9`,
+    });
+    await apiHelper.resolve(Either.right(null));
+    expect(screen.queryByText("No")).not.toBeInTheDocument();
+  });
 });

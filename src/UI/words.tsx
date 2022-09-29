@@ -10,6 +10,7 @@
  * value for "inventory", but also for "inventory.state".
  */
 import React from "react";
+import { ParsedNumber } from "@/Core";
 
 const dict = {
   /**
@@ -95,8 +96,8 @@ const dict = {
   "inventory.statustab.details": "Instance Details",
   "inventory.statustab.setInstanceState": "Set state to",
   "inventory.statustab.confirmTitle": "Confirm set state transfer",
-  "inventory.statustab.confirmMessage": (id: string, state: string) =>
-    `Are you sure you want to set state of instance ${id} to ${state}?`,
+  "inventory.statustab.confirmMessage": (name: string, state: string) =>
+    `Are you sure you want to set state of instance ${name} to ${state}?`,
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.statusTab.history": "History",
@@ -139,10 +140,14 @@ const dict = {
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
   "inventory.deleteInstance.header": (
-    instanceId: string,
+    instanceName: string,
     serviceName: string
   ) =>
-    `Are you sure you want to delete instance ${instanceId} of service entity ${serviceName}?`,
+    `Are you sure you want to delete instance ${instanceName} of service entity ${serviceName}?`,
+  "inventory.deleteVersion.failed": "Deleting version failed",
+  "inventory.deleteVersion.title": "Delete version",
+  "inventory.deleteVersion.header": (version: ParsedNumber) =>
+    `Are you sure you want to delete version ${version}?`,
   "inventory.filters.state.placeholder": "Select a state...",
 
   /**
@@ -456,6 +461,7 @@ const dict = {
   "desiredState.columns.status": "Status",
   "desiredState.columns.resources": "Number of resources",
   "desiredState.columns.labels": "Labels",
+  "desiredState.actions.delete": "Delete",
   "desiredState.actions.showResources": "Show Resources",
   "desiredState.actions.promote": "Promote",
   "desiredState.actions.promote.failed":

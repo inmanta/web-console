@@ -1,0 +1,9 @@
+description: Fix the overflow disapearing outside the window for the facts table.
+sections: 
+  bugfix: "{{description}}"
+  other-note: The editorconfig file now ensures that the codebase stays LF, the package.json will contain Windows specific commands for linting/prettier. Single quotes for paths are not supported by Windows.
+issue-nr: 3909
+change-type: patch
+destination-branches:
+  - master
+  - iso5

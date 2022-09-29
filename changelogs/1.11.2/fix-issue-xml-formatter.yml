@@ -1,0 +1,7 @@
+description: Fixed issue where web-console would crash when failing to format xml
+change-type: patch
+sections:
+  bugfix: "{{description}}"
+destination-branches:
+  - master
+  - iso5

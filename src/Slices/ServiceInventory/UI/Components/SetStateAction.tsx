@@ -18,11 +18,13 @@ import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   targets: string[] | null;
+  instance_identity: string;
 }
 
 export const SetStateAction: React.FC<Props> = ({
   service_entity,
   id,
+  instance_identity,
   version,
   targets,
 }) => {
@@ -61,7 +63,10 @@ export const SetStateAction: React.FC<Props> = ({
     setIsDropdownOpen(false);
     setTargetState(event.target.text);
     setConfirmationText(
-      words("inventory.statustab.confirmMessage")(id, event.target.text)
+      words("inventory.statustab.confirmMessage")(
+        instance_identity,
+        event.target.text
+      )
     );
     handleModalToggle();
   };

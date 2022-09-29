@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
   Button,
@@ -35,10 +35,16 @@ SyntaxHighlighter.registerLanguage("bash", bash);
 interface Props {
   code: string;
   language: "json" | "xml" | "text" | "python" | "bash";
+  scrollBottom?: boolean;
   close?: () => void;
 }
 
-export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
+export const CodeHighlighter: React.FC<Props> = ({
+  code,
+  language,
+  scrollBottom = false,
+  close,
+}) => {
   const [copied, setCopied] = useState(false);
   const [zoomed, setZoomed] = useState(false);
   const [showLineNumbers, setShowLineNumbers] = useState(false);
@@ -136,51 +142,68 @@ export const CodeHighlighter: React.FC<Props> = ({ code, language, close }) => {
     </>
   );
 
+  const setScrollPosition = () => {
+    if (!scrollBottom) {
+      return;
+    }
+
+    const preBlock = codeBlockRef.current?.querySelector("pre");
+
+    if (preBlock && preBlock.firstChild?.nodeName === "CODE") {
+      preBlock.scrollTo(0, preBlock.scrollHeight);
+    }
+  };
+
+  useEffect(() => {
+    setScrollPosition();
+  });
+
   return (
     <>
-      <span ref={codeBlockRef} />
-      {isEmpty(code) ? (
-        <Label variant="outline" icon={<InfoCircleIcon />}>
-          <pre>{words("empty")}</pre>
-        </Label>
-      ) : isShortSingleLine(code) ? (
-        <pre>{code}</pre>
-      ) : (
-        <BorderedArea>
-          <Flex flexWrap={{ default: "nowrap" }}>
-            <FlexItemWithOverflow grow={{ default: "grow" }}>
-              <SyntaxHighlighter
-                language={language}
-                style={docco}
-                customStyle={{
-                  backgroundColor: "initial",
-                  height: height,
-                  minHeight,
-                  resize: "vertical",
-                  scrollbarGutter: "stable",
-                  borderRight: "1px solid var(--pf-global--BorderColor--100)",
-                }}
-                showLineNumbers={showLineNumbers}
-                showInlineLineNumbers
-                lineNumberStyle={{
-                  whiteSpace: "nowrap",
-                  marginRight: "1em",
-                  paddingRight: 0,
-                  minWidth: "1.25em",
-                }}
-                wrapLongLines={wrapLongLines}
-                wrapLines
-                lineProps={{
-                  style: { wordBreak: "break-word", flexWrap: "wrap" },
-                }}
-              >
-                {code}
-              </SyntaxHighlighter>
-            </FlexItemWithOverflow>
-            <SmallFlexItem>{actions}</SmallFlexItem>
-          </Flex>
-        </BorderedArea>
-      )}
+      <span ref={codeBlockRef}>
+        {isEmpty(code) ? (
+          <Label variant="outline" icon={<InfoCircleIcon />}>
+            <pre>{words("empty")}</pre>
+          </Label>
+        ) : isShortSingleLine(code) ? (
+          <pre>{code}</pre>
+        ) : (
+          <BorderedArea>
+            <Flex flexWrap={{ default: "nowrap" }}>
+              <FlexItemWithOverflow grow={{ default: "grow" }}>
+                <SyntaxHighlighter
+                  language={language}
+                  style={docco}
+                  customStyle={{
+                    backgroundColor: "initial",
+                    height: height,
+                    minHeight,
+                    resize: "vertical",
+                    scrollbarGutter: "stable",
+                    borderRight: "1px solid var(--pf-global--BorderColor--100)",
+                  }}
+                  showLineNumbers={showLineNumbers}
+                  showInlineLineNumbers
+                  lineNumberStyle={{
+                    whiteSpace: "nowrap",
+                    marginRight: "1em",
+                    paddingRight: 0,
+                    minWidth: "1.25em",
+                  }}
+                  wrapLongLines={wrapLongLines}
+                  wrapLines
+                  lineProps={{
+                    style: { wordBreak: "break-word", flexWrap: "wrap" },
+                  }}
+                >
+                  {code}
+                </SyntaxHighlighter>
+              </FlexItemWithOverflow>
+              <SmallFlexItem>{actions}</SmallFlexItem>
+            </Flex>
+          </BorderedArea>
+        )}
+      </span>
     </>
   );
 };

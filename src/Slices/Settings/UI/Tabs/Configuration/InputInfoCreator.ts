@@ -1,4 +1,13 @@
 import { EnvironmentSettings, Maybe } from "@/Core";
+import {
+  BooleanDefinition,
+  DictDefinition,
+  EnumDefinition,
+  IntDefinition,
+  PositiveFloatDefinition,
+  StrDefinition,
+  UnknownDefinition,
+} from "@/Core/Domain/EnvironmentSettings";
 
 type Update = (
   id: string,
@@ -71,57 +80,62 @@ export class InputInfoCreator {
 
     switch (definition.type) {
       case "bool":
+        const BooleanDefinition = definition as BooleanDefinition;
         return {
-          ...definition,
+          ...BooleanDefinition,
           type: "bool",
           initial: initial as boolean,
-          value: this.undefinedFallback(value, definition.default),
+          value: this.undefinedFallback(value, BooleanDefinition.default),
           set: (value) => setValue(value),
           update,
           reset,
           isUpdateable,
         };
       case "int":
+        const intDefinition = definition as IntDefinition;
         return {
-          ...definition,
+          ...intDefinition,
           type: "int",
           initial: initial as number,
-          value: this.undefinedFallback(value, definition.default),
+          value: this.undefinedFallback(value, intDefinition.default),
           set: (value) => setValue(value),
           update,
           reset,
           isUpdateable,
         };
       case "positive_float":
+        const positiveFloatDefinition = definition as PositiveFloatDefinition;
         return {
-          ...definition,
+          ...positiveFloatDefinition,
           type: "positive_float",
           initial: initial as number,
-          value: this.undefinedFallback(value, definition.default),
+          value: this.undefinedFallback(value, positiveFloatDefinition.default),
           set: (value) => setValue(value),
           update,
           reset,
           isUpdateable,
         };
       case "enum":
+        const enumerationDefinition = definition as EnumDefinition;
         return {
-          ...definition,
+          ...enumerationDefinition,
           type: "enum",
           initial: initial as string,
-          value: this.undefinedFallback(value, definition.default),
+          value: this.undefinedFallback(value, enumerationDefinition.default),
           set: (value) => setValue(value),
           update,
           reset,
           isUpdateable,
         };
       case "dict":
+        const dictDefinition = definition as DictDefinition;
         return {
-          ...definition,
+          ...dictDefinition,
           type: "dict",
           initial: initial as EnvironmentSettings.Dict,
           value: this.undefinedFallback(
             value,
-            definition.default as EnvironmentSettings.Dict
+            dictDefinition.default as EnvironmentSettings.Dict
           ),
           set: (value) => setValue(value),
           update,
@@ -129,11 +143,24 @@ export class InputInfoCreator {
           isUpdateable,
         };
       case "str":
+        const strDefinition = definition as StrDefinition;
         return {
-          ...definition,
+          ...strDefinition,
           type: "str",
           initial: initial as string,
-          value: this.undefinedFallback(value, definition.default),
+          value: this.undefinedFallback(value, strDefinition.default),
+          set: (value) => setValue(value),
+          update,
+          reset,
+          isUpdateable,
+        };
+      default:
+        const unknown = definition as UnknownDefinition;
+        return {
+          ...unknown,
+          type: "str",
+          initial: initial as string,
+          value: this.undefinedFallback(value, unknown.default),
           set: (value) => setValue(value),
           update,
           reset,

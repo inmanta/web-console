@@ -23,7 +23,7 @@ pipeline {
                     yarn tsc;
                     yarn check-circular-deps;
                     yarn build;
-                    yarn test'''
+                    yarn test:ci'''
                 }
             }
         }

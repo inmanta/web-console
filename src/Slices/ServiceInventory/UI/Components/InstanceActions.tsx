@@ -49,6 +49,9 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
         <DeleteModal
           isDisabled={deleteDisabled}
           service_entity={instance.service_entity}
+          instance_identity={
+            instance.service_identity_attribute_value ?? instance.id
+          }
           id={instance.id}
           version={instance.version}
         />
@@ -98,6 +101,9 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
         <SetStateAction
           service_entity={instance.service_entity}
           id={instance.id}
+          instance_identity={
+            instance.service_identity_attribute_value ?? instance.id
+          }
           version={instance.version}
           targets={instance.instanceSetStateTargets}
         />

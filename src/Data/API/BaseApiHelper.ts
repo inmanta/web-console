@@ -1,4 +1,4 @@
-import { KeycloakInstance } from "keycloak-js";
+import Keycloak from "keycloak-js";
 import { identity } from "lodash-es";
 import {
   ApiHelper,
@@ -16,7 +16,7 @@ export class BaseApiHelper implements ApiHelper {
   constructor(
     private readonly jsonParser: JsonParser = new BigIntJsonParser(),
     private readonly baseUrl: string = "",
-    private readonly keycloak?: KeycloakInstance
+    private readonly keycloak?: Keycloak
   ) {}
 
   async head(url: string): Promise<number> {

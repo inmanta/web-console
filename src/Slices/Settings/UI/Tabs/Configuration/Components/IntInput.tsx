@@ -5,10 +5,7 @@ import { EnvironmentSettings } from "@/Core";
 import { Warning } from "./Warning";
 
 interface Props {
-  // TODO: differentiate between float and int
-  info:
-    | EnvironmentSettings.IntInputInfo
-    | EnvironmentSettings.PositiveFloatInputInfo;
+  info: EnvironmentSettings.IntInputInfo;
 }
 
 export const IntInput: React.FC<Props> = ({ info }) => {

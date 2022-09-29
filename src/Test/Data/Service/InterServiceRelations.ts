@@ -40,6 +40,18 @@ export const notEditableWithLowerAndUpperLimit: InterServiceRelation = {
   upper_limit: 3,
   name: "relation6",
 };
+export const EditableWithLowerAndUpperLimitSetTo1: InterServiceRelation = {
+  ...editable,
+  lower_limit: 1,
+  upper_limit: 1,
+  name: "relation7",
+};
+export const notEditableWithLowerAndUpperLimitSetTo1: InterServiceRelation = {
+  ...notEditable,
+  lower_limit: 1,
+  upper_limit: 1,
+  name: "relation8",
+};
 
 export const listWithAll = [
   editable,
@@ -48,4 +60,6 @@ export const listWithAll = [
   notEditableUpperLimit,
   withLowerAndUpperLimit,
   notEditableWithLowerAndUpperLimit,
+  EditableWithLowerAndUpperLimitSetTo1,
+  notEditableWithLowerAndUpperLimitSetTo1,
 ];
