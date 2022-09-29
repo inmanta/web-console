@@ -49,12 +49,12 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
                 </SplitItem>
                 <SplitItem>
                   <ToggleAll
-                    isExpanding={false}
+                    isExpanded={false}
                     onToggle={row.openAll}
                     aria-label={`ExpandAll-${row.id}`}
                   />
                   <ToggleAll
-                    isExpanding={true}
+                    isExpanded={true}
                     onToggle={row.closeAll}
                     aria-label={`CollapseAll-${row.id}`}
                   />

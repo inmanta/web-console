@@ -26,32 +26,14 @@ export class TreeExpansionManager {
     key: string,
     shouldOpen: boolean
   ): ExpansionState {
-    if (shouldOpen) return this.openAll(state, key);
+    if (shouldOpen) {
+      return this.openAll(state, key);
+    }
     return this.close(state, key);
   }
 
   get(state: ExpansionState, key: string): boolean {
     return state[key];
-  }
-  checkIfAllChildrenAreOpened(state: ExpansionState, key: string): boolean {
-    const keysToCheck = Object.keys(state).filter((k) =>
-      k.startsWith(`${key}${this.separator}`)
-    );
-    const stateValues = keysToCheck.map((key) => state[key]);
-    return stateValues.every((value) => value === true);
-  }
-  getExpandableChildrenAmount(state: ExpansionState, key: string): number {
-    const keysToCheck = Object.keys(state).filter((k) =>
-      k.startsWith(`${key}${this.separator}`)
-    );
-    /**
-     * Split keys to show how deep nested they are
-     * Then return only children that are at level 3 or higher.
-     * That mean there are more nesting levels than one, so expandAll is justified
-     */
-    return keysToCheck
-      .map((key) => key.split(this.separator))
-      .filter((splittedKey) => splittedKey.length > 2).length;
   }
 
   /**
@@ -84,7 +66,6 @@ export class TreeExpansionManager {
   }
 
   private open(state: ExpansionState, key: string): ExpansionState {
-    this.checkIfAllChildrenAreOpened(state, key);
     return {
       ...state,
       [key]: true,

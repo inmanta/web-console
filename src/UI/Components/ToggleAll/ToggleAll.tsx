@@ -6,17 +6,17 @@ import {
 } from "@patternfly/react-icons";
 
 interface ToggleAllProps {
-  isExpanding: boolean;
+  isExpanded: boolean;
   onToggle: () => void;
   [k: string]: unknown;
 }
 
 export const ToggleAll: React.FC<ToggleAllProps> = ({
-  isExpanding,
+  isExpanded,
   onToggle,
   ...props
 }) => (
   <Button variant="plain" onClick={onToggle} {...props}>
-    {isExpanding ? <AngleDoubleUpIcon /> : <AngleDoubleDownIcon />}
+    {isExpanded ? <AngleDoubleUpIcon /> : <AngleDoubleDownIcon />}
   </Button>
 );

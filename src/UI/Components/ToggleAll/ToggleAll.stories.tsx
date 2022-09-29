@@ -13,7 +13,7 @@ const Template: Story<ComponentProps<typeof ToggleAll>> = (args) => (
 );
 
 export const Default = Template.bind({});
-Default.args = { isExpanding: false };
+Default.args = { isExpanded: false };
 
 export const Expanded = Template.bind({});
-Expanded.args = { isExpanding: true };
+Expanded.args = { isExpanded: true };
