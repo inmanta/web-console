@@ -47,6 +47,10 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
   ): TreeRow[] {
     const createOnToggle = (key: string) => () =>
       setState(this.expansionManager.toggle(expansionState, key));
+    const createCloseAll = (key: string) => () =>
+      setState(this.expansionManager.toggleAll(expansionState, key, false));
+    const createOpenAll = (key: string) => () =>
+      setState(this.expansionManager.toggleAll(expansionState, key, true));
 
     const isExpandedByParent = (path: string) =>
       this.expansionManager.get(
@@ -62,6 +66,8 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
       isExpandedByParent,
       isChildExpanded,
       createOnToggle,
+      createCloseAll,
+      createOpenAll,
       this.extractValues
     );
 

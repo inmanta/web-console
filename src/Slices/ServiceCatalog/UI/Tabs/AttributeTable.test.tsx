@@ -1,7 +1,9 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { AttributeModel } from "@/Core";
 import { Service } from "@/Test";
+import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
 import { AttributeTable } from "./AttributeTable";
 
 const attribute1: AttributeModel = {
@@ -82,4 +84,102 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
   expect(
     await screen.findByRole("row", { name: "Row-circuits" })
   ).toBeVisible();
+});
+
+test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", async () => {
+  render(
+    <AttributeTable
+      service={{
+        ...Service.a,
+        attributes: [attribute1, attribute2],
+        embedded_entities: [],
+      }}
+      scrollIntoView={jest.fn}
+    />
+  );
+
+  expect(
+    await screen.findByRole("row", { name: "Row-order_id" })
+  ).toBeVisible();
+  expect(
+    await screen.findByRole("row", { name: "Row-service_mtu" })
+  ).toBeVisible();
+});
+
+test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows are shown and availalbe to expand/collapse one", async () => {
+  render(
+    <AttributeTable
+      service={{
+        ...Service.a,
+        name: "service_name_a",
+        embedded_entities: multiNestedEditable,
+      }}
+      scrollIntoView={jest.fn}
+    />
+  );
+
+  //default embedded entity
+  expect(
+    await screen.findByRole("row", { name: "Row-bandwidth" })
+  ).toBeVisible();
+
+  //scenario to expand and hide one child
+  const toggleButton = await screen.findByRole("button", {
+    name: "Toggle-embedded",
+  });
+  //show embedded entity
+  await userEvent.click(toggleButton);
+  const row = await screen.findByRole("row", {
+    name: "Row-embedded$embedded_single",
+  });
+
+  expect(row).toBeVisible();
+  //collapse embedded entity
+  await userEvent.click(toggleButton);
+  expect(row).not.toBeVisible();
+});
+
+test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows are shown and availalbe to expand/collapse all", async () => {
+  render(
+    <AttributeTable
+      service={{
+        ...Service.a,
+        name: "service_name_a",
+        embedded_entities: multiNestedEditable,
+      }}
+      scrollIntoView={jest.fn}
+    />
+  );
+
+  //default embedded entity
+  expect(
+    await screen.findByRole("row", { name: "Row-bandwidth" })
+  ).toBeVisible();
+
+  const expandAllButton = await screen.findByRole("button", {
+    name: "ExpandAll-embedded",
+  });
+  const collapseAllButton = await screen.findByRole("button", {
+    name: "CollapseAll-embedded",
+  });
+
+  await userEvent.click(expandAllButton);
+  //three different nested entities, each on further nesting stage
+  const row = await screen.findByRole("row", {
+    name: "Row-embedded$embedded_single",
+  });
+  const row2 = await screen.findByRole("row", {
+    name: "Row-embedded$embedded_single$another_embedded",
+  });
+  const row3 = await screen.findByRole("row", {
+    name: "Row-embedded$embedded_single$another_embedded$another_embedded_single",
+  });
+  expect(row).toBeVisible();
+  expect(row2).toBeVisible();
+  expect(row3).toBeVisible();
+
+  await userEvent.click(collapseAllButton);
+  expect(row).not.toBeVisible();
+  expect(row2).not.toBeVisible();
+  expect(row3).not.toBeVisible();
 });

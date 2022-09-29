@@ -18,6 +18,8 @@ interface Root {
   kind: "Root";
   id: string;
   onToggle: () => void;
+  openAll: () => void;
+  closeAll: () => void;
   isChildExpanded: boolean;
   primaryCell: Cell;
 }
