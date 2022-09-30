@@ -1,9 +1,6 @@
 import React from "react";
 import { Button } from "@patternfly/react-core";
-import {
-  AngleDoubleDownIcon,
-  AngleDoubleUpIcon,
-} from "@patternfly/react-icons";
+import { CollapseAll, ExpandAll } from "./Icons";
 
 interface ToggleAllProps {
   isExpanded: boolean;
@@ -17,6 +14,6 @@ export const ToggleAll: React.FC<ToggleAllProps> = ({
   ...props
 }) => (
   <Button variant="plain" onClick={onToggle} {...props}>
-    {isExpanded ? <AngleDoubleUpIcon /> : <AngleDoubleDownIcon />}
+    {isExpanded ? <ExpandAll /> : <CollapseAll />}
   </Button>
 );
