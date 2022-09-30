@@ -4,7 +4,7 @@ import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
 export const createFormState = (
   fields: FieldLikeWithFormState[]
 ): InstanceAttributeModel => {
-  return fields.reduce((acc, curr) => {
+  const returnValue = fields.reduce((acc, curr) => {
     switch (curr.kind) {
       case "Boolean":
       case "Enum":
@@ -16,6 +16,7 @@ export const createFormState = (
       }
 
       case "InterServiceRelation": {
+        acc[curr.name] = "";
         return acc;
       }
 
@@ -30,7 +31,6 @@ export const createFormState = (
         } else {
           acc[curr.name] = times(Number(curr.min), () => "");
         }
-
         return acc;
       }
 
@@ -46,10 +46,13 @@ export const createFormState = (
         return acc;
       }
       default: {
+        console.log("entering default reducer case and returning acc", acc);
         return acc;
       }
     }
   }, {});
+  console.log("Reduced fields", returnValue);
+  return returnValue;
 };
 
 export const createEditFormState = (

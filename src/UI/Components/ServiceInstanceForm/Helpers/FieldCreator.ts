@@ -13,10 +13,19 @@ import { ModifierHandler } from "./ModifierHandler";
 /**
  * Create form fields based on a ServiceModel.
  * And more specifically, based on the AttributeModel and EmbeddedEntities.
+ * @class
+ * @param {ModifierHandler} ModifierHandler
  */
 export class FieldCreator {
   constructor(private readonly fieldModifierHandler: ModifierHandler) {}
 
+  /**
+   * Create the Array containing all information to construct a form
+   *
+   * @param service Pick<ServiceModel, "attributes" | "embedded_entities" | "inter_service_relations">
+   * @returns {Array<Field>} An array of objects containing `fieldsFromAttributes` + `fieldsFromEmbeddedEntities` + `fieldsFromRelations`
+   * These can be mapped to the result coming from the API to generate the form.
+   */
   create(
     service: Pick<
       ServiceModel,
@@ -50,6 +59,7 @@ export class FieldCreator {
         this.interServiceRelationToFields(interServiceRelation)
       )
       .filter(isNotNull);
+
     return [
       ...fieldsFromAttributes,
       ...fieldsFromEmbeddedEntities,
@@ -65,9 +75,16 @@ export class FieldCreator {
     return !entity.upper_limit || entity.upper_limit > 1;
   }
 
+  /**
+   * An embeddedEntity is a nested Entity of any of the Field types.
+   * Visually, it will mostly be represented as a collapsible or a multiselect in some cases.
+   *
+   * @return This will return you an Entity with a nested fields Array which can contain again new Entities.
+   */
   private embeddedEntityToField(entity: EmbeddedEntity): Field | null {
-    if (!this.fieldModifierHandler.validateModifier(entity.modifier, true))
+    if (!this.fieldModifierHandler.validateModifier(entity.modifier, true)) {
       return null;
+    }
 
     const fieldsFromAttributes: Field[] = this.attributesToFields(
       entity.attributes,
@@ -77,6 +94,7 @@ export class FieldCreator {
     const fieldsFromEmbeddedEntities = entity.embedded_entities
       .map((entity) => this.embeddedEntityToField(entity))
       .filter(isNotNull);
+
     const fieldsFromRelations = entity.inter_service_relations
       ? entity.inter_service_relations
           .map((interServiceRelation) =>
@@ -122,8 +140,9 @@ export class FieldCreator {
         interServiceRelation.modifier,
         embedded
       )
-    )
+    ) {
       return null;
+    }
 
     if (interServiceRelation.upper_limit === 1)
       return {
@@ -169,6 +188,7 @@ export class FieldCreator {
           attribute.default_value_set,
           attribute.default_value
         );
+
         if (type === "bool") {
           return {
             kind: "Boolean",
@@ -203,6 +223,7 @@ export class FieldCreator {
         };
       });
   }
+
   private isTextFieldOptional(attribute: AttributeModel): boolean {
     return (
       attribute.type.includes("?") ||

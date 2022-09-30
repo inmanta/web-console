@@ -29,6 +29,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       : createFormState(fields)
   );
 
+  console.log("formstate: ", formState);
+
   const getUpdate =
     (path: string) =>
     (value: unknown): void =>

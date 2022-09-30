@@ -141,7 +141,8 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
   } else if (typeName.includes("dict")) {
     return words("inventory.form.placeholder.dict");
   }
-  return undefined;
+
+  return "No placeholder defined";
 };
 
 const getTypeHintForType = (typeName: string): string | undefined => {
@@ -208,7 +209,10 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   const list = get(formState, makePath(path, field.name)) as Array<unknown>;
 
   const onAdd = () => {
-    if (field.max && list.length >= field.max) return;
+    if (field.max && list.length >= field.max) {
+      return;
+    }
+
     getUpdate(makePath(path, field.name))([
       ...list,
       createFormState(field.fields),
@@ -296,6 +300,9 @@ interface RelationListProps {
   path: string | null;
 }
 
+/**
+ * InterServiceRelation can only be a string or a string[] as value. UID's
+ */
 const RelationListFieldInput: React.FC<RelationListProps> = ({
   field,
   formState,
@@ -303,9 +310,12 @@ const RelationListFieldInput: React.FC<RelationListProps> = ({
   path,
 }) => {
   const list = get(formState, makePath(path, field.name)) as Array<unknown>;
-
   const onAdd = () => {
-    if (field.max && list.length >= field.max) return;
+    console.log("adding field for RelationList", field);
+    if (field.max && list.length >= field.max) {
+      return;
+    }
+
     getUpdate(makePath(path, field.name))([
       ...list,
       createFormState(field.fields),
