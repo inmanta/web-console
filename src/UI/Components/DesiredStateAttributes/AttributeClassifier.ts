@@ -89,6 +89,7 @@ export class AttributeClassifier {
   }
 
   private isXml(value: string): boolean {
-    return value.startsWith("<") && value.endsWith(">");
+    const trimmedValue = value.trimStart().trimEnd();
+    return trimmedValue.startsWith("<") && trimmedValue.endsWith(">");
   }
 }
