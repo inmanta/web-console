@@ -14,6 +14,6 @@ export const ToggleAll: React.FC<ToggleAllProps> = ({
   ...props
 }) => (
   <Button variant="plain" onClick={onToggle} {...props}>
-    {isExpanded ? <ExpandAll /> : <CollapseAll />}
+    {isExpanded ? <CollapseAll /> : <ExpandAll />}
   </Button>
 );
