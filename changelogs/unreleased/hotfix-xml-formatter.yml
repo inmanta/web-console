@@ -1,0 +1,8 @@
+description: Hotfix for the xml-formatter when the scenario occurs where the string to be formatted is preceded or ends with whitspaces.
+sections: 
+  bugfix: "{{description}}"
+issue-nr: 4144
+change-type: patch
+destination-branches:
+  - master
+  - iso5
