@@ -9,12 +9,20 @@ import { extractInventoryValues, TreeRowCreator } from "./TreeRowCreator";
 const onToggle = () => {
   undefined;
 };
+const closeAll = () => {
+  undefined;
+};
+const openAll = () => {
+  undefined;
+};
 
 const treeRowCreator = new TreeRowCreator(
   new PathHelper("."),
   () => false,
   () => false,
   () => onToggle,
+  () => closeAll,
+  () => openAll,
   extractInventoryValues
 );
 
@@ -69,6 +77,8 @@ test("TreeRowCreator create returns Root for flat Branch node", () => {
     kind: "Root",
     id: "a",
     onToggle,
+    closeAll,
+    openAll,
     isChildExpanded: false,
     primaryCell: { label: "name", value: "a" },
   };

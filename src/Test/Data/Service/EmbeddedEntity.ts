@@ -551,3 +551,120 @@ export const nestedEditable: EmbeddedEntity[] = [
     upper_limit: 4,
   },
 ];
+
+export const multiNestedEditable: EmbeddedEntity[] = [
+  {
+    attributes: [
+      {
+        name: "my_attr",
+        modifier: "rw+",
+        type: "int",
+        default_value: null,
+        default_value_set: false,
+        validation_type: null,
+        validation_parameters: null,
+      },
+      {
+        name: "bool_attr",
+        modifier: "rw+",
+        type: "bool?",
+        default_value: null,
+        default_value_set: false,
+        validation_type: null,
+        validation_parameters: null,
+      },
+      {
+        name: "dict_attr",
+        modifier: "rw+",
+        type: "dict",
+        default_value: null,
+        default_value_set: false,
+        validation_type: null,
+        validation_parameters: null,
+      },
+    ],
+    embedded_entities: [
+      {
+        attributes: [
+          {
+            name: "attr4",
+            modifier: "rw+",
+            type: "int[]",
+            default_value: null,
+            default_value_set: false,
+            validation_type: null,
+            validation_parameters: null,
+          },
+        ],
+        embedded_entities: [
+          {
+            attributes: [
+              {
+                name: "my_other_attr",
+                modifier: "rw+",
+                type: "string",
+                default_value: null,
+                default_value_set: false,
+                validation_type: null,
+                validation_parameters: null,
+              },
+            ],
+            embedded_entities: [
+              {
+                attributes: [
+                  {
+                    name: "attr5",
+                    modifier: "rw+",
+                    type: "number",
+                    default_value: null,
+                    default_value_set: false,
+                    validation_type: null,
+                    validation_parameters: null,
+                  },
+                  {
+                    name: "attr6",
+                    modifier: "rw+",
+                    type: "number",
+                    default_value: null,
+                    default_value_set: false,
+                    validation_type: null,
+                    validation_parameters: null,
+                  },
+                ],
+                embedded_entities: [],
+                name: "another_embedded_single",
+                description: "description",
+                modifier: "rw+",
+                lower_limit: 0,
+                upper_limit: 1,
+                inter_service_relations: [
+                  {
+                    name: "related_service",
+                    entity_type: "test_entity",
+                    description: "description",
+                    lower_limit: 0,
+                    modifier: "rw",
+                  },
+                ],
+              },
+            ],
+            name: "another_embedded",
+            modifier: "rw+",
+            lower_limit: 0,
+            description: "description",
+          },
+        ],
+        name: "embedded_single",
+        description: "description",
+        modifier: "rw+",
+        lower_limit: 0,
+        upper_limit: 1,
+      },
+    ],
+    name: "embedded",
+    description: "description",
+    modifier: "rw+",
+    lower_limit: 0,
+    upper_limit: 2,
+  },
+];

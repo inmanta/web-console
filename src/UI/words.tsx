@@ -88,6 +88,8 @@ const dict = {
   "inventory.column.updatedAt": "Updated",
   "inventory.column.resources": "Resources",
   "inventory.tabs.attributes": "Attributes",
+  "inventory.tabs.collapse": "Collapse all",
+  "inventory.tabs.expand": "Expand all",
   "inventory.tabs.resources": "Resources",
   "inventory.tabs.status": "Status",
   "inventory.statustab.actions": "Actions",
