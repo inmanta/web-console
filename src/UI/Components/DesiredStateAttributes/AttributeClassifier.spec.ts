@@ -9,7 +9,7 @@ test("GIVEN AttributeClassifier WHEN provided with a mixed attributes object THE
     new XmlFormatter()
   );
 
-  expect(classifier.classify(attributes)).toEqual(classified.sort());
+  expect(classifier.classify(attributes)).toEqual(classified);
 });
 
 test("GIVEN AttributeClassifier WHEN provided with a custom multiline classifier THEN returns the correct list of ClassifiedAttributes", () => {
@@ -21,7 +21,7 @@ test("GIVEN AttributeClassifier WHEN provided with a custom multiline classifier
 
   expect(
     classifier.classify({ f: attributes["f"], ff: attributes["ff"] })
-  ).toStrictEqual([
+  ).toEqual([
     {
       kind: "Python",
       key: "f",
