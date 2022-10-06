@@ -1,0 +1,8 @@
+---
+description: add indication for "Compile Reports" navigation link that inform about any ongoing compilations
+change-type: patch
+destination-branches: 
+ - master
+ - iso5
+sections: 
+  minor-improvement: "{{description}}"

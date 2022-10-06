@@ -24,6 +24,10 @@ import * as GetInstanceLogs from "@S/ServiceInstanceHistory/Core/Query";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
 import {
+  GetCompilationState,
+  GetCompilationStateManifest,
+} from "./GetCompilationState";
+import {
   GetCompilerStatus,
   GetCompilerStatusManifest,
 } from "./GetCompilerStatus";
@@ -94,7 +98,8 @@ export type Query =
   | GetDryRuns.Query
   | GetDryRunReport.Query
   | GetVersionedResourceDetails.Query
-  | GetNotifications.Query;
+  | GetNotifications.Query
+  | GetCompilationState;
 
 export type Type = Query;
 
@@ -122,6 +127,7 @@ interface Manifest {
   GetEnvironmentDetails: GetEnvironmentDetails.Manifest;
   GetCompileReports: GetCompileReports.Manifest;
   GetCompileDetails: GetCompileDetails.Manifest;
+  GetCompilationState: GetCompilationStateManifest;
   GetCallbacks: GetCallbacks.Manifest;
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
