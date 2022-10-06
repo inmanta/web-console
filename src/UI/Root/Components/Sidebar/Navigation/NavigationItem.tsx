@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Label, NavItem, Tooltip } from "@patternfly/react-core";
 import { LockIcon } from "@patternfly/react-icons";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchHelper } from "@/UI/Routing";
 
@@ -18,6 +18,7 @@ interface Link extends Label, Url {
   id: string;
   external: boolean;
   locked: boolean;
+  statusIndication: boolean;
 }
 
 export const NavigationItem: React.FC<Link> = ({
@@ -26,6 +27,7 @@ export const NavigationItem: React.FC<Link> = ({
   url,
   external,
   locked,
+  statusIndication,
 }) => {
   if (locked) {
     return <LockedItem label={label} key={id} />;
@@ -33,7 +35,7 @@ export const NavigationItem: React.FC<Link> = ({
   if (external) {
     return <ExternalItem label={label} url={url} key={id} />;
   }
-  if (id === "CompileReports") {
+  if (statusIndication) {
     return <CompileReportItem label={label} url={url} key={id} />;
   }
   return <RegularItem key={id} label={label} url={url} />;
@@ -102,10 +104,12 @@ const CompileReportItem: React.FC<Label & Url> = ({ label, url }) => {
       >
         {label}
         {data.kind === "Success" && data.value === true && (
-          <StyledIndication
-            aria-label="CompileReportsIndication"
-            className="--pf-c-label--m-blue__content--before--BorderColor"
-          />
+          <Tooltip key={"ongoing-compilation-tooltip"} content={"Compiling"}>
+            <StyledIndication
+              aria-label="CompileReportsIndication"
+              className="--pf-c-label--m-blue__content--before--BorderColor"
+            />
+          </Tooltip>
         )}
       </NavLink>
     </NavItem>
@@ -128,6 +132,12 @@ const StyledTooltip = styled(Tooltip)`
 `;
 
 //Indication colors based on <Label color="blue" /> component
+const pendingAnimation = keyframes`
+ 0% { opacity: .2}
+ 50% { opacity: 1}
+ 100% { opacity: .2}
+`;
+
 const StyledIndication = styled.div`
   width: 10px;
   height: 10px;
@@ -142,5 +152,6 @@ const StyledIndication = styled.div`
     height: 8px;
     border-radius: 50%;
     border: 1px solid #bee1f4;
+    animation: ${pendingAnimation} 2s infinite;
   }
 `;
