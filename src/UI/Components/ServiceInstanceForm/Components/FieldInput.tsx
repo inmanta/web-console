@@ -150,7 +150,7 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
     return words("inventory.form.placeholder.dict");
   }
 
-  return "";
+  return undefined;
 };
 
 const getTypeHintForType = (typeName: string): string | undefined => {
