@@ -8,11 +8,12 @@ import { AutoCompleteInputProvider } from "./AutoCompleteInputProvider";
 interface Props {
   serviceName: string;
   attributeName: string;
-  attributeValue: string;
+  attributeValue: string | string[];
   description?: string;
   isOptional: boolean;
   handleInputChange: (value, event) => void;
   alreadySelected: string[];
+  multi?: boolean;
 }
 
 export const RelatedServiceProvider: React.FC<Props> = ({
@@ -23,12 +24,14 @@ export const RelatedServiceProvider: React.FC<Props> = ({
   isOptional,
   handleInputChange,
   alreadySelected,
+  multi,
 }) => {
   const { queryResolver } = useContext(DependencyContext);
   const [data, retry] = queryResolver.useOneTime<"GetService">({
     kind: "GetService",
     name: serviceName,
   });
+
   return RemoteData.fold(
     {
       notAsked: () => null,
@@ -58,6 +61,7 @@ export const RelatedServiceProvider: React.FC<Props> = ({
             handleInputChange={handleInputChange}
             serviceName={serviceName}
             serviceIdentity={service.service_identity}
+            multi={multi}
           />
         );
       },

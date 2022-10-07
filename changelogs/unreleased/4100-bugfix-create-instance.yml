@@ -1,0 +1,9 @@
+description: Fix the error thrown on create new instance.
+sections: 
+  bugfix: "{{description}}"
+  minor-improvement: The create/edit Instance form now has a better way to allow the user to select multiple Inter Service Relations.
+issue-nr: 4100
+change-type: patch
+destination-branches:
+  - master
+  - iso5

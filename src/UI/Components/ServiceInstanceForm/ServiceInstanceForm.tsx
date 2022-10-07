@@ -30,12 +30,28 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   );
 
   const getUpdate =
-    (path: string) =>
-    (value: unknown): void =>
-      setFormState((prev) => {
-        const clone = { ...prev };
-        return set(clone, path, value);
-      });
+    (path: string, multi = false) =>
+    (value: unknown): void => {
+      if (multi) {
+        setFormState((prev) => {
+          const clone = { ...prev };
+          let selection = (clone[path] as string[]) || [];
+
+          if (selection.includes(value as string)) {
+            selection = selection.filter((item) => item !== (value as string));
+          } else {
+            selection.push(value as string);
+          }
+
+          return set(clone, path, selection);
+        });
+      } else {
+        setFormState((prev) => {
+          const clone = { ...prev };
+          return set(clone, path, value);
+        });
+      }
+    };
 
   const preventDefault = (event: React.FormEvent) => {
     event.preventDefault();

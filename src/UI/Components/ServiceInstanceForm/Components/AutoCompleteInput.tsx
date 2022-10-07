@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { FormGroup, Select, SelectOption } from "@patternfly/react-core";
+import {
+  FormGroup,
+  Select,
+  SelectOption,
+  SelectVariant,
+} from "@patternfly/react-core";
 import { words } from "@/UI/words";
 
 interface Option {
@@ -12,11 +17,12 @@ interface Props {
   options: Option[];
   serviceEntity: string;
   attributeName: string;
-  attributeValue: string;
+  attributeValue: string | string[];
   description?: string;
   isOptional: boolean;
   handleInputChange: (value, event) => void;
   onSearchTextChanged: (value: string) => void;
+  multi?: boolean;
 }
 export const AutoCompleteInput: React.FC<Props> = ({
   options,
@@ -27,6 +33,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
   isOptional,
   handleInputChange,
   onSearchTextChanged,
+  multi,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,14 +61,14 @@ export const AutoCompleteInput: React.FC<Props> = ({
       <Select
         aria-label={`${attributeName}-select-input`}
         toggleAriaLabel={`${attributeName}-select-toggle`}
-        variant="typeahead"
+        variant={multi ? SelectVariant.typeaheadMulti : SelectVariant.typeahead}
         onFilter={() => selectOptions}
         onToggle={() => {
           setIsOpen(!isOpen);
         }}
         isOpen={isOpen}
         onSelect={onSelect}
-        selections={attributeValue === "" ? undefined : attributeValue}
+        selections={attributeValue}
         placeholderText={words("common.serviceInstance.relation")}
         onTypeaheadInputChanged={onSearchTextChanged}
       >
