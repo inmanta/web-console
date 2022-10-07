@@ -26,11 +26,7 @@ export const createFormState = (
       }
 
       case "RelationList": {
-        if (curr.min <= 0) {
-          acc[curr.name] = [];
-        } else {
-          acc[curr.name] = [];
-        }
+        acc[curr.name] = [];
         return acc;
       }
 
