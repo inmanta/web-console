@@ -22,6 +22,7 @@ export const Provider: React.FC<Props> = ({ afterTrigger }) => {
 
   const onRecompile = (update: boolean) => async () => {
     await trigger(update);
+    document.dispatchEvent(new CustomEvent("CompileTrigger"));
     refetch();
     afterTrigger && afterTrigger();
   };
