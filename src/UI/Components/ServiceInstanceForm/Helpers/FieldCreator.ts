@@ -158,15 +158,7 @@ export class FieldCreator {
       name: interServiceRelation.name,
       description: interServiceRelation.description,
       isOptional: this.isOptional(interServiceRelation),
-      fields: [
-        {
-          kind: "InterServiceRelation",
-          name: interServiceRelation.name,
-          description: interServiceRelation.description,
-          isOptional: false,
-          serviceEntity: interServiceRelation.entity_type,
-        },
-      ],
+      serviceEntity: interServiceRelation.entity_type,
       min: interServiceRelation.lower_limit,
       max: interServiceRelation.upper_limit,
     };

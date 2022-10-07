@@ -29,7 +29,7 @@ export const createFormState = (
         if (curr.min <= 0) {
           acc[curr.name] = [];
         } else {
-          acc[curr.name] = times(Number(curr.min), () => "");
+          acc[curr.name] = [];
         }
         return acc;
       }
@@ -46,12 +46,11 @@ export const createFormState = (
         return acc;
       }
       default: {
-        console.log("entering default reducer case and returning acc", acc);
         return acc;
       }
     }
   }, {});
-  console.log("Reduced fields", returnValue);
+
   return returnValue;
 };
 
@@ -87,7 +86,7 @@ export const createEditFormState = (
         }
 
         case "RelationList": {
-          acc[curr.name] = originalAttributes?.[curr.name] as string[];
+          acc[curr.name] = (originalAttributes?.[curr.name] as string[]) || [];
           return acc;
         }
 

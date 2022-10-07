@@ -57,7 +57,7 @@ export interface DictListField extends BaseField {
 
 export interface RelationListField extends BaseField {
   kind: "RelationList";
-  fields: InterServiceRelationField[];
+  serviceEntity: string;
   min: ParsedNumber;
   max?: ParsedNumber;
 }
