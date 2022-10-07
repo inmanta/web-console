@@ -3,7 +3,6 @@ import * as Environment from "@/Test/Data/Environment";
 import * as Attribute from "./Attribute";
 import * as EmbeddedEntity from "./EmbeddedEntity";
 import * as InstanceSummary from "./InstanceSummary";
-import { editable } from "./InterServiceRelations";
 import * as State from "./State";
 import * as Transfer from "./Transfer";
 export * as InterServiceRelations from "./InterServiceRelations";
@@ -78,5 +77,16 @@ export const withRelationsOnly: ServiceModel = {
   name: "with_relations",
   attributes: [],
   embedded_entities: [],
-  inter_service_relations: [editable],
+  inter_service_relations: [
+    {
+      name: "test_entity",
+      description: "test-case",
+      lower_limit: 1,
+      modifier: "rw+",
+      entity_type: "test_entity",
+      upper_limit: 5,
+    },
+  ],
+  service_identity: "subscriber_number",
+  service_identity_display_name: "User Equipment",
 };

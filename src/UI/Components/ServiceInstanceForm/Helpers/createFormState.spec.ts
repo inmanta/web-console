@@ -59,8 +59,8 @@ test("GIVEN fieldsToFormState WHEN passed a interservice relations THEN creates 
     relation2: [],
     relation3: [],
     relation4: [],
-    relation5: [""],
-    relation6: [""],
+    relation5: [],
+    relation6: [],
   });
 });
 
@@ -77,7 +77,7 @@ test("GIVEN fieldsToFormState WHEN passed a interservice relations and current s
     relation2: [],
     relation3: [],
     relation4: ["id"],
-    relation5: [""],
+    relation5: [],
     relation6: ["abc"],
   });
 });

@@ -24,6 +24,7 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
+  GetCompilationStateQueryManager,
   GetCompilerStatusQueryManager,
   GetServiceInstancesOneTimeQueryManager,
   GetServiceOneTimeQueryManager,
@@ -256,6 +257,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.scheduler
       ),
       new GetCompilerStatusQueryManager(this.apiHelper, this.scheduler),
+      new GetCompilationStateQueryManager(this.apiHelper, this.scheduler),
       new GetParametersQueryManager(
         this.apiHelper,
         new GetParametersStateHelper(this.store),

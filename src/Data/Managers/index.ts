@@ -25,3 +25,4 @@ export * from "./Repair";
 export * from "./PromoteVersion";
 export * from "./ControlAgent";
 export * from "./GetCompilerStatus";
+export * from "./GetCompilationState";

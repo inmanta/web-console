@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { PageSize } from "@/Core";
+import { PageSize, ParsedNumber } from "@/Core";
 import { Filter } from "@S/DesiredState/Core/Query";
 import { CompareSelection } from "./Utils";
 
@@ -9,6 +9,7 @@ interface GetDesiredStatesProvider {
   setErrorMessage(message: string): void;
   compareSelection: CompareSelection;
   setCompareSelection(selection: CompareSelection): void;
+  setDeleteModal: (version: ParsedNumber, modalState: boolean) => void;
 }
 
 export const GetDesiredStatesContext = createContext<GetDesiredStatesProvider>({
@@ -19,4 +20,5 @@ export const GetDesiredStatesContext = createContext<GetDesiredStatesProvider>({
   },
   compareSelection: { kind: "None" },
   setCompareSelection: () => undefined,
+  setDeleteModal: () => undefined,
 });

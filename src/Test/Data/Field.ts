@@ -217,15 +217,7 @@ export const RelationListFields: Field[] = [
     name: "relation1",
     description: "desc",
     isOptional: true,
-    fields: [
-      {
-        kind: "InterServiceRelation",
-        name: "relation1",
-        description: "desc",
-        isOptional: false,
-        serviceEntity: "test_entity",
-      },
-    ],
+    serviceEntity: "test_entity",
     min: 0,
   },
   {
@@ -233,15 +225,7 @@ export const RelationListFields: Field[] = [
     name: "relation2",
     description: "desc",
     isOptional: true,
-    fields: [
-      {
-        kind: "InterServiceRelation",
-        name: "relation2",
-        description: "desc",
-        isOptional: false,
-        serviceEntity: "test_entity2",
-      },
-    ],
+    serviceEntity: "test_entity2",
     min: 0,
   },
   {
@@ -249,15 +233,7 @@ export const RelationListFields: Field[] = [
     name: "relation3",
     description: "desc",
     isOptional: true,
-    fields: [
-      {
-        kind: "InterServiceRelation",
-        name: "relation3",
-        description: "desc",
-        isOptional: false,
-        serviceEntity: "test_entity",
-      },
-    ],
+    serviceEntity: "test_entity",
     min: 0,
     max: 3,
   },
@@ -266,15 +242,7 @@ export const RelationListFields: Field[] = [
     name: "relation4",
     description: "desc",
     isOptional: true,
-    fields: [
-      {
-        kind: "InterServiceRelation",
-        name: "relation4",
-        description: "desc",
-        isOptional: false,
-        serviceEntity: "test_entity2",
-      },
-    ],
+    serviceEntity: "test_entity2",
     min: 0,
     max: 3,
   },
@@ -283,15 +251,7 @@ export const RelationListFields: Field[] = [
     name: "relation5",
     description: "desc",
     isOptional: false,
-    fields: [
-      {
-        kind: "InterServiceRelation",
-        name: "relation5",
-        description: "desc",
-        isOptional: false,
-        serviceEntity: "test_entity",
-      },
-    ],
+    serviceEntity: "test_entity",
     min: 1,
     max: 3,
   },
@@ -300,15 +260,7 @@ export const RelationListFields: Field[] = [
     name: "relation6",
     description: "desc",
     isOptional: false,
-    fields: [
-      {
-        kind: "InterServiceRelation",
-        name: "relation6",
-        description: "desc",
-        isOptional: false,
-        serviceEntity: "test_entity2",
-      },
-    ],
+    serviceEntity: "test_entity2",
     min: 1,
     max: 3,
   },

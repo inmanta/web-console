@@ -1,6 +1,8 @@
 import React from "react";
+import { Split, SplitItem } from "@patternfly/react-core";
 import { Tr, Td } from "@patternfly/react-table";
 import { Toggle } from "@/UI/Components/Toggle";
+import { ToggleAll } from "../../ToggleAll";
 import { CellWithCopy } from "./CellWithCopy";
 import { Indent } from "./Indent";
 import { TreeRow } from "./TreeRow";
@@ -36,12 +38,28 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
         <Tr aria-label={`Row-${row.id}`}>
           <Td dataLabel="name" colSpan={4}>
             <Indent level={0}>
-              <Toggle
-                expanded={row.isChildExpanded}
-                onToggle={row.onToggle}
-                aria-label={`Toggle-${row.id}`}
-              />
-              {row.primaryCell.value}
+              <Split>
+                <SplitItem isFilled>
+                  <Toggle
+                    expanded={row.isChildExpanded}
+                    onToggle={row.onToggle}
+                    aria-label={`Toggle-${row.id}`}
+                  />
+                  {row.primaryCell.value}
+                </SplitItem>
+                <SplitItem>
+                  <ToggleAll
+                    isExpanded={false}
+                    onToggle={row.openAll}
+                    aria-label={`ExpandAll-${row.id}`}
+                  />
+                  <ToggleAll
+                    isExpanded={true}
+                    onToggle={row.closeAll}
+                    aria-label={`CollapseAll-${row.id}`}
+                  />
+                </SplitItem>
+              </Split>
             </Indent>
           </Td>
         </Tr>
