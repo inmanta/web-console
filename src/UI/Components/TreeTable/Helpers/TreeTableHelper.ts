@@ -47,9 +47,9 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
   ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void } {
     const createOnToggle = (key: string) => () =>
       setState(this.expansionManager.toggle(expansionState, key));
-    const createCloseAll = () => () =>
+    const createCloseAll = () =>
       setState(this.expansionManager.toggleAll(expansionState, false));
-    const createOpenAll = () => () =>
+    const createOpenAll = () =>
       setState(this.expansionManager.toggleAll(expansionState, true));
 
     const isExpandedByParent = (path: string) =>
@@ -75,8 +75,8 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
       rows: Object.entries(nodes)
         .map(([key, node]) => treeRowCreator.create(key, node))
         .sort((a, b) => a.id.localeCompare(b.id)),
-      openAll: createOpenAll(),
-      closeAll: createCloseAll(),
+      openAll: createOpenAll,
+      closeAll: createCloseAll,
     };
   }
   getEmptyAttributeSets(): string[] {
