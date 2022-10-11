@@ -256,8 +256,8 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetVersionResourcesStateHelper(this.store),
         this.scheduler
       ),
-      new GetCompilerStatusQueryManager(this.apiHelper, this.scheduler),
-      new GetCompilationStateQueryManager(this.apiHelper, this.scheduler),
+      GetCompilerStatusQueryManager(this.apiHelper, this.scheduler),
+      GetCompilationStateQueryManager(this.apiHelper, this.scheduler),
       new GetParametersQueryManager(
         this.apiHelper,
         new GetParametersStateHelper(this.store),
