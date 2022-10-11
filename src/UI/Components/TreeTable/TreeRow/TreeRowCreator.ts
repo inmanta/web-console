@@ -13,8 +13,6 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
     private readonly isExpandedByParent: (path: string) => boolean,
     private readonly isChildExpanded: (path: string) => boolean,
     private readonly createOnToggle: (path: string) => () => void,
-    private readonly createCloseAll: (path: string) => () => void,
-    private readonly createOpenAll: (path: string) => () => void,
     private readonly extractValues: (
       node: Extract<MultiAttributeNode<T>, { kind: "Leaf" }>
     ) => Cell[]
@@ -56,8 +54,6 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
           id: path,
           isChildExpanded: this.isChildExpanded(path),
           onToggle: this.createOnToggle(path),
-          openAll: this.createOpenAll(path),
-          closeAll: this.createCloseAll(path),
           primaryCell: { label: "name", value: path },
         };
       }

@@ -21,15 +21,11 @@ export class TreeExpansionManager {
     return this.open(state, key);
   }
 
-  toggleAll(
-    state: ExpansionState,
-    key: string,
-    shouldOpen: boolean
-  ): ExpansionState {
+  toggleAll(state: ExpansionState, shouldOpen: boolean): ExpansionState {
     if (shouldOpen) {
-      return this.openAll(state, key);
+      return this.openAll(state);
     }
-    return this.close(state, key);
+    return this.closeAll(state);
   }
 
   get(state: ExpansionState, key: string): boolean {
@@ -52,17 +48,12 @@ export class TreeExpansionManager {
       ...closedState,
     };
   }
+  private closeAll(state: ExpansionState): ExpansionState {
+    return this.createState([...Object.keys(state)]);
+  }
 
-  private openAll(state: ExpansionState, key: string): ExpansionState {
-    const keysToOpen = Object.keys(state).filter((k) =>
-      k.startsWith(`${key}${this.separator}`)
-    );
-
-    const openedState = this.createState([...keysToOpen, key], true);
-    return {
-      ...state,
-      ...openedState,
-    };
+  private openAll(state: ExpansionState): ExpansionState {
+    return this.createState([...Object.keys(state)], true);
   }
 
   private open(state: ExpansionState, key: string): ExpansionState {
