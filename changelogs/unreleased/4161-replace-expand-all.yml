@@ -1,0 +1,6 @@
+---
+description: change expand/collapse all functionality to cover all attributes and move it to the dropdown
+change-type: patch
+destination-branches: 
+ - master
+ - iso5
