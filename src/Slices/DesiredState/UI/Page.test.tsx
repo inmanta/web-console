@@ -45,7 +45,7 @@ function setup() {
         getDesiredStatesStateHelper,
         scheduler
       ),
-      new GetCompilerStatusQueryManager(apiHelper, scheduler),
+      GetCompilerStatusQueryManager(apiHelper, scheduler),
     ])
   );
   const commandResolver = new CommandResolverImpl(
