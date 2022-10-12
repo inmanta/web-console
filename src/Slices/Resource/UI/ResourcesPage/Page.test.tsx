@@ -44,7 +44,7 @@ function setup() {
           ...dependencies,
           queryResolver,
           commandResolver,
-          environmentHandler: new MockEnvironmentHandler(environment),
+          environmentHandler: MockEnvironmentHandler(environment),
         }}
       >
         <StoreProvider store={store}>
