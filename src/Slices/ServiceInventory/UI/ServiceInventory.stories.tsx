@@ -47,7 +47,7 @@ export const Basic: React.FC = () => {
     scheduler
   );
 
-  const resourcesHelper = new InstanceResourcesQueryManager(
+  const resourcesHelper = InstanceResourcesQueryManager(
     apiHelper,
     new InstanceResourcesStateHelper(store),
     new ServiceInstancesStateHelper(store),

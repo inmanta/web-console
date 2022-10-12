@@ -43,7 +43,7 @@ function setup() {
     scheduler
   );
   const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
-  const serviceConfigQueryManager = new ServiceConfigQueryManager(
+  const serviceConfigQueryManager = ServiceConfigQueryManager(
     apiHelper,
     new ServiceConfigStateHelper(store),
     new ServiceConfigFinalizer(
@@ -79,7 +79,7 @@ function setup() {
           queryResolver,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
-          environmentHandler: new MockEnvironmentHandler(Service.a.environment),
+          environmentHandler: MockEnvironmentHandler(Service.a.environment),
         }}
       >
         <StoreProvider store={store}>

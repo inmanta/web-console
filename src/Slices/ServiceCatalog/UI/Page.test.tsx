@@ -46,7 +46,7 @@ function setup() {
     new DynamicCommandManagerResolver([commandManager])
   );
 
-  const environmentHandler = new EnvironmentHandlerImpl(
+  const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
     dependencies.routeManager
   );

@@ -165,12 +165,12 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         serviceInstanceStateHelper
       ),
       new GetServiceOneTimeQueryManager(this.apiHelper, serviceStateHelper),
-      new ServiceConfigQueryManager(
+      ServiceConfigQueryManager(
         this.apiHelper,
         new ServiceConfigStateHelper(this.store),
         new ServiceConfigFinalizer(serviceStateHelper)
       ),
-      new InstanceResourcesQueryManager(
+      InstanceResourcesQueryManager(
         this.apiHelper,
         new InstanceResourcesStateHelper(this.store),
         serviceInstancesStateHelper,
@@ -187,7 +187,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         new GetInstanceLogsStateHelper(this.store),
         this.scheduler
       ),
-      new InstanceConfigQueryManager(
+      InstanceConfigQueryManager(
         this.apiHelper,
         new InstanceConfigStateHelper(this.store),
         new InstanceConfigFinalizer(serviceStateHelper)

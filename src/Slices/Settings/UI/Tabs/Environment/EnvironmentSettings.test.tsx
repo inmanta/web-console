@@ -36,9 +36,7 @@ function setup() {
           dependencies={{
             ...dependencies,
             commandResolver,
-            environmentHandler: new MockEnvironmentHandler(
-              selectedEnvironment.id
-            ),
+            environmentHandler: MockEnvironmentHandler(selectedEnvironment.id),
           }}
         >
           <EnvironmentSettings
