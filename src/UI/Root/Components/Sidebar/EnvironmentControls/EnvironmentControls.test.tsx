@@ -69,9 +69,7 @@ function setup() {
           ...dependencies,
           queryResolver,
           commandResolver,
-          environmentHandler: new MockEnvironmentHandler(
-            EnvironmentDetails.a.id
-          ),
+          environmentHandler: MockEnvironmentHandler(EnvironmentDetails.a.id),
         }}
       >
         <StoreProvider store={store}>

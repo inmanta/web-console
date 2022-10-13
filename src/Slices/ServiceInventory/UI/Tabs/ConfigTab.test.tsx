@@ -58,7 +58,7 @@ function setup(
     version: ServiceInstance.a.version,
   };
 
-  const instanceConfigHelper = new InstanceConfigQueryManager(
+  const instanceConfigHelper = InstanceConfigQueryManager(
     new InstantApiHelper(() => ({
       kind: "Success",
       data: { data: { auto_creating: false } },
@@ -87,7 +87,7 @@ function setup(
           queryResolver,
           commandResolver,
           environmentModifier,
-          environmentHandler: new MockEnvironmentHandler(Service.a.environment),
+          environmentHandler: MockEnvironmentHandler(Service.a.environment),
         }}
       >
         <StoreProvider store={storeInstance}>
@@ -155,7 +155,7 @@ test("ConfigTab can change 1 toggle", async () => {
 });
 
 test("ConfigTab handles hooks with environment modifier correctly", async () => {
-  const environmentModifier = new EnvironmentModifierImpl();
+  const environmentModifier = EnvironmentModifierImpl();
   environmentModifier.setEnvironment(Service.a.environment);
   const { component, storeInstance } = setup(environmentModifier);
   storeInstance.dispatch.environment.setEnvironmentDetailsById({

@@ -28,7 +28,7 @@ function setup() {
     id: ServiceInstance.a.environment,
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
-  const environmentModifier = new EnvironmentModifierImpl();
+  const environmentModifier = EnvironmentModifierImpl();
   environmentModifier.setEnvironment(ServiceInstance.a.environment);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])

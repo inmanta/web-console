@@ -44,7 +44,7 @@ function setup(service = Service.a) {
     scheduler
   );
 
-  const resourcesHelper = new InstanceResourcesQueryManager(
+  const resourcesHelper = InstanceResourcesQueryManager(
     apiHelper,
     new InstanceResourcesStateHelper(store),
     new ServiceInstancesStateHelper(store),
