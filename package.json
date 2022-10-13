@@ -109,7 +109,7 @@
     "raw-loader": "^4.0.2",
     "react-axe": "3.5.4",
     "react-svg-loader": "^3.0.3",
-    "regenerator-runtime": "^0.13.9",
+    "regenerator-runtime": "^0.13.10",
     "rimraf": "^3.0.0",
     "start-server-and-test": "^1.14.0",
     "style-loader": "^3.3.1",
