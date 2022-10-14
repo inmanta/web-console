@@ -42,16 +42,16 @@ export class ServiceInventoryPrepper {
       update: jest.fn((result) => task.update(result)),
     }));
     const apiHelper = new DeferredApiHelper();
-    const serviceInstancesHelper = new ServiceInstancesQueryManager(
+    const serviceInstancesHelper = ServiceInstancesQueryManager(
       apiHelper,
-      new ServiceInstancesStateHelper(store),
+      ServiceInstancesStateHelper(store),
       scheduler
     );
 
     const resourcesHelper = InstanceResourcesQueryManager(
       apiHelper,
-      new InstanceResourcesStateHelper(store),
-      new ServiceInstancesStateHelper(store),
+      InstanceResourcesStateHelper(store),
+      ServiceInstancesStateHelper(store),
       scheduler
     );
 
@@ -59,12 +59,12 @@ export class ServiceInventoryPrepper {
       new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
     );
 
-    const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
+    const triggerUpdateCommandManager = TriggerInstanceUpdateCommandManager(
       new BaseApiHelper()
     );
-    const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
+    const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
-    const setStateCommandManager = new TriggerSetStateCommandManager(
+    const setStateCommandManager = TriggerSetStateCommandManager(
       new KeycloakAuthHelper(),
       new BaseApiHelper()
     );

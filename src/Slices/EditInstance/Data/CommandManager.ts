@@ -5,28 +5,25 @@ import {
   sanitizeAttributes,
 } from "@/Data/Common/AttributeConverter";
 
-export class TriggerInstanceUpdateCommandManager extends CommandManagerWithEnv<"TriggerInstanceUpdate"> {
-  constructor(private readonly apiHelper: ApiHelper) {
-    super(
-      "TriggerInstanceUpdate",
-      (command, environment) =>
-        async (fields: Field[], currentAttributes, updatedAttributes) => {
-          return await this.apiHelper.patch(
-            this.getUrl(command),
-            environment,
-            getBody(fields, currentAttributes, updatedAttributes)
-          );
-        }
-    );
-  }
-
-  private getUrl({
+export function TriggerInstanceUpdateCommandManager(apiHelper: ApiHelper) {
+  function getUrl({
     service_entity,
     id,
     version,
   }: Command.SubCommand<"TriggerInstanceUpdate">): string {
     return `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`;
   }
+  return CommandManagerWithEnv<"TriggerInstanceUpdate">(
+    "TriggerInstanceUpdate",
+    (command, environment) =>
+      async (fields: Field[], currentAttributes, updatedAttributes) => {
+        return await apiHelper.patch(
+          getUrl(command),
+          environment,
+          getBody(fields, currentAttributes, updatedAttributes)
+        );
+      }
+  );
 }
 
 export const getBody = (

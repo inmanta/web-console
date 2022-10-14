@@ -9,7 +9,7 @@ import { UrlManagerImpl } from "@/UI/Utils";
 
 const baseUrl = "";
 const env = "env";
-const routeManager = new PrimaryRouteManager(baseUrl);
+const routeManager = PrimaryRouteManager(baseUrl);
 const featureManager = new MockFeatureManager();
 const environmentModifier = EnvironmentModifierImpl();
 const urlManager = new UrlManagerImpl(featureManager, baseUrl);

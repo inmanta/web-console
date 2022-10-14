@@ -27,7 +27,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new EventsQueryManager(
+      EventsQueryManager(
         new InstantApiHelper(() => ({
           kind: "Success",
           data: {
@@ -41,7 +41,7 @@ const Template: React.FC<{ events: InstanceEvent[] }> = ({ events }) => {
             },
           },
         })),
-        new EventsStateHelper(store),
+        EventsStateHelper(store),
         scheduler
       ),
     ])

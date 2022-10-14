@@ -144,7 +144,7 @@ export function InstanceResourcesQueryManager(
       };
     }, [environment]);
 
-    return [stateHelper.getHooked(query, environment), () => undefined];
+    return [stateHelper.useGetHooked(query, environment), () => undefined];
   }
 
   function updateInstance(

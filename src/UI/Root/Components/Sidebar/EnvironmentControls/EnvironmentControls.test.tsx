@@ -33,23 +33,21 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const environmentDetailsStateHelper = new GetEnvironmentDetailsStateHelper(
-    store
-  );
+  const environmentDetailsStateHelper = GetEnvironmentDetailsStateHelper(store);
   const environmentDetailsQueryManager =
-    new EnvironmentDetailsContinuousQueryManager(store, apiHelper, scheduler);
+    EnvironmentDetailsContinuousQueryManager(store, apiHelper, scheduler);
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([environmentDetailsQueryManager])
   );
 
-  const haltEnvironmentManager = new HaltEnvironmentCommandManager(
+  const haltEnvironmentManager = HaltEnvironmentCommandManager(
     new BaseApiHelper(),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(store, apiHelper)
   );
 
-  const resumeEnvironmentManager = new ResumeEnvironmentCommandManager(
+  const resumeEnvironmentManager = ResumeEnvironmentCommandManager(
     new BaseApiHelper(),
     environmentDetailsStateHelper,
     new EnvironmentDetailsUpdater(store, apiHelper)

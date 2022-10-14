@@ -32,7 +32,7 @@ export const DeleteModal: React.FC<Props> = ({
     useContext(DependencyContext);
   const { refetch } = useContext(GetInstancesContext);
 
-  const trigger = commandResolver.getTrigger<"DeleteInstance">({
+  const trigger = commandResolver.useGetTrigger<"DeleteInstance">({
     kind: "DeleteInstance",
     service_entity,
     id,

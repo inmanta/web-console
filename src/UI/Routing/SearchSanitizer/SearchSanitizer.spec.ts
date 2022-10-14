@@ -1,7 +1,7 @@
 import { PrimaryRouteManager } from "@/UI";
 import { SearchSanitizer } from "./SearchSanitizer";
 
-const sanitizer = new SearchSanitizer(new PrimaryRouteManager(""));
+const sanitizer = new SearchSanitizer(PrimaryRouteManager(""));
 
 test("GIVEN sanitizer.isSanitized WHEN clean string THEN returns true", () => {
   const search = "?state.Catalog.x=abc&env=123";

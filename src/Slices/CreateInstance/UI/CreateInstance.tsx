@@ -31,7 +31,7 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
     [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
   );
 
-  const trigger = commandResolver.getTrigger<"CreateInstance">({
+  const trigger = commandResolver.useGetTrigger<"CreateInstance">({
     kind: "CreateInstance",
     service_entity: serviceEntity.name,
   });

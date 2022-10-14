@@ -30,8 +30,8 @@ import { CallbacksView } from "@S/ServiceCatalog/UI/Tabs/Callbacks";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const callbacksStateHelper = new CallbacksStateHelper(store);
-  const callbacksQueryManager = new CallbacksQueryManager(
+  const callbacksStateHelper = CallbacksStateHelper(store);
+  const callbacksQueryManager = CallbacksQueryManager(
     apiHelper,
     callbacksStateHelper
   );
@@ -41,15 +41,15 @@ function setup() {
   );
 
   const callbacksUpdater = new CallbacksUpdater(
-    new CallbacksStateHelper(store),
+    CallbacksStateHelper(store),
     apiHelper
   );
-  const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
+  const deleteCallbackCommandManager = DeleteCallbackCommandManager(
     apiHelper,
     callbacksUpdater
   );
 
-  const createCallbackCommandManager = new CreateCallbackCommandManager(
+  const createCallbackCommandManager = CreateCallbackCommandManager(
     apiHelper,
     callbacksUpdater
   );

@@ -36,7 +36,7 @@ function setup() {
     new CommandManagerResolver(store, apiHelper, authHelper)
   );
 
-  const routeManager = new PrimaryRouteManager("");
+  const routeManager = PrimaryRouteManager("");
 
   store.dispatch.environment.setEnvironmentDetailsById({
     id: "env",

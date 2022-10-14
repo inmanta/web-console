@@ -44,7 +44,7 @@ export const SetStateAction: React.FC<Props> = ({
   const isDisabled = !dropdownItems || dropdownItems.length === 0;
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const trigger = commandResolver.getTrigger<"TriggerSetState">({
+  const trigger = commandResolver.useGetTrigger<"TriggerSetState">({
     kind: "TriggerSetState",
     service_entity,
     id,

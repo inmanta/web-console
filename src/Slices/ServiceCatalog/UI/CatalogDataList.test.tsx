@@ -15,7 +15,7 @@ import { CatalogDataList } from "./CatalogDataList";
 const Component = (services: ServiceModel[]) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new DeleteServiceCommandManager(new BaseApiHelper()),
+      DeleteServiceCommandManager(new BaseApiHelper()),
     ])
   );
   return (

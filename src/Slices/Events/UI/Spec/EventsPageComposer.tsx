@@ -24,9 +24,9 @@ export class EventsPageComposer {
     const store = getStoreInstance();
     const scheduler = new SchedulerImpl(5000);
     const apiHelper = new DeferredApiHelper();
-    const eventsHelper = new EventsQueryManager(
+    const eventsHelper = EventsQueryManager(
       apiHelper,
-      new EventsStateHelper(store),
+      EventsStateHelper(store),
       scheduler
     );
 

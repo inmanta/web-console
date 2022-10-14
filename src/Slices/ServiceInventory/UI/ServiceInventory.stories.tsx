@@ -34,7 +34,7 @@ export const Basic: React.FC = () => {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const serviceInstancesHelper = new ServiceInstancesQueryManager(
+  const serviceInstancesHelper = ServiceInstancesQueryManager(
     new InstantApiHelper(() => ({
       kind: "Success",
       data: {
@@ -43,14 +43,14 @@ export const Basic: React.FC = () => {
         metadata: Pagination.metadata,
       },
     })),
-    new ServiceInstancesStateHelper(store),
+    ServiceInstancesStateHelper(store),
     scheduler
   );
 
   const resourcesHelper = InstanceResourcesQueryManager(
     apiHelper,
-    new InstanceResourcesStateHelper(store),
-    new ServiceInstancesStateHelper(store),
+    InstanceResourcesStateHelper(store),
+    ServiceInstancesStateHelper(store),
     scheduler
   );
 
@@ -84,7 +84,7 @@ export const Basic: React.FC = () => {
 export const Failed: React.FC = () => {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
-  const serviceInstancesHelper = new ServiceInstancesQueryManager(
+  const serviceInstancesHelper = ServiceInstancesQueryManager(
     new InstantApiHelper(() => ({
       kind: "Failed",
       error: `The following error occured while communicating with the server: 400 Bad Request 
@@ -92,7 +92,7 @@ Invalid request: Filter validation failed: 1 validation error for st_filter
 id -> 0
   value is not a valid uuid (type=type_error.uuid), values provided: {'id': ['12']}`,
     })),
-    new ServiceInstancesStateHelper(store),
+    ServiceInstancesStateHelper(store),
     scheduler
   );
 

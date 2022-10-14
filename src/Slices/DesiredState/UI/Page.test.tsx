@@ -33,14 +33,14 @@ function setup() {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const getDesiredStatesStateHelper = new GetDesiredStatesStateHelper(store);
+  const getDesiredStatesStateHelper = GetDesiredStatesStateHelper(store);
   const desiredStatesUpdater = new DesiredStatesUpdater(
     getDesiredStatesStateHelper,
     apiHelper
   );
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new GetDesiredStatesQueryManager(
+      GetDesiredStatesQueryManager(
         apiHelper,
         getDesiredStatesStateHelper,
         scheduler
@@ -50,9 +50,9 @@ function setup() {
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new PromoteVersionCommandManager(apiHelper, desiredStatesUpdater),
-      new DeleteVersionCommandManager(apiHelper),
-      new TriggerCompileCommandManager(apiHelper),
+      PromoteVersionCommandManager(apiHelper, desiredStatesUpdater),
+      DeleteVersionCommandManager(apiHelper),
+      TriggerCompileCommandManager(apiHelper),
     ])
   );
 

@@ -21,11 +21,7 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new EventsQueryManager(
-        apiHelper,
-        new EventsStateHelper(store),
-        scheduler
-      ),
+      EventsQueryManager(apiHelper, EventsStateHelper(store), scheduler),
     ])
   );
 

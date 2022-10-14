@@ -9,7 +9,7 @@ export const DeleteEntityModal: React.FunctionComponent<{
   serviceName: string;
 }> = ({ serviceName }) => {
   const { commandResolver } = useContext(DependencyContext);
-  const trigger = commandResolver.getTrigger<"DeleteService">({
+  const trigger = commandResolver.useGetTrigger<"DeleteService">({
     kind: "DeleteService",
     name: serviceName,
   });

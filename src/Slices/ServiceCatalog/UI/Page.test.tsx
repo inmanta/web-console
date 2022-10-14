@@ -32,16 +32,16 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
 
-  const servicesHelper = new ServicesQueryManager(
+  const servicesHelper = ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store),
+    ServicesStateHelper(store),
     scheduler
   );
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([servicesHelper])
   );
-  const commandManager = new DeleteServiceCommandManager(new BaseApiHelper());
+  const commandManager = DeleteServiceCommandManager(new BaseApiHelper());
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
   );

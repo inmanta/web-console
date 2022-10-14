@@ -35,7 +35,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
   const [error, setError] = useState<string | null>(null);
   const { commandResolver } = useContext(DependencyContext);
 
-  const create = commandResolver.getTrigger<"CreateCallback">({
+  const create = commandResolver.useGetTrigger<"CreateCallback">({
     kind: "CreateCallback",
     callback_url: url || "",
     callback_id: id || undefined,

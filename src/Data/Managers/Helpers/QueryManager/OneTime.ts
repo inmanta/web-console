@@ -3,7 +3,7 @@
  * When you edit this file, turn the rule off so you know you are not missing anything.
  */
 
-/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useEffect, useState } from "react";
 import {
@@ -17,53 +17,59 @@ import {
 import { GetDependencies, Data, GetUrl, ToUsed } from "./types";
 import { urlEncodeParams } from "./utils";
 
-export class OneTime<Kind extends Query.Kind>
-  implements OneTimeQueryManager<Kind>
-{
-  constructor(
-    protected readonly apiHelper: ApiHelper,
-    protected readonly stateHelper: StateHelper<Kind>,
-    private readonly getDependencies: GetDependencies<Kind>,
-    private readonly kind: Kind,
-    private readonly getUrl: GetUrl<Kind>,
-    private readonly toUsed: ToUsed<Kind>,
-    private readonly strategy: "MERGE" | "RELOAD"
-  ) {}
-
-  async update(query: Query.SubQuery<Kind>, url: string): Promise<void> {
-    this.stateHelper.set(
-      RemoteData.fromEither(await this.apiHelper.getWithoutEnvironment(url)),
+export function OneTime<Kind extends Query.Kind>(
+  apiHelper: ApiHelper,
+  stateHelper: StateHelper<Kind>,
+  getDependencies: GetDependencies<Kind>,
+  kind: Kind,
+  getUrl: GetUrl<Kind>,
+  toUsed: ToUsed<Kind>,
+  strategy: "MERGE" | "RELOAD"
+): OneTimeQueryManager<Kind> {
+  async function update(
+    query: Query.SubQuery<Kind>,
+    url: string
+  ): Promise<void> {
+    stateHelper.set(
+      RemoteData.fromEither(await apiHelper.getWithoutEnvironment(url)),
       query
     );
   }
 
-  useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
-    const [url, setUrl] = useState(this.getUrl(urlEncodeParams(query)));
+  function useOneTime(query: Query.SubQuery<Kind>): Data<Kind> {
+    const [url, setUrl] = useState(getUrl(urlEncodeParams(query)));
 
     useEffect(() => {
-      setUrl(this.getUrl(urlEncodeParams(query)));
-    }, this.getDependencies(query));
+      setUrl(getUrl(urlEncodeParams(query)));
+    }, getDependencies(query));
 
     useEffect(() => {
       if (
-        this.strategy === "RELOAD" ||
-        RemoteData.isNotAsked(this.stateHelper.getOnce(query))
+        strategy === "RELOAD" ||
+        RemoteData.isNotAsked(stateHelper.getOnce(query))
       ) {
-        this.stateHelper.set(RemoteData.loading(), query);
+        stateHelper.set(RemoteData.loading(), query);
       }
-      this.update(query, url);
+      update(query, url);
     }, [url]);
 
     return [
       RemoteData.mapSuccess(
-        (d) => this.toUsed(d, setUrl),
-        this.stateHelper.getHooked(query)
+        (d) => toUsed(d, setUrl),
+        stateHelper.useGetHooked(query)
       ),
-      () => this.update(query, url),
+      () => update(query, url),
     ];
   }
 
-  matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
-    return query.kind === this.kind && kind === "OneTime";
+  function matches(
+    query: Query.SubQuery<Kind>,
+    matchingKind: QueryManagerKind
+  ): boolean {
+    return query.kind === kind && matchingKind === "OneTime";
   }
+  return {
+    useOneTime,
+    matches,
+  };
 }

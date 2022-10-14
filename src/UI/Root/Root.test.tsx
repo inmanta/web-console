@@ -25,14 +25,14 @@ import { Root } from "./Root";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const environmentsManager = new GetEnvironmentsQueryManager(
+  const environmentsManager = GetEnvironmentsQueryManager(
     apiHelper,
-    new GetEnvironmentsStateHelper(store)
+    GetEnvironmentsStateHelper(store)
   );
 
-  const getServerStatusManager = new GetServerStatusOneTimeQueryManager(
+  const getServerStatusManager = GetServerStatusOneTimeQueryManager(
     apiHelper,
-    new GetServerStatusStateHelper(store)
+    GetServerStatusStateHelper(store)
   );
 
   const queryResolver = new QueryResolverImpl(

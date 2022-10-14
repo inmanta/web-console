@@ -30,12 +30,12 @@ const Template: React.FC<{ diagnostics: RawDiagnostics }> = ({
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new DiagnosticsQueryManager(
+      DiagnosticsQueryManager(
         new InstantApiHelper(() => ({
           kind: "Success",
           data: { data: diagnostics },
         })),
-        new DiagnosticsStateHelper(store),
+        DiagnosticsStateHelper(store),
         new StaticScheduler()
       ),
     ])

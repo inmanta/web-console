@@ -41,121 +41,117 @@ import { Settings } from "@S/Settings";
 import { Status } from "@S/Status";
 import { encodeParams } from "./Utils";
 
-export class PrimaryRouteManager implements RouteManager {
-  private readonly routeDictionary: RouteDictionary;
+export function PrimaryRouteManager(baseUrl: string): RouteManager {
+  const routeDictionary: RouteDictionary = {
+    /**
+     * Main
+     */
+    Home: Home.route(baseUrl),
+    CreateEnvironment: CreateEnvironment.route(baseUrl),
+    Settings: Settings.route(baseUrl),
+    Status: Status.route(baseUrl),
+    NotificationCenter: Notification.route(baseUrl),
 
-  constructor(private readonly baseUrl: string) {
-    this.routeDictionary = {
-      /**
-       * Main
-       */
-      Home: Home.route(this.baseUrl),
-      CreateEnvironment: CreateEnvironment.route(this.baseUrl),
-      Settings: Settings.route(this.baseUrl),
-      Status: Status.route(this.baseUrl),
-      NotificationCenter: Notification.route(this.baseUrl),
+    /**
+     * LSM
+     */
+    Catalog: ServiceCatalog.route(baseUrl),
+    Inventory: ServiceInventory.route(baseUrl),
+    CreateInstance: CreateInstance.route(baseUrl),
+    EditInstance: EditInstance.route(baseUrl),
+    History: ServiceInstanceHistory.route(baseUrl),
+    Diagnose: Diagnose.route(baseUrl),
+    Events: Events.route(baseUrl),
 
-      /**
-       * LSM
-       */
-      Catalog: ServiceCatalog.route(this.baseUrl),
-      Inventory: ServiceInventory.route(this.baseUrl),
-      CreateInstance: CreateInstance.route(this.baseUrl),
-      EditInstance: EditInstance.route(this.baseUrl),
-      History: ServiceInstanceHistory.route(this.baseUrl),
-      Diagnose: Diagnose.route(this.baseUrl),
-      Events: Events.route(this.baseUrl),
+    /**
+     * Resource Manager
+     */
+    Resources: Resource.route(baseUrl),
+    Agents: Agents.route(baseUrl),
+    Facts: Facts.route(baseUrl),
+    AgentProcess: AgentProcess.route(baseUrl),
+    ResourceDetails: ResourceDetails.route(baseUrl),
 
-      /**
-       * Resource Manager
-       */
-      Resources: Resource.route(this.baseUrl),
-      Agents: Agents.route(this.baseUrl),
-      Facts: Facts.route(this.baseUrl),
-      AgentProcess: AgentProcess.route(this.baseUrl),
-      ResourceDetails: ResourceDetails.route(this.baseUrl),
+    /**
+     * Orchestration Engine
+     */
+    CompileReports: CompileReports.route(baseUrl),
+    CompileDetails: CompileDetails.route(baseUrl),
+    DesiredState: DesiredState.route(baseUrl),
+    DesiredStateDetails: DesiredStateDetails.route(baseUrl),
+    DesiredStateResourceDetails: DesiredStateResourceDetails.route(baseUrl),
+    DesiredStateCompare: DesiredStateCompare.route(baseUrl),
+    Parameters: Parameters.route(baseUrl),
+    ComplianceCheck: ComplianceCheck.route(baseUrl),
+  };
 
-      /**
-       * Orchestration Engine
-       */
-      CompileReports: CompileReports.route(this.baseUrl),
-      CompileDetails: CompileDetails.route(this.baseUrl),
-      DesiredState: DesiredState.route(this.baseUrl),
-      DesiredStateDetails: DesiredStateDetails.route(this.baseUrl),
-      DesiredStateResourceDetails: DesiredStateResourceDetails.route(
-        this.baseUrl
-      ),
-      DesiredStateCompare: DesiredStateCompare.route(this.baseUrl),
-      Parameters: Parameters.route(this.baseUrl),
-      ComplianceCheck: ComplianceCheck.route(this.baseUrl),
-    };
+  function isBaseUrlDefined(): boolean {
+    return baseUrl !== "";
   }
 
-  isBaseUrlDefined(): boolean {
-    return this.baseUrl !== "";
-  }
-
-  getLineageFromRoute(route: Route, routes: Route[] = []): Route[] {
+  function getLineageFromRoute(route: Route, routes: Route[] = []): Route[] {
     if (route.parent) {
-      return this.getLineageFromRoute(this.getRoute(route.parent), [
-        route,
-        ...routes,
-      ]);
+      return getLineageFromRoute(getRoute(route.parent), [route, ...routes]);
     }
     return [route, ...routes];
   }
 
-  getRelatedUrlWithoutParams(pathname: string): string {
-    const routeMatch = this.getRouteMatchFromUrl(pathname);
+  function getRelatedUrlWithoutParams(pathname: string): string {
+    const routeMatch = getRouteMatchFromUrl(pathname);
     if (typeof routeMatch === "undefined") {
-      return this.getUrl("Home", undefined);
+      return getUrl("Home", undefined);
     }
     const { route } = routeMatch;
-    if (!this.routeHasParams(route)) return pathname;
-    const parent = this.getParentWithoutParams(route);
-    if (typeof parent === "undefined") return this.getUrl("Home", undefined);
-    return this.getUrl(parent.kind, undefined);
+    if (!routeHasParams(route)) return pathname;
+    const parent = getParentWithoutParams(route);
+    if (typeof parent === "undefined") return getUrl("Home", undefined);
+    return getUrl(parent.kind, undefined);
   }
 
-  private getParentWithoutParams(route: Route): Route | undefined {
-    const lineage = this.getLineageFromRoute(route);
-    return lineage.reverse().find((route) => !this.routeHasParams(route));
+  function getParentWithoutParams(route: Route): Route | undefined {
+    const lineage = getLineageFromRoute(route);
+    return lineage.reverse().find((route) => !routeHasParams(route));
   }
 
-  private routeHasParams(route: Route): boolean {
+  function routeHasParams(route: Route): boolean {
     return route.path.includes(":");
   }
 
-  getRoutes(): Route[] {
-    return Object.values(this.routeDictionary);
+  function getRoutes(): Route[] {
+    return Object.values(routeDictionary);
   }
 
-  getRouteDictionary(): RouteDictionary {
-    return this.routeDictionary;
+  function getRouteDictionary(): RouteDictionary {
+    return routeDictionary;
   }
 
-  getRoute<K extends RouteKind>(kind: K): Route<K> {
-    return this.routeDictionary[kind] as Route<K>;
+  function getRoute<K extends RouteKind>(kind: K): Route<K> {
+    return routeDictionary[kind] as Route<K>;
   }
 
-  getUrl<K extends RouteKind>(kind: K, params: RouteParams<K>): string {
-    const route = this.getRoute(kind);
+  function getUrl<K extends RouteKind>(
+    kind: K,
+    params: RouteParams<K>
+  ): string {
+    const route = getRoute(kind);
     return generatePath(
       route.path,
       params === undefined ? params : encodeParams(params)
     );
   }
 
-  getUrlForApiUri(uri: string): string | undefined {
+  function getUrlForApiUri(uri: string): string | undefined {
     if (uri.length <= 0) return undefined;
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
     if (match === null) return undefined;
     if (match.params.id === undefined) return undefined;
-    return this.getUrl("CompileDetails", { id: match.params.id });
+    return getUrl("CompileDetails", { id: match.params.id });
   }
 
-  getParamsFromUrl(uri: string): RouteKindWithId<"CompileDetails"> | undefined {
+  function getParamsFromUrl(
+    uri: string
+  ): RouteKindWithId<"CompileDetails"> | undefined {
     if (uri.length <= 0) return undefined;
     const pattern = "/api/v2/compilereport/:id";
     const match = matchPath(pattern, uri);
@@ -168,8 +164,8 @@ export class PrimaryRouteManager implements RouteManager {
     };
   }
 
-  getRouteMatchFromUrl(url: string): RouteMatch | undefined {
-    const routeMatchPairs = this.getRoutes().map((route) => [
+  function getRouteMatchFromUrl(url: string): RouteMatch | undefined {
+    const routeMatchPairs = getRoutes().map((route) => [
       route,
       matchPath(route.path, url),
     ]);
@@ -187,10 +183,9 @@ export class PrimaryRouteManager implements RouteManager {
     };
   }
 
-  useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+  function useUrl(kind: RouteKind, params: RouteParams<RouteKind>): string {
     const { search } = useLocation();
-    const route = this.getRoute(kind);
+    const route = getRoute(kind);
     const path = generatePath(
       route.path,
       params === undefined ? params : encodeParams(params)
@@ -198,11 +193,11 @@ export class PrimaryRouteManager implements RouteManager {
     return `${path}${search}`;
   }
 
-  getCrumbs(url: string): Crumb[] {
-    const routeMatch = this.getRouteMatchFromUrl(url);
+  function getCrumbs(url: string): Crumb[] {
+    const routeMatch = getRouteMatchFromUrl(url);
     if (typeof routeMatch === "undefined") return [];
     const { route, params } = routeMatch;
-    const lineage = this.getLineageFromRoute(route);
+    const lineage = getLineageFromRoute(route);
     return lineage.map(({ kind, generateLabel, path }, idx) => ({
       kind,
       label: generateLabel(params),
@@ -210,4 +205,18 @@ export class PrimaryRouteManager implements RouteManager {
       active: idx === lineage.length - 1,
     }));
   }
+  return {
+    isBaseUrlDefined,
+    getRoutes,
+    getRouteDictionary,
+    getRoute,
+    getUrl,
+    getUrlForApiUri,
+    getRelatedUrlWithoutParams,
+    getLineageFromRoute,
+    getRouteMatchFromUrl,
+    useUrl,
+    getCrumbs,
+    getParamsFromUrl,
+  };
 }

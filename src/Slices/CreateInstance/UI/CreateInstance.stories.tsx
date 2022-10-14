@@ -24,9 +24,7 @@ export const Default: React.FC = () => {
     data: null,
   }));
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([
-      new CreateInstanceCommandManager(apiHelper),
-    ])
+    new DynamicCommandManagerResolver([CreateInstanceCommandManager(apiHelper)])
   );
   return (
     <BrowserRouter>

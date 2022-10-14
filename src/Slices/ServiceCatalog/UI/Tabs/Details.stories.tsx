@@ -16,7 +16,7 @@ export default {
 const Template: React.FC<ComponentProps<typeof Details>> = (args) => {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new DeleteServiceCommandManager(new BaseApiHelper()),
+      DeleteServiceCommandManager(new BaseApiHelper()),
     ])
   );
 

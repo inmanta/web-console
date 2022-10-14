@@ -18,7 +18,7 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
   ...props
 }) => {
   const { commandResolver } = useContext(DependencyContext);
-  const onDelete = commandResolver.getTrigger<"DeleteCallback">({
+  const onDelete = commandResolver.useGetTrigger<"DeleteCallback">({
     kind: "DeleteCallback",
     callbackId: callback.callback_id,
     service_entity,

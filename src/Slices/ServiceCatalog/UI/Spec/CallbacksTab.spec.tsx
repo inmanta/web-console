@@ -37,13 +37,13 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
 
-  const servicesQueryManager = new ServicesQueryManager(
+  const servicesQueryManager = ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store),
+    ServicesStateHelper(store),
     scheduler
   );
-  const callbacksStateHelper = new CallbacksStateHelper(store);
-  const callbacksQueryManager = new CallbacksQueryManager(
+  const callbacksStateHelper = CallbacksStateHelper(store);
+  const callbacksQueryManager = CallbacksQueryManager(
     apiHelper,
     callbacksStateHelper
   );
@@ -55,18 +55,18 @@ function setup() {
     ])
   );
 
-  const deleteServiceCommandManager = new DeleteServiceCommandManager(
+  const deleteServiceCommandManager = DeleteServiceCommandManager(
     new BaseApiHelper()
   );
 
-  const deleteCallbackCommandManager = new DeleteCallbackCommandManager(
+  const deleteCallbackCommandManager = DeleteCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper)
+    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper)
   );
 
-  const createCallbackCommandManager = new CreateCallbackCommandManager(
+  const createCallbackCommandManager = CreateCallbackCommandManager(
     apiHelper,
-    new CallbacksUpdater(new CallbacksStateHelper(store), apiHelper)
+    new CallbacksUpdater(CallbacksStateHelper(store), apiHelper)
   );
 
   const commandResolver = new CommandResolverImpl(

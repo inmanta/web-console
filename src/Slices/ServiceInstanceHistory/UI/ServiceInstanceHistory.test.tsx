@@ -25,9 +25,9 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new GetInstanceLogsQueryManager(
+      GetInstanceLogsQueryManager(
         apiHelper,
-        new GetInstanceLogsStateHelper(store),
+        GetInstanceLogsStateHelper(store),
         new StaticScheduler()
       ),
     ])

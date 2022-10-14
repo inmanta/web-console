@@ -9,7 +9,7 @@ import { PageBreadcrumbs } from "./PageBreadcrumbs";
 function setup(initialEntries?: string[]) {
   const component = (
     <DependencyProvider
-      dependencies={{ routeManager: new PrimaryRouteManager("") }}
+      dependencies={{ routeManager: PrimaryRouteManager("") }}
     >
       <MemoryRouter initialEntries={initialEntries}>
         <PageBreadcrumbs />

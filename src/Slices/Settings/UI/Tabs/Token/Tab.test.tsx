@@ -13,7 +13,7 @@ import { Tab } from "./Tab";
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
-  const commandManager = new GenerateTokenCommandManager(apiHelper);
+  const commandManager = GenerateTokenCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
   );

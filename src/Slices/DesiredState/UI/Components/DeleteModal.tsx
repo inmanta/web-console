@@ -15,7 +15,7 @@ export const DeleteModal: React.FC<Props> = ({ version, isOpened }) => {
   const { setDeleteModal } = useContext(GetDesiredStatesContext);
   const { commandResolver } = useContext(DependencyContext);
   const { filter, pageSize } = useContext(GetDesiredStatesContext);
-  const deleteVersionTrigger = commandResolver.getTrigger<"DeleteVersion">({
+  const deleteVersionTrigger = commandResolver.useGetTrigger<"DeleteVersion">({
     kind: "DeleteVersion",
     version,
   });

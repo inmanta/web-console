@@ -4,34 +4,36 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class GetResourcesQueryManager extends QueryManager.ContinuousWithEnv<"GetResources"> {
-  constructor(store: Store, apiHelper: ApiHelper, scheduler: Scheduler) {
-    super(
-      apiHelper,
-      new StateHelper(store),
-      scheduler,
-      ({ kind }, environment) => `${kind}_${environment}`,
-      ({ filter, sort, pageSize }, environment) => [
-        environment,
-        pageSize.value,
-        sort?.name,
-        sort?.order,
-        stringifyFilter(filter),
-      ],
-      "GetResources",
-      getUrl,
-      ({ data, links, metadata }, setUrl) => {
-        if (typeof links === "undefined") {
-          return { data: data, handlers: {}, metadata };
-        }
-        return {
-          data: data,
-          handlers: getPaginationHandlers(links, metadata, setUrl),
-          metadata,
-        };
+export function GetResourcesQueryManager(
+  store: Store,
+  apiHelper: ApiHelper,
+  scheduler: Scheduler
+) {
+  return QueryManager.ContinuousWithEnv<"GetResources">(
+    apiHelper,
+    StateHelper(store),
+    scheduler,
+    ({ kind }, environment) => `${kind}_${environment}`,
+    ({ filter, sort, pageSize }, environment) => [
+      environment,
+      pageSize.value,
+      sort?.name,
+      sort?.order,
+      stringifyFilter(filter),
+    ],
+    "GetResources",
+    getUrl,
+    ({ data, links, metadata }, setUrl) => {
+      if (typeof links === "undefined") {
+        return { data: data, handlers: {}, metadata };
       }
-    );
-  }
+      return {
+        data: data,
+        handlers: getPaginationHandlers(links, metadata, setUrl),
+        metadata,
+      };
+    }
+  );
 }
 
 function stringifyFilter(filter: Resource.Filter | undefined): string {

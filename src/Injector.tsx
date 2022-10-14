@@ -34,7 +34,7 @@ interface Props {
 
 export const Injector: React.FC<Props> = ({ store, children }) => {
   const featureManager = new PrimaryFeatureManager(
-    new GetServerStatusStateHelper(store),
+    GetServerStatusStateHelper(store),
     new PrimaryLogger(),
     getJsonParserId(globalThis),
     COMMITHASH
@@ -50,7 +50,7 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   );
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const routeManager = new PrimaryRouteManager(basePathname);
+  const routeManager = PrimaryRouteManager(basePathname);
   const apiHelper = new BaseApiHelper(
     featureManager.getJsonParser() === "BigInt"
       ? new BigIntJsonParser()

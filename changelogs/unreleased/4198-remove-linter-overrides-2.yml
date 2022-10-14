@@ -1,0 +1,5 @@
+change-type: patch
+description: remove disabling linter rules for hooks by refactoring classes to functions 
+destination-branches:
+- master
+- iso5

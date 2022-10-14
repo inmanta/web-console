@@ -67,22 +67,20 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   }
 
   private getManagers(): CommandManager[] {
-    const environmentDetailsStateHelper = new GetEnvironmentDetailsStateHelper(
+    const environmentDetailsStateHelper = GetEnvironmentDetailsStateHelper(
       this.store
     );
     const environmentSettingUpdater = new EnvironmentSettingUpdater(
       this.apiHelper,
-      new GetEnvironmentSettingStateHelper(this.store)
+      GetEnvironmentSettingStateHelper(this.store)
     );
-    const getDesiredStatesStateHelper = new GetDesiredStatesStateHelper(
-      this.store
-    );
+    const getDesiredStatesStateHelper = GetDesiredStatesStateHelper(this.store);
     const desiredStatesUpdater = new DesiredStatesUpdater(
       getDesiredStatesStateHelper,
       this.apiHelper
     );
     const callbacksUpdater = new CallbacksUpdater(
-      new CallbacksStateHelper(this.store),
+      CallbacksStateHelper(this.store),
       this.apiHelper
     );
     const environmentDetailsUpdater = new EnvironmentDetailsUpdater(
@@ -94,81 +92,78 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       new DeleteEnvironmentCommandManager(
         this.apiHelper,
         new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(this.store),
+          GetEnvironmentsStateHelper(this.store),
           this.apiHelper
         )
       ),
       new ClearEnvironmentCommandManager(this.apiHelper),
       new CreateProjectCommandManager(
         this.apiHelper,
-        new ProjectsUpdater(
-          new GetProjectsStateHelper(this.store),
-          this.apiHelper
-        )
+        new ProjectsUpdater(GetProjectsStateHelper(this.store), this.apiHelper)
       ),
       new CreateEnvironmentCommandManager(
         this.apiHelper,
         new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(this.store),
+          GetEnvironmentsStateHelper(this.store),
           this.apiHelper
         )
       ),
       new GetSupportArchiveCommandManager(this.apiHelper),
-      new ServiceConfigCommandManager(
+      ServiceConfigCommandManager(
         this.apiHelper,
-        new ServiceConfigStateHelper(this.store)
+        ServiceConfigStateHelper(this.store)
       ),
-      new InstanceConfigCommandManager(
+      InstanceConfigCommandManager(
         this.apiHelper,
-        new InstanceConfigStateHelper(this.store)
+        InstanceConfigStateHelper(this.store)
       ),
-      new CreateInstanceCommandManager(this.apiHelper),
-      new TriggerInstanceUpdateCommandManager(this.apiHelper),
-      new DeleteInstanceCommandManager(this.apiHelper),
-      new DeleteServiceCommandManager(this.apiHelper),
-      new TriggerSetStateCommandManager(this.authHelper, this.apiHelper),
-      new HaltEnvironmentCommandManager(
-        this.apiHelper,
-        environmentDetailsStateHelper,
-        environmentDetailsUpdater
-      ),
-      new ResumeEnvironmentCommandManager(
+      CreateInstanceCommandManager(this.apiHelper),
+      TriggerInstanceUpdateCommandManager(this.apiHelper),
+      DeleteInstanceCommandManager(this.apiHelper),
+      DeleteServiceCommandManager(this.apiHelper),
+      TriggerSetStateCommandManager(this.authHelper, this.apiHelper),
+      HaltEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,
         environmentDetailsUpdater
       ),
-      new DeleteCallbackCommandManager(this.apiHelper, callbacksUpdater),
-      new CreateCallbackCommandManager(this.apiHelper, callbacksUpdater),
-      new ModifyEnvironmentCommandManager(
+      ResumeEnvironmentCommandManager(
+        this.apiHelper,
+        environmentDetailsStateHelper,
+        environmentDetailsUpdater
+      ),
+      DeleteCallbackCommandManager(this.apiHelper, callbacksUpdater),
+      CreateCallbackCommandManager(this.apiHelper, callbacksUpdater),
+      ModifyEnvironmentCommandManager(
         this.apiHelper,
         new EnvironmentDetailsUpdater(this.store, this.apiHelper),
         new EnvironmentsUpdater(
-          new GetEnvironmentsStateHelper(this.store),
+          GetEnvironmentsStateHelper(this.store),
           this.apiHelper
         )
       ),
-      new UpdateEnvironmentSettingCommandManager(
+      UpdateEnvironmentSettingCommandManager(
         this.apiHelper,
         environmentSettingUpdater,
         environmentDetailsUpdater
       ),
-      new ResetEnvironmentSettingCommandManager(
+      ResetEnvironmentSettingCommandManager(
         this.apiHelper,
         environmentSettingUpdater,
         environmentDetailsUpdater
       ),
-      new GenerateTokenCommandManager(this.apiHelper),
-      new DeployCommandManager(this.apiHelper),
-      new RepairCommandManager(this.apiHelper),
-      new PromoteVersionCommandManager(this.apiHelper, desiredStatesUpdater),
-      new DeleteVersionCommandManager(this.apiHelper),
-      new ControlAgentCommandManager(
+      GenerateTokenCommandManager(this.apiHelper),
+      DeployCommandManager(this.apiHelper),
+      RepairCommandManager(this.apiHelper),
+      PromoteVersionCommandManager(this.apiHelper, desiredStatesUpdater),
+      DeleteVersionCommandManager(this.apiHelper),
+      ControlAgentCommandManager(
         this.apiHelper,
         new GetAgentsUpdater(this.store, this.apiHelper)
       ),
-      new TriggerCompileCommandManager(this.apiHelper),
-      new TriggerDryRun.CommandManager(this.apiHelper),
-      new UpdateNotificationCommandManager(this.apiHelper, this.store),
+      TriggerCompileCommandManager(this.apiHelper),
+      TriggerDryRun.CommandManager(this.apiHelper),
+      UpdateNotificationCommandManager(this.apiHelper, this.store),
     ];
   }
 }

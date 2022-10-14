@@ -38,16 +38,16 @@ function setup(service = Service.a) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
-  const serviceInstancesHelper = new ServiceInstancesQueryManager(
+  const serviceInstancesHelper = ServiceInstancesQueryManager(
     apiHelper,
-    new ServiceInstancesStateHelper(store),
+    ServiceInstancesStateHelper(store),
     scheduler
   );
 
   const resourcesHelper = InstanceResourcesQueryManager(
     apiHelper,
-    new InstanceResourcesStateHelper(store),
-    new ServiceInstancesStateHelper(store),
+    InstanceResourcesStateHelper(store),
+    ServiceInstancesStateHelper(store),
     scheduler
   );
 
@@ -55,13 +55,12 @@ function setup(service = Service.a) {
     new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
   );
 
-  const triggerUpdateCommandManager = new TriggerInstanceUpdateCommandManager(
-    apiHelper
-  );
+  const triggerUpdateCommandManager =
+    TriggerInstanceUpdateCommandManager(apiHelper);
 
-  const deleteCommandManager = new DeleteInstanceCommandManager(apiHelper);
+  const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
-  const setStateCommandManager = new TriggerSetStateCommandManager(
+  const setStateCommandManager = TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
     new BaseApiHelper()
   );
