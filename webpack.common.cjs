@@ -2,6 +2,7 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const { GitRevisionPlugin } = require("git-revision-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const VersionFile = require('webpack-version-file');
 const webpack = require("webpack");
 const gitRevisionPlugin = new GitRevisionPlugin();
 
@@ -10,14 +11,24 @@ module.exports = {
     app: path.resolve(__dirname, "src", "index.tsx"),
   },
   plugins: [
-    new webpack.IgnorePlugin({ resourceRegExp: /^\.\/config\.js$/ }),
-    new CopyPlugin({ patterns: [{ from: "src/config.js", to: "" }] }),
-    new webpack.ProvidePlugin({
-      process: "process/browser",
-    }),
+    new webpack.IgnorePlugin({ resourceRegExp: /^\.\/(config|version)\.js$/ }),
     gitRevisionPlugin,
     new webpack.DefinePlugin({
       COMMITHASH: JSON.stringify(gitRevisionPlugin.commithash()),
+      APP_VERSION: JSON.stringify(require("./package.json").version),
+    }),
+    new VersionFile({
+      output: 'src/version.json',
+      package: './package.json',
+      template: './version.ejs',
+      data: {
+        buildDate: new Date(),
+        commitHash: JSON.stringify(gitRevisionPlugin.commithash()),
+      }
+    }),
+    new CopyPlugin({ patterns: [{ from: "src/version.json", to: "" }, { from: "src/config.js", to: "" }] }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
     }),
   ],
   module: {
@@ -114,6 +125,11 @@ module.exports = {
           fullySpecified: false,
         },
       },
+      {
+        test: /\.txt$/,
+        type: "asset/resource",
+        include: [path.resolve(__dirname, "version.txt")],
+      }
     ],
   },
   output: {
