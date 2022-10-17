@@ -37,27 +37,25 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
 
-  const servicesHelper = new ServicesQueryManager(
+  const servicesHelper = ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store),
+    ServicesStateHelper(store),
     scheduler
   );
-  const serviceConfigStateHelper = new ServiceConfigStateHelper(store);
+  const serviceConfigStateHelper = ServiceConfigStateHelper(store);
   const serviceConfigQueryManager = ServiceConfigQueryManager(
     apiHelper,
-    new ServiceConfigStateHelper(store),
-    new ServiceConfigFinalizer(
-      new ServiceStateHelper(store, new ServiceKeyMaker())
-    )
+    ServiceConfigStateHelper(store),
+    new ServiceConfigFinalizer(ServiceStateHelper(store, new ServiceKeyMaker()))
   );
 
   // { data: Service.a.config }
-  const serviceConfigCommandManager = new ServiceConfigCommandManager(
+  const serviceConfigCommandManager = ServiceConfigCommandManager(
     apiHelper,
     serviceConfigStateHelper
   );
 
-  const deleteServiceCommandManager = new DeleteServiceCommandManager(
+  const deleteServiceCommandManager = DeleteServiceCommandManager(
     new BaseApiHelper()
   );
 

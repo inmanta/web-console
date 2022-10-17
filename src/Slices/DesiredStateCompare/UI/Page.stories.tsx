@@ -35,12 +35,12 @@ export const Default: React.FC = () => {
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new GetDesiredStateDiffQueryManager(
+      GetDesiredStateDiffQueryManager(
         new InstantApiHelper(() => ({
           kind: "Success",
           data: DesiredStateDiff.response,
         })),
-        new GetDesiredStateDiffStateHelper(store)
+        GetDesiredStateDiffStateHelper(store)
       ),
     ])
   );

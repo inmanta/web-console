@@ -5,16 +5,14 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class GetProjectsQueryManager extends QueryManager.OneTime<"GetProjects"> {
-  constructor(store: Store, apiHelper: ApiHelper) {
-    super(
-      apiHelper,
-      new StateHelper(store),
-      () => [],
-      "GetProjects",
-      ({ environmentDetails }) => getUrl(environmentDetails),
-      identity,
-      "MERGE"
-    );
-  }
+export function GetProjectsQueryManager(store: Store, apiHelper: ApiHelper) {
+  return QueryManager.OneTime<"GetProjects">(
+    apiHelper,
+    StateHelper(store),
+    () => [],
+    "GetProjects",
+    ({ environmentDetails }) => getUrl(environmentDetails),
+    identity,
+    "MERGE"
+  );
 }

@@ -58,7 +58,7 @@ export function InstanceConfigQueryManager(
 
     return [
       configFinalizer.finalize(
-        stateHelper.getHooked(query),
+        stateHelper.useGetHooked(query),
         service_entity,
         environment
       ),

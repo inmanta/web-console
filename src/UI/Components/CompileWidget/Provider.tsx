@@ -13,7 +13,7 @@ export const Provider: React.FC<Props> = ({ afterTrigger }) => {
   const isServerCompileEnabled =
     environmentModifier.useIsServerCompileEnabled();
 
-  const trigger = commandResolver.getTrigger<"TriggerCompile">({
+  const trigger = commandResolver.useGetTrigger<"TriggerCompile">({
     kind: "TriggerCompile",
   });
   const [data, refetch] = queryResolver.useContinuous<"GetCompilerStatus">({

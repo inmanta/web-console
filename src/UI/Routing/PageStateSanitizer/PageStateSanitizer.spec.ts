@@ -1,7 +1,7 @@
 import { PrimaryRouteManager } from "@/UI";
 import { PageStateSanitizer } from "./PageStateSanitizer";
 
-const sanitizer = new PageStateSanitizer(new PrimaryRouteManager(""));
+const sanitizer = new PageStateSanitizer(PrimaryRouteManager(""));
 
 test("GIVEN sanitizer.isSanitized WHEN clean pageState THEN returns true", () => {
   const pageState = { Catalog: { x: "abc" } };

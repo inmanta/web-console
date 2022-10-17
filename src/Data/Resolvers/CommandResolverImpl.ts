@@ -10,9 +10,9 @@ export class CommandResolverImpl implements CommandResolver {
     private readonly managerResolver: ManagerResolver<CommandManager>
   ) {}
 
-  getTrigger(command: Command.Type): Command.Trigger<typeof command.kind> {
+  useGetTrigger(command: Command.Type): Command.Trigger<typeof command.kind> {
     const manager = this.getManager(command);
-    return manager.getTrigger(command);
+    return manager.useGetTrigger(command);
   }
 
   private getManager(command: Command.Type): CommandManager {

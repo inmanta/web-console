@@ -47,9 +47,9 @@ function setup(useMockArchiveHelper = false) {
     RemoteData.success(ServerStatus.withoutLsm)
   );
   const apiHelper = new DeferredApiHelper();
-  const getServerStatusQueryManager = new GetServerStatusContinuousQueryManager(
+  const getServerStatusQueryManager = GetServerStatusContinuousQueryManager(
     apiHelper,
-    new GetServerStatusStateHelper(store),
+    GetServerStatusStateHelper(store),
     new StaticScheduler()
   );
   const queryResolver = new QueryResolverImpl(
@@ -63,7 +63,7 @@ function setup(useMockArchiveHelper = false) {
   );
 
   const featureManager = new PrimaryFeatureManager(
-    new GetServerStatusStateHelper(store)
+    GetServerStatusStateHelper(store)
   );
 
   const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper =

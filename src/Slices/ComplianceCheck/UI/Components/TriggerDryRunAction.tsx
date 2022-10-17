@@ -16,7 +16,7 @@ export const TriggerDryRunAction: React.FC<Props> = ({
 }) => {
   const { commandResolver } = useContext(DependencyContext);
   const [errorMessage, setErrorMessage] = useState("");
-  const trigger = commandResolver.getTrigger<"TriggerDryRun">({
+  const trigger = commandResolver.useGetTrigger<"TriggerDryRun">({
     kind: "TriggerDryRun",
     version,
   });

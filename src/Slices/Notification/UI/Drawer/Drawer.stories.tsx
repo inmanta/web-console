@@ -17,7 +17,7 @@ export const Default = () => (
     <DependencyProvider
       dependencies={{
         ...dependencies,
-        routeManager: new PrimaryRouteManager(""),
+        routeManager: PrimaryRouteManager(""),
       }}
     >
       <View

@@ -18,7 +18,7 @@ export class ServiceConfigFinalizer
     serviceName: string,
     environment: string
   ): RemoteData.Type<string, Config> {
-    const serviceData = this.serviceStateHelper.getHooked(
+    const serviceData = this.serviceStateHelper.useGetHooked(
       {
         kind: "GetService",
         name: serviceName,

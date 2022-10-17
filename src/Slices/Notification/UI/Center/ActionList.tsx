@@ -12,7 +12,7 @@ interface Props {
 export const ActionList: React.FC<Props> = ({ read, id, onUpdate }) => {
   const { commandResolver } = useContext(DependencyContext);
   const [isOpen, setIsOpen] = useState(false);
-  const trigger = commandResolver.getTrigger<"UpdateNotification">({
+  const trigger = commandResolver.useGetTrigger<"UpdateNotification">({
     kind: "UpdateNotification",
     origin: "center",
   });

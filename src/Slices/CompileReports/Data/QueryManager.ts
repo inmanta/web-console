@@ -5,34 +5,36 @@ import { Filter } from "@S/CompileReports/Core/Query";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class CompileReportsQueryManager extends QueryManager.ContinuousWithEnv<"GetCompileReports"> {
-  constructor(store: Store, apiHelper: ApiHelper, scheduler: Scheduler) {
-    super(
-      apiHelper,
-      new StateHelper(store),
-      scheduler,
-      ({ kind }, environment) => `${kind}_${environment}`,
-      ({ pageSize, sort, filter }, environment) => [
-        environment,
-        pageSize.value,
-        sort?.name,
-        sort?.order,
-        stringifyFilter(filter),
-      ],
-      "GetCompileReports",
-      (query) => getUrl(query),
-      ({ data, links, metadata }, setUrl) => {
-        if (typeof links === "undefined") {
-          return { data: data, handlers: {}, metadata };
-        }
-        return {
-          data: data,
-          handlers: getPaginationHandlers(links, metadata, setUrl),
-          metadata,
-        };
+export function CompileReportsQueryManager(
+  store: Store,
+  apiHelper: ApiHelper,
+  scheduler: Scheduler
+) {
+  return QueryManager.ContinuousWithEnv<"GetCompileReports">(
+    apiHelper,
+    StateHelper(store),
+    scheduler,
+    ({ kind }, environment) => `${kind}_${environment}`,
+    ({ pageSize, sort, filter }, environment) => [
+      environment,
+      pageSize.value,
+      sort?.name,
+      sort?.order,
+      stringifyFilter(filter),
+    ],
+    "GetCompileReports",
+    (query) => getUrl(query),
+    ({ data, links, metadata }, setUrl) => {
+      if (typeof links === "undefined") {
+        return { data: data, handlers: {}, metadata };
       }
-    );
-  }
+      return {
+        data: data,
+        handlers: getPaginationHandlers(links, metadata, setUrl),
+        metadata,
+      };
+    }
+  );
 }
 
 function stringifyFilter(filter: Filter | undefined): string {

@@ -48,9 +48,7 @@ function setup(
     data: RemoteData.success(Service.a),
   });
 
-  const instanceConfigStateHelper = new InstanceConfigStateHelper(
-    storeInstance
-  );
+  const instanceConfigStateHelper = InstanceConfigStateHelper(storeInstance);
 
   const instanceIdentifier: VersionedServiceInstanceIdentifier = {
     id: ServiceInstance.a.id,
@@ -65,7 +63,7 @@ function setup(
     })),
     instanceConfigStateHelper,
     new InstanceConfigFinalizer(
-      new ServiceStateHelper(storeInstance, serviceKeyMaker)
+      ServiceStateHelper(storeInstance, serviceKeyMaker)
     )
   );
 
@@ -75,7 +73,7 @@ function setup(
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new InstanceConfigCommandManager(apiHelper, instanceConfigStateHelper),
+      InstanceConfigCommandManager(apiHelper, instanceConfigStateHelper),
     ])
   );
 

@@ -25,7 +25,7 @@ export const Default: React.FC = () => {
   }));
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
-      new TriggerInstanceUpdateCommandManager(apiHelper),
+      TriggerInstanceUpdateCommandManager(apiHelper),
     ])
   );
   return (

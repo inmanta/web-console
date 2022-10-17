@@ -21,9 +21,9 @@ import { View } from "./Page";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const queryManager = new GetDesiredStateDiffQueryManager(
+  const queryManager = GetDesiredStateDiffQueryManager(
     apiHelper,
-    new GetDesiredStateDiffStateHelper(store)
+    GetDesiredStateDiffStateHelper(store)
   );
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([queryManager])

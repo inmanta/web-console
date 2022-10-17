@@ -1,22 +1,20 @@
 import { ApiHelper, AuthHelper, ParsedNumber, SetStateBody } from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class TriggerSetStateCommandManager extends CommandManagerWithEnv<"TriggerSetState"> {
-  constructor(
-    private readonly authHelper: AuthHelper,
-    private readonly apiHelper: ApiHelper
-  ) {
-    super(
-      "TriggerSetState",
-      ({ service_entity, id, version }, environment) =>
-        (targetState) =>
-          this.apiHelper.postWithoutResponse(
-            `/lsm/v1/service_inventory/${service_entity}/${id}/state`,
-            environment,
-            getBody(this.authHelper.getUsername(), targetState, version)
-          )
-    );
-  }
+export function TriggerSetStateCommandManager(
+  authHelper: AuthHelper,
+  apiHelper: ApiHelper
+) {
+  return CommandManagerWithEnv<"TriggerSetState">(
+    "TriggerSetState",
+    ({ service_entity, id, version }, environment) =>
+      (targetState) =>
+        apiHelper.postWithoutResponse(
+          `/lsm/v1/service_inventory/${service_entity}/${id}/state`,
+          environment,
+          getBody(authHelper.getUsername(), targetState, version)
+        )
+  );
 }
 
 export const getBody = (

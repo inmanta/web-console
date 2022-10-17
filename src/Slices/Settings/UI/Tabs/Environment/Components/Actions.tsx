@@ -24,11 +24,11 @@ export const Actions: React.FC<ActionsProps> = ({ environment }) => {
     useContext(DependencyContext);
   const navigateTo = useNavigateTo();
   const redirectToHome = () => navigateTo("Home", undefined);
-  const deleteTrigger = commandResolver.getTrigger<"DeleteEnvironment">({
+  const deleteTrigger = commandResolver.useGetTrigger<"DeleteEnvironment">({
     kind: "DeleteEnvironment",
     id: environment.id,
   });
-  const clearTrigger = commandResolver.getTrigger<"ClearEnvironment">({
+  const clearTrigger = commandResolver.useGetTrigger<"ClearEnvironment">({
     kind: "ClearEnvironment",
     id: environment.id,
   });

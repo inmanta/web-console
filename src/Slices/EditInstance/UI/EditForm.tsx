@@ -40,7 +40,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const currentAttributes =
     attributeInputConverter.getCurrentAttributes(instance);
 
-  const trigger = commandResolver.getTrigger<"TriggerInstanceUpdate">({
+  const trigger = commandResolver.useGetTrigger<"TriggerInstanceUpdate">({
     kind: "TriggerInstanceUpdate",
     service_entity: instance.service_entity,
     id: instance.id,

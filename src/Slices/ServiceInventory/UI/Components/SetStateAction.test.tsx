@@ -19,7 +19,7 @@ import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { SetStateAction } from "./SetStateAction";
 
 function setup() {
-  const commandManager = new TriggerSetStateCommandManager(
+  const commandManager = TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
     new BaseApiHelper()
   );

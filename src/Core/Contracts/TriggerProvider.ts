@@ -8,7 +8,7 @@ import { Command } from "@/Core/Command";
  * the POST request.
  */
 export interface TriggerProvider {
-  getTrigger<Kind extends Command.Kind>(
+  useGetTrigger<Kind extends Command.Kind>(
     command: Command.Type
   ): Command.Trigger<Kind>;
 }

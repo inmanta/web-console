@@ -28,14 +28,14 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ResourceHistoryQueryManager(
+      ResourceHistoryQueryManager(
         apiHelper,
-        new ResourceHistoryStateHelper(store),
+        ResourceHistoryStateHelper(store),
         scheduler
       ),
-      new ResourceDetailsQueryManager(
+      ResourceDetailsQueryManager(
         apiHelper,
-        new ResourceDetailsStateHelper(store),
+        ResourceDetailsStateHelper(store),
         scheduler
       ),
     ])

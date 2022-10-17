@@ -8,7 +8,7 @@ export const DeployButton: React.FC = () => {
   const { environmentModifier, commandResolver } =
     useContext(DependencyContext);
   const isHalted = environmentModifier.useIsHalted();
-  const trigger = commandResolver.getTrigger<"Deploy">({ kind: "Deploy" });
+  const trigger = commandResolver.useGetTrigger<"Deploy">({ kind: "Deploy" });
   return (
     <ActionDisabledTooltip
       isDisabled={isHalted}

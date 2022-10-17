@@ -5,17 +5,19 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class GetDryRunsQueryManager extends QueryManager.ContinuousWithEnv<"GetDryRuns"> {
-  constructor(apiHelper: ApiHelper, store: Store, scheduler: Scheduler) {
-    super(
-      apiHelper,
-      new StateHelper(store),
-      scheduler,
-      ({ kind }, environment) => `${kind}_${environment}`,
-      ({ version }, environment) => [environment, version],
-      "GetDryRuns",
-      getUrl,
-      identity
-    );
-  }
+export function GetDryRunsQueryManager(
+  apiHelper: ApiHelper,
+  store: Store,
+  scheduler: Scheduler
+) {
+  return QueryManager.ContinuousWithEnv<"GetDryRuns">(
+    apiHelper,
+    StateHelper(store),
+    scheduler,
+    ({ kind }, environment) => `${kind}_${environment}`,
+    ({ version }, environment) => [environment, version],
+    "GetDryRuns",
+    getUrl,
+    identity
+  );
 }

@@ -12,7 +12,7 @@ interface Props {
 export const ConfigList: React.FC<Props> = ({ config, serviceName }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const update = commandResolver.getTrigger<"UpdateServiceConfig">({
+  const update = commandResolver.useGetTrigger<"UpdateServiceConfig">({
     kind: "UpdateServiceConfig",
     name: serviceName,
   });

@@ -20,9 +20,9 @@ import { ConfigDetails } from "./ConfigDetails";
 function setup() {
   const store = getStoreInstance();
   const baseApiHelper = new BaseApiHelper();
-  const commandManager = new InstanceConfigCommandManager(
+  const commandManager = InstanceConfigCommandManager(
     baseApiHelper,
-    new InstanceConfigStateHelper(store)
+    InstanceConfigStateHelper(store)
   );
   store.dispatch.environment.setEnvironmentDetailsById({
     id: ServiceInstance.a.environment,

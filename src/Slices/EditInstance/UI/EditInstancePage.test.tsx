@@ -32,15 +32,15 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new ServiceInstanceQueryManager(
+      ServiceInstanceQueryManager(
         apiHelper,
-        new ServiceInstanceStateHelper(store),
+        ServiceInstanceStateHelper(store),
         scheduler
       ),
     ])
   );
 
-  const commandManager = new TriggerInstanceUpdateCommandManager(apiHelper);
+  const commandManager = TriggerInstanceUpdateCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])
   );

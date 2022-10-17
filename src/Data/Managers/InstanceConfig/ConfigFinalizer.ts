@@ -21,7 +21,7 @@ export class InstanceConfigFinalizer
     serviceName: string,
     environment: string
   ): RemoteData.Type<string, Query.UsedData<"GetInstanceConfig">> {
-    const serviceData = this.serviceStateHelper.getHooked(
+    const serviceData = this.serviceStateHelper.useGetHooked(
       {
         kind: "GetService",
         name: serviceName,

@@ -5,7 +5,7 @@ import { Environment } from "@/Test";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { EnvironmentHandlerImpl } from ".";
 
-const routeManager = new PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("");
 
 test("EnvironmentHandler updates environment correctly", () => {
   const history = createMemoryHistory({

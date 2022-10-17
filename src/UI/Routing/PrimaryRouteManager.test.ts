@@ -1,6 +1,6 @@
 import { PrimaryRouteManager } from "./PrimaryRouteManager";
 
-const routeManager = new PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("");
 
 test.each`
   inputUrl                                                | outputUrl

@@ -15,7 +15,7 @@ export const ActionButton: React.FC<Props> = ({ name, paused }) => {
     useContext(DependencyContext);
   const { filter, sort, pageSize, setErrorMessage } =
     useContext(GetAgentsContext);
-  const agentActionTrigger = commandResolver.getTrigger<"ControlAgent">({
+  const agentActionTrigger = commandResolver.useGetTrigger<"ControlAgent">({
     kind: "ControlAgent",
     name,
     action: paused ? "unpause" : "pause",
