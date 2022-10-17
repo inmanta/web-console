@@ -26,7 +26,8 @@ export const UpdateBanner: React.FunctionComponent<Props> = (props) => {
     <React.Fragment>
       <Banner isSticky variant="warning">
         You are running {currentVersion}, a new version is available! Please
-        hard-refresh your page to load the new version.
+        hard-reload (Ctrl+F5 | Cmd + Shift + R) your page to load the new
+        version.
       </Banner>
     </React.Fragment>
   );

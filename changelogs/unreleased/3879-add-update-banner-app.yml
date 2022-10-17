@@ -1,4 +1,4 @@
-description: Add a banner whenever the commithash is older than the latest one. Add a banner to inform the user.
+description: An update banner will be displayed if your application happens to be outdated.
 sections: 
   minor-improvement: "{{description}}"
 issue-nr: 3879
