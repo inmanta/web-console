@@ -38,8 +38,4 @@ export const GlobalStyles = createGlobalStyle`
   .pf-c-calendar-month__header-year {
     width: 9ch;
   }
-
-  .pointer {
-    cursor: pointer;
-  }
 `;

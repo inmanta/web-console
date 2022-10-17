@@ -16,9 +16,8 @@ export class PrimaryFeatureManager implements FeatureManager {
     private readonly commitHash: string = "",
     private readonly appVersion: string = ""
   ) {
-    this.logger.log(`Application configured with ${jsonParserId} JSON parser`);
     this.logger.log(
-      `Application version configured with ${appVersion}, ${commitHash}`
+      `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
     );
   }
 
