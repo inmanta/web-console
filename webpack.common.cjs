@@ -2,7 +2,7 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const { GitRevisionPlugin } = require("git-revision-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const VersionFile = require('webpack-version-file');
+const VersionFile = require("webpack-version-file");
 const webpack = require("webpack");
 const gitRevisionPlugin = new GitRevisionPlugin();
 
@@ -18,15 +18,20 @@ module.exports = {
       APP_VERSION: JSON.stringify(require("./package.json").version),
     }),
     new VersionFile({
-      output: 'src/version.json',
-      package: './package.json',
-      template: './version.ejs',
+      output: "src/version.json",
+      package: "./package.json",
+      template: "./version.ejs",
       data: {
         buildDate: new Date(),
         commitHash: JSON.stringify(gitRevisionPlugin.commithash()),
-      }
+      },
     }),
-    new CopyPlugin({ patterns: [{ from: "src/version.json", to: "" }, { from: "src/config.js", to: "" }] }),
+    new CopyPlugin({
+      patterns: [
+        { from: "src/version.json", to: "" },
+        { from: "src/config.js", to: "" },
+      ],
+    }),
     new webpack.ProvidePlugin({
       process: "process/browser",
     }),
@@ -129,7 +134,7 @@ module.exports = {
         test: /\.txt$/,
         type: "asset/resource",
         include: [path.resolve(__dirname, "version.txt")],
-      }
+      },
     ],
   },
   output: {
