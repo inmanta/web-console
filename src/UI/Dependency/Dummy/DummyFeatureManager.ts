@@ -4,6 +4,9 @@ export class DummyFeatureManager implements FeatureManager {
   getCommitHash(): string {
     throw new Error("Method not implemented.");
   }
+  getAppVersion(): string {
+    throw new Error("Method not implemented");
+  }
   getJsonParser(): JsonParserId {
     throw new Error("Method not implemented.");
   }
