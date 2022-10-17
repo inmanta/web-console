@@ -2,8 +2,8 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const { GitRevisionPlugin } = require("git-revision-webpack-plugin");
 const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const VersionFile = require("webpack-version-file");
 const webpack = require("webpack");
+const VersionFile = require("webpack-version-file");
 const gitRevisionPlugin = new GitRevisionPlugin();
 
 module.exports = {
