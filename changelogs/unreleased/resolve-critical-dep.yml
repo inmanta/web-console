@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Resolve critical dependency leaks from version-file-plugin'
+destination-branches:
+- master
+- iso5
+sections: {}
