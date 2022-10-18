@@ -61,6 +61,7 @@ import {
   GetServiceInstancesManifest,
 } from "./GetServiceInstances";
 import { GetServices, GetServicesManifest } from "./GetServices";
+import { GetVersionFile, GetVersionFileManifest } from "./GetVersionFile";
 
 export type Query =
   | GetServices
@@ -99,7 +100,8 @@ export type Query =
   | GetDryRunReport.Query
   | GetVersionedResourceDetails.Query
   | GetNotifications.Query
-  | GetCompilationState;
+  | GetCompilationState
+  | GetVersionFile;
 
 export type Type = Query;
 
@@ -145,6 +147,7 @@ interface Manifest {
   GetDryRunReport: GetDryRunReport.Manifest;
   GetVersionedResourceDetails: GetVersionedResourceDetails.Manifest;
   GetNotifications: GetNotifications.Manifest;
+  GetVersionFile: GetVersionFileManifest;
 }
 
 /**

@@ -27,6 +27,7 @@ import {
   EnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
+import { UpdateBanner } from "./UI/Components/UpdateBanner";
 
 interface Props {
   store: Store;
@@ -37,8 +38,10 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
     GetServerStatusStateHelper(store),
     new PrimaryLogger(),
     getJsonParserId(globalThis),
-    COMMITHASH
+    COMMITHASH,
+    APP_VERSION
   );
+
   const keycloakController = new PrimaryKeycloakController(
     process.env.SHOULD_USE_AUTH,
     globalThis && globalThis.auth,
@@ -93,6 +96,7 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
         keycloakController,
       }}
     >
+      <UpdateBanner apiHelper={apiHelper} />
       {children}
     </DependencyProvider>
   );
