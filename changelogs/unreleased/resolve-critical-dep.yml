@@ -1,5 +1,5 @@
 change-type: patch
-description: 'Resolve critical dependency leaks from version-file-plugin'
+description: 'Resolve critical dependency leaks from version-file-plugin (there are two similar packages, only one is secure.)'
 destination-branches:
 - master
 - iso5
