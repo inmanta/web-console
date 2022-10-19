@@ -4,9 +4,8 @@ import { EnvironmentControls } from "./EnvironmentControls";
 import { Navigation } from "./Navigation";
 
 export const Sidebar: React.FC<{
-  isNavOpen: boolean;
   environment: string | undefined;
-}> = ({ isNavOpen, environment }) => {
+}> = ({ environment }) => {
   return (
     <PageSidebar
       aria-label="PageSidebar"
@@ -25,7 +24,6 @@ export const Sidebar: React.FC<{
           )}
         </Stack>
       }
-      isNavOpen={isNavOpen}
       theme="dark"
     />
   );
