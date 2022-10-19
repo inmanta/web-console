@@ -40,6 +40,7 @@ export const PageFrame: React.FC<Props> = ({ children, environmentId }) => {
         onNotificationDrawerExpand,
         isNotificationDrawerExpanded,
       }}
+      isManagedSidebar
       breadcrumb={<PageBreadcrumbs />}
       onPageResize={onPageResize}
       header={
@@ -48,12 +49,7 @@ export const PageFrame: React.FC<Props> = ({ children, environmentId }) => {
           noEnv={!Boolean(environmentId)}
         />
       }
-      sidebar={
-        <Sidebar
-          isNavOpen={isMobileView ? isNavOpenMobile : isNavOpen}
-          environment={environmentId}
-        />
-      }
+      sidebar={<Sidebar environment={environmentId} />}
     >
       {children}
     </Page>
