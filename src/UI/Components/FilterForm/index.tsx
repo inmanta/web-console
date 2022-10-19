@@ -21,8 +21,11 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
   };
   const removeChip = (id, prop: Properties) => {
     //assingment is neccesary to avoid ts error due to it's limitation to recognize square brackets property
-    const p = filter[prop];
-    updateType(p ? p.filter((value) => value !== id) : [], prop);
+    const chosenProperty = filter[prop];
+    updateType(
+      chosenProperty ? chosenProperty.filter((value) => value !== id) : [],
+      prop
+    );
   };
   const onTextInput = (event) => {
     event.preventDefault();
