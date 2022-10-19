@@ -95,6 +95,7 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
               removeChip={(cat, id) => removeChip(id, "value")}
               value={valueTextInput}
               setValue={setValueTextInput}
+              isSubmitVisible
             />
           </ToolbarItem>
         </ToolbarGroup>

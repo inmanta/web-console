@@ -2,13 +2,14 @@ import React from "react";
 import {
   Button,
   ToolbarFilter,
-  InputGroup,
   TextInput,
   ButtonVariant,
   ToolbarChip,
   ToolbarChipGroup,
+  ToolbarItem,
+  ToolbarGroup,
 } from "@patternfly/react-core";
-import { SearchIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 interface Props {
   isHidden?: boolean;
@@ -21,6 +22,7 @@ interface Props {
   ) => void;
   value: string;
   setValue: (value: string) => void;
+  isSubmitVisible?: boolean;
 }
 
 export const FreeTextFilter: React.FC<Props> = ({
@@ -31,6 +33,7 @@ export const FreeTextFilter: React.FC<Props> = ({
   removeChip,
   value,
   setValue,
+  isSubmitVisible = false,
 }) => {
   return (
     <ToolbarFilter
@@ -39,26 +42,32 @@ export const FreeTextFilter: React.FC<Props> = ({
       categoryName={filterPropertyName}
       showToolbarItem={!isHidden}
     >
-      <InputGroup>
-        <TextInput
-          data-testid={`${filterPropertyName}FilterInput`}
-          name={`${filterPropertyName}FilterInput`}
-          type="search"
-          aria-label={`${filterPropertyName}Filter`}
-          onChange={setValue}
-          value={value}
-          placeholder={placeholder}
-        />
-        <Button
-          variant={ButtonVariant.control}
-          aria-label="submit search"
-          type="submit"
-          value={filterPropertyName}
-          name={filterPropertyName}
-        >
-          <SearchIcon />
-        </Button>
-      </InputGroup>
+      <ToolbarGroup>
+        <ToolbarItem>
+          <TextInput
+            data-testid={`${filterPropertyName}FilterInput`}
+            name={`${filterPropertyName}FilterInput`}
+            type="search"
+            aria-label={`${filterPropertyName}Filter`}
+            onChange={setValue}
+            value={value}
+            placeholder={placeholder}
+          />
+        </ToolbarItem>
+        {isSubmitVisible && (
+          <ToolbarItem>
+            <Button
+              variant={ButtonVariant.secondary}
+              aria-label="submit search"
+              type="submit"
+              value={filterPropertyName}
+              name={filterPropertyName}
+            >
+              {words("resources.filters.filter")}
+            </Button>
+          </ToolbarItem>
+        )}
+      </ToolbarGroup>
     </ToolbarFilter>
   );
 };

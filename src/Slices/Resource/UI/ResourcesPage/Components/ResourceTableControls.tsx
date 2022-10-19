@@ -35,10 +35,10 @@ export const ResourceTableControls: React.FC<Props> = ({
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
       <ToolbarContent>
-        <FilterForm filter={filter} setFilter={setFilter} />
         <ToolbarItem>
           <DeployStateFilter filter={filter} setFilter={setFilter} />
         </ToolbarItem>
+        <FilterForm filter={filter} setFilter={setFilter} />
         <ToolbarItem>
           <Button
             variant="link"

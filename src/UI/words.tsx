@@ -268,6 +268,7 @@ const dict = {
   "resources.filters.value.placeholder": "Value...",
   "resources.filters.type.placeholder": "Type...",
   "resources.filters.reset": "Reset filters",
+  "resources.filters.filter": "Add filter",
   "resources.deploySummary.title": "Deployment state summary",
   "resources.deploySummary.deploy": "Deploy",
   "resources.deploySummary.repair": "Repair",
