@@ -28,9 +28,9 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
     event.preventDefault();
     let newFilter = { ...filter };
     if (
-      typeTextInput.length <= 0 &&
-      agentTextInput.length <= 0 &&
-      valueTextInput.length <= 0
+      !typeTextInput.length &&
+      !agentTextInput.length &&
+      !valueTextInput.length
     ) {
       return;
     }
