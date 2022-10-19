@@ -17,7 +17,7 @@ export function ServiceConfigCommandManager(
       stateHelper.set(
         RemoteData.fromEither(
           await apiHelper.post(
-            `/lsm/v1/service_catalog/${name}/config`,
+            `/lsm/v1/service_catalog/${command.name}/config`,
             environment,
             {
               values: {
