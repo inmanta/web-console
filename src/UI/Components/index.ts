@@ -43,7 +43,7 @@ export * from "./PageTitle";
 export * from "./PageContainer";
 export * from "./PageSectionWithTitle";
 export * from "./DesiredStateAttributes";
-export * from "./ResourceFilters";
+export * from "./FilterForm";
 export * from "./RequiresTable";
 export * from "./LegendBar";
 export * from "./ResourceLink";

@@ -1,0 +1,8 @@
+---
+description: Allow to send filter values from more than one input at once with enter or button click - Resouces & Desired State Details view
+change-type: patch
+destination-branches: 
+ - master
+ - iso5
+sections: 
+  minor-improvement: "{{description}}"

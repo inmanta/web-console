@@ -237,23 +237,103 @@ it.each`
     expect(apiHelper.pendingRequests[0].url).toContain(
       `filter.${filterUrlName}=${filterValue}`
     );
-
-    await act(async () => {
-      await apiHelper.resolve(
-        Either.right({
-          data: Resource.response.data.slice(4),
-          links: Resource.response.links,
-          metadata: Resource.response.metadata,
-        })
-      );
-    });
-
-    const rowsAfter = await screen.findAllByRole("row", {
-      name: "Resource Table Row",
-    });
-    expect(rowsAfter).toHaveLength(2);
   }
 );
+it.each`
+  filterValueOne | placeholderTextOne | filterUrlNameOne       | filterValueTwo | placeholderTextTwo | filterUrlNameTwo
+  ${"agent2"}    | ${"Agent..."}      | ${"agent"}             | ${"file3"}     | ${"Value..."}      | ${"resource_id_value"}
+  ${"Directory"} | ${"Type..."}       | ${"resource_type"}     | ${"agent2"}    | ${"Agent..."}      | ${"agent"}
+  ${"tmp"}       | ${"Value..."}      | ${"resource_id_value"} | ${"File"}      | ${"Type..."}       | ${"resource_type"}
+`(
+  "when using the search filters of type $filterType with value $filterValueOne and text $placeholderTextOne combined with $filterType with value $filterValueTwo and text $placeholderText then the resources with that $filterUrlNameOne and $filterUrlNameTwo should be fetched and shown",
+  async ({
+    filterValueOne,
+    placeholderTextOne,
+    filterUrlNameOne,
+    filterValueTwo,
+    placeholderTextTwo,
+    filterUrlNameTwo,
+  }) => {
+    const { component, apiHelper } = setup();
+    render(component);
+
+    await act(async () => {
+      await apiHelper.resolve(Either.right(Resource.response));
+    });
+
+    const initialRows = await screen.findAllByRole("row", {
+      name: "Resource Table Row",
+    });
+    expect(initialRows).toHaveLength(6);
+
+    const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
+    await userEvent.click(inputOne);
+    await userEvent.type(inputOne, `${filterValueOne}`);
+
+    const inputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
+    await userEvent.click(inputTwo);
+    await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
+
+    expect(apiHelper.pendingRequests[0].url).toContain(
+      `filter.status=%21orphaned`
+    );
+    expect(apiHelper.pendingRequests[0].url).toContain(
+      `filter.${filterUrlNameOne}=${filterValueOne}`
+    );
+
+    expect(apiHelper.pendingRequests[0].url).toContain(
+      `filter.${filterUrlNameTwo}=${filterValueTwo}`
+    );
+  }
+);
+test("when using the all filters then the resources with that filter values should be fetched and shown", async () => {
+  const filterValueOne = "agent";
+  const placeholderTextOne = "Agent...";
+  const filterUrlNameOne = "agent";
+  const filterValueTwo = "Directory";
+  const placeholderTextTwo = "Type...";
+  const filterUrlNameTwo = "resource_type";
+  const filterValueThree = "dir5";
+  const placeholderTextThree = "Value...";
+  const filterUrlNameThree = "resource_id_value";
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
+
+  const initialRows = await screen.findAllByRole("row", {
+    name: "Resource Table Row",
+  });
+  expect(initialRows).toHaveLength(6);
+
+  const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
+  await userEvent.click(inputOne);
+  await userEvent.type(inputOne, `${filterValueOne}`);
+
+  const inputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
+  await userEvent.click(inputTwo);
+  await userEvent.type(inputTwo, `${filterValueTwo}`);
+
+  const inputThree = await screen.findByPlaceholderText(placeholderTextThree);
+  await userEvent.click(inputThree);
+  await userEvent.type(inputThree, `${filterValueThree}{enter}`);
+
+  expect(apiHelper.pendingRequests[0].url).toContain(
+    `filter.status=%21orphaned`
+  );
+  expect(apiHelper.pendingRequests[0].url).toContain(
+    `filter.${filterUrlNameOne}=${filterValueOne}`
+  );
+
+  expect(apiHelper.pendingRequests[0].url).toContain(
+    `filter.${filterUrlNameTwo}=${filterValueTwo}`
+  );
+  expect(apiHelper.pendingRequests[0].url).toContain(
+    `filter.${filterUrlNameThree}=${filterValueThree}`
+  );
+});
 
 test.each`
   filterValue      | option
