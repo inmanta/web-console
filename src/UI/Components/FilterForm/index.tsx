@@ -34,14 +34,14 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
     ) {
       return;
     }
-    if (typeTextInput.length > 0) {
+    if (typeTextInput.length) {
       newFilter = {
         ...newFilter,
         type: filter.type ? [...filter.type, typeTextInput] : [typeTextInput],
       };
     }
 
-    if (agentTextInput.length > 0) {
+    if (agentTextInput.length) {
       newFilter = {
         ...newFilter,
         agent: filter.agent
@@ -49,7 +49,7 @@ export const FilterForm: React.FC<Props> = ({ filter, setFilter }) => {
           : [agentTextInput],
       };
     }
-    if (valueTextInput.length > 0) {
+    if (valueTextInput.length) {
       newFilter = {
         ...newFilter,
 
