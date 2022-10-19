@@ -9,17 +9,10 @@ import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 
 interface Props {
   noEnv: boolean;
-  isNavOpen: boolean;
-  onToggle(): void;
   onNotificationsToggle(): void;
 }
 
-export const Header: React.FC<Props> = ({
-  noEnv,
-  isNavOpen,
-  onToggle,
-  onNotificationsToggle,
-}) => {
+export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   const { routeManager } = useContext(DependencyContext);
   return (
     <>
@@ -30,8 +23,6 @@ export const Header: React.FC<Props> = ({
         headerTools={<Actions {...{ noEnv, onNotificationsToggle }} />}
         showNavToggle
         topNav={<EnvSelectorWithProvider />}
-        isNavOpen={isNavOpen}
-        onNavToggle={onToggle}
       />
     </>
   );

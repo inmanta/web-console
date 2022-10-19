@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Page } from "@patternfly/react-core";
 import { Header } from "@/UI/Root/Components/Header";
 import { PageBreadcrumbs } from "@/UI/Root/Components/PageBreadcrumbs";
@@ -10,22 +10,6 @@ interface Props {
 }
 
 export const PageFrame: React.FC<Props> = ({ children, environmentId }) => {
-  const [isNavOpen, setIsNavOpen] = useState(true);
-  const [isMobileView, setIsMobileView] = useState(false);
-  const [isNavOpenMobile, setIsNavOpenMobile] = useState(false);
-
-  const onPageResize = (props: { mobileView: boolean; windowSize: number }) => {
-    setIsMobileView(props.mobileView);
-  };
-  const onNavToggleMobile = () => {
-    setIsNavOpenMobile(!isNavOpenMobile);
-  };
-  const onNavToggle = () => {
-    setIsNavOpen(!isNavOpen);
-  };
-
-  const onToggle = isMobileView ? onNavToggleMobile : onNavToggle;
-
   const {
     onNotificationsToggle,
     notificationDrawer,
@@ -42,10 +26,9 @@ export const PageFrame: React.FC<Props> = ({ children, environmentId }) => {
       }}
       isManagedSidebar
       breadcrumb={<PageBreadcrumbs />}
-      onPageResize={onPageResize}
       header={
         <Header
-          {...{ isNavOpen, onToggle, onNotificationsToggle }}
+          {...{ onNotificationsToggle }}
           noEnv={!Boolean(environmentId)}
         />
       }
