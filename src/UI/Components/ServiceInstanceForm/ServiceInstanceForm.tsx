@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ActionGroup, Alert, Button, Form } from "@patternfly/react-core";
 import { set } from "lodash-es";
 import styled from "styled-components";
@@ -29,9 +29,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       : createFormState(fields)
   );
 
-  const getUpdate =
-    (path: string, multi = false) =>
-    (value: unknown): void => {
+  const getUpdate = useCallback(
+    (path: string, value: unknown, multi = false): void => {
       if (multi) {
         setFormState((prev) => {
           const clone = { ...prev };
@@ -51,7 +50,9 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           return set(clone, path, value);
         });
       }
-    };
+    },
+    []
+  );
 
   const preventDefault = (event: React.FormEvent) => {
     event.preventDefault();
