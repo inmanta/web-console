@@ -1,0 +1,6 @@
+change-type: patch
+description: improve rwd of header in range of 768px - 1200px
+issue-nr: 4119
+destination-branches:
+- master
+- iso5
