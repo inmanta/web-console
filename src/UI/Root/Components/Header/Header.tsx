@@ -34,7 +34,6 @@ const StyledImage = styled(SimpleBackgroundImage)`
 
 const StyledHeader = styled(PageHeader)`
   background-color: transparent;
-  //var(--pf-global--breakpoint--md) doesn't seems work
   @media (min-width: 768px) {
     grid-template-columns: auto 1fr auto;
   }
