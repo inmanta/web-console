@@ -39,6 +39,29 @@ export const enumField: EnumField = {
   },
   type: "string",
 };
+export const enumFieldTwoOptions: EnumField = {
+  kind: "Enum",
+  name: "enum_field_double",
+  description: "description",
+  isOptional: false,
+  defaultValue: "",
+  options: {
+    local: "local",
+    local2: "local2",
+  },
+  type: "string",
+};
+export const enumFieldSingleOption: EnumField = {
+  kind: "Enum",
+  name: "enum_field_single",
+  description: "description",
+  isOptional: false,
+  defaultValue: "",
+  options: {
+    local: "local",
+  },
+  type: "string",
+};
 
 export const number: TextField = {
   kind: "Text",

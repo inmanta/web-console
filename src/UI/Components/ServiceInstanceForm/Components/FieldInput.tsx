@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -28,8 +28,7 @@ interface Props {
   path: string | null;
 }
 
-type Update = (value: unknown) => void;
-type GetUpdate = (path: string, multi?: boolean) => Update;
+type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
 
 const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
@@ -40,6 +39,13 @@ export const FieldInput: React.FC<Props> = ({
   getUpdate,
   path,
 }) => {
+  //callback was used to avoid re-render in useEffect used in SelectFormInput
+  const getEnumUpdate = useCallback(
+    (value) => {
+      getUpdate(makePath(path, field.name), value);
+    },
+    [getUpdate, path, field.name]
+  );
   switch (field.kind) {
     case "Boolean":
       return (
@@ -49,7 +55,7 @@ export const FieldInput: React.FC<Props> = ({
           isOptional={field.isOptional}
           isChecked={get(formState, makePath(path, field.name)) as boolean}
           handleInputChange={(value) =>
-            getUpdate(makePath(path, field.name))(toOptionalBoolean(value))
+            getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
           key={field.name}
@@ -64,7 +70,9 @@ export const FieldInput: React.FC<Props> = ({
           description={field.description}
           isOptional={field.isOptional}
           type={field.inputType}
-          handleInputChange={getUpdate(makePath(path, field.name))}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name), value)
+          }
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.name}
@@ -84,7 +92,9 @@ export const FieldInput: React.FC<Props> = ({
             get(formState, makePath(path, field.name) as string) as string
           }
           isOptional={field.isOptional}
-          handleInputChange={getUpdate(makePath(path, field.name) as string)}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name) as string, value)
+          }
         />
       );
     case "Enum":
@@ -96,7 +106,7 @@ export const FieldInput: React.FC<Props> = ({
           attributeValue={get(formState, makePath(path, field.name)) as string}
           description={field.description}
           isOptional={field.isOptional}
-          handleInputChange={getUpdate(makePath(path, field.name))}
+          handleInputChange={getEnumUpdate}
           key={field.name}
         />
       );
@@ -132,7 +142,9 @@ export const FieldInput: React.FC<Props> = ({
             get(formState, makePath(path, field.name), []) as string[]
           }
           isOptional={field.isOptional}
-          handleInputChange={getUpdate(makePath(path, field.name), true)}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name), value, true)
+          }
           multi={true}
         />
       );
@@ -221,14 +233,14 @@ const DictListFieldInput: React.FC<DictListProps> = ({
       return;
     }
 
-    getUpdate(makePath(path, field.name))([
+    getUpdate(makePath(path, field.name), [
       ...list,
       createFormState(field.fields),
     ]);
   };
 
   const getOnDelete = (index: number) => () =>
-    getUpdate(makePath(path, field.name))([
+    getUpdate(makePath(path, field.name), [
       ...list.slice(0, index),
       ...list.slice(index + 1, list.length),
     ]);

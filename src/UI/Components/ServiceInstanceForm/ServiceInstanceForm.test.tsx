@@ -77,6 +77,67 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField THEN shows that field",
   expect(select).toHaveTextContent("ci");
 });
 
+test("GIVEN ServiceInstanceForm WHEN passed an EnumField with more than one value THEN shows that field with default prompt", async () => {
+  render(
+    <ServiceInstanceForm
+      fields={[Test.Field.enumFieldTwoOptions]}
+      onCancel={jest.fn()}
+      onSubmit={jest.fn()}
+    />
+  );
+  const component = screen.getByRole("generic", {
+    name: `EnumFieldInput-${Test.Field.enumFieldTwoOptions.name}`,
+  });
+  expect(component).toBeVisible();
+
+  const preselectedOption = screen.getByText(
+    `Select value for ${Test.Field.enumFieldTwoOptions.name}`
+  );
+  expect(preselectedOption).toBeVisible();
+
+  const select = screen.getByRole("button", {
+    name: `${Test.Field.enumFieldTwoOptions.name}-select-toggle`,
+  });
+  await userEvent.click(select);
+
+  const dropdown = screen.getByRole("listbox", {
+    name: `${Test.Field.enumFieldTwoOptions.name}-select-input`,
+  });
+
+  const options = within(dropdown).getAllByRole("option");
+  expect(options).toHaveLength(2);
+});
+
+test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THEN shows that field with preselected option", async () => {
+  render(
+    <ServiceInstanceForm
+      fields={[Test.Field.enumFieldSingleOption]}
+      onCancel={jest.fn()}
+      onSubmit={jest.fn()}
+    />
+  );
+  const component = screen.getByRole("generic", {
+    name: `EnumFieldInput-${Test.Field.enumFieldSingleOption.name}`,
+  });
+  expect(component).toBeVisible();
+
+  const preselectedOption = screen.getByText(
+    Test.Field.enumFieldSingleOption.options.local as string
+  );
+  expect(preselectedOption).toBeVisible();
+  const select = screen.getByRole("button", {
+    name: `${Test.Field.enumFieldSingleOption.name}-select-toggle`,
+  });
+  await userEvent.click(select);
+
+  const dropdown = screen.getByRole("listbox", {
+    name: `${Test.Field.enumFieldSingleOption.name}-select-input`,
+  });
+
+  const option = within(dropdown).getByRole("option");
+  expect(option).toBeInTheDocument();
+});
+
 test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN the nested FlatField is shown", async () => {
   render(
     <ServiceInstanceForm
