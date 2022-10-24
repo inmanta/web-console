@@ -39,6 +39,7 @@ export const FieldInput: React.FC<Props> = ({
   getUpdate,
   path,
 }) => {
+  //callback was used to avoid re-render in useEffect used in SelectFormInput
   const getEnumUpdate = useCallback(
     (value) => {
       getUpdate(makePath(path, field.name), value);

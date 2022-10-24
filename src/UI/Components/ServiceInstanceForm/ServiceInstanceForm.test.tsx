@@ -121,7 +121,9 @@ test("GIVEN ServiceInstanceForm WHEN passed an EnumField with only one value THE
   });
   expect(component).toBeVisible();
 
-  const preselectedOption = screen.getByText("local");
+  const preselectedOption = screen.getByText(
+    Test.Field.enumFieldSingleOption.options.local as string
+  );
   expect(preselectedOption).toBeVisible();
   const select = screen.getByRole("button", {
     name: `${Test.Field.enumFieldSingleOption.name}-select-toggle`,

@@ -29,6 +29,7 @@ export const SelectFormInput: React.FC<Props> = ({
   const selectOptions = Object.keys(options)
     .sort()
     .map((key) => <SelectOption key={key} value={key} />);
+
   useEffect(() => {
     const optionsArray = Object.keys(options);
     if (optionsArray.length === 1) {

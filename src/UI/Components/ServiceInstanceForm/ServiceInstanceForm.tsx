@@ -29,6 +29,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       : createFormState(fields)
   );
 
+  //callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
   const getUpdate = useCallback(
     (path: string, value: unknown, multi = false): void => {
       if (multi) {
