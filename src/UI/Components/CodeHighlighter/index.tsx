@@ -45,6 +45,7 @@ export const CodeHighlighter: React.FC<Props> = ({
   scrollBottom = false,
   close,
 }) => {
+  const [allowScrollState, setAllowScrollState] = useState(true);
   const [copied, setCopied] = useState(false);
   const [zoomed, setZoomed] = useState(false);
   const [showLineNumbers, setShowLineNumbers] = useState(false);
@@ -142,20 +143,47 @@ export const CodeHighlighter: React.FC<Props> = ({
     </>
   );
 
-  const setScrollPosition = () => {
-    if (!scrollBottom) {
+  const setScrollPositionBottom = (element) => {
+    if (!scrollBottom || !allowScrollState || !element) {
       return;
     }
 
-    const preBlock = codeBlockRef.current?.querySelector("pre");
+    element.scrollTo(0, element.scrollHeight);
+  };
 
-    if (preBlock && preBlock.firstChild?.nodeName === "CODE") {
-      preBlock.scrollTo(0, preBlock.scrollHeight);
+  const updateScrollPosition = ({ target }) => {
+    const element = target as HTMLElement;
+
+    element.dataset.scrollPosition = element.scrollTop.toString();
+
+    if (!element.dataset.oldScrollPosition) {
+      element.dataset.oldScrollPosition = element.scrollTop.toString();
+    }
+
+    const currentScrollPosition = parseFloat(element.dataset.scrollPosition);
+    const oldScrollPosition = parseFloat(element.dataset.oldScrollPosition);
+
+    // check if we are scrolling upwards and block the automatic scroll to bottom.
+    if (oldScrollPosition > currentScrollPosition && allowScrollState) {
+      element.dataset.oldScrollPosition = element.scrollTop.toString();
+      setAllowScrollState(false);
     }
   };
 
   useEffect(() => {
-    setScrollPosition();
+    const preBlock = codeBlockRef.current?.querySelector("pre");
+
+    if (scrollBottom && preBlock?.firstChild?.nodeName === "CODE") {
+      preBlock?.addEventListener("scroll", updateScrollPosition);
+    }
+
+    setScrollPositionBottom(preBlock);
+
+    return () => {
+      if (!allowScrollState) {
+        preBlock?.removeEventListener("scroll", updateScrollPosition);
+      }
+    };
   });
 
   return (
