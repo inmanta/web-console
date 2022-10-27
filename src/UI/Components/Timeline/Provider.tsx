@@ -7,6 +7,7 @@ interface Props {
   requested: string;
   started?: string | null;
   completed?: string | null;
+  success?: boolean | null;
 }
 
 const datePresenter = new MomentDatePresenter();
@@ -15,6 +16,7 @@ export const Provider: React.FC<Props> = ({
   requested,
   started,
   completed,
+  success,
 }) => {
   useTickerWithInterval(!(started && completed) ? "OneSecond" : "Never");
   const now = new Date(Date.now()).toISOString();
@@ -44,6 +46,7 @@ export const Provider: React.FC<Props> = ({
               time: datePresenter.getTime(completed),
             }
       }
+      success={success}
     />
   );
 };
