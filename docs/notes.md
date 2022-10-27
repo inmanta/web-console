@@ -114,3 +114,10 @@ Currently the url is not shortened, the parameters are written to the url as the
 
 The `CodeHighlighter` component is responsible for the syntax highlighting that we use on several pages. It offloads the highlighting logic to [react-syntax-highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter).
 We chose a custom component instead of the Patternfly `CodeBlock` component because the Pattenfly one takes up more screen real estate (actions on top in a mostly empty row, instead of on the side), and it's also missing some features that we could include in the custom component (e.g., line numbers, highlighting according to different languages).
+
+## Storybook
+__27-10-2022__
+As of this date, we decided to remove storybook and all related dependencies. The main reasons are as follow: 
+- We don't have any benefit in displaying the list of components that we are using. We are not building a library of components, but an application using third party components. This results in unnecessary maintenance. 
+- We tested to see for 1-2 months if it has any usecases, asside from maintaining it, we didn't use it either. 
+- A lot of dependencies are being imported for no major interesting reasons. 
