@@ -25,8 +25,7 @@ This is however only a temporary solution. You should fix the cors problem... I 
 
 TypeScript by itself can detect unused code. But once you export it, TypeScript no longer cares about it.  
 The tool `ts-prune` looks for unused exports. Some of these exports can be removed.  
-Some can not be removed. For example the exports done in storybook files and not used anywhere.  
-But Storybook does pick them up.
+Some can not be removed.
 
 You can list the unused exports by running:
 
