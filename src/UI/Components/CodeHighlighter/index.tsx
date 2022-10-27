@@ -45,12 +45,12 @@ export const CodeHighlighter: React.FC<Props> = ({
   scrollBottom = false,
   close,
 }) => {
-  const [allowScrollState, setAllowScrollState] = useState(true);
   const [copied, setCopied] = useState(false);
   const [zoomed, setZoomed] = useState(false);
   const [showLineNumbers, setShowLineNumbers] = useState(false);
   const [wrapLongLines, setWraplongLines] = useState(true);
   const codeBlockRef = useRef<HTMLDivElement>(null);
+  const [allowScrollState, setAllowScrollState] = useState(true);
   const minHeight = "8em";
 
   const onCopy = () => {
@@ -144,11 +144,9 @@ export const CodeHighlighter: React.FC<Props> = ({
   );
 
   const setScrollPositionBottom = (element) => {
-    if (!scrollBottom || !allowScrollState || !element) {
-      return;
+    if (element && scrollBottom && allowScrollState) {
+      element.scrollTo(0, element.scrollHeight);
     }
-
-    element.scrollTo(0, element.scrollHeight);
   };
 
   const updateScrollPosition = ({ target }) => {
@@ -175,9 +173,8 @@ export const CodeHighlighter: React.FC<Props> = ({
 
     if (scrollBottom && preBlock?.firstChild?.nodeName === "CODE") {
       preBlock?.addEventListener("scroll", updateScrollPosition);
+      setScrollPositionBottom(preBlock);
     }
-
-    setScrollPositionBottom(preBlock);
 
     return () => {
       if (!allowScrollState) {
