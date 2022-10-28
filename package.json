@@ -23,8 +23,6 @@
     "precypress-test": "yarn run delete:reports",
     "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'yarn cypress run'",
     "package-cleanup": "node clean_up_packages",
-    "storybook": "start-storybook --ci --port 6006",
-    "build-storybook": "build-storybook",
     "check-circular-deps": "madge --circular ./src/index.tsx"
   },
   "lint-staged": {
@@ -43,10 +41,6 @@
   "devDependencies": {
     "@babel/core": "^7.19.6",
     "@babel/plugin-transform-typescript": "^7.19.3",
-    "@storybook/addon-actions": "^v6.5.13",
-    "@storybook/addon-essentials": "^v6.5.12",
-    "@storybook/addon-links": "^v6.5.13",
-    "@storybook/react": "^v6.4.22",
     "@testing-library/dom": "^8.19.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",

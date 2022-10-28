@@ -89,7 +89,7 @@ module.exports = {
       },
     },
     {
-      files: ["**/*webpack*", ".storybook/**/*.{cjs,js}"],
+      files: ["**/*webpack*"],
       rules: {
         "@typescript-eslint/no-var-requires": "off",
       },
