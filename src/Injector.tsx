@@ -33,7 +33,10 @@ interface Props {
   store: Store;
 }
 
-export const Injector: React.FC<Props> = ({ store, children }) => {
+export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
+  store,
+  children,
+}) => {
   const featureManager = new PrimaryFeatureManager(
     GetServerStatusStateHelper(store),
     new PrimaryLogger(),

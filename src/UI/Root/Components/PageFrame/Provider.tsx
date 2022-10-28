@@ -10,7 +10,10 @@ interface Props {
   environmentRole: EnvironmentRole;
 }
 
-export const Provider: React.FC<Props> = ({ children, environmentRole }) => {
+export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
+  children,
+  environmentRole,
+}) => {
   const { environmentHandler, routeManager, keycloakController } =
     useContext(DependencyContext);
   const environment = environmentHandler.useSelected();

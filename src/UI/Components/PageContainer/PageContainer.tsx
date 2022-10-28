@@ -7,7 +7,7 @@ interface Props extends PageSectionProps {
   title: string;
 }
 
-export const PageContainer: React.FC<Props> = ({
+export const PageContainer: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   title,
   ...props

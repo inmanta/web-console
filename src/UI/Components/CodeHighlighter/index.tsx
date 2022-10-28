@@ -278,6 +278,7 @@ const ToggleTooltip: React.FC<{
   enabled: boolean;
   enabledContent: string;
   disabledContent: string;
+  children?: React.ReactNode;
 }> = ({ enabled, enabledContent, disabledContent, children }) => {
   return (
     <Tooltip

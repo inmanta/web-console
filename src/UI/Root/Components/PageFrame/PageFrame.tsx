@@ -9,7 +9,10 @@ interface Props {
   environmentId?: string;
 }
 
-export const PageFrame: React.FC<Props> = ({ children, environmentId }) => {
+export const PageFrame: React.FC<React.PropsWithChildren<Props>> = ({
+  children,
+  environmentId,
+}) => {
   const {
     onNotificationsToggle,
     notificationDrawer,

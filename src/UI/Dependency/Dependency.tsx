@@ -56,6 +56,7 @@ export const DependencyContext = createContext<Dependencies>({
 
 export const DependencyProvider: React.FC<{
   dependencies: Partial<Dependencies>;
+  children?: React.ReactNode;
 }> = ({
   dependencies: {
     commandResolver,

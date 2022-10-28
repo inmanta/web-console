@@ -7,7 +7,7 @@ interface Props {
   withSpace?: boolean;
 }
 
-export const Description: React.FC<Props> = ({
+export const Description: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   className,
   withSpace,

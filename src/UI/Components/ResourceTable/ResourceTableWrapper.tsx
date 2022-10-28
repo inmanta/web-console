@@ -6,7 +6,7 @@ interface Props {
   id?: string;
 }
 
-export const ResourceTableWrapper: React.FC<Props> = ({
+export const ResourceTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
   children,
   ...props
 }) => {

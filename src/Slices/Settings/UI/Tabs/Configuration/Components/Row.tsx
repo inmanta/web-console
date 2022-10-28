@@ -10,7 +10,10 @@ interface Props {
   info: EnvironmentSettings.InputInfo;
 }
 
-export const Row: React.FC<Props> = ({ info, children }) => (
+export const Row: React.FC<React.PropsWithChildren<Props>> = ({
+  info,
+  children,
+}) => (
   <Tr aria-label={`Row-${info.name}`}>
     <Td>
       {info.name}{" "}
