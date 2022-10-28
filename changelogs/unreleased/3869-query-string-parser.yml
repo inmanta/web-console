@@ -1,0 +1,6 @@
+description: Add documentation about the query string parser limitations.
+issue-nr: 3869
+change-type: patch
+destination-branches:
+  - master
+  - iso5

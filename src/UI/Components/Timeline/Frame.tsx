@@ -5,9 +5,14 @@ import { Timestamp } from "./Timestamp";
 interface FrameProps {
   started?: Timestamp;
   completed?: Timestamp;
+  success?: boolean | null;
 }
 
-export const Frame: React.FC<FrameProps> = ({ started, completed }) => {
+export const Frame: React.FC<FrameProps> = ({
+  started,
+  completed,
+  success,
+}) => {
   const Definitions = () => (
     <defs>
       <path id="diffLine" d="M0,1 L200,1" />
@@ -20,6 +25,11 @@ export const Frame: React.FC<FrameProps> = ({ started, completed }) => {
         <path d="M15,30 C6.71572875,30 0,23.2842712 0,15 C0,6.71572875 6.71572875,0 15,0 C23.2842712,0 30,6.71572875 30,15 C30,23.2842712 23.2842712,30 15,30 Z M15,27.1428571 C21.7063148,27.1428571 27.1428571,21.7063148 27.1428571,15 C27.1428571,8.29368518 21.7063148,2.85714286 15,2.85714286 C8.29368518,2.85714286 2.85714286,8.29368518 2.85714286,15 C2.85714286,21.7063148 8.29368518,27.1428571 15,27.1428571 Z" />
         <StyledCircle cx="15" cy="15" r="7.5" />
       </g>
+      <path
+        id="failedBullet"
+        fill="#c9190b"
+        d="M 15 30 C 6.7157 30 0 23.2843 0 15 C 0 6.7157 6.7157 0 15 0 C 23.2843 0 30 6.7157 30 15 C 30 23.2843 23.2843 30 15 30 z M 12.7 5 l 0 12 c 0 0.546 0.42 1.014 0.84 1.014 h 3 c 0.48 0 0.84 -0.468 0.84 -1.014 l 0 -12 c 0 -0.624 -0.36 -1.17 -0.84 -1.17 h -3 c -0.48 0 -0.9 0.546 -0.84 1.17 M 15 26 c 1.386 0 2.541 -1.1088 2.541 -2.4948 s -1.155 -2.4948 -2.541 -2.5052 s -2.541 1.1088 -2.541 2.4948 s 1.155 2.4948 2.541 2.4948 z"
+      ></path>
     </defs>
   );
 
@@ -49,8 +59,15 @@ export const Frame: React.FC<FrameProps> = ({ started, completed }) => {
 
   const Completed = () => (
     <g transform="translate(472)">
-      {completed && <use xlinkHref="#checkBullet" />}
-      {!completed && started && <use xlinkHref="#loadingBullet" />}
+      {completed && !success && (
+        <use xlinkHref="#failedBullet" aria-label="failedBullet" />
+      )}
+      {completed && success && (
+        <use xlinkHref="#checkBullet" aria-label="checkBullet" />
+      )}
+      {!completed && started && (
+        <use xlinkHref="#loadingBullet" aria-label="loadingBullet" />
+      )}
       {!completed && !started && (
         <circle cx="15" cy="15" r="15" fill="#D2D2D2" />
       )}
