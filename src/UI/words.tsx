@@ -151,6 +151,7 @@ const dict = {
   "inventory.deleteVersion.header": (version: ParsedNumber) =>
     `Are you sure you want to delete version ${version}?`,
   "inventory.filters.state.placeholder": "Select a state...",
+  "ServiceDetails.title": (name: string) => `Service Detals: ${name}`,
 
   /**
    * Config related text
@@ -220,7 +221,8 @@ const dict = {
   "catalog.summary.title": `Number of instances by label`,
   "catalog.summary.noLabel": "no label",
   "catalog.summary.empty": "No instance summary found",
-  "catalog.button.inventory": "Inventory",
+  "catalog.button.inventory": "Show inventory",
+  "catalog.button.details": "Show details",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
   "catalog.delete.failed": "Deleting service entity failed",

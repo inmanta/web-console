@@ -3,7 +3,7 @@ import { Flex, FlexItem, Title } from "@patternfly/react-core";
 import { InstanceSummary } from "@/Core";
 import { EmptyView, Spacer, SummaryChart } from "@/UI/Components";
 import { words } from "@/UI/words";
-import { DeleteEntityModal } from "../DeleteEntityModal";
+import { DeleteEntityModal } from "./DeleteEntityModal";
 
 interface Props {
   serviceName: string;

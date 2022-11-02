@@ -1,7 +1,7 @@
 import { identity } from "lodash-es";
 import { ApiHelper, StateHelperWithEnv } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
-import { getUrl } from "@S/ServiceCatalog/Data/Callbacks/getUrl";
+import { getUrl } from "@S/ServiceDetails/Data/Callbacks/getUrl";
 
 export function CallbacksQueryManager(
   apiHelper: ApiHelper,

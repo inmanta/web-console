@@ -20,6 +20,7 @@ import { Parameters } from "@S/Parameters";
 import { Resource } from "@S/Resource";
 import { ResourceDetails } from "@S/ResourceDetails";
 import { ServiceCatalog } from "@S/ServiceCatalog";
+import { ServiceDetails } from "@S/ServiceDetails";
 import { ServiceInstanceHistory } from "@S/ServiceInstanceHistory";
 import { ServiceInventory } from "@S/ServiceInventory";
 import { Settings } from "@S/Settings";
@@ -42,6 +43,7 @@ export const paths: Paths = {
    */
   Catalog: ServiceCatalog.path,
   Inventory: ServiceInventory.path,
+  ServiceDetails: ServiceDetails.path,
   CreateInstance: CreateInstance.path,
   EditInstance: EditInstance.path,
   History: ServiceInstanceHistory.path,

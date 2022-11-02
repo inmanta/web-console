@@ -55,17 +55,33 @@ test("GIVEN CatalogDataList WHEN 2 services THEN 2 services are shown", () => {
   ).toBeInTheDocument();
 });
 
-test("GIVEN CatalogDataList WHEN service THEN service has correct link", () => {
+test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link", () => {
   render(Component([Service.a]));
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem = within(list).getByRole("listitem", { name: Service.a.name });
   expect(listItem).toBeInTheDocument();
-  const link = within(listItem).getByRole("link", { name: "Inventory" });
+  const link = within(listItem).getByRole("link", { name: "Show inventory" });
   expect(link).toBeInTheDocument();
   expect(link).toHaveAttribute(
     "href",
     `/lsm/catalog/${Service.a.name}/inventory`
+  );
+});
+
+test("GIVEN CatalogDataList WHEN service THEN service details has correct link", async () => {
+  render(Component([Service.a]));
+
+  const list = screen.getByRole("list", { name: "List of service entities" });
+  const listItem = within(list).getByRole("listitem", { name: Service.a.name });
+  expect(listItem).toBeInTheDocument();
+  const dropdown = within(listItem).getByLabelText("Actions-details");
+  await userEvent.click(within(dropdown).getByRole("button"));
+  const link = screen.getByRole("link", { name: "Show details" });
+  expect(link).toBeInTheDocument();
+  expect(link).toHaveAttribute(
+    "href",
+    `/lsm/catalog/${Service.a.name}/details`
   );
 });
 
@@ -78,74 +94,4 @@ test("GIVEN CatalogDataList WHEN description available THEN should show descript
     Service.a.description as string
   );
   expect(description).toBeVisible();
-});
-
-test("GIVEN CatalogDataList WHEN user clicks toggle THEN details are shown", async () => {
-  render(Component([Service.a]));
-
-  const list = screen.getByRole("list", { name: "List of service entities" });
-  const listItem = within(list).getByRole("listitem", { name: Service.a.name });
-  const button = within(listItem).getByRole("button", {
-    name: `${Service.a.name} Details`,
-  });
-  await userEvent.click(button);
-
-  const details = within(listItem).queryByRole("region", {
-    name: "Primary Content Details",
-  });
-  expect(details).toBeVisible();
-});
-
-test("GIVEN CatalogDataList WHEN user clicks toggle 2 times THEN details are hidden", async () => {
-  render(Component([Service.a]));
-
-  const list = screen.getByRole("list", { name: "List of service entities" });
-  const listItem = within(list).getByRole("listitem", { name: Service.a.name });
-  const button = within(listItem).getByRole("button", {
-    name: `${Service.a.name} Details`,
-  });
-  await userEvent.click(button);
-  await userEvent.click(button);
-
-  const details = within(listItem).queryByRole("region", {
-    name: "Primary Content Details",
-  });
-  expect(details).not.toBeInTheDocument();
-});
-
-test("GIVEN CatalogDataList with 2 services WHEN user clicks on both toggles THEN both details are shown", async () => {
-  render(Component([Service.a, Service.b]));
-
-  const list = screen.getByRole("list", { name: "List of service entities" });
-  const listItem1 = within(list).getByRole("listitem", {
-    name: Service.a.name,
-  });
-  const listItem2 = within(list).getByRole("listitem", {
-    name: Service.b.name,
-  });
-
-  expect(
-    screen.queryByRole("region", {
-      name: "Primary Content Details",
-    })
-  ).not.toBeInTheDocument();
-
-  const toggle1 = within(listItem1).getByRole("button", {
-    name: `${Service.a.name} Details`,
-  });
-  const toggle2 = within(listItem2).getByRole("button", {
-    name: `${Service.b.name} Details`,
-  });
-
-  await userEvent.click(toggle1);
-  await userEvent.click(toggle2);
-
-  const details1 = within(listItem1).queryByRole("region", {
-    name: "Primary Content Details",
-  });
-  const details2 = within(listItem2).queryByRole("region", {
-    name: "Primary Content Details",
-  });
-  expect(details1).toBeVisible();
-  expect(details2).toBeVisible();
 });

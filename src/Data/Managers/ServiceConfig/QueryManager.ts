@@ -52,7 +52,6 @@ export function ServiceConfigQueryManager(
       initialize(query);
       update(query, getConfigUrl(query), environment);
     }, [environment]); /* eslint-disable-line react-hooks/exhaustive-deps */
-
     return [
       configFinalizer.finalize(
         stateHelper.useGetHooked(query),

@@ -13,6 +13,7 @@ const kinds = [
    */
   "Catalog",
   "Inventory",
+  "ServiceDetails",
   "CreateInstance",
   "EditInstance",
   "History",
@@ -66,6 +67,7 @@ export interface RouteKindWithId<K extends RouteKind = RouteKind> {
  */
 interface RouteParamKeysManifest {
   Inventory: "service";
+  ServiceDetails: "service";
   CreateInstance: "service";
   EditInstance: "service" | "instance";
   History: "service" | "instance";

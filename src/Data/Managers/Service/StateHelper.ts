@@ -16,7 +16,10 @@ export function ServiceStateHelper(
         environment,
       });
     },
-    (state, query, environment) =>
-      state.services.byNameAndEnv[keyMaker.make([environment, query.name])]
+    (state, query, environment) => {
+      return state.services.byNameAndEnv[
+        keyMaker.make([environment, query.name])
+      ];
+    }
   );
 }

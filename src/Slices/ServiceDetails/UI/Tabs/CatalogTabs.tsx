@@ -23,7 +23,6 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({
     key: `tab-${service.name}`,
     route: "Catalog",
   });
-
   const handleTabClick = (event, tabIndex) => {
     setActiveTabKey(tabIndex);
   };

@@ -12,7 +12,6 @@ export const Root: React.FC = () => {
   const pages = new PrimaryPageManager(
     routeManager.getRouteDictionary()
   ).getPages();
-
   return (
     <>
       <GlobalStyles />
