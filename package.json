@@ -122,7 +122,7 @@
     "webpack-version-file": "^0.1.7"
   },
   "dependencies": {
-    "@patternfly/react-charts": "^6.94.7",
+    "@patternfly/react-charts": "^6.94.11",
     "@patternfly/react-core": "^4.250.1",
     "@patternfly/react-icons": "^4.82.8",
     "@patternfly/react-styles": "^4.91.6",
