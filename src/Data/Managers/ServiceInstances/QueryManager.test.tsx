@@ -17,7 +17,9 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { ServiceInstancesQueryManager } from "./QueryManager";
 import { ServiceInstancesStateHelper } from "./StateHelper";
 
-jest.useFakeTimers("legacy");
+const jestOptions = { legacyFakeTimers: true };
+
+jest.useFakeTimers(jestOptions);
 
 const setup = () => {
   const store = getStoreInstance();
