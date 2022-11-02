@@ -34,4 +34,23 @@ const StyledImage = styled(SimpleBackgroundImage)`
 
 const StyledHeader = styled(PageHeader)`
   background-color: transparent;
+  @media (min-width: 768px) {
+    grid-template-columns: auto 1fr auto;
+  }
+  .pf-c-page__header-brand {
+    @media (min-width: 768px) {
+      padding-right: 2rem;
+    }
+  }
+  .pf-c-page__header-nav {
+    @media (min-width: 768px) {
+      grid-column: 2/3;
+      grid-row: 1/2;
+    }
+  }
+  .pf-c-page__header-tools {
+    @media (min-width: 768px) {
+      grid-column: 3/3;
+    }
+  }
 `;
