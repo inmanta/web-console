@@ -45,54 +45,56 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
         </FlexItem>
       </StyledFlex>
       <StyledList isHorizontal columnModifier={{ default: "2Col" }}>
-        <DescriptionListGroup>
-          <DescriptionListTerm>
-            {words("compileDetails.status.export")}
-          </DescriptionListTerm>
-          <DescriptionListDescription>
-            {compileDetails.do_export.toString()}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-        <DescriptionListGroup>
-          <DescriptionListTerm>
-            {words("compileDetails.status.update")}
-          </DescriptionListTerm>
-          <DescriptionListDescription>
-            {compileDetails.force_update.toString()}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-        <DescriptionListGroup>
-          <DescriptionListTerm>
-            {words("compileDetails.status.success")}
-          </DescriptionListTerm>
-          <DescriptionListDescription>
-            {compileDetails.success ? (
-              <GreenCheckCircle />
-            ) : compileDetails.success === false ? (
-              <RedExclamationCircle />
-            ) : (
-              ""
-            )}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-        <DescriptionListGroup>
-          <DescriptionListTerm>
-            {words("compileDetails.status.message")}
-          </DescriptionListTerm>
-          <DescriptionListDescription>
-            {compileDetails.metadata["message"] as string}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-        {compileDetails.metadata["type"] && (
+        <>
           <DescriptionListGroup>
             <DescriptionListTerm>
-              {words("compileDetails.status.trigger")}
+              {words("compileDetails.status.export")}
             </DescriptionListTerm>
             <DescriptionListDescription>
-              {compileDetails.metadata["type"] as string}
+              {compileDetails.do_export.toString()}
             </DescriptionListDescription>
           </DescriptionListGroup>
-        )}
+          <DescriptionListGroup>
+            <DescriptionListTerm>
+              {words("compileDetails.status.update")}
+            </DescriptionListTerm>
+            <DescriptionListDescription>
+              {compileDetails.force_update.toString()}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>
+              {words("compileDetails.status.success")}
+            </DescriptionListTerm>
+            <DescriptionListDescription>
+              {compileDetails.success ? (
+                <GreenCheckCircle />
+              ) : compileDetails.success === false ? (
+                <RedExclamationCircle />
+              ) : (
+                ""
+              )}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          <DescriptionListGroup>
+            <DescriptionListTerm>
+              {words("compileDetails.status.message")}
+            </DescriptionListTerm>
+            <DescriptionListDescription>
+              {compileDetails.metadata["message"] as string}
+            </DescriptionListDescription>
+          </DescriptionListGroup>
+          {compileDetails.metadata["type"] && (
+            <DescriptionListGroup>
+              <DescriptionListTerm>
+                {words("compileDetails.status.trigger")}
+              </DescriptionListTerm>
+              <DescriptionListDescription>
+                {compileDetails.metadata["type"] as string}
+              </DescriptionListDescription>
+            </DescriptionListGroup>
+          )}
+        </>
       </StyledList>
       <StyledList>
         <DescriptionListGroup>
