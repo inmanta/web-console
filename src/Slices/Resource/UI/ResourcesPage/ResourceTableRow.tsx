@@ -34,7 +34,7 @@ export const ResourceTableRow: React.FC<Props> = ({
           isDisabled={row.numberOfDependencies <= 0}
           onClick={onToggle}
         >
-          {row.numberOfDependencies}
+          {row.numberOfDependencies as React.ReactNode}
         </Button>
       </Td>
       <Td dataLabel={words("resources.column.deployState")}>

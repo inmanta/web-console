@@ -20,13 +20,13 @@ export const DesiredStatesTableRow: React.FC<Props> = ({ row }) => (
         <DateWithTooltip timestamp={row.date} />
       </Td>
       <Td dataLabel={words("desiredState.columns.version")} width={20}>
-        {row.version}
+        {row.version as React.ReactNode}
       </Td>
       <Td dataLabel={words("desiredState.columns.status")} width={20}>
         <StatusLabel status={row.status} />
       </Td>
       <Td dataLabel={words("desiredState.columns.resources")} width={20}>
-        {row.total}
+        {row.total as React.ReactNode}
       </Td>
       <Td dataLabel={words("desiredState.columns.labels")} width={20}>
         {row.labels && row.labels.length > 0
