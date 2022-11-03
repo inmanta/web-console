@@ -79,19 +79,23 @@ test("DesiredStatesView shows empty table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    apiHelper.resolve(204);
+  });
 
   expect(
     await screen.findByRole("generic", { name: "DesiredStatesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
-    Either.right({
-      data: [],
-      links: { self: "" },
-      metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-    })
-  );
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [],
+        links: { self: "" },
+        metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("generic", { name: "DesiredStatesView-Empty" })
@@ -102,13 +106,17 @@ test("DesiredStatesView shows failed table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    apiHelper.resolve(204);
+  });
 
   expect(
     await screen.findByRole("generic", { name: "DesiredStatesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.left("error"));
+  await act(async () => {
+    apiHelper.resolve(Either.left("error"));
+  });
 
   expect(
     await screen.findByRole("generic", { name: "DesiredStatesView-Failed" })
@@ -119,13 +127,17 @@ test("AgentsView shows success table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    apiHelper.resolve(204);
+  });
 
   expect(
     await screen.findByRole("generic", { name: "DesiredStatesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right(DesiredStateVersions.response));
+  await act(async () => {
+    apiHelper.resolve(Either.right(DesiredStateVersions.response));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "DesiredStatesView-Success" })
@@ -136,7 +148,9 @@ test("When using the status filter then only the matching desired states should 
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -186,7 +200,9 @@ test("When using the Date filter then the desired state versions within the rang
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -234,7 +250,10 @@ test("When using the Date filter then the desired state versions within the rang
 
   // The chips are hidden in small windows, so resize it
   window = Object.assign(window, { innerWidth: 1200 });
-  window.dispatchEvent(new Event("resize"));
+  act(() => {
+    window.dispatchEvent(new Event("resize"));
+  });
+
   expect(
     await screen.findByText("from | 2021/12/06 00:00:00", { exact: false })
   ).toBeVisible();
@@ -247,7 +266,9 @@ test("When using the Version filter then the desired state versions within the r
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -357,7 +378,9 @@ test("Given the Desired states view with filters When promoting a version, then 
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -425,7 +448,9 @@ test("Given the Desired states view When promoting a version results in an error
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -470,7 +495,9 @@ describe("DeleteModal ", () => {
     const { component, apiHelper } = setup();
     render(component);
 
-    apiHelper.resolve(204);
+    await act(async () => {
+      apiHelper.resolve(204);
+    });
 
     await act(async () => {
       await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -498,7 +525,9 @@ describe("DeleteModal ", () => {
     const { component, apiHelper } = setup();
     render(component);
 
-    apiHelper.resolve(204);
+    await act(async () => {
+      apiHelper.resolve(204);
+    });
 
     await act(async () => {
       await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -539,7 +568,9 @@ describe("DeleteModal ", () => {
     const { component, apiHelper } = setup();
     render(component);
 
-    apiHelper.resolve(204);
+    await act(async () => {
+      apiHelper.resolve(204);
+    });
 
     await act(async () => {
       await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -565,7 +596,9 @@ describe("DeleteModal ", () => {
       method: "DELETE",
       url: `/api/v1/version/9`,
     });
-    await apiHelper.resolve(Either.right(null));
+    await act(async () => {
+      apiHelper.resolve(Either.right(null));
+    });
     expect(screen.queryByText("No")).not.toBeInTheDocument();
   });
 });
