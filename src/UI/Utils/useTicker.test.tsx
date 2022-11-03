@@ -31,6 +31,7 @@ test("GIVEN useTickerWithInterval WHEN provided with interval THEN executes at t
 test("GIVEN useTickerWithUnixMs WHEN provided with timestamp longer than 1 hour ago THEN executes every minute", () => {
   const callback = jest.fn();
   const value = new Date(Date.now() - 3 * ONE_HOUR).valueOf();
+
   const Component: React.FC = () => {
     useTickerWithUnixMs(value);
     callback();
@@ -42,7 +43,7 @@ test("GIVEN useTickerWithUnixMs WHEN provided with timestamp longer than 1 hour 
     jest.advanceTimersByTime(10 * ONE_MINUTE + 100);
   });
 
-  expect(callback).toBeCalledTimes(11);
+  expect(callback).toBeCalledTimes(2);
 });
 
 test("GIVEN useTickerWithUnixMs WHEN provided with timestamp less than 1 minute ago THEN executes every second until 1 minute is reached", () => {
@@ -59,19 +60,19 @@ test("GIVEN useTickerWithUnixMs WHEN provided with timestamp less than 1 minute 
     jest.advanceTimersByTime(9 * ONE_SECOND + 100);
   });
 
-  expect(callback).toBeCalledTimes(10);
+  expect(callback).toBeCalledTimes(2);
 
   act(() => {
     jest.advanceTimersByTime(ONE_SECOND);
   });
 
-  expect(callback).toBeCalledTimes(11);
+  expect(callback).toBeCalledTimes(3);
 
   act(() => {
     jest.advanceTimersByTime(10 * ONE_SECOND + 100);
   });
 
-  expect(callback).toBeCalledTimes(12);
+  expect(callback).toBeCalledTimes(4);
 });
 
 test("GIVEN getDiffFromNow WHEN provided with timestamp THEN returns correct millisecond difference", () => {
