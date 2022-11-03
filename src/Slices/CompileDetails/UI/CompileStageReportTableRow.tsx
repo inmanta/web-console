@@ -72,7 +72,7 @@ export const CompileStageReportTableRow: React.FC<Props> = ({
                 {words("compileDetails.stages.columns.returnCode")}
               </DescriptionListTerm>
               <DescriptionListDescription>
-                {row.returncode}
+                <>{row.returncode}</>
               </DescriptionListDescription>
             </DescriptionListGroup>
             <DescriptionListGroup>
