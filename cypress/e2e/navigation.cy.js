@@ -16,10 +16,7 @@ describe("Navigation", function () {
   });
   it("Button and breadcrumb navigation should change the url", function () {
     cy.visit("/console/lsm/catalog?env=36cdbc7e-28a1-4803-e8c1-6743f52a594c");
-    cy.get(".pf-c-data-list__item-action")
-      .first()
-      .find(".pf-m-primary")
-      .click();
+    cy.get(".pf-c-data-list__item-action").first().find(".pf-m-link").click();
     cy.url().should("include", "inventory");
     cy.get(".pf-c-breadcrumb__item").first().click();
     cy.url().should("not.include", "inventory");
