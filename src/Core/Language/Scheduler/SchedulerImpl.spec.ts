@@ -1,7 +1,9 @@
 import { flushPromises } from "@/Test";
 import { SchedulerImpl } from "./SchedulerImpl";
 
-jest.useFakeTimers("legacy");
+const jestOptions = { legacyFakeTimers: true };
+
+jest.useFakeTimers(jestOptions);
 
 test("GIVEN a Scheduler WHEN registering a task after a cycle THEN executes all registered tasks", async () => {
   const scheduler = new SchedulerImpl(5000);

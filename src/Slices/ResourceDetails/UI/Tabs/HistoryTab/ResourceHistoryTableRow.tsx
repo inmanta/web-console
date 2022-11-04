@@ -48,7 +48,7 @@ export const ResourceHistoryTableRow: React.FC<Props> = ({
           onClick={openTabAndScrollTo(TabKey.Requires)}
         >
           <span ref={rowRef} style={{ cursor: "pointer" }}>
-            {row.numberOfDependencies}
+            {row.numberOfDependencies as React.ReactNode}
           </span>
         </Td>
       </Tr>

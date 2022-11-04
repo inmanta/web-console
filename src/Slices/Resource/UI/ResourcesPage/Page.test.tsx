@@ -72,19 +72,21 @@ test("ResourcesView shows empty table", async () => {
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
-    Either.right({
-      data: [],
-      metadata: {
-        total: 0,
-        before: 0,
-        after: 0,
-        page_size: 10,
-        deploy_summary: { total: 0, by_state: {} },
-      },
-      links: { self: "" },
-    })
-  );
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: [],
+        metadata: {
+          total: 0,
+          before: 0,
+          after: 0,
+          page_size: 10,
+          deploy_summary: { total: 0, by_state: {} },
+        },
+        links: { self: "" },
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Empty" })
@@ -99,7 +101,9 @@ test("ResourcesView shows failed table", async () => {
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.left("error"));
+  await act(async () => {
+    await apiHelper.resolve(Either.left("error"));
+  });
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Failed" })
@@ -114,7 +118,9 @@ test("ResourcesView shows success table", async () => {
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right(Resource.response));
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
@@ -125,7 +131,9 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(Either.right(Resource.response));
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
 
   const rows = await screen.findAllByRole("row", {
     name: "Resource Table Row",
@@ -134,7 +142,9 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
   const toggle = within(rows[0]).getByRole("button", { name: "2" });
   await userEvent.click(toggle);
 
-  apiHelper.resolve(Either.right(ResourceDetails.response));
+  await act(async () => {
+    await apiHelper.resolve(Either.right(ResourceDetails.response));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourceRequires-Success" })
@@ -145,13 +155,15 @@ test("ResourcesView shows next page of resources", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(
-    Either.right({
-      data: Resource.response.data.slice(0, 3),
-      links: { ...Resource.response.links, next: "/fake-link" },
-      metadata: Resource.response.metadata,
-    })
-  );
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: Resource.response.data.slice(0, 3),
+        links: { ...Resource.response.links, next: "/fake-link" },
+        metadata: Resource.response.metadata,
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("cell", {
@@ -161,13 +173,15 @@ test("ResourcesView shows next page of resources", async () => {
 
   await userEvent.click(screen.getByRole("button", { name: "Next" }));
 
-  apiHelper.resolve(
-    Either.right({
-      data: Resource.response.data.slice(3),
-      links: { ...Resource.response.links, next: "/fake-link" },
-      metadata: Resource.response.metadata,
-    })
-  );
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: Resource.response.data.slice(3),
+        links: { ...Resource.response.links, next: "/fake-link" },
+        metadata: Resource.response.metadata,
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("cell", {
@@ -179,10 +193,15 @@ test("ResourcesView shows next page of resources", async () => {
 test("ResourcesView shows sorting buttons for sortable columns", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right(Resource.response));
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
+
   const table = await screen.findByRole("grid", {
     name: "ResourcesView-Success",
   });
+
   expect(table).toBeVisible();
   expect(within(table).getByRole("button", { name: /type/i })).toBeVisible();
   expect(within(table).getByRole("button", { name: /agent/i })).toBeVisible();
@@ -195,10 +214,17 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
 test("ResourcesView sets sorting parameters correctly on click", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right(Resource.response));
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
+
   const stateButton = await screen.findByRole("button", { name: /agent/i });
+
   expect(stateButton).toBeVisible();
+
   await userEvent.click(stateButton);
+
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=agent.asc");
 });
 
@@ -264,6 +290,7 @@ it.each`
     const initialRows = await screen.findAllByRole("row", {
       name: "Resource Table Row",
     });
+
     expect(initialRows).toHaveLength(6);
 
     const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
@@ -306,6 +333,7 @@ test("when using the all filters then the resources with that filter values shou
   const initialRows = await screen.findAllByRole("row", {
     name: "Resource Table Row",
   });
+
   expect(initialRows).toHaveLength(6);
 
   const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
@@ -352,6 +380,7 @@ test.each`
     const initialRows = await screen.findAllByRole("row", {
       name: "Resource Table Row",
     });
+
     expect(initialRows).toHaveLength(6);
 
     const toolbar = await screen.findByRole("generic", {
@@ -387,6 +416,7 @@ test.each`
     const rowsAfter = await screen.findAllByRole("row", {
       name: "Resource Table Row",
     });
+
     expect(rowsAfter).toHaveLength(2);
   }
 );
@@ -406,10 +436,14 @@ test("When clicking the clear and reset filters then the state filter is updated
   const initialRows = await screen.findAllByRole("row", {
     name: "Resource Table Row",
   });
+
   expect(initialRows).toHaveLength(6);
+
   const clearButtons = await screen.findAllByText("Clear all filters");
   const visibleClearButton = clearButtons[clearButtons.length - 1];
+
   expect(visibleClearButton).toBeVisible();
+
   await userEvent.click(visibleClearButton);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -437,7 +471,10 @@ test("When clicking the clear and reset filters then the state filter is updated
 test("ResourcesView shows deploy state bar", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right(Resource.response));
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
@@ -456,12 +493,14 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
-    Either.right({
-      ...Resource.response,
-      links: { ...Resource.response.links, next: "/fake-link" },
-    })
-  );
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        ...Resource.response,
+        links: { ...Resource.response.links, next: "/fake-link" },
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
@@ -478,7 +517,9 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
   ).toHaveAttribute("data-value", "1");
 
   const nextButton = screen.getByRole("button", { name: "Next" });
+
   expect(nextButton).toBeEnabled();
+
   await userEvent.click(nextButton);
 
   expect(
@@ -494,21 +535,23 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     screen.getByRole("generic", { name: "PaginationWidget" })
   ).toBeVisible();
 
-  apiHelper.resolve(
-    Either.right({
-      ...Resource.response,
-      metadata: {
-        ...Resource.response.metadata,
-        deploy_summary: {
-          ...Resource.response.metadata.deploy_summary,
-          by_state: {
-            ...Resource.response.metadata.deploy_summary.by_state,
-            available: 2,
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        ...Resource.response,
+        metadata: {
+          ...Resource.response.metadata,
+          deploy_summary: {
+            ...Resource.response.metadata.deploy_summary,
+            by_state: {
+              ...Resource.response.metadata.deploy_summary.by_state,
+              available: 2,
+            },
           },
         },
-      },
-    })
-  );
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("generic", {
@@ -525,12 +568,14 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
-    Either.right({
-      ...Resource.response,
-      links: { ...Resource.response.links, next: "/fake-link" },
-    })
-  );
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        ...Resource.response,
+        links: { ...Resource.response.links, next: "/fake-link" },
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
@@ -557,21 +602,23 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
     screen.getByRole("generic", { name: "PaginationWidget" })
   ).toBeVisible();
 
-  await apiHelper.resolve(
-    Either.right({
-      ...Resource.response,
-      metadata: {
-        ...Resource.response.metadata,
-        deploy_summary: {
-          ...Resource.response.metadata.deploy_summary,
-          by_state: {
-            ...Resource.response.metadata.deploy_summary.by_state,
-            available: 2,
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        ...Resource.response,
+        metadata: {
+          ...Resource.response.metadata,
+          deploy_summary: {
+            ...Resource.response.metadata.deploy_summary,
+            by_state: {
+              ...Resource.response.metadata.deploy_summary.by_state,
+              available: 2,
+            },
           },
         },
-      },
-    })
-  );
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("generic", {
@@ -583,7 +630,10 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
 test("ResourcesView shows deploy state bar with available status without processing_events status", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(Either.right(Resource.response));
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
 
   expect(
     await screen.findByRole("generic", { name: "Deployment state summary" })
@@ -592,6 +642,7 @@ test("ResourcesView shows deploy state bar with available status without process
   const availableItem = screen.getByRole("generic", {
     name: "LegendItem-available",
   });
+
   expect(availableItem).toBeVisible();
   expect(availableItem).toHaveAttribute("data-value", "1");
   expect(availableItem).not.toHaveAttribute("data-value", "3");
@@ -603,13 +654,17 @@ test("ResourcesView shows deploy state bar with available status without process
 test("Given the ResourcesView When clicking on deploy, then the approriate backend request is fired", async () => {
   const { component, apiHelper, environment } = setup();
   render(component);
-  apiHelper.resolve(Either.right(Resource.response));
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
 
   await userEvent.click(await screen.findByRole("button", { name: "Deploy" }));
+
   expect(apiHelper.pendingRequests).toEqual([
     {
       method: "POST",
@@ -625,13 +680,17 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
 test("Given the ResourcesView When clicking on repair, then the approriate backend request is fired", async () => {
   const { component, apiHelper, environment } = setup();
   render(component);
-  apiHelper.resolve(Either.right(Resource.response));
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
 
   await userEvent.click(await screen.findByRole("button", { name: "Repair" }));
+
   expect(apiHelper.pendingRequests).toEqual([
     {
       method: "POST",
@@ -654,7 +713,10 @@ test("Given the ResourcesView When environment is halted, then deploy and repair
   });
 
   render(component);
-  apiHelper.resolve(Either.right(Resource.response));
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Resource.response));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourcesView-Success" })

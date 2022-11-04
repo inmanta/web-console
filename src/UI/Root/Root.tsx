@@ -12,9 +12,15 @@ export const Root: React.FC = () => {
   const pages = new PrimaryPageManager(
     routeManager.getRouteDictionary()
   ).getPages();
+
+  // This is done because the StyledComponents package is not fully compatible with React 18 typing definitions.
+  // https://github.com/styled-components/styled-components/issues/3738
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const GlobalStyleProxy: any = GlobalStyles;
+
   return (
     <>
-      <GlobalStyles />
+      <GlobalStyleProxy />
       <Initializer>
         <SearchSanitizer.Provider>
           <AuthProvider>
