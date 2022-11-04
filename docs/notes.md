@@ -121,3 +121,40 @@ As of this date, we decided to remove storybook and all related dependencies. Th
 - We don't have any benefit in displaying the list of components that we are using. We are not building a library of components, but an application using third party components. This results in unnecessary maintenance. 
 - We tested to see for 1-2 months if it has any usecases, asside from maintaining it, we didn't use it either. 
 - A lot of dependencies are being imported for no major interesting reasons. 
+
+## React 18 update notes
+__04-10-2022__
+As of this date, the project has been updated to the latest React version. React 18 brings a few breaking changes and improvements. 
+You can find the release note [here](https://reactjs.org/blog/2022/03/29/react-v18.html)
+
+### List of changes concerning this project
+
+#### Act in tests.
+- Resolving mocked calls in tests always needs to be wrapped in an "act". 
+Example: 
+```Javascript
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
+```
+#### Styled Components compatibility
+- Some Styled components might give you typing errors, especially SVGIcons when trying to déclare them. If you encounter this issue, please remove your node_modules and reinstall the project. You might have some cached typings. The reason why this error occurs is because StyleComponents are using a wildcard in the dependency for React types. We use a resolution to stay compatible with the new typing of React 18 and the ones needed for the StyledComponents. 
+
+#### Children in Components
+- From now on, if a component has children props you will need to declare them explicitly. You have two options.
+    1) You define the children in the interface, this is handy when you already defined an interface for it. 
+    2) You can type your component as follow : ``React.FC<React.PropsWithChildren<unkown>>`` or ``React.FC<React.PropsWithChildren<Props>>`` if you use an interface.
+
+#### Multiple Children error
+- If you encounter an error telling you the number of ReactNode is multiple instead of 1, this is again either a compatibility issue from Paternfly components OR you defined that the children of a component as follow : ``children?: React.ReactNode;`` instead of ``children?: React.ReactNode | React.ReactNode[];`` 
+There is a simple way to bypass this issue if it's coming from a third party component. You can wrap the innercontent of the component in a ReactFragment.
+
+```Javascript
+<ComponentWithChildren>
+    <>
+        // your content
+    </>
+</ComponentWithChildren>
+```
+
+
