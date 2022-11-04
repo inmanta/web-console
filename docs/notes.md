@@ -149,6 +149,12 @@ Example:
 #### Styled Components compatibility
 - Some Styled components might give you typing errors, especially SVGIcons when trying to déclare them. If you encounter this issue, please remove your node_modules and reinstall the project. You might have some cached typings. The reason why this error occurs is because StyleComponents are using a wildcard in the dependency for React types. We use a resolution to stay compatible with the new typing of React 18 and the ones needed for the StyledComponents. 
 
+- We needed to proxy the globalStyles, this solution is required because of the typing related compatibility. [You can find the Github issue here.](https://github.com/styled-components/styled-components/issues/3738)
+
+```Javascript 
+ const GlobalStyleProxy: any = GlobalStyles;
+```
+
 #### Children in Components
 - From now on, if a component has children props you will need to declare them explicitly. You have two options.
     1) You define the children in the interface, this is handy when you already defined an interface for it. 
@@ -172,4 +178,6 @@ Example:
 ```Javascript
 {row.version as React.ReactNode}
 ```
+
+
 
