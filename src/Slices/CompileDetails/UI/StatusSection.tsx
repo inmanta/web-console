@@ -41,6 +41,7 @@ export const StatusSection: React.FC<Props> = ({ compileDetails }) => {
             requested={compileDetails.requested}
             started={compileDetails.started}
             completed={compileDetails.completed}
+            success={compileDetails.success}
           />
         </FlexItem>
       </StyledFlex>

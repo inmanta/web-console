@@ -110,6 +110,42 @@ Note that the values saved to the url are not checked against the contents of th
 
 Currently the url is not shortened, the parameters are written to the url as they are present in the components, this can be optimized if the length of the url becomes a problem.
 
+### QS parser
+
+__25-10-2022__
+Currently, the [*qs* ](https://www.npmjs.com/package/qs) library is being used to parse the query into a stateObject. The library allows you to pass in an arrayLimit in the parsing method. When the limit is reached, the query string will be transformed into an object instead of an array. The current limitation is set to `200`. This limit is only applied to a list of queries of the same level.
+
+Example: 
+
+`http://example.com?fruits=Banana&fruits=Apple`
+
+Will be parsed as : 
+
+`{ fruits: [ 'Banana', 'Apples' ] }`
+
+If the arrayLimit is set to `2`, on the third fruit, the parser will change the fruits Array into a fruits Object. This behaviour is built-in the third party we are using, and cannot be overriden. 
+
+`http://example.com?fruits=Banana&fruits=Apple&fruits=Oranges`
+
+Will be parsed as : 
+
+`{ fruits: { 1:'Banana', 2:'Apples', 3:'Oranges' } }`
+
+When this occurs, the app is getting an Object instead of an Array at the place it calls `fruits` and will throw an error. 
+
+Concretely this means that when a user clicks 201 logs open on the same page, that limit will be reached and result in an error that's being caught by the ErrorBoundary component. 
+
+__Decission__ 
+The limit is set to 200, and before the app would even throw, the user would have to click 201 elements of same the state-type (so in the case of the example above, 201 fruits.) The limitation is only applied on lists of the same level. Nested elements aren't affected and each level will have it's own limit of 200 length. 
+
+The effort of changing and catching the unwanted Objects and changing them to Arrays is too big for the few occasions this issue might arise. The limit could be set to a higher number, but this isn't something we should do lightly. Very long urls can cause issues such as DOS. 200 is already a very big number. 
+
+If the problem is being noticed and the app crashes for this specific reason, we can investigate how to prevent it while preserving performance and security. 
+
+__Related tickets__
+- [#3869](https://github.com/inmanta/web-console/issues/3869) Browser crashes when url keeps growing
+- [#2680](https://github.com/inmanta/web-console/issues/2680) Expanding many items in a resource logs page makes the page crash
+
 ## Syntax highlighting
 
 The `CodeHighlighter` component is responsible for the syntax highlighting that we use on several pages. It offloads the highlighting logic to [react-syntax-highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter).

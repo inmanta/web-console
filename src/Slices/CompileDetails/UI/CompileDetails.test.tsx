@@ -53,7 +53,7 @@ test("CompileDetailsView shows failed view", async () => {
   ).toBeInTheDocument();
 });
 
-test("CompileDetailsView shows success table", async () => {
+test("CompileDetailsView shows completed table with success: true", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -66,4 +66,22 @@ test("CompileDetailsView shows success table", async () => {
   expect(
     await screen.findByRole("generic", { name: "CompileDetailsView-Success" })
   ).toBeInTheDocument();
+  expect(await screen.findByLabelText("checkBullet")).toBeInTheDocument();
+});
+
+test("CompileDetailsView shows completed table with success: false, error indication should appear", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  expect(
+    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" })
+  ).toBeInTheDocument();
+
+  apiHelper.resolve(Either.right({ data: Mock.DataFailed }));
+
+  expect(
+    await screen.findByRole("generic", { name: "CompileDetailsView-Success" })
+  ).toBeInTheDocument();
+
+  expect(await screen.findByLabelText("failedBullet")).toBeInTheDocument();
 });
