@@ -129,6 +129,14 @@ You can find the release note [here](https://reactjs.org/blog/2022/03/29/react-v
 
 ### List of changes concerning this project
 
+#### Using FakeTimers
+They changed the format, you can't pass a string anymore to the fakeTimer method. You need to pass an object instead.
+```Javascript
+const jestOptions = { legacyFakeTimers: true };
+
+jest.useFakeTimers(jestOptions);
+```
+
 #### Act in tests.
 - Resolving mocked calls in tests always needs to be wrapped in an "act". 
 Example: 
@@ -137,6 +145,7 @@ Example:
     await apiHelper.resolve(204);
   });
 ```
+
 #### Styled Components compatibility
 - Some Styled components might give you typing errors, especially SVGIcons when trying to déclare them. If you encounter this issue, please remove your node_modules and reinstall the project. You might have some cached typings. The reason why this error occurs is because StyleComponents are using a wildcard in the dependency for React types. We use a resolution to stay compatible with the new typing of React 18 and the ones needed for the StyledComponents. 
 
@@ -157,4 +166,10 @@ There is a simple way to bypass this issue if it's coming from a third party com
 </ComponentWithChildren>
 ```
 
+#### Type ParsedNumber is not signable to ReactNode
+If you get a simmilar error, you will most likely need to cast the variable to a ReactNode element.
+Example: 
+```Javascript
+{row.version as React.ReactNode}
+```
 
