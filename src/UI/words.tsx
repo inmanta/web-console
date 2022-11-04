@@ -151,7 +151,7 @@ const dict = {
   "inventory.deleteVersion.header": (version: ParsedNumber) =>
     `Are you sure you want to delete version ${version}?`,
   "inventory.filters.state.placeholder": "Select a state...",
-  "ServiceDetails.title": (name: string) => `Service Detals: ${name}`,
+  "ServiceDetails.title": (name: string) => `Service Details: ${name}`,
 
   /**
    * Config related text

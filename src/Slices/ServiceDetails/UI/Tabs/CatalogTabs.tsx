@@ -11,13 +11,9 @@ import { LifecycleTable } from "./LifecycleTable";
 
 interface Props {
   service: ServiceModel;
-  scrollIntoView: (service: string) => void;
 }
 
-export const CatalogTabs: React.FunctionComponent<Props> = ({
-  service,
-  scrollIntoView,
-}) => {
+export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
   const [activeTabKey, setActiveTabKey] = useUrlStateWithString({
     default: "details",
     key: `tab-${service.name}`,
@@ -42,7 +38,7 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({
       </Tab>
       <Tab eventKey="attributes" title="Attributes">
         <OverflowContainer>
-          <AttributeTable service={service} scrollIntoView={scrollIntoView} />
+          <AttributeTable service={service} />
         </OverflowContainer>
       </Tab>
       <Tab eventKey="lifecycle_states" title="Lifecycle States">

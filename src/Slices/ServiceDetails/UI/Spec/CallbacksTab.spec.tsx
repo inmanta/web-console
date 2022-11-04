@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
@@ -90,12 +90,14 @@ function setup() {
   );
 
   const component = (
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
       <DependencyProvider
         dependencies={{ ...dependencies, queryResolver, commandResolver }}
       >
         <StoreProvider store={store}>
-          <Page />
+          <Routes>
+            <Route path="/lsm/catalog/:service/details" element={<Page />} />
+          </Routes>
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -107,12 +109,12 @@ function setup() {
   };
 }
 
-test("GIVEN ServiceCatalog WHEN click on callbacks tab THEN shows callbacks tab", async () => {
+test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
   await act(async () => {
-    await apiHelper.resolve(Either.right({ data: [Service.a] }));
+    await apiHelper.resolve(Either.right({ data: Service.a }));
   });
 
   const callbacksButton = screen.getByRole("tab", { name: "Callbacks" });
@@ -129,5 +131,5 @@ test("GIVEN ServiceCatalog WHEN click on callbacks tab THEN shows callbacks tab"
   expect(
     await screen.findByRole("grid", { name: "CallbacksTable" })
   ).toBeVisible();
-  //expect(screen.getByRole("row", { name: "CallbackRow-79e7" })).toBeVisible();
+  expect(screen.getByRole("row", { name: "CallbackRow-79e7" })).toBeVisible();
 });

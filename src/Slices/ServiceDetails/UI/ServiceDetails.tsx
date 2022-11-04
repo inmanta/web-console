@@ -10,10 +10,7 @@ export const ServiceDetails: React.FunctionComponent<{
 }> = ({ serviceName, service }) => {
   return (
     <Wrapper name={serviceName}>
-      <CatalogTabs
-        service={service}
-        scrollIntoView={() => console.log("scrollIntoView")}
-      />
+      <CatalogTabs service={service} />
     </Wrapper>
   );
 };

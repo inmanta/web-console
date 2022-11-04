@@ -12,7 +12,7 @@ import {
 
 interface Props {
   service: ServiceModel;
-  scrollIntoView: (service: string) => void;
+  scrollIntoView?: (service: string) => void;
 }
 
 export const AttributeTable: React.FunctionComponent<Props> = ({
