@@ -2,6 +2,7 @@ import React from "react";
 import { Link, MemoryRouter, useLocation } from "react-router-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
+import { act } from "react-dom/test-utils";
 import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
@@ -92,8 +93,9 @@ function setup() {
 test("ServiceDetails removes service after deletion", async () => {
   const { component, apiHelper, scheduler } = setup();
   render(component);
-
-  apiHelper.resolve(Either.right({ data: Service.a }));
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: Service.a }));
+  });
 
   expect(
     await screen.findByText(`Service Details: ${Service.a.name}`)
@@ -105,7 +107,9 @@ test("ServiceDetails removes service after deletion", async () => {
 
   scheduler.executeAll();
 
-  apiHelper.resolve(Either.right({ data: [] }));
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [] }));
+  });
 
   expect(
     await screen.findByText(`Service Details: undefined`)
