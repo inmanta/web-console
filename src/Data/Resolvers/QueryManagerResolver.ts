@@ -85,7 +85,7 @@ import {
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
-} from "@S/ServiceCatalog/Data";
+} from "@S/ServiceDetails/Data";
 import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,

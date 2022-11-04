@@ -2,7 +2,7 @@ import React from "react";
 import { TableComposable, Th, Thead, Tr } from "@patternfly/react-table";
 import { useUrlStateWithExpansion } from "@/Data";
 import { words } from "@/UI/words";
-import { Callback } from "@S/ServiceCatalog/Core/Callback";
+import { Callback } from "@S/ServiceDetails/Core/Callback";
 import { CreateCallbackForm } from "./CreateCallbackForm";
 import { Row } from "./Row";
 
@@ -19,7 +19,6 @@ export const CallbacksTable: React.FC<Props> = ({
     key: "callbacks-expansion",
     route: "Catalog",
   });
-
   return (
     <TableComposable aria-label="CallbacksTable">
       <Thead>

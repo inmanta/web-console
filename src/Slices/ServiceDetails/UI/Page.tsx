@@ -2,12 +2,12 @@ import React from "react";
 import { ServiceModel } from "@/Core";
 import { ServiceProvider } from "@/UI/Components";
 import { useRouteParams } from "@/UI/Routing";
-import { Chart } from "./Components";
-import { ServiceInventory } from "./ServiceInventory";
+import { ServiceDetails } from "./ServiceDetails";
 import { Wrapper } from "./Wrapper";
 
 export const Page: React.FC = () => {
-  const { service: serviceName } = useRouteParams<"Inventory">();
+  const { service: serviceName } = useRouteParams<"ServiceDetails">();
+
   return (
     <ServiceProvider
       serviceName={serviceName}
@@ -19,10 +19,4 @@ export const Page: React.FC = () => {
 
 const PreppedServiceInventory: React.FC<{ service: ServiceModel }> = ({
   service,
-}) => (
-  <ServiceInventory
-    service={service}
-    serviceName={service.name}
-    intro={<Chart summary={service.instance_summary} />}
-  />
-);
+}) => <ServiceDetails service={service} serviceName={service.name} />;

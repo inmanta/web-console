@@ -19,7 +19,7 @@ import * as GetResourceDetails from "@S/ResourceDetails/Core/GetResourceDetailsQ
 import * as GetResourceFacts from "@S/ResourceDetails/Core/GetResourceFactsQuery";
 import * as GetResourceHistory from "@S/ResourceDetails/Core/GetResourceHistoryQuery";
 import * as GetResourceLogs from "@S/ResourceDetails/Core/GetResourceLogsQuery";
-import * as GetCallbacks from "@S/ServiceCatalog/Core/GetCallbacksQuery";
+import * as GetCallbacks from "@S/ServiceDetails/Core/GetCallbacksQuery";
 import * as GetInstanceLogs from "@S/ServiceInstanceHistory/Core/Query";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";

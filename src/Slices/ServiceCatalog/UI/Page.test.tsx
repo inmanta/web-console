@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, MemoryRouter, useLocation } from "react-router-dom";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
@@ -124,37 +124,6 @@ test("ServiceCatalog shows updated empty", async () => {
   expect(
     await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
   ).toBeInTheDocument();
-
-  scheduler.executeAll();
-
-  apiHelper.resolve(Either.right({ data: [] }));
-
-  expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
-  ).toBeInTheDocument();
-});
-
-test("ServiceCatalog removes service after deletion", async () => {
-  const { component, apiHelper, scheduler } = setup();
-  render(component);
-
-  expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" })
-  ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: [Service.a] }));
-
-  expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
-  ).toBeInTheDocument();
-
-  fireEvent.click(
-    screen.getByRole("button", { name: `${Service.a.name} Details` })
-  );
-
-  fireEvent.click(screen.getByRole("button", { name: "Delete" }));
-
-  fireEvent.click(screen.getByRole("button", { name: "Yes" }));
 
   scheduler.executeAll();
 

@@ -47,7 +47,7 @@ import {
   CallbacksUpdater,
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
-} from "@S/ServiceCatalog/Data";
+} from "@S/ServiceDetails/Data";
 import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
 import { DeleteVersionCommandManager } from "../Managers/DeleteVersion";
 

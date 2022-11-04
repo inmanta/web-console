@@ -5,7 +5,7 @@ import { Maybe } from "@/Core";
 import { DeleteForm, ErrorToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import { Callback } from "@S/ServiceCatalog/Core/Callback";
+import { Callback } from "@S/ServiceDetails/Core/Callback";
 
 interface DeleteProps {
   callback: Callback;

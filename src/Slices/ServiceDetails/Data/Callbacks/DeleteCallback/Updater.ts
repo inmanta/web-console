@@ -5,7 +5,7 @@ import {
   StateHelperWithEnv,
   UpdaterWithEnv,
 } from "@/Core";
-import { getUrl } from "@S/ServiceCatalog/Data/Callbacks/getUrl";
+import { getUrl } from "@S/ServiceDetails/Data/Callbacks/getUrl";
 
 export class CallbacksUpdater implements UpdaterWithEnv<"GetCallbacks"> {
   constructor(

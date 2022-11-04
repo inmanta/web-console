@@ -14,6 +14,7 @@ import {
   Crumb,
   RouteKindWithId,
 } from "@/Core";
+import { ServiceDetails } from "@/Slices/ServiceDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -57,6 +58,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
      */
     Catalog: ServiceCatalog.route(baseUrl),
     Inventory: ServiceInventory.route(baseUrl),
+    ServiceDetails: ServiceDetails.route(baseUrl),
     CreateInstance: CreateInstance.route(baseUrl),
     EditInstance: EditInstance.route(baseUrl),
     History: ServiceInstanceHistory.route(baseUrl),

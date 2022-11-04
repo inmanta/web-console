@@ -24,8 +24,8 @@ import {
   CallbacksUpdater,
   CreateCallbackCommandManager,
   DeleteCallbackCommandManager,
-} from "@S/ServiceCatalog/Data";
-import { CallbacksView } from "@S/ServiceCatalog/UI/Tabs/Callbacks";
+} from "@S/ServiceDetails/Data";
+import { CallbacksView } from "@S/ServiceDetails/UI/Tabs/Callbacks";
 
 function setup() {
   const store = getStoreInstance();
