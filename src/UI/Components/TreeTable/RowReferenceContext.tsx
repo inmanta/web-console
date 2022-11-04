@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
 interface TreeTableCell {
-  onClick: ((cellValue: string, serviceName?: string) => void) | undefined;
+  onClick: (cellValue: string, serviceName?: string) => void;
 }
 
 export const TreeTableCellContext = createContext<TreeTableCell>({

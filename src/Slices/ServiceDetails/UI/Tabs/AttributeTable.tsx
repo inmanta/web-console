@@ -25,8 +25,11 @@ export const AttributeTable: React.FunctionComponent<Props> = ({
     (service.inter_service_relations &&
       service.inter_service_relations.length > 0)
   ) {
+    const handleClick = () => undefined;
     return (
-      <TreeTableCellContext.Provider value={{ onClick: scrollIntoView }}>
+      <TreeTableCellContext.Provider
+        value={{ onClick: scrollIntoView || handleClick }}
+      >
         <TreeTable
           treeTableHelper={
             new CatalogTreeTableHelper(
