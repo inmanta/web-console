@@ -4,7 +4,9 @@ import { RouteManager, RouteKind } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "./SearchSanitizer";
 
-export const Provider: React.FC = ({ children }) => {
+export const Provider: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const { routeManager } = useContext(DependencyContext);
   const { pathname, search, hash } = useLocation();
   const navigate = useNavigate();

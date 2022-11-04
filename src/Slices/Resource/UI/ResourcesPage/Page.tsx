@@ -17,7 +17,9 @@ import { ResourceTableControls } from "./Components";
 import { ResourcesTableProvider } from "./ResourcesTableProvider";
 import { Summary } from "./Summary";
 
-export const Wrapper: React.FC = ({ children }) => (
+export const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => (
   <PageContainer title={words("inventory.tabs.resources")}>
     {children}
   </PageContainer>

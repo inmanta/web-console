@@ -1,18 +1,17 @@
-import React, { ReactElement } from "react";
+import React from "react";
 import { Tooltip } from "@patternfly/react-core";
 import styled from "styled-components";
 import { words } from "@/UI/words";
 
 interface Props {
-  // Type of children from the Tooltip component of Patternfly
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  children?: ReactElement<any>;
   isDisabled?: boolean;
   ariaLabel: string;
   tooltipContent?: string;
 }
 
-export const ActionDisabledTooltip: React.FC<Props> = ({
+export const ActionDisabledTooltip: React.FC<
+  React.PropsWithChildren<Props>
+> = ({
   children,
   isDisabled,
   ariaLabel,

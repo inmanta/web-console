@@ -4,7 +4,10 @@ import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
 import { EditInstancePage } from "./EditInstancePage";
 
-const PageWrapper: React.FC = ({ children, ...props }) => (
+const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+  ...props
+}) => (
   <PageContainer {...props} title={words("inventory.editInstance.title")}>
     {children}
   </PageContainer>

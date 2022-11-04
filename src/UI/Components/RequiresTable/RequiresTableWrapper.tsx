@@ -10,7 +10,9 @@ import {
 import styled from "styled-components";
 import { words } from "@/UI/words";
 
-export const RequiresTableWrapper: React.FC = ({ children, ...props }) => (
+export const RequiresTableWrapper: React.FC<
+  React.PropsWithChildren<unknown>
+> = ({ children, ...props }) => (
   <TableComposable
     aria-label={props["aria-label"]}
     variant={TableVariant.compact}
