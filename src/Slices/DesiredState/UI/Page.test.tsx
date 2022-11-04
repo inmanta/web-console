@@ -80,7 +80,7 @@ test("DesiredStatesView shows empty table", async () => {
   render(component);
 
   await act(async () => {
-    apiHelper.resolve(204);
+    await apiHelper.resolve(204);
   });
 
   expect(
@@ -107,7 +107,7 @@ test("DesiredStatesView shows failed table", async () => {
   render(component);
 
   await act(async () => {
-    apiHelper.resolve(204);
+    await apiHelper.resolve(204);
   });
 
   expect(
@@ -115,7 +115,7 @@ test("DesiredStatesView shows failed table", async () => {
   ).toBeInTheDocument();
 
   await act(async () => {
-    apiHelper.resolve(Either.left("error"));
+    await apiHelper.resolve(Either.left("error"));
   });
 
   expect(
@@ -128,7 +128,7 @@ test("AgentsView shows success table", async () => {
   render(component);
 
   await act(async () => {
-    apiHelper.resolve(204);
+    await apiHelper.resolve(204);
   });
 
   expect(
@@ -136,7 +136,7 @@ test("AgentsView shows success table", async () => {
   ).toBeInTheDocument();
 
   await act(async () => {
-    apiHelper.resolve(Either.right(DesiredStateVersions.response));
+    await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
 
   expect(
@@ -149,7 +149,7 @@ test("When using the status filter then only the matching desired states should 
   render(component);
 
   await act(async () => {
-    apiHelper.resolve(204);
+    await apiHelper.resolve(204);
   });
 
   await act(async () => {
@@ -159,6 +159,7 @@ test("When using the status filter then only the matching desired states should 
   const initialRows = await screen.findAllByRole("row", {
     name: "DesiredStates Table Row",
   });
+
   expect(initialRows).toHaveLength(9);
 
   await userEvent.click(
@@ -193,6 +194,7 @@ test("When using the status filter then only the matching desired states should 
   const rowsAfter = await screen.findAllByRole("row", {
     name: "DesiredStates Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 });
 
@@ -201,7 +203,7 @@ test("When using the Date filter then the desired state versions within the rang
   render(component);
 
   await act(async () => {
-    apiHelper.resolve(204);
+    await apiHelper.resolve(204);
   });
 
   await act(async () => {
@@ -211,6 +213,7 @@ test("When using the Date filter then the desired state versions within the rang
   const initialRows = await screen.findAllByRole("row", {
     name: "DesiredStates Table Row",
   });
+
   expect(initialRows).toHaveLength(9);
 
   await userEvent.click(
@@ -246,6 +249,7 @@ test("When using the Date filter then the desired state versions within the rang
   const rowsAfter = await screen.findAllByRole("row", {
     name: "DesiredStates Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 
   // The chips are hidden in small windows, so resize it
@@ -267,7 +271,7 @@ test("When using the Version filter then the desired state versions within the r
   render(component);
 
   await act(async () => {
-    apiHelper.resolve(204);
+    await apiHelper.resolve(204);
   });
 
   await act(async () => {
@@ -277,6 +281,7 @@ test("When using the Version filter then the desired state versions within the r
   const initialRows = await screen.findAllByRole("row", {
     name: "DesiredStates Table Row",
   });
+
   expect(initialRows).toHaveLength(9);
 
   await userEvent.click(
@@ -290,6 +295,7 @@ test("When using the Version filter then the desired state versions within the r
   const fromDatePicker = await screen.findByLabelText("Version range from");
   await userEvent.click(fromDatePicker);
   await userEvent.type(fromDatePicker, `3`);
+
   const toDatePicker = await screen.findByLabelText("Version range to");
   await userEvent.click(toDatePicker);
   await userEvent.type(toDatePicker, `5`);
@@ -312,6 +318,7 @@ test("When using the Version filter then the desired state versions within the r
   const rowsAfter = await screen.findAllByRole("row", {
     name: "DesiredStates Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 
   // The chips are hidden in small windows, so resize it
@@ -325,7 +332,9 @@ test("Given the Desired states view When promoting a version, then the correct r
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -355,21 +364,27 @@ test("Given the Desired states view When promoting a version, then the correct r
   );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "POST",
     environment: "env",
     url: "/api/v2/desiredstate/9/promote",
     body: null,
   });
+
   await act(async () => {
     await apiHelper.resolve(Maybe.none());
   });
+
   expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
+
   expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
@@ -379,7 +394,7 @@ test("Given the Desired states view with filters When promoting a version, then 
   render(component);
 
   await act(async () => {
-    apiHelper.resolve(204);
+    await apiHelper.resolve(204);
   });
 
   await act(async () => {
@@ -420,16 +435,20 @@ test("Given the Desired states view with filters When promoting a version, then 
   );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "POST",
     environment: "env",
     url: "/api/v2/desiredstate/9/promote",
     body: null,
   });
+
   await act(async () => {
     await apiHelper.resolve(Maybe.none());
   });
+
   expect(apiHelper.resolvedRequests).toHaveLength(4);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -437,9 +456,11 @@ test("Given the Desired states view with filters When promoting a version, then 
     environment: "env",
     url: "/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=candidate",
   });
+
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
+
   expect(apiHelper.resolvedRequests).toHaveLength(5);
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
@@ -449,7 +470,7 @@ test("Given the Desired states view When promoting a version results in an error
   render(component);
 
   await act(async () => {
-    apiHelper.resolve(204);
+    await apiHelper.resolve(204);
   });
 
   await act(async () => {
@@ -470,23 +491,28 @@ test("Given the Desired states view When promoting a version results in an error
   );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "POST",
     environment: "env",
     url: "/api/v2/desiredstate/9/promote",
     body: null,
   });
+
   await act(async () => {
     await apiHelper.resolve(Maybe.some("something happened"));
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
+
   expect(await screen.findByText("something happened")).toBeVisible();
 });
 
 test("DesiredStatesView shows CompileWidget", async () => {
   const { component } = setup();
   render(component);
+
   expect(screen.getByRole("generic", { name: "CompileWidget" })).toBeVisible();
 });
 
@@ -496,7 +522,7 @@ describe("DeleteModal ", () => {
     render(component);
 
     await act(async () => {
-      apiHelper.resolve(204);
+      await apiHelper.resolve(204);
     });
 
     await act(async () => {
@@ -515,6 +541,7 @@ describe("DeleteModal ", () => {
     await userEvent.click(
       within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
     );
+
     expect(
       await screen.findByText("Are you sure you want to delete version 9?")
     ).toBeVisible();
@@ -526,7 +553,7 @@ describe("DeleteModal ", () => {
     render(component);
 
     await act(async () => {
-      apiHelper.resolve(204);
+      await apiHelper.resolve(204);
     });
 
     await act(async () => {
@@ -548,6 +575,7 @@ describe("DeleteModal ", () => {
     );
     const noButton = await screen.findByText("No");
     await userEvent.click(noButton);
+
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
 
     //close by close button scenario
@@ -562,6 +590,7 @@ describe("DeleteModal ", () => {
 
     const closeButton = await screen.findByLabelText("Close");
     await userEvent.click(closeButton);
+
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
   });
   it("Sends request when submitted then request is executed and modal closed", async () => {
@@ -569,7 +598,7 @@ describe("DeleteModal ", () => {
     render(component);
 
     await act(async () => {
-      apiHelper.resolve(204);
+      await apiHelper.resolve(204);
     });
 
     await act(async () => {
@@ -578,6 +607,7 @@ describe("DeleteModal ", () => {
     const rows = await screen.findAllByRole("row", {
       name: "DesiredStates Table Row",
     });
+
     expect(rows).toHaveLength(9);
 
     await userEvent.click(
@@ -589,16 +619,20 @@ describe("DeleteModal ", () => {
     await userEvent.click(
       within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
     );
+
     const yesButton = await screen.findByText("Yes");
     await userEvent.click(yesButton);
+
     expect(apiHelper.pendingRequests[0]).toEqual({
       environment: "env",
       method: "DELETE",
       url: `/api/v1/version/9`,
     });
+
     await act(async () => {
-      apiHelper.resolve(Either.right(null));
+      await apiHelper.resolve(Either.right(null));
     });
+
     expect(screen.queryByText("No")).not.toBeInTheDocument();
   });
 });
