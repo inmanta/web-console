@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { act, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, Maybe } from "@/Core";
@@ -303,6 +303,9 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
       Either.right({ data: EnvironmentSettings.auto_deploy })
     );
   });
+
+  fireEvent(document, new Event("Settings update"));
+  expect(await screen.findByText("Setting Changed")).toBeVisible();
 
   expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(toggle.checked).toBeTruthy();
