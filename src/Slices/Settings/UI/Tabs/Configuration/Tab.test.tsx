@@ -304,7 +304,7 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
     );
   });
 
-  fireEvent(document, new Event("Settings update"));
+  fireEvent(document, new Event("settings-update"));
   expect(await screen.findByText("Setting Changed")).toBeVisible();
 
   expect(apiHelper.resolvedRequests).toHaveLength(3);

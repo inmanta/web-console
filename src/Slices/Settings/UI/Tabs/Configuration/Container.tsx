@@ -3,6 +3,7 @@ import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
 import { TableComposable, Tbody } from "@patternfly/react-table";
 import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
+import { words } from "@/UI";
 import { InputRow } from "./Components";
 
 interface Props {
@@ -27,9 +28,9 @@ export const Container: React.FC<Props> = ({
         setShowUpdateBanner(false);
       }, 2000);
     };
-    document.addEventListener("Settings update", updateSuccessBanner);
+    document.addEventListener("settings-update", updateSuccessBanner);
     return () => {
-      document.removeEventListener("Settings update", updateSuccessBanner);
+      document.removeEventListener("settings-update", updateSuccessBanner);
     };
   }, [setShowUpdateBanner]);
   return (
@@ -46,7 +47,7 @@ export const Container: React.FC<Props> = ({
       {showUpdateBanner && (
         <StyledAlert
           variant="success"
-          title={"Setting Changed"}
+          title={words("settings.update")}
           aria-live="polite"
           actionClose={
             <AlertActionCloseButton

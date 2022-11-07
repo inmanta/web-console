@@ -215,5 +215,12 @@ Example:
 {row.version as React.ReactNode}
 ```
 
+### Naming conventions
+
+#### Events
+We agreed to use hyphen-sepraten name covention for custom Events i.e.
+```
+  document.dispatchEvent(new Event("settings-update"));
+```
 
 
