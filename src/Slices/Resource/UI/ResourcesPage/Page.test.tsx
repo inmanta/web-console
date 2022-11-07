@@ -139,7 +139,9 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
     name: "Resource Table Row",
   });
 
-  const toggle = within(rows[0]).getByRole("button", { name: "2" });
+  const toggle = within(rows[0]).getByRole("button", {
+    name: "Toggle-" + Resource.response.data[0].resource_id,
+  });
   await userEvent.click(toggle);
 
   await act(async () => {
@@ -203,11 +205,11 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
   });
 
   expect(table).toBeVisible();
-  expect(within(table).getByRole("button", { name: /type/i })).toBeVisible();
-  expect(within(table).getByRole("button", { name: /agent/i })).toBeVisible();
-  expect(within(table).getByRole("button", { name: /value/i })).toBeVisible();
+  expect(within(table).getByRole("button", { name: "Type" })).toBeVisible();
+  expect(within(table).getByRole("button", { name: "Agent" })).toBeVisible();
+  expect(within(table).getByRole("button", { name: "Value" })).toBeVisible();
   expect(
-    within(table).getByRole("button", { name: /Deploy state/i })
+    within(table).getByRole("button", { name: "Deploy State" })
   ).toBeVisible();
 });
 
@@ -219,7 +221,7 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
     await apiHelper.resolve(Either.right(Resource.response));
   });
 
-  const stateButton = await screen.findByRole("button", { name: /agent/i });
+  const stateButton = await screen.findByRole("button", { name: "Agent" });
 
   expect(stateButton).toBeVisible();
 
