@@ -1,0 +1,6 @@
+change-type: patch
+description: improve rwd of config settings to avoid hidden buttons on smaller resolution
+issue-nr: 4115
+destination-branches:
+- master
+- iso5
