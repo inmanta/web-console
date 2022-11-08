@@ -2,7 +2,7 @@ import React from "react";
 import { Form, ActionGroup, Button } from "@patternfly/react-core";
 import { words } from "@/UI/words";
 
-export const DeleteForm: React.FunctionComponent<{
+export const ConfirmUserActionForm: React.FunctionComponent<{
   onSubmit: () => void;
   onCancel: () => void;
 }> = ({ onSubmit, onCancel }) => {

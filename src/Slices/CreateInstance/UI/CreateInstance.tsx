@@ -4,7 +4,7 @@ import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
   Description,
-  ErrorToastAlert,
+  ToastAlert,
   FieldCreator,
   ServiceInstanceForm,
 } from "@/UI/Components";
@@ -48,10 +48,10 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   return (
     <>
       {errorMessage && (
-        <ErrorToastAlert
+        <ToastAlert
           title={words("inventory.addInstance.failed")}
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
+          message={errorMessage}
+          setMessage={setErrorMessage}
         />
       )}
       <Description withSpace>

@@ -3,36 +3,37 @@ import {
   Alert,
   AlertActionCloseButton,
   AlertGroup,
+  AlertVariant,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 
 interface Props {
   title: string;
-  errorMessage: string;
-  setErrorMessage: (message: string) => void;
+  type?: AlertVariant;
+  message: string;
+  setMessage: (message: string) => void;
 }
 
-export const ErrorToastAlert: React.FC<Props> = ({
+export const ToastAlert: React.FC<Props> = ({
   title,
-  errorMessage,
-  setErrorMessage,
+  type = AlertVariant.danger,
+  message,
+  setMessage,
 }) => {
-  return errorMessage ? (
+  return message ? (
     <AlertGroup isToast>
       <Alert
-        aria-label="ErrorToastAlert"
-        variant={"danger"}
+        aria-label="ToastAlert"
+        variant={type}
         title={title}
-        actionClose={
-          <AlertActionCloseButton onClose={() => setErrorMessage("")} />
-        }
+        actionClose={<AlertActionCloseButton onClose={() => setMessage("")} />}
       >
-        <StyledErrorMessage>{errorMessage}</StyledErrorMessage>
+        <StyledMessage>{message}</StyledMessage>
       </Alert>
     </AlertGroup>
   ) : null;
 };
 
-const StyledErrorMessage = styled.div`
+const StyledMessage = styled.div`
   white-space: pre-wrap;
 `;

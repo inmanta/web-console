@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { PageSection, Toolbar, ToolbarContent } from "@patternfly/react-core";
 import styled from "styled-components";
 import { Diff, Maybe, RemoteData } from "@/Core";
-import { DiffWizard, ErrorToastAlert, PageTitle } from "@/UI/Components";
+import { DiffWizard, ToastAlert, PageTitle } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { useRouteParams } from "@/UI/Routing";
 import { words } from "@/UI/words";
@@ -77,10 +77,10 @@ export const View: React.FC<Props> = ({ version }) => {
 
   return (
     <>
-      <ErrorToastAlert
+      <ToastAlert
         title={words("desiredState.complianceCheck.failed")}
-        errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        message={errorMessage}
+        setMessage={setErrorMessage}
       />
       <StyledPageSection variant="light">
         <PageTitle>{words("desiredState.complianceCheck.title")}</PageTitle>

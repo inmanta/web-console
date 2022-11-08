@@ -9,7 +9,7 @@ export * from "./CodeText";
 export * from "./CompileWidget";
 export * from "./DateWithTooltip";
 export * from "./DefaultSwitch";
-export * from "./DeleteForm";
+export * from "./ConfirmUserActionForm";
 export * from "./Description";
 export * from "./DictEditor";
 export * as DiffWizard from "./DiffWizard";
