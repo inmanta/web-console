@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump loader-utils from 1.4.0 to 1.4.1'
+destination-branches:
+- master
+- iso5
+sections: {}
