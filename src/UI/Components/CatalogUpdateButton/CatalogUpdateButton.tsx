@@ -10,7 +10,7 @@ import { Either } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ConfirmUserActionForm } from "../ConfirmUserActionForm";
-import { ToastAlert } from "../ErrorToastAlert";
+import { ToastAlert } from "../ToastAlert";
 
 /**
  * This component will trigger an update of the Service Catalog.

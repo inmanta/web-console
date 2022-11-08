@@ -226,7 +226,7 @@ const dict = {
   "catalog.update.failed": "The update failed",
   "catalog.update.success": "The update has been requested",
   "catalog.update.success.message":
-    "We are processing the update of your Service Catalog.",
+    "We are processing the update of your Service Catalog. The process will be finished after compilation.",
   "catalog.update.modal.title": "Update Request",
   "catalog.update.confirmation":
     "Are you sure you want to update your Service Catalog? This is an irreversible change and you might want to do a back-up before confirming the update.",
