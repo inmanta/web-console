@@ -19,12 +19,12 @@ import { ToastAlert } from "../ErrorToastAlert";
  * When the action is being executed,
  * the user will see a toast appear to inform the update has been requested.
  *
- * @returns ReloadButton
+ * @returns CatalogUpdateButton
  */
-export const CatalogReloadWidget: React.FC = () => {
+export const CatalogUpdateButton: React.FC = () => {
   const { commandResolver } = useContext(DependencyContext);
-  const trigger = commandResolver.useGetTrigger<"ReloadCatalog">({
-    kind: "ReloadCatalog",
+  const trigger = commandResolver.useGetTrigger<"UpdateCatalog">({
+    kind: "UpdateCatalog",
   });
 
   const [isOpen, setIsOpen] = useState(false);
@@ -41,11 +41,11 @@ export const CatalogReloadWidget: React.FC = () => {
     const result = await trigger();
 
     if (Either.isRight(result)) {
-      setToastTitle(words("catalog.reload.success"));
-      setMessage(words("catalog.reload.success.message"));
+      setToastTitle(words("catalog.update.success"));
+      setMessage(words("catalog.update.success.message"));
       setToastType(AlertVariant.success);
     } else {
-      setToastTitle(words("catalog.reload.failed"));
+      setToastTitle(words("catalog.update.failed"));
       setMessage(result.value);
       setToastType(AlertVariant.danger);
     }
@@ -59,16 +59,18 @@ export const CatalogReloadWidget: React.FC = () => {
         setMessage={setMessage}
         type={toastType}
       />
-      <ReloadButton onClick={handleModalToggle}>
-        {words("catalog.button.reload")}
-      </ReloadButton>
+      <StyledWrapper>
+        <Button onClick={handleModalToggle}>
+          {words("catalog.button.update")}
+        </Button>
+      </StyledWrapper>
       <Modal
         variant={ModalVariant.small}
         isOpen={isOpen}
-        title={words("catalog.reload.modal.title")}
+        title={words("catalog.update.modal.title")}
         onClose={handleModalToggle}
       >
-        {words("catalog.reload.confirmation")}
+        {words("catalog.update.confirmation")}
         <ConfirmUserActionForm
           onSubmit={onSubmit}
           onCancel={handleModalToggle}
@@ -78,6 +80,10 @@ export const CatalogReloadWidget: React.FC = () => {
   );
 };
 
-const ReloadButton = styled(Button)`
-  margin: 24px 0;
+const StyledWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: var(--pf-global--spacer--md);
+}
 `;

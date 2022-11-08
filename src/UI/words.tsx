@@ -222,13 +222,13 @@ const dict = {
   "catalog.summary.noLabel": "no label",
   "catalog.summary.empty": "No instance summary found",
   "catalog.button.inventory": "Show inventory",
-  "catalog.button.reload": "Update Service Catalog ",
-  "catalog.reload.failed": "The update failed",
-  "catalog.reload.success": "The update has been requested",
-  "catalog.reload.success.message":
+  "catalog.button.update": "Update Service Catalog ",
+  "catalog.update.failed": "The update failed",
+  "catalog.update.success": "The update has been requested",
+  "catalog.update.success.message":
     "We are processing the update of your Service Catalog.",
-  "catalog.reload.modal.title": "Update Request",
-  "catalog.reload.confirmation":
+  "catalog.update.modal.title": "Update Request",
+  "catalog.update.confirmation":
     "Are you sure you want to update your Service Catalog? This is an irreversible change and you might want to do a back-up before confirming the update.",
   "catalog.button.details": "Show Details",
   "catalog.delete.title": (serviceName: string) =>

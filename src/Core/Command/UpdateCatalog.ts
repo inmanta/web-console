@@ -1,13 +1,13 @@
 import { Either } from "@/Core/Language";
 
-export interface ReloadCatalog {
-  kind: "ReloadCatalog";
+export interface UpdateCatalog {
+  kind: "UpdateCatalog";
 }
 
-export interface ReloadCatalogManifest {
+export interface UpdateCatalogManifest {
   error: string;
   apiData: string;
   body: null;
-  command: ReloadCatalog;
+  command: UpdateCatalog;
   trigger: () => Promise<Either.Either<string, string>>;
 }

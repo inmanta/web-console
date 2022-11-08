@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { EmptyView, PageContainer, RemoteDataView } from "@/UI/Components";
-import { CatalogReloadWidget } from "@/UI/Components/CatalogReloadWidget";
+import { CatalogUpdateButton } from "@/UI/Components/CatalogUpdateButton";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CatalogDataList } from "./CatalogDataList";
@@ -25,7 +25,7 @@ export const Page: React.FC = () => {
             />
           ) : (
             <div aria-label="ServiceCatalog-Success">
-              <CatalogReloadWidget />
+              <CatalogUpdateButton />
               <CatalogDataList services={services} />
             </div>
           )

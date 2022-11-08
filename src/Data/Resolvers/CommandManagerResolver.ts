@@ -50,7 +50,7 @@ import {
 } from "@S/ServiceDetails/Data";
 import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
 import { DeleteVersionCommandManager } from "../Managers/DeleteVersion";
-import { ReloadCatalogCommandManager } from "../Managers/ReloadCatalog/CommandManager";
+import { UpdateCatalogCommandManager } from "../Managers/UpdateCatalog/CommandManager";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -165,7 +165,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       TriggerCompileCommandManager(this.apiHelper),
       TriggerDryRun.CommandManager(this.apiHelper),
       UpdateNotificationCommandManager(this.apiHelper, this.store),
-      ReloadCatalogCommandManager(this.apiHelper),
+      UpdateCatalogCommandManager(this.apiHelper),
     ];
   }
 }

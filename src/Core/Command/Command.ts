@@ -23,7 +23,6 @@ import {
   ModifyEnvironmentManifest,
 } from "./ModifyEnvironment";
 import { PromoteVersion, PromoteVersionManifest } from "./PromoteVersion";
-import { ReloadCatalog, ReloadCatalogManifest } from "./ReloadCatalog";
 import { Repair, RepairManifest } from "./Repair";
 import {
   ResetEnvironmentSetting,
@@ -36,6 +35,7 @@ import {
 import { TriggerCompile, TriggerCompileManifest } from "./TriggerCompile";
 import { TriggerDryRun } from "./TriggerDryRun";
 import { TriggerSetState, TriggerSetStateManifest } from "./TriggerSetState";
+import { UpdateCatalog, UpdateCatalogManifest } from "./UpdateCatalog";
 import {
   UpdateEnvironmentSetting,
   UpdateEnvironmentSettingManifest,
@@ -67,7 +67,7 @@ export type Command =
   | HaltEnvironment
   | ModifyEnvironment
   | PromoteVersion
-  | ReloadCatalog
+  | UpdateCatalog
   | Repair
   | ResetEnvironmentSetting
   | ResumeEnvironment
@@ -104,7 +104,7 @@ interface Manifest {
   HaltEnvironment: HaltEnvironmentManifest;
   ModifyEnvironment: ModifyEnvironmentManifest;
   PromoteVersion: PromoteVersionManifest;
-  ReloadCatalog: ReloadCatalogManifest;
+  UpdateCatalog: UpdateCatalogManifest;
   Repair: RepairManifest;
   ResetEnvironmentSetting: ResetEnvironmentSettingManifest;
   ResumeEnvironment: ResumeEnvironmentManifest;
