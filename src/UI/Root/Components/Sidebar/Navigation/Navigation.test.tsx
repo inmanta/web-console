@@ -73,12 +73,6 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
       name: "Resource Manager",
     })
   ).toBeVisible();
-
-  expect(
-    within(navigation).getByRole("region", {
-      name: "Other Sites",
-    })
-  ).toBeVisible();
 });
 
 test("GIVEN Navigation WHEN no lsm THEN lsm is not shown", () => {
