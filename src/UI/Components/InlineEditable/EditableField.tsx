@@ -7,6 +7,7 @@ import {
   FlexItem,
 } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
+import { convertToTitleCase } from "@/UI/Utils";
 import {
   CancelEditButton,
   EnableEditButton,
@@ -84,7 +85,7 @@ export const EditableField: React.FC<Props> = ({
           spaceItems={{ default: "spaceItemsNone" }}
         >
           <InlineLabelItem aria-label={`${label}-label`}>
-            {label}
+            {convertToTitleCase(label)}
             {isRequired && (
               <span aria-hidden="true" style={{ color: "red" }}>
                 {" "}
@@ -121,7 +122,7 @@ export const EditableField: React.FC<Props> = ({
             <FlexItem grow={{ default: "grow" }}>
               <EditView
                 aria-label={`${label}-input`}
-                label={label}
+                label={convertToTitleCase(label)}
                 value={value}
                 onChange={setValue}
                 onSubmit={() => onSubmitRequest(value)}
