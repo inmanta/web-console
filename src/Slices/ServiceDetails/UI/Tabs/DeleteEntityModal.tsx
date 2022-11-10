@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
-import { DeleteForm, ErrorToastAlert } from "@/UI/Components";
+import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -27,10 +27,10 @@ export const DeleteEntityModal: React.FunctionComponent<{
   };
   return (
     <>
-      <ErrorToastAlert
+      <ToastAlert
         title={words("catalog.delete.failed")}
-        errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        message={errorMessage}
+        setMessage={setErrorMessage}
       />
       <Button variant="danger" onClick={handleModalToggle}>
         {words("delete")}
@@ -42,7 +42,10 @@ export const DeleteEntityModal: React.FunctionComponent<{
         onClose={handleModalToggle}
       >
         {words("catalog.delete.title")(serviceName)}
-        <DeleteForm onSubmit={onSubmit} onCancel={handleModalToggle} />
+        <ConfirmUserActionForm
+          onSubmit={onSubmit}
+          onCancel={handleModalToggle}
+        />
       </Modal>
     </>
   );

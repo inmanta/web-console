@@ -35,6 +35,7 @@ import {
 import { TriggerCompile, TriggerCompileManifest } from "./TriggerCompile";
 import { TriggerDryRun } from "./TriggerDryRun";
 import { TriggerSetState, TriggerSetStateManifest } from "./TriggerSetState";
+import { UpdateCatalog, UpdateCatalogManifest } from "./UpdateCatalog";
 import {
   UpdateEnvironmentSetting,
   UpdateEnvironmentSettingManifest,
@@ -49,34 +50,35 @@ import {
 } from "./UpdateServiceConfig";
 
 export type Command =
-  | UpdateServiceConfig
-  | UpdateInstanceConfig
-  | CreateInstance.Command
-  | TriggerInstanceUpdate.Command
-  | DeleteInstance
-  | TriggerSetState
-  | DeleteService
-  | HaltEnvironment
-  | ResumeEnvironment
-  | ModifyEnvironment
-  | DeleteCallback.Command
-  | CreateCallback.Command
-  | DeleteEnvironment.Command
   | ClearEnvironment.Command
-  | CreateProject.Command
-  | CreateEnvironment.Command
-  | UpdateEnvironmentSetting
-  | ResetEnvironmentSetting
-  | GenerateToken
-  | Deploy
-  | Repair
-  | GetSupportArchive
-  | PromoteVersion
-  | DeleteVersion
   | ControlAgent
+  | CreateCallback.Command
+  | CreateEnvironment.Command
+  | CreateInstance.Command
+  | CreateProject.Command
+  | DeleteCallback.Command
+  | DeleteEnvironment.Command
+  | DeleteInstance
+  | DeleteService
+  | DeleteVersion
+  | Deploy
+  | GenerateToken
+  | GetSupportArchive
+  | HaltEnvironment
+  | ModifyEnvironment
+  | PromoteVersion
+  | UpdateCatalog
+  | Repair
+  | ResetEnvironmentSetting
+  | ResumeEnvironment
   | TriggerCompile
   | TriggerDryRun.Command
-  | UpdateNotification.Command;
+  | TriggerInstanceUpdate.Command
+  | TriggerSetState
+  | UpdateEnvironmentSetting
+  | UpdateInstanceConfig
+  | UpdateNotification.Command
+  | UpdateServiceConfig;
 
 export type Type = Command;
 
@@ -85,34 +87,35 @@ export type Type = Command;
  * types related to all the sub commands.
  */
 interface Manifest {
-  UpdateServiceConfig: UpdateServiceConfigManifest;
-  UpdateInstanceConfig: UpdateInstanceConfigManifest;
-  CreateInstance: CreateInstance.Manifest;
-  TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
-  DeleteInstance: DeleteInstanceManifest;
-  TriggerSetState: TriggerSetStateManifest;
-  DeleteService: DeleteServiceManifest;
-  HaltEnvironment: HaltEnvironmentManifest;
-  ResumeEnvironment: ResumeEnvironmentManifest;
-  ModifyEnvironment: ModifyEnvironmentManifest;
-  DeleteCallback: DeleteCallback.Manifest;
-  CreateCallback: CreateCallback.Manifest;
-  DeleteEnvironment: DeleteEnvironment.Manifest;
-  DeleteVersion: DeleteVersionManifest;
   ClearEnvironment: ClearEnvironment.Manifest;
-  CreateProject: CreateProject.Manifest;
-  CreateEnvironment: CreateEnvironment.Manifest;
-  UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
-  ResetEnvironmentSetting: ResetEnvironmentSettingManifest;
-  GenerateToken: GenerateTokenManifest;
-  Deploy: DeployManifest;
-  Repair: RepairManifest;
-  GetSupportArchive: GetSupportArchiveManifest;
-  PromoteVersion: PromoteVersionManifest;
   ControlAgent: ControlAgentManifest;
+  CreateCallback: CreateCallback.Manifest;
+  CreateEnvironment: CreateEnvironment.Manifest;
+  CreateInstance: CreateInstance.Manifest;
+  CreateProject: CreateProject.Manifest;
+  DeleteCallback: DeleteCallback.Manifest;
+  DeleteEnvironment: DeleteEnvironment.Manifest;
+  DeleteInstance: DeleteInstanceManifest;
+  DeleteService: DeleteServiceManifest;
+  DeleteVersion: DeleteVersionManifest;
+  Deploy: DeployManifest;
+  GenerateToken: GenerateTokenManifest;
+  GetSupportArchive: GetSupportArchiveManifest;
+  HaltEnvironment: HaltEnvironmentManifest;
+  ModifyEnvironment: ModifyEnvironmentManifest;
+  PromoteVersion: PromoteVersionManifest;
+  UpdateCatalog: UpdateCatalogManifest;
+  Repair: RepairManifest;
+  ResetEnvironmentSetting: ResetEnvironmentSettingManifest;
+  ResumeEnvironment: ResumeEnvironmentManifest;
   TriggerCompile: TriggerCompileManifest;
   TriggerDryRun: TriggerDryRun.Manifest;
+  TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
+  TriggerSetState: TriggerSetStateManifest;
+  UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
+  UpdateInstanceConfig: UpdateInstanceConfigManifest;
   UpdateNotification: UpdateNotification.Manifest;
+  UpdateServiceConfig: UpdateServiceConfigManifest;
 }
 
 /**

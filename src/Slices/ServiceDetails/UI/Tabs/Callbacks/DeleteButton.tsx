@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { Maybe } from "@/Core";
-import { DeleteForm, ErrorToastAlert } from "@/UI/Components";
+import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
@@ -36,10 +36,10 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
   };
   return (
     <>
-      <ErrorToastAlert
+      <ToastAlert
         title={words("catalog.callbacks.delete.failed")}
-        errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        message={errorMessage}
+        setMessage={setErrorMessage}
       />
       <Modal
         variant={ModalVariant.small}
@@ -48,7 +48,10 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
         onClose={() => setIsOpen(false)}
       >
         {words("catalog.callbacks.delete")(callback.url)}
-        <DeleteForm onSubmit={onSubmit} onCancel={() => setIsOpen(false)} />
+        <ConfirmUserActionForm
+          onSubmit={onSubmit}
+          onCancel={() => setIsOpen(false)}
+        />
       </Modal>
       <Button
         variant="secondary"
