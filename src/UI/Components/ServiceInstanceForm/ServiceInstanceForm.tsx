@@ -4,13 +4,18 @@ import { set } from "lodash-es";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
+import useIsDirty from "@/UI/Utils/useIsDirty";
+import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
 import { FieldInput } from "./Components";
 import { createEditFormState, createFormState } from "./Helpers";
 
 interface Props {
   fields: Field[];
-  onSubmit(formState: InstanceAttributeModel): void;
+  onSubmit(
+    formState: InstanceAttributeModel,
+    callback: (value: boolean) => void
+  ): void;
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
   isSubmitDisabled?: boolean;
@@ -28,7 +33,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       ? createEditFormState(fields, originalAttributes)
       : createFormState(fields)
   );
-
+  const { isDirty, overrideState } = useIsDirty(formState, originalAttributes);
+  usePrompt(words("notification.instanceForm.prompt"), isDirty);
   //callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
   const getUpdate = useCallback(
     (path: string, value: unknown, multi = false): void => {
@@ -59,7 +65,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
     event.preventDefault();
   };
 
-  const onConfirm = () => onSubmit(formState);
+  const onConfirm = () =>
+    onSubmit(formState, (value: boolean) => overrideState(value));
 
   return (
     <StyledForm onSubmit={preventDefault}>

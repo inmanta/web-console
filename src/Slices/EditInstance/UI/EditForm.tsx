@@ -46,9 +46,14 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
     id: instance.id,
     version: instance.version,
   });
-  const onSubmit = async (attributes: InstanceAttributeModel) => {
+  const onSubmit = async (
+    attributes: InstanceAttributeModel,
+    setIsDirty: (value: boolean) => void
+  ) => {
+    setIsDirty(false);
     const result = await trigger(fields, currentAttributes, attributes);
     if (Maybe.isSome(result)) {
+      setIsDirty(true);
       setErrorMessage(result.value);
     } else {
       handleRedirect();

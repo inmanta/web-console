@@ -540,6 +540,8 @@ const dict = {
   "notification.drawer.clearAll": "Clear all",
   "notification.drawer.details": "Details",
   "notification.drawer.clear": "Clear",
+  "notification.instanceForm.prompt":
+    "There are some modified properites in Form. Do you want exit?",
 
   /**
    * Common
