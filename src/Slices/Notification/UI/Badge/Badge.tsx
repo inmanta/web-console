@@ -5,7 +5,7 @@ import {
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { RemoteData } from "@/Core";
-import { ErrorToastAlert } from "@/UI/Components";
+import { ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Notification } from "@S/Notification/Core/Domain";
@@ -49,10 +49,10 @@ export const View: React.FC<Props> = ({ data, onClick }) => {
       ),
       failed: () => (
         <>
-          <ErrorToastAlert
-            errorMessage={error}
+          <ToastAlert
+            message={error}
             title={words("error")}
-            setErrorMessage={setError}
+            setMessage={setError}
           />
           <PlainBadge
             aria-label="Badge"

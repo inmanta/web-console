@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump mocha-junit-reporter from 2.1.0 to 2.1.1'
+destination-branches:
+- master
+- iso5
+sections: {}

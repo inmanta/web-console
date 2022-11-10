@@ -9,6 +9,7 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
+import { convertToTitleCase } from "@/UI/Utils";
 import {
   CancelEditButton,
   EnableEditButton,
@@ -100,7 +101,7 @@ export const EditableMultiTextField: React.FC<Props> = ({
           {Object.entries(fieldValues).map(([label, value]) => (
             <DescriptionListGroup key={label}>
               <DescriptionListTerm aria-label={`${label}-label`}>
-                {label}
+                {convertToTitleCase(label)}
               </DescriptionListTerm>
               <DescriptionListDescription>
                 {!editable && (

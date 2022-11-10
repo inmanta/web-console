@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { EmptyView, PageContainer, RemoteDataView } from "@/UI/Components";
+import { CatalogUpdateButton } from "@/UI/Components/CatalogUpdateButton";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CatalogDataList } from "./CatalogDataList";
@@ -24,6 +25,7 @@ export const Page: React.FC = () => {
             />
           ) : (
             <div aria-label="ServiceCatalog-Success">
+              <CatalogUpdateButton />
               <CatalogDataList services={services} />
             </div>
           )

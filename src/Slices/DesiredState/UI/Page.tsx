@@ -3,7 +3,7 @@ import { ParsedNumber } from "@/Core";
 import { useUrlStateWithFilter, useUrlStateWithPageSize } from "@/Data";
 import {
   EmptyView,
-  ErrorToastAlert,
+  ToastAlert,
   PageContainer,
   PaginationWidget,
   RemoteDataView,
@@ -65,10 +65,10 @@ export const Page: React.FC = () => {
             />
           }
         />
-        <ErrorToastAlert
+        <ToastAlert
           title={words("desiredState.actions.promote.failed")}
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
+          message={errorMessage}
+          setMessage={setErrorMessage}
         />
         <RemoteDataView
           data={data}

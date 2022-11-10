@@ -65,7 +65,10 @@ export const ResourcesTable: React.FC<Props> = ({
   return (
     <TableComposable {...props} variant={TableVariant.compact}>
       <Thead>
-        <Tr>{heads}</Tr>
+        <Tr>
+          <Th></Th>
+          {heads}
+        </Tr>
       </Thead>
       {rows.map((row) => (
         <ResourceTableRow
