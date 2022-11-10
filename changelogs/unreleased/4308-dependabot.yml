@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump keycloak-js from 20.0.0 to 20.0.1'
+destination-branches:
+- master
+- iso5
+sections: {}
