@@ -26,6 +26,7 @@ export function UpdateEnvironmentSettingCommandManager(
             details: false,
             id: environment,
           });
+          document.dispatchEvent(new Event("Settings update"));
         }
 
         return error;
