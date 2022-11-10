@@ -128,7 +128,9 @@ const Row: React.FC<RowProps> = ({
 const StyledTextInput = styled(TextInput)`
   &&& {
     text-overflow: initial;
-    min-width: 300px;
+    @media (min-width: 1450px) {
+      min-width: 300px;
+    }
   }
 `;
 

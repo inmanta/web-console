@@ -420,6 +420,7 @@ const dict = {
   "settings.tabs.token.description":
     "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
   "settings.tabs.token.generate": "Generate",
+  "settings.update": "Setting Changed",
 
   /**
    * Status
