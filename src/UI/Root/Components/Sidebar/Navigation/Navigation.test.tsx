@@ -54,7 +54,7 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
   expect(navigation).toBeVisible();
-  expect(within(navigation).getAllByRole("region").length).toEqual(4);
+  expect(within(navigation).getAllByRole("region").length).toEqual(3);
 
   expect(
     within(navigation).getByRole("region", {
@@ -73,12 +73,6 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
       name: "Resource Manager",
     })
   ).toBeVisible();
-
-  expect(
-    within(navigation).getByRole("region", {
-      name: "Other Sites",
-    })
-  ).toBeVisible();
 });
 
 test("GIVEN Navigation WHEN no lsm THEN lsm is not shown", () => {
@@ -87,7 +81,7 @@ test("GIVEN Navigation WHEN no lsm THEN lsm is not shown", () => {
 
   const navigation = screen.getByRole("navigation", { name: "Global" });
   expect(navigation).toBeVisible();
-  expect(within(navigation).getAllByRole("region").length).toEqual(3);
+  expect(within(navigation).getAllByRole("region").length).toEqual(2);
 
   expect(
     within(navigation).queryByRole("region", {
