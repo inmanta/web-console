@@ -38,12 +38,13 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
 
   const onSubmit = async (
     attributes: InstanceAttributeModel,
-    setIsDirty: (value: boolean) => void
+    dirtyInputs: string[],
+    setIsDirty: (values: string[]) => void
   ) => {
-    setIsDirty(false);
+    setIsDirty([]);
     const result = await trigger(fields, attributes);
     if (result.kind === "Left") {
-      setIsDirty(true);
+      setIsDirty(dirtyInputs);
       setErrorMessage(result.value);
     } else {
       handleRedirect();

@@ -1,13 +1,24 @@
-import React, { useState } from "react";
-import { Link, BrowserRouter, Route, Routes } from "react-router-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import React, { useEffect, useState } from "react";
+import { Link, Route, Routes } from "react-router-dom";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { act } from "react-dom/test-utils";
+import CustomRouter from "../Routing/CustomRouter";
+import history from "../Routing/history";
 import { usePrompt } from "./usePrompt";
-
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+}));
+jest.mock("history", () => ({
+  ...jest.requireActual("history"),
+}));
 const setup = () => {
   const Component: React.FC = () => {
     const [promptValue, setPromptValue] = useState(false);
     usePrompt("Prompt message", promptValue);
+    useEffect(() => {
+      console.log(promptValue);
+    }, [promptValue]);
     return (
       <>
         <button onClick={() => setPromptValue(true)}>Click</button>
@@ -18,7 +29,7 @@ const setup = () => {
     );
   };
   const component = (
-    <BrowserRouter>
+    <CustomRouter history={history}>
       <Routes>
         <Route path="/" element={<Component />} />
         <Route
@@ -33,12 +44,12 @@ const setup = () => {
           }
         />
       </Routes>
-    </BrowserRouter>
+    </CustomRouter>
   );
   return component;
 };
 
-afterEach(() => {
+beforeEach(() => {
   cleanup;
 });
 test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert window THEN page doesn't change", async () => {
@@ -46,10 +57,10 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user cancel alert 
   const prompt = jest.spyOn(window, "confirm").mockImplementation(() => false);
   render(setup());
   const button = screen.getByText("Click");
-
   await act(async () => {
     await userEvent.click(button);
   });
+
   const link = screen.getByText("Link");
   await act(async () => {
     await userEvent.click(link);
@@ -80,11 +91,11 @@ test("GIVEN usePrompt WHEN hook's parameter is equal true and user confirm alert
   await act(async () => {
     await userEvent.click(homeLink);
   });
-
   const button = screen.getByText("Click");
   await act(async () => {
     await userEvent.click(button);
   });
+
   const link = screen.getByText("Link");
   await act(async () => {
     await userEvent.click(link);

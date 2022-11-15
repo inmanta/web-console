@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
@@ -10,6 +10,8 @@ import {
   TextField,
 } from "@/Core";
 import * as Test from "@/Test";
+import CustomRouter from "@/UI/Routing/CustomRouter";
+import history from "@/UI/Routing/history";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
@@ -23,7 +25,7 @@ const setup = (
   func: undefined | jest.Mock = undefined
 ) => {
   return (
-    <Router>
+    <CustomRouter history={history}>
       <Routes>
         <Route
           path="/"
@@ -36,7 +38,7 @@ const setup = (
           }
         />
       </Routes>
-    </Router>
+    </CustomRouter>
   );
 };
 test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", async () => {
@@ -230,6 +232,12 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
       [nestedField.name]: { [nestedField.fields[0].name]: "test text 2" },
       [dictListField.name]: [{ [dictListField.fields[0].name]: "test text 3" }],
     },
+    [
+      dictListField.name + ".0." + dictListField.fields[0].name,
+      nestedField.name + "." + nestedField.fields[0].name,
+      Test.Field.bool.name,
+      Test.Field.text.name,
+    ],
     expect.any(Function)
   );
 });

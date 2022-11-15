@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ActionGroup, Alert, Button, Form } from "@patternfly/react-core";
 import { set } from "lodash-es";
 import styled from "styled-components";
 import { InstanceAttributeModel, Field } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components/ActionDisabledTooltip";
-import useIsDirty from "@/UI/Utils/useIsDirty";
 import { usePrompt } from "@/UI/Utils/usePrompt";
 import { words } from "@/UI/words";
 import { FieldInput } from "./Components";
@@ -14,7 +13,8 @@ interface Props {
   fields: Field[];
   onSubmit(
     formState: InstanceAttributeModel,
-    callback: (value: boolean) => void
+    dirtyInputs: string[],
+    callback: () => void
   ): void;
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
@@ -33,8 +33,9 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       ? createEditFormState(fields, originalAttributes)
       : createFormState(fields)
   );
-  const { isDirty, overrideState } = useIsDirty(formState, originalAttributes);
-  usePrompt(words("notification.instanceForm.prompt"), isDirty);
+  const [dirtyInputs, setDirtyInputs] = useState<string[]>([]);
+  const [shouldPerformCancel, setShouldCancel] = useState(false);
+  usePrompt(words("notification.instanceForm.prompt"), dirtyInputs.length > 0);
   //callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
   const getUpdate = useCallback(
     (path: string, value: unknown, multi = false): void => {
@@ -48,17 +49,42 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           } else {
             selection.push(value as string);
           }
-
+          if (
+            !dirtyInputs.includes(path) &&
+            (selection.length !== 0 ||
+              (originalAttributes && value !== originalAttributes[path]))
+          ) {
+            setDirtyInputs([path, ...dirtyInputs]);
+          } else if (
+            selection.length === 0 ||
+            (originalAttributes && selection === originalAttributes[path])
+          ) {
+            setDirtyInputs(dirtyInputs.filter((input) => path !== input));
+          }
           return set(clone, path, selection);
         });
       } else {
         setFormState((prev) => {
           const clone = { ...prev };
+          if (
+            !dirtyInputs.includes(path) &&
+            (value !== "" ||
+              value !== null ||
+              (originalAttributes && value !== originalAttributes[path]))
+          ) {
+            setDirtyInputs([path, ...dirtyInputs]);
+          } else if (
+            value === "" ||
+            value === null ||
+            (originalAttributes && value === originalAttributes[path])
+          ) {
+            setDirtyInputs(dirtyInputs.filter((input) => path !== input));
+          }
           return set(clone, path, value);
         });
       }
     },
-    []
+    [dirtyInputs, originalAttributes]
   );
 
   const preventDefault = (event: React.FormEvent) => {
@@ -66,8 +92,13 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   };
 
   const onConfirm = () =>
-    onSubmit(formState, (value: boolean) => overrideState(value));
+    onSubmit(formState, dirtyInputs, () => setDirtyInputs([]));
 
+  useEffect(() => {
+    if (shouldPerformCancel) {
+      onCancel();
+    }
+  }, [shouldPerformCancel, onCancel]);
   return (
     <StyledForm onSubmit={preventDefault}>
       {fields.map((field) => (
@@ -103,7 +134,15 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           </Button>
         </ActionDisabledTooltip>
 
-        <Button variant="link" onClick={onCancel}>
+        <Button
+          variant="link"
+          onClick={() => {
+            if (dirtyInputs.length > 0) {
+              setDirtyInputs([]);
+            }
+            setShouldCancel(true);
+          }}
+        >
           {words("cancel")}
         </Button>
       </ActionGroup>

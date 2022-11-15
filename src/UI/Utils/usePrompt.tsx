@@ -1,5 +1,5 @@
-import { useCallback, useContext, useEffect } from "react";
-import { UNSAFE_NavigationContext as NavigationContext } from "react-router-dom";
+import { useCallback, useEffect } from "react";
+import history from "../Routing/history";
 
 /**
  * Blocks all navigation attempts. This is useful for preventing the page from
@@ -9,16 +9,15 @@ import { UNSAFE_NavigationContext as NavigationContext } from "react-router-dom"
  * @param  when
  */
 function useConfirmExit(confirmExit: () => boolean, when = true) {
-  const { navigator } = useContext(NavigationContext);
-
   useEffect(() => {
+    console.log(when);
     if (!when) {
       return;
     }
 
-    const push = navigator.push;
+    const push = history.push;
 
-    navigator.push = (...args: Parameters<typeof push>) => {
+    history.push = (...args: Parameters<typeof push>) => {
       const result = confirmExit();
       if (result !== false) {
         push(...args);
@@ -26,9 +25,9 @@ function useConfirmExit(confirmExit: () => boolean, when = true) {
     };
 
     return () => {
-      navigator.push = push;
+      history.push = push;
     };
-  }, [navigator, confirmExit, when]);
+  }, [confirmExit, when]);
 }
 /**
  * Prompts the user with an Alert before they leave the current screen.
