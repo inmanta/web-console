@@ -232,12 +232,6 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
       [nestedField.name]: { [nestedField.fields[0].name]: "test text 2" },
       [dictListField.name]: [{ [dictListField.fields[0].name]: "test text 3" }],
     },
-    [
-      dictListField.name + ".0." + dictListField.fields[0].name,
-      nestedField.name + "." + nestedField.fields[0].name,
-      Test.Field.bool.name,
-      Test.Field.text.name,
-    ],
     expect.any(Function)
   );
 });

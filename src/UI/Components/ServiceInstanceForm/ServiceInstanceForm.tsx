@@ -13,8 +13,7 @@ interface Props {
   fields: Field[];
   onSubmit(
     formState: InstanceAttributeModel,
-    dirtyInputs: string[],
-    callback: () => void
+    callback: (value: boolean) => void
   ): void;
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
@@ -33,12 +32,15 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       ? createEditFormState(fields, originalAttributes)
       : createFormState(fields)
   );
-  const [dirtyInputs, setDirtyInputs] = useState<string[]>([]);
+  const [dirtyInputs, setDirtyInputs] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
-  usePrompt(words("notification.instanceForm.prompt"), dirtyInputs.length > 0);
+  usePrompt(words("notification.instanceForm.prompt"), dirtyInputs);
   //callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
   const getUpdate = useCallback(
     (path: string, value: unknown, multi = false): void => {
+      if (!dirtyInputs) {
+        setDirtyInputs(true);
+      }
       if (multi) {
         setFormState((prev) => {
           const clone = { ...prev };
@@ -49,42 +51,16 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           } else {
             selection.push(value as string);
           }
-          if (
-            !dirtyInputs.includes(path) &&
-            (selection.length !== 0 ||
-              (originalAttributes && value !== originalAttributes[path]))
-          ) {
-            setDirtyInputs([path, ...dirtyInputs]);
-          } else if (
-            selection.length === 0 ||
-            (originalAttributes && selection === originalAttributes[path])
-          ) {
-            setDirtyInputs(dirtyInputs.filter((input) => path !== input));
-          }
           return set(clone, path, selection);
         });
       } else {
         setFormState((prev) => {
           const clone = { ...prev };
-          if (
-            !dirtyInputs.includes(path) &&
-            (value !== "" ||
-              value !== null ||
-              (originalAttributes && value !== originalAttributes[path]))
-          ) {
-            setDirtyInputs([path, ...dirtyInputs]);
-          } else if (
-            value === "" ||
-            value === null ||
-            (originalAttributes && value === originalAttributes[path])
-          ) {
-            setDirtyInputs(dirtyInputs.filter((input) => path !== input));
-          }
           return set(clone, path, value);
         });
       }
     },
-    [dirtyInputs, originalAttributes]
+    [dirtyInputs]
   );
 
   const preventDefault = (event: React.FormEvent) => {
@@ -92,7 +68,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   };
 
   const onConfirm = () =>
-    onSubmit(formState, dirtyInputs, () => setDirtyInputs([]));
+    onSubmit(formState, (value: boolean) => setDirtyInputs(value));
 
   useEffect(() => {
     if (shouldPerformCancel) {
@@ -137,8 +113,8 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         <Button
           variant="link"
           onClick={() => {
-            if (dirtyInputs.length > 0) {
-              setDirtyInputs([]);
+            if (dirtyInputs) {
+              setDirtyInputs(false);
             }
             setShouldCancel(true);
           }}

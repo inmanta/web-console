@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -6,19 +6,11 @@ import { act } from "react-dom/test-utils";
 import CustomRouter from "../Routing/CustomRouter";
 import history from "../Routing/history";
 import { usePrompt } from "./usePrompt";
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-}));
-jest.mock("history", () => ({
-  ...jest.requireActual("history"),
-}));
+
 const setup = () => {
   const Component: React.FC = () => {
     const [promptValue, setPromptValue] = useState(false);
     usePrompt("Prompt message", promptValue);
-    useEffect(() => {
-      console.log(promptValue);
-    }, [promptValue]);
     return (
       <>
         <button onClick={() => setPromptValue(true)}>Click</button>
