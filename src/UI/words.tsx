@@ -541,6 +541,8 @@ const dict = {
   "notification.drawer.clearAll": "Clear all",
   "notification.drawer.details": "Details",
   "notification.drawer.clear": "Clear",
+  "notification.instanceForm.prompt":
+    "Are you sure you want to leave this page? You have unsaved changes",
 
   /**
    * Common
