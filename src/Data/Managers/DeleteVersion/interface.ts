@@ -1,5 +1,5 @@
 import { Maybe, ParsedNumber } from "@/Core/Language";
-import { Query } from "../Query";
+import { Query } from "../../../Core/Query";
 
 export interface DeleteVersion {
   kind: "DeleteVersion";
