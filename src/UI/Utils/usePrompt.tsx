@@ -10,7 +10,6 @@ import history from "../Routing/history";
  */
 function useConfirmExit(confirmExit: () => boolean, when = true) {
   useEffect(() => {
-    console.log(when);
     if (!when) {
       return;
     }

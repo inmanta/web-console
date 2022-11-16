@@ -1,14 +1,14 @@
 import { Maybe } from "@/Core/Language";
 
-export interface Command {
+export interface TriggerDryRun {
   kind: "TriggerDryRun";
   version: string;
 }
 
-export interface Manifest {
+export interface TriggerDryRunManifest {
   error: string;
   apiData: undefined;
   body: undefined;
-  command: Command;
+  command: TriggerDryRun;
   trigger: () => Promise<Maybe.Maybe<string>>;
 }
