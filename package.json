@@ -23,7 +23,8 @@
     "precypress-test": "yarn run delete:reports",
     "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'yarn cypress run'",
     "package-cleanup": "node clean_up_packages",
-    "check-circular-deps": "madge --circular ./src/index.tsx"
+    "check-circular-deps": "madge --circular ./src/index.tsx",
+    "e2e": "sh ./cypress/execute-e2e.sh"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

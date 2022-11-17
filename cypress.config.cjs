@@ -2,13 +2,13 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
-  video: false,
+  video: true,
   reporter: "junit",
   reporterOptions: {
     mochaFile: "cypress/reports/junit/test-report-[hash].xml",
   },
   e2e: {
-    baseUrl: "http://localhost:9000",
+    baseUrl: "http://localhost:8888",
     supportFile: false,
   },
 });
