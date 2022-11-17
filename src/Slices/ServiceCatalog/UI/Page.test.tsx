@@ -100,6 +100,7 @@ test("ServiceCatalog shows updated services", async () => {
   expect(
     await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
   ).toBeInTheDocument();
+  expect(await screen.findByText("Update Service Catalog")).toBeInTheDocument();
 
   scheduler.executeAll();
 

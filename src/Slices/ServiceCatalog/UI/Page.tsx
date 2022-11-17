@@ -19,10 +19,13 @@ export const Page: React.FC = () => {
         label="ServiceCatalog"
         SuccessView={(services) =>
           services.length <= 0 ? (
-            <EmptyView
-              aria-label="ServiceCatalog-Empty"
-              message={words("catalog.empty.message")}
-            />
+            <>
+              <CatalogUpdateButton />
+              <EmptyView
+                aria-label="ServiceCatalog-Empty"
+                message={words("catalog.empty.message")}
+              />
+            </>
           ) : (
             <div aria-label="ServiceCatalog-Success">
               <CatalogUpdateButton />

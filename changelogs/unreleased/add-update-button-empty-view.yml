@@ -1,0 +1,7 @@
+description: Make sure the Update button is also shown on an empty Catalog.
+sections: 
+  bugfix: "{{description}}"
+change-type: patch
+destination-branches:
+  - master
+  - iso5
