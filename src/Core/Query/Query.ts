@@ -1,4 +1,60 @@
 import { RemoteData } from "@/Core/Language";
+import {
+  GetEnvironmentSetting,
+  GetEnvironmentSettingManifest,
+} from "@/Data/Managers/EnvironmentSettings/GetEnvironmentSettingInterface";
+import {
+  GetEnvironmentSettings,
+  GetEnvironmentSettingsManifest,
+} from "@/Data/Managers/EnvironmentSettings/GetEnvironmentSettings/interface";
+import {
+  GetCompilationState,
+  GetCompilationStateManifest,
+} from "@/Data/Managers/GetCompilationState/interface";
+import {
+  GetCompilerStatus,
+  GetCompilerStatusManifest,
+} from "@/Data/Managers/GetCompilerStatus/interface";
+import {
+  GetEnvironments,
+  GetEnvironmentsManifest,
+} from "@/Data/Managers/GetEnvironments/interface";
+import {
+  GetServiceInstance,
+  GetServiceInstanceManifest,
+} from "@/Data/Managers/GetInstance/interface";
+import {
+  GetInstanceResources,
+  GetInstanceResourcesManifest,
+} from "@/Data/Managers/GetInstanceResources/interface";
+import {
+  GetServerStatus,
+  GetServerStatusManifest,
+} from "@/Data/Managers/GetServerStatus/interface";
+import {
+  GetVersionFile,
+  GetVersionFileManifest,
+} from "@/Data/Managers/GetVersionFile/interface";
+import {
+  GetInstanceConfig,
+  GetInstanceConfigManifest,
+} from "@/Data/Managers/InstanceConfig/interfaces";
+import {
+  GetService,
+  GetServiceManifest,
+} from "@/Data/Managers/Service/interface";
+import {
+  GetServiceConfig,
+  GetServiceConfigManifest,
+} from "@/Data/Managers/ServiceConfig/interfaces";
+import {
+  GetServiceInstances,
+  GetServiceInstancesManifest,
+} from "@/Data/Managers/ServiceInstances/interface";
+import {
+  GetServices,
+  GetServicesManifest,
+} from "@/Data/Managers/Services/interface";
 import * as GetAgentProcess from "@S/AgentProcess/Core/Query";
 import * as GetAgents from "@S/Agents/Core/Query";
 import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
@@ -23,45 +79,6 @@ import * as GetCallbacks from "@S/ServiceDetails/Core/GetCallbacksQuery";
 import * as GetInstanceLogs from "@S/ServiceInstanceHistory/Core/Query";
 import * as GetEnvironmentDetails from "@S/Settings/Core/GetEnvironmentDetailsQuery";
 import * as GetProjects from "@S/Settings/Core/GetProjectsQuery";
-import {
-  GetCompilationState,
-  GetCompilationStateManifest,
-} from "./GetCompilationState";
-import {
-  GetCompilerStatus,
-  GetCompilerStatusManifest,
-} from "./GetCompilerStatus";
-import {
-  GetEnvironmentSetting,
-  GetEnvironmentSettingManifest,
-} from "./GetEnvironmentSetting";
-import {
-  GetEnvironmentSettings,
-  GetEnvironmentSettingsManifest,
-} from "./GetEnvironmentSettings";
-import { GetEnvironments, GetEnvironmentsManifest } from "./GetEnvironments";
-
-import {
-  GetInstanceConfig,
-  GetInstanceConfigManifest,
-} from "./GetInstanceConfig";
-import {
-  GetInstanceResources,
-  GetInstanceResourcesManifest,
-} from "./GetInstanceResources";
-import { GetServerStatus, GetServerStatusManifest } from "./GetServerStatus";
-import { GetService, GetServiceManifest } from "./GetService";
-import { GetServiceConfig, GetServiceConfigManifest } from "./GetServiceConfig";
-import {
-  GetServiceInstance,
-  GetServiceInstanceManifest,
-} from "./GetServiceInstance";
-import {
-  GetServiceInstances,
-  GetServiceInstancesManifest,
-} from "./GetServiceInstances";
-import { GetServices, GetServicesManifest } from "./GetServices";
-import { GetVersionFile, GetVersionFileManifest } from "./GetVersionFile";
 
 export type Query =
   | GetServices
