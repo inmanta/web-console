@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Fix ui of catalogs badges and off-center catalog'
+issue-nr: 4322
+destination-branches:
+- master
+- iso5
