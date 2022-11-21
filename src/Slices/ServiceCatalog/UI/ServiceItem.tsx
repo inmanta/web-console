@@ -13,10 +13,12 @@ import {
   KebabToggle,
   Dropdown,
   Flex,
+  Modal,
+  ModalVariant,
 } from "@patternfly/react-core";
 import styled from "styled-components";
-import { ServiceModel } from "@/Core";
-import { Spacer } from "@/UI/Components";
+import { Maybe, ServiceModel } from "@/Core";
+import { Spacer, ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { greyText } from "@/UI/Styles";
 import { words } from "@/UI/words";
@@ -27,13 +29,33 @@ interface Props {
 }
 
 export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, commandResolver } = useContext(DependencyContext);
   const rowRefs = useRef<Record<string, HTMLSpanElement | null>>({});
   const [isOpen, setIsOpen] = useState(false);
   const serviceKey = service.name + "-item";
-
+  const trigger = commandResolver.useGetTrigger<"DeleteService">({
+    kind: "DeleteService",
+    name: service.name,
+  });
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const handleModalToggle = () => {
+    setIsDeleteModalOpen(!isOpen);
+  };
+  const onSubmit = async () => {
+    handleModalToggle();
+    const result = await trigger();
+    if (Maybe.isSome(result)) {
+      setErrorMessage(result.value);
+    }
+  };
   return (
     <DataListItem id={service.name} aria-labelledby={serviceKey}>
+      <ToastAlert
+        title={words("catalog.delete.failed")}
+        message={errorMessage}
+        setMessage={setErrorMessage}
+      />
       <span ref={(element) => (rowRefs.current[service.name] = element)} />
       <DataListItemRow>
         <DataListItemCells
@@ -95,10 +117,32 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
                   {words("catalog.button.details")}
                 </Button>
               </Link>,
+              <Button
+                key={service.name + "-deleteButton"}
+                aria-label={service.name + "-deleteButton"}
+                variant="link"
+                onClick={() => {
+                  setIsDeleteModalOpen(true);
+                }}
+              >
+                {words("delete")}
+              </Button>,
             ]}
           />
         </DataListAction>
       </DataListItemRow>
+      <Modal
+        variant={ModalVariant.small}
+        isOpen={isDeleteModalOpen}
+        title="Delete Service Entity"
+        onClose={handleModalToggle}
+      >
+        {words("catalog.delete.title")(service.name)}
+        <ConfirmUserActionForm
+          onSubmit={onSubmit}
+          onCancel={handleModalToggle}
+        />
+      </Modal>
     </DataListItem>
   );
 };

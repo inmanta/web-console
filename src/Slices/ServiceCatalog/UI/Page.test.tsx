@@ -160,3 +160,26 @@ test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is trigg
     environment: env2,
   });
 });
+
+test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [Service.a] }));
+  });
+
+  await userEvent.click(screen.getByLabelText("Actions"));
+  await userEvent.click(
+    screen.getByLabelText(Service.a.name + "-deleteButton")
+  );
+  await userEvent.click(screen.getByText("Yes"));
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.resolvedRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    environment: env1,
+    method: "DELETE",
+    url: "/lsm/v1/service_catalog/" + Service.a.name,
+  });
+});

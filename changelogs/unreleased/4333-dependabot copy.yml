@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Move delete service functionality to catalog view'
+issue-nr: 4336
+destination-branches:
+- master
+- iso5
