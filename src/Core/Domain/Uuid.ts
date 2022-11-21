@@ -8,4 +8,4 @@ export const getUuidFromRaw = (raw: string): Uuid => ({
   short: raw.substring(0, 4),
 });
 
-export const getShortUuidFromRaw = (raw: string): string => raw.substring(0, 4);
+export const getShortUuidFromRaw = (raw: string): string => raw.substring(0, 8);

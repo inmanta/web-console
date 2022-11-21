@@ -96,10 +96,12 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
     await screen.findByRole("grid", { name: "CallbacksTable" })
   ).toBeVisible();
 
-  expect(screen.getByRole("row", { name: "CallbackRow-79e7" })).toBeVisible();
+  expect(
+    screen.getByRole("row", { name: "CallbackRow-79e7d0b6" })
+  ).toBeVisible();
 
   const deleteButton = await screen.findByRole("button", {
-    name: "DeleteCallback-79e7",
+    name: "DeleteCallback-79e7d0b6",
   });
   await userEvent.click(deleteButton);
 
@@ -119,7 +121,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   });
 
   expect(
-    screen.queryByRole("row", { name: "CallbackRow-79e7" })
+    screen.queryByRole("row", { name: "CallbackRow-79e7d0b6" })
   ).not.toBeInTheDocument();
 });
 
@@ -135,7 +137,9 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
     await screen.findByRole("grid", { name: "CallbacksTable" })
   ).toBeVisible();
 
-  expect(screen.getByRole("row", { name: "CallbackRow-79e7" })).toBeVisible();
+  expect(
+    screen.getByRole("row", { name: "CallbackRow-79e7d0b6" })
+  ).toBeVisible();
 
   const callbackUrlInput = screen.getByRole("textbox", {
     name: "callbackUrl",
