@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either, Maybe } from "@/Core";
+import { Either, getShortUuidFromRaw, Maybe } from "@/Core";
 import {
   QueryResolverImpl,
   CommandResolverImpl,
@@ -26,6 +26,8 @@ import {
   DeleteCallbackCommandManager,
 } from "@S/ServiceDetails/Data";
 import { CallbacksView } from "@S/ServiceDetails/UI/Tabs/Callbacks";
+
+const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
 
 function setup() {
   const store = getStoreInstance();
@@ -97,11 +99,11 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   ).toBeVisible();
 
   expect(
-    screen.getByRole("row", { name: "CallbackRow-79e7d0b6" })
+    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })
   ).toBeVisible();
 
   const deleteButton = await screen.findByRole("button", {
-    name: "DeleteCallback-79e7d0b6",
+    name: "DeleteCallback-" + shortenUUID,
   });
   await userEvent.click(deleteButton);
 
@@ -121,7 +123,7 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   });
 
   expect(
-    screen.queryByRole("row", { name: "CallbackRow-79e7d0b6" })
+    screen.queryByRole("row", { name: "CallbackRow-" + shortenUUID })
   ).not.toBeInTheDocument();
 });
 
@@ -138,7 +140,7 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   ).toBeVisible();
 
   expect(
-    screen.getByRole("row", { name: "CallbackRow-79e7d0b6" })
+    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })
   ).toBeVisible();
 
   const callbackUrlInput = screen.getByRole("textbox", {
