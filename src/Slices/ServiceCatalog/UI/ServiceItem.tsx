@@ -12,7 +12,6 @@ import {
   TextVariants,
   KebabToggle,
   Dropdown,
-  Flex,
 } from "@patternfly/react-core";
 import styled from "styled-components";
 import { ServiceModel } from "@/Core";
@@ -38,15 +37,10 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
       <DataListItemRow>
         <DataListItemCells
           dataListCells={[
-            <StyledDataListCell key="primary content">
-              <Flex alignItems={{ default: "alignItemsCenter" }}>
-                <Title id={serviceKey} headingLevel="h2" size="xl">
-                  {service.name}
-                </Title>
-                {service.instance_summary && (
-                  <SummaryIcons summary={service.instance_summary} />
-                )}
-              </Flex>
+            <DataListCell key="primary content">
+              <Title id={serviceKey} headingLevel="h2" size="xl">
+                {service.name}
+              </Title>
               {service.description && (
                 <div id={`${service.name}-description`}>
                   <Spacer />
@@ -56,7 +50,10 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
                   <Spacer />
                 </div>
               )}
-            </StyledDataListCell>,
+              {service.instance_summary && (
+                <SummaryIcons summary={service.instance_summary} />
+              )}
+            </DataListCell>,
           ]}
         />
         <DataListAction
@@ -105,10 +102,4 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
 
 const StyledText = styled(Text)`
   ${greyText};
-`;
-
-const StyledDataListCell = styled(DataListCell)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 `;
