@@ -19,7 +19,7 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
     key: `tab-${service.name}`,
     route: "Catalog",
   });
-  const handleTabClick = (event, tabIndex) => {
+  const handleTabClick = (tabIndex) => {
     setActiveTabKey(tabIndex);
   };
 
@@ -31,10 +31,7 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
       mountOnEnter
     >
       <Tab eventKey="details" title="Details">
-        <Details
-          serviceName={service.name}
-          instanceSummary={service.instance_summary}
-        />
+        <Details instanceSummary={service.instance_summary} />
       </Tab>
       <Tab eventKey="attributes" title="Attributes">
         <OverflowContainer>
