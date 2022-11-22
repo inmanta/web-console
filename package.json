@@ -59,7 +59,7 @@
     "@types/styled-components": "^5.1.26",
     "@types/webpack": "^5.28.0",
     "@types/xml-formatter": "^2.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.42.1",
     "babel-loader": "^9.1.0",
     "clean-css": "^5.3.1",
