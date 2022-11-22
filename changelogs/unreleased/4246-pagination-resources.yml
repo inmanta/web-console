@@ -1,0 +1,6 @@
+change-type: patch
+description: 'add pagination on the bottom of the table to improve UX'
+issue-nr: 4246
+destination-branches:
+- master
+- iso5
