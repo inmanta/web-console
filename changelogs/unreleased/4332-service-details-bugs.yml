@@ -1,5 +1,5 @@
 change-type: patch
-description: 'Fix service callbacks issues in display, in readabilty and form behaviour after adding component'
+description: 'Fix service callbacks component issues in display, in readabilty and form behaviour after adding component'
 issue-nr: 4332
 destination-branches:
 - master
