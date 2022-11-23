@@ -27,13 +27,13 @@ pipeline {
                 }
             }
         }
-        stage('Testing with cypress') {
-            steps {
-                dir('web-console') {
-                    sh '''yarn cypress-test'''
-                }
-            }
-        }
+        // stage('Testing with cypress') {
+        //     steps {
+        //         dir('web-console') {
+        //             sh '''yarn cypress-test'''
+        //         }
+        //     }
+        // }
     }
 
     post {
