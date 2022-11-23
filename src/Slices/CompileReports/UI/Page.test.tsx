@@ -19,6 +19,7 @@ import {
   EnvironmentDetails,
   EnvironmentSettings,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import * as Mock from "@S/CompileReports/Core/Mock";
@@ -182,7 +183,9 @@ test("When using the status filter with the Success option then the successful c
     )
   );
 
-  const input = screen.getByPlaceholderText("Select compile status...");
+  const input = screen.getByPlaceholderText(
+    words("compileReports.filters.status.placeholder")
+  );
   await userEvent.click(input);
 
   const option = await screen.findByRole("option", { name: "success" });
@@ -228,12 +231,17 @@ test("When using the status filter with the In Progress opiton then the compile 
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Status" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("compileReports.columns.status") })
+  );
 
-  const input = screen.getByPlaceholderText("Select compile status...");
+  const input = screen.getByPlaceholderText(
+    words("compileReports.filters.status.placeholder")
+  );
   await userEvent.click(input);
 
   const option = await screen.findByRole("option", { name: "in progress" });
+
   await await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -276,7 +284,11 @@ it("When using the Date filter then the compile reports within the range selecte
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Requested" }));
+  await userEvent.click(
+    screen.getByRole("option", {
+      name: words("compileReports.columns.requested"),
+    })
+  );
 
   const fromDatePicker = await screen.findByLabelText("From Date Picker");
   await userEvent.click(fromDatePicker);

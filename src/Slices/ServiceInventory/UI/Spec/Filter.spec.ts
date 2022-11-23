@@ -2,6 +2,7 @@ import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Either } from "@/Core";
 import { ServiceInstance, Pagination } from "@/Test";
+import { words } from "@/UI";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on something THEN a data update is triggered", async () => {
@@ -24,7 +25,9 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   });
   expect(beforeRows.length).toEqual(2);
 
-  const input = await screen.findByPlaceholderText("Select a state...");
+  const input = await screen.findByPlaceholderText(
+    words("inventory.filters.state.placeholder")
+  );
   await userEvent.click(input);
 
   const option = await screen.findByRole("option", { name: "creating" });

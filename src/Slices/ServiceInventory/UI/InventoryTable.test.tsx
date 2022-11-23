@@ -17,6 +17,7 @@ import {
   dependencies,
   DeferredApiHelper,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { InventoryTable } from "./InventoryTable";
 
@@ -90,7 +91,9 @@ test("ServiceInventory can show resources for instance", async () => {
 
   await userEvent.click(within(expandCell).getByRole("button"));
 
-  await userEvent.click(screen.getByRole("tab", { name: "Resources" }));
+  await userEvent.click(
+    screen.getByRole("tab", { name: words("inventory.tabs.resources") })
+  );
   await act(async () => {
     apiHelper.resolve(
       Either.right({

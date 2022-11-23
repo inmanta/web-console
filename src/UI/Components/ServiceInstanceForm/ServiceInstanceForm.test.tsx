@@ -12,6 +12,7 @@ import {
 import * as Test from "@/Test";
 import CustomRouter from "@/UI/Routing/CustomRouter";
 import history from "@/UI/Routing/history";
+import { words } from "@/UI/words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 const setup = (
@@ -206,7 +207,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     screen.getByRole("textbox", { name: fields[0].name }),
     "test text"
   );
-  await userEvent.click(screen.getByRole("radio", { name: "True" }));
+  await userEvent.click(screen.getByRole("radio", { name: words("true") }));
 
   await userEvent.click(screen.getByRole("button", { name: nestedField.name }));
   await userEvent.type(
@@ -223,7 +224,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     "test text 3"
   );
 
-  await userEvent.click(screen.getByRole("button", { name: "Confirm" }));
+  await userEvent.click(screen.getByRole("button", { name: words("confirm") }));
   expect(submitCb).toBeCalled();
   expect(submitCb).toHaveBeenCalledWith(
     {

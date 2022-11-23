@@ -28,6 +28,9 @@ const dict = {
   retry: "Retry",
   delete: "Delete",
   empty: "Empty",
+  jumpTo: "Jump to",
+  hideAll: "Hide All",
+  showAll: "Show All",
 
   /**
    * Error related text
@@ -222,7 +225,7 @@ const dict = {
   "catalog.summary.noLabel": "no label",
   "catalog.summary.empty": "No instance summary found",
   "catalog.button.inventory": "Show inventory",
-  "catalog.button.update": "Update Service Catalog ",
+  "catalog.button.update": "Update Service Catalog",
   "catalog.update.failed": "The update failed",
   "catalog.update.success": "The update has been requested",
   "catalog.update.success.message":
