@@ -1,28 +1,30 @@
 #!/bin/bash
 echo "Starting E2E test suit"
 
-if [[ -f "./shell-scripts/env.sh" ]]; then
-    echo "env.sh found - sourcing..."
-    # shellcheck disable=SC1091
-    source ./shell-scripts/env.sh
-    local_setup_repo=https://demo:$GITLAB_TOKEN@code.inmanta.com/inmanta/local-setup.git
-else
-    echo "No env.sh file found, checking for GITLAB_TOKEN variable instead"
-    if [ -n "$GITLAB_TOKEN" ]; then
-    echo "GITLAB_TOKEN successfuly found."
-    local_setup_repo=https://jenkins:$GITLAB_TOKEN@code.inmanta.com/inmanta/local-setup.git
-    else
-    echo "GITLAB_TOKEN variable not supplied."
-    exit
-    fi
-fi
+# if [[ -f "./shell-scripts/env.sh" ]]; then
+#     echo "env.sh found - sourcing..."
+#     # shellcheck disable=SC1091
+#     source ./shell-scripts/env.sh
+#     local_setup_repo=https://demo:$GITLAB_TOKEN@code.inmanta.com/inmanta/local-setup.git
+# else
+#     echo "No env.sh file found, checking for GITLAB_TOKEN variable instead"
+#     if [ -n "$GITLAB_TOKEN" ]; then
+#     echo "GITLAB_TOKEN successfuly found."
+#     local_setup_repo=https://jenkins:$GITLAB_TOKEN@code.inmanta.com/inmanta/local-setup.git
+#     else
+#     echo "GITLAB_TOKEN variable not supplied."
+#     exit
+#     fi
+# fi
 
 
+local_setup_repo=https://jenkins:$GITLAB_TOKEN@code.inmanta.com/inmanta/local-setup.git
 
 mkdir temp
 cd temp
 git clone $local_setup_repo
 
+if ![[ -f "local-setup"]]; then exit
 cd local-setup
 
 # pull either iso5 or iso4

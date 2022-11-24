@@ -5,6 +5,8 @@ pipeline {
         disableConcurrentBuilds()
         checkoutToSubdirectory('web-console')
         skipDefaultCheckout()
+        gitLabConnection('code.inmanta.com')
+        timeout(time: 15, unit: 'MINUTES')
     }
     triggers{
         pollSCM('* * * * *')
