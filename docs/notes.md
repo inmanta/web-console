@@ -286,7 +286,7 @@ After that assignment we get an Array from the hook with RemoteData Object which
 3. Failed - with the value that stores an error message
 4. Success- with the value that corresponds to data requested in a query
  
-That object has to be unfolded to access data through RemoteData.unfold()
+That object has to be unfolded to access data through RemoteData.fold()
  
  
 #### Command Managers
