@@ -6,7 +6,13 @@ if [[ -f "./shell-scripts/env.sh" ]]; then
     # shellcheck disable=SC1091
     source ./shell-scripts/env.sh
 else
-    echo "No env.sh file found, if GITLAB_TOKEN variable is not available, script will fail."
+    echo "No env.sh file found, checking for GITLAB_TOKEN variable instead"
+    if [ -n "$GITLAB_TOKEN" ]; then
+    echo "GITLAB_TOKEN successfuly found."
+    else
+    echo "GITLAB_TOKEN variable not supplied."
+    exit
+    fi
 fi
 
 local_setup_repo=https://demo:$GITLAB_TOKEN@code.inmanta.com/inmanta/local-setup.git
