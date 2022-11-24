@@ -52,11 +52,7 @@ export const Row: React.FC<Props> = ({
         </Td>
         <Td>{callback.minimal_log_level_text}</Td>
         <Td>
-          {callback.event_types &&
-            callback.event_types[0].substr(0, 8) +
-              "... (" +
-              callback.event_types.length +
-              ")"}
+          {callback.event_types && callback.event_types.length + " Event Types"}
         </Td>
         <Td>
           <DeleteButton
