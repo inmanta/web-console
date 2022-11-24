@@ -110,7 +110,9 @@ test("When using the source filter then only the matching parameters should be f
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Source" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("parameters.columns.source") })
+  );
 
   const input = screen.getByPlaceholderText(
     words("parameters.filters.source.placeholder")
@@ -157,7 +159,11 @@ test("When using the Updated filter then the parameters within the range selecte
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Updated" }));
+  await userEvent.click(
+    screen.getByRole("option", {
+      name: words("parameters.columns.updated.tests"),
+    })
+  );
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
   await userEvent.click(fromDatePicker);

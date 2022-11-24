@@ -240,7 +240,9 @@ test("When using the status filter with the In Progress opiton then the compile 
   );
   await userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "in progress" });
+  const option = await screen.findByRole("option", {
+    name: words("compileReports.tests.filters.result.inProgress"),
+  });
 
   await await userEvent.click(option);
 

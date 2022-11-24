@@ -331,6 +331,8 @@ const dict = {
   "compileReports.filters.result.placeholder": "Select result...",
   "compileReports.filters.result.success": "Successful",
   "compileReports.filters.result.failed": "Failed",
+  "compileReports.filters.testResult.success": "Success",
+  "compileReports.tests.filters.result.inProgress": "in progress",
 
   /** Compile details related text */
   "compileDetails.title": "Compile Details",
@@ -453,6 +455,8 @@ const dict = {
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",
+  "agent.tests.processName": "Process Name",
+  "agent.tests.status": "Status",
 
   /** Facts */
   "facts.title": "Facts",
@@ -523,6 +527,7 @@ const dict = {
   "parameters.empty.message": "No parameters found",
   "parameters.columns.name": "Name",
   "parameters.columns.updated": "Last Updated",
+  "parameters.columns.updated.tests": "Updated",
   "parameters.columns.source": "Source",
   "parameters.columns.value": "Value",
   "parameters.filters.name.placeholder": "Filter by name",

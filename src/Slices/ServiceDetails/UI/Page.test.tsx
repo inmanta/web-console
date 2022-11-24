@@ -99,7 +99,7 @@ test("ServiceDetails removes service after deletion", async () => {
   });
 
   expect(
-    await screen.findByText(`Service Details: ${Service.a.name}`)
+    await screen.findByText(words("ServiceDetails.title")(Service.a.name))
   ).toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: words("delete") }));
@@ -113,6 +113,6 @@ test("ServiceDetails removes service after deletion", async () => {
   });
 
   expect(
-    await screen.findByText(`Service Details: undefined`)
+    await screen.findByText(words("ServiceDetails.title")("undefined"))
   ).toBeInTheDocument();
 });

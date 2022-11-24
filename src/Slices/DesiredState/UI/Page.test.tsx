@@ -422,7 +422,9 @@ test("Given the Desired states view with filters When promoting a version, then 
     screen.getByRole("option", { name: words("desiredState.columns.status") })
   );
 
-  const input = screen.getByPlaceholderText("Select status...");
+  const input = screen.getByPlaceholderText(
+    words("desiredState.filters.status.placeholder")
+  );
   await userEvent.click(input);
 
   const option = await screen.findByRole("option", {
@@ -560,7 +562,7 @@ describe("DeleteModal ", () => {
     );
 
     expect(
-      await screen.findByText("Are you sure you want to delete version 9?")
+      await screen.findByText(words("inventory.deleteVersion.header")(9))
     ).toBeVisible();
     expect(await screen.findByText("Yes")).toBeVisible();
     expect(await screen.findByText("No")).toBeVisible();

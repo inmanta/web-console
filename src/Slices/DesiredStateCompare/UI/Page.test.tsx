@@ -69,7 +69,7 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  const button = screen.getByRole("button", { name: "Jump to" });
+  const button = screen.getByRole("button", { name: words("jumpTo") });
   expect(button).toBeVisible();
   expect(
     screen.queryByRole("generic", { name: "DiffSummaryList" })
