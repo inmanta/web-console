@@ -1,17 +1,15 @@
 #!/bin/bash
 echo "Starting E2E test suit"
 
-if [[ -f "./env.sh" ]]; then
+if [[ -f "./shell-scripts/env.sh" ]]; then
     echo "env.sh found - sourcing..."
     # shellcheck disable=SC1091
-    source ./env.sh
+    source ./shell-scripts/env.sh
 else
-    echo "No env.sh file found, please make sure to add it before running the script."
-    echo "The variable PAT_GITLAB needs to be exported."
-    exit
+    echo "No env.sh file found, if GITLAB_TOKEN variable is not available, script will fail."
 fi
 
-local_setup_repo=https://demo:$PAT_GITLAB@code.inmanta.com/inmanta/local-setup.git
+local_setup_repo=https://demo:$GITLAB_TOKEN@code.inmanta.com/inmanta/local-setup.git
 
 mkdir temp
 cd temp
@@ -41,13 +39,3 @@ cd ../..
 docker exec inmanta_orchestrator rm -rf /usr/share/inmanta/web-console
 
 docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console
-
-# yarn cypress run
-
-# cleanup containers after running test suit.
-# cd temp/local-setup
-# yarn run kill:container
-
-# delete temp folder that was created.
-# cd ../..
-# rm -rf temp
