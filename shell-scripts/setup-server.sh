@@ -13,11 +13,6 @@ fi
 
 local_setup_repo=https://demo:$PAT_GITLAB@code.inmanta.com/inmanta/local-setup.git
 
-# build the app to have the latest build version
-yarn build
-
-cd cypress
-
 mkdir temp
 cd temp
 git clone $local_setup_repo
@@ -40,21 +35,19 @@ sleep 4
 yarn windows:lsm:install
 
 # run test suit based on the docker that is being spinned up.
-cd ../../..
+cd ../..
 
 # remove old build output and copy dist to the the orchestrator
 docker exec inmanta_orchestrator rm -rf /usr/share/inmanta/web-console
 
 docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console
 
-# run tests on port where orchestrator is running
-
-#yarn cypress run
+# yarn cypress run
 
 # cleanup containers after running test suit.
-#cd cypress/temp/local-setup
-#yarn run kill:container
+# cd temp/local-setup
+# yarn run kill:container
 
 # delete temp folder that was created.
-#cd ../..
-#rm -rf temp
+# cd ../..
+# rm -rf temp
