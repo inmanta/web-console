@@ -45,11 +45,11 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
   const onSubmit = async () => {
     handleModalToggle();
     const result = await trigger();
-
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
   };
+
   return (
     <DataListItem id={service.name} aria-labelledby={serviceKey}>
       <ToastAlert
