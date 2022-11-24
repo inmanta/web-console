@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Flex, FlexItem } from "@patternfly/react-core";
+import styled from "styled-components";
 import { RemoteData, Resource } from "@/Core";
 import {
   useUrlStateWithFilter,
@@ -89,15 +91,30 @@ export const Page: React.FC = () => {
               aria-label="ResourcesView-Empty"
             />
           ) : (
-            <ResourcesTableProvider
-              sort={sort}
-              setSort={setSort}
-              resources={resources.data}
-              aria-label="ResourcesView-Success"
-            />
+            <>
+              <ResourcesTableProvider
+                sort={sort}
+                setSort={setSort}
+                resources={resources.data}
+                aria-label="ResourcesView-Success"
+              />
+              <StyledFlex justifyContent={{ default: "justifyContentFlexEnd" }}>
+                <FlexItem>
+                  <PaginationWidget
+                    data={staleData}
+                    pageSize={pageSize}
+                    setPageSize={setPageSize}
+                  />
+                </FlexItem>
+              </StyledFlex>
+            </>
           )
         }
       />
     </Wrapper>
   );
 };
+
+const StyledFlex = styled(Flex)`
+  padding-right: 16px;
+`;

@@ -173,7 +173,7 @@ test("ResourcesView shows next page of resources", async () => {
     })
   ).toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole("button", { name: "Next" }));
+  await userEvent.click(screen.getAllByRole("button", { name: "Next" })[0]);
 
   await act(async () => {
     await apiHelper.resolve(
@@ -518,7 +518,7 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
     })
   ).toHaveAttribute("data-value", "1");
 
-  const nextButton = screen.getByRole("button", { name: "Next" });
+  const nextButton = screen.getAllByRole("button", { name: "Next" })[0];
 
   expect(nextButton).toBeEnabled();
 
@@ -601,8 +601,8 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
   expect(screen.getByRole("button", { name: "Repair" })).toBeVisible();
   expect(screen.getByRole("button", { name: "Deploy" })).toBeVisible();
   expect(
-    screen.getByRole("generic", { name: "PaginationWidget" })
-  ).toBeVisible();
+    screen.getAllByRole("generic", { name: "PaginationWidget" })
+  ).toHaveLength(2);
 
   await act(async () => {
     await apiHelper.resolve(
