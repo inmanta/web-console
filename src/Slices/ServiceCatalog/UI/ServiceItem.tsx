@@ -45,6 +45,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
   const onSubmit = async () => {
     handleModalToggle();
     const result = await trigger();
+
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
@@ -134,7 +135,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
       <Modal
         variant={ModalVariant.small}
         isOpen={isDeleteModalOpen}
-        title="Delete Service Entity"
+        title={words("catalog.delete.modal.title")}
         onClose={handleModalToggle}
       >
         {words("catalog.delete.title")(service.name)}

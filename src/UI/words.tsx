@@ -223,6 +223,7 @@ const dict = {
   "catalog.summary.empty": "No instance summary found",
   "catalog.button.inventory": "Show inventory",
   "catalog.button.update": "Update Service Catalog ",
+  "catalog.delete.modal.title": "Update Request",
   "catalog.update.failed": "The update failed",
   "catalog.update.success": "The update has been requested",
   "catalog.update.success.message":
