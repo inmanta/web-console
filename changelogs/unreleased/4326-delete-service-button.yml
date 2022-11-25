@@ -1,5 +1,5 @@
 change-type: patch
-description: 'Move delete service functionality to catalog view'
+description: 'Move delete service button to the Service Catalog overview, in the kebab menu options.'
 issue-nr: 4326
 destination-branches:
 - master

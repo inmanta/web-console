@@ -21,6 +21,7 @@ import {
   Service,
   StaticScheduler,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { Page } from "./Page";
 
@@ -173,7 +174,7 @@ test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", a
   await userEvent.click(
     screen.getByLabelText(Service.a.name + "-deleteButton")
   );
-  await userEvent.click(screen.getByText("Yes"));
+  await userEvent.click(screen.getByText(words("yes")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.resolvedRequests).toHaveLength(1);
