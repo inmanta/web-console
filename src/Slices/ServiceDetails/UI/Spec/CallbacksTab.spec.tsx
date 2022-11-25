@@ -3,7 +3,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { Either, getShortUuidFromRaw } from "@/Core";
 import {
   QueryResolverImpl,
   ServicesQueryManager,
@@ -110,6 +110,8 @@ function setup() {
 }
 
 test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab", async () => {
+  const shortenUUID = getShortUuidFromRaw(Callback.list[0].callback_id);
+
   const { component, apiHelper } = setup();
   render(component);
 
@@ -131,5 +133,7 @@ test("GIVEN ServiceDetails WHEN click on callbacks tab THEN shows callbacks tab"
   expect(
     await screen.findByRole("grid", { name: "CallbacksTable" })
   ).toBeVisible();
-  expect(screen.getByRole("row", { name: "CallbackRow-79e7" })).toBeVisible();
+  expect(
+    screen.getByRole("row", { name: "CallbackRow-" + shortenUUID })
+  ).toBeVisible();
 });

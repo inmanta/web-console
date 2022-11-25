@@ -7,6 +7,7 @@ export interface Callback {
   service_entity: string;
   event_types: string[] | null;
   minimal_log_level: string | null;
+  minimal_log_level_text: string | null;
 }
 
 export interface CreateCallbackBody {
