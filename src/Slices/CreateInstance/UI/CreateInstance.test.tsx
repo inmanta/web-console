@@ -20,6 +20,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { InterServiceRelations } from "@/Test/Data/Service";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CreateInstance } from "./CreateInstance";
 
@@ -73,7 +74,7 @@ test("Given the CreateInstance View When creating an instance with attributes Th
   const networkField = screen.getByText("network");
   expect(networkField).toBeValid();
 
-  await userEvent.click(screen.getByRole("button", { name: "Confirm" }));
+  await userEvent.click(screen.getByRole("button", { name: words("confirm") }));
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
@@ -121,7 +122,9 @@ test("Given the CreateInstance View When creating an instance with Inter-service
     );
   });
 
-  const relationInputField = screen.getByPlaceholderText("Select an instance");
+  const relationInputField = screen.getByPlaceholderText(
+    words("common.serviceInstance.relation")
+  );
   await userEvent.type(relationInputField, "ab");
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
@@ -154,7 +157,7 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   expect(options2[0]).toHaveClass("pf-m-disabled");
   await userEvent.click(options2[1]);
 
-  await userEvent.click(screen.getByRole("button", { name: "Confirm" }));
+  await userEvent.click(screen.getByRole("button", { name: words("confirm") }));
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",

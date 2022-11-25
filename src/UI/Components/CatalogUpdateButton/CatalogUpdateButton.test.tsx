@@ -64,7 +64,9 @@ test("Given CatalogUpdateButton, when user clicks on button, it should display a
   const { component } = setup();
   render(component);
 
-  const button = screen.getByRole("button", { name: "Update Service Catalog" });
+  const button = screen.getByRole("button", {
+    name: words("catalog.button.update"),
+  });
 
   expect(button).toBeVisible();
   await userEvent.click(button);
@@ -78,7 +80,9 @@ test("Given CatalogUpdateButton, when user cancels the modal, it should not fire
   const { component, apiHelper } = setup();
   render(component);
 
-  const button = screen.getByRole("button", { name: "Update Service Catalog" });
+  const button = screen.getByRole("button", {
+    name: words("catalog.button.update"),
+  });
   await userEvent.click(button);
   const cancelButton = await screen.findByText(words("no"));
   expect(cancelButton).toBeVisible();
@@ -94,7 +98,9 @@ test("Given CatalogUpdateButton, when user confirms update, it should fire the A
   const { component, apiHelper } = setup();
   render(component);
 
-  const button = screen.getByRole("button", { name: "Update Service Catalog" });
+  const button = screen.getByRole("button", {
+    name: words("catalog.button.update"),
+  });
   await userEvent.click(button);
   const confirmButton = await screen.findByText(words("yes"));
   expect(confirmButton).toBeVisible();
@@ -115,7 +121,7 @@ test("Given CatalogUpdateButton, when user confirms update, it should fire the A
   });
 
   expect(
-    await screen.findByText("The update has been requested")
+    await screen.findByText(words("catalog.update.success"))
   ).toBeVisible();
 });
 
@@ -123,7 +129,9 @@ test("Given CatalogUpdateButton, when user confirms the update, it should fire t
   const { component, apiHelper } = setup();
   render(component);
 
-  const button = screen.getByRole("button", { name: "Update Service Catalog" });
+  const button = screen.getByRole("button", {
+    name: words("catalog.button.update"),
+  });
   await userEvent.click(button);
   const confirmButton = await screen.findByText(words("yes"));
   expect(confirmButton).toBeVisible();

@@ -11,6 +11,7 @@ import {
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   GetParametersQueryManager,
@@ -64,7 +65,9 @@ test("When using the name filter then only the matching parameters should be fet
   });
   expect(initialRows).toHaveLength(10);
 
-  const input = screen.getByPlaceholderText("Filter by name");
+  const input = screen.getByPlaceholderText(
+    words("parameters.filters.name.placeholder")
+  );
 
   await userEvent.click(input);
   await userEvent.type(input, "param{enter}");
@@ -107,9 +110,13 @@ test("When using the source filter then only the matching parameters should be f
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Source" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("parameters.columns.source") })
+  );
 
-  const input = screen.getByPlaceholderText("Filter by source");
+  const input = screen.getByPlaceholderText(
+    words("parameters.filters.source.placeholder")
+  );
 
   await userEvent.click(input);
   await userEvent.type(input, "plugin{enter}");
@@ -152,7 +159,11 @@ test("When using the Updated filter then the parameters within the range selecte
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Updated" }));
+  await userEvent.click(
+    screen.getByRole("option", {
+      name: words("parameters.columns.updated.tests"),
+    })
+  );
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
   await userEvent.click(fromDatePicker);

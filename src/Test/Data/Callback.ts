@@ -7,6 +7,7 @@ export const a: Callback = {
   service_entity: "service_name_a",
   event_types: null,
   minimal_log_level: null,
+  minimal_log_level_text: null,
 };
 
 export const b: Callback = {
@@ -16,6 +17,7 @@ export const b: Callback = {
   service_entity: "service_name_a",
   event_types: null,
   minimal_log_level: null,
+  minimal_log_level_text: null,
 };
 
 export const c: Callback = {
@@ -25,6 +27,7 @@ export const c: Callback = {
   service_entity: "service_name_a",
   event_types: null,
   minimal_log_level: null,
+  minimal_log_level_text: null,
 };
 
 export const list = [a, b, c];

@@ -29,6 +29,7 @@ import {
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
@@ -212,7 +213,9 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   ).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole("button", { name: "Details" }));
-  await userEvent.click(await screen.findByRole("tab", { name: "Resources" }));
+  await userEvent.click(
+    await screen.findByRole("tab", { name: words("inventory.tabs.resources") })
+  );
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));
@@ -262,6 +265,6 @@ test("ServiceInventory shows instance summary chart", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("img", { name: "Number of instances by label" })
+    await screen.findByRole("img", { name: words("catalog.summary.title") })
   ).toBeInTheDocument();
 });
