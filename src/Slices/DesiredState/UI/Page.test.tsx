@@ -179,7 +179,7 @@ test("When using the status filter then only the matching desired states should 
   await userEvent.click(input);
 
   const option = await screen.findByRole("option", {
-    name: "skipped_candidate",
+    name: words("desiredState.test.skippedCandidate"),
   });
   await await userEvent.click(option);
 
@@ -227,7 +227,9 @@ test("When using the Date filter then the desired state versions within the rang
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Date" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("desiredState.columns.date") })
+  );
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
   await userEvent.click(fromDatePicker);
@@ -428,7 +430,7 @@ test("Given the Desired states view with filters When promoting a version, then 
   await userEvent.click(input);
 
   const option = await screen.findByRole("option", {
-    name: "candidate",
+    name: words("desiredState.test.candidate"),
   });
   await userEvent.click(option);
 

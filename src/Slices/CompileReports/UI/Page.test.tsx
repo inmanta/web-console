@@ -188,7 +188,9 @@ test("When using the status filter with the Success option then the successful c
   );
   await userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "success" });
+  const option = await screen.findByRole("option", {
+    name: words("compileReports.filters.test.success"),
+  });
   await await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(

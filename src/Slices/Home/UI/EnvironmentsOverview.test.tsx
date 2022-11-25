@@ -32,7 +32,9 @@ it.each`
       name: "Environment card",
     });
     expect(initialCards).toHaveLength(4);
-    const input = await screen.findByPlaceholderText("Filter by name");
+    const input = await screen.findByPlaceholderText(
+      words("home.filters.env.placeholder")
+    );
     await userEvent.click(input);
     await userEvent.type(input, filterValue);
     expect(

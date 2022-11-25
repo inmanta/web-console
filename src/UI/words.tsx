@@ -155,6 +155,7 @@ const dict = {
     `Are you sure you want to delete version ${version}?`,
   "inventory.filters.state.placeholder": "Select a state...",
   "ServiceDetails.title": (name: string) => `Service Details: ${name}`,
+  "inventory.test.creating": "creating",
 
   /**
    * Config related text
@@ -331,7 +332,7 @@ const dict = {
   "compileReports.filters.result.placeholder": "Select result...",
   "compileReports.filters.result.success": "Successful",
   "compileReports.filters.result.failed": "Failed",
-  "compileReports.filters.testResult.success": "Success",
+  "compileReports.filters.test.success": "success",
   "compileReports.tests.filters.result.inProgress": "in progress",
 
   /** Compile details related text */
@@ -457,6 +458,7 @@ const dict = {
   "agents.filters.processName.placeholder": "Filter by process name",
   "agent.tests.processName": "Process Name",
   "agent.tests.status": "Status",
+  "agent.tests.up": "up",
 
   /** Facts */
   "facts.title": "Facts",
@@ -521,6 +523,8 @@ const dict = {
   "desiredState.complianceCheck.action.dryRun.failed":
     "Triggering dryrun failed",
   "desiredState.complianceCheck.noDryRuns": "No dry runs exist",
+  "desiredState.test.skippedCandidate": "skipped_candidate",
+  "desiredState.test.candidate": "candidate",
 
   /** Parameters */
   "parameters.title": "Parameters",

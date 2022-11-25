@@ -232,7 +232,9 @@ test("When using the status filter with the 'up' option then the agents in the '
   );
   await userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "up" });
+  const option = await screen.findByRole("option", {
+    name: words("agent.tests.up"),
+  });
   await await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
