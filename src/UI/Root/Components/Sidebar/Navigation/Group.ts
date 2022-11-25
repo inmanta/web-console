@@ -101,21 +101,3 @@ export const resourceManager = (
     },
   ],
 });
-
-export const otherSites = (
-  dashboardUrl: string,
-  isEnvPresent: boolean
-): Group => ({
-  id: "OtherSites",
-  title: "Other Sites",
-  links: [
-    {
-      id: "Dashboard",
-      label: "Dashboard",
-      url: dashboardUrl,
-      external: true,
-      locked: !isEnvPresent,
-      statusIndication: false,
-    },
-  ],
-});

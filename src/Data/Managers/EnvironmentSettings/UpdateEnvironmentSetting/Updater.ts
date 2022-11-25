@@ -4,7 +4,7 @@ import {
   StateHelperWithEnv,
   UpdaterWithEnv,
 } from "@/Core";
-import { GetEnvironmentSetting } from "@/Core/Query/GetEnvironmentSetting";
+import { GetEnvironmentSetting } from "@/Data/Managers/EnvironmentSettings/GetEnvironmentSettingInterface";
 
 export class EnvironmentSettingUpdater
   implements UpdaterWithEnv<"GetEnvironmentSetting">

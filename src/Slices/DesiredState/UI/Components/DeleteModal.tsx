@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Modal } from "@patternfly/react-core";
-import { DeleteVersion } from "@/Core/Command/DeleteVersion";
-import { DeleteForm } from "@/UI/Components";
+import { DeleteVersion } from "@/Data/Managers/DeleteVersion/interface";
+import { ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { GetDesiredStatesContext } from "../GetDesiredStatesContext";
@@ -36,7 +36,7 @@ export const DeleteModal: React.FC<Props> = ({ version, isOpened }) => {
       onClose={() => setDeleteModal(0, false)}
     >
       {words("inventory.deleteVersion.header")(version)}
-      <DeleteForm
+      <ConfirmUserActionForm
         onSubmit={onSubmit}
         onCancel={() => setDeleteModal(0, false)}
       />

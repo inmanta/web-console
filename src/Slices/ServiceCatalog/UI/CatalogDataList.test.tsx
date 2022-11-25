@@ -77,7 +77,7 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
   expect(listItem).toBeInTheDocument();
   const dropdown = within(listItem).getByLabelText("Actions-details");
   await userEvent.click(within(dropdown).getByRole("button"));
-  const link = screen.getByRole("link", { name: "Show details" });
+  const link = screen.getByRole("link", { name: "Show Details" });
   expect(link).toBeInTheDocument();
   expect(link).toHaveAttribute(
     "href",

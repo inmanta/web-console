@@ -9,14 +9,13 @@ import {
   ServicesQueryManager,
   ServicesStateHelper,
   getStoreInstance,
-  DeleteServiceCommandManager,
-  BaseApiHelper,
   CommandResolverImpl,
+  CommandManagerResolver,
+  KeycloakAuthHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Environment,
   Service,
@@ -41,9 +40,9 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([servicesHelper])
   );
-  const commandManager = DeleteServiceCommandManager(new BaseApiHelper());
+  const authHelper = new KeycloakAuthHelper();
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager])
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
 
   const environmentHandler = EnvironmentHandlerImpl(
@@ -101,6 +100,7 @@ test("ServiceCatalog shows updated services", async () => {
   expect(
     await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
   ).toBeInTheDocument();
+  expect(await screen.findByText("Update Service Catalog")).toBeInTheDocument();
 
   scheduler.executeAll();
 

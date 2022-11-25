@@ -12,7 +12,7 @@ import {
   Task,
   PageSize,
 } from "@/Core";
-import { GetInstanceResources } from "@/Core/Query/GetInstanceResources";
+import { GetInstanceResources } from "@/Data/Managers/GetInstanceResources/interface";
 import { Data } from "@/Data/Managers/Helpers/QueryManager/types";
 import { DependencyContext } from "@/UI/Dependency";
 

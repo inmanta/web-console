@@ -1,12 +1,12 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { DeleteForm } from "./DeleteForm";
+import { ConfirmUserActionForm } from "./ConfirmUserActionForm";
 
 test("GIVEN DeleteForm WHEN user clicks 'No' THEN closeModal is executed", async () => {
   const submit = jest.fn();
   const closeModal = jest.fn();
-  render(<DeleteForm onSubmit={submit} onCancel={closeModal} />);
+  render(<ConfirmUserActionForm onSubmit={submit} onCancel={closeModal} />);
 
   await userEvent.click(screen.getByRole("button", { name: "No" }));
 
@@ -17,7 +17,7 @@ test("GIVEN DeleteForm WHEN user clicks 'No' THEN closeModal is executed", async
 test("GIVEN DeleteForm WHEN user clicks 'Yes' THEN submit is executed", async () => {
   const submit = jest.fn();
   const closeModal = jest.fn();
-  render(<DeleteForm onSubmit={submit} onCancel={closeModal} />);
+  render(<ConfirmUserActionForm onSubmit={submit} onCancel={closeModal} />);
 
   await userEvent.click(screen.getByRole("button", { name: "Yes" }));
 

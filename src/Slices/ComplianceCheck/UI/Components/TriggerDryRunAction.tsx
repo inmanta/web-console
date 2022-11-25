@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Button, ToolbarGroup } from "@patternfly/react-core";
 import { Maybe } from "@/Core";
-import { ErrorToastAlert } from "@/UI/Components";
+import { ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 
@@ -31,10 +31,10 @@ export const TriggerDryRunAction: React.FC<Props> = ({
 
   return (
     <ToolbarGroup alignment={{ default: "alignRight" }}>
-      <ErrorToastAlert
+      <ToastAlert
         title={words("desiredState.complianceCheck.action.dryRun.failed")}
-        errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        message={errorMessage}
+        setMessage={setErrorMessage}
       />
       <Button variant="secondary" onClick={onTrigger}>
         {words("desiredState.complianceCheck.action.dryRun")}
