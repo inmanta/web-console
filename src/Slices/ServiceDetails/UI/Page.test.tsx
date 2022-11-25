@@ -23,6 +23,7 @@ import {
   Service,
   StaticScheduler,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { Page } from "./Page";
 
@@ -98,12 +99,12 @@ test("ServiceDetails removes service after deletion", async () => {
   });
 
   expect(
-    await screen.findByText(`Service Details: ${Service.a.name}`)
+    await screen.findByText(words("ServiceDetails.title")(Service.a.name))
   ).toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole("button", { name: "Delete" }));
+  fireEvent.click(screen.getByRole("button", { name: words("delete") }));
 
-  fireEvent.click(screen.getByRole("button", { name: "Yes" }));
+  fireEvent.click(screen.getByRole("button", { name: words("yes") }));
 
   scheduler.executeAll();
 
@@ -112,6 +113,6 @@ test("ServiceDetails removes service after deletion", async () => {
   });
 
   expect(
-    await screen.findByText(`Service Details: undefined`)
+    await screen.findByText(words("ServiceDetails.title")("undefined"))
   ).toBeInTheDocument();
 });

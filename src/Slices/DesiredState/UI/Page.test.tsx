@@ -21,6 +21,7 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   GetDesiredStatesQueryManager,
@@ -168,13 +169,17 @@ test("When using the status filter then only the matching desired states should 
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Status" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("desiredState.columns.status") })
+  );
 
-  const input = screen.getByPlaceholderText("Select status...");
+  const input = screen.getByPlaceholderText(
+    words("agents.filters.status.placeholder")
+  );
   await userEvent.click(input);
 
   const option = await screen.findByRole("option", {
-    name: "skipped_candidate",
+    name: words("desiredState.test.skippedCandidate"),
   });
   await await userEvent.click(option);
 
@@ -222,7 +227,9 @@ test("When using the Date filter then the desired state versions within the rang
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Date" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("desiredState.columns.date") })
+  );
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
   await userEvent.click(fromDatePicker);
@@ -290,7 +297,9 @@ test("When using the Version filter then the desired state versions within the r
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Version" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("desiredState.columns.version") })
+  );
 
   const fromDatePicker = await screen.findByLabelText("Version range from");
   await userEvent.click(fromDatePicker);
@@ -350,7 +359,9 @@ test("Given the Desired states view When promoting a version, then the correct r
   );
 
   expect(
-    within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
+    within(screen.getByRole("menu", { name: "Actions" })).getByText(
+      words("desiredState.actions.promote")
+    )
   ).toHaveAttribute("aria-disabled", "true");
 
   await userEvent.click(
@@ -360,7 +371,9 @@ test("Given the Desired states view When promoting a version, then the correct r
   );
 
   await userEvent.click(
-    within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
+    within(screen.getByRole("menu", { name: "Actions" })).getByText(
+      words("desiredState.actions.promote")
+    )
   );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -407,13 +420,17 @@ test("Given the Desired states view with filters When promoting a version, then 
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Status" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("desiredState.columns.status") })
+  );
 
-  const input = screen.getByPlaceholderText("Select status...");
+  const input = screen.getByPlaceholderText(
+    words("desiredState.filters.status.placeholder")
+  );
   await userEvent.click(input);
 
   const option = await screen.findByRole("option", {
-    name: "candidate",
+    name: words("desiredState.test.candidate"),
   });
   await userEvent.click(option);
 
@@ -431,7 +448,9 @@ test("Given the Desired states view with filters When promoting a version, then 
   );
 
   await userEvent.click(
-    within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
+    within(screen.getByRole("menu", { name: "Actions" })).getByText(
+      words("desiredState.actions.promote")
+    )
   );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -487,7 +506,9 @@ test("Given the Desired states view When promoting a version results in an error
   );
 
   await userEvent.click(
-    within(screen.getByRole("menu", { name: "Actions" })).getByText("Promote")
+    within(screen.getByRole("menu", { name: "Actions" })).getByText(
+      words("desiredState.actions.promote")
+    )
   );
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -543,7 +564,7 @@ describe("DeleteModal ", () => {
     );
 
     expect(
-      await screen.findByText("Are you sure you want to delete version 9?")
+      await screen.findByText(words("inventory.deleteVersion.header")(9))
     ).toBeVisible();
     expect(await screen.findByText("Yes")).toBeVisible();
     expect(await screen.findByText("No")).toBeVisible();

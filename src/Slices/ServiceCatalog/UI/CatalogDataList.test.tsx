@@ -9,6 +9,7 @@ import {
   DeleteServiceCommandManager,
 } from "@/Data";
 import { dependencies, DynamicCommandManagerResolver, Service } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { CatalogDataList } from "./CatalogDataList";
 
@@ -61,7 +62,9 @@ test("GIVEN CatalogDataList WHEN service THEN service inventory has correct link
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem = within(list).getByRole("listitem", { name: Service.a.name });
   expect(listItem).toBeInTheDocument();
-  const link = within(listItem).getByRole("link", { name: "Show inventory" });
+  const link = within(listItem).getByRole("link", {
+    name: words("catalog.button.inventory"),
+  });
   expect(link).toBeInTheDocument();
   expect(link).toHaveAttribute(
     "href",
@@ -77,7 +80,9 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
   expect(listItem).toBeInTheDocument();
   const dropdown = within(listItem).getByLabelText("Actions-details");
   await userEvent.click(within(dropdown).getByRole("button"));
-  const link = screen.getByRole("link", { name: "Show Details" });
+  const link = screen.getByRole("link", {
+    name: words("catalog.button.details"),
+  });
   expect(link).toBeInTheDocument();
   expect(link).toHaveAttribute(
     "href",

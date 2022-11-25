@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownToggle, Spinner } from "@patternfly/react-core";
 import { Item, Refs } from "@/UI/Components/DiffWizard/types";
+import { words } from "@/UI/words";
 import { SummaryList } from "./SummaryList";
 
 interface Props {
@@ -16,7 +17,7 @@ export const JumpToAction: React.FC<Props> = ({ items, refs }) => {
       onSelect={() => setIsOpen(false)}
       toggle={
         <DropdownToggle onToggle={() => setIsOpen(!isOpen)}>
-          Jump to
+          {words("jumpTo")}
         </DropdownToggle>
       }
       isOpen={isOpen}

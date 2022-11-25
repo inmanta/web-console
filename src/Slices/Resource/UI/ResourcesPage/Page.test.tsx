@@ -20,6 +20,7 @@ import {
   Resource,
   StaticScheduler,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { ResourceDetails } from "@S/ResourceDetails/Data/Mock";
 import { Page } from "./Page";
@@ -209,7 +210,9 @@ test("ResourcesView shows sorting buttons for sortable columns", async () => {
   expect(within(table).getByRole("button", { name: "Agent" })).toBeVisible();
   expect(within(table).getByRole("button", { name: "Value" })).toBeVisible();
   expect(
-    within(table).getByRole("button", { name: "Deploy State" })
+    within(table).getByRole("button", {
+      name: words("resources.column.deployState"),
+    })
   ).toBeVisible();
 });
 
@@ -229,12 +232,11 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
 
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=agent.asc");
 });
-
 it.each`
-  filterType  | filterValue | placeholderText | filterUrlName
-  ${"search"} | ${"agent2"} | ${"Agent..."}   | ${"agent"}
-  ${"search"} | ${"File"}   | ${"Type..."}    | ${"resource_type"}
-  ${"search"} | ${"tmp"}    | ${"Value..."}   | ${"resource_id_value"}
+  filterType  | filterValue | placeholderText                                 | filterUrlName
+  ${"search"} | ${"agent2"} | ${words("resources.filters.agent.placeholder")} | ${"agent"}
+  ${"search"} | ${"File"}   | ${words("resources.filters.type.placeholder")}  | ${"resource_type"}
+  ${"search"} | ${"tmp"}    | ${words("resources.filters.value.placeholder")} | ${"resource_id_value"}
 `(
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the resources with that $filterUrlName should be fetched and shown",
   async ({ filterType, filterValue, placeholderText, filterUrlName }) => {
@@ -268,10 +270,10 @@ it.each`
   }
 );
 it.each`
-  filterValueOne | placeholderTextOne | filterUrlNameOne       | filterValueTwo | placeholderTextTwo | filterUrlNameTwo
-  ${"agent2"}    | ${"Agent..."}      | ${"agent"}             | ${"file3"}     | ${"Value..."}      | ${"resource_id_value"}
-  ${"Directory"} | ${"Type..."}       | ${"resource_type"}     | ${"agent2"}    | ${"Agent..."}      | ${"agent"}
-  ${"tmp"}       | ${"Value..."}      | ${"resource_id_value"} | ${"File"}      | ${"Type..."}       | ${"resource_type"}
+  filterValueOne | placeholderTextOne                              | filterUrlNameOne       | filterValueTwo | placeholderTextTwo                              | filterUrlNameTwo
+  ${"agent2"}    | ${words("resources.filters.agent.placeholder")} | ${"agent"}             | ${"file3"}     | ${words("resources.filters.value.placeholder")} | ${"resource_id_value"}
+  ${"Directory"} | ${words("resources.filters.type.placeholder")}  | ${"resource_type"}     | ${"agent2"}    | ${words("resources.filters.agent.placeholder")} | ${"agent"}
+  ${"tmp"}       | ${words("resources.filters.value.placeholder")} | ${"resource_id_value"} | ${"File"}      | ${words("resources.filters.type.placeholder")}  | ${"resource_type"}
 `(
   "when using the search filters of type $filterType with value $filterValueOne and text $placeholderTextOne combined with $filterType with value $filterValueTwo and text $placeholderText then the resources with that $filterUrlNameOne and $filterUrlNameTwo should be fetched and shown",
   async ({
@@ -317,13 +319,10 @@ it.each`
 );
 test("when using the all filters then the resources with that filter values should be fetched and shown", async () => {
   const filterValueOne = "agent";
-  const placeholderTextOne = "Agent...";
   const filterUrlNameOne = "agent";
   const filterValueTwo = "Directory";
-  const placeholderTextTwo = "Type...";
   const filterUrlNameTwo = "resource_type";
   const filterValueThree = "dir5";
-  const placeholderTextThree = "Value...";
   const filterUrlNameThree = "resource_id_value";
   const { component, apiHelper } = setup();
   render(component);
@@ -338,15 +337,21 @@ test("when using the all filters then the resources with that filter values shou
 
   expect(initialRows).toHaveLength(6);
 
-  const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
+  const inputOne = await screen.findByPlaceholderText(
+    words("resources.filters.agent.placeholder")
+  );
   await userEvent.click(inputOne);
   await userEvent.type(inputOne, `${filterValueOne}`);
 
-  const inputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
+  const inputTwo = await screen.findByPlaceholderText(
+    words("resources.filters.type.placeholder")
+  );
   await userEvent.click(inputTwo);
   await userEvent.type(inputTwo, `${filterValueTwo}`);
 
-  const inputThree = await screen.findByPlaceholderText(placeholderTextThree);
+  const inputThree = await screen.findByPlaceholderText(
+    words("resources.filters.value.placeholder")
+  );
   await userEvent.click(inputThree);
   await userEvent.type(inputThree, `${filterValueThree}{enter}`);
 
@@ -483,7 +488,9 @@ test("ResourcesView shows deploy state bar", async () => {
   ).toBeInTheDocument();
 
   expect(
-    await screen.findByRole("generic", { name: "Deployment state summary" })
+    await screen.findByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    })
   ).toBeInTheDocument();
 });
 
@@ -509,7 +516,9 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
   ).toBeInTheDocument();
 
   expect(
-    await screen.findByRole("generic", { name: "Deployment state summary" })
+    await screen.findByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    })
   ).toBeInTheDocument();
 
   expect(
@@ -529,10 +538,20 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
   ).toBeInTheDocument();
 
   expect(
-    screen.getByRole("generic", { name: "Deployment state summary" })
+    screen.getByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    })
   ).toBeVisible();
-  expect(screen.getByRole("button", { name: "Repair" })).toBeVisible();
-  expect(screen.getByRole("button", { name: "Deploy" })).toBeVisible();
+  expect(
+    screen.getByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    })
+  ).toBeVisible();
+  expect(
+    screen.getByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    })
+  ).toBeVisible();
   expect(
     screen.getByRole("generic", { name: "PaginationWidget" })
   ).toBeVisible();
@@ -584,7 +603,9 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
   ).toBeInTheDocument();
 
   expect(
-    await screen.findByRole("generic", { name: "Deployment state summary" })
+    await screen.findByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    })
   ).toBeInTheDocument();
 
   expect(
@@ -596,10 +617,20 @@ test("GIVEN ResourcesView WHEN data is auto-updated THEN shows updated toolbar",
   scheduler.executeAll();
 
   expect(
-    screen.getByRole("generic", { name: "Deployment state summary" })
+    screen.getByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    })
   ).toBeVisible();
-  expect(screen.getByRole("button", { name: "Repair" })).toBeVisible();
-  expect(screen.getByRole("button", { name: "Deploy" })).toBeVisible();
+  expect(
+    screen.getByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    })
+  ).toBeVisible();
+  expect(
+    screen.getByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    })
+  ).toBeVisible();
   expect(
     screen.getAllByRole("generic", { name: "PaginationWidget" })
   ).toHaveLength(2);
@@ -638,7 +669,9 @@ test("ResourcesView shows deploy state bar with available status without process
   });
 
   expect(
-    await screen.findByRole("generic", { name: "Deployment state summary" })
+    await screen.findByRole("generic", {
+      name: words("resources.deploySummary.title"),
+    })
   ).toBeInTheDocument();
 
   const availableItem = screen.getByRole("generic", {
@@ -665,7 +698,11 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
 
-  await userEvent.click(await screen.findByRole("button", { name: "Deploy" }));
+  await userEvent.click(
+    await screen.findByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    })
+  );
 
   expect(apiHelper.pendingRequests).toEqual([
     {
@@ -691,7 +728,11 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
 
-  await userEvent.click(await screen.findByRole("button", { name: "Repair" }));
+  await userEvent.click(
+    await screen.findByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    })
+  );
 
   expect(apiHelper.pendingRequests).toEqual([
     {
@@ -724,6 +765,14 @@ test("Given the ResourcesView When environment is halted, then deploy and repair
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
 
-  expect(await screen.findByRole("button", { name: "Repair" })).toBeDisabled();
-  expect(await screen.findByRole("button", { name: "Deploy" })).toBeDisabled();
+  expect(
+    await screen.findByRole("button", {
+      name: words("resources.deploySummary.repair"),
+    })
+  ).toBeDisabled();
+  expect(
+    await screen.findByRole("button", {
+      name: words("resources.deploySummary.deploy"),
+    })
+  ).toBeDisabled();
 });

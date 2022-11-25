@@ -10,6 +10,7 @@ import {
   KeycloakAuthHelper,
 } from "@/Data";
 import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { GetInstancesContext } from "../../GetInstancesContext";
 import { DeleteModal } from "./DeleteModal";
@@ -65,28 +66,28 @@ describe("DeleteModal ", () => {
   it("Shows form when clicking on modal button", async () => {
     const { component } = setup();
     render(component());
-    const modalButton = await screen.findByText("Delete");
+    const modalButton = await screen.findByText(words("delete"));
     await userEvent.click(modalButton);
-    expect(await screen.findByText("Yes")).toBeVisible();
-    expect(await screen.findByText("No")).toBeVisible();
+    expect(await screen.findByText(words("yes"))).toBeVisible();
+    expect(await screen.findByText(words("no"))).toBeVisible();
   });
   it("Closes modal when cancelled", async () => {
     const { component } = setup();
     render(component());
-    const modalButton = await screen.findByText("Delete");
+    const modalButton = await screen.findByText(words("delete"));
     await userEvent.click(modalButton);
-    const noButton = await screen.findByText("No");
+    const noButton = await screen.findByText(words("no"));
     await userEvent.click(noButton);
-    expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+    expect(screen.queryByText(words("yes"))).not.toBeInTheDocument();
   });
   it("Sends request when submitted", async () => {
     const { component, apiHelper, refetch } = setup();
     render(component());
-    const modalButton = await screen.findByText("Delete");
+    const modalButton = await screen.findByText(words("delete"));
     await userEvent.click(modalButton);
-    const yesButton = await screen.findByText("Yes");
+    const yesButton = await screen.findByText(words("yes"));
     await userEvent.click(yesButton);
-    expect(screen.queryByText("Yes")).not.toBeInTheDocument();
+    expect(screen.queryByText(words("yes"))).not.toBeInTheDocument();
     expect(apiHelper.pendingRequests[0]).toEqual({
       environment: "env",
       method: "DELETE",
@@ -106,7 +107,7 @@ describe("DeleteModal ", () => {
     });
     rerender(component(false));
     expect(
-      await screen.findByRole("button", { name: "Delete" })
+      await screen.findByRole("button", { name: words("delete") })
     ).toBeDisabled();
   });
 });

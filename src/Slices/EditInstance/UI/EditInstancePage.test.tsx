@@ -22,6 +22,7 @@ import {
   DeferredApiHelper,
   dependencies,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { EditInstancePage } from "./EditInstancePage";
@@ -102,7 +103,7 @@ test("EditInstance View shows success form", async () => {
   expect(bandwidthField).toBeVisible();
 
   await userEvent.type(bandwidthField, "2");
-  await userEvent.click(screen.getByText("Confirm"));
+  await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -141,7 +142,7 @@ test("Given the EditInstance View When changing an embedded entity Then the corr
   expect(bandwidthField).toBeVisible();
 
   await userEvent.type(bandwidthField, "2");
-  await userEvent.click(screen.getByText("Confirm"));
+  await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   if (!ServiceInstance.a.active_attributes) {
