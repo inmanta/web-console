@@ -24,8 +24,7 @@ git clone $local_setup_repo || exit 1
 
 cd local-setup
 
-# pull either iso5 or iso4
-
+# This can be adjusted to pull in iso4 by replacing the command with 'yarn run pull:4dev'
 yarn run pull:5dev
 
 sleep 2
@@ -36,10 +35,10 @@ yarn start
 # need to sleep to avoid concurency with the next command execution. Under 4 sec it doesn't work locally.
 sleep 4
 
-# execute installation script for LSM (there are two commands so in cleanup think about solution instead of copying the whole command)
+# execute installation script for LSM
 yarn windows:lsm:install
 
-# run test suit based on the docker that is being spinned up.
+# exit temp/local-setup to be back on root level
 cd ../..
 
 # remove old build output and copy dist to the the orchestrator
