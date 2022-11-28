@@ -86,7 +86,7 @@ export const View: React.FC<Props> = ({ version }) => {
         <PageTitle>{words("desiredState.complianceCheck.title")}</PageTitle>
       </StyledPageSection>
       <PageSection variant="light">
-        <Toolbar>
+        <ToolBarContainer>
           <ToolbarContent style={{ padding: 0 }}>
             <SelectReportAction
               setSelectedReport={setSelectedReport}
@@ -99,7 +99,7 @@ export const View: React.FC<Props> = ({ version }) => {
             />
             <TriggerDryRunAction version={version} updateList={updateList} />
           </ToolbarContent>
-        </Toolbar>
+        </ToolBarContainer>
       </PageSection>
       <DiffPageSection
         report={selectedReport}
@@ -112,4 +112,8 @@ export const View: React.FC<Props> = ({ version }) => {
 
 const StyledPageSection = styled(PageSection)`
   padding-bottom: 0;
+`;
+
+const ToolBarContainer = styled(Toolbar)`
+  z-index: var(--pf-global--ZIndex--xl);
 `;
