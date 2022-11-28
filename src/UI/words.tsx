@@ -232,6 +232,7 @@ const dict = {
   "catalog.update.success.message":
     "We are processing the update of your Service Catalog. The process will be finished after compilation.",
   "catalog.update.modal.title": "Update Request",
+  "catalog.delete.modal.title": "Delete Service",
   "catalog.update.confirmation":
     "Are you sure you want to update your Service Catalog? This is an irreversible change and you might want to do a back-up before confirming the update.",
   "catalog.button.details": "Show Details",
