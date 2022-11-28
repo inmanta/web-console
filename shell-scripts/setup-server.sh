@@ -27,7 +27,7 @@ git clone $local_setup_repo || exit 1
 
 cd local-setup
 
-# This can be adjusted to pull in iso4 by replacing the command with 'yarn run pull:4dev'
+# This can be adjusted to pull in iso4 by replacing the second argument with '4dev'
 yarn run pull:$2
 
 sleep 2
