@@ -1,6 +1,9 @@
 #!/bin/bash
 echo "Starting E2E test suit"
 
+# Arg $1 is the OS you are on
+# Arg $2 is the version of the orchestrator that is being pulled/installed.
+
 if [[ -f "./shell-scripts/env.sh" ]]; then
     echo "env.sh found - sourcing..."
     # shellcheck disable=SC1091
@@ -25,7 +28,7 @@ git clone $local_setup_repo || exit 1
 cd local-setup
 
 # This can be adjusted to pull in iso4 by replacing the command with 'yarn run pull:4dev'
-yarn run pull:5dev
+yarn run pull:$2
 
 sleep 2
 
@@ -36,7 +39,7 @@ yarn start
 sleep 4
 
 # execute installation script for LSM
-yarn windows:lsm:install
+yarn $1:lsm:install
 
 # exit temp/local-setup to be back on root level
 cd ../..
