@@ -31,10 +31,7 @@ export const CatalogTabs: React.FunctionComponent<Props> = ({ service }) => {
       mountOnEnter
     >
       <Tab eventKey="details" title="Details">
-        <Details
-          serviceName={service.name}
-          instanceSummary={service.instance_summary}
-        />
+        <Details instanceSummary={service.instance_summary} />
       </Tab>
       <Tab eventKey="attributes" title="Attributes">
         <OverflowContainer>

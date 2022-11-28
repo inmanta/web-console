@@ -9,6 +9,7 @@ import {
 import styled from "styled-components";
 import { Diff } from "@/Core";
 import { StatusDescriptor } from "@/UI/Components/DiffWizard/StatusDescriptor";
+import { words } from "@/UI/words";
 
 interface Props {
   statuses: Diff.Status[];
@@ -28,8 +29,8 @@ export const StatusFilter: React.FC<Props> = ({ statuses, setStatuses }) => {
 
   const [allLabel, allCallback] =
     statuses.length === Diff.statuses.length
-      ? ["Hide All", () => setStatuses([])]
-      : ["Show All", () => setStatuses(Diff.statuses)];
+      ? [words("hideAll"), () => setStatuses([])]
+      : [words("showAll"), () => setStatuses(Diff.statuses)];
 
   return (
     <ToolbarGroup alignment={{ default: "alignLeft" }}>

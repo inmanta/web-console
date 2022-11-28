@@ -10,6 +10,7 @@ import {
   QueryManagerResolver,
 } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Mock } from "@S/Facts/Test";
 import { Page } from "./Page";
@@ -87,7 +88,7 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
     })
   );
   const resourceIdButton = await screen.findByRole("button", {
-    name: "Resource Id",
+    name: words("facts.column.resourceId"),
   });
   expect(resourceIdButton).toBeVisible();
   await userEvent.click(resourceIdButton);
@@ -95,9 +96,9 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
 });
 
 test.each`
-  filterValue      | placeholderText     | filterUrlName
-  ${"awsDeviceV2"} | ${"Name..."}        | ${"name"}
-  ${"id123"}       | ${"Resource Id..."} | ${"resource_id"}
+  filterValue      | placeholderText                                  | filterUrlName
+  ${"awsDeviceV2"} | ${words("facts.filters.name.placeholder")}       | ${"name"}
+  ${"id123"}       | ${words("facts.filters.resourceId.placeholder")} | ${"resource_id"}
 `(
   "When using the $filterName filter of type $filterType with value $filterValue and text $placeholderText then the facts with that $filterUrlName should be fetched and shown",
   async ({ filterValue, placeholderText, filterUrlName }) => {

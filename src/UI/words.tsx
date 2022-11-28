@@ -28,6 +28,9 @@ const dict = {
   retry: "Retry",
   delete: "Delete",
   empty: "Empty",
+  jumpTo: "Jump to",
+  hideAll: "Hide All",
+  showAll: "Show All",
 
   /**
    * Error related text
@@ -152,6 +155,7 @@ const dict = {
     `Are you sure you want to delete version ${version}?`,
   "inventory.filters.state.placeholder": "Select a state...",
   "ServiceDetails.title": (name: string) => `Service Details: ${name}`,
+  "inventory.test.creating": "creating",
 
   /**
    * Config related text
@@ -222,12 +226,13 @@ const dict = {
   "catalog.summary.noLabel": "no label",
   "catalog.summary.empty": "No instance summary found",
   "catalog.button.inventory": "Show inventory",
-  "catalog.button.update": "Update Service Catalog ",
+  "catalog.button.update": "Update Service Catalog",
   "catalog.update.failed": "The update failed",
   "catalog.update.success": "The update has been requested",
   "catalog.update.success.message":
     "We are processing the update of your Service Catalog. The process will be finished after compilation.",
   "catalog.update.modal.title": "Update Request",
+  "catalog.delete.modal.title": "Delete Service",
   "catalog.update.confirmation":
     "Are you sure you want to update your Service Catalog? This is an irreversible change and you might want to do a back-up before confirming the update.",
   "catalog.button.details": "Show Details",
@@ -328,6 +333,8 @@ const dict = {
   "compileReports.filters.result.placeholder": "Select result...",
   "compileReports.filters.result.success": "Successful",
   "compileReports.filters.result.failed": "Failed",
+  "compileReports.filters.test.success": "success",
+  "compileReports.tests.filters.result.inProgress": "in progress",
 
   /** Compile details related text */
   "compileDetails.title": "Compile Details",
@@ -450,6 +457,9 @@ const dict = {
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",
+  "agent.tests.processName": "Process Name",
+  "agent.tests.status": "Status",
+  "agent.tests.up": "up",
 
   /** Facts */
   "facts.title": "Facts",
@@ -514,12 +524,15 @@ const dict = {
   "desiredState.complianceCheck.action.dryRun.failed":
     "Triggering dryrun failed",
   "desiredState.complianceCheck.noDryRuns": "No dry runs exist",
+  "desiredState.test.skippedCandidate": "skipped_candidate",
+  "desiredState.test.candidate": "candidate",
 
   /** Parameters */
   "parameters.title": "Parameters",
   "parameters.empty.message": "No parameters found",
   "parameters.columns.name": "Name",
   "parameters.columns.updated": "Last Updated",
+  "parameters.columns.updated.tests": "Updated",
   "parameters.columns.source": "Source",
   "parameters.columns.value": "Value",
   "parameters.filters.name.placeholder": "Filter by name",

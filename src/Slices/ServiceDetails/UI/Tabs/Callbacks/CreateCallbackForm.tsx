@@ -73,7 +73,7 @@ export const CreateCallbackForm: React.FC<Props> = ({
         <Td className={inlineStyles.inlineEditInput}>
           <TextInput
             aria-label="callbackId"
-            value={id || undefined}
+            value={id || ""}
             type="text"
             onChange={setId}
           />

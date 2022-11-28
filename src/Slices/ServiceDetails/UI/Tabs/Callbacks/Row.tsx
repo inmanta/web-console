@@ -1,9 +1,9 @@
 import React from "react";
-import { Button } from "@patternfly/react-core";
+import { Button, Text, Tooltip } from "@patternfly/react-core";
 import { AngleDownIcon, AngleRightIcon } from "@patternfly/react-icons";
 import { ExpandableRowContent, Tbody, Td, Tr } from "@patternfly/react-table";
+import styled from "styled-components";
 import { getShortUuidFromRaw } from "@/Core";
-
 import { TextWithCopy } from "@/UI/Components";
 import { words } from "@/UI/words";
 import { Callback } from "@S/ServiceDetails/Core/Callback";
@@ -29,24 +29,30 @@ export const Row: React.FC<Props> = ({
   return (
     <Tbody isExpanded={false}>
       <Tr aria-label={`CallbackRow-${shortUuid}`}>
-        <Td>{callback.url}</Td>
         <Td>
-          <TextWithCopy
-            value={callback.callback_id}
-            tooltipContent={words("catalog.callbacks.uuid.copy")}
-          >
-            {shortUuid}
-          </TextWithCopy>
-        </Td>
-        <Td>{callback.minimal_log_level}</Td>
-        <Td>
-          {callback.event_types && (
-            <ListWithTeaser
-              items={callback.event_types}
+          {callback.event_types ? (
+            <Toggle
+              text={callback.url}
               onClick={onToggle}
               isExpanded={isExpanded}
             />
+          ) : (
+            <StyledText>{callback.url}</StyledText>
           )}
+        </Td>
+        <Td>
+          <Tooltip content={callback.callback_id}>
+            <TextWithCopy
+              value={callback.callback_id}
+              tooltipContent={words("catalog.callbacks.uuid.copy")}
+            >
+              {shortUuid}
+            </TextWithCopy>
+          </Tooltip>
+        </Td>
+        <Td>{callback.minimal_log_level_text}</Td>
+        <Td>
+          {callback.event_types && callback.event_types.length + " Event Types"}
         </Td>
         <Td>
           <DeleteButton
@@ -68,17 +74,21 @@ export const Row: React.FC<Props> = ({
     </Tbody>
   );
 };
-
-const ListWithTeaser: React.FC<{
-  items: string[];
+const Toggle: React.FC<{
+  text: string;
   onClick: () => void;
   isExpanded: boolean;
-}> = ({ items, onClick, isExpanded }) => {
-  if (items.length <= 0) return null;
-  const teaser = `${items[0].substr(0, 8)}... (${items.length})`;
+}> = ({ text, onClick, isExpanded }) => {
   return (
-    <Button variant="plain" aria-label="Action" onClick={onClick}>
-      {teaser} {isExpanded ? <AngleDownIcon /> : <AngleRightIcon />}
-    </Button>
+    <StyledButton variant="plain" aria-label="Action" onClick={onClick}>
+      {isExpanded ? <AngleDownIcon /> : <AngleRightIcon />} {text}
+    </StyledButton>
   );
 };
+
+const StyledText = styled(Text)`
+  padding-left: 36px;
+`;
+const StyledButton = styled(Button)`
+  color: var(--pf-c-table--cell--Color) !important;
+`;

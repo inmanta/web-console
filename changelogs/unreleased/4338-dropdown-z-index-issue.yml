@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Fix filter options being displayed under the DIFF comparator on some pages.'
+issue-nr: 4338
+destination-branches:
+- master
+- iso5
+sections: 
+  minor-improvement: "{{description}}"

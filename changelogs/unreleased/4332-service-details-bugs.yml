@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Fix service callbacks issues in display, in readabilty and form behaviour after adding callback'
+issue-nr: 4332
+destination-branches:
+- master
+- iso5
+sections: 
+  minor-improvement: "{{description}}"

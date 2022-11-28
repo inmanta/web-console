@@ -12,6 +12,8 @@ import {
   QueryResolverImpl,
 } from "@/Data";
 import { DeferredApiHelper, dependencies, StaticScheduler } from "@/Test";
+import { words } from "@/UI";
+
 import { DependencyProvider } from "@/UI/Dependency";
 import { MomentDatePresenter } from "@/UI/Utils";
 import * as Mock from "@S/ComplianceCheck/Data/Mock";
@@ -166,7 +168,9 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
-  const dryRunButton = screen.getByRole("button", { name: "Perform dry run" });
+  const dryRunButton = screen.getByRole("button", {
+    name: words("desiredState.complianceCheck.action.dryRun"),
+  });
   await userEvent.click(dryRunButton);
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -222,7 +226,7 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
-  await userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
 
   expect(
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
@@ -246,10 +250,10 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     name: "StatusFilterOption",
   });
   expect(statusOptions).toHaveLength(7);
-  await userEvent.click(screen.getByRole("button", { name: "Hide All" }));
+  await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
   await userEvent.click(statusOptions[0]);
 
-  await userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
   expect(
     await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" })
   ).toHaveLength(2);

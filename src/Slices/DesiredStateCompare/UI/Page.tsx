@@ -41,14 +41,14 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
         <PageTitle>{words("desiredState.compare.title")}</PageTitle>
       </StyledPageSection>
       <PageSection variant="light">
-        <Toolbar>
+        <ToolBarContainer>
           <ToolbarContent style={{ padding: 0 }}>
             <DiffWizard.StatusFilter
               statuses={statuses}
               setStatuses={setStatuses}
             />
           </ToolbarContent>
-        </Toolbar>
+        </ToolBarContainer>
       </PageSection>
       <PageSection variant="light" hasShadowBottom sticky="top">
         <DiffWizard.Controls
@@ -82,4 +82,8 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
 
 const StyledPageSection = styled(PageSection)`
   padding-bottom: 0;
+`;
+
+const ToolBarContainer = styled(Toolbar)`
+  z-index: var(--pf-global--ZIndex--xl);
 `;

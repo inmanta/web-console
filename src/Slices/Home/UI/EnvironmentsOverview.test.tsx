@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { dependencies, Environment } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentsOverview } from "./EnvironmentsOverview";
 
@@ -31,7 +32,9 @@ it.each`
       name: "Environment card",
     });
     expect(initialCards).toHaveLength(4);
-    const input = await screen.findByPlaceholderText("Filter by name");
+    const input = await screen.findByPlaceholderText(
+      words("home.filters.env.placeholder")
+    );
     await userEvent.click(input);
     await userEvent.type(input, filterValue);
     expect(
@@ -49,7 +52,9 @@ test("Given environments overview When filtering by project Then only the matchi
     name: "Environment card",
   });
   expect(initialCards).toHaveLength(4);
-  const input = await screen.findByPlaceholderText("Filter by project");
+  const input = await screen.findByPlaceholderText(
+    words("home.filters.project.placeholder")
+  );
   await userEvent.click(input);
   const option = await screen.findByRole("option", { name: "default" });
   await await userEvent.click(option);
@@ -67,11 +72,15 @@ test("Given environments overview When filtering by name and project Then only t
     name: "Environment card",
   });
   expect(initialCards).toHaveLength(4);
-  const projectInput = await screen.findByPlaceholderText("Filter by project");
+  const projectInput = await screen.findByPlaceholderText(
+    words("home.filters.project.placeholder")
+  );
   await userEvent.click(projectInput);
   const option = await screen.findByRole("option", { name: "default" });
   await await userEvent.click(option);
-  const nameInput = await screen.findByPlaceholderText("Filter by name");
+  const nameInput = await screen.findByPlaceholderText(
+    words("home.filters.env.placeholder")
+  );
   await userEvent.click(nameInput);
   await userEvent.type(nameInput, "test");
   expect(

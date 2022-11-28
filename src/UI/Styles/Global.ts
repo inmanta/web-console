@@ -38,4 +38,21 @@ export const GlobalStyles = createGlobalStyle`
   .pf-c-calendar-month__header-year {
     width: 9ch;
   }
+  .pf-c-toolbar__content-section {
+    gap: var(--pf-global--spacer--sm);
+    align-items: flex-start;
+  }
+  .pf-c-select {
+    min-width: 180px;
+  }
+  .pf-c-toolbar__item .pf-c-input-group {
+    height: auto !important;
+  }
+  @media (max-width: 1000px) {
+    *[aria-label="FilterBar"] {
+      gap: var(--pf-global--spacer--md);
+      flex-wrap: wrap;
+    }
+  }
+
 `;
