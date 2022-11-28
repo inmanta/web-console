@@ -32,8 +32,18 @@ The frontend uses the (patternfly v4 framework)[https://www.patternfly.org/v4/] 
 
     yarn bundle-profile:analyze # Launch a tool to inspect the bundle size
 
-    yarn cypress-test # Run tests with Cypress
+    yarn setup-server:lsm # Will setup and install an orchestrator running on port 8888 with lsm modules.
 
+    yarn cypress-test # Run tests with Cypress (Requires the previous command to run succesfully)
+
+    yarn kill-server:lsm # This will remove the temporary folder containing the local-setup repo and destroy the docker containers that were setup previously with the setup-server:lsm command.
+
+### PAT
+You will need to create a file `env.sh` in `shell-scripts` folder containing the variable GITLAB_TOKEN. It should look like so: 
+``export GITLAB_TOKEN=xxxxxxxxxxxxxxxxx``
+(xxxx equals your PAT token, of course.)
+
+## Authentication
 To enable authentication with keycloak, you can use environment variables, e.g. add the following variable to a dotenv (`.env` in the root of the project) file (further information on <https://github.com/motdotla/dotenv>)
 
     SHOULD_USE_AUTH=true
