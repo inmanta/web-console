@@ -80,7 +80,10 @@ export const TimestampFilter: React.FC<Props> = ({
   };
 
   return (
-    <Flex>
+    <Flex
+      style={{ gap: "var(--pf-global--spacer--md)" }}
+      flexWrap={{ lg: "nowrap" }}
+    >
       {isVisible && (
         <>
           <FlexItem>
