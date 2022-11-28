@@ -1,0 +1,8 @@
+description: Improve alignment of filter options on smaller screens.
+change-type: patch
+issue-nr: 4339
+destination-branches: 
+ - master
+ - iso5
+sections: 
+  minor-improvement: "{{description}}"
