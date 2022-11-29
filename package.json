@@ -21,9 +21,12 @@
     "clean": "rimraf dist",
     "delete:reports": "rm -r cypress/reports/* || true",
     "precypress-test": "yarn run delete:reports",
-    "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'yarn cypress run'",
+    "cypress-test": "yarn start-test 'yarn start' http-get://localhost:8888 'yarn cypress run'",
     "package-cleanup": "node clean_up_packages",
-    "check-circular-deps": "madge --circular ./src/index.tsx"
+    "check-circular-deps": "madge --circular ./src/index.tsx",
+    "setup-server:lsm": "sh ./shell-scripts/setup-server.sh windows 5dev",
+    "setup-server:lsm:linux": "sh ./shell-scripts/setup-server.sh linux 5dev",
+    "kill-server:lsm": "sh ./shell-scripts/clear-server.sh"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -40,7 +43,7 @@
   "type": "module",
   "devDependencies": {
     "@babel/core": "^7.19.6",
-    "@babel/plugin-transform-typescript": "^7.19.3",
+    "@babel/plugin-transform-typescript": "^7.20.2",
     "@testing-library/dom": "^8.19.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -53,7 +56,7 @@
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.11.2",
     "@types/qs": "^6.9.7",
-    "@types/react-dom": "^18.0.8",
+    "@types/react-dom": "^18.0.9",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-syntax-highlighter": "^15.5.5",
     "@types/styled-components": "^5.1.26",
@@ -122,8 +125,8 @@
     "webpack-version-file": "^0.1.7"
   },
   "dependencies": {
-    "@patternfly/react-charts": "^6.94.11",
-    "@patternfly/react-core": "^4.250.1",
+    "@patternfly/react-charts": "^6.94.12",
+    "@patternfly/react-core": "^4.264.0",
     "@patternfly/react-icons": "^4.92.10",
     "@patternfly/react-styles": "^4.91.10",
     "@patternfly/react-table": "^4.111.33",

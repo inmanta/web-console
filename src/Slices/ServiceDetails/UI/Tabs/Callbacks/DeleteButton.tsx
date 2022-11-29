@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
-import { TrashAltIcon } from "@patternfly/react-icons";
 import { Maybe } from "@/Core";
 import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -56,10 +55,11 @@ export const DeleteButton: React.FunctionComponent<DeleteProps> = ({
       <Button
         variant="secondary"
         isDanger
-        icon={<TrashAltIcon />}
         onClick={() => setIsOpen(true)}
         {...props}
-      />
+      >
+        {words("delete")}
+      </Button>
     </>
   );
 };

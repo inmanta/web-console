@@ -14,6 +14,7 @@ import {
   MockEnvironmentModifier,
   ServiceInstance,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { InstanceActions } from "./InstanceActions";
 
@@ -51,5 +52,9 @@ test("Given InstanceActions component When the instance is terminated Then the a
     </MemoryRouter>
   );
   render(component);
-  expect(await screen.findByRole("button", { name: "History" })).toBeVisible();
+  expect(
+    await screen.findByRole("button", {
+      name: words("inventory.statusTab.history"),
+    })
+  ).toBeVisible();
 });

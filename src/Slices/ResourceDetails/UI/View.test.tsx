@@ -12,6 +12,7 @@ import {
   StaticScheduler,
   Resource,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import {
   ResourceDetailsQueryManager,
@@ -80,7 +81,9 @@ test("GIVEN The Resource details view WHEN the user clicks on the requires tab T
     await apiHelper.resolve(Either.right({ data: ResourceDetails.a }));
   });
 
-  await userEvent.click(screen.getAllByRole("tab", { name: "Requires" })[0]);
+  await userEvent.click(
+    screen.getAllByRole("tab", { name: words("resources.requires.title") })[0]
+  );
 
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(0);

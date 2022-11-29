@@ -1,6 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { words } from "@/UI/words";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "./Catalog";
 import { PathHelper, TreeExpansionManager } from "./Helpers";
 import {
@@ -192,7 +193,9 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
   expect(row3).toBeVisible();
 
   fireEvent.click(dropdownOpenButton);
-  await userEvent.click(within(dropdown).getByText("Collapse all"));
+  await userEvent.click(
+    within(dropdown).getByText(words("inventory.tabs.collapse"))
+  );
   expect(row1).not.toBeVisible();
   expect(row2).not.toBeVisible();
   expect(row3).not.toBeVisible();

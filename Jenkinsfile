@@ -5,10 +5,14 @@ pipeline {
         disableConcurrentBuilds()
         checkoutToSubdirectory('web-console')
         skipDefaultCheckout()
+        timeout(time: 15, unit: 'MINUTES')
     }
     triggers{
         pollSCM('* * * * *')
         cron(BRANCH_NAME ==~ /master|iso[0-9]+/ ? "H H(2-5) * * *" : "")
+    }
+    environment {
+        GITLAB_TOKEN = credentials('jenkins_on_gitlab')
     }
 
     stages {
@@ -30,7 +34,10 @@ pipeline {
         stage('Testing with cypress') {
             steps {
                 dir('web-console') {
-                    sh '''yarn cypress-test'''
+                    sh '''yarn run build;
+                    yarn run setup-server:lsm;
+                    yarn run cypress-test;
+                    yarn run kill-server:lsm'''
                 }
             }
         }

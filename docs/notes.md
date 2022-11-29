@@ -224,3 +224,94 @@ We agreed to use hyphen-sepraten name covention for custom Events i.e.
 ```
 
 
+### Backend Communication
+We decided to briefly explain flow and the general usage of Command and Query Managers which are the foundation of our communication with the backend.
+The decision was motivated to ease the onboarding process for future colleagues who happen to work on currently implemented or create new ones and also for us to help when we have to come back to them in future
+ 
+Communication is based on Command/Query Managers and Resolvers which were implemented to unify how data is fetched from the backend and also to group all these types of calls in one place to be easily accessed.
+That also put some abstraction on it which can be difficult to decode at first glance.
+
+The difference between Command and Query Managers is pretty straightforward, Command ones are responsible for every request that sends some data to the backend(POST/UPDATE/DELETE)Query ones, on the other hand, for retrieving data from it(GET/HEAD).
+ 
+#### Query Managers & Resolvers
+There are two main types of query managers each with two subtypes:
+- One Time Query Manager(with Env or not)
+- Continuous Query Manager(with Env or not)
+ 
+There is also one query Manager used for notifications:
+- useReadOnlyWithEnv to which implementation is simplified to only 3 parameters but has similar behavior to the covered queries below.
+ 
+One Time Query Managers as its name indicates creates an instance that's meant to be used as a singular, non-repeating request.
+ 
+Continuous Query Managers on the other hand are used with one additional parameter to help them fulfill their continuous purpose,
+parameter "scheduler" indicates the interval on which a given request is called.
+ 
+##### General flow:
+ 
+Query Manager accepts:
+- **ApiHelper** - takes care of API calls, it's instantiated on app start(in the `Injector.tsx` file) before all other Managers/Resolvers which then is passed down to ones that need that helper.
+- **StateHelper** - get call status and eventual data assigned[^1], it's also instantiated on the start, like **ApiHelper**
+- **Scheduler** - as mentioned above sets the interval on which query is asked[^2]
+- **getUnique** - a callback that returns a unique "id" that is being populated to Scheduler to avoid having duplicates of queries in scheduler[^2]
+- **getDependencies** - a callback that returns dependencies on which that call relies (with env or not)
+- **kind** - defines what kind of call it is from a set of predefined calls[^1]
+- **getUrl** - a callback that returns the correct URL tail for a given call[^1]
+- **toUsed** - a callback that is used to process data after retrieved from a call
+- **strategy** - a string enum that is used as one of the conditions to define whether to set query call status to loading or not[^3]
+ 
+[^1]: These parameters can be with or without Env, depending if the call requires one
+[^2]: parameter for the Continous Query manager **only**
+[^3]: parameter for the One Time Query manager **only**
+ 
+Each query Manager has:
+- internal **update** function which takes care of appending data to stateHelper
+- **useOneTime** hook which has two useEffect, one listens for query change and update URL, second listens to URL change to perform fire update() function, also returns data and callback that essentially run update function which is used across the app as retry function
+- matches function that checks given query.kind with one that is initially sent to query manager(with kind parameter on initialization)
+ 
+Each initialization of Query Manager is appended to the main Query Resolver which stores every instance of the queries available in the app. Query Resolver on the other hand is stored in DependecyContext with other Managers or Resolvers.
+ 
+These instances can be used in components as in the example below:
+ 
+```
+const { queryResolver } = useContext(DependencyContext);
+const [statusData, retry] = queryResolver.useOneTime<"GetServerStatus">({
+ kind: "GetServerStatus",
+});
+```
+ 
+All **queryManagers** are stored in QueryResolver class which allows us to browse through the ready-to-use implementation of each query only with kind parameters as seen above.
+After that assignment we get an Array from the hook with RemoteData Object which, in short, has 4 statuses:
+1. Not Asked
+2. Loading
+3. Failed - with the value that stores an error message
+4. Success- with the value that corresponds to data requested in a query
+ 
+That object has to be unfolded to access data through RemoteData.fold()
+ 
+ 
+#### Command Managers
+There are two sub-types of command managers:
+- CommandManagerWithEnv
+- CommandManagerWithoutEnv
+ 
+Each CommandManager instance is initialized with apiHelper in CommandResolver which has the same purpose as queryResolver.
+CommandResolver stores all instances of managers, each of them returns either CommandManagerWithEnv or CommandManagerWithoutEnv instance that takes two parameters:
+ - **kind** - string Enum that helps navigate through managers in the same way as in Query Resolvers
+ - **customGetTrigger** - a callback that accepts:
+ - **command** Object which stores kind parameter and occasionally data used to specify the destination of post/update/delete request
+ - **environment** string which is populated in the CommandManagerWithEnv/WithoutEnv body
+ That callback with help of apiHelper takes care of requests based on the requirement
+that function then returns functions:
+ - **matches** - which has the same usability as in queryManager
+ - **useGetTrigger** which takes the command Object and passes it down with the environment parameter down to customGetTrigger
+ 
+These instances can be used in components as in the example below:
+ 
+```
+const { commandResolver } = useContext(DependencyContext);
+const trigger = commandResolver.useGetTrigger<"TriggerDryRun">({
+ kind: "TriggerDryRun",
+ version,
+});
+```
+the trigger is returning customGetTrigger with already populated parameters, ready to be used to send requests to the backend.

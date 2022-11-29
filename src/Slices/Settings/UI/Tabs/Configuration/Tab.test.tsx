@@ -19,7 +19,7 @@ import {
   EnvironmentSettings,
   StaticScheduler,
 } from "@/Test";
-import { DependencyProvider } from "@/UI";
+import { DependencyProvider, words } from "@/UI";
 import { Tab } from "./Tab";
 
 function setup() {
@@ -305,7 +305,7 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
   });
 
   fireEvent(document, new Event("settings-update"));
-  expect(await screen.findByText("Setting Changed")).toBeVisible();
+  expect(await screen.findByText(words("settings.update"))).toBeVisible();
 
   expect(apiHelper.resolvedRequests).toHaveLength(3);
   expect(toggle.checked).toBeTruthy();

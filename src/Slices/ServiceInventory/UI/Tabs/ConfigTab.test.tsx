@@ -32,6 +32,7 @@ import {
   Service,
   ServiceInstance,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { EnvironmentModifierImpl } from "@/UI/Dependency/EnvironmentModifier";
 import { ConfigTab } from "./ConfigTab";
@@ -107,7 +108,9 @@ test("ConfigTab can reset all settings", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  const resetButton = await screen.findByRole("button", { name: "Reset" });
+  const resetButton = await screen.findByRole("button", {
+    name: words("config.reset"),
+  });
   expect(resetButton).toBeVisible();
 
   expect(

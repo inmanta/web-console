@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Change hard-coded text in test cases to values from words.ts'
+issue-nr: 4296
+destination-branches:
+- master
+- iso5

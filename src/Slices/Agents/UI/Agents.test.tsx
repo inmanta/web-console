@@ -18,6 +18,7 @@ import {
   dependencies,
   EnvironmentDetails,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import * as AgentsMock from "@S/Agents/Core/Mock";
 import { Page } from "./Page";
@@ -124,9 +125,13 @@ test("When using the name filter then only the matching agents should be fetched
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Name" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("attribute.name") })
+  );
 
-  const input = screen.getByPlaceholderText("Filter by name");
+  const input = screen.getByPlaceholderText(
+    words("home.filters.env.placeholder")
+  );
   await userEvent.click(input);
 
   await userEvent.type(input, "internal{enter}");
@@ -169,9 +174,13 @@ test("When using the process name filter then only the matching agents should be
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Process Name" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("agent.tests.processName") })
+  );
 
-  const input = screen.getByPlaceholderText("Filter by process name");
+  const input = screen.getByPlaceholderText(
+    words("agents.filters.processName.placeholder")
+  );
   await userEvent.click(input);
 
   await userEvent.type(input, "internal{enter}");
@@ -214,12 +223,18 @@ test("When using the status filter with the 'up' option then the agents in the '
       { name: "FilterPicker" }
     )
   );
-  await userEvent.click(screen.getByRole("option", { name: "Status" }));
+  await userEvent.click(
+    screen.getByRole("option", { name: words("agent.tests.status") })
+  );
 
-  const input = screen.getByPlaceholderText("Select status...");
+  const input = screen.getByPlaceholderText(
+    words("agents.filters.status.placeholder")
+  );
   await userEvent.click(input);
 
-  const option = await screen.findByRole("option", { name: "up" });
+  const option = await screen.findByRole("option", {
+    name: words("agent.tests.up"),
+  });
   await await userEvent.click(option);
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -249,7 +264,9 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
-  const input = screen.getByPlaceholderText("Filter by name");
+  const input = screen.getByPlaceholderText(
+    words("agents.filters.name.placeholder")
+  );
   await userEvent.click(input);
   await userEvent.type(input, "aws{enter}");
 
@@ -260,7 +277,7 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
     name: "Agents Table Row",
   });
   const pauseAgentButton = await within(rows[0]).findByRole("button", {
-    name: "Pause",
+    name: words("agents.actions.pause"),
   });
 
   await userEvent.click(pauseAgentButton);
@@ -298,7 +315,9 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
     await apiHelper.resolve(Either.right(AgentsMock.response));
   });
 
-  const input = screen.getByPlaceholderText("Filter by name");
+  const input = screen.getByPlaceholderText(
+    words("agents.filters.name.placeholder")
+  );
   await userEvent.click(input);
   await userEvent.type(input, "bru{enter}");
 
@@ -309,7 +328,7 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
     name: "Agents Table Row",
   });
   const unpauseAgentButton = await within(rows[1]).findByRole("button", {
-    name: "Unpause",
+    name: words("agents.actions.unpause"),
   });
 
   await userEvent.click(unpauseAgentButton);
@@ -350,7 +369,7 @@ test("Given the Agents view When pausing an agent results in an error, then the 
     name: "Agents Table Row",
   });
   const pauseAgentButton = await within(rows[0]).findByRole("button", {
-    name: "Pause",
+    name: words("agents.actions.pause"),
   });
 
   await userEvent.click(pauseAgentButton);

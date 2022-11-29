@@ -8,7 +8,7 @@ import {
   dependencies,
   DynamicCommandManagerResolver,
 } from "@/Test";
-import { DependencyProvider } from "@/UI";
+import { DependencyProvider, words } from "@/UI";
 import { Tab } from "./Tab";
 
 function setup() {
@@ -30,7 +30,9 @@ function setup() {
 test("GIVEN TokenTab WHEN generate button is clicked THEN generate call is executed", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  const generateButton = screen.getByRole("button", { name: "Generate" });
+  const generateButton = screen.getByRole("button", {
+    name: words("settings.tabs.token.generate"),
+  });
   expect(generateButton).toBeVisible();
   expect(generateButton).toBeEnabled();
 
@@ -49,7 +51,9 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
   const { component, apiHelper } = setup();
   render(component);
   await userEvent.click(screen.getByRole("button", { name: "AgentOption" }));
-  await userEvent.click(screen.getByRole("button", { name: "Generate" }));
+  await userEvent.click(
+    screen.getByRole("button", { name: words("settings.tabs.token.generate") })
+  );
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
     body: { client_types: ["agent"] },
@@ -61,7 +65,9 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
 test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  await userEvent.click(screen.getByRole("button", { name: "Generate" }));
+  await userEvent.click(
+    screen.getByRole("button", { name: words("settings.tabs.token.generate") })
+  );
 
   await act(async () => {
     await apiHelper.resolve(Either.left("error message"));
@@ -81,7 +87,9 @@ test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () =
   const tokenOutput = screen.getByRole("textbox", { name: "TokenOutput" });
   expect(copyButton).toBeDisabled();
   expect(tokenOutput).toHaveValue("");
-  await userEvent.click(screen.getByRole("button", { name: "Generate" }));
+  await userEvent.click(
+    screen.getByRole("button", { name: words("settings.tabs.token.generate") })
+  );
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: "tokenstring123" }));
   });
