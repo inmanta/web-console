@@ -1,6 +1,0 @@
-change-type: patch
-description: 'Remove e2e cases'
-issue-nr: 4280
-destination-branches:
-- master
-- iso5
