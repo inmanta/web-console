@@ -3,7 +3,9 @@ import { RemoteData } from "@/Core";
 import { RemoteDataView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 
-export const Initializer: React.FC = ({ children }) => {
+export const Initializer: React.FC<React.PropsWithChildren<unknown>> = ({
+  children,
+}) => {
   const { queryResolver } = useContext(DependencyContext);
   const [statusData] = queryResolver.useOneTime<"GetServerStatus">({
     kind: "GetServerStatus",

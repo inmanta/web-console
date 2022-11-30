@@ -2,6 +2,7 @@ import assert from "assert";
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { Service } from "@/Test";
+import { words } from "@/UI/words";
 import { SummaryChart } from "./SummaryChart";
 
 test("SummaryChart renders with multiple instances", () => {
@@ -13,7 +14,7 @@ test("SummaryChart renders with multiple instances", () => {
     />
   );
   expect(
-    screen.getByRole("img", { name: "Number of instances by label" })
+    screen.getByRole("img", { name: words("catalog.summary.title") })
   ).toBeVisible();
 });
 
@@ -25,6 +26,6 @@ test("SummaryChart renders with no instances", () => {
     />
   );
   expect(
-    screen.getByRole("img", { name: "Number of instances by label" })
+    screen.getByRole("img", { name: words("catalog.summary.title") })
   ).toBeVisible();
 });

@@ -3,19 +3,17 @@ import { StateHelper, ApiHelper } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
 import { getUrl } from "@S/Settings/Data/GetProjects/getUrl";
 
-export class GetEnvironmentsQueryManager extends QueryManager.OneTime<"GetEnvironments"> {
-  constructor(
-    apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetEnvironments">
-  ) {
-    super(
-      apiHelper,
-      stateHelper,
-      () => [],
-      "GetEnvironments",
-      ({ details }) => getUrl(details),
-      identity,
-      "MERGE"
-    );
-  }
+export function GetEnvironmentsQueryManager(
+  apiHelper: ApiHelper,
+  stateHelper: StateHelper<"GetEnvironments">
+) {
+  return QueryManager.OneTime<"GetEnvironments">(
+    apiHelper,
+    stateHelper,
+    () => [],
+    "GetEnvironments",
+    ({ details }) => getUrl(details),
+    identity,
+    "MERGE"
+  );
 }

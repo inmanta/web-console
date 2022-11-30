@@ -14,6 +14,7 @@ interface Props {
   started?: Timestamp;
   startedDiff?: string;
   completed?: Timestamp;
+  success?: boolean | null;
 }
 
 export const Timeline: React.FC<Props> = ({
@@ -22,6 +23,7 @@ export const Timeline: React.FC<Props> = ({
   started,
   startedDiff,
   completed,
+  success,
 }) => (
   <Container>
     <RequestedLabel>Requested</RequestedLabel>
@@ -29,7 +31,7 @@ export const Timeline: React.FC<Props> = ({
     <StartedLabel>Started</StartedLabel>
     {startedDiff && <StartedDiff>{startedDiff}</StartedDiff>}
     <CompletedLabel>Completed</CompletedLabel>
-    <Frame started={started} completed={completed} />
+    <Frame started={started} completed={completed} success={success} />
     <RequestedTimestampLabel timestamp={requested} />
     {started && <StartedTimestampLabel timestamp={started} />}
     {completed && <CompletedTimestampLabel timestamp={completed} />}

@@ -6,7 +6,7 @@ import { DependencyContext } from "@/UI/Dependency";
 
 interface Props {
   serviceName: string;
-  Wrapper: React.FC<{ name: string }>;
+  Wrapper: React.FC<{ name: string; children?: React.ReactNode }>;
   Dependant: React.FC<{ service: ServiceModel }>;
 }
 

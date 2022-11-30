@@ -25,10 +25,10 @@ export const EnvironmentSettings: React.FC<Props> = ({
 }) => {
   const { commandResolver } = useContext(DependencyContext);
   const modifyEnvironmentTrigger =
-    commandResolver.getTrigger<"ModifyEnvironment">({
+    commandResolver.useGetTrigger<"ModifyEnvironment">({
       kind: "ModifyEnvironment",
     });
-  const createProject = commandResolver.getTrigger<"CreateProject">({
+  const createProject = commandResolver.useGetTrigger<"CreateProject">({
     kind: "CreateProject",
   });
 

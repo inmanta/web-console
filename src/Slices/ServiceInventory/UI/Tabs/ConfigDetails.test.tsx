@@ -20,15 +20,15 @@ import { ConfigDetails } from "./ConfigDetails";
 function setup() {
   const store = getStoreInstance();
   const baseApiHelper = new BaseApiHelper();
-  const commandManager = new InstanceConfigCommandManager(
+  const commandManager = InstanceConfigCommandManager(
     baseApiHelper,
-    new InstanceConfigStateHelper(store)
+    InstanceConfigStateHelper(store)
   );
   store.dispatch.environment.setEnvironmentDetailsById({
     id: ServiceInstance.a.environment,
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
-  const environmentModifier = new EnvironmentModifierImpl();
+  const environmentModifier = EnvironmentModifierImpl();
   environmentModifier.setEnvironment(ServiceInstance.a.environment);
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([commandManager])

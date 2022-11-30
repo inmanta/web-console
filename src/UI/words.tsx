@@ -28,6 +28,9 @@ const dict = {
   retry: "Retry",
   delete: "Delete",
   empty: "Empty",
+  jumpTo: "Jump to",
+  hideAll: "Hide All",
+  showAll: "Show All",
 
   /**
    * Error related text
@@ -88,6 +91,8 @@ const dict = {
   "inventory.column.updatedAt": "Updated",
   "inventory.column.resources": "Resources",
   "inventory.tabs.attributes": "Attributes",
+  "inventory.tabs.collapse": "Collapse all",
+  "inventory.tabs.expand": "Expand all",
   "inventory.tabs.resources": "Resources",
   "inventory.tabs.status": "Status",
   "inventory.statustab.actions": "Actions",
@@ -149,6 +154,8 @@ const dict = {
   "inventory.deleteVersion.header": (version: ParsedNumber) =>
     `Are you sure you want to delete version ${version}?`,
   "inventory.filters.state.placeholder": "Select a state...",
+  "ServiceDetails.title": (name: string) => `Service Details: ${name}`,
+  "inventory.test.creating": "creating",
 
   /**
    * Config related text
@@ -218,7 +225,17 @@ const dict = {
   "catalog.summary.title": `Number of instances by label`,
   "catalog.summary.noLabel": "no label",
   "catalog.summary.empty": "No instance summary found",
-  "catalog.button.inventory": "Inventory",
+  "catalog.button.inventory": "Show inventory",
+  "catalog.button.update": "Update Service Catalog",
+  "catalog.update.failed": "The update failed",
+  "catalog.update.success": "The update has been requested",
+  "catalog.update.success.message":
+    "We are processing the update of your Service Catalog. The process will be finished after compilation.",
+  "catalog.update.modal.title": "Update Request",
+  "catalog.delete.modal.title": "Delete Service",
+  "catalog.update.confirmation":
+    "Are you sure you want to update your Service Catalog? This is an irreversible change and you might want to do a back-up before confirming the update.",
+  "catalog.button.details": "Show Details",
   "catalog.delete.title": (serviceName: string) =>
     `Are you sure you want to delete service entity ${serviceName}?`,
   "catalog.delete.failed": "Deleting service entity failed",
@@ -266,10 +283,11 @@ const dict = {
   "resources.filters.value.placeholder": "Value...",
   "resources.filters.type.placeholder": "Type...",
   "resources.filters.reset": "Reset filters",
+  "resources.filters.filter": "Add filter",
   "resources.deploySummary.title": "Deployment state summary",
   "resources.deploySummary.deploy": "Deploy",
   "resources.deploySummary.repair": "Repair",
-  "resources.link.details": "Show details",
+  "resources.link.details": "Show Details",
   "resources.details.title": "Resource Details",
   "resources.info.id": "Id",
   "resources.info.lastDeploy": "Last Deploy",
@@ -315,6 +333,8 @@ const dict = {
   "compileReports.filters.result.placeholder": "Select result...",
   "compileReports.filters.result.success": "Successful",
   "compileReports.filters.result.failed": "Failed",
+  "compileReports.filters.test.success": "success",
+  "compileReports.tests.filters.result.inProgress": "in progress",
 
   /** Compile details related text */
   "compileDetails.title": "Compile Details",
@@ -407,6 +427,7 @@ const dict = {
   "settings.tabs.token.description":
     "Generate authentication tokens for authorizing agents, api or compiler for this specific environment.",
   "settings.tabs.token.generate": "Generate",
+  "settings.update": "Setting Changed",
 
   /**
    * Status
@@ -436,6 +457,9 @@ const dict = {
   "agents.filters.status.placeholder": "Select status...",
   "agents.filters.name.placeholder": "Filter by name",
   "agents.filters.processName.placeholder": "Filter by process name",
+  "agent.tests.processName": "Process Name",
+  "agent.tests.status": "Status",
+  "agent.tests.up": "up",
 
   /** Facts */
   "facts.title": "Facts",
@@ -500,12 +524,15 @@ const dict = {
   "desiredState.complianceCheck.action.dryRun.failed":
     "Triggering dryrun failed",
   "desiredState.complianceCheck.noDryRuns": "No dry runs exist",
+  "desiredState.test.skippedCandidate": "skipped_candidate",
+  "desiredState.test.candidate": "candidate",
 
   /** Parameters */
   "parameters.title": "Parameters",
   "parameters.empty.message": "No parameters found",
   "parameters.columns.name": "Name",
   "parameters.columns.updated": "Last Updated",
+  "parameters.columns.updated.tests": "Updated",
   "parameters.columns.source": "Source",
   "parameters.columns.value": "Value",
   "parameters.filters.name.placeholder": "Filter by name",
@@ -527,6 +554,8 @@ const dict = {
   "notification.drawer.clearAll": "Clear all",
   "notification.drawer.details": "Details",
   "notification.drawer.clear": "Clear",
+  "notification.instanceForm.prompt":
+    "Are you sure you want to leave this page? You have unsaved changes",
 
   /**
    * Common

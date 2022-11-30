@@ -1,24 +1,25 @@
 import { ApiHelper, Maybe, Updater, UpdaterWithEnv } from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 
-export class ResetEnvironmentSettingCommandManager extends CommandManagerWithEnv<"ResetEnvironmentSetting"> {
-  constructor(
-    private readonly apiHelper: ApiHelper,
-    private readonly updater: UpdaterWithEnv<"GetEnvironmentSetting">,
-    private readonly environmentUpdater: Updater<"GetEnvironmentDetails">
-  ) {
-    super("ResetEnvironmentSetting", (command, environment) => {
+export function ResetEnvironmentSettingCommandManager(
+  apiHelper: ApiHelper,
+  updater: UpdaterWithEnv<"GetEnvironmentSetting">,
+  environmentUpdater: Updater<"GetEnvironmentDetails">
+) {
+  return CommandManagerWithEnv<"ResetEnvironmentSetting">(
+    "ResetEnvironmentSetting",
+    (command, environment) => {
       return async (id) => {
-        const error = await this.apiHelper.delete(
+        const error = await apiHelper.delete(
           `/api/v2/environment_settings/${id}`,
           environment
         );
         if (Maybe.isNone(error)) {
-          await this.updater.update(
+          await updater.update(
             { kind: "GetEnvironmentSetting", id },
             environment
           );
-          await this.environmentUpdater.update({
+          await environmentUpdater.update({
             kind: "GetEnvironmentDetails",
             details: false,
             id: environment,
@@ -26,6 +27,6 @@ export class ResetEnvironmentSettingCommandManager extends CommandManagerWithEnv
         }
         return error;
       };
-    });
-  }
+    }
+  );
 }

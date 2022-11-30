@@ -17,6 +17,7 @@ export const attributes = {
   some_password: "abcde",
   wrongXml1: `<class 'AttributeError'>: 'RPCError' object has no attribute '_tag'`,
   wrongXml2: `<class 'AttributeError'>`,
+  whiteSpacedXML: `  <note><to>Tove</to><from>Jani</from></note> `,
 };
 
 export const classified: ClassifiedAttribute[] = [
@@ -56,6 +57,11 @@ export const classified: ClassifiedAttribute[] = [
     kind: "Password",
     key: "some_password",
     value: "****",
+  },
+  {
+    kind: "Xml",
+    key: "whiteSpacedXML",
+    value: `<note>\n    <to>Tove</to>\n    <from>Jani</from>\n</note>`,
   },
   {
     kind: "SingleLine",

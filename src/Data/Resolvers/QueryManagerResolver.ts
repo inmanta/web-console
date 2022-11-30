@@ -24,6 +24,7 @@ import {
   GetEnvironmentSettingsStateHelper,
   GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
+  GetCompilationStateQueryManager,
   GetCompilerStatusQueryManager,
   GetServiceInstancesOneTimeQueryManager,
   GetServiceOneTimeQueryManager,
@@ -84,7 +85,7 @@ import {
 import {
   CallbacksQueryManager,
   CallbacksStateHelper,
-} from "@S/ServiceCatalog/Data";
+} from "@S/ServiceDetails/Data";
 import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,
@@ -109,176 +110,163 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
 
   private getManagers(): QueryManager[] {
     const serviceKeyMaker = new ServiceKeyMaker();
-    const serviceStateHelper = new ServiceStateHelper(
-      this.store,
-      serviceKeyMaker
-    );
-    const serviceInstancesStateHelper = new ServiceInstancesStateHelper(
-      this.store
-    );
-    const serviceInstanceStateHelper = new ServiceInstanceStateHelper(
-      this.store
-    );
+    const serviceStateHelper = ServiceStateHelper(this.store, serviceKeyMaker);
+    const serviceInstancesStateHelper = ServiceInstancesStateHelper(this.store);
+    const serviceInstanceStateHelper = ServiceInstanceStateHelper(this.store);
 
     return [
-      new GetProjectsQueryManager(this.store, this.apiHelper),
-      new GetEnvironmentsQueryManager(
+      GetProjectsQueryManager(this.store, this.apiHelper),
+      GetEnvironmentsQueryManager(
         this.apiHelper,
-        new GetEnvironmentsStateHelper(this.store)
+        GetEnvironmentsStateHelper(this.store)
       ),
-      new GetServerStatusOneTimeQueryManager(
+      GetServerStatusOneTimeQueryManager(
         this.apiHelper,
-        new GetServerStatusStateHelper(this.store)
+        GetServerStatusStateHelper(this.store)
       ),
-      new GetServerStatusContinuousQueryManager(
+      GetServerStatusContinuousQueryManager(
         this.apiHelper,
-        new GetServerStatusStateHelper(this.store),
+        GetServerStatusStateHelper(this.store),
         this.slowScheduler
       ),
-      new GetEnvironmentSettingsQueryManager(
+      GetEnvironmentSettingsQueryManager(
         this.apiHelper,
-        new GetEnvironmentSettingsStateHelper(this.store)
+        GetEnvironmentSettingsStateHelper(this.store)
       ),
-      new ServicesQueryManager(
+      ServicesQueryManager(
         this.apiHelper,
-        new ServicesStateHelper(this.store),
+        ServicesStateHelper(this.store),
         this.scheduler
       ),
-      new ServiceQueryManager(
+      ServiceQueryManager(
         this.apiHelper,
         serviceStateHelper,
         this.scheduler,
         serviceKeyMaker
       ),
-      new ServiceInstancesQueryManager(
+      ServiceInstancesQueryManager(
         this.apiHelper,
         serviceInstancesStateHelper,
         this.scheduler
       ),
-      new GetServiceInstancesOneTimeQueryManager(
+      GetServiceInstancesOneTimeQueryManager(
         this.apiHelper,
         serviceInstancesStateHelper
       ),
-      new GetServiceInstanceOneTimeQueryManager(
+      GetServiceInstanceOneTimeQueryManager(
         this.apiHelper,
         serviceInstanceStateHelper
       ),
-      new GetServiceOneTimeQueryManager(this.apiHelper, serviceStateHelper),
-      new ServiceConfigQueryManager(
+      GetServiceOneTimeQueryManager(this.apiHelper, serviceStateHelper),
+      ServiceConfigQueryManager(
         this.apiHelper,
-        new ServiceConfigStateHelper(this.store),
+        ServiceConfigStateHelper(this.store),
         new ServiceConfigFinalizer(serviceStateHelper)
       ),
-      new InstanceResourcesQueryManager(
+      InstanceResourcesQueryManager(
         this.apiHelper,
-        new InstanceResourcesStateHelper(this.store),
+        InstanceResourcesStateHelper(this.store),
         serviceInstancesStateHelper,
         this.scheduler,
         this.instanceResourcesRetryLimit
       ),
-      new EventsQueryManager(
+      EventsQueryManager(
         this.apiHelper,
-        new EventsStateHelper(this.store),
+        EventsStateHelper(this.store),
         this.scheduler
       ),
-      new GetInstanceLogsQueryManager(
+      GetInstanceLogsQueryManager(
         this.apiHelper,
-        new GetInstanceLogsStateHelper(this.store),
+        GetInstanceLogsStateHelper(this.store),
         this.scheduler
       ),
-      new InstanceConfigQueryManager(
+      InstanceConfigQueryManager(
         this.apiHelper,
-        new InstanceConfigStateHelper(this.store),
+        InstanceConfigStateHelper(this.store),
         new InstanceConfigFinalizer(serviceStateHelper)
       ),
-      new DiagnosticsQueryManager(
+      DiagnosticsQueryManager(
         this.apiHelper,
-        new DiagnosticsStateHelper(this.store),
+        DiagnosticsStateHelper(this.store),
         this.scheduler
       ),
-      new GetResourcesQueryManager(this.store, this.apiHelper, this.scheduler),
-      new ResourceDetailsQueryManager(
+      GetResourcesQueryManager(this.store, this.apiHelper, this.scheduler),
+      ResourceDetailsQueryManager(
         this.apiHelper,
-        new ResourceDetailsStateHelper(this.store),
+        ResourceDetailsStateHelper(this.store),
         this.scheduler
       ),
-      new ResourceHistoryQueryManager(
+      ResourceHistoryQueryManager(
         this.apiHelper,
-        new ResourceHistoryStateHelper(this.store),
+        ResourceHistoryStateHelper(this.store),
         this.scheduler
       ),
-      new EnvironmentDetailsContinuousQueryManager(
+      EnvironmentDetailsContinuousQueryManager(
         this.store,
         this.apiHelper,
         this.scheduler
       ),
-      new EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
-      new ServiceInstanceQueryManager(
+      EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
+      ServiceInstanceQueryManager(
         this.apiHelper,
         serviceInstanceStateHelper,
         this.scheduler
       ),
-      new CallbacksQueryManager(
-        this.apiHelper,
-        new CallbacksStateHelper(this.store)
-      ),
-      new CompileReportsQueryManager(
-        this.store,
-        this.apiHelper,
-        this.scheduler
-      ),
-      new CompileDetailsQueryManager(
+      CallbacksQueryManager(this.apiHelper, CallbacksStateHelper(this.store)),
+      CompileReportsQueryManager(this.store, this.apiHelper, this.scheduler),
+      CompileDetailsQueryManager(
         this.store,
         this.apiHelper,
 
         this.scheduler
       ),
-      new ResourceLogsQueryManager(
+      ResourceLogsQueryManager(
         this.apiHelper,
-        new ResourceLogsStateHelper(this.store),
+        ResourceLogsStateHelper(this.store),
         this.scheduler
       ),
-      new GetResourceFactsQueryManager(
+      GetResourceFactsQueryManager(
         this.apiHelper,
-        new GetResourceFactsStateHelper(this.store),
+        GetResourceFactsStateHelper(this.store),
         this.scheduler
       ),
-      new GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
-      new GetAgentProcessQueryManager(this.store, this.apiHelper),
-      new GetDesiredStatesQueryManager(
+      GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
+      GetAgentProcessQueryManager(this.store, this.apiHelper),
+      GetDesiredStatesQueryManager(
         this.apiHelper,
-        new GetDesiredStatesStateHelper(this.store),
+        GetDesiredStatesStateHelper(this.store),
         this.scheduler
       ),
-      new GetVersionResourcesQueryManager(
+      GetVersionResourcesQueryManager(
         this.apiHelper,
-        new GetVersionResourcesStateHelper(this.store),
+        GetVersionResourcesStateHelper(this.store),
         this.scheduler
       ),
-      new GetCompilerStatusQueryManager(this.apiHelper, this.scheduler),
-      new GetParametersQueryManager(
+      GetCompilerStatusQueryManager(this.apiHelper, this.scheduler),
+      GetCompilationStateQueryManager(this.apiHelper, this.scheduler),
+      GetParametersQueryManager(
         this.apiHelper,
-        new GetParametersStateHelper(this.store),
+        GetParametersStateHelper(this.store),
         this.scheduler
       ),
-      new GetFactsQueryManager(this.store, this.apiHelper, this.scheduler),
-      new GetDesiredStateDiffQueryManager(
+      GetFactsQueryManager(this.store, this.apiHelper, this.scheduler),
+      GetDesiredStateDiffQueryManager(
         this.apiHelper,
-        new GetDesiredStateDiffStateHelper(this.store)
+        GetDesiredStateDiffStateHelper(this.store)
       ),
-      new GetDryRunsQueryManager(this.apiHelper, this.store, this.scheduler),
-      new GetDryRunReportQueryManager(this.apiHelper, this.store),
-      new GetDesiredStateResourceDetailsQueryManager(
+      GetDryRunsQueryManager(this.apiHelper, this.store, this.scheduler),
+      GetDryRunReportQueryManager(this.apiHelper, this.store),
+      GetDesiredStateResourceDetailsQueryManager(
         this.apiHelper,
         this.store,
         this.scheduler
       ),
-      new NotificationContinuousQueryManager(
+      NotificationContinuousQueryManager(
         this.apiHelper,
         this.store,
         this.scheduler
       ),
-      new NotificationReadOnlyQueryManager(this.store),
+      NotificationReadOnlyQueryManager(this.store),
     ];
   }
 }

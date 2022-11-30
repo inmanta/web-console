@@ -4,7 +4,6 @@ import { DependencyContext } from "@/UI/Dependency";
 import {
   lifecycleServiceManager,
   orchestrationEngine,
-  otherSites,
   resourceManager,
 } from "./Group";
 import { NavigationItem } from "./NavigationItem";
@@ -12,8 +11,7 @@ import { NavigationItem } from "./NavigationItem";
 export const Navigation: React.FC<{ environment: string | undefined }> = ({
   environment,
 }) => {
-  const { featureManager, routeManager, urlManager } =
-    useContext(DependencyContext);
+  const { featureManager, routeManager } = useContext(DependencyContext);
   const isEnvPresent = typeof environment !== "undefined";
   const groups = [
     ...(featureManager.isLsmEnabled()
@@ -21,10 +19,6 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({
       : []),
     orchestrationEngine(routeManager, isEnvPresent),
     resourceManager(routeManager, isEnvPresent),
-    otherSites(
-      environment ? urlManager.getDashboardUrl(environment) : "",
-      isEnvPresent
-    ),
   ];
 
   return (

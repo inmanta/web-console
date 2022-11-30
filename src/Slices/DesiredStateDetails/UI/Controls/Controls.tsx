@@ -1,7 +1,7 @@
 import React from "react";
 import { Toolbar, ToolbarItem, ToolbarContent } from "@patternfly/react-core";
 import { Resource } from "@/Core";
-import { AgentFilter, TypeFilter, ValueFilter } from "@/UI/Components";
+import { FilterForm } from "@/UI/Components";
 
 interface Props {
   paginationWidget: React.ReactNode;
@@ -17,15 +17,7 @@ export const Controls: React.FC<Props> = ({
   <>
     <Toolbar clearAllFilters={() => setFilter({})}>
       <ToolbarContent>
-        <ToolbarItem>
-          <TypeFilter filter={filter} setFilter={setFilter} />
-        </ToolbarItem>
-        <ToolbarItem>
-          <AgentFilter filter={filter} setFilter={setFilter} />
-        </ToolbarItem>
-        <ToolbarItem>
-          <ValueFilter filter={filter} setFilter={setFilter} />
-        </ToolbarItem>
+        <FilterForm filter={filter} setFilter={setFilter} />
         <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
       </ToolbarContent>
     </Toolbar>

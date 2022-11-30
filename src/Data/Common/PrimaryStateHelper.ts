@@ -12,84 +12,82 @@ type ApiData<Kind extends Query.Kind> = RemoteData.Type<
   Query.ApiResponse<Kind>
 >;
 
-export class PrimaryStateHelper<Kind extends Query.Kind>
-  implements StateHelper<Kind>
-{
-  constructor(
-    private readonly store: Store,
-    private readonly customSet: (
-      data: ApiData<Kind>,
-      query: Query.SubQuery<Kind>
-    ) => void,
-    private readonly customGet: (
-      state: State<StoreModel>,
-      query: Query.SubQuery<Kind>
-    ) => Data<Kind>
-  ) {}
-
-  set(data: ApiData<Kind>, query: Query.SubQuery<Kind>): void {
-    this.customSet(data, query);
+export function PrimaryStateHelper<Kind extends Query.Kind>(
+  store: Store,
+  customSet: (data: ApiData<Kind>, query: Query.SubQuery<Kind>) => void,
+  customGet: (
+    state: State<StoreModel>,
+    query: Query.SubQuery<Kind>
+  ) => Data<Kind>
+): StateHelper<Kind> {
+  function set(data: ApiData<Kind>, query: Query.SubQuery<Kind>): void {
+    customSet(data, query);
   }
 
-  getHooked(query: Query.SubQuery<Kind>): Data<Kind> {
-    /* eslint-disable-next-line react-hooks/rules-of-hooks */
-    return useStoreState(
-      (state) => this.enforce(this.customGet(state, query)),
-      isEqual
-    );
+  function useGetHooked(query: Query.SubQuery<Kind>): Data<Kind> {
+    return useStoreState((state) => enforce(customGet(state, query)), isEqual);
   }
 
-  private enforce(value: undefined | Data<Kind>): Data<Kind> {
+  function enforce(value: undefined | Data<Kind>): Data<Kind> {
     if (typeof value === "undefined") return RemoteData.notAsked();
     return value;
   }
 
-  getOnce(query: Query.SubQuery<Kind>): Data<Kind> {
-    return this.enforce(this.customGet(this.store.getState(), query));
+  function getOnce(query: Query.SubQuery<Kind>): Data<Kind> {
+    return enforce(customGet(store.getState(), query));
   }
+  return {
+    set,
+    useGetHooked,
+    getOnce,
+  };
 }
 
-export class PrimaryStateHelperWithEnv<Kind extends Query.Kind>
-  implements StateHelperWithEnv<Kind>
-{
-  constructor(
-    private readonly store: Store,
-    private readonly customSet: (
-      data: ApiData<Kind>,
-      query: Query.SubQuery<Kind>,
-      environment: string
-    ) => void,
-    private readonly customGet: (
-      state: State<StoreModel>,
-      query: Query.SubQuery<Kind>,
-      environment: string
-    ) => Data<Kind> | undefined
-  ) {}
-
-  set(
+export function PrimaryStateHelperWithEnv<Kind extends Query.Kind>(
+  store: Store,
+  customSet: (
+    data: ApiData<Kind>,
+    query: Query.SubQuery<Kind>,
+    environment: string
+  ) => void,
+  customGet: (
+    state: State<StoreModel>,
+    query: Query.SubQuery<Kind>,
+    environment: string
+  ) => Data<Kind> | undefined
+): StateHelperWithEnv<Kind> {
+  function set(
     data: ApiData<Kind>,
     query: Query.SubQuery<Kind>,
     environment: string
   ): void {
-    this.customSet(data, query, environment);
+    customSet(data, query, environment);
   }
 
-  getHooked(query: Query.SubQuery<Kind>, environment: string): Data<Kind> {
-    /* eslint-disable-next-line react-hooks/rules-of-hooks */
+  function useGetHooked(
+    query: Query.SubQuery<Kind>,
+    environment: string
+  ): Data<Kind> {
     return useStoreState(
-      (state) => this.enforce(this.customGet(state, query, environment)),
+      (state) => enforce(customGet(state, query, environment)),
       isEqual
     );
   }
 
-  private enforce(value: undefined | Data<Kind>): Data<Kind> {
+  function enforce(value: undefined | Data<Kind>): Data<Kind> {
     if (typeof value === "undefined") return RemoteData.notAsked();
     return value;
   }
 
-  getOnce(query: Query.SubQuery<Kind>, environment: string): Data<Kind> {
-    return this.enforce(
-      this.customGet(this.store.getState(), query, environment)
-    );
+  function getOnce(
+    query: Query.SubQuery<Kind>,
+    environment: string
+  ): Data<Kind> {
+    return enforce(customGet(store.getState(), query, environment));
   }
+  return {
+    useGetHooked,
+    getOnce,
+    set,
+  };
 }

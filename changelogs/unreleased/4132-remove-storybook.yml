@@ -1,0 +1,6 @@
+description: Removing Storybook and all related dependencies.
+issue-nr: 4132
+change-type: patch
+destination-branches:
+  - master
+  - iso5

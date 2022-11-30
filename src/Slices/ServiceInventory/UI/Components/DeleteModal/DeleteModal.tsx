@@ -3,9 +3,9 @@ import { Button, Modal } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import {
-  ErrorToastAlert,
+  ToastAlert,
   ActionDisabledTooltip,
-  DeleteForm,
+  ConfirmUserActionForm,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -32,7 +32,7 @@ export const DeleteModal: React.FC<Props> = ({
     useContext(DependencyContext);
   const { refetch } = useContext(GetInstancesContext);
 
-  const trigger = commandResolver.getTrigger<"DeleteInstance">({
+  const trigger = commandResolver.useGetTrigger<"DeleteInstance">({
     kind: "DeleteInstance",
     service_entity,
     id,
@@ -48,10 +48,10 @@ export const DeleteModal: React.FC<Props> = ({
   };
   return (
     <>
-      <ErrorToastAlert
+      <ToastAlert
         title={words("inventory.deleteInstance.failed")}
-        errorMessage={errorMessage}
-        setErrorMessage={setErrorMessage}
+        message={errorMessage}
+        setMessage={setErrorMessage}
       />
       <ActionDisabledTooltip
         isDisabled={isDisabled || isHalted}
@@ -81,7 +81,10 @@ export const DeleteModal: React.FC<Props> = ({
           instance_identity,
           service_entity
         )}
-        <DeleteForm onSubmit={onSubmit} onCancel={() => setIsOpen(false)} />
+        <ConfirmUserActionForm
+          onSubmit={onSubmit}
+          onCancel={() => setIsOpen(false)}
+        />
       </Modal>
     </>
   );

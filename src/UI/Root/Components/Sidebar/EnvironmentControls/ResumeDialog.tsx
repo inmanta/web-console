@@ -11,7 +11,7 @@ export const ResumeDialog: React.FC = () => {
   const handleModalToggle = () => setIsModalOpen(!isModalOpen);
 
   const resumeEnvironmentTrigger =
-    commandResolver.getTrigger<"ResumeEnvironment">({
+    commandResolver.useGetTrigger<"ResumeEnvironment">({
       kind: "ResumeEnvironment",
     });
   return (

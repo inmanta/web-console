@@ -6,7 +6,11 @@ interface Props {
   name: string;
 }
 
-export const Wrapper: React.FC<Props> = ({ children, name, ...props }) => (
+export const Wrapper: React.FC<React.PropsWithChildren<Props>> = ({
+  children,
+  name,
+  ...props
+}) => (
   <PageContainer {...props} title={words("inventory.title")(name)}>
     {children}
   </PageContainer>

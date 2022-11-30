@@ -7,7 +7,7 @@ interface Props {
   tooltipContent: string;
 }
 
-export const TextWithCopy: React.FC<Props> = ({
+export const TextWithCopy: React.FC<React.PropsWithChildren<Props>> = ({
   value,
   tooltipContent,
   children,

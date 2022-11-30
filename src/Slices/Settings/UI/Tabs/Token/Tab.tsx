@@ -9,7 +9,7 @@ export const Tab: React.FC = () => {
   const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState<Maybe.Maybe<string>>(Maybe.none());
   const [token, setToken] = useState<Maybe.Maybe<string>>(Maybe.none());
-  const trigger = commandResolver.getTrigger<"GenerateToken">({
+  const trigger = commandResolver.useGetTrigger<"GenerateToken">({
     kind: "GenerateToken",
   });
 

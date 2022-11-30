@@ -1,0 +1,8 @@
+description: Add Hooks that check if user leaves unfinished Add/Edit Instance form and prompt for confirmation
+sections: 
+  minor-improvement: "{{description}}"
+issue-nr: 4125
+change-type: patch
+destination-branches:
+  - master
+  - iso5

@@ -19,7 +19,7 @@ interface Props {
   setSort?: (sort: Sort.Type) => void;
 }
 
-export const EventsTableWrapper: React.FC<Props> = ({
+export const EventsTableWrapper: React.FC<React.PropsWithChildren<Props>> = ({
   tablePresenter,
   wrapInTd,
   children,

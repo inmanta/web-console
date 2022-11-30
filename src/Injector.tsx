@@ -27,18 +27,24 @@ import {
   EnvironmentModifierImpl,
   UrlManagerImpl,
 } from "@/UI";
+import { UpdateBanner } from "./UI/Components/UpdateBanner";
 
 interface Props {
   store: Store;
 }
 
-export const Injector: React.FC<Props> = ({ store, children }) => {
+export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
+  store,
+  children,
+}) => {
   const featureManager = new PrimaryFeatureManager(
-    new GetServerStatusStateHelper(store),
+    GetServerStatusStateHelper(store),
     new PrimaryLogger(),
     getJsonParserId(globalThis),
-    COMMITHASH
+    COMMITHASH,
+    APP_VERSION
   );
+
   const keycloakController = new PrimaryKeycloakController(
     process.env.SHOULD_USE_AUTH,
     globalThis && globalThis.auth,
@@ -50,7 +56,7 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   );
   const basePathname = baseUrlManager.getBasePathname();
   const baseUrl = baseUrlManager.getBaseUrl(process.env.API_BASEURL);
-  const routeManager = new PrimaryRouteManager(basePathname);
+  const routeManager = PrimaryRouteManager(basePathname);
   const apiHelper = new BaseApiHelper(
     featureManager.getJsonParser() === "BigInt"
       ? new BigIntJsonParser()
@@ -72,11 +78,8 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
   );
   const urlManager = new UrlManagerImpl(featureManager, baseUrl);
   const fileFetcher = new FileFetcherImpl(apiHelper);
-  const environmentModifier = new EnvironmentModifierImpl();
-  const environmentHandler = new EnvironmentHandlerImpl(
-    useLocation,
-    routeManager
-  );
+  const environmentModifier = EnvironmentModifierImpl();
+  const environmentHandler = EnvironmentHandlerImpl(useLocation, routeManager);
   const fileManager = new PrimaryFileManager();
   const archiveHelper = new PrimaryArchiveHelper(fileManager);
 
@@ -96,6 +99,7 @@ export const Injector: React.FC<Props> = ({ store, children }) => {
         keycloakController,
       }}
     >
+      <UpdateBanner apiHelper={apiHelper} />
       {children}
     </DependencyProvider>
   );

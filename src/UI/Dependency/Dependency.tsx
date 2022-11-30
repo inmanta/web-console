@@ -48,7 +48,7 @@ export const DependencyContext = createContext<Dependencies>({
   environmentModifier: new DummyEnvironmentModifier(),
   featureManager: new DummyFeatureManager(),
   routeManager: new DummyRouteManager(),
-  environmentHandler: new DummyEnvironmentHandler(),
+  environmentHandler: DummyEnvironmentHandler(),
   authHelper: new DummyAuthHelper(),
   archiveHelper: new DummyArchiveHelper(),
   keycloakController: new DummyKeycloakController(),
@@ -56,6 +56,7 @@ export const DependencyContext = createContext<Dependencies>({
 
 export const DependencyProvider: React.FC<{
   dependencies: Partial<Dependencies>;
+  children?: React.ReactNode;
 }> = ({
   dependencies: {
     commandResolver,
@@ -82,7 +83,7 @@ export const DependencyProvider: React.FC<{
         environmentModifier || new DummyEnvironmentModifier(),
       featureManager: featureManager || new DummyFeatureManager(),
       routeManager: routeManager || new DummyRouteManager(),
-      environmentHandler: environmentHandler || new DummyEnvironmentHandler(),
+      environmentHandler: environmentHandler || DummyEnvironmentHandler(),
       authHelper: authHelper || new DummyAuthHelper(),
       archiveHelper: archiveHelper || new DummyArchiveHelper(),
       keycloakController: keycloakController || new DummyKeycloakController(),

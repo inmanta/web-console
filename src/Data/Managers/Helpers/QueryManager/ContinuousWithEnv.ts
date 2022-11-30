@@ -3,7 +3,7 @@
  * When you edit this file, turn the rule off so you know you are not missing anything.
  */
 
-/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useContext, useEffect, useState } from "react";
 import {
@@ -26,75 +26,76 @@ import {
 import { usePrevious } from "./usePrevious";
 import { urlEncodeParams } from "./utils";
 
-export class ContinuousWithEnv<Kind extends Query.Kind>
-  implements ContinuousQueryManager<Kind>
-{
-  constructor(
-    private readonly apiHelper: ApiHelper,
-    private readonly stateHelper: StateHelperWithEnv<Kind>,
-    private readonly scheduler: Scheduler,
-    private readonly getUnique: GetUniqueWithEnv<Kind>,
-    private readonly getDependencies: GetDependenciesWithEnv<Kind>,
-    private readonly kind: Kind,
-    private readonly getUrl: GetUrlWithEnv<Kind>,
-    private readonly toUsed: ToUsed<Kind>
-  ) {}
-
-  private async update(
+export function ContinuousWithEnv<Kind extends Query.Kind>(
+  apiHelper: ApiHelper,
+  stateHelper: StateHelperWithEnv<Kind>,
+  scheduler: Scheduler,
+  getUnique: GetUniqueWithEnv<Kind>,
+  getDependencies: GetDependenciesWithEnv<Kind>,
+  kind: Kind,
+  getUrl: GetUrlWithEnv<Kind>,
+  toUsed: ToUsed<Kind>
+): ContinuousQueryManager<Kind> {
+  async function update(
     query: Query.SubQuery<Kind>,
     url: string,
     environment: string
   ): Promise<void> {
-    this.stateHelper.set(
-      RemoteData.fromEither(await this.apiHelper.get(url, environment)),
+    stateHelper.set(
+      RemoteData.fromEither(await apiHelper.get(url, environment)),
       query,
       environment
     );
   }
 
-  useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
+  function useContinuous(query: Query.SubQuery<Kind>): Data<Kind> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
-    const [url, setUrl] = useState(
-      this.getUrl(urlEncodeParams(query), environment)
-    );
+    const [url, setUrl] = useState(getUrl(urlEncodeParams(query), environment));
     const previousEnvironment = usePrevious(environment);
 
     useEffect(() => {
-      setUrl(this.getUrl(urlEncodeParams(query), environment));
-    }, this.getDependencies(query, environment));
+      setUrl(getUrl(urlEncodeParams(query), environment));
+    }, getDependencies(query, environment));
 
     const task = {
       effect: async () =>
-        RemoteData.fromEither(await this.apiHelper.get(url, environment)),
-      update: (data) => this.stateHelper.set(data, query, environment),
+        RemoteData.fromEither(await apiHelper.get(url, environment)),
+      update: (data) => stateHelper.set(data, query, environment),
     };
 
     useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), query, environment);
+      stateHelper.set(RemoteData.loading(), query, environment);
       // If the environment changed, use the url derived from the query
       // Otherwise the url has changed, use it to not lose e.g. paging state
       const urlToUse =
         environment !== previousEnvironment
-          ? this.getUrl(urlEncodeParams(query), environment)
+          ? getUrl(urlEncodeParams(query), environment)
           : url;
-      this.update(query, urlToUse, environment);
-      this.scheduler.register(this.getUnique(query, environment), task);
+      update(query, urlToUse, environment);
+      scheduler.register(getUnique(query, environment), task);
       return () => {
-        this.scheduler.unregister(this.getUnique(query, environment));
+        scheduler.unregister(getUnique(query, environment));
       };
     }, [url, environment]);
 
     return [
       RemoteData.mapSuccess(
-        (data) => this.toUsed(data, setUrl),
-        this.stateHelper.getHooked(query, environment)
+        (data) => toUsed(data, setUrl),
+        stateHelper.useGetHooked(query, environment)
       ),
-      () => this.update(query, url, environment),
+      () => update(query, url, environment),
     ];
   }
 
-  matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
-    return query.kind === this.kind && kind === "Continuous";
+  function matches(
+    query: Query.SubQuery<Kind>,
+    matchingKind: QueryManagerKind
+  ): boolean {
+    return query.kind === kind && matchingKind === "Continuous";
   }
+  return {
+    useContinuous,
+    matches,
+  };
 }

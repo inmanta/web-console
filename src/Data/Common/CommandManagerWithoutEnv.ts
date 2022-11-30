@@ -14,7 +14,7 @@ export class CommandManagerWithoutEnv<Kind extends Command.Kind>
     return command.kind === this.kind;
   }
 
-  getTrigger(command: Command.SubCommand<Kind>): Command.Trigger<Kind> {
+  useGetTrigger(command: Command.SubCommand<Kind>): Command.Trigger<Kind> {
     return this.customGetTrigger(command);
   }
 }

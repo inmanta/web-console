@@ -26,7 +26,7 @@ export const Drawer: React.FC<Props> = ({ onClose, drawerRef }) => {
   const { commandResolver, queryResolver } = useContext(DependencyContext);
   const data = queryResolver.useReadOnly<"GetNotifications">(drawerQuery);
 
-  const trigger = commandResolver.getTrigger<"UpdateNotification">({
+  const trigger = commandResolver.useGetTrigger<"UpdateNotification">({
     kind: "UpdateNotification",
     origin: "drawer",
   });

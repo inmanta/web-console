@@ -15,7 +15,7 @@ export const Default = () => (
     <DependencyProvider
       dependencies={{
         ...dependencies,
-        routeManager: new PrimaryRouteManager(""),
+        routeManager: PrimaryRouteManager(""),
         commandResolver: new MockCommandManager(),
       }}
     >

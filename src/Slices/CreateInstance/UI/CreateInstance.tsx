@@ -4,7 +4,7 @@ import { InstanceAttributeModel, ServiceModel } from "@/Core";
 import {
   CreateModifierHandler,
   Description,
-  ErrorToastAlert,
+  ToastAlert,
   FieldCreator,
   ServiceInstanceForm,
 } from "@/UI/Components";
@@ -31,14 +31,20 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
     [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
   );
 
-  const trigger = commandResolver.getTrigger<"CreateInstance">({
+  const trigger = commandResolver.useGetTrigger<"CreateInstance">({
     kind: "CreateInstance",
     service_entity: serviceEntity.name,
   });
 
-  const onSubmit = async (attributes: InstanceAttributeModel) => {
+  const onSubmit = async (
+    attributes: InstanceAttributeModel,
+    setIsDirty: (values: boolean) => void
+  ) => {
+    //as setState used in setIsDirty doesn't change immidiate we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
+    setIsDirty(false);
     const result = await trigger(fields, attributes);
     if (result.kind === "Left") {
+      setIsDirty(true);
       setErrorMessage(result.value);
     } else {
       handleRedirect();
@@ -48,10 +54,10 @@ export const CreateInstance: React.FC<Props> = ({ serviceEntity }) => {
   return (
     <>
       {errorMessage && (
-        <ErrorToastAlert
+        <ToastAlert
           title={words("inventory.addInstance.failed")}
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
+          message={errorMessage}
+          setMessage={setErrorMessage}
         />
       )}
       <Description withSpace>

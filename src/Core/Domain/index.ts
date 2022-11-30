@@ -29,3 +29,4 @@ export * as RangeOperator from "./RangeOperator";
 export * as IntRange from "./IntRange";
 export * from "./Parameter";
 export * from "./CompileStatus";
+export * from "./VersionInfo";

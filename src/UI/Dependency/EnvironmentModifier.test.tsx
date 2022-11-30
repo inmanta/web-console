@@ -27,7 +27,7 @@ function setup() {
       definition: EnvironmentSettings.definition,
     }),
   });
-  const environmentModifier = new EnvironmentModifierImpl();
+  const environmentModifier = EnvironmentModifierImpl();
   environmentModifier.setEnvironment(environmentId);
   const component = (
     <StoreProvider store={store}>

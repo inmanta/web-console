@@ -43,7 +43,7 @@ export const EventsTableRow: React.FC<Props> = ({
       <Td>
         <DateWithTooltip timestamp={row.timestamp} />
       </Td>
-      <Td>{row.serviceInstanceVersion}</Td>
+      <Td>{row.serviceInstanceVersion as React.ReactNode}</Td>
       <Td>{row.source}</Td>
       <Td>{row.destination}</Td>
     </Tr>

@@ -23,8 +23,8 @@ import { View } from "./View";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const resourceLogsStateHelper = new ResourceLogsStateHelper(store);
-  const resourceLogsQueryManager = new ResourceLogsQueryManager(
+  const resourceLogsStateHelper = ResourceLogsStateHelper(store);
+  const resourceLogsQueryManager = ResourceLogsQueryManager(
     apiHelper,
     resourceLogsStateHelper,
     new StaticScheduler()

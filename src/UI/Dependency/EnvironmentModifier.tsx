@@ -7,16 +7,15 @@ import {
 } from "@/Core";
 import { useStoreState } from "@/Data/Store";
 
-export class EnvironmentModifierImpl implements EnvironmentModifier {
-  private environment: Maybe.Type<string> = Maybe.none();
+export function EnvironmentModifierImpl(): EnvironmentModifier {
+  let environment: Maybe.Type<string> = Maybe.none();
 
-  private useCurrentEnvironment(): EnvironmentDetails | null {
-    /* eslint-disable-next-line react-hooks/rules-of-hooks */
+  function useCurrentEnvironment(): EnvironmentDetails | null {
     const storeState = useStoreState(
       (state) => state.environment.environmentDetailsById
     );
-    if (Maybe.isSome(this.environment)) {
-      const state = storeState[this.environment.value];
+    if (Maybe.isSome(environment)) {
+      const state = storeState[environment.value];
       if (state !== undefined && RemoteData.isSuccess(state)) {
         return state.value;
       }
@@ -25,13 +24,12 @@ export class EnvironmentModifierImpl implements EnvironmentModifier {
     return null;
   }
 
-  private useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
-    /* eslint-disable-next-line react-hooks/rules-of-hooks */
+  function useEnvironmentSettings(): EnvironmentSettings.EnvironmentSettings | null {
     const storeState = useStoreState(
       (state) => state.environment.settingsByEnv
     );
-    if (Maybe.isSome(this.environment)) {
-      const state = storeState[this.environment.value];
+    if (Maybe.isSome(environment)) {
+      const state = storeState[environment.value];
       if (state !== undefined && RemoteData.isSuccess(state)) {
         return state.value;
       }
@@ -39,21 +37,21 @@ export class EnvironmentModifierImpl implements EnvironmentModifier {
     return null;
   }
 
-  setEnvironment(environment: string): void {
-    this.environment = Maybe.some(environment);
+  function setEnvironment(environmentToSet: string): void {
+    environment = Maybe.some(environmentToSet);
   }
 
-  useIsHalted(): boolean {
-    const environmentDetails = this.useCurrentEnvironment();
+  function useIsHalted(): boolean {
+    const environmentDetails = useCurrentEnvironment();
     if (environmentDetails === null) return false;
     return environmentDetails.halted;
   }
 
-  private useSetting(
+  function useSetting(
     settingName: keyof EnvironmentSettings.DefinitionMap
   ): boolean {
-    const environmentDetails = this.useCurrentEnvironment();
-    const environmentSettings = this.useEnvironmentSettings();
+    const environmentDetails = useCurrentEnvironment();
+    const environmentSettings = useEnvironmentSettings();
     if (environmentDetails === null || environmentSettings === null)
       return false;
     if (
@@ -66,11 +64,17 @@ export class EnvironmentModifierImpl implements EnvironmentModifier {
     }
   }
 
-  useIsServerCompileEnabled(): boolean {
-    return this.useSetting("server_compile");
+  function useIsServerCompileEnabled(): boolean {
+    return useSetting("server_compile");
   }
 
-  useIsProtectedEnvironment(): boolean {
-    return this.useSetting("protected_environment");
+  function useIsProtectedEnvironment(): boolean {
+    return useSetting("protected_environment");
   }
+  return {
+    useIsHalted,
+    setEnvironment,
+    useIsServerCompileEnabled,
+    useIsProtectedEnvironment,
+  };
 }

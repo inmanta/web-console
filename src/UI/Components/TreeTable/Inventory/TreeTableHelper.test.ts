@@ -32,7 +32,7 @@ test("TreeTableHelper createRows returns correct list", () => {
   // Act
   /* eslint-disable-next-line @typescript-eslint/no-empty-function */
   const cb = () => {};
-  const rows = treeTableHelper.createRows({ c: false }, cb);
+  const { rows } = treeTableHelper.createRows({ c: false }, cb);
   // Assert
   const expectedRows = [
     {
@@ -92,7 +92,7 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
   );
   // Act
   const cb = jest.fn;
-  const rows = treeTableHelper.createRows({ deallocation_ctx: false }, cb);
+  const { rows } = treeTableHelper.createRows({ deallocation_ctx: false }, cb);
   // Assert
   const expectedRows = [
     {

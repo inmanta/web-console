@@ -1,0 +1,6 @@
+description: Align casing of 'Show Details' link.
+issue-nr: 4123
+change-type: patch
+destination-branches:
+  - master
+  - iso5

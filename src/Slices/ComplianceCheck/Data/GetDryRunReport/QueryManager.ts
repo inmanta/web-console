@@ -5,15 +5,16 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class GetDryRunReportQueryManager extends QueryManager.OneTimeWithEnv<"GetDryRunReport"> {
-  constructor(apiHelper: ApiHelper, store: Store) {
-    super(
-      apiHelper,
-      new StateHelper(store),
-      ({ reportId }, environment) => [environment, reportId],
-      "GetDryRunReport",
-      getUrl,
-      identity
-    );
-  }
+export function GetDryRunReportQueryManager(
+  apiHelper: ApiHelper,
+  store: Store
+) {
+  return QueryManager.OneTimeWithEnv<"GetDryRunReport">(
+    apiHelper,
+    StateHelper(store),
+    ({ reportId }, environment) => [environment, reportId],
+    "GetDryRunReport",
+    getUrl,
+    identity
+  );
 }

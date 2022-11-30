@@ -1,0 +1,8 @@
+---
+description: Add an indication in the navigation sidebar when there are ongoing compilations. The indication will be added to the "Compile Report" menu-item.
+change-type: patch
+destination-branches: 
+ - master
+ - iso5
+sections: 
+  minor-improvement: "{{description}}"

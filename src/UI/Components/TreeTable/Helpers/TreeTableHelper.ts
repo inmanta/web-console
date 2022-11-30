@@ -17,7 +17,7 @@ export interface TreeTableHelper {
   createRows(
     expansionState: ExpansionState,
     setState: (state: ExpansionState) => void
-  ): TreeRow[];
+  ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void };
 
   getEmptyAttributeSets(): string[];
 }
@@ -44,9 +44,13 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
   createRows(
     expansionState: ExpansionState,
     setState: (state: ExpansionState) => void
-  ): TreeRow[] {
+  ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void } {
     const createOnToggle = (key: string) => () =>
       setState(this.expansionManager.toggle(expansionState, key));
+    const createCloseAll = () =>
+      setState(this.expansionManager.toggleAll(expansionState, false));
+    const createOpenAll = () =>
+      setState(this.expansionManager.toggleAll(expansionState, true));
 
     const isExpandedByParent = (path: string) =>
       this.expansionManager.get(
@@ -67,9 +71,13 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
 
     const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
 
-    return Object.entries(nodes)
-      .map(([key, node]) => treeRowCreator.create(key, node))
-      .sort((a, b) => a.id.localeCompare(b.id));
+    return {
+      rows: Object.entries(nodes)
+        .map(([key, node]) => treeRowCreator.create(key, node))
+        .sort((a, b) => a.id.localeCompare(b.id)),
+      openAll: createOpenAll,
+      closeAll: createCloseAll,
+    };
   }
   getEmptyAttributeSets(): string[] {
     return [];

@@ -9,9 +9,10 @@ export const HaltDialog: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalToggle = () => setIsModalOpen(!isModalOpen);
 
-  const haltEnvironmentTrigger = commandResolver.getTrigger<"HaltEnvironment">({
-    kind: "HaltEnvironment",
-  });
+  const haltEnvironmentTrigger =
+    commandResolver.useGetTrigger<"HaltEnvironment">({
+      kind: "HaltEnvironment",
+    });
   return (
     <>
       <Button variant="danger" icon={<StopIcon />} onClick={handleModalToggle}>

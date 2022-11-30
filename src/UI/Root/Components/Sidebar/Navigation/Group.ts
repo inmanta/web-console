@@ -13,6 +13,7 @@ interface Link {
   url: string;
   external: boolean;
   locked: boolean;
+  statusIndication: boolean;
 }
 
 export const lifecycleServiceManager = (
@@ -28,6 +29,7 @@ export const lifecycleServiceManager = (
       url: routeManager.getRoute("Catalog").path,
       external: false,
       locked: !isEnvPresent,
+      statusIndication: false,
     },
   ],
 });
@@ -45,6 +47,7 @@ export const orchestrationEngine = (
       url: routeManager.getRoute("DesiredState").path,
       external: false,
       locked: !isEnvPresent,
+      statusIndication: false,
     },
     {
       id: "CompileReports",
@@ -52,6 +55,7 @@ export const orchestrationEngine = (
       url: routeManager.getRoute("CompileReports").path,
       external: false,
       locked: !isEnvPresent,
+      statusIndication: true,
     },
     {
       id: "Parameters",
@@ -59,6 +63,7 @@ export const orchestrationEngine = (
       url: routeManager.getRoute("Parameters").path,
       external: false,
       locked: !isEnvPresent,
+      statusIndication: false,
     },
   ],
 });
@@ -76,6 +81,7 @@ export const resourceManager = (
       url: routeManager.getRoute("Resources").path,
       external: false,
       locked: !isEnvPresent,
+      statusIndication: false,
     },
     {
       id: "Agents",
@@ -83,6 +89,7 @@ export const resourceManager = (
       url: routeManager.getRoute("Agents").path,
       external: false,
       locked: !isEnvPresent,
+      statusIndication: false,
     },
     {
       id: "Facts",
@@ -90,23 +97,7 @@ export const resourceManager = (
       url: routeManager.getRoute("Facts").path,
       external: false,
       locked: !isEnvPresent,
-    },
-  ],
-});
-
-export const otherSites = (
-  dashboardUrl: string,
-  isEnvPresent: boolean
-): Group => ({
-  id: "OtherSites",
-  title: "Other Sites",
-  links: [
-    {
-      id: "Dashboard",
-      label: "Dashboard",
-      url: dashboardUrl,
-      external: true,
-      locked: !isEnvPresent,
+      statusIndication: false,
     },
   ],
 });

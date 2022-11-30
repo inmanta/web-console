@@ -1,18 +1,19 @@
 import { InstanceAttributeModel, Field, ApiHelper } from "@/Core";
 import { CommandManagerWithEnv, sanitizeAttributes } from "@/Data/Common";
 
-export class CreateInstanceCommandManager extends CommandManagerWithEnv<"CreateInstance"> {
-  constructor(private readonly apiHelper: ApiHelper) {
-    super("CreateInstance", ({ service_entity }, environment) => {
+export function CreateInstanceCommandManager(apiHelper: ApiHelper) {
+  return CommandManagerWithEnv<"CreateInstance">(
+    "CreateInstance",
+    ({ service_entity }, environment) => {
       return async (fields, attributes) => {
-        return await this.apiHelper.post(
+        return await apiHelper.post(
           `/lsm/v1/service_inventory/${service_entity}`,
           environment,
           prepBody(fields, attributes)
         );
       };
-    });
-  }
+    }
+  );
 }
 
 export function prepBody(

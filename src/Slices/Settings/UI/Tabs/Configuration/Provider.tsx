@@ -14,12 +14,15 @@ export const Provider: React.FC<Props> = ({
   const [values, setValues] = useState(settings);
   const [errorMessage, setErrorMessage] = useState("");
   const { commandResolver } = useContext(DependencyContext);
-  const updateSetting = commandResolver.getTrigger<"UpdateEnvironmentSetting">({
-    kind: "UpdateEnvironmentSetting",
-  });
-  const resetSetting = commandResolver.getTrigger<"ResetEnvironmentSetting">({
-    kind: "ResetEnvironmentSetting",
-  });
+  const updateSetting =
+    commandResolver.useGetTrigger<"UpdateEnvironmentSetting">({
+      kind: "UpdateEnvironmentSetting",
+    });
+  const resetSetting = commandResolver.useGetTrigger<"ResetEnvironmentSetting">(
+    {
+      kind: "ResetEnvironmentSetting",
+    }
+  );
   const infos = new InputInfoCreator(
     setValues,
     updateSetting,

@@ -8,6 +8,7 @@ interface Props {
   envOnly?: boolean;
   search?: string;
   className?: string;
+  children?: React.ReactNode;
 }
 
 export const Link: React.FC<Props> = forwardRef<HTMLAnchorElement, Props>(
