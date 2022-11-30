@@ -25,7 +25,7 @@ export const ConfigDetails: React.FC<Props> = ({
 }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const trigger = commandResolver.getTrigger<"UpdateInstanceConfig">({
+  const trigger = commandResolver.useGetTrigger<"UpdateInstanceConfig">({
     kind: "UpdateInstanceConfig",
     ...serviceInstanceIdentifier,
   });

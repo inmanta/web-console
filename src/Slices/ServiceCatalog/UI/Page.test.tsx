@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, MemoryRouter, useLocation } from "react-router-dom";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either, RemoteData } from "@/Core";
@@ -9,19 +9,19 @@ import {
   ServicesQueryManager,
   ServicesStateHelper,
   getStoreInstance,
-  DeleteServiceCommandManager,
-  BaseApiHelper,
   CommandResolverImpl,
+  CommandManagerResolver,
+  KeycloakAuthHelper,
 } from "@/Data";
 import {
   DeferredApiHelper,
   dependencies,
-  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Environment,
   Service,
   StaticScheduler,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { Page } from "./Page";
 
@@ -32,21 +32,21 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
 
-  const servicesHelper = new ServicesQueryManager(
+  const servicesHelper = ServicesQueryManager(
     apiHelper,
-    new ServicesStateHelper(store),
+    ServicesStateHelper(store),
     scheduler
   );
 
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([servicesHelper])
   );
-  const commandManager = new DeleteServiceCommandManager(new BaseApiHelper());
+  const authHelper = new KeycloakAuthHelper();
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager])
+    new CommandManagerResolver(store, apiHelper, authHelper)
   );
 
-  const environmentHandler = new EnvironmentHandlerImpl(
+  const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
     dependencies.routeManager
   );
@@ -101,6 +101,7 @@ test("ServiceCatalog shows updated services", async () => {
   expect(
     await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
   ).toBeInTheDocument();
+  expect(await screen.findByText("Update Service Catalog")).toBeInTheDocument();
 
   scheduler.executeAll();
 
@@ -124,37 +125,6 @@ test("ServiceCatalog shows updated empty", async () => {
   expect(
     await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
   ).toBeInTheDocument();
-
-  scheduler.executeAll();
-
-  apiHelper.resolve(Either.right({ data: [] }));
-
-  expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Empty" })
-  ).toBeInTheDocument();
-});
-
-test("ServiceCatalog removes service after deletion", async () => {
-  const { component, apiHelper, scheduler } = setup();
-  render(component);
-
-  expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Loading" })
-  ).toBeInTheDocument();
-
-  apiHelper.resolve(Either.right({ data: [Service.a] }));
-
-  expect(
-    await screen.findByRole("generic", { name: "ServiceCatalog-Success" })
-  ).toBeInTheDocument();
-
-  fireEvent.click(
-    screen.getByRole("button", { name: `${Service.a.name} Details` })
-  );
-
-  fireEvent.click(screen.getByRole("button", { name: "Delete" }));
-
-  fireEvent.click(screen.getByRole("button", { name: "Yes" }));
 
   scheduler.executeAll();
 
@@ -189,5 +159,28 @@ test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is trigg
     method: "GET",
     url: "/lsm/v1/service_catalog?instance_summary=True",
     environment: env2,
+  });
+});
+
+test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", async () => {
+  const { component, apiHelper } = setup();
+  render(component);
+
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [Service.a] }));
+  });
+
+  await userEvent.click(screen.getByLabelText("Actions"));
+  await userEvent.click(
+    screen.getByLabelText(Service.a.name + "-deleteButton")
+  );
+  await userEvent.click(screen.getByText(words("yes")));
+
+  expect(apiHelper.pendingRequests).toHaveLength(1);
+  expect(apiHelper.resolvedRequests).toHaveLength(1);
+  expect(apiHelper.pendingRequests[0]).toEqual({
+    environment: env1,
+    method: "DELETE",
+    url: "/lsm/v1/service_catalog/" + Service.a.name,
   });
 });

@@ -26,9 +26,9 @@ function setup() {
   const scheduler = new StaticScheduler();
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new GetResourceFactsQueryManager(
+      GetResourceFactsQueryManager(
         apiHelper,
-        new GetResourceFactsStateHelper(store),
+        GetResourceFactsStateHelper(store),
         scheduler
       ),
     ])

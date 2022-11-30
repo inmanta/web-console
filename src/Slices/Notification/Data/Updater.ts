@@ -13,7 +13,7 @@ export class Updater implements UpdaterWithEnv<"GetNotifications"> {
     query: Query.SubQuery<"GetNotifications">,
     environment: string
   ): Promise<void> {
-    new StateHelper(this.store).set(
+    StateHelper(this.store).set(
       RemoteData.fromEither(
         await this.apiHelper.get(getUrl(query), environment)
       ),

@@ -2,7 +2,10 @@
   "compilerOptions": {
     "module": "ES2020",
     "target": "ES2020",
-    "lib": ["ES2020", "dom"],
+    "lib": [
+      "ES2020",
+      "dom"
+    ],
     "sourceMap": true,
     "jsx": "react",
     "moduleResolution": "node",
@@ -19,15 +22,35 @@
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "dist",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/typings.d.ts",
+      "./src/global.typings.d.ts"
+    ],
     "paths": {
-      "@assets/*": ["node_modules/@patternfly/react-core/dist/styles/assets/*"],
-      "@images/*": ["public/images/*"],
-      "@/*": ["src/*"],
-      "@S/*": ["src/Slices/*"]
+      "@assets/*": [
+        "node_modules/@patternfly/react-core/dist/styles/assets/*"
+      ],
+      "@images/*": [
+        "public/images/*"
+      ],
+      "@/*": [
+        "src/*"
+      ],
+      "@S/*": [
+        "src/Slices/*"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.jsx", "jestSetupAfterEnv.cjs"],
-  "exclude": ["node_modules"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.jsx",
+    "jestSetupAfterEnv.cjs"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "ts-node": {
     "compilerOptions": {
       "module": "ES2020",

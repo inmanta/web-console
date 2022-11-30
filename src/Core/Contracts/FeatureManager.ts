@@ -8,4 +8,5 @@ export interface FeatureManager {
   getEdition(): string;
   getJsonParser(): JsonParserId;
   getCommitHash(): string;
+  getAppVersion(): string;
 }

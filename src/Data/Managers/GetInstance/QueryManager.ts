@@ -2,40 +2,36 @@ import { identity } from "lodash-es";
 import { StateHelper, Scheduler, ApiHelper } from "@/Core";
 import { QueryManager } from "@/Data/Managers/Helpers";
 
-export class ServiceInstanceQueryManager extends QueryManager.ContinuousWithEnv<"GetServiceInstance"> {
-  constructor(
-    apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetServiceInstance">,
-    scheduler: Scheduler
-  ) {
-    super(
-      apiHelper,
-      stateHelper,
-      scheduler,
-      ({ kind, id }) => `${kind}_${id}`,
-      ({ id }) => [id],
-      "GetServiceInstance",
-      ({ service_entity, id }) =>
-        `/lsm/v1/service_inventory/${service_entity}/${id}`,
-      identity
-    );
-  }
+export function ServiceInstanceQueryManager(
+  apiHelper: ApiHelper,
+  stateHelper: StateHelper<"GetServiceInstance">,
+  scheduler: Scheduler
+) {
+  return QueryManager.ContinuousWithEnv<"GetServiceInstance">(
+    apiHelper,
+    stateHelper,
+    scheduler,
+    ({ kind, id }) => `${kind}_${id}`,
+    ({ id }) => [id],
+    "GetServiceInstance",
+    ({ service_entity, id }) =>
+      `/lsm/v1/service_inventory/${service_entity}/${id}`,
+    identity
+  );
 }
 
-export class GetServiceInstanceOneTimeQueryManager extends QueryManager.OneTimeWithEnv<"GetServiceInstance"> {
-  constructor(
-    apiHelper: ApiHelper,
-    stateHelper: StateHelper<"GetServiceInstance">
-  ) {
-    super(
-      apiHelper,
-      stateHelper,
-      ({ id }) => [id],
-      "GetServiceInstance",
-      ({ service_entity, id }) =>
-        `/lsm/v1/service_inventory/${service_entity}/${id}`,
-      identity,
-      "MERGE"
-    );
-  }
+export function GetServiceInstanceOneTimeQueryManager(
+  apiHelper: ApiHelper,
+  stateHelper: StateHelper<"GetServiceInstance">
+) {
+  return QueryManager.OneTimeWithEnv<"GetServiceInstance">(
+    apiHelper,
+    stateHelper,
+    ({ id }) => [id],
+    "GetServiceInstance",
+    ({ service_entity, id }) =>
+      `/lsm/v1/service_inventory/${service_entity}/${id}`,
+    identity,
+    "MERGE"
+  );
 }

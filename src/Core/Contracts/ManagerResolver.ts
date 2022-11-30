@@ -1,3 +1,3 @@
-export interface ManagerResolver<Manager> {
-  get(): Manager[];
+export interface ManagerResolver<Type> {
+  get(): Type[];
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
+import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
 import { CompileDetailsPage } from "@S/CompileDetails/UI";
@@ -56,6 +57,10 @@ export class PrimaryPageManager implements PageManager {
       Inventory: {
         ...this.routeDictionary.Inventory,
         element: <ServiceInventoryPage />,
+      },
+      ServiceDetails: {
+        ...this.routeDictionary.ServiceDetails,
+        element: <ServiceDetailsPage />,
       },
       CreateInstance: {
         ...this.routeDictionary.CreateInstance,

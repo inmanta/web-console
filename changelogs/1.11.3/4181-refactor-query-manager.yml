@@ -1,0 +1,6 @@
+---
+description: refactor of queryManagers implementation from class to functional due to linting errors related to used hooks
+change-type: patch
+destination-branches: 
+ - master
+ - iso5

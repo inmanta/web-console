@@ -5,7 +5,7 @@ import { Environment } from "@/Test";
 import { PrimaryRouteManager } from "@/UI/Routing";
 import { EnvironmentHandlerImpl } from ".";
 
-const routeManager = new PrimaryRouteManager("");
+const routeManager = PrimaryRouteManager("");
 
 test("EnvironmentHandler updates environment correctly", () => {
   const history = createMemoryHistory({
@@ -17,7 +17,7 @@ test("EnvironmentHandler updates environment correctly", () => {
     .getActions()
     .environment.setEnvironments(RemoteData.success(Environment.filterable));
 
-  const environmentHandler = new EnvironmentHandlerImpl(
+  const environmentHandler = EnvironmentHandlerImpl(
     () => history.location,
     routeManager
   );
@@ -29,7 +29,7 @@ test("EnvironmentHandler updates environment correctly", () => {
 test("EnvironmentHandler determines selected environment correctly", () => {
   const history = createMemoryHistory();
 
-  const environmentHandler = new EnvironmentHandlerImpl(
+  const environmentHandler = EnvironmentHandlerImpl(
     () => history.location,
     routeManager
   );

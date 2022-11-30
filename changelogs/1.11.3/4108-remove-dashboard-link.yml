@@ -1,0 +1,8 @@
+description: The link to the old dashboard has been removed from the sidebar.
+sections: 
+  minor-improvement: "{{description}}"
+issue-nr: 4108
+change-type: patch
+destination-branches:
+  - master
+  - iso5

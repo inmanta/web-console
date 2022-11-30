@@ -1,0 +1,9 @@
+---
+description: A button has been added to the Service Catalog overview to execute an update.
+sections: 
+  minor-improvement: "{{description}}"
+issue-nr: 4159
+change-type: patch
+destination-branches: 
+ - master
+ - iso5

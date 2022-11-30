@@ -1,0 +1,6 @@
+change-type: patch
+description: Add resolution for loader-utils to resolve security issue in peer dependency tree.
+destination-branches:
+- master
+- iso5
+sections: {}

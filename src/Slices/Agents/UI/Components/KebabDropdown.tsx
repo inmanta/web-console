@@ -9,8 +9,8 @@ interface Props {
 
 export const KebabDropdown: React.FC<Props> = ({ name, paused }) => {
   const { commandResolver } = useContext(DependencyContext);
-  const deploy = commandResolver.getTrigger<"Deploy">({ kind: "Deploy" });
-  const repair = commandResolver.getTrigger<"Repair">({ kind: "Repair" });
+  const deploy = commandResolver.useGetTrigger<"Deploy">({ kind: "Deploy" });
+  const repair = commandResolver.useGetTrigger<"Repair">({ kind: "Repair" });
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Dropdown

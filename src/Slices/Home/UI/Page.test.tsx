@@ -21,10 +21,10 @@ import { Page } from "./Page";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const environmentsStateHelper = new GetEnvironmentsStateHelper(store);
+  const environmentsStateHelper = GetEnvironmentsStateHelper(store);
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
-      new GetEnvironmentsQueryManager(apiHelper, environmentsStateHelper),
+      GetEnvironmentsQueryManager(apiHelper, environmentsStateHelper),
     ])
   );
   const component = (

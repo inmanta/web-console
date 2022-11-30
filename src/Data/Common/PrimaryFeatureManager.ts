@@ -13,9 +13,16 @@ export class PrimaryFeatureManager implements FeatureManager {
     private readonly stateHelper: StateHelper<"GetServerStatus">,
     private readonly logger: Logger = new VoidLogger(),
     private readonly jsonParserId: JsonParserId = "Native",
-    private readonly commitHash: string = ""
+    private readonly commitHash: string = "",
+    private readonly appVersion: string = ""
   ) {
-    this.logger.log(`Application configured with ${jsonParserId} JSON parser`);
+    this.logger.log(
+      `Application configured with ${jsonParserId} JSON parser, Version : ${appVersion}, Commit: ${commitHash}`
+    );
+  }
+
+  getAppVersion(): string {
+    return this.appVersion;
   }
 
   getCommitHash(): string {

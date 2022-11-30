@@ -12,7 +12,7 @@ import {
   Task,
   PageSize,
 } from "@/Core";
-import { GetInstanceResources } from "@/Core/Query/GetInstanceResources";
+import { GetInstanceResources } from "@/Data/Managers/GetInstanceResources/interface";
 import { Data } from "@/Data/Managers/Helpers/QueryManager/types";
 import { DependencyContext } from "@/UI/Dependency";
 
@@ -24,47 +24,44 @@ interface ResponseGroup {
   instance?: Query.UsedData<"GetServiceInstance">;
 }
 
-/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 
 /**
  * @param {number} retryLimit The amount of times the queryManager will retry
  * after the first failed request. So with a retryLimit of 2, there will be
  * an initial request followed by 2 retries. This makes a total of 3 requests.
  */
-export class InstanceResourcesQueryManager
-  implements ContinuousQueryManager<"GetInstanceResources">
-{
-  constructor(
-    private readonly apiHelper: ApiHelper,
-    private readonly stateHelper: StateHelperWithEnv<"GetInstanceResources">,
-    private readonly instancesStateHelper: StateHelperWithEnv<"GetServiceInstances">,
-    private readonly scheduler: Scheduler,
-    private readonly retryLimit: number = 20
-  ) {}
-
-  private async getResources(
+export function InstanceResourcesQueryManager(
+  apiHelper: ApiHelper,
+  stateHelper: StateHelperWithEnv<"GetInstanceResources">,
+  instancesStateHelper: StateHelperWithEnv<"GetServiceInstances">,
+  scheduler: Scheduler,
+  retryLimit = 20
+): ContinuousQueryManager<"GetInstanceResources"> {
+  async function getResources(
     query: Query.SubQuery<"GetInstanceResources">,
     environment: string
   ): Promise<
     Either.Either<ErrorWithHTTPCode, Query.ApiResponse<"GetInstanceResources">>
   > {
-    return this.apiHelper.getWithHTTPCode<
-      Query.ApiResponse<"GetInstanceResources">
-    >(this.getUrl(query), environment);
+    return apiHelper.getWithHTTPCode<Query.ApiResponse<"GetInstanceResources">>(
+      getUrl(query),
+      environment
+    );
   }
 
-  private async getInstance(
+  async function getInstance(
     serviceEntity: string,
     id: string,
     environment: string
   ) {
-    return this.apiHelper.get<Query.ApiResponse<"GetServiceInstance">>(
+    return apiHelper.get<Query.ApiResponse<"GetServiceInstance">>(
       `/lsm/v1/service_inventory/${serviceEntity}/${id}`,
       environment
     );
   }
 
-  private getUrl({
+  function getUrl({
     service_entity,
     id,
     version,
@@ -72,17 +69,17 @@ export class InstanceResourcesQueryManager
     return `/lsm/v1/service_inventory/${service_entity}/${id}/resources?current_version=${version}`;
   }
 
-  private getUnique({ kind, id }: Query.SubQuery<"GetInstanceResources">) {
+  function getUnique({ kind, id }: Query.SubQuery<"GetInstanceResources">) {
     return `${kind}_${id}`;
   }
 
-  private async getEventualData(
+  async function getEventualData(
     query: Query.SubQuery<"GetInstanceResources">,
     environment: string,
     retries: number,
     instance?: Query.UsedData<"GetServiceInstance">
   ): Promise<ResponseGroup> {
-    const resources = await this.getResources(query, environment);
+    const resources = await getResources(query, environment);
 
     if (Either.isRight(resources)) {
       return { resources: RemoteData.success(resources.value), instance };
@@ -92,11 +89,11 @@ export class InstanceResourcesQueryManager
       return { resources: RemoteData.failed(resources.value.message) };
     }
 
-    if (retries >= this.retryLimit) {
+    if (retries >= retryLimit) {
       return { resources: RemoteData.failed("Retry limit reached.") };
     }
 
-    const instanceResult = await this.getInstance(
+    const instanceResult = await getInstance(
       query.service_entity,
       query.id,
       environment
@@ -108,7 +105,7 @@ export class InstanceResourcesQueryManager
 
     const nextQuery = { ...query, version: instanceResult.value.data.version };
 
-    return this.getEventualData(
+    return getEventualData(
       nextQuery,
       environment,
       retries + 1,
@@ -116,46 +113,48 @@ export class InstanceResourcesQueryManager
     );
   }
 
-  useContinuous(query: GetInstanceResources): Data<"GetInstanceResources"> {
+  function useContinuous(
+    query: GetInstanceResources
+  ): Data<"GetInstanceResources"> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
     const task: Task<ResponseGroup> = {
-      effect: async () => this.getEventualData(query, environment, 0),
+      effect: async () => getEventualData(query, environment, 0),
       update: ({ resources, instance }) => {
-        this.stateHelper.set(resources, query, environment);
-        this.updateInstance(instance, query.service_entity, environment);
+        stateHelper.set(resources, query, environment);
+        updateInstance(instance, query.service_entity, environment);
       },
     };
 
     useEffect(() => {
-      this.stateHelper.set(RemoteData.loading(), query, environment);
+      stateHelper.set(RemoteData.loading(), query, environment);
       (async () => {
-        const { resources, instance } = await this.getEventualData(
+        const { resources, instance } = await getEventualData(
           query,
           environment,
           0
         );
-        this.stateHelper.set(resources, query, environment);
-        this.updateInstance(instance, query.service_entity, environment);
+        stateHelper.set(resources, query, environment);
+        updateInstance(instance, query.service_entity, environment);
       })();
-      this.scheduler.register(this.getUnique(query), task);
+      scheduler.register(getUnique(query), task);
 
       return () => {
-        this.scheduler.unregister(this.getUnique(query));
+        scheduler.unregister(getUnique(query));
       };
     }, [environment]);
 
-    return [this.stateHelper.getHooked(query, environment), () => undefined];
+    return [stateHelper.useGetHooked(query, environment), () => undefined];
   }
 
-  private updateInstance(
+  function updateInstance(
     latest: Query.UsedData<"GetServiceInstance"> | undefined,
     serviceEntity: string,
     environment: string
   ) {
     if (latest === undefined) return;
 
-    const currentState = this.instancesStateHelper.getOnce(
+    const currentState = instancesStateHelper.getOnce(
       {
         kind: "GetServiceInstances",
         name: serviceEntity,
@@ -167,7 +166,7 @@ export class InstanceResourcesQueryManager
       const updatedState = currentState.value.data.map((instance) =>
         instance.id === latest.id ? latest : instance
       );
-      this.instancesStateHelper.set(
+      instancesStateHelper.set(
         {
           value: { ...currentState.value, data: updatedState },
           kind: "Success",
@@ -182,10 +181,14 @@ export class InstanceResourcesQueryManager
     }
   }
 
-  matches(
+  function matches(
     query: Query.SubQuery<"GetInstanceResources">,
     kind: QueryManagerKind
   ): boolean {
     return query.kind === "GetInstanceResources" && kind === "Continuous";
   }
+  return {
+    useContinuous,
+    matches,
+  };
 }

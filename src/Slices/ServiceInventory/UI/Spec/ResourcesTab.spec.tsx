@@ -4,7 +4,9 @@ import { Either, Maybe } from "@/Core";
 import { ServiceInstance, Pagination, InstanceResource } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
-jest.useFakeTimers("modern");
+const jestOptions = { legacyFakeTimers: false };
+
+jest.useFakeTimers(jestOptions);
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN data is fetched immediately", async () => {
   const user = userEvent.setup({ delay: null });

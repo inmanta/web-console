@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -12,7 +12,6 @@ import {
   DictListField,
   Field,
   NestedField,
-  RelationListField,
 } from "@/Core";
 import { toOptionalBoolean } from "@/Data";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
@@ -29,8 +28,7 @@ interface Props {
   path: string | null;
 }
 
-type Update = (value: unknown) => void;
-type GetUpdate = (path: string) => Update;
+type GetUpdate = (path: string, value: unknown, multi?: boolean) => void;
 
 const makePath = (path: string | null, next: string): string =>
   path === null ? next : `${path}.${next}`;
@@ -41,6 +39,13 @@ export const FieldInput: React.FC<Props> = ({
   getUpdate,
   path,
 }) => {
+  //callback was used to avoid re-render in useEffect used in SelectFormInput
+  const getEnumUpdate = useCallback(
+    (value) => {
+      getUpdate(makePath(path, field.name), value);
+    },
+    [getUpdate, path, field.name]
+  );
   switch (field.kind) {
     case "Boolean":
       return (
@@ -50,7 +55,7 @@ export const FieldInput: React.FC<Props> = ({
           isOptional={field.isOptional}
           isChecked={get(formState, makePath(path, field.name)) as boolean}
           handleInputChange={(value) =>
-            getUpdate(makePath(path, field.name))(toOptionalBoolean(value))
+            getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
           key={field.name}
@@ -65,7 +70,9 @@ export const FieldInput: React.FC<Props> = ({
           description={field.description}
           isOptional={field.isOptional}
           type={field.inputType}
-          handleInputChange={getUpdate(makePath(path, field.name))}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name), value)
+          }
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.name}
@@ -85,7 +92,9 @@ export const FieldInput: React.FC<Props> = ({
             get(formState, makePath(path, field.name) as string) as string
           }
           isOptional={field.isOptional}
-          handleInputChange={getUpdate(makePath(path, field.name) as string)}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name) as string, value)
+          }
         />
       );
     case "Enum":
@@ -97,7 +106,7 @@ export const FieldInput: React.FC<Props> = ({
           attributeValue={get(formState, makePath(path, field.name)) as string}
           description={field.description}
           isOptional={field.isOptional}
-          handleInputChange={getUpdate(makePath(path, field.name))}
+          handleInputChange={getEnumUpdate}
           key={field.name}
         />
       );
@@ -121,11 +130,22 @@ export const FieldInput: React.FC<Props> = ({
       );
     case "RelationList":
       return (
-        <RelationListFieldInput
-          field={field}
-          formState={formState}
-          getUpdate={getUpdate}
-          path={path}
+        <RelatedServiceProvider
+          alreadySelected={
+            get(formState, makePath(path, field.name), []) as string[]
+          }
+          key={makePath(path, field.name)}
+          serviceName={field.serviceEntity}
+          attributeName={field.name}
+          description={field.description}
+          attributeValue={
+            get(formState, makePath(path, field.name), []) as string[]
+          }
+          isOptional={field.isOptional}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name), value, true)
+          }
+          multi={true}
         />
       );
   }
@@ -141,6 +161,7 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
   } else if (typeName.includes("dict")) {
     return words("inventory.form.placeholder.dict");
   }
+
   return undefined;
 };
 
@@ -208,15 +229,18 @@ const DictListFieldInput: React.FC<DictListProps> = ({
   const list = get(formState, makePath(path, field.name)) as Array<unknown>;
 
   const onAdd = () => {
-    if (field.max && list.length >= field.max) return;
-    getUpdate(makePath(path, field.name))([
+    if (field.max && list.length >= field.max) {
+      return;
+    }
+
+    getUpdate(makePath(path, field.name), [
       ...list,
       createFormState(field.fields),
     ]);
   };
 
   const getOnDelete = (index: number) => () =>
-    getUpdate(makePath(path, field.name))([
+    getUpdate(makePath(path, field.name), [
       ...list.slice(0, index),
       ...list.slice(index + 1, list.length),
     ]);
@@ -281,115 +305,6 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               formState={formState}
               getUpdate={getUpdate}
               path={makePath(path, `${field.name}.${index}`)}
-            />
-          ))}
-        </StyledFormFieldGroupExpandable>
-      ))}
-    </StyledFormFieldGroupExpandable>
-  );
-};
-
-interface RelationListProps {
-  field: RelationListField;
-  formState: InstanceAttributeModel;
-  getUpdate: GetUpdate;
-  path: string | null;
-}
-
-const RelationListFieldInput: React.FC<RelationListProps> = ({
-  field,
-  formState,
-  getUpdate,
-  path,
-}) => {
-  const list = get(formState, makePath(path, field.name)) as Array<unknown>;
-
-  const onAdd = () => {
-    if (field.max && list.length >= field.max) return;
-    getUpdate(makePath(path, field.name))([
-      ...list,
-      createFormState(field.fields),
-    ]);
-  };
-
-  const getOnDelete = (index: number) => () =>
-    getUpdate(makePath(path, field.name))([
-      ...list.slice(0, index),
-      ...list.slice(index + 1, list.length),
-    ]);
-
-  return (
-    <StyledFormFieldGroupExpandable
-      aria-label={`RelationListFieldInput-${makePath(path, field.name)}`}
-      header={
-        <FormFieldGroupHeader
-          titleText={{
-            text: field.name,
-            id: `RelationListFieldInput-${makePath(path, field.name)}`,
-          }}
-          titleDescription={`${field.description} (${words(
-            "inventory.createInstance.items"
-          )(list.length)})`}
-          actions={
-            <Button
-              variant="link"
-              icon={<PlusIcon />}
-              onClick={onAdd}
-              isDisabled={!!field.max && list.length >= field.max}
-            >
-              Add
-            </Button>
-          }
-        />
-      }
-    >
-      {list.map((item, index) => (
-        <StyledFormFieldGroupExpandable
-          aria-label={`RelationListFieldInputItem-${makePath(
-            path,
-            `${field.name}.${index + 1}`
-          )}`}
-          key={makePath(path, `${field.name}.${index}`)}
-          header={
-            <FormFieldGroupHeader
-              titleText={{
-                text: index + 1,
-                id: `RelationListFieldInputItem-${makePath(
-                  path,
-                  `${field.name}.${index + 1}`
-                )}`,
-              }}
-              actions={
-                <Button
-                  variant="link"
-                  onClick={getOnDelete(index)}
-                  isDisabled={field.min > index}
-                >
-                  Delete
-                </Button>
-              }
-            />
-          }
-        >
-          {field.fields.map((childField) => (
-            <RelatedServiceProvider
-              alreadySelected={
-                get(formState, makePath(path, `${field.name}`), []) as string[]
-              }
-              key={makePath(path, `${field.name}.${index}`)}
-              serviceName={childField.serviceEntity}
-              attributeName={childField.name}
-              description={childField.description}
-              attributeValue={
-                get(
-                  formState,
-                  makePath(path, `${field.name}.${index}`) as string
-                ) as string
-              }
-              isOptional={childField.isOptional}
-              handleInputChange={getUpdate(
-                makePath(path, `${field.name}.${index}`) as string
-              )}
             />
           ))}
         </StyledFormFieldGroupExpandable>

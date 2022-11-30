@@ -11,7 +11,7 @@ import {
   DesiredStateDiff,
   DynamicQueryManagerResolver,
 } from "@/Test";
-import { DependencyProvider } from "@/UI";
+import { DependencyProvider, words } from "@/UI";
 import {
   GetDesiredStateDiffQueryManager,
   GetDesiredStateDiffStateHelper,
@@ -21,9 +21,9 @@ import { View } from "./Page";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const queryManager = new GetDesiredStateDiffQueryManager(
+  const queryManager = GetDesiredStateDiffQueryManager(
     apiHelper,
-    new GetDesiredStateDiffStateHelper(store)
+    GetDesiredStateDiffStateHelper(store)
   );
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([queryManager])
@@ -69,7 +69,7 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  const button = screen.getByRole("button", { name: "Jump to" });
+  const button = screen.getByRole("button", { name: words("jumpTo") });
   expect(button).toBeVisible();
   expect(
     screen.queryByRole("generic", { name: "DiffSummaryList" })
@@ -94,7 +94,7 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  await userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
 
   expect(
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
@@ -118,10 +118,10 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     name: "StatusFilterOption",
   });
   expect(statusOptions).toHaveLength(7);
-  await userEvent.click(screen.getByRole("button", { name: "Hide All" }));
+  await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
   await userEvent.click(statusOptions[0]);
 
-  await userEvent.click(screen.getByRole("button", { name: "Jump to" }));
+  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
   expect(
     await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" })
   ).toHaveLength(2);
@@ -141,7 +141,9 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
 
   const blocks = screen.getAllByRole("article", { name: "DiffBlock" });
   await userEvent.click(
-    within(blocks[1]).getByRole("button", { name: "Show file contents" })
+    within(blocks[1]).getByRole("button", {
+      name: words("desiredState.compare.file.show"),
+    })
   );
   expect(apiHelper.pendingRequests).toEqual([
     {
@@ -157,7 +159,9 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   ]);
 
   expect(
-    within(blocks[1]).getByRole("button", { name: "Show file contents" })
+    within(blocks[1]).getByRole("button", {
+      name: words("desiredState.compare.file.show"),
+    })
   ).toBeDisabled();
 
   await act(async () => {
@@ -166,15 +170,21 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   });
 
   await userEvent.click(
-    within(blocks[1]).getByRole("button", { name: "Hide file contents" })
+    within(blocks[1]).getByRole("button", {
+      name: words("desiredState.compare.file.hide"),
+    })
   );
 
   expect(
-    within(blocks[1]).getByRole("button", { name: "Show file contents" })
+    within(blocks[1]).getByRole("button", {
+      name: words("desiredState.compare.file.show"),
+    })
   ).toBeVisible();
 
   await userEvent.click(
-    within(blocks[1]).getByRole("button", { name: "Show file contents" })
+    within(blocks[1]).getByRole("button", {
+      name: words("desiredState.compare.file.show"),
+    })
   );
 
   await act(async () => {

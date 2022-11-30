@@ -7,22 +7,8 @@ type Data = RemoteData.Type<
   Query.Data<"GetEnvironmentDetails">
 >;
 
-export class StateHelper extends PrimaryStateHelper<"GetEnvironmentDetails"> {
-  constructor(store: Store) {
-    super(
-      store,
-      (data, query) => {
-        const unwrapped = RemoteData.mapSuccess(
-          (wrapped) => wrapped.data,
-          data
-        );
-        this.setData(store.dispatch, query, unwrapped);
-      },
-      (state, query) => this.getData(state, query)
-    );
-  }
-
-  private getData(
+export function StateHelper(store: Store) {
+  function getData(
     state: State,
     { details, id }: Query.SubQuery<"GetEnvironmentDetails">
   ): Data {
@@ -31,7 +17,7 @@ export class StateHelper extends PrimaryStateHelper<"GetEnvironmentDetails"> {
       : state.environment.environmentDetailsById[id];
   }
 
-  private setData(
+  function setData(
     store: Dispatch,
     { details, id }: Query.SubQuery<"GetEnvironmentDetails">,
     data: Data
@@ -54,4 +40,12 @@ export class StateHelper extends PrimaryStateHelper<"GetEnvironmentDetails"> {
       });
     }
   }
+  return PrimaryStateHelper<"GetEnvironmentDetails">(
+    store,
+    (data, query) => {
+      const unwrapped = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
+      setData(store.dispatch, query, unwrapped);
+    },
+    (state, query) => getData(state, query)
+  );
 }

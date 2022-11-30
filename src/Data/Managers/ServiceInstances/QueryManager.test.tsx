@@ -17,12 +17,14 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { ServiceInstancesQueryManager } from "./QueryManager";
 import { ServiceInstancesStateHelper } from "./StateHelper";
 
-jest.useFakeTimers("legacy");
+const jestOptions = { legacyFakeTimers: true };
+
+jest.useFakeTimers(jestOptions);
 
 const setup = () => {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const stateHelper = new ServiceInstancesStateHelper(store);
+  const stateHelper = ServiceInstancesStateHelper(store);
   const tasks = new DictionaryImpl<Task>();
   const scheduler = new SchedulerImpl(
     5000,
@@ -32,7 +34,7 @@ const setup = () => {
     }),
     tasks
   );
-  const queryManager = new ServiceInstancesQueryManager(
+  const queryManager = ServiceInstancesQueryManager(
     apiHelper,
     stateHelper,
     scheduler

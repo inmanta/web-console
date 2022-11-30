@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, AlertActionCloseButton } from "@patternfly/react-core";
 import { TableComposable, Tbody } from "@patternfly/react-table";
 import styled from "styled-components";
 import { EnvironmentSettings } from "@/Core";
+import { words } from "@/UI";
 import { InputRow } from "./Components";
 
 interface Props {
@@ -18,6 +19,20 @@ export const Container: React.FC<Props> = ({
   onErrorClose,
   className,
 }) => {
+  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
+
+  useEffect(() => {
+    const updateSuccessBanner = () => {
+      setShowUpdateBanner(true);
+      setTimeout(() => {
+        setShowUpdateBanner(false);
+      }, 2000);
+    };
+    document.addEventListener("settings-update", updateSuccessBanner);
+    return () => {
+      document.removeEventListener("settings-update", updateSuccessBanner);
+    };
+  }, [setShowUpdateBanner]);
   return (
     <Wrapper className={className}>
       {errorMessage && (
@@ -26,6 +41,19 @@ export const Container: React.FC<Props> = ({
           title={errorMessage}
           aria-live="polite"
           actionClose={<AlertActionCloseButton onClose={onErrorClose} />}
+          isInline
+        />
+      )}
+      {showUpdateBanner && (
+        <StyledAlert
+          variant="success"
+          title={words("settings.update")}
+          aria-live="polite"
+          actionClose={
+            <AlertActionCloseButton
+              onClose={() => setShowUpdateBanner(false)}
+            />
+          }
           isInline
         />
       )}

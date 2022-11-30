@@ -3,7 +3,7 @@
  * When you edit this file, turn the rule off so you know you are not missing anything.
  */
 
-/* eslint-disable react-hooks/rules-of-hooks, react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { useContext } from "react";
 import {
@@ -16,28 +16,31 @@ import {
 import { DependencyContext } from "@/UI";
 import { ReadOnlyToUsed } from "./types";
 
-export class ReadOnlyWithEnv<Kind extends Query.Kind>
-  implements ReadOnlyQueryManager<Kind>
-{
-  constructor(
-    private readonly stateHelper: StateHelperWithEnv<Kind>,
-    private readonly kind: Kind,
-    private readonly toUsed: ReadOnlyToUsed<Kind>
-  ) {}
-
-  useReadOnly(
+export function ReadOnlyWithEnv<Kind extends Query.Kind>(
+  stateHelper: StateHelperWithEnv<Kind>,
+  kind: Kind,
+  toUsed: ReadOnlyToUsed<Kind>
+): ReadOnlyQueryManager<Kind> {
+  function useReadOnly(
     query: Query.SubQuery<Kind>
   ): RemoteData.Type<Query.Error<Kind>, Query.UsedData<Kind>> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
 
     return RemoteData.mapSuccess(
-      (data) => this.toUsed(data),
-      this.stateHelper.getHooked(query, environment)
+      (data) => toUsed(data),
+      stateHelper.useGetHooked(query, environment)
     );
   }
 
-  matches(query: Query.SubQuery<Kind>, kind: QueryManagerKind): boolean {
-    return query.kind === this.kind && kind === "ReadOnly";
+  function matches(
+    query: Query.SubQuery<Kind>,
+    matchingKind: QueryManagerKind
+  ): boolean {
+    return query.kind === kind && matchingKind === "ReadOnly";
   }
+  return {
+    useReadOnly,
+    matches,
+  };
 }

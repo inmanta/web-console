@@ -5,17 +5,19 @@ import { Store } from "@/Data/Store";
 import { GetDesiredStateResourceDetailsStateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class GetDesiredStateResourceDetailsQueryManager extends QueryManager.ContinuousWithEnv<"GetVersionedResourceDetails"> {
-  constructor(apiHelper: ApiHelper, store: Store, scheduler: Scheduler) {
-    super(
-      apiHelper,
-      new GetDesiredStateResourceDetailsStateHelper(store),
-      scheduler,
-      ({ kind, version, id }) => `${kind}_${version}_${id}`,
-      ({ version, id }) => [version, id],
-      "GetVersionedResourceDetails",
-      getUrl,
-      identity
-    );
-  }
+export function GetDesiredStateResourceDetailsQueryManager(
+  apiHelper: ApiHelper,
+  store: Store,
+  scheduler: Scheduler
+) {
+  return QueryManager.ContinuousWithEnv<"GetVersionedResourceDetails">(
+    apiHelper,
+    GetDesiredStateResourceDetailsStateHelper(store),
+    scheduler,
+    ({ kind, version, id }) => `${kind}_${version}_${id}`,
+    ({ version, id }) => [version, id],
+    "GetVersionedResourceDetails",
+    getUrl,
+    identity
+  );
 }

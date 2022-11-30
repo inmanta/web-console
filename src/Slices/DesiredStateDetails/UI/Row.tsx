@@ -20,7 +20,7 @@ export const Row: React.FC<Props> = ({ row, version }) => {
         <Td dataLabel={words("resources.column.agent")}>{row.agent}</Td>
         <Td dataLabel={words("resources.column.value")}>{row.value}</Td>
         <Td dataLabel={words("resources.column.requires")}>
-          {row.numberOfDependencies}
+          {row.numberOfDependencies as React.ReactNode}
         </Td>
         <Td modifier="fitContent" isActionCell>
           <Link

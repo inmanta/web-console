@@ -65,7 +65,7 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
   );
 
   const cb = jest.fn;
-  const rows = treeTableHelper.createRows(
+  const { rows } = treeTableHelper.createRows(
     {
       a: false,
       "a.b": false,

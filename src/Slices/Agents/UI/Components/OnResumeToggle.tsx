@@ -12,7 +12,7 @@ interface Props {
 
 export const OnResumeToggle: React.FC<Props> = ({ name, unpauseOnResume }) => {
   const { commandResolver } = useContext(DependencyContext);
-  const agentActionTrigger = commandResolver.getTrigger<"ControlAgent">({
+  const agentActionTrigger = commandResolver.useGetTrigger<"ControlAgent">({
     kind: "ControlAgent",
     name,
     action: unpauseOnResume ? "keep_paused_on_resume" : "unpause_on_resume",

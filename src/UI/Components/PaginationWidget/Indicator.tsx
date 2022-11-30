@@ -8,7 +8,7 @@ interface Props {
 
 export const Indicator: React.FC<Props> = ({ metadata }) => (
   <Container>
-    <b>{getCurrent(metadata)}</b> of <b>{metadata.total}</b>
+    <b>{getCurrent(metadata)}</b> of <b>{metadata.total as React.ReactNode}</b>
   </Container>
 );
 

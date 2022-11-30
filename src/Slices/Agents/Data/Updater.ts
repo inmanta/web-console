@@ -13,7 +13,7 @@ export class GetAgentsUpdater implements UpdaterWithEnv<"GetAgents"> {
     query: Query.SubQuery<"GetAgents">,
     environment: string
   ): Promise<void> {
-    new StateHelper(this.store).set(
+    StateHelper(this.store).set(
       RemoteData.fromEither(
         await this.apiHelper.get(getUrl(query), environment)
       ),

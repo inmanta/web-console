@@ -19,7 +19,7 @@ import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
 import { SetStateAction } from "./SetStateAction";
 
 function setup() {
-  const commandManager = new TriggerSetStateCommandManager(
+  const commandManager = TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
     new BaseApiHelper()
   );
@@ -90,7 +90,7 @@ test("SetStateAction dropdown takes environment halted status in account", async
     id: ServiceInstance.b.environment,
     value: RemoteData.success({ halted: false } as EnvironmentDetails),
   });
-  const environmentModifier = new EnvironmentModifierImpl();
+  const environmentModifier = EnvironmentModifierImpl();
   environmentModifier.setEnvironment(ServiceInstance.b.environment);
   const componentWithDependencies = (targets: string[]) => (
     <DependencyProvider

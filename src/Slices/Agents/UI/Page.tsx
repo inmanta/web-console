@@ -6,7 +6,7 @@ import {
 } from "@/Data";
 import {
   EmptyView,
-  ErrorToastAlert,
+  ToastAlert,
   PageContainer,
   PaginationWidget,
   RemoteDataView,
@@ -54,10 +54,10 @@ export const Page: React.FC = () => {
       <GetAgentsContext.Provider
         value={{ filter, sort, pageSize, setErrorMessage }}
       >
-        <ErrorToastAlert
+        <ToastAlert
           title={words("agents.actions.failed")}
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
+          message={errorMessage}
+          setMessage={setErrorMessage}
         />
         <RemoteDataView
           data={data}

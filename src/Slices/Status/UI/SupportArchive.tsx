@@ -12,7 +12,7 @@ export const SupportArchive: React.FC = () => {
   const { commandResolver, archiveHelper } = useContext(DependencyContext);
   const [phase, setPhase] = useState<Phase>("Default");
   const [error, setError] = useState<null | string>(null);
-  const trigger = commandResolver.getTrigger<"GetSupportArchive">({
+  const trigger = commandResolver.useGetTrigger<"GetSupportArchive">({
     kind: "GetSupportArchive",
   });
 

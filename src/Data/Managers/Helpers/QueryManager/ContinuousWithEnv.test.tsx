@@ -43,10 +43,12 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
     ])
   );
 
-  const Wrapper: React.FC = ({ children }) => {
-    const environmentHandler = new EnvironmentHandlerImpl(
+  const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
+    children,
+  }) => {
+    const environmentHandler = EnvironmentHandlerImpl(
       useLocation,
-      new PrimaryRouteManager("")
+      PrimaryRouteManager("")
     );
     return (
       <DependencyProvider

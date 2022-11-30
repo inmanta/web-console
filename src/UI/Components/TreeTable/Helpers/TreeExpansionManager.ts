@@ -7,18 +7,25 @@ export interface ExpansionState {
 export class TreeExpansionManager {
   constructor(private readonly separator: string) {}
 
-  private createState(keys: string[]): ExpansionState {
-    const pairs = keys.map((id) => [id, false]);
+  private createState(keys: string[], state = false): ExpansionState {
+    const pairs = keys.map((id) => [id, state]);
     return fromEntries(pairs);
   }
 
-  create(keys: string[]): ExpansionState {
-    return this.createState(keys);
+  create(keys: string[], state = false): ExpansionState {
+    return this.createState(keys, state);
   }
 
   toggle(state: ExpansionState, key: string): ExpansionState {
     if (state[key]) return this.close(state, key);
     return this.open(state, key);
+  }
+
+  toggleAll(state: ExpansionState, shouldOpen: boolean): ExpansionState {
+    if (shouldOpen) {
+      return this.openAll(state);
+    }
+    return this.closeAll(state);
   }
 
   get(state: ExpansionState, key: string): boolean {
@@ -40,6 +47,13 @@ export class TreeExpansionManager {
       ...state,
       ...closedState,
     };
+  }
+  private closeAll(state: ExpansionState): ExpansionState {
+    return this.createState([...Object.keys(state)]);
+  }
+
+  private openAll(state: ExpansionState): ExpansionState {
+    return this.createState([...Object.keys(state)], true);
   }
 
   private open(state: ExpansionState, key: string): ExpansionState {

@@ -7,11 +7,12 @@ interface Props {
   serviceName: string;
   serviceIdentity?: string;
   attributeName: string;
-  attributeValue: string;
+  attributeValue: string | string[];
   description?: string;
   isOptional: boolean;
   handleInputChange: (value, event) => void;
   alreadySelected: string[];
+  multi?: boolean;
 }
 
 export const AutoCompleteInputProvider: React.FC<Props> = ({
@@ -23,6 +24,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   isOptional,
   handleInputChange,
   alreadySelected,
+  multi,
   ...props
 }) => {
   const { queryResolver } = useContext(DependencyContext);
@@ -85,6 +87,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
             description={description}
             handleInputChange={handleInputChange}
             onSearchTextChanged={onSearchTextChanged}
+            multi={multi}
             {...props}
           />
         );
@@ -95,10 +98,10 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
 };
 
 const getCurrentValue = (
-  attributeValue: string,
+  attributeValue: string | string[],
   filter: ServiceInstanceParams.Filter,
   serviceIdentity?: boolean
-): string => {
+): string | string[] => {
   if (attributeValue) {
     return attributeValue;
   }

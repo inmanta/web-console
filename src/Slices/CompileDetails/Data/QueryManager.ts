@@ -4,17 +4,19 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 
-export class CompileDetailsQueryManager extends QueryManager.ContinuousWithEnv<"GetCompileDetails"> {
-  constructor(store: Store, apiHelper: ApiHelper, scheduler: Scheduler) {
-    super(
-      apiHelper,
-      new StateHelper(store),
-      scheduler,
-      ({ id, kind }) => `${kind}_${id}`,
-      ({ id }) => [id],
-      "GetCompileDetails",
-      ({ id }) => `/api/v2/compilereport/${id}`,
-      identity
-    );
-  }
+export function CompileDetailsQueryManager(
+  store: Store,
+  apiHelper: ApiHelper,
+  scheduler: Scheduler
+) {
+  return QueryManager.ContinuousWithEnv<"GetCompileDetails">(
+    apiHelper,
+    StateHelper(store),
+    scheduler,
+    ({ id, kind }) => `${kind}_${id}`,
+    ({ id }) => [id],
+    "GetCompileDetails",
+    ({ id }) => `/api/v2/compilereport/${id}`,
+    identity
+  );
 }

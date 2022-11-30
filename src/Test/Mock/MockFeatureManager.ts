@@ -5,6 +5,10 @@ export class MockFeatureManager implements FeatureManager {
     return "123456abcdef";
   }
 
+  getAppVersion(): string {
+    return "1.10.11";
+  }
+
   getJsonParser(): JsonParserId {
     return "Native";
   }
@@ -33,6 +37,10 @@ export class MockFeatureManager implements FeatureManager {
 export class MockEditableFeatureManager implements FeatureManager {
   getCommitHash(): string {
     return "123456abcdef";
+  }
+
+  getAppVersion(): string {
+    return "@inmanta/1.10.11";
   }
 
   getJsonParser(): JsonParserId {

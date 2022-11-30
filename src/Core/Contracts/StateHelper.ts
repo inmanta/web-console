@@ -17,9 +17,9 @@ type ApiData<K extends Query.Kind> = RemoteData.Type<
  * store instance. This allows us to use the redux-react bindings
  * under the hood.
  *
- * We need 2 getters, getOnce & getHooked.
+ * We need 2 getters, getOnce & useGetHooked.
  *
- * getHooked is based on React Hooks. This can only be used in a
+ * useGetHooked is based on React Hooks. This can only be used in a
  * top-level component context. It retriggers when there is
  * a change to the store. We can provide an equality function to
  * prevent unnecessary rerenders. Standard equality comparison uses
@@ -34,7 +34,7 @@ type ApiData<K extends Query.Kind> = RemoteData.Type<
 export interface StateHelper<Kind extends Query.Kind> {
   set(value: ApiData<Kind>, query: Query.SubQuery<Kind>): void;
   getOnce(query: Query.SubQuery<Kind>): Data<Kind>;
-  getHooked(query: Query.SubQuery<Kind>): Data<Kind>;
+  useGetHooked(query: Query.SubQuery<Kind>): Data<Kind>;
 }
 
 export interface StateHelperWithEnv<Kind extends Query.Kind> {
@@ -44,5 +44,5 @@ export interface StateHelperWithEnv<Kind extends Query.Kind> {
     environment: string
   ): void;
   getOnce(query: Query.SubQuery<Kind>, environment: string): Data<Kind>;
-  getHooked(query: Query.SubQuery<Kind>, environment: string): Data<Kind>;
+  useGetHooked(query: Query.SubQuery<Kind>, environment: string): Data<Kind>;
 }

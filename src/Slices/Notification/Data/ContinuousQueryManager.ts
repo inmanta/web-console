@@ -4,30 +4,32 @@ import { Store } from "@/Data/Store";
 import { StateHelper } from "./StateHelper";
 import { getUrl } from "./getUrl";
 
-export class NotificationContinuousQueryManager extends QueryManager.ContinuousWithEnv<"GetNotifications"> {
-  constructor(apiHelper: ApiHelper, store: Store, scheduler: Scheduler) {
-    super(
-      apiHelper,
-      new StateHelper(store),
-      scheduler,
-      ({ kind, origin }, environment) => `${kind}_${environment}_${origin}`,
-      ({ filter, pageSize }, environment) => [
-        environment,
-        pageSize.value,
-        stringifyObjectOrUndefined(filter),
-      ],
-      "GetNotifications",
-      getUrl,
-      ({ data, links, metadata }, setUrl) => {
-        if (typeof links === "undefined") {
-          return { data: data, handlers: {}, metadata };
-        }
-        return {
-          data: data,
-          handlers: getPaginationHandlers(links, metadata, setUrl),
-          metadata,
-        };
+export function NotificationContinuousQueryManager(
+  apiHelper: ApiHelper,
+  store: Store,
+  scheduler: Scheduler
+) {
+  return QueryManager.ContinuousWithEnv<"GetNotifications">(
+    apiHelper,
+    StateHelper(store),
+    scheduler,
+    ({ kind, origin }, environment) => `${kind}_${environment}_${origin}`,
+    ({ filter, pageSize }, environment) => [
+      environment,
+      pageSize.value,
+      stringifyObjectOrUndefined(filter),
+    ],
+    "GetNotifications",
+    getUrl,
+    ({ data, links, metadata }, setUrl) => {
+      if (typeof links === "undefined") {
+        return { data: data, handlers: {}, metadata };
       }
-    );
-  }
+      return {
+        data: data,
+        handlers: getPaginationHandlers(links, metadata, setUrl),
+        metadata,
+      };
+    }
+  );
 }

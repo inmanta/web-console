@@ -1,17 +1,15 @@
 import { PrimaryStateHelperWithEnv } from "@/Data/Common";
 import { Store } from "@/Data/Store";
 
-export class GetVersionResourcesStateHelper extends PrimaryStateHelperWithEnv<"GetVersionResources"> {
-  constructor(store: Store) {
-    super(
-      store,
-      (data, query, environment) => {
-        store.dispatch.versionResources.set({
-          environment,
-          data,
-        });
-      },
-      (state, query, environment) => state.versionResources.byEnv[environment]
-    );
-  }
+export function GetVersionResourcesStateHelper(store: Store) {
+  return PrimaryStateHelperWithEnv<"GetVersionResources">(
+    store,
+    (data, query, environment) => {
+      store.dispatch.versionResources.set({
+        environment,
+        data,
+      });
+    },
+    (state, query, environment) => state.versionResources.byEnv[environment]
+  );
 }

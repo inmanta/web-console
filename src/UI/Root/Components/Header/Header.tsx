@@ -9,17 +9,10 @@ import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 
 interface Props {
   noEnv: boolean;
-  isNavOpen: boolean;
-  onToggle(): void;
   onNotificationsToggle(): void;
 }
 
-export const Header: React.FC<Props> = ({
-  noEnv,
-  isNavOpen,
-  onToggle,
-  onNotificationsToggle,
-}) => {
+export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
   const { routeManager } = useContext(DependencyContext);
   return (
     <>
@@ -30,8 +23,6 @@ export const Header: React.FC<Props> = ({
         headerTools={<Actions {...{ noEnv, onNotificationsToggle }} />}
         showNavToggle
         topNav={<EnvSelectorWithProvider />}
-        isNavOpen={isNavOpen}
-        onNavToggle={onToggle}
       />
     </>
   );
@@ -43,4 +34,23 @@ const StyledImage = styled(SimpleBackgroundImage)`
 
 const StyledHeader = styled(PageHeader)`
   background-color: transparent;
+  @media (min-width: 768px) {
+    grid-template-columns: auto 1fr auto;
+  }
+  .pf-c-page__header-brand {
+    @media (min-width: 768px) {
+      padding-right: 2rem;
+    }
+  }
+  .pf-c-page__header-nav {
+    @media (min-width: 768px) {
+      grid-column: 2/3;
+      grid-row: 1/2;
+    }
+  }
+  .pf-c-page__header-tools {
+    @media (min-width: 768px) {
+      grid-column: 3/3;
+    }
+  }
 `;

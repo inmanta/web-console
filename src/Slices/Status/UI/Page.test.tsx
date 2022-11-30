@@ -21,6 +21,7 @@ import {
   ServerStatus,
   StaticScheduler,
 } from "@/Test";
+import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { Page } from "./Page";
 
@@ -47,9 +48,9 @@ function setup(useMockArchiveHelper = false) {
     RemoteData.success(ServerStatus.withoutLsm)
   );
   const apiHelper = new DeferredApiHelper();
-  const getServerStatusQueryManager = new GetServerStatusContinuousQueryManager(
+  const getServerStatusQueryManager = GetServerStatusContinuousQueryManager(
     apiHelper,
-    new GetServerStatusStateHelper(store),
+    GetServerStatusStateHelper(store),
     new StaticScheduler()
   );
   const queryResolver = new QueryResolverImpl(
@@ -63,7 +64,7 @@ function setup(useMockArchiveHelper = false) {
   );
 
   const featureManager = new PrimaryFeatureManager(
-    new GetServerStatusStateHelper(store)
+    GetServerStatusStateHelper(store)
   );
 
   const archiveHelper: MockArchiveHelper | PrimaryArchiveHelper =
@@ -163,9 +164,13 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
   const downloadButton = screen.getByRole("button", {
     name: "DownloadArchiveButton",
   });
-  expect(downloadButton).toHaveTextContent("Download support archive");
+  expect(downloadButton).toHaveTextContent(
+    words("status.supportArchive.action.download")
+  );
   await userEvent.click(downloadButton);
-  expect(downloadButton).toHaveTextContent("Fetching support data");
+  expect(downloadButton).toHaveTextContent(
+    words("status.supportArchive.action.downloading")
+  );
 
   expect(apiHelper.pendingRequests).toEqual([
     { method: "GET", url: "/api/v1/support/full" },
@@ -177,7 +182,9 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
     );
   });
   await waitFor(() =>
-    expect(downloadButton).toHaveTextContent("Download support archive")
+    expect(downloadButton).toHaveTextContent(
+      words("status.supportArchive.action.download")
+    )
   );
 });
 
@@ -191,9 +198,13 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
   const downloadButton = screen.getByRole("button", {
     name: "DownloadArchiveButton",
   });
-  expect(downloadButton).toHaveTextContent("Download support archive");
+  expect(downloadButton).toHaveTextContent(
+    words("status.supportArchive.action.download")
+  );
   await userEvent.click(downloadButton);
-  expect(downloadButton).toHaveTextContent("Fetching support data");
+  expect(downloadButton).toHaveTextContent(
+    words("status.supportArchive.action.downloading")
+  );
 
   expect(apiHelper.pendingRequests).toEqual([
     { method: "GET", url: "/api/v1/support/full" },
@@ -204,12 +215,16 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
       Either.right({ data: ServerStatus.supportArchiveBase64 })
     );
   });
-  expect(downloadButton).toHaveTextContent("Generating support archive");
+  expect(downloadButton).toHaveTextContent(
+    words("status.supportArchive.action.generating")
+  );
   (archiveHelper as MockArchiveHelper).resolve(
     new Blob(["testing"], { type: "application/octet-stream" })
   );
   await waitFor(() =>
-    expect(downloadButton).toHaveTextContent("Download support archive")
+    expect(downloadButton).toHaveTextContent(
+      words("status.supportArchive.action.download")
+    )
   );
 });
 
@@ -230,7 +245,9 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
     await apiHelper.resolve(Either.left("error"));
   });
 
-  expect(downloadButton).toHaveTextContent("Download support archive");
+  expect(downloadButton).toHaveTextContent(
+    words("status.supportArchive.action.download")
+  );
   const errorContainer = screen.getByRole("generic", {
     name: "ArchiveErrorContainer",
   });

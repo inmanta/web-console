@@ -23,10 +23,10 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
   const isLsmEnabled = featureManager.isLsmEnabled();
   const navigateTo = useNavigateTo();
   const navigateToHome = () => navigateTo("Home", undefined);
-  const createProject = commandResolver.getTrigger<"CreateProject">({
+  const createProject = commandResolver.useGetTrigger<"CreateProject">({
     kind: "CreateProject",
   });
-  const createEnvironment = commandResolver.getTrigger<"CreateEnvironment">({
+  const createEnvironment = commandResolver.useGetTrigger<"CreateEnvironment">({
     kind: "CreateEnvironment",
   });
   const [createEnvironmentBody, setCreateEnvironmentBody] =

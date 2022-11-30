@@ -7,26 +7,8 @@ type Data = RemoteData.Type<
   Query.Data<"GetEnvironments">
 >;
 
-export class GetEnvironmentsStateHelper extends PrimaryStateHelper<"GetEnvironments"> {
-  constructor(store: Store) {
-    super(
-      store,
-      (data, query) => {
-        const unwrapped = RemoteData.mapSuccess((wrapped) => {
-          return wrapped.data.flatMap((project) => [
-            ...project.environments.map((environment) => ({
-              ...environment,
-              projectName: project.name,
-            })),
-          ]);
-        }, data);
-        this.setData(store.dispatch, query, unwrapped);
-      },
-      (state, query) => this.getData(state, query)
-    );
-  }
-
-  private getData(
+export function GetEnvironmentsStateHelper(store: Store) {
+  function getData(
     state: State,
     { details }: Query.SubQuery<"GetEnvironments">
   ): Data {
@@ -35,7 +17,7 @@ export class GetEnvironmentsStateHelper extends PrimaryStateHelper<"GetEnvironme
       : state.environment.environments;
   }
 
-  private setData(
+  function setData(
     store: Dispatch,
     { details }: Query.SubQuery<"GetEnvironments">,
     data: Data
@@ -49,4 +31,19 @@ export class GetEnvironmentsStateHelper extends PrimaryStateHelper<"GetEnvironme
       store.environment.setEnvironments(data);
     }
   }
+  return PrimaryStateHelper<"GetEnvironments">(
+    store,
+    (data, query) => {
+      const unwrapped = RemoteData.mapSuccess((wrapped) => {
+        return wrapped.data.flatMap((project) => [
+          ...project.environments.map((environment) => ({
+            ...environment,
+            projectName: project.name,
+          })),
+        ]);
+      }, data);
+      setData(store.dispatch, query, unwrapped);
+    },
+    (state, query) => getData(state, query)
+  );
 }

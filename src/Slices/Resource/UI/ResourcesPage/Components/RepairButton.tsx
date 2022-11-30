@@ -8,7 +8,7 @@ export const RepairButton: React.FC = () => {
   const { environmentModifier, commandResolver } =
     useContext(DependencyContext);
   const isHalted = environmentModifier.useIsHalted();
-  const trigger = commandResolver.getTrigger<"Repair">({ kind: "Repair" });
+  const trigger = commandResolver.useGetTrigger<"Repair">({ kind: "Repair" });
   return (
     <ActionDisabledTooltip
       isDisabled={isHalted}

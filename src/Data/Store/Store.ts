@@ -62,7 +62,7 @@ import {
 import {
   CallbacksSlice,
   callbacksSlice,
-} from "@S/ServiceCatalog/Data/CallbacksSlice";
+} from "@S/ServiceDetails/Data/CallbacksSlice";
 import {
   InstanceLogsSlice,
   instanceLogsSlice,

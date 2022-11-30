@@ -17,10 +17,12 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { filter, pageSize, setErrorMessage } = useContext(
     GetDesiredStatesContext
   );
-  const promoteVersionTrigger = commandResolver.getTrigger<"PromoteVersion">({
-    kind: "PromoteVersion",
-    version,
-  });
+  const promoteVersionTrigger = commandResolver.useGetTrigger<"PromoteVersion">(
+    {
+      kind: "PromoteVersion",
+      version,
+    }
+  );
   const onSubmit = async () => {
     const result = await promoteVersionTrigger({
       kind: "GetDesiredStates",

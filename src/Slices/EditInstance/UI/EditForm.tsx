@@ -11,7 +11,7 @@ import {
   FieldCreator,
   ServiceInstanceForm,
   EditModifierHandler,
-  ErrorToastAlert,
+  ToastAlert,
 } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -40,15 +40,21 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const currentAttributes =
     attributeInputConverter.getCurrentAttributes(instance);
 
-  const trigger = commandResolver.getTrigger<"TriggerInstanceUpdate">({
+  const trigger = commandResolver.useGetTrigger<"TriggerInstanceUpdate">({
     kind: "TriggerInstanceUpdate",
     service_entity: instance.service_entity,
     id: instance.id,
     version: instance.version,
   });
-  const onSubmit = async (attributes: InstanceAttributeModel) => {
+  const onSubmit = async (
+    attributes: InstanceAttributeModel,
+    setIsDirty: (values: boolean) => void
+  ) => {
+    //as setState used in setIsDirty doesn't change immidiate we cannot use it only before handleRedirect() as it would trigger prompt from ServiceInstanceForm
+    setIsDirty(false);
     const result = await trigger(fields, currentAttributes, attributes);
     if (Maybe.isSome(result)) {
+      setIsDirty(true);
       setErrorMessage(result.value);
     } else {
       handleRedirect();
@@ -57,10 +63,10 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   return (
     <>
       {errorMessage && (
-        <ErrorToastAlert
+        <ToastAlert
           title={words("inventory.editInstance.failed")}
-          errorMessage={errorMessage}
-          setErrorMessage={setErrorMessage}
+          message={errorMessage}
+          setMessage={setErrorMessage}
         />
       )}
       <ServiceInstanceForm
