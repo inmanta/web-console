@@ -52,7 +52,7 @@
     "@types/file-saver": "^2.0.5",
     "@types/jest": "^29.2.1",
     "@types/json-bigint": "^1.0.1",
-    "@types/lodash": "^4.14.186",
+    "@types/lodash": "^4.14.191",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.11.2",
     "@types/qs": "^6.9.7",
