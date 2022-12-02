@@ -4,6 +4,8 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   video: false,
   reporter: "junit",
+  viewportWidth: 1500,
+  viewportHeight: 700,
   reporterOptions: {
     mochaFile: "cypress/reports/junit/test-report-[hash].xml",
   },
