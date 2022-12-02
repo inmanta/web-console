@@ -167,6 +167,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // await compilation to be finished to be able to click on edit
     waitForCompile();
+    waitForCompile();
 
     // click on edit button
     cy.get(".pf-c-description-list").contains("Edit").click();
@@ -233,9 +234,5 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get('[aria-label="InstanceRow-Intro"]:first')
       .find('[data-label="State"]')
       .should("contain", "deleting");
-    waitForCompile();
-
-    // check that the response body doesn't contain data anymore.
-    cy.wait("@GetServiceInventory").its("response.body").should("eq", "");
   });
 });
