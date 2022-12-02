@@ -165,9 +165,14 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
       "No resources available yet"
     );
 
-    // await compilation to be finished to be able to click on edit
+    // await compilation to check state
     waitForCompile();
-    waitForCompile();
+    cy.wait(2000);
+
+    // check state is up now
+    cy.get('[aria-label="InstanceRow-Intro"]:first')
+      .find('[data-label="State"]')
+      .should("contain", "up");
 
     // click on edit button
     cy.get(".pf-c-description-list").contains("Edit").click();
