@@ -230,12 +230,14 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get("#basic-service").contains("Show inventory").click();
+    cy.wait("@GetServiceInventory");
+
     // expand first row
     cy.get("#expand-toggle0").click();
 
     // There might be still a compile running because of the edit action. So we do a check if one is pending.
     waitForCompile();
-    cy.wait("@GetServiceInventory");
+    cy.wait(2000);
 
     // delete but cancel deletion in modal
     cy.get(".pf-c-description-list").contains("Delete").click();
