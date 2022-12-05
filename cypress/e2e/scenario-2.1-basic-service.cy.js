@@ -211,10 +211,6 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.intercept("DELETE", "/lsm/v1/service_inventory/basic-service/**").as(
       "DeleteInstance"
     );
-    cy.intercept(
-      "GET",
-      "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
-    ).as("GetServiceInventory");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get("#basic-service").contains("Show inventory").click();
