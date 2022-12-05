@@ -211,6 +211,10 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.intercept("DELETE", "/lsm/v1/service_inventory/basic-service/**").as(
       "DeleteInstance"
     );
+    cy.intercept(
+      "GET",
+      "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
+    ).as("GetServiceInventory");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get("#basic-service").contains("Show inventory").click();
@@ -219,6 +223,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // There might be still a compile running because of the edit action. So we do a check if one is pending.
     waitForCompile();
+    cy.wait("@GetServiceInventory");
 
     // delete but cancel deletion in modal
     cy.get(".pf-c-description-list").contains("Delete").click();
@@ -232,6 +237,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     // check response if instance has been deleted succesfully.
     cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
     waitForCompile();
+
     cy.get('[aria-label="InstanceRow-Intro"]:first')
       .find('[data-label="State"]')
       .should("contain", "deleting");
