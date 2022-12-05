@@ -167,7 +167,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // await compilation to check state
     waitForCompile();
-    cy.wait(2000);
+    cy.wait(3000);
 
     // check state is up now
     cy.get('[aria-label="InstanceRow-Intro"]:first')
@@ -236,7 +236,6 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // check response if instance has been deleted succesfully.
     cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
-    waitForCompile();
 
     cy.get('[aria-label="InstanceRow-Intro"]:first')
       .find('[data-label="State"]')
