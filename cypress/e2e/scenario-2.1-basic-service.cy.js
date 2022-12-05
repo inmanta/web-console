@@ -80,8 +80,17 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
   it("2.1.1 Add Instance Cancel form", () => {
     // Go from Home page to Service Inventory of Basic-service
     cy.visit("/console/");
+
+    cy.intercept(
+      "GET",
+      "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
+    ).as("GetServiceInventory");
+
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get("#basic-service").contains("Show inventory").click();
+
+    // make sure the call to get inventory has been executed
+    cy.wait("@GetServiceInventory");
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
     // Add an instance and fill form
@@ -97,6 +106,9 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get("#service_id").type("0001");
     cy.get("#name").type("basic-service");
     cy.get("button").contains("Cancel").click();
+
+    // make sure the call to get inventory has been executed
+    cy.wait("@GetServiceInventory");
 
     // check if the view is still empty, also means we have been redirected as expected.
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
