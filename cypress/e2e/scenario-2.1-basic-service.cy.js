@@ -248,9 +248,5 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // check response if instance has been deleted succesfully.
     cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
-
-    cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]')
-      .should("contain", "deleting");
   });
 });
