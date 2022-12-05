@@ -65,7 +65,7 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
       method: "POST",
       url: `/lsm/v1/exporter/export_service_definition`,
       headers: { "X-Inmanta-Tid": id },
-      body: { force_update: false },
+      body: { force_update: true },
     });
     checkStatusCompile(id);
   });
@@ -203,6 +203,9 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // expect to land on Service Inventory page and to find attributes tab button
     cy.get(".pf-c-tabs__list").contains("Attributes").click();
+
+    // wait till compile is done
+    waitForCompile();
 
     // Expect to find new value as candidate and old value in active and no rollback value
     cy.get('[aria-label="Row-address_r1"')
