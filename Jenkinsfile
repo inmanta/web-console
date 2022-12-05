@@ -36,7 +36,7 @@ pipeline {
                 dir('web-console') {
                     sh '''yarn run build;
                     yarn run setup-server:lsm:ci;
-                    for i in $(seq 0 20); do yarn run cypress-test; done
+                    yarn run cypress-test;
                     yarn run kill-server:lsm'''
                 }
             }
