@@ -318,7 +318,7 @@ describe("Environment", function () {
   it("1.5 Clear environment", function () {
     //Fill The form and submit
     cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("test").click();
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
 
     //Go to settings
@@ -328,7 +328,7 @@ describe("Environment", function () {
     cy.get("button").contains("Clear environment").click();
     cy.get("button").contains("Cancel").click();
     cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("test").click();
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
 
     //Go to settings and get Id of an environment
@@ -341,7 +341,7 @@ describe("Environment", function () {
       .contains("I understand the consequences, clear this environment")
       .click();
     cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("test").click();
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
     //Update service catalog to restore instances
     cy.get("button").contains("Update Service Catalog").click();
