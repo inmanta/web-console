@@ -35,7 +35,7 @@ pipeline {
             steps {
                 dir('web-console') {
                     sh '''yarn run build;
-                    yarn run setup-server:lsm;
+                    yarn run setup-server:lsm:ci;
                     yarn run cypress-test;
                     yarn run kill-server:lsm'''
                 }
