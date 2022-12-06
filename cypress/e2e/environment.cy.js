@@ -1,11 +1,6 @@
 const icon = "./cypress/fixtures/test-icon.png";
 
 /// <reference types="Cypress" />
-const PATHS = {
-  catalogPage: "/console/lsm/catalog?env=",
-  createEnvPage: "/console/environment/create",
-  settingsPage: "/console/settings?env=",
-};
 const configurationTypes = [
   {
     name: "agent_trigger_method_on_auto_deploy",
@@ -129,16 +124,6 @@ const configurationTypes = [
     newValue: "false",
   },
 ];
-const newEnvCard = '[aria-label="Overview-Success"] > :first-child';
-const projectNameInput = '[aria-label="Project Name-typeahead"]';
-const newProjectName = '[aria-label="Project Name-select-input';
-const newProjectNameButton = ".pf-c-select__menu-item";
-const nameInput = '[aria-label="Name-input"]';
-const descInput = '[aria-label="Description-input"]';
-const repoInput = '[aria-label="Repository-input"]';
-const branchInput = '[aria-label="Branch-input"]';
-const iconInput = "#simple-text-file-filename";
-
 const testProjectName = (number) => "Test Project Name " + number;
 const testName = (number) => "TestName " + number;
 
@@ -162,18 +147,21 @@ const createEnv = ({
   shouldPassEnvName = true,
   fillOptionalInputs = false,
 }) => {
-  cy.get(projectNameInput).type(projectName);
-  cy.get(newProjectName).within(() => {
-    cy.get(newProjectNameButton).click();
+  cy.get('[aria-label="Project Name-typeahead"]').type(projectName);
+  cy.get('[aria-label="Project Name-select-input').within(() => {
+    cy.get(".pf-c-select__menu-item").click();
   });
   if (shouldPassEnvName) {
-    cy.get(nameInput).type(envName);
+    cy.get('[aria-label="Name-input"]').type(envName);
   }
   if (!fillOptionalInputs) {
-    cy.get(descInput).type("Test description");
-    cy.get(repoInput).type("repository");
-    cy.get(branchInput).type("branch");
-    cy.get(iconInput).selectFile(icon, { action: "drag-drop", force: true });
+    cy.get('[aria-label="Description-input"]').type("Test description");
+    cy.get('[aria-label="Repository-input"]').type("repository");
+    cy.get('[aria-label="Branch-input"]').type("branch");
+    cy.get("#simple-text-file-filename").selectFile(icon, {
+      action: "drag-drop",
+      force: true,
+    });
   }
 };
 
@@ -191,15 +179,18 @@ const deleteEnv = (name, projectName) => {
 
 const openSettings = (envName) => {
   cy.get('[aria-label="Settings actions"]').click();
-  cy.url().should("contain", PATHS.settingsPage);
+  cy.url().should("contain", "/console/settings?env=");
   cy.get('[aria-label="Name-value"]').should("contain", envName);
 };
 
 describe("Environment", function () {
   it("1.1 cancel creation of an environment", function () {
     cy.visit("/console/");
-    cy.get(newEnvCard).click();
-    cy.url().should("eq", Cypress.config().baseUrl + PATHS.createEnvPage);
+    cy.get('[aria-label="Overview-Success"] > :first-child').click();
+    cy.url().should(
+      "eq",
+      Cypress.config().baseUrl + "/console/environment/create"
+    );
     createEnv({
       envName: testName(1),
       projectName: testProjectName(1),
@@ -210,17 +201,17 @@ describe("Environment", function () {
 
   it("1.2 Create new  environment", function () {
     //fill the form and submit
-    cy.visit(PATHS.createEnvPage);
+    cy.visit("/console/environment/create");
     createEnv({
       envName: testName(2),
       projectName: testProjectName(2),
       shouldPassEnvName: false,
     });
     cy.get("button").contains("Submit").should("be.disabled");
-    cy.get(nameInput).type(testName(2));
+    cy.get('[aria-label="Name-input"]').type(testName(2));
     cy.get("button").contains("Submit").should("not.be.disabled");
     cy.get("button").contains("Submit").click();
-    cy.url().should("contain", PATHS.catalogPage);
+    cy.url().should("contain", "/console/lsm/catalog?env=");
     //go back to gome and check if env is visible
     cy.wait(50);
     cy.get(".pf-c-breadcrumb__item")
@@ -236,7 +227,7 @@ describe("Environment", function () {
 
   it("1.3 delete an environment", function () {
     //Fill The form and submit
-    cy.visit(PATHS.createEnvPage);
+    cy.visit("/console/environment/create");
     createEnv({
       envName: testName(3),
       projectName: testProjectName(3),
@@ -244,7 +235,7 @@ describe("Environment", function () {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.url().should("contain", PATHS.catalogPage);
+    cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(3));
     deleteEnv(testName(3), testProjectName(3));
@@ -252,7 +243,7 @@ describe("Environment", function () {
 
   it("1.4 Edit created environment", function () {
     //Fill The form and submit
-    cy.visit(PATHS.createEnvPage);
+    cy.visit("/console/environment/create");
     createEnv({
       envName: testName(4),
       projectName: testProjectName(4),
@@ -315,7 +306,7 @@ describe("Environment", function () {
     //change Icon value
     cy.wait(50);
     cy.get('[aria-label="Icon-toggle-edit"]').should("be.visible").click();
-    cy.get(iconInput).selectFile(icon, {
+    cy.get("#simple-text-file-filename").selectFile(icon, {
       action: "drag-drop",
       force: true,
     });
@@ -362,7 +353,7 @@ describe("Environment", function () {
   });
 
   it("1.6 Edit environment configuration", function () {
-    cy.visit(PATHS.createEnvPage);
+    cy.visit("/console/environment/create");
     createEnv({
       envName: testName(6),
       projectName: testProjectName(6),
@@ -370,7 +361,7 @@ describe("Environment", function () {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.url().should("contain", PATHS.catalogPage);
+    cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(6), testProjectName(6));
     cy.get("button").contains("Configuration").click();
