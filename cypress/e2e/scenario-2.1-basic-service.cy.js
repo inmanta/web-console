@@ -233,6 +233,9 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get("#basic-service").contains("Show inventory").click();
+
+    // wait to check if compile is done
+    waitForCompile();
     cy.wait("@GetServiceInventory");
 
     // expand first row
