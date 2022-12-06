@@ -128,7 +128,7 @@ const testProjectName = (number) => "Test Project Name " + number;
 const testName = (number) => "TestName " + number;
 
 beforeEach(() => {
-  // delete project exlcuding test one before each test
+  // delete projects exlcuding test one before each test to have unified conditions for each test case
   cy.request("http://localhost:8010/proxy/api/v1/project").as("projects");
   cy.get("@projects").then((response) => {
     response.body.projects.map((project) => {
@@ -141,6 +141,15 @@ beforeEach(() => {
     });
   });
 });
+/**
+ * Function is responsible for creating Environment process without submiting it.
+ * it accepts object that holds:
+ *
+ * @param {*} envName -string
+ * @param {*} projectName -string
+ * @param {*} shouldPassEnvName -boolean - default value - true
+ * @param {*} envName -boolean - default value - false
+ */
 const createEnv = ({
   envName,
   projectName,
@@ -164,7 +173,11 @@ const createEnv = ({
     });
   }
 };
-
+/**
+ * Function is responsible for going through delete Environment process with assertions selection that covers test cases
+ * @param {*} name - string
+ * @param {*} projectName - string
+ */
 const deleteEnv = (name, projectName) => {
   cy.get("button").contains("Delete environment").click();
   cy.get('[aria-label="delete"]').should("be.disabled");
@@ -176,7 +189,10 @@ const deleteEnv = (name, projectName) => {
     .contains(projectName)
     .should("not.exist");
 };
-
+/**
+ * Function handle going into Settings tab, and checks if we chosen correct environment
+ * @param {*} envName - string
+ */
 const openSettings = (envName) => {
   cy.get('[aria-label="Settings actions"]').click();
   cy.url().should("contain", "/console/settings?env=");
@@ -329,7 +345,9 @@ describe("Environment", function () {
     cy.get("button").contains("Cancel").click();
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
+    cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 10000 }).should(
+      "to.be.visible"
+    );
 
     //Go to settings and get Id of an environment
     openSettings("test");
@@ -365,7 +383,7 @@ describe("Environment", function () {
 
     openSettings(testName(6), testProjectName(6));
     cy.get("button").contains("Configuration").click();
-    //go through every configuration and
+    //go through every configuration and change its value according to one assigned in the configruationTypes
     cy.wrap(configurationTypes).each((config) => {
       switch (config.inputType) {
         case "text":
@@ -398,6 +416,7 @@ describe("Environment", function () {
           });
           break;
       }
+      //assert if the warning sign exist, which means that value in the input is new but not saved, then save, and expect warning sign to disapear
       cy.wait(100);
       cy.get('[aria-label="Warning"]').should("exist");
       cy.get(config.row).within(() => {
@@ -405,6 +424,7 @@ describe("Environment", function () {
       });
       cy.wait(100);
       cy.get('[aria-label="Warning"]').should("not.exist");
+      //go through every configuration and expect new value there
       switch (config.inputType) {
         case "textNumber" | "text":
           cy.get(config.row).within(() => {
