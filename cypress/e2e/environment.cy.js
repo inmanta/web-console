@@ -129,17 +129,15 @@ const testName = (number) => "TestName " + number;
 
 beforeEach(() => {
   // delete projects exlcuding test one before each test to have unified conditions for each test case
-  cy.request("http://localhost:8010/proxy/api/v1/project").as("projects");
+  cy.request("/api/v1/project").as("projects");
   cy.get("@projects").then((response) => {
     response.body.projects.map((project) => {
       if (project.name !== "lsm-frontend") {
-        cy.request(
-          "DELETE",
-          `http://localhost:8010/proxy/api/v1/project/${project.id}`
-        );
+        cy.request("DELETE", `/api/v1/project/${project.id}`);
       }
     });
   });
+  cy.wait(1000);
 });
 /**
  * Function is responsible for creating Environment process without submiting it.
