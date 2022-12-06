@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @types/lodash from 4.14.186 to 4.14.191'
+destination-branches:
+- master
+- iso6
+- iso5
+sections: {}
