@@ -5,7 +5,6 @@ pipeline {
         disableConcurrentBuilds()
         checkoutToSubdirectory('web-console')
         skipDefaultCheckout()
-        timeout(time: 15, unit: 'MINUTES')
     }
     triggers{
         pollSCM('* * * * *')
@@ -33,11 +32,19 @@ pipeline {
         }
         stage('Testing with cypress') {
             steps {
+                timeout(time: 15, unit: 'MINUTES') {
                 dir('web-console') {
                     sh '''yarn run build;
                     yarn run setup-server:lsm:ci;
-                    yarn run cypress-test;
-                    yarn run kill-server:lsm'''
+                    yarn run cypress-test;'''
+                }
+                }
+            }
+            post {
+                always {
+                    dir('web-console') {
+                        sh'yarn run kill-server:lsm'
+                    }
                 }
             }
         }
