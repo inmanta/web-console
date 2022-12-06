@@ -32,13 +32,13 @@ pipeline {
         }
         stage('Testing with cypress') {
                 timeout(time: 15, unit: 'MINUTES') {
-                dir('web-console') {
-                    sh '''yarn run build;
-                    yarn run setup-server:lsm:ci;
-                    yarn run cypress-test;'''
+                    dir('web-console') {
+                        sh '''yarn run build;
+                        yarn run setup-server:lsm:ci;
+                        yarn run cypress-test;'''
+                    }
                 }
-                }
-            }
+                
             post {
                 always {
                     dir('web-console') {
