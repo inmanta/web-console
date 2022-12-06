@@ -8,7 +8,7 @@ module.exports = defineConfig({
     mochaFile: "cypress/reports/junit/test-report-[hash].xml",
   },
   e2e: {
-    baseUrl: "http://localhost:8888",
+    baseUrl: "http://172.30.0.3:8888",
     supportFile: false,
   },
 });
