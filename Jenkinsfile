@@ -5,7 +5,6 @@ pipeline {
         disableConcurrentBuilds()
         checkoutToSubdirectory('web-console')
         skipDefaultCheckout()
-        timeout(time: 15, unit: 'MINUTES')
     }
     triggers{
         pollSCM('* * * * *')
@@ -16,28 +15,37 @@ pipeline {
     }
 
     stages {
-        stage('Build & Unit Test') {
-            steps {
-                deleteDir()
-                dir('web-console'){
-                    checkout scm
-                    sh '''yarn install --frozen-lockfile;
-                    yarn lint;
-                    yarn format:check;
-                    yarn tsc;
-                    yarn check-circular-deps;
-                    yarn build;
-                    yarn test:ci'''
-                }
-            }
-        }
+        // stage('Build & Unit Test') {
+        //     steps {
+        //         deleteDir()
+        //         dir('web-console'){
+        //             checkout scm
+        //             sh '''yarn install --frozen-lockfile;
+        //             yarn lint;
+        //             yarn format:check;
+        //             yarn tsc;
+        //             yarn check-circular-deps;
+        //             yarn build;
+        //             yarn test:ci'''
+        //         }
+        //     }
+        // }
         stage('Testing with cypress') {
             steps {
+                options {
+                    timeout(time: 1, unit: 'MINUTES')
+                }
                 dir('web-console') {
                     sh '''yarn run build;
-                    yarn run setup-server:lsm;
-                    yarn run cypress-test;
-                    yarn run kill-server:lsm'''
+                    yarn run setup-server:lsm:ci;
+                    yarn run cypress-test;'''
+                }
+            }
+            post {
+                always {
+                    dir('web-console') {
+                        sh'yarn run kill-server:lsm'
+                    }
                 }
             }
         }
