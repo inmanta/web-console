@@ -358,7 +358,9 @@ describe("Environment", function () {
       .click();
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
+    cy.get('[aria-label="ServiceCatalog-Empty"]', { timeout: 6000 }).should(
+      "to.be.visible"
+    );
     //Update service catalog to restore instances
     cy.get("button").contains("Update Service Catalog").click();
     cy.get("button").contains("Yes").click();
@@ -383,6 +385,7 @@ describe("Environment", function () {
     cy.get("button").contains("Configuration").click();
     //go through every configuration and change its value according to one assigned in the configruationTypes
     cy.wrap(configurationTypes).each((config) => {
+      cy.wait(100);
       switch (config.inputType) {
         case "text":
           cy.get(config.row).clear().type(config.newValue);
