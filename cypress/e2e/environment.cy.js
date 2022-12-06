@@ -6,133 +6,125 @@ const PATHS = {
   createEnvPage: "/console/environment/create",
   settingsPage: "/console/settings?env=",
 };
-const parameterTypes = [
-  { name: "Project Name", type: "typeahead" },
-  { name: "Name", type: "text" },
-  { name: "Description", type: "text" },
-  { name: "Repository", type: "joined" },
-  { name: "Branch", type: "joined" },
-  { name: "Icon", type: "icon" },
-];
 const configurationTypes = [
   {
     name: "agent_trigger_method_on_auto_deploy",
-    row: "Row-agent_trigger_method_on_auto_deploy > td > input",
+    row: '[aria-label="Row-agent_trigger_method_on_auto_deploy"]',
     inputType: "select",
     newValue: "push_full_deploy",
   },
   {
     name: "auto_deploy",
-    row: "Row-auto_deploy > td > input",
+    row: '[aria-label="Row-auto_deploy"]',
     inputType: "switch",
     newValue: "false",
   },
   {
     name: "auto_full_compile",
-    row: "Row-auto_full_compile > td > input",
+    row: '[aria-label="Row-auto_full_compile"]',
     inputType: "text",
-    newValue: "test Value",
+    newValue: "1 2 3 4 5",
   },
   {
     name: "autostart_agent_deploy_interval",
-    row: "Row-autostart_agent_deploy_interval > td > input",
-    inputType: "text",
+    row: '[aria-label="Row-autostart_agent_deploy_interval"]',
+    inputType: "textNumber",
     newValue: "610",
   },
   {
     name: "autostart_agent_deploy_splay_time",
-    row: "Row-autostart_agent_deploy_splay_time > td > input",
-    inputType: "text",
+    row: '[aria-label="Row-autostart_agent_deploy_splay_time"]',
+    inputType: "textNumber",
     newValue: "20",
   },
   {
     name: "autostart_agent_interval",
-    row: "Row-autostart_agent_interval > td > input",
-    inputType: "text",
+    row: '[aria-label="Row-autostart_agent_interval"]',
+    inputType: "textNumber",
     newValue: "610",
   },
   {
     name: "autostart_agent_map",
-    row: "Row-autostart_agent_map > td > input",
+    row: '[aria-label="Row-autostart_agent_map"]',
     inputType: "textmap",
-    newValue: "",
+    newValue: "new value",
   },
 
   {
     name: "autostart_agent_repair_interval",
-    row: "Row-autostart_agent_repair_interval > td > input",
-    inputType: "text",
+    row: '[aria-label="Row-autostart_agent_repair_interval"]',
+    inputType: "textNumber",
     newValue: "86410",
   },
   {
     name: "autostart_agent_repair_splay_time",
-    row: "Row-autostart_agent_repair_splay_time > td > input",
-    inputType: "text",
+    row: '[aria-label="Row-autostart_agent_repair_splay_time"]',
+    inputType: "textNumber",
     newValue: "610",
   },
   {
     name: "autostart_on_start",
-    row: "Row-autostart_on_start > td > input",
+    row: '[aria-label="Row-autostart_on_start"]',
     inputType: "switch",
     newValue: "false",
   },
   {
     name: "autostart_splay",
-    row: "Row-autostart_splay > td > input",
-    inputType: "text",
+    row: '[aria-label="Row-autostart_splay"]',
+    inputType: "textNumber",
     newValue: "20",
   },
   {
     name: "available_versions_to_keep",
-    row: "Row-available_versions_to_keep > td > input",
-    inputType: "text",
+    row: '[aria-label="Row-available_versions_to_keep"]',
+    inputType: "textNumber",
     newValue: "110",
   },
   {
     name: "environment_agent_trigger_method",
-    row: "Row-environment_agent_trigger_method > td > input",
+    row: '[aria-label="Row-environment_agent_trigger_method"]',
     inputType: "select",
     newValue: "push_incremental_deploy",
   },
   {
     name: "lsm_partial_compile",
-    row: "Row-lsm_partial_compile > td > input",
+    row: '[aria-label="Row-lsm_partial_compile"]',
     inputType: "switch",
     newValue: "true",
   },
   {
     name: "notification_retention",
-    row: "Row-notification_retention > td > input",
-    inputType: "text",
+    row: '[aria-label="Row-notification_retention"]',
+    inputType: "textNumber",
     newValue: "375",
   },
   {
     name: "protected_environment",
-    row: "Row-protected_environment > td > input",
+    row: '[aria-label="Row-protected_environment"]',
     inputType: "switch",
     newValue: "true",
   },
   {
     name: "purge_on_delete",
-    row: "Row-purge_on_delete > td > input",
+    row: '[aria-label="Row-purge_on_delete"]',
     inputType: "switch",
     newValue: "true",
   },
   {
     name: "push_on_auto_deploy",
-    row: "Row-push_on_auto_deploy > td > input",
+    row: '[aria-label="Row-push_on_auto_deploy"]',
     inputType: "switch",
     newValue: "false",
   },
   {
     name: "resource_action_logs_retention",
-    row: "Row-resource_action_logs_retention > td > input",
-    inputType: "text",
+    row: '[aria-label="Row-resource_action_logs_retention"]',
+    inputType: "textNumber",
     newValue: "8",
   },
   {
     name: "server_compile",
-    row: "Row-server_compile > td > input",
+    row: '[aria-label="Row-server_compile"]',
     inputType: "switch",
     newValue: "false",
   },
@@ -159,7 +151,7 @@ beforeEach(() => {
         cy.request(
           "DELETE",
           `http://localhost:8010/proxy/api/v1/project/${project.id}`
-        ).as("projects");
+        );
       }
     });
   });
@@ -230,6 +222,7 @@ describe("Environment", function () {
     cy.get("button").contains("Submit").click();
     cy.url().should("contain", PATHS.catalogPage);
     //go back to gome and check if env is visible
+    cy.wait(50);
     cy.get(".pf-c-breadcrumb__item")
       .contains("Home")
       .should("be.visible")
@@ -269,83 +262,66 @@ describe("Environment", function () {
     cy.get("button").contains("Submit").click();
 
     openSettings(testName(4));
-    cy.wrap(parameterTypes).each((parameter) => {
-      if (
-        parameter.name !== "Repository" &&
-        parameter.name !== "Branch" &&
-        parameter.name !== "Icon"
-      ) {
-        cy.get('[aria-label="' + parameter.name + '-toggle-edit"]').click();
-      }
+    //change Name value
+    cy.wait(50);
+    cy.get('[aria-label="Name-toggle-edit"]').click();
+    cy.get('[aria-label="Name-input"]').clear().type("New Value Name");
+    cy.get('[aria-label="Name-submit-edit"]').click();
+    cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
+    //change Description value
+    cy.wait(50);
+    cy.get('[aria-label="Description-toggle-edit"]').click();
+    cy.get('[aria-label="Description-input"]')
+      .clear()
+      .type("New Value Description");
+    cy.get('[aria-label="Description-submit-edit"]').click();
+    cy.get('[aria-label="Description-value"]').should(
+      "contain",
+      "New Value Description"
+    );
+    //change Repository Branch value
+    cy.wait(50);
+    cy.get('[aria-label="Repository Settings-toggle-edit"]')
+      .should("be.visible")
+      .click();
+    cy.get('[aria-label="repo_branch-input"]')
+      .clear()
+      .type("New Value Repo Branch");
+    cy.get('[aria-label="Repository Settings-submit-edit"]').click();
+    cy.get('[aria-label="repo_branch-value"]').should(
+      "contain",
+      "New Value Repo Branch"
+    );
+    //change Repository url value
+    cy.wait(50);
+    cy.get('[aria-label="Repository Settings-toggle-edit"]')
+      .should("be.visible")
+      .click();
+    cy.get('[aria-label="repo_url-input"]').clear().type("New Value Repo Url");
+    cy.get('[aria-label="Repository Settings-submit-edit"]').click();
+    cy.get('[aria-label="repo_url-value"]').should(
+      "contain",
+      "New Value Repo Url"
+    );
+    //change Project Name value
+    cy.wait(50);
+    cy.get('[aria-label="Project Name-toggle-edit"]').click();
+    cy.get('[aria-label="Project Name-typeahead"]')
+      .clear()
+      .type("New Value Project Name");
 
-      switch (parameter.type) {
-        case "text":
-          cy.get('[aria-label="' + parameter.name + '-input"]')
-            .clear()
-            .type("New Value " + parameter.name);
-          break;
-        case "icon":
-          cy.get('[aria-label="' + parameter.name + '-toggle-edit"]').click({
-            force: true,
-          });
-          cy.get(iconInput).selectFile(icon, {
-            action: "drag-drop",
-            force: true,
-          });
-          break;
-        case "typeahead":
-          cy.get('[aria-label="Project Name-typeahead"]')
-            .clear()
-            .type("New Value " + parameter.name);
-
-          cy.get("button")
-            .contains(`Create "New Value ${parameter.name}"`)
-            .click();
-
-          break;
-        case "joined":
-          cy.get('[aria-label="Repository Settings-toggle-edit"]')
-            .should("be.visible")
-            .click();
-          cy.get(
-            parameter.name === "Branch"
-              ? '[aria-label="repo_branch-input"]'
-              : '[aria-label="repo_url-input"]'
-          )
-            .clear()
-            .type("New Value " + parameter.name);
-          break;
-      }
-      if (parameter.name !== "Repository" && parameter.name !== "Branch") {
-        cy.get('[aria-label="' + parameter.name + '-submit-edit"]').click();
-        if (parameter.name === "Icon") {
-          //by default that env doesn't have Icon
-          cy.get('[aria-label="' + parameter.name + '-value"]').should(
-            "not.have.text",
-            "no icon"
-          );
-        } else {
-          cy.get('[aria-label="' + parameter.name + '-value"]').should(
-            "contain",
-            "New Value " + parameter.name
-          );
-        }
-      } else {
-        cy.get('[aria-label="Repository Settings-submit-edit"]').click();
-        if (parameter.name === "Repository") {
-          cy.get('[aria-label="repo_url-value"]').should(
-            "contain",
-            "New Value " + parameter.name
-          );
-        } else {
-          cy.get('[aria-label="repo_branch-value"]').should(
-            "contain",
-            "New Value " + parameter.name
-          );
-        }
-      }
+    cy.get("button").contains('Create "New Value Project Name"').click();
+    cy.get('[aria-label="Project Name-submit-edit"]').click({ force: true });
+    //change Icon value
+    cy.wait(50);
+    cy.get('[aria-label="Icon-toggle-edit"]').should("be.visible").click();
+    cy.get(iconInput).selectFile(icon, {
+      action: "drag-drop",
+      force: true,
     });
-    deleteEnv("New Value Name", "New Value Project Name");
+    cy.get('[aria-label="Icon-submit-edit"]').click();
+
+    cy.get('[aria-label="Icon-value"]').should("not.have.text", "no icon");
   });
 
   it("1.5 Clear environment", function () {
@@ -379,73 +355,98 @@ describe("Environment", function () {
     //Update service catalog to restore instances
     cy.get("button").contains("Update Service Catalog").click();
     cy.get("button").contains("Yes").click();
-    cy.intercept("/lsm/v1/service_catalog?instance_summary=True").as(
-      "catalogUpdate"
+    // exceeded timeout needed is to await continous call to return services
+    cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 30000 }).should(
+      "to.be.visible"
     );
-    cy.wait(20000);
-    cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
   });
 
   it("1.6 Edit environment configuration", function () {
     cy.visit(PATHS.createEnvPage);
     createEnv({
-      envName: testName(3),
-      projectName: testProjectName(3),
+      envName: testName(6),
+      projectName: testProjectName(6),
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
     cy.url().should("contain", PATHS.catalogPage);
 
-    openSettings("test");
-    cy.get("button").contains("Configuration");
+    openSettings(testName(6), testProjectName(6));
+    cy.get("button").contains("Configuration").click();
+    //go through every configuration and
     cy.wrap(configurationTypes).each((config) => {
-      switch (config.type) {
+      switch (config.inputType) {
         case "text":
           cy.get(config.row).clear().type(config.newValue);
           break;
+        case "textNumber":
+          cy.get(config.row).within(() => {
+            cy.get(".pf-c-form-control").clear().type(config.newValue);
+          });
+          break;
         case "switch":
-          cy.get(config.row).click();
+          cy.get(config.row).within(() => {
+            cy.get(".pf-c-switch").click();
+          });
 
           break;
         case "select":
           cy.get(config.row).click();
-          cy.get("Row-" + config.name + " > td > .pf-c-select__menu-item")
-            .contains(config.newValue)
-            .click();
+          cy.get(".pf-c-select__menu-item").contains(config.newValue).click();
 
           break;
-        case "selecMap":
-          cy.get("Row-" + config.name + " > td ");
-
+        case "textmap":
+          cy.get(config.row).within(() => {
+            cy.get('[aria-label="editEntryValue"]')
+              .filter((key, $el) => {
+                return $el.value === "local:";
+              })
+              .clear()
+              .type(config.newValue);
+          });
           break;
       }
-      cy.get('[aria-label="Warning"]').should("be.visible");
-      cy.get('[aria-label="SaveAction"]').click();
-      cy.get('[aria-label="Warning"]').should("not.be.visible");
-
-      switch (config.type) {
-        case "text":
-          cy.get(config.row).clear().type(config.newValue);
-          break;
-        case "switch":
-          cy.get(config.row).click();
-
+      cy.wait(100);
+      cy.get('[aria-label="Warning"]').should("exist");
+      cy.get(config.row).within(() => {
+        cy.get('[aria-label="SaveAction"]').click();
+      });
+      cy.wait(100);
+      cy.get('[aria-label="Warning"]').should("not.exist");
+      switch (config.inputType) {
+        case "textNumber" | "text":
+          cy.get(config.row).within(() => {
+            cy.get(".pf-c-form-control").should("have.text", config.newValue);
+          });
           break;
         case "select":
-          cy.get(config.row).click();
-          cy.get("Row-" + config.name + " > td > .pf-c-select__menu-item")
-            .contains(config.newValue)
-            .click();
+          cy.get(config.row).within(() => {
+            cy.get(".pf-c-form-control").should("have.value", config.newValue);
+          });
 
           break;
-        case "selecMap":
-          cy.get("Row-" + config.name + " > td ");
-
+        case "textmap":
+          cy.get(config.row).within(() => {
+            cy.get('[aria-label="editEntryValue"]').should(
+              "have.value",
+              config.newValue
+            );
+          });
           break;
       }
     });
-    cy.get("button").contains("Environment");
-    deleteEnv(6);
+    //unable to delete env
+    cy.get('[aria-label="Row-protected_environment"]').within(() => {
+      cy.get(".pf-c-switch").click();
+    });
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-protected_environment"]').within(() => {
+      cy.get('[aria-label="SaveAction"]').click();
+    });
+    cy.get('[aria-label="Warning"]').should("not.exist");
+
+    cy.get("button").contains("Environment").click();
+    deleteEnv(testName(6), testProjectName(6));
   });
 });
