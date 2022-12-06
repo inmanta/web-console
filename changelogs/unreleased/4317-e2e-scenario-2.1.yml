@@ -4,5 +4,6 @@ issue-nr: 4317
 destination-branches:
 - master
 - iso6
+- iso5
 sections: 
   minor-improvement: "{{description}}"
