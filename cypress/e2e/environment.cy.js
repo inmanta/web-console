@@ -137,7 +137,7 @@ beforeEach(() => {
       }
     });
   });
-  cy.wait(1000);
+  cy.wait(600);
 });
 /**
  * Function is responsible for creating Environment process without submiting it.
@@ -223,9 +223,9 @@ describe("Environment", function () {
     });
     cy.get("button").contains("Submit").should("be.disabled");
     cy.get('[aria-label="Name-input"]').type(testName(2));
-    cy.wait(1000);
+    cy.wait(600);
     cy.get("button").contains("Submit").should("not.be.disabled").click();
-    cy.wait(1000);
+    cy.wait(600);
     cy.url().should("contain", "/console/lsm/catalog?env=");
     //go back to gome and check if env is visible
     cy.wait(50);
@@ -249,9 +249,9 @@ describe("Environment", function () {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.wait(1000);
+    cy.wait(600);
     cy.get("button").contains("Submit").should("not.be.disabled").click();
-    cy.wait(1000);
+    cy.wait(600);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(3));
@@ -267,9 +267,9 @@ describe("Environment", function () {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.wait(1000);
+    cy.wait(600);
     cy.get("button").contains("Submit").should("not.be.disabled").click();
-    cy.wait(1000);
+    cy.wait(600);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(4));
@@ -280,7 +280,7 @@ describe("Environment", function () {
     cy.get('[aria-label="Name-submit-edit"]').click();
     cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
     //change Description value
-    cy.wait(1000);
+    cy.wait(600);
     cy.get('[aria-label="Description-toggle-edit"]')
       .should("be.visible")
       .click();
@@ -309,7 +309,7 @@ describe("Environment", function () {
       "New Value Repo Branch"
     );
     //change Repository url value
-    cy.wait(1000);
+    cy.wait(600);
     cy.get('[aria-label="Repository Settings-toggle-edit"]')
       .should("be.visible")
       .click();
@@ -393,9 +393,9 @@ describe("Environment", function () {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.wait(1000);
+    cy.wait(600);
     cy.get("button").contains("Submit").should("not.be.disabled").click();
-    cy.wait(1000);
+    cy.wait(600);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(6), testProjectName(6));
