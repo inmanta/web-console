@@ -181,7 +181,7 @@ const deleteEnv = (name, projectName) => {
   cy.get('[aria-label="delete"]').should("be.disabled");
 
   cy.get('[aria-label="delete environment check"]').type(name);
-  cy.get('[aria-label="delete"]').should("not.be.disabled").click();
+  cy.get('[aria-label="delete"]').click();
   cy.url().should("eq", Cypress.config().baseUrl + "/console/");
   cy.get('[aria-label="Environment card"]')
     .contains(projectName)
@@ -223,7 +223,7 @@ describe("Environment", function () {
     });
     cy.get("button").contains("Submit").should("be.disabled");
     cy.get('[aria-label="Name-input"]').type(testName(2));
-    cy.get("button").contains("Submit").should("not.be.disabled").click();
+    cy.get("button").contains("Submit").click();
     cy.wait("@createEnv", { timeout: 10000 })
       .its("response.statusCode")
       .should("eq", 200);
@@ -231,7 +231,7 @@ describe("Environment", function () {
     //go back to gome and check if env is visible
     cy.get(".pf-c-breadcrumb__item")
       .contains("Home")
-      .should("be.visible")
+
       .click();
     cy.get('[aria-label="Environment card"]').should(
       "any.contain",
@@ -248,7 +248,7 @@ describe("Environment", function () {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.get("button").contains("Submit").should("not.be.disabled").click();
+    cy.get("button").contains("Submit").click();
     cy.wait("@createEnv", { timeout: 10000 })
       .its("response.statusCode")
       .should("eq", 200);
@@ -267,7 +267,7 @@ describe("Environment", function () {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.get("button").contains("Submit").should("not.be.disabled").click();
+    cy.get("button").contains("Submit").click();
     cy.wait("@createEnv").its("response.statusCode").should("eq", 200);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
@@ -279,26 +279,16 @@ describe("Environment", function () {
     cy.get('[aria-label="Name-submit-edit"]').click();
     cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
     //change Description value
-    cy.get('[aria-label="Description-toggle-edit"]')
-      .should(($el) => {
-        expect(Cypress.dom.isDetached($el)).to.eq(false);
-      })
-      .click();
-    cy.get('[aria-label="Description-input"]').should("be.visible").clear();
+    cy.get('[aria-label="Description-toggle-edit"]').click();
+    cy.get('[aria-label="Description-input"]').clear();
     cy.get('[aria-label="Description-input"]').type("New Value Description");
-    cy.get('[aria-label="Description-submit-edit"]')
-      .should(($el) => {
-        expect(Cypress.dom.isDetached($el)).to.eq(false);
-      })
-      .click();
+    cy.get('[aria-label="Description-submit-edit"]').click();
     cy.get('[aria-label="Description-value"]').should(
       "contain",
       "New Value Description"
     );
     //change Repository Branch value
-    cy.get('[aria-label="Repository Settings-toggle-edit"]')
-      .should("be.visible")
-      .click();
+    cy.get('[aria-label="Repository Settings-toggle-edit"]').click();
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch", {
       delay: 10,
@@ -309,10 +299,8 @@ describe("Environment", function () {
       "New Value Repo Branch"
     );
     //change Repository url value
-    cy.get('[aria-label="Repository Settings-toggle-edit"]')
-      .should("be.visible")
-      .click();
-
+    cy.get('[aria-label="Repository Settings-toggle-edit"]').click();
+    //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_url-input"]').type("New Value Repo Url", {
       delay: 10,
     });
@@ -331,11 +319,7 @@ describe("Environment", function () {
     cy.get("button").contains('Create "New Value Project Name"').click();
     cy.get('[aria-label="Project Name-submit-edit"]').click({ force: true });
     //change Icon value
-    cy.get('[aria-label="Icon-toggle-edit"]')
-      .should(($el) => {
-        expect(Cypress.dom.isDetached($el)).to.eq(false);
-      })
-      .click();
+    cy.get('[aria-label="Icon-toggle-edit"]').click();
     cy.get("#simple-text-file-filename").selectFile(icon, {
       action: "drag-drop",
       force: true,
@@ -394,7 +378,7 @@ describe("Environment", function () {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.get("button").contains("Submit").should("not.be.disabled").click();
+    cy.get("button").contains("Submit").click();
     cy.wait("@createEnv", { timeout: 10000 })
       .its("response.statusCode")
       .should("eq", 200);
