@@ -1,4 +1,5 @@
 description: Remove reviewer checklist from the PR template.
 issue-nr: 5005
+issue-repo: inmanta-core
 change-type: patch
 destination-branches: [master, iso6, iso5, iso4]
