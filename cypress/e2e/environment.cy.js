@@ -286,7 +286,11 @@ describe("Environment", function () {
       .click();
     cy.get('[aria-label="Description-input"]').should("be.visible").clear();
     cy.get('[aria-label="Description-input"]').type("New Value Description");
-    cy.get('[aria-label="Description-submit-edit"]').click();
+    cy.get('[aria-label="Description-submit-edit"]')
+      .should(($el) => {
+        expect(Cypress.dom.isDetached($el)).to.eq(false);
+      })
+      .click();
     cy.get('[aria-label="Description-value"]').should(
       "contain",
       "New Value Description"
@@ -295,7 +299,7 @@ describe("Environment", function () {
     cy.get('[aria-label="Repository Settings-toggle-edit"]')
       .should("be.visible")
       .click();
-    cy.get('[aria-label="repo_branch-input"]').clear();
+    //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch", {
       delay: 10,
     });
@@ -309,8 +313,9 @@ describe("Environment", function () {
       .should("be.visible")
       .click();
 
-    cy.get('[aria-label="repo_url-input"]').clear();
-    cy.get('[aria-label="repo_url-input"]').type("New Value Repo Url");
+    cy.get('[aria-label="repo_url-input"]').type("New Value Repo Url", {
+      delay: 10,
+    });
     cy.get('[aria-label="Repository Settings-submit-edit"]').click();
     cy.get('[aria-label="repo_url-value"]').should(
       "contain",
