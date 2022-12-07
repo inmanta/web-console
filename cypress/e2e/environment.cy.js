@@ -332,8 +332,9 @@ describe("Environment", function () {
     cy.get("button").contains('Create "New Value Project Name"').click();
     cy.get('[aria-label="Project Name-submit-edit"]').click({ force: true });
     //change Icon value
-    cy.wait(50);
+    cy.wait(500);
     cy.get('[aria-label="Icon-toggle-edit"]').should("be.visible").click();
+    cy.wait(500);
     cy.get("#simple-text-file-filename").selectFile(icon, {
       action: "drag-drop",
       force: true,
