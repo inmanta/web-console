@@ -1,6 +1,5 @@
 const icon = "./cypress/fixtures/test-icon.png";
 
-/// <reference types="Cypress" />
 const configurationTypes = [
   {
     name: "agent_trigger_method_on_auto_deploy",
@@ -259,6 +258,8 @@ describe("Environment", function () {
   });
 
   it("1.4 Edit created environment", function () {
+    cy.intercept("POST", "api/v2/environment/**").as("postEnvEdit");
+    cy.intercept("GET", "api/v2/environment/**").as("getEnv");
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -277,12 +278,17 @@ describe("Environment", function () {
     cy.get('[aria-label="Name-input"]').clear();
     cy.get('[aria-label="Name-input"]').type("New Value Name");
     cy.get('[aria-label="Name-submit-edit"]').click();
+    cy.wait("@postEnvEdit");
+    cy.wait("@getEnv");
+    cy.wait(500);
     cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
     //change Description value
     cy.get('[aria-label="Description-toggle-edit"]').click();
     cy.get('[aria-label="Description-input"]').clear();
     cy.get('[aria-label="Description-input"]').type("New Value Description");
     cy.get('[aria-label="Description-submit-edit"]').click();
+    cy.wait("@postEnvEdit");
+    cy.wait("@getEnv");
     cy.get('[aria-label="Description-value"]').should(
       "contain",
       "New Value Description"
@@ -294,7 +300,9 @@ describe("Environment", function () {
       delay: 10,
     });
     cy.get('[aria-label="Repository Settings-submit-edit"]').click();
-    cy.get('[aria-label="repo_branch-value"]').should(
+    cy.wait("@postEnvEdit");
+    cy.wait("@getEnv");
+    cy.get('[aria-labe="repo_branch-value"]').should(
       "contain",
       "New Value Repo Branch"
     );
@@ -305,7 +313,9 @@ describe("Environment", function () {
       delay: 10,
     });
     cy.get('[aria-label="Repository Settings-submit-edit"]').click();
-    cy.get('[aria-label="repo_url-value"]').should(
+    cy.wait("@postEnvEdit");
+    cy.wait("@getEnv");
+    cy.get('[aria-labe="repo_url-value"]').should(
       "contain",
       "New Value Repo Url"
     );
@@ -317,7 +327,9 @@ describe("Environment", function () {
     );
 
     cy.get("button").contains('Create "New Value Project Name"').click();
-    cy.get('[aria-label="Project Name-submit-edit"]').click({ force: true });
+    cy.get('[aria-label="Project Name-submit-edit"]').click();
+    cy.wait("@postEnvEdit");
+    cy.wait("@getEnv");
     //change Icon value
     cy.get('[aria-label="Icon-toggle-edit"]').click();
     cy.get("#simple-text-file-filename").selectFile(icon, {
@@ -325,7 +337,8 @@ describe("Environment", function () {
       force: true,
     });
     cy.get('[aria-label="Icon-submit-edit"]').click();
-
+    cy.wait("@postEnvEdit");
+    cy.wait("@getEnv");
     cy.get('[aria-label="Icon-value"]').should("not.have.text", "no icon");
   });
 
