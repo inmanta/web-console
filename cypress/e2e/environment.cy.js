@@ -213,6 +213,9 @@ describe("Environment", function () {
   });
 
   it("1.2 Create new  environment", function () {
+    cy.intercept("/lsm/v1/service_catalog?instance_summary=True").as(
+      "getCatalog"
+    );
     //fill the form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -226,12 +229,10 @@ describe("Environment", function () {
     cy.wait("@createEnv", { timeout: 10000 })
       .its("response.statusCode")
       .should("eq", 200);
-    cy.url().should("contain", "/console/lsm/catalog?env=");
+    cy.wait("@getCatalog");
     //go back to gome and check if env is visible
-    cy.get(".pf-c-breadcrumb__item")
-      .contains("Home")
 
-      .click();
+    cy.get(".pf-c-breadcrumb__item").contains("Home").click();
     cy.get('[aria-label="Environment card"]').should(
       "any.contain",
       testName(2)
@@ -259,7 +260,7 @@ describe("Environment", function () {
 
   it("1.4 Edit created environment", function () {
     cy.intercept("POST", "api/v2/environment/**").as("postEnvEdit");
-    cy.intercept("GET", "api/v2/environment/**").as("getEnv");
+    cy.intercept("GET", "api/v2/project?environment_details=**").as("getEnv");
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -280,7 +281,6 @@ describe("Environment", function () {
     cy.get('[aria-label="Name-submit-edit"]').click();
     cy.wait("@postEnvEdit");
     cy.wait("@getEnv");
-    cy.wait(500);
     cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
     //change Description value
     cy.get('[aria-label="Description-toggle-edit"]').click();
@@ -302,7 +302,7 @@ describe("Environment", function () {
     cy.get('[aria-label="Repository Settings-submit-edit"]').click();
     cy.wait("@postEnvEdit");
     cy.wait("@getEnv");
-    cy.get('[aria-labe="repo_branch-value"]').should(
+    cy.get('[aria-label="repo_branch-value"]').should(
       "contain",
       "New Value Repo Branch"
     );
@@ -315,7 +315,7 @@ describe("Environment", function () {
     cy.get('[aria-label="Repository Settings-submit-edit"]').click();
     cy.wait("@postEnvEdit");
     cy.wait("@getEnv");
-    cy.get('[aria-labe="repo_url-value"]').should(
+    cy.get('[aria-label="repo_url-value"]').should(
       "contain",
       "New Value Repo Url"
     );
