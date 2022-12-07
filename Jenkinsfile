@@ -5,6 +5,7 @@ pipeline {
         disableConcurrentBuilds()
         checkoutToSubdirectory('web-console')
         skipDefaultCheckout()
+        ansiColor('xterm')
     }
     triggers{
         pollSCM('* * * * *')
