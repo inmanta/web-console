@@ -260,7 +260,7 @@ describe("Environment", function () {
 
   it("1.4 Edit created environment", function () {
     cy.intercept("POST", "api/v2/environment/**").as("postEnvEdit");
-    cy.intercept("GET", "api/v2/project?environment_details=**").as("getEnv");
+    cy.intercept("GET", "api/v2/project?environment_details=true").as("getEnv");
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
