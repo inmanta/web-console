@@ -261,6 +261,7 @@ describe("Environment", function () {
   it("1.4 Edit created environment", function () {
     cy.intercept("POST", "api/v2/environment/**").as("postEnvEdit");
     cy.intercept("GET", "api/v2/project?environment_details=true").as("getEnv");
+    cy.intercept("PUT", "api/v2/project").as("createProject");
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -328,7 +329,7 @@ describe("Environment", function () {
 
     cy.get("button").contains('Create "New Value Project Name"').click();
     cy.get('[aria-label="Project Name-submit-edit"]').click();
-    cy.wait("@postEnvEdit");
+    cy.wait("@createProject");
     cy.wait("@getEnv");
     //change Icon value
     cy.get('[aria-label="Icon-toggle-edit"]').click();
