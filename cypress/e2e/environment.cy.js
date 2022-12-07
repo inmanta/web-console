@@ -193,7 +193,7 @@ const deleteEnv = (name, projectName) => {
  */
 const openSettings = (envName) => {
   cy.get('[aria-label="Settings actions"]').click();
-  cy.url().should("contain", "/console/settings?env=");
+  cy.url().should("contain", "/console/settings?env=", { timeout: 6000 });
   cy.get('[aria-label="Name-value"]').should("contain", envName);
 };
 
@@ -223,8 +223,9 @@ describe("Environment", function () {
     });
     cy.get("button").contains("Submit").should("be.disabled");
     cy.get('[aria-label="Name-input"]').type(testName(2));
-    cy.get("button").contains("Submit").should("not.be.disabled");
-    cy.get("button").contains("Submit").click();
+    cy.wait(1000);
+    cy.get("button").contains("Submit").should("not.be.disabled").click();
+    cy.wait(1000);
     cy.url().should("contain", "/console/lsm/catalog?env=");
     //go back to gome and check if env is visible
     cy.wait(50);
@@ -248,7 +249,9 @@ describe("Environment", function () {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.get("button").contains("Submit").click();
+    cy.wait(1000);
+    cy.get("button").contains("Submit").should("not.be.disabled").click();
+    cy.wait(1000);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(3));
@@ -264,7 +267,10 @@ describe("Environment", function () {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.get("button").contains("Submit").click();
+    cy.wait(1000);
+    cy.get("button").contains("Submit").should("not.be.disabled").click();
+    cy.wait(1000);
+    cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(4));
     //change Name value
@@ -274,9 +280,13 @@ describe("Environment", function () {
     cy.get('[aria-label="Name-submit-edit"]').click();
     cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
     //change Description value
-    cy.wait(50);
-    cy.get('[aria-label="Description-toggle-edit"]').click();
+    cy.wait(1000);
+    cy.get('[aria-label="Description-toggle-edit"]')
+      .should("be.visible")
+      .click();
+    cy.wait(100);
     cy.get('[aria-label="Description-input"]')
+      .should("be.visible")
       .clear()
       .type("New Value Description");
     cy.get('[aria-label="Description-submit-edit"]').click();
@@ -285,10 +295,11 @@ describe("Environment", function () {
       "New Value Description"
     );
     //change Repository Branch value
-    cy.wait(50);
+    cy.wait(500);
     cy.get('[aria-label="Repository Settings-toggle-edit"]')
       .should("be.visible")
       .click();
+    cy.wait(500);
     cy.get('[aria-label="repo_branch-input"]')
       .clear()
       .type("New Value Repo Branch");
@@ -298,10 +309,12 @@ describe("Environment", function () {
       "New Value Repo Branch"
     );
     //change Repository url value
-    cy.wait(50);
+    cy.wait(1000);
     cy.get('[aria-label="Repository Settings-toggle-edit"]')
       .should("be.visible")
       .click();
+    cy.wait(500);
+
     cy.get('[aria-label="repo_url-input"]').clear().type("New Value Repo Url");
     cy.get('[aria-label="Repository Settings-submit-edit"]').click();
     cy.get('[aria-label="repo_url-value"]').should(
@@ -309,8 +322,9 @@ describe("Environment", function () {
       "New Value Repo Url"
     );
     //change Project Name value
-    cy.wait(50);
+    cy.wait(500);
     cy.get('[aria-label="Project Name-toggle-edit"]').click();
+    cy.wait(500);
     cy.get('[aria-label="Project Name-typeahead"]')
       .clear()
       .type("New Value Project Name");
@@ -358,7 +372,7 @@ describe("Environment", function () {
       .click();
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get('[aria-label="ServiceCatalog-Empty"]', { timeout: 6000 }).should(
+    cy.get('[aria-label="ServiceCatalog-Empty"]', { timeout: 10000 }).should(
       "to.be.visible"
     );
     //Update service catalog to restore instances
@@ -378,7 +392,9 @@ describe("Environment", function () {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.get("button").contains("Submit").click();
+    cy.wait(1000);
+    cy.get("button").contains("Submit").should("not.be.disabled").click();
+    cy.wait(1000);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(6), testProjectName(6));
@@ -402,7 +418,9 @@ describe("Environment", function () {
 
           break;
         case "select":
-          cy.get(config.row).click();
+          cy.get(config.row).within(() => {
+            cy.get(".pf-c-form-control").click();
+          });
           cy.get(".pf-c-select__menu-item").contains(config.newValue).click();
 
           break;
@@ -448,7 +466,7 @@ describe("Environment", function () {
           break;
       }
     });
-    //unable to delete env
+    //re-enable to delete env
     cy.get('[aria-label="Row-protected_environment"]').within(() => {
       cy.get(".pf-c-switch").click();
     });
