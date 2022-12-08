@@ -125,7 +125,7 @@ const testProjectName = (number) => "Test Project Name " + number;
 const testName = (number) => "TestName " + number;
 
 beforeEach(() => {
-  cy.fixture("test-icon.png").as("icon");
+  cy.fixture("test-icon.png", { encoding: null }).as("icon");
   // delete projects exlcuding test one before each test to have unified conditions for each test case
   cy.intercept("/api/v2/environment").as("createEnv");
   cy.request("/api/v1/project").as("projects");
