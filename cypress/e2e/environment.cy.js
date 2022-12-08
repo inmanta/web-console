@@ -351,9 +351,9 @@ describe("Environment", function () {
     );
     cy.get('[aria-label="Icon-submit-edit"]').click();
     cy.wait("@postEnvEdit");
-    cy.wait("@getEnv");
-    cy.wait(1000);
-    cy.get('[aria-label="Icon-value"]').should("not.have.text", "no icon");
+    cy.wait("@getEnv").then(() => {
+      cy.get('[aria-label="Icon-value"]').should("not.have.text", "no icon");
+    });
   });
 
   it("1.5 Clear environment", function () {
