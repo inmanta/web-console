@@ -330,7 +330,6 @@ describe("Environment", function () {
     cy.get("button").contains('Create "New Value Project Name"').click();
     cy.get('[aria-label="Project Name-submit-edit"]').click();
     cy.wait("@createProject");
-    cy.wait("@getEnv");
     //change Icon value
     cy.get('[aria-label="Icon-toggle-edit"]').click();
     cy.get("#simple-text-file-filename").selectFile(icon, {
