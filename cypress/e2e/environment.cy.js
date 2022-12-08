@@ -1,4 +1,3 @@
-const icon = "./cypress/fixtures/test-icon.png";
 const configurationTypes = [
   {
     name: "agent_trigger_method_on_auto_deploy",
@@ -341,14 +340,19 @@ describe("Environment", function () {
     //change Icon value
     cy.get('[aria-label="Icon-toggle-edit"]').click();
 
-    cy.get("#simple-text-file-filename").selectFile(icon, {
-      action: "drag-drop",
-      force: true,
-    });
+    cy.get("#simple-text-file-filename").selectFile(
+      {
+        contents: "@icon",
+        fileName: "icon.png",
+        mimeType: "image/png",
+      },
+      {
+        action: "drag-drop",
+        force: true,
+      }
+    );
     cy.get('[aria-label="Icon-submit-edit"]').click();
     cy.wait("@postEnvEdit");
-    cy.wait("@getEnv");
-
     cy.wait("@getEnvEdit").then(() => {
       cy.get('[aria-label="Icon-value"]').should("not.have.text", "no icon");
     });
