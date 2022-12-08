@@ -338,6 +338,7 @@ describe("Environment", function () {
     cy.wait("@createProject");
     //change Icon value
     cy.get('[aria-label="Icon-toggle-edit"]').click();
+    cy.wait("@getEnv");
     cy.get("#simple-text-file-filename").selectFile(
       {
         contents: "@icon",
