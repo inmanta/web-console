@@ -266,7 +266,6 @@ describe("Environment", function () {
 
   it("1.4 Edit created environment", function () {
     cy.intercept("POST", "api/v2/environment/**").as("postEnvEdit");
-    cy.intercept("GET", "api/v2/environment/**").as("EnvEdit");
     cy.intercept("GET", "api/v2/project?environment_details=true").as("getEnv");
     cy.intercept("PUT", "api/v2/project").as("createProject");
     //Fill The form and submit
@@ -352,7 +351,7 @@ describe("Environment", function () {
     );
     cy.get('[aria-label="Icon-submit-edit"]').click();
     cy.wait("@postEnvEdit");
-    cy.wait("@EnvEdit").then(() => {
+    cy.wait("@getEnv").then(() => {
       cy.get('[aria-label="Icon-value"]').should("not.have.text", "no icon");
     });
   });
