@@ -1,5 +1,3 @@
-const icon = "./cypress/fixtures/test-icon.png";
-
 const configurationTypes = [
   {
     name: "agent_trigger_method_on_auto_deploy",
@@ -127,6 +125,7 @@ const testProjectName = (number) => "Test Project Name " + number;
 const testName = (number) => "TestName " + number;
 
 beforeEach(() => {
+  cy.fixture("test-icon.png").as("icon");
   // delete projects exlcuding test one before each test to have unified conditions for each test case
   cy.intercept("/api/v2/environment").as("createEnv");
   cy.request("/api/v1/project").as("projects");
@@ -164,10 +163,17 @@ const fillCreateEnvForm = ({
     cy.get('[aria-label="Description-input"]').type("Test description");
     cy.get('[aria-label="Repository-input"]').type("repository");
     cy.get('[aria-label="Branch-input"]').type("branch");
-    cy.get("#simple-text-file-filename").selectFile(icon, {
-      action: "drag-drop",
-      force: true,
-    });
+    cy.get("#simple-text-file-filename").selectFile(
+      {
+        contents: "@icon",
+        fileName: "icon.png",
+        mimeType: "image/png",
+      },
+      {
+        action: "drag-drop",
+        force: true,
+      }
+    );
   }
 };
 /**
@@ -332,10 +338,17 @@ describe("Environment", function () {
     cy.wait("@createProject");
     //change Icon value
     cy.get('[aria-label="Icon-toggle-edit"]').click();
-    cy.get("#simple-text-file-filename").selectFile(icon, {
-      action: "drag-drop",
-      force: true,
-    });
+    cy.get("#simple-text-file-filename").selectFile(
+      {
+        contents: "@icon",
+        fileName: "icon.png",
+        mimeType: "image/png",
+      },
+      {
+        action: "drag-drop",
+        force: true,
+      }
+    );
     cy.get('[aria-label="Icon-submit-edit"]').click();
     cy.wait("@postEnvEdit");
     cy.wait("@getEnv");
