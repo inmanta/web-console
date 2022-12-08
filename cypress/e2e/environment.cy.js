@@ -337,25 +337,6 @@ describe("Environment", function () {
     cy.get("button").contains('Create "New Value Project Name"').click();
     cy.get('[aria-label="Project Name-submit-edit"]').click();
     cy.wait("@createProject");
-    //change Icon value
-    cy.get('[aria-label="Icon-toggle-edit"]').click();
-
-    cy.get("#simple-text-file-filename").selectFile(
-      {
-        contents: "@icon",
-        fileName: "icon.png",
-        mimeType: "image/png",
-      },
-      {
-        action: "drag-drop",
-        force: true,
-      }
-    );
-    cy.get('[aria-label="Icon-submit-edit"]').click();
-    cy.wait("@postEnvEdit");
-    cy.wait("@getEnvEdit").then(() => {
-      cy.get('[aria-label="Icon-value"]').should("not.have.text", "no icon");
-    });
   });
 
   it("1.5 Clear environment", function () {
