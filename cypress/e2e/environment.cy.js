@@ -1,131 +1,11 @@
-const configurationTypes = [
-  {
-    name: "agent_trigger_method_on_auto_deploy",
-    row: '[aria-label="Row-agent_trigger_method_on_auto_deploy"]',
-    inputType: "select",
-    newValue: "push_full_deploy",
-  },
-  {
-    name: "auto_deploy",
-    row: '[aria-label="Row-auto_deploy"]',
-    inputType: "switch",
-    newValue: "false",
-  },
-  {
-    name: "auto_full_compile",
-    row: '[aria-label="Row-auto_full_compile"]',
-    inputType: "text",
-    newValue: "1 2 3 4 5",
-  },
-  {
-    name: "autostart_agent_deploy_interval",
-    row: '[aria-label="Row-autostart_agent_deploy_interval"]',
-    inputType: "textNumber",
-    newValue: "610",
-  },
-  {
-    name: "autostart_agent_deploy_splay_time",
-    row: '[aria-label="Row-autostart_agent_deploy_splay_time"]',
-    inputType: "textNumber",
-    newValue: "20",
-  },
-  {
-    name: "autostart_agent_interval",
-    row: '[aria-label="Row-autostart_agent_interval"]',
-    inputType: "textNumber",
-    newValue: "610",
-  },
-  {
-    name: "autostart_agent_map",
-    row: '[aria-label="Row-autostart_agent_map"]',
-    inputType: "textmap",
-    newValue: "new value",
-  },
-
-  {
-    name: "autostart_agent_repair_interval",
-    row: '[aria-label="Row-autostart_agent_repair_interval"]',
-    inputType: "textNumber",
-    newValue: "86410",
-  },
-  {
-    name: "autostart_agent_repair_splay_time",
-    row: '[aria-label="Row-autostart_agent_repair_splay_time"]',
-    inputType: "textNumber",
-    newValue: "610",
-  },
-  {
-    name: "autostart_on_start",
-    row: '[aria-label="Row-autostart_on_start"]',
-    inputType: "switch",
-    newValue: "false",
-  },
-  {
-    name: "autostart_splay",
-    row: '[aria-label="Row-autostart_splay"]',
-    inputType: "textNumber",
-    newValue: "20",
-  },
-  {
-    name: "available_versions_to_keep",
-    row: '[aria-label="Row-available_versions_to_keep"]',
-    inputType: "textNumber",
-    newValue: "110",
-  },
-  {
-    name: "environment_agent_trigger_method",
-    row: '[aria-label="Row-environment_agent_trigger_method"]',
-    inputType: "select",
-    newValue: "push_incremental_deploy",
-  },
-  {
-    name: "lsm_partial_compile",
-    row: '[aria-label="Row-lsm_partial_compile"]',
-    inputType: "switch",
-    newValue: "true",
-  },
-  {
-    name: "notification_retention",
-    row: '[aria-label="Row-notification_retention"]',
-    inputType: "textNumber",
-    newValue: "375",
-  },
-  {
-    name: "protected_environment",
-    row: '[aria-label="Row-protected_environment"]',
-    inputType: "switch",
-    newValue: "true",
-  },
-  {
-    name: "purge_on_delete",
-    row: '[aria-label="Row-purge_on_delete"]',
-    inputType: "switch",
-    newValue: "true",
-  },
-  {
-    name: "push_on_auto_deploy",
-    row: '[aria-label="Row-push_on_auto_deploy"]',
-    inputType: "switch",
-    newValue: "false",
-  },
-  {
-    name: "resource_action_logs_retention",
-    row: '[aria-label="Row-resource_action_logs_retention"]',
-    inputType: "textNumber",
-    newValue: "8",
-  },
-  {
-    name: "server_compile",
-    row: '[aria-label="Row-server_compile"]',
-    inputType: "switch",
-    newValue: "false",
-  },
-];
 const testProjectName = (number) => "Test Project Name " + number;
 const testName = (number) => "TestName " + number;
 
 beforeEach(() => {
   cy.fixture("test-icon.png", { encoding: null }).as("icon");
+  cy.intercept("POST", "/api/v2/environment_settings/**").as(
+    "postEnvConfigEdit"
+  );
   // delete projects exlcuding test one before each test to have unified conditions for each test case
   cy.intercept("/api/v2/environment").as("createEnv");
   cy.request("/api/v1/project").as("projects");
@@ -266,7 +146,6 @@ describe("Environment", function () {
 
   it("1.4 Edit created environment", function () {
     cy.intercept("POST", "api/v2/environment/**").as("postEnvEdit");
-    cy.intercept("GET", "api/v2/environment/**").as("getEnvEdit");
     cy.intercept("GET", "api/v2/project?environment_details=true").as("getEnv");
     cy.intercept("PUT", "api/v2/project").as("createProject");
     //Fill The form and submit
@@ -396,58 +275,306 @@ describe("Environment", function () {
 
     openSettings(testName(6), testProjectName(6));
     cy.get("button").contains("Configuration").click();
-    //go through every configuration and change its value according to one assigned in the configruationTypes
-    cy.wrap(configurationTypes).each((config) => {
-      switch (config.inputType) {
-        case "text":
-          cy.get(config.row).clear();
-          cy.get(config.row).type(config.newValue);
-          break;
-        case "textNumber":
-          cy.get(config.row).find(".pf-c-form-control").clear();
-          cy.get(config.row).find(".pf-c-form-control").type(config.newValue);
-          break;
-        case "switch":
-          cy.get(config.row).find(".pf-c-switch").click();
 
-          break;
-        case "select":
-          cy.get(config.row).find(".pf-c-form-control").click();
-          cy.get(".pf-c-select__menu-item").contains(config.newValue).click();
+    //Change agent_trigger_method_on_auto_deploy
+    cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
+      .find(".pf-c-form-control")
+      .click();
+    cy.get(".pf-c-select__menu-item").contains("push_full_deploy").click();
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "push_full_deploy");
 
-          break;
-        case "textmap":
-          cy.get(config.row)
-            .find('[aria-label="editEntryValue"]')
-            .filter((key, $el) => {
-              return $el.value === "local:";
-            })
-            .type("{selectAll}{backspace}" + config.newValue);
-          break;
-      }
-      //assert if the warning sign exist, which means that value in the input is new but not saved, then save, and expect warning sign to disapear
-      cy.get('[aria-label="Warning"]').should("exist");
-      cy.get(config.row).find('[aria-label="SaveAction"]').click();
-      cy.get('[aria-label="Warning"]').should("not.exist");
-      //go through every configuration and expect new value there
-      switch (config.inputType) {
-        case "textNumber" | "text":
-          cy.get(config.row)
-            .find(".pf-c-form-control")
-            .should("have.text", config.newValue);
-          break;
-        case "select":
-          cy.get(config.row)
-            .find(".pf-c-form-control")
-            .should("have.value", config.newValue);
-          break;
-        case "textmap":
-          cy.get(config.row)
-            .find('[aria-label="editEntryValue"]')
-            .should("have.value", config.newValue);
-          break;
-      }
-    });
+    //Change auto_deploy
+    cy.get('[aria-label="Row-auto_deploy"]').find(".pf-c-switch").click();
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-auto_deploy"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+
+    //Change auto_full_compile
+    cy.get('[aria-label="Row-auto_full_compile"]').clear();
+    cy.get('[aria-label="Row-auto_full_compile"]').type("1 2 3 4 5");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-auto_full_compile"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-auto_full_compile"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "1 2 3 4 5");
+
+    //Change autostart_agent_deploy_interval
+    cy.get('[aria-label="Row-autostart_agent_deploy_interval"]')
+      .find(".pf-c-form-control")
+      .type("{selectAll}610");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-autostart_agent_deploy_interval"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-autostart_agent_deploy_interval"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "610");
+
+    //Change autostart_agent_deploy_splay_time
+    cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
+      .find(".pf-c-form-control")
+      .type("{selectAll}20");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "20");
+
+    //Change autostart_agent_interval
+    cy.get('[aria-label="Row-autostart_agent_interval"]')
+      .find(".pf-c-form-control")
+      .type("{selectAll}610");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-autostart_agent_interval"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-autostart_agent_interval"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "610");
+
+    //Change autostart_agent_map
+    cy.get('[aria-label="Row-autostart_agent_map"]')
+      .find('[aria-label="editEntryValue"]')
+      .filter((key, $el) => {
+        return $el.value === "local:";
+      })
+      .type("{selectAll}{backspace}new value");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-autostart_agent_map"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-autostart_agent_map"]')
+      .find('[aria-label="editEntryValue"]')
+      .should("have.value", "new value");
+
+    //Change autostart_agent_repair_interval
+    cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
+      .find(".pf-c-form-control")
+      .type("{selectAll}86410");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "86410");
+
+    //Change autostart_agent_repair_splay_time
+    cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
+      .find(".pf-c-form-control")
+      .type("{selectAll}610");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "610");
+
+    //Change autostart_on_start
+    cy.get('[aria-label="Row-autostart_on_start"]')
+      .find(".pf-c-switch")
+      .click();
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-autostart_on_start"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+
+    //Change autostart_splay
+    cy.get('[aria-label="Row-autostart_splay"]')
+      .find(".pf-c-form-control")
+      .type("{selectAll}20");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-autostart_splay"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-autostart_splay"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "20");
+
+    //Change available_versions_to_keep
+    cy.get('[aria-label="Row-available_versions_to_keep"]')
+      .find(".pf-c-form-control")
+      .type("{selectAll}110");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-available_versions_to_keep"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-available_versions_to_keep"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "110");
+
+    //Change environment_agent_trigger_method
+    cy.get('[aria-label="Row-environment_agent_trigger_method"]')
+      .find(".pf-c-form-control")
+      .click();
+    cy.get(".pf-c-select__menu-item")
+      .contains("push_incremental_deploy")
+      .click();
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-environment_agent_trigger_method"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-environment_agent_trigger_method"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "push_incremental_deploy");
+
+    //Change lsm_partial_compile
+    cy.get('[aria-label="Row-lsm_partial_compile"]')
+      .find(".pf-c-switch")
+      .click();
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-lsm_partial_compile"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+
+    //change notification_retention
+    cy.get('[aria-label="Row-notification_retention"]')
+      .find(".pf-c-form-control")
+      .type("{selectAll}375");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-notification_retention"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-notification_retention"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "375");
+
+    //Change protected_environment
+    cy.get('[aria-label="Row-protected_environment"]')
+      .find(".pf-c-switch")
+      .click();
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-protected_environment"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+
+    //Change purge_on_delete
+    cy.get('[aria-label="Row-purge_on_delete"]').find(".pf-c-switch").click();
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-purge_on_delete"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+
+    //Change push_on_auto_deploy
+    cy.get('[aria-label="Row-push_on_auto_deploy"]')
+      .find(".pf-c-switch")
+      .click();
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-push_on_auto_deploy"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+
+    //Change resource_action_logs_retention
+    cy.get('[aria-label="Row-resource_action_logs_retention"]')
+      .find(".pf-c-form-control")
+      .type("{selectAll}8");
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-resource_action_logs_retention"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+    cy.get('[aria-label="Row-resource_action_logs_retention"]')
+      .find(".pf-c-form-control")
+      .should("have.value", "8");
+
+    //change server_compile
+    cy.get('[aria-label="Row-server_compile"]').find(".pf-c-switch").click();
+    cy.get('[aria-label="Warning"]').should("exist");
+    cy.get('[aria-label="Row-server_compile"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
+    cy.get('[aria-label="Warning"]').should("not.exist");
+
     //re-enable to delete env
     cy.get('[aria-label="Row-protected_environment"]')
       .find(".pf-c-switch")
@@ -456,6 +583,9 @@ describe("Environment", function () {
     cy.get('[aria-label="Row-protected_environment"]')
       .find('[aria-label="SaveAction"]')
       .click();
+    cy.wait("@postEnvConfigEdit")
+      .its("response.statusCode")
+      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
 
     cy.get("button").contains("Environment").click();
