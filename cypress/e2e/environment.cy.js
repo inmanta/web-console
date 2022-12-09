@@ -1,5 +1,5 @@
-const testProjectName = (number) => "Test Project Name " + number;
-const testName = (number) => "TestName " + number;
+const testProjectName = (id) => "Test Project Name " + id;
+const testName = (id) => "TestName " + id;
 
 beforeEach(() => {
   cy.fixture("test-icon.png", { encoding: null }).as("icon");
