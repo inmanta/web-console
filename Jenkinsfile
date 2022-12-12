@@ -15,21 +15,21 @@ pipeline {
     }
 
     stages {
-        // stage('Build & Unit Test') {
-        //     steps {
-        //         deleteDir()
-        //         dir('web-console'){
-        //             checkout scm
-        //             sh '''yarn install --frozen-lockfile;
-        //             yarn lint;
-        //             yarn format:check;
-        //             yarn tsc;
-        //             yarn check-circular-deps;
-        //             yarn build;
-        //             yarn test:ci'''
-        //         }
-        //     }
-        // }
+        stage('Build & Unit Test') {
+            steps {
+                deleteDir()
+                dir('web-console'){
+                    checkout scm
+                    sh '''yarn install --frozen-lockfile;
+                    yarn lint;
+                    yarn format:check;
+                    yarn tsc;
+                    yarn check-circular-deps;
+                    yarn build;
+                    yarn test:ci'''
+                }
+            }
+        }
         stage('Testing with cypress') {
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
