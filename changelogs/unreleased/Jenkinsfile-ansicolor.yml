@@ -1,0 +1,6 @@
+description: Set the ansiColor option in the Jenkinsfile to consume color codes in output.
+change-type: patch
+destination-branches:
+  - master
+  - iso6
+  - iso5
