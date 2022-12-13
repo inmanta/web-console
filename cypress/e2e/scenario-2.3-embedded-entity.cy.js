@@ -28,7 +28,7 @@ const checkStatusCompile = (id) => {
     // the timeout is necessary to avoid errors.
     // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
     // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
-    cy.wait("@IsCompiling", { timeout: 10000 }).then((req) => {
+    cy.wait("@IsCompiling").then((req) => {
       statusCodeCompile = req.response.statusCode;
       if (statusCodeCompile === 200) {
         checkStatusCompile(id);
@@ -39,32 +39,30 @@ const checkStatusCompile = (id) => {
 
 /**
  * It will recursively check for instance service status until its "up".
- *
+ * it has optional parameter to avoid infinite awaiting, with default value of 20
+ * which is around 8 more than needed locally to fucntion to pass, but I took jenkins into account.
  *
  */
-const checkServiceState = () => {
-  let state = "start";
-
-  if (state !== "up") {
-    // the timeout is necessary to avoid errors.
-    // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
-    // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
-    cy.wait("@GetServiceInventory", { timeout: 10000 }).then((req) => {
-      if (
-        req.response.statusCode !== 200 &&
-        req.response.statusCode !== 400 &&
-        req.response.statusCode !== 404 &&
-        req.response.statusCode !== 500
-      ) {
-        checkServiceState();
-      } else {
-        state = req.response.body.data[0].state;
-        if (state !== "up") {
-          checkServiceState();
-        }
-      }
-    });
+const checkServiceState = (attempts = 20) => {
+  if (attempts < 1) {
+    return;
   }
+  const updatedAttempts = attempts - 1;
+
+  cy.wait("@GetServiceInventory").then((req) => {
+    if (
+      req.response.statusCode !== 200 &&
+      req.response.statusCode !== 400 &&
+      req.response.statusCode !== 404 &&
+      req.response.statusCode !== 500
+    ) {
+      checkServiceState(updatedAttempts);
+    } else {
+      if (req.response.body.data[0].state !== "up") {
+        checkServiceState(updatedAttempts);
+      }
+    }
+  });
 };
 
 /**
