@@ -250,6 +250,8 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("No").click();
 
+    cy.wait(2000);
+
     cy.get(".pf-c-description-list").contains("Delete").click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("Yes").click();
