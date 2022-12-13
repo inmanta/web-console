@@ -28,11 +28,10 @@ const checkStatusCompile = (id) => {
     // the timeout is necessary to avoid errors.
     // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
     // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
-    cy.wait("@IsCompiling", { timeout: 10000 }).then((req) => {
+    cy.wait("@IsCompiling", { timeout: 15000 }).then((req) => {
       statusCodeCompile = req.response.statusCode;
 
       if (statusCodeCompile === 200) {
-        cy.wait(1000);
         checkStatusCompile(id);
       }
     });
@@ -116,7 +115,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
       expect($table).to.have.length(1);
 
       const $td = $table.find("td");
-      // there can only be table-data cells available
+      // there can only be 2 table-data cells available
       expect($td).to.have.length(2);
       expect($td.eq(0), "first item").to.have.text(
         "frontend_model::TestResource[internal,name=default-0001]"
@@ -178,7 +177,6 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
       .should("contain", "delete_validating_up");
 
     // check status change after compile, should be up again because the deletion couldn't be completed
-    cy.wait(10000);
     waitForCompile();
     cy.wait("@GetParentInventory");
 
