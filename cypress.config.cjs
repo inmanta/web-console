@@ -12,5 +12,6 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: "http://127.0.0.1:8888",
     supportFile: false,
+    defaultCommandTimeout: 6000,
   },
 });
