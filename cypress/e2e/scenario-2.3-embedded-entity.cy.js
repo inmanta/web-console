@@ -50,7 +50,12 @@ const checkServiceState = () => {
     // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
     // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
     cy.wait("@GetServiceInventory", { timeout: 10000 }).then((req) => {
-      if (req.response.statusCode !== 200) {
+      if (
+        req.response.statusCode !== 200 &&
+        req.response.statusCode !== 400 &&
+        req.response.statusCode !== 404 &&
+        req.response.statusCode !== 500
+      ) {
         checkServiceState();
       } else {
         state = req.response.body.data[0].state;
@@ -219,6 +224,10 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
       "DELETE",
       "/lsm/v1/service_inventory/embedded-entity-service/**"
     ).as("DeleteInstance");
+    cy.intercept(
+      "GET",
+      "/lsm/v1/service_inventory/embedded-entity-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
+    ).as("GetServiceInventory");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get("#embedded-entity-service").contains("Show inventory").click();
