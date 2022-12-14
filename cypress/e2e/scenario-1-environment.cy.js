@@ -112,9 +112,7 @@ describe("Environment", () => {
     cy.get("button").contains("Submit").should("be.disabled");
     cy.get('[aria-label="Name-input"]').type(testName(2));
     cy.get("button").contains("Submit").click();
-    cy.wait("@createEnv", { timeout: 10000 })
-      .its("response.statusCode")
-      .should("eq", 200);
+    cy.wait("@createEnv").its("response.statusCode").should("eq", 200);
     cy.wait("@getCatalog");
     //go back to gome and check if env is visible
 
@@ -135,9 +133,7 @@ describe("Environment", () => {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.wait("@createEnv", { timeout: 10000 })
-      .its("response.statusCode")
-      .should("eq", 200);
+    cy.wait("@createEnv").its("response.statusCode").should("eq", 200);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(3));
@@ -232,9 +228,8 @@ describe("Environment", () => {
     cy.get("button").contains("Cancel").click();
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 10000 }).should(
-      "to.be.visible"
-    );
+
+    cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
 
     //Go to settings and get Id of an environment
     openSettings("test");
@@ -247,9 +242,7 @@ describe("Environment", () => {
       .click();
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get('[aria-label="ServiceCatalog-Empty"]', { timeout: 10000 }).should(
-      "to.be.visible"
-    );
+    cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
     //Update service catalog to restore instances
     cy.get("button").contains("Update Service Catalog").click();
     cy.get("button").contains("Yes").click();
@@ -268,9 +261,7 @@ describe("Environment", () => {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.wait("@createEnv", { timeout: 10000 })
-      .its("response.statusCode")
-      .should("eq", 200);
+    cy.wait("@createEnv").its("response.statusCode").should("eq", 200);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(6), testProjectName(6));
