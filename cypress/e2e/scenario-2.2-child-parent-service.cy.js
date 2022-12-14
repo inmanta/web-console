@@ -102,26 +102,20 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
 
     cy.intercept("**/resources**").as("GetVersion");
 
-    // 4 compiles are being triggered for this instance.
-    waitForCompile();
-    waitForCompile();
-    waitForCompile();
-    waitForCompile();
-    cy.wait("@GetVersion", { timeout: 10000 });
-    cy.wait(10000);
-
     // expect one item with deployed state
-    cy.get('[aria-label="ResourceTable-Success"]').should(($table) => {
-      expect($table).to.have.length(1);
+    cy.get('[aria-label="ResourceTable-Success"]', { timeout: 60000 }).should(
+      ($table) => {
+        expect($table).to.have.length(1);
 
-      const $td = $table.find("td");
-      // there can only be 2 table-data cells available
-      expect($td).to.have.length(2);
-      expect($td.eq(0), "first item").to.have.text(
-        "frontend_model::TestResource[internal,name=default-0001]"
-      );
-      expect($td.eq(1), "second item").to.have.text("deployed");
-    });
+        const $td = $table.find("td");
+        // there can only be 2 table-data cells available
+        expect($td).to.have.length(2);
+        expect($td.eq(0), "first item").to.have.text(
+          "frontend_model::TestResource[internal,name=default-0001]"
+        );
+        expect($td.eq(1), "second item").to.have.text("deployed");
+      }
+    );
 
     // click on service catalog in breadcrumb
     cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
@@ -139,9 +133,11 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     // Expect to be redirected to service inventory
     cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
 
-    waitForCompile();
     // Check if only one row has been added to the table.
-    cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+    cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 20000 }).should(
+      "have.length",
+      1
+    );
   });
   it("2.2.2 Remove Parent Service and Child Service", () => {
     cy.visit("/console/");
@@ -160,10 +156,8 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get("#parent-service").contains("Show inventory").click();
 
-    waitForCompile();
-
     // open row from element
-    cy.get("#expand-toggle0").click();
+    cy.get("#expand-toggle0", { timeout: 20000 }).click();
     // try delete item (Should not be possible)
     cy.get(".pf-c-description-list").contains("Delete").click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
@@ -178,11 +172,9 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
 
     // check status change after compile, should be up again because the deletion couldn't be completed
     waitForCompile();
-    cy.wait("@GetParentInventory");
-    cy.wait(5000);
 
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]')
+      .find('[data-label="State"]', { timeout: 20000 })
       .should("not.contain", "delete_validating_up");
 
     // click on service catalog in breadcrumb
@@ -200,8 +192,6 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
 
     cy.wait("@DeleteChildService").its("response.statusCode").should("eq", 200);
 
-    cy.wait(10000);
-    waitForCompile();
     cy.wait("@GetParentInventory");
 
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
