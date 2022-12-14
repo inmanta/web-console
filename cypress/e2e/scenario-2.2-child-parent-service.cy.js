@@ -108,7 +108,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     waitForCompile();
     waitForCompile();
     cy.wait("@GetVersion", { timeout: 10000 });
-    cy.wait(2000);
+    cy.wait(10000);
 
     // expect one item with deployed state
     cy.get('[aria-label="ResourceTable-Success"]').should(($table) => {
@@ -179,7 +179,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     // check status change after compile, should be up again because the deletion couldn't be completed
     waitForCompile();
     cy.wait("@GetParentInventory");
-    cy.wait(10000);
+    cy.wait(5000);
 
     cy.get('[aria-label="InstanceRow-Intro"]:first')
       .find('[data-label="State"]')
