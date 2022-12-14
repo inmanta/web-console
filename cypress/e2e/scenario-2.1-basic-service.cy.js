@@ -28,7 +28,7 @@ const checkStatusCompile = (id) => {
     // the timeout is necessary to avoid errors.
     // Cypress doesn't support while loops and this was the only workaround to wait till the statuscode is not 200 anymore.
     // the default timeout in cypress is 5000, but since we have recursion it goes into timeout for the nested awaits because of the recursion.
-    cy.wait("@IsCompiling").then((req) => {
+    cy.wait("@IsCompiling", { timeout: 10000 }).then((req) => {
       statusCodeCompile = req.response.statusCode;
 
       if (statusCodeCompile === 200) {
