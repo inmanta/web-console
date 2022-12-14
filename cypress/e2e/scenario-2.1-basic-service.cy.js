@@ -177,13 +177,9 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
       "No resources available yet"
     );
 
-    // await compilation to check state
-    waitForCompile();
-    cy.wait(3000);
-
     // check state is up now
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]')
+      .find('[data-label="State"]', { timeout: 20000 })
       .should("contain", "up");
 
     // click on edit button
@@ -202,14 +198,13 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get("button").contains("Confirm").click();
 
     // expect to land on Service Inventory page and to find attributes tab button
-    cy.get(".pf-c-tabs__list").contains("Attributes").click();
-
-    // wait till compile is done
-    waitForCompile();
+    cy.get(".pf-c-tabs__list")
+      .contains("Attributes", { timeout: 20000 })
+      .click();
 
     // Expect to find new value as candidate and old value in active and no rollback value
     cy.get('[aria-label="Row-address_r1"')
-      .find('[data-label="candidate"]')
+      .find('[data-label="candidate"]', { timeout: 20000 })
       .should("contain", "1.2.3.8/32");
     cy.get('[aria-label="Row-address_r1"')
       .find('[data-label="active"]')
@@ -234,25 +229,21 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
-    // wait to check if compile is done
-    waitForCompile();
-    cy.wait("@GetServiceInventory");
-
     // expand first row
-    cy.get("#expand-toggle0").click();
+    cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
-    // There might be still a compile running because of the edit action. So we do a check if one is pending.
     waitForCompile();
-    cy.wait(2000);
 
     // delete but cancel deletion in modal
-    cy.get(".pf-c-description-list").contains("Delete").click();
+    cy.get(".pf-c-description-list")
+      .contains("Delete", { timeout: 60000 })
+      .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("No").click();
 
-    cy.wait(2000);
-
-    cy.get(".pf-c-description-list").contains("Delete").click();
+    cy.get(".pf-c-description-list")
+      .contains("Delete", { timeout: 20000 })
+      .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("Yes").click();
 
