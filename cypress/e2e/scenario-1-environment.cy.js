@@ -78,7 +78,7 @@ const deleteEnv = (name, projectName) => {
  */
 const openSettings = (envName) => {
   cy.get('[aria-label="Settings actions"]').click();
-  cy.url().should("contain", "/console/settings?env=", { timeout: 6000 });
+  cy.url().should("contain", "/console/settings?env=");
   cy.get('[aria-label="Name-value"]').should("contain", envName);
 };
 
@@ -112,11 +112,9 @@ describe("Environment", () => {
     cy.get("button").contains("Submit").should("be.disabled");
     cy.get('[aria-label="Name-input"]').type(testName(2));
     cy.get("button").contains("Submit").click();
-    cy.wait("@createEnv").its("response.statusCode").should("eq", 200);
-    cy.wait("@getCatalog");
     //go back to gome and check if env is visible
-
-    cy.get(".pf-c-breadcrumb__item").contains("Home").click();
+    cy.wait(500);
+    cy.get(".pf-c-breadcrumb__item").eq(0).click();
     cy.get('[aria-label="Environment card"]').should(
       "any.contain",
       testName(2)
@@ -133,17 +131,13 @@ describe("Environment", () => {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.wait("@createEnv").its("response.statusCode").should("eq", 200);
-    cy.url().should("contain", "/console/lsm/catalog?env=");
+    cy.url().should("contain", "/console/lsm/catalog?env=", { timeout: 10000 });
 
     openSettings(testName(3));
     deleteEnv(testName(3), testProjectName(3));
   });
 
   it("1.4 Edit created environment", () => {
-    cy.intercept("POST", "api/v2/environment/**").as("postEnvEdit");
-    cy.intercept("GET", "api/v2/project?environment_details=true").as("getEnv");
-    cy.intercept("PUT", "api/v2/project").as("createProject");
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -153,7 +147,6 @@ describe("Environment", () => {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.wait("@createEnv").its("response.statusCode").should("eq", 200);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(4));
@@ -162,16 +155,12 @@ describe("Environment", () => {
     cy.get('[aria-label="Name-input"]').clear();
     cy.get('[aria-label="Name-input"]').type("New Value Name");
     cy.get('[aria-label="Name-submit-edit"]').click();
-    cy.wait("@postEnvEdit");
-    cy.wait("@getEnv");
     cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
     //change Description value
     cy.get('[aria-label="Description-toggle-edit"]').click();
     cy.get('[aria-label="Description-input"]').clear();
     cy.get('[aria-label="Description-input"]').type("New Value Description");
     cy.get('[aria-label="Description-submit-edit"]').click();
-    cy.wait("@postEnvEdit");
-    cy.wait("@getEnv");
     cy.get('[aria-label="Description-value"]').should(
       "contain",
       "New Value Description"
@@ -183,8 +172,6 @@ describe("Environment", () => {
       delay: 10,
     });
     cy.get('[aria-label="Repository Settings-submit-edit"]').click();
-    cy.wait("@postEnvEdit");
-    cy.wait("@getEnv");
     cy.get('[aria-label="repo_branch-value"]').should(
       "contain",
       "New Value Repo Branch"
@@ -196,8 +183,6 @@ describe("Environment", () => {
       delay: 10,
     });
     cy.get('[aria-label="Repository Settings-submit-edit"]').click();
-    cy.wait("@postEnvEdit");
-    cy.wait("@getEnv");
     cy.get('[aria-label="repo_url-value"]').should(
       "contain",
       "New Value Repo Url"
@@ -211,7 +196,6 @@ describe("Environment", () => {
 
     cy.get("button").contains('Create "New Value Project Name"').click();
     cy.get('[aria-label="Project Name-submit-edit"]').click();
-    cy.wait("@createProject");
   });
 
   it("1.5 Clear environment", () => {
@@ -261,7 +245,6 @@ describe("Environment", () => {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.wait("@createEnv").its("response.statusCode").should("eq", 200);
     cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(6), testProjectName(6));
@@ -276,9 +259,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-agent_trigger_method_on_auto_deploy"]')
       .find(".pf-c-form-control")
@@ -290,9 +270,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
 
     //Change auto_full_compile
@@ -302,9 +279,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-auto_full_compile"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-auto_full_compile"]')
       .find(".pf-c-form-control")
@@ -318,9 +292,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_deploy_interval"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_deploy_interval"]')
       .find(".pf-c-form-control")
@@ -334,9 +305,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_deploy_splay_time"]')
       .find(".pf-c-form-control")
@@ -350,9 +318,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_interval"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_interval"]')
       .find(".pf-c-form-control")
@@ -369,9 +334,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_map"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_map"]')
       .find('[aria-label="editEntryValue"]')
@@ -385,9 +347,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_repair_interval"]')
       .find(".pf-c-form-control")
@@ -401,9 +360,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_agent_repair_splay_time"]')
       .find(".pf-c-form-control")
@@ -417,9 +373,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_on_start"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
 
     //Change autostart_splay
@@ -430,9 +383,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-autostart_splay"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-autostart_splay"]')
       .find(".pf-c-form-control")
@@ -446,9 +396,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-available_versions_to_keep"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-available_versions_to_keep"]')
       .find(".pf-c-form-control")
@@ -465,9 +412,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-environment_agent_trigger_method"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-environment_agent_trigger_method"]')
       .find(".pf-c-form-control")
@@ -481,9 +425,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-lsm_partial_compile"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
 
     //change notification_retention
@@ -494,9 +435,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-notification_retention"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-notification_retention"]')
       .find(".pf-c-form-control")
@@ -510,9 +448,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-protected_environment"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
 
     //Change purge_on_delete
@@ -521,9 +456,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-purge_on_delete"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
 
     //Change push_on_auto_deploy
@@ -534,9 +466,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-push_on_auto_deploy"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
 
     //Change resource_action_logs_retention
@@ -547,9 +476,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-resource_action_logs_retention"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-resource_action_logs_retention"]')
       .find(".pf-c-form-control")
@@ -561,9 +487,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-server_compile"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
 
     //re-enable to delete env
@@ -574,9 +497,6 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-protected_environment"]')
       .find('[aria-label="SaveAction"]')
       .click();
-    cy.wait("@postEnvConfigEdit")
-      .its("response.statusCode")
-      .should("equal", 200);
     cy.get('[aria-label="Warning"]').should("not.exist");
 
     cy.get("button").contains("Environment").click();
