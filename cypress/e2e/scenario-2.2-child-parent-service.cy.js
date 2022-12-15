@@ -186,7 +186,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     cy.get("#expand-toggle0").click();
 
     // try delete item (Should be possible)
-    cy.get(".pf-c-description-list", { timeout: 10000 })
+    cy.get(".pf-c-description-list", { timeout: 20000 })
       .contains("Delete")
       .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
