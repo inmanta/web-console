@@ -142,17 +142,6 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
   it("2.2.2 Remove Parent Service and Child Service", () => {
     cy.visit("/console/");
 
-    cy.intercept("DELETE", "/lsm/v1/service_inventory/child-service/**").as(
-      "DeleteChildService"
-    );
-    cy.intercept("DELETE", "/lsm/v1/service_inventory/parent-service/**").as(
-      "DeleteParentService"
-    );
-    cy.intercept(
-      "GET",
-      "/lsm/v1/service_inventory/parent-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
-    ).as("GetParentInventory");
-
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get("#parent-service").contains("Show inventory").click();
 
@@ -164,9 +153,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     cy.get(".pf-c-form__actions").contains("Yes").click();
 
     // check status change before compile
-    cy.wait("@DeleteParentService");
-
-    cy.get('[aria-label="InstanceRow-Intro"]:first')
+    cy.get('[aria-label="InstanceRow-Intro"]:first', { timeout: 20000 })
       .find('[data-label="State"]')
       .should("contain", "delete_validating_up");
 
@@ -192,10 +179,8 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("Yes").click();
 
-    cy.wait("@DeleteChildService").its("response.statusCode").should("eq", 200);
-
-    cy.wait("@GetParentInventory");
-
-    cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 20000 }).should(
+      "to.be.visible"
+    );
   });
 });
