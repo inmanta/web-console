@@ -10,7 +10,6 @@ describe("BooleanFormInput", () => {
       <BooleanToggleInput
         attributeName="bool_param"
         isChecked={true}
-        isOptional={false}
         description={"This is a bool parameter"}
         handleInputChange={handleClick}
       />
