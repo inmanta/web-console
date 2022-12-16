@@ -189,6 +189,7 @@ describe("Environment", () => {
       "New Value Repo Url"
     );
     //change Project Name value
+    cy.wait(1000);
     cy.get('[aria-label="Project Name-toggle-edit"]:enabled').click();
     cy.get('[aria-label="Project Name-typeahead"]').clear();
     cy.get('[aria-label="Project Name-typeahead"]').type(
