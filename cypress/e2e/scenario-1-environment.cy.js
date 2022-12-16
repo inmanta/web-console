@@ -171,14 +171,18 @@ describe("Environment", () => {
       "New Value Description"
     );
     //change Repository Branch value
-    cy.get('[aria-label="Repository Settings-toggle-edit"]', {
+    cy.get('[aria-label="Repository Settings-toggle-edit"]:enabled', {
       timeout: 30000,
-    }).click();
+    }).click({
+      timeout: 30000,
+    });
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch");
     cy.get('[aria-label="Repository Settings-submit-edit"]:enabled', {
-      timeout: 20000,
-    }).click();
+      timeout: 30000,
+    }).click({
+      timeout: 30000,
+    });
     cy.get('[aria-label="repo_branch-value"]').should(
       "contain",
       "New Value Repo Branch"
