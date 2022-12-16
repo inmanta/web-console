@@ -179,7 +179,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // check state is up now
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 20000 })
+      .find('[data-label="State"]', { timeout: 40000 })
       .should("contain", "up");
 
     // click on edit button
