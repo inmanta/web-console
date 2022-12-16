@@ -157,10 +157,12 @@ describe("Environment", () => {
     cy.get('[aria-label="Name-submit-edit"]').click();
     cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
     //change Description value
-
+    //cy.wait(1000);
     cy.get('[aria-label="Description-toggle-edit"]:enabled', {
       timeout: 30000,
-    }).click();
+    }).click({
+      timeout: 30000,
+    });
     cy.get('[aria-label="Description-input"]', { timeout: 30000 }).clear();
     cy.get('[aria-label="Description-input"]').type("New Value Description");
     cy.get('[aria-label="Description-submit-edit"]').click();
