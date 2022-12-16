@@ -159,9 +159,9 @@ describe("Environment", () => {
     //change Description value
 
     cy.get('[aria-label="Description-toggle-edit"]:enabled', {
-      timeout: 20000,
+      timeout: 30000,
     }).click();
-    cy.get('[aria-label="Description-input"]', { timeout: 20000 }).clear();
+    cy.get('[aria-label="Description-input"]', { timeout: 30000 }).clear();
     cy.get('[aria-label="Description-input"]').type("New Value Description");
     cy.get('[aria-label="Description-submit-edit"]').click();
     cy.get('[aria-label="Description-value"]').should(
@@ -169,11 +169,11 @@ describe("Environment", () => {
       "New Value Description"
     );
     //change Repository Branch value
-    cy.get('[aria-label="Repository Settings-toggle-edit"]').click();
+    cy.get('[aria-label="Repository Settings-toggle-edit"]', {
+      timeout: 30000,
+    }).click();
     //delay is needed to fix error that says that this input is disabled
-    cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch", {
-      delay: 10,
-    });
+    cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch");
     cy.get('[aria-label="Repository Settings-submit-edit"]:enabled', {
       timeout: 20000,
     }).click();
