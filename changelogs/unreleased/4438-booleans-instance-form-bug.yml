@@ -6,4 +6,4 @@ destination-branches:
   - iso5
   - iso6
 sections: 
-bugfix: "{{description}}"
+  bugfix: "{{description}}"
