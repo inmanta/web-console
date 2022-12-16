@@ -157,13 +157,9 @@ describe("Environment", () => {
     cy.get('[aria-label="Name-submit-edit"]').click();
     cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
     //change Description value
-    //cy.wait(1000);
-    cy.get('[aria-label="Description-toggle-edit"]:enabled', {
-      timeout: 30000,
-    }).click({
-      timeout: 30000,
-    });
-    cy.get('[aria-label="Description-input"]', { timeout: 30000 }).clear();
+    cy.wait(1000);
+    cy.get('[aria-label="Description-toggle-edit"]:enabled').click();
+    cy.get('[aria-label="Description-input"]').clear();
     cy.get('[aria-label="Description-input"]').type("New Value Description");
     cy.get('[aria-label="Description-submit-edit"]').click();
     cy.get('[aria-label="Description-value"]').should(
@@ -171,41 +167,29 @@ describe("Environment", () => {
       "New Value Description"
     );
     //change Repository Branch value
-    cy.get('[aria-label="Repository Settings-toggle-edit"]:enabled', {
-      timeout: 30000,
-    }).click({
-      timeout: 30000,
-    });
+    cy.wait(1000);
+    cy.get('[aria-label="Repository Settings-toggle-edit"]:enabled').click();
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch");
-    cy.get('[aria-label="Repository Settings-submit-edit"]:enabled', {
-      timeout: 30000,
-    }).click({
-      timeout: 30000,
-    });
+    cy.get('[aria-label="Repository Settings-submit-edit"]:enabled').click();
     cy.get('[aria-label="repo_branch-value"]').should(
       "contain",
       "New Value Repo Branch"
     );
     //change Repository url value
-    cy.get('[aria-label="Repository Settings-toggle-edit"]:enabled', {
-      timeout: 20000,
-    }).click();
+    cy.wait(1000);
+    cy.get('[aria-label="Repository Settings-toggle-edit"]:enabled').click();
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_url-input"]').type("New Value Repo Url", {
       delay: 10,
     });
-    cy.get('[aria-label="Repository Settings-submit-edit"]:enabled', {
-      timeout: 20000,
-    }).click();
+    cy.get('[aria-label="Repository Settings-submit-edit"]:enabled').click();
     cy.get('[aria-label="repo_url-value"]').should(
       "contain",
       "New Value Repo Url"
     );
     //change Project Name value
-    cy.get('[aria-label="Project Name-toggle-edit"]:enabled', {
-      timeout: 20000,
-    }).click();
+    cy.get('[aria-label="Project Name-toggle-edit"]:enabled').click();
     cy.get('[aria-label="Project Name-typeahead"]').clear();
     cy.get('[aria-label="Project Name-typeahead"]').type(
       "New Value Project Name"
