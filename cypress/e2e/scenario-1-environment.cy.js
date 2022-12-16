@@ -174,24 +174,32 @@ describe("Environment", () => {
     cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch", {
       delay: 10,
     });
-    cy.get('[aria-label="Repository Settings-submit-edit"]').click();
+    cy.get('[aria-label="Repository Settings-submit-edit"]:enabled', {
+      timeout: 20000,
+    }).click();
     cy.get('[aria-label="repo_branch-value"]').should(
       "contain",
       "New Value Repo Branch"
     );
     //change Repository url value
-    cy.get('[aria-label="Repository Settings-toggle-edit"]').click();
+    cy.get('[aria-label="Repository Settings-toggle-edit"]:enabled', {
+      timeout: 20000,
+    }).click();
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_url-input"]').type("New Value Repo Url", {
       delay: 10,
     });
-    cy.get('[aria-label="Repository Settings-submit-edit"]').click();
+    cy.get('[aria-label="Repository Settings-submit-edit"]:enabled', {
+      timeout: 20000,
+    }).click();
     cy.get('[aria-label="repo_url-value"]').should(
       "contain",
       "New Value Repo Url"
     );
     //change Project Name value
-    cy.get('[aria-label="Project Name-toggle-edit"]').click();
+    cy.get('[aria-label="Project Name-toggle-edit"]:enabled', {
+      timeout: 20000,
+    }).click();
     cy.get('[aria-label="Project Name-typeahead"]').clear();
     cy.get('[aria-label="Project Name-typeahead"]').type(
       "New Value Project Name"
