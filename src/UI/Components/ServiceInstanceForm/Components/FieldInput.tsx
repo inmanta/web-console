@@ -17,6 +17,7 @@ import { toOptionalBoolean } from "@/Data";
 import { createFormState } from "@/UI/Components/ServiceInstanceForm/Helpers";
 import { words } from "@/UI/words";
 import { BooleanFormInput } from "./BooleanFormInput";
+import { BooleanToggleInput } from "./BooleanToggleInput";
 import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
@@ -48,11 +49,22 @@ export const FieldInput: React.FC<Props> = ({
   );
   switch (field.kind) {
     case "Boolean":
-      return (
+      return field.isOptional ? (
         <BooleanFormInput
           aria-label={`BooleanFieldInput-${field.name}`}
           attributeName={field.name}
           isOptional={field.isOptional}
+          isChecked={get(formState, makePath(path, field.name)) as boolean}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name), toOptionalBoolean(value))
+          }
+          description={field.description}
+          key={field.name}
+        />
+      ) : (
+        <BooleanToggleInput
+          aria-label={`BooleanToggleInput-${field.name}`}
+          attributeName={field.name}
           isChecked={get(formState, makePath(path, field.name)) as boolean}
           handleInputChange={(value) =>
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
