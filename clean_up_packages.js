@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 // Get a list of packageVersionIds
 async function getDevVersions() {
   const getQueryString = (cursor) =>
