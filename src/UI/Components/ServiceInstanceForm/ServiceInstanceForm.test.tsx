@@ -26,6 +26,7 @@ const setup = (
   func: undefined | jest.Mock = undefined
 ) => {
   return (
+    // @ts-expect-error mismatch typing coming from dep, functionality remains as is.
     <CustomRouter history={history}>
       <Routes>
         <Route
