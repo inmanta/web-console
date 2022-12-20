@@ -245,42 +245,119 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#vlan_id_r2").type("8");
     cy.get("#service_id").type("0008");
     cy.get("#name").type("failed");
+    cy.get(".pf-c-switch").first().click();
     cy.get("button").contains("Confirm").click();
 
+    // Expect the number in the chart to be 2
+    cy.get(".pf-c-chart").within(() => {
+      cy.get("svg")
+        .find("title")
+        .should("contain", "Number of instances by label");
+      cy.get("svg")
+        .find("text")
+        .should("contain", "2")
+        .and("contain", "Instances");
+    });
+
     // expect newly created instance to be visible in table
+    cy.get('[aria-label="ServiceInventory-Success"]', {
+      timeout: 20000,
+    }).should("to.be.visible");
+
+    // Check if only one row has been added to the table.
+    cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 2);
+
+    // Check if the newly added instance has failed.
+    cy.get('[aria-label="InstanceRow-Intro"]')
+      .first()
+      .should(($row) => {
+        const $cols = $row.find("td");
+        expect($cols.eq(1), "name").to.have.text("failed");
+      });
+
+    // long timeout justified by the fact that a few compiles are already queued at this point and status change will only be changed after.
+    cy.get(".pf-c-label.pf-m-red", { timeout: 120000 }).should(
+      "contain",
+      "failed"
+    );
 
     // go back to Service Catalog
+    cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
     // click on kebab menu on basic-service
-
-    // click on Show Details
+    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("button").contains("Show Details").click();
 
     // Expect to be redirected on Service Details: basic-service
+    cy.get("h1")
+      .contains("Service Details: basic-service")
+      .should("to.be.visible");
 
-    // Expect to be on last visited tab (Details in this case)
-
-    // Click on Details tab
+    // Expect to be Details tab
+    cy.get(".pf-m-current").should("contain", "Details");
 
     // Expect the number in the chart to be 2
-
-    // Expect 1 success and 1 danger
-
-    // Go back to home page
+    cy.get(".pf-c-chart").within(() => {
+      cy.get("svg")
+        .find("title")
+        .should("contain", "Number of instances by label");
+      cy.get("svg")
+        .find("text")
+        .should("contain", "2")
+        .and("contain", "Instances");
+    });
   });
 
   it("3.4 Callbacks", () => {
     // Select card 'test' environment on home page
+    cy.visit("/console/");
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
     // Click on kebab menu and select Show Details on basic-service
+    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("button").contains("Show Details").click();
+
     // Expect to be redirected on Service Details: basic-service
+    cy.get("h1")
+      .contains("Service Details: basic-service")
+      .should("to.be.visible");
+
     // Go to the callback tab
+    cy.get("button").contains("Callbacks").click();
+
     // Fill in the fields
-    // Submit form
+    cy.get('[aria-label="callbackUrl"]').type("wrongUrl");
+    cy.get('[aria-label="callbackId"]').type(
+      "60b18097-1525-47f2-95ae-1d941d9c0c85"
+    );
+    cy.get(".pf-c-select").first().click();
+    cy.get(".pf-c-select__menu-item").contains("INFO").click();
+    cy.get(".pf-c-select").eq(1).click();
+    cy.get(".pf-c-select__menu-item").contains("ALLOCATION_UPDATE").click();
+    cy.get("button").contains("Add").click();
+
     // Expect an error to show up : Something went wrong
+    cy.get('[aria-label="Danger Alert"]').should("to.be.visible");
+
     // Change the input field for url to : http://localhost:1234
+    cy.get('[aria-label="callbackUrl"]').clear();
+    cy.get('[aria-label="callbackUrl"]').type("http://localhost:1234");
+    cy.get("button").contains("Add").click();
+
     // Expect new row to be added to the view.
+    cy.get('[aria-label="CallbacksTable"]').should(($table) => {
+      const $tableBody = $table.find("tbody");
+      expect($tableBody).to.have.length(2);
+    });
+
     // Expect the form to be cleared completely.
+    cy.get('[aria-label="callbackUrl"]').its("value").should("to.be.undefined");
+    cy.get('[aria-label="callbackId"]').its("value").should("to.be.undefined");
+
     // click on expand row
-    // Expect to see all values except ALLOCATION_UPDATE and API_SET_STATE_TRANSITION to have text-decoration: line-through
+    cy.get("button").contains("http://localhost:1234").click();
+
+    // Expect to see all values except ALLOCATION_UPDATE to have text-decoration: line-through
     // Expect the UUID to be truncated to 8 characters
     // Expect the minimal log level to be INFO and not 20 (that's the numerical code for INFO)
     // Delete Callback
