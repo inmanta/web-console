@@ -21,7 +21,6 @@ const setup = () => {
     );
   };
   const component = (
-    // @ts-expect-error mismatch typing coming from dep, functionality remains as is.
     <CustomRouter history={history}>
       <Routes>
         <Route path="/" element={<Component />} />
