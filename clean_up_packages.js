@@ -44,16 +44,16 @@ async function getOldDevVersions() {
       },
       (error) => console.log(error)
     );
-    let packages = await queryResults.json();
-    let response_headers = queryResults.headers;
+    const packages = await queryResults.json();
+    const response_headers = queryResults.headers;
 
-    if (packages.length === 0) {
+    if (!packages || !packages.length) {
       throw Error("Unable to find web-console packages");
     }
 
     // Take the dev versions only
-    let devVersions = packages.filter((pkg) => pkg.name.includes("dev"));
-    let devVersionsWithDate = devVersions.map((devPackageVersion) => {
+    const devVersions = packages.filter((pkg) => pkg.name.includes("dev"));
+    const devVersionsWithDate = devVersions.map((devPackageVersion) => {
       return {
         id: devPackageVersion.id,
         version: devPackageVersion.name,
@@ -61,7 +61,7 @@ async function getOldDevVersions() {
       };
     });
     // Take the versions that are older than 30 days
-    let oldDevVersions = devVersionsWithDate.filter(
+    const oldDevVersions = devVersionsWithDate.filter(
       (devPackageVersion) =>
         Math.floor(
           (new Date() - new Date(devPackageVersion.updatedAt)) /
@@ -81,7 +81,7 @@ async function getOldDevVersions() {
     }
 
     // Check to see if another page should be queried
-    let linkToNextPage = getLinkToNextPage(response_headers);
+    const linkToNextPage = getLinkToNextPage(response_headers);
     if (linkToNextPage != null) {
       queryUrl = linkToNextPage;
       console.log(`Fetching the next page from ${queryUrl}`);
@@ -94,43 +94,48 @@ async function getOldDevVersions() {
   }
 }
 
-getOldDevVersions().then((oldDevVersions) => {
-  if (oldDevVersions.length == 0) {
-    console.log("No old versions found matching the criteria");
-    return;
-  }
-  // Make sure we're not starting too many requests at once
-  if (oldDevVersions.length > 5) {
-    oldDevVersions = oldDevVersions.slice(0, 5);
-  }
-  oldDevVersions.map((oldDevVersion) => {
-    const idToDelete = oldDevVersion.id;
-    console.log(
-      `Attempting to delete version ${oldDevVersion.version} with id ${idToDelete} from ${oldDevVersion.updatedAt}`
-    );
-    fetch(
-      `https://api.github.com/orgs/inmanta/packages/npm/web-console/versions/${idToDelete}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-          Accept: "application/vnd.github+json",
-          "X-GitHub-Api-Version": "2022-11-28",
-        },
-        method: "DELETE",
-      }
-    ).then(
-      (response) => {
-        if (response.ok) {
-          console.log(`Successfully deleted package ${idToDelete}`);
-        } else {
-          const error_message = `Deleting package ${idToDelete} failed: ${response.statusText}`;
-          console.log(error_message);
-          throw Error(error_message);
+getOldDevVersions().then(
+  (oldDevVersions) => {
+    if (oldDevVersions.length == 0) {
+      console.log("No old versions found matching the criteria");
+      return;
+    }
+    // Make sure we're not starting too many requests at once
+    if (oldDevVersions.length > 5) {
+      oldDevVersions = oldDevVersions.slice(0, 5);
+    }
+    oldDevVersions.map((oldDevVersion) => {
+      const idToDelete = oldDevVersion.id;
+      console.log(
+        `Attempting to delete version ${oldDevVersion.version} with id ${idToDelete} from ${oldDevVersion.updatedAt}`
+      );
+      fetch(
+        `https://api.github.com/orgs/inmanta/packages/npm/web-console/versions/${idToDelete}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            Accept: "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+          method: "DELETE",
         }
-      },
-      (reason) => {
-        console.log(reason);
-      }
-    );
-  });
-});
+      ).then(
+        (response) => {
+          if (response.ok) {
+            console.log(`Successfully deleted package ${idToDelete}`);
+          } else {
+            const error_message = `Deleting package ${idToDelete} failed: ${response.statusText}`;
+            console.log(error_message);
+            throw Error(error_message);
+          }
+        },
+        (reason) => {
+          console.log(reason);
+        }
+      );
+    });
+  },
+  (reason) => {
+    console.log(`Failed to retrieve dev packages: ${reason}`);
+  }
+);
