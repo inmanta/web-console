@@ -14,7 +14,7 @@ function getLinkToNextPage(headerObj) {
     const refName = splittedHeaderParts[1].trim();
     const refLink = splittedHeaderParts[0].trim();
     if (refName === 'rel="next"') {
-      // The link is represented as '<url>'. This shops off the '<' and '>' characters.
+      // The link is represented as '<url>'. This chops off the '<' and '>' characters.
       return refLink.slice(1, refLink.length - 1);
     }
   }
