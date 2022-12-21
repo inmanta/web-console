@@ -20,7 +20,7 @@
     "clean": "rimraf dist",
     "delete:reports": "rm -r cypress/reports/* || true",
     "precypress-test": "yarn run delete:reports",
-    "cypress-test": "yarn start-test 'yarn start' http-get://localhost:9000 'yarn cypress run'",
+    "cypress-test": "yarn start-test 'yarn start' http-get://127.0.0.1:9000 'yarn cypress run'",
     "package-cleanup": "node clean_up_packages",
     "storybook": "start-storybook --ci --port 6006",
     "build-storybook": "build-storybook",
@@ -102,7 +102,6 @@
     "mochawesome-report-generator": "^6.0.1",
     "moment-locales-webpack-plugin": "^1.2.0",
     "moment-timezone-data-webpack-plugin": "^1.5.0",
-    "node-fetch": "^3.2.0",
     "prettier": "^2.5.1",
     "prop-types": "^15.8.1",
     "raw-loader": "^4.0.2",
@@ -166,8 +165,6 @@
     "browserslist": "^4.16.5",
     "json-schema": "^0.4.0",
     "node-forge": "^1.0.0",
-    "cross-fetch": "^3.1.5",
-    "node-fetch": "^2.6.7",
     "minimist": "^1.2.6"
   },
   "madge": {
