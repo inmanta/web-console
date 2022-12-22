@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 function getLinkToNextPage(headerObj) {
   /**
    *  Takes the Header object and returns the URL to the next page or null if no such page exists.
