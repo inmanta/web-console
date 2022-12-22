@@ -71,7 +71,9 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // Click on kebab menu and select Show Details on basic-service
-    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("#basic-service", { timeout: 30000 })
+      .find('[aria-label="Actions"]')
+      .click();
     cy.get("button").contains("Show Details").click();
 
     // Expect to be redirected on Service Details: basic-service
@@ -169,7 +171,9 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // click on Show Inventory on basic-service
-    cy.get("#basic-service").contains("Show inventory").click();
+    cy.get("#basic-service", { timeout: 30000 })
+      .contains("Show inventory")
+      .click();
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
     // click on add instance
@@ -200,7 +204,9 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
     // click on kebab menu on basic-service
-    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("#basic-service", { timeout: 30000 })
+      .find('[aria-label="Actions"]')
+      .click();
     cy.get("button").contains("Show Details").click();
 
     // Expect to be redirected on Service Details: basic-service
@@ -229,7 +235,9 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // click on Show Inventory on basic-service
-    cy.get("#basic-service").contains("Show inventory").click();
+    cy.get("#basic-service", { timeout: 30000 })
+      .contains("Show inventory")
+      .click();
 
     // click on add instance
     cy.get("#add-instance-button").click();
@@ -285,7 +293,9 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
     // click on kebab menu on basic-service
-    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("#basic-service", { timeout: 30000 })
+      .find('[aria-label="Actions"]')
+      .click();
     cy.get("button").contains("Show Details").click();
 
     // Expect to be redirected on Service Details: basic-service
@@ -314,7 +324,9 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // Click on kebab menu and select Show Details on basic-service
-    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("#basic-service", { timeout: 30000 })
+      .find('[aria-label="Actions"]')
+      .click();
     cy.get("button").contains("Show Details").click();
 
     // Expect to be redirected on Service Details: basic-service
@@ -425,14 +437,18 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // Click on Delete button
-    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("#basic-service", { timeout: 30000 })
+      .find('[aria-label="Actions"]')
+      .click();
     cy.get("button").contains("Delete").click();
 
     // Expect modal to confirm action and cancel it
     cy.get("#cancel").click();
 
     // Click again on Delete button
-    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("#basic-service", { timeout: 30000 })
+      .find('[aria-label="Actions"]')
+      .click();
     cy.get("button").contains("Delete").click();
 
     // Confirm modal
@@ -442,7 +458,9 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="ToastAlert"]').should("to.be.visible");
 
     // Click on Show Invetory on basic-service
-    cy.get("#basic-service").contains("Show inventory").click();
+    cy.get("#basic-service", { timeout: 30000 })
+      .contains("Show inventory")
+      .click();
 
     // Click open first row
     cy.get("#expand-toggle0").click();
