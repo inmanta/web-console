@@ -124,8 +124,8 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Row-service_id"]')
       .should("contain", "service_id")
       .and("contain", "string");
-    cy.get('[aria-label="Row-should_fail"]')
-      .should("contain", "should_fail")
+    cy.get('[aria-label="Row-should_deploy_fail"]')
+      .should("contain", "should_deploy_fail")
       .and("contain", "bool");
     cy.get('[aria-label="Row-vlan_id_r1"]')
       .should("contain", "vlan_id_r1")
@@ -351,44 +351,120 @@ describe("Scenario 3 - Service Details", () => {
     });
 
     // Expect the form to be cleared completely.
-    cy.get('[aria-label="callbackUrl"]').its("value").should("to.be.undefined");
-    cy.get('[aria-label="callbackId"]').its("value").should("to.be.undefined");
+    cy.get('[aria-label="callbackUrl"]').should("have.value", "");
+    cy.get('[aria-label="callbackId"]').should("have.value", "");
 
     // click on expand row
     cy.get("button").contains("http://localhost:1234").click();
 
     // Expect to see all values except ALLOCATION_UPDATE to have text-decoration: line-through
-    // Expect the UUID to be truncated to 8 characters
-    // Expect the minimal log level to be INFO and not 20 (that's the numerical code for INFO)
+    cy.get(".pf-c-description-list__description ul").should(($ul) => {
+      const $list = $ul.find("li");
+      expect($list).to.have.length(8);
+    });
+
+    cy.get(".pf-c-description-list__description li")
+      .first()
+      .should("have.css", "text-decoration")
+      .and("contain", "none solid");
+    cy.get(".pf-c-description-list__description li")
+      .eq(1)
+      .should("have.css", "text-decoration")
+      .and("contain", "line-through solid");
+    cy.get(".pf-c-description-list__description li")
+      .eq(2)
+      .should("have.css", "text-decoration")
+      .and("contain", "line-through solid");
+    cy.get(".pf-c-description-list__description li")
+      .eq(3)
+      .should("have.css", "text-decoration")
+      .and("contain", "line-through solid");
+    cy.get(".pf-c-description-list__description li")
+      .eq(4)
+      .should("have.css", "text-decoration")
+      .and("contain", "line-through solid");
+    cy.get(".pf-c-description-list__description li")
+      .eq(5)
+      .should("have.css", "text-decoration")
+      .and("contain", "line-through solid");
+    cy.get(".pf-c-description-list__description li")
+      .eq(6)
+      .should("have.css", "text-decoration")
+      .and("contain", "line-through solid");
+    cy.get(".pf-c-description-list__description li")
+      .eq(7)
+      .should("have.css", "text-decoration")
+      .and("contain", "line-through solid");
+
+    // Expect the UUID to be truncated to 8 characters, have INFO level and 1 Event Type.
+    cy.get('[aria-label="CallbacksTable"]').should(($table) => {
+      const $tableBody = $table.find("tbody").eq(1);
+      const $cells = $tableBody.find("td");
+
+      expect($cells.eq(1), "Id").to.have.text("60b18097");
+      expect($cells.eq(2), "Minimal Log Level").to.have.text("INFO");
+      expect($cells.eq(3), "Event Types").to.have.text("1 Event Types");
+    });
+
     // Delete Callback
-    // Expect modal
-    // Confirm delete
-    // Expect row to be gone.
-    // Go back to Home
+    cy.get("button").contains("Delete").click();
+
+    // Confirm deletion
+    cy.get("#submit").click();
+
+    // Expect row to be gone. So there should only be one tbody left.
+    cy.get('[aria-label="CallbacksTable"]').should(($table) => {
+      const $tableBody = $table.find("tbody");
+      expect($tableBody).to.have.length(1);
+    });
   });
 
   it("3.5 Delete Service", () => {
     // Select card 'test' environment on home page
-    // Click on kebab menu and select Show Details on basic-service
-    // Expect to be redirected on Service Details: basic-service
-    // Expect to be on Callback tab
-    // Go to Detail tab
+    cy.visit("/console/");
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
     // Click on Delete button
-    // Expect modal to confirm action
-    // Cancel action
-    // Expect nothing to happen
+    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("button").contains("Delete").click();
+
+    // Expect modal to confirm action and cancel it
+    cy.get("#cancel").click();
+
     // Click again on Delete button
+    cy.get("#basic-service").find('[aria-label="Actions"]').click();
+    cy.get("button").contains("Delete").click();
+
     // Confirm modal
+    cy.get("#submit").click();
+
     // Expect Toast : Deleting service entity failed
-    // Go back to Service Catalog
+    cy.get('[aria-label="ToastAlert"]').should("to.be.visible");
+
     // Click on Show Invetory on basic-service
+    cy.get("#basic-service").contains("Show inventory").click();
+
     // Click open first row
+    cy.get("#expand-toggle0").click();
+
     // Click on delete instance
+    cy.get("button").contains("Delete").eq(0).click();
+
     // Confirm deletion
+    cy.get("#submit").click();
+
     // Open second row
+    cy.get("#expand-toggle1").click();
+
     // Click on delete instance
+    cy.get("button").contains("Delete").eq(1).click();
+
     // Confirm deletion
+    cy.get("#submit").click();
+
     // Expect to be redirected to Service Catalog after deletion
-    // Expect deleted Service to not be in the catalog anymore.
+    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 60000 }).should(
+      "to.be.visible"
+    );
   });
 });
