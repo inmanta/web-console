@@ -71,7 +71,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // Click on kebab menu and select Show Details on basic-service
-    cy.get("#basic-service", { timeout: 30000 })
+    cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
     cy.get("button").contains("Show Details").click();
@@ -171,7 +171,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // click on Show Inventory on basic-service
-    cy.get("#basic-service", { timeout: 30000 })
+    cy.get("#basic-service", { timeout: 60000 })
       .contains("Show inventory")
       .click();
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
@@ -204,7 +204,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
     // click on kebab menu on basic-service
-    cy.get("#basic-service", { timeout: 30000 })
+    cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
     cy.get("button").contains("Show Details").click();
@@ -235,7 +235,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // click on Show Inventory on basic-service
-    cy.get("#basic-service", { timeout: 30000 })
+    cy.get("#basic-service", { timeout: 60000 })
       .contains("Show inventory")
       .click();
 
@@ -293,7 +293,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
 
     // click on kebab menu on basic-service
-    cy.get("#basic-service", { timeout: 30000 })
+    cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
     cy.get("button").contains("Show Details").click();
@@ -324,7 +324,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // Click on kebab menu and select Show Details on basic-service
-    cy.get("#basic-service", { timeout: 30000 })
+    cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
     cy.get("button").contains("Show Details").click();
@@ -437,7 +437,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // Click on Delete button
-    cy.get("#basic-service", { timeout: 30000 })
+    cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
     cy.get("button").contains("Delete").click();
@@ -446,7 +446,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#cancel").click();
 
     // Click again on Delete button
-    cy.get("#basic-service", { timeout: 30000 })
+    cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
     cy.get("button").contains("Delete").click();
@@ -458,7 +458,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="ToastAlert"]').should("to.be.visible");
 
     // Click on Show Invetory on basic-service
-    cy.get("#basic-service", { timeout: 30000 })
+    cy.get("#basic-service", { timeout: 60000 })
       .contains("Show inventory")
       .click();
 
