@@ -58,9 +58,9 @@ export const ResourceLogsTable: React.FC<Props> = ({
       {logs.map((log, index) => (
         <Row
           index={index}
-          onToggle={onExpansion(getUniqueId(log, index))}
-          isExpanded={isExpanded(getUniqueId(log, index))}
-          key={getUniqueId(log, index)}
+          onToggle={onExpansion(getUniqueId(log))}
+          isExpanded={isExpanded(getUniqueId(log))}
+          key={getUniqueId(log)}
           log={log}
           numberOfColumns={6}
           toggleActionType={toggleActionType}
@@ -70,8 +70,8 @@ export const ResourceLogsTable: React.FC<Props> = ({
   );
 };
 
-function getUniqueId(log: ResourceLog, index: number): string {
-  return `${log.action_id}_${log.timestamp}_${index}`;
+function getUniqueId(log: ResourceLog): string {
+  return `${log.action_id}_${log.timestamp}`;
 }
 
 const LogLevelTh = styled(Th)`
