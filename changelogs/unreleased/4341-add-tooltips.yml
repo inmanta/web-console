@@ -1,0 +1,9 @@
+change-type: patch
+description: 'Adding Tooltips for halted and resume buttons in the sidebar.'
+issue-nr: 4341
+destination-branches:
+- master
+- iso6
+- iso5
+sections: 
+  minor-improvement: "{{description}}"
