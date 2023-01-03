@@ -269,7 +269,7 @@ describe("Scenario 4 Desired State", () => {
       .contains("Compare with current state")
       .click();
     cy.get(".pf-c-title").should("have.text", "Compliance Check");
-    cy.get(".pf-c-select").eq(0).should("have.text", "No dry runs exist");
+    cy.get(".pf-c-select").contains("No dry runs exist").should("be.visible");
     cy.get(".pf-c-button").contains("Perform dry run").click();
     cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should(
       "be.visible"
