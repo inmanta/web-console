@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal } from "@patternfly/react-core";
+import { Button, Modal, Tooltip } from "@patternfly/react-core";
 import { StopIcon } from "@patternfly/react-icons";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
@@ -15,9 +15,15 @@ export const HaltDialog: React.FC = () => {
     });
   return (
     <>
-      <Button variant="danger" icon={<StopIcon />} onClick={handleModalToggle}>
-        {words("environment.halt.button")}
-      </Button>
+      <Tooltip content={<div>{words("environment.halt.button.tooltip")}</div>}>
+        <Button
+          variant="danger"
+          icon={<StopIcon />}
+          onClick={handleModalToggle}
+        >
+          {words("environment.halt.button")}
+        </Button>
+      </Tooltip>
       <Modal
         variant="small"
         title={words("environment.halt.title")}

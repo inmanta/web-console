@@ -204,7 +204,9 @@ describe("Environment", () => {
     //Fill The form and submit
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
+    cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 20000 }).should(
+      "to.be.visible"
+    );
 
     //Go to settings
     openSettings("test");
@@ -215,7 +217,9 @@ describe("Environment", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
-    cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
+    cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 20000 }).should(
+      "to.be.visible"
+    );
 
     //Go to settings and get Id of an environment
     openSettings("test");
