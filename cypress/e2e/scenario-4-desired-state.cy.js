@@ -200,14 +200,17 @@ describe("Scenario 4 Desired State", () => {
       .eq(7)
       .find(".pf-c-description-list__description")
       .should("have.text", "basic-service");
-    cy.get('[aria-label="BreadcrumbItem"]').contains("Desired State").click();
   });
 
   it("4.3 Delete Desired State", () => {
-    cy.get(".pf-c-dropdown__menu-item").contains("Delete").click();
+    cy.get('[aria-label="BreadcrumbItem"]').contains("Desired State").click();
+    cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
+    cy.get(".pf-c-dropdown__menu-item", { timeout: 20000 })
+      .contains("Delete")
+      .click();
     cy.get("#cancel").click();
     cy.get("tbody").should("have.length", 2);
-    cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
+    cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
     cy.get(".pf-c-dropdown__menu-item").contains("Delete").click();
     cy.get("#submit").click();
     cy.get("tbody", { timeout: 20000 }).should("have.length", 1);
@@ -240,6 +243,14 @@ describe("Scenario 4 Desired State", () => {
       .eq(1)
       .find('[data-label="Status"]')
       .should("have.text", "retired");
+    //turn the auto-deploy back to "true" and go back to desired State page
+    cy.get('[aria-label="Settings actions"]').click();
+    cy.get(".pf-c-tabs__link").contains("Configuration").click();
+    cy.get('[aria-label="Row-auto_deploy"]').find(".pf-c-switch").click();
+    cy.get('[aria-label="Row-auto_deploy"]')
+      .find('[aria-label="SaveAction"]')
+      .click();
+    cy.get(".pf-c-nav__link").contains("Desired State").click();
   });
   it("4.5 Desired state resources", () => {
     cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
@@ -248,11 +259,20 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-c-dropdown__menu-item")
       .contains("Compare with selected")
       .click();
+    cy.get(".pf-c-title").should("have.text", "Compare");
+    //go back
+    cy.get(".pf-c-nav__link").contains("Desired State").click();
   });
   it("4.6 Desired state resources", () => {
     cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
     cy.get(".pf-c-dropdown__menu-item")
       .contains("Compare with current state")
       .click();
+    cy.get(".pf-c-title").should("have.text", "Compliance Check");
+    cy.get(".pf-c-select").eq(0).should("have.text", "No dry runs exist");
+    cy.get(".pf-c-button").contains("Perform dry run").click();
+    cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should(
+      "be.visible"
+    );
   });
 });
