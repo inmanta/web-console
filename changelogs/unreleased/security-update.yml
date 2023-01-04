@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Resolve security breach in dependencies.'
+destination-branches:
+- master
+- iso6
+- iso5
