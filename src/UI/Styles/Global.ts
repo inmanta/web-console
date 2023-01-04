@@ -40,7 +40,6 @@ export const GlobalStyles = createGlobalStyle`
   }
   .pf-c-toolbar__content-section {
     gap: var(--pf-global--spacer--sm);
-    align-items: flex-start;
   }
   .pf-c-select {
     min-width: 180px;
