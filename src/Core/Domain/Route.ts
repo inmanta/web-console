@@ -11,6 +11,7 @@ const kinds = [
   /**
    * LSM
    */
+  "Dashboard",
   "Catalog",
   "Inventory",
   "ServiceDetails",

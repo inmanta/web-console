@@ -24,6 +24,14 @@ export const lifecycleServiceManager = (
   title: words("navigation.lifecycleServiceManager"),
   links: [
     {
+      id: "Dashboard",
+      label: routeManager.getRoute("Dashboard").generateLabel(undefined),
+      url: routeManager.getRoute("Dashboard").path,
+      external: false,
+      locked: !isEnvPresent,
+      statusIndication: false,
+    },
+    {
       id: "Catalog",
       label: routeManager.getRoute("Catalog").generateLabel(undefined),
       url: routeManager.getRoute("Catalog").path,

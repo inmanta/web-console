@@ -254,6 +254,11 @@ const dict = {
   "catalog.table.description": "Description",
 
   /**
+   * Dashboard
+   */
+  "dashboard.title": (envName: string) => `Dashboard | ${envName}`,
+
+  /**
    * Environment controls
    */
   "environment.resume.button": "Resume",
