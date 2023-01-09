@@ -8,7 +8,6 @@ import { InputInfoCreator } from "./InputInfoCreator";
 interface Props {
   settings: EnvironmentSettings.EnvironmentSettings;
 }
-
 function reducer(
   state: { settings: EnvironmentSettings.ValuesMap; resetedValueName: string },
   action: {
@@ -38,9 +37,16 @@ function reducer(
       return state;
   }
 }
+
 export const Provider: React.FC<Props> = ({
   settings: { settings, definition },
 }) => {
+  /*
+  useReducer in this component is used due to dependency issues in useEffect, 
+  to keep track of unsaved changes we had to add logic that was updating the state 
+  through mentioned hook and having state in the dependency array and altering it there is against 
+  React's rules as it results in infinite re-renders
+  */
   const [state, dispatch] = useReducer(reducer, {
     settings: settings,
     resetedValueName: "",
