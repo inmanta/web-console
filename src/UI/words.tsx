@@ -414,6 +414,7 @@ const dict = {
   /**
    * Navigation related text
    */
+  "navigation.orchestratorOverview": "Orchestrator Overview",
   "navigation.lifecycleServiceManager": "Lifecycle Service Manager",
   "navigation.resourceManager": "Resource Manager",
   "navigation.orchestrationEngine": "Orchestration Engine",

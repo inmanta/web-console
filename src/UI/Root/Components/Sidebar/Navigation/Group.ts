@@ -16,12 +16,12 @@ interface Link {
   statusIndication: boolean;
 }
 
-export const lifecycleServiceManager = (
+export const orchestratorOverview = (
   routeManager: RouteManager,
   isEnvPresent: boolean
 ): Group => ({
-  id: "LifecycleServiceManager",
-  title: words("navigation.lifecycleServiceManager"),
+  id: words("navigation.orchestratorOverview"),
+  title: words("navigation.orchestratorOverview"),
   links: [
     {
       id: "Dashboard",
@@ -31,6 +31,16 @@ export const lifecycleServiceManager = (
       locked: !isEnvPresent,
       statusIndication: false,
     },
+  ],
+});
+
+export const lifecycleServiceManager = (
+  routeManager: RouteManager,
+  isEnvPresent: boolean
+): Group => ({
+  id: "LifecycleServiceManager",
+  title: words("navigation.lifecycleServiceManager"),
+  links: [
     {
       id: "Catalog",
       label: routeManager.getRoute("Catalog").generateLabel(undefined),
