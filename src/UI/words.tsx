@@ -254,6 +254,11 @@ const dict = {
   "catalog.table.description": "Description",
 
   /**
+   * Dashboard
+   */
+  "dashboard.title": (envName: string) => `Dashboard | ${envName}`,
+
+  /**
    * Environment controls
    */
   "environment.resume.button": "Resume",
@@ -409,6 +414,7 @@ const dict = {
   /**
    * Navigation related text
    */
+  "navigation.orchestratorOverview": "Orchestrator Overview",
   "navigation.lifecycleServiceManager": "Lifecycle Service Manager",
   "navigation.resourceManager": "Resource Manager",
   "navigation.orchestrationEngine": "Orchestration Engine",
