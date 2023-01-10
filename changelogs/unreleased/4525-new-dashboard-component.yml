@@ -1,6 +1,6 @@
 description: Create component and navigation for the Dashboard Page
 issue-nr: 4525
-change-type: patch
+change-type: minor
 destination-branches:
   - master
   - iso6
