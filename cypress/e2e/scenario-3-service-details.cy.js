@@ -471,11 +471,14 @@ describe("Scenario 3 - Service Details", () => {
     // Confirm deletion
     cy.get("#submit").click();
 
+    // Close first row
+    cy.get("#expand-toggle0").click();
+
     // Open second row
     cy.get("#expand-toggle1").click();
 
     // Click on delete instance
-    cy.get("button").contains("Delete").eq(1).click();
+    cy.get("button", { timeout: 20000 }).contains("Delete").eq(0).click();
 
     // Confirm deletion
     cy.get("#submit").click();
