@@ -1,0 +1,8 @@
+description: Create Dashboard Sections with the ability to display various charts
+issue-nr: 4527
+change-type: path
+destination-branches:
+  - master
+  - iso6
+sections: 
+  feature: "{{description}}"

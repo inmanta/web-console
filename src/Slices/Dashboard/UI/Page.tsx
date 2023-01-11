@@ -3,6 +3,7 @@ import { RemoteData } from "@/Core";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Section } from "./Section";
 
 export const Page: React.FC = () => {
   const { queryResolver, environmentHandler } = useContext(DependencyContext);
@@ -27,9 +28,17 @@ export const Page: React.FC = () => {
             />
           ),
           success: (value) => (
-            <PageContainer
-              title={words("dashboard.title")(value.name)}
-            ></PageContainer>
+            <PageContainer title={words("dashboard.title")(value.name)}>
+              <Section
+                title={words("navigation.lifecycleServiceManager")}
+                metricType="lsm"
+              />
+              <Section
+                title={words("navigation.orchestrationEngine")}
+                metricType="orchestrator"
+              />
+              {/* <Section title={words("navigation.resourceManager")} metricType="resource"/> */}
+            </PageContainer>
           ),
         },
         envData
