@@ -108,6 +108,10 @@ describe("Scenario 4 Desired State", () => {
   });
 
   it("4.2 Desired state resources", () => {
+    cy.visit("/console/");
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Desired State").click();
+
     //go from desired State to Resources
     cy.get("tbody").eq(0).contains("Show Resources").click();
     cy.get('[aria-label="VersionResourcesTable-Success"]')
@@ -122,15 +126,18 @@ describe("Scenario 4 Desired State", () => {
       .eq(1)
       .should("contain", "lsm::LifecycleTransfer")
       .and("contain", "1");
+
     //go to details of first resource
     cy.get("tbody").eq(0).contains("Show Details").click();
     cy.get(".pf-c-content").should(
       "have.text",
       "frontend_model::TestResource[internal,name=default-0001]"
     );
+
     //go back and open details of second resource
     cy.get('[aria-label="BreadcrumbItem"]').contains("Details").click();
     cy.get("tbody").eq(1).contains("Show Details").click();
+
     //go through each row and check value
     cy.get(".pf-c-description-list__group")
       .eq(1)
@@ -200,10 +207,15 @@ describe("Scenario 4 Desired State", () => {
       .eq(7)
       .find(".pf-c-description-list__description")
       .should("have.text", "basic-service");
+
+    cy.get('[aria-label="BreadcrumbItem"]').contains("Desired State").click();
   });
 
   it("4.3 Delete Desired State", () => {
-    cy.get('[aria-label="BreadcrumbItem"]').contains("Desired State").click();
+    cy.visit("/console/");
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Desired State").click();
+
     cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
     cy.get(".pf-c-dropdown__menu-item", { timeout: 20000 })
       .contains("Delete")
@@ -215,7 +227,12 @@ describe("Scenario 4 Desired State", () => {
     cy.get("#submit").click();
     cy.get("tbody", { timeout: 20000 }).should("have.length", 1);
   });
+
   it("4.4 Promote/Recompile Desired state", () => {
+    cy.visit("/console/");
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Desired State").click();
+
     cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
     cy.get(".pf-c-dropdown__menu-item")
       .contains("Promote")
@@ -252,7 +269,12 @@ describe("Scenario 4 Desired State", () => {
       .click();
     cy.get(".pf-c-nav__link").contains("Desired State").click();
   });
+
   it("4.5 Desired state resources", () => {
+    cy.visit("/console/");
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Desired State").click();
+
     cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
     cy.get(".pf-c-dropdown__menu-item").contains("Select for compare").click();
     cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
@@ -263,16 +285,135 @@ describe("Scenario 4 Desired State", () => {
     //go back
     cy.get(".pf-c-nav__link").contains("Desired State").click();
   });
+
   it("4.6 Desired state resources", () => {
+    cy.visit("/console/");
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Desired State").click();
+
     cy.get("tbody").eq(1).find('[aria-label="Actions"]').click();
     cy.get(".pf-c-dropdown__menu-item")
       .contains("Compare with current state")
       .click();
+
     cy.get(".pf-c-title").should("have.text", "Compliance Check");
     cy.get(".pf-c-select").contains("No dry runs exist").should("be.visible");
     cy.get(".pf-c-button").contains("Perform dry run").click();
     cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should(
       "be.visible"
     );
+
+    cy.get(".pf-c-label.pf-m-outline.pf-m-compact");
+
+    // expect diff module to say No changes have been found
+    cy.get(".pf-c-card__expandable-content", { timeout: 20000 }).should(
+      ($expandableRow) => {
+        expect($expandableRow).to.have.length(2);
+        expect($expandableRow.eq(0), "first-row").to.have.text(
+          "This resource has not been modified."
+        );
+        expect($expandableRow.eq(1), "second-row").to.have.text(
+          "This resource has not been modified."
+        );
+      }
+    );
+
+    // go back to desired state page
+    cy.get(".pf-c-nav__link").contains("Desired State").click();
+
+    // click on version latest kebab menu
+    cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
+
+    // select Compare with current state
+    cy.get(".pf-c-dropdown__menu-item")
+      .contains("Compare with current state")
+      .click();
+
+    // expect to land on compliance check page
+    cy.get(".pf-c-title").should("have.text", "Compliance Check");
+
+    // Expect diff-module to be empty
+    cy.get(".pf-c-page__main-section")
+      .eq(1)
+      .children()
+      .should("have.length", 1);
+
+    cy.get(".pf-c-select").contains("No dry runs exist").should("be.visible");
+    cy.get(".pf-c-button").contains("Perform dry run").click();
+    // perform dry-run
+    // await the end of the dry-run and expect to find two rows with expandable content.
+    cy.get(".pf-c-card__expandable-content", { timeout: 20000 }).should(
+      ($expandableRow) => {
+        expect($expandableRow).to.have.length(2);
+        expect($expandableRow.eq(0), "first-row").to.have.text(
+          "This resource has not been modified."
+        );
+
+        const $tdElements = $expandableRow.find("td");
+        expect($tdElements.eq(0)).to.have.text("-");
+        expect($tdElements.eq(1)).to.have.text("3");
+        expect($tdElements.eq(2)).to.have.text("+");
+        expect($tdElements.eq(3)).to.have.text("4");
+      }
+    );
+
+    // click on filter by status dropdown
+    cy.get(".pf-c-select__toggle").eq(1).click();
+
+    // uncheck unmodified option
+    cy.get('[aria-label="StatusFilterOption"]').contains("unmodified").click();
+    cy.get(".pf-c-select__toggle").eq(1).click();
+
+    // expect diff-module to only show the modified file.
+    cy.get(".pf-c-card__expandable-content", { timeout: 20000 }).should(
+      ($expandableRow) => {
+        expect($expandableRow).to.have.length(1);
+
+        const $tdElements = $expandableRow.find("td");
+        expect($tdElements.eq(0)).to.have.text("-");
+        expect($tdElements.eq(1)).to.have.text("3");
+        expect($tdElements.eq(2)).to.have.text("+");
+        expect($tdElements.eq(3)).to.have.text("4");
+      }
+    );
+
+    // go back to desired state
+    cy.get(".pf-c-nav__link").contains("Desired State").click();
+
+    // click again on kebab menu of version 5
+    cy.get("tbody").eq(0).find('[aria-label="Actions"]').click();
+
+    // select again compare with current state
+    cy.get(".pf-c-dropdown__menu-item")
+      .contains("Compare with current state")
+      .click();
+
+    // expect the view to still contain the diff of the last dry-run comparison
+    cy.get(".pf-c-card__expandable-content", { timeout: 20000 }).should(
+      ($expandableRow) => {
+        expect($expandableRow).to.have.length(2);
+        expect($expandableRow.eq(0), "first-row").to.have.text(
+          "This resource has not been modified."
+        );
+
+        const $tdElements = $expandableRow.find("td");
+        expect($tdElements.eq(0)).to.have.text("-");
+        expect($tdElements.eq(1)).to.have.text("3");
+        expect($tdElements.eq(2)).to.have.text("+");
+        expect($tdElements.eq(3)).to.have.text("4");
+      }
+    );
+
+    // click on Perform dry run
+    cy.get(".pf-c-button").contains("Perform dry run").click();
+
+    // click on the dropdown containing the different dry-runs
+    cy.get(".pf-c-select__toggle").eq(0).click();
+
+    // expect it to have 2 options.
+    cy.get('[aria-label="ReportList"]').find("li").should("have.length", 2);
+
+    // go back to Home.
+    cy.visit("/console/");
   });
 });
