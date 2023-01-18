@@ -104,7 +104,6 @@ export const LineChart: React.FC<LineChartProps> = ({
         <ChartAxis
           tickLabelComponent={
             <StyledChartLabel
-              tickLength={timestamps.length}
               dx={({ index }) => (index == timestamps.length - 1 ? -20 : 0)}
             />
           }
@@ -201,15 +200,13 @@ export const LineChart: React.FC<LineChartProps> = ({
   );
 };
 
-interface StyledChartLabel extends ChartLabelProps {
-  tickLength: number;
-}
-const StyledChartLabel = styled(ChartLabel)<StyledChartLabel>`
-  ${({ index, tickLength }) => {
+const StyledChartLabel = styled(ChartLabel)<ChartLabelProps>`
+  ${({ index }) => {
     return css`
-      ${index !== 0 && index !== tickLength - 1
-        ? "visibility: hidden !important"
-        : ""}
+      tspan {
+        font-size: 16px !important;
+        ${(index as number) % 2 === 1 ? "visibility: hidden !important" : ""}
+      }
     `;
   }}
 `;
