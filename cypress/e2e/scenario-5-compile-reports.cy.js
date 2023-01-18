@@ -72,20 +72,73 @@ describe("5 Compile reports", () => {
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
 
     // go to compile reports page
+    cy.get(".pf-c-nav__link").contains("Compile Reports").click();
 
-    // expect it to have no items shown in the table
+    // expect it to have 1 item shown in the table
+    cy.get("tbody").should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(1);
+      expect($rows.eq(0), "top-row-message").to.contain(
+        "Recompile model to export service definition"
+      );
+      expect($rows.eq(0), "top-row-status").to.contain("success");
+    });
+
     // click on recompile button
+    cy.get("button").contains("Recompile").click();
+
     // expect row to be added in table
-    // await end of compilation
-    // expect it to be success
+    cy.get("tbody").should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(2);
+      expect($rows.eq(0), "top-row-message").to.contain(
+        "Compile triggered from the console"
+      );
+      expect($rows.eq(0), "top-row-status").to.contain("queued");
+    });
+
+    // await end of compilation and expect it to be success
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows.eq(0), "top-row-message").to.contain(
+        "Compile triggered from the console"
+      );
+      expect($rows.eq(0), "top-row-status").to.contain("success");
+    });
+
     // click on show details
+    cy.get("button").contains("Show Details").eq(0).click();
+
     // Expect to be redirected to compile details page
-    // Expect the Status to have three green icons
+    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
+
     // Expect message to be : Compile triggered from the console
+    cy.get(".pf-c-description-list__group")
+      .eq(3)
+      .should("contain", "Compile triggered from the console");
+
     // Expect to have no environment variables
-    // Expect to have 5 stages in collapsibles
+    cy.get(".pf-c-code-block__content").should("have.text", "{}");
+
+    // Expect to have 2 stages in collapsibles
+    cy.get("tbody").should(($rowElements) => {
+      expect($rowElements).to.have.length(2);
+    });
+
     // Click on init stage arrow
+    cy.get(".pf-c-table__toggle").eq(0).click();
+
     // expect to see Command Empty, Return code 0 an output stream and no error stream.
+    cy.get("pf-c-table__expandable-row pf-m-expanded")
+      .find(".pf-c-description-list__group")
+      .should(($rowGroups) => {
+        expect($rowGroups).to.have.length(4);
+
+        expect($rowGroups.eq(0), "Command-row").to.contain("Empty");
+      });
     // note: The output stream is using uuids which can't be used to validate an assertion. We will assume this is also thoroughly tested on the BE. We will assert that there is an output.
     // Go back to report page by clicking on breadcrumb
     // Expect to still see one Compile report in table.
