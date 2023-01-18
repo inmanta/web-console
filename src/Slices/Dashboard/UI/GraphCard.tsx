@@ -95,7 +95,7 @@ export const GraphCard: React.FC<GraphCardProps> = ({
     }
   }, [metrics, isStacked]);
   return (
-    <StyledCard id={`trend-card-${metrics.name}`} component="div" isRounded>
+    <Card id={`trend-card-${metrics.name}`} component="div" isRounded>
       <CardHeader>
         <Flex
           direction={{ default: "column" }}
@@ -131,13 +131,9 @@ export const GraphCard: React.FC<GraphCardProps> = ({
           />
         )}
       </CardBody>
-    </StyledCard>
+    </Card>
   );
 };
-
-const StyledCard = styled(Card)`
-  max-width: 1300px;
-`;
 const StyledDescription = styled.span`
   color: var(--pf-global--Color--200);
 `;
