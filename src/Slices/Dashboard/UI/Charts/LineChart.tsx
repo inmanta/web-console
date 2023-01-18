@@ -12,6 +12,7 @@ import {
   ChartLabel,
   ChartLabelProps,
   ChartScatter,
+  ChartLegend,
 } from "@patternfly/react-charts";
 import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/interfaces";
@@ -73,10 +74,14 @@ export const LineChart: React.FC<LineChartProps> = ({
         containerComponent={
           <CursorVoronoiContainer
             cursorDimension="x"
-            labels={({ datum }) => `${datum.y !== null ? datum.y : "no data"}`}
+            labels={({ datum }) =>
+              !datum.childName.includes("scatter-")
+                ? `${datum.y !== null ? datum.y : "no data"}`
+                : null
+            }
             labelComponent={
               <ChartLegendTooltip
-                legendData={legendData}
+                legendData={legendData.reverse()}
                 title={(datum) => new Date(datum.x).toUTCString().slice(5, 25)}
                 flyoutWidth={190}
               />
@@ -88,11 +93,17 @@ export const LineChart: React.FC<LineChartProps> = ({
         }
         legendData={isStacked ? legendData : undefined}
         legendPosition="bottom"
+        legendComponent={
+          <ChartLegend
+            borderPadding={{ top: 25 }}
+            style={{ labels: { fontSize: 16 } }}
+          />
+        }
         maxDomain={{ y: max * 1.1 }}
         minDomain={{ y: isStacked || min === 0 ? 0 : min * 0.9 }}
         name={`chart-${title}`}
         padding={{
-          bottom: isStacked ? 70 : 50, // Adjusted to accommodate legend
+          bottom: isStacked ? 85 : 60, // Adjusted to accommodate legend
           left: 60,
           right: 25,
           top: 20,
@@ -105,6 +116,7 @@ export const LineChart: React.FC<LineChartProps> = ({
           tickLabelComponent={
             <StyledChartLabel
               dx={({ index }) => (index == timestamps.length - 1 ? -20 : 0)}
+              lineHeight={1.4}
             />
           }
           tickFormat={(x) => {
@@ -115,7 +127,7 @@ export const LineChart: React.FC<LineChartProps> = ({
         <ChartAxis dependentAxis showGrid label={label} />
         {isStacked ? (
           <ChartStack>
-            {metrics.map(({ name, data }, index) => (
+            {metrics.reverse().map(({ name, data }, index) => (
               <ChartArea
                 data={data.map((value, index) => {
                   return { x: timestamps[index], y: value };
