@@ -37,7 +37,11 @@ export const Page: React.FC = () => {
                 title={words("navigation.orchestrationEngine")}
                 metricType="orchestrator"
               />
-              {/* <Section title={words("navigation.resourceManager")} metricType="resource"/> */}
+              <Section
+                title={words("navigation.resourceManager")}
+                metricType="resource"
+                chartType="stacked"
+              />
             </PageContainer>
           ),
         },

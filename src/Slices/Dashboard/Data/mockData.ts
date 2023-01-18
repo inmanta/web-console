@@ -1,20 +1,6 @@
-interface Metric {
-  "lsm.service_counter": number[];
-  "orchestrator.compile_time": number[];
-  "resource.agent_count": {
-    up: number;
-    down: number;
-    paused: number;
-  }[];
-}
-export interface Metrics {
-  start: string;
-  end: string;
-  timestamps: string[];
-  metrics: Metric;
-}
+import { BackendMetricData } from "../Core/interfaces";
 
-export const mockedMetrics: Metrics = {
+export const mockedMetrics: BackendMetricData = {
   start: "2022-12-19T13:03:17.626169",
   end: "2023-01-09T13:06:35.108092",
   timestamps: [
@@ -32,7 +18,7 @@ export const mockedMetrics: Metrics = {
     ],
     "resource.agent_count": [
       {
-        up: 6,
+        up: 4,
         down: 0,
         paused: 2,
       },
