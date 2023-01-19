@@ -1,4 +1,4 @@
-description: Create Dashboard Sections with the ability to display various charts
+description: Create Section, GraphCard, LineCharts and Area charts components and display them on Dashboard
 issue-nr: 4527
 change-type: path
 destination-branches:
