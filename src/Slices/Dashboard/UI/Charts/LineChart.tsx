@@ -13,11 +13,21 @@ import {
   ChartLabelProps,
   ChartScatter,
   ChartLegend,
+  ChartAxisProps,
 } from "@patternfly/react-charts";
 import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/interfaces";
 import { colorTheme } from "../themes";
-
+interface CustomAxisProps extends ChartAxisProps {
+  style: {
+    ticks: {
+      [key: string]: number;
+    };
+  };
+}
+const CustomAxis = ({ ...props }: CustomAxisProps) => {
+  return <ChartAxis {...props} />;
+};
 export const LineChart: React.FC<LineChartProps> = ({
   title,
   description,
@@ -112,7 +122,7 @@ export const LineChart: React.FC<LineChartProps> = ({
         height={300}
         width={width}
       >
-        <ChartAxis
+        <CustomAxis
           tickLabelComponent={
             <StyledChartLabel
               dx={({ index }) => (index == timestamps.length - 1 ? -20 : 0)}
@@ -123,8 +133,18 @@ export const LineChart: React.FC<LineChartProps> = ({
             const date = new Date(x).toUTCString();
             return date.slice(5, 16) + "\n" + date.slice(17, 25);
           }}
+          style={{
+            ticks: { size: 10 },
+          }}
         />
-        <ChartAxis dependentAxis showGrid label={label} />
+        <ChartAxis
+          dependentAxis
+          showGrid
+          label={label}
+          style={{
+            grid: { stroke: "#E5E4E2" },
+          }}
+        />
         {isStacked ? (
           <ChartStack>
             {metrics.reverse().map(({ name, data }, index) => (
