@@ -21,7 +21,7 @@ export const Section: React.FC<Props> = ({
     <Wrapper>
       <Title
         headingLevel="h2"
-        style={{ paddingBottom: "20px", fontWeight: "700" }}
+        style={{ paddingBottom: "20px", fontWeight: 700 }}
         size="xl"
       >
         {title}
