@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { words } from "@/UI";
-import { MetricName } from "../Core/interfaces";
-import { mockedMetrics } from "../Data/mockData";
+import { MetricName } from "../Core/Domain";
+import { mockedMetrics } from "../Core/Mock";
 import { GraphCard } from "./GraphCard";
 
 describe("Test GraphCard with LineChart component", () => {

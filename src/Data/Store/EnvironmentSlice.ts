@@ -34,6 +34,21 @@ export interface EnvironmentSlice {
       >;
     }
   >;
+  environmentMetricsById: Record<
+    string,
+    RemoteData.Type<Query.Error<"GetMetrics">, Query.Data<"GetMetrics">>
+  >;
+  setEnvironmentMetricsById: Action<
+    EnvironmentSlice,
+    {
+      id: string;
+      value: RemoteData.Type<
+        Query.Error<"GetMetrics">,
+        Query.Data<"GetMetrics">
+      >;
+    }
+  >;
+
   environmentDetailsWithIconById: Record<
     string,
     RemoteData.Type<
@@ -74,6 +89,10 @@ export const environmentSlice: EnvironmentSlice = {
   environmentDetailsById: {},
   setEnvironmentDetailsById: action((state, payload) => {
     state.environmentDetailsById[payload.id] = payload.value;
+  }),
+  environmentMetricsById: {},
+  setEnvironmentMetricsById: action((state, payload) => {
+    state.environmentMetricsById[payload.id] = payload.value;
   }),
   environmentDetailsWithIconById: {},
   setEnvironmentDetailsWithIconById: action((state, payload) => {

@@ -16,7 +16,7 @@ import {
   ChartAxisProps,
 } from "@patternfly/react-charts";
 import styled, { css } from "styled-components";
-import { LineChartProps } from "../../Core/interfaces";
+import { LineChartProps } from "../../Core/Domain";
 import { colorTheme } from "../themes";
 interface CustomAxisProps extends ChartAxisProps {
   style: {

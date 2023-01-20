@@ -1,5 +1,5 @@
 export type MetricName =
-  | "lsm.service_counter"
+  | "lsm.service_count"
   | "lsm.service_instance_count"
   | "orchestrator.compile_time"
   | "orchestrator.compile_waiting_time"
@@ -38,12 +38,26 @@ export interface LineChartProps {
 }
 
 export interface BackendMetric {
-  "lsm.service_counter": (number | null)[];
+  "lsm.service_count": (number | null)[];
   "orchestrator.compile_time": (number | null)[];
+  "orchestrator.compile_waiting_time": (number | null)[];
+  "orchestrator.compile_rate": (number | null)[];
   "resource.agent_count": {
     up: number | null;
     down: number | null;
-    paused: number | null;
+    paused?: number | null;
+  }[];
+  "resource.resource_count": {
+    skipped?: number;
+    deploying?: number;
+    undefined?: number;
+    available?: number;
+    cancelled?: number;
+    skipped_for_undefined?: number;
+    unavailable?: number;
+    dry?: number;
+    failed?: number;
+    deployed?: number;
   }[];
 }
 export interface BackendMetricData {

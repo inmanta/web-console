@@ -16,7 +16,7 @@ import {
   Metric,
   MetricName,
   StackedMetric,
-} from "../Core/interfaces";
+} from "../Core/Domain";
 import { LineChart } from "./Charts/LineChart";
 import { colorTheme } from "./themes";
 

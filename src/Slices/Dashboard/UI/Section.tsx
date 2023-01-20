@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, FlexItem, Title } from "@patternfly/react-core";
 import styled from "styled-components";
-import { mockedMetrics } from "../Data/mockData";
+import { mockedMetrics } from "../Core/Mock";
 import { GraphCard } from "./GraphCard";
 interface Props {
   title: string;

@@ -257,9 +257,9 @@ const dict = {
    * Dashboard
    */
   "dashboard.title": (envName: string) => `Dashboard | ${envName}`,
-  "dashboard.lsm.service_counter.title": "Service Counter",
-  "dashboard.lsm.service_counter.description": "The Number of service types",
-  "dashboard.lsm.service_counter.label.x": "Number of Services [#]",
+  "dashboard.lsm.service_count.title": "Service Counter",
+  "dashboard.lsm.service_count.description": "The Number of service types",
+  "dashboard.lsm.service_count.label.x": "Number of Services [#]",
   "dashboard.lsm.service_instance_count.title": "Service Instances",
   "dashboard.lsm.service_instance_count.description":
     "The number of service instances over time (grouped by state label)",
