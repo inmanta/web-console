@@ -129,74 +129,297 @@ describe("5 Compile reports", () => {
     });
 
     // Click on init stage arrow
-    cy.get(".pf-c-table__toggle").eq(0).click();
+    cy.get("#expand-toggle0").click();
 
     // expect to see Command Empty, Return code 0 an output stream and no error stream.
-    cy.get("pf-c-table__expandable-row pf-m-expanded")
+    cy.get(".pf-c-table__expandable-row.pf-m-expanded")
       .find(".pf-c-description-list__group")
       .should(($rowGroups) => {
         expect($rowGroups).to.have.length(4);
 
         expect($rowGroups.eq(0), "Command-row").to.contain("Empty");
+        expect($rowGroups.eq(1), "Return-code-row").to.contain("0");
+        expect($rowGroups.eq(2), "Output-stream-row").to.contain(
+          "Using extra environment variables during compile"
+        );
       });
-    // note: The output stream is using uuids which can't be used to validate an assertion. We will assume this is also thoroughly tested on the BE. We will assert that there is an output.
-    // Go back to report page by clicking on breadcrumb
-    // Expect to still see one Compile report in table.
   });
 
   it("5.2 Compile after adding a Service instance", () => {
-    // Go to Service Catalog
+    // go to home page
+    cy.visit("/console/");
+
+    // click on test environment card
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
     // Click on Show Inventory on basic service
+    cy.get("#basic-service").contains("Show inventory").click();
+    cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+
     // Add instance
-    // Submit form
+    cy.get("#add-instance-button").click();
+    cy.get("#ip_r1").type("1.2.3.4");
+    cy.get("#interface_r1_name").type("eth0");
+    cy.get("#address_r1").type("1.2.3.5");
+    cy.get("#vlan_id_r1").type("1");
+    cy.get("#ip_r2").type("1.2.2.1");
+    cy.get("#interface_r2_name").type("interface-vlan");
+    cy.get("#address_r2").type("1.2.2.3");
+    cy.get("#vlan_id_r2").type("2");
+    cy.get("#service_id").type("0001");
+    cy.get("#name").type("basic-service");
+    cy.get("button").contains("Confirm").click();
+
+    cy.get(".pf-c-chart").should("be.visible");
+
     // Go to compiled Reports page
-    // Expect one row to be having the message:
-    // Recompile model because state transition (validate)
-    // Expect two rows to be having the message:
-    // Recompile model because state transition
+    cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+
     // Expect all compiles to be succesful
+    cy.get("tbody", { timeout: 60000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(5);
+
+      // Expect latest row to be having the message: Recompile model because state transition
+      expect($rows.eq(0), "top-row-message").to.contain(
+        "Recompile model because state transition"
+      );
+      expect($rows.eq(1), "second-row-message").to.contain(
+        "Recompile model because state transition"
+      );
+      expect($rows.eq(2), "third-row-message").to.contain(
+        "Recompile model because state transition (validate)"
+      );
+      expect($rows.eq(0), "top-row-status").to.contain("success");
+      expect($rows.eq(1), "second-row-status").to.contain("success");
+      expect($rows.eq(2), "third-row-status").to.contain("success");
+      expect($rows.eq(3), "fourth-row-status").to.contain("success");
+      expect($rows.eq(4), "fifth-row-status").to.contain("success");
+    });
+
     // click on Show Details on top row
+    cy.get("button").contains("Show Details").eq(0).click();
+
+    // Expect to be redirected to compile details page
+    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
+
     // Expect trigger to be lsm_export
-    // Expect environment variables to be
+    cy.get(".pf-c-description-list__group")
+      .eq(4)
+      .should("contain", "lsm_export");
+
+    // Expect environment variables inmanta_model_state: active
+    cy.get("pre")
+      .eq(0)
+      .should("contain", "active")
+      .and("contain", "inmanta_model_state");
   });
 
   it("5.3 Compile after adding a rejected Service Instance", () => {
-    // Go to Service Catalog
+    // go to home page
+    cy.visit("/console/");
+
+    // click on test environment card
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
     // Click on Show Inventory on basic-service
+    cy.get("#basic-service").contains("Show inventory").click();
+
     // Add Instance
+    cy.get("#add-instance-button").click();
+    cy.get("#ip_r1").type("1.2.3.4");
+    cy.get("#interface_r1_name").type("eth0");
+    cy.get("#address_r1").type("1.2.3.5");
+    cy.get("#vlan_id_r1").type("1");
+    cy.get("#ip_r2").type("1.2.2.1");
+    cy.get("#interface_r2_name").type("interface-vlan");
+    cy.get("#address_r2").type("1.2.2.3");
+    cy.get("#vlan_id_r2").type("2");
+    cy.get("#service_id").type("0001");
+    cy.get("#name").type("basic-service2");
+    cy.get("button").contains("Confirm").click();
+
     // Expect to see a rejected service instance in the table
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find(".pf-c-table__expandable-row");
+
+      expect($rows).to.have.length(2);
+
+      expect($rows.eq(0), "top-row-status").to.contain("rejected");
+    });
+
     // Go to the compile report page
+    cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+
     // expect the last compile to be failed.
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(6);
+
+      // Expect one row to be having the message: Recompile model because state transition (validate)
+      expect($rows.eq(0), "top-row-message").to.contain(
+        "Recompile model because state transition (validate)"
+      );
+      expect($rows.eq(0), "top-row-status").to.contain("failed");
+    });
+
     // Click on Show details on last compile
+    cy.get("button").contains("Show Details").eq(0).click();
+
+    // Expect to be redirected to compile details page
+    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
+
     // Expect trigger to be lsm
-    // Expect Icon under Completed text to be a red exclamation icon
+    cy.get(".pf-c-description-list__group").eq(4).should("contain", "lsm");
+
     // Expect Error Type : inmanta.ast.AttributeException
+    cy.get(".pf-c-description-list__description")
+      .eq(6)
+      .should("contain", "inmanta.ast.AttributeException");
   });
 
   it("5.4 Remove rejected instance should fix compile", () => {
-    // Go back to Service Catalog
-    // click on basic-service Show Inventory
+    // go to home page
+    cy.visit("/console/");
+
+    // click on test environment card
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
+    // Click on Show Inventory on basic-service
+    cy.get("#basic-service").contains("Show inventory").click();
+
     // Open rejected instance row
+    cy.get("#expand-toggle0").click();
+
     // delete instance
+    cy.get(".pf-c-description-list", { timeout: 60000 })
+      .contains("Delete")
+      .click();
+
     // confirm modal
+    cy.get(".pf-c-form__actions").contains("Yes").click();
+
     // expect resource to be deleted
+    cy.get(".pf-c-table__toggle", { timeout: 25000 }).should("have.length", 1);
+
     // go back to Compile Reports
+    cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+
     // Expect no new compiles to be visible. The last compile report is a failed one.
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(6);
+
+      // Expect one row to be having the message: Recompile model because state transition (validate)
+      expect($rows.eq(0), "top-row-message").to.contain(
+        "Recompile model because state transition (validate)"
+      );
+      expect($rows.eq(0), "top-row-status").to.contain("failed");
+    });
+
     // Click on recompile button
+    cy.get("button").contains("Recompile").click();
+
     // Expect the new compile to be sucessful.
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(7);
+
+      // Expect one row to be having the message: Recompile model because state transition (validate)
+      expect($rows.eq(0), "top-row-message").to.contain(
+        "Compile triggered from the console"
+      );
+      expect($rows.eq(0), "top-row-status").to.contain("success");
+    });
   });
 
   it("5.5 Filter based on status", () => {
+    // go to home page
+    cy.visit("/console/");
+
+    // click on test environment card
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
+    // Go to the compile report page
+    cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+
     // Click on filter dropdown
+    cy.get(".pf-c-select").eq(1).click();
+
     // select failed
+    cy.get("button").contains("failed").click();
+
     // expect only one row to be visible now in the table
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(1);
+
+      // Expect one row to be having the message: Recompile model because state transition (validate)
+      expect($rows.eq(0), "top-row-message").to.contain(
+        "Recompile model because state transition (validate)"
+      );
+      expect($rows.eq(0), "top-row-status").to.contain("failed");
+    });
+
     // click on clear all filters
-    // expect to have the original lenght of the table (10 items)
+    cy.get(".pf-c-toolbar__item").find("button").eq(6).click();
+
+    // expect to have the original lenght of the table
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(7);
+    });
   });
 
-  it("5.5 Filter based on status", () => {
+  it("5.6 Pagination", () => {
+    // go to home page
+    cy.visit("/console/");
+
+    // click on test environment card
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
+    // Go to the compile report page
+    cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+
     // click on pagination
+    cy.get('[aria-label="Page Size Selector dropdown"]').click();
     // select 5
+    cy.get(".pf-c-dropdown__menu-item").contains("5").click();
+
     // expect only 5 rows to be visible now
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(5);
+    });
+
+    // next page
+    cy.get('[aria-label="Next"]').click();
+
+    // expect only 2 rows to be visible now
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(2);
+    });
+
+    // click on pagination
+    cy.get('[aria-label="Page Size Selector dropdown"]').click();
+
+    // select 10
+    cy.get(".pf-c-dropdown__menu-item").contains("10").click();
+
+    // expect 7 rows to be visible now again
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
+      const $rows = $tableBody.find("tr");
+
+      expect($rows).to.have.length(7);
+    });
   });
 });
