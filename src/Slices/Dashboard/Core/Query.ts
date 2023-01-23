@@ -2,6 +2,8 @@ import { BackendMetricData } from "./Domain";
 
 export interface Query {
   kind: "GetMetrics";
+  startDate: string;
+  endDate: string;
 }
 
 export interface Manifest {

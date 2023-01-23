@@ -1,21 +1,19 @@
 import { identity } from "lodash-es";
-import { ApiHelper, Scheduler, StateHelper } from "@/Core";
+import { ApiHelper, StateHelperWithEnv } from "@/Core";
 import { QueryManager } from "../Helpers";
 
-export function GetMetricsContinuousQueryManager(
+export function GetMetricsQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelper<"GetMetrics">,
-  scheduler: Scheduler
+  stateHelper: StateHelperWithEnv<"GetMetrics">
 ) {
-  return QueryManager.ContinuousWithEnv<"GetMetrics">(
+  return QueryManager.OneTimeWithEnv<"GetMetrics">(
     apiHelper,
     stateHelper,
-    scheduler,
-    ({ kind }) => kind,
-    () => [],
+    ({ startDate, endDate }, environment) => [startDate, endDate, environment],
     "GetMetrics",
-    () =>
-      `/lsm/v2/metrics/?metrics=lsm.service_count&metrics=orchestrator.compile_time&metrics=orchestrator.compile_waiting_time&metrics=orchestrator.compile_rate&metrics=resource.agent_count&metrics=resource.resource_count&start_interval=2023-01-13T08%3A23%3A24.290Z&end_interval=2023-01-20T08%3A23%3A24.290Z&nb_datapoints=14`,
+    ({ startDate, endDate }) => {
+      return `/api/v2/metrics?metrics=lsm.service_count&metrics=orchestrator.compile_time&metrics=orchestrator.compile_waiting_time&metrics=orchestrator.compile_rate&metrics=resource.agent_count&metrics=resource.resource_count&start_interval=${startDate}&end_interval=${endDate}&nb_datapoints=15`;
+    },
     identity
   );
 }

@@ -1,5 +1,7 @@
 export interface GetMetrics {
   kind: "GetMetrics";
+  startDate: string;
+  endDate: string;
 }
 
 export interface GetMetricsManifest {

@@ -8,11 +8,26 @@ export type MetricName =
   | "resource.resource_count";
 export interface Metric {
   name: string;
-  data: number[];
+  data: (number | null)[];
 }
 export interface StackedMetric {
   name: string;
-  data: { down: number; paused: number; up: number }[];
+  data: (
+    | { down: number; paused: number; up: number }
+    | {
+        available: number;
+        cancelled: number;
+        deployed: number;
+        deploying: number;
+        dry: number;
+        failed: number;
+        skipped: number;
+        skipped_for_undefined: number;
+        unavailable: number;
+        undefined: number;
+      }
+    | null
+  )[];
 }
 export interface LegendData {
   name: string;
@@ -33,7 +48,7 @@ export interface LineChartProps {
   legendData: LegendData[];
   timestamps: string[];
   metrics: Metric[];
-  minMax: number[];
+  max: number;
   isStacked?: boolean;
 }
 

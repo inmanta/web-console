@@ -27,40 +27,38 @@ export const GraphCard: React.FC<GraphCardProps> = ({
 }) => {
   const [chartState, setChartState] = useState<Metric[]>([]);
   const [legendDataState, setLegendDataState] = useState<LegendData[]>([]);
-  const [minMax, setMinMax] = useState<number[]>([]);
+  const [max, setMax] = useState<number>(0);
 
   useEffect(() => {
     if (isStacked) {
-      const tempCharState: Metric[] = [
-        {
-          name: "down",
-          data: [],
-        },
-        {
-          name: "paused",
-          data: [],
-        },
-        {
-          name: "up",
-          data: [],
-        },
-      ];
+      const tempCharState: Metric[] = [];
+      let max = 0;
       const { data } = metrics as StackedMetric;
-      data.map(({ down, paused, up }) => {
-        tempCharState[0].data.push(down);
-        tempCharState[1].data.push(paused);
-        tempCharState[2].data.push(up);
-      });
-      const dataValuesOnly = tempCharState.map((object) => object.data);
-      const tempMinMax = dataValuesOnly[0]
-        .map(
-          (value, index) =>
-            value + dataValuesOnly[1][index] + dataValuesOnly[2][index]
-        )
-        .sort((a, b) => a - b);
+      const base = data.find((object) => object !== null);
+      if (base !== undefined && base !== null) {
+        const keys = Object.keys(base);
+        keys.map((key) => {
+          tempCharState.push({
+            name: key,
+            data: [],
+          });
+        });
+        data.map((object) => {
+          let tempMax = 0;
+          keys.forEach((key, index) => {
+            tempMax += object === null ? 0 : object[key];
+            tempCharState[index].data.push(
+              object === null ? null : object[key]
+            );
+          });
+          if (max < tempMax) {
+            max = tempMax;
+          }
+        });
+      }
 
       setChartState(tempCharState);
-      setMinMax(tempMinMax);
+      setMax(max);
       setLegendDataState(
         tempCharState.map(({ name }) => {
           return {
@@ -77,7 +75,12 @@ export const GraphCard: React.FC<GraphCardProps> = ({
       );
     } else {
       setChartState([metrics as Metric]);
-      setMinMax((metrics as Metric).data.flat().sort((a, b) => a - b));
+      setMax(
+        (metrics as Metric).data
+          .flat()
+          .map((value) => (value !== null ? value : 0))
+          .sort((a, b) => a - b)[(metrics as Metric).data.flat().length - 1]
+      );
       setLegendDataState([
         {
           childName: metrics.name,
@@ -127,7 +130,7 @@ export const GraphCard: React.FC<GraphCardProps> = ({
             legendData={legendDataState}
             timestamps={timestamps}
             metrics={chartState}
-            minMax={minMax}
+            max={max}
           />
         )}
       </CardBody>

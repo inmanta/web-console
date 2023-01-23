@@ -1,20 +1,16 @@
 import React from "react";
 import { Flex, FlexItem, Title } from "@patternfly/react-core";
 import styled from "styled-components";
-import { mockedMetrics } from "../Core/Mock";
+import { BackendMetricData } from "../Core/Domain";
 import { GraphCard } from "./GraphCard";
 interface Props {
   title: string;
   metricType: "lsm" | "orchestrator" | "resource";
-  chartType?: "line" | "stacked";
+  metrics: BackendMetricData;
 }
 
-export const Section: React.FC<Props> = ({
-  title,
-  metricType,
-  chartType = "line",
-}) => {
-  const availableKey = Object.keys(mockedMetrics.metrics).find((key) =>
+export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
+  const availableKeys = Object.keys(metrics.metrics).filter((key) =>
     key.includes(metricType)
   );
   return (
@@ -30,16 +26,23 @@ export const Section: React.FC<Props> = ({
         direction={{ default: "column" }}
         spaceItems={{ default: "spaceItemsXl" }}
       >
-        <FlexItem fullWidth={{ default: "fullWidth" }}>
-          <GraphCard
-            isStacked={chartType === "stacked"}
-            timestamps={mockedMetrics.timestamps}
-            metrics={{
-              name: availableKey as string,
-              data: mockedMetrics.metrics[availableKey as string],
-            }}
-          />
-        </FlexItem>
+        {availableKeys.map((key, index) => (
+          <FlexItem
+            fullWidth={{ default: "fullWidth" }}
+            key={`flex-card${key}-${index}`}
+          >
+            <GraphCard
+              isStacked={
+                key.includes("resource_count") || key.includes("agent_count")
+              }
+              timestamps={metrics.timestamps}
+              metrics={{
+                name: key as string,
+                data: metrics.metrics[key as string],
+              }}
+            />
+          </FlexItem>
+        ))}
       </Flex>
     </Wrapper>
   );

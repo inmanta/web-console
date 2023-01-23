@@ -90,7 +90,7 @@ import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,
 } from "@S/ServiceInstanceHistory/Data";
-import { GetMetricsContinuousQueryManager } from "../Managers/GetMetrics";
+import { GetMetricsQueryManager } from "../Managers/GetMetrics";
 import { GetMetricsStateHelper } from "../Managers/GetMetrics/StateHelper";
 
 export class QueryManagerResolver implements ManagerResolver<QueryManager> {
@@ -131,11 +131,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         GetServerStatusStateHelper(this.store),
         this.slowScheduler
       ),
-      GetMetricsContinuousQueryManager(
-        this.apiHelper,
-        GetMetricsStateHelper(this.store),
-        this.slowScheduler
-      ),
+      GetMetricsQueryManager(this.apiHelper, GetMetricsStateHelper(this.store)),
       GetEnvironmentSettingsQueryManager(
         this.apiHelper,
         GetEnvironmentSettingsStateHelper(this.store)

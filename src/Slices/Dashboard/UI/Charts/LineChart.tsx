@@ -4,7 +4,6 @@ import {
   ChartAxis,
   ChartGroup,
   ChartLine,
-  ChartThemeColor,
   ChartLegendTooltip,
   createContainer,
   ChartStack,
@@ -35,7 +34,7 @@ export const LineChart: React.FC<LineChartProps> = ({
   legendData,
   timestamps,
   metrics,
-  minMax,
+  max,
   isStacked = false,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -43,21 +42,6 @@ export const LineChart: React.FC<LineChartProps> = ({
 
   // Note: Container order is important
   const CursorVoronoiContainer = createContainer("voronoi", "cursor");
-  const min = Math.floor(minMax[0]);
-  const max = Math.ceil(minMax[minMax.length - 1]);
-
-  const convertScatterToStacked: (
-    stack: number,
-    group: number,
-    value: number | null
-  ) => number | null = (stack, group, value) => {
-    if (value == null) return null;
-    let sumOfStackedValues = 0;
-    for (let iterator = 0; iterator < stack; iterator++) {
-      sumOfStackedValues += metrics[iterator].data[group];
-    }
-    return sumOfStackedValues + value;
-  };
 
   useEffect(() => {
     function handleResize() {
@@ -92,8 +76,8 @@ export const LineChart: React.FC<LineChartProps> = ({
             labelComponent={
               <ChartLegendTooltip
                 legendData={legendData.reverse()}
-                title={(datum) => new Date(datum.x).toUTCString().slice(5, 25)}
-                flyoutWidth={190}
+                title={(datum) => new Date(datum.x).toLocaleString()}
+                flyoutWidth={250}
               />
             }
             mouseFollowTooltips
@@ -109,8 +93,8 @@ export const LineChart: React.FC<LineChartProps> = ({
             style={{ labels: { fontSize: 16 } }}
           />
         }
-        maxDomain={{ y: max * 1.1 }}
-        minDomain={{ y: isStacked || min === 0 ? 0 : min * 0.9 }}
+        maxDomain={{ y: max === 0 ? 5 : max * 1.1 }}
+        minDomain={{ y: 0 }}
         name={`chart-${title}`}
         padding={{
           bottom: isStacked ? 85 : 60, // Adjusted to accommodate legend
@@ -118,7 +102,6 @@ export const LineChart: React.FC<LineChartProps> = ({
           right: 25,
           top: 20,
         }}
-        themeColor={ChartThemeColor.multiUnordered}
         height={300}
         width={width}
       >
@@ -130,8 +113,8 @@ export const LineChart: React.FC<LineChartProps> = ({
             />
           }
           tickFormat={(x) => {
-            const date = new Date(x).toUTCString();
-            return date.slice(5, 16) + "\n" + date.slice(17, 25);
+            const date = new Date(x).toLocaleString().split(",");
+            return date[0] + "\n" + date[1];
           }}
           style={{
             ticks: { size: 10 },
@@ -177,7 +160,9 @@ export const LineChart: React.FC<LineChartProps> = ({
                   return {
                     x: timestamps[index],
                     y:
-                      value % 1 === 0 ? value : Math.round(value * 1000) / 1000,
+                      value === null || value % 1 === 0
+                        ? value
+                        : Math.round(value * 1000) / 1000,
                   };
                 })}
                 name={name}
@@ -194,39 +179,35 @@ export const LineChart: React.FC<LineChartProps> = ({
             ))}
           </ChartGroup>
         )}
-        <ChartGroup>
-          {metrics.map(({ name, data }, metricIndex) => (
-            <ChartScatter
-              data={data.map((value, index) => {
-                return {
-                  x: timestamps[index],
-                  y:
-                    value === null
-                      ? null
-                      : value % 1 === 0
-                      ? convertScatterToStacked(metricIndex, index, value)
-                      : Math.round(
-                          (convertScatterToStacked(
-                            metricIndex,
-                            index,
-                            value
-                          ) as number) * 1000
-                        ) / 1000,
-                };
-              })}
-              name={"scatter-" + name}
-              key={"scatter-" + name + metricIndex}
-              style={{
-                data: {
-                  fill:
-                    colorTheme[name] === undefined
-                      ? colorTheme.default
-                      : colorTheme[name],
-                },
-              }}
-            />
-          ))}
-        </ChartGroup>
+        {!isStacked && (
+          <ChartGroup>
+            {metrics.map(({ name, data }, metricIndex) => (
+              <ChartScatter
+                data={data.map((value, index) => {
+                  return {
+                    x: timestamps[index],
+                    y:
+                      value === null
+                        ? null
+                        : value % 1 === 0
+                        ? value
+                        : Math.round(value * 1000) / 1000,
+                  };
+                })}
+                name={"scatter-" + name}
+                key={"scatter-" + name + metricIndex}
+                style={{
+                  data: {
+                    fill:
+                      colorTheme[name] === undefined
+                        ? colorTheme.default
+                        : colorTheme[name],
+                  },
+                }}
+              />
+            ))}
+          </ChartGroup>
+        )}
       </Chart>
     </div>
   );
