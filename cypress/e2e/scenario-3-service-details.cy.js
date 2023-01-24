@@ -440,7 +440,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
-    cy.get("button").contains("Delete").click();
+    cy.get("button", { timeout: 30000 }).contains("Delete").click();
 
     // Expect modal to confirm action and cancel it
     cy.get("#cancel").click();
@@ -449,7 +449,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
-    cy.get("button").contains("Delete").click();
+    cy.get("button", { timeout: 20000 }).contains("Delete").click();
 
     // Confirm modal
     cy.get("#submit").click();
@@ -466,16 +466,19 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#expand-toggle0").click();
 
     // Click on delete instance
-    cy.get("button").contains("Delete").eq(0).click();
+    cy.get("button", { timeout: 20000 }).contains("Delete").eq(0).click();
 
     // Confirm deletion
     cy.get("#submit").click();
+
+    // Close first row
+    cy.get("#expand-toggle0").click();
 
     // Open second row
     cy.get("#expand-toggle1").click();
 
     // Click on delete instance
-    cy.get("button").contains("Delete").eq(1).click();
+    cy.get("button", { timeout: 20000 }).contains("Delete").eq(0).click();
 
     // Confirm deletion
     cy.get("#submit").click();
