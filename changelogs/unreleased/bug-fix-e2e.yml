@@ -1,0 +1,7 @@
+change-type: patch
+description: 'bug-fix broken test because of change in test orchestrator'
+destination-branches:
+- master
+- iso6
+- iso5
+sections: {}
