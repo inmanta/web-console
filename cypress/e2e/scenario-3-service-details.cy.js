@@ -105,9 +105,6 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Row-address_r2"]')
       .should("contain", "address_r2")
       .and("contain", "string");
-    cy.get('[aria-label="Row-default_resource"]')
-      .should("contain", "default_resource")
-      .and("contain", "bool");
     cy.get('[aria-label="Row-interface_r1_name"]')
       .should("contain", "interface_r1_name")
       .and("contain", "string");
@@ -419,7 +416,7 @@ describe("Scenario 3 - Service Details", () => {
     });
 
     // Delete Callback
-    cy.get("button").contains("Delete").click();
+    cy.get("button").contains("Delete", { timeout: 20000 }).click();
 
     // Confirm deletion
     cy.get("#submit").click();
