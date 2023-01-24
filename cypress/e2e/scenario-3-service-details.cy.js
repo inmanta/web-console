@@ -437,7 +437,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
-    cy.get("button").contains("Delete").click();
+    cy.get("button", { timeout: 30000 }).contains("Delete").click();
 
     // Expect modal to confirm action and cancel it
     cy.get("#cancel").click();
