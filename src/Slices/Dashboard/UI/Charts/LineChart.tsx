@@ -42,7 +42,12 @@ export const LineChart: React.FC<LineChartProps> = ({
 
   // Note: Container order is important
   const CursorVoronoiContainer = createContainer("voronoi", "cursor");
-
+  const formatValueForChart = (value: null | number) => {
+    if (value === null) {
+      return null;
+    }
+    return value % 1 === 0 ? value : Math.round(value * 1000) / 1000;
+  };
   useEffect(() => {
     function handleResize() {
       // Set window width to state if width from ref is available
@@ -159,10 +164,7 @@ export const LineChart: React.FC<LineChartProps> = ({
                 data={data.map((value, index) => {
                   return {
                     x: timestamps[index],
-                    y:
-                      value === null || value % 1 === 0
-                        ? value
-                        : Math.round(value * 1000) / 1000,
+                    y: formatValueForChart(value),
                   };
                 })}
                 name={name}
@@ -186,12 +188,7 @@ export const LineChart: React.FC<LineChartProps> = ({
                 data={data.map((value, index) => {
                   return {
                     x: timestamps[index],
-                    y:
-                      value === null
-                        ? null
-                        : value % 1 === 0
-                        ? value
-                        : Math.round(value * 1000) / 1000,
+                    y: formatValueForChart(value),
                   };
                 })}
                 name={"scatter-" + name}
