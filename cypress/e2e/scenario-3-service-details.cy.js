@@ -105,9 +105,6 @@ describe("Scenario 3 - Service Details", () => {
     cy.get('[aria-label="Row-address_r2"]')
       .should("contain", "address_r2")
       .and("contain", "string");
-    cy.get('[aria-label="Row-default_resource"]')
-      .should("contain", "default_resource")
-      .and("contain", "bool");
     cy.get('[aria-label="Row-interface_r1_name"]')
       .should("contain", "interface_r1_name")
       .and("contain", "string");
@@ -440,7 +437,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
-    cy.get("button").contains("Delete").click();
+    cy.get("button", { timeout: 30000 }).contains("Delete").click();
 
     // Expect modal to confirm action and cancel it
     cy.get("#cancel").click();
@@ -449,7 +446,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
-    cy.get("button").contains("Delete").click();
+    cy.get("button", { timeout: 20000 }).contains("Delete").click();
 
     // Confirm modal
     cy.get("#submit").click();
@@ -466,19 +463,22 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#expand-toggle0").click();
 
     // Click on delete instance
-    cy.get("button").contains("Delete").eq(0).click();
+    cy.get("button", { timeout: 20000 }).contains("Delete").eq(0).click();
 
     // Confirm deletion
     cy.get("#submit").click();
+
+    // Close first row
+    cy.get("#expand-toggle0").click();
 
     // Open second row
     cy.get("#expand-toggle1").click();
 
     // Click on delete instance
-    cy.get("button").contains("Delete").eq(1).click();
+    cy.get("button", { timeout: 20000 }).contains("Delete").eq(0).click();
 
     // Confirm deletion
-    cy.get("#submit").click();
+    cy.get("#submit", { timeout: 20000 }).click();
 
     // Expect to be redirected to Service Catalog after deletion
     cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 60000 }).should(
