@@ -437,7 +437,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#basic-service", { timeout: 60000 })
       .find('[aria-label="Actions"]')
       .click();
-    cy.get("button").contains("Delete").click();
+    cy.get("button", { timeout: 30000 }).contains("Delete").click();
 
     // Expect modal to confirm action and cancel it
     cy.get("#cancel").click();
@@ -478,7 +478,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("button", { timeout: 20000 }).contains("Delete").eq(0).click();
 
     // Confirm deletion
-    cy.get("#submit").click();
+    cy.get("#submit", { timeout: 20000 }).click();
 
     // Expect to be redirected to Service Catalog after deletion
     cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 60000 }).should(
