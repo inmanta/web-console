@@ -1,5 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
+import { Button } from "@patternfly/react-core";
 import moment from "moment";
+import styled from "styled-components";
 import { RemoteData } from "@/Core";
 import { ErrorView, LoadingView } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -18,13 +20,11 @@ export const Dashboard: React.FC = () => {
     endDate,
   });
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStartDate(moment().add(-1, "days").toISOString());
-      setEndDate(moment().toISOString());
-    }, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  const updateCharts = () => {
+    setStartDate(moment().add(-1, "days").toISOString());
+    setEndDate(moment().toISOString());
+  };
+
   return (
     <>
       {RemoteData.fold(
@@ -39,7 +39,12 @@ export const Dashboard: React.FC = () => {
             />
           ),
           success: (metrics) => (
-            <div aria-label="Metrics-Success">
+            <Wrapper aria-label="Metrics-Success">
+              <RefreshWrapper>
+                <Button variant="secondary" onClick={updateCharts}>
+                  {words("dashboard.refresh")}
+                </Button>
+              </RefreshWrapper>
               <Section
                 title={words("navigation.lifecycleServiceManager")}
                 metricType="lsm"
@@ -55,7 +60,7 @@ export const Dashboard: React.FC = () => {
                 metricType="resource"
                 metrics={metrics}
               />
-            </div>
+            </Wrapper>
           ),
         },
         data
@@ -63,3 +68,10 @@ export const Dashboard: React.FC = () => {
     </>
   );
 };
+const Wrapper = styled.div`
+  position: relative;
+`;
+const RefreshWrapper = styled.div`
+  position: absolute;
+  right: 0;
+`;

@@ -60,6 +60,6 @@ export const GraphCard: React.FC<GraphCardProps> = ({
     </Card>
   );
 };
-const StyledDescription = styled.span`
+export const StyledDescription = styled.span`
   color: var(--pf-global--Color--200);
 `;

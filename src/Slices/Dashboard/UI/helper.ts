@@ -1,4 +1,5 @@
-import { Metric, StackedMetric } from "../Core/Domain";
+import { words } from "@/UI";
+import { Metric, MetricName, StackedMetric } from "../Core/Domain";
 import { colorTheme } from "./themes";
 
 export const formatLegendData = (metrics, isStacked) => {
@@ -20,9 +21,9 @@ export const formatLegendData = (metrics, isStacked) => {
     return [
       {
         childName: metrics.name,
-        name:
-          metrics.name.split(".")[1].charAt(0).toUpperCase() +
-          metrics.name.split(".")[1].slice(1),
+        name: words(`dashboard.${metrics.name as MetricName}.label.x`).split(
+          "["
+        )[0],
         symbol: {
           fill:
             colorTheme[metrics.name] === undefined

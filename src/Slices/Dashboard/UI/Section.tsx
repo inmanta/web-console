@@ -3,6 +3,7 @@ import { Flex, FlexItem, Title } from "@patternfly/react-core";
 import styled from "styled-components";
 import { BackendMetricData } from "../Core/Domain";
 import { GraphCard } from "./GraphCard";
+import { NumericCard } from "./NumericCard";
 interface Props {
   title: string;
   metricType: "lsm" | "orchestrator" | "resource";
@@ -26,23 +27,34 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
         direction={{ default: "column" }}
         spaceItems={{ default: "spaceItemsXl" }}
       >
-        {availableKeys.map((key, index) => (
-          <FlexItem
-            fullWidth={{ default: "fullWidth" }}
-            key={`flex-card${key}-${index}`}
-          >
-            <GraphCard
-              isStacked={
-                key.includes("resource_count") || key.includes("agent_count")
-              }
-              timestamps={metrics.timestamps}
-              metrics={{
-                name: key as string,
-                data: metrics.metrics[key as string],
-              }}
-            />
-          </FlexItem>
-        ))}
+        {availableKeys.map((key, index) =>
+          key.includes("service_count") ? (
+            <FlexItem key={`flex-card${key}-${index}`}>
+              <NumericCard
+                metrics={{
+                  name: key as string,
+                  data: metrics.metrics[key as string],
+                }}
+              />
+            </FlexItem>
+          ) : (
+            <FlexItem
+              fullWidth={{ default: "fullWidth" }}
+              key={`flex-card${key}-${index}`}
+            >
+              <GraphCard
+                isStacked={
+                  key.includes("resource_count") || key.includes("agent_count")
+                }
+                timestamps={metrics.timestamps}
+                metrics={{
+                  name: key as string,
+                  data: metrics.metrics[key as string],
+                }}
+              />
+            </FlexItem>
+          )
+        )}
       </Flex>
     </Wrapper>
   );

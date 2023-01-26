@@ -257,6 +257,7 @@ const dict = {
    * Dashboard
    */
   "dashboard.title": (envName: string) => `Dashboard | ${envName}`,
+  "dashboard.refresh": "Refresh",
   "dashboard.lsm.service_count.title": "Service Counter",
   "dashboard.lsm.service_count.description": "The Number of service types",
   "dashboard.lsm.service_count.label.x": "Number of Services [#]",

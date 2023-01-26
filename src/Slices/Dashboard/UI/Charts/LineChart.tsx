@@ -138,7 +138,10 @@ export const LineChart: React.FC<LineChartProps> = ({
             {metrics.reverse().map(({ name, data }, index) => (
               <ChartArea
                 data={data.map((value, index) => {
-                  return { x: timestamps[index], y: value };
+                  return {
+                    x: timestamps[index],
+                    y: formatValueForChart(value),
+                  };
                 })}
                 name={name}
                 key={name + index}
