@@ -1,0 +1,6 @@
+change-type: patch
+description: 'aligning branches'
+destination-branches:
+- master
+- iso6
+- iso5
