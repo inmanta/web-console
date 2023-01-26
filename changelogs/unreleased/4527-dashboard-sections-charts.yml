@@ -1,6 +1,6 @@
-description: Create Section, GraphCard, LineCharts and Area charts components and display them on Dashboard
+description: Create base components for Dashboard, endpoint QueryManager to acquire metrics and serve them to Dashboard and finally components with given Manager 
 issue-nr: 4527
-change-type: path
+change-type: patch
 destination-branches:
   - master
   - iso6
