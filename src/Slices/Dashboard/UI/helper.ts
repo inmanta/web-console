@@ -65,8 +65,7 @@ export const formatMetricsToStacked = (
   } else {
     tempCharState = [metrics as Metric];
     max = (metrics as Metric).data
-      .flat()
-      .map((value) => (value !== null ? value : 0))
+      .flatMap((value) => (value !== null ? value : 0))
       .sort((a, b) => a - b)[(metrics as Metric).data.flat().length - 1];
   }
   return [tempCharState, max];
