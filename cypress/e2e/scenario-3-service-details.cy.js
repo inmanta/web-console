@@ -327,7 +327,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("button").contains("Show Details").click();
 
     // Expect to be redirected on Service Details: basic-service
-    cy.get("h1")
+    cy.get("h1", { timeout: 20000 })
       .contains("Service Details: basic-service")
       .should("to.be.visible");
 
@@ -463,7 +463,11 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#expand-toggle0").click();
 
     // Click on delete instance
-    cy.get("button", { timeout: 20000 }).contains("Delete").eq(0).click();
+    cy.get(".pf-c-table__expandable-row-content", { timeout: 20000 })
+      .eq(0)
+      .find("button")
+      .contains("Delete")
+      .click();
 
     // Confirm deletion
     cy.get("#submit").click();
@@ -475,7 +479,11 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#expand-toggle1").click();
 
     // Click on delete instance
-    cy.get("button", { timeout: 20000 }).contains("Delete").eq(0).click();
+    cy.get(".pf-c-table__expandable-row-content", { timeout: 20000 })
+      .eq(1)
+      .find("button")
+      .contains("Delete")
+      .click();
 
     // Confirm deletion
     cy.get("#submit", { timeout: 20000 }).click();
