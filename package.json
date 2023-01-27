@@ -45,7 +45,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.5",
     "@babel/plugin-transform-typescript": "^7.20.7",
-    "@testing-library/dom": "^8.19.0",
+    "@testing-library/dom": "^8.20.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
@@ -70,7 +70,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.2.2",
-    "cypress": "^12.3.0",
+    "cypress": "^12.4.0",
     "cypress-file-upload": "^5.0.8",
     "cypress-multi-reporters": "^1.6.2",
     "dotenv-webpack": "^8.0.1",
