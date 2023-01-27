@@ -1,0 +1,8 @@
+description: Delete Environment Selector, adjust routing to include Dashboard correctly, fix e2e accordingly to new flow of routes
+issue-nr: 4531
+change-type: patch
+destination-branches:
+  - master
+  - iso6
+sections: 
+  feature: "{{description}}"

@@ -87,6 +87,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     ).as("GetServiceInventory");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
     // make sure the call to get inventory has been executed
@@ -118,6 +119,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     // Go from Home page to Service Inventory of Basic-service
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
@@ -156,6 +158,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
   it("2.1.3 Edit previously created instance", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     // Expect to find one badge on the basic-service row.
     cy.get("#basic-service")
       .get('[aria-label="Number of instances by label"]')
@@ -227,6 +230,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     ).as("GetServiceInventory");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
     // expand first row
