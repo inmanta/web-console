@@ -1,0 +1,30 @@
+import {
+  chart_color_black_200,
+  chart_color_black_400,
+  chart_color_blue_300,
+  chart_color_blue_500,
+  chart_color_gold_300,
+  chart_color_gold_400,
+  chart_color_green_100,
+  chart_color_green_300,
+  chart_color_red_300,
+  chart_color_red_400,
+  chart_theme_purple_ColorScale_300,
+} from "@patternfly/react-tokens";
+
+export const colorTheme = {
+  default: chart_color_green_300.var,
+  down: chart_color_red_300.var,
+  paused: chart_color_gold_300.var,
+  up: chart_color_green_300.var,
+  deploying: chart_color_gold_400.var,
+  dry: chart_color_black_200.var,
+  unavailable: chart_color_black_400.var,
+  deployed: chart_color_green_300.var,
+  undefined: chart_theme_purple_ColorScale_300.var,
+  available: chart_color_green_100.var,
+  skipped_for_undefined: chart_color_blue_300.var,
+  skipped: chart_color_blue_500.var,
+  failed: chart_color_red_300.var,
+  cancelled: chart_color_red_400.var,
+};

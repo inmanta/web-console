@@ -3,6 +3,7 @@ import { RemoteData } from "@/Core";
 import { ErrorView, LoadingView, PageContainer } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Dashboard } from "./Dashboard";
 
 export const Page: React.FC = () => {
   const { queryResolver, environmentHandler } = useContext(DependencyContext);
@@ -29,7 +30,10 @@ export const Page: React.FC = () => {
           success: (value) => (
             <PageContainer
               title={words("dashboard.title")(value.name)}
-            ></PageContainer>
+              aria-label="Dashboard-Success"
+            >
+              <Dashboard />
+            </PageContainer>
           ),
         },
         envData

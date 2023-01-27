@@ -4,6 +4,8 @@ import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import { getStoreInstance, QueryResolverImpl } from "@/Data";
+import { GetMetricsQueryManager } from "@/Data/Managers/GetMetrics";
+import { GetMetricsStateHelper } from "@/Data/Managers/GetMetrics/StateHelper";
 import { EnvironmentDetailsOneTimeQueryManager } from "@/Slices/Settings/Data/GetEnvironmentDetails";
 import {
   DeferredApiHelper,
@@ -22,22 +24,29 @@ function setup() {
     store,
     apiHelper
   );
+  const metricsQueryManager = GetMetricsQueryManager(
+    apiHelper,
+    GetMetricsStateHelper(store)
+  );
 
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([environmentDetailsQueryManager])
+    new DynamicQueryManagerResolver([
+      environmentDetailsQueryManager,
+      metricsQueryManager,
+    ])
   );
   const component = (
     <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-        }}
-      >
-        <StoreProvider store={store}>
+      <StoreProvider store={store}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+          }}
+        >
           <Page />
-        </StoreProvider>
-      </DependencyProvider>
+        </DependencyProvider>
+      </StoreProvider>
     </MemoryRouter>
   );
 
@@ -72,7 +81,6 @@ test("Home View shows success table", async () => {
       data: EnvironmentDetails.a,
     })
   );
-
   expect(
     await screen.findByText(words("dashboard.title")(EnvironmentDetails.a.name))
   ).toBeInTheDocument();

@@ -257,6 +257,34 @@ const dict = {
    * Dashboard
    */
   "dashboard.title": (envName: string) => `Dashboard | ${envName}`,
+  "dashboard.refresh": "Refresh",
+  "dashboard.lsm.service_count.title": "Service Counter",
+  "dashboard.lsm.service_count.description": "The Number of service types",
+  "dashboard.lsm.service_count.label.x": "Number of Services [#]",
+  "dashboard.lsm.service_instance_count.title": "Service Instances",
+  "dashboard.lsm.service_instance_count.description":
+    "The number of service instances over time (grouped by state label)",
+  "dashboard.lsm.service_instance_count.label.x": "Number of units [#]",
+  "dashboard.orchestrator.compile_time.title": "Compile Time",
+  "dashboard.orchestrator.compile_time.description":
+    "The time (in seconds) required to compile the model",
+  "dashboard.orchestrator.compile_time.label.x": "Compile time [s]",
+  "dashboard.orchestrator.compile_waiting_time.title": "Compile Waiting Time",
+  "dashboard.orchestrator.compile_waiting_time.description":
+    "The amount of time (in seconds) a compile request spends waiting in the compile queue before being executed",
+  "dashboard.orchestrator.compile_waiting_time.label.x": "Waiting Time [s]",
+  "dashboard.orchestrator.compile_rate.title": "Compile Rate",
+  "dashboard.orchestrator.compile_rate.description":
+    "The rate of compile requests over time (number of compiles per hour)",
+  "dashboard.orchestrator.compile_rate.label.x": "Rate of Compiles [#/h]",
+  "dashboard.resource.agent_count.title": "Agents Count",
+  "dashboard.resource.agent_count.description":
+    "The number of agents (grouped by agent state)",
+  "dashboard.resource.agent_count.label.x": "Number of Agents [#]",
+  "dashboard.resource.resource_count.title": "Resources Count",
+  "dashboard.resource.resource_count.description":
+    "The number of resources grouped (by resource state)",
+  "dashboard.resource.resource_count.label.x": "Number of Resources [#]",
 
   /**
    * Environment controls
