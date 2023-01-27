@@ -38,8 +38,14 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
         </Flex>
       </CardHeader>
       <CardBody>
-        <Text style={{ fontWeight: 500, fontSize: 60, paddingLeft: 100 }}>
-          {displayedValue === null ? "no data" : displayedValue}
+        <Text
+          style={{
+            fontWeight: 500,
+            fontSize: displayedValue === null ? 40 : 60,
+            paddingLeft: displayedValue === null ? 0 : 100,
+          }}
+        >
+          {displayedValue === null ? "no data" : Math.floor(displayedValue)}
         </Text>
       </CardBody>
     </StyledCard>
