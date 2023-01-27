@@ -28,7 +28,6 @@ export const Provider: React.FC = () => {
     };
     environmentHandler.set(navigate, newLocation, item.environmentId);
   };
-  console.log(selected);
   return (
     <EnvSelectorWithData
       environments={data}
