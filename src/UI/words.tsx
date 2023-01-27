@@ -268,7 +268,7 @@ const dict = {
   "dashboard.orchestrator.compile_time.title": "Compile Time",
   "dashboard.orchestrator.compile_time.description":
     "The time (in seconds) required to compile the model",
-  "dashboard.orchestrator.compile_time.label.x": "Comiple time [s]",
+  "dashboard.orchestrator.compile_time.label.x": "Compile time [s]",
   "dashboard.orchestrator.compile_waiting_time.title": "Compile Waiting Time",
   "dashboard.orchestrator.compile_waiting_time.description":
     "The amount of time (in seconds) a compile request spends waiting in the compile queue before being executed",
