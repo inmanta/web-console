@@ -177,7 +177,7 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
     cy.visit("/console/");
   });
 
-  it("2.1.4 Delete previously created instance", () => {
+  it("2.3.4 Delete previously created instance", () => {
     cy.visit("/console/");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();

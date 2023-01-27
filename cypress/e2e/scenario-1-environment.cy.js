@@ -216,6 +216,7 @@ describe("Environment", () => {
     cy.get("button").contains("Cancel").click();
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
 
     cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 20000 }).should(
       "to.be.visible"
