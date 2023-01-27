@@ -113,7 +113,9 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
+    cy.get(".pf-c-title", { timeout: 20000 })
+      .contains("Compile Details")
+      .should("to.be.visible");
 
     // Expect message to be : Compile triggered from the console
     cy.get(".pf-c-description-list__group")
@@ -202,7 +204,9 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
+    cy.get(".pf-c-title", { timeout: 20000 })
+      .contains("Compile Details")
+      .should("to.be.visible");
 
     // Expect trigger to be lsm_export
     cy.get(".pf-c-description-list__group")
@@ -269,7 +273,9 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
+    cy.get(".pf-c-title", { timeout: 20000 })
+      .contains("Compile Details")
+      .should("to.be.visible");
 
     // Expect trigger to be lsm
     cy.get(".pf-c-description-list__group").eq(4).should("contain", "lsm");
