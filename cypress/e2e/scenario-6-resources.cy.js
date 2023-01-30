@@ -115,25 +115,124 @@ describe("Scenario 6 : Resources", () => {
     cy.get(".pf-c-nav__link").contains("Resources").click();
 
     // Expect two rows to be added to the table
-
     // lsm::LifecycleTransfer
     // frontend_model::TestResource
+    cy.get('[aria-label="Resource Table Row"]', { timeout: 30000 }).should(
+      "have.length",
+      2
+    );
+    cy.get('[aria-label="Resource Table Row"]')
+      .eq(0)
+      .should("contain", "frontend_model::TestResource");
+    cy.get('[aria-label="Resource Table Row"]')
+      .eq(1)
+      .should("contain", "lsm::LifecycleTransfer");
+
     // click on frontend_model::TestResource Show Details
+    cy.get('[aria-label="Resource Table Row"]')
+      .eq(0)
+      .find("button")
+      .contains("Show Details")
+      .click();
+
     // Expect to find this information in table :
+    cy.get(".pf-c-description-list__group")
+      .eq(0)
+      .should("contain", "name")
+      .and("contain", "default-0001");
+    cy.get(".pf-c-description-list__group")
+      .eq(1)
+      .should("contain", "purge_on_delete")
+      .and("contain", "false");
+    cy.get(".pf-c-description-list__group")
+      .eq(2)
+      .should("contain", "purged")
+      .and("contain", "false");
+    cy.get(".pf-c-description-list__group")
+      .eq(3)
+      .should("contain", "send_event")
+      .and("contain", "true");
+    cy.get(".pf-c-description-list__group")
+      .eq(4)
+      .should("contain", "should_deploy_fail")
+      .and("contain", "false");
+
     // Click on Requires tab
+    cy.get("button").contains("Requires").click();
+
     // Expect it to be empty
+    cy.get('[aria-label="ResourceRequires-Empty"]').should(
+      "contain",
+      "No requirements found"
+    );
+
     // Click on history tab
+    cy.get("button").contains("History").click();
+
     // Expect One row to be visible
+    cy.get('[aria-label="Resource History Table Row"]').should(
+      "have.length",
+      1
+    );
+
     // Expect row to have 0 dependencies
+    cy.get('[data-label="Dependencies"]').should("contain", "0");
+
     // click row open
+    cy.get('[aria-label="Details"]').click();
+
     // Expect content to be the same as on main Desired State tab
+    cy.get(".pf-c-description-list__group")
+      .eq(2)
+      .should("contain", "name")
+      .and("contain", "default-0001");
+    cy.get(".pf-c-description-list__group")
+      .eq(3)
+      .should("contain", "purge_on_delete")
+      .and("contain", "false");
+    cy.get(".pf-c-description-list__group")
+      .eq(4)
+      .should("contain", "purged")
+      .and("contain", "false");
+    cy.get(".pf-c-description-list__group")
+      .eq(5)
+      .should("contain", "send_event")
+      .and("contain", "true");
+    cy.get(".pf-c-description-list__group")
+      .eq(6)
+      .should("contain", "should_deploy_fail")
+      .and("contain", "false");
+
     // Expect requires tab to have no requirements
+    cy.get(".pf-c-tabs__list")
+      .eq(1)
+      .find("button")
+      .contains("Requires")
+      .click();
+    cy.get('[aria-label="Requires"]').find("tbody").should("to.be.empty");
+
     // Go to logs tab
-    // Expect it to have :
-    // 8 log messages
+    cy.get("button").contains("Logs").click();
+
+    // Expect it to have : 9 log messages
+    cy.get('[aria-label="ResourceLogRow"]', { timeout: 30000 }).should(
+      "have.length",
+      9
+    );
+
     // Expect last log message to be "Setting deployed due to known good status"
+    cy.get('[aria-label="ResourceLogRow"]')
+      .eq(0)
+      .should("contain", "Setting deployed due to known good status");
+
     // Click top message open
+    cy.get('[aria-label="Details"]').eq(0).click();
+
     // Expect to find "Setting deployed due to known good status" displayed in expansion.
+    cy.get(".pf-c-description-list__text").should(
+      "contain",
+      "Setting deployed due to known good status"
+    );
   });
   it("6.3 Log message filtering", () => {
     // Filter on "INFO" for Minimal Log Level
