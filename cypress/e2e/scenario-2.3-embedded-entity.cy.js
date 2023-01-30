@@ -82,6 +82,7 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
     cy.visit("/console/");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#embedded-entity-service").contains("Show inventory").click();
 
     // make sure the call to get inventory has been executed
@@ -121,6 +122,7 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
     // Go from Home page to Service Inventory of Embedded-service
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     // Expect to find one badge on the embedded-service row.
     cy.get("#embedded-entity-service")
       .get('[aria-label="Number of instances by label"]')
@@ -147,6 +149,7 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
   it("2.3.3 - Show history view", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     // Expect to find one badge on the embedded-service row.
     cy.get("#embedded-entity-service")
       .get('[aria-label="Number of instances by label"]')
@@ -174,10 +177,11 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
     cy.visit("/console/");
   });
 
-  it("2.1.4 Delete previously created instance", () => {
+  it("2.3.4 Delete previously created instance", () => {
     cy.visit("/console/");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#embedded-entity-service").contains("Show inventory").click();
 
     // expand first row

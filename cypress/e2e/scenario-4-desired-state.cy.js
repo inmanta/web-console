@@ -70,6 +70,7 @@ describe("Scenario 4 Desired State", () => {
     // Go from Home page to Service Inventory of Basic-service
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 

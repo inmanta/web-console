@@ -80,6 +80,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
   it("2.2.1 Add Instance on parent-service", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#parent-service").contains("Show inventory").click();
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
     // Add an instance and fill form
@@ -143,6 +144,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     cy.visit("/console/");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#parent-service").contains("Show inventory").click();
 
     // open row from element

@@ -204,6 +204,7 @@ describe("Environment", () => {
     //Fill The form and submit
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 20000 }).should(
       "to.be.visible"
     );
@@ -216,6 +217,7 @@ describe("Environment", () => {
     cy.get("button").contains("Cancel").click();
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
 
     cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 20000 }).should(
       "to.be.visible"
@@ -232,9 +234,10 @@ describe("Environment", () => {
       .click();
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+    cy.get("button").contains("Update Service Catalog").click();
     cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
     //Update service catalog to restore instances
-    cy.get("button").contains("Update Service Catalog").click();
     cy.get("button").contains("Yes").click();
     // exceeded timeout needed is to await continous call to return services
     cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 30000 }).should(

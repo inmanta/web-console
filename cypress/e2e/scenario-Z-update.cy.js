@@ -71,6 +71,7 @@ describe("Scenario 2.4 Service Catalog - update", () => {
     cy.visit("/console/");
     //open Environment
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
     //click update button then cancel popup
     cy.get("button").contains("Update Service Catalog").click();
