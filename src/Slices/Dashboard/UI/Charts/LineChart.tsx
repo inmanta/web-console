@@ -29,7 +29,6 @@ const CustomAxis = ({ ...props }: CustomAxisProps) => {
 };
 export const LineChart: React.FC<LineChartProps> = ({
   title,
-  description,
   label,
   legendData,
   timestamps,
@@ -69,7 +68,6 @@ export const LineChart: React.FC<LineChartProps> = ({
     <div ref={ref}>
       <Chart
         ariaDesc={title}
-        ariaTitle={description}
         containerComponent={
           <CursorVoronoiContainer
             cursorDimension="x"
@@ -95,19 +93,22 @@ export const LineChart: React.FC<LineChartProps> = ({
         legendComponent={
           <ChartLegend
             borderPadding={{ top: 25 }}
-            style={{ labels: { fontSize: 16 } }}
+            style={{ labels: { fontSize: 16, height: 230 } }}
+            orientation="horizontal"
+            responsive={true}
           />
         }
+        legendAllowWrap={true}
         maxDomain={{ y: max === 0 ? 5 : max * 1.1 }}
         minDomain={{ y: 0 }}
         name={`chart-${title}`}
         padding={{
-          bottom: isStacked ? 85 : 60, // Adjusted to accommodate legend
-          left: 60,
-          right: 25,
+          bottom: isStacked ? 125 : 60, // Adjusted to accommodate legend
+          left: 100,
+          right: 45,
           top: 20,
         }}
-        height={300}
+        height={isStacked ? 350 : 300}
         width={width}
       >
         <CustomAxis
@@ -128,7 +129,10 @@ export const LineChart: React.FC<LineChartProps> = ({
         <ChartAxis
           dependentAxis
           showGrid
+          fixLabelOverlap
+          axisLabelComponent={<ChartLabel dy={-30} />}
           label={label}
+          offsetX={100}
           style={{
             grid: { stroke: "#E5E4E2" },
           }}
