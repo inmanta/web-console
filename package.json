@@ -70,7 +70,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.2.2",
-    "cypress": "^12.4.0",
+    "cypress": "^12.4.1",
     "cypress-file-upload": "^5.0.8",
     "cypress-multi-reporters": "^1.6.2",
     "dotenv-webpack": "^8.0.1",
