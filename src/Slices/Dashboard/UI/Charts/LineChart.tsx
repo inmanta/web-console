@@ -93,7 +93,7 @@ export const LineChart: React.FC<LineChartProps> = ({
         legendComponent={
           <ChartLegend
             borderPadding={{ top: 25 }}
-            style={{ labels: { fontSize: 16, height: 230 } }}
+            style={{ labels: { fontSize: 16 } }}
             orientation="horizontal"
             responsive={true}
           />
