@@ -68,8 +68,7 @@ export const LineChart: React.FC<LineChartProps> = ({
   return (
     <div ref={ref}>
       <Chart
-        ariaDesc={title}
-        ariaTitle={description}
+        ariaDesc={description}
         containerComponent={
           <CursorVoronoiContainer
             cursorDimension="x"
@@ -223,3 +222,9 @@ const StyledChartLabel = styled(ChartLabel)<ChartLabelProps>`
     `;
   }}
 `;
+
+// const StyledChart = styled(Chart)`
+//   #axis-axisLabel-0 {
+
+//   }
+// `

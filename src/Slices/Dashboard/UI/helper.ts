@@ -55,18 +55,49 @@ export const formatMetricsToStacked = (
         let tempMax = 0;
         keys.forEach((key, index) => {
           tempMax += object === null ? 0 : object[key];
-          tempCharState[index].data.push(object === null ? null : object[key]);
+          tempCharState[index].data.push(
+            object === null ? null : Math.floor(object[key])
+          );
         });
         if (max < tempMax) {
           max = tempMax;
         }
       });
+      tempCharState = tempCharState.map((metric) => formatValues(metric));
     }
   } else {
-    tempCharState = [metrics as Metric];
+    tempCharState = [
+      metrics.name.includes("service_count")
+        ? formatValues(metrics as Metric)
+        : (metrics as Metric),
+    ];
     max = (metrics as Metric).data
       .flatMap((value) => (value !== null ? value : 0))
       .sort((a, b) => a - b)[(metrics as Metric).data.flat().length - 1];
   }
   return [tempCharState, max];
+};
+
+const formatValues = (metrics: Metric) => {
+  const newMetrics = metrics.data.map((data, index) => {
+    if (data == null) {
+      return null;
+    }
+    if (index !== 0) {
+      for (let i = index - 1; i >= 0; i--) {
+        if (metrics.data[i - 1] !== null) {
+          if (data > (metrics.data[i] as number)) {
+            return Math.ceil(data);
+          } else {
+            return Math.floor(data);
+          }
+        }
+      }
+    }
+    return Math.round(data);
+  });
+  return {
+    ...metrics,
+    data: newMetrics,
+  };
 };
