@@ -16,6 +16,7 @@ import {
 } from "@patternfly/react-charts";
 import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/Domain";
+import { interpolateMetrics } from "../helper";
 import { colorTheme } from "../themes";
 interface CustomAxisProps extends ChartAxisProps {
   style: {
@@ -47,6 +48,16 @@ export const LineChart: React.FC<LineChartProps> = ({
     }
     return value % 1 === 0 ? value : Math.round(value * 1000) / 1000;
   };
+  const chooseWhichLabelTouse = (datum) => {
+    if (
+      (isStacked && !datum.childName.includes("scatter-")) ||
+      (!isStacked && datum.childName.includes("scatter-"))
+    ) {
+      return `${datum.y !== null ? datum.y : "no data"}`;
+    } else {
+      return null;
+    }
+  };
   useEffect(() => {
     function handleResize() {
       // Set window width to state if width from ref is available
@@ -71,11 +82,7 @@ export const LineChart: React.FC<LineChartProps> = ({
         containerComponent={
           <CursorVoronoiContainer
             cursorDimension="x"
-            labels={({ datum }) =>
-              !datum.childName.includes("scatter-")
-                ? `${datum.y !== null ? datum.y : "no data"}`
-                : null
-            }
+            labels={({ datum }) => chooseWhichLabelTouse(datum)}
             labelComponent={
               <ChartLegendTooltip
                 legendData={legendData.reverse()}
@@ -168,7 +175,7 @@ export const LineChart: React.FC<LineChartProps> = ({
           <ChartGroup>
             {metrics.map(({ name, data }, index) => (
               <ChartLine
-                data={data.map((value, index) => {
+                data={interpolateMetrics(data).map((value, index) => {
                   return {
                     x: timestamps[index],
                     y: formatValueForChart(value),

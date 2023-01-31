@@ -88,3 +88,45 @@ const formatValues = (metrics: Metric) => {
     data: newMetrics,
   };
 };
+
+/**
+ * Replace null values between two numbers(no matter how many nulls they are in between,
+ * as long as there are some boundaries) with interpolation on line between those two numbers.
+ *
+ * @param metrics
+ * @returns metrics with interpolated values instead null values
+ */
+export const interpolateMetrics = (metrics: (number | null)[]) => {
+  const newMetric: (number | null)[] = [];
+  let nextNumber = 0;
+
+  metrics.forEach((value, index) => {
+    if (nextNumber === -1) {
+      newMetric.push(null);
+    }
+    if (value === null && (index === 0 || index === metrics.length - 1)) {
+      newMetric.push(null);
+    } else if (value === null && newMetric[index - 1] === null) {
+      newMetric.push(null);
+    } else if (value === null && newMetric[index - 1] !== null) {
+      if (metrics[index + 1] !== null) {
+        newMetric.push(lerp(newMetric[index - 1], metrics[index + 1], 0.5));
+      } else {
+        nextNumber = metrics.slice(index).findIndex((value) => value !== null);
+        if (nextNumber === -1) {
+          newMetric.push(null);
+        } else {
+          newMetric.push(
+            lerp(newMetric[index - 1], metrics[index + 1], 1 / nextNumber)
+          );
+        }
+      }
+    } else {
+      newMetric.push(value);
+    }
+  });
+
+  return newMetric;
+};
+
+const lerp = (a, b, amount) => (1 - amount) * a + amount * b;
