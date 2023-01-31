@@ -1,0 +1,6 @@
+change-type: patch
+description: 'bug-fix overlay issue in graphs and remove double tooltip'
+destination-branches:
+- master
+- iso6
+sections: {}
