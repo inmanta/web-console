@@ -61,12 +61,85 @@ export const formatMetricsToStacked = (
           max = tempMax;
         }
       });
+      tempCharState = tempCharState.map((metric) => formatValues(metric));
     }
   } else {
-    tempCharState = [metrics as Metric];
+    tempCharState = [
+      metrics.name.includes("service_count")
+        ? formatValues(metrics as Metric)
+        : (metrics as Metric),
+    ];
     max = (metrics as Metric).data
       .flatMap((value) => (value !== null ? value : 0))
       .sort((a, b) => a - b)[(metrics as Metric).data.flat().length - 1];
   }
   return [tempCharState, max];
 };
+
+const formatValues = (metrics: Metric) => {
+  const newMetrics = metrics.data.map((data, index) => {
+    if (data == null || index === 0) {
+      return null;
+    }
+    if (metrics.data[index - 1] !== null) {
+      if (data > (metrics.data[index - 1] as number)) {
+        return Math.floor(data);
+      } else {
+        return Math.ceil(data);
+      }
+    }
+    return Math.round(data);
+  });
+  return {
+    ...metrics,
+    data: newMetrics,
+  };
+};
+
+/**
+ * Replace null values between two numbers(no matter how many nulls they are in between,
+ * as long as there are some boundaries) with interpolation on line between those two numbers.
+ *
+ * @param metrics
+ * @returns metrics with interpolated values instead null values
+ */
+export const interpolateMetrics = (metrics: (number | null)[]) => {
+  const newMetric: (number | null)[] = [];
+  let nextNumber = 0;
+
+  metrics.forEach((value, index) => {
+    //if there is no non-nullish value from previous iteration then push null as there is no number to interpolato to
+    if (nextNumber === -1) {
+      newMetric.push(null);
+    }
+    //if null value is on the start or end of metrics then there is no value to interpolate (from or to), then push null
+    if (value === null && (index === 0 || index === metrics.length - 1)) {
+      newMetric.push(null);
+      //if null value is null and previous is also null, then push null
+    } else if (value === null && newMetric[index - 1] === null) {
+      newMetric.push(null);
+      //if null and there is a value to interpolate from then look for next non-nullish value
+    } else if (value === null && newMetric[index - 1] !== null) {
+      nextNumber = metrics.slice(index).findIndex((value) => value !== null);
+      //if no number is found then push null
+      if (nextNumber === -1) {
+        newMetric.push(null);
+      } else {
+        //if there is a number, then push interpolated value,
+        newMetric.push(
+          linearInterpolation(
+            newMetric[index - 1], //previous non-nullish value
+            metrics[index + nextNumber], // next non-nullish number,
+            1 / (nextNumber + 1) //fraction of a distance from value before to nextNumber value
+          )
+        );
+      }
+    } else {
+      newMetric.push(value);
+    }
+  });
+
+  return newMetric;
+};
+
+const linearInterpolation = (a, b, amount) => (1 - amount) * a + amount * b;

@@ -11,7 +11,7 @@ import { Section } from "./Section";
 export const Dashboard: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
   const [startDate, setStartDate] = useState(
-    moment().add(-1, "days").toISOString()
+    moment().add(-7, "days").toISOString()
   );
   const [endDate, setEndDate] = useState(moment().toISOString());
   const [data, retry] = queryResolver.useOneTime<"GetMetrics">({

@@ -44,7 +44,9 @@ export const Section: React.FC<Props> = ({ title, metricType, metrics }) => {
             >
               <GraphCard
                 isStacked={
-                  key.includes("resource_count") || key.includes("agent_count")
+                  key.includes("resource_count") ||
+                  key.includes("agent_count") ||
+                  key.includes("service_instance_count")
                 }
                 timestamps={metrics.timestamps}
                 metrics={{
