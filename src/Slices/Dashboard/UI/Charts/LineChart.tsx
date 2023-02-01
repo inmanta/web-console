@@ -48,7 +48,7 @@ export const LineChart: React.FC<LineChartProps> = ({
     }
     return value % 1 === 0 ? value : Math.round(value * 1000) / 1000;
   };
-  const chooseWhichLabelTouse = (datum) => {
+  const chooseWhichLabelToUse = (datum) => {
     if (
       (isStacked && !datum.childName.includes("scatter-")) ||
       (!isStacked && datum.childName.includes("scatter-"))
@@ -74,7 +74,6 @@ export const LineChart: React.FC<LineChartProps> = ({
     // Remove event listener on cleanup
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   return (
     <div ref={ref}>
       <Chart
@@ -82,7 +81,7 @@ export const LineChart: React.FC<LineChartProps> = ({
         containerComponent={
           <CursorVoronoiContainer
             cursorDimension="x"
-            labels={({ datum }) => chooseWhichLabelTouse(datum)}
+            labels={({ datum }) => chooseWhichLabelToUse(datum)}
             labelComponent={
               <ChartLegendTooltip
                 legendData={legendData.reverse()}

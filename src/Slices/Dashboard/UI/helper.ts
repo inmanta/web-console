@@ -108,25 +108,31 @@ export const interpolateMetrics = (metrics: (number | null)[]) => {
   let nextNumber = 0;
 
   metrics.forEach((value, index) => {
+    //if there is no non-nullish value from previous iteration then push null as there is no number to interpolato to
     if (nextNumber === -1) {
       newMetric.push(null);
     }
+    //if null value is on the start or end of metrics then there is no value to interpolate (from or to), then push null
     if (value === null && (index === 0 || index === metrics.length - 1)) {
       newMetric.push(null);
+      //if null value is null and previous is also null, then push null
     } else if (value === null && newMetric[index - 1] === null) {
       newMetric.push(null);
+      //if null and there is a value to interpolate from then look for next non-nullish value
     } else if (value === null && newMetric[index - 1] !== null) {
-      if (metrics[index + 1] !== null) {
-        newMetric.push(lerp(newMetric[index - 1], metrics[index + 1], 0.5));
+      nextNumber = metrics.slice(index).findIndex((value) => value !== null);
+      //if no number is found then push null
+      if (nextNumber === -1) {
+        newMetric.push(null);
       } else {
-        nextNumber = metrics.slice(index).findIndex((value) => value !== null);
-        if (nextNumber === -1) {
-          newMetric.push(null);
-        } else {
-          newMetric.push(
-            lerp(newMetric[index - 1], metrics[index + 1], 1 / nextNumber)
-          );
-        }
+        //if there is a number, then push interpolated value,
+        newMetric.push(
+          linearInterpolation(
+            newMetric[index - 1], //previous non-nullish value
+            metrics[index + nextNumber], // next non-nullish number,
+            1 / (nextNumber + 1) //fraction of a distance from value before to nextNumber value
+          )
+        );
       }
     } else {
       newMetric.push(value);
@@ -136,4 +142,4 @@ export const interpolateMetrics = (metrics: (number | null)[]) => {
   return newMetric;
 };
 
-const lerp = (a, b, amount) => (1 - amount) * a + amount * b;
+const linearInterpolation = (a, b, amount) => (1 - amount) * a + amount * b;
