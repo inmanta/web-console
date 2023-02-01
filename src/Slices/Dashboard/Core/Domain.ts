@@ -57,12 +57,12 @@ export interface BackendMetric {
   "orchestrator.compile_time": (number | null)[];
   "orchestrator.compile_waiting_time": (number | null)[];
   "orchestrator.compile_rate": (number | null)[];
-  "resource.agent_count": {
+  "resource.agent_count": ({
     up: number | null;
     down: number | null;
     paused?: number | null;
-  }[];
-  "resource.resource_count": {
+  } | null)[];
+  "resource.resource_count": ({
     skipped?: number;
     deploying?: number;
     undefined?: number;
@@ -73,7 +73,14 @@ export interface BackendMetric {
     dry?: number;
     failed?: number;
     deployed?: number;
-  }[];
+  } | null)[];
+  "lsm.service_instance_count": ({
+    danger: number;
+    info: number;
+    no_label: number;
+    success: number;
+    warning: number;
+  } | null)[];
 }
 export interface BackendMetricData {
   start: string;

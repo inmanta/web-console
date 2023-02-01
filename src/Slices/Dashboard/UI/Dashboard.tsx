@@ -21,7 +21,7 @@ export const Dashboard: React.FC = () => {
   });
 
   const updateCharts = () => {
-    setStartDate(moment().add(-1, "days").toISOString());
+    setStartDate(moment().add(-7, "days").toISOString());
     setEndDate(moment().toISOString());
   };
 
