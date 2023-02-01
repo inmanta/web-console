@@ -149,7 +149,7 @@ export const LineChart: React.FC<LineChartProps> = ({
               <ChartArea
                 data={data.map((value, index) => {
                   return {
-                    x: timestamps[index],
+                    x: timestamps[index] + "Z",
                     y: formatValueForChart(value),
                   };
                 })}
@@ -176,7 +176,7 @@ export const LineChart: React.FC<LineChartProps> = ({
               <ChartLine
                 data={interpolateMetrics(data).map((value, index) => {
                   return {
-                    x: timestamps[index],
+                    x: timestamps[index] + "Z",
                     y: formatValueForChart(value),
                   };
                 })}
@@ -200,7 +200,7 @@ export const LineChart: React.FC<LineChartProps> = ({
               <ChartScatter
                 data={data.map((value, index) => {
                   return {
-                    x: timestamps[index],
+                    x: timestamps[index] + "Z",
                     y: formatValueForChart(value),
                   };
                 })}
