@@ -77,16 +77,9 @@ export const formatMetricsToStacked = (
 };
 
 const formatValues = (metrics: Metric) => {
-  const newMetrics = metrics.data.map((data, index) => {
-    if (data == null || index === 0) {
+  const newMetrics = metrics.data.map((data) => {
+    if (data == null) {
       return null;
-    }
-    if (metrics.data[index - 1] !== null) {
-      if (data > (metrics.data[index - 1] as number)) {
-        return Math.floor(data);
-      } else {
-        return Math.ceil(data);
-      }
     }
     return Math.round(data);
   });
