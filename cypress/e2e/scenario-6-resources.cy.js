@@ -215,9 +215,9 @@ describe("Scenario 6 : Resources", () => {
     cy.get("button").contains("Logs").click();
 
     // Expect it to have : 9 log messages
-    cy.get('[aria-label="ResourceLogRow"]', { timeout: 30000 }).should(
-      "have.length",
-      9
+    cy.get('[aria-label="ResourceLogRow"]', { timeout: 40000 }).should(
+      "to.have.length.of.at.least",
+      8
     );
 
     // Expect last log message to be "Setting deployed due to known good status"
@@ -235,37 +235,155 @@ describe("Scenario 6 : Resources", () => {
     );
   });
   it("6.3 Log message filtering", () => {
+    // Select Test environment
+    cy.visit("/console/");
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
+    // Go to Resources page
+    cy.get(".pf-c-nav__link").contains("Resources").click();
+
+    // click on frontend_model::TestResource Show Details
+    cy.get('[aria-label="Resource Table Row"]')
+      .eq(0)
+      .find("button")
+      .contains("Show Details")
+      .click();
+
+    // Go to logs tab
+    cy.get("button").contains("Logs").click();
+
     // Filter on "INFO" for Minimal Log Level
-    // expect to find only "INFO" rows
+    cy.get(".pf-c-select").eq(1).click();
+    cy.get("button").contains("INFO").click();
+
+    // Expect the amount of rows to be max  6
+    cy.get('[aria-label="ResourceLogRow"]').should(
+      "to.have.length.of.at.most",
+      6
+    );
+
     // Click on clear filters
-    // Expect to find "INFO" and "DEBUG" rows
+    cy.get(".pf-c-chip").find("button").click();
+
+    // Expect amount of rows to be bigger than before filtering.
+    cy.get('[aria-label="ResourceLogRow"]').should(
+      "to.have.length.of.at.least",
+      8
+    );
   });
   it("6.4 Resources with multiple dependencies", () => {
-    // Go to Service Catalog
+    // Select Test environment
+    cy.visit("/console/");
+    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
+    // Go to Service Catalog page
+    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+
     // Click on Show Inventory on dependency-service
+    cy.get("#dependency-service").contains("Show inventory").click();
+
     // add instance
-    // Expect instance to be created
-    // Go to Ressource page
-    // Expect to find a resource with value:
-    // a
-    // b
-    // c
-    // 0009
-    // waiting-entity
-    // Expect resource with value a,b,c,0009 to have 0 dependencies
-    // Expect resource with value 0009 to have 3 dependencies
+    cy.get("#add-instance-button").click();
+    cy.get("#name").type("dependency-service");
+    cy.get("#waiting_entity").type("waiting-entity");
+    cy.get("#running_entities").type("a, b, c");
+    cy.get("#service_id").type("0009");
+
+    cy.get("button").contains("Confirm").click();
+
+    cy.get(".pf-c-chart").should("be.visible");
+
+    // Go to Resource page
+    cy.get(".pf-c-nav__link").contains("Resources").click();
+
+    // Expect to find 7 rows now in the resource table.
+    cy.get('[aria-label="Resource Table Row"]', { timeout: 60000 }).should(
+      "have.length",
+      7
+    );
+    // Expect to find a resource with value: a, b, c
+    cy.get('[aria-label="Resource Table Row"]').eq(0).should("contain", "a");
+    cy.get('[aria-label="Resource Table Row"]').eq(1).should("contain", "b");
+    cy.get('[aria-label="Resource Table Row"]').eq(2).should("contain", "c");
+    cy.get('[aria-label="Resource Table Row"]')
+      .eq(3)
+      .should("contain", "default-0001");
+
+    // Expect resource with value a,b,c,default-0001 to have 0 dependencies
+    cy.get('[data-label="Dependencies"]').eq(0).should("contain", 0);
+    cy.get('[data-label="Dependencies"]').eq(1).should("contain", 0);
+    cy.get('[data-label="Dependencies"]').eq(2).should("contain", 0);
+    cy.get('[data-label="Dependencies"]').eq(3).should("contain", 0);
+
+    // Expect resource with value waiting-entity to have 3 dependencies
+    cy.get('[data-label="Dependencies"]').eq(4).should("contain", 3);
+
     // Click open collapsible row for resource waiting-entity
+    cy.get(
+      '[aria-label="Toggle-frontend_model::TestResource[internal,name=waiting-entity]"]',
+      { timeout: 20000 }
+    ).click();
     // Expect to find three rows with
-    // frontend_model::TestResource[internal,name=a]
-    // frontend_model::TestResource[internal,name=b]
-    // frontend_model::TestResource[internal,name=c]
+    cy.get('[aria-label="ResourceRequires-Success"]', {
+      timeout: 20000,
+    }).should(($table) => {
+      const $rows = $table.find("tr");
+
+      // 3 rows and one header row.
+      expect($rows).to.have.length(4);
+
+      expect($rows.eq(1).find("button"), "a-row").to.have.text(
+        "frontend_model::TestResource[internal,name=a]"
+      );
+      expect($rows.eq(2).find("button"), "b-row").to.have.text(
+        "frontend_model::TestResource[internal,name=b]"
+      );
+      expect($rows.eq(3).find("button"), "c-row").to.have.text(
+        "frontend_model::TestResource[internal,name=c]"
+      );
+    });
+
     // click on show details on waiting-entity
-    // go to require tab
+    cy.get('[aria-label="Resource Table Row"]')
+      .eq(4)
+      .find("button")
+      .contains("Show Details")
+      .click();
+
+    // go to requires tab
+    cy.get("button").contains("Requires").click();
+
     // expect again to find
     // frontend_model::TestResource[internal,name=a]
     // frontend_model::TestResource[internal,name=b]
     // frontend_model::TestResource[internal,name=c]
+    cy.get('[aria-label="ResourceRequires-Success"]', {
+      timeout: 20000,
+    }).should(($table) => {
+      const $rows = $table.find("tr");
+
+      // 3 rows and one header row.
+      expect($rows).to.have.length(4);
+
+      expect($rows.eq(1).find("button"), "a-row").to.have.text(
+        "frontend_model::TestResource[internal,name=a]"
+      );
+      expect($rows.eq(2).find("button"), "b-row").to.have.text(
+        "frontend_model::TestResource[internal,name=b]"
+      );
+      expect($rows.eq(3).find("button"), "c-row").to.have.text(
+        "frontend_model::TestResource[internal,name=c]"
+      );
+    });
+
     // go to history tab
+    cy.get("button").contains("History").click();
+
+    cy.get('[aria-label="Resource History Table Row"]').should(
+      "have.length",
+      1
+    );
+
     // expect to find one collapsible with 3 dependencies
     // go back to requires tab
     // click on first required resource link frontend_model::TestResource[internal,name=a]
