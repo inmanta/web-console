@@ -385,13 +385,41 @@ describe("Scenario 6 : Resources", () => {
     );
 
     // expect to find one collapsible with 3 dependencies
+    cy.get('[data-label="Dependencies"]').should("contain", "3");
+
     // go back to requires tab
+    cy.get("button").contains("Requires").click();
+
     // click on first required resource link frontend_model::TestResource[internal,name=a]
-    // store url from this page
+    cy.get("button")
+      .contains("frontend_model::TestResource[internal,name=a]")
+      .click();
+
+    // check title from this page, should have the name of the resource
+    cy.get(".pf-c-content")
+      .contains("frontend_model::TestResource[internal,name=a]")
+      .should("to.be.visible");
+
     // go back to Resource page
-    // click open resource with value waiting-entity
+    cy.get(".pf-c-nav__link").contains("Resources").click();
+
+    // click show details on resource with value waiting-entity
+    cy.get('[aria-label="Resource Table Row"]')
+      .eq(4)
+      .find("button")
+      .contains("Show Details")
+      .click();
+
+    cy.get("button").contains("Requires").click();
+
     // click on first resource frontend_model::TestResource[internal,name=a]
-    // Expect to be on the same location as stored url.
-    // go back to home
+    cy.get("button")
+      .contains("frontend_model::TestResource[internal,name=a]")
+      .click();
+
+    // Expect to be on the same page with same title as before.
+    cy.get(".pf-c-content")
+      .contains("frontend_model::TestResource[internal,name=a]")
+      .should("to.be.visible");
   });
 });
