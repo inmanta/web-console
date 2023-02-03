@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Modal } from "@patternfly/react-core";
+import { Button, Modal, Tooltip } from "@patternfly/react-core";
 import { PlayIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -16,9 +16,11 @@ export const ResumeDialog: React.FC = () => {
     });
   return (
     <>
-      <GreenButton icon={<PlayIcon />} onClick={handleModalToggle}>
-        {words("environment.resume.button")}
-      </GreenButton>
+      <Tooltip content={<div>{words("environment.resume.tooltip")}</div>}>
+        <GreenButton icon={<PlayIcon />} onClick={handleModalToggle}>
+          {words("environment.resume.button")}
+        </GreenButton>
+      </Tooltip>
       <Modal
         variant="small"
         title={words("environment.resume.title")}

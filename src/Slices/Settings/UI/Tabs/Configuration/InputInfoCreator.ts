@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { EnvironmentSettings, Maybe } from "@/Core";
 import {
   BooleanDefinition,
@@ -75,7 +76,7 @@ export class InputInfoCreator {
       if (info.initial === undefined && info.value === info.default) {
         return false;
       }
-      return info.value !== info.initial;
+      return !_.isEqual(info.value, info.initial);
     };
 
     switch (definition.type) {

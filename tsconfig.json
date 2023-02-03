@@ -55,7 +55,8 @@
     "compilerOptions": {
       "module": "ES2020",
       "target": "ES2020",
-      "esModuleInterop": true
+      "esModuleInterop": true,
+      "types": ["cypress-file-upload"]
     }
   }
 }

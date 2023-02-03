@@ -16,6 +16,24 @@ interface Link {
   statusIndication: boolean;
 }
 
+export const orchestratorOverview = (
+  routeManager: RouteManager,
+  isEnvPresent: boolean
+): Group => ({
+  id: words("navigation.orchestratorOverview"),
+  title: words("navigation.orchestratorOverview"),
+  links: [
+    {
+      id: "Dashboard",
+      label: routeManager.getRoute("Dashboard").generateLabel(undefined),
+      url: routeManager.getRoute("Dashboard").path,
+      external: false,
+      locked: !isEnvPresent,
+      statusIndication: false,
+    },
+  ],
+});
+
 export const lifecycleServiceManager = (
   routeManager: RouteManager,
   isEnvPresent: boolean

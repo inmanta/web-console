@@ -1,0 +1,8 @@
+description: Create component and navigation for the Dashboard Page
+issue-nr: 4525
+change-type: minor
+destination-branches:
+  - master
+  - iso6
+sections: 
+  feature: "{{description}}"

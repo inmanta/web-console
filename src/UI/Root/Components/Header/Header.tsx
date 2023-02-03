@@ -13,13 +13,18 @@ interface Props {
 }
 
 export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, environmentHandler } = useContext(DependencyContext);
   return (
     <>
       <StyledImage />
       <StyledHeader
         logo={<img src={logo} alt="Inmanta Logo" aria-label="Inmanta Logo" />}
-        logoProps={{ href: routeManager.getUrl("Home", undefined) }}
+        logoProps={{
+          href: noEnv
+            ? routeManager.getUrl("Home", undefined)
+            : routeManager.getUrl("Dashboard", undefined) +
+              `?env=${environmentHandler.useId()}`,
+        }}
         headerTools={<Actions {...{ noEnv, onNotificationsToggle }} />}
         showNavToggle
         topNav={<EnvSelectorWithProvider />}

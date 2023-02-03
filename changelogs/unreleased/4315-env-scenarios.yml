@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Enviroment e2e test scenarios'
+issue-nr: 4315
+destination-branches:
+- master
+- iso5
+- iso6

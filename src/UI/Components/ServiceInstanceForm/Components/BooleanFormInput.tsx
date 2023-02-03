@@ -39,7 +39,7 @@ export const BooleanFormInput: React.FC<Props> = ({
         />
         <Radio
           isChecked={isChecked === false}
-          onChange={handleInputChange}
+          onChange={(event) => handleInputChange(false, event)}
           label={words("false")}
           name={`${attributeName}`}
           id={`${attributeName}-false`}
