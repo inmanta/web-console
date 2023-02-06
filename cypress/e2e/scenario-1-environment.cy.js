@@ -238,7 +238,7 @@ describe("Environment", () => {
     cy.get("button").contains("Update Service Catalog").click();
     cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
     //Update service catalog to restore instances
-    cy.get("button").contains("Yes").click();
+    cy.get("button", { timeout: 30000 }).contains("Yes").click();
     // exceeded timeout needed is to await continous call to return services
     cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 30000 }).should(
       "to.be.visible"
