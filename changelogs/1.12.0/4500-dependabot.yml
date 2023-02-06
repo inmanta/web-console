@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Build(deps): Bump copy-to-clipboard from 3.3.2 to 3.3.3'
+destination-branches:
+- master
+- iso6
+- iso5
+sections: {}

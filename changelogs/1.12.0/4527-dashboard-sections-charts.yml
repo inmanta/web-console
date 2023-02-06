@@ -1,0 +1,8 @@
+description: Create base components for Dashboard, endpoint QueryManager to acquire metrics and serve them to Dashboard and finally components with given Manager 
+issue-nr: 4527
+change-type: patch
+destination-branches:
+  - master
+  - iso6
+sections: 
+  feature: "{{description}}"

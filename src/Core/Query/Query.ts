@@ -61,6 +61,7 @@ import * as GetCompileDetails from "@S/CompileDetails/Core/Query";
 import * as GetCompileReports from "@S/CompileReports/Core/Query";
 import * as GetDryRunReport from "@S/ComplianceCheck/Core/DryRunReportQuery";
 import * as GetDryRuns from "@S/ComplianceCheck/Core/DryRunsQuery";
+import * as GetMetrics from "@S/Dashboard/Core/Query";
 import * as GetDesiredStates from "@S/DesiredState/Core/Query";
 import * as GetDesiredStateDiff from "@S/DesiredStateCompare/Core/Query";
 import * as GetVersionResources from "@S/DesiredStateDetails/Core/Query";
@@ -90,6 +91,7 @@ export type Query =
   | GetInstanceEvents.Query
   | GetInstanceLogs.Query
   | GetInstanceConfig
+  | GetMetrics.Query
   | GetDiagnostics.Query
   | GetProjects.Query
   | GetResources.Query
@@ -137,6 +139,7 @@ interface Manifest {
   GetInstanceLogs: GetInstanceLogs.Manifest;
   GetInstanceConfig: GetInstanceConfigManifest;
   GetDiagnostics: GetDiagnostics.Manifest;
+  GetMetrics: GetMetrics.Manifest;
   GetProjects: GetProjects.Manifest;
   GetServerStatus: GetServerStatusManifest;
   GetResources: GetResources.Manifest;

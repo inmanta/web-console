@@ -8,6 +8,7 @@ import { CompileReportsPage } from "@S/CompileReports/UI";
 import { ComplianceCheckPage } from "@S/ComplianceCheck/UI";
 import { CreateEnvironmentPage } from "@S/CreateEnvironment/UI";
 import { CreateInstancePage } from "@S/CreateInstance/UI";
+import { DashboardPage } from "@S/Dashboard/UI";
 import { DesiredStatePage } from "@S/DesiredState/UI";
 import { DesiredStateComparePage } from "@S/DesiredStateCompare/UI";
 import { DesiredStateDetailsPage } from "@S/DesiredStateDetails/UI";
@@ -50,6 +51,10 @@ export class PrimaryPageManager implements PageManager {
       /**
        * LSM
        */
+      Dashboard: {
+        ...this.routeDictionary.Dashboard,
+        element: <DashboardPage />,
+      },
       Catalog: {
         ...this.routeDictionary.Catalog,
         element: <ServiceCatalogPage />,

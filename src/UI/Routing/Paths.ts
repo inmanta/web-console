@@ -1,4 +1,5 @@
 import { RouteKind } from "@/Core";
+import { Dashboard } from "@/Slices/Dashboard";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -41,6 +42,7 @@ export const paths: Paths = {
   /**
    * LSM
    */
+  Dashboard: Dashboard.path,
   Catalog: ServiceCatalog.path,
   Inventory: ServiceInventory.path,
   ServiceDetails: ServiceDetails.path,

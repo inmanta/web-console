@@ -10,7 +10,7 @@ export function ControlAgentCommandManager(
     ({ name, action }, environment) => {
       return async (query) => {
         const result = await apiHelper.postWithoutResponse(
-          `/api/v2/agent/${name}/${action}`,
+          `/api/v2/agent/${encodeURIComponent(name)}/${action}`,
           environment,
           null
         );
