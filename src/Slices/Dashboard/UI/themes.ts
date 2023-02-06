@@ -7,8 +7,10 @@ import {
   chart_color_gold_400,
   chart_color_green_100,
   chart_color_green_300,
+  chart_color_red_200,
   chart_color_red_300,
   chart_color_red_400,
+  chart_theme_gray_ColorScale_300,
   chart_theme_purple_ColorScale_300,
 } from "@patternfly/react-tokens";
 
@@ -27,4 +29,8 @@ export const colorTheme = {
   skipped: chart_color_blue_500.var,
   failed: chart_color_red_300.var,
   cancelled: chart_color_red_400.var,
+  danger: chart_color_red_200.var,
+  info: chart_color_blue_300.var,
+  warning: chart_color_gold_300.var,
+  no_label: chart_theme_gray_ColorScale_300.var,
 };

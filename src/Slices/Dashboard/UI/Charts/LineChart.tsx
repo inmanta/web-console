@@ -16,6 +16,7 @@ import {
 } from "@patternfly/react-charts";
 import styled, { css } from "styled-components";
 import { LineChartProps } from "../../Core/Domain";
+import { interpolateMetrics } from "../helper";
 import { colorTheme } from "../themes";
 interface CustomAxisProps extends ChartAxisProps {
   style: {
@@ -29,7 +30,6 @@ const CustomAxis = ({ ...props }: CustomAxisProps) => {
 };
 export const LineChart: React.FC<LineChartProps> = ({
   title,
-  description,
   label,
   legendData,
   timestamps,
@@ -48,6 +48,16 @@ export const LineChart: React.FC<LineChartProps> = ({
     }
     return value % 1 === 0 ? value : Math.round(value * 1000) / 1000;
   };
+  const chooseWhichLabelToUse = (datum) => {
+    if (
+      (isStacked && !datum.childName.includes("scatter-")) ||
+      (!isStacked && datum.childName.includes("scatter-"))
+    ) {
+      return `${datum.y !== null ? datum.y : "no data"}`;
+    } else {
+      return null;
+    }
+  };
   useEffect(() => {
     function handleResize() {
       // Set window width to state if width from ref is available
@@ -64,23 +74,17 @@ export const LineChart: React.FC<LineChartProps> = ({
     // Remove event listener on cleanup
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   return (
     <div ref={ref}>
       <Chart
         ariaDesc={title}
-        ariaTitle={description}
         containerComponent={
           <CursorVoronoiContainer
             cursorDimension="x"
-            labels={({ datum }) =>
-              !datum.childName.includes("scatter-")
-                ? `${datum.y !== null ? datum.y : "no data"}`
-                : null
-            }
+            labels={({ datum }) => chooseWhichLabelToUse(datum)}
             labelComponent={
               <ChartLegendTooltip
-                legendData={legendData.reverse()}
+                legendData={legendData}
                 title={(datum) => new Date(datum.x).toLocaleString()}
                 flyoutWidth={250}
               />
@@ -96,18 +100,21 @@ export const LineChart: React.FC<LineChartProps> = ({
           <ChartLegend
             borderPadding={{ top: 25 }}
             style={{ labels: { fontSize: 16 } }}
+            orientation="horizontal"
+            responsive={true}
           />
         }
+        legendAllowWrap={true}
         maxDomain={{ y: max === 0 ? 5 : max * 1.1 }}
         minDomain={{ y: 0 }}
         name={`chart-${title}`}
         padding={{
-          bottom: isStacked ? 85 : 60, // Adjusted to accommodate legend
-          left: 60,
-          right: 25,
+          bottom: isStacked ? 125 : 60, // Adjusted to accommodate legend
+          left: 100,
+          right: 45,
           top: 20,
         }}
-        height={300}
+        height={isStacked ? 350 : 300}
         width={width}
       >
         <CustomAxis
@@ -128,7 +135,10 @@ export const LineChart: React.FC<LineChartProps> = ({
         <ChartAxis
           dependentAxis
           showGrid
+          fixLabelOverlap
+          axisLabelComponent={<ChartLabel dy={-30} />}
           label={label}
+          offsetX={100}
           style={{
             grid: { stroke: "#E5E4E2" },
           }}
@@ -139,7 +149,7 @@ export const LineChart: React.FC<LineChartProps> = ({
               <ChartArea
                 data={data.map((value, index) => {
                   return {
-                    x: timestamps[index],
+                    x: timestamps[index] + "Z",
                     y: formatValueForChart(value),
                   };
                 })}
@@ -164,9 +174,9 @@ export const LineChart: React.FC<LineChartProps> = ({
           <ChartGroup>
             {metrics.map(({ name, data }, index) => (
               <ChartLine
-                data={data.map((value, index) => {
+                data={interpolateMetrics(data).map((value, index) => {
                   return {
-                    x: timestamps[index],
+                    x: timestamps[index] + "Z",
                     y: formatValueForChart(value),
                   };
                 })}
@@ -190,7 +200,7 @@ export const LineChart: React.FC<LineChartProps> = ({
               <ChartScatter
                 data={data.map((value, index) => {
                   return {
-                    x: timestamps[index],
+                    x: timestamps[index] + "Z",
                     y: formatValueForChart(value),
                   };
                 })}

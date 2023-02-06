@@ -69,6 +69,7 @@ describe("Scenario 3 - Service Details", () => {
   it("3.1 Check empty state", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
 
     // Click on kebab menu and select Show Details on basic-service
     cy.get("#basic-service", { timeout: 60000 })
@@ -166,6 +167,7 @@ describe("Scenario 3 - Service Details", () => {
     // Select 'test' environment
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
 
     // click on Show Inventory on basic-service
     cy.get("#basic-service", { timeout: 60000 })
@@ -230,6 +232,7 @@ describe("Scenario 3 - Service Details", () => {
     // Select 'test' environment
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
 
     // click on Show Inventory on basic-service
     cy.get("#basic-service", { timeout: 60000 })
@@ -319,6 +322,7 @@ describe("Scenario 3 - Service Details", () => {
     // Select card 'test' environment on home page
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
 
     // Click on kebab menu and select Show Details on basic-service
     cy.get("#basic-service", { timeout: 60000 })
@@ -432,6 +436,7 @@ describe("Scenario 3 - Service Details", () => {
     // Select card 'test' environment on home page
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
 
     // Click on Delete button
     cy.get("#basic-service", { timeout: 60000 })

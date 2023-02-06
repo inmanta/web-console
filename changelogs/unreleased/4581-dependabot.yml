@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump cypress from 12.4.0 to 12.4.1'
+destination-branches:
+- master
+- iso6
+sections: {}
