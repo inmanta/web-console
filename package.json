@@ -111,7 +111,7 @@
     "start-server-and-test": "^1.15.2",
     "style-loader": "^3.3.1",
     "svg-url-loader": "^8.0.0",
-    "ts-jest": "^29.0.3",
+    "ts-jest": "^29.0.5",
     "ts-loader": "^9.4.2",
     "ts-prune": "^0.10.3",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
