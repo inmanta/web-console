@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
 import { words } from "@/UI/words";
-import { InstanceCellValue } from "./InstanceCellValue";
+import { InstanceCellButton } from "./InstanceCellButton";
 
 interface Props {
   className: string;
@@ -139,18 +139,21 @@ const MultiLinkCell: React.FC<LinkCellProps> = ({
   return <LinkCell value={value} serviceName={serviceName} onClick={onClick} />;
 };
 
-const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) => (
-  <Button
-    variant="link"
-    isInline
-    onClick={
-      serviceName ? () => onClick(value, serviceName) : () => onClick(value)
-    }
-  >
-    {serviceName && value.length > 0 ? (
-      <InstanceCellValue id={value} serviceName={serviceName} />
-    ) : (
-      value
-    )}
-  </Button>
-);
+const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) =>
+  serviceName && value.length > 0 ? (
+    <InstanceCellButton
+      id={value}
+      serviceName={serviceName}
+      onClick={onClick}
+    />
+  ) : (
+    <Button
+      variant="link"
+      isInline
+      onClick={
+        serviceName ? () => onClick(value, serviceName) : () => onClick(value)
+      }
+    >
+      {value}
+    </Button>
+  );

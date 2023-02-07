@@ -1,0 +1,9 @@
+change-type: patch
+description: 'Adding automated e2e testing for the Service Catalog - Catalog Update'
+issue-nr: 4323
+destination-branches:
+- master
+- iso6
+- iso5
+sections: 
+  minor-improvement: "{{description}}"

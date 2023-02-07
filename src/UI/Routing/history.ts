@@ -1,4 +1,4 @@
-import { createBrowserHistory } from "history";
+import { createBrowserHistory } from "@remix-run/router";
 
-const history = createBrowserHistory();
+const history = createBrowserHistory({ v5Compat: true });
 export default history;

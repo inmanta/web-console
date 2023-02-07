@@ -5,7 +5,7 @@ pipeline {
         disableConcurrentBuilds()
         checkoutToSubdirectory('web-console')
         skipDefaultCheckout()
-        timeout(time: 15, unit: 'MINUTES')
+        ansiColor('xterm')
     }
     triggers{
         pollSCM('* * * * *')
@@ -33,11 +33,19 @@ pipeline {
         }
         stage('Testing with cypress') {
             steps {
+                timeout(time: 20, unit: 'MINUTES') {
                 dir('web-console') {
                     sh '''yarn run build;
-                    yarn run setup-server:lsm;
-                    yarn run cypress-test;
-                    yarn run kill-server:lsm'''
+                    yarn run setup-server:lsm:ci;
+                    yarn run cypress-test;'''
+                }
+                }
+            }
+            post {
+                always {
+                    dir('web-console') {
+                        sh'yarn run kill-server:lsm'
+                    }
                 }
             }
         }
@@ -50,7 +58,7 @@ pipeline {
             }
             junit 'web-console/junit.xml'
             cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
-            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**', allowEmptyArchive: true, onlyIfSuccessful: false
+            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
             deleteDir()
         }
     }

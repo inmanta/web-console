@@ -36,7 +36,7 @@ sleep 2
 yarn start
 
 # need to sleep to avoid concurency with the next command execution. Under 4 sec it doesn't work locally.
-sleep 4
+sleep 6
 
 # execute installation script for LSM
 yarn $1:lsm:install
