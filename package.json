@@ -1,6 +1,6 @@
 {
   "name": "@inmanta/web-console",
-  "version": "1.11.4",
+  "version": "1.11.5",
   "description": "Web Console for Inmanta Orchestrator",
   "exports": "./dist/index.js",
   "repository": "https://github.com/inmanta/web-console.git",
@@ -155,7 +155,7 @@
     "xml-formatter": "^3.2.0"
   },
   "resolutions": {
-    "json5" : "^2.2.2",
+    "json5": "^2.2.2",
     "terser-webpack-plugin": "^1.4.5",
     "@types/react": "^18.0.21",
     "prismjs": "^1.25.0",
