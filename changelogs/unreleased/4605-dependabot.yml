@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump jest and @types/jest'
+destination-branches:
+- master
+- iso6
+sections: {}
