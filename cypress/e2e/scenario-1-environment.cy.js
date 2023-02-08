@@ -508,7 +508,7 @@ describe("Environment", () => {
       .click();
     cy.get('[aria-label="Warning"]').should("not.exist");
 
-    cy.get("button").contains("Environment").click();
+    cy.get(".pf-c-tabs__list").find("button").contains("Environment").click();
     deleteEnv(testName(6), testProjectName(6));
   });
 });
