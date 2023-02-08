@@ -5,4 +5,4 @@ destination-branches:
   - master
   - iso6
 sections: 
-  feature: "{{description}}"
+  minor-improvement: "{{description}}"
