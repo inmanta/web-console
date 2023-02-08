@@ -59,7 +59,7 @@ export const EnvSelector: React.FC<Props> = ({
       isOpen={isOpen}
       toggle={
         <StyledToggle id="text" onToggle={() => setIsOpen(!isOpen)}>
-          Env: {toggleText.split(" ")[0]}
+          Environment: {toggleText.split(" ")[0]}
         </StyledToggle>
       }
       dropdownItems={envs}
@@ -77,15 +77,15 @@ const StyledDropdown = styled(Dropdown)`
 `;
 const StyledToggle = styled(DropdownToggle)`
   height: 100%;
-  max-width: 240px;
-  min-width: 240px;
+  max-width: 260px;
+  min-width: 260px;
   &::before {
     border-top: 0;
   }
 `;
 const StyledItem = styled(DropdownItem)`
-  max-width: 240px;
-  min-width: 240px;
+  max-width: 260px;
+  min-width: 260px;
 `;
 const StyledSeparator = styled(DropdownSeparator)`
   padding: 0 15px;

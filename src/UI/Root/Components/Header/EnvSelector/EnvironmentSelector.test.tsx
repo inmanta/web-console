@@ -44,7 +44,7 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
     </MemoryRouter>
   );
 
-  const toggle = screen.getByText(`Env: ${envA.name}`);
+  const toggle = screen.getByText(`Environment: ${envA.name}`);
   await userEvent.click(toggle);
   const listItem = screen.getAllByText(`${envB.name}`)[0];
 
@@ -69,7 +69,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
     </MemoryRouter>
   );
 
-  const toggle = screen.getByText(`Env: ${envA.name}`);
+  const toggle = screen.getByText(`Environment: ${envA.name}`);
   await userEvent.click(toggle);
 
   const listItem = screen.getAllByText(`${envB.name}`)[1];
@@ -78,7 +78,7 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
 
   await userEvent.click(listItem);
 
-  expect(screen.getByText(`Env: ${envB.name}`)).toBeVisible();
+  expect(screen.getByText(`Environment: ${envB.name}`)).toBeVisible();
   expect(selectedEnv).toEqual(envB.id);
 });
 
@@ -100,7 +100,7 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
     </MemoryRouter>
   );
   const toggle = screen.getByRole("button", {
-    name: `Env: ${envB.name}`,
+    name: `Environment: ${envB.name}`,
   });
   await userEvent.click(toggle);
 
@@ -109,7 +109,7 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
 
   expect(
     screen.getByRole("button", {
-      name: `Env: ${envB.name}`,
+      name: `Environment: ${envB.name}`,
     })
   );
 
