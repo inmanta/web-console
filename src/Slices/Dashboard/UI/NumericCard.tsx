@@ -16,6 +16,7 @@ import { StyledDescription } from "./GraphCard";
 
 export const NumericCard = ({ metrics }: { metrics: Metric }) => {
   const lastData = metrics.data[metrics.data.length - 1];
+
   return (
     <StyledCard id={`trend-card-${metrics.name}`} component="div" isRounded>
       <CardHeader>
@@ -45,7 +46,7 @@ export const NumericCard = ({ metrics }: { metrics: Metric }) => {
             paddingLeft: lastData === null ? 0 : 100,
           }}
         >
-          {lastData == null ? "no data" : lastData}
+          {lastData == null ? "no data" : Math.round(lastData)}
         </Text>
       </CardBody>
     </StyledCard>
