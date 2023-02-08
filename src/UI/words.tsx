@@ -404,6 +404,7 @@ const dict = {
   "home.environment.icon": (name: string) => `Icon for environment ${name}`,
   "home.environment.select": "Select this environment",
   "home.environment.edit": "Edit environment",
+  "home.environment.selector": "Environments",
   "home.environment.delete": "Delete environment",
   "home.environment.clear": "Clear environment",
   "home.environment.delete.warning": "Are you absolutely sure?",
@@ -442,7 +443,7 @@ const dict = {
   /**
    * Navigation related text
    */
-  "navigation.orchestratorOverview": "Orchestrator Overview",
+  "navigation.environment": "Environment",
   "navigation.lifecycleServiceManager": "Lifecycle Service Manager",
   "navigation.resourceManager": "Resource Manager",
   "navigation.orchestrationEngine": "Orchestration Engine",

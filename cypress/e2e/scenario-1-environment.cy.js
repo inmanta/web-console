@@ -77,7 +77,7 @@ const deleteEnv = (name, projectName) => {
  * @param {*} envName - string
  */
 const openSettings = (envName) => {
-  cy.get('[aria-label="Settings actions"]').click();
+  cy.get(".pf-c-nav__item").contains("Settings").click();
   cy.url().should("contain", "/console/settings?env=");
   cy.get('[aria-label="Name-value"]').should("contain", envName);
 };

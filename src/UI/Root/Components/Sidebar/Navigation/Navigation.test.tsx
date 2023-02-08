@@ -17,6 +17,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 import { Navigation } from "./Navigation";
 
 function setup(
@@ -55,28 +56,27 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
   const navigation = screen.getByRole("navigation", { name: "Global" });
   expect(navigation).toBeVisible();
   expect(within(navigation).getAllByRole("region").length).toEqual(4);
-
   expect(
     within(navigation).getByRole("region", {
-      name: "Orchestrator Overview",
+      name: words("navigation.environment"),
     })
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
-      name: "Lifecycle Service Manager",
+      name: words("navigation.lifecycleServiceManager"),
     })
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
-      name: "Orchestration Engine",
+      name: words("navigation.orchestrationEngine"),
     })
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
-      name: "Resource Manager",
+      name: words("navigation.resourceManager"),
     })
   ).toBeVisible();
 });
@@ -91,7 +91,7 @@ test("GIVEN Navigation WHEN no lsm THEN lsm is not shown", () => {
 
   expect(
     within(navigation).queryByRole("region", {
-      name: "Lifecycle Service Manager",
+      name: words("navigation.lifecycleServiceManager"),
     })
   ).not.toBeInTheDocument();
 });

@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import logo from "@images/logo.svg";
 import { Actions } from "./Actions";
-import { EnvSelectorWithProvider } from "./EnvSelector";
 import { SimpleBackgroundImage } from "./SimpleBackgroundImage";
 
 interface Props {
@@ -27,7 +26,6 @@ export const Header: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
         }}
         headerTools={<Actions {...{ noEnv, onNotificationsToggle }} />}
         showNavToggle
-        topNav={<EnvSelectorWithProvider />}
       />
     </>
   );
@@ -55,6 +53,7 @@ const StyledHeader = styled(PageHeader)`
   }
   .pf-c-page__header-tools {
     @media (min-width: 768px) {
+      height: 100%;
       grid-column: 3/3;
     }
   }
