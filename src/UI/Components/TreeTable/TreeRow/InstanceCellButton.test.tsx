@@ -16,7 +16,7 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { DependencyProvider } from "@/UI/Dependency";
-import { InstanceCellValue } from "./InstanceCellValue";
+import { InstanceCellButton } from "./InstanceCellButton";
 
 function setup() {
   const store = getStoreInstance();
@@ -25,7 +25,7 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
-
+  const handleClick = jest.fn();
   const component = (
     <MemoryRouter>
       <DependencyProvider
@@ -35,7 +35,11 @@ function setup() {
         }}
       >
         <StoreProvider store={store}>
-          <InstanceCellValue id="id123" serviceName="test_service" />
+          <InstanceCellButton
+            id="id123"
+            serviceName="test_service"
+            onClick={handleClick}
+          />
         </StoreProvider>
       </DependencyProvider>
     </MemoryRouter>
@@ -44,7 +48,7 @@ function setup() {
   return { component, apiHelper, scheduler };
 }
 
-test("Given the InstanceCellValue When an instance has an identity Then it is shown instead of the id", async () => {
+test("Given the InstanceCellButton When an instance has an identity Then it is shown instead of the id", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -58,7 +62,7 @@ test("Given the InstanceCellValue When an instance has an identity Then it is sh
   ).toBeVisible();
 });
 
-test("Given the InstanceCellValue When an instance doesn't have an identity Then the id is shown", async () => {
+test("Given the InstanceCellButton When an instance doesn't have an identity Then the id is shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
@@ -75,7 +79,7 @@ test("Given the InstanceCellValue When an instance doesn't have an identity Then
   expect(await screen.findByText("id123")).toBeVisible();
 });
 
-test("Given the InstanceCellValue When the instance request fails Then the id is shown", async () => {
+test("Given the InstanceCellButton When the instance request fails Then the id is shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
 

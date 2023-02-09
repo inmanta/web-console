@@ -1,0 +1,7 @@
+description: Fix jenkins leaks and misconfiguration of ports.
+issue-nr: 4386
+change-type: patch
+destination-branches:
+  - master
+  - iso5
+  - iso6
