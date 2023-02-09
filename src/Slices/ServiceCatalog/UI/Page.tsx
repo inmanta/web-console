@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { EmptyView, PageContainer, RemoteDataView } from "@/UI/Components";
 import { CatalogUpdateButton } from "@/UI/Components/CatalogUpdateButton";
 import { DependencyContext } from "@/UI/Dependency";
@@ -10,7 +10,11 @@ export const Page: React.FC = () => {
   const [data, retry] = queryResolver.useContinuous<"GetServices">({
     kind: "GetServices",
   });
-
+  useEffect(() => {
+    document.addEventListener("service-deleted", () => {
+      retry();
+    });
+  }, [retry]);
   return (
     <PageContainer title={words("catalog.title")}>
       <RemoteDataView

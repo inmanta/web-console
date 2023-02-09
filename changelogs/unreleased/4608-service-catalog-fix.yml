@@ -1,0 +1,8 @@
+change-type: patch
+description: 'refresh catalog list after deleting Service'
+issue-nr: 4608
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"
