@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EnvSelector } from "./EnvSelector";
 
 interface Props {
@@ -49,16 +49,14 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
     setFilteredItems(filterItems(value));
   };
 
-  const onSelect = (event, value: ReactNode) => {
+  const onSelect = (value: string) => {
     setIsOpen(!isOpen);
-    // The onSelect value is the selected ReactNode. In this case, the selection items are just strings.
-    const valAsString = value as string;
 
     const matchingEnvItem = selectorItems.find(
       (envItem) => envItem.displayName === value
     );
     if (matchingEnvItem) {
-      setToggleText(valAsString);
+      setToggleText(value);
       onSelectEnvironment(matchingEnvItem);
     }
   };
