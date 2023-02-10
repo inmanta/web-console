@@ -77,7 +77,7 @@ const deleteEnv = (name, projectName) => {
  * @param {*} envName - string
  */
 const openSettings = (envName) => {
-  cy.get('[aria-label="Settings actions"]').click();
+  cy.get(".pf-c-nav__item").contains("Settings").click();
   cy.url().should("contain", "/console/settings?env=");
   cy.get('[aria-label="Name-value"]').should("contain", envName);
 };
@@ -508,7 +508,7 @@ describe("Environment", () => {
       .click();
     cy.get('[aria-label="Warning"]').should("not.exist");
 
-    cy.get("button").contains("Environment").click();
+    cy.get(".pf-c-tabs__list").find("button").contains("Environment").click();
     deleteEnv(testName(6), testProjectName(6));
   });
 });
