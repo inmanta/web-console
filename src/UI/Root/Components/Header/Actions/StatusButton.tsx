@@ -13,14 +13,14 @@ export const StatusButton: React.FC = () => {
       setStatusColor("red");
     });
     document.addEventListener("status-up", () => {
-      setStatusColor("green");
+      setStatusColor("currentColor");
     });
     return () => {
       document.removeEventListener("status-down", () => {
         setStatusColor("red");
       });
       document.removeEventListener("status-up", () => {
-        setStatusColor("green");
+        setStatusColor("currentColor");
       });
     };
   }, []);
