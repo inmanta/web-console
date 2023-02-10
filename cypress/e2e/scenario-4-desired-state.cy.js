@@ -238,7 +238,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-c-dropdown__menu-item")
       .contains("Promote")
       .should("have.attr", "aria-disabled", "true");
-    cy.get('[aria-label="Settings actions"]').click();
+    cy.get(".pf-c-nav__item").contains("Settings").click();
     cy.get(".pf-c-tabs__link").contains("Configuration").click();
     cy.get('[aria-label="Row-auto_deploy"]').find(".pf-c-switch").click();
     cy.get('[aria-label="Row-auto_deploy"]')
@@ -262,7 +262,7 @@ describe("Scenario 4 Desired State", () => {
       .find('[data-label="Status"]')
       .should("have.text", "retired");
     //turn the auto-deploy back to "true" and go back to desired State page
-    cy.get('[aria-label="Settings actions"]').click();
+    cy.get(".pf-c-nav__item").contains("Settings").click();
     cy.get(".pf-c-tabs__link").contains("Configuration").click();
     cy.get('[aria-label="Row-auto_deploy"]').find(".pf-c-switch").click();
     cy.get('[aria-label="Row-auto_deploy"]')
