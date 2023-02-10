@@ -21,9 +21,9 @@ export const Root: React.FC = () => {
   return (
     <>
       <GlobalStyleProxy />
-      <Initializer>
-        <SearchSanitizer.Provider>
-          <AuthProvider>
+      <AuthProvider>
+        <Initializer>
+          <SearchSanitizer.Provider>
             <Routes>
               {routeManager.isBaseUrlDefined() && (
                 <Route
@@ -53,9 +53,9 @@ export const Root: React.FC = () => {
                 />
               ))}
             </Routes>
-          </AuthProvider>
-        </SearchSanitizer.Provider>
-      </Initializer>
+          </SearchSanitizer.Provider>
+        </Initializer>
+      </AuthProvider>
     </>
   );
 };
