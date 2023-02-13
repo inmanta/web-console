@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Hot fix the script to setup the docker containers for the test suits.'
+destination-branches:
+- iso5
+sections: {}

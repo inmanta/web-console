@@ -36,8 +36,7 @@ sleep 2
 yarn start
 
 # need to sleep to avoid concurency with the next command execution. Under 4 sec it doesn't work locally.
-sleep 6
-
+for i in {0..30}; do curl --connect-timeout 1 http://localhost:8888/api/v1/serverstatus > /dev/null && echo "Server up " && break; echo "Waiting $i"; sleep 1; done && [[ $i == 30 ]] && exit 1
 # execute installation script for LSM
 yarn $1:lsm:install
 
