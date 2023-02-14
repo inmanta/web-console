@@ -21,7 +21,11 @@ export const createFormState = (
       }
 
       case "Nested": {
-        acc[curr.name] = createFormState(curr.fields);
+        if (curr.isOptional) {
+          acc[curr.name] = null;
+        } else {
+          acc[curr.name] = createFormState(curr.fields);
+        }
         return acc;
       }
 
@@ -74,6 +78,8 @@ export const createEditFormState = (
         }
 
         case "Nested": {
+          console.log(curr);
+          console.log(originalAttributes?.[curr.name]);
           acc[curr.name] = createEditFormState(
             curr.fields,
             originalAttributes?.[curr.name] as InstanceAttributeModel

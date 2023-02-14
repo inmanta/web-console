@@ -92,9 +92,22 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
     cy.get("#add-instance-button").click();
     cy.get("#service_id").type("0001");
     cy.get("#name").type("embedded-entity");
-
+    //add nested entities to form
+    cy.get('[aria-label="NestedFieldInput-vlan_assigment_r1"]')
+      .find("pf-c-form__field-group-header-actions")
+      .find("button")
+      .click();
+    cy.get('[aria-label="NestedFieldInput-vlan_assigment_r2"]')
+      .find("pf-c-form__field-group-header-actions")
+      .find("button")
+      .click();
     //open dropdown for first assigment to fill up the forms
     cy.get('[aria-label="NestedFieldInput-vlan_assigment_r1"]')
+      .find(".pf-c-form__field-group-toggle")
+      .find("button")
+      .click();
+    cy.get('[aria-label="NestedFieldInput-vlan_assigment_r1"]')
+      .find(".pf-c-form__field-group-toggle")
       .find("button")
       .click();
     cy.get("#router_ip").type("1.2.3.4");
@@ -104,9 +117,11 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
 
     //close first dropdown and open the second one to fill up the forms
     cy.get('[aria-label="NestedFieldInput-vlan_assigment_r1"]')
+      .find(".pf-c-form__field-group-toggle")
       .find("button")
       .click();
     cy.get('[aria-label="NestedFieldInput-vlan_assigment_r2"]')
+      .find(".pf-c-form__field-group-toggle")
       .find("button")
       .click();
     cy.get("#router_ip").type("1.2.3.6");
