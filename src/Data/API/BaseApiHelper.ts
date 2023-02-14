@@ -43,7 +43,7 @@ export class BaseApiHelper implements ApiHelper {
 
     if (this.keycloak && (response.status === 401 || response.status === 403)) {
       errorMessage += ` ${words("error.authorizationFailed")}`;
-      this.keycloak.clearToken();
+      //this.keycloak.clearToken();
     }
 
     return words("error.server.intro")(
