@@ -78,12 +78,14 @@ export const createEditFormState = (
         }
 
         case "Nested": {
-          console.log(curr);
-          console.log(originalAttributes?.[curr.name]);
-          acc[curr.name] = createEditFormState(
-            curr.fields,
-            originalAttributes?.[curr.name] as InstanceAttributeModel
-          );
+          if (curr.isOptional && originalAttributes?.[curr.name] === null) {
+            acc[curr.name] = null;
+          } else {
+            acc[curr.name] = createEditFormState(
+              curr.fields,
+              originalAttributes?.[curr.name] as InstanceAttributeModel
+            );
+          }
           return acc;
         }
 
