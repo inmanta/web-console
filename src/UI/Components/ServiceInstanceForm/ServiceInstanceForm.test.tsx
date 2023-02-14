@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import * as Test from "@/Test";
+import { words } from "../../words";
 import { ServiceInstanceForm } from "./ServiceInstanceForm";
 
 test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", () => {
@@ -89,7 +90,9 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
   const group = screen.getByRole("generic", {
     name: "NestedFieldInput-nested_field",
   });
-
+  userEvent.click(
+    within(group).getByRole("button", { name: words("catalog.callbacks.add") })
+  );
   expect(group).toBeVisible();
 
   expect(
@@ -153,7 +156,12 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     "test text"
   );
   userEvent.click(screen.getByRole("radio", { name: "True" }));
-
+  const group = screen.getByRole("generic", {
+    name: "NestedFieldInput-nested_field",
+  });
+  userEvent.click(
+    within(group).getByRole("button", { name: words("catalog.callbacks.add") })
+  );
   userEvent.click(screen.getByRole("button", { name: nestedField.name }));
   userEvent.type(
     screen.getByRole("textbox", { name: nestedField.fields[0].name }),
