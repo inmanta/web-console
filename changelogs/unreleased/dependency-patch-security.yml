@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Clean up dependencies, removing security risk.'
+destination-branches:
+- master
+- iso6
+sections: {}
