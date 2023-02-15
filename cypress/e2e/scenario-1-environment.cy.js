@@ -415,7 +415,7 @@ describe("Environment", () => {
       .find(".pf-c-form-control")
       .click();
     cy.get(".pf-c-select__menu-item").contains("push_full_deploy").click();
-    cy.get('[aria-label="Warning"]', { timeout: 20000 }).should("exist");
+    cy.get('[aria-label="Warning"]').should("exist");
     cy.get('[aria-label="Row-environment_agent_trigger_method"]')
       .find('[aria-label="SaveAction"]')
       .click();
