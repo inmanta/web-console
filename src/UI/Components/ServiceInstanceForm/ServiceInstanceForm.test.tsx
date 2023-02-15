@@ -157,6 +157,9 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
   });
 
   expect(group).toBeVisible();
+  await userEvent.click(
+    within(group).getByRole("button", { name: words("catalog.callbacks.add") })
+  );
 
   expect(
     screen.queryByRole("textbox", { name: Test.Field.text.name })
@@ -209,6 +212,12 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   );
   await userEvent.click(screen.getByRole("radio", { name: words("true") }));
 
+  const group = screen.getByRole("group", {
+    name: "nested_field",
+  });
+  await userEvent.click(
+    within(group).getByRole("button", { name: words("catalog.callbacks.add") })
+  );
   await userEvent.click(screen.getByRole("button", { name: nestedField.name }));
   await userEvent.type(
     screen.getByRole("textbox", { name: nestedField.fields[0].name }),

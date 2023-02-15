@@ -37,6 +37,9 @@ export function sanitizeAttributes(
       }
 
       case "Nested": {
+        if (formState[field.name] == null) {
+          return;
+        }
         sanitized[field.name] = sanitizeAttributes(
           field.fields,
           formState[field.name] as InstanceAttributeModel
