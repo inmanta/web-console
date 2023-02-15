@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -200,30 +200,68 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   formState,
   getUpdate,
   path,
-}) => (
-  <StyledFormFieldGroupExpandable
-    aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
-    header={
-      <FormFieldGroupHeader
-        titleText={{
-          text: field.name,
-          id: `NestedFieldInput-${makePath(path, field.name)}`,
-        }}
-        titleDescription={field.description}
-      />
+}) => {
+  const [showList, setShowList] = useState(
+    !field.isOptional || formState[field.name] !== null
+  );
+  const onAdd = () => {
+    setShowList(true);
+    if (formState !== null) {
+      getUpdate(makePath(path, field.name), createFormState(field.fields));
     }
-  >
-    {field.fields.map((childField) => (
-      <FieldInput
-        field={childField}
-        key={makePath(path, `${field.name}.${childField.name}`)}
-        formState={formState}
-        getUpdate={getUpdate}
-        path={makePath(path, field.name)}
-      />
-    ))}
-  </StyledFormFieldGroupExpandable>
-);
+  };
+
+  const getOnDelete = () => () => {
+    setShowList(false);
+    return getUpdate(makePath(path, field.name), null);
+  };
+  return (
+    <StyledFormFieldGroupExpandable
+      aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
+      header={
+        <FormFieldGroupHeader
+          titleText={{
+            text: field.name,
+            id: `NestedFieldInput-${makePath(path, field.name)}`,
+          }}
+          titleDescription={field.description}
+          actions={
+            field.isOptional && (
+              <>
+                <Button
+                  variant="link"
+                  icon={<PlusIcon />}
+                  onClick={onAdd}
+                  isDisabled={showList}
+                >
+                  {words("catalog.callbacks.add")}
+                </Button>
+                <Button
+                  variant="link"
+                  onClick={getOnDelete()}
+                  isDisabled={!showList}
+                >
+                  {words("delete")}
+                </Button>
+              </>
+            )
+          }
+        />
+      }
+    >
+      {showList &&
+        field.fields.map((childField) => (
+          <FieldInput
+            field={childField}
+            key={makePath(path, `${field.name}.${childField.name}`)}
+            formState={formState}
+            getUpdate={getUpdate}
+            path={makePath(path, field.name)}
+          />
+        ))}
+    </StyledFormFieldGroupExpandable>
+  );
+};
 
 interface DictListProps {
   field: DictListField;
