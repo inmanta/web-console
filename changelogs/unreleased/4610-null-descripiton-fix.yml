@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Show no value instead of null when there is no description in embedded/relation entity'
+issue-nr: 4610
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"
