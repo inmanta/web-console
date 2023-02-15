@@ -235,8 +235,9 @@ describe("Environment", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get(".pf-c-nav__link").contains("Service Catalog").click();
-    cy.get("button").contains("Update Service Catalog").click();
     cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
+
+    cy.get("button").contains("Update Service Catalog").click();
     //Update service catalog to restore instances
     cy.get("button", { timeout: 30000 }).contains("Yes").click();
     // exceeded timeout needed is to await continous call to return services
@@ -414,9 +415,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Row-environment_agent_trigger_method"]')
       .find(".pf-c-form-control")
       .click();
-    cy.get(".pf-c-select__menu-item")
-      .contains("push_incremental_deploy")
-      .click();
+    cy.get(".pf-c-select__menu-item").contains("push_full_deploy").click();
     cy.get('[aria-label="Warning"]').should("exist");
     cy.get('[aria-label="Row-environment_agent_trigger_method"]')
       .find('[aria-label="SaveAction"]')
@@ -424,7 +423,7 @@ describe("Environment", () => {
     cy.get('[aria-label="Warning"]').should("not.exist");
     cy.get('[aria-label="Row-environment_agent_trigger_method"]')
       .find(".pf-c-form-control")
-      .should("have.value", "push_incremental_deploy");
+      .should("have.value", "push_full_deploy");
 
     //Change lsm_partial_compile
     cy.get('[aria-label="Row-lsm_partial_compile"]')
