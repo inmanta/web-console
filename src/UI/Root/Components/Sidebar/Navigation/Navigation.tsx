@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Nav, NavGroup } from "@patternfly/react-core";
 import { DependencyContext } from "@/UI/Dependency";
 import {
-  orchestratorOverview,
+  envrionment,
   lifecycleServiceManager,
   orchestrationEngine,
   resourceManager,
@@ -15,7 +15,7 @@ export const Navigation: React.FC<{ environment: string | undefined }> = ({
   const { featureManager, routeManager } = useContext(DependencyContext);
   const isEnvPresent = typeof environment !== "undefined";
   const groups = [
-    orchestratorOverview(routeManager, isEnvPresent),
+    envrionment(routeManager, isEnvPresent),
     ...(featureManager.isLsmEnabled()
       ? [lifecycleServiceManager(routeManager, isEnvPresent)]
       : []),

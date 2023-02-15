@@ -48,6 +48,7 @@ export const ServiceItem: React.FunctionComponent<Props> = ({ service }) => {
     if (Maybe.isSome(result)) {
       setErrorMessage(result.value);
     }
+    document.dispatchEvent(new CustomEvent("service-deleted"));
   };
 
   return (
