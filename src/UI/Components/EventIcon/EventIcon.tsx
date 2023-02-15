@@ -9,6 +9,8 @@ import {
   ResourcesAlmostFullIcon,
   RunningIcon,
   TrashIcon,
+  SyncAltIcon,
+  TrashAltIcon,
 } from "@patternfly/react-icons";
 import { EventType } from "@/Core";
 
@@ -41,5 +43,9 @@ function getIconFor(eventType: EventType): React.ReactElement {
       return <PencilAltIcon />;
     case EventType.ON_DELETE_TRANSITION:
       return <TrashIcon />;
+    case EventType.FORCE_UPDATE:
+      return <SyncAltIcon />;
+    case EventType.FORCE_DELETE:
+      return <TrashAltIcon />;
   }
 }
