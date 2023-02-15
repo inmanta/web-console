@@ -235,8 +235,9 @@ describe("Environment", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get(".pf-c-nav__link").contains("Service Catalog").click();
-    cy.get("button").contains("Update Service Catalog").click();
     cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
+
+    cy.get("button").contains("Update Service Catalog").click();
     //Update service catalog to restore instances
     cy.get("button", { timeout: 30000 }).contains("Yes").click();
     // exceeded timeout needed is to await continous call to return services
