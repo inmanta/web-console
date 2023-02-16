@@ -373,7 +373,7 @@ describe("Scenario 3 - Service Details", () => {
     // Expect to see all values except ALLOCATION_UPDATE to have text-decoration: line-through
     cy.get(".pf-c-description-list__description ul").should(($ul) => {
       const $list = $ul.find("li");
-      expect($list).to.have.length(8);
+      expect($list).to.have.length(10);
     });
 
     cy.get(".pf-c-description-list__description li")
