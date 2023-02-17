@@ -4,6 +4,7 @@ export interface GetMetrics {
   kind: "GetMetrics";
   startDate: string;
   endDate: string;
+  isLsmAvailable: boolean;
 }
 
 export interface GetMetricsManifest {
