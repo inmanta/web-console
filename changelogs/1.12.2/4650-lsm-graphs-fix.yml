@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Do not show LSM related graphs when LSM it not loaded'
+issue-nr: 4650
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"
