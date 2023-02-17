@@ -15,7 +15,10 @@ export const HaltDialog: React.FC = () => {
     });
   return (
     <>
-      <Tooltip content={<div>{words("environment.halt.button.tooltip")}</div>}>
+      <Tooltip
+        content={<div>{words("environment.halt.button.tooltip")}</div>}
+        position="right"
+      >
         <Button
           variant="danger"
           icon={<StopIcon />}

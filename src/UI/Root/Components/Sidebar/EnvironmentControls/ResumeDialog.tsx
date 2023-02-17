@@ -16,7 +16,10 @@ export const ResumeDialog: React.FC = () => {
     });
   return (
     <>
-      <Tooltip content={<div>{words("environment.resume.tooltip")}</div>}>
+      <Tooltip
+        content={<div>{words("environment.resume.tooltip")}</div>}
+        position="right"
+      >
         <GreenButton icon={<PlayIcon />} onClick={handleModalToggle}>
           {words("environment.resume.button")}
         </GreenButton>
