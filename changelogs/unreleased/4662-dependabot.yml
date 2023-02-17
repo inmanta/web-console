@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump jest from 29.4.1 to 29.4.3'
+destination-branches:
+- master
+- iso6
+sections: {}
