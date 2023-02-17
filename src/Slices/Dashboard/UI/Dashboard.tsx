@@ -9,7 +9,7 @@ import { words } from "@/UI/words";
 import { Section } from "./Section";
 
 export const Dashboard: React.FC = () => {
-  const { queryResolver } = useContext(DependencyContext);
+  const { queryResolver, featureManager } = useContext(DependencyContext);
   const [startDate, setStartDate] = useState(
     moment().add(-7, "days").toISOString()
   );
@@ -18,6 +18,7 @@ export const Dashboard: React.FC = () => {
     kind: "GetMetrics",
     startDate,
     endDate,
+    isLsmAvailable: featureManager.isLsmEnabled(),
   });
 
   const updateCharts = () => {
@@ -45,11 +46,13 @@ export const Dashboard: React.FC = () => {
                   {words("dashboard.refresh")}
                 </Button>
               </RefreshWrapper>
-              <Section
-                title={words("navigation.lifecycleServiceManager")}
-                metricType="lsm"
-                metrics={metrics}
-              />
+              {featureManager.isLsmEnabled() && (
+                <Section
+                  title={words("navigation.lifecycleServiceManager")}
+                  metricType="lsm"
+                  metrics={metrics}
+                />
+              )}
               <Section
                 title={words("navigation.orchestrationEngine")}
                 metricType="orchestrator"
