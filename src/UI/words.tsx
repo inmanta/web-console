@@ -577,4 +577,4 @@ const dict = {
 
 type Key = keyof typeof dict;
 
-export const words = <K extends Key>(key: K): typeof dict[K] => dict[key];
+export const words = <K extends Key>(key: K): (typeof dict)[K] => dict[key];
