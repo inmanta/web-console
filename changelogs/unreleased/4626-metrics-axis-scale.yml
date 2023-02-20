@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Fix incorrect Y-axis values on stacked charts on dashboard'
+issue-nr: 4626
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"
