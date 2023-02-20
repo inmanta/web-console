@@ -3,8 +3,8 @@ import { Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
 import { Td } from "@patternfly/react-table";
 import styled from "styled-components";
 import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
-import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
 import { words } from "@/UI/words";
+import { TreeTableCellContext } from "../RowReferenceContext";
 import { InstanceCellButton } from "./InstanceCellButton";
 
 interface Props {
@@ -24,7 +24,6 @@ export const CellWithCopy: React.FC<Props> = ({
 }) => {
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
   const { onClick } = useContext(TreeTableCellContext);
-
   const onMouseEnter = (event: MouseEvent<HTMLTableCellElement>) => {
     // Check if overflown
     if (event.currentTarget.offsetWidth < event.currentTarget.scrollWidth) {

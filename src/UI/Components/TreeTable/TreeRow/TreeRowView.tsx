@@ -23,7 +23,7 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
           {row.valueCells.map(({ label, value, hasOnClick, serviceName }) => (
             <CellWithCopy
               label={label}
-              value={value}
+              value={label === "description" && value === "null" ? "" : value}
               hasOnClick={hasOnClick}
               serviceName={serviceName}
               className={"pf-m-truncate"}
@@ -44,7 +44,10 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
                     onToggle={row.onToggle}
                     aria-label={`Toggle-${row.id}`}
                   />
-                  {row.primaryCell.value}
+                  {row.primaryCell.label === "description" &&
+                  row.primaryCell.value === "null"
+                    ? ""
+                    : row.primaryCell.value}
                 </SplitItem>
               </Split>
             </Indent>
@@ -62,7 +65,10 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
                 onToggle={row.onToggle}
                 aria-label={`Toggle-${row.id}`}
               />
-              {row.primaryCell.value}
+              {row.primaryCell.label === "description" &&
+              row.primaryCell.value === "null"
+                ? ""
+                : row.primaryCell.value}
             </Indent>
           </Td>
         </Tr>
@@ -79,7 +85,7 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
           {row.valueCells.map(({ label, value, hasOnClick, serviceName }) => (
             <CellWithCopy
               label={label}
-              value={value}
+              value={label === "description" && value === "null" ? "" : value}
               hasOnClick={hasOnClick}
               serviceName={serviceName}
               className={"pf-m-truncate"}

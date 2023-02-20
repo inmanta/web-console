@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AttributeModel } from "@/Core";
@@ -26,22 +27,26 @@ const attribute2: AttributeModel = {
 
 test("GIVEN AttributeTable WHEN passed no attributes THEN the empty container is shown", () => {
   render(
-    <AttributeTable
-      service={{ ...Service.a, attributes: [], embedded_entities: [] }}
-    />
+    <MemoryRouter>
+      <AttributeTable
+        service={{ ...Service.a, attributes: [], embedded_entities: [] }}
+      />
+    </MemoryRouter>
   );
   expect(screen.getByText("No attributes found for the service")).toBeVisible();
 });
 
 test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async () => {
   render(
-    <AttributeTable
-      service={{
-        ...Service.a,
-        attributes: [attribute1],
-        embedded_entities: [],
-      }}
-    />
+    <MemoryRouter>
+      <AttributeTable
+        service={{
+          ...Service.a,
+          attributes: [attribute1],
+          embedded_entities: [],
+        }}
+      />
+    </MemoryRouter>
   );
   expect(
     await screen.findByRole("row", { name: "Row-order_id" })
@@ -50,13 +55,15 @@ test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async (
 
 test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", async () => {
   render(
-    <AttributeTable
-      service={{
-        ...Service.a,
-        attributes: [attribute1, attribute2],
-        embedded_entities: [],
-      }}
-    />
+    <MemoryRouter>
+      <AttributeTable
+        service={{
+          ...Service.a,
+          attributes: [attribute1, attribute2],
+          embedded_entities: [],
+        }}
+      />
+    </MemoryRouter>
   );
 
   expect(
@@ -69,12 +76,14 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
 
 test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities THEN the rows are shown", async () => {
   render(
-    <AttributeTable
-      service={{
-        ...Service.a,
-        attributes: [],
-      }}
-    />
+    <MemoryRouter>
+      <AttributeTable
+        service={{
+          ...Service.a,
+          attributes: [],
+        }}
+      />
+    </MemoryRouter>
   );
 
   expect(
@@ -84,13 +93,15 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
 
 test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", async () => {
   render(
-    <AttributeTable
-      service={{
-        ...Service.a,
-        attributes: [attribute1, attribute2],
-        embedded_entities: [],
-      }}
-    />
+    <MemoryRouter>
+      <AttributeTable
+        service={{
+          ...Service.a,
+          attributes: [attribute1, attribute2],
+          embedded_entities: [],
+        }}
+      />
+    </MemoryRouter>
   );
 
   expect(
@@ -103,13 +114,15 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
 
 test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows are shown and availalbe to expand/collapse one", async () => {
   render(
-    <AttributeTable
-      service={{
-        ...Service.a,
-        name: "service_name_a",
-        embedded_entities: multiNestedEditable,
-      }}
-    />
+    <MemoryRouter>
+      <AttributeTable
+        service={{
+          ...Service.a,
+          name: "service_name_a",
+          embedded_entities: multiNestedEditable,
+        }}
+      />
+    </MemoryRouter>
   );
 
   //default embedded entity
