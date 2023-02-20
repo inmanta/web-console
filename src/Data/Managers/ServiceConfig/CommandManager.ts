@@ -14,11 +14,10 @@ export class ServiceConfigCommandManager extends CommandManagerWithEnv<"UpdateSe
           kind: "GetServiceConfig",
         });
         if (!RemoteData.isSuccess(configData)) return;
-
         this.stateHelper.set(
           RemoteData.fromEither(
             await this.apiHelper.post(
-              `/lsm/v1/service_catalog/${name}/config`,
+              `/lsm/v1/service_catalog/${command.name}/config`,
               environment,
               {
                 values: {
