@@ -10865,34 +10865,22 @@ ws@^8.9.0:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.10.0.tgz#00a28c09dfb76eae4eb45c3b565f771d6951aa51"
   integrity sha512-+s49uSmZpvtAsd2h37vIPy1RBusaLawVe8of+GyEPsaJTCMpj/2v8NpeK1SHXjBlQ95lQTmQofOJnFiLoaN3yw==
 
-xml-formatter@*:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-2.6.1.tgz#066ef3a100bd58ee3b943f0c503be63176d3d497"
-  integrity sha512-dOiGwoqm8y22QdTNI7A+N03tyVfBlQ0/oehAzxIZtwnFAHGeSlrfjF73YQvzSsa/Kt6+YZasKsrdu6OIpuBggw==
+xml-formatter@*, xml-formatter@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-3.3.0.tgz#b8def827074ad10d089dc18a87f86cf27495eac2"
+  integrity sha512-+vVC4qTDuwsF6HbLG2g8RX2/jFeIiOxtbZ607hetoAupXU9P6dKv3+nqM1G6VJ6xv/ClyfUOKW4cWTbJ8x+0vw==
   dependencies:
-    xml-parser-xo "^3.2.0"
-
-xml-formatter@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/xml-formatter/-/xml-formatter-3.2.0.tgz#e07e923414e32476f52f1eef9efb48fa1431d483"
-  integrity sha512-PYROODIUDHz1SDFePg2VThajPOuSmvo/PrYRKARcSc9xxKKs62EN9uar60IIxxknzmOSNDAxlylpw34bQp0g/Q==
-  dependencies:
-    xml-parser-xo "^4.0.1"
+    xml-parser-xo "^4.0.3"
 
 xml-name-validator@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-4.0.0.tgz#79a006e2e63149a8600f15430f0a4725d1524835"
   integrity sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==
 
-xml-parser-xo@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/xml-parser-xo/-/xml-parser-xo-3.2.0.tgz#c633ab55cf1976d6b03ab4a6a85045093ac32b73"
-  integrity sha512-8LRU6cq+d7mVsoDaMhnkkt3CTtAs4153p49fRo+HIB3I1FD1o5CeXRjRH29sQevIfVJIcPjKSsPU/+Ujhq09Rg==
-
-xml-parser-xo@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/xml-parser-xo/-/xml-parser-xo-4.0.1.tgz#d89d09d0a0e7524f35f654c71274e1b4d0f2f43a"
-  integrity sha512-wJmRjzVZr7D+kYSajd3zqT7tt+y9L2vVWp+s7ARxzPMtk/gZcTY0KB14B801QX2D2wqIQ1d3bV/LgcnwlpKyyg==
+xml-parser-xo@^4.0.3:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/xml-parser-xo/-/xml-parser-xo-4.0.4.tgz#6c750f58fc7491c6cd0bb5e9fd11c0546fff4b08"
+  integrity sha512-wdjXcsgKaVeTJ+TKbahl38jCPkXPvVWnkpCMZwjL1Thavj2Vj7UuGBNR5z297Gh80kpHgs8rWJAhPWkm3rlZrw==
 
 xml@^1.0.1:
   version "1.0.1"
