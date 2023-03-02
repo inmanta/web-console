@@ -62,6 +62,7 @@ export const View: React.FC<ViewProps> = ({
   const onClearAll = () => {
     if (!RemoteData.isSuccess(data)) return;
     getOnUpdate(data.value.data.map((notification) => notification.id))({
+      read: true,
       cleared: true,
     });
   };

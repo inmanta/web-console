@@ -84,7 +84,7 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
         <DropdownItem
           key="cleared"
           component="button"
-          onClick={() => onUpdate({ cleared: true })}
+          onClick={() => onUpdate({ read: true, cleared: true })}
         >
           {words("notification.drawer.clear")}
         </DropdownItem>,
