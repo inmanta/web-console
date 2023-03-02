@@ -1,5 +1,6 @@
 import { RouteKind } from "@/Core";
 import { Dashboard } from "@/Slices/Dashboard";
+import { InstanceComposer } from "@/Slices/InstanceComposer";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
 import { CompileDetails } from "@S/CompileDetails";
@@ -44,6 +45,7 @@ export const paths: Paths = {
    */
   Dashboard: Dashboard.path,
   Catalog: ServiceCatalog.path,
+  InstanceComposer: InstanceComposer.path,
   Inventory: ServiceInventory.path,
   ServiceDetails: ServiceDetails.path,
   CreateInstance: CreateInstance.path,

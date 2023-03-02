@@ -20,6 +20,7 @@ const kinds = [
   "History",
   "Diagnose",
   "Events",
+  "InstanceComposer",
 
   /**
    * Resource Manager

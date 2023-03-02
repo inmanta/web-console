@@ -49,9 +49,11 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/backbone": "^1.4.15",
     "@types/fetch-mock": "^7.3.5",
     "@types/file-saver": "^2.0.5",
     "@types/jest": "^29.4.0",
+    "@types/jquery": "^3.5.16",
     "@types/json-bigint": "^1.0.1",
     "@types/lodash": "^4.14.191",
     "@types/lodash-es": "^4.17.6",
@@ -124,6 +126,7 @@
     "webpack-version-file": "^0.1.7"
   },
   "dependencies": {
+    "@clientio/rappid": "file:./rappid.tgz",
     "@patternfly/react-charts": "^6.94.15",
     "@patternfly/react-core": "^4.267.6",
     "@patternfly/react-icons": "^4.93.3",
