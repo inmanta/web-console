@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Fix issue wit clearing unread notification'
+issue-nr: 4677
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"
