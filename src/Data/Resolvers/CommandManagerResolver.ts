@@ -25,6 +25,7 @@ import {
   ControlAgentCommandManager,
   TriggerCompileCommandManager,
   TriggerDryRun,
+  TriggerForceStateCommandManager,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import {
@@ -123,6 +124,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       DeleteInstanceCommandManager(this.apiHelper),
       DeleteServiceCommandManager(this.apiHelper),
       TriggerSetStateCommandManager(this.authHelper, this.apiHelper),
+      TriggerForceStateCommandManager(this.authHelper, this.apiHelper),
       HaltEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,

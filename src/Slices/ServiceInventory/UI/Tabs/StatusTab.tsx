@@ -21,6 +21,7 @@ interface StatusInfo {
   createdAt: string;
   updatedAt: string;
   actions: React.ReactElement | null;
+  expertActions: React.ReactElement | null;
 }
 
 interface Props {
@@ -92,6 +93,14 @@ export const StatusTab: React.FC<Props> = ({ statusInfo }) => (
             </Title>
           </FlexItem>
           <FlexItem>{statusInfo.actions}</FlexItem>
+        </Flex>
+        <Flex direction={{ default: "column" }}>
+          <FlexItem>
+            <Title headingLevel="h3">
+              {words("inventory.statustab.expertActions")}
+            </Title>
+          </FlexItem>
+          <FlexItem>{statusInfo.expertActions}</FlexItem>
         </Flex>
       </Flex>
     </CardBody>
