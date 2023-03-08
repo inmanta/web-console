@@ -11,6 +11,7 @@ import {
   TextInputTypes,
 } from "@patternfly/react-core";
 import { HelpIcon, TimesIcon } from "@patternfly/react-icons";
+import { words } from "@/UI/words";
 
 interface Props {
   attributeName: string;
@@ -41,6 +42,7 @@ export const TextListFormInput: React.FC<Props> = ({
       (chip) => !Object.is(chip, chipToDelete)
     );
     setCurrentChips(newChips);
+    handleInputChange(newChips, null);
   };
 
   const handleChangeInput = (
@@ -63,6 +65,7 @@ export const TextListFormInput: React.FC<Props> = ({
   /** callback for clearing all selected chips and the text input */
   const clearChipsAndInput = () => {
     setCurrentChips([]);
+    handleInputChange([], null);
     setInputValue("");
   };
 
@@ -112,7 +115,7 @@ export const TextListFormInput: React.FC<Props> = ({
         </TextInputGroupMain>
         <TextInputGroupUtilities>
           <Button variant="plain" onClick={addChip}>
-            Add
+            {words("catalog.callbacks.add")}
           </Button>
           <Button
             variant="plain"
