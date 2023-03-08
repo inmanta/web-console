@@ -70,7 +70,7 @@ export const TextListFormInput: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    if (attributeValue.length) {
+    if (attributeValue && attributeValue.length) {
       setCurrentChips(attributeValue);
     }
   }, [attributeValue]);
