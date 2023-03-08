@@ -156,6 +156,15 @@ const dict = {
     serviceName: string
   ) =>
     `Are you sure you want to delete instance ${instanceName} of service entity ${serviceName}?`,
+  "inventory.destroyInstance.button": "Destroy",
+  "inventory.destroyInstance.failed": "Destroying instance failed",
+  "inventory.destroyInstance.title": "Destroy instance",
+  "inventory.destroyInstance.header": (
+    instanceName: string,
+    serviceName: string
+  ) =>
+    `Are you absolutely sure you want to permanently destroy instance ${instanceName} of service entity ${serviceName}?`,
+  "inventory.destroyInstance.text": `This action cannot be undone.`,
   "inventory.deleteVersion.failed": "Deleting version failed",
   "inventory.deleteVersion.title": "Delete version",
   "inventory.deleteVersion.header": (version: ParsedNumber) =>

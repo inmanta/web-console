@@ -3,6 +3,7 @@ export { TriggerDryRun };
 
 export * from "./DeleteInstance";
 export * from "./DeleteService";
+export * from "./DestroyInstance";
 export * from "./EnvironmentSettings";
 export * from "./GenerateToken";
 export * from "./GetSupportArchive";
