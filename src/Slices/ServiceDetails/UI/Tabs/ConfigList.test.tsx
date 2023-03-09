@@ -55,7 +55,7 @@ function setup() {
 it("Config Details takes environment halted status in account", async () => {
   const { component, store } = setup();
   const { rerender } = render(component({}));
-  act(() => {
+  await act(async () => {
     store.dispatch.environment.setEnvironmentDetailsById({
       id: ServiceInstance.a.environment,
       value: RemoteData.success({ halted: true } as EnvironmentDetails),

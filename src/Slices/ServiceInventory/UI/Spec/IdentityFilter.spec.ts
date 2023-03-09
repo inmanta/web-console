@@ -31,7 +31,9 @@ test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID',
   await userEvent.click(screen.getByRole("option", { name: "Order ID" }));
 
   const input = screen.getByRole("searchbox", { name: "IdentityFilter" });
-  await userEvent.type(input, `0001{enter}`);
+  await act(async () => {
+    await userEvent.type(input, `0001{enter}`);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/lsm/v1/service_inventory/${Service.withIdentity.name}?include_deployment_progress=True&limit=20&filter.order_id=0001&sort=created_at.desc`

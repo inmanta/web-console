@@ -143,7 +143,9 @@ test("GIVEN ResourcesView WHEN user clicks on requires toggle THEN list of requi
   const toggle = within(rows[0]).getByRole("button", {
     name: "Toggle-" + Resource.response.data[0].resource_id,
   });
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(ResourceDetails.response));
@@ -227,8 +229,9 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   const stateButton = await screen.findByRole("button", { name: "Agent" });
 
   expect(stateButton).toBeVisible();
-
-  await userEvent.click(stateButton);
+  await act(async () => {
+    await userEvent.click(stateButton);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=agent.asc");
 });
@@ -256,9 +259,13 @@ it.each`
     await userEvent.click(input);
     if (filterType === "select") {
       const option = await screen.findByRole("option", { name: filterValue });
-      await userEvent.click(option);
+      await act(async () => {
+        await userEvent.click(option);
+      });
     } else {
-      await userEvent.type(input, `${filterValue}{enter}`);
+      await act(async () => {
+        await userEvent.type(input, `${filterValue}{enter}`);
+      });
     }
 
     expect(apiHelper.pendingRequests[0].url).toContain(
@@ -299,11 +306,15 @@ it.each`
 
     const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
     await userEvent.click(inputOne);
-    await userEvent.type(inputOne, `${filterValueOne}`);
+    await act(async () => {
+      await userEvent.type(inputOne, `${filterValueOne}`);
+    });
 
     const inputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
     await userEvent.click(inputTwo);
-    await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
+    await act(async () => {
+      await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
+    });
 
     expect(apiHelper.pendingRequests[0].url).toContain(
       `filter.status=%21orphaned`
@@ -341,19 +352,25 @@ test("when using the all filters then the resources with that filter values shou
     words("resources.filters.agent.placeholder")
   );
   await userEvent.click(inputOne);
-  await userEvent.type(inputOne, `${filterValueOne}`);
+  await act(async () => {
+    await userEvent.type(inputOne, `${filterValueOne}`);
+  });
 
   const inputTwo = await screen.findByPlaceholderText(
     words("resources.filters.type.placeholder")
   );
   await userEvent.click(inputTwo);
-  await userEvent.type(inputTwo, `${filterValueTwo}`);
+  await act(async () => {
+    await userEvent.type(inputTwo, `${filterValueTwo}`);
+  });
 
   const inputThree = await screen.findByPlaceholderText(
     words("resources.filters.value.placeholder")
   );
   await userEvent.click(inputThree);
-  await userEvent.type(inputThree, `${filterValueThree}{enter}`);
+  await act(async () => {
+    await userEvent.type(inputThree, `${filterValueThree}{enter}`);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toContain(
     `filter.status=%21orphaned`
@@ -402,7 +419,9 @@ test.each`
     const toggle = await screen.findByRole("generic", {
       name: `${filterValue}-${option}-toggle`,
     });
-    await userEvent.click(toggle);
+    await act(async () => {
+      await userEvent.click(toggle);
+    });
 
     expect(apiHelper.pendingRequests[0].url).toEqual(
       `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&filter.status=${
@@ -450,8 +469,9 @@ test("When clicking the clear and reset filters then the state filter is updated
   const visibleClearButton = clearButtons[clearButtons.length - 1];
 
   expect(visibleClearButton).toBeVisible();
-
-  await userEvent.click(visibleClearButton);
+  await act(async () => {
+    await userEvent.click(visibleClearButton);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/resource?deploy_summary=True&limit=20&&sort=resource_type.asc`
@@ -466,9 +486,11 @@ test("When clicking the clear and reset filters then the state filter is updated
       })
     );
   });
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Reset-filters" })
-  );
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Reset-filters" })
+    );
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/resource?deploy_summary=True&limit=20&filter.status=%21orphaned&sort=resource_type.asc`

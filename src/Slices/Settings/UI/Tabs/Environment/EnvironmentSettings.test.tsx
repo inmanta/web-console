@@ -76,7 +76,9 @@ test("Given environment settings When submitting the edited name Then the backen
   );
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   await userEvent.clear(textBox);
-  await userEvent.type(textBox, `dev{enter}`);
+  await act(async () => {
+    await userEvent.type(textBox, `dev{enter}`);
+  });
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
@@ -115,7 +117,9 @@ test("Given environment settings When canceling a name edit Then the backend req
   );
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   await userEvent.clear(textBox);
-  await userEvent.type(textBox, "dev");
+  await act(async () => {
+    await userEvent.type(textBox, "dev");
+  });
   await userEvent.click(
     screen.getByRole("button", { name: "Name-cancel-edit" })
   );
@@ -143,7 +147,9 @@ test.each`
     );
     const textBox = await screen.findByRole("textbox", { name: "Name-input" });
     await userEvent.clear(textBox);
-    await userEvent.type(textBox, `dev{enter}`);
+    await act(async () => {
+      await userEvent.type(textBox, `dev{enter}`);
+    });
     expect(apiHelper.pendingRequests).toHaveLength(1);
     await act(async () => {
       await apiHelper.resolve(Maybe.some("Invalid environment name"));
@@ -210,12 +216,16 @@ test("Given environment settings When submitting the edited repository settings 
     name: "repo_branch-input",
   });
   await userEvent.clear(branchTextBox);
-  await userEvent.type(branchTextBox, newBranch);
+  await act(async () => {
+    await userEvent.type(branchTextBox, newBranch);
+  });
   const urlTextBox = await screen.findByRole("textbox", {
     name: "repo_url-input",
   });
   await userEvent.clear(urlTextBox);
-  await userEvent.type(urlTextBox, newRepository);
+  await act(async () => {
+    await userEvent.type(urlTextBox, newRepository);
+  });
   await userEvent.click(
     screen.getByRole("button", { name: "Repository Settings-submit-edit" })
   );
@@ -267,7 +277,9 @@ test("Given environment settings When canceling a repository edit Then the backe
     name: "repo_branch-input",
   });
   await userEvent.clear(textBox);
-  await userEvent.type(textBox, "dev");
+  await act(async () => {
+    await userEvent.type(textBox, "dev");
+  });
   await userEvent.click(
     screen.getByRole("button", { name: "Repository Settings-cancel-edit" })
   );
@@ -304,7 +316,9 @@ test.each`
       name: "repo_branch-input",
     });
     await userEvent.clear(textBox);
-    await userEvent.type(textBox, `dev{enter}`);
+    await act(async () => {
+      await userEvent.type(textBox, `dev{enter}`);
+    });
     expect(apiHelper.pendingRequests).toHaveLength(1);
     await act(async () => {
       await apiHelper.resolve(Maybe.some("Invalid branch"));
@@ -364,7 +378,9 @@ test("Given environment settings When submitting the edited project name Then th
   const toggle = await screen.findByRole("button", {
     name: "Project Name-select-toggle",
   });
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
   await userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
   await userEvent.click(
     screen.getByRole("button", { name: "Project Name-submit-edit" })
@@ -409,7 +425,9 @@ test("Given environment settings When canceling a project name edit Then the bac
   const toggle = await screen.findByRole("button", {
     name: "Project Name-select-toggle",
   });
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
   await userEvent.click(screen.getByRole("option", { name: "project_name_b" }));
   await userEvent.click(
     screen.getByRole("button", { name: "Project Name-cancel-edit" })
@@ -439,7 +457,9 @@ test.each`
     const toggle = await screen.findByRole("button", {
       name: "Project Name-select-toggle",
     });
-    await userEvent.click(toggle);
+    await act(async () => {
+      await userEvent.click(toggle);
+    });
     await userEvent.click(
       screen.getByRole("option", { name: "project_name_b" })
     );
