@@ -99,7 +99,7 @@ describe("DeleteModal ", () => {
   it("Takes environment halted status in account", async () => {
     const { component, storeInstance } = setup();
     const { rerender } = render(component(true));
-    act(() => {
+    await act(async () => {
       storeInstance.dispatch.environment.setEnvironmentDetailsById({
         id: ServiceInstance.a.environment,
         value: RemoteData.success({ halted: true } as EnvironmentDetails),

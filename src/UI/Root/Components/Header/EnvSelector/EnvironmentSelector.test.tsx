@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
 import { Router } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import { RemoteData } from "@/Core";
@@ -45,7 +45,9 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
   );
 
   const toggle = screen.getByText(`Environment: ${envA.name}`);
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
   const listItem = screen.getAllByText(`${envB.name}`)[0];
 
   expect(listItem).toBeVisible();
@@ -70,7 +72,9 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
   );
 
   const toggle = screen.getByText(`Environment: ${envA.name}`);
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
 
   const listItem = screen.getAllByText(`${envB.name}`)[1];
 
@@ -102,7 +106,9 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   const toggle = screen.getByRole("button", {
     name: `Environment: ${envB.name}`,
   });
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
 
   const menuItems = screen.getAllByRole("menuitem");
   await userEvent.click(menuItems[2]);

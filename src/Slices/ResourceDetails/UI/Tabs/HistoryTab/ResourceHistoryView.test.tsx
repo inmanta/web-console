@@ -133,7 +133,9 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
   apiHelper.resolve(Either.right(ResourceHistory.response));
   const stateButton = await screen.findByRole("button", { name: /date/i });
   expect(stateButton).toBeVisible();
-  await userEvent.click(stateButton);
+  await act(async () => {
+    await userEvent.click(stateButton);
+  });
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=date.asc");
 });
 

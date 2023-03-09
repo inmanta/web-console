@@ -70,7 +70,9 @@ test("When using the name filter then only the matching parameters should be fet
   );
 
   await userEvent.click(input);
-  await userEvent.type(input, "param{enter}");
+  await act(async () => {
+    await userEvent.type(input, "param{enter}");
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.name=param`
@@ -119,7 +121,9 @@ test("When using the source filter then only the matching parameters should be f
   );
 
   await userEvent.click(input);
-  await userEvent.type(input, "plugin{enter}");
+  await act(async () => {
+    await userEvent.type(input, "plugin{enter}");
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin`
@@ -167,12 +171,17 @@ test("When using the Updated filter then the parameters within the range selecte
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
   await userEvent.click(fromDatePicker);
-  await userEvent.type(fromDatePicker, `2022/01/31`);
+  await act(async () => {
+    await userEvent.type(fromDatePicker, `2022/01/31`);
+  });
   const toDatePicker = screen.getByLabelText("To Date Picker");
   await userEvent.click(toDatePicker);
-  await userEvent.type(toDatePicker, `2022-02-01`);
-
-  await userEvent.click(screen.getByLabelText("Apply date filter"));
+  await act(async () => {
+    await userEvent.type(toDatePicker, `2022-02-01`);
+  });
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Apply date filter"));
+  });
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00`

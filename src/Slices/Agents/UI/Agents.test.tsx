@@ -134,7 +134,9 @@ test("When using the name filter then only the matching agents should be fetched
   );
   await userEvent.click(input);
 
-  await userEvent.type(input, "internal{enter}");
+  await act(async () => {
+    await userEvent.type(input, "internal{enter}");
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/agents?limit=20&filter.name=internal&sort=name.asc`
@@ -183,7 +185,9 @@ test("When using the process name filter then only the matching agents should be
   );
   await userEvent.click(input);
 
-  await userEvent.type(input, "internal{enter}");
+  await act(async () => {
+    await userEvent.type(input, "internal{enter}");
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/agents?limit=20&filter.process_name=internal&sort=name.asc`
@@ -235,7 +239,9 @@ test("When using the status filter with the 'up' option then the agents in the '
   const option = await screen.findByRole("option", {
     name: words("agent.tests.up"),
   });
-  await await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/agents?limit=20&filter.status=up&sort=name.asc`
@@ -268,7 +274,9 @@ test("Given the Agents view with filters, When pausing an agent, then the correc
     words("agents.filters.name.placeholder")
   );
   await userEvent.click(input);
-  await userEvent.type(input, "aws{enter}");
+  await act(async () => {
+    await userEvent.type(input, "aws{enter}");
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(AgentsMock.response));
@@ -319,7 +327,9 @@ test("Given the Agents view with filters, When unpausing an agent, then the corr
     words("agents.filters.name.placeholder")
   );
   await userEvent.click(input);
-  await userEvent.type(input, "bru{enter}");
+  await act(async () => {
+    await userEvent.type(input, "bru{enter}");
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(AgentsMock.response));

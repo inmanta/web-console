@@ -113,7 +113,9 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
   expect(options[0]).toHaveAttribute("aria-selected", "true");
 
   // Select a different report
-  await userEvent.click(options[1]);
+  await act(async () => {
+    await userEvent.click(options[1]);
+  });
   // Verify the request
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -132,11 +134,13 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     ).getAllByRole<HTMLButtonElement>("option")[1]
   ).toHaveAttribute("aria-selected", "true");
   // Go back to the first one
-  await userEvent.click(
-    within(
-      screen.getByRole("listbox", { name: "ReportList" })
-    ).getAllByRole<HTMLButtonElement>("option")[0]
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(
+        screen.getByRole("listbox", { name: "ReportList" })
+      ).getAllByRole<HTMLButtonElement>("option")[0]
+    );
+  });
   // Verify the request
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
