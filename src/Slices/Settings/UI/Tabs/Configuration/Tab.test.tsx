@@ -107,7 +107,9 @@ test("GIVEN ConfigurationTab WHEN editing a dict field THEN shows warning icon",
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  await userEvent.type(newKeyInput, "testKey");
+  await act(async () => {
+    await userEvent.type(newKeyInput, "testKey");
+  });
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -226,7 +228,9 @@ test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  await userEvent.type(textbox, "testString");
+  await act(async () => {
+    await userEvent.type(textbox, "testString");
+  });
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -266,7 +270,9 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
   });
 
   expect(toggle.checked).toBeFalsy();
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
   expect(toggle.checked).toBeTruthy();
   expect(apiHelper.resolvedRequests).toHaveLength(1);
 
@@ -379,11 +385,15 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
   const newKeyInput = within(newEntryRow).getByRole("textbox", {
     name: "editEntryKey",
   });
-  await userEvent.type(newKeyInput, "testKey");
+  await act(async () => {
+    await userEvent.type(newKeyInput, "testKey");
+  });
   const newValueInput = within(newEntryRow).getByRole("textbox", {
     name: "editEntryValue",
   });
-  await userEvent.type(newValueInput, "testValue");
+  await act(async () => {
+    await userEvent.type(newValueInput, "testValue");
+  });
 
   await userEvent.click(
     within(row).getByRole("button", { name: "SaveAction" }),

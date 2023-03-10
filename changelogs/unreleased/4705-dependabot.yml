@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @testing-library/dom from 8.20.0 to 9.0.1'
+destination-branches:
+- master
+- iso6
+sections: {}

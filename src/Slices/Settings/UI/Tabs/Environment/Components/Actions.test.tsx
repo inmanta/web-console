@@ -66,7 +66,9 @@ test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN de
   expect(input.value).toHaveLength(0);
   expect(deleteButton).toBeDisabled();
 
-  await userEvent.type(input, "wrong");
+  await act(async () => {
+    await userEvent.type(input, "wrong");
+  });
   expect(input.value).toMatch("wrong");
   expect(deleteButton).toBeDisabled();
 });
@@ -84,7 +86,9 @@ test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete en
   expect(input.value).toHaveLength(0);
   expect(deleteButton).toBeDisabled();
 
-  await userEvent.type(input, "connect");
+  await act(async () => {
+    await userEvent.type(input, "connect");
+  });
   expect(input.value).toMatch("connect");
   expect(deleteButton).toBeEnabled();
 });
@@ -99,7 +103,9 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
     name: "delete environment check",
   });
   const deleteButton = screen.getByRole("button", { name: "delete" });
-  await userEvent.type(input, "connect");
+  await act(async () => {
+    await userEvent.type(input, "connect");
+  });
   await userEvent.click(deleteButton);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
@@ -130,7 +136,9 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",
   });
-  await userEvent.type(input, "connect");
+  await act(async () => {
+    await userEvent.type(input, "connect");
+  });
   await userEvent.click(screen.getByRole("button", { name: "delete" }));
   await act(async () => {
     await apiHelper.resolve(Maybe.some("error message"));
@@ -181,7 +189,9 @@ test("GIVEN Environment Actions and clear modal WHEN correct env & clear button 
     name: "clear environment check",
   });
   const clearButton = screen.getByRole("button", { name: "clear" });
-  await userEvent.type(input, "connect");
+  await act(async () => {
+    await userEvent.type(input, "connect");
+  });
   await userEvent.click(clearButton);
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];

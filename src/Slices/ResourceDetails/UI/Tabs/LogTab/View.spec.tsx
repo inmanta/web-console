@@ -90,7 +90,9 @@ test("GIVEN ResourceLogsView WHEN filtered on message THEN only shows relevant l
   const messageFilter = screen.getByRole("searchbox", {
     name: "MessageFilter",
   });
-  await userEvent.type(messageFilter, "failed{enter}");
+  await act(async () => {
+    await userEvent.type(messageFilter, "failed{enter}");
+  });
 
   await act(async () => {
     apiHelper.resolve(
