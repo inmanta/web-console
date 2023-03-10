@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
@@ -91,7 +91,9 @@ test("GIVEN Facts page THEN sets sorting parameters correctly on click", async (
     name: words("facts.column.resourceId"),
   });
   expect(resourceIdButton).toBeVisible();
-  await userEvent.click(resourceIdButton);
+  await act(async () => {
+    await userEvent.click(resourceIdButton);
+  });
   expect(apiHelper.pendingRequests[0].url).toContain("&sort=resource_id.asc");
 });
 
@@ -125,7 +127,9 @@ test.each`
     const input = await screen.findByPlaceholderText(placeholderText);
     await userEvent.click(input);
 
-    await userEvent.type(input, `${filterValue}{enter}`);
+    await act(async () => {
+      await userEvent.type(input, `${filterValue}{enter}`);
+    });
 
     expect(apiHelper.pendingRequests[0].url).toEqual(
       `/api/v2/facts?limit=20&filter.${filterUrlName}=${filterValue}&sort=name.asc`

@@ -146,7 +146,9 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   const callbackUrlInput = screen.getByRole("textbox", {
     name: "callbackUrl",
   });
-  await userEvent.type(callbackUrlInput, "http://www.example.com/");
+  await act(async () => {
+    await userEvent.type(callbackUrlInput, "http://www.example.com/");
+  });
   const minimalLogLevelInput = screen.getByRole("button", {
     name: "MinimalLogLevel",
   });
