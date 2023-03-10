@@ -186,7 +186,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get(".pf-c-description-list").contains("Edit").click();
 
     // check if the amount of fields is 4 instead of 11
-    cy.get("form").find("input").should("have.length", 4);
+    cy.get("form").find("input").should("have.length", 5);
 
     // delete first value and submit should give an error toast
     cy.get("#address_r1").clear();
