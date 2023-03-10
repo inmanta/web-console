@@ -115,7 +115,7 @@ test("SetStateAction dropdown takes environment halted status in account", async
     </DependencyProvider>
   );
   const { rerender } = render(componentWithDependencies([]));
-  act(() => {
+  await act(async () => {
     storeInstance.dispatch.environment.setEnvironmentDetailsById({
       id: ServiceInstance.b.environment,
       value: RemoteData.success({ halted: true } as EnvironmentDetails),
