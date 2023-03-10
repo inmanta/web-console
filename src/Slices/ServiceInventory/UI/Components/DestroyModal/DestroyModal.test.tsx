@@ -66,7 +66,9 @@ describe("DeleteModal ", () => {
   it("Shows form when clicking on modal button", async () => {
     const { component } = setup();
     render(component());
-    const modalButton = await screen.findByText(words("delete"));
+    const modalButton = await screen.findByText(
+      words("inventory.destroyInstance.button")
+    );
     await userEvent.click(modalButton);
     expect(await screen.findByText(words("yes"))).toBeVisible();
     expect(await screen.findByText(words("no"))).toBeVisible();
@@ -74,7 +76,9 @@ describe("DeleteModal ", () => {
   it("Closes modal when cancelled", async () => {
     const { component } = setup();
     render(component());
-    const modalButton = await screen.findByText(words("delete"));
+    const modalButton = await screen.findByText(
+      words("inventory.destroyInstance.button")
+    );
     await userEvent.click(modalButton);
     const noButton = await screen.findByText(words("no"));
     await userEvent.click(noButton);
@@ -83,7 +87,9 @@ describe("DeleteModal ", () => {
   it("Sends request when submitted", async () => {
     const { component, apiHelper, refetch } = setup();
     render(component());
-    const modalButton = await screen.findByText(words("delete"));
+    const modalButton = await screen.findByText(
+      words("inventory.destroyInstance.button")
+    );
     await userEvent.click(modalButton);
     const yesButton = await screen.findByText(words("yes"));
     await userEvent.click(yesButton);
@@ -91,12 +97,12 @@ describe("DeleteModal ", () => {
     expect(apiHelper.pendingRequests[0]).toEqual({
       environment: "env",
       method: "DELETE",
-      url: `/lsm/v1/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}?current_version=${ServiceInstance.a.version}`,
+      url: `/lsm/v2/service_inventory/${ServiceInstance.a.service_entity}/${ServiceInstance.a.id}/expert?current_version=${ServiceInstance.a.version}`,
     });
     await apiHelper.resolve(Either.right(null));
     expect(refetch).toHaveBeenCalled();
   });
-  it("Takes environment halted status in account", async () => {
+  it("Doesn't takea environment halted status in account", async () => {
     const { component, storeInstance } = setup();
     const { rerender } = render(component(true));
     act(() => {
@@ -107,7 +113,9 @@ describe("DeleteModal ", () => {
     });
     rerender(component(false));
     expect(
-      await screen.findByRole("button", { name: words("delete") })
-    ).toBeDisabled();
+      await screen.findByRole("button", {
+        name: words("inventory.destroyInstance.button"),
+      })
+    ).toBeEnabled();
   });
 });

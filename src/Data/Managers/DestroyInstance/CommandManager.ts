@@ -7,7 +7,7 @@ export function DestroyInstanceCommandManager(apiHelper: ApiHelper) {
     ({ id, service_entity, version }, environment) => {
       return async (refetch) => {
         const result = await apiHelper.delete(
-          `/lsm/v1/service_inventory/${service_entity}/${id}/expert?current_version=${version}`,
+          `/lsm/v2/service_inventory/${service_entity}/${id}/expert?current_version=${version}`,
           environment
         );
         await refetch();

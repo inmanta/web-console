@@ -2,22 +2,16 @@ import React, { useContext, useState } from "react";
 import { Button, Modal, Text } from "@patternfly/react-core";
 import { TrashAltIcon } from "@patternfly/react-icons";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
-import {
-  ToastAlert,
-  ActionDisabledTooltip,
-  ConfirmUserActionForm,
-} from "@/UI/Components";
+import { ToastAlert, ConfirmUserActionForm } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { GetInstancesContext } from "@S/ServiceInventory/UI/GetInstancesContext";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
-  isDisabled?: boolean;
 }
 
 export const DestroyModal: React.FC<Props> = ({
-  isDisabled,
   id,
   instance_identity,
   version,
@@ -28,8 +22,7 @@ export const DestroyModal: React.FC<Props> = ({
     setIsOpen(!isOpen);
   };
   const [errorMessage, setErrorMessage] = useState("");
-  const { commandResolver, environmentModifier } =
-    useContext(DependencyContext);
+  const { commandResolver } = useContext(DependencyContext);
   const { refetch } = useContext(GetInstancesContext);
 
   const trigger = commandResolver.useGetTrigger<"DestroyInstance">({
@@ -38,7 +31,6 @@ export const DestroyModal: React.FC<Props> = ({
     id,
     version,
   });
-  const isHalted = environmentModifier.useIsHalted();
   const onSubmit = async () => {
     setIsOpen(false);
     const result = await trigger(refetch);
@@ -53,25 +45,9 @@ export const DestroyModal: React.FC<Props> = ({
         message={errorMessage}
         setMessage={setErrorMessage}
       />
-      <ActionDisabledTooltip
-        isDisabled={isDisabled || isHalted}
-        ariaLabel={words("inventory.destroyInstance.button")}
-        tooltipContent={
-          isHalted
-            ? words("environment.halt.tooltip")
-            : words("inventory.statustab.actionDisabled")
-        }
-      >
-        <Button
-          variant="secondary"
-          onClick={handleModalToggle}
-          isDisabled={isDisabled || isHalted}
-          isBlock
-          isDanger
-        >
-          <TrashAltIcon /> {words("inventory.destroyInstance.button")}
-        </Button>
-      </ActionDisabledTooltip>
+      <Button variant="secondary" onClick={handleModalToggle} isBlock isDanger>
+        <TrashAltIcon /> {words("inventory.destroyInstance.button")}
+      </Button>
       <Modal
         variant={"small"}
         isOpen={isOpen}

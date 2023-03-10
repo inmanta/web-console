@@ -29,7 +29,6 @@ export const ExpertActions: React.FC<InstanceActionsProps> = ({ instance }) => {
             instance.service_identity_attribute_value ?? instance.id
           }
           version={instance.version}
-          targets={instance.instanceSetStateTargets}
         />
       </DescriptionListGroup>
     </DescriptionList>
