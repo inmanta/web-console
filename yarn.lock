@@ -925,13 +925,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@patternfly/react-charts@^6.94.15":
-  version "6.94.15"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-charts/-/react-charts-6.94.15.tgz#23c32633612c72150d955c0874914e8d211554aa"
-  integrity sha512-wtuZQIR1b9eVPkho1uDrKxIAXOtMiW6XYweosaHyjzg0LQkSzd4vBisvn/QW8BSnyla0g/HztSFnxC5hckwNyQ==
+"@patternfly/react-charts@^6.94.18":
+  version "6.94.18"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-charts/-/react-charts-6.94.18.tgz#1daca0285f4eaa13945aa28de2aa5fa919d335ab"
+  integrity sha512-56WxnZYC3blRX41mW67JaPxJ3YhXViLvwGpEsZrYCccla/rTV8JgKK0gjHnqtzPQiVBfpn+3ewOyNCOR5uRoSw==
   dependencies:
-    "@patternfly/react-styles" "^4.92.3"
-    "@patternfly/react-tokens" "^4.94.3"
+    "@patternfly/react-styles" "^4.92.6"
+    "@patternfly/react-tokens" "^4.94.6"
     hoist-non-react-statics "^3.3.0"
     lodash "^4.17.19"
     tslib "^2.0.0"
