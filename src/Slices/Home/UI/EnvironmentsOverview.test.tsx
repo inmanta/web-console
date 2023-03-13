@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { dependencies, Environment } from "@/Test";
 import { words } from "@/UI";
@@ -36,7 +36,9 @@ it.each`
       words("home.filters.env.placeholder")
     );
     await userEvent.click(input);
-    await userEvent.type(input, filterValue);
+    await act(async () => {
+      await userEvent.type(input, filterValue);
+    });
     expect(
       screen.queryAllByRole("article", {
         name: "Environment card",
@@ -57,7 +59,9 @@ test("Given environments overview When filtering by project Then only the matchi
   );
   await userEvent.click(input);
   const option = await screen.findByRole("option", { name: "default" });
-  await await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
   expect(
     screen.queryAllByRole("article", {
       name: "Environment card",
@@ -77,12 +81,16 @@ test("Given environments overview When filtering by name and project Then only t
   );
   await userEvent.click(projectInput);
   const option = await screen.findByRole("option", { name: "default" });
-  await await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
   const nameInput = await screen.findByPlaceholderText(
     words("home.filters.env.placeholder")
   );
   await userEvent.click(nameInput);
-  await userEvent.type(nameInput, "test");
+  await act(async () => {
+    await userEvent.type(nameInput, "test");
+  });
   expect(
     await screen.findByRole("article", {
       name: "Environment card",

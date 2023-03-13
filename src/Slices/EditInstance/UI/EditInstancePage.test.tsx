@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { cloneDeep } from "lodash";
@@ -102,7 +102,9 @@ test("EditInstance View shows success form", async () => {
   const bandwidthField = screen.getByText("bandwidth");
   expect(bandwidthField).toBeVisible();
 
-  await userEvent.type(bandwidthField, "2");
+  await act(async () => {
+    await userEvent.type(bandwidthField, "2");
+  });
   await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -136,12 +138,16 @@ test("Given the EditInstance View When changing an embedded entity Then the corr
   await userEvent.click(screen.getByRole("button", { name: "circuits" }));
   await userEvent.click(screen.getByRole("button", { name: "1" }));
   const serviceIdField = screen.getByRole("spinbutton", { name: "service_id" });
-  await userEvent.type(serviceIdField, "{backspace}7");
+  await act(async () => {
+    await userEvent.type(serviceIdField, "{backspace}7");
+  });
 
   const bandwidthField = screen.getByText("bandwidth");
   expect(bandwidthField).toBeVisible();
 
-  await userEvent.type(bandwidthField, "2");
+  await act(async () => {
+    await userEvent.type(bandwidthField, "2");
+  });
   await userEvent.click(screen.getByText(words("confirm")));
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
