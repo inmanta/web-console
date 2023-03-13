@@ -1,0 +1,187 @@
+import React from "react";
+import { fireEvent, screen, render, act } from "@testing-library/react";
+import { StoreProvider } from "easy-peasy";
+import { EnvironmentDetails, RemoteData } from "@/Core";
+import {
+  TriggerForceStateCommandManager,
+  CommandResolverImpl,
+  BaseApiHelper,
+  KeycloakAuthHelper,
+  getStoreInstance,
+} from "@/Data";
+import {
+  dependencies,
+  DynamicCommandManagerResolver,
+  MockEnvironmentModifier,
+  ServiceInstance,
+} from "@/Test";
+import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
+import { ForceStateAction } from "./ForceStateAction";
+
+function setup() {
+  const commandManager = TriggerForceStateCommandManager(
+    new KeycloakAuthHelper(),
+    new BaseApiHelper()
+  );
+  return {
+    commandResolver: new CommandResolverImpl(
+      new DynamicCommandManagerResolver([commandManager])
+    ),
+  };
+}
+function setupComponent() {
+  const { commandResolver } = setup();
+  return {
+    component: (
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          commandResolver,
+          environmentModifier: new MockEnvironmentModifier(),
+        }}
+      >
+        <ForceStateAction
+          id={ServiceInstance.a.id}
+          instance_identity={
+            ServiceInstance.a.service_identity_attribute_value ??
+            ServiceInstance.a.id
+          }
+          service_entity={ServiceInstance.a.service_entity}
+          version={ServiceInstance.a.version}
+          targets={["up", "deleting"]}
+        />
+      </DependencyProvider>
+    ),
+  };
+}
+
+test("ForceStateAction dropdown doesn't takes environment halted status in account", async () => {
+  const id = ServiceInstance.b.id;
+  const { commandResolver } = setup();
+  const storeInstance = getStoreInstance();
+  storeInstance.dispatch.environment.setEnvironmentDetailsById({
+    id: ServiceInstance.b.environment,
+    value: RemoteData.success({ halted: false } as EnvironmentDetails),
+  });
+  const environmentModifier = EnvironmentModifierImpl();
+  environmentModifier.setEnvironment(ServiceInstance.b.environment);
+  const componentWithDependencies = (targets: string[]) => (
+    <DependencyProvider
+      dependencies={{
+        ...dependencies,
+        commandResolver,
+        environmentModifier,
+      }}
+    >
+      <StoreProvider store={storeInstance}>
+        <ForceStateAction
+          id={ServiceInstance.b.id}
+          instance_identity={
+            ServiceInstance.b.service_identity_attribute_value ??
+            ServiceInstance.b.id
+          }
+          service_entity={ServiceInstance.b.service_entity}
+          version={ServiceInstance.b.version}
+          targets={targets}
+        />
+      </StoreProvider>
+    </DependencyProvider>
+  );
+  const { rerender } = render(componentWithDependencies([]));
+  await act(async () => {
+    storeInstance.dispatch.environment.setEnvironmentDetailsById({
+      id: ServiceInstance.b.environment,
+      value: RemoteData.success({ halted: true } as EnvironmentDetails),
+    });
+  });
+
+  rerender(componentWithDependencies(["update_started"]));
+  const testid = `${id}-force-state-toggle`;
+  expect(await screen.findByTestId(testid)).toBeEnabled();
+});
+
+test("ForceStateAction dropdown can be expanded", async () => {
+  const id = ServiceInstance.a.id;
+  const { component } = setupComponent();
+  render(component);
+  const testid = `${id}-force-state-toggle`;
+
+  fireEvent.click(await screen.findByTestId(testid));
+
+  expect(await screen.findByTestId(`${id}-up-expert`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-deleting-expert`)).toBeVisible();
+});
+
+test("ForceStateAction shows confirmation dialog when element is selected", async () => {
+  const id = ServiceInstance.a.id;
+  const { component } = setupComponent();
+  render(component);
+  const testid = `${id}-force-state-toggle`;
+
+  fireEvent.click(await screen.findByTestId(testid));
+  fireEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+
+  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+});
+
+test("ForceStateAction calls onSetInstanceState when transfer is confirmed", async () => {
+  const id = ServiceInstance.a.id;
+  const { component } = setupComponent();
+  render(component);
+  const testid = `${id}-force-state-toggle`;
+
+  fireEvent.click(await screen.findByTestId(testid));
+  fireEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+
+  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+  fireEvent.click(await screen.findByTestId(`${id}-force-state-modal-confirm`));
+  expect(
+    screen.queryByTestId(`${id}-force-state-modal`)
+  ).not.toBeInTheDocument();
+  expect(fetchMock.mock.calls).toHaveLength(1);
+});
+
+test("ForceStateAction closes confirmation modal when transfer is cancelled", async () => {
+  const id = ServiceInstance.a.id;
+  const { component } = setupComponent();
+  render(component);
+  const testid = `${id}-force-state-toggle`;
+
+  fireEvent.click(await screen.findByTestId(testid));
+  fireEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+
+  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+  fireEvent.click(await screen.findByTestId(`${id}-force-state-modal-cancel`));
+  expect(
+    screen.queryByTestId(`${id}-force-state-modal`)
+  ).not.toBeInTheDocument();
+  expect(fetchMock.mock.calls).toHaveLength(0);
+});
+
+test("ForceStateAction shows error message when transfer not successful", async () => {
+  fetchMock.mockResponseOnce(JSON.stringify({ message: "Invalid request" }), {
+    status: 400,
+    statusText: "Bad Request",
+  });
+  const id = ServiceInstance.a.id;
+  const { component } = setupComponent();
+  render(component);
+  const testid = `${id}-force-state-toggle`;
+
+  fireEvent.click(await screen.findByTestId(testid));
+  fireEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+
+  // Modal is visible
+  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+  // Confirm transfer
+  fireEvent.click(await screen.findByTestId(`${id}-force-state-modal-confirm`));
+  expect(
+    screen.queryByTestId(`${id}-force-state-modal`)
+  ).not.toBeInTheDocument();
+  expect(fetchMock.mock.calls).toHaveLength(1);
+  // Error message is shown
+  expect(await screen.findByTestId(`${id}-error-message`)).toBeVisible();
+  fireEvent.click(await screen.findByTestId(`${id}-close-error-message`));
+  // Error message can be closed
+  expect(screen.queryByTestId(`${id}-error-message`)).not.toBeInTheDocument();
+});

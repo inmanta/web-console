@@ -96,7 +96,7 @@ export const ForceStateAction: React.FC<Props> = ({
         <StyledDropdown
           toggle={
             <DropdownToggle
-              data-testid={`${id}-set-state-toggle`}
+              data-testid={`${id}-force-state-toggle`}
               onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
               toggleIndicator={CaretDownIcon}
             >
@@ -150,7 +150,7 @@ const ConfirmationModal: React.FC<ModalProps> = ({
   return (
     <React.Fragment>
       <Modal
-        data-testid={`${id}-set-state-modal`}
+        data-testid={`${id}-force-state-modal`}
         variant={ModalVariant.small}
         titleIconVariant="danger"
         title={words("inventory.statustab.forceState.confirmTitle")}
@@ -160,7 +160,7 @@ const ConfirmationModal: React.FC<ModalProps> = ({
           <Button
             key="confirm"
             variant="primary"
-            data-testid={`${id}-set-state-modal-confirm`}
+            data-testid={`${id}-force-state-modal-confirm`}
             onClick={handleConfirm}
           >
             {words("yes")}
@@ -168,7 +168,7 @@ const ConfirmationModal: React.FC<ModalProps> = ({
           <Button
             key="cancel"
             variant="link"
-            data-testid={`${id}-set-state-modal-cancel`}
+            data-testid={`${id}-force-state-modal-cancel`}
             onClick={handleModalToggle}
           >
             {words("no")}
