@@ -20,6 +20,7 @@ import { words } from "@/UI/words";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
+  targets: string[];
 }
 
 export const ForceStateAction: React.FC<Props> = ({
@@ -27,6 +28,7 @@ export const ForceStateAction: React.FC<Props> = ({
   id,
   instance_identity,
   version,
+  targets,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -36,23 +38,7 @@ export const ForceStateAction: React.FC<Props> = ({
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const states = [
-    "deploying",
-    "dry",
-    "unavailable",
-    "deployed",
-    "undefined",
-    "available",
-    "skipped_for_undefined",
-    "skipped",
-    "failed",
-    "cancelled",
-    "danger",
-    "info",
-    "warning",
-    "no_label",
-  ];
-  const dropdownItems = states?.map((target) => (
+  const dropdownItems = targets.map((target) => (
     <DropdownItem
       key={target}
       value={target}

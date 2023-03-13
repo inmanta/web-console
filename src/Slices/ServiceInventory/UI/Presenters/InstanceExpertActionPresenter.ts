@@ -16,8 +16,12 @@ export class InstanceExpertActionPresenter implements ActionPresenter {
   getForId(id: string): ReactElement | null {
     const instance = this.getInstanceForId(id);
     if (typeof instance === "undefined") return null;
+    const states = this.serviceEntity.lifecycle.states.map(
+      (state) => state.name
+    );
     return React.createElement(ExpertActions, {
       instance,
+      targets: states,
     });
   }
 
