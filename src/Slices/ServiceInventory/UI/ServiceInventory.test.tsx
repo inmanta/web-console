@@ -17,6 +17,7 @@ import {
   TriggerSetStateCommandManager,
   getStoreInstance,
   TriggerForceStateCommandManager,
+  DestroyInstanceCommandManager,
 } from "@/Data";
 import {
   Service,
@@ -60,7 +61,9 @@ function setup(service = Service.a) {
 
   const triggerUpdateCommandManager =
     TriggerInstanceUpdateCommandManager(apiHelper);
-
+  const triggerDestroyInstanceCommandManager =
+    DestroyInstanceCommandManager(apiHelper);
+  DestroyInstanceCommandManager;
   const triggerforceStateCommandManager = TriggerForceStateCommandManager(
     authHelper,
     apiHelper
@@ -77,6 +80,7 @@ function setup(service = Service.a) {
     new DynamicCommandManagerResolver([
       triggerUpdateCommandManager,
       triggerforceStateCommandManager,
+      triggerDestroyInstanceCommandManager,
       deleteCommandManager,
       setStateCommandManager,
     ])
