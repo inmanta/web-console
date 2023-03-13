@@ -33,7 +33,7 @@ function setup() {
   );
   const refetch = jest.fn();
   return {
-    component: (isDisabled = false) => (
+    component: () => (
       <StoreProvider store={storeInstance}>
         <DependencyProvider
           dependencies={{
@@ -49,7 +49,6 @@ function setup() {
                 ServiceInstance.a.id
               }
               version={ServiceInstance.a.version}
-              isDisabled={isDisabled}
               service_entity={ServiceInstance.a.service_entity}
             />
           </GetInstancesContext.Provider>
@@ -102,16 +101,16 @@ describe("DeleteModal ", () => {
     await apiHelper.resolve(Either.right(null));
     expect(refetch).toHaveBeenCalled();
   });
-  it("Doesn't takea environment halted status in account", async () => {
+  it("Doesn't take environment halted status in account", async () => {
     const { component, storeInstance } = setup();
-    const { rerender } = render(component(true));
+    const { rerender } = render(component());
     act(() => {
       storeInstance.dispatch.environment.setEnvironmentDetailsById({
         id: ServiceInstance.a.environment,
         value: RemoteData.success({ halted: true } as EnvironmentDetails),
       });
     });
-    rerender(component(false));
+    rerender(component());
     expect(
       await screen.findByRole("button", {
         name: words("inventory.destroyInstance.button"),
