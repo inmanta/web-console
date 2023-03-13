@@ -16,6 +16,7 @@ import {
   KeycloakAuthHelper,
   TriggerSetStateCommandManager,
   getStoreInstance,
+  TriggerForceStateCommandManager,
 } from "@/Data";
 import {
   Service,
@@ -39,6 +40,7 @@ function setup(service = Service.a) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
+  const authHelper = new KeycloakAuthHelper();
   const serviceInstancesHelper = ServiceInstancesQueryManager(
     apiHelper,
     ServiceInstancesStateHelper(store),
@@ -59,16 +61,22 @@ function setup(service = Service.a) {
   const triggerUpdateCommandManager =
     TriggerInstanceUpdateCommandManager(apiHelper);
 
+  const triggerforceStateCommandManager = TriggerForceStateCommandManager(
+    authHelper,
+    apiHelper
+  );
+
   const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
   const setStateCommandManager = TriggerSetStateCommandManager(
-    new KeycloakAuthHelper(),
+    authHelper,
     new BaseApiHelper()
   );
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       triggerUpdateCommandManager,
+      triggerforceStateCommandManager,
       deleteCommandManager,
       setStateCommandManager,
     ])
