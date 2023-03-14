@@ -108,8 +108,9 @@ const attributesTab = (
   view: (
     <AttributesTab
       attributes={row.attributes}
-      id={row.id.short}
+      id={row.id.full}
       service={service}
+      version={row.version}
     />
   ),
 });

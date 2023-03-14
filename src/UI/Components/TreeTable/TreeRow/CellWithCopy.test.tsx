@@ -6,13 +6,17 @@ import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
+  CommandResolverImpl,
   getStoreInstance,
+  KeycloakAuthHelper,
   QueryManagerResolver,
   QueryResolverImpl,
 } from "@/Data";
+import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
   DeferredApiHelper,
   dependencies,
+  DynamicCommandManagerResolver,
   ServiceInstance,
   StaticScheduler,
 } from "@/Test";
@@ -27,6 +31,13 @@ function setup(props) {
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
   );
+  const updateAttribute = UpdateInstanceAttributeCommandManager(
+    new KeycloakAuthHelper(),
+    apiHelper
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([updateAttribute])
+  );
   const onClickFn = jest.fn();
 
   const component = (
@@ -35,6 +46,7 @@ function setup(props) {
         dependencies={{
           ...dependencies,
           queryResolver,
+          commandResolver,
         }}
       >
         <StoreProvider store={store}>

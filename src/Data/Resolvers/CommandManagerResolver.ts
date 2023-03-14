@@ -53,6 +53,7 @@ import {
 import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
 import { DeleteVersionCommandManager } from "../Managers/DeleteVersion";
 import { UpdateCatalogCommandManager } from "../Managers/UpdateCatalog/CommandManager";
+import { UpdateInstanceAttributeCommandManager } from "../Managers/UpdateInstanceAttribute";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -126,6 +127,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       DeleteInstanceCommandManager(this.apiHelper),
       DeleteServiceCommandManager(this.apiHelper),
       TriggerSetStateCommandManager(this.authHelper, this.apiHelper),
+      UpdateInstanceAttributeCommandManager(this.authHelper, this.apiHelper),
       TriggerForceStateCommandManager(this.authHelper, this.apiHelper),
       HaltEnvironmentCommandManager(
         this.apiHelper,

@@ -1,8 +1,19 @@
 import React, { useState, MouseEvent, useContext } from "react";
-import { Button, Flex, FlexItem, Popover } from "@patternfly/react-core";
+import {
+  Button,
+  Flex,
+  FlexItem,
+  Popover,
+  Icon,
+  TextInput,
+} from "@patternfly/react-core";
+import { PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
 import styled from "styled-components";
+import { ParsedNumber } from "@/Core";
+import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
 import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { TreeTableCellContext } from "../RowReferenceContext";
 import { InstanceCellButton } from "./InstanceCellButton";
@@ -13,6 +24,10 @@ interface Props {
   value: string;
   hasOnClick?: boolean;
   serviceName?: string;
+  path: string;
+  instanceId: string;
+  version: ParsedNumber;
+  serviceEntity: string;
 }
 
 export const CellWithCopy: React.FC<Props> = ({
@@ -21,11 +36,25 @@ export const CellWithCopy: React.FC<Props> = ({
   className,
   hasOnClick,
   serviceName,
+  path,
+  instanceId,
+  version,
+  serviceEntity,
 }) => {
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
+  const [newAttribute, setNewAttribute] = useState("");
+  const [isInputOpen, setIsInputOpen] = useState(false);
   const { onClick } = useContext(TreeTableCellContext);
+  const { commandResolver } = useContext(DependencyContext);
+  const trigger = commandResolver.useGetTrigger<"UpdateInstanceAttribute">({
+    kind: "UpdateInstanceAttribute",
+    service_entity: serviceEntity,
+    id: instanceId,
+    version,
+  });
   const onMouseEnter = (event: MouseEvent<HTMLTableCellElement>) => {
     // Check if overflown
+    if (isInputOpen) return;
     if (event.currentTarget.offsetWidth < event.currentTarget.scrollWidth) {
       setWrapWithPopover(true);
     } else {
@@ -39,7 +68,15 @@ export const CellWithCopy: React.FC<Props> = ({
       dataLabel={label}
       onMouseEnter={onMouseEnter}
     >
-      {shouldRenderLink(value, hasOnClick) ? (
+      {isInputOpen ? (
+        <StyledInput
+          value={newAttribute}
+          type="text"
+          onChange={(value) => setNewAttribute(value)}
+          aria-label="new-attribute-input"
+          placeholder="New Attribute"
+        />
+      ) : shouldRenderLink(value, hasOnClick) ? (
         <MultiLinkCell
           value={value}
           serviceName={serviceName}
@@ -48,6 +85,23 @@ export const CellWithCopy: React.FC<Props> = ({
       ) : (
         value
       )}
+
+      <Button
+        variant="link"
+        isDanger
+        onClick={() => {
+          setIsInputOpen(!isInputOpen);
+          trigger(
+            (label + "_attributes") as AttributeSet,
+            "false",
+            path.split("$").join(".")
+          );
+        }}
+      >
+        <Icon status="danger">
+          <PencilAltIcon />
+        </Icon>
+      </Button>
     </Td>
   );
 
@@ -82,6 +136,9 @@ const StyledButton = styled(ClipboardCopyButton)`
   position: absolute;
   top: var(--pf-c-popover--c-button--Top);
   right: calc(var(--pf-c-popover--c-button--Right) + 0.5rem);
+`;
+const StyledInput = styled(TextInput)`
+  max-width: 200px;
 `;
 
 function formatValue(value: string): string {
@@ -126,6 +183,7 @@ const MultiLinkCell: React.FC<LinkCellProps> = ({
       <Flex
         direction={{ default: "column" }}
         spaceItems={{ default: "spaceItemsNone" }}
+        display={{ default: "inlineFlex" }}
       >
         {ids.map((id) => (
           <FlexItem key={id}>

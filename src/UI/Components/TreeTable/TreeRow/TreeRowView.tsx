@@ -1,6 +1,7 @@
 import React from "react";
 import { Split, SplitItem } from "@patternfly/react-core";
 import { Tr, Td } from "@patternfly/react-table";
+import { ParsedNumber } from "@/Core";
 import { Toggle } from "@/UI/Components/Toggle";
 import { CellWithCopy } from "./CellWithCopy";
 import { Indent } from "./Indent";
@@ -8,9 +9,17 @@ import { TreeRow } from "./TreeRow";
 
 interface RowProps {
   row: TreeRow;
+  id: string;
+  serviceEntity: string;
+  version: ParsedNumber;
 }
 
-export const TreeRowView: React.FC<RowProps> = ({ row }) => {
+export const TreeRowView: React.FC<RowProps> = ({
+  row,
+  id,
+  serviceEntity,
+  version,
+}) => {
   switch (row.kind) {
     case "Flat":
       return (
@@ -28,6 +37,10 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
               serviceName={serviceName}
               className={"pf-m-truncate"}
               key={`${label}-${value}`}
+              path={row.id}
+              instanceId={id}
+              version={version}
+              serviceEntity={serviceEntity}
             />
           ))}
         </Tr>
@@ -90,6 +103,10 @@ export const TreeRowView: React.FC<RowProps> = ({ row }) => {
               serviceName={serviceName}
               className={"pf-m-truncate"}
               key={`${label}-${value}`}
+              path={row.id}
+              instanceId={id}
+              version={version}
+              serviceEntity={serviceEntity}
             />
           ))}
         </Tr>

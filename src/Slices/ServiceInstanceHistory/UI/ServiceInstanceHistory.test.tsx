@@ -3,10 +3,17 @@ import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
+import {
+  QueryResolverImpl,
+  getStoreInstance,
+  CommandResolverImpl,
+  KeycloakAuthHelper,
+} from "@/Data";
+import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
   DeferredApiHelper,
   dependencies,
+  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Service,
   ServiceInstance,
@@ -32,10 +39,19 @@ function setup() {
       ),
     ])
   );
+  const updateAttribute = UpdateInstanceAttributeCommandManager(
+    new KeycloakAuthHelper(),
+    apiHelper
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([updateAttribute])
+  );
 
   const component = (
     <MemoryRouter>
-      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+      <DependencyProvider
+        dependencies={{ ...dependencies, queryResolver, commandResolver }}
+      >
         <StoreProvider store={store}>
           <ServiceInstanceHistory
             service={Service.a}
