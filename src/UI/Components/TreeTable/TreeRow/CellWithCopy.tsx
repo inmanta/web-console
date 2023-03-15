@@ -10,7 +10,7 @@ import {
 import { PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { ParsedNumber } from "@/Core";
+import { Environment, ParsedNumber } from "@/Core";
 import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
 import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
 import { DependencyContext } from "@/UI/Dependency";
@@ -45,13 +45,16 @@ export const CellWithCopy: React.FC<Props> = ({
   const [newAttribute, setNewAttribute] = useState("");
   const [isInputOpen, setIsInputOpen] = useState(false);
   const { onClick } = useContext(TreeTableCellContext);
-  const { commandResolver } = useContext(DependencyContext);
+  const { commandResolver, environmentHandler } = useContext(DependencyContext);
   const trigger = commandResolver.useGetTrigger<"UpdateInstanceAttribute">({
     kind: "UpdateInstanceAttribute",
     service_entity: serviceEntity,
     id: instanceId,
     version,
   });
+  const environment = environmentHandler.useSelected() as
+    | Environment
+    | undefined;
   const onMouseEnter = (event: MouseEvent<HTMLTableCellElement>) => {
     // Check if overflown
     if (isInputOpen) return;
@@ -86,22 +89,24 @@ export const CellWithCopy: React.FC<Props> = ({
         value
       )}
 
-      <Button
-        variant="link"
-        isDanger
-        onClick={() => {
-          setIsInputOpen(!isInputOpen);
-          trigger(
-            (label + "_attributes") as AttributeSet,
-            "false",
-            path.split("$").join(".")
-          );
-        }}
-      >
-        <Icon status="danger">
-          <PencilAltIcon />
-        </Icon>
-      </Button>
+      {environment?.settings.enable_lsm_expert_mode && value !== "" && (
+        <Button
+          variant="link"
+          isDanger
+          onClick={() => {
+            setIsInputOpen(!isInputOpen);
+            trigger(
+              (label + "_attributes") as AttributeSet,
+              "false",
+              path.split("$").join(".")
+            );
+          }}
+        >
+          <Icon status="danger">
+            <PencilAltIcon />
+          </Icon>
+        </Button>
+      )}
     </Td>
   );
 
