@@ -151,7 +151,7 @@
     "react-router-dom": "^6.8.2",
     "react-syntax-highlighter": "^15.5.0",
     "styled-components": "^5.3.6",
-    "xml-formatter": "^3.3.0"
+    "xml-formatter": "^3.3.2"
   },
   "resolutions": {
     "json5": "^2.2.2",
