@@ -181,7 +181,9 @@ test("When using the status filter then only the matching desired states should 
   const option = await screen.findByRole("option", {
     name: words("desiredState.test.skippedCandidate"),
   });
-  await await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=skipped_candidate`
@@ -233,13 +235,18 @@ test("When using the Date filter then the desired state versions within the rang
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
   await userEvent.click(fromDatePicker);
-  await userEvent.type(fromDatePicker, `2021-12-06`);
+  await act(async () => {
+    await userEvent.type(fromDatePicker, `2021-12-06`);
+  });
   const toDatePicker = screen.getByLabelText("To Date Picker");
   await userEvent.click(toDatePicker);
-  await userEvent.type(toDatePicker, `2021-12-07`);
+  await act(async () => {
+    await userEvent.type(toDatePicker, `2021-12-07`);
+  });
 
-  await userEvent.click(screen.getByLabelText("Apply date filter"));
-
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Apply date filter"));
+  });
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-05%2B23%3A00%3A00&filter.date=le%3A2021-12-06%2B23%3A00%3A00`
   );
@@ -261,7 +268,7 @@ test("When using the Date filter then the desired state versions within the rang
 
   // The chips are hidden in small windows, so resize it
   window = Object.assign(window, { innerWidth: 1200 });
-  act(() => {
+  await act(async () => {
     window.dispatchEvent(new Event("resize"));
   });
 
@@ -303,14 +310,19 @@ test("When using the Version filter then the desired state versions within the r
 
   const fromDatePicker = await screen.findByLabelText("Version range from");
   await userEvent.click(fromDatePicker);
-  await userEvent.type(fromDatePicker, `3`);
+  await act(async () => {
+    await userEvent.type(fromDatePicker, `3`);
+  });
 
   const toDatePicker = await screen.findByLabelText("Version range to");
   await userEvent.click(toDatePicker);
-  await userEvent.type(toDatePicker, `5`);
+  await act(async () => {
+    await userEvent.type(toDatePicker, `5`);
+  });
 
-  await userEvent.click(await screen.findByLabelText("Apply Version filter"));
-
+  await act(async () => {
+    await userEvent.click(await screen.findByLabelText("Apply Version filter"));
+  });
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.version=ge%3A3&filter.version=le%3A5`
   );
@@ -432,7 +444,9 @@ test("Given the Desired states view with filters When promoting a version, then 
   const option = await screen.findByRole("option", {
     name: words("desiredState.test.candidate"),
   });
-  await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));

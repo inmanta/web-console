@@ -1,0 +1,8 @@
+change-type: patch
+description: 'adjust e2e'
+issue-nr: 4706
+destination-branches:
+- master
+- iso6
+- iso5
+

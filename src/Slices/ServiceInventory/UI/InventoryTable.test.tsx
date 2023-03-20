@@ -164,7 +164,9 @@ test("ServiceInventory sets sorting parameters correctly on click", async () => 
   );
   const stateButton = await screen.findByRole("button", { name: /state/i });
   expect(stateButton).toBeVisible();
-  await userEvent.click(stateButton);
+  await act(async () => {
+    await userEvent.click(stateButton);
+  });
   expect(sort.name).toEqual("state");
   expect(sort.order).toEqual("asc");
 });

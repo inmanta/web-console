@@ -54,9 +54,13 @@ describe("Given the Events Page", () => {
       await userEvent.click(input);
       if (filterType === "select") {
         const option = await screen.findByRole("option", { name: filterValue });
-        await await userEvent.click(option);
+        await act(async () => {
+          await userEvent.click(option);
+        });
       } else {
-        await userEvent.type(input, `${filterValue}{enter}`);
+        await act(async () => {
+          await userEvent.type(input, `${filterValue}{enter}`);
+        });
       }
 
       expect(apiHelper.pendingRequests[0].url).toEqual(
@@ -110,13 +114,18 @@ describe("Given the Events Page", () => {
 
     const fromDatePicker = await screen.findByLabelText("From Date Picker");
     await userEvent.click(fromDatePicker);
-    await userEvent.type(fromDatePicker, `2021-04-28`);
+    await act(async () => {
+      await userEvent.type(fromDatePicker, `2021-04-28`);
+    });
     const toDatePicker = await screen.findByLabelText("To Date Picker");
     await userEvent.click(toDatePicker);
-    await userEvent.type(toDatePicker, `2021-04-30`);
+    await act(async () => {
+      await userEvent.type(toDatePicker, `2021-04-30`);
+    });
 
-    await userEvent.click(await screen.findByLabelText("Apply date filter"));
-
+    await act(async () => {
+      await userEvent.click(await screen.findByLabelText("Apply date filter"));
+    });
     expect(apiHelper.pendingRequests[0].url).toMatch(
       `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=ge%3A2021-04-`
     );
@@ -186,9 +195,14 @@ describe("Given the Events Page", () => {
         `${filterType} Date Picker`
       );
       await userEvent.click(toDatePicker);
-      await userEvent.type(toDatePicker, value);
-
-      await userEvent.click(await screen.findByLabelText("Apply date filter"));
+      await act(async () => {
+        await userEvent.type(toDatePicker, value);
+      });
+      await act(async () => {
+        await userEvent.click(
+          await screen.findByLabelText("Apply date filter")
+        );
+      });
 
       expect(apiHelper.pendingRequests[0].url).toMatch(
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc&filter.timestamp=${operator}%3A2021-05-`
@@ -214,8 +228,9 @@ describe("Given the Events Page", () => {
       window.dispatchEvent(new Event("resize"));
 
       expect(await screen.findByText(chip, { exact: false })).toBeVisible();
-      await userEvent.click(await screen.findByLabelText("close"));
-
+      await act(async () => {
+        await userEvent.click(await screen.findByLabelText("close"));
+      });
       expect(apiHelper.pendingRequests[0].url).toMatch(
         `/lsm/v1/service_inventory/${Service.a.name}/id1/events?limit=20&sort=timestamp.desc`
       );

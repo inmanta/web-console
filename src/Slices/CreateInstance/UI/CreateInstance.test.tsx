@@ -63,13 +63,19 @@ test("Given the CreateInstance View When creating an instance with attributes Th
   const bandwidthField = screen.getByText("bandwidth");
   expect(bandwidthField).toBeVisible();
 
-  await userEvent.type(bandwidthField, "2");
+  await act(async () => {
+    await userEvent.type(bandwidthField, "2");
+  });
 
   const customerLocationsField = screen.getByText("customer_locations");
-  await userEvent.type(customerLocationsField, "5");
+  await act(async () => {
+    await userEvent.type(customerLocationsField, "5");
+  });
 
   const orderIdField = screen.getByText("order_id");
-  await userEvent.type(orderIdField, "7007");
+  await act(async () => {
+    await userEvent.type(orderIdField, "7007");
+  });
 
   const networkField = screen.getByText("network");
   expect(networkField).toBeValid();
@@ -125,19 +131,22 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   const relationInputField = screen.getByPlaceholderText(
     words("common.serviceInstance.relation")
   );
-  await userEvent.type(relationInputField, "ab");
+  await act(async () => {
+    await userEvent.type(relationInputField, "a");
+  });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
     url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=a`,
     environment: "env",
   });
-
   await act(async () => {
-    apiHelper.resolve(
+    await apiHelper.resolve(
       Either.right({ data: [ServiceInstance.a, ServiceInstance.b] })
     );
   });
-
+  await act(async () => {
+    await userEvent.type(relationInputField, "{selectall}{backspace}ab");
+  });
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
     url: `/lsm/v1/service_inventory/${InterServiceRelations.editable.entity_type}?include_deployment_progress=False&limit=100&filter.order_id=ab`,
@@ -150,14 +159,21 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   const options = await screen.findAllByRole("option");
-  await userEvent.click(options[0]);
-
-  await userEvent.click(relationInputField);
+  console.log(options);
+  await act(async () => {
+    await userEvent.click(options[0]);
+  });
+  await act(async () => {
+    await userEvent.click(relationInputField);
+  });
   const options2 = await screen.findAllByRole("option");
   expect(options2[0]).toHaveClass("pf-m-disabled");
-  await userEvent.click(options2[1]);
-
-  await userEvent.click(screen.getByRole("button", { name: words("confirm") }));
+  await act(async () => {
+    await userEvent.click(options2[1]);
+    await userEvent.click(
+      screen.getByRole("button", { name: words("confirm") })
+    );
+  });
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",

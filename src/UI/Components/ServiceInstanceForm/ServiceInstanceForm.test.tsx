@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   BooleanField,
@@ -54,7 +54,9 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
   const textBox = screen.getByRole("textbox", { name: Test.Field.text.name });
   const value = "test text";
   expect(textBox).toBeVisible();
-  await userEvent.type(textBox, value);
+  await act(async () => {
+    await userEvent.type(textBox, value);
+  });
   expect(textBox).toHaveValue(value);
 });
 
@@ -206,10 +208,12 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   const submitCb = jest.fn();
   render(setup(fields, submitCb));
 
-  await userEvent.type(
-    screen.getByRole("textbox", { name: fields[0].name }),
-    "test text"
-  );
+  await act(async () => {
+    await userEvent.type(
+      screen.getByRole("textbox", { name: fields[0].name }),
+      "test text"
+    );
+  });
   await userEvent.click(screen.getByRole("radio", { name: words("true") }));
 
   const group = screen.getByRole("group", {
@@ -219,19 +223,23 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
     within(group).getByRole("button", { name: words("catalog.callbacks.add") })
   );
   await userEvent.click(screen.getByRole("button", { name: nestedField.name }));
-  await userEvent.type(
-    screen.getByRole("textbox", { name: nestedField.fields[0].name }),
-    "test text 2"
-  );
+  await act(async () => {
+    await userEvent.type(
+      screen.getByRole("textbox", { name: nestedField.fields[0].name }),
+      "test text 2"
+    );
+  });
 
   await userEvent.click(
     screen.getByRole("button", { name: dictListField.name })
   );
   await userEvent.click(screen.getByRole("button", { name: "1" }));
-  await userEvent.type(
-    screen.getByRole("textbox", { name: dictListField.fields[0].name }),
-    "test text 3"
-  );
+  await act(async () => {
+    await userEvent.type(
+      screen.getByRole("textbox", { name: dictListField.fields[0].name }),
+      "test text 3"
+    );
+  });
 
   await userEvent.click(screen.getByRole("button", { name: words("confirm") }));
   expect(submitCb).toBeCalled();
