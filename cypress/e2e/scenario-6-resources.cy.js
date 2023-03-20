@@ -286,7 +286,14 @@ describe("Scenario 6 : Resources", () => {
     cy.get("#add-instance-button").click();
     cy.get("#name").type("dependency-service");
     cy.get("#waiting_entity").type("waiting-entity");
-    cy.get("#running_entities").type("a, b, c");
+
+    cy.get('[aria-label="Type to filter"]').type("a");
+    cy.get("button").contains("Add").click();
+    cy.get('[aria-label="Type to filter"]').type("b");
+    cy.get("button").contains("Add").click();
+    cy.get('[aria-label="Type to filter"]').type("c");
+    cy.get("button").contains("Add").click();
+
     cy.get("#service_id").type("0009");
 
     cy.get("button").contains("Confirm").click();
