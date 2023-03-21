@@ -141,12 +141,12 @@ const dict = {
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
   "inventory.form.typeHint.list": (listBaseType: string) =>
-    `A list of ${listBaseType}s, separated by commas`,
+    `A list of ${listBaseType}s`,
   "inventory.form.typeHint.dict":
     'Key-value pairs, following the JSON syntax: {"key": "value"}',
   "inventory.form.placeholder.intList": "1, 2, 3",
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
-  "inventory.form.placeholder.stringList": "value1,value2,value3",
+  "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
