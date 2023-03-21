@@ -79,9 +79,17 @@ export const CellWithCopy: React.FC<Props> = ({
     }
   };
   const onSubmit = async () => {
+    let newValue: string | string[] | number | boolean;
+    if (attributeType.includes("string[]")) {
+      newValue = (newAttribute as string).replace(/\s/g, "").split(",");
+    } else if (attributeType.includes("int")) {
+      newValue = +newAttribute;
+    } else {
+      newValue = newAttribute;
+    }
     const result = await trigger(
       (label + "_attributes") as AttributeSet,
-      attributeType.includes("int") ? +newAttribute : newAttribute,
+      newValue,
       path.split("$").join(".")
     );
     setIsModalOpen(!isModalOpen);
