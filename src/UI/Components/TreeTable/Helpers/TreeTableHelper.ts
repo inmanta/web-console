@@ -70,7 +70,6 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
     );
 
     const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);
-
     return {
       rows: Object.entries(nodes)
         .map(([key, node]) => treeRowCreator.create(key, node))

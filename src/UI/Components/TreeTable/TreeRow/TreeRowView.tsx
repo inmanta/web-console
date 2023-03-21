@@ -41,6 +41,7 @@ export const TreeRowView: React.FC<RowProps> = ({
               instanceId={id}
               version={version}
               serviceEntity={serviceEntity}
+              attributeType={row.type ? row.type : "undefined"}
             />
           ))}
         </Tr>
@@ -107,6 +108,7 @@ export const TreeRowView: React.FC<RowProps> = ({
               instanceId={id}
               version={version}
               serviceEntity={serviceEntity}
+              attributeType={row.type ? row.type : "undefined"}
             />
           ))}
         </Tr>

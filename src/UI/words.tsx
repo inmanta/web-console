@@ -172,6 +172,11 @@ const dict = {
   "inventory.filters.state.placeholder": "Select a state...",
   "ServiceDetails.title": (name: string) => `Service Details: ${name}`,
   "inventory.test.creating": "creating",
+  "inventory.editAttribute.placeholder": "New Attribute",
+  "inventory.editAttribute.failed": "Setting new attribute failed",
+  "inventory.editAttribute.header": "Update Attribute",
+  "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
+    `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can brake instance.`,
 
   /**
    * Config related text

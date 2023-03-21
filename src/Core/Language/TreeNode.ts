@@ -3,6 +3,7 @@ interface Leaf<Value> {
   value: Value;
   hasOnClick?: boolean;
   entity?: string;
+  type?: string;
 }
 
 interface Branch {

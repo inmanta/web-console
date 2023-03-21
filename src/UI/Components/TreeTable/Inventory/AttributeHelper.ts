@@ -1,5 +1,6 @@
 import {
   Attributes,
+  EmbeddedEntity,
   EntityLike,
   InterServiceRelation,
   isNotUndefined,
@@ -96,6 +97,26 @@ export class InventoryAttributeHelper
     );
     return matchingRelation;
   }
+  private findAttributeType(
+    service: ServiceModel | EmbeddedEntity,
+    prefix: string[],
+    key: string
+  ): string | undefined {
+    const matchingEmbeddedEntity = service.embedded_entities.find(
+      (entity) => entity.name === prefix[0]
+    );
+    if (matchingEmbeddedEntity) {
+      return this.findAttributeType(
+        matchingEmbeddedEntity,
+        prefix.slice(1),
+        key
+      );
+    }
+    const adequateAttribute = service.attributes.find(
+      (attribute) => attribute.name === key
+    );
+    return adequateAttribute?.type;
+  }
 
   private getSingleAttributeNodes(
     prefix: string,
@@ -105,6 +126,18 @@ export class InventoryAttributeHelper
     let keys: AttributeNodeDict = {};
     const primaryKeys = Object.keys(subject).sort();
     primaryKeys.forEach((key) => {
+      let type;
+      if (this.service === undefined) {
+        type = "undefined";
+      } else {
+        type = this.findAttributeType(
+          this.service,
+          prefix
+            .split(this.separator)
+            .filter((part) => isNaN(part as unknown as number)),
+          key
+        );
+      }
       if (!this.isNested(subject[key])) {
         const relation = this.findKeyInService(prefix, key);
         keys[`${prefix}${key}`] = {
@@ -112,6 +145,7 @@ export class InventoryAttributeHelper
           value: subject[key],
           hasOnClick: !!relation,
           entity: relation?.entity_type,
+          type,
         };
       } else {
         keys[`${prefix}${key}`] = { kind: "Branch" };
@@ -197,6 +231,10 @@ export class InventoryAttributeHelper
             getEntity(activeNodes[cur]),
             getEntity(rollbackNodes[cur]),
           ]),
+          type:
+            getType(candidateNodes[cur]) ||
+            getType(activeNodes[cur]) ||
+            getType(rollbackNodes[cur]),
         };
         return acc;
       },
@@ -211,6 +249,12 @@ export function isMultiLeaf(
   rollbackNode: TreeNode | undefined
 ): boolean {
   return isLeaf(candidateNode) && isLeaf(activeNode) && isLeaf(rollbackNode);
+}
+
+export function getType(node: TreeNode | undefined): string | undefined {
+  if (typeof node === "undefined") return undefined;
+  if (node.kind !== "Leaf") return undefined;
+  return node.type;
 }
 
 export function getValue(node: TreeNode | undefined): unknown {

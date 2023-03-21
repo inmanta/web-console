@@ -1,21 +1,25 @@
-import React, { useState, MouseEvent, useContext } from "react";
+import React, { useState, MouseEvent, useContext, useEffect } from "react";
 import {
   Button,
   Flex,
   FlexItem,
   Popover,
   Icon,
-  TextInput,
+  Modal,
+  Text,
 } from "@patternfly/react-core";
-import { PencilAltIcon } from "@patternfly/react-icons";
+import { TimesIcon, PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { Environment, ParsedNumber } from "@/Core";
+import { Environment, Maybe, ParsedNumber } from "@/Core";
 import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
+import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
 import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { CustomEvent } from "../../ExpertBanner";
 import { TreeTableCellContext } from "../RowReferenceContext";
+import InlineInput from "./InlineInput";
 import { InstanceCellButton } from "./InstanceCellButton";
 
 interface Props {
@@ -28,6 +32,7 @@ interface Props {
   instanceId: string;
   version: ParsedNumber;
   serviceEntity: string;
+  attributeType: string;
 }
 
 export const CellWithCopy: React.FC<Props> = ({
@@ -40,21 +45,30 @@ export const CellWithCopy: React.FC<Props> = ({
   instanceId,
   version,
   serviceEntity,
+  attributeType,
 }) => {
-  const [wrapWithPopover, setWrapWithPopover] = useState(false);
-  const [newAttribute, setNewAttribute] = useState("");
-  const [isInputOpen, setIsInputOpen] = useState(false);
-  const { onClick } = useContext(TreeTableCellContext);
   const { commandResolver, environmentHandler } = useContext(DependencyContext);
+  const environment = environmentHandler.useSelected() as
+    | Environment
+    | undefined;
+  const [isExpertMode, setIsExpertMode] = useState(
+    environment?.settings.enable_lsm_expert_mode ? true : false
+  );
+  const [wrapWithPopover, setWrapWithPopover] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newAttribute, setNewAttribute] = useState<string | boolean | number>(
+    value
+  );
+  const [isInputOpen, setIsInputOpen] = useState(false);
+  const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
+  const { onClick } = useContext(TreeTableCellContext);
   const trigger = commandResolver.useGetTrigger<"UpdateInstanceAttribute">({
     kind: "UpdateInstanceAttribute",
     service_entity: serviceEntity,
     id: instanceId,
     version,
   });
-  const environment = environmentHandler.useSelected() as
-    | Environment
-    | undefined;
+
   const onMouseEnter = (event: MouseEvent<HTMLTableCellElement>) => {
     // Check if overflown
     if (isInputOpen) return;
@@ -64,6 +78,26 @@ export const CellWithCopy: React.FC<Props> = ({
       setWrapWithPopover(false);
     }
   };
+  const onSubmit = async () => {
+    const result = await trigger(
+      (label + "_attributes") as AttributeSet,
+      attributeType.includes("int") ? +newAttribute : newAttribute,
+      path.split("$").join(".")
+    );
+    setIsModalOpen(!isModalOpen);
+    if (Maybe.isSome(result)) {
+      setStateErrorMessage(result.value);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("expert-mode-check", (evt: CustomEvent) => {
+      setIsExpertMode(evt.detail ? true : false);
+    });
+    return () =>
+      document.removeEventListener("expert-mode-check", (evt: CustomEvent) => {
+        setIsExpertMode(evt.detail ? true : false);
+      });
+  }, []);
   const cell = (
     <Td
       className={className}
@@ -71,13 +105,20 @@ export const CellWithCopy: React.FC<Props> = ({
       dataLabel={label}
       onMouseEnter={onMouseEnter}
     >
+      {stateErrorMessage && (
+        <ToastAlert
+          title={words("inventory.editAttribute.failed")}
+          message={stateErrorMessage}
+          setMessage={setStateErrorMessage}
+        />
+      )}
       {isInputOpen ? (
-        <StyledInput
+        <InlineInput
+          label={label}
           value={newAttribute}
-          type="text"
+          type={attributeType}
           onChange={(value) => setNewAttribute(value)}
-          aria-label="new-attribute-input"
-          placeholder="New Attribute"
+          toggleModal={() => setIsModalOpen(!isModalOpen)}
         />
       ) : shouldRenderLink(value, hasOnClick) ? (
         <MultiLinkCell
@@ -89,24 +130,39 @@ export const CellWithCopy: React.FC<Props> = ({
         value
       )}
 
-      {environment?.settings.enable_lsm_expert_mode && value !== "" && (
+      {isExpertMode && value !== "" && (
         <Button
           variant="link"
           isDanger
           onClick={() => {
             setIsInputOpen(!isInputOpen);
-            trigger(
-              (label + "_attributes") as AttributeSet,
-              "false",
-              path.split("$").join(".")
-            );
           }}
         >
           <Icon status="danger">
-            <PencilAltIcon />
+            {isInputOpen ? <TimesIcon /> : <PencilAltIcon />}
           </Icon>
         </Button>
       )}
+      <Modal
+        variant={"small"}
+        isOpen={isModalOpen}
+        title={words("inventory.destroyInstance.title")}
+        onClose={() => setIsModalOpen(!isModalOpen)}
+        titleIconVariant="danger"
+      >
+        <Text>{words("inventory.editAttribute.header")}</Text>
+        <br />
+        <Text>
+          {words("inventory.editAttribute.text")(
+            value,
+            newAttribute.toString()
+          )}
+        </Text>
+        <ConfirmUserActionForm
+          onSubmit={onSubmit}
+          onCancel={() => setIsModalOpen(!isModalOpen)}
+        />
+      </Modal>
     </Td>
   );
 
@@ -141,9 +197,6 @@ const StyledButton = styled(ClipboardCopyButton)`
   position: absolute;
   top: var(--pf-c-popover--c-button--Top);
   right: calc(var(--pf-c-popover--c-button--Right) + 0.5rem);
-`;
-const StyledInput = styled(TextInput)`
-  max-width: 200px;
 `;
 
 function formatValue(value: string): string {

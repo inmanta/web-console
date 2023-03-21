@@ -28,6 +28,7 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
           level: this.pathHelper.getLevel(path),
           primaryCell: { label: "name", value: this.pathHelper.getSelf(path) },
           valueCells: this.extractValues(node),
+          type: node.type,
         };
       } else {
         return {
@@ -35,6 +36,7 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
           id: path,
           primaryCell: { label: "name", value: path },
           valueCells: this.extractValues(node),
+          type: node.type,
         };
       }
     } else {

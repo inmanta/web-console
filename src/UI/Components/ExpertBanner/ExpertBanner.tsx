@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Banner } from "@patternfly/react-core";
 
-interface CustomEvent extends Event {
+export interface CustomEvent extends Event {
   detail?: boolean;
 }
 export const ExpertBanner = () => {
