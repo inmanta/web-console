@@ -28,7 +28,7 @@ export function UpdateInstanceAttributeCommandManager(
 export const getBody = (
   username: string | null,
   attribute_set_name: attributeSet,
-  value: string,
+  value: string | number | boolean | string[],
   target: string,
   version: ParsedNumber,
   service_entity: string,
@@ -62,7 +62,7 @@ interface UpdateInstanceBody {
       edit_id: string;
       operation: "merge" | "replace" | "remove";
       target: string;
-      value: string;
+      value: string | number | boolean | string[];
     }
   ];
   current_version: ParsedNumber;

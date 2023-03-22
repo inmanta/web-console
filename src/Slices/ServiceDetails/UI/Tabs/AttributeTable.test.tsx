@@ -1,9 +1,14 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { AttributeModel, ServiceModel } from "@/Core";
-import { CommandResolverImpl, KeycloakAuthHelper } from "@/Data";
+import { StoreProvider } from "easy-peasy";
+import { AttributeModel, RemoteData, ServiceModel } from "@/Core";
+import {
+  CommandResolverImpl,
+  getStoreInstance,
+  KeycloakAuthHelper,
+} from "@/Data";
 import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
   DeferredApiHelper,
@@ -12,7 +17,7 @@ import {
   Service,
 } from "@/Test";
 import { multiNestedEditable } from "@/Test/Data/Service/EmbeddedEntity";
-import { DependencyProvider } from "@/UI";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI";
 import { AttributeTable } from "./AttributeTable";
 
 const attribute1: AttributeModel = {
@@ -35,6 +40,7 @@ const attribute2: AttributeModel = {
 
 function setup(service: ServiceModel) {
   const apiHelper = new DeferredApiHelper();
+  const store = getStoreInstance();
 
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
@@ -43,18 +49,40 @@ function setup(service: ServiceModel) {
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([updateAttribute])
   );
+  const environmentHandler = EnvironmentHandlerImpl(
+    useLocation,
+    dependencies.routeManager
+  );
+  store.dispatch.environment.setEnvironments(
+    RemoteData.success([
+      {
+        id: "aaa",
+        name: "env-a",
+        project_id: "ppp",
+        repo_branch: "branch",
+        repo_url: "repo",
+        projectName: "project",
+        settings: {
+          enable_lsm_expert_mode: true,
+        },
+      },
+    ])
+  );
 
   const component = (
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-        commandResolver,
-      }}
-    >
-      <MemoryRouter>
-        <AttributeTable service={service} />
-      </MemoryRouter>
-    </DependencyProvider>
+    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          commandResolver,
+          environmentHandler,
+        }}
+      >
+        <StoreProvider store={store}>
+          <AttributeTable service={service} />
+        </StoreProvider>
+      </DependencyProvider>
+    </MemoryRouter>
   );
 
   return component;

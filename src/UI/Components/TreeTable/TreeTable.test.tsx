@@ -94,6 +94,7 @@ test("TreeTable 2nd level of nested property can be expanded", async () => {
   // Assert
   expect(screen.getByRole("row", { name: "Row-a$b$c" })).toBeVisible();
 });
+
 function catalogSetup(service: EntityLike) {
   const apiHelper = new DeferredApiHelper();
 

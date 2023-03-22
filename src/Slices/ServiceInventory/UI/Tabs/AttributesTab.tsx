@@ -48,6 +48,7 @@ export const AttributesTab: React.FC<Props> = ({
         id={id}
         serviceName={service?.name}
         version={version}
+        isExpertAvailable
       />
     </TreeTableCellContext.Provider>
   );

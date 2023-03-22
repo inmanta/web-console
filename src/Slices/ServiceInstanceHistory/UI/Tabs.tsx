@@ -23,19 +23,23 @@ interface Props {
   state: React.ReactElement;
   activeTab: TabKey;
   setActiveTab: (tab: TabKey) => void;
+  id: string;
 }
 
-export const Tabs: React.FC<Props> = ({ log, activeTab, setActiveTab }) => {
+export const Tabs: React.FC<Props> = ({ log, activeTab, setActiveTab, id }) => {
   return (
     <IconTabs
       activeTab={activeTab}
       onChange={setActiveTab}
-      tabs={[attributesTab(log), eventsTab(log)]}
+      tabs={[attributesTab(log, id), eventsTab(log)]}
     />
   );
 };
 
-const attributesTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
+const attributesTab = (
+  log: InstanceLog,
+  id: string
+): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("history.tabs.attributes"),
   icon: <ListIcon />,
@@ -46,6 +50,7 @@ const attributesTab = (log: InstanceLog): TabDescriptor<TabKey> => ({
         active: log.active_attributes,
         rollback: log.rollback_attributes,
       }}
+      id={id}
     />
   ),
 });

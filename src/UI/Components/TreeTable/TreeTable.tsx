@@ -12,7 +12,8 @@ interface Props {
   treeTableHelper: TreeTableHelper;
   id?: string;
   serviceName?: string;
-  version: ParsedNumber;
+  version?: ParsedNumber;
+  isExpertAvailable?: boolean;
 }
 
 export const TreeTable: React.FC<Props> = ({
@@ -20,6 +21,7 @@ export const TreeTable: React.FC<Props> = ({
   id,
   serviceName,
   version,
+  isExpertAvailable = false,
 }) => {
   const [expansionState, setExpansionState] = useState(
     treeTableHelper.getExpansionState()
@@ -82,8 +84,9 @@ export const TreeTable: React.FC<Props> = ({
             key={row.id}
             row={row}
             id={id as string}
-            version={version}
+            version={version as number}
             serviceEntity={serviceName as string}
+            showExpertMode={isExpertAvailable}
           />
         ))}
       </Tbody>

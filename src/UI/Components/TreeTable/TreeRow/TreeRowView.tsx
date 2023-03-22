@@ -4,6 +4,7 @@ import { Tr, Td } from "@patternfly/react-table";
 import { ParsedNumber } from "@/Core";
 import { Toggle } from "@/UI/Components/Toggle";
 import { CellWithCopy } from "./CellWithCopy";
+import { CellWithCopyExpert } from "./CellWithCopyExpert";
 import { Indent } from "./Indent";
 import { TreeRow } from "./TreeRow";
 
@@ -12,6 +13,7 @@ interface RowProps {
   id: string;
   serviceEntity: string;
   version: ParsedNumber;
+  showExpertMode: boolean;
 }
 
 export const TreeRowView: React.FC<RowProps> = ({
@@ -19,6 +21,7 @@ export const TreeRowView: React.FC<RowProps> = ({
   id,
   serviceEntity,
   version,
+  showExpertMode,
 }) => {
   switch (row.kind) {
     case "Flat":
@@ -29,21 +32,32 @@ export const TreeRowView: React.FC<RowProps> = ({
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value, hasOnClick, serviceName }) => (
-            <CellWithCopy
-              label={label}
-              value={label === "description" && value === "null" ? "" : value}
-              hasOnClick={hasOnClick}
-              serviceName={serviceName}
-              className={"pf-m-truncate"}
-              key={`${label}-${value}`}
-              path={row.id}
-              instanceId={id}
-              version={version}
-              serviceEntity={serviceEntity}
-              attributeType={row.type ? row.type : "undefined"}
-            />
-          ))}
+          {row.valueCells.map(({ label, value, hasOnClick, serviceName }) =>
+            showExpertMode ? (
+              <CellWithCopyExpert
+                label={label}
+                value={label === "description" && value === "null" ? "" : value}
+                hasOnClick={hasOnClick}
+                serviceName={serviceName}
+                className={"pf-m-truncate"}
+                key={`${label}-${value}-expert`}
+                path={row.id}
+                instanceId={id}
+                version={version}
+                serviceEntity={serviceEntity}
+                attributeType={row.type ? row.type : "undefined"}
+              />
+            ) : (
+              <CellWithCopy
+                label={label}
+                value={label === "description" && value === "null" ? "" : value}
+                hasOnClick={hasOnClick}
+                serviceName={serviceName}
+                className={"pf-m-truncate"}
+                key={`${label}-${value}`}
+              />
+            )
+          )}
         </Tr>
       );
     case "Root":
@@ -96,21 +110,32 @@ export const TreeRowView: React.FC<RowProps> = ({
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value, hasOnClick, serviceName }) => (
-            <CellWithCopy
-              label={label}
-              value={label === "description" && value === "null" ? "" : value}
-              hasOnClick={hasOnClick}
-              serviceName={serviceName}
-              className={"pf-m-truncate"}
-              key={`${label}-${value}`}
-              path={row.id}
-              instanceId={id}
-              version={version}
-              serviceEntity={serviceEntity}
-              attributeType={row.type ? row.type : "undefined"}
-            />
-          ))}
+          {row.valueCells.map(({ label, value, hasOnClick, serviceName }) =>
+            showExpertMode ? (
+              <CellWithCopyExpert
+                label={label}
+                value={label === "description" && value === "null" ? "" : value}
+                hasOnClick={hasOnClick}
+                serviceName={serviceName}
+                className={"pf-m-truncate"}
+                key={`${label}-${value}-expert`}
+                path={row.id}
+                instanceId={id}
+                version={version}
+                serviceEntity={serviceEntity}
+                attributeType={row.type ? row.type : "undefined"}
+              />
+            ) : (
+              <CellWithCopy
+                label={label}
+                value={label === "description" && value === "null" ? "" : value}
+                hasOnClick={hasOnClick}
+                serviceName={serviceName}
+                className={"pf-m-truncate"}
+                key={`${label}-${value}`}
+              />
+            )
+          )}
         </Tr>
       );
   }

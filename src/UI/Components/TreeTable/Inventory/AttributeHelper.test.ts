@@ -74,7 +74,10 @@ test("AttributeHelper getMultiAttributeNodes", () => {
     a: { kind: "Branch" },
     "a.b": { kind: "Branch" },
     "a.b.c": {
+      entity: undefined,
+      hasOnClick: undefined,
       kind: "Leaf",
+      type: "undefined",
       value: {
         active: "d",
         candidate: undefined,
@@ -82,7 +85,10 @@ test("AttributeHelper getMultiAttributeNodes", () => {
       },
     },
     e: {
+      entity: undefined,
+      hasOnClick: undefined,
       kind: "Leaf",
+      type: "undefined",
       value: {
         active: "f",
         candidate: undefined,
@@ -91,7 +97,10 @@ test("AttributeHelper getMultiAttributeNodes", () => {
     },
     g: { kind: "Branch" },
     "g.h": {
+      entity: undefined,
+      hasOnClick: undefined,
       kind: "Leaf",
+      type: "undefined",
       value: {
         active: "i",
         candidate: undefined,
@@ -332,10 +341,14 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
       kind: "Branch",
     },
     embedded$0$attr: {
+      entity: undefined,
+      hasOnClick: undefined,
       kind: "Leaf",
+      type: "string?",
       value: {
         candidate: null,
         active: null,
+        rollback: undefined,
       },
     },
     embedded$0$embedded: {
@@ -345,10 +358,14 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
       kind: "Branch",
     },
     embedded$0$embedded$0$attr: {
+      entity: undefined,
+      hasOnClick: undefined,
       kind: "Leaf",
+      type: "string?",
       value: {
         candidate: null,
         active: null,
+        rollback: undefined,
       },
     },
     embedded$0$embedded$0$test: {
@@ -356,9 +373,11 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
       value: {
         candidate: ["ee6be4c1-3e38-42ad-a6c6-b37f20eedf98"],
         active: ["ee6be4c1-3e38-42ad-a6c6-b37f20eedf98"],
+        rollback: undefined,
       },
       hasOnClick: true,
       entity: "type2",
+      type: undefined,
     },
     embedded$0$test: {
       kind: "Leaf",
@@ -368,6 +387,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
       },
       hasOnClick: true,
       entity: "type1",
+      type: undefined,
     },
     embedded2: {
       kind: "Branch",
@@ -376,45 +396,61 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
       kind: "Branch",
     },
     embedded2$0$attr_xyz: {
+      entity: undefined,
+      hasOnClick: undefined,
       kind: "Leaf",
+      type: "string?",
       value: {
         candidate: null,
         active: null,
+        rollback: undefined,
       },
     },
     embedded2$0$test: {
       kind: "Leaf",
+      type: undefined,
+
       value: {
         candidate: ["8eb9a8e5-4507-49c5-95a7-481dd44e34ab"],
         active: ["8eb9a8e5-4507-49c5-95a7-481dd44e34ab"],
+        rollback: undefined,
       },
       hasOnClick: true,
       entity: "different_entity",
     },
     id_attr: {
+      entity: undefined,
+      hasOnClick: undefined,
       kind: "Leaf",
+      type: "string",
       value: {
-        candidate: "testx",
         active: "testx",
+        candidate: "testx",
+        rollback: undefined,
       },
     },
     test: {
       kind: "Leaf",
+      type: undefined,
+
       value: {
         candidate: ["05715f31-8d5c-4429-aa56-e20da1da8a59"],
         active: [
           "05715f31-8d5c-4429-aa56-e20da1da8a59",
           "05715f31-8d5c-4429-aa56-e20da1da8aff",
         ],
+        rollback: undefined,
       },
       hasOnClick: true,
       entity: "type1",
     },
     test2: {
       kind: "Leaf",
+      type: undefined,
       value: {
         candidate: ["29d51b9d-0278-49be-9953-e948be3286e1"],
         active: [],
+        rollback: undefined,
       },
       hasOnClick: true,
       entity: "type2",
