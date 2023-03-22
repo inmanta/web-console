@@ -21,6 +21,7 @@ import { BooleanToggleInput } from "./BooleanToggleInput";
 import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
+import { TextListFormInput } from "./TextListFormInput";
 
 interface Props {
   field: Field;
@@ -70,6 +71,25 @@ export const FieldInput: React.FC<Props> = ({
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
+          key={field.name}
+        />
+      );
+    case "TextList":
+      return (
+        <TextListFormInput
+          aria-label={`TextFieldInput-${field.name}`}
+          attributeName={field.name}
+          attributeValue={
+            get(formState, makePath(path, field.name)) as string[]
+          }
+          description={field.description}
+          isOptional={field.isOptional}
+          type={field.inputType}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name), value)
+          }
+          placeholder={getPlaceholderForType(field.type)}
+          typeHint={getTypeHintForType(field.type)}
           key={field.name}
         />
       );

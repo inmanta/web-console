@@ -63,6 +63,7 @@ export const createEditFormState = (
       switch (curr.kind) {
         case "Boolean":
         case "Enum":
+        case "TextList":
         case "Text": {
           acc[curr.name] = curr.type.includes("dict")
             ? stringifyDict(originalAttributes?.[curr.name])
