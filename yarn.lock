@@ -969,14 +969,14 @@
     victory-voronoi-container "^36.6.7"
     victory-zoom-container "^36.6.7"
 
-"@patternfly/react-core@^4.267.6":
-  version "4.267.6"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-4.267.6.tgz#d9a755e627fa333647ace30c15c400db47046799"
-  integrity sha512-4sb0OeGHLSLfFzrs5Tn3IXHuu6VLb+6v/FG4vcMccnGq7j/Bocns40g5mPkxC9KVbWHq7lT34wfKzS5kyIBHKQ==
+"@patternfly/react-core@^4.267.6", "@patternfly/react-core@^4.276.6":
+  version "4.276.6"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-4.276.6.tgz#fa39aa61022f70bf350b2efc660bdeb096bda447"
+  integrity sha512-G0K+378jf9jw9g+hCAoKnsAe/UGTRspqPeuAYypF2FgNr+dC7dUpc7/VkNhZBVqSJzUWVEK8NyXcqkfi0IemIg==
   dependencies:
-    "@patternfly/react-icons" "^4.93.3"
-    "@patternfly/react-styles" "^4.92.3"
-    "@patternfly/react-tokens" "^4.94.3"
+    "@patternfly/react-icons" "^4.93.6"
+    "@patternfly/react-styles" "^4.92.6"
+    "@patternfly/react-tokens" "^4.94.6"
     focus-trap "6.9.2"
     react-dropzone "9.0.0"
     tippy.js "5.1.2"
