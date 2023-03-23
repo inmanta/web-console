@@ -11,7 +11,7 @@ export function TriggerInstanceUpdateCommandManager(apiHelper: ApiHelper) {
     id,
     version,
   }: Command.SubCommand<"TriggerInstanceUpdate">): string {
-    return `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`;
+    return `/lsm/v2/service_inventory/${service_entity}/${id}?current_version=${version}`;
   }
   return CommandManagerWithEnv<"TriggerInstanceUpdate">(
     "TriggerInstanceUpdate",
@@ -26,11 +26,25 @@ export function TriggerInstanceUpdateCommandManager(apiHelper: ApiHelper) {
   );
 }
 
+const create_UUID = () => {
+  let dt = new Date().getTime();
+  const uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+    /[xy]/g,
+    function (c) {
+      const r = (dt + Math.random() * 16) % 16 | 0;
+      dt = Math.floor(dt / 16);
+      return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+    }
+  );
+  return uuid;
+};
+
 export const getBody = (
   fields: Field[],
   currentAttributes: InstanceAttributeModel | null,
   updatedAttributes: InstanceAttributeModel
-): { attributes: InstanceAttributeModel } => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): { edit: any; patch_id: string } => {
   // Make sure correct types are used
   const parsedAttributes = sanitizeAttributes(fields, updatedAttributes);
 
@@ -40,5 +54,7 @@ export const getBody = (
     currentAttributes
   );
 
-  return { attributes: attributeDiff };
+  console.log("diff: ", attributeDiff);
+
+  return { edit: attributeDiff.edit, patch_id: create_UUID() };
 };
