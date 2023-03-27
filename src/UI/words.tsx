@@ -176,7 +176,7 @@ const dict = {
   "inventory.editAttribute.failed": "Setting new attribute failed",
   "inventory.editAttribute.header": "Update Attribute",
   "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
-    `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can brake instance.`,
+    `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
 
   /**
    * Config related text

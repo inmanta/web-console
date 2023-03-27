@@ -1,26 +1,23 @@
 import React, { useState, MouseEvent, useContext, useEffect } from "react";
-import {
-  Button,
-  Flex,
-  FlexItem,
-  Popover,
-  Icon,
-  Modal,
-  Text,
-} from "@patternfly/react-core";
+import { Button, Popover, Icon, Modal, Text } from "@patternfly/react-core";
 import { TimesIcon, PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
-import styled from "styled-components";
 import { Environment, Maybe, ParsedNumber } from "@/Core";
 import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
-import { ConfirmUserActionForm, ToastAlert } from "@/UI/Components";
-import { ClipboardCopyButton } from "@/UI/Components/ClipboardCopyButton";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { ConfirmUserActionForm } from "../../../Components/ConfirmUserActionForm";
+import { ToastAlert } from "../../../Components/ToastAlert";
 import { CustomEvent } from "../../ExpertBanner";
 import { TreeTableCellContext } from "../RowReferenceContext";
+import {
+  formatValue,
+  MultiLinkCell,
+  shouldRenderLink,
+  StyledButton,
+  StyledPopoverBody,
+} from "./CellWithCopy";
 import InlineInput from "./InlineInput";
-import { InstanceCellButton } from "./InstanceCellButton";
 
 interface Props {
   className: string;
@@ -104,11 +101,11 @@ export const CellWithCopyExpert: React.FC<Props> = ({
   };
   useEffect(() => {
     document.addEventListener("expert-mode-check", (evt: CustomEvent) => {
-      setIsExpertMode(evt.detail ? true : false);
+      setIsExpertMode(evt.detail === true);
     });
     return () =>
       document.removeEventListener("expert-mode-check", (evt: CustomEvent) => {
-        setIsExpertMode(evt.detail ? true : false);
+        setIsExpertMode(evt.detail === true);
       });
   }, []);
   const cell = (
@@ -125,13 +122,29 @@ export const CellWithCopyExpert: React.FC<Props> = ({
           setMessage={setStateErrorMessage}
         />
       )}
+      {isExpertMode && value !== "" && (
+        <Button
+          variant="link"
+          isDanger
+          onClick={() => {
+            setNewAttribute(value);
+            setIsInputOpen(!isInputOpen);
+          }}
+        >
+          <Icon status="danger">
+            {isInputOpen ? <TimesIcon /> : <PencilAltIcon />}
+          </Icon>
+        </Button>
+      )}
       {isInputOpen ? (
         <InlineInput
           label={label}
           value={newAttribute}
           type={attributeType}
           onChange={(value) => setNewAttribute(value)}
-          toggleModal={() => setIsModalOpen(!isModalOpen)}
+          toggleModal={() => {
+            setIsModalOpen(!isModalOpen);
+          }}
         />
       ) : shouldRenderLink(value, hasOnClick) ? (
         <MultiLinkCell
@@ -141,20 +154,6 @@ export const CellWithCopyExpert: React.FC<Props> = ({
         />
       ) : (
         value
-      )}
-
-      {isExpertMode && value !== "" && (
-        <Button
-          variant="link"
-          isDanger
-          onClick={() => {
-            setIsInputOpen(!isInputOpen);
-          }}
-        >
-          <Icon status="danger">
-            {isInputOpen ? <TimesIcon /> : <PencilAltIcon />}
-          </Icon>
-        </Button>
       )}
       <Modal
         variant={"small"}
@@ -196,90 +195,3 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     cell
   );
 };
-
-const StyledPopoverBody = styled.div`
-  padding-right: var(--pf-c-popover--c-button--sibling--PaddingRight);
-  overflow-y: auto;
-  max-height: 50vh;
-  white-space: pre-wrap;
-`;
-
-const StyledButton = styled(ClipboardCopyButton)`
-  position: absolute;
-  top: var(--pf-c-popover--c-button--Top);
-  right: calc(var(--pf-c-popover--c-button--Right) + 0.5rem);
-`;
-
-function formatValue(value: string): string {
-  return isJson(value) ? JSON.stringify(JSON.parse(value), null, 2) : value;
-}
-
-function isJson(value: string): boolean {
-  try {
-    JSON.parse(value);
-  } catch (e) {
-    return false;
-  }
-  return true;
-}
-
-function shouldRenderLink(value: string, hasOnClick?: boolean): boolean {
-  return !!(hasOnClick && value.length > 0 && value !== "{}");
-}
-
-function splitValue(value: string): string[] {
-  const parts = value.split(",").map((val) => val.trim());
-  return parts;
-}
-function isValueOfMultipleIds(value: string): boolean {
-  return splitValue(value).length > 0;
-}
-
-interface LinkCellProps {
-  value: string;
-  serviceName?: string;
-  onClick: (cellValue: string, serviceName?: string | undefined) => void;
-}
-
-const MultiLinkCell: React.FC<LinkCellProps> = ({
-  value,
-  serviceName,
-  onClick,
-}) => {
-  if (isValueOfMultipleIds(value)) {
-    const ids = splitValue(value);
-    return (
-      <Flex
-        direction={{ default: "column" }}
-        spaceItems={{ default: "spaceItemsNone" }}
-        display={{ default: "inlineFlex" }}
-      >
-        {ids.map((id) => (
-          <FlexItem key={id}>
-            <LinkCell value={id} serviceName={serviceName} onClick={onClick} />
-          </FlexItem>
-        ))}
-      </Flex>
-    );
-  }
-  return <LinkCell value={value} serviceName={serviceName} onClick={onClick} />;
-};
-
-const LinkCell: React.FC<LinkCellProps> = ({ value, serviceName, onClick }) =>
-  serviceName && value.length > 0 ? (
-    <InstanceCellButton
-      id={value}
-      serviceName={serviceName}
-      onClick={onClick}
-    />
-  ) : (
-    <Button
-      variant="link"
-      isInline
-      onClick={
-        serviceName ? () => onClick(value, serviceName) : () => onClick(value)
-      }
-    >
-      {value}
-    </Button>
-  );

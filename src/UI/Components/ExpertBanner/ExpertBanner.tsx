@@ -8,11 +8,11 @@ export const ExpertBanner = () => {
   const [showBannerState, setShowBannerState] = useState(false);
   useEffect(() => {
     document.addEventListener("expert-mode-check", (evt: CustomEvent) => {
-      setShowBannerState(evt.detail ? true : false);
+      setShowBannerState(evt.detail === true);
     });
     return () =>
       document.removeEventListener("expert-mode-check", (evt: CustomEvent) => {
-        setShowBannerState(evt.detail ? true : false);
+        setShowBannerState(evt.detail === true);
       });
   }, []);
   const banner = (

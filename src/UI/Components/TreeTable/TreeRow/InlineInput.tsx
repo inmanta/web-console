@@ -34,7 +34,12 @@ const InlineInput = ({
         />
       )}
 
-      <Button variant="link" isDanger onClick={toggleModal}>
+      <Button
+        data-testid="inline-submit"
+        variant="link"
+        isDanger
+        onClick={toggleModal}
+      >
         <Icon status="danger">
           <CheckIcon />
         </Icon>

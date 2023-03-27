@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, SchedulerImpl, ServiceModel } from "@/Core";
 import {
@@ -26,7 +26,7 @@ import {
   MockEnvironmentModifier,
   Service,
 } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 
@@ -87,11 +87,13 @@ export class ServiceInventoryPrepper {
         triggerDestroyInstanceCommandManager,
       ])
     );
-
+    const environmentHandler = EnvironmentHandlerImpl(
+      useLocation,
+      dependencies.routeManager
+    );
     store.dispatch.environment.setEnvironments(
       RemoteData.success(Environment.filterable)
     );
-
     const component = (
       <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
         <DependencyProvider
@@ -100,6 +102,7 @@ export class ServiceInventoryPrepper {
             queryResolver,
             commandResolver,
             environmentModifier: new MockEnvironmentModifier(),
+            environmentHandler,
           }}
         >
           <StoreProvider store={store}>

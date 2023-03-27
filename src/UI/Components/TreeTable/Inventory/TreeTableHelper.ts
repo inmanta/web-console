@@ -1,14 +1,13 @@
 import { isObjectEmpty } from "@/Core";
 import {
   AttributeHelper,
-  BaseTreeTableHelper,
   PathHelper,
   TreeExpansionManager,
+  BaseTreeTableHelper,
 } from "@/UI/Components/TreeTable/Helpers";
 import { extractInventoryValues } from "@/UI/Components/TreeTable/TreeRow";
 import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
 import { words } from "@/UI/words";
-console.log(BaseTreeTableHelper<InventoryAttributeTree>);
 export class InventoryTreeTableHelper extends BaseTreeTableHelper<InventoryAttributeTree> {
   private readonly columns = [
     words("attribute.name"),
