@@ -1,4 +1,12 @@
-import { Command, Field, ApiHelper, InstanceAttributeModel } from "@/Core";
+import { cloneDeep, merge } from "lodash";
+import {
+  Command,
+  Field,
+  ApiHelper,
+  InstanceAttributeModel,
+  PatchField,
+  ParsedNumber,
+} from "@/Core";
 import { CommandManagerWithEnv } from "@/Data/Common";
 import {
   AttributeResultConverterImpl,
@@ -10,18 +18,33 @@ export function TriggerInstanceUpdateCommandManager(apiHelper: ApiHelper) {
     service_entity,
     id,
     version,
+    apiVersion = "v1",
   }: Command.SubCommand<"TriggerInstanceUpdate">): string {
-    return `/lsm/v2/service_inventory/${service_entity}/${id}?current_version=${version}`;
+    return `/lsm/${apiVersion}/service_inventory/${service_entity}/${id}?current_version=${version}`;
   }
   return CommandManagerWithEnv<"TriggerInstanceUpdate">(
     "TriggerInstanceUpdate",
     (command, environment) =>
       async (fields: Field[], currentAttributes, updatedAttributes) => {
-        return await apiHelper.patch(
-          getUrl(command),
-          environment,
-          getBody(fields, currentAttributes, updatedAttributes)
-        );
+        if (command.apiVersion === "v2") {
+          return await apiHelper.patch(
+            getUrl(command),
+            environment,
+            getBodyV2(
+              fields,
+              currentAttributes,
+              updatedAttributes,
+              command.service_entity,
+              command.version
+            )
+          );
+        } else {
+          return await apiHelper.patch(
+            getUrl(command),
+            environment,
+            getBodyV1(fields, currentAttributes, updatedAttributes)
+          );
+        }
       }
   );
 }
@@ -39,12 +62,11 @@ const create_UUID = () => {
   return uuid;
 };
 
-export const getBody = (
+export const getBodyV1 = (
   fields: Field[],
   currentAttributes: InstanceAttributeModel | null,
   updatedAttributes: InstanceAttributeModel
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): { edit: any; patch_id: string } => {
+): { attributes: InstanceAttributeModel } => {
   // Make sure correct types are used
   const parsedAttributes = sanitizeAttributes(fields, updatedAttributes);
 
@@ -54,7 +76,30 @@ export const getBody = (
     currentAttributes
   );
 
-  console.log("diff: ", attributeDiff);
+  return { attributes: attributeDiff };
+};
 
-  return { edit: attributeDiff.edit, patch_id: create_UUID() };
+export const getBodyV2 = (
+  fields: Field[],
+  currentAttributes: InstanceAttributeModel | null,
+  updatedAttributes: InstanceAttributeModel,
+  service_id: string,
+  version: ParsedNumber
+): { edit: Array<PatchField>; patch_id: string } => {
+  // Make sure correct types are used
+  const parsedAttributes = sanitizeAttributes(fields, updatedAttributes);
+
+  const richDiff = cloneDeep(parsedAttributes);
+  merge(richDiff, currentAttributes);
+
+  const patchData = [
+    {
+      edit_id: `${service_id}_version=${version}`,
+      operation: "merge",
+      target: ".",
+      value: richDiff,
+    },
+  ];
+
+  return { edit: patchData, patch_id: create_UUID() };
 };

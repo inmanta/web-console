@@ -167,56 +167,24 @@ export class AttributeResultConverterImpl implements AttributeResultConverter {
     if (!originalAttributes) {
       return attributesAfterChanges;
     }
-
     // Make sure that we include values of nested embedded entities when checking the difference if only a part of them has changed
     // Otherwise a partial update might not be valid or might remove previously set nested attributes
     const richDiff = cloneDeep(originalAttributes);
     merge(richDiff, attributesAfterChanges);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const patched: Array<any> = [];
-
-    const recursiveMethod = (origin, diff, path?) => {
-      Object.keys(diff).forEach((attributeName) => {
-        const currentPath = path
-          ? `${path}.${attributeName}`
-          : `${attributeName}`;
-
-        if (!isEqual(diff[attributeName], origin[attributeName])) {
-          if (typeof diff[attributeName] === "object") {
-            // means it's nested further.
-            recursiveMethod(
-              origin[attributeName],
-              diff[attributeName],
-              currentPath
-            );
-          } else if (
-            diff[attributeName] === undefined ||
-            diff[attributeName] === null
-          ) {
-            // means it's a remove action.
-            patched.push({
-              edit_id: `patch-${attributeName}`,
-              operation: "remove",
-              target: currentPath,
-            });
-          } else {
-            // ordinary replace action.
-            patched.push({
-              edit_id: `patch-${attributeName}`,
-              operation: "replace",
-              target: currentPath,
-              value: diff[attributeName],
-            });
-          }
-        }
-      });
-    };
-
-    recursiveMethod(originalAttributes, richDiff);
-
-    console.log(patched);
-
-    return { edit: patched };
+    // Don't include changes from undefined to null, but allow setting a value explicitly to null
+    const changedAttributeNames = Object.keys(richDiff).filter(
+      (attributeName) =>
+        !(
+          originalAttributes[attributeName] === undefined &&
+          richDiff[attributeName] === null
+        ) &&
+        !isEqual(richDiff[attributeName], originalAttributes[attributeName])
+    );
+    const updatedAttributes = {};
+    for (const attribute of changedAttributeNames) {
+      updatedAttributes[attribute] = richDiff[attribute];
+    }
+    return updatedAttributes;
   }
 }
 
