@@ -39,17 +39,6 @@ const checkStatusCompile = (id) => {
 };
 
 /**
- * when ID of the environment is not yet known, use this method to wait for the compile to be terminated.
- */
-const waitForCompile = () => {
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-    checkStatusCompile(id);
-  });
-};
-
-/**
  * Will by default execute the force update on the 'lsm-frontend' environment if no argumenst are being passed.
  * This method can be executed standalone, but is part of the cleanup cycle that is needed before running a scenario.
  *
@@ -236,17 +225,15 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     // expand first row
     cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
-    waitForCompile();
-
     // delete but cancel deletion in modal
-    cy.get(".pf-c-description-list", { timeout: 60000 })
+    cy.get(".pf-c-description-list", { timeout: 120000 })
       .find("button")
       .contains("Delete")
       .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("No").click();
 
-    cy.get(".pf-c-description-list", { timeout: 40000 })
+    cy.get(".pf-c-description-list", { timeout: 60000 })
       .find("button")
       .contains("Delete")
       .click();

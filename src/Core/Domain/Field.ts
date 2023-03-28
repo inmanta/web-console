@@ -9,6 +9,7 @@ import { ParsedNumber } from "@/Core/Language";
 export type Field =
   | BooleanField
   | TextField
+  | TextListField
   | EnumField
   | NestedField
   | DictListField
@@ -31,6 +32,13 @@ export interface BooleanField extends BaseField {
 
 export interface TextField extends BaseField {
   kind: "Text";
+  defaultValue: unknown;
+  inputType: TextInputTypes;
+  type: string;
+}
+
+export interface TextListField extends BaseField {
+  kind: "TextList";
   defaultValue: unknown;
   inputType: TextInputTypes;
   type: string;
