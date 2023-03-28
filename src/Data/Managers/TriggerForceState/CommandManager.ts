@@ -12,12 +12,12 @@ export function TriggerForceStateCommandManager(
         apiHelper.postWithoutResponse(
           `/lsm/v1/service_inventory/${service_entity}/${id}/expert/state`,
           environment,
-          composeRequestBody(authHelper.getUsername(), targetState, version)
+          composeCommandBody(authHelper.getUsername(), targetState, version)
         )
   );
 }
 
-export const composeRequestBody = (
+export const composeCommandBody = (
   username: string | null,
   targetState: string,
   version: ParsedNumber

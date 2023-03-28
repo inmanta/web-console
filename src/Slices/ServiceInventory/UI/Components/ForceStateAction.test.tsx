@@ -126,7 +126,7 @@ test("ForceStateAction shows confirmation dialog when element is selected", asyn
   await act(async () => {
     await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
   });
-  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
 });
 
 test("ForceStateAction calls onSetInstanceState when transfer is confirmed", async () => {
@@ -142,15 +142,13 @@ test("ForceStateAction calls onSetInstanceState when transfer is confirmed", asy
     await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
   });
 
-  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   await act(async () => {
     await userEvent.click(
-      await screen.findByTestId(`${id}-force-state-modal-confirm`)
+      await screen.findByTestId(`${id}-state-modal-confirm`)
     );
   });
-  expect(
-    screen.queryByTestId(`${id}-force-state-modal`)
-  ).not.toBeInTheDocument();
+  expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(1);
 });
 
@@ -166,15 +164,13 @@ test("ForceStateAction closes confirmation modal when transfer is cancelled", as
   await act(async () => {
     await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
   });
-  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   await act(async () => {
     await userEvent.click(
-      await screen.findByTestId(`${id}-force-state-modal-cancel`)
+      await screen.findByTestId(`${id}-state-modal-cancel`)
     );
   });
-  expect(
-    screen.queryByTestId(`${id}-force-state-modal`)
-  ).not.toBeInTheDocument();
+  expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
 
@@ -196,16 +192,14 @@ test("ForceStateAction shows error message when transfer not successful", async 
   });
 
   // Modal is visible
-  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   // Confirm transfer
   await act(async () => {
     await userEvent.click(
-      await screen.findByTestId(`${id}-force-state-modal-confirm`)
+      await screen.findByTestId(`${id}-state-modal-confirm`)
     );
   });
-  expect(
-    screen.queryByTestId(`${id}-force-state-modal`)
-  ).not.toBeInTheDocument();
+  expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(1);
   // Error message is shown
   expect(await screen.findByTestId(`${id}-error-message`)).toBeVisible();
