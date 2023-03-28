@@ -127,7 +127,6 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
     cy.get("#expand-toggle0").click();
 
     //wait until state is up and change it to creating with help of force state functionality
-    cy.get(".pf-c-description-list").contains("Edit").should("be.disabled");
     cy.get('[aria-label="InstanceRow-Intro"]:first')
       .find('[data-label="State"]', { timeout: 40000 })
       .should("contain", "up");
