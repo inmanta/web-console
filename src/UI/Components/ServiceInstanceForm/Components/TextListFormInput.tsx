@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Chip,
@@ -48,7 +48,7 @@ export const TextListFormInput: React.FC<Props> = ({
   const handleChangeInput = (
     value: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    event: FormEvent<HTMLInputElement>
+    event: React.FormEvent<HTMLInputElement>
   ) => {
     setInputValue(value);
   };
