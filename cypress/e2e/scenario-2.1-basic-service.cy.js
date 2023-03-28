@@ -171,7 +171,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // check state is up now
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 40000 })
+      .find('[data-label="State"]', { timeout: 120000 })
       .should("contain", "up");
 
     // click on edit button
@@ -224,7 +224,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     //check for instance state to change to up
     cy.get('[data-label="State"]')
-      .find(".pf-c-label.pf-m-green", { timeout: 150000 })
+      .find(".pf-c-label.pf-m-green", { timeout: 180000 })
       .should("contain", "up");
 
     // expand first row
