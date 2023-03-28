@@ -1,5 +1,6 @@
 import React from "react";
-import { fireEvent, screen, render, act } from "@testing-library/react";
+import { screen, render, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { EnvironmentDetails, RemoteData } from "@/Core";
 import {
@@ -132,8 +133,9 @@ test("SetStateAction dropdown can be expanded", async () => {
   const { component } = setupComponent();
   render(component);
   const testid = `${id}-set-state-toggle`;
-
-  fireEvent.click(await screen.findByTestId(testid));
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
 
   expect(await screen.findByTestId(`${id}-acknowledged`)).toBeVisible();
   expect(await screen.findByTestId(`${id}-designed`)).toBeVisible();
@@ -144,11 +146,15 @@ test("SetStateAction shows confirmation dialog when element is selected", async 
   const { component } = setupComponent();
   render(component);
   const testid = `${id}-set-state-toggle`;
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
 
-  fireEvent.click(await screen.findByTestId(testid));
-  fireEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+  });
 
-  expect(await screen.findByTestId(`${id}-set-state-modal`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
 });
 
 test("SetStateAction calls onSetInstanceState when transfer is confirmed", async () => {
@@ -157,12 +163,20 @@ test("SetStateAction calls onSetInstanceState when transfer is confirmed", async
   render(component);
   const testid = `${id}-set-state-toggle`;
 
-  fireEvent.click(await screen.findByTestId(testid));
-  fireEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
 
-  expect(await screen.findByTestId(`${id}-set-state-modal`)).toBeVisible();
-  fireEvent.click(await screen.findByTestId(`${id}-set-state-modal-confirm`));
-  expect(screen.queryByTestId(`${id}-set-state-modal`)).not.toBeInTheDocument();
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+  });
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByTestId(`${id}-state-modal-confirm`)
+    );
+  });
+  expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(1);
 });
 
@@ -172,12 +186,21 @@ test("SetStateAction closes confirmation modal when transfer is cancelled", asyn
   render(component);
   const testid = `${id}-set-state-toggle`;
 
-  fireEvent.click(await screen.findByTestId(testid));
-  fireEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
 
-  expect(await screen.findByTestId(`${id}-set-state-modal`)).toBeVisible();
-  fireEvent.click(await screen.findByTestId(`${id}-set-state-modal-cancel`));
-  expect(screen.queryByTestId(`${id}-set-state-modal`)).not.toBeInTheDocument();
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+  });
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByTestId(`${id}-state-modal-cancel`)
+    );
+  });
+
+  expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
 
@@ -190,19 +213,31 @@ test("SetStateAction shows error message when transfer not successful", async ()
   const { component } = setupComponent();
   render(component);
   const testid = `${id}-set-state-toggle`;
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
 
-  fireEvent.click(await screen.findByTestId(testid));
-  fireEvent.click(await screen.findByTestId(`${id}-acknowledged`));
-
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+  });
   // Modal is visible
-  expect(await screen.findByTestId(`${id}-set-state-modal`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   // Confirm transfer
-  fireEvent.click(await screen.findByTestId(`${id}-set-state-modal-confirm`));
-  expect(screen.queryByTestId(`${id}-set-state-modal`)).not.toBeInTheDocument();
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByTestId(`${id}-state-modal-confirm`)
+    );
+  });
+  expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(1);
   // Error message is shown
   expect(await screen.findByTestId(`${id}-error-message`)).toBeVisible();
-  fireEvent.click(await screen.findByTestId(`${id}-close-error-message`));
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByTestId(`${id}-close-error-message`)
+    );
+  });
+
   // Error message can be closed
   expect(screen.queryByTestId(`${id}-error-message`)).not.toBeInTheDocument();
 });

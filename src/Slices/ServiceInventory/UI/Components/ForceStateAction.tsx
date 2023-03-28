@@ -1,14 +1,8 @@
 import React, { useContext, useState } from "react";
 import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  Button,
   Dropdown,
   DropdownItem,
   DropdownToggle,
-  Modal,
-  ModalVariant,
   Text,
 } from "@patternfly/react-core";
 import { CaretDownIcon } from "@patternfly/react-icons";
@@ -17,6 +11,8 @@ import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import ConfirmationModal from "./ConfirmationModal";
+import { ToastAlertMessage } from "./ToastAlertMessage";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
@@ -109,106 +105,20 @@ export const ForceStateAction: React.FC<Props> = ({
         />
       </ActionDisabledTooltip>
       <ConfirmationModal
-        confirmationText={confirmationText}
+        title={words("inventory.statustab.forceState.confirmTitle")}
         onSetInstanceState={onSubmit}
         id={id}
         targetState={targetState}
         isModalOpen={isModalOpen}
         setIsModalOpen={handleModalToggle}
         setErrorMessage={setStateErrorMessage}
-      />
-    </>
-  );
-};
-
-interface ModalProps {
-  confirmationText: string;
-  id: string;
-  targetState: string;
-  onSetInstanceState: (targetState: string) => Promise<void>;
-  isModalOpen: boolean;
-  setIsModalOpen: (isOpen: boolean) => void;
-  setErrorMessage: (message: string) => void;
-}
-
-const ConfirmationModal: React.FC<ModalProps> = ({
-  confirmationText,
-  onSetInstanceState,
-  isModalOpen,
-  setIsModalOpen,
-  id,
-  targetState,
-}) => {
-  const handleModalToggle = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-  const handleConfirm = async () => {
-    await onSetInstanceState(targetState);
-    handleModalToggle();
-  };
-
-  return (
-    <React.Fragment>
-      <Modal
-        data-testid={`${id}-force-state-modal`}
-        variant={ModalVariant.small}
-        titleIconVariant="danger"
-        title={words("inventory.statustab.forceState.confirmTitle")}
-        isOpen={isModalOpen}
-        onClose={handleModalToggle}
-        actions={[
-          <Button
-            key="confirm"
-            variant="primary"
-            data-testid={`${id}-force-state-modal-confirm`}
-            onClick={handleConfirm}
-          >
-            {words("yes")}
-          </Button>,
-          <Button
-            key="cancel"
-            variant="link"
-            data-testid={`${id}-force-state-modal-cancel`}
-            onClick={handleModalToggle}
-          >
-            {words("no")}
-          </Button>,
-        ]}
       >
         <Text>{confirmationText}</Text>
         <br />
         <Text>{words("inventory.statustab.forceState.confirmMessage")}</Text>
         <Text>{words("inventory.statustab.forceState.confirmQuestion")}</Text>
-      </Modal>
-    </React.Fragment>
-  );
-};
-
-interface ToastAlertMessageProps {
-  stateErrorMessage: string;
-  id: string;
-  setStateErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const ToastAlertMessage: React.FC<ToastAlertMessageProps> = ({
-  stateErrorMessage,
-  id,
-  setStateErrorMessage,
-}) => {
-  return (
-    <AlertGroup isToast={true}>
-      <Alert
-        variant="danger"
-        title={stateErrorMessage}
-        data-testid={`${id}-error-message`}
-        actionClose={
-          <AlertActionCloseButton
-            data-testid={`${id}-close-error-message`}
-            onClose={() => setStateErrorMessage("")}
-          />
-        }
-      />
-    </AlertGroup>
+      </ConfirmationModal>
+    </>
   );
 };
 
