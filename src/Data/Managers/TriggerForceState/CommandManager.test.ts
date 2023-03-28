@@ -1,9 +1,9 @@
 import { ServiceInstance } from "@/Test";
-import { composeRequestBody } from "./CommandManager";
+import { composeCommandBody } from "./CommandManager";
 
 test("GIVEN getBody THEN generates correct body with message", async () => {
   expect(
-    composeRequestBody("inmanta", "up", ServiceInstance.a.version)
+    composeCommandBody("inmanta", "up", ServiceInstance.a.version)
   ).toEqual({
     current_version: ServiceInstance.a.version,
     target_state: "up",
