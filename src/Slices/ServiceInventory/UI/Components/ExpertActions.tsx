@@ -1,7 +1,7 @@
 import React from "react";
 import { DescriptionList, DescriptionListGroup } from "@patternfly/react-core";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
-import { DestroyModal } from "./DestroyModal";
+import { DestroyAction } from "./DestroyAction";
 import { ForceStateAction } from "./ForceStateAction";
 
 export interface InstanceActionsProps {
@@ -16,7 +16,7 @@ export const ExpertActions: React.FC<InstanceActionsProps> = ({
   return (
     <DescriptionList>
       <DescriptionListGroup>
-        <DestroyModal
+        <DestroyAction
           service_entity={instance.service_entity}
           instance_identity={
             instance.service_identity_attribute_value ?? instance.id

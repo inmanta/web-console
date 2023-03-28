@@ -11,7 +11,7 @@ interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
 }
 
-export const DestroyModal: React.FC<Props> = ({
+export const DestroyAction: React.FC<Props> = ({
   id,
   instance_identity,
   version,

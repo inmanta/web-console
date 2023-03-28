@@ -13,7 +13,7 @@ import { DeferredApiHelper, dependencies, ServiceInstance } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { GetInstancesContext } from "../../GetInstancesContext";
-import { DestroyModal } from "./DestroyModal";
+import { DestroyAction } from "./DestroyAction";
 
 function setup() {
   const apiHelper = new DeferredApiHelper();
@@ -42,7 +42,7 @@ function setup() {
           }}
         >
           <GetInstancesContext.Provider value={{ refetch }}>
-            <DestroyModal
+            <DestroyAction
               id={ServiceInstance.a.id}
               instance_identity={
                 ServiceInstance.a.service_identity_attribute_value ??
