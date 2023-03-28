@@ -74,6 +74,7 @@ describe("DeleteModal ", () => {
     expect(await screen.findByText(words("yes"))).toBeVisible();
     expect(await screen.findByText(words("no"))).toBeVisible();
   });
+
   it("Closes modal when cancelled", async () => {
     const { component } = setup();
     render(component());
@@ -89,6 +90,7 @@ describe("DeleteModal ", () => {
     });
     expect(screen.queryByText(words("yes"))).not.toBeInTheDocument();
   });
+
   it("Sends request when submitted", async () => {
     const { component, apiHelper, refetch } = setup();
     render(component());
@@ -111,6 +113,7 @@ describe("DeleteModal ", () => {
     await apiHelper.resolve(Either.right(null));
     expect(refetch).toHaveBeenCalled();
   });
+
   it("Doesn't take environment halted status in account", async () => {
     const { component, storeInstance } = setup();
     const { rerender } = render(component());
