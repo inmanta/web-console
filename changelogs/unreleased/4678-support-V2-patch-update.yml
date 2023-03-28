@@ -1,0 +1,8 @@
+description: Add support for V2 Patch update for instance attributes, keeping the backwards compatibility with V1. When the strict_modifier_enforcement is enabled on a service model, the new endpoint will be used. It is adviced to set the strict_modifier_enforcement by default on true.
+issue-nr: 4678
+change-type: patch
+destination-branches:
+  - master
+  - iso6
+sections: 
+  minor-improvement: "{{description}}"
