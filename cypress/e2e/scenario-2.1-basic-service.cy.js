@@ -222,6 +222,11 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
+    //check for instance state to change to up
+    cy.get('[data-label="State"]')
+      .find(".pf-c-label.pf-m-green", { timeout: 60000 })
+      .should("contain", "up");
+
     // expand first row
     cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
