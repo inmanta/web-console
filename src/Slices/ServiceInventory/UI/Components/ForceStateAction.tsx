@@ -143,8 +143,8 @@ const ConfirmationModal: React.FC<ModalProps> = ({
     setIsModalOpen(!isModalOpen);
   };
   const handleConfirm = async () => {
-    handleModalToggle();
     await onSetInstanceState(targetState);
+    handleModalToggle();
   };
 
   return (
