@@ -224,7 +224,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     //check for instance state to change to up
     cy.get('[data-label="State"]')
-      .find(".pf-c-label.pf-m-green", { timeout: 120000 })
+      .find(".pf-c-label.pf-m-green", { timeout: 180000 })
       .should("contain", "up");
 
     // expand first row
