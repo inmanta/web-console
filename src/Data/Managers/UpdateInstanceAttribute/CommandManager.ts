@@ -12,7 +12,7 @@ export function UpdateInstanceAttributeCommandManager(
         apiHelper.patch(
           `/lsm/v2/service_inventory/${service_entity}/${id}/expert`,
           environment,
-          getBody(
+          composeCommandBody(
             authHelper.getUsername(),
             attribute_set_name,
             value,
@@ -25,7 +25,7 @@ export function UpdateInstanceAttributeCommandManager(
   );
 }
 
-export const getBody = (
+export const composeCommandBody = (
   username: string | null,
   attribute_set_name: attributeSet,
   value: string | number | boolean | string[],

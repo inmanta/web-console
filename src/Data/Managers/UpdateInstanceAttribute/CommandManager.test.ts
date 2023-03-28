@@ -1,9 +1,9 @@
 import { ServiceInstance } from "@/Test";
-import { getBody } from "./CommandManager";
+import { composeCommandBody } from "./CommandManager";
 
 test("GIVEN getBody THEN generates correct body with message", async () => {
   expect(
-    getBody(
+    composeCommandBody(
       "inmanta",
       "active_attributes",
       "test",
