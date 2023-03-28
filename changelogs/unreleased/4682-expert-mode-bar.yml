@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Add support for lsm expert mode'
+issue-nr: 4682
+destination-branches:
+- master
+- iso6
+sections: 
+  feature: "{{description}}"
