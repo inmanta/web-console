@@ -46,9 +46,9 @@ export const TextListFormInput: React.FC<Props> = ({
   };
 
   const handleChangeInput = (
+    value: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    event: React.FormEvent<HTMLInputElement>,
-    value: string
+    event: React.FormEvent<HTMLInputElement>
   ) => {
     setInputValue(value);
   };
