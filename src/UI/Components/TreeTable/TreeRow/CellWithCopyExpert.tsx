@@ -1,7 +1,15 @@
 import React, { useState, MouseEvent, useContext, useEffect } from "react";
-import { Button, Popover, Icon, Modal, Text } from "@patternfly/react-core";
+import {
+  Button,
+  Popover,
+  Icon,
+  Modal,
+  Text,
+  Spinner,
+} from "@patternfly/react-core";
 import { TimesIcon, PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
+import styled from "styled-components";
 import { Environment, Maybe, ParsedNumber } from "@/Core";
 import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
 import { DependencyContext } from "@/UI/Dependency";
@@ -57,6 +65,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     value
   );
   const [isInputOpen, setIsInputOpen] = useState(false);
+  const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
   const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
   const { onClick } = useContext(TreeTableCellContext);
   const trigger = commandResolver.useGetTrigger<"UpdateInstanceAttribute">({
@@ -89,6 +98,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       setIsModalOpen(!isModalOpen);
       return;
     }
+    setIsSpinnerVisible(true);
     const result = await trigger(
       (label + "_attributes") as AttributeSet,
       newValue,
@@ -97,6 +107,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     setIsModalOpen(!isModalOpen);
     if (Maybe.isSome(result)) {
       setStateErrorMessage(result.value);
+      setIsSpinnerVisible(false);
     }
   };
   useEffect(() => {
@@ -155,6 +166,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
       ) : (
         value
       )}
+      {isSpinnerVisible && <StyledSpinner isSVG size="sm" />}
       <Modal
         variant={"small"}
         isOpen={isModalOpen}
@@ -195,3 +207,8 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     cell
   );
 };
+
+const StyledSpinner = styled(Spinner)`
+  --pf-c-spinner--Color: var(--pf-global--Color--100);
+  margin-left: 8px;
+`;
