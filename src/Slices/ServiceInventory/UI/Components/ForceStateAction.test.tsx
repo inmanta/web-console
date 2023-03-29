@@ -1,5 +1,6 @@
 import React from "react";
-import { fireEvent, screen, render, act } from "@testing-library/react";
+import { screen, render, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { EnvironmentDetails, RemoteData } from "@/Core";
 import {
@@ -48,7 +49,7 @@ function setupComponent() {
           }
           service_entity={ServiceInstance.a.service_entity}
           version={ServiceInstance.a.version}
-          targets={["up", "deleting"]}
+          possibleInstanceStates={["up", "deleting"]}
         />
       </DependencyProvider>
     ),
@@ -82,7 +83,7 @@ test("ForceStateAction dropdown doesn't takes environment halted status in accou
           }
           service_entity={ServiceInstance.b.service_entity}
           version={ServiceInstance.b.version}
-          targets={targets}
+          possibleInstanceStates={targets}
         />
       </StoreProvider>
     </DependencyProvider>
@@ -106,8 +107,9 @@ test("ForceStateAction dropdown can be expanded", async () => {
   render(component);
   const testid = `${id}-force-state-toggle`;
 
-  fireEvent.click(await screen.findByTestId(testid));
-
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
   expect(await screen.findByTestId(`${id}-up-expert`)).toBeVisible();
   expect(await screen.findByTestId(`${id}-deleting-expert`)).toBeVisible();
 });
@@ -118,10 +120,13 @@ test("ForceStateAction shows confirmation dialog when element is selected", asyn
   render(component);
   const testid = `${id}-force-state-toggle`;
 
-  fireEvent.click(await screen.findByTestId(testid));
-  fireEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
-
-  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+  });
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
 });
 
 test("ForceStateAction calls onSetInstanceState when transfer is confirmed", async () => {
@@ -130,14 +135,20 @@ test("ForceStateAction calls onSetInstanceState when transfer is confirmed", asy
   render(component);
   const testid = `${id}-force-state-toggle`;
 
-  fireEvent.click(await screen.findByTestId(testid));
-  fireEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+  });
 
-  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
-  fireEvent.click(await screen.findByTestId(`${id}-force-state-modal-confirm`));
-  expect(
-    screen.queryByTestId(`${id}-force-state-modal`)
-  ).not.toBeInTheDocument();
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByTestId(`${id}-state-modal-confirm`)
+    );
+  });
+  expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(1);
 });
 
@@ -147,14 +158,19 @@ test("ForceStateAction closes confirmation modal when transfer is cancelled", as
   render(component);
   const testid = `${id}-force-state-toggle`;
 
-  fireEvent.click(await screen.findByTestId(testid));
-  fireEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
-
-  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
-  fireEvent.click(await screen.findByTestId(`${id}-force-state-modal-cancel`));
-  expect(
-    screen.queryByTestId(`${id}-force-state-modal`)
-  ).not.toBeInTheDocument();
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+  });
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByTestId(`${id}-state-modal-cancel`)
+    );
+  });
+  expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
 
@@ -168,20 +184,30 @@ test("ForceStateAction shows error message when transfer not successful", async 
   render(component);
   const testid = `${id}-force-state-toggle`;
 
-  fireEvent.click(await screen.findByTestId(testid));
-  fireEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(testid));
+  });
+  await act(async () => {
+    await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
+  });
 
   // Modal is visible
-  expect(await screen.findByTestId(`${id}-force-state-modal`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   // Confirm transfer
-  fireEvent.click(await screen.findByTestId(`${id}-force-state-modal-confirm`));
-  expect(
-    screen.queryByTestId(`${id}-force-state-modal`)
-  ).not.toBeInTheDocument();
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByTestId(`${id}-state-modal-confirm`)
+    );
+  });
+  expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(1);
   // Error message is shown
   expect(await screen.findByTestId(`${id}-error-message`)).toBeVisible();
-  fireEvent.click(await screen.findByTestId(`${id}-close-error-message`));
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByTestId(`${id}-close-error-message`)
+    );
+  });
   // Error message can be closed
   expect(screen.queryByTestId(`${id}-error-message`)).not.toBeInTheDocument();
 });

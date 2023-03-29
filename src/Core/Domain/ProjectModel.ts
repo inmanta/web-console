@@ -18,38 +18,17 @@ export interface EnvironmentModel {
   icon?: string;
 }
 
-export interface FlatEnvironment {
-  id: string;
-  name: string;
-  project_id: string;
-  repo_branch: string;
-  repo_url: string;
+export interface FlatEnvironment extends EnvironmentModel {
   projectName: string;
-  description?: string;
-  icon?: string;
 }
-export interface EnvironmentExpertOnly {
-  id: string;
-  name: string;
-  project_id: string;
-  repo_branch: string;
-  repo_url: string;
+export interface EnvironmentExpertOnly extends EnvironmentModel {
   projectName: string;
-  description?: string;
-  icon?: string;
   settings: {
     enable_lsm_expert_mode: boolean;
   };
 }
-export interface Environment {
-  id: string;
-  name: string;
-  project_id: string;
-  repo_branch: string;
-  repo_url: string;
+export interface Environment extends EnvironmentModel {
   projectName: string;
-  description?: string;
-  icon?: string;
   settings: {
     agent_trigger_method_on_auto_deploy: string;
     auto_deploy: boolean;

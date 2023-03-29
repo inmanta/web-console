@@ -107,7 +107,7 @@ const dict = {
   "inventory.statustab.forceState": "Force state to",
   "inventory.statustab.forceState.confirmTitle": "Confirm force state transfer",
   "inventory.statustab.forceState.message": (name: string, state: string) =>
-    `Are you sure you want to force state of instance ${name} to ${state}? `,
+    `Are you sure you want to force the state of instance ${name} to ${state}? `,
   "inventory.statustab.forceState.confirmMessage": `Forcing a state might corrupt the service and the orchestrated resources`,
   "inventory.statustab.forceState.confirmQuestion": `Are you sure you want to continue?`,
   "inventory.statustab.actionDisabled":
