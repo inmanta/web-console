@@ -167,7 +167,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("Yes").click();
 
-    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 240000 }).should(
+    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 40000 }).should(
       "to.be.visible"
     );
   });
