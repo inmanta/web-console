@@ -1,6 +1,0 @@
-change-type: patch
-description: 'Update e2e tests'
-destination-branches:
-- master
-- iso6
-sections: {}
