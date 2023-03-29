@@ -76,7 +76,7 @@ test("Given CellWithCopy When a cell has a simple value only Then it is shown", 
 });
 
 test("Given CellWithCopy When a cell has on click Then it is rendered as a link", async () => {
-  const props = { label: "attribute", value: "someValue", hasOnClick: true };
+  const props = { label: "attribute", value: "someValue", hasRelation: true };
   const { component, onClickFn } = setup(props);
   render(component);
 
@@ -90,7 +90,7 @@ test("Given CellWithCopy When a cell has entity and on click Then it is rendered
   const props = {
     label: "attribute",
     value: "someValue",
-    hasOnClick: true,
+    hasRelation: true,
     serviceName: "test_service",
   };
   const { component, apiHelper, onClickFn } = setup(props);
@@ -116,7 +116,7 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
   const props = {
     label: "attribute",
     value: "someValue,someOtherValue",
-    hasOnClick: true,
+    hasRelation: true,
     serviceName: "test_service",
   };
   const { component, apiHelper, onClickFn } = setup(props);

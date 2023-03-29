@@ -11,7 +11,7 @@ interface Props {
   className: string;
   label: string;
   value: string;
-  hasOnClick?: boolean;
+  hasRelation?: boolean;
   serviceName?: string;
 }
 
@@ -19,7 +19,7 @@ export const CellWithCopy: React.FC<Props> = ({
   label,
   value,
   className,
-  hasOnClick,
+  hasRelation,
   serviceName,
 }) => {
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
@@ -40,7 +40,7 @@ export const CellWithCopy: React.FC<Props> = ({
       dataLabel={label}
       onMouseEnter={onMouseEnter}
     >
-      {shouldRenderLink(value, hasOnClick) ? (
+      {shouldRenderLink(value, hasRelation) ? (
         <MultiLinkCell
           value={value}
           serviceName={serviceName}
@@ -98,8 +98,11 @@ function isJson(value: string): boolean {
   return true;
 }
 
-export function shouldRenderLink(value: string, hasOnClick?: boolean): boolean {
-  return !!(hasOnClick && value.length > 0 && value !== "{}");
+export function shouldRenderLink(
+  value: string,
+  hasRelation?: boolean
+): boolean {
+  return !!(hasRelation && value.length > 0 && value !== "{}");
 }
 
 function splitValue(value: string): string[] {

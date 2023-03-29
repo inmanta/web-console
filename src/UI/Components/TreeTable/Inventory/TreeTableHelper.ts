@@ -8,6 +8,7 @@ import {
 import { extractInventoryValues } from "@/UI/Components/TreeTable/TreeRow";
 import { InventoryAttributeTree } from "@/UI/Components/TreeTable/types";
 import { words } from "@/UI/words";
+
 export class InventoryTreeTableHelper extends BaseTreeTableHelper<InventoryAttributeTree> {
   private readonly columns = [
     words("attribute.name"),

@@ -100,7 +100,7 @@ test("AttributeHelper getMultiAttributeNodes", () => {
         type: "test_service",
         description: "",
       },
-      hasOnClick: true,
+      hasRelation: true,
     },
   });
 });

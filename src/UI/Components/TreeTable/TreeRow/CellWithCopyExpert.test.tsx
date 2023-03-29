@@ -96,7 +96,7 @@ test("Given CellWithCopyExpert When a cell has a simple value only Then it is sh
 });
 
 test("Given CellWithCopyExpert When a cell has on click Then it is rendered as a link", async () => {
-  const props = { label: "attribute", value: "someValue", hasOnClick: true };
+  const props = { label: "attribute", value: "someValue", hasRelation: true };
   const { component, onClickFn } = setup(props);
   render(component);
 
@@ -110,7 +110,7 @@ test("Given CellWithCopyExpert When a cell has entity and on click Then it is re
   const props = {
     label: "attribute",
     value: "someValue",
-    hasOnClick: true,
+    hasRelation: true,
     serviceName: "test_service",
   };
   const { component, apiHelper, onClickFn } = setup(props);
@@ -136,7 +136,7 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
   const props = {
     label: "attribute",
     value: "someValue,someOtherValue",
-    hasOnClick: true,
+    hasRelation: true,
     serviceName: "test_service",
   };
   const { component, apiHelper, onClickFn } = setup(props);
@@ -173,7 +173,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode Then button 
   const props = {
     label: "attribute",
     value: "someValue",
-    hasOnClick: true,
+    hasRelation: true,
     serviceName: "test_service",
     path: "mgmt_prefix",
     instanceId: "09042edf-3032-490d-bcaf-cc45615ba782",
@@ -214,7 +214,7 @@ test("Given CellWithCopyExpert When a cell has access to expertMode and input wi
   const props = {
     label: "attribute",
     value: "someValue",
-    hasOnClick: true,
+    hasRelation: true,
     serviceName: "test_service",
     path: "mgmt_prefix",
     instanceId: "09042edf-3032-490d-bcaf-cc45615ba782",

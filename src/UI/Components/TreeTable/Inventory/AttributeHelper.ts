@@ -98,10 +98,13 @@ export class InventoryAttributeHelper
     return matchingRelation;
   }
   private findAttributeType(
-    service: ServiceModel | EmbeddedEntity,
+    service: ServiceModel | EmbeddedEntity | undefined,
     prefix: string[],
     key: string
   ): string | undefined {
+    if (service === undefined) {
+      return undefined;
+    }
     const matchingEmbeddedEntity = service.embedded_entities.find(
       (entity) => entity.name === prefix[0]
     );
@@ -126,24 +129,20 @@ export class InventoryAttributeHelper
     let keys: AttributeNodeDict = {};
     const primaryKeys = Object.keys(subject).sort();
     primaryKeys.forEach((key) => {
-      let type;
-      if (this.service === undefined) {
-        type = "undefined";
-      } else {
-        type = this.findAttributeType(
-          this.service,
-          prefix
-            .split(this.separator)
-            .filter((part) => isNaN(part as unknown as number)),
-          key
-        );
-      }
+      const type = this.findAttributeType(
+        this.service,
+        prefix
+          .split(this.separator)
+          .filter((part) => isNaN(part as unknown as number)),
+        key
+      );
+
       if (!this.isNested(subject[key])) {
         const relation = this.findKeyInService(prefix, key);
         keys[`${prefix}${key}`] = {
           kind: "Leaf",
           value: subject[key],
-          hasOnClick: !!relation,
+          hasRelation: !!relation,
           entity: relation?.entity_type,
           type,
         };
@@ -222,10 +221,10 @@ export class InventoryAttributeHelper
             active: getValue(activeNodes[cur]),
             rollback: getValue(rollbackNodes[cur]),
           },
-          hasOnClick:
-            getHasOnClick(candidateNodes[cur]) ||
-            getHasOnClick(activeNodes[cur]) ||
-            getHasOnClick(rollbackNodes[cur]),
+          hasRelation:
+            getHasRelation(candidateNodes[cur]) ||
+            getHasRelation(activeNodes[cur]) ||
+            getHasRelation(rollbackNodes[cur]),
           entity: chooseEntity([
             getEntity(candidateNodes[cur]),
             getEntity(activeNodes[cur]),
@@ -242,7 +241,6 @@ export class InventoryAttributeHelper
     );
   }
 }
-
 export function isMultiLeaf(
   candidateNode: TreeNode | undefined,
   activeNode: TreeNode | undefined,
@@ -268,10 +266,10 @@ export function isLeaf(node: TreeNode | undefined): boolean {
   return node.kind === "Leaf";
 }
 
-function getHasOnClick(node: TreeNode | undefined): boolean | undefined {
+function getHasRelation(node: TreeNode | undefined): boolean | undefined {
   if (typeof node === "undefined") return undefined;
   if (node.kind !== "Leaf") return undefined;
-  return node.hasOnClick;
+  return node.hasRelation;
 }
 
 function getEntity(node: TreeNode | undefined): string | undefined {

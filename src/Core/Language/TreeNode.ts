@@ -1,7 +1,7 @@
 interface Leaf<Value> {
   kind: "Leaf";
   value: Value;
-  hasOnClick?: boolean;
+  hasRelation?: boolean;
   entity?: string;
   type?: string;
 }

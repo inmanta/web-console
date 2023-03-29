@@ -32,12 +32,12 @@ export const TreeRowView: React.FC<RowProps> = ({
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value, hasOnClick, serviceName }) =>
+          {row.valueCells.map(({ label, value, hasRelation, serviceName }) =>
             showExpertMode ? (
               <CellWithCopyExpert
                 label={label}
                 value={label === "description" && value === "null" ? "" : value}
-                hasOnClick={hasOnClick}
+                hasRelation={hasRelation}
                 serviceName={serviceName}
                 className={"pf-m-truncate"}
                 key={`${label}-${value}-expert`}
@@ -51,7 +51,7 @@ export const TreeRowView: React.FC<RowProps> = ({
               <CellWithCopy
                 label={label}
                 value={label === "description" && value === "null" ? "" : value}
-                hasOnClick={hasOnClick}
+                hasRelation={hasRelation}
                 serviceName={serviceName}
                 className={"pf-m-truncate"}
                 key={`${label}-${value}`}
@@ -110,12 +110,12 @@ export const TreeRowView: React.FC<RowProps> = ({
               {row.primaryCell.value}
             </Indent>
           </Td>
-          {row.valueCells.map(({ label, value, hasOnClick, serviceName }) =>
+          {row.valueCells.map(({ label, value, hasRelation, serviceName }) =>
             showExpertMode ? (
               <CellWithCopyExpert
                 label={label}
                 value={label === "description" && value === "null" ? "" : value}
-                hasOnClick={hasOnClick}
+                hasRelation={hasRelation}
                 serviceName={serviceName}
                 className={"pf-m-truncate"}
                 key={`${label}-${value}-expert`}
@@ -129,7 +129,7 @@ export const TreeRowView: React.FC<RowProps> = ({
               <CellWithCopy
                 label={label}
                 value={label === "description" && value === "null" ? "" : value}
-                hasOnClick={hasOnClick}
+                hasRelation={hasRelation}
                 serviceName={serviceName}
                 className={"pf-m-truncate"}
                 key={`${label}-${value}`}

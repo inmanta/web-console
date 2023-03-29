@@ -83,7 +83,7 @@ export function extractCatalogValues(
     {
       label: "type",
       value: format(node.value.type),
-      hasOnClick: node.hasOnClick,
+      hasRelation: node.hasRelation,
     },
     {
       label: "description",
@@ -99,19 +99,19 @@ export function extractInventoryValues(
     {
       label: "candidate",
       value: format(node.value.candidate),
-      hasOnClick: node.hasOnClick,
+      hasRelation: node.hasRelation,
       serviceName: node.entity,
     },
     {
       label: "active",
       value: format(node.value.active),
-      hasOnClick: node.hasOnClick,
+      hasRelation: node.hasRelation,
       serviceName: node.entity,
     },
     {
       label: "rollback",
       value: format(node.value.rollback),
-      hasOnClick: node.hasOnClick,
+      hasRelation: node.hasRelation,
       serviceName: node.entity,
     },
   ];

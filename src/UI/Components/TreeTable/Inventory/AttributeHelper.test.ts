@@ -75,9 +75,9 @@ test("AttributeHelper getMultiAttributeNodes", () => {
     "a.b": { kind: "Branch" },
     "a.b.c": {
       entity: undefined,
-      hasOnClick: undefined,
+      hasRelation: undefined,
       kind: "Leaf",
-      type: "undefined",
+      type: undefined,
       value: {
         active: "d",
         candidate: undefined,
@@ -86,9 +86,9 @@ test("AttributeHelper getMultiAttributeNodes", () => {
     },
     e: {
       entity: undefined,
-      hasOnClick: undefined,
+      hasRelation: undefined,
       kind: "Leaf",
-      type: "undefined",
+      type: undefined,
       value: {
         active: "f",
         candidate: undefined,
@@ -98,9 +98,9 @@ test("AttributeHelper getMultiAttributeNodes", () => {
     g: { kind: "Branch" },
     "g.h": {
       entity: undefined,
-      hasOnClick: undefined,
+      hasRelation: undefined,
       kind: "Leaf",
-      type: "undefined",
+      type: undefined,
       value: {
         active: "i",
         candidate: undefined,
@@ -342,7 +342,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
     },
     embedded$0$attr: {
       entity: undefined,
-      hasOnClick: undefined,
+      hasRelation: undefined,
       kind: "Leaf",
       type: "string?",
       value: {
@@ -359,7 +359,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
     },
     embedded$0$embedded$0$attr: {
       entity: undefined,
-      hasOnClick: undefined,
+      hasRelation: undefined,
       kind: "Leaf",
       type: "string?",
       value: {
@@ -375,7 +375,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
         active: ["ee6be4c1-3e38-42ad-a6c6-b37f20eedf98"],
         rollback: undefined,
       },
-      hasOnClick: true,
+      hasRelation: true,
       entity: "type2",
       type: undefined,
     },
@@ -385,7 +385,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
         candidate: ["05715f31-8d5c-4429-aa56-e20da1da8a59"],
         active: ["05715f31-8d5c-4429-aa56-e20da1da8a59"],
       },
-      hasOnClick: true,
+      hasRelation: true,
       entity: "type1",
       type: undefined,
     },
@@ -397,7 +397,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
     },
     embedded2$0$attr_xyz: {
       entity: undefined,
-      hasOnClick: undefined,
+      hasRelation: undefined,
       kind: "Leaf",
       type: "string?",
       value: {
@@ -415,12 +415,12 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
         active: ["8eb9a8e5-4507-49c5-95a7-481dd44e34ab"],
         rollback: undefined,
       },
-      hasOnClick: true,
+      hasRelation: true,
       entity: "different_entity",
     },
     id_attr: {
       entity: undefined,
-      hasOnClick: undefined,
+      hasRelation: undefined,
       kind: "Leaf",
       type: "string",
       value: {
@@ -441,7 +441,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
         ],
         rollback: undefined,
       },
-      hasOnClick: true,
+      hasRelation: true,
       entity: "type1",
     },
     test2: {
@@ -452,7 +452,7 @@ test("AttributeHelper extracts inter-service relations correctly", () => {
         active: [],
         rollback: undefined,
       },
-      hasOnClick: true,
+      hasRelation: true,
       entity: "type2",
     },
   });

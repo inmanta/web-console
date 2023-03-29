@@ -23,7 +23,7 @@ interface Props {
   className: string;
   label: string;
   value: string;
-  hasOnClick?: boolean;
+  hasRelation?: boolean;
   serviceName?: string;
   path: string;
   instanceId: string;
@@ -36,7 +36,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
   label,
   value,
   className,
-  hasOnClick,
+  hasRelation,
   serviceName,
   path,
   instanceId,
@@ -80,7 +80,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     if (attributeType.includes("string[]")) {
       newValue = (newAttribute as string).replace(/\s/g, "").split(",");
     } else if (attributeType.includes("int")) {
-      newValue = +newAttribute;
+      newValue = newAttribute;
     } else {
       newValue = newAttribute;
     }
@@ -146,7 +146,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
             setIsModalOpen(!isModalOpen);
           }}
         />
-      ) : shouldRenderLink(value, hasOnClick) ? (
+      ) : shouldRenderLink(value, hasRelation) ? (
         <MultiLinkCell
           value={value}
           serviceName={serviceName}
