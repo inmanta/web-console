@@ -112,6 +112,7 @@ test("ServiceInventory can show resources for instance", async () => {
       },
     ])
   );
+
   render(
     <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
       <DependencyProvider
@@ -139,6 +140,7 @@ test("ServiceInventory can show resources for instance", async () => {
       screen.getByRole("tab", { name: words("inventory.tabs.resources") })
     );
   });
+
   await act(async () => {
     apiHelper.resolve(
       Either.right({
@@ -158,6 +160,7 @@ test("ServiceInventory can show resources for instance", async () => {
 
   expect(screen.getByText("resource_id_1")).toBeInTheDocument();
 });
+
 function setup(setSortFn: (props) => void = dummySetter) {
   const store = getStoreInstance();
   const environmentHandler = EnvironmentHandlerImpl(
@@ -179,6 +182,7 @@ function setup(setSortFn: (props) => void = dummySetter) {
       },
     ])
   );
+
   const component = (
     <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
       <DependencyProvider
@@ -197,6 +201,7 @@ function setup(setSortFn: (props) => void = dummySetter) {
   );
   return component;
 }
+
 test("ServiceInventory shows service identity if it's defined", async () => {
   const component = setup();
   render(component);

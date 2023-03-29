@@ -63,7 +63,6 @@ function setup(service = Service.a) {
     TriggerInstanceUpdateCommandManager(apiHelper);
   const triggerDestroyInstanceCommandManager =
     DestroyInstanceCommandManager(apiHelper);
-
   const triggerforceStateCommandManager = TriggerForceStateCommandManager(
     authHelper,
     apiHelper

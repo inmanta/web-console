@@ -75,6 +75,7 @@ export const InstanceLogRow: React.FC<Props> = ({
               state={state}
               log={log}
               timestamp={timestamp}
+              id={id}
             />
           </ExpandableRowContent>
         </Td>

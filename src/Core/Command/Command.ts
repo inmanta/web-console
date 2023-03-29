@@ -80,6 +80,10 @@ import {
   UpdateCatalog,
   UpdateCatalogManifest,
 } from "@/Data/Managers/UpdateCatalog/interface";
+import {
+  UpdateInstanceAttribute,
+  UpdateInstanceAttributeManifest,
+} from "@/Data/Managers/UpdateInstanceAttribute/interface";
 
 import * as CreateEnvironment from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
 import * as CreateProject from "@S/CreateEnvironment/Core/CreateProjectCommand";
@@ -120,6 +124,7 @@ export type Command =
   | TriggerSetState
   | TriggerForceState
   | UpdateEnvironmentSetting
+  | UpdateInstanceAttribute
   | UpdateInstanceConfig
   | UpdateNotification.Command
   | UpdateServiceConfig;
@@ -159,6 +164,7 @@ interface Manifest {
   TriggerSetState: TriggerSetStateManifest;
   TriggerForceState: TriggerForceStateManifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
+  UpdateInstanceAttribute: UpdateInstanceAttributeManifest;
   UpdateInstanceConfig: UpdateInstanceConfigManifest;
   UpdateNotification: UpdateNotification.Manifest;
   UpdateServiceConfig: UpdateServiceConfigManifest;
