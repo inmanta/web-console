@@ -68,10 +68,6 @@ export class InventoryTablePresenter
     return this.expertActionPresenter.getForId(id);
   }
 
-  public getExpertActionsFor(id: string): ReactElement | null {
-    return this.expertActionPresenter.getForId(id);
-  }
-
   public createRows(instances: ServiceInstanceModelWithTargetStates[]): Row[] {
     return instances.map((instance) => this.instanceToRow(instance));
   }
