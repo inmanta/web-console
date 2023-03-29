@@ -64,6 +64,9 @@ export class InventoryTablePresenter
   public getActionsFor(id: string): ReactElement | null {
     return this.actionPresenter.getForId(id);
   }
+  public getExpertActionsFor(id: string): ReactElement | null {
+    return this.expertActionPresenter.getForId(id);
+  }
 
   public getExpertActionsFor(id: string): ReactElement | null {
     return this.expertActionPresenter.getForId(id);
