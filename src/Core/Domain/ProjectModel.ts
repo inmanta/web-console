@@ -28,6 +28,19 @@ export interface FlatEnvironment {
   description?: string;
   icon?: string;
 }
+export interface EnvironmentExpertOnly {
+  id: string;
+  name: string;
+  project_id: string;
+  repo_branch: string;
+  repo_url: string;
+  projectName: string;
+  description?: string;
+  icon?: string;
+  settings: {
+    enable_lsm_expert_mode: boolean;
+  };
+}
 export interface Environment {
   id: string;
   name: string;

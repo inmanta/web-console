@@ -1,9 +1,9 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   ServiceInstancesQueryManager,
@@ -32,7 +32,7 @@ import {
   dependencies,
 } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
@@ -85,15 +85,34 @@ function setup(service = Service.a) {
       setStateCommandManager,
     ])
   );
-
+  const environmentHandler = EnvironmentHandlerImpl(
+    useLocation,
+    dependencies.routeManager
+  );
+  store.dispatch.environment.setEnvironments(
+    RemoteData.success([
+      {
+        id: "aaa",
+        name: "env-a",
+        project_id: "ppp",
+        repo_branch: "branch",
+        repo_url: "repo",
+        projectName: "project",
+        settings: {
+          enable_lsm_expert_mode: false,
+        },
+      },
+    ])
+  );
   const component = (
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
       <DependencyProvider
         dependencies={{
           ...dependencies,
           queryResolver,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
+          environmentHandler,
         }}
       >
         <StoreProvider store={store}>
