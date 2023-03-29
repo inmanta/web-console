@@ -3,6 +3,9 @@ import { ServiceModel } from "@/Core";
 import { ActionPresenter, ServiceInstanceForAction } from "@/UI/Presenters";
 import { ExpertActions } from "../Components/ExpertActions";
 
+/**
+ * ActionPresenters holds logic that creates React Snippets realted  to specific Actions, in this case list of Expert Actions
+ */
 export class InstanceExpertActionPresenter implements ActionPresenter {
   constructor(
     private readonly instances: ServiceInstanceForAction[],
@@ -12,7 +15,11 @@ export class InstanceExpertActionPresenter implements ActionPresenter {
   private getInstanceForId(id: string): ServiceInstanceForAction | undefined {
     return this.instances.find((instance) => instance.id === id);
   }
-
+  /**
+   * find instance according to given Id, if found an instance create React Component that holds Expert Actions regarding given instance
+   * @param id
+   * @returns React Component or null
+   */
   getForId(id: string): ReactElement | null {
     const instance = this.getInstanceForId(id);
     if (typeof instance === "undefined") return null;
@@ -23,23 +30,5 @@ export class InstanceExpertActionPresenter implements ActionPresenter {
       instance,
       possibleInstanceStates: states,
     });
-  }
-
-  isTransferDisabled(
-    id: string,
-    transferType: "on_update" | "on_delete"
-  ): boolean {
-    const instance = this.getInstanceForId(id);
-    if (typeof instance === "undefined") {
-      return false;
-    }
-    // If the action is allowed, there is a corresponding transfer in the lifecycle,
-    // where the source state is the current state
-    const transfersFromCurrentSource =
-      this.serviceEntity.lifecycle.transfers.filter(
-        (transfer) =>
-          transfer.source === instance.state && transfer[transferType]
-      );
-    return transfersFromCurrentSource.length === 0;
   }
 }

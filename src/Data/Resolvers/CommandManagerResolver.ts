@@ -1,6 +1,7 @@
 import { ApiHelper, AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
   DeleteInstanceCommandManager,
+  DestroyInstanceCommandManager,
   InstanceConfigCommandManager,
   InstanceConfigStateHelper,
   ServiceConfigStateHelper,
@@ -121,6 +122,7 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       CreateInstanceCommandManager(this.apiHelper),
       TriggerInstanceUpdateCommandManager(this.apiHelper),
+      DestroyInstanceCommandManager(this.apiHelper),
       DeleteInstanceCommandManager(this.apiHelper),
       DeleteServiceCommandManager(this.apiHelper),
       TriggerSetStateCommandManager(this.authHelper, this.apiHelper),

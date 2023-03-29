@@ -16,6 +16,10 @@ import {
 } from "@/Data/Managers/DeleteVersion/interface";
 import { Deploy, DeployManifest } from "@/Data/Managers/Deploy/interface";
 import {
+  DestroyInstance,
+  DestroyInstanceManifest,
+} from "@/Data/Managers/DestroyInstance/interface";
+import {
   ResetEnvironmentSetting,
   ResetEnvironmentSettingManifest,
 } from "@/Data/Managers/EnvironmentSettings/ResetEnvironmentSetting/interface";
@@ -97,6 +101,7 @@ export type Command =
   | DeleteCallback.Command
   | DeleteEnvironment.Command
   | DeleteInstance
+  | DestroyInstance
   | DeleteService
   | DeleteVersion
   | Deploy
@@ -135,6 +140,7 @@ interface Manifest {
   DeleteCallback: DeleteCallback.Manifest;
   DeleteEnvironment: DeleteEnvironment.Manifest;
   DeleteInstance: DeleteInstanceManifest;
+  DestroyInstance: DestroyInstanceManifest;
   DeleteService: DeleteServiceManifest;
   DeleteVersion: DeleteVersionManifest;
   Deploy: DeployManifest;
