@@ -219,7 +219,7 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
 
 test("ServiceInventory sets sorting parameters correctly on click", async () => {
   let sort;
-  const component = setup((v) => (sort = v));
+  const component = setup((value) => (sort = value));
   render(component);
   const stateButton = await screen.findByRole("button", { name: /state/i });
   expect(stateButton).toBeVisible();

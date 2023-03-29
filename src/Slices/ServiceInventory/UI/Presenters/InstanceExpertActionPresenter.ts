@@ -21,7 +21,7 @@ export class InstanceExpertActionPresenter implements ActionPresenter {
     );
     return React.createElement(ExpertActions, {
       instance,
-      targets: states,
+      possibleInstanceStates: states,
     });
   }
 

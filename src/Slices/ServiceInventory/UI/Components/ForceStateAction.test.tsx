@@ -49,7 +49,7 @@ function setupComponent() {
           }
           service_entity={ServiceInstance.a.service_entity}
           version={ServiceInstance.a.version}
-          targets={["up", "deleting"]}
+          possibleInstanceStates={["up", "deleting"]}
         />
       </DependencyProvider>
     ),
@@ -83,7 +83,7 @@ test("ForceStateAction dropdown doesn't takes environment halted status in accou
           }
           service_entity={ServiceInstance.b.service_entity}
           version={ServiceInstance.b.version}
-          targets={targets}
+          possibleInstanceStates={targets}
         />
       </StoreProvider>
     </DependencyProvider>

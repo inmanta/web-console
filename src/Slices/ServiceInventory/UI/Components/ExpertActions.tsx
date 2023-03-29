@@ -5,12 +5,12 @@ import { ForceStateAction } from "./ForceStateAction";
 
 export interface InstanceActionsProps {
   instance: ServiceInstanceForAction;
-  targets: string[];
+  possibleInstanceStates: string[];
 }
 
 export const ExpertActions: React.FC<InstanceActionsProps> = ({
   instance,
-  targets,
+  possibleInstanceStates,
 }) => {
   return (
     <DescriptionList>
@@ -22,7 +22,7 @@ export const ExpertActions: React.FC<InstanceActionsProps> = ({
             instance.service_identity_attribute_value ?? instance.id
           }
           version={instance.version}
-          targets={targets}
+          possibleInstanceStates={possibleInstanceStates}
         />
       </DescriptionListGroup>
     </DescriptionList>

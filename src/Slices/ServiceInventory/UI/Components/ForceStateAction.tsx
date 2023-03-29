@@ -16,7 +16,7 @@ import { ToastAlertMessage } from "./ToastAlertMessage";
 
 interface Props extends VersionedServiceInstanceIdentifier {
   instance_identity: string;
-  targets: string[];
+  possibleInstanceStates: string[];
 }
 
 export const ForceStateAction: React.FC<Props> = ({
@@ -24,7 +24,7 @@ export const ForceStateAction: React.FC<Props> = ({
   id,
   instance_identity,
   version,
-  targets,
+  possibleInstanceStates,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -34,7 +34,7 @@ export const ForceStateAction: React.FC<Props> = ({
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const dropdownItems = targets.map((target) => (
+  const dropdownItems = possibleInstanceStates.map((target) => (
     <DropdownItem
       key={target}
       value={target}
