@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Add force state functionality for expert mode'
+issue-nr: 4683
+destination-branches:
+- master
+- iso6

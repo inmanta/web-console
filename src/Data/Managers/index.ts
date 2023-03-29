@@ -20,6 +20,7 @@ export * from "./ServiceInstances";
 export * from "./Services";
 export * from "./TriggerCompile";
 export { TriggerSetStateCommandManager } from "./TriggerSetState";
+export * from "./TriggerForceState";
 export * from "./Deploy";
 export * from "./Repair";
 export * from "./PromoteVersion";

@@ -76,6 +76,7 @@ export const InventoryTable: React.FC<Props> = ({
           onToggle={onExpansion(getIdentityForRow(row))}
           numberOfColumns={tablePresenter.getNumberOfColumns()}
           actions={tablePresenter.getActionsFor(row.id.full)}
+          expertActions={tablePresenter.getExpertActionsFor(row.id.full)}
           state={tablePresenter.getStateFor(row.id.full)}
           serviceInstanceIdentifier={{
             id: row.id.full,

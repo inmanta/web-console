@@ -96,6 +96,7 @@ const dict = {
   "inventory.tabs.resources": "Resources",
   "inventory.tabs.status": "Status",
   "inventory.statustab.actions": "Actions",
+  "inventory.statustab.expertActions": "Expert Actions",
   "inventory.statustab.diagnose": "Diagnose",
   "inventory.statustab.version": "Version",
   "inventory.statustab.details": "Instance Details",
@@ -103,6 +104,12 @@ const dict = {
   "inventory.statustab.confirmTitle": "Confirm set state transfer",
   "inventory.statustab.confirmMessage": (name: string, state: string) =>
     `Are you sure you want to set state of instance ${name} to ${state}?`,
+  "inventory.statustab.forceState": "Force state to",
+  "inventory.statustab.forceState.confirmTitle": "Confirm force state transfer",
+  "inventory.statustab.forceState.message": (name: string, state: string) =>
+    `Are you sure you want to force the state of instance ${name} to ${state}? `,
+  "inventory.statustab.forceState.confirmMessage": `Forcing a state might corrupt the service and the orchestrated resources`,
+  "inventory.statustab.forceState.confirmQuestion": `Are you sure you want to continue?`,
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.statusTab.history": "History",

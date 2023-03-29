@@ -65,6 +65,10 @@ import {
   TriggerDryRunManifest,
 } from "@/Data/Managers/TriggerDryRun/interface";
 import {
+  TriggerForceState,
+  TriggerForceStateManifest,
+} from "@/Data/Managers/TriggerForceState/interface";
+import {
   TriggerSetState,
   TriggerSetStateManifest,
 } from "@/Data/Managers/TriggerSetState/interface";
@@ -109,6 +113,7 @@ export type Command =
   | TriggerDryRun
   | TriggerInstanceUpdate.Command
   | TriggerSetState
+  | TriggerForceState
   | UpdateEnvironmentSetting
   | UpdateInstanceConfig
   | UpdateNotification.Command
@@ -146,6 +151,7 @@ interface Manifest {
   TriggerDryRun: TriggerDryRunManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
   TriggerSetState: TriggerSetStateManifest;
+  TriggerForceState: TriggerForceStateManifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
   UpdateInstanceConfig: UpdateInstanceConfigManifest;
   UpdateNotification: UpdateNotification.Manifest;

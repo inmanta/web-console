@@ -6,6 +6,7 @@ import {
   Text,
 } from "@patternfly/react-core";
 import { CaretDownIcon } from "@patternfly/react-icons";
+import styled from "styled-components";
 import { Maybe, VersionedServiceInstanceIdentifier } from "@/Core";
 import { ActionDisabledTooltip } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
@@ -14,16 +15,16 @@ import ConfirmationModal from "./ConfirmationModal";
 import { ToastAlertMessage } from "./ToastAlertMessage";
 
 interface Props extends VersionedServiceInstanceIdentifier {
-  targets: string[] | null;
   instance_identity: string;
+  possibleInstanceStates: string[];
 }
 
-export const SetStateAction: React.FC<Props> = ({
+export const ForceStateAction: React.FC<Props> = ({
   service_entity,
   id,
   instance_identity,
   version,
-  targets,
+  possibleInstanceStates,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -33,16 +34,19 @@ export const SetStateAction: React.FC<Props> = ({
   const handleModalToggle = () => {
     setIsModalOpen(!isModalOpen);
   };
-  const dropdownItems = targets?.map((target) => (
-    <DropdownItem key={target} value={target} data-testid={`${id}-${target}`}>
+  const dropdownItems = possibleInstanceStates.map((target) => (
+    <DropdownItem
+      key={target}
+      value={target}
+      data-testid={`${id}-${target}-expert`}
+    >
       {target}
     </DropdownItem>
   ));
-  const isDisabled = !dropdownItems || dropdownItems.length === 0;
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
-  const trigger = commandResolver.useGetTrigger<"TriggerSetState">({
-    kind: "TriggerSetState",
+  const trigger = commandResolver.useGetTrigger<"TriggerForceState">({
+    kind: "TriggerForceState",
     service_entity,
     id,
     version,
@@ -60,7 +64,7 @@ export const SetStateAction: React.FC<Props> = ({
     setIsDropdownOpen(false);
     setTargetState(event.target.text);
     setConfirmationText(
-      words("inventory.statustab.confirmMessage")(
+      words("inventory.statustab.forceState.message")(
         instance_identity,
         event.target.text
       )
@@ -78,23 +82,21 @@ export const SetStateAction: React.FC<Props> = ({
         />
       )}
       <ActionDisabledTooltip
-        isDisabled={isDisabled || isHalted}
-        ariaLabel={words("inventory.statustab.setInstanceState")}
+        ariaLabel={words("inventory.statustab.forceState")}
         tooltipContent={
           isHalted
             ? words("environment.halt.tooltip")
             : words("inventory.statustab.actionDisabled")
         }
       >
-        <Dropdown
+        <StyledDropdown
           toggle={
             <DropdownToggle
-              data-testid={`${id}-set-state-toggle`}
+              data-testid={`${id}-force-state-toggle`}
               onToggle={() => setIsDropdownOpen(!isDropdownOpen)}
               toggleIndicator={CaretDownIcon}
-              isDisabled={isDisabled || isHalted}
             >
-              {words("inventory.statustab.setInstanceState")}
+              {words("inventory.statustab.forceState")}
             </DropdownToggle>
           }
           dropdownItems={dropdownItems}
@@ -103,7 +105,7 @@ export const SetStateAction: React.FC<Props> = ({
         />
       </ActionDisabledTooltip>
       <ConfirmationModal
-        title={words("inventory.statustab.confirmTitle")}
+        title={words("inventory.statustab.forceState.confirmTitle")}
         onSetInstanceState={onSubmit}
         id={id}
         targetState={targetState}
@@ -111,8 +113,40 @@ export const SetStateAction: React.FC<Props> = ({
         setIsModalOpen={handleModalToggle}
         setErrorMessage={setStateErrorMessage}
       >
-        <Text> {confirmationText}</Text>
+        <Text>{confirmationText}</Text>
+        <br />
+        <Text>{words("inventory.statustab.forceState.confirmMessage")}</Text>
+        <Text>{words("inventory.statustab.forceState.confirmQuestion")}</Text>
       </ConfirmationModal>
     </>
   );
 };
+
+const StyledDropdown = styled(Dropdown)`
+  --pf-c-dropdown__toggle--before--BorderTopColor: var(
+    --pf-global--danger-color--100
+  );
+  --pf-c-dropdown__toggle--before--BorderRightColor: var(
+    --pf-global--danger-color--100
+  );
+  --pf-c-dropdown__toggle--before--BorderLeftColor: var(
+    --pf-global--danger-color--100
+  );
+  --pf-c-dropdown__toggle--before--BorderBottomColor: var(
+    --pf-global--danger-color--100
+  );
+  --pf-c-dropdown--m-expanded__toggle--before--BorderBottomColor: var(
+    --pf-global--danger-color--100
+  );
+  --pf-c-dropdown__toggle--hover--before--BorderBottomColor: var(
+    --pf-global--danger-color--100
+  );
+  --pf-c-dropdown__toggle--focus--before--BorderBottomColor: var(
+    --pf-global--danger-color--100
+  );
+  --pf-c-dropdown__toggle--active--before--BorderBottomColor: var(
+    --pf-global--danger-color--100
+  );
+  --pf-c-dropdown__toggle--Color: var(--pf-global--danger-color--100);
+  --pf-c-dropdown__toggle--Color: var(--pf-global--danger-color--100);
+`;

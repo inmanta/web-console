@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { EnvironmentDetails, RemoteData } from "@/Core";
 import {
-  TriggerSetStateCommandManager,
+  TriggerForceStateCommandManager,
   CommandResolverImpl,
   BaseApiHelper,
   KeycloakAuthHelper,
@@ -17,10 +17,10 @@ import {
   ServiceInstance,
 } from "@/Test";
 import { DependencyProvider, EnvironmentModifierImpl } from "@/UI/Dependency";
-import { SetStateAction } from "./SetStateAction";
+import { ForceStateAction } from "./ForceStateAction";
 
 function setup() {
-  const commandManager = TriggerSetStateCommandManager(
+  const commandManager = TriggerForceStateCommandManager(
     new KeycloakAuthHelper(),
     new BaseApiHelper()
   );
@@ -41,7 +41,7 @@ function setupComponent() {
           environmentModifier: new MockEnvironmentModifier(),
         }}
       >
-        <SetStateAction
+        <ForceStateAction
           id={ServiceInstance.a.id}
           instance_identity={
             ServiceInstance.a.service_identity_attribute_value ??
@@ -49,41 +49,14 @@ function setupComponent() {
           }
           service_entity={ServiceInstance.a.service_entity}
           version={ServiceInstance.a.version}
-          targets={ServiceInstance.a.instanceSetStateTargets}
+          possibleInstanceStates={["up", "deleting"]}
         />
       </DependencyProvider>
     ),
   };
 }
 
-test("SetStateAction dropdown is disabled when no targets are found", async () => {
-  const id = ServiceInstance.b.id;
-  const { commandResolver } = setup();
-  render(
-    <DependencyProvider
-      dependencies={{
-        ...dependencies,
-        commandResolver,
-        environmentModifier: new MockEnvironmentModifier(),
-      }}
-    >
-      <SetStateAction
-        id={ServiceInstance.b.id}
-        instance_identity={
-          ServiceInstance.b.service_identity_attribute_value ??
-          ServiceInstance.b.id
-        }
-        service_entity={ServiceInstance.b.service_entity}
-        version={ServiceInstance.b.version}
-        targets={[]}
-      />
-    </DependencyProvider>
-  );
-  const testid = `${id}-set-state-toggle`;
-  expect(await screen.findByTestId(testid)).toBeDisabled();
-});
-
-test("SetStateAction dropdown takes environment halted status in account", async () => {
+test("ForceStateAction dropdown doesn't takes environment halted status in account", async () => {
   const id = ServiceInstance.b.id;
   const { commandResolver } = setup();
   const storeInstance = getStoreInstance();
@@ -102,7 +75,7 @@ test("SetStateAction dropdown takes environment halted status in account", async
       }}
     >
       <StoreProvider store={storeInstance}>
-        <SetStateAction
+        <ForceStateAction
           id={ServiceInstance.b.id}
           instance_identity={
             ServiceInstance.b.service_identity_attribute_value ??
@@ -110,7 +83,7 @@ test("SetStateAction dropdown takes environment halted status in account", async
           }
           service_entity={ServiceInstance.b.service_entity}
           version={ServiceInstance.b.version}
-          targets={targets}
+          possibleInstanceStates={targets}
         />
       </StoreProvider>
     </DependencyProvider>
@@ -124,52 +97,51 @@ test("SetStateAction dropdown takes environment halted status in account", async
   });
 
   rerender(componentWithDependencies(["update_started"]));
-  const testid = `${id}-set-state-toggle`;
-  expect(await screen.findByTestId(testid)).toBeDisabled();
+  const testid = `${id}-force-state-toggle`;
+  expect(await screen.findByTestId(testid)).toBeEnabled();
 });
 
-test("SetStateAction dropdown can be expanded", async () => {
+test("ForceStateAction dropdown can be expanded", async () => {
   const id = ServiceInstance.a.id;
   const { component } = setupComponent();
   render(component);
-  const testid = `${id}-set-state-toggle`;
+  const testid = `${id}-force-state-toggle`;
+
   await act(async () => {
     await userEvent.click(await screen.findByTestId(testid));
   });
-
-  expect(await screen.findByTestId(`${id}-acknowledged`)).toBeVisible();
-  expect(await screen.findByTestId(`${id}-designed`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-up-expert`)).toBeVisible();
+  expect(await screen.findByTestId(`${id}-deleting-expert`)).toBeVisible();
 });
 
-test("SetStateAction shows confirmation dialog when element is selected", async () => {
+test("ForceStateAction shows confirmation dialog when element is selected", async () => {
   const id = ServiceInstance.a.id;
   const { component } = setupComponent();
   render(component);
-  const testid = `${id}-set-state-toggle`;
+  const testid = `${id}-force-state-toggle`;
+
   await act(async () => {
     await userEvent.click(await screen.findByTestId(testid));
   });
-
   await act(async () => {
-    await userEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+    await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
   });
-
   expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
 });
 
-test("SetStateAction calls onSetInstanceState when transfer is confirmed", async () => {
+test("ForceStateAction calls onSetInstanceState when transfer is confirmed", async () => {
   const id = ServiceInstance.a.id;
   const { component } = setupComponent();
   render(component);
-  const testid = `${id}-set-state-toggle`;
+  const testid = `${id}-force-state-toggle`;
 
   await act(async () => {
     await userEvent.click(await screen.findByTestId(testid));
   });
-
   await act(async () => {
-    await userEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+    await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
   });
+
   expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   await act(async () => {
     await userEvent.click(
@@ -180,18 +152,17 @@ test("SetStateAction calls onSetInstanceState when transfer is confirmed", async
   expect(fetchMock.mock.calls).toHaveLength(1);
 });
 
-test("SetStateAction closes confirmation modal when transfer is cancelled", async () => {
+test("ForceStateAction closes confirmation modal when transfer is cancelled", async () => {
   const id = ServiceInstance.a.id;
   const { component } = setupComponent();
   render(component);
-  const testid = `${id}-set-state-toggle`;
+  const testid = `${id}-force-state-toggle`;
 
   await act(async () => {
     await userEvent.click(await screen.findByTestId(testid));
   });
-
   await act(async () => {
-    await userEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+    await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
   });
   expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   await act(async () => {
@@ -199,12 +170,11 @@ test("SetStateAction closes confirmation modal when transfer is cancelled", asyn
       await screen.findByTestId(`${id}-state-modal-cancel`)
     );
   });
-
   expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
 
-test("SetStateAction shows error message when transfer not successful", async () => {
+test("ForceStateAction shows error message when transfer not successful", async () => {
   fetchMock.mockResponseOnce(JSON.stringify({ message: "Invalid request" }), {
     status: 400,
     statusText: "Bad Request",
@@ -212,14 +182,15 @@ test("SetStateAction shows error message when transfer not successful", async ()
   const id = ServiceInstance.a.id;
   const { component } = setupComponent();
   render(component);
-  const testid = `${id}-set-state-toggle`;
+  const testid = `${id}-force-state-toggle`;
+
   await act(async () => {
     await userEvent.click(await screen.findByTestId(testid));
   });
-
   await act(async () => {
-    await userEvent.click(await screen.findByTestId(`${id}-acknowledged`));
+    await userEvent.click(await screen.findByTestId(`${id}-deleting-expert`));
   });
+
   // Modal is visible
   expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   // Confirm transfer
@@ -237,7 +208,6 @@ test("SetStateAction shows error message when transfer not successful", async ()
       await screen.findByTestId(`${id}-close-error-message`)
     );
   });
-
   // Error message can be closed
   expect(screen.queryByTestId(`${id}-error-message`)).not.toBeInTheDocument();
 });

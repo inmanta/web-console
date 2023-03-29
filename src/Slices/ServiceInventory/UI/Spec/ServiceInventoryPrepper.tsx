@@ -1,5 +1,5 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { StoreProvider } from "easy-peasy";
 import { RemoteData, SchedulerImpl, ServiceModel } from "@/Core";
 import {
@@ -14,6 +14,7 @@ import {
   TriggerSetStateCommandManager,
   KeycloakAuthHelper,
   getStoreInstance,
+  TriggerForceStateCommandManager,
 } from "@/Data";
 import {
   DeferredApiHelper,
@@ -24,7 +25,7 @@ import {
   MockEnvironmentModifier,
   Service,
 } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 
@@ -62,6 +63,11 @@ export class ServiceInventoryPrepper {
     const triggerUpdateCommandManager = TriggerInstanceUpdateCommandManager(
       new BaseApiHelper()
     );
+    const triggerforceStateCommandManager = TriggerForceStateCommandManager(
+      new KeycloakAuthHelper(),
+      apiHelper
+    );
+
     const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
     const setStateCommandManager = TriggerSetStateCommandManager(
@@ -74,13 +80,16 @@ export class ServiceInventoryPrepper {
         triggerUpdateCommandManager,
         deleteCommandManager,
         setStateCommandManager,
+        triggerforceStateCommandManager,
       ])
     );
-
+    const environmentHandler = EnvironmentHandlerImpl(
+      useLocation,
+      dependencies.routeManager
+    );
     store.dispatch.environment.setEnvironments(
       RemoteData.success(Environment.filterable)
     );
-
     const component = (
       <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
         <DependencyProvider
@@ -89,6 +98,7 @@ export class ServiceInventoryPrepper {
             queryResolver,
             commandResolver,
             environmentModifier: new MockEnvironmentModifier(),
+            environmentHandler,
           }}
         >
           <StoreProvider store={store}>

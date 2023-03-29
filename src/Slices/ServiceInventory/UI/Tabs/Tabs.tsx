@@ -28,6 +28,7 @@ interface Props {
   setActiveTab: (tabKey: TabKey) => void;
   row: Row;
   actions: React.ReactElement | null;
+  expertActions: React.ReactElement | null;
   state: React.ReactElement | null;
   service?: ServiceModel;
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
@@ -38,6 +39,7 @@ export const Tabs: React.FC<Props> = ({
   setActiveTab,
   row,
   actions,
+  expertActions,
   state,
   service,
   serviceInstanceIdentifier,
@@ -50,7 +52,7 @@ export const Tabs: React.FC<Props> = ({
         activeTab={activeTab}
         onChange={setActiveTab}
         tabs={[
-          statusTab(row, state, actions),
+          statusTab(row, state, actions, expertActions),
           attributesTab(row, service),
           resourcesTab(serviceInstanceIdentifier),
           configTab(
@@ -75,7 +77,8 @@ const datePresenter = new MomentDatePresenter();
 const statusTab = (
   row: Row,
   state: React.ReactElement | null,
-  actions: React.ReactElement | null
+  actions: React.ReactElement | null,
+  expertActions: React.ReactElement | null
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Status,
   title: words("inventory.tabs.status"),
@@ -89,6 +92,7 @@ const statusTab = (
         createdAt: datePresenter.getFull(row.createdAt),
         updatedAt: datePresenter.getFull(row.updatedAt),
         actions,
+        expertActions,
       }}
     />
   ),
