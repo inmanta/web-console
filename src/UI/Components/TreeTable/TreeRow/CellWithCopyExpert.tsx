@@ -61,9 +61,9 @@ export const CellWithCopyExpert: React.FC<Props> = ({
   );
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newAttribute, setNewAttribute] = useState<string | boolean | number>(
-    value
-  );
+  const [newAttribute, setNewAttribute] = useState<
+    string | boolean | number | string[]
+  >(value);
   const [isInputOpen, setIsInputOpen] = useState(false);
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(false);
   const [stateErrorMessage, setStateErrorMessage] = useState<string>("");
@@ -85,30 +85,30 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     }
   };
   const onSubmit = async () => {
-    let newValue: string | string[] | number | boolean;
-    if (attributeType.includes("string[]")) {
-      newValue = (newAttribute as string).replace(/\s/g, "").split(",");
-    } else if (attributeType.includes("int")) {
-      newValue = newAttribute;
-    } else {
-      newValue = newAttribute;
-    }
-    if (newValue === value) {
+    const newValue = newAttribute;
+    //if string[] then we need to convert initial value to the same format to be able to compare
+    if (
+      newValue === value ||
+      (attributeType.includes("string[]") &&
+        (newAttribute as string[]).join(", ") === value)
+    ) {
       setIsInputOpen(!isInputOpen);
       setIsModalOpen(!isModalOpen);
       return;
     }
+
     setIsSpinnerVisible(true);
     const result = await trigger(
       (label + "_attributes") as AttributeSet,
       newValue,
       path.split("$").join(".")
     );
-    setIsModalOpen(!isModalOpen);
+
     if (Maybe.isSome(result)) {
       setStateErrorMessage(result.value);
       setIsSpinnerVisible(false);
     }
+    setIsModalOpen(!isModalOpen);
   };
   useEffect(() => {
     document.addEventListener("expert-mode-check", (evt: CustomEvent) => {
