@@ -19,6 +19,7 @@ interface Props {
   onToggle: () => void;
   numberOfColumns: number;
   actions: React.ReactElement | null;
+  expertActions: React.ReactElement | null;
   state: React.ReactElement | null;
   service?: ServiceModel;
   serviceInstanceIdentifier: VersionedServiceInstanceIdentifier;
@@ -33,6 +34,7 @@ export const InstanceRow: React.FC<Props> = ({
   onToggle,
   numberOfColumns,
   actions,
+  expertActions,
   state,
   serviceInstanceIdentifier,
   shouldUseServiceIdentity,
@@ -117,6 +119,7 @@ export const InstanceRow: React.FC<Props> = ({
               row={row}
               state={state}
               actions={actions}
+              expertActions={expertActions}
               serviceInstanceIdentifier={serviceInstanceIdentifier}
               service={service}
             />

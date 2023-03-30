@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Add force attribute functionality for expert mode'
+issue-nr: 4685
+destination-branches:
+- master
+- iso6

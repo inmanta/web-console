@@ -111,9 +111,9 @@ test("Given Drawer When clicking on 'Clear all' Then all notifications are clear
   );
   await userEvent.click(screen.getByRole("menuitem", { name: "Clear all" }));
   expect(apiHelper.pendingRequests).toEqual([
-    updateRequest("abcdefgh01", { cleared: true }),
-    updateRequest("abcdefgh02", { cleared: true }),
-    updateRequest("abcdefgh03", { cleared: true }),
+    updateRequest("abcdefgh01", { read: true, cleared: true }),
+    updateRequest("abcdefgh02", { read: true, cleared: true }),
+    updateRequest("abcdefgh03", { read: true, cleared: true }),
   ]);
   await act(async () => {
     await apiHelper.resolve(Maybe.none());
@@ -283,7 +283,7 @@ test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cle
   await userEvent.click(actions);
   await userEvent.click(screen.getByRole("menuitem", { name: "Clear" }));
   expect(apiHelper.pendingRequests).toEqual([
-    updateRequest("abcdefgh03", { cleared: true }),
+    updateRequest("abcdefgh03", { read: true, cleared: true }),
   ]);
   await act(async () => {
     await apiHelper.resolve(Maybe.none());

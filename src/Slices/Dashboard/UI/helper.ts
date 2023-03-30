@@ -54,14 +54,15 @@ export const formatMetricsToStacked = (
       data.map((object) => {
         let tempMax = 0;
         keys.forEach((key, index) => {
-          tempMax += object === null ? 0 : object[key];
-          tempCharState[index].data.push(object === null ? null : object[key]);
+          tempMax += object === null ? 0 : Math.round(object[key]);
+          tempCharState[index].data.push(
+            object === null ? null : Math.round(object[key])
+          );
         });
         if (max < tempMax) {
           max = tempMax;
         }
       });
-      tempCharState = tempCharState.map((metric) => formatValues(metric));
     }
   } else {
     tempCharState = [

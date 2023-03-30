@@ -191,7 +191,9 @@ test("When using the status filter with the Success option then the successful c
   const option = await screen.findByRole("option", {
     name: words("compileReports.filters.test.success"),
   });
-  await await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=true`
@@ -246,7 +248,9 @@ test("When using the status filter with the In Progress opiton then the compile 
     name: words("compileReports.tests.filters.result.inProgress"),
   });
 
-  await await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.started=true&filter.completed=false`
@@ -296,13 +300,18 @@ it("When using the Date filter then the compile reports within the range selecte
 
   const fromDatePicker = await screen.findByLabelText("From Date Picker");
   await userEvent.click(fromDatePicker);
-  await userEvent.type(fromDatePicker, `2021-09-28`);
+  await act(async () => {
+    await userEvent.type(fromDatePicker, `2021-09-28`);
+  });
   const toDatePicker = await screen.findByLabelText("To Date Picker");
   await userEvent.click(toDatePicker);
-  await userEvent.type(toDatePicker, `2021-09-30`);
+  await act(async () => {
+    await userEvent.type(toDatePicker, `2021-09-30`);
+  });
 
-  await userEvent.click(await screen.findByLabelText("Apply date filter"));
-
+  await act(async () => {
+    await userEvent.click(await screen.findByLabelText("Apply date filter"));
+  });
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.requested=ge%3A2021-09-`
   );

@@ -80,7 +80,9 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   await userEvent.clear(textBox);
-  await userEvent.type(textBox, `dev{enter}`);
+  await act(async () => {
+    await userEvent.type(textBox, `dev{enter}`);
+  });
 
   await userEvent.click(await screen.findByRole("button", { name: "submit" }));
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -112,7 +114,9 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   await userEvent.clear(textBox);
-  await userEvent.type(textBox, `dev{enter}`);
+  await act(async () => {
+    await userEvent.type(textBox, `dev{enter}`);
+  });
 
   const repository = "github.com/test-env";
   const branch = "dev";
@@ -120,12 +124,16 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
     name: "Branch-input",
   });
   await userEvent.clear(branchTextBox);
-  await userEvent.type(branchTextBox, branch);
+  await act(async () => {
+    await userEvent.type(branchTextBox, branch);
+  });
   const urlTextBox = await screen.findByRole("textbox", {
     name: "Repository-input",
   });
   await userEvent.clear(urlTextBox);
-  await userEvent.type(urlTextBox, repository);
+  await act(async () => {
+    await userEvent.type(urlTextBox, repository);
+  });
 
   await userEvent.click(await screen.findByRole("button", { name: "submit" }));
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -155,10 +163,12 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
   await userEvent.click(
     await screen.findByRole("button", { name: "Project Name-select-toggle" })
   );
-  await userEvent.type(
-    await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
-    "new-project"
-  );
+  await act(async () => {
+    await userEvent.type(
+      await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
+      "new-project"
+    );
+  });
   await userEvent.click(
     screen.getByRole("option", { name: 'Create "new-project"' })
   );
@@ -182,7 +192,9 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   await userEvent.clear(textBox);
-  await userEvent.type(textBox, `dev{enter}`);
+  await act(async () => {
+    await userEvent.type(textBox, `dev{enter}`);
+  });
   await act(async () => {
     await userEvent.click(
       await screen.findByRole("button", { name: "submit" })
@@ -219,10 +231,12 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
   await userEvent.click(
     await screen.findByRole("button", { name: "Project Name-select-toggle" })
   );
-  await userEvent.type(
-    await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
-    "new-project"
-  );
+  await act(async () => {
+    await userEvent.type(
+      await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
+      "new-project"
+    );
+  });
   await userEvent.click(
     screen.getByRole("option", { name: 'Create "new-project"' })
   );
@@ -270,7 +284,9 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   await userEvent.clear(textBox);
-  await userEvent.type(textBox, `test-env1{enter}`);
+  await act(async () => {
+    await userEvent.type(textBox, `test-env1{enter}`);
+  });
   // Submit request
   await userEvent.click(await screen.findByRole("button", { name: "submit" }));
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -318,14 +334,18 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   await userEvent.clear(textBox);
-  await userEvent.type(textBox, `dev{enter}`);
+  await act(async () => {
+    await userEvent.type(textBox, `dev{enter}`);
+  });
 
   const description = "description text";
   const descriptionInput = screen.getByRole("textbox", {
     name: "Description-input",
   });
   await userEvent.clear(descriptionInput);
-  await userEvent.type(descriptionInput, description);
+  await act(async () => {
+    await userEvent.type(descriptionInput, description);
+  });
 
   await userEvent.click(await screen.findByRole("button", { name: "submit" }));
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -359,21 +379,27 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
   await userEvent.clear(textBox);
-  await userEvent.type(textBox, `dev{enter}`);
+  await act(async () => {
+    await userEvent.type(textBox, `dev{enter}`);
+  });
 
   const branch = "dev";
   const branchTextBox = await screen.findByRole("textbox", {
     name: "Branch-input",
   });
   await userEvent.clear(branchTextBox);
-  await userEvent.type(branchTextBox, branch);
+  await act(async () => {
+    await userEvent.type(branchTextBox, branch);
+  });
 
   const repository = "github.com/test-env";
   const urlTextBox = await screen.findByRole("textbox", {
     name: "Repository-input",
   });
   await userEvent.clear(urlTextBox);
-  await userEvent.type(urlTextBox, repository);
+  await act(async () => {
+    await userEvent.type(urlTextBox, repository);
+  });
 
   await userEvent.clear(branchTextBox);
   await userEvent.clear(urlTextBox);

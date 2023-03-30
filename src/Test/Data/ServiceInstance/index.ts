@@ -39,6 +39,11 @@ export const c: ServiceInstanceModelWithTargetStates = {
   rollback_attributes: a.active_attributes,
 };
 
+export const d: ServiceInstanceModelWithTargetStates = {
+  ...a,
+  service_entity: Service.d.name,
+};
+
 export const deleted: ServiceInstanceModelWithTargetStates = {
   ...a,
   id: "service_instance_id_d",
