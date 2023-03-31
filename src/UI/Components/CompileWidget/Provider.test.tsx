@@ -24,6 +24,7 @@ function setup(
     halted: false,
     server_compile: true,
     protected_environment: false,
+    enable_lsm_expert_mode: false,
   }
 ) {
   const apiHelper = new DeferredApiHelper();
@@ -190,6 +191,7 @@ test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THE
     halted: false,
     server_compile: false,
     protected_environment: false,
+    enable_lsm_expert_mode: false,
   });
   render(component);
 
