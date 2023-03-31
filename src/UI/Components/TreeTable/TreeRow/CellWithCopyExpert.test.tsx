@@ -22,7 +22,11 @@ import {
   StaticScheduler,
 } from "@/Test";
 import { TreeTableCellContext } from "@/UI/Components/TreeTable/RowReferenceContext";
-import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import {
+  DependencyProvider,
+  EnvironmentModifierImpl,
+  EnvironmentHandlerImpl,
+} from "@/UI/Dependency";
 import { CellWithCopyExpert } from "./CellWithCopyExpert";
 
 function setup(props, expertMode = false) {
@@ -44,6 +48,8 @@ function setup(props, expertMode = false) {
     useLocation,
     dependencies.routeManager
   );
+  const environmentModifier = EnvironmentModifierImpl();
+
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
       {
@@ -59,6 +65,33 @@ function setup(props, expertMode = false) {
       },
     ])
   );
+
+  store.dispatch.environment.setSettingsData({
+    environment: "aaa",
+    value: RemoteData.success({
+      settings: {
+        enable_lsm_expert_mode: expertMode,
+      },
+      definition: {},
+    }),
+  });
+
+  store.dispatch.environment.setEnvironmentDetailsById({
+    id: "aaa",
+    value: RemoteData.success({
+      id: "aaa",
+      name: "env-a",
+      project_id: "ppp",
+      repo_branch: "branch",
+      repo_url: "repo",
+      projectName: "project",
+      halted: false,
+      settings: {
+        enable_lsm_expert_mode: expertMode,
+      },
+    }),
+  });
+  environmentModifier.setEnvironment("aaa");
   const component = (
     <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
       <DependencyProvider
@@ -66,6 +99,7 @@ function setup(props, expertMode = false) {
           ...dependencies,
           queryResolver,
           commandResolver,
+          environmentModifier,
           environmentHandler,
         }}
       >
