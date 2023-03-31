@@ -136,7 +136,10 @@ test("Given CellWithCopyExpert When a cell has on click Then it is rendered as a
 
   const cell = await screen.findByText(props.value);
   expect(cell).toBeVisible();
-  await userEvent.click(cell);
+
+  await act(async () => {
+    await userEvent.click(cell);
+  });
   expect(onClickFn).toBeCalledWith(props.value);
 });
 
@@ -161,7 +164,9 @@ test("Given CellWithCopyExpert When a cell has entity and on click Then it is re
 
   const cell = await screen.findByText(props.value);
   expect(cell).toBeVisible();
-  await userEvent.click(cell);
+  await act(async () => {
+    await userEvent.click(cell);
+  });
   expect(onClickFn).toBeCalledWith(props.value, props.serviceName);
 });
 
@@ -195,11 +200,15 @@ test("Given CellWithCopyExpert When a cell has entity, multiple values and on cl
 
   const firstCell = await screen.findByText(someValue);
   expect(firstCell).toBeVisible();
-  await userEvent.click(firstCell);
+  await act(async () => {
+    await userEvent.click(firstCell);
+  });
   expect(onClickFn).toBeCalledWith(someValue, props.serviceName);
   const otherCell = await screen.findByText(someOtherValue);
   expect(otherCell).toBeVisible();
-  await userEvent.click(otherCell);
+  await act(async () => {
+    await userEvent.click(otherCell);
+  });
   expect(onClickFn).toBeCalledWith(someOtherValue, props.serviceName);
 });
 
