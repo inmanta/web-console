@@ -4,12 +4,19 @@ import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
+import {
+  QueryResolverImpl,
+  getStoreInstance,
+  KeycloakAuthHelper,
+  CommandResolverImpl,
+} from "@/Data";
+import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
   DynamicQueryManagerResolver,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
+  DynamicCommandManagerResolver,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -33,6 +40,13 @@ function setup() {
       ),
     ])
   );
+  const updateAttribute = UpdateInstanceAttributeCommandManager(
+    new KeycloakAuthHelper(),
+    apiHelper
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([updateAttribute])
+  );
 
   const component = (
     <MemoryRouter>
@@ -40,6 +54,7 @@ function setup() {
         dependencies={{
           ...dependencies,
           queryResolver,
+          commandResolver,
         }}
       >
         <StoreProvider store={store}>

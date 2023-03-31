@@ -2,6 +2,13 @@ import { ParsedNumber } from "@/Core/Language";
 
 export type InstanceAttributeModel = Record<string, unknown>;
 
+export interface PatchField {
+  edit_id: string;
+  operation: string;
+  target: string;
+  value: InstanceAttributeModel | null;
+}
+
 export interface DeploymentProgress {
   total: ParsedNumber;
   failed: ParsedNumber;

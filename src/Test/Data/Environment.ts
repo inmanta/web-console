@@ -1,4 +1,4 @@
-import { EnvironmentModel, FlatEnvironment } from "@/Core";
+import { EnvironmentExpertOnly, EnvironmentModel } from "@/Core";
 
 export const a: EnvironmentModel = {
   id: "environment_id_a",
@@ -40,7 +40,7 @@ export const e: EnvironmentModel = {
   repo_url: "",
 };
 
-export const filterable: FlatEnvironment[] = [
+export const filterable: EnvironmentExpertOnly[] = [
   {
     projectName: "default",
     project_id: "1",
@@ -50,6 +50,9 @@ export const filterable: FlatEnvironment[] = [
     repo_url: "github.com/test",
     description: "Test desc",
     icon: "image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiCiAgICAgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIgogICAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iYmxhY2siIC8+CiAgPGNpcmNsZSBjeD0iMTUiIGN5PSIxMCIgcj0iOCIgZmlsbD0id2hpdGUiIC8+Cjwvc3ZnPg==",
+    settings: {
+      enable_lsm_expert_mode: true,
+    },
   },
   {
     id: "456",
@@ -58,6 +61,9 @@ export const filterable: FlatEnvironment[] = [
     projectName: "default",
     repo_branch: "master",
     repo_url: "github.com/test2",
+    settings: {
+      enable_lsm_expert_mode: true,
+    },
   },
   {
     projectName: "prod",
@@ -66,6 +72,9 @@ export const filterable: FlatEnvironment[] = [
     project_id: "444",
     repo_branch: "master",
     repo_url: "gitlab.com/test",
+    settings: {
+      enable_lsm_expert_mode: true,
+    },
   },
   {
     projectName: "prod",
@@ -74,5 +83,8 @@ export const filterable: FlatEnvironment[] = [
     project_id: "444",
     repo_branch: "master",
     repo_url: "gitlab.com/test123",
+    settings: {
+      enable_lsm_expert_mode: true,
+    },
   },
 ];

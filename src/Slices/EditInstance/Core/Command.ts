@@ -7,6 +7,7 @@ import { Maybe } from "@/Core/Language";
 
 export interface Command extends VersionedServiceInstanceIdentifier {
   kind: "TriggerInstanceUpdate";
+  apiVersion?: string;
 }
 
 export interface Manifest {

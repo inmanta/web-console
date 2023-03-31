@@ -29,6 +29,7 @@ export class InventoryTablePresenter
     private datePresenter: DatePresenter,
     private attributesPresenter: AttributesPresenter,
     private actionPresenter: ActionPresenter,
+    private expertActionPresenter: ActionPresenter,
     private statePresenter: StatePresenter,
     private serviceIdentity?: string,
     private serviceIdentityDisplayName?: string,
@@ -62,6 +63,9 @@ export class InventoryTablePresenter
 
   public getActionsFor(id: string): ReactElement | null {
     return this.actionPresenter.getForId(id);
+  }
+  public getExpertActionsFor(id: string): ReactElement | null {
+    return this.expertActionPresenter.getForId(id);
   }
 
   public createRows(instances: ServiceInstanceModelWithTargetStates[]): Row[] {

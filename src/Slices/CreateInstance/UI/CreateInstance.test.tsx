@@ -163,7 +163,6 @@ test("Given the CreateInstance View When creating an instance with Inter-service
   });
 
   const options = await screen.findAllByRole("option");
-
   await act(async () => {
     await userEvent.click(options[0]);
   });

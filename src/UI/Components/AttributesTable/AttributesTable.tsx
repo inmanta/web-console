@@ -12,9 +12,10 @@ import {
 
 interface Props {
   attributes: Attributes;
+  id: string;
 }
 
-export const AttributesTable: React.FC<Props> = ({ attributes }) => (
+export const AttributesTable: React.FC<Props> = ({ attributes, id }) => (
   <TreeTable
     treeTableHelper={
       new InventoryTreeTableHelper(
@@ -24,5 +25,6 @@ export const AttributesTable: React.FC<Props> = ({ attributes }) => (
         attributes
       )
     }
+    version={+id}
   />
 );
