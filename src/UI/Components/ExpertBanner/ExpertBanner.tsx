@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Banner } from "@patternfly/react-core";
+import { DependencyContext } from "@/UI/Dependency";
 
-export interface CustomEvent extends Event {
-  detail?: boolean;
-}
 export const ExpertBanner = () => {
-  const [showBannerState, setShowBannerState] = useState(false);
-  useEffect(() => {
-    document.addEventListener("expert-mode-check", (evt: CustomEvent) => {
-      setShowBannerState(evt.detail === true);
-    });
-    return () =>
-      document.removeEventListener("expert-mode-check", (evt: CustomEvent) => {
-        setShowBannerState(evt.detail === true);
-      });
-  }, []);
-  const banner = (
+  const { environmentModifier } = useContext(DependencyContext);
+
+  return environmentModifier.useIsExpertModeEnabled() ? (
     <React.Fragment>
       <Banner isSticky variant="danger">
         LSM expert mode is enabled, proceed with caution.
       </Banner>
     </React.Fragment>
-  );
-
-  return showBannerState ? banner : null;
+  ) : null;
 };

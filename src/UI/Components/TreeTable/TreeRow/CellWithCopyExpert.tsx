@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent, useContext, useEffect } from "react";
+import React, { useState, MouseEvent, useContext } from "react";
 import {
   Button,
   Popover,
@@ -10,13 +10,12 @@ import {
 import { TimesIcon, PencilAltIcon } from "@patternfly/react-icons";
 import { Td } from "@patternfly/react-table";
 import styled from "styled-components";
-import { Environment, Maybe, ParsedNumber } from "@/Core";
+import { Maybe, ParsedNumber } from "@/Core";
 import { AttributeSet } from "@/Core/Domain/ServiceInstanceParams";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { ConfirmUserActionForm } from "../../../Components/ConfirmUserActionForm";
 import { ToastAlert } from "../../../Components/ToastAlert";
-import { CustomEvent } from "../../ExpertBanner";
 import { TreeTableCellContext } from "../RowReferenceContext";
 import {
   formatValue,
@@ -52,13 +51,8 @@ export const CellWithCopyExpert: React.FC<Props> = ({
   serviceEntity,
   attributeType,
 }) => {
-  const { commandResolver, environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useSelected() as
-    | Environment
-    | undefined;
-  const [isExpertMode, setIsExpertMode] = useState(
-    environment?.settings.enable_lsm_expert_mode ? true : false
-  );
+  const { commandResolver, environmentModifier } =
+    useContext(DependencyContext);
   const [wrapWithPopover, setWrapWithPopover] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAttribute, setNewAttribute] = useState<
@@ -110,15 +104,6 @@ export const CellWithCopyExpert: React.FC<Props> = ({
     }
     setIsModalOpen(!isModalOpen);
   };
-  useEffect(() => {
-    document.addEventListener("expert-mode-check", (evt: CustomEvent) => {
-      setIsExpertMode(evt.detail === true);
-    });
-    return () =>
-      document.removeEventListener("expert-mode-check", (evt: CustomEvent) => {
-        setIsExpertMode(evt.detail === true);
-      });
-  }, []);
   const cell = (
     <Td
       className={className}
@@ -133,7 +118,7 @@ export const CellWithCopyExpert: React.FC<Props> = ({
           setMessage={setStateErrorMessage}
         />
       )}
-      {isExpertMode && value !== "" && (
+      {environmentModifier.useIsExpertModeEnabled() && value !== "" && (
         <Button
           variant="link"
           isDanger
