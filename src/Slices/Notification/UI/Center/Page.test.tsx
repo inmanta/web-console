@@ -69,7 +69,9 @@ test("Given Notification Center page When user filters on severity Then executes
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  await userEvent.click(screen.getByRole("button", { name: "Severity" }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Severity" }));
+  });
   await act(async () => {
     await userEvent.click(screen.getByRole("option", { name: "message" }));
   });
@@ -88,10 +90,13 @@ test("Given Notification Center page When user filters on severity Then executes
     screen.getAllByRole("listitem", { name: "NotificationItem" })
   ).toHaveLength(2);
 
-  await userEvent.click(screen.getByRole("button", { name: "Severity" }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Severity" }));
+  });
   await act(async () => {
     await userEvent.click(screen.getByRole("option", { name: "message" }));
   });
+
   expect(apiHelper.pendingRequests).toEqual([request("?limit=20")]);
 });
 
@@ -102,7 +107,9 @@ test("Given Notification Center page When user filters on read Then executes cor
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  await userEvent.click(screen.getByRole("button", { name: "Read" }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Read" }));
+  });
   await act(async () => {
     await userEvent.click(screen.getByRole("option", { name: "read" }));
   });
@@ -123,7 +130,9 @@ test("Given Notification Center page When user filters on read Then executes cor
     })
   ).toHaveLength(2);
 
-  await userEvent.click(screen.getByRole("button", { name: "Read" }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Read" }));
+  });
   await act(async () => {
     await userEvent.click(screen.getByRole("option", { name: "read" }));
   });
@@ -208,7 +217,9 @@ test("Given Notification Center page When user clicks next page Then fetches nex
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
-  await userEvent.click(screen.getByRole("button", { name: "Next" }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Next" }));
+  });
 
   expect(apiHelper.pendingRequests).toEqual([
     {

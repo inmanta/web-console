@@ -105,7 +105,9 @@ test("EditInstance View shows success form", async () => {
   await act(async () => {
     await userEvent.type(bandwidthField, "2");
   });
-  await userEvent.click(screen.getByText(words("confirm")));
+  await act(async () => {
+    await userEvent.click(screen.getByText(words("confirm")));
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -135,8 +137,12 @@ test("Given the EditInstance View When changing an embedded entity Then the corr
     await screen.findByRole("generic", { name: "EditInstance-Success" })
   ).toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole("button", { name: "circuits" }));
-  await userEvent.click(screen.getByRole("button", { name: "1" }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "circuits" }));
+  });
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "1" }));
+  });
   const serviceIdField = screen.getByRole("spinbutton", { name: "service_id" });
   await act(async () => {
     await userEvent.type(serviceIdField, "{backspace}7");
@@ -148,7 +154,9 @@ test("Given the EditInstance View When changing an embedded entity Then the corr
   await act(async () => {
     await userEvent.type(bandwidthField, "2");
   });
-  await userEvent.click(screen.getByText(words("confirm")));
+  await act(async () => {
+    await userEvent.click(screen.getByText(words("confirm")));
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   if (!ServiceInstance.a.active_attributes) {

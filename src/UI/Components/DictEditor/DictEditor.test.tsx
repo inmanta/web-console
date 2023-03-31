@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DictEditor } from "./DictEditor";
 
@@ -42,10 +42,17 @@ test("GIVEN DictEditor WHEN deleteEntry clicked THEN that entry is removed", asy
   const deleteA = within(rowA).getByRole("button", {
     name: "DeleteEntryAction",
   });
+
   expect(deleteA).toBeEnabled();
-  await userEvent.click(deleteA);
+
+  await act(async () => {
+    await userEvent.click(deleteA);
+  });
+
   expect(setValue).toHaveBeenCalledTimes(1);
+
   rerender(component({ keyB: "valB" }));
+
   expect(rowA).not.toBeInTheDocument();
   expect(rowB).toBeInTheDocument();
 });

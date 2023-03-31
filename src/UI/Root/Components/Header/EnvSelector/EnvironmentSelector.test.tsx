@@ -80,7 +80,9 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
 
   expect(listItem).toBeVisible();
 
-  await userEvent.click(listItem);
+  await act(async () => {
+    await userEvent.click(listItem);
+  });
 
   expect(screen.getByText(`Environment: ${envB.name}`)).toBeVisible();
   expect(selectedEnv).toEqual(envB.id);
@@ -111,7 +113,10 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
   });
 
   const menuItems = screen.getAllByRole("menuitem");
-  await userEvent.click(menuItems[2]);
+
+  await act(async () => {
+    await userEvent.click(menuItems[2]);
+  });
 
   expect(
     screen.getByRole("button", {

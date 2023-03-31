@@ -89,11 +89,14 @@ test("ServiceInventory can show resources for instance", async () => {
 
   const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
 
-  await userEvent.click(within(expandCell).getByRole("button"));
-
-  await userEvent.click(
-    screen.getByRole("tab", { name: words("inventory.tabs.resources") })
-  );
+  await act(async () => {
+    await userEvent.click(within(expandCell).getByRole("button"));
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("tab", { name: words("inventory.tabs.resources") })
+    );
+  });
   await act(async () => {
     apiHelper.resolve(
       Either.right({

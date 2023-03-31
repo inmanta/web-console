@@ -142,10 +142,16 @@ test("ResourcesView sets sorting parameters correctly on click", async () => {
 test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THEN the tabs are shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
   await act(async () => {
     await apiHelper.resolve(Either.right(ResourceHistory.response));
   });
-  await userEvent.click(screen.getAllByRole("button", { name: "Details" })[0]);
+  await act(async () => {
+    await userEvent.click(
+      screen.getAllByRole("button", { name: "Details" })[0]
+    );
+  });
+
   expect(
     screen.getAllByRole("tab", { name: "Desired State" })[0]
   ).toBeVisible();

@@ -212,10 +212,16 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
     await screen.findByRole("grid", { name: "ServiceInventory-Success" })
   ).toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole("button", { name: "Details" }));
-  await userEvent.click(
-    await screen.findByRole("tab", { name: words("inventory.tabs.resources") })
-  );
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Details" }));
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("tab", {
+        name: words("inventory.tabs.resources"),
+      })
+    );
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));

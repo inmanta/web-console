@@ -69,7 +69,10 @@ test("Given CatalogUpdateButton, when user clicks on button, it should display a
   });
 
   expect(button).toBeVisible();
-  await userEvent.click(button);
+
+  await act(async () => {
+    await userEvent.click(button);
+  });
 
   expect(
     await screen.findByText(words("catalog.update.modal.title"))
@@ -83,13 +86,18 @@ test("Given CatalogUpdateButton, when user cancels the modal, it should not fire
   const button = screen.getByRole("button", {
     name: words("catalog.button.update"),
   });
-  await userEvent.click(button);
+  await act(async () => {
+    await userEvent.click(button);
+  });
+
   const cancelButton = await screen.findByText(words("no"));
   expect(cancelButton).toBeVisible();
 
-  await userEvent.click(cancelButton);
-  expect(cancelButton).not.toBeVisible();
+  await act(async () => {
+    await userEvent.click(cancelButton);
+  });
 
+  expect(cancelButton).not.toBeVisible();
   expect(apiHelper.pendingRequests).toHaveLength(0);
   expect(apiHelper.resolvedRequests).toHaveLength(0);
 });
@@ -101,13 +109,18 @@ test("Given CatalogUpdateButton, when user confirms update, it should fire the A
   const button = screen.getByRole("button", {
     name: words("catalog.button.update"),
   });
-  await userEvent.click(button);
+  await act(async () => {
+    await userEvent.click(button);
+  });
+
   const confirmButton = await screen.findByText(words("yes"));
   expect(confirmButton).toBeVisible();
 
-  await userEvent.click(confirmButton);
-  expect(confirmButton).not.toBeVisible();
+  await act(async () => {
+    await userEvent.click(confirmButton);
+  });
 
+  expect(confirmButton).not.toBeVisible();
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
@@ -132,13 +145,19 @@ test("Given CatalogUpdateButton, when user confirms the update, it should fire t
   const button = screen.getByRole("button", {
     name: words("catalog.button.update"),
   });
-  await userEvent.click(button);
+  await act(async () => {
+    await userEvent.click(button);
+  });
+
   const confirmButton = await screen.findByText(words("yes"));
+
   expect(confirmButton).toBeVisible();
 
-  await userEvent.click(confirmButton);
-  expect(confirmButton).not.toBeVisible();
+  await act(async () => {
+    await userEvent.click(confirmButton);
+  });
 
+  expect(confirmButton).not.toBeVisible();
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",

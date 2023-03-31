@@ -19,20 +19,30 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
     );
   });
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
-  await userEvent.click(screen.getByRole("option", { name: "AttributeSet" }));
-  await userEvent.click(
-    screen.getByRole("button", { name: "Select AttributeSet" })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
+  await act(async () => {
+    await userEvent.click(screen.getByRole("option", { name: "AttributeSet" }));
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "Select AttributeSet" })
+    );
+  });
   await act(async () => {
     await userEvent.click(screen.getByRole("option", { name: "Active" }));
   });
-  await userEvent.click(screen.getByRole("button", { name: "Select Quality" }));
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "Select Quality" })
+    );
+  });
   await act(async () => {
     await userEvent.click(screen.getByRole("option", { name: "Not Empty" }));
   });

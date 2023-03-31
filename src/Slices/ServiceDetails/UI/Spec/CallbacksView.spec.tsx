@@ -105,12 +105,16 @@ test("GIVEN CallbacksTab WHEN user click on delete and confirms THEN callback is
   const deleteButton = await screen.findByRole("button", {
     name: "DeleteCallback-" + shortenUUID,
   });
-  await userEvent.click(deleteButton);
+  await act(async () => {
+    await userEvent.click(deleteButton);
+  });
 
   expect(screen.getByRole("dialog", { name: "Delete Callback" })).toBeVisible();
 
   const yesButton = screen.getByRole("button", { name: "Yes" });
-  await userEvent.click(yesButton);
+  await act(async () => {
+    await userEvent.click(yesButton);
+  });
 
   await act(async () => {
     apiHelper.resolve(Maybe.none());
@@ -152,23 +156,35 @@ test("GIVEN CallbacksTab WHEN user fills in form and clicks on Add THEN callback
   const minimalLogLevelInput = screen.getByRole("button", {
     name: "MinimalLogLevel",
   });
-  await userEvent.click(minimalLogLevelInput);
+  await act(async () => {
+    await userEvent.click(minimalLogLevelInput);
+  });
+
   const criticalOption = screen.getByRole("option", { name: "CRITICAL" });
-  await userEvent.click(criticalOption);
+  await act(async () => {
+    await userEvent.click(criticalOption);
+  });
 
   const eventTypesInput = screen.getByRole("button", {
     name: "EventTypes",
   });
-  await userEvent.click(eventTypesInput);
+  await act(async () => {
+    await userEvent.click(eventTypesInput);
+  });
+
   const checkbox = screen.getByRole("checkbox", {
     name: "ALLOCATION_UPDATE",
   });
-  await userEvent.click(checkbox);
+  await act(async () => {
+    await userEvent.click(checkbox);
+  });
 
   const addButton = screen.getByRole("button", {
     name: "Add",
   });
-  await userEvent.click(addButton);
+  await act(async () => {
+    await userEvent.click(addButton);
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0].url).toMatch("/lsm/v1/callbacks");
