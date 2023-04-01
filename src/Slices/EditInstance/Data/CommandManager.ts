@@ -26,25 +26,32 @@ export function TriggerInstanceUpdateCommandManager(apiHelper: ApiHelper) {
     "TriggerInstanceUpdate",
     (command, environment) =>
       async (fields: Field[], currentAttributes, updatedAttributes) => {
-        if (command.apiVersion === "v2") {
-          return await apiHelper.patch(
-            getUrl(command),
-            environment,
-            getBodyV2(
-              fields,
-              currentAttributes,
-              updatedAttributes,
-              command.service_entity,
-              command.version
-            )
-          );
-        } else {
-          return await apiHelper.patch(
-            getUrl(command),
-            environment,
-            getBodyV1(fields, currentAttributes, updatedAttributes)
-          );
-        }
+        return await apiHelper.patch(
+          getUrl(command),
+          environment,
+          getBodyV1(fields, currentAttributes, updatedAttributes)
+        );
+
+        // TODO make PATCH V2 ready
+        // if (command.apiVersion === "v2") {
+        //   return await apiHelper.patch(
+        //     getUrl(command),
+        //     environment,
+        //     getBodyV2(
+        //       fields,
+        //       currentAttributes,
+        //       updatedAttributes,
+        //       command.service_entity,
+        //       command.version
+        //     )
+        //   );
+        // } else {
+        //   return await apiHelper.patch(
+        //     getUrl(command),
+        //     environment,
+        //     getBodyV1(fields, currentAttributes, updatedAttributes)
+        //   );
+        // }
       }
   );
 }
@@ -95,7 +102,7 @@ export const getBodyV2 = (
   const patchData = [
     {
       edit_id: `${service_id}_version=${version}`,
-      operation: "merge",
+      operation: "replace",
       target: ".",
       value: richDiff,
     },
