@@ -32,7 +32,7 @@ export function TriggerInstanceUpdateCommandManager(apiHelper: ApiHelper) {
           getBodyV1(fields, currentAttributes, updatedAttributes)
         );
 
-        // TODO make PATCH V2 ready
+        // TODO make PATCH V2 ready, refactoring should allow the form to keep the original data aswell, instead of discarding it.
         // if (command.apiVersion === "v2") {
         //   return await apiHelper.patch(
         //     getUrl(command),
