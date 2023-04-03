@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter, useLocation } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { AttributeModel, RemoteData, ServiceModel } from "@/Core";
@@ -173,13 +173,17 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
     name: "Toggle-embedded",
   });
   //show embedded entity
-  await userEvent.click(toggleButton);
+  await act(async () => {
+    await userEvent.click(toggleButton);
+  });
   const row = await screen.findByRole("row", {
     name: "Row-embedded$embedded_single",
   });
 
   expect(row).toBeVisible();
   //collapse embedded entity
-  await userEvent.click(toggleButton);
+  await act(async () => {
+    await userEvent.click(toggleButton);
+  });
   expect(row).not.toBeVisible();
 });

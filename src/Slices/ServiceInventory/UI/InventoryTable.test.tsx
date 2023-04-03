@@ -140,7 +140,6 @@ test("ServiceInventory can show resources for instance", async () => {
       screen.getByRole("tab", { name: words("inventory.tabs.resources") })
     );
   });
-
   await act(async () => {
     apiHelper.resolve(
       Either.right({

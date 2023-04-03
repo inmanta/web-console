@@ -56,9 +56,13 @@ function setup() {
 test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN delete disabled", async () => {
   const { component } = setup();
   render(component);
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" })
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Delete environment" })
+    );
+  });
+
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",
   });
@@ -69,6 +73,7 @@ test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN de
   await act(async () => {
     await userEvent.type(input, "wrong");
   });
+
   expect(input.value).toMatch("wrong");
   expect(deleteButton).toBeDisabled();
 });
@@ -76,9 +81,13 @@ test("GIVEN Environment Actions and delete modal WHEN empty or wrong env THEN de
 test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete enabled", async () => {
   const { component } = setup();
   render(component);
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" })
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Delete environment" })
+    );
+  });
+
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",
   });
@@ -96,17 +105,25 @@ test("GIVEN Environment Actions and delete modal WHEN correct env THEN delete en
 test("GIVEN Environment Actions and delete modal WHEN correct env & delete button pressed THEN delete executed", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" })
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Delete environment" })
+    );
+  });
+
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",
   });
+
   const deleteButton = screen.getByRole("button", { name: "delete" });
   await act(async () => {
     await userEvent.type(input, "connect");
   });
-  await userEvent.click(deleteButton);
+  await act(async () => {
+    await userEvent.click(deleteButton);
+  });
+
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
@@ -118,11 +135,14 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
   await act(async () => {
     await apiHelper.resolve(Maybe.none());
   });
+
   expect(apiHelper.resolvedRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: Project.list }));
   });
+
   expect(apiHelper.resolvedRequests).toHaveLength(2);
   expect(apiHelper.pendingRequests).toHaveLength(0);
 });
@@ -130,19 +150,27 @@ test("GIVEN Environment Actions and delete modal WHEN correct env & delete butto
 test("GIVEN Environment Actions and delete modal WHEN delete executed and error THEN error is shown", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" })
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Delete environment" })
+    );
+  });
+
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "delete environment check",
   });
   await act(async () => {
     await userEvent.type(input, "connect");
   });
-  await userEvent.click(screen.getByRole("button", { name: "delete" }));
+
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "delete" }));
+  });
   await act(async () => {
     await apiHelper.resolve(Maybe.some("error message"));
   });
+
   const errorAlert = screen.getByRole("generic", {
     name: "Environment Error Alert",
   });
@@ -152,10 +180,16 @@ test("GIVEN Environment Actions and delete modal WHEN delete executed and error 
 test("GIVEN Environment Actions and delete modal WHEN form is valid and enter is pressed THEN delete is executed", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Delete environment" })
-  );
-  await userEvent.keyboard("connect{enter}");
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Delete environment" })
+    );
+  });
+  await act(async () => {
+    await userEvent.keyboard("connect{enter}");
+  });
+
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "DELETE",
@@ -167,10 +201,16 @@ test("GIVEN Environment Actions and delete modal WHEN form is valid and enter is
 test("GIVEN Environment Actions and clear modal WHEN form is valid and enter is pressed THEN clear is executed", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Clear environment" })
-  );
-  await userEvent.keyboard("connect{enter}");
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Clear environment" })
+    );
+  });
+  await act(async () => {
+    await userEvent.keyboard("connect{enter}");
+  });
+
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "DELETE",
@@ -182,17 +222,25 @@ test("GIVEN Environment Actions and clear modal WHEN form is valid and enter is 
 test("GIVEN Environment Actions and clear modal WHEN correct env & clear button pressed THEN clear is executed", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Clear environment" })
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Clear environment" })
+    );
+  });
+
   const input = screen.getByRole<HTMLInputElement>("textbox", {
     name: "clear environment check",
   });
   const clearButton = screen.getByRole("button", { name: "clear" });
+
   await act(async () => {
     await userEvent.type(input, "connect");
   });
-  await userEvent.click(clearButton);
+  await act(async () => {
+    await userEvent.click(clearButton);
+  });
+
   expect(apiHelper.pendingRequests).toHaveLength(1);
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({

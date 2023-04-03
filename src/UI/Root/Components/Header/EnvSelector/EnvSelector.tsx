@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import {
   Dropdown,
   DropdownGroup,
@@ -45,13 +44,11 @@ export const EnvSelector: React.FC<Props> = ({
   envs.push(
     <div key="overview-link">
       <StyledSeparator />
-      <StyledItem>
-        <Tooltip content={words("home.navigation.tooltip")}>
-          <Link to={routeManager.getUrl("Home", undefined)}>
-            {words("home.navigation.button")}
-          </Link>
-        </Tooltip>
-      </StyledItem>
+      <Tooltip content={words("home.navigation.tooltip")}>
+        <StyledItem href={routeManager.getUrl("Home", undefined)}>
+          {words("home.navigation.button")}
+        </StyledItem>
+      </Tooltip>
     </div>
   );
   return (

@@ -78,13 +78,16 @@ test("Given CellWithCopy When a cell has a simple value only Then it is shown", 
 test("Given CellWithCopy When a cell has on click Then it is rendered as a link", async () => {
   const props = { label: "attribute", value: "someValue", hasRelation: true };
   const { component, onClickFn } = setup(props);
-  render(component);
 
+  render(component);
   const cell = await screen.findByText(props.value);
+
   expect(cell).toBeVisible();
+
   await act(async () => {
     await userEvent.click(cell);
   });
+
   expect(onClickFn).toBeCalledWith(props.value);
 });
 
@@ -108,10 +111,13 @@ test("Given CellWithCopy When a cell has entity and on click Then it is rendered
   );
 
   const cell = await screen.findByText(props.value);
+
   expect(cell).toBeVisible();
+
   await act(async () => {
     await userEvent.click(cell);
   });
+
   expect(onClickFn).toBeCalledWith(props.value, props.serviceName);
 });
 
@@ -144,15 +150,22 @@ test("Given CellWithCopy When a cell has entity, multiple values and on click Th
   );
 
   const firstCell = await screen.findByText(someValue);
+
   expect(firstCell).toBeVisible();
+
   await act(async () => {
     await userEvent.click(firstCell);
   });
+
   expect(onClickFn).toBeCalledWith(someValue, props.serviceName);
+
   const otherCell = await screen.findByText(someOtherValue);
+
   expect(otherCell).toBeVisible();
+
   await act(async () => {
     await userEvent.click(otherCell);
   });
+
   expect(onClickFn).toBeCalledWith(someOtherValue, props.serviceName);
 });
