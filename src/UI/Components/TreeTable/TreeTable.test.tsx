@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, fireEvent, within, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Attributes, EntityLike } from "@/Core";
 import { CommandResolverImpl, KeycloakAuthHelper } from "@/Data";
@@ -218,9 +218,14 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
     name: "expand-collapse-dropdown",
   });
   const dropdownOpenButton = within(dropdown).getByLabelText("Actions");
-  await userEvent.click(dropdownOpenButton);
 
-  await userEvent.click(within(dropdown).getByText("Expand all"));
+  await act(async () => {
+    await userEvent.click(dropdownOpenButton);
+  });
+  await act(async () => {
+    await userEvent.click(within(dropdown).getByText("Expand all"));
+  });
+
   const row1 = screen.getByRole("row", { name: "Row-a$c$d" });
   const row2 = screen.getByRole("row", { name: "Row-a$e$f" });
   const row3 = screen.getByRole("row", { name: "Row-g$i$m$n" });
@@ -230,9 +235,13 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
   expect(row3).toBeVisible();
 
   fireEvent.click(dropdownOpenButton);
-  await userEvent.click(
-    within(dropdown).getByText(words("inventory.tabs.collapse"))
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      within(dropdown).getByText(words("inventory.tabs.collapse"))
+    );
+  });
+
   expect(row1).not.toBeVisible();
   expect(row2).not.toBeVisible();
   expect(row3).not.toBeVisible();

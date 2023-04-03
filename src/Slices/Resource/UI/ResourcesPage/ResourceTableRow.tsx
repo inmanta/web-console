@@ -22,11 +22,13 @@ export const ResourceTableRow: React.FC<Props> = ({
   <Tbody>
     <Tr aria-label="Resource Table Row">
       {row.numberOfDependencies > 0 ? (
-        <Toggle
-          expanded={isExpanded}
-          onToggle={onToggle}
-          aria-label={`Toggle-${row.id}`}
-        />
+        <Td>
+          <Toggle
+            expanded={isExpanded}
+            onToggle={onToggle}
+            aria-label={`Toggle-${row.id}`}
+          />
+        </Td>
       ) : (
         <NoToggle />
       )}

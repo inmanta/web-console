@@ -34,12 +34,7 @@ export const EnvironmentControls: React.FC = () => {
           document.dispatchEvent(new CustomEvent("status-down"));
           return null;
         },
-        success: (details) => {
-          document.dispatchEvent(
-            new CustomEvent("expert-mode-check", {
-              detail: details.settings.enable_lsm_expert_mode,
-            })
-          );
+        success: () => {
           document.dispatchEvent(new CustomEvent("status-up"));
           return null;
         },

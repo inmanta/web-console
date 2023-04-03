@@ -25,7 +25,9 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     );
   });
 
-  await user.click(screen.getAllByRole("button", { name: "Details" })[0]);
+  await act(async () => {
+    await user.click(screen.getAllByRole("button", { name: "Details" })[0]);
+  });
   await act(async () => {
     await user.click(screen.getAllByRole("tab", { name: "Resources" })[0]);
   });
@@ -69,7 +71,9 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     );
   });
 
-  await user.click(screen.getAllByRole("button", { name: "Details" })[0]);
+  await act(async () => {
+    await user.click(screen.getAllByRole("button", { name: "Details" })[0]);
+  });
   await act(async () => {
     await user.click(screen.getAllByRole("tab", { name: "Resources" })[0]);
   });
@@ -87,7 +91,9 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
     scheduler.tasks.get(`GetInstanceResources_${ServiceInstance.a.id}`)
   );
 
-  jest.advanceTimersByTime(5000);
+  await act(async () => {
+    await jest.advanceTimersByTime(5000);
+  });
 
   await act(async () => {
     await apiHelper.resolve(

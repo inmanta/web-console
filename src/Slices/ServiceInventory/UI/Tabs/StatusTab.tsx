@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import {
   Card,
   CardBody,
@@ -10,10 +10,9 @@ import {
   Flex,
   FlexItem,
 } from "@patternfly/react-core";
-import { Environment, ParsedNumber } from "@/Core";
+import { ParsedNumber } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { TextWithCopy } from "@/UI/Components";
-import { CustomEvent } from "@/UI/Components/ExpertBanner";
 import { words } from "@/UI/words";
 
 interface StatusInfo {
@@ -31,22 +30,7 @@ interface Props {
 }
 
 export const StatusTab: React.FC<Props> = ({ statusInfo }) => {
-  const { environmentHandler } = useContext(DependencyContext);
-  const environment = environmentHandler.useSelected() as
-    | Environment
-    | undefined;
-  const [areExpertVisible, setAreExpertVisible] = useState(
-    environment?.settings.enable_lsm_expert_mode ? true : false
-  );
-  useEffect(() => {
-    document.addEventListener("expert-mode-check", (evt: CustomEvent) => {
-      setAreExpertVisible(evt.detail === true);
-    });
-    return () =>
-      document.removeEventListener("expert-mode-check", (evt: CustomEvent) => {
-        setAreExpertVisible(evt.detail === true);
-      });
-  }, []);
+  const { environmentModifier } = useContext(DependencyContext);
   return (
     <Card>
       <CardBody>
@@ -113,7 +97,7 @@ export const StatusTab: React.FC<Props> = ({ statusInfo }) => {
             </FlexItem>
             <FlexItem>{statusInfo.actions}</FlexItem>
           </Flex>
-          {areExpertVisible && (
+          {environmentModifier.useIsExpertModeEnabled() && (
             <Flex direction={{ default: "column" }}>
               <FlexItem>
                 <Title headingLevel="h3">

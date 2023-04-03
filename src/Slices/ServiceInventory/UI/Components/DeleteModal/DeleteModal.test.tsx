@@ -67,26 +67,43 @@ describe("DeleteModal ", () => {
     const { component } = setup();
     render(component());
     const modalButton = await screen.findByText(words("delete"));
-    await userEvent.click(modalButton);
+    await act(async () => {
+      await userEvent.click(modalButton);
+    });
+
     expect(await screen.findByText(words("yes"))).toBeVisible();
     expect(await screen.findByText(words("no"))).toBeVisible();
   });
   it("Closes modal when cancelled", async () => {
     const { component } = setup();
     render(component());
+
     const modalButton = await screen.findByText(words("delete"));
-    await userEvent.click(modalButton);
+    await act(async () => {
+      await userEvent.click(modalButton);
+    });
+
     const noButton = await screen.findByText(words("no"));
-    await userEvent.click(noButton);
+    await act(async () => {
+      await userEvent.click(noButton);
+    });
+
     expect(screen.queryByText(words("yes"))).not.toBeInTheDocument();
   });
   it("Sends request when submitted", async () => {
     const { component, apiHelper, refetch } = setup();
     render(component());
+
     const modalButton = await screen.findByText(words("delete"));
-    await userEvent.click(modalButton);
+    await act(async () => {
+      await userEvent.click(modalButton);
+    });
+
     const yesButton = await screen.findByText(words("yes"));
-    await userEvent.click(yesButton);
+    await act(async () => {
+      await userEvent.click(yesButton);
+    });
+
     expect(screen.queryByText(words("yes"))).not.toBeInTheDocument();
     expect(apiHelper.pendingRequests[0]).toEqual({
       environment: "env",

@@ -25,10 +25,14 @@ test("GIVEN The Service Inventory WHEN the user filters on identity ('Order ID',
   });
 
   const filterBar = screen.getByRole("generic", { name: "FilterBar" });
-  await userEvent.click(
-    within(filterBar).getByRole("button", { name: "FilterPicker" })
-  );
-  await userEvent.click(screen.getByRole("option", { name: "Order ID" }));
+  await act(async () => {
+    await userEvent.click(
+      within(filterBar).getByRole("button", { name: "FilterPicker" })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(screen.getByRole("option", { name: "Order ID" }));
+  });
 
   const input = screen.getByRole("searchbox", { name: "IdentityFilter" });
   await act(async () => {

@@ -1,0 +1,7 @@
+change-type: patch
+description: 'fix visiblity issue on expert-mode actions'
+issue-nr: 4757
+destination-branches:
+- master
+- iso6
+

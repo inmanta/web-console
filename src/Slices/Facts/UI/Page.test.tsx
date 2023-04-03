@@ -125,7 +125,9 @@ test.each`
     ).toHaveLength(8);
 
     const input = await screen.findByPlaceholderText(placeholderText);
-    await userEvent.click(input);
+    await act(async () => {
+      await userEvent.click(input);
+    });
 
     await act(async () => {
       await userEvent.type(input, `${filterValue}{enter}`);

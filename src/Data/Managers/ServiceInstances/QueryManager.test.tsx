@@ -101,7 +101,10 @@ test("GIVEN QueryManager WHEN first page request is started and user clicks next
   expect(task1?.effect).toHaveBeenCalledTimes(2);
   expect(task1?.update).toHaveBeenCalledTimes(1);
 
-  await user.click(screen.getByText("next"));
+  await act(async () => {
+    await user.click(screen.getByText("next"));
+  });
+
   const task2 = Maybe.orUndefined(tasks.get("GetServiceInstances_name"));
   expect(task2?.effect).not.toHaveBeenCalled();
   expect(task2?.update).not.toHaveBeenCalled();

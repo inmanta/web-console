@@ -176,7 +176,9 @@ test("ResourcesView shows next page of resources", async () => {
     })
   ).toBeInTheDocument();
 
-  await userEvent.click(screen.getAllByRole("button", { name: "Next" })[0]);
+  await act(async () => {
+    await userEvent.click(screen.getAllByRole("button", { name: "Next" })[0]);
+  });
 
   await act(async () => {
     await apiHelper.resolve(
@@ -256,7 +258,10 @@ it.each`
     expect(initialRows).toHaveLength(6);
 
     const input = await screen.findByPlaceholderText(placeholderText);
-    await userEvent.click(input);
+    await act(async () => {
+      await userEvent.click(input);
+    });
+
     if (filterType === "select") {
       const option = await screen.findByRole("option", { name: filterValue });
       await act(async () => {
@@ -305,13 +310,19 @@ it.each`
     expect(initialRows).toHaveLength(6);
 
     const inputOne = await screen.findByPlaceholderText(placeholderTextOne);
-    await userEvent.click(inputOne);
+    await act(async () => {
+      await userEvent.click(inputOne);
+    });
+
     await act(async () => {
       await userEvent.type(inputOne, `${filterValueOne}`);
     });
 
     const inputTwo = await screen.findByPlaceholderText(placeholderTextTwo);
-    await userEvent.click(inputTwo);
+    await act(async () => {
+      await userEvent.click(inputTwo);
+    });
+
     await act(async () => {
       await userEvent.type(inputTwo, `${filterValueTwo}{enter}`);
     });
@@ -351,7 +362,9 @@ test("when using the all filters then the resources with that filter values shou
   const inputOne = await screen.findByPlaceholderText(
     words("resources.filters.agent.placeholder")
   );
-  await userEvent.click(inputOne);
+  await act(async () => {
+    await userEvent.click(inputOne);
+  });
   await act(async () => {
     await userEvent.type(inputOne, `${filterValueOne}`);
   });
@@ -359,7 +372,9 @@ test("when using the all filters then the resources with that filter values shou
   const inputTwo = await screen.findByPlaceholderText(
     words("resources.filters.type.placeholder")
   );
-  await userEvent.click(inputTwo);
+  await act(async () => {
+    await userEvent.click(inputTwo);
+  });
   await act(async () => {
     await userEvent.type(inputTwo, `${filterValueTwo}`);
   });
@@ -367,7 +382,9 @@ test("when using the all filters then the resources with that filter values shou
   const inputThree = await screen.findByPlaceholderText(
     words("resources.filters.value.placeholder")
   );
-  await userEvent.click(inputThree);
+  await act(async () => {
+    await userEvent.click(inputThree);
+  });
   await act(async () => {
     await userEvent.type(inputThree, `${filterValueThree}{enter}`);
   });
@@ -414,7 +431,9 @@ test.each`
     const input = await within(toolbar).findByRole("button", {
       name: "Deploy State-toggle",
     });
-    await userEvent.click(input);
+    await act(async () => {
+      await userEvent.click(input);
+    });
 
     const toggle = await screen.findByRole("generic", {
       name: `${filterValue}-${option}-toggle`,
@@ -553,7 +572,9 @@ test("GIVEN ResourcesView WHEN data is loading for next page THEN shows toolbar"
 
   expect(nextButton).toBeEnabled();
 
-  await userEvent.click(nextButton);
+  await act(async () => {
+    await userEvent.click(nextButton);
+  });
 
   expect(
     await screen.findByRole("generic", { name: "ResourcesView-Loading" })
@@ -720,11 +741,13 @@ test("Given the ResourcesView When clicking on deploy, then the approriate backe
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
 
-  await userEvent.click(
-    await screen.findByRole("button", {
-      name: words("resources.deploySummary.deploy"),
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: words("resources.deploySummary.deploy"),
+      })
+    );
+  });
 
   expect(apiHelper.pendingRequests).toEqual([
     {
@@ -750,11 +773,13 @@ test("Given the ResourcesView When clicking on repair, then the approriate backe
     await screen.findByRole("grid", { name: "ResourcesView-Success" })
   ).toBeInTheDocument();
 
-  await userEvent.click(
-    await screen.findByRole("button", {
-      name: words("resources.deploySummary.repair"),
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", {
+        name: words("resources.deploySummary.repair"),
+      })
+    );
+  });
 
   expect(apiHelper.pendingRequests).toEqual([
     {

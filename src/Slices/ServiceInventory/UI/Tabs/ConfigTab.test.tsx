@@ -117,7 +117,9 @@ test("ConfigTab can reset all settings", async () => {
     screen.getByRole("checkbox", { name: "auto_creating-False" })
   ).toBeVisible();
 
-  await userEvent.click(resetButton, { skipHover: true });
+  await act(async () => {
+    await userEvent.click(resetButton, { skipHover: true });
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: {} }));
@@ -138,7 +140,9 @@ test("ConfigTab can change 1 toggle", async () => {
 
   expect(toggle).toBeVisible();
 
-  await userEvent.click(toggle, { skipHover: true });
+  await act(async () => {
+    await userEvent.click(toggle, { skipHover: true });
+  });
 
   await act(async () => {
     await apiHelper.resolve(

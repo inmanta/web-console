@@ -35,10 +35,13 @@ it.each`
     const input = await screen.findByPlaceholderText(
       words("home.filters.env.placeholder")
     );
-    await userEvent.click(input);
+    await act(async () => {
+      await userEvent.click(input);
+    });
     await act(async () => {
       await userEvent.type(input, filterValue);
     });
+
     expect(
       screen.queryAllByRole("article", {
         name: "Environment card",
@@ -53,15 +56,21 @@ test("Given environments overview When filtering by project Then only the matchi
   const initialCards = await screen.findAllByRole("article", {
     name: "Environment card",
   });
+
   expect(initialCards).toHaveLength(4);
+
   const input = await screen.findByPlaceholderText(
     words("home.filters.project.placeholder")
   );
-  await userEvent.click(input);
+  await act(async () => {
+    await userEvent.click(input);
+  });
+
   const option = await screen.findByRole("option", { name: "default" });
   await act(async () => {
     await userEvent.click(option);
   });
+
   expect(
     screen.queryAllByRole("article", {
       name: "Environment card",
@@ -79,7 +88,11 @@ test("Given environments overview When filtering by name and project Then only t
   const projectInput = await screen.findByPlaceholderText(
     words("home.filters.project.placeholder")
   );
-  await userEvent.click(projectInput);
+
+  await act(async () => {
+    await userEvent.click(projectInput);
+  });
+
   const option = await screen.findByRole("option", { name: "default" });
   await act(async () => {
     await userEvent.click(option);
@@ -87,10 +100,14 @@ test("Given environments overview When filtering by name and project Then only t
   const nameInput = await screen.findByPlaceholderText(
     words("home.filters.env.placeholder")
   );
-  await userEvent.click(nameInput);
+
+  await act(async () => {
+    await userEvent.click(nameInput);
+  });
   await act(async () => {
     await userEvent.type(nameInput, "test");
   });
+
   expect(
     await screen.findByRole("article", {
       name: "Environment card",

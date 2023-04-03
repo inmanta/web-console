@@ -25,7 +25,9 @@ test("GIVEN The Service Inventory WHEN the user filters on state ('creating') TH
   expect(initialRows.length).toEqual(2);
 
   const input = await screen.findByPlaceholderText("Select a state...");
-  await userEvent.click(input);
+  await act(async () => {
+    await userEvent.click(input);
+  });
 
   const option = await screen.findByRole("option", { name: "creating" });
   await act(async () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DependencyProvider } from "@/UI/Dependency";
 import { PrimaryRouteManager } from "@/UI/Routing";
@@ -68,13 +68,18 @@ test("GIVEN Breadcrumbs on Inventory WHEN user clicks catalog breadcrumb link TH
   expect(crumbsBefore.length).toEqual(3);
 
   const link = screen.getByRole("link", { name: "Service Catalog" });
-  await userEvent.click(link);
+  await act(async () => {
+    await userEvent.click(link);
+  });
 
   const crumbsAfter = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",
   });
+
   expect(crumbsAfter.length).toEqual(2);
+
   const crumb = crumbsAfter[1];
+
   expect(within(crumb).queryByRole("link")).not.toBeInTheDocument();
   expect(within(crumb).getByText("Service Catalog")).toBeInTheDocument();
 });
@@ -88,11 +93,15 @@ test("GIVEN Breadcrumbs on Add Instance WHEN user clicks inventory breadcrumb li
   expect(crumbsBefore.length).toEqual(4);
 
   const link = screen.getByRole("link", { name: "Service Inventory: service" });
-  await userEvent.click(link);
+
+  await act(async () => {
+    await userEvent.click(link);
+  });
 
   const crumbsAfter = screen.getAllByRole("listitem", {
     name: "BreadcrumbItem",
   });
+
   expect(crumbsAfter.length).toEqual(3);
   expect(
     within(crumbsAfter[1]).getByText("Service Catalog")

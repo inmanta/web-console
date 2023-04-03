@@ -80,7 +80,11 @@ test("Given the CreateInstance View When creating an instance with attributes Th
   const networkField = screen.getByText("network");
   expect(networkField).toBeValid();
 
-  await userEvent.click(screen.getByRole("button", { name: words("confirm") }));
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("confirm") })
+    );
+  });
 
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "POST",
