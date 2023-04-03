@@ -18,9 +18,10 @@ export function TriggerInstanceUpdateCommandManager(apiHelper: ApiHelper) {
     service_entity,
     id,
     version,
+    // eslint-disable-next-line
     apiVersion = "v1",
   }: Command.SubCommand<"TriggerInstanceUpdate">): string {
-    return `/lsm/${apiVersion}/service_inventory/${service_entity}/${id}?current_version=${version}`;
+    return `/lsm/v1/service_inventory/${service_entity}/${id}?current_version=${version}`;
   }
   return CommandManagerWithEnv<"TriggerInstanceUpdate">(
     "TriggerInstanceUpdate",

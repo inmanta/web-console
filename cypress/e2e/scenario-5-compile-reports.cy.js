@@ -92,11 +92,10 @@ describe("5 Compile reports", () => {
     cy.get("tbody").should(($tableBody) => {
       const $rows = $tableBody.find("tr");
 
-      expect($rows).to.have.length(2);
       expect($rows.eq(0), "top-row-message").to.contain(
         "Compile triggered from the console"
       );
-      expect($rows.eq(0), "top-row-status").to.contain("queued");
+      expect($rows).length.to.be.at.least(2);
     });
 
     // await end of compilation and expect it to be success

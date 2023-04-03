@@ -171,7 +171,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // check state is up now
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 120000 })
+      .find('[data-label="State"]', { timeout: 60000 })
       .should("contain", "up");
 
     // click on edit button
@@ -222,11 +222,16 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
+    //check for instance state to change to up
+    cy.get('[data-label="State"]')
+      .find(".pf-c-label.pf-m-green", { timeout: 60000 })
+      .should("contain", "up");
+
     // expand first row
     cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
     // delete but cancel deletion in modal
-    cy.get(".pf-c-description-list", { timeout: 120000 })
+    cy.get(".pf-c-description-list", { timeout: 60000 })
       .find("button")
       .contains("Delete")
       .click();
