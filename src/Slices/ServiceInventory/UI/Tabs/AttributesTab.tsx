@@ -1,5 +1,5 @@
 import React from "react";
-import { Attributes, ServiceModel } from "@/Core";
+import { Attributes, ParsedNumber, ServiceModel } from "@/Core";
 import { useNavigateTo } from "@/UI";
 import { TreeTable, TreeTableCellContext } from "@/UI/Components";
 import {
@@ -15,9 +15,15 @@ interface Props {
   attributes: Attributes;
   service?: ServiceModel;
   id?: string;
+  version: ParsedNumber;
 }
 
-export const AttributesTab: React.FC<Props> = ({ attributes, id, service }) => {
+export const AttributesTab: React.FC<Props> = ({
+  attributes,
+  id,
+  service,
+  version,
+}) => {
   const navigate = useNavigateTo();
   return (
     <TreeTableCellContext.Provider
@@ -40,6 +46,9 @@ export const AttributesTab: React.FC<Props> = ({ attributes, id, service }) => {
           )
         }
         id={id}
+        serviceName={service?.name}
+        version={version}
+        isExpertAvailable
       />
     </TreeTableCellContext.Provider>
   );

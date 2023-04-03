@@ -10,7 +10,7 @@
     "prebuild": "yarn clean",
     "build": "webpack --config webpack.prod.cjs",
     "start": "webpack serve --hot --color --progress --config webpack.dev.cjs",
-    "test": "jest --coverage=true --maxWorkers=50%",
+    "test": "jest --coverage=true --maxWorkers=50% --detectOpenHandles",
     "test:ci": "jest --coverage=true --runInBand",
     "format": "prettier --check --write \"./**/*.{cjs,js,jsx,ts,tsx}\"",
     "format:check": "prettier --check \"./**/*.{cjs,js,jsx,ts,tsx}\"",
@@ -125,7 +125,7 @@
   },
   "dependencies": {
     "@patternfly/react-charts": "^6.94.18",
-    "@patternfly/react-core": "^4.267.6",
+    "@patternfly/react-core": "^4.276.6",
     "@patternfly/react-icons": "^4.93.6",
     "@patternfly/react-styles": "^4.92.6",
     "@patternfly/react-table": "^4.112.6",

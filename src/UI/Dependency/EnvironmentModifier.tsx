@@ -71,10 +71,14 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   function useIsProtectedEnvironment(): boolean {
     return useSetting("protected_environment");
   }
+  function useIsExpertModeEnabled(): boolean {
+    return useSetting("enable_lsm_expert_mode");
+  }
   return {
     useIsHalted,
     setEnvironment,
     useIsServerCompileEnabled,
     useIsProtectedEnvironment,
+    useIsExpertModeEnabled,
   };
 }

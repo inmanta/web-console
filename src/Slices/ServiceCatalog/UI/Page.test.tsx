@@ -151,7 +151,9 @@ test("GIVEN ServiceCatalog WHEN new environment selected THEN new query is trigg
     await apiHelper.resolve(Either.right({ data: [Service.a] }));
   });
 
-  await userEvent.click(screen.getByText("change environment"));
+  await act(async () => {
+    await userEvent.click(screen.getByText("change environment"));
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.resolvedRequests).toHaveLength(1);
@@ -170,11 +172,17 @@ test("GIVEN ServiceCatalog WHEN service is deleted THEN command is triggered", a
     await apiHelper.resolve(Either.right({ data: [Service.a] }));
   });
 
-  await userEvent.click(screen.getByLabelText("Actions"));
-  await userEvent.click(
-    screen.getByLabelText(Service.a.name + "-deleteButton")
-  );
-  await userEvent.click(screen.getByText(words("yes")));
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Actions"));
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByLabelText(Service.a.name + "-deleteButton")
+    );
+  });
+  await act(async () => {
+    await userEvent.click(screen.getByText(words("yes")));
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.resolvedRequests).toHaveLength(1);

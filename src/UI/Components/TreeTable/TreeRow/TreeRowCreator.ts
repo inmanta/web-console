@@ -28,6 +28,7 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
           level: this.pathHelper.getLevel(path),
           primaryCell: { label: "name", value: this.pathHelper.getSelf(path) },
           valueCells: this.extractValues(node),
+          type: node.type,
         };
       } else {
         return {
@@ -35,6 +36,7 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
           id: path,
           primaryCell: { label: "name", value: path },
           valueCells: this.extractValues(node),
+          type: node.type,
         };
       }
     } else {
@@ -81,7 +83,7 @@ export function extractCatalogValues(
     {
       label: "type",
       value: format(node.value.type),
-      hasOnClick: node.hasOnClick,
+      hasRelation: node.hasRelation,
     },
     {
       label: "description",
@@ -97,19 +99,19 @@ export function extractInventoryValues(
     {
       label: "candidate",
       value: format(node.value.candidate),
-      hasOnClick: node.hasOnClick,
+      hasRelation: node.hasRelation,
       serviceName: node.entity,
     },
     {
       label: "active",
       value: format(node.value.active),
-      hasOnClick: node.hasOnClick,
+      hasRelation: node.hasRelation,
       serviceName: node.entity,
     },
     {
       label: "rollback",
       value: format(node.value.rollback),
-      hasOnClick: node.hasOnClick,
+      hasRelation: node.hasRelation,
       serviceName: node.entity,
     },
   ];

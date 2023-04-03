@@ -24,6 +24,7 @@ function setup(
     halted: false,
     server_compile: true,
     protected_environment: false,
+    enable_lsm_expert_mode: false,
   }
 ) {
   const apiHelper = new DeferredApiHelper();
@@ -107,7 +108,9 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
     name: "RecompileButton",
   });
 
-  await userEvent.click(button);
+  await act(async () => {
+    await userEvent.click(button);
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -124,6 +127,7 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
   await act(async () => {
     await apiHelper.resolve({});
   });
+
   // Check if update to the compiler status is triggered
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -131,9 +135,11 @@ test("GIVEN CompileButton WHEN clicked THEN triggers recompile", async () => {
     url: "/api/v1/notify/env",
   });
   expect(button).toBeDisabled();
+
   await act(async () => {
     await apiHelper.resolve(204);
   });
+
   expect(button).toBeEnabled();
 });
 
@@ -162,7 +168,9 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
     name: "UpdateAndRecompileButton",
   });
 
-  await userEvent.click(button);
+  await act(async () => {
+    await userEvent.click(button);
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -183,6 +191,7 @@ test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THE
     halted: false,
     server_compile: false,
     protected_environment: false,
+    enable_lsm_expert_mode: false,
   });
   render(component);
 

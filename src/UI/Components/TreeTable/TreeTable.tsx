@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Dropdown, DropdownItem, KebabToggle } from "@patternfly/react-core";
 import { Tbody, TableComposable, Thead, Tr, Th } from "@patternfly/react-table";
 import styled from "styled-components";
+import { ParsedNumber } from "@/Core";
 import { words } from "@/UI/words";
 import { ColumnHeaders } from "./ColumnHeaders";
 import { TreeTableHelper } from "./Helpers/TreeTableHelper";
@@ -10,9 +11,18 @@ import { TreeRowView, Indent } from "./TreeRow";
 interface Props {
   treeTableHelper: TreeTableHelper;
   id?: string;
+  serviceName?: string;
+  version?: ParsedNumber;
+  isExpertAvailable?: boolean;
 }
 
-export const TreeTable: React.FC<Props> = ({ treeTableHelper, id }) => {
+export const TreeTable: React.FC<Props> = ({
+  treeTableHelper,
+  id,
+  serviceName,
+  version,
+  isExpertAvailable = false,
+}) => {
   const [expansionState, setExpansionState] = useState(
     treeTableHelper.getExpansionState()
   );
@@ -70,7 +80,14 @@ export const TreeTable: React.FC<Props> = ({ treeTableHelper, id }) => {
       </Thead>
       <Tbody>
         {rows.map((row) => (
-          <TreeRowView key={row.id} row={row} />
+          <TreeRowView
+            key={row.id}
+            row={row}
+            id={id as string}
+            version={version as number}
+            serviceEntity={serviceName as string}
+            showExpertMode={isExpertAvailable}
+          />
         ))}
       </Tbody>
     </StyledTableComposable>

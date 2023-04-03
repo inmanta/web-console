@@ -45,7 +45,7 @@ export class CatalogAttributeHelper
               type: cur.entity_type,
               description: cur.description ? cur.description : "",
             },
-            hasOnClick: true,
+            hasRelation: true,
           };
           return acc;
         },

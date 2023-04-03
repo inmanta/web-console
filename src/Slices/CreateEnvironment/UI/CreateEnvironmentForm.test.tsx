@@ -53,11 +53,13 @@ test("Given CreateEnvironmentForm When project and environment are not set Then 
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(
-    Either.right({
-      data: Project.filterable,
-    })
-  );
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Project.filterable,
+      })
+    );
+  });
 
   expect(await screen.findByRole("button", { name: "submit" })).toBeDisabled();
 });
@@ -65,26 +67,38 @@ test("Given CreateEnvironmentForm When project and environment are not set Then 
 test(`Given CreateEnvironmentForm When an existing project and valid environment are set and submit is clicked Then sends the correct request`, async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(
-    Either.right({
-      data: Project.filterable,
-    })
-  );
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Project.filterable,
+      })
+    );
+  });
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-select-toggle" })
-  );
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name })
-  );
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Project Name-select-toggle" })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("option", { name: Project.filterable[0].name })
+    );
+  });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
-  await userEvent.clear(textBox);
+  await act(async () => {
+    await userEvent.clear(textBox);
+  });
   await act(async () => {
     await userEvent.type(textBox, `dev{enter}`);
   });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "submit" })
+    );
+  });
 
-  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "PUT",
@@ -99,21 +113,30 @@ test(`Given CreateEnvironmentForm When an existing project and valid environment
 test(`Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set and submit is clicked Then sends the correct request`, async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(
-    Either.right({
-      data: Project.filterable,
-    })
-  );
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-select-toggle" })
-  );
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name })
-  );
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Project.filterable,
+      })
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Project Name-select-toggle" })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("option", { name: Project.filterable[0].name })
+    );
+  });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
-  await userEvent.clear(textBox);
+  await act(async () => {
+    await userEvent.clear(textBox);
+  });
   await act(async () => {
     await userEvent.type(textBox, `dev{enter}`);
   });
@@ -123,21 +146,32 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const branchTextBox = await screen.findByRole("textbox", {
     name: "Branch-input",
   });
-  await userEvent.clear(branchTextBox);
+  await act(async () => {
+    await userEvent.clear(branchTextBox);
+  });
   await act(async () => {
     await userEvent.type(branchTextBox, branch);
   });
   const urlTextBox = await screen.findByRole("textbox", {
     name: "Repository-input",
   });
-  await userEvent.clear(urlTextBox);
+  await act(async () => {
+    await userEvent.clear(urlTextBox);
+  });
   await act(async () => {
     await userEvent.type(urlTextBox, repository);
   });
 
-  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "submit" })
+    );
+  });
+
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "PUT",
     body: {
@@ -154,24 +188,30 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(
-    Either.right({
-      data: Project.filterable,
-    })
-  );
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Project.filterable,
+      })
+    );
+  });
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-select-toggle" })
-  );
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Project Name-select-toggle" })
+    );
+  });
   await act(async () => {
     await userEvent.type(
       await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
       "new-project"
     );
   });
-  await userEvent.click(
-    screen.getByRole("option", { name: 'Create "new-project"' })
-  );
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", { name: 'Create "new-project"' })
+    );
+  });
   const request = apiHelper.pendingRequests[0];
   expect(request).toEqual({
     method: "PUT",
@@ -188,10 +228,15 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     ...Project.filterable,
     { name: "new-project", id: "proj-id-new", environments: [] },
   ];
-  apiHelper.resolve(Either.right({ data: updatedProjects }));
+
+  await act(async () => {
+    apiHelper.resolve(Either.right({ data: updatedProjects }));
+  });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
-  await userEvent.clear(textBox);
+  await act(async () => {
+    await userEvent.clear(textBox);
+  });
   await act(async () => {
     await userEvent.type(textBox, `dev{enter}`);
   });
@@ -202,7 +247,9 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
   });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   const environmentRequest = apiHelper.pendingRequests[0];
+
   expect(environmentRequest).toEqual({
     method: "PUT",
     body: {
@@ -211,9 +258,11 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
     },
     url: `/api/v2/environment`,
   });
+
   await act(async () => {
     apiHelper.resolve(Either.right({ data: Environment.a }));
   });
+
   expect(apiHelper.pendingRequests[0]).toEqual({
     method: "GET",
     url: `/api/v2/project?environment_details=false`,
@@ -223,24 +272,33 @@ test(`Given CreateEnvironmentForm When a new project and valid environment are s
 test("Given CreateEnvironmentForm When creating a new project is not successful Then shows error message", async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(
-    Either.right({
-      data: Project.filterable,
-    })
-  );
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-select-toggle" })
-  );
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Project.filterable,
+      })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Project Name-select-toggle" })
+    );
+  });
   await act(async () => {
     await userEvent.type(
       await screen.findByRole("textbox", { name: "Project Name-typeahead" }),
       "new-project"
     );
   });
-  await userEvent.click(
-    screen.getByRole("option", { name: 'Create "new-project"' })
-  );
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", { name: 'Create "new-project"' })
+    );
+  });
+
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "PUT",
     body: {
@@ -248,6 +306,7 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
     },
     url: `/api/v2/project`,
   });
+
   await act(async () => {
     await apiHelper.resolve(
       Either.left("Unexpected error while trying to create new project")
@@ -257,9 +316,13 @@ test("Given CreateEnvironmentForm When creating a new project is not successful 
   expect(
     await screen.findByRole("generic", { name: "Project Name-error-message" })
   ).toBeVisible();
-  await userEvent.click(
-    screen.getByRole("button", { name: "Project Name-close-error" })
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "Project Name-close-error" })
+    );
+  });
+
   expect(
     screen.queryByRole("generic", { name: "Project Name-error-message" })
   ).not.toBeInTheDocument();
@@ -269,28 +332,46 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
       Then shows the error message`, async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(
-    Either.right({
-      data: Project.filterable,
-    })
-  );
+
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Project.filterable,
+      })
+    );
+  });
+
   // Input data
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-select-toggle" })
-  );
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name })
-  );
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Project Name-select-toggle" })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("option", { name: Project.filterable[0].name })
+    );
+  });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
-  await userEvent.clear(textBox);
+  await act(async () => {
+    await userEvent.clear(textBox);
+  });
+
   await act(async () => {
     await userEvent.type(textBox, `test-env1{enter}`);
   });
   // Submit request
-  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "submit" })
+    );
+  });
+
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "PUT",
     body: {
@@ -299,17 +380,23 @@ test(`Given CreateEnvironmentForm When an existing project and invalid environme
     },
     url: `/api/v2/environment`,
   });
+
   await act(async () => {
     await apiHelper.resolve(Either.left("Environment already exists"));
   });
+
   expect(apiHelper.pendingRequests).toHaveLength(0);
   // Alert is visible and can be closed
   expect(
     await screen.findByRole("generic", { name: "submit-error-message" })
   ).toBeVisible();
-  await userEvent.click(
-    screen.getByRole("button", { name: "submit-close-error" })
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "submit-close-error" })
+    );
+  });
+
   expect(
     screen.queryByRole("generic", { name: "submit-error-message" })
   ).not.toBeInTheDocument();
@@ -319,21 +406,29 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(
-    Either.right({
-      data: Project.filterable,
-    })
-  );
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Project.filterable,
+      })
+    );
+  });
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-select-toggle" })
-  );
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name })
-  );
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Project Name-select-toggle" })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("option", { name: Project.filterable[0].name })
+    );
+  });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
-  await userEvent.clear(textBox);
+  await act(async () => {
+    await userEvent.clear(textBox);
+  });
   await act(async () => {
     await userEvent.type(textBox, `dev{enter}`);
   });
@@ -342,14 +437,23 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const descriptionInput = screen.getByRole("textbox", {
     name: "Description-input",
   });
-  await userEvent.clear(descriptionInput);
+  await act(async () => {
+    await userEvent.clear(descriptionInput);
+  });
   await act(async () => {
     await userEvent.type(descriptionInput, description);
   });
 
-  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "submit" })
+    );
+  });
+
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     method: "PUT",
     body: {
@@ -364,21 +468,29 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
 test(`Given CreateEnvironmentForm When an existing project, a valid environment and repository settings are set then removed and submit is clicked Then sends the correct request`, async () => {
   const { component, apiHelper } = setup();
   render(component);
-  apiHelper.resolve(
-    Either.right({
-      data: Project.filterable,
-    })
-  );
 
-  await userEvent.click(
-    await screen.findByRole("button", { name: "Project Name-select-toggle" })
-  );
-  await userEvent.click(
-    await screen.findByRole("option", { name: Project.filterable[0].name })
-  );
+  await act(async () => {
+    apiHelper.resolve(
+      Either.right({
+        data: Project.filterable,
+      })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Project Name-select-toggle" })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("option", { name: Project.filterable[0].name })
+    );
+  });
 
   const textBox = await screen.findByRole("textbox", { name: "Name-input" });
-  await userEvent.clear(textBox);
+  await act(async () => {
+    await userEvent.clear(textBox);
+  });
   await act(async () => {
     await userEvent.type(textBox, `dev{enter}`);
   });
@@ -387,7 +499,9 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const branchTextBox = await screen.findByRole("textbox", {
     name: "Branch-input",
   });
-  await userEvent.clear(branchTextBox);
+  await act(async () => {
+    await userEvent.clear(branchTextBox);
+  });
   await act(async () => {
     await userEvent.type(branchTextBox, branch);
   });
@@ -396,17 +510,29 @@ test(`Given CreateEnvironmentForm When an existing project, a valid environment 
   const urlTextBox = await screen.findByRole("textbox", {
     name: "Repository-input",
   });
-  await userEvent.clear(urlTextBox);
+  await act(async () => {
+    await userEvent.clear(urlTextBox);
+  });
   await act(async () => {
     await userEvent.type(urlTextBox, repository);
   });
 
-  await userEvent.clear(branchTextBox);
-  await userEvent.clear(urlTextBox);
+  await act(async () => {
+    await userEvent.clear(branchTextBox);
+  });
+  await act(async () => {
+    await userEvent.clear(urlTextBox);
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("button", { name: "submit" })
+    );
+  });
 
-  await userEvent.click(await screen.findByRole("button", { name: "submit" }));
   expect(apiHelper.pendingRequests).toHaveLength(1);
+
   const request = apiHelper.pendingRequests[0];
+
   expect(request).toEqual({
     //branch and repository should not be present in the body
     method: "PUT",

@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Add support to force instance state, destroy instance or change intance attributes through lsm expert mode'
+issue-nr: 4682
+destination-branches:
+- master
+- iso6
+sections: 
+  feature: "{{description}}"

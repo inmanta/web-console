@@ -36,6 +36,12 @@ export const c: ServiceModel = {
   name: "service_name_c",
 };
 
+export const d: ServiceModel = {
+  ...a,
+  name: "service_name_d",
+  strict_modifier_enforcement: true,
+};
+
 export const withIdentity: ServiceModel = {
   ...a,
   name: "service_name_d",

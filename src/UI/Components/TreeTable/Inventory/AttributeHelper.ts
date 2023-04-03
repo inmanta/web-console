@@ -1,5 +1,6 @@
 import {
   Attributes,
+  EmbeddedEntity,
   EntityLike,
   InterServiceRelation,
   isNotUndefined,
@@ -96,6 +97,29 @@ export class InventoryAttributeHelper
     );
     return matchingRelation;
   }
+  private findAttributeType(
+    service: ServiceModel | EmbeddedEntity | undefined,
+    prefix: string[],
+    key: string
+  ): string | undefined {
+    if (service === undefined) {
+      return undefined;
+    }
+    const matchingEmbeddedEntity = service.embedded_entities.find(
+      (entity) => entity.name === prefix[0]
+    );
+    if (matchingEmbeddedEntity) {
+      return this.findAttributeType(
+        matchingEmbeddedEntity,
+        prefix.slice(1),
+        key
+      );
+    }
+    const adequateAttribute = service.attributes.find(
+      (attribute) => attribute.name === key
+    );
+    return adequateAttribute?.type;
+  }
 
   private getSingleAttributeNodes(
     prefix: string,
@@ -105,13 +129,22 @@ export class InventoryAttributeHelper
     let keys: AttributeNodeDict = {};
     const primaryKeys = Object.keys(subject).sort();
     primaryKeys.forEach((key) => {
+      const type = this.findAttributeType(
+        this.service,
+        prefix
+          .split(this.separator)
+          .filter((part) => isNaN(part as unknown as number)),
+        key
+      );
+
       if (!this.isNested(subject[key])) {
         const relation = this.findKeyInService(prefix, key);
         keys[`${prefix}${key}`] = {
           kind: "Leaf",
           value: subject[key],
-          hasOnClick: !!relation,
+          hasRelation: !!relation,
           entity: relation?.entity_type,
+          type,
         };
       } else {
         keys[`${prefix}${key}`] = { kind: "Branch" };
@@ -188,15 +221,19 @@ export class InventoryAttributeHelper
             active: getValue(activeNodes[cur]),
             rollback: getValue(rollbackNodes[cur]),
           },
-          hasOnClick:
-            getHasOnClick(candidateNodes[cur]) ||
-            getHasOnClick(activeNodes[cur]) ||
-            getHasOnClick(rollbackNodes[cur]),
+          hasRelation:
+            getHasRelation(candidateNodes[cur]) ||
+            getHasRelation(activeNodes[cur]) ||
+            getHasRelation(rollbackNodes[cur]),
           entity: chooseEntity([
             getEntity(candidateNodes[cur]),
             getEntity(activeNodes[cur]),
             getEntity(rollbackNodes[cur]),
           ]),
+          type:
+            getType(candidateNodes[cur]) ||
+            getType(activeNodes[cur]) ||
+            getType(rollbackNodes[cur]),
         };
         return acc;
       },
@@ -204,13 +241,18 @@ export class InventoryAttributeHelper
     );
   }
 }
-
 export function isMultiLeaf(
   candidateNode: TreeNode | undefined,
   activeNode: TreeNode | undefined,
   rollbackNode: TreeNode | undefined
 ): boolean {
   return isLeaf(candidateNode) && isLeaf(activeNode) && isLeaf(rollbackNode);
+}
+
+export function getType(node: TreeNode | undefined): string | undefined {
+  if (typeof node === "undefined") return undefined;
+  if (node.kind !== "Leaf") return undefined;
+  return node.type;
 }
 
 export function getValue(node: TreeNode | undefined): unknown {
@@ -224,10 +266,10 @@ export function isLeaf(node: TreeNode | undefined): boolean {
   return node.kind === "Leaf";
 }
 
-function getHasOnClick(node: TreeNode | undefined): boolean | undefined {
+function getHasRelation(node: TreeNode | undefined): boolean | undefined {
   if (typeof node === "undefined") return undefined;
   if (node.kind !== "Leaf") return undefined;
-  return node.hasOnClick;
+  return node.hasRelation;
 }
 
 function getEntity(node: TreeNode | undefined): string | undefined {

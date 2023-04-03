@@ -90,10 +90,18 @@ test("EnvironmentControls halt the environment when clicked and the environment 
     await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
   });
   const stopButton = await screen.findByText("STOP");
+
   expect(stopButton).toBeVisible();
-  await userEvent.click(stopButton);
-  await userEvent.click(await screen.findByText("Yes"));
+
+  await act(async () => {
+    await userEvent.click(stopButton);
+  });
+  await act(async () => {
+    await userEvent.click(await screen.findByText("Yes"));
+  });
+
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
+
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/halt`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id
@@ -103,30 +111,50 @@ test("EnvironmentControls halt the environment when clicked and the environment 
 test("EnvironmentControls don\\t trigger backend call when dialog is not confirmed", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: EnvironmentDetails.a }));
   });
+
   const stopButton = await screen.findByText("STOP");
+
   expect(stopButton).toBeVisible();
-  await userEvent.click(stopButton);
-  await userEvent.click(await screen.findByText("No"));
+
+  await act(async () => {
+    await userEvent.click(stopButton);
+  });
+  await act(async () => {
+    await userEvent.click(await screen.findByText("No"));
+  });
+
   expect(fetchMock.mock.calls).toHaveLength(0);
 });
 
 test("EnvironmentControls resume the environment when clicked and the environment is halted", async () => {
   const { component, apiHelper } = setup();
   render(component);
+
   await act(async () => {
     await apiHelper.resolve(
       Either.right({ data: { ...EnvironmentDetails.a, halted: true } })
     );
   });
+
   expect(await screen.findByText("Operations halted")).toBeVisible();
+
   const start = await screen.findByText("Resume");
+
   expect(start).toBeVisible();
-  await userEvent.click(start);
-  await userEvent.click(await screen.findByText("Yes"));
+
+  await act(async () => {
+    await userEvent.click(start);
+  });
+  await act(async () => {
+    await userEvent.click(await screen.findByText("Yes"));
+  });
+
   const [receivedUrl, requestInit] = fetchMock.mock.calls[0];
+
   expect(receivedUrl).toEqual(`/api/v2/actions/environment/resume`);
   expect(requestInit?.headers?.["X-Inmanta-Tid"]).toEqual(
     EnvironmentDetails.a.id
