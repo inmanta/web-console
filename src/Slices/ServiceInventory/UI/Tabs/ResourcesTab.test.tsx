@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
 import {
@@ -47,7 +47,9 @@ test("ResourcesView shows empty table", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right({ data: [] }));
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [] }));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Empty" })
@@ -62,7 +64,9 @@ test("ResourcesView shows failed table", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.left("error"));
+  await act(async () => {
+    await apiHelper.resolve(Either.left("error"));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Failed" })
@@ -77,11 +81,13 @@ test("ResourcesView shows success table", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
-    Either.right({
-      data: [{ resource_id: "abc123,v=3", resource_state: "deployed" }],
-    })
-  );
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: [{ resource_id: "abc123,v=3", resource_state: "deployed" }],
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Success" })
@@ -96,7 +102,9 @@ test("ResourcesView shows updated table", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right({ data: [] }));
+  await act(async () => {
+    await apiHelper.resolve(Either.right({ data: [] }));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Empty" })
@@ -104,11 +112,13 @@ test("ResourcesView shows updated table", async () => {
 
   scheduler.executeAll();
 
-  apiHelper.resolve(
-    Either.right({
-      data: [{ resource_id: "abc123,v=4", resource_state: "deployed" }],
-    })
-  );
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: [{ resource_id: "abc123,v=4", resource_state: "deployed" }],
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("grid", { name: "ResourceTable-Success" })

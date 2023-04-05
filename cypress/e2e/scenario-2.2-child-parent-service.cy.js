@@ -39,17 +39,6 @@ const checkStatusCompile = (id) => {
 };
 
 /**
- * when ID of the environment is not yet known, use this method to wait for the compile to be terminated.
- */
-const waitForCompile = () => {
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-    checkStatusCompile(id);
-  });
-};
-
-/**
  * Will by default execute the force update on the 'lsm-frontend' environment if no argumenst are being passed.
  * This method can be executed standalone, but is part of the cleanup cycle that is needed before running a scenario.
  *
@@ -159,11 +148,8 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
       .find('[data-label="State"]')
       .should("contain", "delete_validating_up");
 
-    // check status change after compile, should be up again because the deletion couldn't be completed
-    waitForCompile();
-
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 20000 })
+      .find('[data-label="State"]', { timeout: 60000 })
       .should("not.contain", "delete_validating_up");
 
     // click on service catalog in breadcrumb
@@ -181,7 +167,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("Yes").click();
 
-    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 20000 }).should(
+    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 60000 }).should(
       "to.be.visible"
     );
   });

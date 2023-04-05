@@ -32,18 +32,27 @@ export const TimestampPicker: React.FC<Props> = ({
     }
   }, [timestamp]);
 
-  const onDateChange = (inputDate, newDate) => {
+  const onDateChange = (
+    _event: React.FormEvent,
+    inputString: string,
+    inputDate: Date | undefined
+  ) => {
     if (
       timestamp &&
+      inputDate &&
       isValidDate(timestamp) &&
-      isValidDate(newDate) &&
-      validateDateFormat(inputDate, newDate)
+      isValidDate(inputDate) &&
+      validateDateFormat(inputString, inputDate)
     ) {
-      newDate.setHours(timestamp.getHours());
-      newDate.setMinutes(timestamp.getMinutes());
+      inputDate.setHours(timestamp.getHours());
+      inputDate.setMinutes(timestamp.getMinutes());
     }
-    if (isValidDate(newDate) && validateDateFormat(inputDate, newDate)) {
-      onChange(new Date(newDate));
+    if (
+      inputDate &&
+      isValidDate(inputDate) &&
+      validateDateFormat(inputString, inputDate)
+    ) {
+      onChange(new Date(inputDate));
     }
   };
 
@@ -101,10 +110,19 @@ const isValidSlashedFormat = (dateString: string): boolean =>
 const isValidDashedFormat = (dateString: string): boolean =>
   moment(dateString, "YYYY-MM-DD", true).isValid();
 
-const validateDateFormat = (dateString: string, date: Date): boolean => {
+const validateDateFormat = (
+  dateString: string,
+  date: Date | string
+): boolean => {
+  let formattedDate;
+  if (typeof date === "string") {
+    formattedDate = new Date(date);
+  } else {
+    formattedDate = date;
+  }
   return (
-    dateString === yyyyMMddFormat(date) ||
-    dateString === formatDateWithSlashes(date)
+    dateString === yyyyMMddFormat(formattedDate) ||
+    dateString === formatDateWithSlashes(formattedDate)
   );
 };
 

@@ -163,25 +163,33 @@ test("When using the status filter then only the matching desired states should 
 
   expect(initialRows).toHaveLength(9);
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
-  await userEvent.click(
-    screen.getByRole("option", { name: words("desiredState.columns.status") })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", { name: words("desiredState.columns.status") })
+    );
+  });
 
   const input = screen.getByPlaceholderText(
     words("agents.filters.status.placeholder")
   );
-  await userEvent.click(input);
+  await act(async () => {
+    await userEvent.click(input);
+  });
 
   const option = await screen.findByRole("option", {
     name: words("desiredState.test.skippedCandidate"),
   });
-  await await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=skipped_candidate`
@@ -221,25 +229,39 @@ test("When using the Date filter then the desired state versions within the rang
 
   expect(initialRows).toHaveLength(9);
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
-  await userEvent.click(
-    screen.getByRole("option", { name: words("desiredState.columns.date") })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", { name: words("desiredState.columns.date") })
+    );
+  });
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
-  await userEvent.click(fromDatePicker);
-  await userEvent.type(fromDatePicker, `2021-12-06`);
+  await act(async () => {
+    await userEvent.click(fromDatePicker);
+  });
+  await act(async () => {
+    await userEvent.type(fromDatePicker, `2021-12-06`);
+  });
+
   const toDatePicker = screen.getByLabelText("To Date Picker");
-  await userEvent.click(toDatePicker);
-  await userEvent.type(toDatePicker, `2021-12-07`);
+  await act(async () => {
+    await userEvent.click(toDatePicker);
+  });
+  await act(async () => {
+    await userEvent.type(toDatePicker, "2021-12-07");
+  });
 
-  await userEvent.click(screen.getByLabelText("Apply date filter"));
-
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Apply date filter"));
+  });
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-05%2B23%3A00%3A00&filter.date=le%3A2021-12-06%2B23%3A00%3A00`
   );
@@ -261,7 +283,7 @@ test("When using the Date filter then the desired state versions within the rang
 
   // The chips are hidden in small windows, so resize it
   window = Object.assign(window, { innerWidth: 1200 });
-  act(() => {
+  await act(async () => {
     window.dispatchEvent(new Event("resize"));
   });
 
@@ -291,26 +313,41 @@ test("When using the Version filter then the desired state versions within the r
 
   expect(initialRows).toHaveLength(9);
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
-  await userEvent.click(
-    screen.getByRole("option", { name: words("desiredState.columns.version") })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", {
+        name: words("desiredState.columns.version"),
+      })
+    );
+  });
 
   const fromDatePicker = await screen.findByLabelText("Version range from");
-  await userEvent.click(fromDatePicker);
-  await userEvent.type(fromDatePicker, `3`);
+  await act(async () => {
+    await userEvent.click(fromDatePicker);
+  });
+  await act(async () => {
+    await userEvent.type(fromDatePicker, `3`);
+  });
 
   const toDatePicker = await screen.findByLabelText("Version range to");
-  await userEvent.click(toDatePicker);
-  await userEvent.type(toDatePicker, `5`);
+  await act(async () => {
+    await userEvent.click(toDatePicker);
+  });
+  await act(async () => {
+    await userEvent.type(toDatePicker, `5`);
+  });
 
-  await userEvent.click(await screen.findByLabelText("Apply Version filter"));
-
+  await act(async () => {
+    await userEvent.click(await screen.findByLabelText("Apply Version filter"));
+  });
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.version=ge%3A3&filter.version=le%3A5`
   );
@@ -332,7 +369,10 @@ test("When using the Version filter then the desired state versions within the r
 
   // The chips are hidden in small windows, so resize it
   window = Object.assign(window, { innerWidth: 1200 });
-  window.dispatchEvent(new Event("resize"));
+  await act(async () => {
+    await window.dispatchEvent(new Event("resize"));
+  });
+
   expect(await screen.findByText("from | 3", { exact: false })).toBeVisible();
   expect(await screen.findByText("to | 5", { exact: false })).toBeVisible();
 });
@@ -352,11 +392,13 @@ test("Given the Desired states view When promoting a version, then the correct r
     name: "DesiredStates Table Row",
   });
 
-  await userEvent.click(
-    within(rows[8]).getByRole("button", {
-      name: "Actions",
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(rows[8]).getByRole("button", {
+        name: "Actions",
+      })
+    );
+  });
 
   expect(
     within(screen.getByRole("menu", { name: "Actions" })).getByText(
@@ -364,17 +406,21 @@ test("Given the Desired states view When promoting a version, then the correct r
     )
   ).toHaveAttribute("aria-disabled", "true");
 
-  await userEvent.click(
-    within(rows[0]).getByRole("button", {
-      name: "Actions",
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "Actions",
+      })
+    );
+  });
 
-  await userEvent.click(
-    within(screen.getByRole("menu", { name: "Actions" })).getByText(
-      words("desiredState.actions.promote")
-    )
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("menu", { name: "Actions" })).getByText(
+        words("desiredState.actions.promote")
+      )
+    );
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -414,25 +460,33 @@ test("Given the Desired states view with filters When promoting a version, then 
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
   });
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
-  await userEvent.click(
-    screen.getByRole("option", { name: words("desiredState.columns.status") })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", { name: words("desiredState.columns.status") })
+    );
+  });
 
   const input = screen.getByPlaceholderText(
     words("desiredState.filters.status.placeholder")
   );
-  await userEvent.click(input);
+  await act(async () => {
+    await userEvent.click(input);
+  });
 
   const option = await screen.findByRole("option", {
     name: words("desiredState.test.candidate"),
   });
-  await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(DesiredStateVersions.response));
@@ -441,18 +495,21 @@ test("Given the Desired states view with filters When promoting a version, then 
     name: "DesiredStates Table Row",
   });
 
-  await userEvent.click(
-    within(rows[0]).getByRole("button", {
-      name: "Actions",
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "Actions",
+      })
+    );
+  });
 
-  await userEvent.click(
-    within(screen.getByRole("menu", { name: "Actions" })).getByText(
-      words("desiredState.actions.promote")
-    )
-  );
-
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("menu", { name: "Actions" })).getByText(
+        words("desiredState.actions.promote")
+      )
+    );
+  });
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
   const request = apiHelper.pendingRequests[0];
@@ -499,17 +556,21 @@ test("Given the Desired states view When promoting a version results in an error
     name: "DesiredStates Table Row",
   });
 
-  await userEvent.click(
-    within(rows[0]).getByRole("button", {
-      name: "Actions",
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(rows[0]).getByRole("button", {
+        name: "Actions",
+      })
+    );
+  });
 
-  await userEvent.click(
-    within(screen.getByRole("menu", { name: "Actions" })).getByText(
-      words("desiredState.actions.promote")
-    )
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("menu", { name: "Actions" })).getByText(
+        words("desiredState.actions.promote")
+      )
+    );
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
 
@@ -553,15 +614,21 @@ describe("DeleteModal ", () => {
       name: "DesiredStates Table Row",
     });
 
-    await userEvent.click(
-      within(rows[0]).getByRole("button", {
-        name: "Actions",
-      })
-    );
+    await act(async () => {
+      await userEvent.click(
+        within(rows[0]).getByRole("button", {
+          name: "Actions",
+        })
+      );
+    });
 
-    await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
-    );
+    await act(async () => {
+      await userEvent.click(
+        within(screen.getByRole("menu", { name: "Actions" })).getByText(
+          "Delete"
+        )
+      );
+    });
 
     expect(
       await screen.findByText(words("inventory.deleteVersion.header")(9))
@@ -585,32 +652,48 @@ describe("DeleteModal ", () => {
     });
 
     //close by "no" button scenario
-    await userEvent.click(
-      within(rows[0]).getByRole("button", {
-        name: "Actions",
-      })
-    );
+    await act(async () => {
+      await userEvent.click(
+        within(rows[0]).getByRole("button", {
+          name: "Actions",
+        })
+      );
+    });
 
-    await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
-    );
+    await act(async () => {
+      await userEvent.click(
+        within(screen.getByRole("menu", { name: "Actions" })).getByText(
+          "Delete"
+        )
+      );
+    });
     const noButton = await screen.findByText("No");
-    await userEvent.click(noButton);
+    await act(async () => {
+      await userEvent.click(noButton);
+    });
 
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
 
     //close by close button scenario
-    await userEvent.click(
-      within(rows[0]).getByRole("button", {
-        name: "Actions",
-      })
-    );
-    await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
-    );
+    await act(async () => {
+      await userEvent.click(
+        within(rows[0]).getByRole("button", {
+          name: "Actions",
+        })
+      );
+    });
+    await act(async () => {
+      await userEvent.click(
+        within(screen.getByRole("menu", { name: "Actions" })).getByText(
+          "Delete"
+        )
+      );
+    });
 
     const closeButton = await screen.findByLabelText("Close");
-    await userEvent.click(closeButton);
+    await act(async () => {
+      await userEvent.click(closeButton);
+    });
 
     expect(screen.queryByText("Yes")).not.toBeInTheDocument();
   });
@@ -631,18 +714,25 @@ describe("DeleteModal ", () => {
 
     expect(rows).toHaveLength(9);
 
-    await userEvent.click(
-      within(rows[0]).getByRole("button", {
-        name: "Actions",
-      })
-    );
+    await act(async () => {
+      await userEvent.click(
+        within(rows[0]).getByRole("button", {
+          name: "Actions",
+        })
+      );
+    });
 
-    await userEvent.click(
-      within(screen.getByRole("menu", { name: "Actions" })).getByText("Delete")
-    );
-
+    await act(async () => {
+      await userEvent.click(
+        within(screen.getByRole("menu", { name: "Actions" })).getByText(
+          "Delete"
+        )
+      );
+    });
     const yesButton = await screen.findByText("Yes");
-    await userEvent.click(yesButton);
+    await act(async () => {
+      await userEvent.click(yesButton);
+    });
 
     expect(apiHelper.pendingRequests[0]).toEqual({
       environment: "env",

@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump css-loader from 6.7.1 to 6.7.3'
+destination-branches:
+- master
+- iso6
+sections: {}

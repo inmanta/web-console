@@ -1,6 +1,7 @@
 import { ApiHelper, AuthHelper, CommandManager, ManagerResolver } from "@/Core";
 import {
   DeleteInstanceCommandManager,
+  DestroyInstanceCommandManager,
   InstanceConfigCommandManager,
   InstanceConfigStateHelper,
   ServiceConfigStateHelper,
@@ -25,6 +26,7 @@ import {
   ControlAgentCommandManager,
   TriggerCompileCommandManager,
   TriggerDryRun,
+  TriggerForceStateCommandManager,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import {
@@ -51,6 +53,7 @@ import {
 import { ClearEnvironmentCommandManager } from "@S/Settings/Data/ClearEnvironmentCommandManager";
 import { DeleteVersionCommandManager } from "../Managers/DeleteVersion";
 import { UpdateCatalogCommandManager } from "../Managers/UpdateCatalog/CommandManager";
+import { UpdateInstanceAttributeCommandManager } from "../Managers/UpdateInstanceAttribute";
 
 export class CommandManagerResolver implements ManagerResolver<CommandManager> {
   private managers: CommandManager[] = [];
@@ -120,9 +123,12 @@ export class CommandManagerResolver implements ManagerResolver<CommandManager> {
       ),
       CreateInstanceCommandManager(this.apiHelper),
       TriggerInstanceUpdateCommandManager(this.apiHelper),
+      DestroyInstanceCommandManager(this.apiHelper),
       DeleteInstanceCommandManager(this.apiHelper),
       DeleteServiceCommandManager(this.apiHelper),
       TriggerSetStateCommandManager(this.authHelper, this.apiHelper),
+      UpdateInstanceAttributeCommandManager(this.authHelper, this.apiHelper),
+      TriggerForceStateCommandManager(this.authHelper, this.apiHelper),
       HaltEnvironmentCommandManager(
         this.apiHelper,
         environmentDetailsStateHelper,

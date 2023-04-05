@@ -1,18 +1,25 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
+import { Either, RemoteData } from "@/Core";
+import {
+  QueryResolverImpl,
+  getStoreInstance,
+  CommandResolverImpl,
+  KeycloakAuthHelper,
+} from "@/Data";
+import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
   DeferredApiHelper,
   dependencies,
+  DynamicCommandManagerResolver,
   DynamicQueryManagerResolver,
   Service,
   ServiceInstance,
   StaticScheduler,
 } from "@/Test";
-import { DependencyProvider } from "@/UI/Dependency";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,
@@ -32,10 +39,42 @@ function setup() {
       ),
     ])
   );
-
+  const updateAttribute = UpdateInstanceAttributeCommandManager(
+    new KeycloakAuthHelper(),
+    apiHelper
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([updateAttribute])
+  );
+  const environmentHandler = EnvironmentHandlerImpl(
+    useLocation,
+    dependencies.routeManager
+  );
+  store.dispatch.environment.setEnvironments(
+    RemoteData.success([
+      {
+        id: "aaa",
+        name: "env-a",
+        project_id: "ppp",
+        repo_branch: "branch",
+        repo_url: "repo",
+        projectName: "project",
+        settings: {
+          enable_lsm_expert_mode: true,
+        },
+      },
+    ])
+  );
   const component = (
-    <MemoryRouter>
-      <DependencyProvider dependencies={{ ...dependencies, queryResolver }}>
+    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+      <DependencyProvider
+        dependencies={{
+          ...dependencies,
+          queryResolver,
+          commandResolver,
+          environmentHandler,
+        }}
+      >
         <StoreProvider store={store}>
           <ServiceInstanceHistory
             service={Service.a}

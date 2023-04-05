@@ -13,4 +13,7 @@ export class DummyEnvironmentModifier implements EnvironmentModifier {
   useIsHalted(): boolean {
     throw new Error("Method not implemented.");
   }
+  useIsExpertModeEnabled(): boolean {
+    throw new Error("Method not implemented.");
+  }
 }

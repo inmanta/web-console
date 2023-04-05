@@ -60,17 +60,6 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   });
 };
 
-/**
- * when ID of the environment is not yet known, use this method to wait for the compile to be terminated.
- */
-const waitForCompile = () => {
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-    checkStatusCompile(id);
-  });
-};
-
 before(() => {
   clearEnvironment();
   forceUpdateEnvironment();
@@ -187,11 +176,10 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
     // expand first row
     cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
-    // There might be still a compile running because of the edit action. So we do a check if one is pending.
-    waitForCompile();
-
     // delete but cancel deletion in modal
-    cy.get(".pf-c-description-list").contains("Delete").click();
+    cy.get(".pf-c-description-list", { timeout: 60000 })
+      .contains("Delete")
+      .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("No").click();
 

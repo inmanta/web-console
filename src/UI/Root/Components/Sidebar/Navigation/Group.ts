@@ -16,17 +16,25 @@ interface Link {
   statusIndication: boolean;
 }
 
-export const orchestratorOverview = (
+export const envrionment = (
   routeManager: RouteManager,
   isEnvPresent: boolean
 ): Group => ({
-  id: words("navigation.orchestratorOverview"),
-  title: words("navigation.orchestratorOverview"),
+  id: words("navigation.environment"),
+  title: words("navigation.environment"),
   links: [
     {
       id: "Dashboard",
       label: routeManager.getRoute("Dashboard").generateLabel(undefined),
       url: routeManager.getRoute("Dashboard").path,
+      external: false,
+      locked: !isEnvPresent,
+      statusIndication: false,
+    },
+    {
+      id: "Settings",
+      label: routeManager.getRoute("Settings").generateLabel(undefined),
+      url: routeManager.getRoute("Settings").path,
       external: false,
       locked: !isEnvPresent,
       statusIndication: false,

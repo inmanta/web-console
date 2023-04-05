@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Resolve the rounding issue on dashboard Service Counter.'
+issue-nr: 4602
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"

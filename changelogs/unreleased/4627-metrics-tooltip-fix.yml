@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Improve metrics tooltip placement across chart'
+issue-nr: 4627
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"

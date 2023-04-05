@@ -96,6 +96,7 @@ const dict = {
   "inventory.tabs.resources": "Resources",
   "inventory.tabs.status": "Status",
   "inventory.statustab.actions": "Actions",
+  "inventory.statustab.expertActions": "Expert Actions",
   "inventory.statustab.diagnose": "Diagnose",
   "inventory.statustab.version": "Version",
   "inventory.statustab.details": "Instance Details",
@@ -103,6 +104,12 @@ const dict = {
   "inventory.statustab.confirmTitle": "Confirm set state transfer",
   "inventory.statustab.confirmMessage": (name: string, state: string) =>
     `Are you sure you want to set state of instance ${name} to ${state}?`,
+  "inventory.statustab.forceState": "Force state to",
+  "inventory.statustab.forceState.confirmTitle": "Confirm force state transfer",
+  "inventory.statustab.forceState.message": (name: string, state: string) =>
+    `Are you sure you want to force the state of instance ${name} to ${state}? `,
+  "inventory.statustab.forceState.confirmMessage": `Forcing a state might corrupt the service and the orchestrated resources`,
+  "inventory.statustab.forceState.confirmQuestion": `Are you sure you want to continue?`,
   "inventory.statustab.actionDisabled":
     "This action is not supported by the lifecycle in the current state",
   "inventory.statusTab.history": "History",
@@ -134,12 +141,12 @@ const dict = {
   "inventory.editInstance.header": (instanceId: string) =>
     `Change attributes of instance ${instanceId}`,
   "inventory.form.typeHint.list": (listBaseType: string) =>
-    `A list of ${listBaseType}s, separated by commas`,
+    `A list of ${listBaseType}s`,
   "inventory.form.typeHint.dict":
     'Key-value pairs, following the JSON syntax: {"key": "value"}',
   "inventory.form.placeholder.intList": "1, 2, 3",
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
-  "inventory.form.placeholder.stringList": "value1,value2,value3",
+  "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
@@ -149,6 +156,15 @@ const dict = {
     serviceName: string
   ) =>
     `Are you sure you want to delete instance ${instanceName} of service entity ${serviceName}?`,
+  "inventory.destroyInstance.button": "Destroy",
+  "inventory.destroyInstance.failed": "Destroying instance failed",
+  "inventory.destroyInstance.title": "Destroy instance",
+  "inventory.destroyInstance.header": (
+    instanceName: string,
+    serviceName: string
+  ) =>
+    `Are you absolutely sure you want to permanently destroy instance ${instanceName} of service entity ${serviceName}?`,
+  "inventory.destroyInstance.text": `This action cannot be undone.`,
   "inventory.deleteVersion.failed": "Deleting version failed",
   "inventory.deleteVersion.title": "Delete version",
   "inventory.deleteVersion.header": (version: ParsedNumber) =>
@@ -156,6 +172,11 @@ const dict = {
   "inventory.filters.state.placeholder": "Select a state...",
   "ServiceDetails.title": (name: string) => `Service Details: ${name}`,
   "inventory.test.creating": "creating",
+  "inventory.editAttribute.placeholder": "New Attribute",
+  "inventory.editAttribute.failed": "Setting new attribute failed",
+  "inventory.editAttribute.header": "Update Attribute",
+  "inventory.editAttribute.text": (oldValue: string, newValue: string) =>
+    `Are you absolutely sure you want to change attribute from ${oldValue} to ${newValue}? This operation can corrupt the instance.`,
 
   /**
    * Config related text
@@ -404,6 +425,7 @@ const dict = {
   "home.environment.icon": (name: string) => `Icon for environment ${name}`,
   "home.environment.select": "Select this environment",
   "home.environment.edit": "Edit environment",
+  "home.environment.selector": "Environments",
   "home.environment.delete": "Delete environment",
   "home.environment.clear": "Clear environment",
   "home.environment.delete.warning": "Are you absolutely sure?",
@@ -442,7 +464,7 @@ const dict = {
   /**
    * Navigation related text
    */
-  "navigation.orchestratorOverview": "Orchestrator Overview",
+  "navigation.environment": "Environment",
   "navigation.lifecycleServiceManager": "Lifecycle Service Manager",
   "navigation.resourceManager": "Resource Manager",
   "navigation.orchestrationEngine": "Orchestration Engine",

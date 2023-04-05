@@ -10,12 +10,13 @@ export class PrimaryKeycloakController implements KeycloakController {
     private readonly externalConfig: undefined | KeycloakConfig,
     private readonly keycloakUrl: string | undefined
   ) {
-    this.instance = Keycloak(this.getConfig());
+    this.instance = new Keycloak(this.getConfig());
   }
 
   getInitConfig(): KeycloakInitOptions {
     return {
       onLoad: "login-required",
+      checkLoginIframe: false,
       flow: "implicit",
     };
   }

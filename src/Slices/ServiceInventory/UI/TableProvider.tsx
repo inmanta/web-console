@@ -13,6 +13,7 @@ import {
   InstanceStatePresenter,
   InventoryTablePresenter,
 } from "./Presenters";
+import { InstanceExpertActionPresenter } from "./Presenters/InstanceExpertActionPresenter";
 
 export interface Props {
   instances: ServiceInstanceModelWithTargetStates[];
@@ -31,11 +32,16 @@ export const TableProvider: React.FC<Props> = ({
   const datePresenter = new MomentDatePresenter();
   const attributesPresenter = new AttributesPresenter();
   const actionPresenter = new InstanceActionPresenter(instances, serviceEntity);
+  const expertActionPresenter = new InstanceExpertActionPresenter(
+    instances,
+    serviceEntity
+  );
   const statePresenter = new InstanceStatePresenter(instances, serviceEntity);
   const tablePresenter = new InventoryTablePresenter(
     datePresenter,
     attributesPresenter,
     actionPresenter,
+    expertActionPresenter,
     statePresenter,
     serviceEntity.service_identity,
     serviceEntity.service_identity_display_name,

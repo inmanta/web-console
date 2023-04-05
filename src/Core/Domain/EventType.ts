@@ -7,6 +7,8 @@ export enum EventType {
   RESOURCE_EVENT = "RESOURCE_EVENT",
   AUTO_TRANSITION = "AUTO_TRANSITION",
   ALLOCATION_UPDATE = "ALLOCATION_UPDATE",
+  FORCE_UPDATE = "FORCE_UPDATE",
+  FORCE_DELETE = "FORCE_DELETE",
 }
 
 export const EventTypesList = Object.values(EventType).sort();

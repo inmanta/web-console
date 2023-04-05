@@ -28,12 +28,16 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
   const input = await screen.findByPlaceholderText(
     words("inventory.filters.state.placeholder")
   );
-  await userEvent.click(input);
+  await act(async () => {
+    await userEvent.click(input);
+  });
 
   const option = await screen.findByRole("option", {
     name: words("inventory.test.creating"),
   });
-  await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   expect(
     await screen.findByRole("generic", { name: "ServiceInventory-Loading" })

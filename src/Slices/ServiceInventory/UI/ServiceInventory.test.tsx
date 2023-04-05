@@ -1,9 +1,9 @@
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { fireEvent, render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { Either } from "@/Core";
+import { Either, RemoteData } from "@/Core";
 import {
   QueryResolverImpl,
   ServiceInstancesQueryManager,
@@ -16,6 +16,8 @@ import {
   KeycloakAuthHelper,
   TriggerSetStateCommandManager,
   getStoreInstance,
+  TriggerForceStateCommandManager,
+  DestroyInstanceCommandManager,
 } from "@/Data";
 import {
   Service,
@@ -30,7 +32,7 @@ import {
   dependencies,
 } from "@/Test";
 import { words } from "@/UI";
-import { DependencyProvider } from "@/UI/Dependency";
+import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
@@ -39,6 +41,7 @@ function setup(service = Service.a) {
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
+  const authHelper = new KeycloakAuthHelper();
   const serviceInstancesHelper = ServiceInstancesQueryManager(
     apiHelper,
     ServiceInstancesStateHelper(store),
@@ -58,30 +61,57 @@ function setup(service = Service.a) {
 
   const triggerUpdateCommandManager =
     TriggerInstanceUpdateCommandManager(apiHelper);
+  const triggerDestroyInstanceCommandManager =
+    DestroyInstanceCommandManager(apiHelper);
+  const triggerforceStateCommandManager = TriggerForceStateCommandManager(
+    authHelper,
+    apiHelper
+  );
 
   const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
   const setStateCommandManager = TriggerSetStateCommandManager(
-    new KeycloakAuthHelper(),
+    authHelper,
     new BaseApiHelper()
   );
 
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       triggerUpdateCommandManager,
+      triggerforceStateCommandManager,
+      triggerDestroyInstanceCommandManager,
       deleteCommandManager,
       setStateCommandManager,
     ])
   );
-
+  const environmentHandler = EnvironmentHandlerImpl(
+    useLocation,
+    dependencies.routeManager
+  );
+  store.dispatch.environment.setEnvironments(
+    RemoteData.success([
+      {
+        id: "aaa",
+        name: "env-a",
+        project_id: "ppp",
+        repo_branch: "branch",
+        repo_url: "repo",
+        projectName: "project",
+        settings: {
+          enable_lsm_expert_mode: false,
+        },
+      },
+    ])
+  );
   const component = (
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
       <DependencyProvider
         dependencies={{
           ...dependencies,
           queryResolver,
           commandResolver,
           environmentModifier: new MockEnvironmentModifier(),
+          environmentHandler,
         }}
       >
         <StoreProvider store={store}>
@@ -212,10 +242,16 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
     await screen.findByRole("grid", { name: "ServiceInventory-Success" })
   ).toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole("button", { name: "Details" }));
-  await userEvent.click(
-    await screen.findByRole("tab", { name: words("inventory.tabs.resources") })
-  );
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "Details" }));
+  });
+  await act(async () => {
+    await userEvent.click(
+      await screen.findByRole("tab", {
+        name: words("inventory.tabs.resources"),
+      })
+    );
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right({ data: InstanceResource.listA }));

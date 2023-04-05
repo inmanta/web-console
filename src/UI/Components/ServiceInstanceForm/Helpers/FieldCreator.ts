@@ -204,6 +204,18 @@ export class FieldCreator {
           };
         }
 
+        if (attribute.type === "string[]") {
+          return {
+            kind: "TextList",
+            name: attribute.name,
+            defaultValue: defaultValue,
+            inputType: type,
+            description: attribute.description,
+            type: attribute.type,
+            isOptional: this.isTextFieldOptional(attribute),
+          };
+        }
+
         return {
           kind: "Text",
           name: attribute.name,

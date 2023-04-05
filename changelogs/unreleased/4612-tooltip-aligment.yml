@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Fix tooltip aligment and resolve flickering on environment control button'
+issue-nr: 4612
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"
