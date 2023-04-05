@@ -2,6 +2,12 @@ import { dia, linkTools } from "@clientio/rappid";
 import { ServiceInstanceModel } from "@/Core";
 import { Table } from "./shapes";
 
+/**
+ * Function that displays methods to alter connection objects- currently only remove function
+ *
+ * @param linkView The view for the joint.dia.Link model.
+ * @returns void
+ */
 export function showLinkTools(linkView: dia.LinkView) {
   const tools = new dia.ToolsView({
     tools: [
@@ -39,6 +45,14 @@ export function showLinkTools(linkView: dia.LinkView) {
   linkView.addTools(tools);
 }
 
+/**
+ * Function converts instance attributes in a way that they are possible to display on composer canvas
+ *
+ * @param graph JointJS Object on which we are appending given instance
+ * @param instance instance that we want to display
+ * @param attibutesToDisplay attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
+ * @returns void
+ */
 export function appendInstance(
   graph: dia.Graph,
   instance: ServiceInstanceModel,

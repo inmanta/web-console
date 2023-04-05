@@ -56,6 +56,7 @@ export default function diagramInit(canvas) {
       };
     },
   });
+
   canvas.current.appendChild(scroller.el);
   scroller.render().center();
 
@@ -76,6 +77,7 @@ export default function diagramInit(canvas) {
       zoom(ox, oy, delta);
     }
   );
+
   paper.on(
     "cell:mousewheel",
     (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
@@ -83,6 +85,7 @@ export default function diagramInit(canvas) {
       zoom(ox, oy, delta);
     }
   );
+
   function zoom(x: number, y: number, delta: number) {
     scroller.zoom(delta * 0.2, { min: 0.4, max: 1.2, grid: 0.2, ox: x, oy: y });
   }

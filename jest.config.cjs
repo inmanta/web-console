@@ -47,7 +47,9 @@ module.exports = {
   reporters: ["default", "jest-junit"],
 
   // The react-syntax-highlighter esm modules have to be handled by jest
-  transformIgnorePatterns: ["node_modules/(?!react-syntax-highlighter)"],
+  transformIgnorePatterns: [
+    "node_modules/(?!react-syntax-highlighter|@clientio/rappid)",
+  ],
   globals: {
     "ts-jest": {
       isolatedModules: true,
