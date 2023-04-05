@@ -1,11 +1,11 @@
 import { dia, shapes, ui } from "@clientio/rappid";
-import { createTable, editTable, showLinkTools } from "./actions";
+import { AttributeModel, ServiceInstanceModel } from "@/Core";
+import { appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
-import { HaloService } from "./halo";
 import { routerNamespace } from "./routers";
-import { Link, Table } from "./shapes";
+import { Link } from "./shapes";
 
-export function diagramInit(canvas) {
+export default function diagramInit(canvas) {
   const graph = new dia.Graph({}, { cellNamespace: shapes });
 
   const paper = new dia.Paper({
@@ -87,24 +87,20 @@ export function diagramInit(canvas) {
     scroller.zoom(delta * 0.2, { min: 0.4, max: 1.2, grid: 0.2, ox: x, oy: y });
   }
 
-  paper.on("element:pointerclick", (elementView: dia.ElementView) => {
-    const halo = new HaloService();
-
-    halo.create(elementView, () => editTable(elementView));
-  });
-  // paper.on("element:pointerdblclick", (elementView: dia.ElementView) => {
-  //   editTable(elementView);
-  // });
-
-  paper.on("blank:pointerdblclick", (evt: dia.Event, x: number, y: number) => {
-    const table = new Table().setName("New Instance");
-    table.position(x, y);
-    table.addTo(graph);
-    createTable(table.findView(paper) as dia.ElementView);
-  });
   paper.unfreeze();
-  return () => {
-    scroller.remove();
-    paper.remove();
+  return {
+    removeCanvas: () => {
+      scroller.remove();
+      paper.remove();
+    },
+    addInstance: (
+      instance: ServiceInstanceModel,
+      attributesToDisplay: AttributeModel[]
+    ) => {
+      const attributeNames = attributesToDisplay.map(
+        (attribute) => attribute.name
+      );
+      appendInstance(graph, instance, attributeNames);
+    },
   };
 }

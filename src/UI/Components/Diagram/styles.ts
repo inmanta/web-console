@@ -170,6 +170,7 @@ export const CanvasWrapper = styled.div`
     }
 
     // Text Labels
+
     label,
     output,
     .units {

@@ -1,6 +1,7 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
 import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
+import { InstanceModifierPage } from "@/Slices/InstanceModifier/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
@@ -28,6 +29,7 @@ import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
+import { features } from "../../config";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
@@ -64,10 +66,16 @@ export class PrimaryPageManager implements PageManager {
         ...this.routeDictionary.Inventory,
         element: <ServiceInventoryPage />,
       },
+
       InstanceComposer: {
         ...this.routeDictionary.InstanceComposer,
         element: <InstanceComposerPage />,
       },
+      InstanceModifier: {
+        ...this.routeDictionary.InstanceModifier,
+        element: <InstanceModifierPage />,
+      },
+
       ServiceDetails: {
         ...this.routeDictionary.ServiceDetails,
         element: <ServiceDetailsPage />,
@@ -145,6 +153,16 @@ export class PrimaryPageManager implements PageManager {
   }
 
   getPages(): Page[] {
-    return Object.values(this.pageDictionary);
+    return Object.values(
+      features.instanceComposer
+        ? this.pageDictionary
+        : Object.fromEntries(
+            Object.entries(this.pageDictionary).filter(
+              (property) =>
+                property[0] !== "InstanceComposer" &&
+                property[0] !== "InstanceModifier"
+            )
+          )
+    );
   }
 }

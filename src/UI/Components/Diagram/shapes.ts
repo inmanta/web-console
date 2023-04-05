@@ -8,9 +8,9 @@ export class Table extends shapes.standard.HeaderedRecord {
         type: "app.Table",
         columns: [],
         padding: { top: 40, bottom: 10, left: 10, right: 10 },
-        size: { width: 260 },
+        size: { width: 176 },
         itemMinLabelWidth: 80,
-        itemHeight: 25,
+        itemHeight: 22,
         itemOffset: 0,
         itemOverflow: true,
         attrs: {
@@ -22,24 +22,16 @@ export class Table extends shapes.standard.HeaderedRecord {
             fill: "#FFF",
             strokeWidth: 1,
           },
-          tabColor: {
-            x: -1,
-            y: -5,
-            width: "calc(w+2)",
-            height: 5,
-            stroke: "none",
-            fill: "#6C6C6C",
-            strokeWidth: 1,
-          },
           header: {
-            fill: "#F8FAFC",
-            stroke: "#F8FAFC",
+            fill: "#0066CC",
+            stroke: "#0066CC",
             strokeWidth: 1,
           },
           headerLabel: {
-            fill: "#636363",
-            fontWeight: "bold",
-            fontFamily: "sans-serif",
+            fill: "#FFFFFF",
+            fontFamily: "Lekton",
+            textTransform: "uppercase",
+            fontSize: 12,
             textWrap: {
               ellipsis: true,
               height: 30,
@@ -56,12 +48,15 @@ export class Table extends shapes.standard.HeaderedRecord {
             pointerEvents: "none",
           },
           itemLabels: {
-            fontFamily: "sans-serif",
-            fill: "#636363",
+            fontFamily: "Lekton",
+            fontSize: 10,
+            fill: "#000000",
             pointerEvents: "none",
           },
           itemLabels_1: {
-            fill: "#9C9C9C",
+            fill: "#7F7F7F",
+            fontSize: 10,
+            fontFamily: "Lekton",
             textAnchor: "end",
             x: `calc(0.5 * w - 10)`,
           },
@@ -118,15 +113,6 @@ export class Table extends shapes.standard.HeaderedRecord {
   getName(): string {
     return this.attr(["headerLabel", "text"]);
   }
-
-  setTabColor(color: string) {
-    return this.attr(["tabColor", "fill"], color);
-  }
-
-  getTabColor(): string {
-    return this.attr(["tabColor", "fill"]);
-  }
-
   setColumns(data: Array<ColumnData>) {
     this.set("columns", data);
     return this;
@@ -170,7 +156,6 @@ export class Table extends shapes.standard.HeaderedRecord {
     });
     this.set("items", [names, values]);
     this.removeInvalidLinks();
-
     return this;
   }
 }
