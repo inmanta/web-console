@@ -61,7 +61,7 @@ export function appendInstance(
   if (instance.active_attributes === null) {
     return;
   }
-  const attrKeys = Object.keys(attibutesToDisplay);
+  const attributeKeys = Object.keys(attibutesToDisplay);
 
   const instanceAsTable = new Table()
     .setName(instance.service_entity.toUpperCase())
@@ -73,7 +73,7 @@ export function appendInstance(
       name: "service_id",
       value: instance.active_attributes.service_id as string,
     },
-    ...attrKeys.map((key) => {
+    ...attributeKeys.map((key) => {
       return {
         name: key,
         value:

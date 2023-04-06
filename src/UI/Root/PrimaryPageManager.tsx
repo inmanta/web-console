@@ -1,7 +1,7 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
+import { ComposerEditorPage } from "@/Slices/ComposerEditor/UI";
 import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
-import { InstanceEditorPage } from "@/Slices/InstanceEditor/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
@@ -29,7 +29,7 @@ import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
-import { features } from "../../config";
+import * as configFile from "../../config";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
@@ -71,9 +71,9 @@ export class PrimaryPageManager implements PageManager {
         ...this.routeDictionary.InstanceComposer,
         element: <InstanceComposerPage />,
       },
-      InstanceEditor: {
-        ...this.routeDictionary.InstanceEditor,
-        element: <InstanceEditorPage />,
+      ComposerEditor: {
+        ...this.routeDictionary.ComposerEditor,
+        element: <ComposerEditorPage />,
       },
 
       ServiceDetails: {
@@ -152,17 +152,20 @@ export class PrimaryPageManager implements PageManager {
     };
   }
 
-  getPages(): Page[] {
+  private filterRestricedPages(): Page[] {
     return Object.values(
-      features.instanceComposer
-        ? this.pageDictionary
-        : Object.fromEntries(
-            Object.entries(this.pageDictionary).filter(
-              (property) =>
-                property[0] !== "InstanceComposer" &&
-                property[0] !== "InstanceEditor"
-            )
-          )
+      Object.fromEntries(
+        Object.entries(this.pageDictionary).filter(
+          (property) =>
+            property[0] !== "InstanceComposer" &&
+            property[0] !== "ComposerEditor"
+        )
+      )
     );
+  }
+  getPages(): Page[] {
+    return configFile.features.instanceComposer
+      ? Object.values(this.pageDictionary)
+      : this.filterRestricedPages();
   }
 }

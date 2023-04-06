@@ -14,9 +14,9 @@ import {
   Crumb,
   RouteKindWithId,
 } from "@/Core";
+import { ComposerEditor } from "@/Slices/ComposerEditor";
 import { Dashboard } from "@/Slices/Dashboard";
 import { InstanceComposer } from "@/Slices/InstanceComposer";
-import { InstanceEditor } from "@/Slices/InstanceEditor";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
@@ -63,7 +63,7 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     Dashboard: Dashboard.route(baseUrl),
     Inventory: ServiceInventory.route(baseUrl),
     InstanceComposer: InstanceComposer.route(baseUrl),
-    InstanceEditor: InstanceEditor.route(baseUrl),
+    ComposerEditor: ComposerEditor.route(baseUrl),
     ServiceDetails: ServiceDetails.route(baseUrl),
     CreateInstance: CreateInstance.route(baseUrl),
     EditInstance: EditInstance.route(baseUrl),

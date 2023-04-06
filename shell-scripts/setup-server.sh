@@ -32,7 +32,6 @@ yarn run pull:$2
 sleep 2
 
 # command from the local-setup repo to docker compose up.
-chmod +x resources/load_db_dump.sh
 yarn start
 
 # need to sleep to avoid concurency with the next command execution. Under 4 sec it doesn't work locally.

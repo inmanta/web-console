@@ -17,4 +17,6 @@ export const Page = () => {
 const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
   ...props
-}) => <div {...props}>{children}</div>;
+}) => {
+  return <div {...props}>{children}</div>;
+};

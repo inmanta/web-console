@@ -32,7 +32,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
       <DescriptionListGroup>
         {features.instanceComposer && (
           <Link
-            pathname={routeManager.getUrl("InstanceEditor", {
+            pathname={routeManager.getUrl("ComposerEditor", {
               service: instance.service_entity,
               instance: instance.id,
             })}
