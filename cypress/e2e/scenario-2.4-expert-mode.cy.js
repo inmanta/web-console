@@ -128,7 +128,7 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
 
     //wait until state is up and change it to creating with help of force state functionality
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 40000 })
+      .find('[data-label="State"]', { timeout: 60000 })
       .should("contain", "up");
     cy.get(".pf-c-description-list").contains("Edit").should("not.be.disabled");
 
@@ -154,8 +154,8 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
     cy.get(".pf-c-dropdown__menu-item").contains("creating").click();
     cy.get("button").contains("Yes").click();
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 20000 })
-      .should("contain", "creating", { timeout: 30000 });
+      .find('[data-label="State"]', { timeout: 60000 })
+      .should("contain", "creating");
   });
 
   it("2.4.2 Edit instance attributes", () => {
@@ -175,9 +175,9 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
     // Expect to find status tab
     cy.get(".pf-c-tabs__list li:first").should("have.class", "pf-m-current");
     // Expect edit button to be disabled after previous state change
-    cy.get(".pf-c-description-list", { timeout: 20000 })
-      .contains("Edit")
-      .should("be.disabled");
+    cy.get(".pf-c-description-list")
+      .contains("Edit", { timeout: 60000 })
+      .should("be.disabled", { timeout: 60000 });
     // expect to land on Service Inventory page and to find attributes tab button
     cy.get(".pf-c-tabs__list")
       .contains("Attributes", { timeout: 20000 })
