@@ -102,7 +102,7 @@ test("Given the environmentModifier When the missing setting is requested Then r
     await screen.findByRole("generic", { name: "server-compile-disabled" })
   ).toBeVisible();
   expect(
-    await screen.findByRole("generic", { name: "server-compile-enabled" })
-  ).not.toBeVisible();
+    screen.queryByLabelText("server-compile-enabled")
+  ).not.toBeInTheDocument();
   expect(consoleError).not.toHaveBeenCalled();
 });
