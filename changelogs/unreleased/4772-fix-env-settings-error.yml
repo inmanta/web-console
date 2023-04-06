@@ -1,0 +1,8 @@
+change-type: patch
+description: 'fix the issue that crash the app when using missing environment setting and it's definition'
+issue-nr: 4772
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"
