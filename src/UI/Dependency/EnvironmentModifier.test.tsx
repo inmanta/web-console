@@ -6,7 +6,6 @@ import { EnvironmentModifier, RemoteData } from "@/Core";
 import { DefinitionMap } from "@/Core/Domain/EnvironmentSettings";
 import { getStoreInstance } from "@/Data";
 import { EnvironmentDetails, EnvironmentSettings } from "@/Test";
-import ErrorBoundary from "../Utils/ErrorBoundary";
 import { EnvironmentModifierImpl } from "./EnvironmentModifier";
 
 const DummyComponent: React.FC<{
@@ -32,11 +31,9 @@ function setup(definition: DefinitionMap) {
   const environmentModifier = EnvironmentModifierImpl();
   environmentModifier.setEnvironment(environmentId);
   const component = (
-    <ErrorBoundary>
-      <StoreProvider store={store}>
-        <DummyComponent environmentModifier={environmentModifier} />
-      </StoreProvider>
-    </ErrorBoundary>
+    <StoreProvider store={store}>
+      <DummyComponent environmentModifier={environmentModifier} />
+    </StoreProvider>
   );
   return { component, store, environmentId };
 }
@@ -86,7 +83,7 @@ test("Given the environmentModifier When the server compile setting is requested
   ).toBeVisible();
 });
 
-test("Given the environmentModifier When the missing setting is requested Then render component as the value would be false without crashing", async () => {
+test("Given the environmentModifier When the missing setting is requested Then render component as the value would be false without throwing an error", async () => {
   const consoleError = jest.spyOn(console, "error");
 
   delete EnvironmentSettings.definition.server_compile;
@@ -100,7 +97,7 @@ test("Given the environmentModifier When the missing setting is requested Then r
   });
 
   render(component);
-  //expect to see div as the value would be false instead of error boundary page
+  //expect to see div element that indicates false value of the setting by its aria-label instead of error boundary pa
   expect(
     await screen.findByRole("generic", { name: "server-compile-disabled" })
   ).toBeVisible();
