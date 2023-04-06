@@ -86,7 +86,9 @@ test("Given the environmentModifier When the server compile setting is requested
   ).toBeVisible();
 });
 
-test("Given the environmentModifier When the missing setting is requested Then returns false without crashing the component", async () => {
+test("Given the environmentModifier When the missing setting is requested Then render component as the value would be false without crashing", async () => {
+  const consoleError = jest.spyOn(console, "error");
+
   delete EnvironmentSettings.definition.server_compile;
   const { component, store, environmentId } = setup(
     EnvironmentSettings.definition
@@ -98,8 +100,12 @@ test("Given the environmentModifier When the missing setting is requested Then r
   });
 
   render(component);
-  //expect to see div as the value would be false insteand of error boundary page
+  //expect to see div as the value would be false instead of error boundary page
   expect(
     await screen.findByRole("generic", { name: "server-compile-disabled" })
   ).toBeVisible();
+  expect(
+    await screen.findByRole("generic", { name: "server-compile-enabled" })
+  ).not.toBeVisible();
+  expect(consoleError).not.toHaveBeenCalled();
 });
