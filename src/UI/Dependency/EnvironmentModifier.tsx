@@ -60,7 +60,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
     ) {
       return Boolean(environmentDetails.settings[settingName]);
     } else {
-      return Boolean(environmentSettings.definition[settingName].default);
+      return Boolean(environmentSettings.definition[settingName]?.default);
     }
   }
 
