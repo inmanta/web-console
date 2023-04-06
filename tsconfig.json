@@ -56,8 +56,6 @@
       "module": "ES2020",
       "target": "ES2020",
       "esModuleInterop": true,
-      "types": ["cypress-file-upload"],
-      "skipLibCheck": true
-    }
+      "types": ["cypress-file-upload"]    }
   }
 }

@@ -11,13 +11,15 @@ const Canvas = ({
   instance,
 }: {
   service: ServiceModel;
-  instance: ServiceInstanceModel;
+  instance?: ServiceInstanceModel;
 }) => {
   const canvas = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const actions = diagramInit(canvas);
-    actions.addInstance(instance, service.attributes);
+    if (instance) {
+      actions.addInstance(instance, service.attributes);
+    }
     return () => actions.removeCanvas();
   }, [instance, service.attributes]);
 

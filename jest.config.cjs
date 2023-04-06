@@ -46,7 +46,7 @@ module.exports = {
 
   reporters: ["default", "jest-junit"],
 
-  // The react-syntax-highlighter esm modules have to be handled by jest
+  // The react-syntax-highlighter and @clientio/rappid esm modules have to be handled by jest
   transformIgnorePatterns: [
     "node_modules/(?!react-syntax-highlighter|@clientio/rappid)",
   ],

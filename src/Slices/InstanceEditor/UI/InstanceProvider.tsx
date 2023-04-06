@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { ServiceModel } from "@/Core";
 import { DependencyContext } from "@/UI";
 import { RemoteDataView } from "@/UI/Components";
-import Canvas from "./Canvas";
+import Canvas from "@/UI/Components/Diagram/Canvas";
 
-export const InstanceComposerPage: React.FC<{
+export const InstanceProvider: React.FC<{
   serviceEntity: ServiceModel;
   instanceId: string;
 }> = ({ serviceEntity, instanceId }) => {

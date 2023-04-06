@@ -1,17 +1,17 @@
 import React from "react";
 import { useRouteParams } from "@/UI";
 import { ServiceProvider } from "@/UI/Components";
-import { InstanceComposerPage } from "./InstanceModifierPage";
+import { InstanceProvider } from "./InstanceProvider";
 
 export const Page = () => {
   const { service: serviceName, instance: instance } =
-    useRouteParams<"InstanceModifier">();
+    useRouteParams<"InstanceEditor">();
   return (
     <ServiceProvider
       serviceName={serviceName}
       Wrapper={PageWrapper}
       Dependant={({ service }) => (
-        <InstanceComposerPage serviceEntity={service} instanceId={instance} />
+        <InstanceProvider serviceEntity={service} instanceId={instance} />
       )}
     />
   );
@@ -20,4 +20,6 @@ export const Page = () => {
 const PageWrapper: React.FC<React.PropsWithChildren<unknown>> = ({
   children,
   ...props
-}) => <div {...props}>{children}</div>;
+}) => {
+  return <div {...props}>{children}</div>;
+};
