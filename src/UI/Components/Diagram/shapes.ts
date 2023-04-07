@@ -1,11 +1,11 @@
 import { dia, shapes, util } from "@clientio/rappid";
 import { ColumnData } from "./interfaces";
 
-export class Table extends shapes.standard.HeaderedRecord {
+export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   defaults() {
     return util.defaultsDeep(
       {
-        type: "app.Table",
+        type: "app.ServiceEntityBlock",
         columns: [],
         padding: { top: 40, bottom: 10, left: 10, right: 10 },
         size: { width: 176 },
@@ -18,8 +18,8 @@ export class Table extends shapes.standard.HeaderedRecord {
             magnet: false,
           },
           body: {
-            stroke: "#FFF",
-            fill: "#FFF",
+            stroke: "#FFFFFF",
+            fill: "#FFFFFF",
             strokeWidth: 1,
           },
           header: {
@@ -74,6 +74,40 @@ export class Table extends shapes.standard.HeaderedRecord {
     );
   }
 
+  protected _setColumns(data: Array<ColumnData> = []) {
+    const names: Array<{
+      id: string;
+      label: string;
+      span: number;
+    }> = [];
+    const values: Array<{
+      id: string;
+      label: string;
+    }> = [];
+
+    data.forEach((item) => {
+      if (!item.name) {
+        return;
+      }
+
+      names.push({
+        id: item.name,
+        label: item.name,
+        span: 2,
+      });
+
+      const value = {
+        id: `${item.name}_value`,
+        label: item.value,
+      };
+      values.push(value);
+    });
+
+    this.set("items", [names, values]);
+    this.removeInvalidLinks();
+    return this;
+  }
+
   preinitialize(): void {
     this.markup = [
       {
@@ -106,8 +140,8 @@ export class Table extends shapes.standard.HeaderedRecord {
     }
   }
 
-  setName(name: string, opt?: object) {
-    return this.attr(["headerLabel", "text"], name, opt);
+  setName(name: string, options?: object) {
+    return this.attr(["headerLabel", "text"], name, options);
   }
 
   getName(): string {
@@ -128,39 +162,9 @@ export class Table extends shapes.standard.HeaderedRecord {
     delete json.items;
     return json;
   }
-
-  protected _setColumns(data: Array<ColumnData> = []) {
-    const names: Array<{
-      id: string;
-      label: string;
-      span: number;
-    }> = [];
-    const values: Array<{
-      id: string;
-      label: string;
-    }> = [];
-    data.forEach((item) => {
-      if (!item.name) return;
-
-      names.push({
-        id: item.name,
-        label: item.name,
-        span: 2,
-      });
-
-      const value = {
-        id: `${item.name}_value`,
-        label: item.value,
-      };
-      values.push(value);
-    });
-    this.set("items", [names, values]);
-    this.removeInvalidLinks();
-    return this;
-  }
 }
 
-export class Link extends dia.Link {
+export class EntityConnection extends dia.Link {
   defaults() {
     return {
       ...super.defaults,
@@ -202,8 +206,8 @@ const TableView = shapes.standard.RecordView;
 
 Object.assign(shapes, {
   app: {
-    Table,
+    ServiceEntityBlock,
     TableView,
-    Link,
+    EntityConnection,
   },
 });

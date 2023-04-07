@@ -12,7 +12,7 @@ import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
-import { features } from "../../../../../config";
+import * as configFile from "../../../../../config";
 
 interface Props {
   serviceName: string;
@@ -46,22 +46,23 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup alignment={{ default: "alignRight" }}>
-          {features.instanceComposer && (
-            <ToolbarItem>
-              <Link
-                to={{
-                  pathname: routeManager.getUrl("InstanceComposer", {
-                    service: serviceName,
-                  }),
-                  search: location.search,
-                }}
-              >
-                <Button id="add-instance-composer-button">
-                  {words("inventory.addInstance.composerButton")}
-                </Button>
-              </Link>
-            </ToolbarItem>
-          )}
+          {Object(configFile).hasOwnProperty("features") &&
+            configFile.features.instanceComposer && (
+              <ToolbarItem>
+                <Link
+                  to={{
+                    pathname: routeManager.getUrl("InstanceComposer", {
+                      service: serviceName,
+                    }),
+                    search: location.search,
+                  }}
+                >
+                  <Button id="add-instance-composer-button">
+                    {words("inventory.addInstance.composerButton")}
+                  </Button>
+                </Link>
+              </ToolbarItem>
+            )}
           <ToolbarItem>
             <Link
               to={{

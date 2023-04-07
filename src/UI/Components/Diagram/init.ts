@@ -3,7 +3,7 @@ import { AttributeModel, ServiceInstanceModel } from "@/Core";
 import { appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
 import { routerNamespace } from "./routers";
-import { Link } from "./shapes";
+import { EntityConnection } from "./shapes";
 
 export default function diagramInit(canvas) {
   const graph = new dia.Graph({}, { cellNamespace: shapes });
@@ -34,7 +34,7 @@ export default function diagramInit(canvas) {
         },
       },
     },
-    defaultLink: () => new Link(),
+    defaultLink: () => new EntityConnection(),
     validateConnection: function (srcView, srcMagnet, tgtView, tgtMagnet) {
       return srcMagnet !== tgtMagnet;
     },
@@ -98,12 +98,12 @@ export default function diagramInit(canvas) {
     },
     addInstance: (
       instance: ServiceInstanceModel,
-      attributesToDisplay: AttributeModel[]
+      serviceAttributes: AttributeModel[]
     ) => {
-      const attributeNames = attributesToDisplay.map(
+      const attributeKeywords = serviceAttributes.map(
         (attribute) => attribute.name
       );
-      appendInstance(graph, instance, attributeNames);
+      appendInstance(graph, instance, attributeKeywords);
     },
   };
 }

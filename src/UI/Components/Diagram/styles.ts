@@ -23,12 +23,6 @@ export const CanvasWrapper = styled.div`
       background: #f3f7f6;
     }
 
-    /* [magnet="item"]:hover,
-    .column-connected {
-      fill: #efefef;
-      stroke: #dddddd;
-    } */
-
     .source-arrowhead,
     .target-arrowhead {
       fill: #a0a0a0;
@@ -38,8 +32,7 @@ export const CanvasWrapper = styled.div`
 
   /* 
     ***  ui.Dialog ***
-*/
-
+  */
   .joint-dialog.joint-theme-default {
     .body {
       padding: 0;
@@ -57,7 +50,7 @@ export const CanvasWrapper = styled.div`
       padding: 16px;
       border-radius: 0px;
       color: #3d3d3d;
-      background: #fff;
+      background: #ffffff;
       border: none;
       border-bottom: 1px solid #dddddd;
       font-size: 20px;
@@ -75,20 +68,21 @@ export const CanvasWrapper = styled.div`
       border: none;
       border-top: 1px solid #dddddd;
 
-      & .control-button {
+      .control-button {
         color: #303030;
-        border: 1px solid #ccc;
-        background: #fff;
+        border: 1px solid #cccccc;
+        background: #ffffff;
         border-radius: 0px;
         min-width: 82px;
 
         &:hover {
-          border: 1px solid #ccc;
-          background: #ccc;
+          border: 1px solid #cccccc;
+          background: #cccccc;
           opacity: 0.8;
           transition: 0.1s linear;
         }
-        // Remove button
+
+        // Submit button
         &.left {
           color: #f8f8ff;
           background: blue;
@@ -100,11 +94,10 @@ export const CanvasWrapper = styled.div`
 
   /* 
     ***  ui.Inspector ***
-*/
-
+  */
   .joint-inspector.joint-theme-default {
     border: none;
-    background: #fff;
+    background: #ffffff;
     padding: 5px 16px;
 
     .field {
@@ -114,15 +107,14 @@ export const CanvasWrapper = styled.div`
     // Column Elements
     .list-item {
       color: #636363;
-      background: #fff;
+      background: #ffffff;
       border: none;
-      border-top: 1px solid #ccc;
+      border-top: 1px solid #cccccc;
       box-shadow: none;
       padding: 0;
       padding-top: 12px;
       padding-bottom: 16px;
       margin: 0;
-
       display: flex;
       flex-direction: column;
     }
@@ -136,7 +128,6 @@ export const CanvasWrapper = styled.div`
       box-shadow: none;
       border-radius: 0px;
 
-      &:hover,
       &:hover {
         transition: 0.1s linear;
       }
@@ -170,7 +161,6 @@ export const CanvasWrapper = styled.div`
     }
 
     // Text Labels
-
     label,
     output,
     .units {
@@ -202,10 +192,9 @@ export const CanvasWrapper = styled.div`
       outline: none;
       padding: 16px 12px;
       overflow: auto;
-
       color: #303030;
-      background: #fff;
-      border: 1px solid #ccc;
+      background: #ffffff;
+      border: 1px solid #cccccc;
       border-radius: 0px;
     }
 
@@ -216,7 +205,6 @@ export const CanvasWrapper = styled.div`
       background-position-x: 100%;
       background-position-y: 50%;
       background-origin: content-box;
-
       -webkit-appearance: none;
       cursor: pointer;
 
@@ -244,8 +232,8 @@ export const CanvasWrapper = styled.div`
 
       & span,
       & input:not(:checked) + span {
-        border: 1px solid #ccc;
-        background: #ccc;
+        border: 1px solid #cccccc;
+        background: #cccccc;
       }
 
       & span {
@@ -261,7 +249,7 @@ export const CanvasWrapper = styled.div`
       }
 
       & span i {
-        background: #fff;
+        background: #ffffff;
         transition: 0.2s;
       }
     }

@@ -1,9 +1,11 @@
 import { dia, linkTools } from "@clientio/rappid";
 import { ServiceInstanceModel } from "@/Core";
-import { Table } from "./shapes";
+import { ServiceEntityBlock } from "./shapes";
 
 /**
- * Function that displays methods to alter connection objects- currently only remove function
+ * Function that displays methods to alter connection objects - currently visible is only function to remove connection
+ * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.LinkView
+ * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#linkTools
  *
  * @param linkView The view for the joint.dia.Link model.
  * @returns void
@@ -47,6 +49,7 @@ export function showLinkTools(linkView: dia.LinkView) {
 
 /**
  * Function converts instance attributes in a way that they are possible to display on composer canvas
+ * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
  *
  * @param graph JointJS Object on which we are appending given instance
  * @param instance instance that we want to display
@@ -55,34 +58,27 @@ export function showLinkTools(linkView: dia.LinkView) {
  */
 export function appendInstance(
   graph: dia.Graph,
-  instance: ServiceInstanceModel,
-  attibutesToDisplay: string[]
+  serviceInstance: ServiceInstanceModel,
+  serviceAttributes: string[]
 ) {
-  if (instance.active_attributes === null) {
+  if (serviceInstance.active_attributes === null) {
     return;
   }
-  const attributeKeys = Object.keys(attibutesToDisplay);
-
-  const instanceAsTable = new Table()
-    .setName(instance.service_entity.toUpperCase())
+  const instanceAsTable = new ServiceEntityBlock()
+    .setName(serviceInstance.service_entity.toUpperCase())
     .position(220, 220);
 
-  instanceAsTable.appendColumns([
-    { name: "name", value: instance.active_attributes.name as string },
-    {
-      name: "service_id",
-      value: instance.active_attributes.service_id as string,
-    },
-    ...attributeKeys.map((key) => {
+  instanceAsTable.appendColumns(
+    serviceAttributes.map((key) => {
       return {
         name: key,
         value:
-          instance.active_attributes !== null
-            ? (instance.active_attributes[key] as string)
+          serviceInstance.active_attributes !== null
+            ? (serviceInstance.active_attributes[key] as string)
             : "",
       };
-    }),
-  ]);
+    })
+  );
 
   instanceAsTable.addTo(graph);
 }
