@@ -53,7 +53,7 @@ const customRouter = function (
     );
   }
 
-  // Vertices
+  // Adding the vertices to the route Array
   Array.prototype.push.apply(route, vertices);
 
   // Source Point
