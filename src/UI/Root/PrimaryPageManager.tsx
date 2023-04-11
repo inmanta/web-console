@@ -1,7 +1,7 @@
 import React from "react";
 import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
-import { ComposerEditorPage } from "@/Slices/ComposerEditor/UI";
 import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
+import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
@@ -71,9 +71,9 @@ export class PrimaryPageManager implements PageManager {
         ...this.routeDictionary.InstanceComposer,
         element: <InstanceComposerPage />,
       },
-      ComposerEditor: {
-        ...this.routeDictionary.ComposerEditor,
-        element: <ComposerEditorPage />,
+      InstanceComposerEditor: {
+        ...this.routeDictionary.InstanceComposerEditor,
+        element: <InstanceComposerEditorPage />,
       },
 
       ServiceDetails: {
@@ -158,7 +158,7 @@ export class PrimaryPageManager implements PageManager {
         Object.entries(this.pageDictionary).filter(
           (property) =>
             property[0] !== "InstanceComposer" &&
-            property[0] !== "ComposerEditor"
+            property[0] !== "InstanceComposerEditor"
         )
       )
     );

@@ -21,7 +21,7 @@ const kinds = [
   "Diagnose",
   "Events",
   "InstanceComposer",
-  "ComposerEditor",
+  "InstanceComposerEditor",
 
   /**
    * Resource Manager
@@ -70,7 +70,7 @@ export interface RouteKindWithId<K extends RouteKind = RouteKind> {
  */
 interface RouteParamKeysManifest {
   InstanceComposer: "service";
-  ComposerEditor: "service" | "instance";
+  InstanceComposerEditor: "service" | "instance";
   Inventory: "service";
   ServiceDetails: "service";
   CreateInstance: "service";

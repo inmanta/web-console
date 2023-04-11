@@ -5,7 +5,7 @@ import { InstanceProvider } from "./InstanceProvider";
 
 export const Page = () => {
   const { service: serviceName, instance: instance } =
-    useRouteParams<"ComposerEditor">();
+    useRouteParams<"InstanceComposerEditor">();
   return (
     <ServiceProvider
       serviceName={serviceName}
