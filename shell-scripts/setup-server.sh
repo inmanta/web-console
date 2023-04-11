@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Starting E2E test suit"
 
 # Arg $1 is the OS you are on

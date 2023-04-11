@@ -52,7 +52,7 @@ export function showLinkTools(linkView: dia.LinkView) {
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
  *
  * @param graph JointJS Object on which we are appending given instance
- * @param instance instance that we want to display
+ * @param instance that we want to display
  * @param attibutesToDisplay attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
  * @returns void
  */

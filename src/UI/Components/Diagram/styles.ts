@@ -30,9 +30,7 @@ export const CanvasWrapper = styled.div`
     }
   }
 
-  /* 
-    ***  ui.Dialog ***
-  */
+  //  ***  ui.Dialog ***
   .joint-dialog.joint-theme-default {
     .body {
       padding: 0;
@@ -92,9 +90,7 @@ export const CanvasWrapper = styled.div`
     }
   }
 
-  /* 
-    ***  ui.Inspector ***
-  */
+  //  ***  ui.Inspector ***
   .joint-inspector.joint-theme-default {
     border: none;
     background: #ffffff;

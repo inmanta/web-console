@@ -1,5 +1,11 @@
 import React from "react";
-import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
+import {
+  PageManager,
+  Page,
+  RouteDictionary,
+  PageDictionary,
+  RestrictedPageDictionary,
+} from "@/Core";
 import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
 import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
@@ -33,6 +39,7 @@ import * as configFile from "../../config";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
+  private restrictedPageDictionary: RestrictedPageDictionary;
 
   constructor(private readonly routeDictionary: RouteDictionary) {
     this.pageDictionary = {
@@ -65,15 +72,6 @@ export class PrimaryPageManager implements PageManager {
       Inventory: {
         ...this.routeDictionary.Inventory,
         element: <ServiceInventoryPage />,
-      },
-
-      InstanceComposer: {
-        ...this.routeDictionary.InstanceComposer,
-        element: <InstanceComposerPage />,
-      },
-      InstanceComposerEditor: {
-        ...this.routeDictionary.InstanceComposerEditor,
-        element: <InstanceComposerEditorPage />,
       },
 
       ServiceDetails: {
@@ -150,23 +148,30 @@ export class PrimaryPageManager implements PageManager {
         element: <ComplianceCheckPage />,
       },
     };
+
+    this.restrictedPageDictionary = {
+      InstanceComposer: {
+        ...this.routeDictionary.InstanceComposer,
+        element: <InstanceComposerPage />,
+      },
+      InstanceComposerEditor: {
+        ...this.routeDictionary.InstanceComposerEditor,
+        element: <InstanceComposerEditorPage />,
+      },
+    };
   }
 
-  private filterRestricedPages(): Page[] {
-    return Object.values(
-      Object.fromEntries(
-        Object.entries(this.pageDictionary).filter(
-          (property) =>
-            property[0] !== "InstanceComposer" &&
-            property[0] !== "InstanceComposerEditor"
-        )
-      )
-    );
-  }
   getPages(): Page[] {
-    return Object(configFile).hasOwnProperty("features") &&
+    if (
+      Object(configFile).hasOwnProperty("features") &&
       configFile.features.instanceComposer
-      ? Object.values(this.pageDictionary)
-      : this.filterRestricedPages();
+    ) {
+      return [
+        ...Object.values(this.pageDictionary),
+        ...Object.values(this.restrictedPageDictionary),
+      ];
+    } else {
+      return Object.values(this.pageDictionary);
+    }
   }
 }

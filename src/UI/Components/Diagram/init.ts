@@ -35,9 +35,8 @@ export default function diagramInit(canvas) {
       },
     },
     defaultLink: () => new EntityConnection(),
-    validateConnection: function (srcView, srcMagnet, tgtView, tgtMagnet) {
-      return srcMagnet !== tgtMagnet;
-    },
+    validateConnection: (_srcView, srcMagnet, _tgtView, tgtMagnet) =>
+      srcMagnet !== tgtMagnet,
   });
 
   const scroller = new ui.PaperScroller({

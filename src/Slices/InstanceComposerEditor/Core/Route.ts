@@ -6,6 +6,6 @@ export const route = (base: string): Route<"InstanceComposerEditor"> => ({
   kind: "InstanceComposerEditor",
   parent: "Inventory",
   path: `${base}${path}`,
-  generateLabel: () => "Instance Modifier",
+  generateLabel: () => "Instance Composer Editor",
   environmentRole: "Required",
 });

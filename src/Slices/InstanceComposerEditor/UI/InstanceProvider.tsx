@@ -19,7 +19,7 @@ export const InstanceProvider: React.FC<{
   return (
     <RemoteDataView
       data={data}
-      label="Instance Modifier"
+      label="Instance Composer Editor"
       SuccessView={(instance) => (
         <Canvas service={serviceEntity} instance={instance} />
       )}

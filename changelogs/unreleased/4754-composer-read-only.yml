@@ -1,4 +1,4 @@
-change-type: patch
+change-type: minor
 description: 'Create Instance Composer first Milestone, read only view that can display core attributes of an instance'
 issue-nr: 4754
 destination-branches:
