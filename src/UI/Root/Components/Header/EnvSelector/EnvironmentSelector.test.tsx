@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
 import { Router } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import { RemoteData } from "@/Core";
@@ -44,13 +44,11 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
     </MemoryRouter>
   );
 
-  const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${envA.name} (${envA.projectName})`,
+  const toggle = screen.getByText(`Environment: ${envA.name}`);
+  await act(async () => {
+    await userEvent.click(toggle);
   });
-  await userEvent.click(toggle);
-  const listItem = screen.queryByRole("menuitem", {
-    name: `${envB.name} (${envB.projectName})`,
-  });
+  const listItem = screen.getAllByText(`${envB.name}`)[0];
 
   expect(listItem).toBeVisible();
 });
@@ -73,95 +71,21 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
     </MemoryRouter>
   );
 
-  const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${envA.name} (${envA.projectName})`,
+  const toggle = screen.getByText(`Environment: ${envA.name}`);
+  await act(async () => {
+    await userEvent.click(toggle);
   });
-  await userEvent.click(toggle);
 
-  const listItem = screen.getByRole("menuitem", {
-    name: `${envB.name} (${envB.projectName})`,
-  });
+  const listItem = screen.getAllByText(`${envB.name}`)[1];
 
   expect(listItem).toBeVisible();
 
-  await userEvent.click(listItem);
-
-  expect(
-    screen.queryByRole("button", {
-      name: `Selected Project: ${envB.name} (${envB.projectName})`,
-    })
-  ).toBeVisible();
-  expect(selectedEnv).toEqual(envB.id);
-});
-
-test.each`
-  inputValue    | numberOfMatchedItems
-  ${"test"}     | ${2}
-  ${"dev-env2"} | ${1}
-`(
-  "GIVEN EnvironmentSelector and populated store WHEN user types in '$inputValue' THEN shows $numberOfMatchedItems items",
-  async ({ inputValue, numberOfMatchedItems }) => {
-    const env = Environment.filterable[0];
-
-    render(
-      <MemoryRouter>
-        <DependencyProvider dependencies={dependencies}>
-          <EnvironmentSelector
-            environments={RemoteData.success(Environment.filterable)}
-            onSelectEnvironment={() => {
-              return;
-            }}
-            selectedEnvironment={env}
-          />
-        </DependencyProvider>
-      </MemoryRouter>
-    );
-
-    const toggle = screen.getByRole("button", {
-      name: `Selected Project: ${env.name} (${env.projectName})`,
-    });
-    await userEvent.click(toggle);
-
-    const menuItemsBefore = screen.getAllByRole("menuitem");
-    expect(menuItemsBefore).toHaveLength(Environment.filterable.length);
-
-    const input = screen.getByRole("searchbox", { name: "Filter Projects" });
-    await userEvent.type(input, inputValue);
-
-    const menuItemsAfter = screen.getAllByRole("menuitem");
-    expect(menuItemsAfter).toHaveLength(numberOfMatchedItems);
-  }
-);
-
-test("GIVEN EnvironmentSelector and populated store WHEN user types in non matching text THEN shows no items", async () => {
-  const env = Environment.filterable[0];
-  render(
-    <MemoryRouter>
-      <DependencyProvider dependencies={dependencies}>
-        <EnvironmentSelector
-          environments={RemoteData.success(Environment.filterable)}
-          onSelectEnvironment={() => {
-            return;
-          }}
-          selectedEnvironment={env}
-        />
-      </DependencyProvider>
-    </MemoryRouter>
-  );
-
-  const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${env.name} (${env.projectName})`,
+  await act(async () => {
+    await userEvent.click(listItem);
   });
-  await userEvent.click(toggle);
 
-  const menuItemsBefore = screen.getAllByRole("menuitem");
-  expect(menuItemsBefore).toHaveLength(Environment.filterable.length);
-
-  const input = screen.getByRole("searchbox", { name: "Filter Projects" });
-  await userEvent.type(input, "non_existing_project_name");
-
-  const menuItemsAfter = screen.queryByRole("menuitem");
-  expect(menuItemsAfter).not.toBeInTheDocument();
+  expect(screen.getByText(`Environment: ${envB.name}`)).toBeVisible();
+  expect(selectedEnv).toEqual(envB.id);
 });
 
 test("GIVEN EnvironmentSelector and environments with identical names WHEN user clicks on an environment THEN the correct environment is selected", async () => {
@@ -182,16 +106,21 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
     </MemoryRouter>
   );
   const toggle = screen.getByRole("button", {
-    name: `Selected Project: ${envA.name} (${envA.projectName})`,
+    name: `Environment: ${envB.name}`,
   });
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
 
   const menuItems = screen.getAllByRole("menuitem");
-  await userEvent.click(menuItems[2]);
+
+  await act(async () => {
+    await userEvent.click(menuItems[2]);
+  });
 
   expect(
     screen.getByRole("button", {
-      name: `Selected Project: ${envB.name} (${envB.projectName})`,
+      name: `Environment: ${envB.name}`,
     })
   );
 

@@ -60,7 +60,7 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
     ) {
       return Boolean(environmentDetails.settings[settingName]);
     } else {
-      return Boolean(environmentSettings.definition[settingName].default);
+      return Boolean(environmentSettings.definition[settingName]?.default);
     }
   }
 
@@ -71,10 +71,14 @@ export function EnvironmentModifierImpl(): EnvironmentModifier {
   function useIsProtectedEnvironment(): boolean {
     return useSetting("protected_environment");
   }
+  function useIsExpertModeEnabled(): boolean {
+    return useSetting("enable_lsm_expert_mode");
+  }
   return {
     useIsHalted,
     setEnvironment,
     useIsServerCompileEnabled,
     useIsProtectedEnvironment,
+    useIsExpertModeEnabled,
   };
 }

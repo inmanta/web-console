@@ -1,8 +1,7 @@
 import React from "react";
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
-import { act } from "react-dom/test-utils";
 import { Either } from "@/Core";
 import { FileFetcherImpl, getStoreInstance, QueryResolverImpl } from "@/Data";
 import {
@@ -72,11 +71,14 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
   const button = screen.getByRole("button", { name: words("jumpTo") });
   expect(button).toBeVisible();
   expect(
-    screen.queryByRole("generic", { name: "DiffSummaryList" })
+    screen.queryByRole("list", { name: "DiffSummaryList" })
   ).not.toBeInTheDocument();
-  await userEvent.click(button);
+
+  await act(async () => {
+    await userEvent.click(button);
+  });
   expect(
-    screen.getByRole("generic", {
+    screen.getByRole("list", {
       name: "DiffSummaryList",
     })
   ).toBeVisible();
@@ -94,7 +96,11 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     await apiHelper.resolve(Either.right(DesiredStateDiff.response));
   });
 
-  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("jumpTo") })
+    );
+  });
 
   expect(
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
@@ -108,7 +114,9 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     screen.queryByRole("listbox", { name: "StatusFilterOptions" })
   ).not.toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
+  });
 
   expect(
     screen.getByRole("listbox", { name: "StatusFilterOptions" })
@@ -118,10 +126,21 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
     name: "StatusFilterOption",
   });
   expect(statusOptions).toHaveLength(7);
-  await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
-  await userEvent.click(statusOptions[0]);
 
-  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("hideAll") })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(statusOptions[0]);
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("jumpTo") })
+    );
+  });
+
   expect(
     await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" })
   ).toHaveLength(2);
@@ -140,11 +159,14 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
   });
 
   const blocks = screen.getAllByRole("article", { name: "DiffBlock" });
-  await userEvent.click(
-    within(blocks[1]).getByRole("button", {
-      name: words("desiredState.compare.file.show"),
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(blocks[1]).getByRole("button", {
+        name: words("desiredState.compare.file.show"),
+      })
+    );
+  });
+
   expect(apiHelper.pendingRequests).toEqual([
     {
       method: "GET",
@@ -169,11 +191,13 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     await apiHelper.resolve(Either.right({ content: window.btoa("efghijkl") }));
   });
 
-  await userEvent.click(
-    within(blocks[1]).getByRole("button", {
-      name: words("desiredState.compare.file.hide"),
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(blocks[1]).getByRole("button", {
+        name: words("desiredState.compare.file.hide"),
+      })
+    );
+  });
 
   expect(
     within(blocks[1]).getByRole("button", {
@@ -181,11 +205,13 @@ test("GIVEN DesiredStateCompare WHEN File Resource THEN it shows prompt that can
     })
   ).toBeVisible();
 
-  await userEvent.click(
-    within(blocks[1]).getByRole("button", {
-      name: words("desiredState.compare.file.show"),
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(blocks[1]).getByRole("button", {
+        name: words("desiredState.compare.file.show"),
+      })
+    );
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.left("errormessage"));

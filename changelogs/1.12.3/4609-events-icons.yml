@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Add new icons for new event types in Service Inventory'
+issue-nr: 4609
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   FormFieldGroupExpandable,
@@ -21,6 +21,7 @@ import { BooleanToggleInput } from "./BooleanToggleInput";
 import { RelatedServiceProvider } from "./RelatedServiceProvider";
 import { SelectFormInput } from "./SelectFormInput";
 import { TextFormInput } from "./TextFormInput";
+import { TextListFormInput } from "./TextListFormInput";
 
 interface Props {
   field: Field;
@@ -70,6 +71,25 @@ export const FieldInput: React.FC<Props> = ({
             getUpdate(makePath(path, field.name), toOptionalBoolean(value))
           }
           description={field.description}
+          key={field.name}
+        />
+      );
+    case "TextList":
+      return (
+        <TextListFormInput
+          aria-label={`TextFieldInput-${field.name}`}
+          attributeName={field.name}
+          attributeValue={
+            get(formState, makePath(path, field.name)) as string[]
+          }
+          description={field.description}
+          isOptional={field.isOptional}
+          type={field.inputType}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name), value)
+          }
+          placeholder={getPlaceholderForType(field.type)}
+          typeHint={getTypeHintForType(field.type)}
           key={field.name}
         />
       );
@@ -149,7 +169,7 @@ export const FieldInput: React.FC<Props> = ({
           key={makePath(path, field.name)}
           serviceName={field.serviceEntity}
           attributeName={field.name}
-          description={field.description}
+          description={field.description !== null ? field.description : ""}
           attributeValue={
             get(formState, makePath(path, field.name), []) as string[]
           }
@@ -200,30 +220,68 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   formState,
   getUpdate,
   path,
-}) => (
-  <StyledFormFieldGroupExpandable
-    aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
-    header={
-      <FormFieldGroupHeader
-        titleText={{
-          text: field.name,
-          id: `NestedFieldInput-${makePath(path, field.name)}`,
-        }}
-        titleDescription={field.description}
-      />
+}) => {
+  const [showList, setShowList] = useState(
+    !field.isOptional || formState[field.name] !== null
+  );
+  const onAdd = () => {
+    setShowList(true);
+    if (formState !== null) {
+      getUpdate(makePath(path, field.name), createFormState(field.fields));
     }
-  >
-    {field.fields.map((childField) => (
-      <FieldInput
-        field={childField}
-        key={makePath(path, `${field.name}.${childField.name}`)}
-        formState={formState}
-        getUpdate={getUpdate}
-        path={makePath(path, field.name)}
-      />
-    ))}
-  </StyledFormFieldGroupExpandable>
-);
+  };
+
+  const getOnDelete = () => () => {
+    setShowList(false);
+    return getUpdate(makePath(path, field.name), null);
+  };
+  return (
+    <StyledFormFieldGroupExpandable
+      aria-label={`NestedFieldInput-${makePath(path, field.name)}`}
+      header={
+        <FormFieldGroupHeader
+          titleText={{
+            text: field.name,
+            id: `NestedFieldInput-${makePath(path, field.name)}`,
+          }}
+          titleDescription={field.description}
+          actions={
+            field.isOptional && (
+              <>
+                <Button
+                  variant="link"
+                  icon={<PlusIcon />}
+                  onClick={onAdd}
+                  isDisabled={showList}
+                >
+                  {words("catalog.callbacks.add")}
+                </Button>
+                <Button
+                  variant="link"
+                  onClick={getOnDelete()}
+                  isDisabled={!showList}
+                >
+                  {words("delete")}
+                </Button>
+              </>
+            )
+          }
+        />
+      }
+    >
+      {showList &&
+        field.fields.map((childField) => (
+          <FieldInput
+            field={childField}
+            key={makePath(path, `${field.name}.${childField.name}`)}
+            formState={formState}
+            getUpdate={getUpdate}
+            path={makePath(path, field.name)}
+          />
+        ))}
+    </StyledFormFieldGroupExpandable>
+  );
+};
 
 interface DictListProps {
   field: DictListField;
@@ -266,9 +324,9 @@ const DictListFieldInput: React.FC<DictListProps> = ({
             text: field.name,
             id: `DictListFieldInput-${makePath(path, field.name)}`,
           }}
-          titleDescription={`${field.description} (${words(
-            "inventory.createInstance.items"
-          )(list.length)})`}
+          titleDescription={`${
+            field.description !== null ? field.description : ""
+          } (${words("inventory.createInstance.items")(list.length)})`}
           actions={
             <Button
               variant="link"

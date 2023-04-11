@@ -64,7 +64,9 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
     datePresenter.getFull(Mock.listResponse.data[0].date)
   );
 
-  await userEvent.click(select);
+  await act(async () => {
+    await userEvent.click(select);
+  });
   const dropdown = screen.getByRole("listbox", { name: "ReportList" });
   const options = within(dropdown).getAllByRole<HTMLButtonElement>("option");
   expect(options).toHaveLength(3);
@@ -105,7 +107,9 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
 
   // Also verify that the option shows the selected icon
   const select = screen.getByRole("button", { name: "ReportListSelect" });
-  await userEvent.click(select);
+  await act(async () => {
+    await userEvent.click(select);
+  });
 
   const dropdown = screen.getByRole("listbox", { name: "ReportList" });
   const options = within(dropdown).getAllByRole<HTMLButtonElement>("option");
@@ -113,7 +117,9 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
   expect(options[0]).toHaveAttribute("aria-selected", "true");
 
   // Select a different report
-  await userEvent.click(options[1]);
+  await act(async () => {
+    await userEvent.click(options[1]);
+  });
   // Verify the request
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -125,18 +131,23 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
   // Verify that it's selected
-  await userEvent.click(select);
+  await act(async () => {
+    await userEvent.click(select);
+  });
+
   expect(
     within(
       screen.getByRole("listbox", { name: "ReportList" })
     ).getAllByRole<HTMLButtonElement>("option")[1]
   ).toHaveAttribute("aria-selected", "true");
   // Go back to the first one
-  await userEvent.click(
-    within(
-      screen.getByRole("listbox", { name: "ReportList" })
-    ).getAllByRole<HTMLButtonElement>("option")[0]
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(
+        screen.getByRole("listbox", { name: "ReportList" })
+      ).getAllByRole<HTMLButtonElement>("option")[0]
+    );
+  });
   // Verify the request
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -148,7 +159,10 @@ test("GIVEN ComplianceCheck page When a report is selected from the list THEN th
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
   // Verify that it's selected
-  await userEvent.click(select);
+  await act(async () => {
+    await userEvent.click(select);
+  });
+
   expect(
     within(
       screen.getByRole("listbox", { name: "ReportList" })
@@ -171,7 +185,9 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   const dryRunButton = screen.getByRole("button", {
     name: words("desiredState.complianceCheck.action.dryRun"),
   });
-  await userEvent.click(dryRunButton);
+  await act(async () => {
+    await userEvent.click(dryRunButton);
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -200,7 +216,9 @@ test("GIVEN ComplianceCheck page WHEN user clicks on 'Perform dry run' THEN new 
   expect(select).toBeInTheDocument();
   expect(select).toHaveTextContent(datePresenter.getFull(Mock.a.date));
 
-  await userEvent.click(select);
+  await act(async () => {
+    await userEvent.click(select);
+  });
   const dropdown = screen.getByRole("listbox", { name: "ReportList" });
   const options = within(dropdown).getAllByRole<HTMLButtonElement>("option");
   expect(options).toHaveLength(4);
@@ -226,7 +244,11 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     await apiHelper.resolve(Either.right(Mock.reportResponse));
   });
 
-  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("jumpTo") })
+    );
+  });
 
   expect(
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
@@ -240,7 +262,9 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     screen.queryByRole("listbox", { name: "StatusFilterOptions" })
   ).not.toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
+  await act(async () => {
+    await userEvent.click(screen.getByRole("button", { name: "StatusFilter" }));
+  });
 
   expect(
     screen.getByRole("listbox", { name: "StatusFilterOptions" })
@@ -250,10 +274,20 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     name: "StatusFilterOption",
   });
   expect(statusOptions).toHaveLength(7);
-  await userEvent.click(screen.getByRole("button", { name: words("hideAll") }));
-  await userEvent.click(statusOptions[0]);
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("hideAll") })
+    );
+  });
+  await act(async () => {
+    await userEvent.click(statusOptions[0]);
+  });
 
-  await userEvent.click(screen.getByRole("button", { name: words("jumpTo") }));
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("jumpTo") })
+    );
+  });
   expect(
     await screen.findAllByRole("listitem", { name: "DiffSummaryListItem" })
   ).toHaveLength(2);

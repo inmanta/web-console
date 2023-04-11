@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Fix service details relation links to send user to specified service page'
+issue-nr: 4617
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"

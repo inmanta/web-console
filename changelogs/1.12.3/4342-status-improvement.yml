@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Move sidebars status icon into Header'
+issue-nr: 4342
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

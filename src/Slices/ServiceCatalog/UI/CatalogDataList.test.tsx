@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ServiceModel } from "@/Core";
 import {
@@ -77,9 +77,14 @@ test("GIVEN CatalogDataList WHEN service THEN service details has correct link",
 
   const list = screen.getByRole("list", { name: "List of service entities" });
   const listItem = within(list).getByRole("listitem", { name: Service.a.name });
+
   expect(listItem).toBeInTheDocument();
+
   const dropdown = within(listItem).getByLabelText("Actions-details");
-  await userEvent.click(within(dropdown).getByRole("button"));
+  await act(async () => {
+    await userEvent.click(within(dropdown).getByRole("button"));
+  });
+
   const link = screen.getByRole("link", {
     name: words("catalog.button.details"),
   });

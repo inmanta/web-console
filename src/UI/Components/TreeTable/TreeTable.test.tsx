@@ -1,6 +1,15 @@
 import React from "react";
-import { render, screen, fireEvent, within } from "@testing-library/react";
+import { render, screen, fireEvent, within, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { Attributes, EntityLike } from "@/Core";
+import { CommandResolverImpl, KeycloakAuthHelper } from "@/Data";
+import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
+import {
+  DeferredApiHelper,
+  dependencies,
+  DynamicCommandManagerResolver,
+} from "@/Test";
+import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { CatalogAttributeHelper, CatalogTreeTableHelper } from "./Catalog";
 import { PathHelper, TreeExpansionManager } from "./Helpers";
@@ -10,25 +19,49 @@ import {
 } from "./Inventory";
 import { TreeTable } from "./TreeTable";
 
+function inventorySetup(attributes: Attributes) {
+  const apiHelper = new DeferredApiHelper();
+
+  const updateAttribute = UpdateInstanceAttributeCommandManager(
+    new KeycloakAuthHelper(),
+    apiHelper
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([updateAttribute])
+  );
+
+  const component = (
+    <DependencyProvider
+      dependencies={{
+        ...dependencies,
+        commandResolver,
+      }}
+    >
+      <TreeTable
+        treeTableHelper={
+          new InventoryTreeTableHelper(
+            new PathHelper("$"),
+            new TreeExpansionManager("$"),
+            new InventoryAttributeHelper("$"),
+            attributes
+          )
+        }
+        version={1}
+      />
+    </DependencyProvider>
+  );
+
+  return component;
+}
 test("TreeTable 1st level of nested property can be expanded", async () => {
   // Arrange
   render(
-    <TreeTable
-      treeTableHelper={
-        new InventoryTreeTableHelper(
-          new PathHelper("$"),
-          new TreeExpansionManager("$"),
-          new InventoryAttributeHelper("$"),
-          {
-            candidate: null,
-            active: { a: { b: { c: "d" } } },
-            rollback: null,
-          }
-        )
-      }
-    />
+    inventorySetup({
+      candidate: null,
+      active: { a: { b: { c: "d" } } },
+      rollback: null,
+    })
   );
-
   expect(
     screen.queryByRole("row", { name: "Row-a$b" })
   ).not.toBeInTheDocument();
@@ -43,20 +76,11 @@ test("TreeTable 1st level of nested property can be expanded", async () => {
 test("TreeTable 2nd level of nested property can be expanded", async () => {
   // Arrange
   render(
-    <TreeTable
-      treeTableHelper={
-        new InventoryTreeTableHelper(
-          new PathHelper("$"),
-          new TreeExpansionManager("$"),
-          new InventoryAttributeHelper("$"),
-          {
-            candidate: null,
-            active: { a: { b: { c: "d" } } },
-            rollback: null,
-          }
-        )
-      }
-    />
+    inventorySetup({
+      candidate: null,
+      active: { a: { b: { c: "d" } } },
+      rollback: null,
+    })
   );
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
@@ -71,6 +95,40 @@ test("TreeTable 2nd level of nested property can be expanded", async () => {
   expect(screen.getByRole("row", { name: "Row-a$b$c" })).toBeVisible();
 });
 
+function catalogSetup(service: EntityLike) {
+  const apiHelper = new DeferredApiHelper();
+
+  const updateAttribute = UpdateInstanceAttributeCommandManager(
+    new KeycloakAuthHelper(),
+    apiHelper
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([updateAttribute])
+  );
+
+  const component = (
+    <DependencyProvider
+      dependencies={{
+        ...dependencies,
+        commandResolver,
+      }}
+    >
+      <TreeTable
+        treeTableHelper={
+          new CatalogTreeTableHelper(
+            new PathHelper("$"),
+            new TreeExpansionManager("$"),
+            new CatalogAttributeHelper("$"),
+            service
+          )
+        }
+        version={1}
+      />
+    </DependencyProvider>
+  );
+
+  return component;
+}
 test("TreeTable with catalog entries can be expanded", async () => {
   const service = {
     attributes: [],
@@ -90,18 +148,7 @@ test("TreeTable with catalog entries can be expanded", async () => {
       },
     ],
   };
-  render(
-    <TreeTable
-      treeTableHelper={
-        new CatalogTreeTableHelper(
-          new PathHelper("$"),
-          new TreeExpansionManager("$"),
-          new CatalogAttributeHelper("$"),
-          service
-        )
-      }
-    />
-  );
+  render(catalogSetup(service));
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
   expect(
@@ -164,26 +211,21 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
       },
     ],
   };
-  render(
-    <TreeTable
-      treeTableHelper={
-        new CatalogTreeTableHelper(
-          new PathHelper("$"),
-          new TreeExpansionManager("$"),
-          new CatalogAttributeHelper("$"),
-          service
-        )
-      }
-    />
-  );
+  render(catalogSetup(service));
+
   //get buttons from dropdown
   const dropdown = screen.getByRole("listbox", {
     name: "expand-collapse-dropdown",
   });
   const dropdownOpenButton = within(dropdown).getByLabelText("Actions");
-  await userEvent.click(dropdownOpenButton);
 
-  await userEvent.click(within(dropdown).getByText("Expand all"));
+  await act(async () => {
+    await userEvent.click(dropdownOpenButton);
+  });
+  await act(async () => {
+    await userEvent.click(within(dropdown).getByText("Expand all"));
+  });
+
   const row1 = screen.getByRole("row", { name: "Row-a$c$d" });
   const row2 = screen.getByRole("row", { name: "Row-a$e$f" });
   const row3 = screen.getByRole("row", { name: "Row-g$i$m$n" });
@@ -193,9 +235,13 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
   expect(row3).toBeVisible();
 
   fireEvent.click(dropdownOpenButton);
-  await userEvent.click(
-    within(dropdown).getByText(words("inventory.tabs.collapse"))
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      within(dropdown).getByText(words("inventory.tabs.collapse"))
+    );
+  });
+
   expect(row1).not.toBeVisible();
   expect(row2).not.toBeVisible();
   expect(row3).not.toBeVisible();

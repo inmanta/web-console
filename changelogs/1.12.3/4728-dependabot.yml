@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump moment-timezone from 0.5.40 to 0.5.41'
+destination-branches:
+- master
+- iso6
+sections: {}

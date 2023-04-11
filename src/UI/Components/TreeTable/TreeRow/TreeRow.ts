@@ -3,7 +3,7 @@ export type TreeRow = Flat | Root | Branch | Leaf;
 export interface Cell {
   label: string;
   value: string;
-  hasOnClick?: boolean;
+  hasRelation?: boolean;
   serviceName?: string;
 }
 
@@ -12,6 +12,7 @@ interface Flat {
   id: string;
   primaryCell: Cell;
   valueCells: Cell[];
+  type?: string;
 }
 
 interface Root {
@@ -39,6 +40,7 @@ interface Leaf {
   level: number;
   primaryCell: Cell;
   valueCells: Cell[];
+  type?: string;
 }
 
 export function isRowOfMultipleValues(row: Flat | Leaf): boolean {

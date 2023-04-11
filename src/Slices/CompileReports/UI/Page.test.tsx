@@ -76,19 +76,23 @@ test("CompileReportsView shows empty table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
-    Either.right({
-      data: [],
-      links: { self: "" },
-      metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-    })
-  );
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: [],
+        links: { self: "" },
+        metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Empty" })
@@ -99,13 +103,17 @@ test("CompileReportsView shows failed table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.left("error"));
+  await act(async () => {
+    await apiHelper.resolve(Either.left("error"));
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Failed" })
@@ -116,13 +124,17 @@ test("CompileReportsView shows success table", async () => {
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(Either.right(Mock.response));
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "CompileReportsView-Success" })
@@ -133,19 +145,23 @@ test("CompileReportsView shows updated table", async () => {
   const { component, apiHelper, scheduler } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Loading" })
   ).toBeInTheDocument();
 
-  apiHelper.resolve(
-    Either.right({
-      data: [],
-      links: { self: "" },
-      metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-    })
-  );
+  await act(async () => {
+    await apiHelper.resolve(
+      Either.right({
+        data: [],
+        links: { self: "" },
+        metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
+      })
+    );
+  });
 
   expect(
     await screen.findByRole("generic", { name: "CompileReportsView-Empty" })
@@ -153,8 +169,12 @@ test("CompileReportsView shows updated table", async () => {
 
   scheduler.executeAll();
 
-  apiHelper.resolve(204);
-  apiHelper.resolve(Either.right(Mock.response));
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
+  await act(async () => {
+    await apiHelper.resolve(Either.right(Mock.response));
+  });
 
   expect(
     await screen.findByRole("grid", { name: "CompileReportsView-Success" })
@@ -165,7 +185,9 @@ test("When using the status filter with the Success option then the successful c
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -174,24 +196,32 @@ test("When using the status filter with the Success option then the successful c
   const initialRows = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
   });
+
   expect(initialRows).toHaveLength(8);
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
 
   const input = screen.getByPlaceholderText(
     words("compileReports.filters.status.placeholder")
   );
-  await userEvent.click(input);
+
+  await act(async () => {
+    await userEvent.click(input);
+  });
 
   const option = await screen.findByRole("option", {
     name: words("compileReports.filters.test.success"),
   });
-  await await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.success=true`
@@ -216,7 +246,9 @@ test("When using the status filter with the In Progress opiton then the compile 
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -225,28 +257,39 @@ test("When using the status filter with the In Progress opiton then the compile 
   const initialRows = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
   });
+
   expect(initialRows).toHaveLength(8);
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
-  await userEvent.click(
-    screen.getByRole("option", { name: words("compileReports.columns.status") })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", {
+        name: words("compileReports.columns.status"),
+      })
+    );
+  });
 
   const input = screen.getByPlaceholderText(
     words("compileReports.filters.status.placeholder")
   );
-  await userEvent.click(input);
+  await act(async () => {
+    await userEvent.click(input);
+  });
 
   const option = await screen.findByRole("option", {
     name: words("compileReports.tests.filters.result.inProgress"),
   });
 
-  await await userEvent.click(option);
+  await act(async () => {
+    await userEvent.click(option);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.started=true&filter.completed=false`
@@ -271,7 +314,9 @@ it("When using the Date filter then the compile reports within the range selecte
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
@@ -280,28 +325,42 @@ it("When using the Date filter then the compile reports within the range selecte
   const initialRows = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
   });
+
   expect(initialRows).toHaveLength(8);
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
-  await userEvent.click(
-    screen.getByRole("option", {
-      name: words("compileReports.columns.requested"),
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", {
+        name: words("compileReports.columns.requested"),
+      })
+    );
+  });
 
   const fromDatePicker = await screen.findByLabelText("From Date Picker");
-  await userEvent.click(fromDatePicker);
-  await userEvent.type(fromDatePicker, `2021-09-28`);
-  const toDatePicker = await screen.findByLabelText("To Date Picker");
-  await userEvent.click(toDatePicker);
-  await userEvent.type(toDatePicker, `2021-09-30`);
+  await act(async () => {
+    await userEvent.click(fromDatePicker);
+  });
+  await act(async () => {
+    await userEvent.type(fromDatePicker, "2021-09-28");
+  });
 
-  await userEvent.click(await screen.findByLabelText("Apply date filter"));
+  const toDatePicker = await screen.findByLabelText("To Date Picker");
+
+  await act(async () => {
+    await userEvent.click(toDatePicker);
+    await userEvent.type(toDatePicker, "2021-09-30");
+  });
+  await act(async () => {
+    await userEvent.click(await screen.findByLabelText("Apply date filter"));
+  });
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/compilereport?limit=20&sort=requested.desc&filter.requested=ge%3A2021-09-`
@@ -319,11 +378,15 @@ it("When using the Date filter then the compile reports within the range selecte
   const rowsAfter = await screen.findAllByRole("row", {
     name: "Compile Reports Table Row",
   });
+
   expect(rowsAfter).toHaveLength(3);
 
   // The chips are hidden in small windows, so resize it
   window = Object.assign(window, { innerWidth: 1200 });
-  window.dispatchEvent(new Event("resize"));
+  await act(async () => {
+    window.dispatchEvent(new Event("resize"));
+  });
+
   expect(
     await screen.findByText("from | 2021/09/28 00:00:00", { exact: false })
   ).toBeVisible();
@@ -336,15 +399,21 @@ test("Given CompileReportsView When recompile is triggered Then table is updated
   const { component, apiHelper } = setup();
   render(component);
 
-  apiHelper.resolve(204);
+  await act(async () => {
+    await apiHelper.resolve(204);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right(Mock.response));
   });
 
   const button = screen.getByRole("button", { name: "RecompileButton" });
+
   expect(button).toBeEnabled();
-  await userEvent.click(button);
+
+  await act(async () => {
+    await userEvent.click(button);
+  });
 
   await act(async () => {
     await apiHelper.resolve(Either.right({}));

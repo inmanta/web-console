@@ -167,7 +167,11 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN an a
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.download")
   );
-  await userEvent.click(downloadButton);
+
+  await act(async () => {
+    await userEvent.click(downloadButton);
+  });
+
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.downloading")
   );
@@ -201,7 +205,11 @@ test("GIVEN StatusPage with support extension WHEN user click download THEN butt
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.download")
   );
-  await userEvent.click(downloadButton);
+
+  await act(async () => {
+    await userEvent.click(downloadButton);
+  });
+
   expect(downloadButton).toHaveTextContent(
     words("status.supportArchive.action.downloading")
   );
@@ -239,8 +247,10 @@ test("GIVEN StatusPage with support extension WHEN user click download and respo
   const downloadButton = screen.getByRole("button", {
     name: "DownloadArchiveButton",
   });
-  await userEvent.click(downloadButton);
 
+  await act(async () => {
+    await userEvent.click(downloadButton);
+  });
   await act(async () => {
     await apiHelper.resolve(Either.left("error"));
   });

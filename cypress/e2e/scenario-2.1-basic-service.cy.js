@@ -39,17 +39,6 @@ const checkStatusCompile = (id) => {
 };
 
 /**
- * when ID of the environment is not yet known, use this method to wait for the compile to be terminated.
- */
-const waitForCompile = () => {
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-    checkStatusCompile(id);
-  });
-};
-
-/**
  * Will by default execute the force update on the 'lsm-frontend' environment if no argumenst are being passed.
  * This method can be executed standalone, but is part of the cleanup cycle that is needed before running a scenario.
  *
@@ -182,14 +171,14 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // check state is up now
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 40000 })
+      .find('[data-label="State"]', { timeout: 60000 })
       .should("contain", "up");
 
     // click on edit button
     cy.get(".pf-c-description-list").contains("Edit").click();
 
     // check if the amount of fields is 4 instead of 11
-    cy.get("form").find("input").should("have.length", 4);
+    cy.get("form").find("input").should("have.length", 5);
 
     // delete first value and submit should give an error toast
     cy.get("#address_r1").clear();
@@ -233,19 +222,24 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
+    //check for instance state to change to up
+    cy.get('[data-label="State"]')
+      .find(".pf-c-label.pf-m-green", { timeout: 60000 })
+      .should("contain", "up");
+
     // expand first row
     cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
-    waitForCompile();
-
     // delete but cancel deletion in modal
     cy.get(".pf-c-description-list", { timeout: 60000 })
+      .find("button")
       .contains("Delete")
       .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("No").click();
 
-    cy.get(".pf-c-description-list", { timeout: 40000 })
+    cy.get(".pf-c-description-list", { timeout: 60000 })
+      .find("button")
       .contains("Delete")
       .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");

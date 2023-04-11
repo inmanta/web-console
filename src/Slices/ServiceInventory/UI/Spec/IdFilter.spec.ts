@@ -24,13 +24,19 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
   const picker = within(filterBar).getByRole("button", {
     name: "FilterPicker",
   });
-  await userEvent.click(picker);
+  await act(async () => {
+    await userEvent.click(picker);
+  });
 
   const id = screen.getByRole("option", { name: "Id" });
-  await userEvent.click(id);
+  await act(async () => {
+    await userEvent.click(id);
+  });
 
   const input = screen.getByRole("searchbox", { name: "IdFilter" });
-  await userEvent.type(input, `${ServiceInstance.a.id}{enter}`);
+  await act(async () => {
+    await userEvent.type(input, `${ServiceInstance.a.id}{enter}`);
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.id=${ServiceInstance.a.id}&sort=created_at.desc`

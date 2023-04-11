@@ -1,30 +1,27 @@
-import React, { ReactNode, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
 import {
-  Button,
-  ContextSelector,
-  ContextSelectorFooter,
-  ContextSelectorItem,
-  Flex,
-  FlexItem,
+  Dropdown,
+  DropdownGroup,
+  DropdownItem,
+  DropdownSeparator,
+  DropdownToggle,
   Tooltip,
 } from "@patternfly/react-core";
-import { words } from "@/UI";
+import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
+import { words } from "@/UI/words";
 
 interface Props {
   searchValue: string;
   onSearchInputChange: (value: string) => void;
   items: string[];
-  onSelect: (event, value: ReactNode) => void;
+  onSelect: (value: string) => void;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   toggleText: string;
 }
 
 export const EnvSelector: React.FC<Props> = ({
-  searchValue,
-  onSearchInputChange,
   items,
   onSelect,
   isOpen,
@@ -32,37 +29,62 @@ export const EnvSelector: React.FC<Props> = ({
   toggleText,
 }) => {
   const { routeManager } = useContext(DependencyContext);
-  return (
-    <ContextSelector
-      toggleText={toggleText}
-      onSearchInputChange={onSearchInputChange}
-      isOpen={isOpen}
-      searchInputValue={searchValue}
-      onToggle={() => setIsOpen(!isOpen)}
-      onSelect={onSelect}
-      screenReaderLabel="Selected Project:"
-      searchButtonAriaLabel="Filter Projects"
-      footer={
-        <ContextSelectorFooter>
-          <Flex justifyContent={{ default: "justifyContentFlexEnd" }}>
-            <FlexItem>
-              <Tooltip content={words("home.navigation.tooltip")}>
-                <Link to={routeManager.getUrl("Home", undefined)}>
-                  <Button variant="primary">
-                    {words("home.navigation.button")}{" "}
-                  </Button>
-                </Link>
-              </Tooltip>
-            </FlexItem>
-          </Flex>
-        </ContextSelectorFooter>
-      }
-    >
+  const envs = [
+    <DropdownGroup label={words("home.environment.selector")} key="envs-group">
       {items.map((item, index) => (
-        <ContextSelectorItem {...{ role: "menuitem" }} key={index}>
-          {item}
-        </ContextSelectorItem>
+        <StyledItem onClick={() => onSelect(item)} key={`env-${index}-${item}`}>
+          {item.split(" ")[0].length > 22
+            ? item.split(" ")[0].slice(18) + "..."
+            : item.split(" ")[0]}
+        </StyledItem>
       ))}
-    </ContextSelector>
+    </DropdownGroup>,
+  ];
+  //add footer at the end
+  envs.push(
+    <div key="overview-link">
+      <StyledSeparator />
+      <Tooltip content={words("home.navigation.tooltip")}>
+        <StyledItem href={routeManager.getUrl("Home", undefined)}>
+          {words("home.navigation.button")}
+        </StyledItem>
+      </Tooltip>
+    </div>
+  );
+  return (
+    <StyledDropdown
+      isOpen={isOpen}
+      toggle={
+        <StyledToggle id="toggle-button" onToggle={() => setIsOpen(!isOpen)}>
+          Environment: {toggleText.split(" ")[0]}
+        </StyledToggle>
+      }
+      dropdownItems={envs}
+    />
   );
 };
+
+const StyledDropdown = styled(Dropdown)`
+  height: 100%;
+  --pf-c-dropdown--m-expanded__toggle--before--BorderBottomWidth: 4px;
+  --pf-c-dropdown__toggle--before--BorderRightColor: #666768;
+  --pf-c-dropdown__toggle--before--BorderLeftColor: #666768;
+  --pf-c-dropdown__toggle--PaddingRight: 1rem;
+  --pf-c-dropdown__toggle--PaddingLeft: 1rem;
+`;
+const StyledToggle = styled(DropdownToggle)`
+  height: 100%;
+  max-width: 260px;
+  min-width: 260px;
+  &::before {
+    border-top: 0;
+  }
+`;
+const StyledItem = styled(DropdownItem)`
+  max-width: 260px;
+  min-width: 260px;
+`;
+const StyledSeparator = styled(DropdownSeparator)`
+  padding: 0 15px;
+  margin: 10px 0 5px !important;
+`;
