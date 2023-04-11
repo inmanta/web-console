@@ -32,6 +32,9 @@ function getOutsidePoint(
   return point.round();
 }
 
+/**
+ * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#routers.custom
+ */
 const customRouter = function (
   vertices: Array<g.Point>,
   routerOptions: RouterOptions,

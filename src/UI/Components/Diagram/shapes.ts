@@ -1,6 +1,11 @@
 import { dia, shapes, util } from "@clientio/rappid";
 import { ColumnData } from "./interfaces";
 
+/**
+ * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#shapes
+ * https://resources.jointjs.com/tutorial/custom-elements
+ * https://resources.jointjs.com/tutorial/ts-shape
+ */
 export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
   defaults() {
     return util.defaultsDeep(

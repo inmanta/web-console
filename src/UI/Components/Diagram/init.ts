@@ -8,6 +8,9 @@ import { EntityConnection } from "./shapes";
 export default function diagramInit(canvas) {
   const graph = new dia.Graph({}, { cellNamespace: shapes });
 
+  /**
+   * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Paper
+   */
   const paper = new dia.Paper({
     model: graph,
     width: 1000,
@@ -39,6 +42,9 @@ export default function diagramInit(canvas) {
       srcMagnet !== tgtMagnet,
   });
 
+  /**
+   * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Paper
+   */
   const scroller = new ui.PaperScroller({
     paper,
     cursor: "grab",

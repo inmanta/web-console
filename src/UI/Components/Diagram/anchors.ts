@@ -1,7 +1,9 @@
 import { g, dia, anchors } from "@clientio/rappid";
 
 export const anchorNamespace = { ...anchors };
-
+/**
+ *  https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#anchors.custom
+ */
 const customAnchor = function (
   /* eslint-disable @typescript-eslint/no-explicit-any */
   this: any,
