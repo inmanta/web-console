@@ -47,9 +47,7 @@ const kinds = [
 
 export type RouteKind = (typeof kinds)[number];
 
-const restrictedKinds = ["InstanceComposer", "InstanceComposerEditor"] as const;
-
-export type RestrictedRouteKind = (typeof restrictedKinds)[number];
+export type RestrictedRouteKind = "InstanceComposer" | "InstanceComposerEditor";
 
 export const isValidKind = (value: string): value is RouteKind =>
   kinds.includes(value as RouteKind);
