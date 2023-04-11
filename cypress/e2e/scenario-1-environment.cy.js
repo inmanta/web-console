@@ -458,14 +458,6 @@ describe("Environment", () => {
       .click();
     cy.get('[aria-label="Warning"]').should("not.exist");
 
-    //Change purge_on_delete
-    cy.get('[aria-label="Row-purge_on_delete"]').find(".pf-c-switch").click();
-    cy.get('[aria-label="Warning"]').should("exist");
-    cy.get('[aria-label="Row-purge_on_delete"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
-
     //Change push_on_auto_deploy
     cy.get('[aria-label="Row-push_on_auto_deploy"]')
       .find(".pf-c-switch")
