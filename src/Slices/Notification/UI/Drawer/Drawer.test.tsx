@@ -317,7 +317,7 @@ test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cle
   });
 
   expect(apiHelper.pendingRequests).toEqual([
-    updateRequest("abcdefgh03", { read: true, cleared: true }),
+    updateRequest("abcdefgh03", { cleared: true }),
   ]);
 
   await act(async () => {
