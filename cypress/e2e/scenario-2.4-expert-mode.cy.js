@@ -79,7 +79,7 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
     cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
-    // make sure the call to get inventory has been executed
+    // Make sure the call to get inventory has been executed
     cy.wait("@GetServiceInventory");
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
@@ -97,17 +97,17 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
     cy.get("#name").type("basic-service");
     cy.get("button").contains("Confirm").click();
 
-    // make sure the call to get inventory has been executed
+    // Make sure the call to get inventory has been executed
     cy.wait("@GetServiceInventory");
 
-    // check if the view is still empty, also means we have been redirected as expected.
+    // Check if the view is still empty, also means we have been redirected as expected.
     cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
 
-    //Go to the settings, then to the configuration tab
+    // Go to the settings, then to the configuration tab
     cy.get(".pf-c-nav__item").contains("Settings").click();
     cy.get("button").contains("Configuration").click();
 
-    //Change enable_lsm_expert_mode
+    // Change enable_lsm_expert_mode
     cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
       .find(".pf-c-switch")
       .click();
@@ -119,49 +119,56 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
     cy.get(".pf-c-banner.pf-m-danger.pf-m-sticky")
       .should("exist")
       .and("contain", "LSM expert mode is enabled, proceed with caution.");
-    //go back to service inventory
+
+    // Go back to service inventory
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
     cy.get("#expand-toggle0").click();
 
-    //wait until state is up and change it to creating with help of force state functionality
+    // Wait until state is up
     cy.get('[aria-label="InstanceRow-Intro"]:first')
       .find('[data-label="State"]', { timeout: 60000 })
       .should("contain", "up");
+
     cy.get(".pf-c-description-list").contains("Edit").should("not.be.disabled");
 
     cy.get(".pf-c-dropdown__toggle")
       .contains("Force state to")
       .click({ force: true });
-    cy.get(".pf-c-dropdown__menu-item").contains("creating").click();
+    cy.get(".pf-c-dropdown__menu-item").contains("setting_start").click();
+
     // Modal title for confirmation of Destroying instance should be visible
     cy.get(".pf-c-modal-box__title-text")
       .contains("Confirm force state transfer")
       .should("be.visible");
 
-    //Cancel modal and expect nothing to change
+    // Cancel modal and expect nothing to change
     cy.get("button").contains("No").click();
+
     cy.get('[aria-label="InstanceRow-Intro"]:first')
       .find('[data-label="State"]')
       .should("contain", "up");
 
-    //push new state, confirm modal and expect new value in the State data cell
+    // Push new state, confirm modal and expect new value in the State data cell
     cy.get(".pf-c-dropdown__toggle")
       .contains("Force state to")
       .click({ force: true });
-    cy.get(".pf-c-dropdown__menu-item").contains("creating").click();
+
+    cy.get(".pf-c-dropdown__menu-item").contains("setting_start").click();
     cy.get("button").contains("Yes").click();
+
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 60000 })
-      .should("contain", "creating");
+      .find('[data-label="State"]', { timeout: 40000 })
+      .should("contain", "setting_start");
   });
 
   it("2.4.2 Edit instance attributes", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+
     // Expect to find one badge on the basic-service row.
     cy.get("#basic-service")
       .get('[aria-label="Number of instances by label"]')
@@ -170,15 +177,18 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
     cy.get("#basic-service").contains("Show inventory").click();
     cy.get("#expand-toggle0").click();
 
-    // expect row to be expanded
+    // Expect row to be expanded
     cy.get(".pf-c-table__expandable-row-content").should("to.be.visible");
+
     // Expect to find status tab
     cy.get(".pf-c-tabs__list li:first").should("have.class", "pf-m-current");
+
     // Expect edit button to be disabled after previous state change
     cy.get(".pf-c-description-list")
       .contains("Edit", { timeout: 60000 })
-      .should("be.disabled", { timeout: 60000 });
-    // expect to land on Service Inventory page and to find attributes tab button
+      .should("be.disabled");
+
+    // Expect to land on Service Inventory page and to find attributes tab button
     cy.get(".pf-c-tabs__list")
       .contains("Attributes", { timeout: 20000 })
       .click();
@@ -191,12 +201,14 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
       .find('[data-label="active"]')
       .find("button")
       .click();
-    //type invalid value and submit
+
+    // Type invalid value and submit
     cy.get('[aria-label="new-attribute-input"]').type(
       "{selectall}{backspace}invalid"
     );
     cy.get('[data-testid="inline-submit"]').click();
-    //expect dialog to pop-up, and after canceling it won't affect input state
+
+    // Expect dialog to pop-up, and after canceling it won't affect input state
     cy.get(".pf-c-modal-box__title-text")
       .contains("Update Attribute")
       .should("be.visible");
@@ -205,7 +217,8 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
       "have.value",
       "invalid"
     );
-    // send invalid value and expect toast alert with error message
+
+    // Send invalid value and expect toast alert with error message
     cy.get('[data-testid="inline-submit"]').click();
     cy.get('[data-testid="dialog-submit"]').click();
     cy.get('[aria-label="ToastAlert"]')
@@ -214,7 +227,8 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
     cy.get(
       '[aria-label="Close Danger alert: alert: Setting new attribute failed"]'
     ).click();
-    //pass valid value then submit and expect new value to be pushed to the cell
+
+    // Pass valid value then submit and expect new value to be pushed to the cell
     cy.get('[aria-label="new-attribute-input"]').type(
       "{selectall}{backspace}1.2.3.8/32"
     );
@@ -224,7 +238,7 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
       .find('[data-label="active"]', { timeout: 20000 })
       .should("contain", "1.2.3.8/32");
 
-    //interface_r1_name
+    // interface_r1_name
     cy.get('[aria-label="Row-interface_r1_name"')
       .find('[data-label="active"]')
       .should("contain", "eth0");
@@ -232,18 +246,20 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
       .find('[data-label="active"]')
       .find("button")
       .click();
-    //type invalid value and submit
+
+    // Type invalid value and submit
     cy.get('[aria-label="new-attribute-input"]').type(
       "{selectall}{backspace}eth1"
     );
     cy.get('[data-testid="inline-submit"]').click();
-    //expect dialog to pop-up, and after submiting xpect new value to be pushed to the cell
+
+    // Expect dialog to pop-up, and after submiting xpect new value to be pushed to the cell
     cy.get('[data-testid="dialog-submit"]').click();
     cy.get('[aria-label="Row-interface_r1_name"')
       .find('[data-label="active"]', { timeout: 20000 })
       .should("contain", "eth1");
 
-    //should_deploy_fail
+    // should_deploy_fail
     cy.get('[aria-label="Row-should_deploy_fail"')
       .find('[data-label="active"]')
       .should("contain", "false");
@@ -260,7 +276,7 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
       .find('[data-label="active"]')
       .should("contain", "true");
 
-    //vlan_id_r1
+    // vlan_id_r1
     cy.get('[aria-label="Row-vlan_id_r1"')
       .find('[data-label="active"]')
       .should("contain", "1");
@@ -268,21 +284,25 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
       .find('[data-label="active"]')
       .find("button")
       .click();
-    //type invalid value and submit
+
+    // Type invalid value and submit
     cy.get('[aria-label="new-attribute-input"]').type(
       "{selectall}{backspace}5"
     );
     cy.get('[data-testid="inline-submit"]').click();
-    //expect dialog to pop-up, and after submiting xpect new value to be pushed to the cell
+
+    // Expect dialog to pop-up, and after submiting xpect new value to be pushed to the cell
     cy.get('[data-testid="dialog-submit"]').click();
     cy.get('[aria-label="Row-vlan_id_r1"')
       .find('[data-label="active"]')
       .should("contain", "5");
   });
+
   it("2.4.3 Destroy previously created instance", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
     cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+
     // Expect to find one badge on the basic-service row.
     cy.get("#basic-service")
       .get('[aria-label="Number of instances by label"]')
@@ -291,7 +311,7 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
     cy.get("#basic-service").contains("Show inventory").click();
     cy.get("#expand-toggle0").click();
 
-    // expect row to be expanded
+    // Expect row to be expanded
     cy.get(".pf-c-table__expandable-row-content").should("to.be.visible");
 
     // Expect to find status tab
@@ -305,11 +325,11 @@ describe("Scenario 2.4 Service Catalog - basic-service", () => {
       .contains("Destroy instance")
       .should("be.visible");
 
-    //Confirm modal and expect to new view almost appear informing that there is no instances of that service found
+    // Confirm modal and expect to new view almost appear informing that there is no instances of that service found
     cy.get("button").contains("Yes").click();
     cy.get('[aria-label="ServiceInventory-Empty"').should("to.be.visible");
 
-    //at the end go back to settings and turn expert mode off
+    // At the end go back to settings and turn expert mode off
     cy.get(".pf-c-nav__item").contains("Settings").click();
     cy.get("button").contains("Configuration").click();
     cy.get('[aria-label="Row-enable_lsm_expert_mode"]')
