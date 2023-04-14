@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Repair the tests on expert mode that were caused by a race condition.'
+destination-branches:
+- master
+- iso6
+sections: {}
