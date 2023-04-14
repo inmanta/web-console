@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Resolve errors in DesiredState page and NumericCard component unit tests'
+issue-nr: 4764
+destination-branches:
+- master
+- iso6
