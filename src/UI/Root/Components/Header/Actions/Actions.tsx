@@ -21,7 +21,7 @@ export const Actions: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
         <StatusButton />
         <DocumentationLink />
       </PageHeaderToolsGroup>
-      {!noEnv && <EnvSelectorWithProvider />}
+      <EnvSelectorWithProvider />
       {keycloakController.isEnabled() && (
         <Profile keycloak={keycloakController.getInstance()} />
       )}

@@ -56,7 +56,7 @@ export const EnvSelector: React.FC<Props> = ({
       isOpen={isOpen}
       toggle={
         <StyledToggle id="toggle-button" onToggle={() => setIsOpen(!isOpen)}>
-          Environment: {toggleText.split(" ")[0]}
+          Environment: {toggleText.split(" ")[0] + "..."}
         </StyledToggle>
       }
       dropdownItems={envs}
