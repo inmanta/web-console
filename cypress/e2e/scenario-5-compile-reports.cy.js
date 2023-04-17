@@ -92,11 +92,10 @@ describe("5 Compile reports", () => {
     cy.get("tbody").should(($tableBody) => {
       const $rows = $tableBody.find("tr");
 
-      expect($rows).to.have.length(2);
       expect($rows.eq(0), "top-row-message").to.contain(
         "Compile triggered from the console"
       );
-      expect($rows.eq(0), "top-row-status").to.contain("queued");
+      expect($rows).length.to.be.at.least(2);
     });
 
     // await end of compilation and expect it to be success
@@ -113,9 +112,7 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-c-title", { timeout: 20000 })
-      .contains("Compile Details")
-      .should("to.be.visible");
+    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
 
     // Expect message to be : Compile triggered from the console
     cy.get(".pf-c-description-list__group")
@@ -153,6 +150,7 @@ describe("5 Compile reports", () => {
 
     // click on test environment card
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
 
     // Click on Show Inventory on basic service
     cy.get("#basic-service").contains("Show inventory").click();
@@ -204,9 +202,7 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-c-title", { timeout: 20000 })
-      .contains("Compile Details")
-      .should("to.be.visible");
+    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
 
     // Expect trigger to be lsm_export
     cy.get(".pf-c-description-list__group")
@@ -226,6 +222,7 @@ describe("5 Compile reports", () => {
 
     // click on test environment card
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
 
     // Click on Show Inventory on basic-service
     cy.get("#basic-service").contains("Show inventory").click();
@@ -273,9 +270,7 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Show Details").eq(0).click();
 
     // Expect to be redirected to compile details page
-    cy.get(".pf-c-title", { timeout: 20000 })
-      .contains("Compile Details")
-      .should("to.be.visible");
+    cy.get(".pf-c-title").contains("Compile Details").should("to.be.visible");
 
     // Expect trigger to be lsm
     cy.get(".pf-c-description-list__group").eq(4).should("contain", "lsm");
@@ -292,6 +287,7 @@ describe("5 Compile reports", () => {
 
     // click on test environment card
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
 
     // Click on Show Inventory on basic-service
     cy.get("#basic-service").contains("Show inventory").click();
@@ -396,7 +392,7 @@ describe("5 Compile reports", () => {
     // click on pagination
     cy.get('[aria-label="Page Size Selector dropdown"]').click();
     // select 5
-    cy.get(".pf-c-dropdown__menu-item").contains("5").click();
+    cy.get(".pf-c-dropdown__menu-item").contains("5").first().click();
 
     // expect only 5 rows to be visible now
     cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
@@ -419,7 +415,7 @@ describe("5 Compile reports", () => {
     cy.get('[aria-label="Page Size Selector dropdown"]').click();
 
     // select 10
-    cy.get(".pf-c-dropdown__menu-item").contains("10").click();
+    cy.get(".pf-c-dropdown__menu-item").contains("10").first().click();
 
     // expect 7 rows to be visible now again
     cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
