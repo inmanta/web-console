@@ -235,7 +235,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     waitForCompile();
 
     // delete but cancel deletion in modal
-    cy.get(".pf-c-description-list", { timeout: 320000 })
+    cy.get(".pf-c-description-list", { timeout: 60000 })
       .contains("Delete")
       .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
