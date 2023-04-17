@@ -1,4 +1,4 @@
-import { dia, linkTools } from "@clientio/rappid";
+import { dia, linkTools } from "@inmanta/rappid";
 import { ServiceInstanceModel } from "@/Core";
 import { ServiceEntityBlock } from "./shapes";
 

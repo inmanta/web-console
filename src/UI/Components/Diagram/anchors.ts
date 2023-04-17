@@ -1,7 +1,8 @@
-import { g, dia, anchors } from "@clientio/rappid";
+import { g, dia, anchors } from "@inmanta/rappid";
 
 export const anchorNamespace = { ...anchors };
 /**
+ *  creates new custom anchor
  *  https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#anchors.custom
  */
 const customAnchor = function (

@@ -1,10 +1,17 @@
-import { dia, g, routers } from "@clientio/rappid";
+import { dia, g, routers } from "@inmanta/rappid";
 import { RouterOptions } from "./interfaces";
 
 const DEFAULT_PADDING = 30;
 
 export const routerNamespace = { ...routers };
-
+/**
+ * Function that returns points on canvas where connection between entities are anchored
+ * @param bbox - The bounding box of the element model
+ * @param angle - The rotation of the element in degrees
+ * @param anchor - Point object with x and y coordinates that represent anchor of given entity
+ * @param padding - padding of the Link
+ * @returns
+ */
 function getOutsidePoint(
   bbox: g.Rect,
   angle: number,

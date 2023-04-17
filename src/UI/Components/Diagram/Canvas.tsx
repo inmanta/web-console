@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
-import "@clientio/rappid/rappid.css";
+import "@inmanta/rappid/rappid.css";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import diagramInit from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";

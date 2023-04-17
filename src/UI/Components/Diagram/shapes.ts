@@ -1,4 +1,4 @@
-import { dia, shapes, util } from "@clientio/rappid";
+import { dia, shapes, util } from "@inmanta/rappid";
 import { ColumnData } from "./interfaces";
 
 /**
