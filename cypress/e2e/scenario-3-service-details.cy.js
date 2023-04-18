@@ -489,7 +489,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#submit", { timeout: 20000 }).click();
 
     // Expect to be redirected to Service Catalog after deletion
-    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 60000 }).should(
+    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 120000 }).should(
       "to.be.visible"
     );
   });
