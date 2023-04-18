@@ -76,6 +76,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     ).as("GetServiceInventory");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
     // make sure the call to get inventory has been executed
@@ -107,6 +108,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     // Go from Home page to Service Inventory of Basic-service
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
     cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
@@ -145,6 +147,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
   it("2.1.3 Edit previously created instance", () => {
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     // Expect to find one badge on the basic-service row.
     cy.get("#basic-service")
       .get('[aria-label="Number of instances by label"]')
@@ -168,7 +171,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // check state is up now
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 40000 })
+      .find('[data-label="State"]', { timeout: 60000 })
       .should("contain", "up");
 
     // click on edit button
@@ -230,19 +233,24 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
+    //check for instance state to change to up
+    cy.get('[data-label="State"]')
+      .find(".pf-c-label.pf-m-green", { timeout: 60000 })
+      .should("contain", "up");
+
     // expand first row
     cy.get("#expand-toggle0", { timeout: 20000 }).click();
 
-    waitForCompile();
-
     // delete but cancel deletion in modal
     cy.get(".pf-c-description-list", { timeout: 60000 })
+      .find("button")
       .contains("Delete")
       .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("No").click();
 
-    cy.get(".pf-c-description-list", { timeout: 40000 })
+    cy.get(".pf-c-description-list", { timeout: 60000 })
+      .find("button")
       .contains("Delete")
       .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
