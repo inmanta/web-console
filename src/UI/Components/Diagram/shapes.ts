@@ -2,7 +2,6 @@ import { dia, shapes, util } from "@inmanta/rappid";
 import { ColumnData } from "./interfaces";
 
 /**
- * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#shapes
  * https://resources.jointjs.com/tutorial/custom-elements
  * https://resources.jointjs.com/tutorial/ts-shape
  */
@@ -64,14 +63,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             fontFamily: "Lekton",
             textAnchor: "end",
             x: `calc(0.5 * w - 10)`,
-          },
-          itemLabels_keys: {
-            x: `calc(0.5 * w - 30)`,
-          },
-          iconsGroup_1: {
-            // SVGGroup does not accept `x` attribute
-            refX: "50%",
-            refX2: -26,
           },
         },
       },
