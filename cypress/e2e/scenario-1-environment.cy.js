@@ -67,7 +67,7 @@ const deleteEnv = (name, projectName) => {
 
   cy.get('[aria-label="delete environment check"]').type(name);
   cy.get('[aria-label="delete"]').click();
-  cy.url().should("eq", Cypress.config().baseUrl + "/console/");
+  cy.url().should("eq", Cypress.config().baseUrl + "/console");
   cy.get('[aria-label="Environment card"]')
     .contains(projectName)
     .should("not.exist");
@@ -95,7 +95,7 @@ describe("Environment", () => {
       projectName: testProjectName(1),
     });
     cy.get("button").contains("Cancel").click();
-    cy.url().should("eq", Cypress.config().baseUrl + "/console/");
+    cy.url().should("eq", Cypress.config().baseUrl + "/console");
   });
 
   it("1.2 Create new  environment", () => {
