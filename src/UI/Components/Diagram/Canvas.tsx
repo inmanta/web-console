@@ -1,6 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import "core-js/stable";
-import "regenerator-runtime/runtime";
 import "@inmanta/rappid/rappid.css";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import diagramInit from "@/UI/Components/Diagram/init";

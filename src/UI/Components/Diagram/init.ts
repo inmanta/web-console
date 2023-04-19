@@ -46,7 +46,7 @@ export default function diagramInit(canvas) {
   });
 
   /**
-   * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Paper
+   * https://resources.jointjs.com/docs/rappid/v3.6/ui.PaperScroller.html
    */
   const scroller = new ui.PaperScroller({
     paper,
