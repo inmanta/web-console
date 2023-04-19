@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump eslint from 8.36.0 to 8.38.0'
+destination-branches:
+- master
+- iso6
+sections: {}
