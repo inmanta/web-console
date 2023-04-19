@@ -226,7 +226,8 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     // Must be done after https://github.com/inmanta/inmanta-lsm/issues/1249
     // Linked to: https://github.com/orgs/inmanta/projects/1?pane=issue&itemId=25836961
     cy.get(".pf-c-nav__link").contains("Compile Reports").click();
-    cy.get("button", { timeout: 60000 }).contains("Recompile").click();
+
+    cy.get("button").contains("Recompile", { timeout: 60000 }).click();
 
     // END WORKAROUND.
 
