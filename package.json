@@ -191,5 +191,6 @@
     "last 2 Firefox versions",
     "last 2 Edge versions",
     "last 2 Safari versions"
-  ]
+  ],
+  "packageManager": "yarn@3.5.0"
 }
