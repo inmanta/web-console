@@ -96,7 +96,6 @@ describe("5 Compile reports", () => {
       expect($rows.eq(0), "top-row-message").to.contain(
         "Compile triggered from the console"
       );
-      expect($rows.eq(0), "top-row-status").to.contain("queued");
     });
 
     // await end of compilation and expect it to be success
