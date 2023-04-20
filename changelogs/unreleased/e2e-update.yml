@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Update the e2e scenario for Compile reports.'
+issue-nr: 4706
+destination-branches:
+- iso5
