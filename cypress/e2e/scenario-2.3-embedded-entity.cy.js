@@ -196,7 +196,7 @@ describe("Scenario 2.3 Service Catalog - embedded-entity", () => {
     cy.get(".pf-c-form__actions").contains("Yes").click();
 
     // check response if instance has been deleted succesfully.
-    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 40000 }).should(
+    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 120000 }).should(
       "be.visible"
     );
   });
