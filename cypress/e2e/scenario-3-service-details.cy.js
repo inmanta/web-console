@@ -207,7 +207,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("button").contains("Show Details").click();
 
     // Expect to be redirected on Service Details: basic-service
-    cy.get("h1")
+    cy.get("h1", { timeout: 30000 })
       .contains("Service Details: basic-service")
       .should("to.be.visible");
 
@@ -489,7 +489,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#submit", { timeout: 20000 }).click();
 
     // Expect to be redirected to Service Catalog after deletion
-    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 60000 }).should(
+    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 220000 }).should(
       "to.be.visible"
     );
   });

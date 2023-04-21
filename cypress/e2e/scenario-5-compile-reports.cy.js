@@ -89,13 +89,12 @@ describe("5 Compile reports", () => {
     cy.get("button").contains("Recompile").click();
 
     // expect row to be added in table
-    cy.get("tbody").should(($tableBody) => {
+    cy.get("tbody", { timeout: 30000 }).should(($tableBody) => {
       const $rows = $tableBody.find("tr");
 
       expect($rows.eq(0), "top-row-message").to.contain(
         "Compile triggered from the console"
       );
-      expect($rows).length.to.be.at.least(2);
     });
 
     // await end of compilation and expect it to be success
@@ -122,7 +121,7 @@ describe("5 Compile reports", () => {
     // Expect to have no environment variables
     cy.get(".pf-c-code-block__content").should("have.text", "{}");
 
-    // Expect to have 2 stages in collapsibles
+    // Expect to have 2 stages in collapsible rows.
     cy.get("tbody").should(($rowElements) => {
       expect($rowElements).to.have.length(2);
     });

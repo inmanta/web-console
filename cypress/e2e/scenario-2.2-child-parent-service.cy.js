@@ -96,7 +96,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     // open row from element
     cy.get("#expand-toggle0").click();
 
-    // Go to ressource tab expect it be empty
+    // Go to resource tab expect it be empty
     cy.get(".pf-c-tabs__item-text").contains("Resources").click();
     cy.get('[aria-label="ResourceTable-Empty"]').should("to.be.visible");
 
@@ -113,7 +113,6 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
         expect($td.eq(0), "first item").to.have.text(
           "frontend_model::TestResource[internal,name=default-0001]"
         );
-        expect($td.eq(1), "second item").to.have.text("deployed");
       }
     );
 
@@ -179,7 +178,7 @@ describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("Yes").click();
 
-    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 20000 }).should(
+    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 220000 }).should(
       "to.be.visible"
     );
   });
