@@ -32,7 +32,6 @@ interface Branch {
   onToggle: () => void;
   level: number;
   primaryCell: Cell;
-  hint?: string;
 }
 
 interface Leaf {

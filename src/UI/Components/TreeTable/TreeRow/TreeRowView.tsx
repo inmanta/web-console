@@ -19,6 +19,9 @@ interface RowProps {
   showExpertMode: boolean;
 }
 
+const warningMessage =
+  "This attribute migrated to a different/new Type and can’t be displayed properly into the table. You can copy the object for further comparison through the Copy button. It will store the value of each state in your clipboard.";
+
 export const TreeRowView: React.FC<RowProps> = ({
   row,
   id,
@@ -81,7 +84,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                     : row.primaryCell.value}
                   {row.primaryCell.warning ? (
                     <Spacer>
-                      <Tooltip content="This attribute migrated to a different/new Type and can’t be displayed properly into the table. You can copy the object for further comparison through the Copy button. It will store the value of each state in your clipboard.">
+                      <Tooltip content={warningMessage}>
                         <Icon status="warning">
                           <ExclamationTriangleIcon />
                         </Icon>
@@ -116,7 +119,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 : row.primaryCell.value}
               {row.primaryCell.warning ? (
                 <Spacer>
-                  <Tooltip content="This attribute migrated to a different/new Type and can’t be displayed properly into the table. You can copy the object for further comparison through the Copy button. It will store the value of each state in your clipboard.">
+                  <Tooltip content={warningMessage}>
                     <Icon status="warning">
                       <ExclamationTriangleIcon />
                     </Icon>

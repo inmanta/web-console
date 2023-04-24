@@ -27,7 +27,7 @@ export class InventoryAttributeHelper
    * Will create an array containing the path keys of the attributes.
    *
    * @param {Attributes} attributes
-   * @returns
+   * @returns {string[]}
    */
   public getPaths(attributes: Attributes): string[] {
     return Object.keys(
