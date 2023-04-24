@@ -5,6 +5,7 @@ export interface Cell {
   value: string;
   hasRelation?: boolean;
   serviceName?: string;
+  warning?: string;
 }
 
 interface Flat {
@@ -31,6 +32,7 @@ interface Branch {
   onToggle: () => void;
   level: number;
   primaryCell: Cell;
+  hint?: string;
 }
 
 interface Leaf {
