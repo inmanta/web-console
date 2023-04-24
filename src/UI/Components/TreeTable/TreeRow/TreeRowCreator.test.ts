@@ -1,3 +1,4 @@
+import { Attributes } from "@/Core";
 import {
   InventoryAttributes,
   MultiAttributeNode,
@@ -10,13 +11,26 @@ const onToggle = () => {
   undefined;
 };
 
-const treeRowCreator = new TreeRowCreator(
-  new PathHelper("."),
-  () => false,
-  () => false,
-  () => onToggle,
-  extractInventoryValues
-);
+const attributes: Attributes = {
+  candidate: {
+    b: "a",
+  },
+  active: null,
+  rollback: null,
+};
+
+const setupTreeRowCreator = () => {
+  return new TreeRowCreator(
+    new PathHelper("."),
+    () => false,
+    () => false,
+    () => onToggle,
+    extractInventoryValues,
+    attributes
+  );
+};
+
+const treeRowCreator = setupTreeRowCreator();
 
 test("TreeRowCreator create returns Leaf for Leaf node", () => {
   const node: MultiAttributeNode<InventoryAttributes> = {
@@ -27,6 +41,7 @@ test("TreeRowCreator create returns Leaf for Leaf node", () => {
       rollback: undefined,
     },
   };
+
   const row: TreeRow = {
     kind: "Leaf",
     id: "a.b",
@@ -39,6 +54,7 @@ test("TreeRowCreator create returns Leaf for Leaf node", () => {
     ],
     level: 1,
   };
+
   expect(treeRowCreator.create("a.b", node)).toEqual(row);
 });
 
@@ -51,6 +67,7 @@ test("TreeRowCreator create returns Flat for flat Leaf node", () => {
       rollback: undefined,
     },
   };
+
   const row: TreeRow = {
     kind: "Flat",
     id: "b",
@@ -61,6 +78,7 @@ test("TreeRowCreator create returns Flat for flat Leaf node", () => {
     ],
     primaryCell: { label: "name", value: "b" },
   };
+
   expect(treeRowCreator.create("b", node)).toEqual(row);
 });
 
@@ -72,6 +90,7 @@ test("TreeRowCreator create returns Root for flat Branch node", () => {
     isChildExpanded: false,
     primaryCell: { label: "name", value: "a" },
   };
+
   expect(treeRowCreator.create("a", { kind: "Branch" })).toEqual(row);
 });
 
@@ -85,5 +104,6 @@ test("TreeRowCreator create returns Branch for nested Branch node", () => {
     level: 1,
     primaryCell: { label: "name", value: "b" },
   };
+
   expect(treeRowCreator.create("a.b", { kind: "Branch" })).toEqual(row);
 });
