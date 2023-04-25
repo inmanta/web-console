@@ -94,11 +94,12 @@ export default function diagramInit(canvas) {
       zoom(ox, oy, delta);
     }
   );
+
   /**
-   *  Function that zooms in/out the view of canvas
-   * @param x coordinate on which zoom happens
-   * @param y coordinate on which zoom happens
-   * @param delta the value that dictates how big zoom has to be
+   * Function that zooms in/out the view of canvas
+   * @param {number} x - x coordinate
+   * @param {number} y - y coordinate
+   * @param {number} delta - the value that dictates how big the zoom has to be.
    */
   function zoom(x: number, y: number, delta: number) {
     scroller.zoom(delta * 0.2, { min: 0.4, max: 1.2, grid: 0.2, ox: x, oy: y });

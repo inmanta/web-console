@@ -1,0 +1,7 @@
+change-type: patch
+description: "Fix issue that clearing single unread notification doesn't work"
+issue-nr: 4767
+destination-branches:
+- master
+- iso6
+

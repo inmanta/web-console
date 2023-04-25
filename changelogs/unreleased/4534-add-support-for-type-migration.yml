@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Add support for Attribute-Type migration in the attribute table.'
+issue-nr: 4534
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"
