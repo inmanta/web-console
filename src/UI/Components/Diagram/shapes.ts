@@ -124,6 +124,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       },
     ];
   }
+
   /* eslint-disable @typescript-eslint/no-explicit-any */
   initialize(...args: any[]) {
     super.initialize(...args);

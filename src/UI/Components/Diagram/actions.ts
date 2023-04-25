@@ -3,12 +3,12 @@ import { ServiceInstanceModel } from "@/Core";
 import { ServiceEntityBlock } from "./shapes";
 
 /**
- * Function that displays methods to alter connection objects - currently visible is only function to remove connection
+ * Function to display the methods to alter the connection objects - currently, the only function visible is the one removing connections.
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.LinkView
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#linkTools
  *
- * @param linkView The view for the joint.dia.Link model.
- * @returns void
+ * @param {dia.LinkView} linkView  - The view for the joint.dia.Link model.
+ * @returns {void}
  */
 export function showLinkTools(linkView: dia.LinkView) {
   const tools = new dia.ToolsView({
@@ -48,13 +48,13 @@ export function showLinkTools(linkView: dia.LinkView) {
 }
 
 /**
- * Function converts instance attributes in a way that they are possible to display on composer canvas
+ * This function converts Instance attributes to display them on the Smart Service Composer canvas.
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
  *
- * @param graph JointJS Object on which we are appending given instance
- * @param instance that we want to display
- * @param attibutesToDisplay attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
- * @returns void
+ * @param {dia.Graph} graph JointJS Object on which we are appending given instance
+ * @param {ServiceInstanceModel} serviceInstance - instance that we want to display
+ * @param {string[]} serviceAttributes - attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
+ * @returns {void}
  */
 export function appendInstance(
   graph: dia.Graph,
