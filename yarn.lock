@@ -851,6 +851,7 @@ __metadata:
     cypress: ^12.4.1
     cypress-file-upload: ^5.0.8
     cypress-multi-reporters: ^1.6.3
+    dagre: ^0.8.5
     dotenv-webpack: ^8.0.1
     easy-peasy: ^5.2.0
     eslint: ^8.36.0
@@ -4679,7 +4680,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dagre@npm:~0.8.5":
+"dagre@npm:^0.8.5, dagre@npm:~0.8.5":
   version: 0.8.5
   resolution: "dagre@npm:0.8.5"
   dependencies:

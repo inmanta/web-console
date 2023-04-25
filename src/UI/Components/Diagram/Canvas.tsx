@@ -16,10 +16,10 @@ const Canvas = ({
   useEffect(() => {
     const actions = diagramInit(canvas);
     if (instance) {
-      actions.addInstance(instance, service.attributes);
+      actions.addInstance(instance, service);
     }
     return () => actions.removeCanvas();
-  }, [instance, service.attributes]);
+  }, [instance, service]);
 
   return (
     <CanvasWrapper id="canvas-wrapper">

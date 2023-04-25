@@ -27,8 +27,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             strokeWidth: 1,
           },
           header: {
-            fill: "#0066CC",
-            stroke: "#0066CC",
+            fill: "#F0AB00",
+            stroke: "#F0AB00",
             strokeWidth: 1,
           },
           headerLabel: {
@@ -115,10 +115,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         selector: "header",
       },
       {
-        tagName: "rect",
-        selector: "tabColor",
-      },
-      {
         tagName: "text",
         selector: "headerLabel",
       },
@@ -142,6 +138,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
   getName(): string {
     return this.attr(["headerLabel", "text"]);
+  }
+  setTabColor(color: string) {
+    this.attr(["header", "fill"], color);
+    return this.attr(["header", "stroke"], color);
   }
   setColumns(data: Array<ColumnData>) {
     this.set("columns", data);

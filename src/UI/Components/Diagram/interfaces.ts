@@ -7,5 +7,4 @@ interface RouterOptions {
   sourcePadding?: number;
   targetPadding?: number;
 }
-
 export { ColumnData, RouterOptions };
