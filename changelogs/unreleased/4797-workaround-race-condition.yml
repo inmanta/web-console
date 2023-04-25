@@ -1,0 +1,7 @@
+change-type: patch
+description: 'Add a workaround for the race condition until it can be fixed.'
+destination-branches:
+- master
+- iso6
+- iso5
+sections: {}
