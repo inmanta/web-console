@@ -112,8 +112,8 @@ export default function diagramInit(canvas) {
       paper.remove();
     },
     addInstance: (instance: ServiceInstanceModel, service: ServiceModel) => {
-      appendInstance(graph, instance, service);
-      // appendInstance(graph, testInstance, testService);
+      appendInstance(paper, graph, instance, service);
+      // appendInstance(paper, graph, testInstance, testService);
     },
   };
 }

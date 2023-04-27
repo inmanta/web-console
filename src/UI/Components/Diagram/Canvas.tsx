@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/rappid.css";
+import { Modal } from "@patternfly/react-core";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import diagramInit from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
+import { DictDialogData } from "./interfaces";
 
 const Canvas = ({
   service,
@@ -12,19 +14,54 @@ const Canvas = ({
   instance?: ServiceInstanceModel;
 }) => {
   const canvas = useRef<HTMLDivElement>(null);
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [stringifiedDicts, setStringifiedDicts] = useState<DictDialogData[]>(
+    []
+  );
   useEffect(() => {
     const actions = diagramInit(canvas);
+
     if (instance) {
       actions.addInstance(instance, service);
     }
-    return () => actions.removeCanvas();
+
+    document.addEventListener("openDictsModal", (event) => {
+      const customEvent = event as CustomEvent;
+      setStringifiedDicts(customEvent.detail);
+      setIsDialogOpen(true);
+    });
+
+    return () => {
+      document.removeEventListener("openDictsModal", (event) => {
+        const customEvent = event as CustomEvent;
+        setStringifiedDicts(customEvent.detail);
+        setIsDialogOpen(true);
+      });
+      actions.removeCanvas();
+    };
   }, [instance, service]);
 
   return (
-    <CanvasWrapper id="canvas-wrapper">
-      <div className="canvas" ref={canvas} />
-    </CanvasWrapper>
+    <>
+      <Modal
+        isOpen={isDialogOpen}
+        title={"Dictionary values"}
+        variant={"small"}
+        onClose={() => {
+          setIsDialogOpen(false);
+          setStringifiedDicts([]);
+        }}
+      >
+        {stringifiedDicts.map((dict, key) => (
+          <pre key={"dict-value-" + key}>
+            <code>{`${dict.title}: ${dict.value}`}</code>
+          </pre>
+        ))}
+      </Modal>
+      <CanvasWrapper id="canvas-wrapper">
+        <div className="canvas" ref={canvas} />
+      </CanvasWrapper>
+    </>
   );
 };
 export default Canvas;

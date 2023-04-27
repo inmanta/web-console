@@ -94,7 +94,12 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
       const value = {
         id: `${item.name}_value`,
-        label: item.value,
+        label:
+          typeof item.value === "object" &&
+          !Array.isArray(item.value) &&
+          item.value !== null
+            ? "{...}"
+            : item.value,
       };
       values.push(value);
     });
@@ -144,10 +149,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
     this.attr(["header", "fill"], color);
     return this.attr(["header", "stroke"], color);
   }
-  setColumns(data: Array<ColumnData>) {
-    this.set("columns", data);
-    return this;
-  }
   appendColumns(data: Array<ColumnData>) {
     this._setColumns(data);
     return this;
@@ -173,6 +174,14 @@ export class EntityConnection extends dia.Link {
           strokeWidth: 10,
         },
         line: {
+          targetMarker: {
+            type: "path",
+            d: "M 0 -5 10 0 0 5 z",
+          },
+          sourceMarker: {
+            type: "path",
+            d: "M 0 -5 10 0 0 5 z",
+          },
           connection: true,
           stroke: "#A0A0A0",
           strokeWidth: 2,

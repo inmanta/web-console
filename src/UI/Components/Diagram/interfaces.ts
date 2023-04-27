@@ -7,4 +7,8 @@ interface RouterOptions {
   sourcePadding?: number;
   targetPadding?: number;
 }
-export { ColumnData, RouterOptions };
+interface DictDialogData {
+  title: string;
+  value: string;
+}
+export { ColumnData, RouterOptions, DictDialogData };
