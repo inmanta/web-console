@@ -1,4 +1,4 @@
-import { dia, elementTools, layout, linkTools } from "@inmanta/rappid";
+import { dia, elementTools, g, layout, linkTools } from "@inmanta/rappid";
 import dagre, { graphlib } from "dagre";
 import {
   AttributeModel,
@@ -138,14 +138,14 @@ export function appendInfoTool(
  * @param {dia.Graph} graph JointJS Object on which we are appending given instance
  * @param {ServiceInstanceModel} serviceInstance that we want to display
  * @param {ServiceModel} service that hold definitions for attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
- * @returns {void}
+ * @returns {g.Rect} coordinates that are being use to center view as regular behavior center to the last entity added
  */
 export function appendInstance(
   paper: dia.Paper,
   graph: dia.Graph,
   serviceInstance: ServiceInstanceModel,
   service: ServiceModel
-) {
+): g.Rect {
   const flatAttributes = service.attributes.map((attribute) => attribute.name);
 
   const instanceAsTable = new ServiceEntityBlock().setName(
@@ -244,6 +244,7 @@ export function appendInstance(
     edgeSep: 80,
     rankDir: "TB",
   });
+  return instanceAsTable.getBBox();
 }
 
 /**

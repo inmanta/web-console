@@ -112,8 +112,19 @@ export default function diagramInit(canvas) {
       paper.remove();
     },
     addInstance: (instance: ServiceInstanceModel, service: ServiceModel) => {
-      appendInstance(paper, graph, instance, service);
-      // appendInstance(paper, graph, testInstance, testService);
+      const instanceCoordinates = appendInstance(
+        paper,
+        graph,
+        instance,
+        service
+      );
+      // const instanceCoordinates = appendInstance(
+      //   paper,
+      //   graph,
+      //   testInstance,
+      //   testService
+      // );
+      scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
   };
 }
