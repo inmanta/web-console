@@ -3,5 +3,4 @@ description: 'Fix issue that cause optional enums to display wrong input in inst
 destination-branches:
 - master
 - iso6
-- iso5
 sections: {}
