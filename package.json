@@ -27,7 +27,8 @@
     "setup-server:lsm": "sh ./shell-scripts/setup-server.sh windows lts",
     "setup-server:lsm:linux": "sh ./shell-scripts/setup-server.sh linux lts",
     "setup-server:lsm:ci": "sh ./shell-scripts/setup-server.sh ci lts",
-    "kill-server:lsm": "sh ./shell-scripts/clear-server.sh"
+    "kill-server:lsm": "sh ./shell-scripts/clear-server.sh",
+    "setup-orchestrator": "sh ./shell-scripts/new-script.sh"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
