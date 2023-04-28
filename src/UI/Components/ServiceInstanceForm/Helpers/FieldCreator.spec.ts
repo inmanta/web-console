@@ -106,6 +106,7 @@ test("GIVEN FieldCreator WHEN an entity has validation_type 'enum' or 'enum?' TH
   expect(fields[0].kind).toMatch("Enum");
   expect(fields[1].kind).toMatch("Enum");
 });
+
 test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they are classified correctly", () => {
   const embedded: EmbeddedEntity[] = [
     {
