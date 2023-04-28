@@ -13,7 +13,7 @@ pipeline {
     }
     environment {
         GITLAB_TOKEN = credentials('jenkins_on_gitlab')
-        YARN_NPM_AUTH_TOKEN = credentials('cloudsmith-token')
+        CLOUDSMITH_TOKEN = credentials('cloudsmith-token')
     }
 
     stages {
