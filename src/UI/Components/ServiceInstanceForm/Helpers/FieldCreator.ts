@@ -192,7 +192,10 @@ export class FieldCreator {
           };
         }
 
-        if (attribute.validation_type === "enum") {
+        if (
+          attribute.validation_type === "enum" ||
+          attribute.validation_type === "enum?"
+        ) {
           return {
             kind: "Enum",
             name: attribute.name,
