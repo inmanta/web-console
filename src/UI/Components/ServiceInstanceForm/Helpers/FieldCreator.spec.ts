@@ -1,4 +1,4 @@
-import { EmbeddedEntity, NestedField } from "@/Core";
+import { AttributeModel, EmbeddedEntity, NestedField } from "@/Core";
 import { Service } from "@/Test";
 import {
   InterServiceRelationFields,
@@ -30,7 +30,7 @@ test("GIVEN FieldCreator for edit form WHEN create is provided with a service TH
 test("GIVEN FieldCreator WHEN an attribute has the empty string as default value THEN the field is marked as optional", () => {
   const stringAttribute = {
     name: "attribute_with_empty_default_value",
-    description: "desciption",
+    description: "description",
     modifier: "rw+",
     type: "string",
     default_value: "",
@@ -70,7 +70,42 @@ test("GIVEN FieldCreator WHEN an attribute has the empty string as default value
   expect(fields[2].isOptional).toBeFalsy();
   expect(fields[3].isOptional).toBeTruthy();
 });
-
+test("GIVEN FieldCreator WHEN an entity has validation_type 'enum' or 'enum?' THEN the field has kind ENUM", () => {
+  const enumAttribute: AttributeModel = {
+    name: "attribute_with_enum_validation",
+    description: "description",
+    modifier: "rw+",
+    type: "string",
+    default_value: null,
+    default_value_set: true,
+    validation_type: "enum",
+    validation_parameters: {
+      names: { OPTION_ONE: "OPTION_ONE", OPTION_TWO: "OPTION_TWO" },
+      value: "value",
+    },
+  };
+  const optionalEnumAttribute: AttributeModel = {
+    name: "attribute_with_enum_validation",
+    description: "description",
+    modifier: "rw+",
+    type: "string?",
+    default_value: null,
+    default_value_set: true,
+    validation_type: "enum?",
+    validation_parameters: {
+      names: { OPTION_ONE: "OPTION_ONE", OPTION_TWO: "OPTION_TWO" },
+      value: "validation_type",
+    },
+  };
+  const fields = new FieldCreator(new CreateModifierHandler()).create({
+    attributes: [enumAttribute, optionalEnumAttribute],
+    embedded_entities: [],
+  });
+  expect(fields[0].isOptional).toBeFalsy();
+  expect(fields[1].isOptional).toBeTruthy();
+  expect(fields[0].kind).toMatch("Enum");
+  expect(fields[1].kind).toMatch("Enum");
+});
 test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they are classified correctly", () => {
   const embedded: EmbeddedEntity[] = [
     {
