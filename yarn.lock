@@ -9033,12 +9033,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"local-setup@workspace:temp/local-setup":
-  version: 0.0.0-use.local
-  resolution: "local-setup@workspace:temp/local-setup"
-  languageName: unknown
-  linkType: soft
-
 "locate-path@npm:^3.0.0":
   version: 3.0.0
   resolution: "locate-path@npm:3.0.0"
