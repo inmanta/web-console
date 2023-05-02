@@ -22,7 +22,7 @@ pipeline {
                 deleteDir()
                 dir('web-console'){
                     checkout scm
-                    sh '''yarn install --frozen-lockfile;
+                    sh '''yarn install --immutable;
                     yarn lint;
                     yarn format:check;
                     yarn tsc;
