@@ -192,5 +192,8 @@
     "last 2 Edge versions",
     "last 2 Safari versions"
   ],
+  "workspaces": [
+    "temp/local-setup"
+  ],
   "packageManager": "yarn@3.5.0"
 }
