@@ -38,7 +38,6 @@ pipeline {
                 timeout(time: 20, unit: 'MINUTES') {
                 dir('web-console') {
                     sh '''
-                    yarn install;
                     yarn run build;
                     yarn run setup-server:lsm:ci;
                     yarn run cypress-test;'''
