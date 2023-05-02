@@ -22,7 +22,8 @@ pipeline {
                 deleteDir()
                 dir('web-console'){
                     checkout scm
-                    sh '''yarn install --immutable;
+                    sh '''yarn run setup-server:lsm:ci;
+                    yarn install --immutable;
                     yarn lint;
                     yarn format:check;
                     yarn tsc;
@@ -37,7 +38,6 @@ pipeline {
                 timeout(time: 20, unit: 'MINUTES') {
                 dir('web-console') {
                     sh '''yarn run build;
-                    yarn run setup-server:lsm:ci;
                     yarn run cypress-test;'''
                 }
                 }
