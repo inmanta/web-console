@@ -32,7 +32,7 @@ export const TreeRowView: React.FC<RowProps> = ({
   switch (row.kind) {
     case "Flat":
       return (
-        <Tr aria-label={`Row-${row.id}`}>
+        <StyledTr aria-label={`Row-${row.id}`}>
           <Td dataLabel={row.primaryCell.label}>
             <Indent level={0} noToggle>
               {row.primaryCell.value}
@@ -64,11 +64,11 @@ export const TreeRowView: React.FC<RowProps> = ({
               />
             )
           )}
-        </Tr>
+        </StyledTr>
       );
     case "Root":
       return (
-        <Tr aria-label={`Row-${row.id}`}>
+        <StyledTr aria-label={`Row-${row.id}`}>
           <Td dataLabel="name" colSpan={4}>
             <Indent level={0}>
               <Split>
@@ -100,12 +100,15 @@ export const TreeRowView: React.FC<RowProps> = ({
               </Split>
             </Indent>
           </Td>
-        </Tr>
+        </StyledTr>
       );
 
     case "Branch":
       return (
-        <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
+        <StyledTr
+          aria-label={`Row-${row.id}`}
+          isExpanded={row.isExpandedByParent}
+        >
           <Td colSpan={4} dataLabel={row.primaryCell.label}>
             <Indent level={row.level}>
               <Toggle
@@ -133,12 +136,15 @@ export const TreeRowView: React.FC<RowProps> = ({
               )}
             </Indent>
           </Td>
-        </Tr>
+        </StyledTr>
       );
 
     case "Leaf":
       return (
-        <Tr aria-label={`Row-${row.id}`} isExpanded={row.isExpandedByParent}>
+        <StyledTr
+          aria-label={`Row-${row.id}`}
+          isExpanded={row.isExpandedByParent}
+        >
           <Td dataLabel={row.primaryCell.label}>
             <Indent level={row.level} noToggle>
               {row.primaryCell.value}
@@ -170,11 +176,17 @@ export const TreeRowView: React.FC<RowProps> = ({
               />
             )
           )}
-        </Tr>
+        </StyledTr>
       );
   }
 };
 
 const Spacer = styled.span`
   padding-left: 10px;
+`;
+
+const StyledTr = styled(Tr)`
+  > * {
+    font-size: 16px !important;
+  }
 `;
