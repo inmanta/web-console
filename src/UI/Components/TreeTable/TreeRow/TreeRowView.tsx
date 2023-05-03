@@ -187,6 +187,6 @@ const Spacer = styled.span`
 
 const StyledTr = styled(Tr)`
   > * {
-    font-size: 16px !important;
+    --pf-c-table--cell--FontSize: 16px;
   }
 `;
