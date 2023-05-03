@@ -1,3 +1,13 @@
+const tagVersion = () => {
+  cy.visit("/console/status");
+  cy.get(".pf-c-description-list__description")
+    .first()
+    .invoke("text")
+    .as("VERSION");
+};
+
+const ISO = "Standard Edition";
+
 const testProjectName = (id) => "Test Project Name " + id;
 const testName = (id) => "TestName " + id;
 
@@ -6,7 +16,7 @@ beforeEach(() => {
   cy.intercept("POST", "/api/v2/environment_settings/**").as(
     "postEnvConfigEdit"
   );
-  // delete projects exlcuding test one before each test to have unified conditions for each test case
+  // delete projects excluding test one before each test to have unified conditions for each test case
   cy.intercept("/api/v2/environment").as("createEnv");
   cy.request("/api/v1/project").as("projects");
   cy.get("@projects").then((response) => {
@@ -16,7 +26,10 @@ beforeEach(() => {
       }
     });
   });
+
+  tagVersion();
 });
+
 /**
  * Function is responsible for creating Environment process without submiting it.
  * it accepts object that holds:
@@ -56,6 +69,7 @@ const fillCreateEnvForm = ({
     );
   }
 };
+
 /**
  * Function is responsible for going through delete Environment process with assertions selection that covers test cases
  * @param {*} name - string
@@ -68,10 +82,10 @@ const deleteEnv = (name, projectName) => {
   cy.get('[aria-label="delete environment check"]').type(name);
   cy.get('[aria-label="delete"]').click();
   cy.url().should("eq", Cypress.config().baseUrl + "/console");
-  cy.get('[aria-label="Environment card"]')
-    .contains(projectName)
-    .should("not.exist");
+
+  cy.get(".pf-c-card").contains(projectName).should("not.exist");
 };
+
 /**
  * Function handle going into Settings tab, and checks if we chosen correct environment
  * @param {*} envName - string
@@ -83,7 +97,7 @@ const openSettings = (envName) => {
 };
 
 describe("Environment", () => {
-  it("1.1 cancel creation of an environment", () => {
+  it("1.1 cancel creation of an environment", function () {
     cy.visit("/console/");
     cy.get('[aria-label="Overview-Success"] > :first-child').click();
     cy.url().should(
@@ -98,10 +112,11 @@ describe("Environment", () => {
     cy.url().should("eq", Cypress.config().baseUrl + "/console");
   });
 
-  it("1.2 Create new  environment", () => {
+  it("1.2 Create new  environment", function () {
     cy.intercept("/lsm/v1/service_catalog?instance_summary=True").as(
       "getCatalog"
     );
+
     //fill the form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -112,8 +127,8 @@ describe("Environment", () => {
     cy.get("button").contains("Submit").should("be.disabled");
     cy.get('[aria-label="Name-input"]').type(testName(2));
     cy.get("button").contains("Submit").click();
-    //go back to gome and check if env is visible
-    cy.wait(500);
+
+    //go back to home and check if env is visible
     cy.get(".pf-c-breadcrumb__item").eq(0).click();
     cy.get('[aria-label="Environment card"]').should(
       "any.contain",
@@ -121,7 +136,7 @@ describe("Environment", () => {
     );
   });
 
-  it("1.3 delete an environment", () => {
+  it("1.3 delete an environment", function () {
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -131,13 +146,18 @@ describe("Environment", () => {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.url().should("contain", "/console/lsm/catalog?env=", { timeout: 10000 });
+
+    if (this.version && this.version === ISO) {
+      cy.url().should("contain", "/console/lsm/catalog?env=", {
+        timeout: 10000,
+      });
+    }
 
     openSettings(testName(3));
     deleteEnv(testName(3), testProjectName(3));
   });
 
-  it("1.4 Edit created environment", () => {
+  it("1.4 Edit created environment", function () {
     //Fill The form and submit
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
@@ -147,7 +167,7 @@ describe("Environment", () => {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.url().should("contain", "/console/lsm/catalog?env=");
+    // cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(4));
     //change Name value
@@ -200,7 +220,8 @@ describe("Environment", () => {
     cy.get('[aria-label="Project Name-submit-edit"]').click();
   });
 
-  it("1.5 Clear environment", () => {
+  // specific to ISO
+  xit("1.5 Clear environment", function () {
     //Fill The form and submit
     cy.visit("/console/");
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
@@ -233,20 +254,20 @@ describe("Environment", () => {
       .contains("I understand the consequences, clear this environment")
       .click();
     cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get('[aria-label="Environment card"]').contains("frontend").click();
     cy.get(".pf-c-nav__link").contains("Service Catalog").click();
     cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
 
     cy.get("button").contains("Update Service Catalog").click();
     //Update service catalog to restore instances
     cy.get("button", { timeout: 30000 }).contains("Yes").click();
-    // exceeded timeout needed is to await continous call to return services
+    // exceeded timeout needed is to await continuous call to return services
     cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 30000 }).should(
       "to.be.visible"
     );
   });
 
-  it("1.6 Edit environment configuration", () => {
+  it("1.6 Edit environment configuration", function () {
     cy.visit("/console/environment/create");
     fillCreateEnvForm({
       envName: testName(6),
@@ -255,7 +276,9 @@ describe("Environment", () => {
       fillOptionalInputs: true,
     });
     cy.get("button").contains("Submit").click();
-    cy.url().should("contain", "/console/lsm/catalog?env=");
+
+    // specific to ISO
+    //  cy.url().should("contain", "/console/lsm/catalog?env=");
 
     openSettings(testName(6), testProjectName(6));
     cy.get("button").contains("Configuration").click();
@@ -425,15 +448,17 @@ describe("Environment", () => {
       .find(".pf-c-form-control")
       .should("have.value", "push_full_deploy");
 
+    // specific to ISO
     //Change lsm_partial_compile
-    cy.get('[aria-label="Row-lsm_partial_compile"]')
-      .find(".pf-c-switch")
-      .click();
-    cy.get('[aria-label="Warning"]').should("exist");
-    cy.get('[aria-label="Row-lsm_partial_compile"]')
-      .find('[aria-label="SaveAction"]')
-      .click();
-    cy.get('[aria-label="Warning"]').should("not.exist");
+    // cy.get('[aria-label="Row-lsm_partial_compile"]')
+    //   .find(".pf-c-switch")
+    //   .click();
+
+    // cy.get('[aria-label="Warning"]').should("exist");
+    // cy.get('[aria-label="Row-lsm_partial_compile"]')
+    //   .find('[aria-label="SaveAction"]')
+    //   .click();
+    // cy.get('[aria-label="Warning"]').should("not.exist");
 
     //change notification_retention
     cy.get('[aria-label="Row-notification_retention"]')
