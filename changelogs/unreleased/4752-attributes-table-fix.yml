@@ -1,5 +1,6 @@
 change-type: patch
 description: 'Unify font-size in the tables in Service Details Tables'
+issue-nr: 4752
 destination-branches:
 - master
 - iso6
