@@ -3,4 +3,6 @@
 //   "url": "",
 //   "clientId": ""
 // }
-export const features = {};
+export const features = {
+  instanceComposer: false,
+};

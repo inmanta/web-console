@@ -13,6 +13,7 @@ pipeline {
     }
     environment {
         GITLAB_TOKEN = credentials('jenkins_on_gitlab')
+        CLOUDSMITH_TOKEN = credentials('cloudsmith-token')
     }
 
     stages {
@@ -21,7 +22,8 @@ pipeline {
                 deleteDir()
                 dir('web-console'){
                     checkout scm
-                    sh '''yarn install --frozen-lockfile;
+                    sh '''
+                    yarn install --immutable;
                     yarn lint;
                     yarn format:check;
                     yarn tsc;
@@ -35,7 +37,8 @@ pipeline {
             steps {
                 timeout(time: 20, unit: 'MINUTES') {
                 dir('web-console') {
-                    sh '''yarn run build;
+                    sh '''
+                    yarn run build;
                     yarn run setup-server:lsm:ci;
                     yarn run cypress-test;'''
                 }
