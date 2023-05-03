@@ -3,4 +3,8 @@
 //   "url": "",
 //   "clientId": ""
 // }
-export const features = {};
+const features = {};
+
+module.exports = {
+  features,
+};
