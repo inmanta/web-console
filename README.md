@@ -67,3 +67,31 @@ Cypress can be configured via cypress.json (or command line arguments), e.g. to 
 `husky` configures the git hooks. https://github.com/typicode/husky  
 `lint-staged` runs scripts on matched staged source files. https://github.com/okonet/lint-staged  
 There is no need to manually configure anything. Just by installing the dependencies, the git hooks are configured.
+
+### Scripts
+
+| Command | Description |
+|---------|-------------|
+|´prepare´| Adding the pre-commit hooks with Husky. |
+|´prebuild´| Executing a yarn clean command. |
+|´build´| Build the project with webpack. |
+|´start´| Run the project with webpack. |
+|´test´| Run the Jest test suite. |
+|´test:ci´| Run the Jest test suite for the CI. |
+|´format´| Format the code base with Prettier. |
+|´format:check´| Do a format check, without updating the code. |
+|´lint´| Do a linting check on the codebase. |
+|´lint:fix´| Run the fix command from linter. |
+|´build:bundle-profile´| |
+|´bundle-profile:analyze´| |
+|´clean´| Remove the dist folder. |
+|´delete:reports´| Delete the test reports from cypress if the are present. |
+|´precypress-test´| Delete the cypress reports. |
+|´cypress-test´| Run the E2E test suite. |
+|´package-cleanup´| Execute a node cleanup on the packages. |
+|´check-circular-deps´| check for circular dependencies with madge. |
+|´install:orchestrator´| Install and setup an docker container with the orchestrator. There are four named arguments you can pass to this command. `version` (iso/oss, it will default to iso), `release` (matching release tag for the version, defaults to 7-dev), `branch` (the branch on the frontend-test repo you want to target for the installation, will default to master), `flag` (The docker flag with which the exec command needs to be executed. If not passed, no flags will be used.) Example: `install:orchestrator version=oss release=dev tag=-ti branch=oss_case_1` |
+|´install:orchestrator:iso´| Short hand command to install the latest iso version of the orchestrator. |
+|´install:orchestrator:oss´| Short hand command to install the oss dev version of the orchestrator. |
+|´install:orchestrator:ci´| Short hand command to install the latest iso version of the orchestrator for the CI. |
+|´kill-server´| Terminate the docker container with the orchestrator. |

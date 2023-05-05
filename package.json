@@ -24,10 +24,11 @@
     "cypress-test": "yarn cypress run",
     "package-cleanup": "node clean_up_packages",
     "check-circular-deps": "madge --circular ./src/index.tsx",
-    "setup-server:lsm": "sh ./shell-scripts/setup-server.sh windows 5dev",
-    "setup-server:lsm:linux": "sh ./shell-scripts/setup-server.sh linux 5dev",
-    "setup-server:lsm:ci": "sh ./shell-scripts/setup-server.sh ci 5dev",
-    "kill-server:lsm": "sh ./shell-scripts/clear-server.sh"
+    "install:orchestrator": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
+    "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
+    "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev'",
+    "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh",
+    "kill-server": "sh ./shell-scripts/clear-server.sh"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
