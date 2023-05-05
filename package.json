@@ -27,7 +27,7 @@
     "install:orchestrator": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
     "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
     "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev'",
-    "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh",
+    "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh release='5-dev'",
     "kill-server": "sh ./shell-scripts/clear-server.sh"
   },
   "lint-staged": {
