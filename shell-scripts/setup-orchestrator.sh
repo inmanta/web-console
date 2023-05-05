@@ -34,12 +34,15 @@ RELEASE=${release:-7-dev}
 DOCKER_FLAG=${flag:-}
 BRANCH=${branch:-master}
 
-if [[ $VERSION=oss ]]
+if [[ "$VERSION" == "oss" ]]
 then
     INSTALL_VERSION="oss"
 else
     INSTALL_VERSION="lsm"
 fi
+
+echo "$INSTALL_VERSION"
+exit 0
 
 echo "Creating temp folder..."
 mkdir temp
