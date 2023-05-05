@@ -41,9 +41,6 @@ else
     INSTALL_VERSION="lsm"
 fi
 
-echo "$INSTALL_VERSION"
-exit 0
-
 echo "Creating temp folder..."
 mkdir temp
 
