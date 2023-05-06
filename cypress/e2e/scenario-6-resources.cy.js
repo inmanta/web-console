@@ -176,7 +176,7 @@ describe("Scenario 6 : Resources", () => {
     );
 
     // Expect row to have 0 dependencies
-    cy.get('[data-label="Dependencies"]').should("contain", "0");
+    cy.get('[data-label="Requires"]').should("contain", "0");
 
     // click row open
     cy.get('[aria-label="Details"]').click();
@@ -317,13 +317,13 @@ describe("Scenario 6 : Resources", () => {
       .should("contain", "default-0001");
 
     // Expect resource with value a,b,c,default-0001 to have 0 dependencies
-    cy.get('[data-label="Dependencies"]').eq(0).should("contain", 0);
-    cy.get('[data-label="Dependencies"]').eq(1).should("contain", 0);
-    cy.get('[data-label="Dependencies"]').eq(2).should("contain", 0);
-    cy.get('[data-label="Dependencies"]').eq(3).should("contain", 0);
+    cy.get('[data-label="Requires"]').eq(0).should("contain", 0);
+    cy.get('[data-label="Requires"]').eq(1).should("contain", 0);
+    cy.get('[data-label="Requires"]').eq(2).should("contain", 0);
+    cy.get('[data-label="Requires"]').eq(3).should("contain", 0);
 
     // Expect resource with value waiting-entity to have 3 dependencies
-    cy.get('[data-label="Dependencies"]').eq(4).should("contain", 3);
+    cy.get('[data-label="Requires"]').eq(4).should("contain", 3);
 
     // Click open collapsible row for resource waiting-entity
     cy.get(
@@ -392,7 +392,7 @@ describe("Scenario 6 : Resources", () => {
     );
 
     // expect to find one collapsible with 3 dependencies
-    cy.get('[data-label="Dependencies"]').should("contain", "3");
+    cy.get('[data-label="Requires"]').should("contain", "3");
 
     // go back to requires tab
     cy.get("button").contains("Requires").click();
