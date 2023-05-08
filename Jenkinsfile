@@ -37,9 +37,8 @@ pipeline {
             steps {
                 timeout(time: 20, unit: 'MINUTES') {
                 dir('web-console') {
-                    sh '''
-                    yarn run build;
-                    yarn run setup-server:lsm:ci;
+                    sh '''yarn run build;
+                    yarn run install:orchestrator:ci;
                     yarn run cypress-test;'''
                 }
                 }
@@ -47,7 +46,7 @@ pipeline {
             post {
                 always {
                     dir('web-console') {
-                        sh'yarn run kill-server:lsm'
+                        sh'yarn run kill-server'
                     }
                 }
             }

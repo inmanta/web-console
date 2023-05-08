@@ -1,0 +1,7 @@
+change-type: patch
+description: "Change resource table header title from Dependencies to Requires"
+issue-nr: 4753
+destination-branches:
+- master
+- iso6
+
