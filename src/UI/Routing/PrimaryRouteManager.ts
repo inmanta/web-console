@@ -15,6 +15,8 @@ import {
   RouteKindWithId,
 } from "@/Core";
 import { Dashboard } from "@/Slices/Dashboard";
+import { InstanceComposer } from "@/Slices/InstanceComposer";
+import { InstanceComposerEditor } from "@/Slices/InstanceComposerEditor";
 import { ServiceDetails } from "@/Slices/ServiceDetails";
 import { AgentProcess } from "@S/AgentProcess";
 import { Agents } from "@S/Agents";
@@ -60,6 +62,8 @@ export function PrimaryRouteManager(baseUrl: string): RouteManager {
     Catalog: ServiceCatalog.route(baseUrl),
     Dashboard: Dashboard.route(baseUrl),
     Inventory: ServiceInventory.route(baseUrl),
+    InstanceComposer: InstanceComposer.route(baseUrl),
+    InstanceComposerEditor: InstanceComposerEditor.route(baseUrl),
     ServiceDetails: ServiceDetails.route(baseUrl),
     CreateInstance: CreateInstance.route(baseUrl),
     EditInstance: EditInstance.route(baseUrl),
