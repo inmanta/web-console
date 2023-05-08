@@ -81,16 +81,11 @@ export const CreateEnvironmentForm: React.FC<Props> = ({
       }
     }
   };
+
   const onCloseAlert = () => setErrorMessage("");
-  const preventDefault = (event: React.FormEvent) => {
-    event.preventDefault();
-  };
+
   return (
-    <Form
-      onSubmit={preventDefault}
-      isWidthLimited
-      aria-label={props["aria-label"]}
-    >
+    <Form isWidthLimited aria-label={props["aria-label"]}>
       {errorMessage && (
         <InlinePlainAlert
           aria-label={`submit-error-message`}
