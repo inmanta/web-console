@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Cleanup scripts and repair tests that were broken by V2 update.'
+destination-branches:
+- iso5
+sections: {}
