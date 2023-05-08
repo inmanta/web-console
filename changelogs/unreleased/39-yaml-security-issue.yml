@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Repair Uncaught Exception in yaml'
+destination-branches:
+- master
+- iso6
+sections: {}
