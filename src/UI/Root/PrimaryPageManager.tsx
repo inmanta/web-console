@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  PageManager,
-  Page,
-  RouteDictionary,
-  PageDictionary,
-  RestrictedPageDictionary,
-} from "@/Core";
-import { InstanceComposerPage } from "@/Slices/InstanceComposer/UI";
-import { InstanceComposerEditorPage } from "@/Slices/InstanceComposerEditor/UI";
+import { PageManager, Page, RouteDictionary, PageDictionary } from "@/Core";
 import { ServiceDetailsPage } from "@/Slices/ServiceDetails/UI";
 import { AgentProcessPage } from "@S/AgentProcess/UI";
 import { AgentsPage } from "@S/Agents/UI";
@@ -35,11 +27,9 @@ import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
-import * as configFile from "../../config";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
-  private restrictedPageDictionary: RestrictedPageDictionary;
 
   constructor(private readonly routeDictionary: RouteDictionary) {
     this.pageDictionary = {
@@ -73,7 +63,6 @@ export class PrimaryPageManager implements PageManager {
         ...this.routeDictionary.Inventory,
         element: <ServiceInventoryPage />,
       },
-
       ServiceDetails: {
         ...this.routeDictionary.ServiceDetails,
         element: <ServiceDetailsPage />,
@@ -148,30 +137,9 @@ export class PrimaryPageManager implements PageManager {
         element: <ComplianceCheckPage />,
       },
     };
-
-    this.restrictedPageDictionary = {
-      InstanceComposer: {
-        ...this.routeDictionary.InstanceComposer,
-        element: <InstanceComposerPage />,
-      },
-      InstanceComposerEditor: {
-        ...this.routeDictionary.InstanceComposerEditor,
-        element: <InstanceComposerEditorPage />,
-      },
-    };
   }
 
   getPages(): Page[] {
-    if (
-      Object(configFile).hasOwnProperty("features") &&
-      configFile.features.instanceComposer
-    ) {
-      return [
-        ...Object.values(this.pageDictionary),
-        ...Object.values(this.restrictedPageDictionary),
-      ];
-    } else {
-      return Object.values(this.pageDictionary);
-    }
+    return Object.values(this.pageDictionary);
   }
 }
