@@ -20,8 +20,6 @@ const kinds = [
   "History",
   "Diagnose",
   "Events",
-  "InstanceComposer",
-  "InstanceComposerEditor",
 
   /**
    * Resource Manager
@@ -47,8 +45,6 @@ const kinds = [
 
 export type RouteKind = (typeof kinds)[number];
 
-export type RestrictedRouteKind = "InstanceComposer" | "InstanceComposerEditor";
-
 export const isValidKind = (value: string): value is RouteKind =>
   kinds.includes(value as RouteKind);
 
@@ -71,8 +67,6 @@ export interface RouteKindWithId<K extends RouteKind = RouteKind> {
  * Only contains routes that have parameters (environment not included)
  */
 interface RouteParamKeysManifest {
-  InstanceComposer: "service";
-  InstanceComposerEditor: "service" | "instance";
   Inventory: "service";
   ServiceDetails: "service";
   CreateInstance: "service";
