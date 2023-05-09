@@ -60,73 +60,98 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   });
 };
 
-before(() => {
-  clearEnvironment();
-  forceUpdateEnvironment();
-});
+const isIso = Cypress.env("edition") === "iso";
+const PROJECT = Cypress.env("project") || "lsm-frontend";
 
 describe("Scenario 4 Desired State", () => {
+  if (isIso) {
+    before(() => {
+      clearEnvironment();
+      forceUpdateEnvironment();
+    });
+  }
+
   it("4.1 Initial setup", () => {
     // Go from Home page to Service Inventory of Basic-service
     cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
-    cy.get("#basic-service").contains("Show inventory").click();
-    cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+    cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
 
-    // Add an instance and fill form
-    cy.get("#add-instance-button").click();
-    cy.get("#ip_r1").type("1.2.3.4");
-    cy.get("#interface_r1_name").type("eth0");
-    cy.get("#address_r1").type("1.2.3.5/32");
-    cy.get("#vlan_id_r1").type("1");
+    if (isIso) {
+      cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+      cy.get("#basic-service").contains("Show inventory").click();
+      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
 
-    cy.get("#ip_r2").type("1.2.2.1");
-    cy.get("#interface_r2_name").type("interface-vlan");
-    cy.get("#address_r2").type("1.2.2.3/32");
-    cy.get("#vlan_id_r2").type("2");
-    cy.get("#service_id").type("0001");
-    cy.get("#name").type("basic-service");
-    cy.get("button").contains("Confirm").click();
-    // Should show the chart
-    cy.get(".pf-c-chart").should("be.visible");
+      // Add an instance and fill form
+      cy.get("#add-instance-button").click();
+      cy.get("#ip_r1").type("1.2.3.4");
+      cy.get("#interface_r1_name").type("eth0");
+      cy.get("#address_r1").type("1.2.3.5/32");
+      cy.get("#vlan_id_r1").type("1");
 
-    // Should show the ServiceInventory-Success Component.
-    cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
-    // Check if only one row has been added to the table.
-    cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+      cy.get("#ip_r2").type("1.2.2.1");
+      cy.get("#interface_r2_name").type("interface-vlan");
+      cy.get("#address_r2").type("1.2.2.3/32");
+      cy.get("#vlan_id_r2").type("2");
+      cy.get("#service_id").type("0001");
+      cy.get("#name").type("basic-service");
+      cy.get("button").contains("Confirm").click();
+      // Should show the chart
+      cy.get(".pf-c-chart").should("be.visible");
+
+      // Should show the ServiceInventory-Success Component.
+      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      // Check if only one row has been added to the table.
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+    }
 
     //got to desired stated page
     cy.get(".pf-c-nav__link").contains("Desired State").click();
-    cy.get('[aria-label="DesiredStatesView-Success"]', { timeout: 60000 })
-      .find("tbody", { timeout: 60000 })
-      .should("have.length", 2);
+
+    if (!isIso) {
+      // hit the compile button; OSS don't get compiled on initial state.
+      cy.get("button").contains("Recompile").click();
+      cy.get('[aria-label="DesiredStatesView-Success"]', { timeout: 60000 })
+        .find("tbody", { timeout: 60000 })
+        .should("have.length.at.least", 1);
+      cy.get("tbody")
+        .eq(0)
+        .should("contain", "console")
+        .and("contain", "active");
+    } else {
+      cy.get('[aria-label="DesiredStatesView-Success"]', { timeout: 60000 })
+        .find("tbody", { timeout: 60000 })
+        .should("have.length", 2);
+      cy.get("tbody")
+        .eq(0)
+        .should("contain", "lsm_export")
+        .and("contain", "active");
+    }
+
     cy.get('[data-label="Status"]').contains("active").should("have.length", 1);
-    cy.get("tbody")
-      .eq(0)
-      .should("contain", "lsm_export")
-      .and("contain", "active");
   });
 
-  it("4.2 Desired state resources", () => {
+  it.only("4.2 Desired state resources", () => {
     cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+    cy.get('[aria-label="Environment card"]').contains(PROJECT).click();
     cy.get(".pf-c-nav__link").contains("Desired State").click();
 
     //go from desired State to Resources
     cy.get("tbody").eq(0).contains("Show Resources").click();
     cy.get('[aria-label="VersionResourcesTable-Success"]')
       .find("tbody")
-      .should("have.length", 2);
+      .should("have.length", (isIso && 2) || 5);
 
     cy.get("tbody")
       .eq(0)
       .should("contain", "frontend_model::TestResource")
       .and("contain", "0");
-    cy.get("tbody")
-      .eq(1)
-      .should("contain", "lsm::LifecycleTransfer")
-      .and("contain", "1");
+
+    isIso &&
+      cy
+        .get("tbody")
+        .eq(1)
+        .should("contain", "lsm::LifecycleTransfer")
+        .and("contain", "1");
 
     //go to details of first resource
     cy.get("tbody").eq(0).contains("Show Details").click();

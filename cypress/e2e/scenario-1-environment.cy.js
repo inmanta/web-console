@@ -1,13 +1,3 @@
-const tagVersion = () => {
-  cy.visit("/console/status");
-  cy.get(".pf-c-description-list__description")
-    .first()
-    .invoke("text")
-    .as("VERSION");
-};
-
-const ISO = "Standard Edition";
-
 const testProjectName = (id) => "Test Project Name " + id;
 const testName = (id) => "TestName " + id;
 
@@ -16,22 +6,21 @@ beforeEach(() => {
   cy.intercept("POST", "/api/v2/environment_settings/**").as(
     "postEnvConfigEdit"
   );
+
   // delete projects excluding test one before each test to have unified conditions for each test case
   cy.intercept("/api/v2/environment").as("createEnv");
   cy.request("/api/v1/project").as("projects");
   cy.get("@projects").then((response) => {
     response.body.projects.map((project) => {
-      if (project.name !== "lsm-frontend") {
+      if (project.name !== Cypress.env("project")) {
         cy.request("DELETE", `api/v1/project/${project.id}`);
       }
     });
   });
-
-  tagVersion();
 });
 
 /**
- * Function is responsible for creating Environment process without submiting it.
+ * Function is responsible for creating Environment process without submitting it.
  * it accepts object that holds:
  *
  * @param {*} envName -string
@@ -91,6 +80,8 @@ const deleteEnv = (name, projectName) => {
  * @param {*} envName - string
  */
 const openSettings = (envName) => {
+  cy.wait(2000);
+
   cy.get(".pf-c-nav__item").contains("Settings").click();
   cy.url().should("contain", "/console/settings?env=");
   cy.get('[aria-label="Name-value"]').should("contain", envName);
@@ -124,9 +115,13 @@ describe("Environment", () => {
       projectName: testProjectName(2),
       shouldPassEnvName: false,
     });
+
     cy.get("button").contains("Submit").should("be.disabled");
     cy.get('[aria-label="Name-input"]').type(testName(2));
+
     cy.get("button").contains("Submit").click();
+    cy.wait(1000);
+    // TODO : Add test to check redirection to right page.
 
     //go back to home and check if env is visible
     cy.get(".pf-c-breadcrumb__item").eq(0).click();
@@ -145,9 +140,10 @@ describe("Environment", () => {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
+
     cy.get("button").contains("Submit").click();
 
-    if (this.version && this.version === ISO) {
+    if (Cypress.env("edition") === "iso") {
       cy.url().should("contain", "/console/lsm/catalog?env=", {
         timeout: 10000,
       });
@@ -166,16 +162,25 @@ describe("Environment", () => {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
+
     cy.get("button").contains("Submit").click();
-    // cy.url().should("contain", "/console/lsm/catalog?env=");
+
+    // ISO specific assertion
+    if (Cypress.env("edition") === "iso") {
+      cy.url().should("contain", "/console/lsm/catalog?env=", {
+        timeout: 10000,
+      });
+    }
 
     openSettings(testName(4));
+
     //change Name value
     cy.get('[aria-label="Name-toggle-edit"]').click();
     cy.get('[aria-label="Name-input"]').clear();
     cy.get('[aria-label="Name-input"]').type("New Value Name");
     cy.get('[aria-label="Name-submit-edit"]').click();
     cy.get('[aria-label="Name-value"]').should("contain", "New Value Name");
+
     //change Description value
     cy.wait(1000);
     cy.get('[aria-label="Description-toggle-edit"]:enabled').click();
@@ -186,9 +191,11 @@ describe("Environment", () => {
       "contain",
       "New Value Description"
     );
+
     //change Repository Branch value
     cy.wait(1000);
     cy.get('[aria-label="Repository Settings-toggle-edit"]:enabled').click();
+
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_branch-input"]').type("New Value Repo Branch");
     cy.get('[aria-label="Repository Settings-submit-edit"]:enabled').click();
@@ -196,9 +203,11 @@ describe("Environment", () => {
       "contain",
       "New Value Repo Branch"
     );
+
     //change Repository url value
     cy.wait(1000);
     cy.get('[aria-label="Repository Settings-toggle-edit"]:enabled').click();
+
     //delay is needed to fix error that says that this input is disabled
     cy.get('[aria-label="repo_url-input"]').type("New Value Repo Url", {
       delay: 10,
@@ -208,6 +217,7 @@ describe("Environment", () => {
       "contain",
       "New Value Repo Url"
     );
+
     //change Project Name value
     cy.wait(1000);
     cy.get('[aria-label="Project Name-toggle-edit"]:enabled').click();
@@ -221,51 +231,57 @@ describe("Environment", () => {
   });
 
   // specific to ISO
-  xit("1.5 Clear environment", function () {
-    //Fill The form and submit
-    cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
-    cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 20000 }).should(
-      "to.be.visible"
-    );
+  if (Cypress.env("edition") === "iso") {
+    it("1.5 Clear environment", function () {
+      //Fill The form and submit
+      cy.visit("/console/");
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get('[aria-label="ServiceCatalog-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
 
-    //Go to settings
-    openSettings("test");
+      //Go to settings
+      openSettings("test");
 
-    //Cancel Clear Env and expect nothing to change
-    cy.get("button").contains("Clear environment").click();
-    cy.get("button").contains("Cancel").click();
-    cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+      //Cancel Clear Env and expect nothing to change
+      cy.get("button").contains("Clear environment").click();
+      cy.get("button").contains("Cancel").click();
+      cy.visit("/console/");
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-c-nav__link").contains("Service Catalog").click();
 
-    cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 20000 }).should(
-      "to.be.visible"
-    );
+      cy.get('[aria-label="ServiceCatalog-Success"]', {
+        timeout: 20000,
+      }).should("to.be.visible");
 
-    //Go to settings and get Id of an environment
-    openSettings("test");
+      //Go to settings and get Id of an environment
+      openSettings("test");
 
-    //Clear Env
-    cy.get("button").contains("Clear environment").click();
-    cy.get('[aria-label="clear environment check"]').type("test");
-    cy.get("button")
-      .contains("I understand the consequences, clear this environment")
-      .click();
-    cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("frontend").click();
-    cy.get(".pf-c-nav__link").contains("Service Catalog").click();
-    cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
+      //Clear Env
+      cy.get("button").contains("Clear environment").click();
+      cy.get('[aria-label="clear environment check"]').type("test");
+      cy.get("button")
+        .contains("I understand the consequences, clear this environment")
+        .click();
+      cy.visit("/console/");
+      cy.get('[aria-label="Environment card"]').contains("frontend").click();
+      cy.get(".pf-c-nav__link").contains("Service Catalog").click();
+      cy.get('[aria-label="ServiceCatalog-Empty"]').should("to.be.visible");
 
-    cy.get("button").contains("Update Service Catalog").click();
-    //Update service catalog to restore instances
-    cy.get("button", { timeout: 30000 }).contains("Yes").click();
-    // exceeded timeout needed is to await continuous call to return services
-    cy.get('[aria-label="ServiceCatalog-Success"]', { timeout: 30000 }).should(
-      "to.be.visible"
-    );
-  });
+      cy.get("button").contains("Update Service Catalog").click();
+      //Update service catalog to restore instances
+      cy.get("button", { timeout: 30000 }).contains("Yes").click();
+      // exceeded timeout needed is to await continuous call to return services
+      cy.get('[aria-label="ServiceCatalog-Success"]', {
+        timeout: 30000,
+      }).should("to.be.visible");
+    });
+  }
 
   it("1.6 Edit environment configuration", function () {
     cy.visit("/console/environment/create");
@@ -275,10 +291,14 @@ describe("Environment", () => {
       shouldPassEnvName: true,
       fillOptionalInputs: true,
     });
-    cy.get("button").contains("Submit").click();
+    cy.get("button").contains("Submit").trigger("click");
 
     // specific to ISO
-    //  cy.url().should("contain", "/console/lsm/catalog?env=");
+    if (Cypress.env("edition") === "iso") {
+      cy.url().should("contain", "/console/lsm/catalog?env=", {
+        timeout: 10000,
+      });
+    }
 
     openSettings(testName(6), testProjectName(6));
     cy.get("button").contains("Configuration").click();
@@ -449,16 +469,18 @@ describe("Environment", () => {
       .should("have.value", "push_full_deploy");
 
     // specific to ISO
-    //Change lsm_partial_compile
-    // cy.get('[aria-label="Row-lsm_partial_compile"]')
-    //   .find(".pf-c-switch")
-    //   .click();
+    if (Cypress.env("edition") === "iso") {
+      // Change lsm_partial_compile
+      cy.get('[aria-label="Row-lsm_partial_compile"]')
+        .find(".pf-c-switch")
+        .click();
 
-    // cy.get('[aria-label="Warning"]').should("exist");
-    // cy.get('[aria-label="Row-lsm_partial_compile"]')
-    //   .find('[aria-label="SaveAction"]')
-    //   .click();
-    // cy.get('[aria-label="Warning"]').should("not.exist");
+      cy.get('[aria-label="Warning"]').should("exist");
+      cy.get('[aria-label="Row-lsm_partial_compile"]')
+        .find('[aria-label="SaveAction"]')
+        .click();
+      cy.get('[aria-label="Warning"]').should("not.exist");
+    }
 
     //change notification_retention
     cy.get('[aria-label="Row-notification_retention"]')

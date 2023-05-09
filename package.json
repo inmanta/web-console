@@ -26,7 +26,7 @@
     "check-circular-deps": "madge --circular ./src/index.tsx",
     "install:orchestrator": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
     "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
-    "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev'",
+    "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh",
     "kill-server": "sh ./shell-scripts/clear-server.sh"
   },
