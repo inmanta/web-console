@@ -95,6 +95,7 @@ describe("Scenario 4 Desired State", () => {
       cy.get("#service_id").type("0001");
       cy.get("#name").type("basic-service");
       cy.get("button").contains("Confirm").click();
+
       // Should show the chart
       cy.get(".pf-c-chart").should("be.visible");
 
@@ -146,12 +147,11 @@ describe("Scenario 4 Desired State", () => {
       .should("contain", "frontend_model::TestResource")
       .and("contain", "0");
 
-    isIso &&
-      cy
-        .get("tbody")
-        .eq(1)
-        .should("contain", "lsm::LifecycleTransfer")
-        .and("contain", "1");
+    // ISO
+    cy.get("tbody")
+      .eq(1)
+      .should("contain", "lsm::LifecycleTransfer")
+      .and("contain", "1");
 
     //go to details of first resource
     cy.get("tbody").eq(0).contains("Show Details").click();
