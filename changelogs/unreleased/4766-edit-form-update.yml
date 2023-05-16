@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Update Edit Instance Form to handle v2 of edit command query'
+issue-nr: 4764
+destination-branches:
+- master
+- iso6

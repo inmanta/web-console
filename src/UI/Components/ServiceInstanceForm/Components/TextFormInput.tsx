@@ -59,7 +59,7 @@ export const TextFormInput: React.FC<Props> = ({
         name={attributeName}
         placeholder={placeholder}
         aria-describedby={`${attributeName}-helper`}
-        value={attributeValue}
+        value={attributeValue || ""}
         onChange={handleInputChange}
       />
     </FormGroup>
