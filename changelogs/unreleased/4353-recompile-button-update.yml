@@ -1,0 +1,8 @@
+change-type: patch
+description: 'From now on Recompile buttons aren't disable after use, which make queueing recompilations possible'
+issue-nr: 4353
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"
