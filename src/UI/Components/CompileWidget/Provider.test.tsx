@@ -20,15 +20,15 @@ import { DependencyProvider } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { Provider } from "./Provider";
 
-function setup(
+function setup({
   details = {
     halted: false,
     server_compile: true,
     protected_environment: false,
     enable_lsm_expert_mode: false,
   },
-  isToastVisible = true
-) {
+  isToastVisible = true,
+} = {}) {
   const apiHelper = new DeferredApiHelper();
   const authHelper = new KeycloakAuthHelper();
   const scheduler = new StaticScheduler();
@@ -198,10 +198,12 @@ test("GIVEN CompileButton WHEN clicked on toggle and clicked on Update & Recompi
 
 test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THEN button is disabled", async () => {
   const { component, apiHelper } = setup({
-    halted: false,
-    server_compile: false,
-    protected_environment: false,
-    enable_lsm_expert_mode: false,
+    details: {
+      halted: false,
+      server_compile: false,
+      protected_environment: false,
+      enable_lsm_expert_mode: false,
+    },
   });
   render(component);
 
@@ -218,15 +220,15 @@ test("GIVEN CompileButton WHEN environmentSetting server_compile is disabled THE
 });
 
 test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile clicked THEN toast won't appear", async () => {
-  const { component, apiHelper } = setup(
-    {
+  const { component, apiHelper } = setup({
+    details: {
       halted: false,
       server_compile: true,
       protected_environment: false,
       enable_lsm_expert_mode: false,
     },
-    false
-  );
+    isToastVisible: false,
+  });
   render(component);
 
   await act(async () => {

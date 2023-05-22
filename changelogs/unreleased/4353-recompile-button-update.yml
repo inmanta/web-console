@@ -1,6 +1,5 @@
-change-type: patch
-description: 'From now on Recompile buttons aren't disable after use, which make queueing recompilations possible'
-issue-nr: 4353
+change-type: minor
+description: "From now on Recompile buttons aren't disabled after use, which makes queueing recompilations possible."
 destination-branches:
 - master
 - iso6
