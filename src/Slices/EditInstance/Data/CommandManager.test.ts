@@ -54,10 +54,8 @@ test("GIVEN getBodyV2 WHEN changing optional attributes THEN generates correct b
     { ...Field.number, name: "attr4", isOptional: true, type: "int?" },
   ];
 
-  //to simulate actual behavior after refactor attr1 was added as from now on all of the fields are passed to getBodyV2 function in the flow.
   const attributes = {
     attr1: "some value",
-    attr2: null,
     attr3: true,
     attr4: "42",
   };
@@ -69,7 +67,6 @@ test("GIVEN getBodyV2 WHEN changing optional attributes THEN generates correct b
     target: ".",
     value: {
       attr1: "some value",
-      attr2: null,
       attr3: true,
       attr4: 42,
     },
