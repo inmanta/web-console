@@ -627,6 +627,9 @@ const dict = {
   "common.serviceInstance.relation": `Select an instance`,
   "common.environment.select": "Select an environment...",
   "common.compileWidget.recompile": "Recompile",
+  "common.compileWidget.toast": (update: boolean) =>
+    `${update ? "Update and " : ""}Recompile triggered`,
+  "common.compileWidget.toastTitle": "Recompile Info",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
