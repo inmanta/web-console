@@ -50,7 +50,6 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/backbone": "^1.4.15",
     "@types/fetch-mock": "^7.3.5",
     "@types/file-saver": "^2.0.5",
     "@types/jest": "^29.5.0",
@@ -126,7 +125,6 @@
     "webpack-version-file": "^0.1.7"
   },
   "dependencies": {
-    "@inmanta/rappid": "^3.6.3",
     "@patternfly/react-charts": "^6.94.18",
     "@patternfly/react-core": "^4.276.6",
     "@patternfly/react-icons": "^4.93.6",
@@ -192,6 +190,5 @@
     "last 2 Firefox versions",
     "last 2 Edge versions",
     "last 2 Safari versions"
-  ],
-  "packageManager": "yarn@3.5.0"
+  ]
 }
