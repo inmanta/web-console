@@ -60,35 +60,38 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   });
 };
 
-before(() => {
-  clearEnvironment();
-  forceUpdateEnvironment();
-});
-
-describe("Scenario 2.4 Service Catalog - update", () => {
-  it("2.4.1 Add Instance Cancel form", () => {
-    // Go from Home page to Service Inventory of Basic-service
-    cy.visit("/console/");
-    //open Environment
-    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
-    cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
-    //click update button then cancel popup
-    cy.get("button").contains("Update Service Catalog").click();
-    cy.get(".pf-c-modal-box").should("to.be.visible");
-    cy.get("#cancel").click();
-    cy.get(".pf-c-alert").should("to.not.exist");
-    //click update button and confirm the popup
-    cy.get("button").contains("Update Service Catalog").click();
-    cy.get("#submit").click();
-    cy.get(".pf-c-alert")
-      .contains("The update has been requested")
-      .should("to.be.visible");
-    //find newest compile report
-    cy.get(".pf-c-nav__link").contains("Compile Reports").click();
-    cy.get('[aria-label="Compile Reports Table Row"]')
-      .eq(0)
-      .find('[data-label="Message"]')
-      .should("have.text", "Recompile model to export service definition");
+if (Cypress.env("edition") === "iso") {
+  describe("Scenario 2.4 Service Catalog - update", () => {
+    before(() => {
+      clearEnvironment();
+      forceUpdateEnvironment();
+    });
+    it("2.4.1 Add Instance Cancel form", () => {
+      // Go from Home page to Service Inventory of Basic-service
+      cy.visit("/console/");
+      //open Environment
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get('[aria-label="ServiceCatalog-Success"]').should("to.be.visible");
+      //click update button then cancel popup
+      cy.get("button").contains("Update Service Catalog").click();
+      cy.get(".pf-c-modal-box").should("to.be.visible");
+      cy.get("#cancel").click();
+      cy.get(".pf-c-alert").should("to.not.exist");
+      //click update button and confirm the popup
+      cy.get("button").contains("Update Service Catalog").click();
+      cy.get("#submit").click();
+      cy.get(".pf-c-alert")
+        .contains("The update has been requested")
+        .should("to.be.visible");
+      //find newest compile report
+      cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+      cy.get('[aria-label="Compile Reports Table Row"]')
+        .eq(0)
+        .find('[data-label="Message"]')
+        .should("have.text", "Recompile model to export service definition");
+    });
   });
-});
+}

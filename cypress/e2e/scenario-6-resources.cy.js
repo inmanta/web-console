@@ -83,6 +83,7 @@ describe("Scenario 6 : Resources", () => {
     // Expect table to be empty
     cy.get('[aria-label="ResourcesView-Empty"]').should("to.be.visible");
   });
+
   it("6.2 Add instance on a basic-service", () => {
     // Select Test environment
     cy.visit("/console/");
@@ -234,6 +235,7 @@ describe("Scenario 6 : Resources", () => {
       "Setting deployed due to known good status"
     );
   });
+
   it("6.3 Log message filtering", () => {
     // Select Test environment
     cy.visit("/console/");
@@ -271,6 +273,7 @@ describe("Scenario 6 : Resources", () => {
       8
     );
   });
+
   it("6.4 Resources with multiple dependencies", () => {
     // Select Test environment
     cy.visit("/console/");
