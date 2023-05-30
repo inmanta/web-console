@@ -27,7 +27,8 @@
     "setup-server:lsm": "sh ./shell-scripts/setup-server.sh windows lts",
     "setup-server:lsm:linux": "sh ./shell-scripts/setup-server.sh linux lts",
     "setup-server:lsm:ci": "sh ./shell-scripts/setup-server.sh ci lts",
-    "kill-server:lsm": "sh ./shell-scripts/clear-server.sh"
+    "kill-server:lsm": "sh ./shell-scripts/clear-server.sh",
+    "update:dist": "docker exec inmanta_orchestrator rm -rf /usr/share/inmanta/web-console && docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
