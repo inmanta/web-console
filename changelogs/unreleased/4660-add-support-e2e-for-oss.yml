@@ -4,4 +4,5 @@ issue-nr: 4660
 destination-branches:
 - master
 - iso6
-sections: {}
+sections: 
+  minor-improvement: "{{description}}"
