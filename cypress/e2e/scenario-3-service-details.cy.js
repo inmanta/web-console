@@ -60,7 +60,7 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   });
 };
 
-if (Cypress.env("edition") === "edition") {
+if (Cypress.env("edition") === "iso") {
   describe("Scenario 3 - Service Details", () => {
     before(() => {
       clearEnvironment();
