@@ -21,7 +21,11 @@ export const createFormState = (
       }
 
       case "Nested": {
-        acc[curr.name] = createFormState(curr.fields);
+        if (curr.isOptional) {
+          acc[curr.name] = null;
+        } else {
+          acc[curr.name] = createFormState(curr.fields);
+        }
         return acc;
       }
 
@@ -59,6 +63,7 @@ export const createEditFormState = (
       switch (curr.kind) {
         case "Boolean":
         case "Enum":
+        case "TextList":
         case "Text": {
           acc[curr.name] = curr.type.includes("dict")
             ? stringifyDict(originalAttributes?.[curr.name])
@@ -74,10 +79,14 @@ export const createEditFormState = (
         }
 
         case "Nested": {
-          acc[curr.name] = createEditFormState(
-            curr.fields,
-            originalAttributes?.[curr.name] as InstanceAttributeModel
-          );
+          if (curr.isOptional && originalAttributes?.[curr.name] === null) {
+            acc[curr.name] = null;
+          } else {
+            acc[curr.name] = createEditFormState(
+              curr.fields,
+              originalAttributes?.[curr.name] as InstanceAttributeModel
+            );
+          }
           return acc;
         }
 

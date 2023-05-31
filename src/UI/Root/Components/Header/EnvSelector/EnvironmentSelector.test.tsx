@@ -1,7 +1,7 @@
 import React from "react";
 import { MemoryRouter } from "react-router";
 import { Router } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import { RemoteData } from "@/Core";
@@ -24,6 +24,7 @@ test("GIVEN EnvironmentSelector WHEN there are no environments THEN redirects", 
       </DependencyProvider>
     </Router>
   );
+  expect(screen.getByText(`Environment: Select...`)).toBeVisible();
   expect(history.location.pathname).toEqual("/");
 });
 
@@ -44,8 +45,10 @@ test("GIVEN EnvironmentSelector and a project WHEN user clicks on toggle THEN li
     </MemoryRouter>
   );
 
-  const toggle = screen.getByText(`Environment: ${envA.name}`);
-  await userEvent.click(toggle);
+  const toggle = screen.getByText(`Environment: ${envA.name}...`);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
   const listItem = screen.getAllByText(`${envB.name}`)[0];
 
   expect(listItem).toBeVisible();
@@ -69,16 +72,20 @@ test("GIVEN EnvironmentSelector and populated store WHEN user clicks on an item 
     </MemoryRouter>
   );
 
-  const toggle = screen.getByText(`Environment: ${envA.name}`);
-  await userEvent.click(toggle);
+  const toggle = screen.getByText(`Environment: ${envA.name}...`);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
 
   const listItem = screen.getAllByText(`${envB.name}`)[1];
 
   expect(listItem).toBeVisible();
 
-  await userEvent.click(listItem);
+  await act(async () => {
+    await userEvent.click(listItem);
+  });
 
-  expect(screen.getByText(`Environment: ${envB.name}`)).toBeVisible();
+  expect(screen.getByText(`Environment: ${envB.name}...`)).toBeVisible();
   expect(selectedEnv).toEqual(envB.id);
 });
 
@@ -100,16 +107,21 @@ test("GIVEN EnvironmentSelector and environments with identical names WHEN user 
     </MemoryRouter>
   );
   const toggle = screen.getByRole("button", {
-    name: `Environment: ${envB.name}`,
+    name: `Environment: ${envB.name}...`,
   });
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
 
   const menuItems = screen.getAllByRole("menuitem");
-  await userEvent.click(menuItems[2]);
+
+  await act(async () => {
+    await userEvent.click(menuItems[2]);
+  });
 
   expect(
     screen.getByRole("button", {
-      name: `Environment: ${envB.name}`,
+      name: `Environment: ${envB.name}...`,
     })
   );
 

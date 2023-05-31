@@ -41,7 +41,7 @@ export const LineChart: React.FC<LineChartProps> = ({
   const [width, setWidth] = useState(0);
 
   // Note: Container order is important
-  const CursorVoronoiContainer = createContainer("voronoi", "cursor");
+  const CursorVoronoiContainer = createContainer("voronoi", "voronoi");
   const formatValueForChart = (value: null | number) => {
     if (value === null) {
       return null;
@@ -80,7 +80,6 @@ export const LineChart: React.FC<LineChartProps> = ({
         ariaDesc={title}
         containerComponent={
           <CursorVoronoiContainer
-            cursorDimension="x"
             labels={({ datum }) => chooseWhichLabelToUse(datum)}
             labelComponent={
               <ChartLegendTooltip
@@ -89,7 +88,6 @@ export const LineChart: React.FC<LineChartProps> = ({
                 flyoutWidth={250}
               />
             }
-            mouseFollowTooltips
             voronoiDimension="x"
             voronoiPadding={10}
           />

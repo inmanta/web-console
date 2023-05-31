@@ -1,6 +1,6 @@
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
   CommandResolverImpl,
@@ -51,7 +51,9 @@ function setup() {
 test("GIVEN ConfirmationModal WHEN enter is pressed and form is invalid THEN modal is not closed", async () => {
   const { component, onClose } = setup();
   render(component);
-  await userEvent.keyboard("{enter}");
+  await act(async () => {
+    await userEvent.keyboard("{enter}");
+  });
   expect(onClose).not.toBeCalled();
 });
 

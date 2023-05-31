@@ -4,12 +4,19 @@ import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StoreProvider } from "easy-peasy";
 import { Either } from "@/Core";
-import { QueryResolverImpl, getStoreInstance } from "@/Data";
+import {
+  QueryResolverImpl,
+  getStoreInstance,
+  KeycloakAuthHelper,
+  CommandResolverImpl,
+} from "@/Data";
+import { UpdateInstanceAttributeCommandManager } from "@/Data/Managers/UpdateInstanceAttribute";
 import {
   DynamicQueryManagerResolver,
   StaticScheduler,
   DeferredApiHelper,
   dependencies,
+  DynamicCommandManagerResolver,
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
@@ -33,6 +40,13 @@ function setup() {
       ),
     ])
   );
+  const updateAttribute = UpdateInstanceAttributeCommandManager(
+    new KeycloakAuthHelper(),
+    apiHelper
+  );
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([updateAttribute])
+  );
 
   const component = (
     <MemoryRouter>
@@ -40,6 +54,7 @@ function setup() {
         dependencies={{
           ...dependencies,
           queryResolver,
+          commandResolver,
         }}
       >
         <StoreProvider store={store}>
@@ -69,8 +84,12 @@ test("When using the name filter then only the matching parameters should be fet
     words("parameters.filters.name.placeholder")
   );
 
-  await userEvent.click(input);
-  await userEvent.type(input, "param{enter}");
+  await act(async () => {
+    await userEvent.click(input);
+  });
+  await act(async () => {
+    await userEvent.type(input, "param{enter}");
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.name=param`
@@ -104,22 +123,30 @@ test("When using the source filter then only the matching parameters should be f
   });
   expect(initialRows).toHaveLength(10);
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
-  await userEvent.click(
-    screen.getByRole("option", { name: words("parameters.columns.source") })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", { name: words("parameters.columns.source") })
+    );
+  });
 
   const input = screen.getByPlaceholderText(
     words("parameters.filters.source.placeholder")
   );
 
-  await userEvent.click(input);
-  await userEvent.type(input, "plugin{enter}");
+  await act(async () => {
+    await userEvent.click(input);
+  });
+  await act(async () => {
+    await userEvent.type(input, "plugin{enter}");
+  });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.source=plugin`
@@ -151,28 +178,43 @@ test("When using the Updated filter then the parameters within the range selecte
   const initialRows = await screen.findAllByRole("row", {
     name: "Parameters Table Row",
   });
+
   expect(initialRows).toHaveLength(10);
 
-  await userEvent.click(
-    within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
-      "button",
-      { name: "FilterPicker" }
-    )
-  );
-  await userEvent.click(
-    screen.getByRole("option", {
-      name: words("parameters.columns.updated.tests"),
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
+        "button",
+        { name: "FilterPicker" }
+      )
+    );
+  });
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("option", {
+        name: words("parameters.columns.updated.tests"),
+      })
+    );
+  });
 
   const fromDatePicker = screen.getByLabelText("From Date Picker");
-  await userEvent.click(fromDatePicker);
-  await userEvent.type(fromDatePicker, `2022/01/31`);
-  const toDatePicker = screen.getByLabelText("To Date Picker");
-  await userEvent.click(toDatePicker);
-  await userEvent.type(toDatePicker, `2022-02-01`);
+  await act(async () => {
+    await userEvent.click(fromDatePicker);
+  });
+  await act(async () => {
+    await userEvent.type(fromDatePicker, `2022/01/31`);
+  });
 
-  await userEvent.click(screen.getByLabelText("Apply date filter"));
+  const toDatePicker = screen.getByLabelText("To Date Picker");
+  await act(async () => {
+    await userEvent.click(toDatePicker);
+  });
+  await act(async () => {
+    await userEvent.type(toDatePicker, `2022-02-01`);
+  });
+  await act(async () => {
+    await userEvent.click(screen.getByLabelText("Apply date filter"));
+  });
 
   expect(apiHelper.pendingRequests[0].url).toMatch(
     `/api/v2/parameters?limit=20&sort=name.asc&filter.updated=ge%3A2022-01-30%2B23%3A00%3A00&filter.updated=le%3A2022-01-31%2B23%3A00%3A00`
@@ -194,7 +236,10 @@ test("When using the Updated filter then the parameters within the range selecte
 
   // The chips are hidden in small windows, so resize it
   window = Object.assign(window, { innerWidth: 1200 });
-  window.dispatchEvent(new Event("resize"));
+  await act(async () => {
+    window.dispatchEvent(new Event("resize"));
+  });
+
   expect(
     await screen.findByText("from | 2022/01/31 00:00:00", { exact: false })
   ).toBeVisible();

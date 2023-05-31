@@ -13,15 +13,15 @@ describe("Test GraphCard with LineChart component", () => {
         isStacked={false}
         timestamps={mockedMetrics.timestamps}
         metrics={{
-          name: availableKeys[0],
-          data: mockedMetrics.metrics[availableKeys[0]],
+          name: availableKeys[1],
+          data: mockedMetrics.metrics[availableKeys[1]],
         }}
       />
     );
 
     expect(
       await screen.findByRole("heading", {
-        name: words(`dashboard.${availableKeys[0] as MetricName}.title`),
+        name: words(`dashboard.${availableKeys[1] as MetricName}.title`),
       })
     ).toBeVisible();
     expect(await container.querySelector(".pf-c-chart")).toBeVisible();

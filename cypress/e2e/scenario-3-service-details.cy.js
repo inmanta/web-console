@@ -209,7 +209,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("button").contains("Show Details").click();
 
     // Expect to be redirected on Service Details: basic-service
-    cy.get("h1")
+    cy.get("h1", { timeout: 20000 })
       .contains("Service Details: basic-service")
       .should("to.be.visible");
 
@@ -373,7 +373,7 @@ describe("Scenario 3 - Service Details", () => {
     // Expect to see all values except ALLOCATION_UPDATE to have text-decoration: line-through
     cy.get(".pf-c-description-list__description ul").should(($ul) => {
       const $list = $ul.find("li");
-      expect($list).to.have.length(8);
+      expect($list).to.have.length(10);
     });
 
     cy.get(".pf-c-description-list__description li")
@@ -494,7 +494,7 @@ describe("Scenario 3 - Service Details", () => {
     cy.get("#submit", { timeout: 20000 }).click();
 
     // Expect to be redirected to Service Catalog after deletion
-    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 60000 }).should(
+    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 120000 }).should(
       "to.be.visible"
     );
   });

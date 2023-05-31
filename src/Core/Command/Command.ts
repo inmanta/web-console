@@ -16,6 +16,10 @@ import {
 } from "@/Data/Managers/DeleteVersion/interface";
 import { Deploy, DeployManifest } from "@/Data/Managers/Deploy/interface";
 import {
+  DestroyInstance,
+  DestroyInstanceManifest,
+} from "@/Data/Managers/DestroyInstance/interface";
+import {
   ResetEnvironmentSetting,
   ResetEnvironmentSettingManifest,
 } from "@/Data/Managers/EnvironmentSettings/ResetEnvironmentSetting/interface";
@@ -65,6 +69,10 @@ import {
   TriggerDryRunManifest,
 } from "@/Data/Managers/TriggerDryRun/interface";
 import {
+  TriggerForceState,
+  TriggerForceStateManifest,
+} from "@/Data/Managers/TriggerForceState/interface";
+import {
   TriggerSetState,
   TriggerSetStateManifest,
 } from "@/Data/Managers/TriggerSetState/interface";
@@ -72,6 +80,10 @@ import {
   UpdateCatalog,
   UpdateCatalogManifest,
 } from "@/Data/Managers/UpdateCatalog/interface";
+import {
+  UpdateInstanceAttribute,
+  UpdateInstanceAttributeManifest,
+} from "@/Data/Managers/UpdateInstanceAttribute/interface";
 
 import * as CreateEnvironment from "@S/CreateEnvironment/Core/CreateEnvironmentCommand";
 import * as CreateProject from "@S/CreateEnvironment/Core/CreateProjectCommand";
@@ -93,6 +105,7 @@ export type Command =
   | DeleteCallback.Command
   | DeleteEnvironment.Command
   | DeleteInstance
+  | DestroyInstance
   | DeleteService
   | DeleteVersion
   | Deploy
@@ -109,7 +122,9 @@ export type Command =
   | TriggerDryRun
   | TriggerInstanceUpdate.Command
   | TriggerSetState
+  | TriggerForceState
   | UpdateEnvironmentSetting
+  | UpdateInstanceAttribute
   | UpdateInstanceConfig
   | UpdateNotification.Command
   | UpdateServiceConfig;
@@ -130,6 +145,7 @@ interface Manifest {
   DeleteCallback: DeleteCallback.Manifest;
   DeleteEnvironment: DeleteEnvironment.Manifest;
   DeleteInstance: DeleteInstanceManifest;
+  DestroyInstance: DestroyInstanceManifest;
   DeleteService: DeleteServiceManifest;
   DeleteVersion: DeleteVersionManifest;
   Deploy: DeployManifest;
@@ -146,7 +162,9 @@ interface Manifest {
   TriggerDryRun: TriggerDryRunManifest;
   TriggerInstanceUpdate: TriggerInstanceUpdate.Manifest;
   TriggerSetState: TriggerSetStateManifest;
+  TriggerForceState: TriggerForceStateManifest;
   UpdateEnvironmentSetting: UpdateEnvironmentSettingManifest;
+  UpdateInstanceAttribute: UpdateInstanceAttributeManifest;
   UpdateInstanceConfig: UpdateInstanceConfigManifest;
   UpdateNotification: UpdateNotification.Manifest;
   UpdateServiceConfig: UpdateServiceConfigManifest;

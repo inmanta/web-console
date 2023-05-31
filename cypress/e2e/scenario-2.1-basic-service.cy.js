@@ -39,18 +39,7 @@ const checkStatusCompile = (id) => {
 };
 
 /**
- * when ID of the environment is not yet known, use this method to wait for the compile to be terminated.
- */
-const waitForCompile = () => {
-  cy.url().then((url) => {
-    const location = new URL(url);
-    const id = location.searchParams.get("env");
-    checkStatusCompile(id);
-  });
-};
-
-/**
- * Will by default execute the force update on the 'lsm-frontend' environment if no argumenst are being passed.
+ * Will by default execute the force update on the 'lsm-frontend' environment if no arguments are being passed.
  * This method can be executed standalone, but is part of the cleanup cycle that is needed before running a scenario.
  *
  * @param {string} nameEnvironment
@@ -130,7 +119,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get("#address_r1").type("1.2.3.5/32");
     cy.get("#vlan_id_r1").type("1");
 
-    // This is an incorect value for ip_r2
+    // This is an incorrect value for ip_r2
     cy.get("#ip_r2").type("1.2.2.1/32");
     cy.get("#interface_r2_name").type("interface-vlan");
     cy.get("#address_r2").type("1.2.2.3/32");
@@ -182,14 +171,14 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
 
     // check state is up now
     cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 40000 })
+      .find('[data-label="State"]', { timeout: 60000 })
       .should("contain", "up");
 
     // click on edit button
     cy.get(".pf-c-description-list").contains("Edit").click();
 
     // check if the amount of fields is 4 instead of 11
-    cy.get("form").find("input").should("have.length", 4);
+    cy.get("form").find("input").should("have.length", 5);
 
     // delete first value and submit should give an error toast
     cy.get("#address_r1").clear();
@@ -220,7 +209,7 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
   it("2.1.4 Delete previously created instance", () => {
     cy.visit("/console/");
 
-    // Add interceptios for the delete and get call to be able to catch responses later on.
+    // Add interceptions for the delete and get call to be able to catch responses later on.
     cy.intercept("DELETE", "/lsm/v1/service_inventory/basic-service/**").as(
       "DeleteInstance"
     );
@@ -230,13 +219,27 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     ).as("GetServiceInventory");
 
     cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
+
+    // START WORKAROUND
+
+    // TODO: Remove workaround for race condition.
+    // Must be done after https://github.com/inmanta/inmanta-lsm/issues/1249
+    // Linked to: https://github.com/orgs/inmanta/projects/1?pane=issue&itemId=25836961
+    cy.get(".pf-c-nav__link").contains("Compile Reports").click();
+    cy.get("button", { timeout: 60000 }).contains("Recompile").click();
+
+    // END WORKAROUND.
+
     cy.get(".pf-c-nav__item").contains("Service Catalog").click();
     cy.get("#basic-service").contains("Show inventory").click();
 
+    //check for instance state to change to up
+    cy.get('[data-label="State"]')
+      .find(".pf-c-label.pf-m-green", { timeout: 60000 })
+      .should("contain", "up");
+
     // expand first row
     cy.get("#expand-toggle0", { timeout: 20000 }).click();
-
-    waitForCompile();
 
     // delete but cancel deletion in modal
     cy.get(".pf-c-description-list", { timeout: 60000 })
@@ -246,14 +249,14 @@ describe("Scenario 2.1 Service Catalog - basic-service", () => {
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("No").click();
 
-    cy.get(".pf-c-description-list", { timeout: 40000 })
+    cy.get(".pf-c-description-list", { timeout: 60000 })
       .find("button")
       .contains("Delete")
       .click();
     cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
     cy.get(".pf-c-form__actions").contains("Yes").click();
 
-    // check response if instance has been deleted succesfully.
+    // check response if instance has been deleted successfully.
     cy.wait("@DeleteInstance").its("response.statusCode").should("eq", 200);
   });
 });

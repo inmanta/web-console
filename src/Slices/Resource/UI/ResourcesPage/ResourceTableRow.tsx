@@ -22,11 +22,13 @@ export const ResourceTableRow: React.FC<Props> = ({
   <Tbody>
     <Tr aria-label="Resource Table Row">
       {row.numberOfDependencies > 0 ? (
-        <Toggle
-          expanded={isExpanded}
-          onToggle={onToggle}
-          aria-label={`Toggle-${row.id}`}
-        />
+        <Td>
+          <Toggle
+            expanded={isExpanded}
+            onToggle={onToggle}
+            aria-label={`Toggle-${row.id}`}
+          />
+        </Td>
       ) : (
         <NoToggle />
       )}
@@ -75,7 +77,7 @@ const Wrapper = styled.div<{
 
 const CenteredCell = styled(Td)`
   @media (min-width: 768px) {
-    padding-left: 50px !important;
+    padding-left: 34px !important;
   }
 `;
 

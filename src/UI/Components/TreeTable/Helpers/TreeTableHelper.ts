@@ -1,3 +1,4 @@
+import { Attributes } from "@/Core";
 import {
   Cell,
   TreeRow,
@@ -41,6 +42,7 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
       this.attributeHelper.getPaths(this.attributes)
     );
   }
+
   createRows(
     expansionState: ExpansionState,
     setState: (state: ExpansionState) => void
@@ -66,7 +68,8 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
       isExpandedByParent,
       isChildExpanded,
       createOnToggle,
-      this.extractValues
+      this.extractValues,
+      this.attributes as Attributes
     );
 
     const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);

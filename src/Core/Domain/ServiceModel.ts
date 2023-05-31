@@ -74,6 +74,7 @@ export interface ServiceModel extends ServiceIdentifier {
   instance_summary?: InstanceSummary | null;
   embedded_entities: EmbeddedEntity[];
   inter_service_relations?: InterServiceRelation[];
+  strict_modifier_enforcement?: boolean;
 }
 
 export interface RelationAttribute {

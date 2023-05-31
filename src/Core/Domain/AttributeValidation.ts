@@ -8,7 +8,7 @@ export type AttributeValidation =
   | IpValidation;
 
 interface EnumValidation {
-  validation_type: "enum";
+  validation_type: "enum" | "enum?";
   validation_parameters: {
     names: Record<string, string | ParsedNumber>;
     value: string;

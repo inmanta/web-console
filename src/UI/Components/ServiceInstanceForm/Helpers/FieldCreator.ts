@@ -192,7 +192,10 @@ export class FieldCreator {
           };
         }
 
-        if (attribute.validation_type === "enum") {
+        if (
+          attribute.validation_type === "enum" ||
+          attribute.validation_type === "enum?"
+        ) {
           return {
             kind: "Enum",
             name: attribute.name,
@@ -201,6 +204,18 @@ export class FieldCreator {
             type: attribute.type,
             isOptional: attribute.type.includes("?"),
             options: attribute.validation_parameters.names,
+          };
+        }
+
+        if (attribute.type === "string[]") {
+          return {
+            kind: "TextList",
+            name: attribute.name,
+            defaultValue: defaultValue,
+            inputType: type,
+            description: attribute.description,
+            type: attribute.type,
+            isOptional: this.isTextFieldOptional(attribute),
           };
         }
 

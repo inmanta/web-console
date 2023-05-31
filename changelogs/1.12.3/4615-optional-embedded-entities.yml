@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Allow to add/delete optional nested entities'
+issue-nr: 4615
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"

@@ -31,6 +31,9 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
   });
 
   const button = screen.getByRole("button", { name: "Prev" });
-  await userEvent.click(button);
+  await act(async () => {
+    await userEvent.click(button);
+  });
+
   expect(apiHelper.pendingRequests[0].url).toEqual("first");
 });

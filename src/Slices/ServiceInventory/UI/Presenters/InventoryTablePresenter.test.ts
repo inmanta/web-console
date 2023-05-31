@@ -3,6 +3,7 @@ import {
   DummyActionPresenter,
   DummyDatePresenter,
   tablePresenter,
+  DummyExpertActionPresenter,
 } from "@/Test";
 import { DummyStatePresenter } from "@/Test/Mock/DummyStatePresenter";
 import { AttributesPresenter } from "./AttributesPresenter";
@@ -12,6 +13,7 @@ const presenter = new InventoryTablePresenter(
   new DummyDatePresenter(),
   new AttributesPresenter(),
   new DummyActionPresenter(),
+  new DummyExpertActionPresenter(),
   new DummyStatePresenter()
 );
 const rows = presenter.createRows([ServiceInstance.a]);
@@ -47,6 +49,7 @@ describe("TablePresenter with identity ", () => {
     new DummyDatePresenter(),
     new AttributesPresenter(),
     new DummyActionPresenter(),
+    new DummyExpertActionPresenter(),
     new DummyStatePresenter(),
     "service_id",
     "Service ID"

@@ -107,7 +107,9 @@ test("GIVEN ConfigurationTab WHEN editing a dict field THEN shows warning icon",
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  await userEvent.type(newKeyInput, "testKey");
+  await act(async () => {
+    await userEvent.type(newKeyInput, "testKey");
+  });
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -125,17 +127,23 @@ test("GIVEN ConfigurationTab WHEN editing an enum field THEN shows warning icon"
     name: "Row-agent_trigger_method_on_auto_deploy",
   });
 
-  await userEvent.click(
-    within(row).getByRole("button", {
-      name: "EnumInput-agent_trigger_method_on_auto_deploy",
-    })
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(row).getByRole("button", {
+        name: "EnumInput-agent_trigger_method_on_auto_deploy",
+      })
+    );
+  });
+
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  await userEvent.click(
-    within(row).getByRole("option", { name: "push_full_deploy" })
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      within(row).getByRole("option", { name: "push_full_deploy" })
+    );
+  });
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -156,11 +164,15 @@ test("GIVEN ConfigurationTab WHEN editing a boolean field THEN shows warning ico
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  await userEvent.click(
-    within(row).getByRole<HTMLInputElement>("checkbox", {
-      name: "Toggle-auto_deploy",
-    })
-  );
+
+  await act(async () => {
+    await userEvent.click(
+      within(row).getByRole<HTMLInputElement>("checkbox", {
+        name: "Toggle-auto_deploy",
+      })
+    );
+  });
+
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -181,7 +193,11 @@ test("GIVEN ConfigurationTab WHEN editing a number field THEN shows warning icon
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  await userEvent.click(within(row).getByRole("button", { name: "plus" }));
+
+  await act(async () => {
+    await userEvent.click(within(row).getByRole("button", { name: "plus" }));
+  });
+
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -202,7 +218,11 @@ test("GIVEN ConfigurationTab WHEN editing a positiveFloat field THEN shows warni
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  await userEvent.click(within(row).getByRole("button", { name: "plus" }));
+
+  await act(async () => {
+    await userEvent.click(within(row).getByRole("button", { name: "plus" }));
+  });
+
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -226,7 +246,11 @@ test("GIVEN ConfigurationTab WHEN editing a string field THEN shows warning icon
   expect(
     within(row).queryByRole("generic", { name: "Warning" })
   ).not.toBeInTheDocument();
-  await userEvent.type(textbox, "testString");
+
+  await act(async () => {
+    await userEvent.type(textbox, "testString");
+  });
+
   expect(
     within(row).getByRole("generic", { name: "Warning" })
   ).toBeInTheDocument();
@@ -266,16 +290,21 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
   });
 
   expect(toggle.checked).toBeFalsy();
-  await userEvent.click(toggle);
+  await act(async () => {
+    await userEvent.click(toggle);
+  });
+
   expect(toggle.checked).toBeTruthy();
   expect(apiHelper.resolvedRequests).toHaveLength(1);
 
-  await userEvent.click(
-    within(row).getByRole("button", { name: "SaveAction" }),
-    {
-      skipHover: true,
-    }
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(row).getByRole("button", { name: "SaveAction" }),
+      {
+        skipHover: true,
+      }
+    );
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -329,12 +358,14 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
 
   expect(toggle.checked).toBeFalsy();
 
-  await userEvent.click(
-    within(row).getByRole("button", { name: "ResetAction" }),
-    {
-      skipHover: true,
-    }
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(row).getByRole("button", { name: "ResetAction" }),
+      {
+        skipHover: true,
+      }
+    );
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
@@ -379,18 +410,24 @@ test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN
   const newKeyInput = within(newEntryRow).getByRole("textbox", {
     name: "editEntryKey",
   });
-  await userEvent.type(newKeyInput, "testKey");
+  await act(async () => {
+    await userEvent.type(newKeyInput, "testKey");
+  });
   const newValueInput = within(newEntryRow).getByRole("textbox", {
     name: "editEntryValue",
   });
-  await userEvent.type(newValueInput, "testValue");
+  await act(async () => {
+    await userEvent.type(newValueInput, "testValue");
+  });
 
-  await userEvent.click(
-    within(row).getByRole("button", { name: "SaveAction" }),
-    {
-      skipHover: true,
-    }
-  );
+  await act(async () => {
+    await userEvent.click(
+      within(row).getByRole("button", { name: "SaveAction" }),
+      {
+        skipHover: true,
+      }
+    );
+  });
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
   expect(apiHelper.pendingRequests[0]).toEqual({
