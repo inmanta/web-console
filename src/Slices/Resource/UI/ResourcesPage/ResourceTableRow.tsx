@@ -77,7 +77,7 @@ const Wrapper = styled.div<{
 
 const CenteredCell = styled(Td)`
   @media (min-width: 768px) {
-    padding-left: 50px !important;
+    padding-left: 34px !important;
   }
 `;
 

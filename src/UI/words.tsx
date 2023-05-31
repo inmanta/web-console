@@ -334,7 +334,7 @@ const dict = {
   "resources.column.type": "Type",
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
-  "resources.column.requires": "Dependencies",
+  "resources.column.requires": "Requires",
   "resources.column.deployState": "Deploy State",
   "resources.filters.status.placeholder": "Deploy State...",
   "resources.filters.agent.placeholder": "Agent...",
@@ -625,6 +625,9 @@ const dict = {
   "common.serviceInstance.relation": `Select an instance`,
   "common.environment.select": "Select an environment...",
   "common.compileWidget.recompile": "Recompile",
+  "common.compileWidget.toast": (update: boolean) =>
+    `${update ? "Update and " : ""}Recompile triggered`,
+  "common.compileWidget.toastTitle": "Recompile Info",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":
