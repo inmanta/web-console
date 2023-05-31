@@ -3,8 +3,8 @@ const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
   env: {
-    edition: "oss",
-    project: "oss-frontend",
+    edition: "iso",
+    project: "lsm-frontend",
   },
   video: false,
   reporter: "junit",
