@@ -37,7 +37,7 @@ pipeline {
                 dir('web-console') {
                     sh '''yarn run build;
                     yarn run install:orchestrator:ci;
-                    yarn run cypress-test;'''
+                    yarn run cypress-test:iso;'''
                 }
                 }
             }
