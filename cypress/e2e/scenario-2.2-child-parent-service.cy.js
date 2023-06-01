@@ -60,115 +60,130 @@ const forceUpdateEnvironment = (nameEnvironment = "lsm-frontend") => {
   });
 };
 
-before(() => {
-  clearEnvironment();
-  forceUpdateEnvironment();
-});
+if (Cypress.env("edition") === "iso") {
+  describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
+    before(() => {
+      clearEnvironment();
+      forceUpdateEnvironment();
+    });
+    it("2.2.1 Add Instance on parent-service", () => {
+      cy.visit("/console/");
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get("#parent-service").contains("Show inventory").click();
+      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+      // Add an instance and fill form
+      cy.get("#add-instance-button").click();
+      cy.get("#service_id").type("0001");
+      cy.get("#name").type("parent");
+      cy.get("button").contains("Confirm").click();
 
-describe("Scenario 2.2 Service Catalog - Parent/Children Service", () => {
-  it("2.2.1 Add Instance on parent-service", () => {
-    cy.visit("/console/");
-    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
-    cy.get("#parent-service").contains("Show inventory").click();
-    cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
-    // Add an instance and fill form
-    cy.get("#add-instance-button").click();
-    cy.get("#service_id").type("0001");
-    cy.get("#name").type("parent");
-    cy.get("button").contains("Confirm").click();
+      // Should show the ServiceInventory-Success Component.
+      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      // Check if only one row has been added to the table.
+      cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
 
-    // Should show the ServiceInventory-Success Component.
-    cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
-    // Check if only one row has been added to the table.
-    cy.get('[aria-label="InstanceRow-Intro"]').should("have.length", 1);
+      // open row from element
+      cy.get("#expand-toggle0").click();
 
-    // open row from element
-    cy.get("#expand-toggle0").click();
+      // Go to ressource tab expect it be empty
+      cy.get(".pf-c-tabs__item-text").contains("Resources").click();
+      cy.get('[aria-label="ResourceTable-Empty"]').should("to.be.visible");
 
-    // Go to ressource tab expect it be empty
-    cy.get(".pf-c-tabs__item-text").contains("Resources").click();
-    cy.get('[aria-label="ResourceTable-Empty"]').should("to.be.visible");
+      cy.intercept("**/resources**").as("GetVersion");
 
-    cy.intercept("**/resources**").as("GetVersion");
+      // expect one item with deployed state
+      cy.get('[aria-label="ResourceTable-Success"]', { timeout: 60000 }).should(
+        ($table) => {
+          expect($table).to.have.length(1);
 
-    // expect one item with deployed state
-    cy.get('[aria-label="ResourceTable-Success"]', { timeout: 60000 }).should(
-      ($table) => {
-        expect($table).to.have.length(1);
+          const $td = $table.find("td");
+          // there can only be 2 table-data cells available
+          expect($td).to.have.length(2);
+          expect($td.eq(0), "first item").to.have.text(
+            "frontend_model::TestResource[internal,name=default-0001]"
+          );
+          expect($td.eq(1), "second item").to.have.text("deployed");
+        }
+      );
 
-        const $td = $table.find("td");
-        // there can only be 2 table-data cells available
-        expect($td).to.have.length(2);
-        expect($td.eq(0), "first item").to.have.text(
-          "frontend_model::TestResource[internal,name=default-0001]"
-        );
-        expect($td.eq(1), "second item").to.have.text("deployed");
-      }
-    );
+      // click on service catalog in breadcrumb
+      cy.get('[aria-label="BreadcrumbItem"]')
+        .contains("Service Catalog")
+        .click();
 
-    // click on service catalog in breadcrumb
-    cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
+      // click show inventory on child-service
+      cy.get("#child-service").contains("Show inventory").click();
+      cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
+      // Add an instance and fill form
+      cy.get("#add-instance-button").click();
+      cy.get("#service_id").type("0002");
+      cy.get("#name").type("child");
+      cy.get(".pf-c-select").click();
+      cy.get('[aria-label="parent_entity-select-input"]').first().click();
+      cy.get("button").contains("Confirm").click();
+      // Expect to be redirected to service inventory
+      cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
 
-    // click show inventory on child-service
-    cy.get("#child-service").contains("Show inventory").click();
-    cy.get('[aria-label="ServiceInventory-Empty"]').should("to.be.visible");
-    // Add an instance and fill form
-    cy.get("#add-instance-button").click();
-    cy.get("#service_id").type("0002");
-    cy.get("#name").type("child");
-    cy.get(".pf-c-select").click();
-    cy.get('[aria-label="parent_entity-select-input"]').first().click();
-    cy.get("button").contains("Confirm").click();
-    // Expect to be redirected to service inventory
-    cy.get('[aria-label="ServiceInventory-Success"]').should("to.be.visible");
+      // Check if only one row has been added to the table.
+      cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 20000 }).should(
+        "have.length",
+        1
+      );
+    });
+    it("2.2.2 Remove Parent Service and Child Service", () => {
+      cy.visit("/console/");
 
-    // Check if only one row has been added to the table.
-    cy.get('[aria-label="InstanceRow-Intro"]', { timeout: 20000 }).should(
-      "have.length",
-      1
-    );
+      cy.get('[aria-label="Environment card"]')
+        .contains("lsm-frontend")
+        .click();
+      cy.get(".pf-c-nav__item").contains("Service Catalog").click();
+      cy.get("#parent-service").contains("Show inventory").click();
+
+      // open row from element
+      cy.get("#expand-toggle0", { timeout: 20000 }).click();
+      // try delete item (Should not be possible)
+      cy.get(".pf-c-description-list").contains("Delete").click();
+      cy.get(".pf-c-modal-box__title-text").should(
+        "contain",
+        "Delete instance"
+      );
+      cy.get(".pf-c-form__actions").contains("Yes").click();
+
+      // check status change before compile
+      cy.get('[aria-label="InstanceRow-Intro"]:first', { timeout: 20000 })
+        .find('[data-label="State"]')
+        .should("contain", "delete_validating_up");
+
+      cy.get('[aria-label="InstanceRow-Intro"]:first')
+        .find('[data-label="State"]', { timeout: 60000 })
+        .should("not.contain", "delete_validating_up");
+
+      // click on service catalog in breadcrumb
+      cy.get('[aria-label="BreadcrumbItem"]')
+        .contains("Service Catalog")
+        .click();
+
+      cy.get("#child-service").contains("Show inventory").click();
+
+      // open row from element
+      cy.get("#expand-toggle0").click();
+
+      // try delete item (Should be possible)
+      cy.get(".pf-c-description-list", { timeout: 20000 })
+        .contains("Delete")
+        .click();
+      cy.get(".pf-c-modal-box__title-text").should(
+        "contain",
+        "Delete instance"
+      );
+      cy.get(".pf-c-form__actions").contains("Yes").click();
+
+      cy.get('[aria-label="ServiceInventory-Empty"]', {
+        timeout: 220000,
+      }).should("to.be.visible");
+    });
   });
-  it("2.2.2 Remove Parent Service and Child Service", () => {
-    cy.visit("/console/");
-
-    cy.get('[aria-label="Environment card"]').contains("lsm-frontend").click();
-    cy.get(".pf-c-nav__item").contains("Service Catalog").click();
-    cy.get("#parent-service").contains("Show inventory").click();
-
-    // open row from element
-    cy.get("#expand-toggle0", { timeout: 20000 }).click();
-    // try delete item (Should not be possible)
-    cy.get(".pf-c-description-list").contains("Delete").click();
-    cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
-    cy.get(".pf-c-form__actions").contains("Yes").click();
-
-    // check status change before compile
-    cy.get('[aria-label="InstanceRow-Intro"]:first', { timeout: 20000 })
-      .find('[data-label="State"]')
-      .should("contain", "delete_validating_up");
-
-    cy.get('[aria-label="InstanceRow-Intro"]:first')
-      .find('[data-label="State"]', { timeout: 60000 })
-      .should("not.contain", "delete_validating_up");
-
-    // click on service catalog in breadcrumb
-    cy.get('[aria-label="BreadcrumbItem"]').contains("Service Catalog").click();
-
-    cy.get("#child-service").contains("Show inventory").click();
-
-    // open row from element
-    cy.get("#expand-toggle0").click();
-
-    // try delete item (Should be possible)
-    cy.get(".pf-c-description-list", { timeout: 20000 })
-      .contains("Delete")
-      .click();
-    cy.get(".pf-c-modal-box__title-text").should("contain", "Delete instance");
-    cy.get(".pf-c-form__actions").contains("Yes").click();
-
-    cy.get('[aria-label="ServiceInventory-Empty"]', { timeout: 220000 }).should(
-      "to.be.visible"
-    );
-  });
-});
+}
