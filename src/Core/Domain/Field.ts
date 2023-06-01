@@ -22,6 +22,7 @@ interface BaseField {
   name: string;
   description?: string;
   isOptional: boolean;
+  isDisabled: boolean;
 }
 
 export interface BooleanField extends BaseField {

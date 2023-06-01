@@ -8,6 +8,7 @@ interface Props {
   attributeName: string;
   description?: string;
   handleInputChange: (value, event) => void;
+  shouldBeDisabled?: boolean;
 }
 
 export const BooleanFormInput: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const BooleanFormInput: React.FC<Props> = ({
   attributeName,
   description,
   handleInputChange,
+  shouldBeDisabled = false,
   ...props
 }) => {
   return (
@@ -29,6 +31,7 @@ export const BooleanFormInput: React.FC<Props> = ({
         isRequired={!isOptional}
       >
         <Radio
+          isDisabled={shouldBeDisabled}
           isChecked={isChecked === true}
           onChange={handleInputChange}
           label={words("true")}
@@ -38,20 +41,24 @@ export const BooleanFormInput: React.FC<Props> = ({
           value={"true"}
         />
         <Radio
+          isDisabled={shouldBeDisabled}
           isChecked={isChecked === false}
           onChange={(event) => handleInputChange(false, event)}
           label={words("false")}
           name={`${attributeName}`}
           id={`${attributeName}-false`}
+          data-testid={`${attributeName}-false`}
           value={"false"}
         />
         {isOptional && (
           <Radio
+            isDisabled={shouldBeDisabled}
             isChecked={isChecked === null}
             onChange={handleInputChange}
             label={words("null")}
             name={`${attributeName}`}
             id={`${attributeName}-none`}
+            data-testid={`${attributeName}-none`}
             value={""}
           />
         )}

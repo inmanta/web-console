@@ -25,7 +25,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const { commandResolver, environmentModifier, routeManager } =
     useContext(DependencyContext);
 
-  const fieldCreator = new FieldCreator(new EditModifierHandler());
+  const fieldCreator = new FieldCreator(new EditModifierHandler(), true);
   const fields = fieldCreator.create(serviceEntity);
 
   const isHalted = environmentModifier.useIsHalted();

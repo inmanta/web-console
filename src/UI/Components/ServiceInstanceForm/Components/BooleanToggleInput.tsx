@@ -6,6 +6,7 @@ interface Props {
   attributeName: string;
   description?: string;
   handleInputChange: (value, event) => void;
+  shouldBeDisabled?: boolean;
 }
 
 export const BooleanToggleInput: React.FC<Props> = ({
@@ -13,6 +14,7 @@ export const BooleanToggleInput: React.FC<Props> = ({
   attributeName,
   description,
   handleInputChange,
+  shouldBeDisabled = false,
   ...props
 }) => {
   return (
@@ -28,6 +30,7 @@ export const BooleanToggleInput: React.FC<Props> = ({
         isChecked={isChecked}
         onChange={handleInputChange}
         aria-label={`Toggle-${attributeName}`}
+        isDisabled={shouldBeDisabled}
       />
     </FormGroup>
   );

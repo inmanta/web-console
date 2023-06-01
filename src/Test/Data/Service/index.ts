@@ -96,3 +96,35 @@ export const withRelationsOnly: ServiceModel = {
   service_identity: "subscriber_number",
   service_identity_display_name: "User Equipment",
 };
+
+export const allTypesOfAttributes: ServiceModel = {
+  environment: Environment.a.id,
+  name: "service_name_a",
+  description: "description of service",
+  attributes: Attribute.list,
+  lifecycle: {
+    states: State.list,
+    transfers: Transfer.list,
+    initial_state: "start",
+  },
+  config: {
+    auto_creating: true,
+    auto_designed: true,
+    auto_update_designed: true,
+    auto_update_inprogress: true,
+  },
+  embedded_entities: EmbeddedEntity.list,
+  inter_service_relations: [],
+};
+
+export const ServiceWithAllAttrs: ServiceModel = {
+  ...allTypesOfAttributes,
+  name: "service_name_all_attrs",
+  attributes: Attribute.attributesList,
+  embedded_entities: [
+    EmbeddedEntity.embedded_base,
+    EmbeddedEntity.editableEmbedded_base,
+    EmbeddedEntity.optionalEmbedded_base,
+    EmbeddedEntity.editableOptionalEmbedded_base,
+  ],
+};
