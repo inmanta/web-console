@@ -99,7 +99,7 @@ const string: AttributeModel = {
   type: "string",
   modifier: "rw",
   description: "description",
-  default_value: null,
+  default_value: "default_string",
   default_value_set: true,
 };
 const editableString: AttributeModel = {
@@ -124,7 +124,7 @@ const boolean: AttributeModel = {
   type: "bool",
   modifier: "rw",
   description: "description",
-  default_value: null,
+  default_value: true,
   default_value_set: true,
 };
 const editableBoolean: AttributeModel = {
@@ -149,7 +149,7 @@ const textList: AttributeModel = {
   type: "string[]",
   modifier: "rw",
   description: "description",
-  default_value: null,
+  default_value: ["1.1.1.1", "8.8.8.8"],
   default_value_set: true,
 };
 const editableTextList: AttributeModel = {
@@ -174,7 +174,7 @@ const enumAttr: AttributeModel = {
   type: "string",
   modifier: "rw",
   description: "description",
-  default_value: null,
+  default_value: "OPTION_ONE",
   default_value_set: true,
   validation_type: "enum",
   validation_parameters: {
@@ -205,8 +205,8 @@ const dict: AttributeModel = {
   name: "dict",
   modifier: "rw",
   type: "dict",
-  default_value: null,
-  default_value_set: false,
+  default_value: { default: "value" },
+  default_value_set: true,
   validation_type: null,
   validation_parameters: null,
 };

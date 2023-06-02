@@ -7,7 +7,12 @@ export type AttributeModel = AttributeValidation & {
   type: string;
   description?: string;
   modifier: string;
-  default_value: string | null;
+  default_value:
+    | string
+    | null
+    | boolean
+    | string[]
+    | { [x: string]: string | null | boolean | string[] };
   default_value_set: boolean;
 };
 
