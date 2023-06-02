@@ -54,10 +54,24 @@ export const createFormState = (
   return returnValue;
 };
 
+/**
+ * Creates Form State based on available fields and optional originalAttributes.
+ * If apiVersion "v2" then returns originalAttributes as second version endpoint replaces the whole edited instance
+ * and fields not necessarily cover that 1:1
+ *
+ * @param {FieldLikeWithFormState[]} fields - active fields that
+ * @param {"v1" | "v2"} apiVersion - version of endpoint which handles the edit
+ * @param {InstanceAttributeModel | null | undefined} originalAttributes - current state of Attributes
+ * @returns
+ */
 export const createEditFormState = (
   fields: FieldLikeWithFormState[],
+  apiVersion: "v1" | "v2",
   originalAttributes?: InstanceAttributeModel | null
 ): InstanceAttributeModel => {
+  if (apiVersion === "v2" && originalAttributes) {
+    return originalAttributes;
+  }
   return fields.reduce((acc, curr) => {
     if (originalAttributes?.[curr.name] !== undefined) {
       switch (curr.kind) {
@@ -84,6 +98,7 @@ export const createEditFormState = (
           } else {
             acc[curr.name] = createEditFormState(
               curr.fields,
+              apiVersion,
               originalAttributes?.[curr.name] as InstanceAttributeModel
             );
           }
@@ -101,6 +116,7 @@ export const createEditFormState = (
           ).map((nestedOriginalAttributes) =>
             createEditFormState(
               curr.fields,
+              apiVersion,
               nestedOriginalAttributes as InstanceAttributeModel
             )
           );
