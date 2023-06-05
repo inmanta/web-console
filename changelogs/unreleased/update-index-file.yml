@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Update the index file to import a module instead of a text-file for the config.js'
+destination-branches:
+- master
+- iso6
+sections: {}
