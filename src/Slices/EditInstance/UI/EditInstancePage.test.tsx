@@ -416,4 +416,237 @@ test("Given the EditInstance View When changing an embedded entity Then the inpu
   expect(
     within(embedded_base).queryByLabelText("TextInput-editableDict?")
   ).toBeEnabled();
+
+  //check controls of nested entities
+
+  const nested_embedded_base = within(embedded_base).getByLabelText(
+    "DictListFieldInput-embedded_base.0.embedded"
+  );
+  const nested_editableEmbedded_base = within(embedded_base).getByLabelText(
+    "DictListFieldInput-embedded_base.0.editableEmbedded"
+  );
+  const nested_optionalEmbedded_base = within(embedded_base).getByLabelText(
+    "DictListFieldInput-embedded_base.0.embedded?"
+  );
+  const nested_editableOptionalEmbedded_base = screen.getByLabelText(
+    "DictListFieldInput-embedded_base.0.editableEmbedded?"
+  );
+
+  await act(async () => {
+    await userEvent.click(
+      within(embedded_base).getByRole("button", { name: "embedded" })
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(embedded_base).getByRole("button", {
+        name: "editableEmbedded",
+      })
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(embedded_base).getByRole("button", {
+        name: "embedded?",
+      })
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(embedded_base).getByRole("button", {
+        name: "editableEmbedded?",
+      })
+    );
+  });
+
+  expect(within(nested_embedded_base).queryByText("Add")).toBeDisabled();
+  expect(within(nested_embedded_base).queryByText("Delete")).toBeDisabled();
+
+  expect(within(nested_editableEmbedded_base).queryByText("Add")).toBeEnabled();
+  expect(
+    within(nested_editableEmbedded_base).queryByText("Delete")
+  ).toBeDisabled();
+
+  expect(
+    within(nested_optionalEmbedded_base).queryByText("Add")
+  ).toBeDisabled();
+  expect(
+    within(nested_optionalEmbedded_base).queryByText("Delete")
+  ).toBeDisabled();
+
+  expect(
+    within(nested_editableOptionalEmbedded_base).queryByText("Add")
+  ).toBeEnabled();
+  expect(
+    within(nested_editableOptionalEmbedded_base).queryByText("Delete")
+  ).toBeEnabled();
+});
+
+test("Given the EditInstance View When adding new nested embedded entity Then the inputs for it are displayed correctly", async () => {
+  const { component, apiHelper } = setup("ServiceWithAllAttrs");
+  render(component);
+
+  expect(
+    await screen.findByRole("generic", { name: "EditInstance-Loading" })
+  ).toBeInTheDocument();
+
+  apiHelper.resolve(Either.right({ data: ServiceInstance.allAttrs }));
+
+  expect(
+    await screen.findByRole("generic", { name: "EditInstance-Success" })
+  ).toBeInTheDocument();
+  //add new entity an verify if all are enabled
+  const editableOptionalEmbedded_base = screen.getByLabelText(
+    "DictListFieldInput-editableOptionalEmbedded_base"
+  );
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: "editableOptionalEmbedded_base" })
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(editableOptionalEmbedded_base).getByText("Add")
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(editableOptionalEmbedded_base).getByRole("button", { name: "2" })
+    );
+  });
+  const addedOptionalEmbedded = screen.getByLabelText(
+    "DictListFieldInputItem-editableOptionalEmbedded_base.2"
+  );
+  //check if direct attributes are correctly displayed
+  expect(within(addedOptionalEmbedded).queryByText("string")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableString")
+  ).toBeEnabled();
+
+  expect(within(addedOptionalEmbedded).queryByText("string?")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableString?")
+  ).toBeEnabled();
+
+  expect(within(addedOptionalEmbedded).queryByText("bool")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableBool")
+  ).toBeEnabled();
+
+  expect(within(addedOptionalEmbedded).queryByText("bool?")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableBool?")
+  ).toBeEnabled();
+
+  expect(within(addedOptionalEmbedded).queryByText("string[]")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableString[]")
+  ).toBeEnabled();
+
+  expect(within(addedOptionalEmbedded).queryByText("string[]?")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableString[]?")
+  ).toBeEnabled();
+
+  expect(within(addedOptionalEmbedded).queryByText("enum")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableEnum")
+  ).toBeEnabled();
+
+  expect(within(addedOptionalEmbedded).queryByText("enum?")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableEnum?")
+  ).toBeEnabled();
+
+  expect(within(addedOptionalEmbedded).queryByText("dict")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableDict")
+  ).toBeEnabled();
+
+  expect(within(addedOptionalEmbedded).queryByText("dict?")).toBeEnabled();
+  expect(
+    within(addedOptionalEmbedded).queryByText("editableDict?")
+  ).toBeEnabled();
+
+  const nested_embedded_base = within(addedOptionalEmbedded).getByLabelText(
+    "DictListFieldInput-editableOptionalEmbedded_base.1.embedded"
+  );
+  const nested_editableEmbedded_base = within(
+    addedOptionalEmbedded
+  ).getByLabelText(
+    "DictListFieldInput-editableOptionalEmbedded_base.1.editableEmbedded"
+  );
+  const nested_optionalEmbedded_base = within(
+    addedOptionalEmbedded
+  ).getByLabelText(
+    "DictListFieldInput-editableOptionalEmbedded_base.1.embedded?"
+  );
+  const nested_editableOptionalEmbedded_base = screen.getByLabelText(
+    "DictListFieldInput-editableOptionalEmbedded_base.1.editableEmbedded?"
+  );
+
+  await act(async () => {
+    await userEvent.click(
+      within(addedOptionalEmbedded).getByRole("button", { name: "embedded" })
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(addedOptionalEmbedded).getByRole("button", {
+        name: "editableEmbedded",
+      })
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(addedOptionalEmbedded).getByRole("button", {
+        name: "embedded?",
+      })
+    );
+  });
+
+  await act(async () => {
+    await userEvent.click(
+      within(addedOptionalEmbedded).getByRole("button", {
+        name: "editableEmbedded?",
+      })
+    );
+  });
+
+  expect(within(nested_embedded_base).queryByText("Add")).toBeEnabled();
+  expect(within(nested_embedded_base).queryByText("Delete")).toBeDisabled();
+
+  expect(within(nested_editableEmbedded_base).queryByText("Add")).toBeEnabled();
+  expect(
+    within(nested_editableEmbedded_base).queryByText("Delete")
+  ).toBeDisabled();
+
+  expect(within(nested_optionalEmbedded_base).queryByText("Add")).toBeEnabled();
+  await act(async () => {
+    await userEvent.click(
+      within(nested_optionalEmbedded_base).getByText("Add")
+    );
+  });
+  expect(
+    within(nested_optionalEmbedded_base).queryByText("Delete")
+  ).toBeEnabled();
+
+  expect(
+    within(nested_editableOptionalEmbedded_base).queryByText("Add")
+  ).toBeEnabled();
+  await act(async () => {
+    await userEvent.click(
+      within(nested_editableOptionalEmbedded_base).getByText("Add")
+    );
+  });
+  expect(
+    within(nested_editableOptionalEmbedded_base).queryByText("Delete")
+  ).toBeEnabled();
 });

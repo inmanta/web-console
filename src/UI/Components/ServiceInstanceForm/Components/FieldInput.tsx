@@ -257,7 +257,6 @@ const NestedFieldInput: React.FC<NestedProps> = ({
       getUpdate(makePath(path, field.name), createFormState(field.fields));
     }
   };
-
   const getOnDelete = () => () => {
     setShowList(false);
     return getUpdate(makePath(path, field.name), null);
@@ -279,7 +278,12 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                   variant="link"
                   icon={<PlusIcon />}
                   onClick={onAdd}
-                  isDisabled={field.isDisabled || showList}
+                  isDisabled={
+                    (field.isDisabled &&
+                      get(originalState, makePath(path, field.name)) !==
+                        undefined) ||
+                    showList
+                  }
                 >
                   {words("catalog.callbacks.add")}
                 </Button>
@@ -362,7 +366,10 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               icon={<PlusIcon />}
               onClick={onAdd}
               isDisabled={
-                field.isDisabled || (!!field.max && list.length >= field.max)
+                (field.isDisabled &&
+                  get(originalState, makePath(path, field.name)) !==
+                    undefined) ||
+                (!!field.max && list.length >= field.max)
               }
             >
               Add
@@ -391,7 +398,12 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                 <Button
                   variant="link"
                   onClick={getOnDelete(index)}
-                  isDisabled={field.isDisabled || field.min > index}
+                  isDisabled={
+                    (field.isDisabled &&
+                      get(originalState, makePath(path, field.name)) !==
+                        undefined) ||
+                    field.min > index
+                  }
                 >
                   Delete
                 </Button>
