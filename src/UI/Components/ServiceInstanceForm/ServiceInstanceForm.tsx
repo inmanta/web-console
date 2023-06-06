@@ -18,6 +18,7 @@ interface Props {
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
   isSubmitDisabled?: boolean;
+  apiVersion?: "v1" | "v2";
 }
 
 export const ServiceInstanceForm: React.FC<Props> = ({
@@ -26,10 +27,11 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   onCancel,
   originalAttributes,
   isSubmitDisabled,
+  apiVersion = "v1",
 }) => {
   const [formState, setFormState] = useState(
     originalAttributes
-      ? createEditFormState(fields, originalAttributes)
+      ? createEditFormState(fields, apiVersion, originalAttributes)
       : createFormState(fields)
   );
   const [dirtyInputs, setDirtyInputs] = useState(false);
