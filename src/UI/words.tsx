@@ -306,6 +306,7 @@ const dict = {
   "dashboard.resource.resource_count.description":
     "The number of resources grouped (by resource state)",
   "dashboard.resource.resource_count.label.x": "Number of Resources [#]",
+  "dashboard.logout": "Logout",
 
   /**
    * Environment controls
@@ -623,7 +624,7 @@ const dict = {
   "common.serviceInstance.select": (attribute: string) =>
     `Select value for ${attribute}`,
   "common.serviceInstance.relation": `Select an instance`,
-  "common.environment.select": "Select an environment...",
+  "common.environment.select": "Select an environment",
   "common.compileWidget.recompile": "Recompile",
   "common.compileWidget.toast": (update: boolean) =>
     `${update ? "Update and " : ""}Recompile triggered`,
