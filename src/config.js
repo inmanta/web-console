@@ -3,4 +3,4 @@
 //   "url": "",
 //   "clientId": ""
 // }
-export const features = ["instanceComposer"];
+export const features = [];
