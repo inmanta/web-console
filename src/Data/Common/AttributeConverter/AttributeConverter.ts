@@ -21,7 +21,7 @@ export interface AttributeInputConverter {
     inputType: InputType,
     defaultValueSet: boolean,
     defaultValue: string | null
-  ): string | null | undefined;
+  ): string | string[] | null | undefined;
 
   /**
    * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,

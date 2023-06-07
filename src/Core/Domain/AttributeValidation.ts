@@ -36,6 +36,11 @@ interface IntValidation {
 }
 
 interface IpValidation {
-  validation_type: "ipaddress.IPv4Address" | "ipaddress.IPv4Address?";
-  validation_parameters: null;
+  validation_type:
+    | "ipaddress.IPv4Address"
+    | "ipaddress.IPv4Address?"
+    | "ipaddress.IPv4Interface"
+    | "pydantic.constr[]"
+    | "ipaddress.IPv4Network";
+  validation_parameters: { [key: string]: string } | null;
 }

@@ -39,5 +39,5 @@ export interface Row {
 
 export interface State {
   name: string;
-  label?: "info" | "success" | "danger" | "warning";
+  label?: "info" | "success" | "danger" | "warning" | null;
 }

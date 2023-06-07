@@ -3,6 +3,4 @@
 //   "url": "",
 //   "clientId": ""
 // }
-export const features = {
-  instanceComposer: false,
-};
+export const features = ["instanceComposer"];

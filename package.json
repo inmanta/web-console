@@ -127,7 +127,7 @@
     "webpack-version-file": "^0.1.7"
   },
   "dependencies": {
-    "@inmanta/rappid": "^3.6.3",
+    "@inmanta/rappid": "^3.7.0",
     "@patternfly/react-charts": "^6.94.18",
     "@patternfly/react-core": "^4.276.6",
     "@patternfly/react-icons": "^4.93.6",

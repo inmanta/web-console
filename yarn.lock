@@ -839,9 +839,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@inmanta/rappid@npm:^3.6.3":
-  version: 3.6.3
-  resolution: "@inmanta/rappid@npm:3.6.3::__archiveUrl=https%3A%2F%2Fnpm.cloudsmith.io%2Finmanta%2Ffrontend-composer%2F%40inmanta%2Frappid%2F-%2F3.6.3%2Frappid.tgz"
+"@inmanta/rappid@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "@inmanta/rappid@npm:3.7.0::__archiveUrl=https%3A%2F%2Fnpm.cloudsmith.io%2Finmanta%2Ffrontend-composer%2F%40inmanta%2Frappid%2F-%2F3.7.0%2Frappid.tgz"
   dependencies:
     "@types/backbone": ~1.4.13
     "@types/dagre": ~0.7.44
@@ -855,7 +855,7 @@ __metadata:
     jointjs: ~3.6.4
     jquery: ~3.6.0
     lodash: ~4.17.21
-  checksum: ea1197732b0713d8bd18a22b30ced0b09d09af2607c6ddccb4817f1ccf44d47e161228eb011fbed910fd36dfbdf49800ca908eca511a44dc638bc83a79048e6d
+  checksum: e2ce76e590e4a56e483554808f2258222efd9551ce676e63d8d66ae82df469ca837009c5cac2e7cac84afb6fc6db76ecb78c79e50d11d8682b7b4fcb92601ad1
   languageName: node
   linkType: hard
 
@@ -865,7 +865,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.21.8
     "@babel/plugin-transform-typescript": ^7.21.3
-    "@inmanta/rappid": ^3.6.3
+    "@inmanta/rappid": ^3.7.0
     "@patternfly/react-charts": ^6.94.18
     "@patternfly/react-core": ^4.276.6
     "@patternfly/react-icons": ^4.93.6

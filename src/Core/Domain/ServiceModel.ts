@@ -7,13 +7,13 @@ export type AttributeModel = AttributeValidation & {
   type: string;
   description?: string;
   modifier: string;
-  default_value: string | null;
+  default_value: string | string[] | null;
   default_value_set: boolean;
 };
 
 export interface StateModel {
   deleted: boolean;
-  label?: "info" | "success" | "warning" | "danger";
+  label?: "info" | "success" | "warning" | "danger" | null;
   validate_self?: "candidate" | "active" | null;
   validate_others?: "candidate" | "active" | null;
   export_resources: boolean;
@@ -75,6 +75,7 @@ export interface ServiceModel extends ServiceIdentifier {
   embedded_entities: EmbeddedEntity[];
   inter_service_relations?: InterServiceRelation[];
   strict_modifier_enforcement?: boolean;
+  key_attributes?: string[] | null;
 }
 
 export interface RelationAttribute {
@@ -95,6 +96,7 @@ export interface EmbeddedEntity extends RelationAttribute {
   attributes: AttributeModel[];
   embedded_entities: EmbeddedEntity[];
   inter_service_relations?: InterServiceRelation[];
+  key_attributes?: string[] | null;
 }
 
 interface MinimalEmbeddedEntity {
