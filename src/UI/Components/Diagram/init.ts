@@ -1,5 +1,6 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
+// import { testInstance, testService } from "./Mock";
 import { appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
 import { routerNamespace } from "./routers";
@@ -117,7 +118,12 @@ export default function diagramInit(canvas) {
         instance,
         service
       );
-
+      // const instanceCoordinates = appendInstance(
+      //   paper,
+      //   graph,
+      //   testInstance,
+      //   testService
+      // );
       scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
   };

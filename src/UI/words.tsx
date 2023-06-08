@@ -21,6 +21,7 @@ const dict = {
   submit: "Submit",
   confirm: "Confirm",
   cancel: "Cancel",
+  deploy: "Deploy",
   yes: "Yes",
   no: "No",
   null: "null",

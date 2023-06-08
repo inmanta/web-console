@@ -1,15 +1,17 @@
 import React from "react";
 import { useRouteParams } from "@/UI";
-import { ServiceProvider } from "@/UI/Components";
+import { ServicesProvider } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
 
 export const Page = () => {
   const { service: serviceName } = useRouteParams<"InstanceComposer">();
   return (
-    <ServiceProvider
+    <ServicesProvider
       serviceName={serviceName}
       Wrapper={PageWrapper}
-      Dependant={({ service }) => <Canvas service={service} />}
+      Dependant={({ services, mainService }) => (
+        <Canvas services={services} mainService={mainService} />
+      )}
     />
   );
 };

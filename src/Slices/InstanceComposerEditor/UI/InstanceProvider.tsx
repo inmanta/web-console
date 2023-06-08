@@ -5,14 +5,15 @@ import { RemoteDataView } from "@/UI/Components";
 import Canvas from "@/UI/Components/Diagram/Canvas";
 
 export const InstanceProvider: React.FC<{
-  serviceEntity: ServiceModel;
+  services: ServiceModel[];
+  mainService: string;
   instanceId: string;
-}> = ({ serviceEntity, instanceId }) => {
+}> = ({ services, mainService, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [data] = queryResolver.useOneTime<"GetServiceInstance">({
     kind: "GetServiceInstance",
-    service_entity: serviceEntity.name,
+    service_entity: mainService,
     id: instanceId,
   });
 
@@ -21,7 +22,11 @@ export const InstanceProvider: React.FC<{
       data={data}
       label="Instance Composer Editor"
       SuccessView={(instance) => (
-        <Canvas service={serviceEntity} instance={instance} />
+        <Canvas
+          services={services}
+          mainService={mainService}
+          instance={instance}
+        />
       )}
     />
   );
