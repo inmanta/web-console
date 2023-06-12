@@ -1,7 +1,7 @@
 // window.auth = {
-//   "realm": "",
-//   "url": "",
-//   "clientId": ""
+//   realm: "inmanta",
+//   url: "http://localhost:8080",
+//   clientId: "inmantaso",
 // }
 export const features = {
   instanceComposer: false,
