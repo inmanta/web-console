@@ -29,7 +29,8 @@
     "install:orchestrator:iso": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti'",
     "install:orchestrator:oss": "sh ./shell-scripts/setup-orchestrator.sh flag='-ti' version='oss' release='dev' branch='oss_case_1'",
     "install:orchestrator:ci": "sh ./shell-scripts/setup-orchestrator.sh",
-    "kill-server": "sh ./shell-scripts/clear-server.sh"
+    "kill-server": "sh ./shell-scripts/clear-server.sh",
+    "update:dist": "docker exec inmanta_orchestrator rm -rf /usr/share/inmanta/web-console && docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
