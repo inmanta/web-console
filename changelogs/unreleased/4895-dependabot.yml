@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump styled-components from 5.3.10 to 5.3.11'
+destination-branches:
+- master
+- iso6
+sections: {}
