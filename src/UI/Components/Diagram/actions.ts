@@ -153,34 +153,7 @@ export function appendInstance(
   );
 
   //check if for any presentable attributes, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
-  if (serviceInstance.active_attributes !== null) {
-    appendColumns(
-      instanceAsTable,
-      flatAttributes,
-      serviceInstance.active_attributes
-    );
-
-    //add to graph and then check for dictionaries
-    instanceAsTable.addTo(graph);
-    appendInfoTool(
-      instanceAsTable.findView(paper),
-      service.attributes,
-      serviceInstance.active_attributes
-    );
-
-    //iterate through embedded entities to create and connect them
-    service.embedded_entities.map((entity) => {
-      const appendedEntity = appendEmbeddedEntity(
-        paper,
-        graph,
-        entity,
-        (serviceInstance.active_attributes as InstanceAttributeModel)[
-          entity.name
-        ] as InstanceAttributeModel
-      );
-      connectEntities(graph, instanceAsTable, appendedEntity);
-    });
-  } else if (serviceInstance.candidate_attributes !== null) {
+  if (serviceInstance.candidate_attributes !== null) {
     appendColumns(
       instanceAsTable,
       flatAttributes,
@@ -207,33 +180,6 @@ export function appendInstance(
       );
       connectEntities(graph, instanceAsTable, appendedEntity);
     });
-  } else if (serviceInstance.rollback_attributes !== null) {
-    appendColumns(
-      instanceAsTable,
-      flatAttributes,
-      serviceInstance.rollback_attributes
-    );
-
-    //add to graph and then check for dictionaries
-    instanceAsTable.addTo(graph);
-    appendInfoTool(
-      instanceAsTable.findView(paper),
-      service.attributes,
-      serviceInstance.rollback_attributes
-    );
-
-    //iterate through embedded entities to create and connect them
-    service.embedded_entities.map((entity) => {
-      const appendedEntities = appendEmbeddedEntity(
-        paper,
-        graph,
-        entity,
-        (serviceInstance.rollback_attributes as InstanceAttributeModel)[
-          entity.name
-        ] as InstanceAttributeModel
-      );
-      connectEntities(graph, instanceAsTable, appendedEntities);
-    });
   }
 
   //auto-layout provided by JointJS
@@ -244,6 +190,7 @@ export function appendInstance(
     edgeSep: 80,
     rankDir: "TB",
   });
+
   return instanceAsTable.getBBox();
 }
 

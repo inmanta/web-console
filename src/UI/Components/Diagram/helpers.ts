@@ -10,15 +10,7 @@ export const extractRelationsIds = (
   if (!relationKeys) {
     return [];
   }
-  if (instance.active_attributes !== null) {
-    return relationKeys
-      .map((key) =>
-        instance.active_attributes !== null
-          ? instance.active_attributes[key]
-          : undefined
-      )
-      .filter((value) => value !== undefined) as string[];
-  } else if (instance.candidate_attributes !== null) {
+  if (instance.candidate_attributes !== null) {
     return relationKeys
       .map((key) =>
         instance.candidate_attributes !== null
@@ -27,12 +19,6 @@ export const extractRelationsIds = (
       )
       .filter((value) => value !== undefined) as string[];
   } else {
-    return relationKeys
-      .map((key) =>
-        instance.rollback_attributes !== null
-          ? instance.rollback_attributes[key]
-          : undefined
-      )
-      .filter((value) => value !== undefined) as string[];
+    return [];
   }
 };

@@ -18,6 +18,13 @@ const Canvas = ({
   const [stringifiedDicts, setStringifiedDicts] = useState<DictDialogData[]>(
     []
   );
+
+  const openDictsModal = (event: Event) => {
+    const customEvent = event as CustomEvent;
+    setStringifiedDicts(customEvent.detail);
+    setIsDialogOpen(true);
+  };
+
   useEffect(() => {
     const actions = diagramInit(canvas);
 
@@ -25,18 +32,10 @@ const Canvas = ({
       actions.addInstance(instance, service);
     }
 
-    document.addEventListener("openDictsModal", (event) => {
-      const customEvent = event as CustomEvent;
-      setStringifiedDicts(customEvent.detail);
-      setIsDialogOpen(true);
-    });
+    document.addEventListener("openDictsModal", openDictsModal);
 
     return () => {
-      document.removeEventListener("openDictsModal", (event) => {
-        const customEvent = event as CustomEvent;
-        setStringifiedDicts(customEvent.detail);
-        setIsDialogOpen(true);
-      });
+      document.removeEventListener("openDictsModal", openDictsModal);
       actions.removeCanvas();
     };
   }, [instance, service]);
