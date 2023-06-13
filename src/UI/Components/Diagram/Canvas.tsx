@@ -71,11 +71,19 @@ const Canvas = ({
         }}
       >
         <FlexItem>
-          <Flex spacer={{ default: "spacerXs" }}>
-            <Button variant="plain">1</Button>
-            <Button variant="plain">2</Button>
-            <Spacer />
-            <Button variant="plain">3</Button>
+          <Flex
+            spacer={{ default: "spacerXs" }}
+            alignItems={{ default: "alignItemsFlexEnd" }}
+          >
+            <FlexItem>
+              <StyledButtonTemp variant="secondary">2</StyledButtonTemp>
+            </FlexItem>
+            <FlexItem>
+              <Spacer />
+            </FlexItem>
+            <FlexItem>
+              <StyledButtonTemp variant="secondary">3</StyledButtonTemp>
+            </FlexItem>
           </Flex>
         </FlexItem>
         <FlexItem>
@@ -104,12 +112,17 @@ const Container = styled.div`
 const Toolbar = styled(Flex)`
   padding: 0 0 20px;
 `;
+const StyledButtonTemp = styled(Button)`
+  --pf-c-button--after--BorderRadius: 0;
+  --pf-c-button--BorderRadius: 0;
+`;
 const StyledButton = styled(Button)`
   --pf-c-button--after--BorderRadius: 0;
   --pf-c-button--BorderRadius: 0;
   width: 150px;
 `;
 const Spacer = styled.div`
+  display: flex;
   height: 36px;
   width: 1px;
   background: #e7e7e7;
