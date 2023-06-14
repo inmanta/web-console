@@ -133,7 +133,7 @@
     "@patternfly/react-core": "^4.276.6",
     "@patternfly/react-icons": "^4.93.6",
     "@patternfly/react-styles": "^4.92.6",
-    "@patternfly/react-table": "^4.112.6",
+    "@patternfly/react-table": "^4.113.2",
     "@patternfly/react-tokens": "^4.94.6",
     "@react-keycloak/web": "^3.4.0",
     "copy-to-clipboard": "^3.3.3",
