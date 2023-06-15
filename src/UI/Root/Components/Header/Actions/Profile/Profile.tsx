@@ -1,19 +1,17 @@
 import React from "react";
 import { TextContent } from "@patternfly/react-core";
-import Keycloak from "keycloak-js";
+import { useKeycloak } from "@react-keycloak/web";
 import styled from "styled-components";
 
-interface Props {
-  keycloak: Keycloak | undefined;
-}
+export const Profile: React.FC = () => {
+  const { keycloak } = useKeycloak();
 
-export const Profile: React.FC<Props> = ({ keycloak }) => {
-  const [name, setName] = React.useState("unknown user");
-  if (keycloak && keycloak.profile && keycloak.profile.username !== name) {
-    setName(keycloak.profile.username as string);
-  }
-
-  return <StyledText>{name}</StyledText>;
+  return (
+    <StyledText>
+      {(keycloak && keycloak.profile && keycloak.profile.username) ||
+        "Unknown user"}
+    </StyledText>
+  );
 };
 
 const StyledText = styled(TextContent)`
