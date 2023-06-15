@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Page redirection has been fixed when the authentication token expires.'
+issue-nr: 4885
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"
