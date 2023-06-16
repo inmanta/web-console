@@ -144,96 +144,23 @@ export function appendInstance(
   paper: dia.Paper,
   graph: dia.Graph,
   serviceInstance: ServiceInstanceModel,
-  service: ServiceModel
+  service: ServiceModel,
+  attrsToDisplay: "candidate_attributes" | "active_attributes"
 ): g.Rect {
-  const flatAttributes = service.attributes.map((attribute) => attribute.name);
-
   const instanceAsTable = new ServiceEntityBlock().setName(
     serviceInstance.service_entity
   );
 
   //check if for any presentable attributes, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
-  if (serviceInstance.active_attributes !== null) {
-    appendColumns(
+  if (serviceInstance[attrsToDisplay] !== null) {
+    handleAttributes(
+      graph,
+      paper,
       instanceAsTable,
-      flatAttributes,
-      serviceInstance.active_attributes
-    );
-
-    //add to graph and then check for dictionaries
-    instanceAsTable.addTo(graph);
-    appendInfoTool(
-      instanceAsTable.findView(paper),
       service.attributes,
-      serviceInstance.active_attributes
+      serviceInstance[attrsToDisplay] as InstanceAttributeModel,
+      service.embedded_entities
     );
-
-    //iterate through embedded entities to create and connect them
-    service.embedded_entities.map((entity) => {
-      const appendedEntity = appendEmbeddedEntity(
-        paper,
-        graph,
-        entity,
-        (serviceInstance.active_attributes as InstanceAttributeModel)[
-          entity.name
-        ] as InstanceAttributeModel
-      );
-      connectEntities(graph, instanceAsTable, appendedEntity);
-    });
-  } else if (serviceInstance.candidate_attributes !== null) {
-    appendColumns(
-      instanceAsTable,
-      flatAttributes,
-      serviceInstance.candidate_attributes
-    );
-
-    //add to graph and then check for dictionaries
-    instanceAsTable.addTo(graph);
-    appendInfoTool(
-      instanceAsTable.findView(paper),
-      service.attributes,
-      serviceInstance.candidate_attributes
-    );
-
-    //iterate through embedded entities to create and connect them
-    service.embedded_entities.map((entity) => {
-      const appendedEntity = appendEmbeddedEntity(
-        paper,
-        graph,
-        entity,
-        (serviceInstance.candidate_attributes as InstanceAttributeModel)[
-          entity.name
-        ] as InstanceAttributeModel
-      );
-      connectEntities(graph, instanceAsTable, appendedEntity);
-    });
-  } else if (serviceInstance.rollback_attributes !== null) {
-    appendColumns(
-      instanceAsTable,
-      flatAttributes,
-      serviceInstance.rollback_attributes
-    );
-
-    //add to graph and then check for dictionaries
-    instanceAsTable.addTo(graph);
-    appendInfoTool(
-      instanceAsTable.findView(paper),
-      service.attributes,
-      serviceInstance.rollback_attributes
-    );
-
-    //iterate through embedded entities to create and connect them
-    service.embedded_entities.map((entity) => {
-      const appendedEntities = appendEmbeddedEntity(
-        paper,
-        graph,
-        entity,
-        (serviceInstance.rollback_attributes as InstanceAttributeModel)[
-          entity.name
-        ] as InstanceAttributeModel
-      );
-      connectEntities(graph, instanceAsTable, appendedEntities);
-    });
   }
 
   //auto-layout provided by JointJS
@@ -330,6 +257,47 @@ export function appendEmbeddedEntity(
     return [instanceAsTable];
   }
 }
+/**
+ * Function that creates, appends and returns created embedded entities which then are used to connects to it's parent
+ * Supports recursion to display the whole tree
+ *
+ * @param {dia.Paper} paper JointJS Object on which we are appending given instance
+ * @param {dia.Graph} graph JointJS Object on which we are appending given entity
+ * @param {EmbeddedEntity} embeddedEntity that we want to display
+ * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
+ * @returns {ServiceEntityBlock[]} created JointJS shapes
+ */
+
+export function appendEntity(
+  paper: dia.Paper,
+  graph: dia.Graph,
+  serviceModel: ServiceModel,
+  entity: InstanceAttributeModel
+): g.Rect {
+  //Create shape for Entity
+  const instanceAsTable = new ServiceEntityBlock()
+    .setTabColor("#0066CC")
+    .setName(serviceModel.name);
+
+  handleAttributes(
+    graph,
+    paper,
+    instanceAsTable,
+    serviceModel.attributes,
+    entity,
+    []
+  );
+
+  //auto-layout provided by JointJS
+  layout.DirectedGraph.layout(graph, {
+    dagre: dagre,
+    graphlib: graphlib,
+    nodeSep: 80,
+    edgeSep: 80,
+    rankDir: "TB",
+  });
+  return instanceAsTable.getBBox();
+}
 
 /**
  *  Function that iterates through service instance attributes for values and appends in jointJS entity for display
@@ -371,5 +339,33 @@ function connectEntities(
     link.source(source);
     link.target(target);
     link.addTo(graph);
+  });
+}
+
+function handleAttributes(
+  graph: dia.Graph,
+  paper: dia.Paper,
+  instanceAsTable: ServiceEntityBlock,
+  attributesModel: AttributeModel[],
+  attributes: InstanceAttributeModel,
+  embedded_entities: EmbeddedEntity[]
+) {
+  const attributesNames = attributesModel.map((attribute) => attribute.name);
+
+  appendColumns(instanceAsTable, attributesNames, attributes);
+
+  //add to graph and then check for dictionaries
+  instanceAsTable.addTo(graph);
+  appendInfoTool(instanceAsTable.findView(paper), attributesModel, attributes);
+
+  //iterate through embedded entities to create and connect them
+  embedded_entities.map((entity) => {
+    const appendedEntity = appendEmbeddedEntity(
+      paper,
+      graph,
+      entity,
+      attributes[entity.name] as InstanceAttributeModel
+    );
+    connectEntities(graph, instanceAsTable, appendedEntity);
   });
 }

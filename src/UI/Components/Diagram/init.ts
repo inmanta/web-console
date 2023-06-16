@@ -1,12 +1,16 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
-import { ServiceInstanceModel, ServiceModel } from "@/Core";
+import {
+  InstanceAttributeModel,
+  ServiceInstanceModel,
+  ServiceModel,
+} from "@/Core";
 // import { testInstance, testService } from "./Mock";
-import { appendInstance, showLinkTools } from "./actions";
+import { appendEntity, appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
 import { routerNamespace } from "./routers";
 import { EntityConnection } from "./shapes";
 
-export default function diagramInit(canvas) {
+export default function diagramInit(canvas): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
    */
@@ -102,7 +106,13 @@ export default function diagramInit(canvas) {
    * @param {number} delta - the value that dictates how big the zoom has to be.
    */
   function zoom(x: number, y: number, delta: number) {
-    scroller.zoom(delta * 0.2, { min: 0.4, max: 1.2, grid: 0.2, ox: x, oy: y });
+    scroller.zoom(delta * 0.06, {
+      min: 0.4,
+      max: 1.2,
+      grid: 0.06,
+      ox: x,
+      oy: y,
+    });
   }
 
   paper.unfreeze();
@@ -111,20 +121,40 @@ export default function diagramInit(canvas) {
       scroller.remove();
       paper.remove();
     },
-    addInstance: (instance: ServiceInstanceModel, service: ServiceModel) => {
+    addInstance: (
+      instance: ServiceInstanceModel,
+      service: ServiceModel,
+      attrsToDisplay: "candidate_attributes" | "active_attributes"
+    ) => {
       const instanceCoordinates = appendInstance(
         paper,
         graph,
         instance,
-        service
+        service,
+        attrsToDisplay
       );
       // const instanceCoordinates = appendInstance(
       //   paper,
       //   graph,
       //   testInstance,
-      //   testService
+      //   testService,
+      //   attrsToDisplay
       // );
       scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
+    addEntity: (instance, service) => {
+      const instanceCoordinates = appendEntity(paper, graph, service, instance);
+      scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
+    },
   };
+}
+
+export interface DiagramHandlers {
+  removeCanvas: () => void;
+  addInstance: (
+    instance: ServiceInstanceModel,
+    service: ServiceModel,
+    attrsToDisplay: "candidate_attributes" | "active_attributes"
+  ) => void;
+  addEntity: (entity: InstanceAttributeModel, service: ServiceModel) => void;
 }

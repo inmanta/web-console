@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/rappid.css";
-import { Button, Flex, FlexItem, Modal } from "@patternfly/react-core";
+import { Modal } from "@patternfly/react-core";
 import styled from "styled-components";
 import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import diagramInit from "@/UI/Components/Diagram/init";
+import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
-import { words } from "@/UI/words";
+import FormModal from "./components/FormModal";
+import Toolbar from "./components/Toolbar";
 import { DictDialogData } from "./interfaces";
 
 const Canvas = ({
@@ -19,35 +20,48 @@ const Canvas = ({
 }) => {
   const canvas = useRef<HTMLDivElement>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [attrsToDisplay, setAttrsToDisplay] = useState<
+    "candidate_attributes" | "active_attributes"
+  >("candidate_attributes");
   const [stringifiedDicts, setStringifiedDicts] = useState<DictDialogData[]>(
     []
   );
+  const [diagramHandlers, setDiagramHandlers] =
+    useState<DiagramHandlers | null>(null);
+
+  //const actions = diagramInit(canvas);
+  const handleEvent = (event) => {
+    const customEvent = event as CustomEvent;
+    setStringifiedDicts(customEvent.detail);
+    setIsDialogOpen(true);
+  };
+
   useEffect(() => {
     const actions = diagramInit(canvas);
-
+    setDiagramHandlers(actions);
     if (instance) {
       actions.addInstance(
         instance,
-        services.find((service) => service.name === mainService) as ServiceModel
+        services.find(
+          (service) => service.name === mainService
+        ) as ServiceModel,
+        attrsToDisplay
       );
     }
 
-    document.addEventListener("openDictsModal", (event) => {
-      const customEvent = event as CustomEvent;
-      setStringifiedDicts(customEvent.detail);
-      setIsDialogOpen(true);
-    });
-
     return () => {
-      document.removeEventListener("openDictsModal", (event) => {
-        const customEvent = event as CustomEvent;
-        setStringifiedDicts(customEvent.detail);
-        setIsDialogOpen(true);
-      });
       actions.removeCanvas();
     };
-  }, [instance, services, mainService]);
+  }, [instance, services, mainService, attrsToDisplay]);
 
+  useEffect(() => {
+    document.addEventListener("openDictsModal", handleEvent);
+
+    return () => {
+      document.removeEventListener("openDictsModal", handleEvent);
+    };
+  }, []);
   return (
     <Container>
       <Modal
@@ -65,38 +79,27 @@ const Canvas = ({
           </pre>
         ))}
       </Modal>
-      <Toolbar
-        justifyContent={{
-          default: "justifyContentSpaceBetween",
+      <FormModal
+        isOpen={isFormModalOpen}
+        toggleIsOpen={(value: boolean) => setIsFormModalOpen(value)}
+        services={services}
+        onConfirm={(entity, entityName) => {
+          if (diagramHandlers) {
+            diagramHandlers.addEntity(
+              entity,
+              services.find(
+                (service) => service.name === entityName
+              ) as ServiceModel
+            );
+          }
         }}
-      >
-        <FlexItem>
-          <Flex
-            spacer={{ default: "spacerXs" }}
-            alignItems={{ default: "alignItemsFlexEnd" }}
-          >
-            <FlexItem>
-              <StyledButtonTemp variant="secondary">2</StyledButtonTemp>
-            </FlexItem>
-            <FlexItem>
-              <Spacer />
-            </FlexItem>
-            <FlexItem>
-              <StyledButtonTemp variant="secondary">3</StyledButtonTemp>
-            </FlexItem>
-          </Flex>
-        </FlexItem>
-        <FlexItem>
-          <Flex spacer={{ default: "spacerMd" }}>
-            <StyledButton variant="tertiary" width={200}>
-              {words("cancel")}
-            </StyledButton>
-            <StyledButton variant="primary" width={200}>
-              {words("deploy")}
-            </StyledButton>
-          </Flex>
-        </FlexItem>
-      </Toolbar>
+      />
+      <Toolbar
+        attrsToDisplay={attrsToDisplay}
+        setAttrsToDisplay={setAttrsToDisplay}
+        isToggleVisible={instance !== undefined}
+        openEntityModal={() => setIsFormModalOpen(true)}
+      />
       <CanvasWrapper id="canvas-wrapper">
         <div className="canvas" ref={canvas} />
       </CanvasWrapper>
@@ -108,22 +111,4 @@ export default Canvas;
 const Container = styled.div`
   margin: 0 40px;
   height: 100%;
-`;
-const Toolbar = styled(Flex)`
-  padding: 0 0 20px;
-`;
-const StyledButtonTemp = styled(Button)`
-  --pf-c-button--after--BorderRadius: 0;
-  --pf-c-button--BorderRadius: 0;
-`;
-const StyledButton = styled(Button)`
-  --pf-c-button--after--BorderRadius: 0;
-  --pf-c-button--BorderRadius: 0;
-  width: 150px;
-`;
-const Spacer = styled.div`
-  display: flex;
-  height: 36px;
-  width: 1px;
-  background: #e7e7e7;
 `;
