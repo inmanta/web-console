@@ -129,3 +129,40 @@ export const a: InstanceAttributeModel = {
   iso_release: "",
   network: "local",
 };
+
+const attrsValues = {
+  string: "string",
+  editableString: "editableString",
+  "string?": "string?",
+  "editableString?": "editableString?",
+  bool: true,
+  editableBool: true,
+  "bool?": true,
+  "editableBool?": true,
+  "string[]": ["string"],
+  "editableString[]": ["editable", "String"],
+  "string[]?": ["string?"],
+  "editableString[]?": ["editable", "String?"],
+  enum: "OPTION_ONE",
+  editableEnum: "OPTION_ONE",
+  "enum?": "OPTION_ONE",
+  "editableEnum?": "OPTION_ONE",
+  dict: { test: "value" },
+  editableDict: { test: "value" },
+  "dict?": { test: "value" },
+  "editableDict?": { test: "value" },
+};
+const embedded = {
+  ...attrsValues,
+  embedded: [attrsValues],
+  editableEmbedded: [attrsValues],
+  "embedded?": [attrsValues],
+  "editableEmbedded?": [attrsValues],
+};
+export const b: InstanceAttributeModel = {
+  ...attrsValues,
+  embedded_base: [embedded],
+  editableEmbedded_base: [embedded],
+  optionalEmbedded_base: [embedded],
+  editableOptionalEmbedded_base: [embedded],
+};

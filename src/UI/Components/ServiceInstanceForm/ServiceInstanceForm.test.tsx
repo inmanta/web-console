@@ -51,7 +51,9 @@ test("GIVEN ServiceInstanceForm WHEN passed a TextField THEN shows that field", 
     })
   ).toBeVisible();
 
-  const textBox = screen.getByRole("textbox", { name: Test.Field.text.name });
+  const textBox = screen.getByRole("textbox", {
+    name: `TextInput-${Test.Field.text.name}`,
+  });
   const value = "test text";
   expect(textBox).toBeVisible();
   await act(async () => {
@@ -194,7 +196,7 @@ test("GIVEN ServiceInstanceForm and a NestedField WHEN clicking the toggle THEN 
   });
 
   expect(
-    screen.getByRole("textbox", { name: Test.Field.text.name })
+    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })
   ).toBeVisible();
 });
 
@@ -223,7 +225,7 @@ test("GIVEN ServiceInstanceForm and a DictListField WHEN clicking all toggles op
   });
 
   expect(
-    screen.getByRole("textbox", { name: Test.Field.text.name })
+    screen.getByRole("textbox", { name: `TextInput-${Test.Field.text.name}` })
   ).toBeVisible();
 });
 
@@ -240,7 +242,7 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
 
   await act(async () => {
     await userEvent.type(
-      screen.getByRole("textbox", { name: fields[0].name }),
+      screen.getByRole("textbox", { name: `TextInput-${fields[0].name}` }),
       "test text"
     );
   });
@@ -265,7 +267,9 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   });
   await act(async () => {
     await userEvent.type(
-      screen.getByRole("textbox", { name: nestedField.fields[0].name }),
+      screen.getByRole("textbox", {
+        name: `TextInput-${nestedField.fields[0].name}`,
+      }),
       "test text 2"
     );
   });
@@ -280,7 +284,9 @@ test("GIVEN ServiceInstanceForm WHEN clicking the submit button THEN callback is
   });
   await act(async () => {
     await userEvent.type(
-      screen.getByRole("textbox", { name: dictListField.fields[0].name }),
+      screen.getByRole("textbox", {
+        name: `TextInput-${dictListField.fields[0].name}`,
+      }),
       "test text 3"
     );
   });
