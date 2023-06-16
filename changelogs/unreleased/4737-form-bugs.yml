@@ -4,5 +4,5 @@ issue-nr: 4737
 destination-branches:
 - master
 - iso6
-section: 
+sections: 
   bugfix: "{{description}}"
