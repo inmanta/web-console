@@ -72,7 +72,7 @@ export const EnvSelector: React.FC<Props> = ({
                 <UserCircleIcon />
               </StyledIcon>
               <div>
-                <Profile keycloak={keycloakController.getInstance()} />
+                <Profile />
                 <div>
                   {toggleText.length > 28
                     ? toggleText.slice(0, 20) + "..."
