@@ -46,7 +46,7 @@
   ],
   "type": "module",
   "devDependencies": {
-    "@babel/core": "^7.21.8",
+    "@babel/core": "^7.22.5",
     "@babel/plugin-transform-typescript": "^7.21.3",
     "@testing-library/dom": "^9.0.1",
     "@testing-library/jest-dom": "^5.16.5",
