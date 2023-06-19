@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump @typescript-eslint/parser from 5.59.7 to 5.59.11'
+destination-branches:
+- master
+- iso6
+sections: {}

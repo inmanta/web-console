@@ -1,4 +1,5 @@
 import { EmbeddedEntity } from "@/Core";
+import { attributesList } from "./Attribute";
 
 export const a: EmbeddedEntity = {
   attributes: [
@@ -668,3 +669,56 @@ export const multiNestedEditable: EmbeddedEntity[] = [
     upper_limit: 2,
   },
 ];
+
+export const embedded: EmbeddedEntity = {
+  attributes: attributesList,
+  embedded_entities: [],
+  name: "embedded",
+  description: "desc",
+  modifier: "rw",
+  lower_limit: 1,
+  upper_limit: 4,
+};
+export const embedded_base: EmbeddedEntity = {
+  attributes: attributesList,
+  embedded_entities: [
+    embedded,
+    {
+      ...embedded,
+      name: "editableEmbedded",
+      modifier: "rw+",
+    },
+    {
+      ...embedded,
+      name: "embedded?",
+      lower_limit: 0,
+    },
+    {
+      ...embedded,
+      name: "editableEmbedded?",
+      modifier: "rw+",
+      lower_limit: 0,
+    },
+  ],
+  name: "embedded_base",
+  description: "desc",
+  modifier: "rw",
+  lower_limit: 1,
+  upper_limit: 4,
+};
+
+export const editableEmbedded_base: EmbeddedEntity = {
+  ...embedded_base,
+  name: "editableEmbedded_base",
+  modifier: "rw+",
+};
+export const optionalEmbedded_base: EmbeddedEntity = {
+  ...embedded_base,
+  name: "optionalEmbedded_base",
+  lower_limit: 0,
+};
+export const editableOptionalEmbedded_base: EmbeddedEntity = {
+  ...optionalEmbedded_base,
+  name: "editableOptionalEmbedded_base",
+  modifier: "rw+",
+};

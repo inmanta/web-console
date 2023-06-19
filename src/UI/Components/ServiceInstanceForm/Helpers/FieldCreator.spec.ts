@@ -1,10 +1,22 @@
-import { AttributeModel, EmbeddedEntity, NestedField } from "@/Core";
+import {
+  AttributeModel,
+  DictListField,
+  EmbeddedEntity,
+  NestedField,
+} from "@/Core";
 import { Service } from "@/Test";
 import {
   InterServiceRelationFields,
   RelationListFields,
 } from "@/Test/Data/Field";
 import { InterServiceRelations } from "@/Test/Data/Service";
+import { attributesList } from "@/Test/Data/Service/Attribute";
+import {
+  editableEmbedded_base,
+  editableOptionalEmbedded_base,
+  embedded_base,
+  optionalEmbedded_base,
+} from "@/Test/Data/Service/EmbeddedEntity";
 import { FieldCreator } from "./FieldCreator";
 import { CreateModifierHandler, EditModifierHandler } from "./ModifierHandler";
 
@@ -141,6 +153,7 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
       isOptional: true,
       fields: [...RelationListFields, ...InterServiceRelationFields],
       min: 0,
+      isDisabled: false,
     },
     {
       kind: "DictList",
@@ -148,8 +161,108 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
       isOptional: true,
       fields: [...RelationListFields, ...InterServiceRelationFields],
       min: 0,
+      isDisabled: false,
     },
     ...RelationListFields,
     ...InterServiceRelationFields,
   ]);
 });
+test("GIVEN FieldCreator WHEN attributes are processed for edit form THEN the field is marked as disabled correctly", () => {
+  const fields = new FieldCreator(new CreateModifierHandler(), true).create({
+    attributes: attributesList,
+    embedded_entities: [],
+  });
+  expect(fields).toHaveLength(attributesList.length);
+  expect(fields[0].isDisabled).toBeTruthy();
+  expect(fields[1].isDisabled).toBeFalsy();
+  expect(fields[2].isDisabled).toBeTruthy();
+  expect(fields[3].isDisabled).toBeFalsy();
+  expect(fields[4].isDisabled).toBeTruthy();
+  expect(fields[5].isDisabled).toBeFalsy();
+  expect(fields[6].isDisabled).toBeTruthy();
+  expect(fields[7].isDisabled).toBeFalsy();
+  expect(fields[8].isDisabled).toBeTruthy();
+  expect(fields[9].isDisabled).toBeFalsy();
+  expect(fields[10].isDisabled).toBeTruthy();
+  expect(fields[11].isDisabled).toBeFalsy();
+  expect(fields[12].isDisabled).toBeTruthy();
+  expect(fields[13].isDisabled).toBeFalsy();
+  expect(fields[14].isDisabled).toBeTruthy();
+  expect(fields[15].isDisabled).toBeFalsy();
+  expect(fields[16].isDisabled).toBeTruthy();
+  expect(fields[17].isDisabled).toBeFalsy();
+  expect(fields[18].isDisabled).toBeTruthy();
+  expect(fields[19].isDisabled).toBeFalsy();
+});
+
+test.each`
+  embeddedEntity
+  ${embedded_base}
+  ${optionalEmbedded_base}
+`(
+  "GIVEN FieldCreator WHEN embeddedEntities are processed for edit form THEN the field is marked as disabled correctly",
+  async ({ embeddedEntity }) => {
+    const fields = new FieldCreator(new CreateModifierHandler(), true).create({
+      attributes: [],
+      embedded_entities: [embeddedEntity],
+    });
+    const entityFields = fields[0] as DictListField;
+    expect(fields[0].isDisabled).toBeTruthy();
+    expect(entityFields.fields[0].isDisabled).toBeTruthy();
+    expect(entityFields.fields[1].isDisabled).toBeFalsy();
+    expect(entityFields.fields[2].isDisabled).toBeTruthy();
+    expect(entityFields.fields[3].isDisabled).toBeFalsy();
+    expect(entityFields.fields[4].isDisabled).toBeTruthy();
+    expect(entityFields.fields[5].isDisabled).toBeFalsy();
+    expect(entityFields.fields[6].isDisabled).toBeTruthy();
+    expect(entityFields.fields[7].isDisabled).toBeFalsy();
+    expect(entityFields.fields[8].isDisabled).toBeTruthy();
+    expect(entityFields.fields[9].isDisabled).toBeFalsy();
+    expect(entityFields.fields[10].isDisabled).toBeTruthy();
+    expect(entityFields.fields[11].isDisabled).toBeFalsy();
+    expect(entityFields.fields[12].isDisabled).toBeTruthy();
+    expect(entityFields.fields[13].isDisabled).toBeFalsy();
+    expect(entityFields.fields[14].isDisabled).toBeTruthy();
+    expect(entityFields.fields[15].isDisabled).toBeFalsy();
+    expect(entityFields.fields[16].isDisabled).toBeTruthy();
+    expect(entityFields.fields[17].isDisabled).toBeFalsy();
+    expect(entityFields.fields[18].isDisabled).toBeTruthy();
+    expect(entityFields.fields[19].isDisabled).toBeFalsy();
+  }
+);
+test.each`
+  embeddedEntity
+  ${editableEmbedded_base}
+  ${editableOptionalEmbedded_base}
+`(
+  "GIVEN FieldCreator WHEN editableEmbeddedEntities are processed for edit form THEN the field is marked as disabled correctly",
+  async ({ embeddedEntity }) => {
+    const fields = new FieldCreator(new CreateModifierHandler(), true).create({
+      attributes: [],
+      embedded_entities: [embeddedEntity],
+    });
+
+    const entityFields = fields[0] as DictListField;
+    expect(fields[0].isDisabled).toBeFalsy();
+    expect(entityFields.fields[0].isDisabled).toBeTruthy();
+    expect(entityFields.fields[1].isDisabled).toBeFalsy();
+    expect(entityFields.fields[2].isDisabled).toBeTruthy();
+    expect(entityFields.fields[3].isDisabled).toBeFalsy();
+    expect(entityFields.fields[4].isDisabled).toBeTruthy();
+    expect(entityFields.fields[5].isDisabled).toBeFalsy();
+    expect(entityFields.fields[6].isDisabled).toBeTruthy();
+    expect(entityFields.fields[7].isDisabled).toBeFalsy();
+    expect(entityFields.fields[8].isDisabled).toBeTruthy();
+    expect(entityFields.fields[9].isDisabled).toBeFalsy();
+    expect(entityFields.fields[10].isDisabled).toBeTruthy();
+    expect(entityFields.fields[11].isDisabled).toBeFalsy();
+    expect(entityFields.fields[12].isDisabled).toBeTruthy();
+    expect(entityFields.fields[13].isDisabled).toBeFalsy();
+    expect(entityFields.fields[14].isDisabled).toBeTruthy();
+    expect(entityFields.fields[15].isDisabled).toBeFalsy();
+    expect(entityFields.fields[16].isDisabled).toBeTruthy();
+    expect(entityFields.fields[17].isDisabled).toBeFalsy();
+    expect(entityFields.fields[18].isDisabled).toBeTruthy();
+    expect(entityFields.fields[19].isDisabled).toBeFalsy();
+  }
+);

@@ -21,7 +21,10 @@ export class BaseApiHelper implements ApiHelper {
 
   async head(url: string): Promise<number> {
     try {
-      const response = await fetch(this.getFullUrl(url), { method: "HEAD" });
+      const response = await fetch(this.getFullUrl(url), {
+        method: "HEAD",
+        headers: this.getHeaders(),
+      });
       return response.status;
     } catch (error) {
       return 500;
