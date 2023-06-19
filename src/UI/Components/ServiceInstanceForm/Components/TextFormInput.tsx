@@ -15,6 +15,7 @@ interface Props {
   type: TextInputTypes;
   typeHint?: string;
   placeholder?: string;
+  shouldBeDisabled?: boolean;
   handleInputChange: (value, event) => void;
 }
 export const TextFormInput: React.FC<Props> = ({
@@ -26,6 +27,7 @@ export const TextFormInput: React.FC<Props> = ({
   typeHint,
   placeholder,
   handleInputChange,
+  shouldBeDisabled = false,
   ...props
 }) => {
   return (
@@ -59,8 +61,10 @@ export const TextFormInput: React.FC<Props> = ({
         name={attributeName}
         placeholder={placeholder}
         aria-describedby={`${attributeName}-helper`}
+        aria-label={`TextInput-${attributeName}`}
         value={attributeValue || ""}
         onChange={handleInputChange}
+        isDisabled={shouldBeDisabled}
       />
     </FormGroup>
   );

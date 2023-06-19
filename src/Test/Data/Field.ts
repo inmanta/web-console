@@ -13,6 +13,7 @@ export const text: TextField = {
   name: "text_field",
   description: "description",
   isOptional: true,
+  isDisabled: false,
   defaultValue: "",
   inputType: TextInputTypes.text,
   type: "string?",
@@ -23,6 +24,7 @@ export const bool: BooleanField = {
   name: "boolean_field",
   description: "description",
   isOptional: true,
+  isDisabled: false,
   defaultValue: null,
   type: "bool?",
 };
@@ -32,6 +34,8 @@ export const enumField: EnumField = {
   name: "enum_field",
   description: "description",
   isOptional: false,
+  isDisabled: false,
+
   defaultValue: "local",
   options: {
     local: "local",
@@ -44,6 +48,8 @@ export const enumFieldTwoOptions: EnumField = {
   name: "enum_field_double",
   description: "description",
   isOptional: false,
+  isDisabled: false,
+
   defaultValue: "",
   options: {
     local: "local",
@@ -56,6 +62,8 @@ export const enumFieldSingleOption: EnumField = {
   name: "enum_field_single",
   description: "description",
   isOptional: false,
+  isDisabled: false,
+
   defaultValue: "",
   options: {
     local: "local",
@@ -68,6 +76,7 @@ export const number: TextField = {
   name: "flat_field_numbr",
   description: "description",
   isOptional: true,
+  isDisabled: false,
   defaultValue: "",
   inputType: TextInputTypes.number,
   type: "float?",
@@ -78,6 +87,8 @@ export const dictionary: TextField = {
   name: "dictionary_field",
   description: "description",
   isOptional: false,
+  isDisabled: false,
+
   defaultValue: {},
   inputType: TextInputTypes.text,
   type: "dict",
@@ -88,6 +99,7 @@ export const nested = (fields?: Field[]): NestedField => ({
   name: "nested_field",
   description: "description",
   isOptional: true,
+  isDisabled: false,
   fields: fields || [],
 });
 
@@ -96,6 +108,7 @@ export const dictList = (fields?: Field[]): DictListField => ({
   name: "dict_list_field",
   description: "description",
   isOptional: true,
+  isDisabled: false,
   min: 1,
   max: 4,
   fields: fields || [],
@@ -110,6 +123,7 @@ export const nestedEditable: Field[] = [
     description: "desc",
     type: "string",
     isOptional: false,
+    isDisabled: false,
   },
   {
     kind: "Text",
@@ -119,6 +133,7 @@ export const nestedEditable: Field[] = [
     description: "desc",
     type: "string?",
     isOptional: true,
+    isDisabled: false,
   },
   {
     kind: "Text",
@@ -128,11 +143,13 @@ export const nestedEditable: Field[] = [
     description: "desc",
     type: "dict?",
     isOptional: true,
+    isDisabled: false,
   },
   {
     kind: "DictList",
     name: "embedded",
     isOptional: true,
+    isDisabled: false,
     fields: [
       {
         kind: "Text",
@@ -141,6 +158,7 @@ export const nestedEditable: Field[] = [
         inputType: TextInputTypes.number,
         type: "int",
         isOptional: false,
+        isDisabled: false,
       },
       {
         kind: "Boolean",
@@ -148,6 +166,7 @@ export const nestedEditable: Field[] = [
         defaultValue: null,
         type: "bool?",
         isOptional: true,
+        isDisabled: false,
       },
       {
         kind: "Text",
@@ -156,11 +175,13 @@ export const nestedEditable: Field[] = [
         inputType: TextInputTypes.text,
         type: "dict",
         isOptional: false,
+        isDisabled: false,
       },
       {
         kind: "Nested",
         name: "embedded_single",
         isOptional: true,
+        isDisabled: false,
         fields: [
           {
             kind: "Text",
@@ -169,6 +190,7 @@ export const nestedEditable: Field[] = [
             inputType: TextInputTypes.text,
             type: "int[]",
             isOptional: false,
+            isDisabled: false,
           },
         ],
       },
@@ -180,6 +202,7 @@ export const nestedEditable: Field[] = [
     kind: "DictList",
     name: "another_embedded",
     isOptional: true,
+    isDisabled: false,
     fields: [
       {
         kind: "Text",
@@ -188,11 +211,13 @@ export const nestedEditable: Field[] = [
         inputType: TextInputTypes.text,
         type: "string",
         isOptional: false,
+        isDisabled: false,
       },
       {
         kind: "Nested",
         name: "another_embedded_single",
         isOptional: true,
+        isDisabled: false,
         fields: [
           {
             kind: "Text",
@@ -201,6 +226,7 @@ export const nestedEditable: Field[] = [
             inputType: TextInputTypes.number,
             type: "number",
             isOptional: true,
+            isDisabled: false,
           },
           {
             kind: "Text",
@@ -209,6 +235,7 @@ export const nestedEditable: Field[] = [
             inputType: TextInputTypes.number,
             type: "number",
             isOptional: false,
+            isDisabled: false,
           },
         ],
       },
@@ -223,6 +250,8 @@ export const InterServiceRelationFields: Field[] = [
     name: "relation7",
     description: "desc",
     isOptional: false,
+    isDisabled: false,
+
     serviceEntity: "test_entity",
   },
   {
@@ -230,6 +259,8 @@ export const InterServiceRelationFields: Field[] = [
     name: "relation8",
     description: "desc",
     isOptional: false,
+    isDisabled: false,
+
     serviceEntity: "test_entity2",
   },
 ];
@@ -240,6 +271,7 @@ export const RelationListFields: Field[] = [
     name: "relation1",
     description: "desc",
     isOptional: true,
+    isDisabled: false,
     serviceEntity: "test_entity",
     min: 0,
   },
@@ -248,6 +280,7 @@ export const RelationListFields: Field[] = [
     name: "relation2",
     description: "desc",
     isOptional: true,
+    isDisabled: false,
     serviceEntity: "test_entity2",
     min: 0,
   },
@@ -256,6 +289,7 @@ export const RelationListFields: Field[] = [
     name: "relation3",
     description: "desc",
     isOptional: true,
+    isDisabled: false,
     serviceEntity: "test_entity",
     min: 0,
     max: 3,
@@ -265,6 +299,7 @@ export const RelationListFields: Field[] = [
     name: "relation4",
     description: "desc",
     isOptional: true,
+    isDisabled: false,
     serviceEntity: "test_entity2",
     min: 0,
     max: 3,
@@ -274,6 +309,8 @@ export const RelationListFields: Field[] = [
     name: "relation5",
     description: "desc",
     isOptional: false,
+    isDisabled: false,
+
     serviceEntity: "test_entity",
     min: 1,
     max: 3,
@@ -283,6 +320,8 @@ export const RelationListFields: Field[] = [
     name: "relation6",
     description: "desc",
     isOptional: false,
+    isDisabled: false,
+
     serviceEntity: "test_entity2",
     min: 1,
     max: 3,

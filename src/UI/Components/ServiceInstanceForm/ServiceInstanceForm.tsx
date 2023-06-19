@@ -34,6 +34,12 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       ? createEditFormState(fields, apiVersion, originalAttributes)
       : createFormState(fields)
   );
+  //originalState is created to make possible to differentiate newly created attributes to keep track on which inputs should be disabled
+  const [originalState] = useState(
+    originalAttributes
+      ? createEditFormState(fields, apiVersion, originalAttributes)
+      : createFormState(fields)
+  );
   const [dirtyInputs, setDirtyInputs] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
   usePrompt(words("notification.instanceForm.prompt"), dirtyInputs);
@@ -84,6 +90,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           key={field.name}
           field={field}
           formState={formState}
+          originalState={originalState}
           getUpdate={getUpdate}
           path={null}
         />

@@ -30,6 +30,6 @@ export class InstanceStatePresenter implements StatePresenter {
     return InstanceState({
       name: lifecycleState.name,
       label: lifecycleState.label,
-    });
+    }) as ReactElement;
   }
 }

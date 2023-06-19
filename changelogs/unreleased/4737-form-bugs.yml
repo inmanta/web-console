@@ -1,0 +1,8 @@
+change-type: patch
+description: "Fixed issues with missing default values in string list input in Create Instance Form and with embedded entity inputs not being disabled in the Edit Instance Form"
+issue-nr: 4737
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"

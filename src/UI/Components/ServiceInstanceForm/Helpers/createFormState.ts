@@ -8,7 +8,8 @@ export const createFormState = (
     switch (curr.kind) {
       case "Boolean":
       case "Enum":
-      case "Text": {
+      case "Text":
+      case "TextList": {
         acc[curr.name] = curr.type.includes("dict")
           ? stringifyDict(curr.defaultValue)
           : curr.defaultValue;

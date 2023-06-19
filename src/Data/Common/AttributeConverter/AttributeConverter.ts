@@ -20,8 +20,19 @@ export interface AttributeInputConverter {
   getFormDefaultValue(
     inputType: InputType,
     defaultValueSet: boolean,
-    defaultValue: string | null
-  ): string | string[] | null | undefined;
+    defaultValue:
+      | string
+      | null
+      | boolean
+      | string[]
+      | { [x: string]: string | null | boolean | string[] }
+  ):
+    | string
+    | null
+    | boolean
+    | string[]
+    | { [x: string]: string | null | boolean | string[] }
+    | undefined;
 
   /**
    * Updates to an instance should be applied (compared) to the candidate attribute set, if it's not empty,
