@@ -1,30 +1,29 @@
-import React from "react";
+import React, { useCallback, useContext } from "react";
 import "@inmanta/rappid/rappid.css";
-import {
-  Button,
-  Flex,
-  FlexItem,
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@patternfly/react-core";
+import { useNavigate } from "react-router-dom";
+import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
+import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import labelIcon from "../icons/label-icon.svg";
 import entityIcon from "../icons/new-entity.svg";
 
 const Toolbar = ({
-  attrsToDisplay,
-  setAttrsToDisplay,
-  isToggleVisible,
   openEntityModal,
+  serviceName,
 }: {
-  attrsToDisplay: "active_attributes" | "candidate_attributes";
-  setAttrsToDisplay: (
-    attributeType: "active_attributes" | "candidate_attributes"
-  ) => void;
-  isToggleVisible: boolean;
   openEntityModal: () => void;
+  serviceName: string;
 }) => {
+  const { routeManager } = useContext(DependencyContext);
+  const navigate = useNavigate();
+  const url = routeManager.useUrl("Inventory", {
+    service: serviceName,
+  });
+  const handleRedirect = useCallback(
+    () => navigate(url),
+    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
+  );
   return (
     <Container
       justifyContent={{
@@ -61,29 +60,6 @@ const Toolbar = ({
               />
             </StyledButton>
           </FlexItem>
-          {isToggleVisible && (
-            <>
-              <FlexItem>
-                <Spacer />
-              </FlexItem>
-              <FlexItem>
-                <ToggleGroup aria-label="displayAttrsToggle">
-                  <StyledToggleGroupItem
-                    text="Candidate Attributes"
-                    buttonId="displayAttrsToggle-candidates-button"
-                    isSelected={attrsToDisplay === "candidate_attributes"}
-                    onChange={() => setAttrsToDisplay("candidate_attributes")}
-                  />
-                  <StyledToggleGroupItem
-                    text="Active Attributes"
-                    buttonId="displayAttrsToggle-candidates-button"
-                    isSelected={attrsToDisplay === "active_attributes"}
-                    onChange={() => setAttrsToDisplay("active_attributes")}
-                  />
-                </ToggleGroup>
-              </FlexItem>
-            </>
-          )}
         </Flex>
       </FlexItem>
       <FlexItem>
@@ -91,7 +67,11 @@ const Toolbar = ({
           spacer={{ default: "spacerMd" }}
           alignItems={{ default: "alignItemsCenter" }}
         >
-          <StyledButtonTwo variant="tertiary" width={200}>
+          <StyledButtonTwo
+            variant="tertiary"
+            width={200}
+            onClick={handleRedirect}
+          >
             {words("cancel")}
           </StyledButtonTwo>
           <StyledButtonTwo variant="primary" width={200}>
@@ -116,14 +96,7 @@ const StyledButton = styled(Button)`
   height: 30px;
   width: 30px;
 `;
-const StyledToggleGroupItem = styled(ToggleGroupItem)`
-  --pf-c-toggle-group__button--PaddingTop: 3px;
-  --pf-c-toggle-group__button--PaddingBottom: 0px;
-  --pf-c-toggle-group__button--FontSize: 1rem;
-  button {
-    height: 30px;
-  }
-`;
+
 const StyledButtonTwo = styled(Button)`
   --pf-c-button--PaddingTop: px;
   --pf-c-button--PaddingBottom: 0px;

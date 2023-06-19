@@ -144,21 +144,29 @@ export function appendInstance(
   paper: dia.Paper,
   graph: dia.Graph,
   serviceInstance: ServiceInstanceModel,
-  service: ServiceModel,
-  attrsToDisplay: "candidate_attributes" | "active_attributes"
+  service: ServiceModel
 ): g.Rect {
   const instanceAsTable = new ServiceEntityBlock().setName(
     serviceInstance.service_entity
   );
 
-  //check if for any presentable attributes, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
-  if (serviceInstance[attrsToDisplay] !== null) {
+  //check for any presentable attributes, where candidate attrs have priority, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
+  if (serviceInstance.candidate_attributes !== null) {
     handleAttributes(
       graph,
       paper,
       instanceAsTable,
       service.attributes,
-      serviceInstance[attrsToDisplay] as InstanceAttributeModel,
+      serviceInstance.candidate_attributes,
+      service.embedded_entities
+    );
+  } else {
+    handleAttributes(
+      graph,
+      paper,
+      instanceAsTable,
+      service.attributes,
+      serviceInstance.active_attributes as InstanceAttributeModel,
       service.embedded_entities
     );
   }

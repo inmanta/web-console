@@ -21,9 +21,6 @@ const Canvas = ({
   const canvas = useRef<HTMLDivElement>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [attrsToDisplay, setAttrsToDisplay] = useState<
-    "candidate_attributes" | "active_attributes"
-  >("candidate_attributes");
   const [stringifiedDicts, setStringifiedDicts] = useState<DictDialogData[]>(
     []
   );
@@ -43,17 +40,14 @@ const Canvas = ({
     if (instance) {
       actions.addInstance(
         instance,
-        services.find(
-          (service) => service.name === mainService
-        ) as ServiceModel,
-        attrsToDisplay
+        services.find((service) => service.name === mainService) as ServiceModel
       );
     }
 
     return () => {
       actions.removeCanvas();
     };
-  }, [instance, services, mainService, attrsToDisplay]);
+  }, [instance, services, mainService]);
 
   useEffect(() => {
     document.addEventListener("openDictsModal", handleEvent);
@@ -95,10 +89,8 @@ const Canvas = ({
         }}
       />
       <Toolbar
-        attrsToDisplay={attrsToDisplay}
-        setAttrsToDisplay={setAttrsToDisplay}
-        isToggleVisible={instance !== undefined}
         openEntityModal={() => setIsFormModalOpen(true)}
+        serviceName={mainService}
       />
       <CanvasWrapper id="canvas-wrapper">
         <div className="canvas" ref={canvas} />
