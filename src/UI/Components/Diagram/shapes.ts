@@ -1,6 +1,5 @@
 import { dia, shapes, util } from "@inmanta/rappid";
 import { ColumnData } from "./interfaces";
-
 /**
  * https://resources.jointjs.com/tutorial/custom-elements
  * https://resources.jointjs.com/tutorial/ts-shape
@@ -30,6 +29,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             fill: "#F0AB00",
             stroke: "#F0AB00",
             strokeWidth: 1,
+            cursor: "grab",
           },
           headerLabel: {
             fill: "#FFFFFF",
@@ -40,22 +40,26 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
               ellipsis: true,
               height: 30,
             },
+            cursor: "grab",
           },
           itemBodies_0: {
             // SVGRect which is an active magnet
             // Do not use `true` to prevent CSS effects on hover
             magnet: "item",
+            cursor: "default",
           },
           group_1: {
             // let the pointer events propagate to the group_0
             // which spans over 2 columns
-            pointerEvents: "none",
+            //pointerEvents: "none",
+            cursor: "default",
           },
           itemLabels: {
             fontFamily: "Lekton",
             fontSize: 10,
             fill: "#000000",
-            pointerEvents: "none",
+            //pointerEvents: "none",
+            cursor: "default",
           },
           itemLabels_1: {
             fill: "#7F7F7F",
@@ -63,6 +67,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             fontFamily: "Lekton",
             textAnchor: "end",
             x: `calc(0.5 * w - 10)`,
+            event: "item_value:mouseover",
+            cursor: "pointer",
           },
         },
       },
@@ -122,6 +128,10 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       {
         tagName: "text",
         selector: "headerLabel",
+      },
+      {
+        tagName: "circle",
+        selector: "info",
       },
     ];
   }

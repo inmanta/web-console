@@ -23,7 +23,7 @@ export default function diagramInit(canvas): DiagramHandlers {
     model: graph,
     width: 1000,
     height: 1000,
-    gridSize: 20,
+    gridSize: 1,
     interactive: true,
     defaultConnector: { name: "rounded" },
     async: true,
@@ -56,8 +56,8 @@ export default function diagramInit(canvas): DiagramHandlers {
   const scroller = new ui.PaperScroller({
     paper,
     cursor: "grab",
-    baseWidth: 100,
-    baseHeight: 100,
+    baseWidth: 1000,
+    baseHeight: 1000,
     inertia: { friction: 0.8 },
     autoResizePaper: true,
     contentOptions: function () {
@@ -73,6 +73,11 @@ export default function diagramInit(canvas): DiagramHandlers {
   scroller.render().center();
   scroller.centerContent();
 
+  new ui.Tooltip({
+    rootTarget: ".canvas",
+    target: "[data-tooltip]",
+    padding: 20,
+  });
   paper.on("link:mouseenter", (linkView: dia.LinkView) => {
     showLinkTools(linkView);
   });
@@ -106,10 +111,10 @@ export default function diagramInit(canvas): DiagramHandlers {
    * @param {number} delta - the value that dictates how big the zoom has to be.
    */
   function zoom(x: number, y: number, delta: number) {
-    scroller.zoom(delta * 0.06, {
+    scroller.zoom(delta * 0.05, {
       min: 0.4,
       max: 1.2,
-      grid: 0.06,
+      grid: 0.05,
       ox: x,
       oy: y,
     });

@@ -7,6 +7,7 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
+import { words } from "@/UI/words";
 import { DictDialogData } from "./interfaces";
 import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
@@ -158,7 +159,8 @@ export function appendInstance(
       instanceAsTable,
       service.attributes,
       serviceInstance.candidate_attributes,
-      service.embedded_entities
+      service.embedded_entities,
+      "candidate"
     );
   } else {
     handleAttributes(
@@ -167,7 +169,8 @@ export function appendInstance(
       instanceAsTable,
       service.attributes,
       serviceInstance.active_attributes as InstanceAttributeModel,
-      service.embedded_entities
+      service.embedded_entities,
+      "active"
     );
   }
 
@@ -240,7 +243,6 @@ export function appendEmbeddedEntity(
     const instanceAsTable = new ServiceEntityBlock()
       .setTabColor("#0066CC")
       .setName(embeddedEntity.name);
-
     appendColumns(instanceAsTable, flatAttributes, entityAttributes);
 
     //add to graph and then check for dictionaries
@@ -356,24 +358,57 @@ function handleAttributes(
   instanceAsTable: ServiceEntityBlock,
   attributesModel: AttributeModel[],
   attributes: InstanceAttributeModel,
-  embedded_entities: EmbeddedEntity[]
+  embedded_entities: EmbeddedEntity[],
+  presentedAttr?: "candidate" | "active"
 ) {
   const attributesNames = attributesModel.map((attribute) => attribute.name);
+  handleInfoIcon(instanceAsTable, presentedAttr);
 
   appendColumns(instanceAsTable, attributesNames, attributes);
-
   //add to graph and then check for dictionaries
   instanceAsTable.addTo(graph);
   appendInfoTool(instanceAsTable.findView(paper), attributesModel, attributes);
 
   //iterate through embedded entities to create and connect them
   embedded_entities.map((entity) => {
-    const appendedEntity = appendEmbeddedEntity(
+    const appendedEntities = appendEmbeddedEntity(
       paper,
       graph,
       entity,
       attributes[entity.name] as InstanceAttributeModel
     );
-    connectEntities(graph, instanceAsTable, appendedEntity);
+    appendedEntities.map((entity) => {
+      handleInfoIcon(entity, presentedAttr);
+    });
+    connectEntities(graph, instanceAsTable, appendedEntities);
   });
+}
+
+function handleInfoIcon(
+  instanceAsTable: ServiceEntityBlock,
+  presentedAttrs?: "candidate" | "active"
+) {
+  const infoAttrs = {
+    r: 7,
+    cursor: "pointer",
+    cx: "calc(0.9*w)",
+    cy: 15,
+  };
+  if (presentedAttrs === "candidate") {
+    instanceAsTable.attr({
+      info: {
+        ...infoAttrs,
+        fill: "#FFF",
+        "data-tooltip": words("attributes.candidate"),
+      },
+    });
+  } else if (presentedAttrs === "active") {
+    instanceAsTable.attr({
+      info: {
+        ...infoAttrs,
+        fill: "#000",
+        "data-tooltip": words("attributes.active"),
+      },
+    });
+  }
 }
