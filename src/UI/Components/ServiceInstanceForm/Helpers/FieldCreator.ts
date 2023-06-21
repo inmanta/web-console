@@ -229,6 +229,25 @@ export class FieldCreator {
           };
         }
 
+        // WORKAROUND TO ADD SUPPORT FOR TEXTAREA
+        if (
+          (attribute.type === "string" || attribute.type === "string?") &&
+          (attribute.validation_type === "pydantic.constr" ||
+            attribute.validation_type === "pydantic.constr?") &&
+          attribute.validation_parameters.max_length === 10000
+        ) {
+          return {
+            kind: "Textarea",
+            name: attribute.name,
+            defaultValue: defaultValue,
+            inputType: type,
+            description: attribute.description,
+            type: attribute.type,
+            isOptional: this.isTextFieldOptional(attribute),
+            isDisabled: this.shouldFieldBeDisabled(attribute),
+          };
+        }
+
         return {
           kind: "Text",
           name: attribute.name,

@@ -225,6 +225,28 @@ const editableOptionalDict: AttributeModel = {
   name: "editableDict?",
   modifier: "rw+",
 };
+const textareaString: AttributeModel = {
+  ...string,
+  validation_type: "pydantic.constr",
+  validation_parameters: { max_length: 10000 },
+};
+const editableTextareaString: AttributeModel = {
+  ...textareaString,
+  name: "textareaString",
+  type: "string",
+  modifier: "rw+",
+};
+const optionalTextareaString: AttributeModel = {
+  ...textareaString,
+  name: "textareaString?",
+  type: "string?",
+};
+const editableOptionalTextareaString: AttributeModel = {
+  ...textareaString,
+  name: "editableTextareaString?",
+  type: "string?",
+  modifier: "rw+",
+};
 
 export const attributesList = [
   string,
@@ -247,4 +269,8 @@ export const attributesList = [
   editableDict,
   optionalDict,
   editableOptionalDict,
+  textareaString,
+  optionalTextareaString,
+  editableTextareaString,
+  editableOptionalTextareaString,
 ];

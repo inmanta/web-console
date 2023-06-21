@@ -22,7 +22,11 @@ interface NoValidation {
 
 interface StringValidation {
   validation_type: "pydantic.constr" | "pydantic.constr?";
-  validation_parameters: { regex: string; strict?: boolean };
+  validation_parameters: {
+    regex?: string;
+    strict?: boolean;
+    max_length?: number;
+  };
 }
 
 interface IntValidation {
