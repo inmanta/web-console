@@ -47,7 +47,7 @@ export const TableControls: React.FC<Props> = ({
         />
         <ToolbarGroup alignment={{ default: "alignRight" }}>
           {Object(configFile).hasOwnProperty("features") &&
-            configFile.features.instanceComposer && (
+            configFile.features.includes("instanceComposer") && (
               <ToolbarItem>
                 <Link
                   to={{
