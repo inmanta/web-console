@@ -182,6 +182,7 @@ export function appendInstance(
     edgeSep: 80,
     rankDir: "TB",
   });
+
   return instanceAsTable.getBBox();
 }
 
@@ -243,6 +244,7 @@ export function appendEmbeddedEntity(
     const instanceAsTable = new ServiceEntityBlock()
       .setTabColor("#0066CC")
       .setName(embeddedEntity.name);
+
     appendColumns(instanceAsTable, flatAttributes, entityAttributes);
 
     //add to graph and then check for dictionaries
