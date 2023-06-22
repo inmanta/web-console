@@ -11,7 +11,7 @@ export const Profile: React.FC = () => {
     if (keycloak && keycloak.profile && keycloak.profile.username) {
       setName(keycloak.profile.username);
     }
-  }, [keycloak, keycloak.profile]);
+  }, [keycloak, keycloak.profile, keycloak.profile?.username]);
 
   return <StyledText>{name}</StyledText>;
 };

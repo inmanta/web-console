@@ -193,6 +193,35 @@ test("GIVEN FieldCreator WHEN attributes are processed for edit form THEN the fi
   expect(fields[17].isDisabled).toBeFalsy();
   expect(fields[18].isDisabled).toBeTruthy();
   expect(fields[19].isDisabled).toBeFalsy();
+  expect(fields[20].isDisabled).toBeTruthy();
+  expect(fields[21].isDisabled).toBeTruthy();
+  expect(fields[22].isDisabled).toBeFalsy();
+  expect(fields[23].isDisabled).toBeFalsy();
+
+  expect(fields[0].kind).toBe("Text");
+  expect(fields[1].kind).toBe("Text");
+  expect(fields[2].kind).toBe("Text");
+  expect(fields[3].kind).toBe("Text");
+  expect(fields[4].kind).toBe("Boolean");
+  expect(fields[5].kind).toBe("Boolean");
+  expect(fields[6].kind).toBe("Boolean");
+  expect(fields[7].kind).toBe("Boolean");
+  expect(fields[8].kind).toBe("TextList");
+  expect(fields[9].kind).toBe("TextList");
+  expect(fields[10].kind).toBe("TextList");
+  expect(fields[11].kind).toBe("TextList");
+  expect(fields[12].kind).toBe("Enum");
+  expect(fields[13].kind).toBe("Enum");
+  expect(fields[14].kind).toBe("Enum");
+  expect(fields[15].kind).toBe("Enum");
+  expect(fields[16].kind).toBe("Text");
+  expect(fields[17].kind).toBe("Text");
+  expect(fields[18].kind).toBe("Text");
+  expect(fields[19].kind).toBe("Text");
+  expect(fields[20].kind).toBe("Textarea");
+  expect(fields[21].kind).toBe("Textarea");
+  expect(fields[22].kind).toBe("Textarea");
+  expect(fields[23].kind).toBe("Textarea");
 });
 
 test.each`
@@ -228,6 +257,7 @@ test.each`
     expect(entityFields.fields[17].isDisabled).toBeFalsy();
     expect(entityFields.fields[18].isDisabled).toBeTruthy();
     expect(entityFields.fields[19].isDisabled).toBeFalsy();
+    expect(entityFields.fields[20].isDisabled).toBeTruthy();
   }
 );
 test.each`
@@ -264,5 +294,6 @@ test.each`
     expect(entityFields.fields[17].isDisabled).toBeFalsy();
     expect(entityFields.fields[18].isDisabled).toBeTruthy();
     expect(entityFields.fields[19].isDisabled).toBeFalsy();
+    expect(entityFields.fields[20].isDisabled).toBeTruthy();
   }
 );

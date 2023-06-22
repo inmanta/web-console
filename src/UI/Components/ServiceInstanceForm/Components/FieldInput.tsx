@@ -108,6 +108,28 @@ export const FieldInput: React.FC<Props> = ({
           key={field.name}
         />
       );
+    case "Textarea":
+      return (
+        <TextFormInput
+          aria-label={`TextFieldInput-${field.name}`}
+          attributeName={field.name}
+          attributeValue={get(formState, makePath(path, field.name)) as string}
+          description={field.description}
+          isOptional={field.isOptional}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined
+          }
+          type={field.inputType}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name), value)
+          }
+          placeholder={getPlaceholderForType(field.type)}
+          typeHint={getTypeHintForType(field.type)}
+          key={field.name}
+          isTextarea
+        />
+      );
     case "Text":
       return (
         <TextFormInput
