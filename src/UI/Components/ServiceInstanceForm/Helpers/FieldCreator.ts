@@ -234,7 +234,8 @@ export class FieldCreator {
           (attribute.type === "string" || attribute.type === "string?") &&
           (attribute.validation_type === "pydantic.constr" ||
             attribute.validation_type === "pydantic.constr?") &&
-          attribute.validation_parameters.max_length === 10000
+          attribute.validation_parameters.max_length &&
+          attribute.validation_parameters.max_length > 255
         ) {
           return {
             kind: "Textarea",

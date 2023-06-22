@@ -227,12 +227,13 @@ const editableOptionalDict: AttributeModel = {
 };
 const textareaString: AttributeModel = {
   ...string,
+  name: "textareaString",
   validation_type: "pydantic.constr",
   validation_parameters: { max_length: 10000 },
 };
 const editableTextareaString: AttributeModel = {
   ...textareaString,
-  name: "textareaString",
+  name: "editableTextareaString",
   type: "string",
   modifier: "rw+",
 };
