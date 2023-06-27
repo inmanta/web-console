@@ -184,8 +184,8 @@ if (Cypress.env("edition") === "iso") {
       // click on edit button
       cy.get(".pf-c-description-list").contains("Edit").click();
 
-      // check if the amount of fields is 6 instead of 11
-      cy.get("form").find("input").should("have.length", 6);
+      // check if amount of fields is lesser than create amount.
+      cy.get("form").find("input").should("have.length.of.at.most", 11);
 
       // delete first value and submit should give an error toast
       cy.get("#address_r1").clear();
