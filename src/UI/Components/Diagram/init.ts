@@ -1,5 +1,5 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
-import { AttributeModel, ServiceInstanceModel } from "@/Core";
+import { ServiceInstanceModel, ServiceModel } from "@/Core";
 import { appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
 import { routerNamespace } from "./routers";
@@ -17,7 +17,7 @@ export default function diagramInit(canvas) {
   const paper = new dia.Paper({
     model: graph,
     width: 1000,
-    height: 800,
+    height: 1000,
     gridSize: 20,
     interactive: true,
     defaultConnector: { name: "rounded" },
@@ -64,9 +64,9 @@ export default function diagramInit(canvas) {
       };
     },
   });
-
   canvas.current.appendChild(scroller.el);
   scroller.render().center();
+  scroller.centerContent();
 
   paper.on("link:mouseenter", (linkView: dia.LinkView) => {
     showLinkTools(linkView);
@@ -110,14 +110,15 @@ export default function diagramInit(canvas) {
       scroller.remove();
       paper.remove();
     },
-    addInstance: (
-      instance: ServiceInstanceModel,
-      serviceAttributes: AttributeModel[]
-    ) => {
-      const attributeKeywords = serviceAttributes.map(
-        (attribute) => attribute.name
+    addInstance: (instance: ServiceInstanceModel, service: ServiceModel) => {
+      const instanceCoordinates = appendInstance(
+        paper,
+        graph,
+        instance,
+        service
       );
-      appendInstance(graph, instance, attributeKeywords);
+
+      scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
   };
 }

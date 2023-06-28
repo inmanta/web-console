@@ -128,7 +128,7 @@
     "webpack-version-file": "^0.1.7"
   },
   "dependencies": {
-    "@inmanta/rappid": "^3.6.3",
+    "@inmanta/rappid": "^3.7.0",
     "@patternfly/react-charts": "^6.94.18",
     "@patternfly/react-core": "^4.276.6",
     "@patternfly/react-icons": "^4.93.6",
@@ -137,6 +137,7 @@
     "@patternfly/react-tokens": "^4.94.6",
     "@react-keycloak/web": "^3.4.0",
     "copy-to-clipboard": "^3.3.3",
+    "dagre": "^0.8.5",
     "easy-peasy": "^6.0.0",
     "file-saver": "^2.0.5",
     "history": "^5.3.0",

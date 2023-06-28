@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Add support for textarea in forms'
+issue-nr: 4910
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

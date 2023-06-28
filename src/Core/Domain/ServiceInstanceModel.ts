@@ -28,6 +28,7 @@ export interface VersionedServiceInstanceIdentifier
 
 export interface ServiceInstanceModel
   extends VersionedServiceInstanceIdentifier {
+  config?: { [key: string]: string } | null;
   environment: string;
   active_attributes: InstanceAttributeModel | null;
   callback: string[];

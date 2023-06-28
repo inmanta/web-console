@@ -50,6 +50,10 @@ export class BaseApiHelper implements ApiHelper {
       if (response.status === 401) {
         this.keycloak.clearToken();
       }
+
+      if (this.keycloak.isTokenExpired()) {
+        this.keycloak.login();
+      }
     }
 
     return words("error.server.intro")(

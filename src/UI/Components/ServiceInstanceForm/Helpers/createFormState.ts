@@ -9,6 +9,7 @@ export const createFormState = (
       case "Boolean":
       case "Enum":
       case "Text":
+      case "Textarea":
       case "TextList": {
         acc[curr.name] = curr.type.includes("dict")
           ? stringifyDict(curr.defaultValue)
@@ -78,6 +79,7 @@ export const createEditFormState = (
       switch (curr.kind) {
         case "Boolean":
         case "Enum":
+        case "Textarea":
         case "TextList":
         case "Text": {
           acc[curr.name] = curr.type.includes("dict")

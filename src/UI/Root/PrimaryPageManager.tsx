@@ -164,7 +164,7 @@ export class PrimaryPageManager implements PageManager {
   getPages(): Page[] {
     if (
       Object(configFile).hasOwnProperty("features") &&
-      configFile.features.instanceComposer
+      configFile.features.includes("instanceComposer")
     ) {
       return [
         ...Object.values(this.pageDictionary),
