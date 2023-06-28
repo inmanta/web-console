@@ -10,10 +10,10 @@ export const Page = () => {
     <ServicesProvider
       serviceName={serviceName}
       Wrapper={PageWrapper}
-      Dependant={({ services, mainService }) => (
+      Dependant={({ services, mainServiceName }) => (
         <InstanceProvider
           services={services}
-          mainService={mainService}
+          mainServiceName={mainServiceName}
           instanceId={instance}
         />
       )}

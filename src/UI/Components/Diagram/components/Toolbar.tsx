@@ -5,8 +5,8 @@ import { Button, Flex, FlexItem } from "@patternfly/react-core";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
-import labelIcon from "../icons/label-icon.svg";
-import entityIcon from "../icons/new-entity.svg";
+import labelIcon from "../icons/label-icon.png";
+import entityIcon from "../icons/new-entity-icon.png";
 
 const Toolbar = ({
   openEntityModal,
@@ -20,15 +20,14 @@ const Toolbar = ({
   const url = routeManager.useUrl("Inventory", {
     service: serviceName,
   });
-  const handleRedirect = useCallback(
-    () => navigate(url),
-    [navigate] /* eslint-disable-line react-hooks/exhaustive-deps */
-  );
+  const handleRedirect = useCallback(() => navigate(url), [navigate, url]);
+
   return (
     <Container
       justifyContent={{
         default: "justifyContentSpaceBetween",
       }}
+      alignItems={{ default: "alignItemsFlexEnd" }}
     >
       <FlexItem>
         <Flex
@@ -52,11 +51,11 @@ const Toolbar = ({
             <Spacer />
           </FlexItem>
           <FlexItem>
-            <StyledButton variant="secondary">
+            <StyledButton variant="secondary" aria-label="label-toggle-button">
               <img
                 src={labelIcon}
-                alt="Inmanta Logo"
-                aria-label="Inmanta Logo"
+                alt="Label Toggle Icon"
+                aria-label="label-toggle-icon"
               />
             </StyledButton>
           </FlexItem>

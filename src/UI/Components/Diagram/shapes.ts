@@ -126,7 +126,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
 
         //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
         const reproducedDisplayText = util.breakText(
-          item.value,
+          item.value.toString(),
           { width: 80, height: 22 },
           {
             "font-size": this.attr("itemLabels_1/fontSize"),

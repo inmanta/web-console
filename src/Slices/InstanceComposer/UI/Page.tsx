@@ -9,8 +9,8 @@ export const Page = () => {
     <ServicesProvider
       serviceName={serviceName}
       Wrapper={PageWrapper}
-      Dependant={({ services, mainService }) => (
-        <Canvas services={services} mainService={mainService} />
+      Dependant={({ services, mainServiceName }) => (
+        <Canvas services={services} mainServiceName={mainServiceName} />
       )}
     />
   );

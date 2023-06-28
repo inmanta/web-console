@@ -7,7 +7,7 @@ import { DependencyContext } from "@/UI/Dependency";
 interface Props {
   serviceName: string;
   Wrapper: React.FC<{ name: string; children?: React.ReactNode }>;
-  Dependant: React.FC<{ services: ServiceModel[]; mainService: string }>;
+  Dependant: React.FC<{ services: ServiceModel[]; mainServiceName: string }>;
 }
 
 export const ServicesProvider: React.FunctionComponent<Props> = ({
@@ -35,7 +35,7 @@ export const ServicesProvider: React.FunctionComponent<Props> = ({
         </Wrapper>
       ),
       success: (services) => (
-        <Dependant services={services} mainService={serviceName} />
+        <Dependant services={services} mainServiceName={serviceName} />
       ),
     },
     data

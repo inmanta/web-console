@@ -146,8 +146,14 @@ export default function diagramInit(canvas): DiagramHandlers {
       );
       scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
-    addEntity: (instance, service) => {
-      const instanceCoordinates = appendEntity(paper, graph, service, instance);
+    addEntity: (instance, service, addingCoreInstance) => {
+      const instanceCoordinates = appendEntity(
+        paper,
+        graph,
+        service,
+        instance,
+        addingCoreInstance
+      );
       scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
   };
@@ -156,5 +162,9 @@ export default function diagramInit(canvas): DiagramHandlers {
 export interface DiagramHandlers {
   removeCanvas: () => void;
   addInstance: (instance: ServiceInstanceModel, service: ServiceModel) => void;
-  addEntity: (entity: InstanceAttributeModel, service: ServiceModel) => void;
+  addEntity: (
+    entity: InstanceAttributeModel,
+    service: ServiceModel,
+    addingCoreInstance: boolean
+  ) => void;
 }

@@ -6,14 +6,14 @@ import Canvas from "@/UI/Components/Diagram/Canvas";
 
 export const InstanceProvider: React.FC<{
   services: ServiceModel[];
-  mainService: string;
+  mainServiceName: string;
   instanceId: string;
-}> = ({ services, mainService, instanceId }) => {
+}> = ({ services, mainServiceName, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
 
   const [data] = queryResolver.useOneTime<"GetServiceInstance">({
     kind: "GetServiceInstance",
-    service_entity: mainService,
+    service_entity: mainServiceName,
     id: instanceId,
   });
 
@@ -24,7 +24,7 @@ export const InstanceProvider: React.FC<{
       SuccessView={(instance) => (
         <Canvas
           services={services}
-          mainService={mainService}
+          mainServiceName={mainServiceName}
           instance={instance}
         />
       )}

@@ -135,8 +135,8 @@ export function appendInfoTool(
  * This function converts Instance attributes to display them on the Smart Service Composer canvas.
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
  *
- * @param {dia.Paper} paper JointJS Object on which we are appending given instance
- * @param {dia.Graph} graph JointJS Object on which we are appending given instance
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
  * @param {ServiceInstanceModel} serviceInstance that we want to display
  * @param {ServiceModel} service that hold definitions for attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
  * @returns {g.Rect} coordinates that are being use to center view as regular behavior center to the last entity added
@@ -190,8 +190,8 @@ export function appendInstance(
  * Function that creates, appends and returns created embedded entities which then are used to connects to it's parent
  * Supports recursion to display the whole tree
  *
- * @param {dia.Paper} paper JointJS Object on which we are appending given instance
- * @param {dia.Graph} graph JointJS Object on which we are appending given entity
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
  * @param {EmbeddedEntity} embeddedEntity that we want to display
  * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
  * @returns {ServiceEntityBlock[]} created JointJS shapes
@@ -270,11 +270,10 @@ export function appendEmbeddedEntity(
   }
 }
 /**
- * Function that creates, appends and returns created embedded entities which then are used to connects to it's parent
- * Supports recursion to display the whole tree
+ * Function that creates, appends and returns created Entity, differs from appendInstance by the fact that is used from the scope of Instance Composer and uses different set of data
  *
- * @param {dia.Paper} paper JointJS Object on which we are appending given instance
- * @param {dia.Graph} graph JointJS Object on which we are appending given entity
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
  * @param {EmbeddedEntity} embeddedEntity that we want to display
  * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
  * @returns {ServiceEntityBlock[]} created JointJS shapes
@@ -284,12 +283,15 @@ export function appendEntity(
   paper: dia.Paper,
   graph: dia.Graph,
   serviceModel: ServiceModel,
-  entity: InstanceAttributeModel
+  entity: InstanceAttributeModel,
+  isCore: boolean
 ): g.Rect {
   //Create shape for Entity
-  const instanceAsTable = new ServiceEntityBlock()
-    .setTabColor("#0066CC")
-    .setName(serviceModel.name);
+  const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
+
+  if (!isCore) {
+    instanceAsTable.setTabColor("#0066CC");
+  }
 
   handleAttributes(
     graph,
@@ -354,6 +356,18 @@ function connectEntities(
   });
 }
 
+/**
+ * Function that appends attributes into the entity and creates nested embedded entities that relates to given instance/entity
+ *
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
+ * @param {ServiceEntityBlock} instanceAsTable created Entity
+ * @param attributesModel - attributes model of given instance/entity
+ * @param attributes - attributes of given instance/entity
+ * @param embedded_entities - embedded entities of given instance/entity
+ * @param {"candidate" | "active"=} presentedAttrs *optional* indentify used set of attributes if they are taken from Service Instance
+ * @returns {void}
+ */
 function handleAttributes(
   graph: dia.Graph,
   paper: dia.Paper,
@@ -386,6 +400,12 @@ function handleAttributes(
   });
 }
 
+/**
+ * Adds icon to the Entity with tooltip that tells on which set of attributes given shape is created
+ * @param {ServiceEntityBlock} instanceAsTable created Entity
+ * @param {"candidate" | "active"=} presentedAttrs *optional* indentify used set of attributes if they are taken from Service Instance
+ * @returns {void}
+ */
 function handleInfoIcon(
   instanceAsTable: ServiceEntityBlock,
   presentedAttrs?: "candidate" | "active"
