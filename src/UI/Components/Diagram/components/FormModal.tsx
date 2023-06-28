@@ -162,6 +162,7 @@ const FormModal = ({
           <Form>
             {fields.map((field) => (
               <FieldInput
+                originalState={{}} //TODO: change it to actual state in the PR that solely focus on form
                 key={field.name}
                 field={field}
                 formState={formState}
