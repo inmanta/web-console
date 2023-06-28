@@ -27,7 +27,6 @@ const Canvas = ({
   const [diagramHandlers, setDiagramHandlers] =
     useState<DiagramHandlers | null>(null);
 
-  //const actions = diagramInit(canvas);
   const handleEvent = (event) => {
     const customEvent = event as CustomEvent;
     setStringifiedDict(customEvent.detail);
