@@ -141,7 +141,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
         }
       }
-
       values.push(value);
     });
 
@@ -165,7 +164,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         selector: "headerLabel",
       },
       {
-        tagName: "circle",
+        tagName: "image",
         selector: "info",
       },
     ];

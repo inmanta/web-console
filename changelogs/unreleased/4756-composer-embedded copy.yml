@@ -1,0 +1,7 @@
+change-type: minor
+description: 'Extend Instance Composer with Toolbar, POC of form, improve UX and UI of the visual representation of Instances'
+issue-nr: 4859
+destination-branches:
+- master
+- iso6
+

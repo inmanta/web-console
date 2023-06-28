@@ -8,6 +8,8 @@ import {
   ServiceModel,
 } from "@/Core";
 import { words } from "@/UI/words";
+import activeImage from "./icons/active-icon.svg";
+import candidateImage from "./icons/candidate-icon.svg";
 import { DictDialogData } from "./interfaces";
 import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
@@ -411,25 +413,31 @@ function handleInfoIcon(
   presentedAttrs?: "candidate" | "active"
 ) {
   const infoAttrs = {
-    r: 7,
+    preserveAspectRatio: "none",
     cursor: "pointer",
-    cx: "calc(0.9*w)",
-    cy: 15,
+    x: "calc(0.85*w)",
   };
+
   if (presentedAttrs === "candidate") {
     instanceAsTable.attr({
       info: {
         ...infoAttrs,
-        fill: "#FFF",
+        "xlink:href": candidateImage,
         "data-tooltip": words("attributes.candidate"),
+        y: 6,
+        width: 15,
+        height: 15,
       },
     });
   } else if (presentedAttrs === "active") {
     instanceAsTable.attr({
       info: {
         ...infoAttrs,
-        fill: "#000",
+        "xlink:href": activeImage,
         "data-tooltip": words("attributes.active"),
+        y: 8,
+        width: 14,
+        height: 14,
       },
     });
   }
