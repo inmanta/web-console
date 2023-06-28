@@ -31,7 +31,7 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
     <DescriptionList>
       <DescriptionListGroup>
         {Object(configFile).hasOwnProperty("features") &&
-          configFile.features.instanceComposer && (
+          configFile.features.includes("instanceComposer") && (
             <Link
               pathname={routeManager.getUrl("InstanceComposerEditor", {
                 service: instance.service_entity,

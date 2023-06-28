@@ -4,7 +4,7 @@
 
 There are two requirements that have to be fulfilled to be able to run the Smart Service Composer.
 
-1. The `features` object in the `config.js` file, should contain the property `instanceComposer: true`.
+1. The `features` list in the `config.js` file, should contain the name `instanceComposer`.
 2. The `.yarnrc.yml` file has to get Cloudsmith `<TOKEN>` passed into `${CLOUDSMITH_TOKEN:-<TOKEN>}` to be able to fetch the dependencies on which the Smart Service Composer is built.
 
 In case you decide to run the application without the Smart Service Composer, before installation, remove the `@inmanta/rappid` dependency from `package.json`, to be able to run the application successfully.
