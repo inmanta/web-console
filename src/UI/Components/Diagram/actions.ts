@@ -276,9 +276,10 @@ export function appendEmbeddedEntity(
  *
  * @param {dia.Graph} graph JointJS graph object
  * @param {dia.Paper} paper JointJS paper object
- * @param {EmbeddedEntity} embeddedEntity that we want to display
- * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
- * @returns {ServiceEntityBlock[]} created JointJS shapes
+ * @param {ServiceModel} serviceModel that we want to base created entity on
+ * @param {InstanceAttributeModel} entity created in the from
+ * @param {boolean} isCore defines whether created entity is main one in given View
+ * @returns {g.Rect} created JointJS shape
  */
 
 export function appendEntity(
