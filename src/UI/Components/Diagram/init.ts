@@ -4,7 +4,6 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
-// import { testInstance, testService } from "./Mock";
 import { appendEntity, appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
 import { routerNamespace } from "./routers";
@@ -78,6 +77,18 @@ export default function diagramInit(canvas): DiagramHandlers {
     target: "[data-tooltip]",
     padding: 20,
   });
+
+  paper.on(
+    "element:showDict",
+    (_elementView: dia.ElementView, event: dia.Event) => {
+      document.dispatchEvent(
+        new CustomEvent("openDictsModal", {
+          detail: event.target.parentElement.attributes.dict.value,
+        })
+      );
+    }
+  );
+
   paper.on("link:mouseenter", (linkView: dia.LinkView) => {
     showLinkTools(linkView);
   });
@@ -133,12 +144,6 @@ export default function diagramInit(canvas): DiagramHandlers {
         instance,
         service
       );
-      // const instanceCoordinates = appendInstance(
-      //   paper,
-      //   graph,
-      //   testInstance,
-      //   testService,
-      // );
       scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
     addEntity: (instance, service) => {

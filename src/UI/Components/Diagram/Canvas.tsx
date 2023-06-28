@@ -21,8 +21,8 @@ const Canvas = ({
   const canvas = useRef<HTMLDivElement>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [stringifiedDicts, setStringifiedDicts] = useState<DictDialogData[]>(
-    []
+  const [stringifiedDict, setStringifiedDict] = useState<DictDialogData | null>(
+    null
   );
   const [diagramHandlers, setDiagramHandlers] =
     useState<DiagramHandlers | null>(null);
@@ -30,7 +30,7 @@ const Canvas = ({
   //const actions = diagramInit(canvas);
   const handleEvent = (event) => {
     const customEvent = event as CustomEvent;
-    setStringifiedDicts(customEvent.detail);
+    setStringifiedDict(customEvent.detail);
     setIsDialogOpen(true);
   };
 
@@ -64,14 +64,14 @@ const Canvas = ({
         variant={"small"}
         onClose={() => {
           setIsDialogOpen(false);
-          setStringifiedDicts([]);
+          setStringifiedDict(null);
         }}
       >
-        {stringifiedDicts.map((dict, key) => (
-          <pre key={"dict-value-" + key}>
-            <code>{`${dict.title}: ${dict.value}`}</code>
+        {stringifiedDict && (
+          <pre>
+            <code>{`${stringifiedDict.title}: ${stringifiedDict.value}`}</code>
           </pre>
-        ))}
+        )}
       </Modal>
       <FormModal
         isOpen={isFormModalOpen}

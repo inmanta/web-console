@@ -33,7 +33,8 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
           headerLabel: {
             fill: "#FFFFFF",
-            fontFamily: "Lekton",
+            fontFamily:
+              "RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             textTransform: "uppercase",
             fontSize: 12,
             textWrap: {
@@ -51,11 +52,11 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           group_1: {
             // let the pointer events propagate to the group_0
             // which spans over 2 columns
-            //pointerEvents: "none",
             cursor: "default",
           },
           itemLabels: {
-            fontFamily: "Lekton",
+            fontFamily:
+              "RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             fontSize: 10,
             fill: "#000000",
             //pointerEvents: "none",
@@ -64,11 +65,11 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           itemLabels_1: {
             fill: "#7F7F7F",
             fontSize: 10,
-            fontFamily: "Lekton",
+            fontFamily:
+              "RedHatText, Overpass, overpass, helvetica, arial, sans-serif",
             textAnchor: "end",
             x: `calc(0.5 * w - 10)`,
-            event: "item_value:mouseover",
-            cursor: "pointer",
+            cursor: "default",
           },
         },
       },
@@ -98,15 +99,49 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         span: 2,
       });
 
-      const value = {
+      const value: { id: string; label: string } = {
         id: `${item.name}_value`,
-        label:
-          typeof item.value === "object" &&
-          !Array.isArray(item.value) &&
-          item.value !== null
-            ? "{...}"
-            : item.value,
+        label: "",
       };
+
+      if (
+        typeof item.value === "object" &&
+        !Array.isArray(item.value) &&
+        item.value !== null
+      ) {
+        value.label = "{...}";
+
+        ///Add event and add data to display in Dictionary Modal
+        this.attr(`itemLabel_${item.name}_value/event`, "element:showDict");
+        this.attr(
+          `itemLabel_${item.name}_value/dict`,
+          JSON.stringify({
+            title: item.name,
+            value: item.value,
+          })
+        );
+        this.attr(`itemLabel_${item.name}_value/cursor`, "pointer");
+      } else {
+        value.label = item.value;
+
+        //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
+        const reproducedDisplayText = util.breakText(
+          item.value,
+          { width: 80, height: 22 },
+          {
+            "font-size": this.attr("itemLabels_1/fontSize"),
+            "font-family": this.attr("itemLabels_1/fontFamily"),
+          },
+          {
+            ellipsis: true,
+          }
+        );
+
+        if (reproducedDisplayText.includes(`\u2026`)) {
+          this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
+        }
+      }
+
       values.push(value);
     });
 
