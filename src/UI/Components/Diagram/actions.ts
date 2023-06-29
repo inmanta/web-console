@@ -271,6 +271,7 @@ export function appendEmbeddedEntity(
     return [instanceAsTable];
   }
 }
+
 /**
  * Function that creates, appends and returns created Entity, differs from appendInstance by the fact that is used from the scope of Instance Composer and uses different set of data
  *
@@ -281,7 +282,6 @@ export function appendEmbeddedEntity(
  * @param {boolean} isCore defines whether created entity is main one in given View
  * @returns {g.Rect} created JointJS shape
  */
-
 export function appendEntity(
   paper: dia.Paper,
   graph: dia.Graph,
@@ -313,6 +313,7 @@ export function appendEntity(
     edgeSep: 80,
     rankDir: "TB",
   });
+
   return instanceAsTable.getBBox();
 }
 
