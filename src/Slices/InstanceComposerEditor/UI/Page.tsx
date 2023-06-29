@@ -1,17 +1,21 @@
 import React from "react";
 import { useRouteParams } from "@/UI";
-import { ServiceProvider } from "@/UI/Components";
+import { ServicesProvider } from "@/UI/Components";
 import { InstanceProvider } from "./InstanceProvider";
 
 export const Page = () => {
   const { service: serviceName, instance: instance } =
     useRouteParams<"InstanceComposerEditor">();
   return (
-    <ServiceProvider
+    <ServicesProvider
       serviceName={serviceName}
       Wrapper={PageWrapper}
-      Dependant={({ service }) => (
-        <InstanceProvider serviceEntity={service} instanceId={instance} />
+      Dependant={({ services, mainServiceName }) => (
+        <InstanceProvider
+          services={services}
+          mainServiceName={mainServiceName}
+          instanceId={instance}
+        />
       )}
     />
   );

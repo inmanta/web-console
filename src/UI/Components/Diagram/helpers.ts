@@ -18,6 +18,14 @@ export const extractRelationsIds = (
           : undefined
       )
       .filter((value) => value !== undefined) as string[];
+  } else if (instance.active_attributes !== null) {
+    return relationKeys
+      .map((key) =>
+        instance.active_attributes !== null
+          ? instance.active_attributes[key]
+          : undefined
+      )
+      .filter((value) => value !== undefined) as string[];
   } else {
     return [];
   }

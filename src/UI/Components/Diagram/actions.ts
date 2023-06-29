@@ -7,6 +7,9 @@ import {
   ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
+import { words } from "@/UI/words";
+import activeImage from "./icons/active-icon.svg";
+import candidateImage from "./icons/candidate-icon.svg";
 import { DictDialogData } from "./interfaces";
 import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
@@ -134,8 +137,8 @@ export function appendInfoTool(
  * This function converts Instance attributes to display them on the Smart Service Composer canvas.
  * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
  *
- * @param {dia.Paper} paper JointJS Object on which we are appending given instance
- * @param {dia.Graph} graph JointJS Object on which we are appending given instance
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
  * @param {ServiceInstanceModel} serviceInstance that we want to display
  * @param {ServiceModel} service that hold definitions for attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
  * @returns {g.Rect} coordinates that are being use to center view as regular behavior center to the last entity added
@@ -146,40 +149,31 @@ export function appendInstance(
   serviceInstance: ServiceInstanceModel,
   service: ServiceModel
 ): g.Rect {
-  const flatAttributes = service.attributes.map((attribute) => attribute.name);
-
   const instanceAsTable = new ServiceEntityBlock().setName(
     serviceInstance.service_entity
   );
 
-  //check if for any presentable attributes, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
+  //check for any presentable attributes, where candidate attrs have priority, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
   if (serviceInstance.candidate_attributes !== null) {
-    appendColumns(
+    handleAttributes(
+      graph,
+      paper,
       instanceAsTable,
-      flatAttributes,
-      serviceInstance.candidate_attributes
-    );
-
-    //add to graph and then check for dictionaries
-    instanceAsTable.addTo(graph);
-    appendInfoTool(
-      instanceAsTable.findView(paper),
       service.attributes,
-      serviceInstance.candidate_attributes
+      serviceInstance.candidate_attributes,
+      service.embedded_entities,
+      "candidate"
     );
-
-    //iterate through embedded entities to create and connect them
-    service.embedded_entities.map((entity) => {
-      const appendedEntity = appendEmbeddedEntity(
-        paper,
-        graph,
-        entity,
-        (serviceInstance.candidate_attributes as InstanceAttributeModel)[
-          entity.name
-        ] as InstanceAttributeModel
-      );
-      connectEntities(graph, instanceAsTable, appendedEntity);
-    });
+  } else {
+    handleAttributes(
+      graph,
+      paper,
+      instanceAsTable,
+      service.attributes,
+      serviceInstance.active_attributes as InstanceAttributeModel,
+      service.embedded_entities,
+      "active"
+    );
   }
 
   //auto-layout provided by JointJS
@@ -198,8 +192,8 @@ export function appendInstance(
  * Function that creates, appends and returns created embedded entities which then are used to connects to it's parent
  * Supports recursion to display the whole tree
  *
- * @param {dia.Paper} paper JointJS Object on which we are appending given instance
- * @param {dia.Graph} graph JointJS Object on which we are appending given entity
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
  * @param {EmbeddedEntity} embeddedEntity that we want to display
  * @param {InstanceAttributeModel} entityAttributes - attributes of given entity
  * @returns {ServiceEntityBlock[]} created JointJS shapes
@@ -279,6 +273,51 @@ export function appendEmbeddedEntity(
 }
 
 /**
+ * Function that creates, appends and returns created Entity, differs from appendInstance by the fact that is used from the scope of Instance Composer and uses different set of data
+ *
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
+ * @param {ServiceModel} serviceModel that we want to base created entity on
+ * @param {InstanceAttributeModel} entity created in the from
+ * @param {boolean} isCore defines whether created entity is main one in given View
+ * @returns {g.Rect} created JointJS shape
+ */
+export function appendEntity(
+  paper: dia.Paper,
+  graph: dia.Graph,
+  serviceModel: ServiceModel,
+  entity: InstanceAttributeModel,
+  isCore: boolean
+): g.Rect {
+  //Create shape for Entity
+  const instanceAsTable = new ServiceEntityBlock().setName(serviceModel.name);
+
+  if (!isCore) {
+    instanceAsTable.setTabColor("#0066CC");
+  }
+
+  handleAttributes(
+    graph,
+    paper,
+    instanceAsTable,
+    serviceModel.attributes,
+    entity,
+    []
+  );
+
+  //auto-layout provided by JointJS
+  layout.DirectedGraph.layout(graph, {
+    dagre: dagre,
+    graphlib: graphlib,
+    nodeSep: 80,
+    edgeSep: 80,
+    rankDir: "TB",
+  });
+
+  return instanceAsTable.getBBox();
+}
+
+/**
  *  Function that iterates through service instance attributes for values and appends in jointJS entity for display
  *
  * @param {ServiceEntityBlock} serviceEntity - shape of the entity to which columns will be appended
@@ -319,4 +358,89 @@ function connectEntities(
     link.target(target);
     link.addTo(graph);
   });
+}
+
+/**
+ * Function that appends attributes into the entity and creates nested embedded entities that relates to given instance/entity
+ *
+ * @param {dia.Graph} graph JointJS graph object
+ * @param {dia.Paper} paper JointJS paper object
+ * @param {ServiceEntityBlock} instanceAsTable created Entity
+ * @param attributesModel - attributes model of given instance/entity
+ * @param attributes - attributes of given instance/entity
+ * @param embedded_entities - embedded entities of given instance/entity
+ * @param {"candidate" | "active"=} presentedAttrs *optional* indentify used set of attributes if they are taken from Service Instance
+ * @returns {void}
+ */
+function handleAttributes(
+  graph: dia.Graph,
+  paper: dia.Paper,
+  instanceAsTable: ServiceEntityBlock,
+  attributesModel: AttributeModel[],
+  attributes: InstanceAttributeModel,
+  embedded_entities: EmbeddedEntity[],
+  presentedAttr?: "candidate" | "active"
+) {
+  const attributesNames = attributesModel.map((attribute) => attribute.name);
+  handleInfoIcon(instanceAsTable, presentedAttr);
+
+  appendColumns(instanceAsTable, attributesNames, attributes);
+  //add to graph and then check for dictionaries
+  instanceAsTable.addTo(graph);
+  appendInfoTool(instanceAsTable.findView(paper), attributesModel, attributes);
+
+  //iterate through embedded entities to create and connect them
+  embedded_entities.map((entity) => {
+    const appendedEntities = appendEmbeddedEntity(
+      paper,
+      graph,
+      entity,
+      attributes[entity.name] as InstanceAttributeModel
+    );
+    appendedEntities.map((entity) => {
+      handleInfoIcon(entity, presentedAttr);
+    });
+    connectEntities(graph, instanceAsTable, appendedEntities);
+  });
+}
+
+/**
+ * Adds icon to the Entity with tooltip that tells on which set of attributes given shape is created
+ * @param {ServiceEntityBlock} instanceAsTable created Entity
+ * @param {"candidate" | "active"=} presentedAttrs *optional* indentify used set of attributes if they are taken from Service Instance
+ * @returns {void}
+ */
+function handleInfoIcon(
+  instanceAsTable: ServiceEntityBlock,
+  presentedAttrs?: "candidate" | "active"
+) {
+  const infoAttrs = {
+    preserveAspectRatio: "none",
+    cursor: "pointer",
+    x: "calc(0.85*w)",
+  };
+
+  if (presentedAttrs === "candidate") {
+    instanceAsTable.attr({
+      info: {
+        ...infoAttrs,
+        "xlink:href": candidateImage,
+        "data-tooltip": words("attributes.candidate"),
+        y: 6,
+        width: 15,
+        height: 15,
+      },
+    });
+  } else if (presentedAttrs === "active") {
+    instanceAsTable.attr({
+      info: {
+        ...infoAttrs,
+        "xlink:href": activeImage,
+        "data-tooltip": words("attributes.active"),
+        y: 8,
+        width: 14,
+        height: 14,
+      },
+    });
+  }
 }
