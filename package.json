@@ -138,7 +138,7 @@
     "@react-keycloak/web": "^3.4.0",
     "copy-to-clipboard": "^3.3.3",
     "dagre": "^0.8.5",
-    "easy-peasy": "^6.0.0",
+    "easy-peasy": "^6.0.1",
     "file-saver": "^2.0.5",
     "history": "^5.3.0",
     "json-bigint": "^1.0.0",
