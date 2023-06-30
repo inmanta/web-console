@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Adjust e2e test for iso5 due to the changes made to basic-entity'
+issue-nr: 4927
+destination-branches:
+- iso5
+sections: {}
