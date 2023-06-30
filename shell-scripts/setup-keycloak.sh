@@ -31,15 +31,7 @@ fi
 
 VERSION=${version:-iso}
 RELEASE=${release:-7-dev}
-DOCKER_FLAG=${flag:-}
 BRANCH=${branch:-master}
-
-if [[ "$VERSION" == "oss" ]]
-then
-    INSTALL_VERSION="oss"
-else
-    INSTALL_VERSION="lsm"
-fi
 
 echo "Creating temp folder..."
 mkdir temp
@@ -53,25 +45,11 @@ yarn run pull $VERSION $RELEASE
 
 sleep 2
 echo "Starting container..."
-yarn start
+yarn start:keycloak
 
 for i in {0..30} 
 do 
-    curl --connect-timeout 1 http://localhost:8888/api/v1/serverstatus > /dev/null && echo "Server up " && break
+    curl -k --connect-timeout 1 https://localhost:8888/api/v1/serverstatus > /dev/null && echo "Server up " && break
     echo "Waiting $i"
     sleep 1 
 done && [[ $i == 30 ]] && exit 1
-
-echo "install $INSTALL_VERSION"
-yarn install:orchestrator version=$INSTALL_VERSION flag=${DOCKER_FLAG} branch=${BRANCH}
-
-# exit temp/local-setup to be back on root level
-cd ../..
-
-echo "Replace dist folder on the orchestrator with current build..."
-# remove old build output and copy dist to the the orchestrator
-docker exec inmanta_orchestrator rm -rf /usr/share/inmanta/web-console
-
-docker cp dist inmanta_orchestrator:/usr/share/inmanta/web-console
-
-echo "The orchestrator has been setup."
