@@ -4,8 +4,8 @@ import { useKeycloak } from "@react-keycloak/web";
 import styled from "styled-components";
 
 export const Profile: React.FC = () => {
-  const { keycloak } = useKeycloak();
   const [name, setName] = useState("Unknown user");
+  const { keycloak } = useKeycloak();
 
   useEffect(() => {
     if (keycloak && keycloak.profile && keycloak.profile.username) {
