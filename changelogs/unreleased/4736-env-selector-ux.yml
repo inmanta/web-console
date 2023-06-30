@@ -1,0 +1,6 @@
+change-type: patch
+description: "make environment selector visible across all aplication Pages"
+issue-nr: 4736
+destination-branches:
+- master
+- iso6

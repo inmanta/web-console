@@ -1,0 +1,7 @@
+change-type: minor
+description: 'Extend Instance Composer with second Milestone, read only view can display now core attributes and embedded entities'
+issue-nr: 4756
+destination-branches:
+- master
+- iso6
+

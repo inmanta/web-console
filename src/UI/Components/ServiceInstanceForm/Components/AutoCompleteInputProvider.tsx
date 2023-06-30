@@ -10,6 +10,7 @@ interface Props {
   attributeValue: string | string[];
   description?: string;
   isOptional: boolean;
+  isDisabled?: boolean;
   handleInputChange: (value, event) => void;
   alreadySelected: string[];
   multi?: boolean;
@@ -22,6 +23,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
   attributeValue,
   description,
   isOptional,
+  isDisabled = false,
   handleInputChange,
   alreadySelected,
   multi,
@@ -57,6 +59,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
           attributeName={attributeName}
           attributeValue={selectedValue}
           isOptional={isOptional}
+          shouldBeDisabled={isDisabled}
           description={description}
           handleInputChange={handleInputChange}
           onSearchTextChanged={onSearchTextChanged}
@@ -84,6 +87,7 @@ export const AutoCompleteInputProvider: React.FC<Props> = ({
             serviceEntity={serviceName}
             attributeValue={selectedValue}
             isOptional={isOptional}
+            shouldBeDisabled={isDisabled}
             description={description}
             handleInputChange={handleInputChange}
             onSearchTextChanged={onSearchTextChanged}

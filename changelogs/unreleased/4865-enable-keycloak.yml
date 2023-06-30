@@ -1,0 +1,8 @@
+change-type: patch
+description: 'UI-fix for the header when authentication is enabled.'
+issue-nr: 4865
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

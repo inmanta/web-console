@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump webpack and @types/webpack'
+destination-branches:
+- master
+- iso6
+sections: {}

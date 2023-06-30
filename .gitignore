@@ -79,3 +79,12 @@ src/version.json
 
 # macOS
 .DS_Store
+
+# yarn v2
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

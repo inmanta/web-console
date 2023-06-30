@@ -26,6 +26,7 @@ import { TextListFormInput } from "./TextListFormInput";
 interface Props {
   field: Field;
   formState: InstanceAttributeModel;
+  originalState: InstanceAttributeModel;
   getUpdate: GetUpdate;
   path: string | null;
 }
@@ -38,6 +39,7 @@ const makePath = (path: string | null, next: string): string =>
 export const FieldInput: React.FC<Props> = ({
   field,
   formState,
+  originalState,
   getUpdate,
   path,
 }) => {
@@ -61,6 +63,10 @@ export const FieldInput: React.FC<Props> = ({
           }
           description={field.description}
           key={field.name}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined
+          }
         />
       ) : (
         <BooleanToggleInput
@@ -72,6 +78,10 @@ export const FieldInput: React.FC<Props> = ({
           }
           description={field.description}
           key={field.name}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined
+          }
         />
       );
     case "TextList":
@@ -80,10 +90,15 @@ export const FieldInput: React.FC<Props> = ({
           aria-label={`TextFieldInput-${field.name}`}
           attributeName={field.name}
           attributeValue={
-            get(formState, makePath(path, field.name)) as string[]
+            get(formState, makePath(path, field.name).split(".")) as string[]
           }
           description={field.description}
           isOptional={field.isOptional}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name).split(".")) !==
+              undefined
+          }
           type={field.inputType}
           handleInputChange={(value) =>
             getUpdate(makePath(path, field.name), value)
@@ -91,6 +106,28 @@ export const FieldInput: React.FC<Props> = ({
           placeholder={getPlaceholderForType(field.type)}
           typeHint={getTypeHintForType(field.type)}
           key={field.name}
+        />
+      );
+    case "Textarea":
+      return (
+        <TextFormInput
+          aria-label={`TextFieldInput-${field.name}`}
+          attributeName={field.name}
+          attributeValue={get(formState, makePath(path, field.name)) as string}
+          description={field.description}
+          isOptional={field.isOptional}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined
+          }
+          type={field.inputType}
+          handleInputChange={(value) =>
+            getUpdate(makePath(path, field.name), value)
+          }
+          placeholder={getPlaceholderForType(field.type)}
+          typeHint={getTypeHintForType(field.type)}
+          key={field.name}
+          isTextarea
         />
       );
     case "Text":
@@ -101,6 +138,10 @@ export const FieldInput: React.FC<Props> = ({
           attributeValue={get(formState, makePath(path, field.name)) as string}
           description={field.description}
           isOptional={field.isOptional}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined
+          }
           type={field.inputType}
           handleInputChange={(value) =>
             getUpdate(makePath(path, field.name), value)
@@ -140,6 +181,10 @@ export const FieldInput: React.FC<Props> = ({
           isOptional={field.isOptional}
           handleInputChange={getEnumUpdate}
           key={field.name}
+          shouldBeDisabled={
+            field.isDisabled &&
+            get(originalState, makePath(path, field.name)) !== undefined
+          }
         />
       );
     case "Nested":
@@ -147,6 +192,7 @@ export const FieldInput: React.FC<Props> = ({
         <NestedFieldInput
           field={field}
           formState={formState}
+          originalState={originalState}
           getUpdate={getUpdate}
           path={path}
         />
@@ -156,6 +202,7 @@ export const FieldInput: React.FC<Props> = ({
         <DictListFieldInput
           field={field}
           formState={formState}
+          originalState={originalState}
           getUpdate={getUpdate}
           path={path}
         />
@@ -211,6 +258,7 @@ const getTypeHintForType = (typeName: string): string | undefined => {
 interface NestedProps {
   field: NestedField;
   formState: InstanceAttributeModel;
+  originalState: InstanceAttributeModel;
   getUpdate: GetUpdate;
   path: string | null;
 }
@@ -218,6 +266,7 @@ interface NestedProps {
 const NestedFieldInput: React.FC<NestedProps> = ({
   field,
   formState,
+  originalState,
   getUpdate,
   path,
 }) => {
@@ -230,7 +279,6 @@ const NestedFieldInput: React.FC<NestedProps> = ({
       getUpdate(makePath(path, field.name), createFormState(field.fields));
     }
   };
-
   const getOnDelete = () => () => {
     setShowList(false);
     return getUpdate(makePath(path, field.name), null);
@@ -252,14 +300,19 @@ const NestedFieldInput: React.FC<NestedProps> = ({
                   variant="link"
                   icon={<PlusIcon />}
                   onClick={onAdd}
-                  isDisabled={showList}
+                  isDisabled={
+                    (field.isDisabled &&
+                      get(originalState, makePath(path, field.name)) !==
+                        undefined) ||
+                    showList
+                  }
                 >
                   {words("catalog.callbacks.add")}
                 </Button>
                 <Button
                   variant="link"
                   onClick={getOnDelete()}
-                  isDisabled={!showList}
+                  isDisabled={field.isDisabled || !showList}
                 >
                   {words("delete")}
                 </Button>
@@ -275,6 +328,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
             field={childField}
             key={makePath(path, `${field.name}.${childField.name}`)}
             formState={formState}
+            originalState={originalState}
             getUpdate={getUpdate}
             path={makePath(path, field.name)}
           />
@@ -286,6 +340,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
 interface DictListProps {
   field: DictListField;
   formState: InstanceAttributeModel;
+  originalState: InstanceAttributeModel;
   getUpdate: GetUpdate;
   path: string | null;
 }
@@ -293,6 +348,7 @@ interface DictListProps {
 const DictListFieldInput: React.FC<DictListProps> = ({
   field,
   formState,
+  originalState,
   getUpdate,
   path,
 }) => {
@@ -302,7 +358,6 @@ const DictListFieldInput: React.FC<DictListProps> = ({
     if (field.max && list.length >= field.max) {
       return;
     }
-
     getUpdate(makePath(path, field.name), [
       ...list,
       createFormState(field.fields),
@@ -332,7 +387,12 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               variant="link"
               icon={<PlusIcon />}
               onClick={onAdd}
-              isDisabled={!!field.max && list.length >= field.max}
+              isDisabled={
+                (field.isDisabled &&
+                  get(originalState, makePath(path, field.name)) !==
+                    undefined) ||
+                (!!field.max && list.length >= field.max)
+              }
             >
               Add
             </Button>
@@ -360,7 +420,12 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                 <Button
                   variant="link"
                   onClick={getOnDelete(index)}
-                  isDisabled={field.min > index}
+                  isDisabled={
+                    (field.isDisabled &&
+                      get(originalState, makePath(path, field.name)) !==
+                        undefined) ||
+                    field.min > index
+                  }
                 >
                   Delete
                 </Button>
@@ -373,6 +438,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
               field={childField}
               key={makePath(path, `${field.name}.${index}.${childField.name}`)}
               formState={formState}
+              originalState={originalState}
               getUpdate={getUpdate}
               path={makePath(path, `${field.name}.${index}`)}
             />

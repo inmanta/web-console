@@ -130,6 +130,7 @@ const dict = {
   "inventory.addInstance.title": (serviceName: string) =>
     `Create a new instance of ${serviceName} with the following parameters`,
   "inventory.addInstance.button": "Add instance",
+  "inventory.addInstance.composerButton": "Add in Composer",
   "inventory.createInstance.title": "Create instance",
   "inventory.createInstance.items": (amount: number) =>
     amount === 1 ? "1 item" : `${amount} items`,
@@ -148,6 +149,7 @@ const dict = {
   "inventory.form.placeholder.floatList": "1.1, 3.14, 4.3",
   "inventory.form.placeholder.stringList": "Add a list of values",
   "inventory.form.placeholder.dict": '{"key": "value"}',
+  "inventory.instanceComposer.editButton": "Show in Editor",
   "inventory.deleteInstance.button": "Delete",
   "inventory.deleteInstance.failed": "Deleting instance failed",
   "inventory.deleteInstance.title": "Delete instance",
@@ -306,6 +308,7 @@ const dict = {
   "dashboard.resource.resource_count.description":
     "The number of resources grouped (by resource state)",
   "dashboard.resource.resource_count.label.x": "Number of Resources [#]",
+  "dashboard.logout": "Logout",
 
   /**
    * Environment controls
@@ -334,7 +337,7 @@ const dict = {
   "resources.column.type": "Type",
   "resources.column.agent": "Agent",
   "resources.column.value": "Value",
-  "resources.column.requires": "Dependencies",
+  "resources.column.requires": "Requires",
   "resources.column.deployState": "Deploy State",
   "resources.filters.status.placeholder": "Deploy State...",
   "resources.filters.agent.placeholder": "Agent...",
@@ -623,8 +626,11 @@ const dict = {
   "common.serviceInstance.select": (attribute: string) =>
     `Select value for ${attribute}`,
   "common.serviceInstance.relation": `Select an instance`,
-  "common.environment.select": "Select an environment...",
+  "common.environment.select": "Select an environment",
   "common.compileWidget.recompile": "Recompile",
+  "common.compileWidget.toast": (update: boolean) =>
+    `${update ? "Update and " : ""}Recompile triggered`,
+  "common.compileWidget.toastTitle": "Recompile Info",
   "common.compileWidget.updateAndRecompile": "Update project & recompile",
   "common.compileWidget.compiling": "Compiling",
   "common.compileWidget.compilationDisabled.hint":

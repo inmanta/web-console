@@ -87,3 +87,8 @@ export const nestedEditable: ServiceInstanceModelWithTargetStates = {
   deleted: false,
   instanceSetStateTargets: [],
 };
+
+export const allAttrs: ServiceInstanceModelWithTargetStates = {
+  ...a,
+  active_attributes: Attributes.b,
+};

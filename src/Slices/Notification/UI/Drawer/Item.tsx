@@ -28,7 +28,9 @@ export const Item: React.FC<Props> = ({ notification, onUpdate }) => {
   const navigate = useNavigateTo();
 
   const onClick = (): void => {
-    if (!notification.read) onUpdate({ read: true });
+    if (!notification.read) {
+      onUpdate({ read: true });
+    }
     if (detailsLink) {
       navigate(detailsLink.kind, { id: detailsLink.params.id });
     }
@@ -76,7 +78,10 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
         <DropdownItem
           key="read"
           component="button"
-          onClick={() => onUpdate({ read: false })}
+          onClick={(event) => {
+            event.stopPropagation();
+            onUpdate({ read: false });
+          }}
           isDisabled={!notification.read}
         >
           {words("notification.unread")}
@@ -84,7 +89,10 @@ const ActionList: React.FC<Props> = ({ notification, onUpdate }) => {
         <DropdownItem
           key="cleared"
           component="button"
-          onClick={() => onUpdate({ read: true, cleared: true })}
+          onClick={(event) => {
+            event.stopPropagation();
+            onUpdate({ read: true, cleared: true });
+          }}
         >
           {words("notification.drawer.clear")}
         </DropdownItem>,

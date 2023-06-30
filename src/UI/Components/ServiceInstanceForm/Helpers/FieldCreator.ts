@@ -17,7 +17,10 @@ import { ModifierHandler } from "./ModifierHandler";
  * @param {ModifierHandler} ModifierHandler
  */
 export class FieldCreator {
-  constructor(private readonly fieldModifierHandler: ModifierHandler) {}
+  constructor(
+    private readonly fieldModifierHandler: ModifierHandler,
+    private fieldsForEditForm: boolean = false
+  ) {}
 
   /**
    * Create the Array containing all information to construct a form
@@ -116,6 +119,7 @@ export class FieldCreator {
         ],
         min: entity.lower_limit,
         max: entity.upper_limit,
+        isDisabled: this.shouldFieldBeDisabled(entity),
       };
 
     return {
@@ -128,6 +132,7 @@ export class FieldCreator {
         ...fieldsFromEmbeddedEntities,
         ...fieldsFromRelations,
       ],
+      isDisabled: this.shouldFieldBeDisabled(entity),
     };
   }
 
@@ -150,6 +155,7 @@ export class FieldCreator {
         name: interServiceRelation.name,
         description: interServiceRelation.description,
         isOptional: this.isOptional(interServiceRelation),
+        isDisabled: this.shouldFieldBeDisabled(interServiceRelation),
         serviceEntity: interServiceRelation.entity_type,
       };
 
@@ -158,6 +164,7 @@ export class FieldCreator {
       name: interServiceRelation.name,
       description: interServiceRelation.description,
       isOptional: this.isOptional(interServiceRelation),
+      isDisabled: this.shouldFieldBeDisabled(interServiceRelation),
       serviceEntity: interServiceRelation.entity_type,
       min: interServiceRelation.lower_limit,
       max: interServiceRelation.upper_limit,
@@ -189,10 +196,14 @@ export class FieldCreator {
             description: attribute.description,
             type: attribute.type,
             isOptional: attribute.type.includes("?"),
+            isDisabled: this.shouldFieldBeDisabled(attribute),
           };
         }
 
-        if (attribute.validation_type === "enum") {
+        if (
+          attribute.validation_type === "enum" ||
+          attribute.validation_type === "enum?"
+        ) {
           return {
             kind: "Enum",
             name: attribute.name,
@@ -201,10 +212,11 @@ export class FieldCreator {
             type: attribute.type,
             isOptional: attribute.type.includes("?"),
             options: attribute.validation_parameters.names,
+            isDisabled: this.shouldFieldBeDisabled(attribute),
           };
         }
 
-        if (attribute.type === "string[]") {
+        if (attribute.type === "string[]" || attribute.type === "string[]?") {
           return {
             kind: "TextList",
             name: attribute.name,
@@ -213,6 +225,27 @@ export class FieldCreator {
             description: attribute.description,
             type: attribute.type,
             isOptional: this.isTextFieldOptional(attribute),
+            isDisabled: this.shouldFieldBeDisabled(attribute),
+          };
+        }
+
+        // WORKAROUND TO ADD SUPPORT FOR TEXTAREA
+        if (
+          (attribute.type === "string" || attribute.type === "string?") &&
+          (attribute.validation_type === "pydantic.constr" ||
+            attribute.validation_type === "pydantic.constr?") &&
+          attribute.validation_parameters.max_length &&
+          attribute.validation_parameters.max_length > 255
+        ) {
+          return {
+            kind: "Textarea",
+            name: attribute.name,
+            defaultValue: defaultValue,
+            inputType: type,
+            description: attribute.description,
+            type: attribute.type,
+            isOptional: this.isTextFieldOptional(attribute),
+            isDisabled: this.shouldFieldBeDisabled(attribute),
           };
         }
 
@@ -224,6 +257,7 @@ export class FieldCreator {
           description: attribute.description,
           type: attribute.type,
           isOptional: this.isTextFieldOptional(attribute),
+          isDisabled: this.shouldFieldBeDisabled(attribute),
         };
       });
   }
@@ -233,5 +267,10 @@ export class FieldCreator {
       attribute.type.includes("?") ||
       (attribute.default_value_set && attribute.default_value === "")
     );
+  }
+  private shouldFieldBeDisabled(
+    object: AttributeModel | InterServiceRelation | EmbeddedEntity
+  ): boolean {
+    return this.fieldsForEditForm && object.modifier !== "rw+";
   }
 }

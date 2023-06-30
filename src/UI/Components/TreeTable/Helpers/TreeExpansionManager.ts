@@ -29,7 +29,7 @@ export class TreeExpansionManager {
   }
 
   get(state: ExpansionState, key: string): boolean {
-    return state[key];
+    return state[key] || false;
   }
 
   /**

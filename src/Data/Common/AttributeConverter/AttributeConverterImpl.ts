@@ -45,8 +45,19 @@ export class AttributeInputConverterImpl implements AttributeInputConverter {
   getFormDefaultValue(
     inputType: InputType,
     defaultValueSet: boolean,
-    defaultValue: string | null
-  ): string | null | undefined {
+    defaultValue:
+      | string
+      | null
+      | boolean
+      | string[]
+      | { [x: string]: string | null | boolean | string[] }
+  ):
+    | string
+    | null
+    | boolean
+    | string[]
+    | { [x: string]: string | null | boolean | string[] }
+    | undefined {
     if (defaultValueSet && defaultValue !== null) {
       return defaultValue;
     } else if (inputType === "bool") {

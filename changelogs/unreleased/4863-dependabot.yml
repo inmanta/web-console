@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump style-loader from 3.3.2 to 3.3.3'
+destination-branches:
+- master
+- iso6
+sections: {}

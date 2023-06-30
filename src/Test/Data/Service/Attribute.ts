@@ -90,3 +90,188 @@ export const nestedEditable: AttributeModel[] = [
     validation_parameters: null,
   },
 ];
+
+//By default all attributes created below have rw modifier
+
+// String Attributes
+const string: AttributeModel = {
+  name: "string",
+  type: "string",
+  modifier: "rw",
+  description: "description",
+  default_value: "default_string",
+  default_value_set: true,
+};
+const editableString: AttributeModel = {
+  ...string,
+  name: "editableString",
+  modifier: "rw+",
+};
+const optionalString: AttributeModel = {
+  ...string,
+  name: "string?",
+  type: "string?",
+};
+const editableOptionalString: AttributeModel = {
+  ...optionalString,
+  name: "editableString?",
+  modifier: "rw+",
+};
+
+//Boolean Attributes
+const boolean: AttributeModel = {
+  name: "bool",
+  type: "bool",
+  modifier: "rw",
+  description: "description",
+  default_value: true,
+  default_value_set: true,
+};
+const editableBoolean: AttributeModel = {
+  ...boolean,
+  name: "editableBool",
+  modifier: "rw+",
+};
+const optionalBoolean: AttributeModel = {
+  ...boolean,
+  name: "bool?",
+  type: "bool?",
+};
+const editableOptionalBoolean: AttributeModel = {
+  ...optionalBoolean,
+  name: "editableBool?",
+  modifier: "rw+",
+};
+
+//TextList Attributes
+const textList: AttributeModel = {
+  name: "string[]",
+  type: "string[]",
+  modifier: "rw",
+  description: "description",
+  default_value: ["1.1.1.1", "8.8.8.8"],
+  default_value_set: true,
+};
+const editableTextList: AttributeModel = {
+  ...textList,
+  name: "editableString[]",
+  modifier: "rw+",
+};
+const optionalTextList: AttributeModel = {
+  ...textList,
+  name: "string[]?",
+  type: "string[]?",
+};
+const editableOptionalTextList: AttributeModel = {
+  ...optionalTextList,
+  name: "editableString[]?",
+  modifier: "rw+",
+};
+
+//Enum Attributes
+const enumAttr: AttributeModel = {
+  name: "enum",
+  type: "string",
+  modifier: "rw",
+  description: "description",
+  default_value: "OPTION_ONE",
+  default_value_set: true,
+  validation_type: "enum",
+  validation_parameters: {
+    names: { OPTION_ONE: "OPTION_ONE", OPTION_TWO: "OPTION_TWO" },
+    value: "value",
+  },
+};
+const editableEnum: AttributeModel = {
+  ...enumAttr,
+  name: "editableEnum",
+  modifier: "rw+",
+};
+const optionalEnum: AttributeModel = {
+  ...enumAttr,
+  name: "enum?",
+  type: "string?",
+  validation_type: "enum?",
+};
+const editableOptionalEnum: AttributeModel = {
+  ...optionalEnum,
+  name: "editableEnum?",
+  modifier: "rw+",
+};
+
+//Dict attributes
+
+const dict: AttributeModel = {
+  name: "dict",
+  modifier: "rw",
+  type: "dict",
+  default_value: { default: "value" },
+  default_value_set: true,
+  validation_type: null,
+  validation_parameters: null,
+};
+const editableDict: AttributeModel = {
+  ...dict,
+  name: "editableDict",
+  modifier: "rw+",
+};
+const optionalDict: AttributeModel = {
+  ...dict,
+  name: "dict?",
+  type: "dict?",
+};
+const editableOptionalDict: AttributeModel = {
+  ...dict,
+  name: "editableDict?",
+  modifier: "rw+",
+};
+const textareaString: AttributeModel = {
+  ...string,
+  name: "textareaString",
+  validation_type: "pydantic.constr",
+  validation_parameters: { max_length: 10000 },
+};
+const editableTextareaString: AttributeModel = {
+  ...textareaString,
+  name: "editableTextareaString",
+  type: "string",
+  modifier: "rw+",
+};
+const optionalTextareaString: AttributeModel = {
+  ...textareaString,
+  name: "textareaString?",
+  type: "string?",
+};
+const editableOptionalTextareaString: AttributeModel = {
+  ...textareaString,
+  name: "editableTextareaString?",
+  type: "string?",
+  modifier: "rw+",
+};
+
+export const attributesList = [
+  string,
+  editableString,
+  optionalString,
+  editableOptionalString,
+  boolean,
+  editableBoolean,
+  optionalBoolean,
+  editableOptionalBoolean,
+  textList,
+  editableTextList,
+  optionalTextList,
+  editableOptionalTextList,
+  enumAttr,
+  editableEnum,
+  optionalEnum,
+  editableOptionalEnum,
+  dict,
+  editableDict,
+  optionalDict,
+  editableOptionalDict,
+  textareaString,
+  optionalTextareaString,
+  editableTextareaString,
+  editableOptionalTextareaString,
+];
