@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps): Bump xml-formatter from 3.3.2 to 3.4.1'
+destination-branches:
+- master
+- iso6
+sections: {}
