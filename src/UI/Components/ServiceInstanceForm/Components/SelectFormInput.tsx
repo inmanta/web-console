@@ -9,6 +9,7 @@ interface Props {
   attributeValue: string;
   description?: string;
   isOptional: boolean;
+  shouldBeDisabled?: boolean;
   handleInputChange: (value, event) => void;
 }
 export const SelectFormInput: React.FC<Props> = ({
@@ -17,6 +18,7 @@ export const SelectFormInput: React.FC<Props> = ({
   attributeValue,
   description,
   isOptional,
+  shouldBeDisabled = false,
   handleInputChange,
   ...props
 }) => {
@@ -55,6 +57,7 @@ export const SelectFormInput: React.FC<Props> = ({
         onSelect={onSelect}
         selections={attributeValue === "" ? undefined : attributeValue}
         placeholderText={words("common.serviceInstance.select")(attributeName)}
+        isDisabled={shouldBeDisabled}
       >
         {selectOptions}
       </Select>

@@ -10,6 +10,7 @@ export type Field =
   | BooleanField
   | TextField
   | TextListField
+  | Textarea
   | EnumField
   | NestedField
   | DictListField
@@ -22,6 +23,7 @@ interface BaseField {
   name: string;
   description?: string;
   isOptional: boolean;
+  isDisabled: boolean;
 }
 
 export interface BooleanField extends BaseField {
@@ -32,6 +34,13 @@ export interface BooleanField extends BaseField {
 
 export interface TextField extends BaseField {
   kind: "Text";
+  defaultValue: unknown;
+  inputType: TextInputTypes;
+  type: string;
+}
+
+export interface Textarea extends BaseField {
+  kind: "Textarea";
   defaultValue: unknown;
   inputType: TextInputTypes;
   type: string;

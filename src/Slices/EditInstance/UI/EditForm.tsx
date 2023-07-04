@@ -24,8 +24,11 @@ interface Props {
 export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
   const { commandResolver, environmentModifier, routeManager } =
     useContext(DependencyContext);
-  const fieldCreator = new FieldCreator(new EditModifierHandler());
+
+  const isDisabled = true;
+  const fieldCreator = new FieldCreator(new EditModifierHandler(), isDisabled);
   const fields = fieldCreator.create(serviceEntity);
+
   const isHalted = environmentModifier.useIsHalted();
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -81,6 +84,7 @@ export const EditForm: React.FC<Props> = ({ serviceEntity, instance }) => {
         onCancel={handleRedirect}
         isSubmitDisabled={isHalted}
         originalAttributes={currentAttributes ? currentAttributes : undefined}
+        apiVersion={apiVersion}
       />
     </>
   );

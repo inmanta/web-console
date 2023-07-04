@@ -2,6 +2,7 @@ import React from "react";
 import {
   FormGroup,
   Popover,
+  TextArea,
   TextInput,
   TextInputTypes,
 } from "@patternfly/react-core";
@@ -15,6 +16,8 @@ interface Props {
   type: TextInputTypes;
   typeHint?: string;
   placeholder?: string;
+  shouldBeDisabled?: boolean;
+  isTextarea?: boolean;
   handleInputChange: (value, event) => void;
 }
 export const TextFormInput: React.FC<Props> = ({
@@ -26,6 +29,8 @@ export const TextFormInput: React.FC<Props> = ({
   typeHint,
   placeholder,
   handleInputChange,
+  isTextarea = false,
+  shouldBeDisabled = false,
   ...props
 }) => {
   return (
@@ -52,16 +57,32 @@ export const TextFormInput: React.FC<Props> = ({
       }
       helperText={description}
     >
-      <TextInput
-        isRequired={!isOptional}
-        type={type}
-        id={attributeName}
-        name={attributeName}
-        placeholder={placeholder}
-        aria-describedby={`${attributeName}-helper`}
-        value={attributeValue}
-        onChange={handleInputChange}
-      />
+      {isTextarea ? (
+        <TextArea
+          value={attributeValue || ""}
+          onChange={handleInputChange}
+          id={attributeName}
+          name={attributeName}
+          placeholder={placeholder}
+          isRequired={!isOptional}
+          isDisabled={shouldBeDisabled}
+          aria-describedby={`${attributeName}-helper`}
+          aria-label={`TextareaInput-${attributeName}`}
+        />
+      ) : (
+        <TextInput
+          isRequired={!isOptional}
+          type={type}
+          id={attributeName}
+          name={attributeName}
+          placeholder={placeholder}
+          aria-describedby={`${attributeName}-helper`}
+          aria-label={`TextInput-${attributeName}`}
+          value={attributeValue || ""}
+          onChange={handleInputChange}
+          isDisabled={shouldBeDisabled}
+        />
+      )}
     </FormGroup>
   );
 };

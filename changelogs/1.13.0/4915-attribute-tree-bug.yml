@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Bugfix for nested embedded entities being wrongly displayed in the attribute tree-table.'
+issue-nr: 4915
+destination-branches:
+- master
+- iso6
+sections: 
+  bugfix: "{{description}}"

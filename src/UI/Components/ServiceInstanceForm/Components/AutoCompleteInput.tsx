@@ -20,6 +20,7 @@ interface Props {
   attributeValue: string | string[];
   description?: string;
   isOptional: boolean;
+  shouldBeDisabled?: boolean;
   handleInputChange: (value, event) => void;
   onSearchTextChanged: (value: string) => void;
   multi?: boolean;
@@ -31,6 +32,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
   attributeValue,
   description,
   isOptional,
+  shouldBeDisabled = false,
   handleInputChange,
   onSearchTextChanged,
   multi,
@@ -67,6 +69,7 @@ export const AutoCompleteInput: React.FC<Props> = ({
           setIsOpen(!isOpen);
         }}
         isOpen={isOpen}
+        isDisabled={shouldBeDisabled}
         onSelect={onSelect}
         selections={attributeValue}
         placeholderText={words("common.serviceInstance.relation")}

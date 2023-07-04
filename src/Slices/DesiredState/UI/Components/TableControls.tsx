@@ -33,7 +33,7 @@ export const TableControls: React.FC<Props> = ({
       </ToolbarGroup>
       <ToolbarItem variant="separator" />
       <ToolbarGroup>
-        <CompileWidget />
+        <CompileWidget isToastVisible />
       </ToolbarGroup>
       <ToolbarItem variant="pagination">{paginationWidget}</ToolbarItem>
     </ToolbarContent>

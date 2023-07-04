@@ -5,11 +5,14 @@ import {
   DropdownItem,
   DropdownSeparator,
   DropdownToggle,
+  Icon,
   Tooltip,
 } from "@patternfly/react-core";
+import { UserCircleIcon } from "@patternfly/react-icons";
 import styled from "styled-components";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
+import { Profile } from "../Actions/Profile";
 
 interface Props {
   searchValue: string;
@@ -29,17 +32,18 @@ export const EnvSelector: React.FC<Props> = ({
   toggleText,
 }) => {
   const { routeManager } = useContext(DependencyContext);
+  const { keycloakController } = useContext(DependencyContext);
+
   const envs = [
     <DropdownGroup label={words("home.environment.selector")} key="envs-group">
       {items.map((item, index) => (
         <StyledItem onClick={() => onSelect(item)} key={`env-${index}-${item}`}>
-          {item.split(" ")[0].length > 22
-            ? item.split(" ")[0].slice(18) + "..."
-            : item.split(" ")[0]}
+          {item.length > 28 ? item.slice(0, 20) + "..." : item}
         </StyledItem>
       ))}
     </DropdownGroup>,
   ];
+
   //add footer at the end
   envs.push(
     <div key="overview-link">
@@ -49,14 +53,40 @@ export const EnvSelector: React.FC<Props> = ({
           {words("home.navigation.button")}
         </StyledItem>
       </Tooltip>
+      {keycloakController.isEnabled() && (
+        <StyledItem onClick={() => keycloakController.getInstance().logout()}>
+          {words("dashboard.logout")}
+        </StyledItem>
+      )}
     </div>
   );
+
   return (
     <StyledDropdown
       isOpen={isOpen}
       toggle={
         <StyledToggle id="toggle-button" onToggle={() => setIsOpen(!isOpen)}>
-          Environment: {toggleText.split(" ")[0]}
+          {keycloakController.isEnabled() ? (
+            <StyledDiv>
+              <StyledIcon size="lg">
+                <UserCircleIcon />
+              </StyledIcon>
+              <div>
+                <Profile />
+                <div>
+                  {toggleText.length > 28
+                    ? toggleText.slice(0, 20) + "..."
+                    : toggleText}
+                </div>
+              </div>
+            </StyledDiv>
+          ) : (
+            <>
+              {toggleText.length > 28
+                ? toggleText.slice(0, 20) + "..."
+                : toggleText}
+            </>
+          )}
         </StyledToggle>
       }
       dropdownItems={envs}
@@ -74,7 +104,7 @@ const StyledDropdown = styled(Dropdown)`
 `;
 const StyledToggle = styled(DropdownToggle)`
   height: 100%;
-  max-width: 260px;
+  max-width: 360px;
   min-width: 260px;
   &::before {
     border-top: 0;
@@ -87,4 +117,15 @@ const StyledItem = styled(DropdownItem)`
 const StyledSeparator = styled(DropdownSeparator)`
   padding: 0 15px;
   margin: 10px 0 5px !important;
+`;
+
+const StyledDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+`;
+
+const StyledIcon = styled(Icon)`
+  --pf-c-icon__content--Color: white;
 `;

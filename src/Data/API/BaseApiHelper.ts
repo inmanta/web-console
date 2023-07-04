@@ -21,7 +21,10 @@ export class BaseApiHelper implements ApiHelper {
 
   async head(url: string): Promise<number> {
     try {
-      const response = await fetch(this.getFullUrl(url), { method: "HEAD" });
+      const response = await fetch(this.getFullUrl(url), {
+        method: "HEAD",
+        headers: this.getHeaders(),
+      });
       return response.status;
     } catch (error) {
       return 500;
@@ -46,6 +49,10 @@ export class BaseApiHelper implements ApiHelper {
 
       if (response.status === 401) {
         this.keycloak.clearToken();
+      }
+
+      if (this.keycloak.isTokenExpired()) {
+        this.keycloak.login();
       }
     }
 

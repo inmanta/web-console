@@ -2,6 +2,10 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  env: {
+    edition: "iso",
+    project: "lsm-frontend",
+  },
   video: false,
   reporter: "junit",
   viewportWidth: 1500,

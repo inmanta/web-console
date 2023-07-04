@@ -18,6 +18,7 @@ interface Props {
   attributeValue: string[];
   description?: string;
   isOptional: boolean;
+  shouldBeDisabled?: boolean;
   type: TextInputTypes;
   typeHint?: string;
   placeholder?: string;
@@ -28,6 +29,7 @@ export const TextListFormInput: React.FC<Props> = ({
   attributeValue,
   description,
   isOptional,
+  shouldBeDisabled = false,
   typeHint,
   placeholder,
   handleInputChange,
@@ -81,6 +83,7 @@ export const TextListFormInput: React.FC<Props> = ({
       isRequired={!isOptional}
       fieldId={attributeName}
       label={attributeName}
+      className={shouldBeDisabled ? "is-disabled" : ""}
       labelIcon={
         typeHint ? (
           <Popover bodyContent={<div>{typeHint}</div>}>
@@ -99,7 +102,7 @@ export const TextListFormInput: React.FC<Props> = ({
       }
       helperText={description}
     >
-      <TextInputGroup>
+      <TextInputGroup isDisabled={shouldBeDisabled}>
         <TextInputGroupMain
           value={inputValue}
           placeholder={placeholder}
@@ -107,20 +110,29 @@ export const TextListFormInput: React.FC<Props> = ({
         >
           <ChipGroup>
             {currentChips.map((currentChip) => (
-              <Chip key={currentChip} onClick={() => deleteChip(currentChip)}>
+              <Chip
+                key={currentChip}
+                onClick={() => deleteChip(currentChip)}
+                disabled={shouldBeDisabled}
+              >
                 {currentChip}
               </Chip>
             ))}
           </ChipGroup>
         </TextInputGroupMain>
         <TextInputGroupUtilities>
-          <Button variant="plain" onClick={addChip}>
+          <Button
+            variant="plain"
+            onClick={addChip}
+            isDisabled={shouldBeDisabled}
+          >
             {words("catalog.callbacks.add")}
           </Button>
           <Button
             variant="plain"
             onClick={clearChipsAndInput}
             aria-label="Clear button and input"
+            isDisabled={shouldBeDisabled}
           >
             <TimesIcon />
           </Button>

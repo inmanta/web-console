@@ -1,8 +1,10 @@
 #!/bin/bash
-echo "Starting E2E test suit"
+echo "Setting up Orchestrator"
+echo "for : " + $2 + $3
 
-# Arg $1 is the OS you are on
-# Arg $2 is the version of the orchestrator that is being pulled/installed.
+# Arg $1 is the OS you are on, can be either "linux", "windows"
+# Arg $2 is either "oss" or "iso" or "url".
+# Arg $3 is the tag or full url of the version you want to pull in.
 
 if [[ -f "./shell-scripts/env.sh" ]]; then
     echo "env.sh found - sourcing..."
@@ -20,25 +22,37 @@ else
     fi
 fi
 
+echo "creating temp dir and cloning local-setup repo"
+
 mkdir temp
 cd temp
 
 git clone $local_setup_repo || exit 1
 
+echo "local-setup repo cloned succesfuly"
+
 cd local-setup
 
-# This can be adjusted to pull in iso4 by replacing the second argument with '4dev'
-yarn run pull:$2
+yarn run pull $2 $3
 
-sleep 2
+yarn run start
 
-# command from the local-setup repo to docker compose up.
-yarn start
+echo "checking for status server"
 
-# need to sleep to avoid concurency with the next command execution. Under 4 sec it doesn't work locally.
 for i in {0..30}; do curl --connect-timeout 1 http://localhost:8888/api/v1/serverstatus > /dev/null && echo "Server up " && break; echo "Waiting $i"; sleep 1; done && [[ $i == 30 ]] && exit 1
-# execute installation script for LSM
-yarn $1:lsm:install
+
+if [[ $2 = "iso" ]]
+then
+    echo "Installing ISO version with LSM"
+    yarn run $1:lsm:install
+elif [[ $2 = "oss" ]]
+then 
+    echo "Installing OSS version"
+    yarn run $1:oss:install
+else
+    echo "You provided an url for the orchestrator, please run the install command you wish to use manually."
+    exit 0
+fi
 
 # exit temp/local-setup to be back on root level
 cd ../..

@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Add support to run the e2e tests against the OSS Orchestrator releases.'
+issue-nr: 4660
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

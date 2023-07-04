@@ -1,10 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { PageHeaderTools, PageHeaderToolsGroup } from "@patternfly/react-core";
 import { Badge } from "@/Slices/Notification/UI/Badge";
-import { DependencyContext } from "@/UI/Dependency";
 import { EnvSelectorWithProvider } from "../EnvSelector";
 import { DocumentationLink } from "./DocumentationLink";
-import { Profile } from "./Profile";
 import { StatusButton } from "./StatusButton";
 
 interface Props {
@@ -13,7 +11,6 @@ interface Props {
 }
 
 export const Actions: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
-  const { keycloakController } = useContext(DependencyContext);
   return (
     <PageHeaderTools>
       <PageHeaderToolsGroup>
@@ -21,10 +18,7 @@ export const Actions: React.FC<Props> = ({ noEnv, onNotificationsToggle }) => {
         <StatusButton />
         <DocumentationLink />
       </PageHeaderToolsGroup>
-      {!noEnv && <EnvSelectorWithProvider />}
-      {keycloakController.isEnabled() && (
-        <Profile keycloak={keycloakController.getInstance()} />
-      )}
+      <EnvSelectorWithProvider />
     </PageHeaderTools>
   );
 };

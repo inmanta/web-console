@@ -18,6 +18,7 @@ interface Props {
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
   isSubmitDisabled?: boolean;
+  apiVersion?: "v1" | "v2";
 }
 
 export const ServiceInstanceForm: React.FC<Props> = ({
@@ -26,15 +27,24 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   onCancel,
   originalAttributes,
   isSubmitDisabled,
+  apiVersion = "v1",
 }) => {
   const [formState, setFormState] = useState(
     originalAttributes
-      ? createEditFormState(fields, originalAttributes)
+      ? createEditFormState(fields, apiVersion, originalAttributes)
+      : createFormState(fields)
+  );
+  //originalState is created to make possible to differentiate newly created attributes to keep track on which inputs should be disabled
+  const [originalState] = useState(
+    originalAttributes
+      ? createEditFormState(fields, apiVersion, originalAttributes)
       : createFormState(fields)
   );
   const [dirtyInputs, setDirtyInputs] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
+
   usePrompt(words("notification.instanceForm.prompt"), dirtyInputs);
+
   //callback was used to avoid re-render in useEffect used in SelectFormInput inside FieldInput
   const getUpdate = useCallback(
     (path: string, value: unknown, multi = false): void => {
@@ -75,6 +85,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
       onCancel();
     }
   }, [shouldPerformCancel, onCancel]);
+
   return (
     <StyledForm onSubmit={preventDefault}>
       {fields.map((field) => (
@@ -82,6 +93,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
           key={field.name}
           field={field}
           formState={formState}
+          originalState={originalState}
           getUpdate={getUpdate}
           path={null}
         />

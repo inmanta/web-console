@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Fix issue that cause optional enums to display wrong input in instance form'
+destination-branches:
+- master
+- iso6
+sections: {}
