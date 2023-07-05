@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     options{
         disableConcurrentBuilds()
@@ -17,51 +17,66 @@ pipeline {
     }
 
     stages {
-        stage('Build & Unit Test') {
-            steps {
-                deleteDir()
-                dir('web-console'){
-                    checkout scm
-                    sh '''
-                    yarn install --immutable;
-                    yarn lint;
-                    yarn format:check;
-                    yarn tsc;
-                    yarn check-circular-deps;
-                    yarn build;
-                    yarn test:ci'''
+        stage('Determine whether job should run') {
+            agent any
+            when {
+                beforeAgent true
+                anyOf {
+                    triggeredBy 'UserIdCause'
+                    // skip builds for next and stable branches unless triggered manually
+                    not {
+                        branch pattern: 'iso\\d+-(next|stable)', comparator: 'REGEXP'
+                    }
                 }
             }
-        }
-        stage('Testing with cypress') {
-            steps {
-                timeout(time: 20, unit: 'MINUTES') {
-                dir('web-console') {
-                    sh '''yarn run build;
-                    yarn run install:orchestrator:ci;
-                    yarn run cypress-test:iso;'''
+            stages {
+                stage('Build & Unit Test') {
+                    steps {
+                        deleteDir()
+                        dir('web-console'){
+                            checkout scm
+                            sh '''
+                            yarn install --immutable;
+                            yarn lint;
+                            yarn format:check;
+                            yarn tsc;
+                            yarn check-circular-deps;
+                            yarn build;
+                            yarn test:ci'''
+                        }
+                    }
                 }
+                stage('Testing with cypress') {
+                    steps {
+                        timeout(time: 20, unit: 'MINUTES') {
+                            dir('web-console') {
+                                sh '''yarn run build;
+                                yarn run install:orchestrator:ci;
+                                yarn run cypress-test:iso;'''
+                            }
+                        }
+                    }
+                    post {
+                        always {
+                            dir('web-console') {
+                                sh'yarn run kill-server'
+                            }
+                        }
+                    }
                 }
             }
             post {
                 always {
                     dir('web-console') {
-                        sh'yarn run kill-server'
+                            sh '''npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
                     }
+                    junit 'web-console/junit.xml'
+                    cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
+                    archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
+                    deleteDir()
                 }
             }
         }
     }
 
-    post {
-        always {
-            dir('web-console') {
-                    sh '''npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
-            }
-            junit 'web-console/junit.xml'
-            cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
-            archiveArtifacts artifacts: 'web-console/cypress/reports/cypress-report.xml, web-console/cypress/screenshots/**, web-console/cypress/videos/**', allowEmptyArchive: true, onlyIfSuccessful: false
-            deleteDir()
-        }
-    }
 }
