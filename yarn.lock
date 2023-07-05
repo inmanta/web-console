@@ -1023,7 +1023,7 @@ __metadata:
     "@babel/core": ^7.21.8
     "@babel/plugin-transform-typescript": ^7.22.5
     "@inmanta/rappid": ^3.7.0
-    "@patternfly/react-charts": ^6.94.18
+    "@patternfly/react-charts": ^6.94.21
     "@patternfly/react-core": ^4.276.6
     "@patternfly/react-icons": ^4.93.6
     "@patternfly/react-styles": ^4.92.6
@@ -1509,12 +1509,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patternfly/react-charts@npm:^6.94.18":
-  version: 6.94.20
-  resolution: "@patternfly/react-charts@npm:6.94.20"
+"@patternfly/react-charts@npm:^6.94.21":
+  version: 6.94.21
+  resolution: "@patternfly/react-charts@npm:6.94.21"
   dependencies:
-    "@patternfly/react-styles": ^4.92.7
-    "@patternfly/react-tokens": ^4.94.6
+    "@patternfly/react-styles": ^4.92.8
+    "@patternfly/react-tokens": ^4.94.7
     hoist-non-react-statics: ^3.3.0
     lodash: ^4.17.19
     tslib: ^2.0.0
@@ -1537,7 +1537,7 @@ __metadata:
   peerDependencies:
     react: ^16.8 || ^17 || ^18
     react-dom: ^16.8 || ^17 || ^18
-  checksum: c47b5235db31e2567d1547878703b2ff9b0d9b8a86d450f0adc30156575d227f661bc9d9630d0df7eb55f22f065d8aa16c53fd8c6443248dfc03e80098b82f03
+  checksum: 2da954fdfb4069cb3cbdc62a73c5c31eba3645279941312cb3e97a95851253c2c0822d656c26d598661452d48f4b8e28cdfb4e29e4c95326a36a97f5e331761f
   languageName: node
   linkType: hard
 
