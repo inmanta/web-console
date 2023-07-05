@@ -68,7 +68,7 @@ pipeline {
             post {
                 always {
                     dir('web-console') {
-                            sh '''npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
+                        sh '''npx junit-merge -d cypress/reports/junit -o cypress/reports/cypress-report.xml'''
                     }
                     junit 'web-console/junit.xml'
                     cobertura coberturaReportFile: 'web-console/coverage/cobertura-coverage.xml', failNoReports: false, failUnhealthy: false
