@@ -12,7 +12,6 @@ import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
 import { words } from "@/UI/words";
 import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
-import * as configFile from "../../../../../config";
 
 interface Props {
   serviceName: string;
@@ -46,8 +45,8 @@ export const TableControls: React.FC<Props> = ({
           identityAttribute={identityAttribute}
         />
         <ToolbarGroup alignment={{ default: "alignRight" }}>
-          {Object(configFile).hasOwnProperty("features") &&
-            configFile.features.includes("instanceComposer") && (
+          {globalThis.features !== undefined &&
+            globalThis.features.includes("instanceComposer") && (
               <ToolbarItem>
                 <Link
                   to={{

@@ -10,5 +10,6 @@ declare module "*.m4a";
 declare module "*.rdf";
 declare module "*.ttl";
 declare module "*.pdf";
+declare module "features";
 declare const COMMITHASH: string;
 declare const APP_VERSION: string;

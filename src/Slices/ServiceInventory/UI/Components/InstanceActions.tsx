@@ -9,7 +9,6 @@ import { ButtonWithCursorHandling, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
 import { words } from "@/UI/words";
-import * as configFile from "../../../../config";
 import { DeleteModal } from "./DeleteModal";
 import { SetStateAction } from "./SetStateAction";
 
@@ -30,8 +29,8 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   return (
     <DescriptionList>
       <DescriptionListGroup>
-        {Object(configFile).hasOwnProperty("features") &&
-          configFile.features.includes("instanceComposer") && (
+        {globalThis.features !== undefined &&
+          globalThis.features.includes("instanceComposer") && (
             <Link
               pathname={routeManager.getUrl("InstanceComposerEditor", {
                 service: instance.service_entity,

@@ -1,4 +1,5 @@
 import React from "react";
+//import config from "features";
 import {
   PageManager,
   Page,
@@ -35,7 +36,6 @@ import { ServiceInstanceHistoryPage } from "@S/ServiceInstanceHistory/UI";
 import { ServiceInventoryPage } from "@S/ServiceInventory/UI";
 import { SettingsPage } from "@S/Settings/UI";
 import { StatusPage } from "@S/Status/UI";
-import * as configFile from "../../config";
 
 export class PrimaryPageManager implements PageManager {
   private pageDictionary: PageDictionary;
@@ -163,8 +163,8 @@ export class PrimaryPageManager implements PageManager {
 
   getPages(): Page[] {
     if (
-      Object(configFile).hasOwnProperty("features") &&
-      configFile.features.includes("instanceComposer")
+      globalThis.features !== undefined &&
+      globalThis.features.includes("instanceComposer")
     ) {
       return [
         ...Object.values(this.pageDictionary),
