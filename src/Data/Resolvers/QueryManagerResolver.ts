@@ -120,6 +120,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       GetProjectsQueryManager(this.store, this.apiHelper),
       GetEnvironmentsQueryManager(
         this.apiHelper,
+        this.scheduler,
         GetEnvironmentsStateHelper(this.store)
       ),
       GetServerStatusOneTimeQueryManager(

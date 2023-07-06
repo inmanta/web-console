@@ -8,7 +8,7 @@ import { EmptyFilterToolbar } from "./FilterToolbar";
 
 export const Page: React.FC = () => {
   const { queryResolver } = useContext(DependencyContext);
-  const [data] = queryResolver.useOneTime<"GetEnvironments">({
+  const [data] = queryResolver.useContinuous<"GetEnvironments">({
     kind: "GetEnvironments",
     details: true,
   });
