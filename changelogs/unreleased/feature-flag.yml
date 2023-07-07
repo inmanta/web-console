@@ -1,0 +1,6 @@
+change-type: patch
+description: "change feature-flag implementation to use window/globalThis"
+issue-nr: 4944
+destination-branches:
+  - master
+  - iso6

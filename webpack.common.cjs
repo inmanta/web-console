@@ -152,7 +152,4 @@ module.exports = {
     symlinks: false,
     cacheWithContext: false,
   },
-  externals: {
-    features: "config.js",
-  },
 };
