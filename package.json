@@ -151,7 +151,7 @@
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "process": "^0.11.10",
-    "qs": "^6.11.0",
+    "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-diff-viewer": "^3.1.1",
     "react-dom": "^18.2.0",
