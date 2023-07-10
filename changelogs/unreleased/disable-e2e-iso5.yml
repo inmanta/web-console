@@ -1,0 +1,4 @@
+change-type: patch
+description: 'disable the e2e tests for ISO-5'
+destination-branches:
+- iso5
