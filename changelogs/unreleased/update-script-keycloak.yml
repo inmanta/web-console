@@ -1,0 +1,5 @@
+description: Updated script to test against keycloak
+change-type: patch
+destination-branches:
+  - iso6
+  - master
