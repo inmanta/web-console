@@ -20,6 +20,7 @@ import {
   ServerStatus,
 } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import useFeatureFlags from "../Dependency/useFeatureFlags";
 import { Root } from "./Root";
 
 function setup() {
@@ -46,18 +47,26 @@ function setup() {
     useLocation,
     dependencies.routeManager
   );
-
-  const component = (
-    <MemoryRouter initialEntries={["/"]}>
-      <StoreProvider store={store}>
-        <DependencyProvider
-          dependencies={{ ...dependencies, queryResolver, environmentHandler }}
-        >
-          <Root />
-        </DependencyProvider>
-      </StoreProvider>
-    </MemoryRouter>
-  );
+  const Component: React.FC = () => {
+    const featureFlagController = useFeatureFlags(apiHelper);
+    return (
+      <MemoryRouter initialEntries={["/"]}>
+        <StoreProvider store={store}>
+          <DependencyProvider
+            dependencies={{
+              ...dependencies,
+              queryResolver,
+              environmentHandler,
+              featureFlagController,
+            }}
+          >
+            <Root />
+          </DependencyProvider>
+        </StoreProvider>
+      </MemoryRouter>
+    );
+  };
+  const component = <Component />;
   return {
     component,
     apiHelper,

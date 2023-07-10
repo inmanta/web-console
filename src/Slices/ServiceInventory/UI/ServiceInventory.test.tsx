@@ -33,6 +33,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import useFeatureFlags from "@/UI/Dependency/useFeatureFlags";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { Chart } from "./Components";
 import { ServiceInventory } from "./ServiceInventory";
@@ -103,27 +104,33 @@ function setup(service = Service.a) {
       },
     ])
   );
-  const component = (
-    <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          queryResolver,
-          commandResolver,
-          environmentModifier: new MockEnvironmentModifier(),
-          environmentHandler,
-        }}
-      >
-        <StoreProvider store={store}>
-          <ServiceInventory
-            serviceName={service.name}
-            service={service}
-            intro={<Chart summary={service.instance_summary} />}
-          />
-        </StoreProvider>
-      </DependencyProvider>
-    </MemoryRouter>
-  );
+  const Component: React.FC = () => {
+    const featureFlagController = useFeatureFlags(apiHelper);
+
+    return (
+      <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            queryResolver,
+            commandResolver,
+            environmentModifier: new MockEnvironmentModifier(),
+            environmentHandler,
+            featureFlagController,
+          }}
+        >
+          <StoreProvider store={store}>
+            <ServiceInventory
+              serviceName={service.name}
+              service={service}
+              intro={<Chart summary={service.instance_summary} />}
+            />
+          </StoreProvider>
+        </DependencyProvider>
+      </MemoryRouter>
+    );
+  };
+  const component = <Component />;
 
   return {
     component,
@@ -139,7 +146,6 @@ test("ServiceInventory shows updated instances", async () => {
   expect(
     await screen.findByRole("generic", { name: "ServiceInventory-Loading" })
   ).toBeInTheDocument();
-
   apiHelper.resolve(
     Either.right({
       data: [],
@@ -147,6 +153,7 @@ test("ServiceInventory shows updated instances", async () => {
       metadata: Pagination.metadata,
     })
   );
+  apiHelper.resolve(Either.right(""));
 
   expect(
     await screen.findByRole("generic", { name: "ServiceInventory-Empty" })
@@ -172,6 +179,7 @@ test("ServiceInventory shows error with retry", async () => {
   render(component);
 
   apiHelper.resolve(Either.left("fake error"));
+  apiHelper.resolve(Either.right(""));
 
   expect(
     await screen.findByRole("generic", { name: "ServiceInventory-Failed" })
@@ -203,6 +211,7 @@ test("ServiceInventory shows next page of instances", async () => {
       metadata: Pagination.metadata,
     })
   );
+  apiHelper.resolve(Either.right(""));
 
   expect(
     await screen.findByRole("cell", { name: "IdCell-a" })
@@ -237,6 +246,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
       })
     );
   });
+  apiHelper.resolve(Either.right(""));
 
   expect(
     await screen.findByRole("grid", { name: "ServiceInventory-Success" })

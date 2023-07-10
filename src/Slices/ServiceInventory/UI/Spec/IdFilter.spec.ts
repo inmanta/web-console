@@ -5,7 +5,7 @@ import { Service, ServiceInstance, Pagination } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 instance is shown", async () => {
-  const { component, apiHelper } = new ServiceInventoryPrepper().prep();
+  const { component, apiHelper } = ServiceInventoryPrepper();
 
   render(component);
 
@@ -17,6 +17,8 @@ test("GIVEN The Service Inventory WHEN the user filters on id ('a') THEN only 1 
         metadata: Pagination.metadata,
       })
     );
+    //resolve request for config.js
+    await apiHelper.resolve(Either.right(""));
   });
 
   const filterBar = screen.getByRole("generic", { name: "FilterBar" });

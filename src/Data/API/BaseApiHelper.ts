@@ -108,6 +108,18 @@ export class BaseApiHelper implements ApiHelper {
       headers: this.getHeaders(),
     });
   }
+  async getWithoutEnvironmentAsText(
+    url: string
+  ): Promise<Either.Type<string, string>> {
+    return this.execute<string, string>(
+      async (response) => await response.text(),
+      identity,
+      this.getFullUrl(url),
+      {
+        headers: this.getHeaders(),
+      }
+    );
+  }
 
   async post<Data, Body>(
     url: string,

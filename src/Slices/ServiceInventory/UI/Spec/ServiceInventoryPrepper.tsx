@@ -27,6 +27,7 @@ import {
   Service,
 } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
+import useFeatureFlags from "@/UI/Dependency/useFeatureFlags";
 import { TriggerInstanceUpdateCommandManager } from "@S/EditInstance/Data";
 import { ServiceInventory } from "@S/ServiceInventory/UI/ServiceInventory";
 
@@ -36,65 +37,69 @@ export interface Handles {
   apiHelper: DeferredApiHelper;
 }
 
-export class ServiceInventoryPrepper {
-  prep(service: ServiceModel = Service.a): Handles {
-    const store = getStoreInstance();
-    const scheduler = new SchedulerImpl(5000, (task) => ({
-      effect: jest.fn(() => task.effect()),
-      update: jest.fn((result) => task.update(result)),
-    }));
-    const apiHelper = new DeferredApiHelper();
-    const serviceInstancesHelper = ServiceInstancesQueryManager(
-      apiHelper,
-      ServiceInstancesStateHelper(store),
-      scheduler
-    );
+export function ServiceInventoryPrepper(
+  service: ServiceModel = Service.a
+): Handles {
+  const store = getStoreInstance();
+  const scheduler = new SchedulerImpl(5000, (task) => ({
+    effect: jest.fn(() => task.effect()),
+    update: jest.fn((result) => task.update(result)),
+  }));
+  const apiHelper = new DeferredApiHelper();
+  const serviceInstancesHelper = ServiceInstancesQueryManager(
+    apiHelper,
+    ServiceInstancesStateHelper(store),
+    scheduler
+  );
 
-    const resourcesHelper = InstanceResourcesQueryManager(
-      apiHelper,
-      InstanceResourcesStateHelper(store),
-      ServiceInstancesStateHelper(store),
-      scheduler
-    );
+  const resourcesHelper = InstanceResourcesQueryManager(
+    apiHelper,
+    InstanceResourcesStateHelper(store),
+    ServiceInstancesStateHelper(store),
+    scheduler
+  );
 
-    const queryResolver = new QueryResolverImpl(
-      new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
-    );
+  const queryResolver = new QueryResolverImpl(
+    new DynamicQueryManagerResolver([serviceInstancesHelper, resourcesHelper])
+  );
 
-    const triggerUpdateCommandManager = TriggerInstanceUpdateCommandManager(
-      new BaseApiHelper()
-    );
-    const triggerDestroyInstanceCommandManager =
-      DestroyInstanceCommandManager(apiHelper);
-    const triggerforceStateCommandManager = TriggerForceStateCommandManager(
-      new KeycloakAuthHelper(),
-      apiHelper
-    );
+  const triggerUpdateCommandManager = TriggerInstanceUpdateCommandManager(
+    new BaseApiHelper()
+  );
+  const triggerDestroyInstanceCommandManager =
+    DestroyInstanceCommandManager(apiHelper);
+  const triggerforceStateCommandManager = TriggerForceStateCommandManager(
+    new KeycloakAuthHelper(),
+    apiHelper
+  );
 
-    const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
+  const deleteCommandManager = DeleteInstanceCommandManager(apiHelper);
 
-    const setStateCommandManager = TriggerSetStateCommandManager(
-      new KeycloakAuthHelper(),
-      new BaseApiHelper()
-    );
+  const setStateCommandManager = TriggerSetStateCommandManager(
+    new KeycloakAuthHelper(),
+    new BaseApiHelper()
+  );
 
-    const commandResolver = new CommandResolverImpl(
-      new DynamicCommandManagerResolver([
-        triggerUpdateCommandManager,
-        deleteCommandManager,
-        setStateCommandManager,
-        triggerforceStateCommandManager,
-        triggerDestroyInstanceCommandManager,
-      ])
-    );
-    const environmentHandler = EnvironmentHandlerImpl(
-      useLocation,
-      dependencies.routeManager
-    );
-    store.dispatch.environment.setEnvironments(
-      RemoteData.success(Environment.filterable)
-    );
-    const component = (
+  const commandResolver = new CommandResolverImpl(
+    new DynamicCommandManagerResolver([
+      triggerUpdateCommandManager,
+      deleteCommandManager,
+      setStateCommandManager,
+      triggerforceStateCommandManager,
+      triggerDestroyInstanceCommandManager,
+    ])
+  );
+  const environmentHandler = EnvironmentHandlerImpl(
+    useLocation,
+    dependencies.routeManager
+  );
+  store.dispatch.environment.setEnvironments(
+    RemoteData.success(Environment.filterable)
+  );
+  const Component: React.FC = () => {
+    const featureFlagController = useFeatureFlags(apiHelper);
+
+    return (
       <MemoryRouter initialEntries={[{ search: "?env=123" }]}>
         <DependencyProvider
           dependencies={{
@@ -103,6 +108,7 @@ export class ServiceInventoryPrepper {
             commandResolver,
             environmentModifier: new MockEnvironmentModifier(),
             environmentHandler,
+            featureFlagController,
           }}
         >
           <StoreProvider store={store}>
@@ -111,7 +117,8 @@ export class ServiceInventoryPrepper {
         </DependencyProvider>
       </MemoryRouter>
     );
+  };
+  const component = <Component />;
 
-    return { component, scheduler, apiHelper };
-  }
+  return { component, scheduler, apiHelper };
 }

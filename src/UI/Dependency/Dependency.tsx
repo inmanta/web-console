@@ -11,6 +11,7 @@ import {
   FeatureManager,
   ArchiveHelper,
   KeycloakController,
+  FeatureFlagController,
 } from "@/Core";
 import {
   DummyCommandResolver,
@@ -24,6 +25,7 @@ import {
   DummyAuthHelper,
   DummyArchiveHelper,
   DummyKeycloakController,
+  DummyFeatureFlagController,
 } from "./Dummy";
 
 export interface Dependencies {
@@ -38,6 +40,7 @@ export interface Dependencies {
   authHelper: AuthHelper;
   archiveHelper: ArchiveHelper;
   keycloakController: KeycloakController;
+  featureFlagController: FeatureFlagController;
 }
 
 export const DependencyContext = createContext<Dependencies>({
@@ -52,6 +55,7 @@ export const DependencyContext = createContext<Dependencies>({
   authHelper: new DummyAuthHelper(),
   archiveHelper: new DummyArchiveHelper(),
   keycloakController: new DummyKeycloakController(),
+  featureFlagController: new DummyFeatureFlagController(),
 });
 
 export const DependencyProvider: React.FC<{
@@ -70,6 +74,7 @@ export const DependencyProvider: React.FC<{
     authHelper,
     archiveHelper,
     keycloakController,
+    featureFlagController,
   },
   children,
 }) => (
@@ -87,6 +92,8 @@ export const DependencyProvider: React.FC<{
       authHelper: authHelper || new DummyAuthHelper(),
       archiveHelper: archiveHelper || new DummyArchiveHelper(),
       keycloakController: keycloakController || new DummyKeycloakController(),
+      featureFlagController:
+        featureFlagController || new DummyFeatureFlagController(),
     }}
   >
     {children}

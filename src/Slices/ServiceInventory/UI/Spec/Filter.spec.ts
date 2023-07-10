@@ -6,7 +6,7 @@ import { words } from "@/UI";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on something THEN a data update is triggered", async () => {
-  const { component, apiHelper } = new ServiceInventoryPrepper().prep();
+  const { component, apiHelper } = ServiceInventoryPrepper();
 
   render(component);
 
@@ -18,6 +18,8 @@ test("GIVEN The Service Inventory WHEN the user filters on something THEN a data
         metadata: Pagination.metadata,
       })
     );
+    //resolve request for config.js
+    await apiHelper.resolve(Either.right(""));
   });
 
   const beforeRows = await screen.findAllByRole("row", {

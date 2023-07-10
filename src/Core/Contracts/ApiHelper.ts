@@ -14,6 +14,9 @@ export interface ApiHelper {
     environment: string
   ): Promise<Either.Type<string, Data>>;
   getWithoutEnvironment<Data>(url: string): Promise<Either.Type<string, Data>>;
+  getWithoutEnvironmentAsText(
+    url: string
+  ): Promise<Either.Type<string, string>>;
   post<Data, Body = unknown>(
     url: string,
     environment: string,

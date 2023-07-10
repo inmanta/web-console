@@ -5,7 +5,7 @@ import { ServiceInstance } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user clicks on prev THEN first page is shown", async () => {
-  const { component, apiHelper } = new ServiceInventoryPrepper().prep();
+  const { component, apiHelper } = ServiceInventoryPrepper();
 
   render(component);
 
@@ -28,12 +28,12 @@ test("GIVEN ServiceInventory WHEN on 2nd page with outdated 1st page and user cl
         },
       })
     );
+    await apiHelper.resolve(Either.right(""));
   });
 
   const button = screen.getByRole("button", { name: "Prev" });
   await act(async () => {
     await userEvent.click(button);
   });
-
   expect(apiHelper.pendingRequests[0].url).toEqual("first");
 });

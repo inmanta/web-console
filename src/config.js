@@ -3,5 +3,3 @@
 //   url: "http://localhost:8080",
 //   clientId: "inmantaso",
 // };
-
-window.features = [];

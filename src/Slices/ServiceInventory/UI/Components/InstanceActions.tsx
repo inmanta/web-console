@@ -25,28 +25,28 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   deleteDisabled,
   diagnoseDisabled,
 }) => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, featureFlagController } = useContext(DependencyContext);
+
   return (
     <DescriptionList>
       <DescriptionListGroup>
-        {globalThis.features !== undefined &&
-          globalThis.features.includes("instanceComposer") && (
-            <Link
-              pathname={routeManager.getUrl("InstanceComposerEditor", {
-                service: instance.service_entity,
-                instance: instance.id,
-              })}
+        {featureFlagController.isComposerAvailable() && (
+          <Link
+            pathname={routeManager.getUrl("InstanceComposerEditor", {
+              service: instance.service_entity,
+              instance: instance.id,
+            })}
+            isDisabled={editDisabled}
+          >
+            <ButtonWithCursorHandling
+              isBlock
+              variant="primary"
               isDisabled={editDisabled}
             >
-              <ButtonWithCursorHandling
-                isBlock
-                variant="primary"
-                isDisabled={editDisabled}
-              >
-                <ToolsIcon /> {words("inventory.instanceComposer.editButton")}
-              </ButtonWithCursorHandling>
-            </Link>
-          )}
+              <ToolsIcon /> {words("inventory.instanceComposer.editButton")}
+            </ButtonWithCursorHandling>
+          </Link>
+        )}
         <Link
           pathname={routeManager.getUrl("EditInstance", {
             service: instance.service_entity,

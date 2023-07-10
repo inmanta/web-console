@@ -137,6 +137,17 @@ export class DeferredApiHelper implements ApiHelper {
     });
     return promise as Promise<Either.Type<string, Data>>;
   }
+  getWithoutEnvironmentAsText(
+    url: string
+  ): Promise<Either.Type<string, string>> {
+    const { promise, resolve } = new Deferred();
+    this._pendingRequests.push({
+      request: { method: "GET", url },
+      resolve,
+      promise,
+    });
+    return promise as Promise<Either.Type<string, string>>;
+  }
 
   post<Data, Body = unknown>(
     url: string,

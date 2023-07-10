@@ -10,8 +10,7 @@ jest.useFakeTimers(jestOptions);
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN data is fetched immediately", async () => {
   const user = userEvent.setup({ delay: null });
-  const { component, scheduler, apiHelper } =
-    new ServiceInventoryPrepper().prep();
+  const { component, scheduler, apiHelper } = ServiceInventoryPrepper();
 
   render(component);
 
@@ -23,6 +22,8 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
         metadata: Pagination.metadata,
       })
     );
+    //resolve request for config.js
+    await apiHelper.resolve(Either.right(""));
   });
 
   await act(async () => {
@@ -56,8 +57,7 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
 
 test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN the Resources auto-update happens in sync with the ServiceInstances", async () => {
   const user = userEvent.setup({ delay: null });
-  const prepper = new ServiceInventoryPrepper();
-  const { component, scheduler, apiHelper } = prepper.prep();
+  const { component, scheduler, apiHelper } = ServiceInventoryPrepper();
 
   render(component);
 
@@ -69,6 +69,8 @@ test("GIVEN The Service Inventory WHEN the user clicks on the resourcesTab THEN 
         metadata: Pagination.metadata,
       })
     );
+    //resolve request for config.js
+    await apiHelper.resolve(Either.right(""));
   });
 
   await act(async () => {

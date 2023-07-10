@@ -9,10 +9,11 @@ import { AuthProvider, PageFrame, Initializer } from "./Components";
 import { PrimaryPageManager } from "./PrimaryPageManager";
 
 export const Root: React.FC = () => {
-  const { routeManager } = useContext(DependencyContext);
+  const { routeManager, featureFlagController } = useContext(DependencyContext);
+
   const pages = new PrimaryPageManager(
     routeManager.getRouteDictionary()
-  ).getPages();
+  ).getPages(featureFlagController.isComposerAvailable());
 
   // This is done because the StyledComponents package is not fully compatible with React 18 typing definitions.
   // https://github.com/styled-components/styled-components/issues/3738

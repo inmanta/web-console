@@ -28,6 +28,7 @@ import {
   UrlManagerImpl,
 } from "@/UI";
 import { UpdateBanner } from "./UI/Components/UpdateBanner";
+import useFeatureFlags from "./UI/Dependency/useFeatureFlags";
 
 interface Props {
   store: Store;
@@ -44,7 +45,6 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
     COMMITHASH,
     APP_VERSION
   );
-
   const keycloakController = new PrimaryKeycloakController(
     process.env.SHOULD_USE_AUTH,
     globalThis && globalThis.auth,
@@ -64,6 +64,8 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
     baseUrl,
     keycloakController.getInstance()
   );
+
+  const featureFlagController = useFeatureFlags(apiHelper);
   const authHelper = new KeycloakAuthHelper(keycloakController.getInstance());
   const queryResolver = new QueryResolverImpl(
     new QueryManagerResolver(
@@ -97,6 +99,7 @@ export const Injector: React.FC<React.PropsWithChildren<Props>> = ({
         authHelper,
         archiveHelper,
         keycloakController,
+        featureFlagController,
       }}
     >
       <UpdateBanner apiHelper={apiHelper} />

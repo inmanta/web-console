@@ -160,11 +160,8 @@ export class PrimaryPageManager implements PageManager {
     };
   }
 
-  getPages(): Page[] {
-    if (
-      globalThis.features !== undefined &&
-      globalThis.features.includes("instanceComposer")
-    ) {
+  getPages(featureFlag: boolean): Page[] {
+    if (featureFlag) {
       return [
         ...Object.values(this.pageDictionary),
         ...Object.values(this.restrictedPageDictionary),

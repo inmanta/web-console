@@ -16,6 +16,7 @@ import {
 } from "@/Test";
 import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
+import useFeatureFlags from "@/UI/Dependency/useFeatureFlags";
 import { InstanceActions } from "./InstanceActions";
 
 test("Given InstanceActions component When the instance is terminated Then the actions are still shown", async () => {
@@ -33,24 +34,30 @@ test("Given InstanceActions component When the instance is terminated Then the a
       setStateCommandManager,
     ])
   );
-  const component = (
-    <MemoryRouter>
-      <DependencyProvider
-        dependencies={{
-          ...dependencies,
-          commandResolver,
-          environmentModifier: new MockEnvironmentModifier(),
-        }}
-      >
-        <InstanceActions
-          instance={ServiceInstance.deleted}
-          editDisabled={true}
-          deleteDisabled={true}
-          diagnoseDisabled={true}
-        />
-      </DependencyProvider>
-    </MemoryRouter>
-  );
+  const Component: React.FC = () => {
+    const featureFlagController = useFeatureFlags(apiHelper);
+
+    return (
+      <MemoryRouter>
+        <DependencyProvider
+          dependencies={{
+            ...dependencies,
+            commandResolver,
+            featureFlagController,
+            environmentModifier: new MockEnvironmentModifier(),
+          }}
+        >
+          <InstanceActions
+            instance={ServiceInstance.deleted}
+            editDisabled={true}
+            deleteDisabled={true}
+            diagnoseDisabled={true}
+          />
+        </DependencyProvider>
+      </MemoryRouter>
+    );
+  };
+  const component = <Component />;
   render(component);
   expect(
     await screen.findByRole("button", {

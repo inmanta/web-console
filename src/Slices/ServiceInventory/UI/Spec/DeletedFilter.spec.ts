@@ -5,10 +5,9 @@ import { Service, ServiceInstance, Pagination } from "@/Test";
 import { ServiceInventoryPrepper } from "./ServiceInventoryPrepper";
 
 test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN only deleted instances are shown", async () => {
-  const { component, apiHelper } = new ServiceInventoryPrepper().prep();
+  const { component, apiHelper } = ServiceInventoryPrepper();
 
   render(component);
-
   await act(async () => {
     await apiHelper.resolve(
       Either.right({
@@ -17,6 +16,9 @@ test("GIVEN The Service Inventory WHEN the user filters on deleted ('Only') THEN
         metadata: Pagination.metadata,
       })
     );
+
+    //resolve request for config.js
+    await apiHelper.resolve(Either.right(""));
   });
 
   const filterBar = screen.getByRole("generic", { name: "FilterBar" });
