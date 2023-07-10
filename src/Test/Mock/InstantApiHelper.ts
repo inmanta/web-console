@@ -21,6 +21,11 @@ export class InstantApiHelper<Data> implements ApiHelper {
       this.getOutcome(url) as Outcome.Type<string, Data>
     );
   }
+  getWithoutEnvironmentAsText(url): Promise<Either.Type<string, string>> {
+    return Outcome.handle<string, string>(
+      this.getOutcome(url) as Outcome.Type<string, string>
+    );
+  }
   post<Data>(): Promise<Either.Type<string, Data>> {
     throw new Error("Method not implemented.");
   }
