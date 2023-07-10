@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump ts-jest from 29.1.0 to 29.1.1'
+destination-branches:
+- master
+- iso6
+sections: {}
