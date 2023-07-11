@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump webpack-dev-server from 4.13.3 to 4.15.1'
+destination-branches:
+- master
+- iso6
+sections: {}
