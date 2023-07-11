@@ -40,9 +40,7 @@ module.exports = merge(common, {
       favicon: path.resolve(__dirname, "public", "images", "favicon.ico"),
     }),
     new CopyPlugin({
-      patterns: [
-        { from: "src/config.js", to: "" },
-      ],
+      patterns: [{ from: "src/config.js", to: "" }],
     }),
   ],
   module: {

@@ -27,9 +27,7 @@ module.exports = {
       },
     }),
     new CopyPlugin({
-      patterns: [
-        { from: "src/version.json", to: "" },
-      ],
+      patterns: [{ from: "src/version.json", to: "" }],
     }),
     new webpack.ProvidePlugin({
       process: "process/browser",
