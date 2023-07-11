@@ -16,3 +16,6 @@ trim_trailing_whitespace = false
 [*.md]
 max_line_length = off
 trim_trailing_whitespace = false
+
+[Jenkinsfile]
+indent_size = 4
