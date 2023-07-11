@@ -30,6 +30,23 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
   return (
     <DescriptionList>
       <DescriptionListGroup>
+        <Link
+          pathname={routeManager.getUrl("EditInstance", {
+            service: instance.service_entity,
+            instance: instance.id,
+          })}
+          isDisabled={editDisabled}
+        >
+          <ButtonWithCursorHandling
+            isBlock
+            variant="secondary"
+            isDisabled={editDisabled}
+          >
+            <ToolsIcon /> {words("inventory.editInstance.button")}
+          </ButtonWithCursorHandling>
+        </Link>
+      </DescriptionListGroup>
+      <DescriptionListGroup>
         {featureFlagController.isComposerAvailable() && (
           <Link
             pathname={routeManager.getUrl("InstanceComposerEditor", {
@@ -47,23 +64,6 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
             </ButtonWithCursorHandling>
           </Link>
         )}
-      </DescriptionListGroup>
-      <DescriptionListGroup>
-        <Link
-          pathname={routeManager.getUrl("EditInstance", {
-            service: instance.service_entity,
-            instance: instance.id,
-          })}
-          isDisabled={editDisabled}
-        >
-          <ButtonWithCursorHandling
-            isBlock
-            variant="secondary"
-            isDisabled={editDisabled}
-          >
-            <ToolsIcon /> {words("inventory.editInstance.button")}
-          </ButtonWithCursorHandling>
-        </Link>
       </DescriptionListGroup>
       <DescriptionListGroup>
         <DeleteModal
