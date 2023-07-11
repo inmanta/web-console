@@ -171,7 +171,7 @@ export class FieldCreator {
     };
   }
 
-  private attributesToFields(
+  attributesToFields(
     attributes: AttributeModel[],
     embedded?: boolean
   ): Field[] {

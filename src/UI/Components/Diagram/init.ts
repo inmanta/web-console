@@ -1,11 +1,15 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
-import { ServiceInstanceModel, ServiceModel } from "@/Core";
-import { appendInstance, showLinkTools } from "./actions";
+import {
+  InstanceAttributeModel,
+  ServiceInstanceModel,
+  ServiceModel,
+} from "@/Core";
+import { appendEntity, appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
 import { routerNamespace } from "./routers";
 import { EntityConnection } from "./shapes";
 
-export default function diagramInit(canvas) {
+export default function diagramInit(canvas): DiagramHandlers {
   /**
    * https://resources.jointjs.com/docs/jointjs/v3.6/joint.html#dia.Graph
    */
@@ -18,7 +22,7 @@ export default function diagramInit(canvas) {
     model: graph,
     width: 1000,
     height: 1000,
-    gridSize: 20,
+    gridSize: 1,
     interactive: true,
     defaultConnector: { name: "rounded" },
     async: true,
@@ -51,8 +55,8 @@ export default function diagramInit(canvas) {
   const scroller = new ui.PaperScroller({
     paper,
     cursor: "grab",
-    baseWidth: 100,
-    baseHeight: 100,
+    baseWidth: 1000,
+    baseHeight: 1000,
     inertia: { friction: 0.8 },
     autoResizePaper: true,
     contentOptions: function () {
@@ -67,6 +71,23 @@ export default function diagramInit(canvas) {
   canvas.current.appendChild(scroller.el);
   scroller.render().center();
   scroller.centerContent();
+
+  new ui.Tooltip({
+    rootTarget: ".canvas",
+    target: "[data-tooltip]",
+    padding: 20,
+  });
+
+  paper.on(
+    "element:showDict",
+    (_elementView: dia.ElementView, event: dia.Event) => {
+      document.dispatchEvent(
+        new CustomEvent("openDictsModal", {
+          detail: event.target.parentElement.attributes.dict.value,
+        })
+      );
+    }
+  );
 
   paper.on("link:mouseenter", (linkView: dia.LinkView) => {
     showLinkTools(linkView);
@@ -101,7 +122,13 @@ export default function diagramInit(canvas) {
    * @param {number} delta - the value that dictates how big the zoom has to be.
    */
   function zoom(x: number, y: number, delta: number) {
-    scroller.zoom(delta * 0.2, { min: 0.4, max: 1.2, grid: 0.2, ox: x, oy: y });
+    scroller.zoom(delta * 0.05, {
+      min: 0.4,
+      max: 1.2,
+      grid: 0.05,
+      ox: x,
+      oy: y,
+    });
   }
 
   paper.unfreeze();
@@ -117,8 +144,27 @@ export default function diagramInit(canvas) {
         instance,
         service
       );
-
+      scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
+    },
+    addEntity: (instance, service, addingCoreInstance) => {
+      const instanceCoordinates = appendEntity(
+        paper,
+        graph,
+        service,
+        instance,
+        addingCoreInstance
+      );
       scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
   };
+}
+
+export interface DiagramHandlers {
+  removeCanvas: () => void;
+  addInstance: (instance: ServiceInstanceModel, service: ServiceModel) => void;
+  addEntity: (
+    entity: InstanceAttributeModel,
+    service: ServiceModel,
+    addingCoreInstance: boolean
+  ) => void;
 }
