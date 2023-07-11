@@ -1,4 +1,5 @@
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
@@ -37,6 +38,9 @@ module.exports = merge(common, {
       template: path.resolve(__dirname, "src", "index.html"),
       PUBLIC_PATH: publicPath,
       favicon: path.resolve(__dirname, "public", "images", "favicon.ico"),
+    }),
+    new CopyPlugin({
+      patterns: [{ from: "src/config.js", to: "" }],
     }),
   ],
   module: {
