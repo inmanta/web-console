@@ -110,6 +110,7 @@ export type Query =
   | GetEnvironmentSettings
   | GetEnvironmentSetting
   | GetEnvironments
+  | GetEnvironmentsContinuous
   | GetFacts.Query
   | GetResourceFacts.Query
   | GetAgents.Query
@@ -124,7 +125,6 @@ export type Query =
   | GetVersionedResourceDetails.Query
   | GetNotifications.Query
   | GetCompilationState
-  | GetEnvironmentsContinuous
   | GetVersionFile;
 
 export type Type = Query;

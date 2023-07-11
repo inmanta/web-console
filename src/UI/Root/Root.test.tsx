@@ -9,15 +9,20 @@ import {
   getStoreInstance,
   GetServerStatusOneTimeQueryManager,
   GetServerStatusStateHelper,
-  GetEnvironmentsQueryManager,
   GetEnvironmentsStateHelper,
+  GetEnvironmentsQueryManager,
 } from "@/Data";
+import {
+  GetEnvironmentsContinuousQueryManager,
+  GetEnvironmentsContinuousStateHelper,
+} from "@/Data/Managers/GetEnvironmentsContinuous";
 import {
   DeferredApiHelper,
   dependencies,
   DynamicQueryManagerResolver,
   Project,
   ServerStatus,
+  StaticScheduler,
 } from "@/Test";
 import { DependencyProvider, EnvironmentHandlerImpl } from "@/UI/Dependency";
 import { Root } from "./Root";
@@ -25,9 +30,17 @@ import { Root } from "./Root";
 function setup() {
   const store = getStoreInstance();
   const apiHelper = new DeferredApiHelper();
-  const environmentsManager = GetEnvironmentsQueryManager(
+  const scheduler = new StaticScheduler();
+  const environmentsStateHelper = GetEnvironmentsStateHelper(store);
+  const environmentManagerOneTime = GetEnvironmentsQueryManager(
     apiHelper,
-    GetEnvironmentsStateHelper(store)
+    environmentsStateHelper
+  );
+
+  const environmentsManager = GetEnvironmentsContinuousQueryManager(
+    apiHelper,
+    scheduler,
+    GetEnvironmentsContinuousStateHelper(store)
   );
 
   const getServerStatusManager = GetServerStatusOneTimeQueryManager(
@@ -38,6 +51,7 @@ function setup() {
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       environmentsManager,
+      environmentManagerOneTime,
       getServerStatusManager,
     ])
   );
