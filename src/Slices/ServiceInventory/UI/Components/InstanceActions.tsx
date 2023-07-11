@@ -47,6 +47,8 @@ export const InstanceActions: React.FC<InstanceActionsProps> = ({
             </ButtonWithCursorHandling>
           </Link>
         )}
+      </DescriptionListGroup>
+      <DescriptionListGroup>
         <Link
           pathname={routeManager.getUrl("EditInstance", {
             service: instance.service_entity,

@@ -47,9 +47,4 @@ sleep 2
 echo "Starting container..."
 yarn start:keycloak
 
-for i in {0..30} 
-do 
-    curl -k --connect-timeout 1 https://localhost:8888/api/v1/serverstatus > /dev/null && echo "Server up " && break
-    echo "Waiting $i"
-    sleep 1 
-done && [[ $i == 30 ]] && exit 1
+sleep 3
