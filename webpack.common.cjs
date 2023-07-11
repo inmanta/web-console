@@ -29,7 +29,6 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: "src/version.json", to: "" },
-        { from: "src/config.js", to: "" },
       ],
     }),
     new webpack.ProvidePlugin({
