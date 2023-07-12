@@ -1,0 +1,8 @@
+change-type: patch
+description: 'Update url construction based on new changes in API to redirect to ressource page.'
+issue-nr: 4907
+destination-branches:
+- master
+- iso6
+sections: 
+  minor-improvement: "{{description}}"

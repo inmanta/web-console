@@ -145,7 +145,7 @@ test("ServiceInventory can show resources for instance", async () => {
       Either.right({
         data: [
           {
-            resource_id: "resource_id_1,v=1",
+            resource_id: "[resource_id_1],v=1",
             resource_state: "resource_state",
           },
         ],
@@ -157,7 +157,7 @@ test("ServiceInventory can show resources for instance", async () => {
     await screen.findByRole("grid", { name: "ResourceTable-Success" })
   ).toBeInTheDocument();
 
-  expect(screen.getByText("resource_id_1")).toBeInTheDocument();
+  expect(screen.getByText("[resource_id_1]")).toBeInTheDocument();
 });
 
 function setup(setSortFn: (props) => void = dummySetter) {

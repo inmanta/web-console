@@ -258,7 +258,7 @@ test("GIVEN ResourcesView fetches resources for new instance after instance upda
   });
 
   expect(
-    screen.getByRole("cell", { name: "resource_id_a" })
+    screen.getByRole("cell", { name: "[resource_id_a]" })
   ).toBeInTheDocument();
 
   scheduler.executeAll();
