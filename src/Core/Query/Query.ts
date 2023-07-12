@@ -20,6 +20,10 @@ import {
   GetEnvironmentsManifest,
 } from "@/Data/Managers/GetEnvironments/interface";
 import {
+  GetEnvironmentsContinuous,
+  GetEnvironmentsContinuousManifest,
+} from "@/Data/Managers/GetEnvironmentsContinuous/interface";
+import {
   GetServiceInstance,
   GetServiceInstanceManifest,
 } from "@/Data/Managers/GetInstance/interface";
@@ -106,6 +110,7 @@ export type Query =
   | GetEnvironmentSettings
   | GetEnvironmentSetting
   | GetEnvironments
+  | GetEnvironmentsContinuous
   | GetFacts.Query
   | GetResourceFacts.Query
   | GetAgents.Query
@@ -154,6 +159,7 @@ interface Manifest {
   GetEnvironmentSettings: GetEnvironmentSettingsManifest;
   GetEnvironmentSetting: GetEnvironmentSettingManifest;
   GetEnvironments: GetEnvironmentsManifest;
+  GetEnvironmentsContinuous: GetEnvironmentsContinuousManifest;
   GetResourceFacts: GetResourceFacts.Manifest;
   GetAgents: GetAgents.Manifest;
   GetAgentProcess: GetAgentProcess.Manifest;

@@ -90,6 +90,10 @@ import {
   GetInstanceLogsQueryManager,
   GetInstanceLogsStateHelper,
 } from "@S/ServiceInstanceHistory/Data";
+import {
+  GetEnvironmentsContinuousQueryManager,
+  GetEnvironmentsContinuousStateHelper,
+} from "../Managers/GetEnvironmentsContinuous";
 import { GetMetricsQueryManager } from "../Managers/GetMetrics";
 import { GetMetricsStateHelper } from "../Managers/GetMetrics/StateHelper";
 
@@ -118,6 +122,11 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
 
     return [
       GetProjectsQueryManager(this.store, this.apiHelper),
+      GetEnvironmentsContinuousQueryManager(
+        this.apiHelper,
+        this.scheduler,
+        GetEnvironmentsContinuousStateHelper(this.store)
+      ),
       GetEnvironmentsQueryManager(
         this.apiHelper,
         GetEnvironmentsStateHelper(this.store)
