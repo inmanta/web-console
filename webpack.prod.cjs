@@ -10,7 +10,6 @@ const currentYear = new Date().getFullYear();
 
 module.exports = merge(common, {
   mode: "production",
-  devtool: "source-map",
   optimization: {
     minimizer: [
       new CssMinimizerPlugin({
