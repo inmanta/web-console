@@ -83,7 +83,7 @@ test("GIVEN ComplianceCheck page THEN user sees latest dry run report", async ()
   });
 
   const blocks = await screen.findAllByRole("article", { name: "DiffBlock" });
-  expect(blocks).toHaveLength(12);
+  expect(blocks).toHaveLength(11);
 });
 
 test("GIVEN ComplianceCheck page When a report is selected from the list THEN the user sees the selected dry run report", async () => {
@@ -252,11 +252,11 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
 
   expect(
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
-  ).toHaveLength(12);
+  ).toHaveLength(11);
 
   expect(
     await screen.findAllByRole("article", { name: "DiffBlock" })
-  ).toHaveLength(12);
+  ).toHaveLength(11);
 
   expect(
     screen.queryByRole("listbox", { name: "StatusFilterOptions" })
@@ -274,6 +274,11 @@ test("GIVEN ComplianceCheck page WHEN StatusFilter = 'Added' THEN only 'Added' r
     name: "StatusFilterOption",
   });
   expect(statusOptions).toHaveLength(7);
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("showAll") })
+    );
+  });
   await act(async () => {
     await userEvent.click(
       screen.getByRole("button", { name: words("hideAll") })

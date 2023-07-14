@@ -21,7 +21,7 @@ export const Page: React.FC = () => {
 export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   const { queryResolver } = useContext(DependencyContext);
   const refs: DiffWizard.Refs = useRef({});
-  const [statuses, setStatuses] = useState(Diff.statuses);
+  const [statuses, setStatuses] = useState(Diff.defaultStatuses);
 
   const [data] = queryResolver.useOneTime<"GetDesiredStateDiff">({
     kind: "GetDesiredStateDiff",

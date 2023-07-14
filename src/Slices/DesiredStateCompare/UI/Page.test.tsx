@@ -57,7 +57,7 @@ test("GIVEN DesiredStateCompare THEN shows list of diff blocks", async () => {
   });
 
   const blocks = await screen.findAllByRole("article", { name: "DiffBlock" });
-  expect(blocks).toHaveLength(12);
+  expect(blocks).toHaveLength(11);
 });
 
 test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", async () => {
@@ -85,7 +85,7 @@ test("GIVEN DesiredStateCompare THEN shows 'Jump To' action with dropdown", asyn
   const items = screen.getAllByRole("listitem", {
     name: "DiffSummaryListItem",
   });
-  expect(items).toHaveLength(12);
+  expect(items).toHaveLength(11);
 });
 
 test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' resources are shown", async () => {
@@ -104,11 +104,11 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
 
   expect(
     screen.getAllByRole("listitem", { name: "DiffSummaryListItem" })
-  ).toHaveLength(12);
+  ).toHaveLength(11);
 
   expect(
     await screen.findAllByRole("article", { name: "DiffBlock" })
-  ).toHaveLength(12);
+  ).toHaveLength(11);
 
   expect(
     screen.queryByRole("listbox", { name: "StatusFilterOptions" })
@@ -127,6 +127,11 @@ test("GIVEN DesiredStateCompare WHEN StatusFilter = 'Added' THEN only 'Added' re
   });
   expect(statusOptions).toHaveLength(7);
 
+  await act(async () => {
+    await userEvent.click(
+      screen.getByRole("button", { name: words("showAll") })
+    );
+  });
   await act(async () => {
     await userEvent.click(
       screen.getByRole("button", { name: words("hideAll") })
