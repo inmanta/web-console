@@ -11,9 +11,8 @@ export const InstanceProvider: React.FC<{
 }> = ({ services, mainServiceName, instanceId }) => {
   const { queryResolver } = useContext(DependencyContext);
 
-  const [data] = queryResolver.useOneTime<"GetServiceInstance">({
-    kind: "GetServiceInstance",
-    service_entity: mainServiceName,
+  const [data] = queryResolver.useOneTime<"GetInstanceWithRelations">({
+    kind: "GetInstanceWithRelations",
     id: instanceId,
   });
 

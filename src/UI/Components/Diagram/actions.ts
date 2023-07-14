@@ -4,9 +4,9 @@ import {
   AttributeModel,
   EmbeddedEntity,
   InstanceAttributeModel,
-  ServiceInstanceModel,
   ServiceModel,
 } from "@/Core";
+import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { words } from "@/UI/words";
 import activeImage from "./icons/active-icon.svg";
 import candidateImage from "./icons/candidate-icon.svg";
@@ -141,17 +141,27 @@ export function appendInfoTool(
  * @param {dia.Paper} paper JointJS paper object
  * @param {ServiceInstanceModel} serviceInstance that we want to display
  * @param {ServiceModel} service that hold definitions for attributes which we want to display as instance Object doesn't differentiate core attributes from i.e. embedded entities
- * @returns {g.Rect} coordinates that are being use to center view as regular behavior center to the last entity added
+ * @returns {ServiceEntityBlock} appendedInstance to allow connect related Instances added concurrently
  */
 export function appendInstance(
   paper: dia.Paper,
   graph: dia.Graph,
-  serviceInstance: ServiceInstanceModel,
-  service: ServiceModel
-): g.Rect {
+  serviceWithReferences: InstanceWithReferences,
+  services: ServiceModel[],
+  isMainInstance: boolean
+): ServiceEntityBlock {
+  const serviceInstance = serviceWithReferences.instance.data;
+  const ServiceInstanceModel = services.find(
+    (model) => model.name === serviceInstance.service_entity
+  ) as ServiceModel;
+
   const instanceAsTable = new ServiceEntityBlock().setName(
     serviceInstance.service_entity
   );
+
+  if (!isMainInstance) {
+    instanceAsTable.setTabColor("#0066CC");
+  }
 
   //check for any presentable attributes, where candidate attrs have priority, if there is a set, then append them to  JointJS shape and try to display and connect embedded entities
   if (serviceInstance.candidate_attributes !== null) {
@@ -159,9 +169,9 @@ export function appendInstance(
       graph,
       paper,
       instanceAsTable,
-      service.attributes,
+      ServiceInstanceModel.attributes,
       serviceInstance.candidate_attributes,
-      service.embedded_entities,
+      ServiceInstanceModel.embedded_entities,
       "candidate"
     );
   } else {
@@ -169,12 +179,18 @@ export function appendInstance(
       graph,
       paper,
       instanceAsTable,
-      service.attributes,
+      ServiceInstanceModel.attributes,
       serviceInstance.active_attributes as InstanceAttributeModel,
-      service.embedded_entities,
+      ServiceInstanceModel.embedded_entities,
       "active"
     );
   }
+  const appendedInstances = serviceWithReferences.relatedInstances.map(
+    (relatedInstance) => {
+      return appendInstance(paper, graph, relatedInstance, services, false);
+    }
+  );
+  connectEntities(graph, instanceAsTable, appendedInstances);
 
   //auto-layout provided by JointJS
   layout.DirectedGraph.layout(graph, {
@@ -185,7 +201,7 @@ export function appendInstance(
     rankDir: "TB",
   });
 
-  return instanceAsTable.getBBox();
+  return instanceAsTable;
 }
 
 /**

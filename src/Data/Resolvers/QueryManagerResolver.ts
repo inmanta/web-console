@@ -29,6 +29,8 @@ import {
   GetServiceInstancesOneTimeQueryManager,
   GetServiceOneTimeQueryManager,
   GetServiceInstanceOneTimeQueryManager,
+  GetInstanceWithRelationsQueryManager,
+  GetInstanceWithRelationsStateHelper,
 } from "@/Data/Managers";
 import { Store } from "@/Data/Store";
 import {
@@ -159,6 +161,10 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       GetServiceInstanceOneTimeQueryManager(
         this.apiHelper,
         serviceInstanceStateHelper
+      ),
+      GetInstanceWithRelationsQueryManager(
+        this.apiHelper,
+        GetInstanceWithRelationsStateHelper(this.store)
       ),
       GetServiceOneTimeQueryManager(this.apiHelper, serviceStateHelper),
       ServiceConfigQueryManager(

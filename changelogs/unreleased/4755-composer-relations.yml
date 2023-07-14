@@ -1,0 +1,7 @@
+change-type: minor
+description: 'Extend Instance Composer with ability to display relation-services'
+issue-nr: 4755
+destination-branches:
+- master
+- iso6
+

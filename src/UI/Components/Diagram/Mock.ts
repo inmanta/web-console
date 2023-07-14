@@ -32,6 +32,7 @@ export const testInstance: ServiceInstanceModel = {
   created_at: "2023-05-16T07:40:28.868598",
   last_updated: "2023-05-16T07:49:41.067413",
   callback: [],
+  referenced_by: [],
   deleted: false,
   deployment_progress: {
     total: 335,
