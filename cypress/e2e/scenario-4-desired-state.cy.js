@@ -371,10 +371,6 @@ describe("Scenario 4 Desired State", () => {
     //go back
     cy.get(".pf-c-nav__link").contains("Desired State").click();
 
-    // cy.get("@TABLE_LENGTH").then((length) => {
-    //   cy.get("tbody").eq(length).find('[aria-label="Actions"]').click();
-    // });
-
     cy.get("tbody").eq(-1).find('[aria-label="Actions"]').click();
 
     cy.get(".pf-c-dropdown__menu-item")
@@ -384,6 +380,11 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-c-title").should("have.text", "Compliance Check");
     cy.get(".pf-c-select").contains("No dry runs exist").should("be.visible");
     cy.get(".pf-c-button").contains("Perform dry run").click();
+
+    cy.get('[aria-label="StatusFilter"]').click();
+    cy.get('[aria-label="StatusFilterOption"]').contains("unmodified").click();
+    cy.get('[aria-label="StatusFilter"]').click();
+
     cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should(
       "be.visible"
     );
@@ -425,6 +426,11 @@ describe("Scenario 4 Desired State", () => {
 
     cy.get(".pf-c-select").contains("No dry runs exist").should("be.visible");
     cy.get(".pf-c-button").contains("Perform dry run").click();
+
+    cy.get('[aria-label="StatusFilter"]').click();
+    cy.get('[aria-label="StatusFilterOption"]').contains("unmodified").click();
+    cy.get('[aria-label="StatusFilter"]').click();
+
     // perform dry-run
     // await the end of the dry-run and expect to find two rows with expandable content.
     cy.get(".pf-c-card__expandable-content", { timeout: 20000 }).should(
@@ -478,6 +484,10 @@ describe("Scenario 4 Desired State", () => {
     cy.get(".pf-c-dropdown__menu-item")
       .contains("Compare with current state")
       .click();
+
+    cy.get('[aria-label="StatusFilter"]').click();
+    cy.get('[aria-label="StatusFilterOption"]').contains("unmodified").click();
+    cy.get('[aria-label="StatusFilter"]').click();
 
     // expect the view to still contain the diff of the last dry-run comparison
     cy.get(".pf-c-card__expandable-content", { timeout: 20000 }).should(
