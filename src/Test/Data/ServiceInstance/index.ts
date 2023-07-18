@@ -19,6 +19,7 @@ export const a: ServiceInstanceModelWithTargetStates = {
   callback: [],
   deleted: false,
   instanceSetStateTargets: ["acknowledged", "designed"],
+  referenced_by: [],
 };
 
 export const b: ServiceInstanceModelWithTargetStates = {
@@ -86,6 +87,7 @@ export const nestedEditable: ServiceInstanceModelWithTargetStates = {
   callback: [],
   deleted: false,
   instanceSetStateTargets: [],
+  referenced_by: [],
 };
 
 export const allAttrs: ServiceInstanceModelWithTargetStates = {

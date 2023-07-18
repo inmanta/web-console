@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "@inmanta/rappid/rappid.css";
 import { Modal } from "@patternfly/react-core";
 import styled from "styled-components";
-import { ServiceInstanceModel, ServiceModel } from "@/Core";
+import { ServiceModel } from "@/Core";
+import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import FormModal from "./components/FormModal";
@@ -16,7 +17,7 @@ const Canvas = ({
 }: {
   services: ServiceModel[];
   mainServiceName: string;
-  instance?: ServiceInstanceModel;
+  instance?: InstanceWithReferences;
 }) => {
   const canvas = useRef<HTMLDivElement>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -37,12 +38,8 @@ const Canvas = ({
     const actions = diagramInit(canvas);
     setDiagramHandlers(actions);
     if (instance) {
-      actions.addInstance(
-        instance,
-        services.find(
-          (service) => service.name === mainServiceName
-        ) as ServiceModel
-      );
+      const isMainInstance = true;
+      actions.addInstance(instance, services, isMainInstance);
     }
 
     return () => {

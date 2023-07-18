@@ -40,6 +40,7 @@ export interface ServiceInstanceModel
   state: string;
   deployment_progress?: DeploymentProgress | null;
   service_identity_attribute_value?: string;
+  referenced_by: string[];
 }
 
 export interface ServiceInstanceModelWithTargetStates

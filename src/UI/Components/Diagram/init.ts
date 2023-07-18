@@ -1,9 +1,6 @@
 import { dia, shapes, ui } from "@inmanta/rappid";
-import {
-  InstanceAttributeModel,
-  ServiceInstanceModel,
-  ServiceModel,
-} from "@/Core";
+import { InstanceAttributeModel, ServiceModel } from "@/Core";
+import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations/interface";
 import { appendEntity, appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
 import { routerNamespace } from "./routers";
@@ -137,15 +134,23 @@ export default function diagramInit(canvas): DiagramHandlers {
       scroller.remove();
       paper.remove();
     },
-    addInstance: (instance: ServiceInstanceModel, service: ServiceModel) => {
-      const instanceCoordinates = appendInstance(
+
+    addInstance: (
+      instance: InstanceWithReferences,
+      services: ServiceModel[],
+      isMainInstance: boolean
+    ) => {
+      const appendedInstance = appendInstance(
         paper,
         graph,
         instance,
-        service
+        services,
+        isMainInstance
       );
-      scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
+      const { x, y } = appendedInstance.getBBox();
+      scroller.center(x, y + 200);
     },
+
     addEntity: (instance, service, addingCoreInstance) => {
       const instanceCoordinates = appendEntity(
         paper,
@@ -161,7 +166,11 @@ export default function diagramInit(canvas): DiagramHandlers {
 
 export interface DiagramHandlers {
   removeCanvas: () => void;
-  addInstance: (instance: ServiceInstanceModel, service: ServiceModel) => void;
+  addInstance: (
+    instance: InstanceWithReferences,
+    services: ServiceModel[],
+    isMainInstance: boolean
+  ) => void;
   addEntity: (
     entity: InstanceAttributeModel,
     service: ServiceModel,
