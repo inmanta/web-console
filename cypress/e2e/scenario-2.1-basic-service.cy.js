@@ -171,7 +171,8 @@ if (Cypress.env("edition") === "iso") {
 
       // Expect edit button to be disabled
       cy.get(".pf-c-description-list")
-        .contains("/^Edit$/")
+        .contains("Edit")
+        .eq(1)
         .should("be.disabled");
       cy.get('[aria-label="LegendItem-lone"]').should(
         "contain",
@@ -184,7 +185,7 @@ if (Cypress.env("edition") === "iso") {
         .should("contain", "up");
 
       // click on edit button
-      cy.get(".pf-c-description-list").contains("/^Edit$/").click();
+      cy.get(".pf-c-description-list").contains("Edit").eq(1).click();
 
       // check if amount of fields is lesser than create amount.
       cy.get("form").find("input").should("have.length.of.at.most", 11);
