@@ -13,6 +13,7 @@ const extractFeatures = (fileContent) => {
 const useFeatures = (): string[] => {
   const [features, setFeatures] = useState([]);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const checkFileChange = async () => {
       try {
@@ -29,7 +30,7 @@ const useFeatures = (): string[] => {
     };
 
     checkFileChange();
-  }, [features]);
+  }, []);
 
   return features || [];
 };

@@ -78,13 +78,7 @@ function setup() {
   };
 }
 
-beforeAll(() => {
-  jest.mock("@/UI/Utils/useFeatures");
-});
-
-afterAll(() => {
-  jest.clearAllMocks();
-});
+jest.mock("@/UI/Utils/useFeatures");
 
 test("GIVEN the app THEN the navigation toggle button should be visible", async () => {
   fetchMock.mockResponse(JSON.stringify({}));
