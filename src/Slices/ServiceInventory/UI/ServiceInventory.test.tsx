@@ -132,8 +132,11 @@ function setup(service = Service.a) {
   };
 }
 
+jest.mock("@/UI/Utils/useFeatures");
+
 test("ServiceInventory shows updated instances", async () => {
   const { component, apiHelper, scheduler } = setup();
+
   render(component);
 
   expect(

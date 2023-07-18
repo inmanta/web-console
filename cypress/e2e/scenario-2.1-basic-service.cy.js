@@ -169,20 +169,19 @@ if (Cypress.env("edition") === "iso") {
       // Expect to find status tab
       cy.get(".pf-c-tabs__list li:first").should("have.class", "pf-m-current");
 
-      // Expect edit button to be disabled
-      cy.get(".pf-c-description-list").contains("Edit").should("be.disabled");
-      cy.get('[aria-label="LegendItem-lone"]').should(
-        "contain",
-        "No resources available yet"
-      );
-
       // check state is up now
       cy.get('[aria-label="InstanceRow-Intro"]:first')
         .find('[data-label="State"]', { timeout: 60000 })
         .should("contain", "up");
 
+      cy.get('[aria-label="LegendItem-deployed"]').should("contain", "1");
+
       // click on edit button
-      cy.get(".pf-c-description-list").contains("Edit").click();
+      cy.get(".pf-c-description-list__group")
+        .find("button")
+        .eq(2)
+        .last()
+        .click();
 
       // check if amount of fields is lesser than create amount.
       cy.get("form").find("input").should("have.length.of.at.most", 11);
