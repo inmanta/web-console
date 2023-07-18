@@ -10,8 +10,8 @@ import {
 import { PlusIcon } from "@patternfly/react-icons";
 import { ServiceModel, ServiceInstanceParams } from "@/Core";
 import { DependencyContext } from "@/UI/Dependency";
+import useFeatures from "@/UI/Utils/useFeatures";
 import { words } from "@/UI/words";
-import useFeatures from "@/configHook";
 import { FilterWidget } from "@S/ServiceInventory/UI/Components/FilterWidget";
 
 interface Props {

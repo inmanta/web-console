@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { DependencyContext } from "@/UI/Dependency";
 import { SearchSanitizer } from "@/UI/Routing";
 import { GlobalStyles } from "@/UI/Styles";
-import useFeatures from "@/configHook";
+import useFeatures from "@/UI/Utils/useFeatures";
 import { NotFoundPage } from "@S/NotFound/UI";
 import { ExpertBanner } from "../Components/ExpertBanner";
 import { AuthProvider, PageFrame, Initializer } from "./Components";

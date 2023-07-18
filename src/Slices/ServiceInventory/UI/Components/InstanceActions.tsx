@@ -8,8 +8,8 @@ import { HistoryIcon, ToolsIcon, PortIcon } from "@patternfly/react-icons";
 import { ButtonWithCursorHandling, Link } from "@/UI/Components";
 import { DependencyContext } from "@/UI/Dependency";
 import { ServiceInstanceForAction } from "@/UI/Presenters";
+import useFeatures from "@/UI/Utils/useFeatures";
 import { words } from "@/UI/words";
-import useFeatures from "@/configHook";
 import { DeleteModal } from "./DeleteModal";
 import { SetStateAction } from "./SetStateAction";
 
