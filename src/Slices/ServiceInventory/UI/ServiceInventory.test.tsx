@@ -132,7 +132,13 @@ function setup(service = Service.a) {
   };
 }
 
-jest.mock("@/UI/Utils/useFeatures");
+beforeAll(() => {
+  jest.mock("@/UI/Utils/useFeatures");
+});
+
+afterAll(() => {
+  jest.clearAllMocks();
+});
 
 test("ServiceInventory shows updated instances", async () => {
   const { component, apiHelper, scheduler } = setup();

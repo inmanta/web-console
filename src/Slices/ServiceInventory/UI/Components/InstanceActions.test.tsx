@@ -18,7 +18,13 @@ import { words } from "@/UI";
 import { DependencyProvider } from "@/UI/Dependency";
 import { InstanceActions } from "./InstanceActions";
 
-jest.mock("@/UI/Utils/useFeatures");
+beforeAll(() => {
+  jest.mock("@/UI/Utils/useFeatures");
+});
+
+afterAll(() => {
+  jest.clearAllMocks();
+});
 
 test("Given InstanceActions component When the instance is terminated Then the actions are still shown", async () => {
   const apiHelper = new DeferredApiHelper();
