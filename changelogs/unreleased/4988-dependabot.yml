@@ -1,0 +1,6 @@
+change-type: patch
+description: 'Build(deps-dev): Bump jest-environment-jsdom from 29.5.0 to 29.6.1'
+destination-branches:
+- master
+- iso6
+sections: {}
