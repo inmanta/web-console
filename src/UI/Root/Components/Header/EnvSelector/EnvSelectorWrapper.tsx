@@ -5,7 +5,7 @@ interface Props {
   selectorItems: EnvironmentSelectorItem[];
   environmentNames: string[];
   onSelectEnvironment: (
-    selectedProjectAndEnvironment: EnvironmentSelectorItem
+    selectedProjectAndEnvironment: EnvironmentSelectorItem,
   ) => void;
   defaultToggleText: string;
 }
@@ -39,7 +39,7 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
         ? environmentNames
         : environmentNames.filter(
             (envName) =>
-              envName.toLowerCase().indexOf(value.toLowerCase()) !== -1
+              envName.toLowerCase().indexOf(value.toLowerCase()) !== -1,
           );
     return filtered;
   };
@@ -53,7 +53,7 @@ export const EnvSelectorWrapper: React.FC<Props> = ({
     setIsOpen(!isOpen);
 
     const matchingEnvItem = selectorItems.find(
-      (envItem) => envItem.displayName === value
+      (envItem) => envItem.displayName === value,
     );
     if (matchingEnvItem) {
       setToggleText(value);

@@ -35,7 +35,7 @@ export const TimestampPicker: React.FC<Props> = ({
   const onDateChange = (
     _event: React.FormEvent,
     inputString: string,
-    inputDate: Date | undefined
+    inputDate: Date | undefined,
   ) => {
     if (
       timestamp &&
@@ -112,7 +112,7 @@ const isValidDashedFormat = (dateString: string): boolean =>
 
 const validateDateFormat = (
   dateString: string,
-  date: Date | string
+  date: Date | string,
 ): boolean => {
   let formattedDate;
   if (typeof date === "string") {

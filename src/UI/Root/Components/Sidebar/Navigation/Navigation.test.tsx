@@ -22,17 +22,17 @@ import { Navigation } from "./Navigation";
 
 function setup(
   initialEntries: string[] | undefined,
-  serverStatus: ServerStatus
+  serverStatus: ServerStatus,
 ) {
   const apiHelper = new DeferredApiHelper();
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   store.dispatch.serverStatus.setData(RemoteData.success(serverStatus));
   const featureManager = new PrimaryFeatureManager(
-    GetServerStatusStateHelper(store)
+    GetServerStatusStateHelper(store),
   );
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const component = (
     <MemoryRouter initialEntries={initialEntries}>
@@ -59,25 +59,25 @@ test("GIVEN Navigation WHEN lsm enabled THEN shows all navigation items", () => 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.environment"),
-    })
+    }),
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.lifecycleServiceManager"),
-    })
+    }),
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.orchestrationEngine"),
-    })
+    }),
   ).toBeVisible();
 
   expect(
     within(navigation).getByRole("region", {
       name: words("navigation.resourceManager"),
-    })
+    }),
   ).toBeVisible();
 });
 
@@ -92,7 +92,7 @@ test("GIVEN Navigation WHEN no lsm THEN lsm is not shown", () => {
   expect(
     within(navigation).queryByRole("region", {
       name: words("navigation.lifecycleServiceManager"),
-    })
+    }),
   ).not.toBeInTheDocument();
 });
 
@@ -110,7 +110,7 @@ test("GIVEN Navigation WHEN on 'Service Catalog' THEN 'Service Catalog' is highl
 test("GIVEN Navigation WHEN Compilation Reports are pending THEN 'Compile Reports' Indication is visible", async () => {
   const { component, apiHelper } = setup(
     ["/lsm/catalog"],
-    TestServerStatus.withLsm
+    TestServerStatus.withLsm,
   );
   render(component);
 

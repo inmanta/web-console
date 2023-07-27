@@ -21,5 +21,5 @@ export enum DesiredStateVersionStatus {
 }
 
 export const DesiredStateVersionStatusList = Object.values(
-  DesiredStateVersionStatus
+  DesiredStateVersionStatus,
 );

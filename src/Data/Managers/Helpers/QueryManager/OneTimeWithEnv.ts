@@ -26,17 +26,17 @@ export function OneTimeWithEnv<Kind extends Query.Kind>(
   kind: Kind,
   getUrl: GetUrlWithEnv<Kind>,
   toUsed: ToUsed<Kind>,
-  strategy: "MERGE" | "RELOAD" = "RELOAD"
+  strategy: "MERGE" | "RELOAD" = "RELOAD",
 ): OneTimeQueryManager<Kind> {
   async function update(
     query: Query.SubQuery<Kind>,
     url: string,
-    environment: string
+    environment: string,
   ): Promise<void> {
     stateHelper.set(
       RemoteData.fromEither(await apiHelper.get(url, environment)),
       query,
-      environment
+      environment,
     );
   }
 
@@ -46,9 +46,12 @@ export function OneTimeWithEnv<Kind extends Query.Kind>(
     const [url, setUrl] = useState(getUrl(urlEncodeParams(query), environment));
     const previousEnvironment = usePrevious(environment);
 
-    useEffect(() => {
-      setUrl(getUrl(urlEncodeParams(query), environment));
-    }, getDependencies(query, environment));
+    useEffect(
+      () => {
+        setUrl(getUrl(urlEncodeParams(query), environment));
+      },
+      getDependencies(query, environment),
+    );
 
     useEffect(() => {
       if (
@@ -69,7 +72,7 @@ export function OneTimeWithEnv<Kind extends Query.Kind>(
     return [
       RemoteData.mapSuccess(
         (d) => toUsed(d, setUrl),
-        stateHelper.useGetHooked(query, environment)
+        stateHelper.useGetHooked(query, environment),
       ),
       () => update(query, url, environment),
     ];
@@ -77,7 +80,7 @@ export function OneTimeWithEnv<Kind extends Query.Kind>(
 
   function matches(
     query: Query.SubQuery<Kind>,
-    matchingKind: QueryManagerKind
+    matchingKind: QueryManagerKind,
   ): boolean {
     return query.kind === kind && matchingKind === "OneTime";
   }

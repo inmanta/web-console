@@ -23,7 +23,7 @@ function setup() {
   const baseApiHelper = new BaseApiHelper();
   const commandManager = ServiceConfigCommandManager(
     baseApiHelper,
-    ServiceConfigStateHelper(store)
+    ServiceConfigStateHelper(store),
   );
   store.dispatch.environment.setEnvironmentDetailsById({
     id: Service.a.environment,
@@ -32,7 +32,7 @@ function setup() {
   const environmentModifier = EnvironmentModifierImpl();
   environmentModifier.setEnvironment(Service.a.environment);
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager])
+    new DynamicCommandManagerResolver([commandManager]),
   );
   return {
     component: (config: Config) => (
@@ -63,6 +63,6 @@ it("Config Details takes environment halted status in account", async () => {
   });
   rerender(component({ enabled: true }));
   expect(
-    await screen.findByRole("checkbox", { name: "enabled-True" })
+    await screen.findByRole("checkbox", { name: "enabled-True" }),
   ).toBeDisabled();
 });

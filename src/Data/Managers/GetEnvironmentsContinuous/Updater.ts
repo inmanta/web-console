@@ -6,17 +6,17 @@ export class EnvironmentsUpdater
 {
   constructor(
     private readonly stateHelper: StateHelper<"GetEnvironmentsContinuous">,
-    private readonly apiHelper: ApiHelper
+    private readonly apiHelper: ApiHelper,
   ) {}
 
   async update(
-    query: Query.SubQuery<"GetEnvironmentsContinuous">
+    query: Query.SubQuery<"GetEnvironmentsContinuous">,
   ): Promise<void> {
     this.stateHelper.set(
       RemoteData.fromEither(
-        await this.apiHelper.getWithoutEnvironment(getUrl(query.details))
+        await this.apiHelper.getWithoutEnvironment(getUrl(query.details)),
       ),
-      query
+      query,
     );
   }
 }

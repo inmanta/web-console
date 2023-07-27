@@ -32,12 +32,12 @@ test("InventoryTable can be expanded", async () => {
       store,
       new DeferredApiHelper(),
       new StaticScheduler(),
-      new StaticScheduler()
-    )
+      new StaticScheduler(),
+    ),
   );
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -52,7 +52,7 @@ test("InventoryTable can be expanded", async () => {
           enable_lsm_expert_mode: false,
         },
       },
-    ])
+    ]),
   );
   render(
     <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
@@ -68,7 +68,7 @@ test("InventoryTable can be expanded", async () => {
           />
         </StoreProvider>
       </DependencyProvider>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
   const testid = `details_${Row.a.id.short}`;
 
@@ -90,12 +90,12 @@ test("ServiceInventory can show resources for instance", async () => {
       store,
       apiHelper,
       new StaticScheduler(),
-      new StaticScheduler()
-    )
+      new StaticScheduler(),
+    ),
   );
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -110,7 +110,7 @@ test("ServiceInventory can show resources for instance", async () => {
           enable_lsm_expert_mode: false,
         },
       },
-    ])
+    ]),
   );
 
   render(
@@ -127,7 +127,7 @@ test("ServiceInventory can show resources for instance", async () => {
           />
         </StoreProvider>
       </DependencyProvider>
-    </MemoryRouter>
+    </MemoryRouter>,
   );
 
   const expandCell = screen.getByLabelText(`expand-button-${Row.a.id.short}`);
@@ -137,7 +137,7 @@ test("ServiceInventory can show resources for instance", async () => {
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("tab", { name: words("inventory.tabs.resources") })
+      screen.getByRole("tab", { name: words("inventory.tabs.resources") }),
     );
   });
   await act(async () => {
@@ -149,12 +149,12 @@ test("ServiceInventory can show resources for instance", async () => {
             resource_state: "resource_state",
           },
         ],
-      })
+      }),
     );
   });
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceTable-Success" })
+    await screen.findByRole("grid", { name: "ResourceTable-Success" }),
   ).toBeInTheDocument();
 
   expect(screen.getByText("[resource_id_1]")).toBeInTheDocument();
@@ -164,7 +164,7 @@ function setup(setSortFn: (props) => void = dummySetter) {
   const store = getStoreInstance();
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -179,7 +179,7 @@ function setup(setSortFn: (props) => void = dummySetter) {
           enable_lsm_expert_mode: false,
         },
       },
-    ])
+    ]),
   );
 
   const component = (
@@ -217,7 +217,7 @@ test("ServiceInventory shows sorting buttons for sortable columns", async () => 
   expect(await screen.findByRole("button", { name: /created/i })).toBeVisible();
   expect(await screen.findByRole("button", { name: /updated/i })).toBeVisible();
   expect(
-    screen.queryByRole("button", { name: /attributes/i })
+    screen.queryByRole("button", { name: /attributes/i }),
   ).not.toBeInTheDocument();
 });
 

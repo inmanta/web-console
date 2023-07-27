@@ -23,7 +23,7 @@ const Canvas = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [stringifiedDict, setStringifiedDict] = useState<DictDialogData | null>(
-    null
+    null,
   );
   const [diagramHandlers, setDiagramHandlers] =
     useState<DiagramHandlers | null>(null);
@@ -80,9 +80,9 @@ const Canvas = ({
             diagramHandlers.addEntity(
               entity,
               services.find(
-                (service) => service.name === entityName
+                (service) => service.name === entityName,
               ) as ServiceModel,
-              entityName === mainServiceName
+              entityName === mainServiceName,
             );
           }
         }}

@@ -44,7 +44,7 @@ const CheckedList: React.FC<{ all: string[]; available: string[] }> = ({
         <ListItem key={item}>{item}</ListItem>
       ) : (
         <StyledListItemStriked key={item}>{item}</StyledListItemStriked>
-      )
+      ),
     )}
   </List>
 );

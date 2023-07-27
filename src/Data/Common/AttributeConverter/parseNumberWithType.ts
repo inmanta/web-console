@@ -1,6 +1,6 @@
 export function parseNumberWithType(
   type: string,
-  value: string
+  value: string,
 ): bigint | number | string | null {
   try {
     const number = Number(value);

@@ -5,7 +5,7 @@ import { getUrl } from "./getUrl";
 export function ResourceHistoryQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetResourceHistory">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetResourceHistory">(
     apiHelper,
@@ -28,6 +28,6 @@ export function ResourceHistoryQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }

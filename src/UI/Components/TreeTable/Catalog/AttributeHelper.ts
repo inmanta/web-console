@@ -9,19 +9,19 @@ export class CatalogAttributeHelper
 
   public getPaths(container: CatalogAttributeTree["source"]): string[] {
     return Object.keys(this.getNodesFromEntities("", container)).sort(
-      (pathA, pathB) => pathA.localeCompare(pathB)
+      (pathA, pathB) => pathA.localeCompare(pathB),
     );
   }
 
   public getMultiAttributeNodes(
-    container: CatalogAttributeTree["source"]
+    container: CatalogAttributeTree["source"],
   ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
     return this.getNodesFromEntities("", container);
   }
 
   private getNodesFromEntities(
     prefix: string,
-    container: CatalogAttributeTree["source"]
+    container: CatalogAttributeTree["source"],
   ): MultiAttributeNodeDict<CatalogAttributeTree["target"]> {
     let entries = container.attributes.reduce((acc, cur) => {
       acc[`${prefix}${cur.name}`] = {
@@ -49,7 +49,7 @@ export class CatalogAttributeHelper
           };
           return acc;
         },
-        {}
+        {},
       );
       entries = { ...entries, ...entriesFromRelations };
     }
@@ -60,7 +60,7 @@ export class CatalogAttributeHelper
           ...entries,
           ...this.getNodesFromEntities(
             `${prefix}${entity.name}${this.separator}`,
-            entity
+            entity,
           ),
         };
       });

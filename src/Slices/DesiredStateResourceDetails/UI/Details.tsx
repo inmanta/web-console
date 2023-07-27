@@ -22,5 +22,5 @@ const classifier = new AttributeClassifier(
   new JsonFormatter(),
   new XmlFormatter(),
   undefined,
-  () => false
+  () => false,
 );

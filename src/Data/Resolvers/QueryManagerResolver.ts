@@ -107,7 +107,7 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
     private readonly apiHelper: ApiHelper,
     private readonly scheduler: Scheduler,
     private readonly slowScheduler: Scheduler,
-    private readonly instanceResourcesRetryLimit: number = 20
+    private readonly instanceResourcesRetryLimit: number = 20,
   ) {
     this.managers = this.getManagers();
   }
@@ -127,108 +127,108 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
       GetEnvironmentsContinuousQueryManager(
         this.apiHelper,
         this.scheduler,
-        GetEnvironmentsContinuousStateHelper(this.store)
+        GetEnvironmentsContinuousStateHelper(this.store),
       ),
       GetEnvironmentsQueryManager(
         this.apiHelper,
-        GetEnvironmentsStateHelper(this.store)
+        GetEnvironmentsStateHelper(this.store),
       ),
       GetServerStatusOneTimeQueryManager(
         this.apiHelper,
-        GetServerStatusStateHelper(this.store)
+        GetServerStatusStateHelper(this.store),
       ),
       GetServerStatusContinuousQueryManager(
         this.apiHelper,
         GetServerStatusStateHelper(this.store),
-        this.slowScheduler
+        this.slowScheduler,
       ),
       GetMetricsQueryManager(this.apiHelper, GetMetricsStateHelper(this.store)),
       GetEnvironmentSettingsQueryManager(
         this.apiHelper,
-        GetEnvironmentSettingsStateHelper(this.store)
+        GetEnvironmentSettingsStateHelper(this.store),
       ),
       ServicesQueryManager(
         this.apiHelper,
         ServicesStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       ServiceQueryManager(
         this.apiHelper,
         serviceStateHelper,
         this.scheduler,
-        serviceKeyMaker
+        serviceKeyMaker,
       ),
       ServiceInstancesQueryManager(
         this.apiHelper,
         serviceInstancesStateHelper,
-        this.scheduler
+        this.scheduler,
       ),
       GetServiceInstancesOneTimeQueryManager(
         this.apiHelper,
-        serviceInstancesStateHelper
+        serviceInstancesStateHelper,
       ),
       GetServiceInstanceOneTimeQueryManager(
         this.apiHelper,
-        serviceInstanceStateHelper
+        serviceInstanceStateHelper,
       ),
       GetInstanceWithRelationsQueryManager(
         this.apiHelper,
-        GetInstanceWithRelationsStateHelper(this.store)
+        GetInstanceWithRelationsStateHelper(this.store),
       ),
       GetServiceOneTimeQueryManager(this.apiHelper, serviceStateHelper),
       ServiceConfigQueryManager(
         this.apiHelper,
         ServiceConfigStateHelper(this.store),
-        new ServiceConfigFinalizer(serviceStateHelper)
+        new ServiceConfigFinalizer(serviceStateHelper),
       ),
       InstanceResourcesQueryManager(
         this.apiHelper,
         InstanceResourcesStateHelper(this.store),
         serviceInstancesStateHelper,
         this.scheduler,
-        this.instanceResourcesRetryLimit
+        this.instanceResourcesRetryLimit,
       ),
       EventsQueryManager(
         this.apiHelper,
         EventsStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       GetInstanceLogsQueryManager(
         this.apiHelper,
         GetInstanceLogsStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       InstanceConfigQueryManager(
         this.apiHelper,
         InstanceConfigStateHelper(this.store),
-        new InstanceConfigFinalizer(serviceStateHelper)
+        new InstanceConfigFinalizer(serviceStateHelper),
       ),
       DiagnosticsQueryManager(
         this.apiHelper,
         DiagnosticsStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       GetResourcesQueryManager(this.store, this.apiHelper, this.scheduler),
       ResourceDetailsQueryManager(
         this.apiHelper,
         ResourceDetailsStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       ResourceHistoryQueryManager(
         this.apiHelper,
         ResourceHistoryStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       EnvironmentDetailsContinuousQueryManager(
         this.store,
         this.apiHelper,
-        this.scheduler
+        this.scheduler,
       ),
       EnvironmentDetailsOneTimeQueryManager(this.store, this.apiHelper),
       ServiceInstanceQueryManager(
         this.apiHelper,
         serviceInstanceStateHelper,
-        this.scheduler
+        this.scheduler,
       ),
       CallbacksQueryManager(this.apiHelper, CallbacksStateHelper(this.store)),
       CompileReportsQueryManager(this.store, this.apiHelper, this.scheduler),
@@ -236,53 +236,53 @@ export class QueryManagerResolver implements ManagerResolver<QueryManager> {
         this.store,
         this.apiHelper,
 
-        this.scheduler
+        this.scheduler,
       ),
       ResourceLogsQueryManager(
         this.apiHelper,
         ResourceLogsStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       GetResourceFactsQueryManager(
         this.apiHelper,
         GetResourceFactsStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       GetAgentsQueryManager(this.store, this.apiHelper, this.scheduler),
       GetAgentProcessQueryManager(this.store, this.apiHelper),
       GetDesiredStatesQueryManager(
         this.apiHelper,
         GetDesiredStatesStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       GetVersionResourcesQueryManager(
         this.apiHelper,
         GetVersionResourcesStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       GetCompilerStatusQueryManager(this.apiHelper, this.scheduler),
       GetCompilationStateQueryManager(this.apiHelper, this.scheduler),
       GetParametersQueryManager(
         this.apiHelper,
         GetParametersStateHelper(this.store),
-        this.scheduler
+        this.scheduler,
       ),
       GetFactsQueryManager(this.store, this.apiHelper, this.scheduler),
       GetDesiredStateDiffQueryManager(
         this.apiHelper,
-        GetDesiredStateDiffStateHelper(this.store)
+        GetDesiredStateDiffStateHelper(this.store),
       ),
       GetDryRunsQueryManager(this.apiHelper, this.store, this.scheduler),
       GetDryRunReportQueryManager(this.apiHelper, this.store),
       GetDesiredStateResourceDetailsQueryManager(
         this.apiHelper,
         this.store,
-        this.scheduler
+        this.scheduler,
       ),
       NotificationContinuousQueryManager(
         this.apiHelper,
         this.store,
-        this.scheduler
+        this.scheduler,
       ),
       NotificationReadOnlyQueryManager(this.store),
     ];

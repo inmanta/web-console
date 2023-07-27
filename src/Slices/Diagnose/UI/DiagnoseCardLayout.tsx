@@ -18,7 +18,7 @@ export const DiagnoseCardLayout: React.FC<{
                 failure={failureGroup.failures[0]}
               />
             </FlexItem>
-          )
+          ),
       )}
       {diagnostics.rejections.map((rejection, idx) => (
         <FlexItem key={`rejection-${idx}`}>

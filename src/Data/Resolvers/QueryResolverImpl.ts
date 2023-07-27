@@ -18,7 +18,7 @@ export class QueryResolverImpl implements QueryResolver {
   constructor(public readonly managerResolver: ManagerResolver<QueryManager>) {}
 
   private getOneTimeQueryManager(
-    query: Query.Type
+    query: Query.Type,
   ): OneTimeQueryManager<typeof query.kind> {
     const manager = this.managerResolver
       .get()
@@ -35,7 +35,7 @@ export class QueryResolverImpl implements QueryResolver {
   }
 
   private getContinuousQueryManager(
-    query: Query.Type
+    query: Query.Type,
   ): ContinuousQueryManager<typeof query.kind> {
     const manager = this.managerResolver
       .get()
@@ -44,7 +44,7 @@ export class QueryResolverImpl implements QueryResolver {
       return manager as ContinuousQueryManager<typeof query.kind>;
     }
     throw new Error(
-      `Can't find ContinuousQueryManager for query ${query.kind}`
+      `Can't find ContinuousQueryManager for query ${query.kind}`,
     );
   }
 
@@ -54,7 +54,7 @@ export class QueryResolverImpl implements QueryResolver {
   }
 
   private getReadOnlyQueryManager(
-    query: Query.Type
+    query: Query.Type,
   ): ReadOnlyQueryManager<typeof query.kind> {
     const manager = this.managerResolver
       .get()

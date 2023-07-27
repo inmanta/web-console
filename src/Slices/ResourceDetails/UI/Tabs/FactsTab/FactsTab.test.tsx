@@ -29,9 +29,9 @@ function setup() {
       GetResourceFactsQueryManager(
         apiHelper,
         GetResourceFactsStateHelper(store),
-        scheduler
+        scheduler,
       ),
-    ])
+    ]),
   );
 
   const component = (
@@ -57,13 +57,13 @@ test("Given the FactsTab When the backend response is an error Then shows failed
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Facts-Loading" })
+    await screen.findByRole("generic", { name: "Facts-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "Facts-Failed" })
+    await screen.findByRole("generic", { name: "Facts-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -72,7 +72,7 @@ test("Given the FactsTab When the backend response is successful Then shows succ
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Facts-Loading" })
+    await screen.findByRole("generic", { name: "Facts-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -85,7 +85,7 @@ test("Given the FactsTab When the backend response is successful Then shows succ
   apiHelper.resolve(Either.right(Mock.response));
 
   expect(
-    await screen.findByRole("grid", { name: "Facts-Success" })
+    await screen.findByRole("grid", { name: "Facts-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -93,12 +93,12 @@ test("Given sortFactRows When sorting by different columns Then the result is co
   const sortedByNameAsc = sortFactRows(Mock.response.data, "name", "asc");
   expect(sortedByNameAsc[0].name).toEqual("awsDevice");
   expect(sortedByNameAsc[sortedByNameAsc.length - 1].name).toEqual(
-    "partnerName"
+    "partnerName",
   );
   const sortedByNameDesc = sortFactRows(Mock.response.data, "name", "desc");
   expect(sortedByNameDesc[0].name).toEqual("partnerName");
   expect(sortedByNameDesc[sortedByNameDesc.length - 1].name).toEqual(
-    "awsDevice"
+    "awsDevice",
   );
 
   const sortedByDateAsc = sortFactRows(Mock.response.data, "updated", "asc");
@@ -108,7 +108,7 @@ test("Given sortFactRows When sorting by different columns Then the result is co
   const sortedByDateDesc = sortFactRows(Mock.response.data, "updated", "desc");
   expect(sortedByDateDesc[0].name).toEqual("location");
   expect(sortedByDateDesc[sortedByDateDesc.length - 1].name).toEqual(
-    "jumboFrameCapable"
+    "jumboFrameCapable",
   );
 
   const sortedByValueAsc = sortFactRows(Mock.response.data, "value", "asc");
@@ -118,7 +118,7 @@ test("Given sortFactRows When sorting by different columns Then the result is co
   const sortedByValueDesc = sortFactRows(Mock.response.data, "value", "desc");
   expect(sortedByValueDesc[0].value).toEqual("no");
   expect(sortedByValueDesc[sortedByValueDesc.length - 1].value).toEqual(
-    "available"
+    "available",
   );
 
   const factsWithUndefinedDate = [
@@ -129,10 +129,10 @@ test("Given sortFactRows When sorting by different columns Then the result is co
   const sortedByDateWithUndefined = sortFactRows(
     factsWithUndefinedDate,
     "updated",
-    "asc"
+    "asc",
   );
   expect(sortedByDateWithUndefined[0].name).toEqual("no_date");
   expect(
-    sortedByDateWithUndefined[sortedByDateWithUndefined.length - 1].name
+    sortedByDateWithUndefined[sortedByDateWithUndefined.length - 1].name,
   ).toEqual("location");
 });

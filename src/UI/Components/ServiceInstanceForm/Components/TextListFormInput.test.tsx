@@ -16,11 +16,11 @@ describe("TextListInputField", () => {
         description="a text list input field"
         handleInputChange={handleClick}
         isOptional={false}
-      />
+      />,
     );
 
     const chips = container.getElementsByClassName(
-      "pf-c-chip-group__list-item"
+      "pf-c-chip-group__list-item",
     );
     expect(chips.length).toBe(3);
   });
@@ -34,7 +34,7 @@ describe("TextListInputField", () => {
         description="a text list input field"
         handleInputChange={handleClick}
         isOptional={false}
-      />
+      />,
     );
 
     await act(async () => {
@@ -46,12 +46,12 @@ describe("TextListInputField", () => {
     });
 
     const chips = container.getElementsByClassName(
-      "pf-c-chip-group__list-item"
+      "pf-c-chip-group__list-item",
     );
     expect(chips.length).toBe(4);
     expect(handleClick).toHaveBeenCalledWith(
       ["value1", "value2", "value3", "test"],
-      null
+      null,
     );
   });
 
@@ -64,7 +64,7 @@ describe("TextListInputField", () => {
         description="a text list input field"
         handleInputChange={handleClick}
         isOptional={false}
-      />
+      />,
     );
 
     await act(async () => {
@@ -73,13 +73,13 @@ describe("TextListInputField", () => {
     });
 
     const chips = container.getElementsByClassName(
-      "pf-c-chip-group__list-item"
+      "pf-c-chip-group__list-item",
     );
     expect(chips.length).toBe(2);
     expect(handleClick).toHaveBeenCalledWith(["value2", "value3"], null);
 
     const chipsContainer = container.getElementsByClassName(
-      "pf-c-text-input-group__main"
+      "pf-c-text-input-group__main",
     );
     expect(chipsContainer[0].childElementCount).toBe(2);
   });
@@ -93,7 +93,7 @@ describe("TextListInputField", () => {
         description="a text list input field"
         handleInputChange={handleClick}
         isOptional={false}
-      />
+      />,
     );
 
     await act(async () => {
@@ -104,11 +104,11 @@ describe("TextListInputField", () => {
     });
 
     const chipsContainer = container.getElementsByClassName(
-      "pf-c-text-input-group__main"
+      "pf-c-text-input-group__main",
     );
     expect(chipsContainer[0].childElementCount).toBe(1);
     expect(chipsContainer[0].firstChild).toHaveClass(
-      "pf-c-text-input-group__text"
+      "pf-c-text-input-group__text",
     );
     expect(handleClick).toHaveBeenCalledWith([], null);
   });

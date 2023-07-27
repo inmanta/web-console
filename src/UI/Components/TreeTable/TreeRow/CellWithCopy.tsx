@@ -100,7 +100,7 @@ function isJson(value: string): boolean {
 
 export function shouldRenderLink(
   value: string,
-  hasRelation?: boolean
+  hasRelation?: boolean,
 ): boolean {
   return !!(hasRelation && value.length > 0 && value !== "{}");
 }

@@ -3,7 +3,7 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function UpdateInstanceAttributeCommandManager(
   authHelper: AuthHelper,
-  apiHelper: ApiHelper
+  apiHelper: ApiHelper,
 ) {
   return CommandManagerWithEnv<"UpdateInstanceAttribute">(
     "UpdateInstanceAttribute",
@@ -19,9 +19,9 @@ export function UpdateInstanceAttributeCommandManager(
             target,
             version,
             service_entity,
-            id
-          )
-        )
+            id,
+          ),
+        ),
   );
 }
 
@@ -32,7 +32,7 @@ export const composeCommandBody = (
   target: string,
   version: ParsedNumber,
   service_entity: string,
-  id: string
+  id: string,
 ): UpdateInstanceBody => {
   const comment = username
     ? `Triggered from the console by ${username}`
@@ -63,7 +63,7 @@ interface UpdateInstanceBody {
       operation: "merge" | "replace" | "remove";
       target: string;
       value: string | number | boolean | string[];
-    }
+    },
   ];
   current_version: ParsedNumber;
   comment: string;

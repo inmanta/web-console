@@ -9,6 +9,6 @@ export function StateHelper(store: Store) {
       const value = RemoteData.mapSuccess((data) => data.data, data);
       store.dispatch.compileDetails.setData({ id, value });
     },
-    (state, { id }) => state.compileDetails.byId[id]
+    (state, { id }) => state.compileDetails.byId[id],
   );
 }

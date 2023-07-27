@@ -6,7 +6,7 @@ import { getUrl } from "./getUrl";
 export function ResourceLogsQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetResourceLogs">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetResourceLogs">(
     apiHelper,
@@ -30,7 +30,7 @@ export function ResourceLogsQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }
 

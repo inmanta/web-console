@@ -34,18 +34,18 @@ function setup() {
   const environmentsStateHelper = GetEnvironmentsStateHelper(store);
   const environmentManagerOneTime = GetEnvironmentsQueryManager(
     apiHelper,
-    environmentsStateHelper
+    environmentsStateHelper,
   );
 
   const environmentsManager = GetEnvironmentsContinuousQueryManager(
     apiHelper,
     scheduler,
-    GetEnvironmentsContinuousStateHelper(store)
+    GetEnvironmentsContinuousStateHelper(store),
   );
 
   const getServerStatusManager = GetServerStatusOneTimeQueryManager(
     apiHelper,
-    GetServerStatusStateHelper(store)
+    GetServerStatusStateHelper(store),
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -53,12 +53,12 @@ function setup() {
       environmentsManager,
       environmentManagerOneTime,
       getServerStatusManager,
-    ])
+    ]),
   );
 
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
 
   const component = (
@@ -90,7 +90,7 @@ test("GIVEN the app THEN the navigation toggle button should be visible", async 
   });
 
   expect(
-    screen.getByRole("button", { name: "Global navigation" })
+    screen.getByRole("button", { name: "Global navigation" }),
   ).toBeVisible();
 });
 
@@ -105,6 +105,6 @@ test("GIVEN the app THEN the documentation link should be visible", async () => 
   });
 
   expect(
-    screen.getByRole("link", { name: "documentation link" })
+    screen.getByRole("link", { name: "documentation link" }),
   ).toBeVisible();
 });

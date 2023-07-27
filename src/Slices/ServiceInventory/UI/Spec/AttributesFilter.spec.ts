@@ -15,7 +15,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
         data: [ServiceInstance.a, ServiceInstance.b],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 
@@ -23,8 +23,8 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
@@ -32,7 +32,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Select AttributeSet" })
+      screen.getByRole("button", { name: "Select AttributeSet" }),
     );
   });
   await act(async () => {
@@ -40,7 +40,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "Select Quality" })
+      screen.getByRole("button", { name: "Select Quality" }),
     );
   });
   await act(async () => {
@@ -48,7 +48,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.attribute_set_not_empty=active_attributes&sort=created_at.desc`
+    `/lsm/v1/service_inventory/${Service.a.name}?include_deployment_progress=True&limit=20&filter.attribute_set_not_empty=active_attributes&sort=created_at.desc`,
   );
 
   await act(async () => {
@@ -57,7 +57,7 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
         data: [ServiceInstance.a],
         links: Pagination.links,
         metadata: Pagination.metadata,
-      })
+      }),
     );
   });
 
@@ -73,6 +73,6 @@ test("GIVEN The Service Inventory WHEN the user filters on AttributeSet ('Active
   expect(
     within(summary).getByRole("listitem", {
       name: "Active-NotEmpty",
-    })
+    }),
   ).toBeInTheDocument();
 });

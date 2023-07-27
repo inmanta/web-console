@@ -29,6 +29,6 @@ describe("getUrl for events ", () => {
       };
 
       expect(getUrl(query, "Europe/Brussels")).toEqual(url);
-    }
+    },
   );
 });

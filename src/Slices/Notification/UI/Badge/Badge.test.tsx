@@ -19,7 +19,7 @@ function setup() {
   const store = getStoreInstance();
 
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
 
   const component = (
@@ -74,5 +74,5 @@ test.each`
     const button = screen.getByRole("button", { name: "Badge" });
     expect(button).toBeVisible();
     expect(button).toHaveAttribute("data-variant", variant);
-  }
+  },
 );

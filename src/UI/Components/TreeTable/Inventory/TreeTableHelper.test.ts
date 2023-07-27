@@ -11,7 +11,7 @@ test("TreeTableHelper getExpansionState returns correct expansionState", () => {
     new PathHelper("."),
     new TreeExpansionManager("."),
     new InventoryAttributeHelper("."),
-    { candidate: null, active: { a: "b" }, rollback: null }
+    { candidate: null, active: { a: "b" }, rollback: null },
   );
   // Act
   const expansionState = treeTableHelper.getExpansionState();
@@ -27,7 +27,7 @@ test("TreeTableHelper createRows returns correct list", () => {
     new PathHelper("."),
     new TreeExpansionManager("."),
     new InventoryAttributeHelper("."),
-    { candidate: null, active: { a: "b", c: { d: "e" } }, rollback: null }
+    { candidate: null, active: { a: "b", c: { d: "e" } }, rollback: null },
   );
   // Act
   /* eslint-disable-next-line @typescript-eslint/no-empty-function */
@@ -88,7 +88,7 @@ test("TreeTableHelper createRows returns correctly ordered list", () => {
           "network_interfaces[name=eth1].allocated_id": 456789,
         },
       },
-    }
+    },
   );
   // Act
   const cb = jest.fn;

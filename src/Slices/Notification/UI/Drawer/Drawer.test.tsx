@@ -27,11 +27,11 @@ function setup() {
   const store = getStoreInstance();
 
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper())
+    new CommandManagerResolver(store, apiHelper, new KeycloakAuthHelper()),
   );
 
   const closeCallback = jest.fn();
@@ -92,11 +92,11 @@ test("Given Drawer Then a list of notifications are shown", async () => {
   });
 
   expect(
-    screen.getByRole("generic", { name: "NotificationDrawer" })
+    screen.getByRole("generic", { name: "NotificationDrawer" }),
   ).toBeVisible();
 
   expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" })
+    screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(3);
 });
 
@@ -109,7 +109,7 @@ test("Given Drawer When clicking on 'Clear all' Then all notifications are clear
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "NotificationListActions" })
+      screen.getByRole("button", { name: "NotificationListActions" }),
     );
   });
   await act(async () => {
@@ -134,7 +134,7 @@ test("Given Drawer When clicking on 'Clear all' Then all notifications are clear
   });
 
   expect(
-    screen.queryByRole("listitem", { name: "NotificationItem" })
+    screen.queryByRole("listitem", { name: "NotificationItem" }),
   ).not.toBeInTheDocument();
 });
 
@@ -147,12 +147,12 @@ test("Given Drawer When user clicks on 'Read all' Then all notifications are rea
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("button", { name: "NotificationListActions" })
+      screen.getByRole("button", { name: "NotificationListActions" }),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("menuitem", { name: "Mark all as read" })
+      screen.getByRole("menuitem", { name: "Mark all as read" }),
     );
   });
 
@@ -176,12 +176,12 @@ test("Given Drawer When user clicks on 'Read all' Then all notifications are rea
           { ...Mock.error, read: true },
           Mock.read,
         ],
-      })
+      }),
     );
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" })
+    screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(3);
 });
 
@@ -210,12 +210,12 @@ test("Given Drawer When user clicks a notification Then it becomes read", async 
       Either.right({
         ...Mock.response,
         data: [{ ...Mock.unread, read: true }, Mock.error, Mock.read],
-      })
+      }),
     );
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" })
+    screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(3);
 });
 
@@ -232,7 +232,7 @@ test("Given Drawer When user clicks a notification with an uri then go to the ur
   });
 
   expect(history.location.pathname).toBe(
-    "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614"
+    "/compilereports/f2c68117-24bd-43cf-a9dc-ce42b934a614",
   );
 });
 
@@ -270,7 +270,7 @@ test("Given Drawer When user clicks on 'unread' for 1 notification Then it becom
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("menuitem", { name: "Mark as unread" })
+      screen.getByRole("menuitem", { name: "Mark as unread" }),
     );
   });
 
@@ -288,12 +288,12 @@ test("Given Drawer When user clicks on 'unread' for 1 notification Then it becom
       Either.right({
         ...Mock.response,
         data: [Mock.unread, Mock.error, { ...Mock.read, read: false }],
-      })
+      }),
     );
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" })
+    screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(3);
 });
 
@@ -330,11 +330,11 @@ test("Given Drawer When user clicks on 'Clear' for 1 notification Then it is cle
       Either.right({
         ...Mock.response,
         data: [Mock.unread, Mock.error],
-      })
+      }),
     );
   });
 
   expect(
-    screen.getAllByRole("listitem", { name: "NotificationItem" })
+    screen.getAllByRole("listitem", { name: "NotificationItem" }),
   ).toHaveLength(2);
 });

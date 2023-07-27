@@ -4,7 +4,7 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 export function ResumeEnvironmentCommandManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetEnvironmentDetails">,
-  updater: Updater<"GetEnvironmentDetails">
+  updater: Updater<"GetEnvironmentDetails">,
 ) {
   return CommandManagerWithEnv<"ResumeEnvironment">(
     "ResumeEnvironment",
@@ -18,7 +18,7 @@ export function ResumeEnvironmentCommandManager(
         const result = await apiHelper.postWithoutResponse(
           `/api/v2/actions/environment/resume`,
           environment,
-          null
+          null,
         );
         await updater.update({
           kind: "GetEnvironmentDetails",
@@ -27,6 +27,6 @@ export function ResumeEnvironmentCommandManager(
         });
         return result;
       };
-    }
+    },
   );
 }

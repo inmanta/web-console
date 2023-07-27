@@ -58,7 +58,7 @@ export const DestroyAction: React.FC<Props> = ({
         <Text>
           {words("inventory.destroyInstance.header")(
             instance_identity,
-            service_entity
+            service_entity,
           )}
         </Text>
         <br />

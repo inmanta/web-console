@@ -10,6 +10,6 @@ export function GetVersionResourcesStateHelper(store: Store) {
         data,
       });
     },
-    (state, query, environment) => state.versionResources.byEnv[environment]
+    (state, query, environment) => state.versionResources.byEnv[environment],
   );
 }

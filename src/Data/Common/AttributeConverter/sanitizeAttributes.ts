@@ -10,7 +10,7 @@ import { AttributeResultConverterImpl } from "./AttributeConverterImpl";
  */
 export function sanitizeAttributes(
   fields: Field[],
-  formState: InstanceAttributeModel
+  formState: InstanceAttributeModel,
 ): InstanceAttributeModel {
   const converter = new AttributeResultConverterImpl();
   const sanitized = { ...formState };
@@ -23,7 +23,7 @@ export function sanitizeAttributes(
           typeof key === "string" && key.length > 0 ? field.options[key] : "";
         sanitized[field.name] = converter.ensureAttributeType(
           value,
-          field.type
+          field.type,
         );
         return;
       }
@@ -31,7 +31,7 @@ export function sanitizeAttributes(
       case "Text": {
         sanitized[field.name] = converter.ensureAttributeType(
           formState[field.name],
-          field.type
+          field.type,
         );
         return;
       }
@@ -42,7 +42,7 @@ export function sanitizeAttributes(
         }
         sanitized[field.name] = sanitizeAttributes(
           field.fields,
-          formState[field.name] as InstanceAttributeModel
+          formState[field.name] as InstanceAttributeModel,
         );
         return;
       }
@@ -60,7 +60,7 @@ export function sanitizeAttributes(
             .map((item) => sanitizeAttributes(field.fields, item));
         } else {
           sanitized[field.name] = list.map((item) =>
-            sanitizeAttributes(field.fields, item)
+            sanitizeAttributes(field.fields, item),
           );
         }
         return;

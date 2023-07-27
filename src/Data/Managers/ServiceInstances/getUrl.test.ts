@@ -12,7 +12,7 @@ test("getUrl returns correct url for no filter & no sort", () => {
   };
 
   expect(getUrl(query)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20`,
   );
 });
 
@@ -29,7 +29,7 @@ test("getUrl returns correct url for filter & no sort", () => {
   };
 
   expect(getUrl(query)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=10&filter.state=up&filter.state=creating`
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=10&filter.state=up&filter.state=creating`,
   );
 });
 
@@ -47,7 +47,7 @@ test("getUrl returns correct url for sort & no filter", () => {
   };
 
   expect(getUrl(query)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&sort=state.asc`
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&sort=state.asc`,
   );
 });
 
@@ -67,7 +67,7 @@ test("getUrl returns correct url for sort & filter", () => {
   };
 
   expect(getUrl(query)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating&sort=state.asc`
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=20&filter.state=up&filter.state=creating&sort=state.asc`,
   );
 });
 
@@ -86,6 +86,6 @@ test("getUrl returns correct url for empty filter", () => {
   };
 
   expect(getUrl(query)).toMatch(
-    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=50`
+    `/lsm/v1/service_inventory/${name}?include_deployment_progress=True&limit=50`,
   );
 });

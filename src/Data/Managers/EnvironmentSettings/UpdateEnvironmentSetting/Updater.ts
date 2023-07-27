@@ -11,22 +11,22 @@ export class EnvironmentSettingUpdater
 {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentSetting">
+    private readonly stateHelper: StateHelperWithEnv<"GetEnvironmentSetting">,
   ) {}
 
   async update(
     query: GetEnvironmentSetting,
-    environment: string
+    environment: string,
   ): Promise<void> {
     return this.stateHelper.set(
       RemoteData.fromEither(
         await this.apiHelper.get(
           `/api/v2/environment_settings/${query.id}`,
-          environment
-        )
+          environment,
+        ),
       ),
       query,
-      environment
+      environment,
     );
   }
 }

@@ -10,6 +10,6 @@ export interface Manifest {
   body: { name: string };
   command: Command;
   trigger: (
-    name: string
+    name: string,
   ) => Promise<Either.Type<string, { data: ProjectModel }>>;
 }

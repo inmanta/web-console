@@ -295,7 +295,7 @@ if (Cypress.env("edition") === "iso") {
       // long timeout justified by the fact that a few compiles are already queued at this point and status change will only be changed after.
       cy.get(".pf-c-label.pf-m-red", { timeout: 120000 }).should(
         "contain",
-        "failed"
+        "failed",
       );
 
       // go back to Service Catalog
@@ -354,7 +354,7 @@ if (Cypress.env("edition") === "iso") {
       // Fill in the fields
       cy.get('[aria-label="callbackUrl"]').type("wrongUrl");
       cy.get('[aria-label="callbackId"]').type(
-        "60b18097-1525-47f2-95ae-1d941d9c0c85"
+        "60b18097-1525-47f2-95ae-1d941d9c0c85",
       );
       cy.get(".pf-c-select").first().click();
       cy.get(".pf-c-select__menu-item").contains("INFO").click();

@@ -7,7 +7,7 @@ import { getUrl } from "./getUrl";
 
 export function GetDryRunReportQueryManager(
   apiHelper: ApiHelper,
-  store: Store
+  store: Store,
 ) {
   return QueryManager.OneTimeWithEnv<"GetDryRunReport">(
     apiHelper,
@@ -15,6 +15,6 @@ export function GetDryRunReportQueryManager(
     ({ reportId }, environment) => [environment, reportId],
     "GetDryRunReport",
     getUrl,
-    identity
+    identity,
   );
 }

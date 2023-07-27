@@ -15,7 +15,7 @@ function setup() {
   const apiHelper = new DeferredApiHelper();
   const commandManager = GenerateTokenCommandManager(apiHelper);
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([commandManager])
+    new DynamicCommandManagerResolver([commandManager]),
   );
 
   const component = (
@@ -62,7 +62,7 @@ test("GIVEN TokenTab WHEN api clientType is selected and generate button is clic
     await userEvent.click(
       screen.getByRole("button", {
         name: words("settings.tabs.token.generate"),
-      })
+      }),
     );
   });
 
@@ -82,7 +82,7 @@ test("GIVEN TokenTab WHEN generate fails THEN the error is shown", async () => {
     await userEvent.click(
       screen.getByRole("button", {
         name: words("settings.tabs.token.generate"),
-      })
+      }),
     );
   });
 
@@ -112,7 +112,7 @@ test("GIVEN TokenTab WHEN generate succeeds THEN the token is shown", async () =
     await userEvent.click(
       screen.getByRole("button", {
         name: words("settings.tabs.token.generate"),
-      })
+      }),
     );
   });
   await act(async () => {

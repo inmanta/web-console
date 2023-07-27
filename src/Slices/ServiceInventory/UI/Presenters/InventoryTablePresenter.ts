@@ -33,7 +33,7 @@ export class InventoryTablePresenter
     private statePresenter: StatePresenter,
     private serviceIdentity?: string,
     private serviceIdentityDisplayName?: string,
-    private isConfigDisabled?: boolean
+    private isConfigDisabled?: boolean,
   ) {
     this.columnHeads = [
       {
@@ -89,7 +89,7 @@ export class InventoryTablePresenter
 
   public getIndexForColumnName(columnName?: string): number {
     return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName
+      (columnHead) => columnHead.apiName === columnName,
     );
   }
 
@@ -153,7 +153,7 @@ export class InventoryTablePresenter
       attributesSummary: this.attributesPresenter.getSummary(
         candidate_attributes,
         active_attributes,
-        rollback_attributes
+        rollback_attributes,
       ),
       attributes: {
         candidate: candidate_attributes,

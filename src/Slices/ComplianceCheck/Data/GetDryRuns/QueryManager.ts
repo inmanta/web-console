@@ -8,7 +8,7 @@ import { getUrl } from "./getUrl";
 export function GetDryRunsQueryManager(
   apiHelper: ApiHelper,
   store: Store,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetDryRuns">(
     apiHelper,
@@ -18,6 +18,6 @@ export function GetDryRunsQueryManager(
     ({ version }, environment) => [environment, version],
     "GetDryRuns",
     getUrl,
-    identity
+    identity,
   );
 }

@@ -3,10 +3,10 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function InstanceConfigCommandManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelper<"GetInstanceConfig">
+  stateHelper: StateHelper<"GetInstanceConfig">,
 ) {
   function getQuery(
-    command: Command.SubCommand<"UpdateInstanceConfig">
+    command: Command.SubCommand<"UpdateInstanceConfig">,
   ): Query.SubQuery<"GetInstanceConfig"> {
     return {
       ...command,
@@ -18,7 +18,7 @@ export function InstanceConfigCommandManager(
     command: Command.SubCommand<"UpdateInstanceConfig">,
     option: string,
     value: boolean,
-    environment: string
+    environment: string,
   ): Promise<void> {
     const configData = stateHelper.getOnce(getQuery(command));
     if (!RemoteData.isSuccess(configData)) return;
@@ -30,23 +30,23 @@ export function InstanceConfigCommandManager(
             ...configData.value,
             [option]: value,
           },
-        })
+        }),
       ),
-      getQuery(command)
+      getQuery(command),
     );
   }
 
   async function reset(
     command: Command.SubCommand<"UpdateInstanceConfig">,
-    environment: string
+    environment: string,
   ): Promise<void> {
     stateHelper.set(
       RemoteData.fromEither(
         await apiHelper.post(getUrl(command), environment, {
           values: {},
-        })
+        }),
       ),
-      getQuery(command)
+      getQuery(command),
     );
   }
 
@@ -70,6 +70,6 @@ export function InstanceConfigCommandManager(
             update(command, payload.option, payload.value, environment);
         }
       };
-    }
+    },
   );
 }

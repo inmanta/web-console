@@ -18,7 +18,7 @@ interface Link {
 
 export const envrionment = (
   routeManager: RouteManager,
-  isEnvPresent: boolean
+  isEnvPresent: boolean,
 ): Group => ({
   id: words("navigation.environment"),
   title: words("navigation.environment"),
@@ -44,7 +44,7 @@ export const envrionment = (
 
 export const lifecycleServiceManager = (
   routeManager: RouteManager,
-  isEnvPresent: boolean
+  isEnvPresent: boolean,
 ): Group => ({
   id: "LifecycleServiceManager",
   title: words("navigation.lifecycleServiceManager"),
@@ -62,7 +62,7 @@ export const lifecycleServiceManager = (
 
 export const orchestrationEngine = (
   routeManager: RouteManager,
-  isEnvPresent: boolean
+  isEnvPresent: boolean,
 ): Group => ({
   id: "OrchestrationEngine",
   title: words("navigation.orchestrationEngine"),
@@ -96,7 +96,7 @@ export const orchestrationEngine = (
 
 export const resourceManager = (
   routeManager: RouteManager,
-  isEnvPresent: boolean
+  isEnvPresent: boolean,
 ): Group => ({
   id: "ResourceManager",
   title: words("navigation.resourceManager"),

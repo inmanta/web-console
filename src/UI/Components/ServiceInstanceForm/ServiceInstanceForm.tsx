@@ -13,7 +13,7 @@ interface Props {
   fields: Field[];
   onSubmit(
     formState: InstanceAttributeModel,
-    callback: (value: boolean) => void
+    callback: (value: boolean) => void,
   ): void;
   onCancel(): void;
   originalAttributes?: InstanceAttributeModel;
@@ -32,13 +32,13 @@ export const ServiceInstanceForm: React.FC<Props> = ({
   const [formState, setFormState] = useState(
     originalAttributes
       ? createEditFormState(fields, apiVersion, originalAttributes)
-      : createFormState(fields)
+      : createFormState(fields),
   );
   //originalState is created to make possible to differentiate newly created attributes to keep track on which inputs should be disabled
   const [originalState] = useState(
     originalAttributes
       ? createEditFormState(fields, apiVersion, originalAttributes)
-      : createFormState(fields)
+      : createFormState(fields),
   );
   const [dirtyInputs, setDirtyInputs] = useState(false);
   const [shouldPerformCancel, setShouldCancel] = useState(false);
@@ -70,7 +70,7 @@ export const ServiceInstanceForm: React.FC<Props> = ({
         });
       }
     },
-    [dirtyInputs]
+    [dirtyInputs],
   );
 
   const preventDefault = (event: React.FormEvent) => {

@@ -53,7 +53,7 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 
 const getEnvironmentId = (
   environmentRole: EnvironmentRole,
-  environment: FlatEnvironment | undefined
+  environment: FlatEnvironment | undefined,
 ): Either.Type<string, string | undefined> => {
   if (environmentRole === "Forbidden") return Either.right(undefined);
   if (environmentRole === "Required") {

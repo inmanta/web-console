@@ -9,7 +9,7 @@ export function CommandManager(apiHelper: ApiHelper) {
         apiHelper.postWithoutResponse(
           `/api/v2/dryrun/${version}`,
           environment,
-          undefined
-        )
+          undefined,
+        ),
   );
 }

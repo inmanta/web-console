@@ -2,10 +2,10 @@ import { ServiceInstanceModel, ServiceModel } from "@/Core";
 
 export const extractRelationsIds = (
   service: ServiceModel,
-  instance: ServiceInstanceModel
+  instance: ServiceInstanceModel,
 ): string[] => {
   const relationKeys = service.inter_service_relations?.map(
-    (relation) => relation.name
+    (relation) => relation.name,
   );
   if (!relationKeys) {
     return [];
@@ -15,7 +15,7 @@ export const extractRelationsIds = (
       .map((key) =>
         instance.candidate_attributes !== null
           ? instance.candidate_attributes[key]
-          : undefined
+          : undefined,
       )
       .filter((value) => value !== undefined) as string[];
   } else if (instance.active_attributes !== null) {
@@ -23,7 +23,7 @@ export const extractRelationsIds = (
       .map((key) =>
         instance.active_attributes !== null
           ? instance.active_attributes[key]
-          : undefined
+          : undefined,
       )
       .filter((value) => value !== undefined) as string[];
   } else {

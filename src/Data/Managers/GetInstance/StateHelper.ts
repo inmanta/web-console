@@ -9,6 +9,6 @@ export function ServiceInstanceStateHelper(store: Store) {
       const value = RemoteData.mapSuccess((wrapped) => wrapped.data, data);
       store.dispatch.serviceInstance.setData({ id: query.id, value });
     },
-    (state, query) => state.serviceInstance.byId[query.id]
+    (state, query) => state.serviceInstance.byId[query.id],
   );
 }

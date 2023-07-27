@@ -45,7 +45,7 @@ export const EnvSelectorWithData: React.FC<Props> = ({
         />
       ),
     },
-    environments
+    environments,
   );
 
 const environmentToSelector = ({

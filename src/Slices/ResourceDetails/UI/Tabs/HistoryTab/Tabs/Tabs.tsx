@@ -39,7 +39,7 @@ export const Tabs: React.FC<Props> = ({
 };
 
 const attributesTab = (
-  attributes: Record<string, unknown>
+  attributes: Record<string, unknown>,
 ): TabDescriptor<TabKey> => ({
   id: TabKey.Attributes,
   title: words("resources.history.tabs.attributes"),
@@ -59,7 +59,7 @@ const AttributesTab: React.FC<{ attributes: Record<string, unknown> }> = ({
 }) => {
   const classifier = new AttributeClassifier(
     new JsonFormatter(),
-    new XmlFormatter()
+    new XmlFormatter(),
   );
   const classifiedAttributes = classifier.classify(attributes);
   return (

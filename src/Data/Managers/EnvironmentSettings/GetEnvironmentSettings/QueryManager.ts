@@ -4,7 +4,7 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 
 export function GetEnvironmentSettingsQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<"GetEnvironmentSettings">
+  stateHelper: StateHelperWithEnv<"GetEnvironmentSettings">,
 ) {
   return QueryManager.OneTimeWithEnv<"GetEnvironmentSettings">(
     apiHelper,
@@ -12,6 +12,6 @@ export function GetEnvironmentSettingsQueryManager(
     () => [],
     "GetEnvironmentSettings",
     () => `/api/v2/environment_settings`,
-    identity
+    identity,
   );
 }

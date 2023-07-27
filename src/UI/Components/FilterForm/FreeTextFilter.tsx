@@ -18,7 +18,7 @@ interface Props {
   searchEntries?: string[];
   removeChip: (
     category: string | ToolbarChipGroup,
-    chip: string | ToolbarChip
+    chip: string | ToolbarChip,
   ) => void;
   value: string;
   setValue: (value: string) => void;

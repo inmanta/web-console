@@ -4,7 +4,7 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 export function ResetEnvironmentSettingCommandManager(
   apiHelper: ApiHelper,
   updater: UpdaterWithEnv<"GetEnvironmentSetting">,
-  environmentUpdater: Updater<"GetEnvironmentDetails">
+  environmentUpdater: Updater<"GetEnvironmentDetails">,
 ) {
   return CommandManagerWithEnv<"ResetEnvironmentSetting">(
     "ResetEnvironmentSetting",
@@ -12,12 +12,12 @@ export function ResetEnvironmentSettingCommandManager(
       return async (id) => {
         const error = await apiHelper.delete(
           `/api/v2/environment_settings/${id}`,
-          environment
+          environment,
         );
         if (Maybe.isNone(error)) {
           await updater.update(
             { kind: "GetEnvironmentSetting", id },
-            environment
+            environment,
           );
           await environmentUpdater.update({
             kind: "GetEnvironmentDetails",
@@ -27,6 +27,6 @@ export function ResetEnvironmentSettingCommandManager(
         }
         return error;
       };
-    }
+    },
   );
 }

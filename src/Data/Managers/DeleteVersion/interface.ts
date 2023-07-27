@@ -12,6 +12,6 @@ export interface DeleteVersionManifest {
   body: null;
   command: DeleteVersion;
   trigger: (
-    query: Query.SubQuery<"GetDesiredStates">
+    query: Query.SubQuery<"GetDesiredStates">,
   ) => Promise<Maybe.Type<string>>;
 }

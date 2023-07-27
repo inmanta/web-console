@@ -79,7 +79,7 @@ export const DeleteModal: React.FC<Props> = ({
       >
         {words("inventory.deleteInstance.header")(
           instance_identity,
-          service_entity
+          service_entity,
         )}
         <ConfirmUserActionForm
           onSubmit={onSubmit}

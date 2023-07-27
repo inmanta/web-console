@@ -4,7 +4,7 @@ import { Query, RangeOperator } from "@/Core";
 
 export function getUrl(
   { pageSize, filter }: Query.SubQuery<"GetDesiredStates">,
-  timezone = moment.tz.guess()
+  timezone = moment.tz.guess(),
 ): string {
   const defaultFilter = { status: ["active", "candidate", "retired"] };
   const filterWithDefaults =
@@ -20,19 +20,19 @@ export function getUrl(
               date: filterWithDefaults.date?.map(
                 (timestampWithOperator) =>
                   `${RangeOperator.serializeOperator(
-                    timestampWithOperator.operator
+                    timestampWithOperator.operator,
                   )}:${moment
                     .tz(timestampWithOperator.date, timezone)
                     .utc()
-                    .format("YYYY-MM-DD+HH:mm:ss")}`
+                    .format("YYYY-MM-DD+HH:mm:ss")}`,
               ),
               version: filterWithDefaults.version?.map(
                 ({ value, operator }) =>
-                  `${RangeOperator.serializeOperator(operator)}:${value}`
+                  `${RangeOperator.serializeOperator(operator)}:${value}`,
               ),
             },
           },
-          { allowDots: true, arrayFormat: "repeat" }
+          { allowDots: true, arrayFormat: "repeat" },
         )}`
       : "";
   const sortParam = `&sort=version.desc`;

@@ -35,7 +35,7 @@ export const Page: React.FC<{ version: string }> = ({ version }) => {
   const [filter, setFilter] = useUrlStateWithFilter<Resource.FilterFromVersion>(
     {
       route: "DesiredStateDetails",
-    }
+    },
   );
 
   const [data, retry] = queryResolver.useContinuous<"GetVersionResources">({

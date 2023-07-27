@@ -2,7 +2,7 @@ import { times, cloneDeep } from "lodash-es";
 import { FieldLikeWithFormState, InstanceAttributeModel } from "@/Core";
 
 export const createFormState = (
-  fields: FieldLikeWithFormState[]
+  fields: FieldLikeWithFormState[],
 ): InstanceAttributeModel => {
   const returnValue = fields.reduce((acc, curr) => {
     switch (curr.kind) {
@@ -41,7 +41,7 @@ export const createFormState = (
           acc[curr.name] = [];
         } else {
           acc[curr.name] = times(Number(curr.min), () =>
-            createFormState(curr.fields)
+            createFormState(curr.fields),
           );
         }
 
@@ -69,7 +69,7 @@ export const createFormState = (
 export const createEditFormState = (
   fields: FieldLikeWithFormState[],
   apiVersion: "v1" | "v2",
-  originalAttributes?: InstanceAttributeModel | null
+  originalAttributes?: InstanceAttributeModel | null,
 ): InstanceAttributeModel => {
   if (apiVersion === "v2" && originalAttributes) {
     return originalAttributes;
@@ -102,7 +102,7 @@ export const createEditFormState = (
             acc[curr.name] = createEditFormState(
               curr.fields,
               apiVersion,
-              originalAttributes?.[curr.name] as InstanceAttributeModel
+              originalAttributes?.[curr.name] as InstanceAttributeModel,
             );
           }
           return acc;
@@ -120,8 +120,8 @@ export const createEditFormState = (
             createEditFormState(
               curr.fields,
               apiVersion,
-              nestedOriginalAttributes as InstanceAttributeModel
-            )
+              nestedOriginalAttributes as InstanceAttributeModel,
+            ),
           );
           return acc;
         }

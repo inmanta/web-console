@@ -5,10 +5,10 @@ export class PageStateSanitizer {
 
   isSanitized(
     routeKind: RouteKind,
-    pageState: Record<string, unknown>
+    pageState: Record<string, unknown>,
   ): boolean {
     const lineage = this.routeManager.getLineageFromRoute(
-      this.routeManager.getRoute(routeKind)
+      this.routeManager.getRoute(routeKind),
     );
     const kinds = lineage.map((route) => route.kind);
     if (getKeysExcluding(kinds, pageState).length > 0) return false;
@@ -17,10 +17,10 @@ export class PageStateSanitizer {
 
   sanitize(
     routeKind: RouteKind,
-    pageState: Record<string, unknown>
+    pageState: Record<string, unknown>,
   ): Record<string, unknown> {
     const lineage = this.routeManager.getLineageFromRoute(
-      this.routeManager.getRoute(routeKind)
+      this.routeManager.getRoute(routeKind),
     );
     const kinds = lineage.map((route) => route.kind);
     return Object.keys(pageState).reduce((acc, cur) => {

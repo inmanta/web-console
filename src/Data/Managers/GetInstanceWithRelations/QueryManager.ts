@@ -18,7 +18,7 @@ type Data = RemoteData.Type<
 
 export function GetInstanceWithRelationsQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<"GetInstanceWithRelations">
+  stateHelper: StateHelperWithEnv<"GetInstanceWithRelations">,
 ): OneTimeQueryManager<"GetInstanceWithRelations"> {
   function getInstanceUrl({
     id,
@@ -35,7 +35,7 @@ export function GetInstanceWithRelationsQueryManager(
 
   function initialize(
     query: Query.SubQuery<"GetInstanceWithRelations">,
-    environment
+    environment,
   ): void {
     const value = stateHelper.getOnce(query, environment);
     if (RemoteData.isNotAsked(value)) {
@@ -45,23 +45,23 @@ export function GetInstanceWithRelationsQueryManager(
 
   async function update(
     query: Query.SubQuery<"GetInstanceWithRelations">,
-    environment: string
+    environment: string,
   ): Promise<void> {
     const instance = await getInstanceWithRelations(query, environment);
     //stateHelper implementation interfaces want to get direct api response which is transformed,
     //decided to set is a any to avoid having separate implementation just for this call
     stateHelper.set(
       RemoteData.fromEither(
-        instance as unknown as Type<string, { data: ServiceInstanceModel }>
+        instance as unknown as Type<string, { data: ServiceInstanceModel }>,
       ),
       query,
-      environment
+      environment,
     );
   }
 
   async function getInstanceWithRelations(
     query: Query.SubQuery<"GetInstanceWithRelations">,
-    environment: string
+    environment: string,
   ) {
     const relatedInstances: ServiceInstanceModel[] = [];
 
@@ -78,7 +78,7 @@ export function GetInstanceWithRelationsQueryManager(
           kind: "GetServiceInstance",
           id: query.id,
         }),
-        environment
+        environment,
       );
 
       if (Either.isRight(instanceWithReferences)) {
@@ -88,14 +88,14 @@ export function GetInstanceWithRelationsQueryManager(
               async (relatedId) => {
                 const nestedInstance = await getInstanceWithRelations(
                   { kind: "GetInstanceWithRelations", id: relatedId },
-                  environment
+                  environment,
                 );
 
                 relatedInstances.push(
-                  nestedInstance.value as unknown as ServiceInstanceModel
+                  nestedInstance.value as unknown as ServiceInstanceModel,
                 );
-              }
-            )
+              },
+            ),
           );
         }
       }
@@ -113,7 +113,7 @@ export function GetInstanceWithRelationsQueryManager(
   }
 
   function useOneTime(
-    query: Query.SubQuery<"GetInstanceWithRelations">
+    query: Query.SubQuery<"GetInstanceWithRelations">,
   ): [Data, () => void] {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();

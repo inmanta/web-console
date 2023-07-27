@@ -6,7 +6,7 @@ import { getUrl } from "./getUrl";
 export function GetDesiredStatesQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetDesiredStates">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetDesiredStates">(
     apiHelper,
@@ -29,7 +29,7 @@ export function GetDesiredStatesQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }
 

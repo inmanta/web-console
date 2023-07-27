@@ -3,7 +3,7 @@ import { CommandManagerWithEnv } from "@/Data/Common";
 
 export function DeleteCallbackCommandManager(
   apiHelper: ApiHelper,
-  updater: UpdaterWithEnv<"GetCallbacks">
+  updater: UpdaterWithEnv<"GetCallbacks">,
 ) {
   function getUrl({
     callbackId,
@@ -20,10 +20,10 @@ export function DeleteCallbackCommandManager(
             kind: "GetCallbacks",
             service_entity: command.service_entity,
           },
-          environment
+          environment,
         );
         return result;
       };
-    }
+    },
   );
 }

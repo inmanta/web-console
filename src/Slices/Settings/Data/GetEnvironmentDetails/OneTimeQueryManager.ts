@@ -7,7 +7,7 @@ import { getUrl } from "./getUrl";
 
 export function EnvironmentDetailsOneTimeQueryManager(
   store: Store,
-  apiHelper: ApiHelper
+  apiHelper: ApiHelper,
 ) {
   return QueryManager.OneTime<"GetEnvironmentDetails">(
     apiHelper,
@@ -16,6 +16,6 @@ export function EnvironmentDetailsOneTimeQueryManager(
     "GetEnvironmentDetails",
     ({ details, id }) => getUrl(details, id),
     identity,
-    "MERGE"
+    "MERGE",
   );
 }

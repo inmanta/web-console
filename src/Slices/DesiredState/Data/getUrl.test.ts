@@ -19,5 +19,5 @@ it.each`
       filter,
     };
     expect(getUrl(query, "Europe/Brussels")).toEqual(url);
-  }
+  },
 );

@@ -20,10 +20,10 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
 
   const onClose = jest.fn();
@@ -63,6 +63,6 @@ test("GIVEN ConfirmationModal THEN focus is on the input field", async () => {
   expect(
     screen.getByRole<HTMLInputElement>("textbox", {
       name: "delete environment check",
-    })
+    }),
   ).toHaveFocus();
 });

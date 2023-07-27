@@ -14,13 +14,13 @@ export function ResourceDetailsStateHelper(store: Store) {
             Object.entries(wrapped.data.requires_status).map(([k, v]) => [
               k,
               v as Resource.Status,
-            ])
+            ]),
           ),
         }),
-        data
+        data,
       );
       store.dispatch.resourceDetails.setData({ id: query.id, value });
     },
-    (state, query) => state.resourceDetails.byId[query.id]
+    (state, query) => state.resourceDetails.byId[query.id],
   );
 }

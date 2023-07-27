@@ -32,9 +32,9 @@ export const Page: React.FC = () => {
           RemoteData.mapSuccess(
             (instanceData) =>
               instanceData.service_identity_attribute_value || instanceData.id,
-            data
+            data,
           ),
-          instance
+          instance,
         )}
       />
     </PageContainer>

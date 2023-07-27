@@ -12,6 +12,6 @@ export function GetDesiredStatesStateHelper(store: Store) {
         data: value,
       });
     },
-    (state, query, environment) => state.desiredStates.listByEnv[environment]
+    (state, query, environment) => state.desiredStates.listByEnv[environment],
   );
 }

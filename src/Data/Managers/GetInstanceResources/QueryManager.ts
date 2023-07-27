@@ -36,28 +36,28 @@ export function InstanceResourcesQueryManager(
   stateHelper: StateHelperWithEnv<"GetInstanceResources">,
   instancesStateHelper: StateHelperWithEnv<"GetServiceInstances">,
   scheduler: Scheduler,
-  retryLimit = 20
+  retryLimit = 20,
 ): ContinuousQueryManager<"GetInstanceResources"> {
   async function getResources(
     query: Query.SubQuery<"GetInstanceResources">,
-    environment: string
+    environment: string,
   ): Promise<
     Either.Either<ErrorWithHTTPCode, Query.ApiResponse<"GetInstanceResources">>
   > {
     return apiHelper.getWithHTTPCode<Query.ApiResponse<"GetInstanceResources">>(
       getUrl(query),
-      environment
+      environment,
     );
   }
 
   async function getInstance(
     serviceEntity: string,
     id: string,
-    environment: string
+    environment: string,
   ) {
     return apiHelper.get<Query.ApiResponse<"GetServiceInstance">>(
       `/lsm/v1/service_inventory/${serviceEntity}/${id}`,
-      environment
+      environment,
     );
   }
 
@@ -77,7 +77,7 @@ export function InstanceResourcesQueryManager(
     query: Query.SubQuery<"GetInstanceResources">,
     environment: string,
     retries: number,
-    instance?: Query.UsedData<"GetServiceInstance">
+    instance?: Query.UsedData<"GetServiceInstance">,
   ): Promise<ResponseGroup> {
     const resources = await getResources(query, environment);
 
@@ -96,7 +96,7 @@ export function InstanceResourcesQueryManager(
     const instanceResult = await getInstance(
       query.service_entity,
       query.id,
-      environment
+      environment,
     );
 
     if (Either.isLeft(instanceResult)) {
@@ -109,12 +109,12 @@ export function InstanceResourcesQueryManager(
       nextQuery,
       environment,
       retries + 1,
-      instanceResult.value.data
+      instanceResult.value.data,
     );
   }
 
   function useContinuous(
-    query: GetInstanceResources
+    query: GetInstanceResources,
   ): Data<"GetInstanceResources"> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
@@ -132,7 +132,7 @@ export function InstanceResourcesQueryManager(
         const { resources, instance } = await getEventualData(
           query,
           environment,
-          0
+          0,
         );
         stateHelper.set(resources, query, environment);
         updateInstance(instance, query.service_entity, environment);
@@ -150,7 +150,7 @@ export function InstanceResourcesQueryManager(
   function updateInstance(
     latest: Query.UsedData<"GetServiceInstance"> | undefined,
     serviceEntity: string,
-    environment: string
+    environment: string,
   ) {
     if (latest === undefined) return;
 
@@ -160,11 +160,11 @@ export function InstanceResourcesQueryManager(
         name: serviceEntity,
         pageSize: PageSize.initial,
       },
-      environment
+      environment,
     );
     if (RemoteData.isSuccess(currentState)) {
       const updatedState = currentState.value.data.map((instance) =>
-        instance.id === latest.id ? latest : instance
+        instance.id === latest.id ? latest : instance,
       );
       instancesStateHelper.set(
         {
@@ -176,14 +176,14 @@ export function InstanceResourcesQueryManager(
           name: serviceEntity,
           pageSize: PageSize.initial,
         },
-        environment
+        environment,
       );
     }
   }
 
   function matches(
     query: Query.SubQuery<"GetInstanceResources">,
-    kind: QueryManagerKind
+    kind: QueryManagerKind,
   ): boolean {
     return query.kind === "GetInstanceResources" && kind === "Continuous";
   }

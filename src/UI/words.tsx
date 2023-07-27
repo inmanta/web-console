@@ -156,7 +156,7 @@ const dict = {
   "inventory.deleteInstance.title": "Delete instance",
   "inventory.deleteInstance.header": (
     instanceName: string,
-    serviceName: string
+    serviceName: string,
   ) =>
     `Are you sure you want to delete instance ${instanceName} of service entity ${serviceName}?`,
   "inventory.destroyInstance.button": "Destroy",
@@ -164,7 +164,7 @@ const dict = {
   "inventory.destroyInstance.title": "Destroy instance",
   "inventory.destroyInstance.header": (
     instanceName: string,
-    serviceName: string
+    serviceName: string,
   ) =>
     `Are you absolutely sure you want to permanently destroy instance ${instanceName} of service entity ${serviceName}?`,
   "inventory.destroyInstance.text": `This action cannot be undone.`,

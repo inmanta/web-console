@@ -43,28 +43,28 @@ function setup() {
     apiHelper,
     ServiceStateHelper(store, serviceKeyMaker),
     scheduler,
-    serviceKeyMaker
+    serviceKeyMaker,
   );
 
   const servicesHelper = ServicesQueryManager(
     apiHelper,
     ServicesStateHelper(store),
-    scheduler
+    scheduler,
   );
   const serviceConfigQueryManager = ServiceConfigQueryManager(
     apiHelper,
     ServiceConfigStateHelper(store),
-    new ServiceConfigFinalizer(ServiceStateHelper(store, serviceKeyMaker))
+    new ServiceConfigFinalizer(ServiceStateHelper(store, serviceKeyMaker)),
   );
 
   // { data: Service.a.config }
   const serviceConfigCommandManager = ServiceConfigCommandManager(
     apiHelper,
-    ServiceConfigStateHelper(store)
+    ServiceConfigStateHelper(store),
   );
 
   const deleteServiceCommandManager = DeleteServiceCommandManager(
-    new BaseApiHelper()
+    new BaseApiHelper(),
   );
 
   const queryResolver = new QueryResolverImpl(
@@ -72,13 +72,13 @@ function setup() {
       serviceQueryManager,
       servicesHelper,
       serviceConfigQueryManager,
-    ])
+    ]),
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       serviceConfigCommandManager,
       deleteServiceCommandManager,
-    ])
+    ]),
   );
   const component = (
     <MemoryRouter initialEntries={[`/lsm/catalog/${Service.a.name}/details`]}>
@@ -141,6 +141,6 @@ test("GIVEN ServiceCatalog WHEN config tab is active THEN shows SettingsList", a
   });
 
   expect(
-    await screen.findByRole("generic", { name: "SettingsList" })
+    await screen.findByRole("generic", { name: "SettingsList" }),
   ).toBeVisible();
 });

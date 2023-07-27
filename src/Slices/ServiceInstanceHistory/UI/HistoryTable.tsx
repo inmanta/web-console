@@ -54,7 +54,7 @@ export const HistoryTable: React.FC<Props> = ({ service, logs }) => {
             attributesSummary={attributesPresenter.getSummary(
               dict[id].candidate_attributes,
               dict[id].active_attributes,
-              dict[id].rollback_attributes
+              dict[id].rollback_attributes,
             )}
             state={<State service={service} state={dict[id].state} />}
           />
@@ -70,7 +70,7 @@ const State: React.FC<{ service: ServiceModel; state: string }> = ({
 }) => {
   // The service entity lifecycle contains all of the states an instance of that entity can reach
   const lifecycleState = service.lifecycle.states.find(
-    (serviceState) => serviceState.name === state
+    (serviceState) => serviceState.name === state,
   );
   if (!lifecycleState) {
     return null;

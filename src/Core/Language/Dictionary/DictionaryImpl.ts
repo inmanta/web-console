@@ -37,7 +37,7 @@ export class DictionaryImpl<Value> implements Dictionary<Value> {
         acc[id] = value;
         return acc;
       },
-      {}
+      {},
     );
   }
 }

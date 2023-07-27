@@ -16,7 +16,7 @@ export const PositiveFloatInput: React.FC<Props> = ({ info }) => {
   };
   const onMinus = () =>
     info.set(
-      Number(info.value) - 1 >= MINVALUE ? Number(info.value) - 1 : MINVALUE
+      Number(info.value) - 1 >= MINVALUE ? Number(info.value) - 1 : MINVALUE,
     );
   const onPlus = () => info.set(Number(info.value) + 1);
 

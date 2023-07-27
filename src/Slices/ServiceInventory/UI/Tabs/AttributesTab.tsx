@@ -32,7 +32,7 @@ export const AttributesTab: React.FC<Props> = ({
           navigate(
             "Inventory",
             { service: serviceName as string },
-            `?env=${service?.environment}&state.Inventory.filter.id[0]=${value}`
+            `?env=${service?.environment}&state.Inventory.filter.id[0]=${value}`,
           ),
       }}
     >
@@ -42,7 +42,7 @@ export const AttributesTab: React.FC<Props> = ({
             new PathHelper("$"),
             new TreeExpansionManager("$"),
             new InventoryAttributeHelper("$", service),
-            attributes
+            attributes,
           )
         }
         id={id}

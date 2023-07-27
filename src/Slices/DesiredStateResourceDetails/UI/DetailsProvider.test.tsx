@@ -19,7 +19,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
 
   const component = (
@@ -51,7 +51,7 @@ test("GIVEN DesiredStateResourceDetails page WHEN api returns details THEN shows
   });
 
   expect(
-    screen.getByRole("generic", { name: "ResourceDetails-Success" })
+    screen.getByRole("generic", { name: "ResourceDetails-Success" }),
   ).toBeVisible();
   expect(screen.getByText("requires")).toBeVisible();
 });

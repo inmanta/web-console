@@ -25,11 +25,11 @@ function setup() {
   });
 
   dependencies.environmentModifier.setEnvironment(
-    ServiceInstance.a.environment
+    ServiceInstance.a.environment,
   );
 
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(storeInstance, apiHelper, authHelper)
+    new CommandManagerResolver(storeInstance, apiHelper, authHelper),
   );
   const refetch = jest.fn();
   return {
@@ -124,7 +124,7 @@ describe("DeleteModal ", () => {
     });
     rerender(component(false));
     expect(
-      await screen.findByRole("button", { name: words("delete") })
+      await screen.findByRole("button", { name: words("delete") }),
     ).toBeDisabled();
   });
 });

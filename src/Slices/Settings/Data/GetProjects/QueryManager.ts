@@ -13,6 +13,6 @@ export function GetProjectsQueryManager(store: Store, apiHelper: ApiHelper) {
     "GetProjects",
     ({ environmentDetails }) => getUrl(environmentDetails),
     identity,
-    "MERGE"
+    "MERGE",
   );
 }

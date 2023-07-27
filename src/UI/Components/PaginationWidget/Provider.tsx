@@ -30,7 +30,7 @@ export const Provider: React.FC<Props> = ({ data, pageSize, setPageSize }) =>
         />
       ),
     },
-    data
+    data,
   );
 
 const Filler = styled.div`

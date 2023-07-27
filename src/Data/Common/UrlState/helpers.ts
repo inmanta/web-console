@@ -23,21 +23,21 @@ export interface StateConfig<Data> {
 type Handler<ConfigType, ReturnValue> = (
   config: ConfigType,
   location: Location,
-  replace: Replace
+  replace: Replace,
 ) => ReturnValue;
 
 type ProvidedHandler<ConfigType, ReturnValue> = (
-  config: ConfigType
+  config: ConfigType,
 ) => ReturnValue;
 
 export const provide = <ConfigType, ReturnValue>(
-  handler: Handler<ConfigType, ReturnValue>
+  handler: Handler<ConfigType, ReturnValue>,
 ): ProvidedHandler<ConfigType, ReturnValue> => {
   return (config) => {
     const location = useLocation();
     const navigate = useNavigate();
     return handler(config, location, (path) =>
-      navigate(path, { replace: true })
+      navigate(path, { replace: true }),
     );
   };
 };

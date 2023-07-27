@@ -5,6 +5,6 @@ export function getOptionsFromService(service: ServiceModel): string[] {
   return uniq(
     service.lifecycle.transfers
       .map((transfer) => transfer.config_name)
-      .filter(isNotNull)
+      .filter(isNotNull),
   );
 }

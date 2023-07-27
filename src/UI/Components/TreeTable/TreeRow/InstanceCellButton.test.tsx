@@ -23,7 +23,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const apiHelper = new DeferredApiHelper();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const handleClick = jest.fn();
   const component = (
@@ -57,8 +57,8 @@ test("Given the InstanceCellButton When an instance has an identity Then it is s
   });
   expect(
     await screen.findByText(
-      ServiceInstance.a.service_identity_attribute_value as string
-    )
+      ServiceInstance.a.service_identity_attribute_value as string,
+    ),
   ).toBeVisible();
 });
 
@@ -73,7 +73,7 @@ test("Given the InstanceCellButton When an instance doesn't have an identity The
           ...ServiceInstance.a,
           service_identity_attribute_value: undefined,
         },
-      })
+      }),
     );
   });
   expect(await screen.findByText("id123")).toBeVisible();
@@ -87,7 +87,7 @@ test("Given the InstanceCellButton When the instance request fails Then the id i
     apiHelper.resolve(
       Either.left({
         message: "Something happened",
-      })
+      }),
     );
   });
   expect(await screen.findByText("id123")).toBeVisible();

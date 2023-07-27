@@ -12,6 +12,6 @@ export function GetResourceFactsStateHelper(store: Store) {
         data: unwrapped,
       });
     },
-    (state, { resourceId }) => state.resourceFacts.listByResource[resourceId]
+    (state, { resourceId }) => state.resourceFacts.listByResource[resourceId],
   );
 }

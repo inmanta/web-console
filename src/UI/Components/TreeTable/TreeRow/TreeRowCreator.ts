@@ -15,9 +15,9 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
     private readonly isChildExpanded: (path: string) => boolean,
     private readonly createOnToggle: (path: string) => () => void,
     private readonly extractValues: (
-      node: Extract<MultiAttributeNode<T>, { kind: "Leaf" }>
+      node: Extract<MultiAttributeNode<T>, { kind: "Leaf" }>,
     ) => Cell[],
-    private readonly attributes: Attributes
+    private readonly attributes: Attributes,
   ) {}
 
   /**
@@ -40,17 +40,17 @@ export class TreeRowCreator<T extends AttributeTree["target"]> {
 
     const candidateValue = pathArr.reduce(
       (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
-      candidate
+      candidate,
     );
 
     const activeValue = pathArr.reduce(
       (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
-      active
+      active,
     );
 
     const rollBackValue = pathArr.reduce(
       (obj, key) => (obj && obj[key] !== "undefined" ? obj[key] : undefined),
-      rollback
+      rollback,
     );
 
     /**
@@ -158,7 +158,7 @@ function format(value: unknown): string {
 }
 
 export function extractCatalogValues(
-  node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: "Leaf" }>
+  node: Extract<MultiAttributeNode<CatalogAttributes>, { kind: "Leaf" }>,
 ): Cell[] {
   return [
     {
@@ -174,7 +174,7 @@ export function extractCatalogValues(
 }
 
 export function extractInventoryValues(
-  node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: "Leaf" }>
+  node: Extract<MultiAttributeNode<InventoryAttributes>, { kind: "Leaf" }>,
 ): Cell[] {
   return [
     {
