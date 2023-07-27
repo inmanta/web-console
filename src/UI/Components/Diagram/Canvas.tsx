@@ -93,6 +93,31 @@ const Canvas = ({
       />
       <CanvasWrapper id="canvas-wrapper">
         <div className="canvas" ref={canvas} />
+        <ZoomWrapper>
+          <button
+            className="zoom-in"
+            onClick={(event) => {
+              event.stopPropagation();
+
+              if (diagramHandlers) {
+                diagramHandlers.zoom(1);
+              }
+            }}
+          >
+            +
+          </button>
+          <button
+            className="zoom-out"
+            onClick={(event) => {
+              event.stopPropagation();
+              if (diagramHandlers) {
+                diagramHandlers.zoom(-1);
+              }
+            }}
+          >
+            -
+          </button>
+        </ZoomWrapper>
       </CanvasWrapper>
     </Container>
   );
@@ -102,4 +127,44 @@ export default Canvas;
 const Container = styled.div`
   margin: 0 40px;
   height: 100%;
+`;
+
+const ZoomWrapper = styled.div`
+  z-index: 10;
+  display: flex;
+  gap: 1px;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.35);
+
+  button {
+    display: flex;
+    width: 24px;
+    height: 22px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    background: #fff;
+    padding: 0;
+    border: 0;
+
+    &.zoom-in {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    &.zoom-out {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+    &:hover {
+      background: #ececec;
+    }
+    &:active {
+      background: #e6e5e5;
+    }
+  }
 `;

@@ -32,7 +32,7 @@ export default function diagramInit(canvas): DiagramHandlers {
     defaultAnchor: { name: "customAnchor" },
     snapLinks: true,
     linkPinning: false,
-    magnetThreshold: "onleave",
+    magnetThreshold: 0,
     highlighting: {
       connecting: {
         name: "addClass",
@@ -42,8 +42,9 @@ export default function diagramInit(canvas): DiagramHandlers {
       },
     },
     defaultLink: () => new EntityConnection(),
-    validateConnection: (_srcView, srcMagnet, _tgtView, tgtMagnet) =>
-      srcMagnet !== tgtMagnet,
+    validateConnection: (srcView, srcMagnet, tgtView, tgtMagnet) => {
+      return srcMagnet !== tgtMagnet && srcView.cid !== tgtView.cid;
+    },
   });
 
   /**
@@ -85,6 +86,42 @@ export default function diagramInit(canvas): DiagramHandlers {
       );
     }
   );
+
+  paper.on("cell:pointerup", function (cellView) {
+    // We don't want a Halo for links.
+    if (cellView.model instanceof dia.Link) return;
+
+    const halo = new ui.Halo({
+      cellView: cellView,
+      type: "toolbar",
+    });
+
+    halo.removeHandle("clone");
+    halo.removeHandle("resize");
+    halo.removeHandle("rotate");
+    halo.removeHandle("fork");
+    halo.removeHandle("unlink");
+
+    halo.addHandle({
+      name: "edit",
+      position: ui.Halo.HandlePosition.S,
+    });
+
+    // additional listeners to add logic for appended tools, if there will be need for any validation on remove then I think we will need custom handle anyway
+    // halo.on("action:remove:pointerdown", function (evt) {
+    // });
+    // halo.on("action:link:pointerdown", function (evt) {
+    // });
+    // halo.on("action:link:add", function (evt) {
+    // });
+
+    halo.on("action:edit:pointerdown", function (evt) {
+      evt.stopPropagation();
+      console.log("open edit form");
+    });
+
+    halo.render();
+  });
 
   paper.on("link:mouseenter", (linkView: dia.LinkView) => {
     showLinkTools(linkView);
@@ -161,6 +198,9 @@ export default function diagramInit(canvas): DiagramHandlers {
       );
       scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
+    zoom: (delta) => {
+      scroller.zoom(0.05 * delta, { min: 0.4, max: 1.2, grid: 0.05 });
+    },
   };
 }
 
@@ -176,4 +216,5 @@ export interface DiagramHandlers {
     service: ServiceModel,
     addingCoreInstance: boolean
   ) => void;
+  zoom: (delta: 1 | -1) => void;
 }
