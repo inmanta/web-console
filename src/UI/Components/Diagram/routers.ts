@@ -50,7 +50,6 @@ const customRouter = function (
 ) {
   const link = linkView.model;
   const route: g.Point[] = [];
-
   // Target Point
   const source = link.getSourceElement();
   if (source) {
