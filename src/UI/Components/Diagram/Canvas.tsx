@@ -130,7 +130,6 @@ const Container = styled.div`
 `;
 
 const ZoomWrapper = styled.div`
-  z-index: 10;
   display: flex;
   gap: 1px;
   position: absolute;
