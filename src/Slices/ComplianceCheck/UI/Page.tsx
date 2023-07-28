@@ -29,7 +29,7 @@ export const View: React.FC<Props> = ({ version }) => {
   const [updatedList, setUpdatedList] = useState(false);
   const [statuses, setStatuses] = useState(Diff.defaultStatuses);
   const [selectedReport, setSelectedReport] = useState<MaybeReport>(
-    Maybe.none()
+    Maybe.none(),
   );
   const firstReport = useRef<MaybeReport>(Maybe.none());
 

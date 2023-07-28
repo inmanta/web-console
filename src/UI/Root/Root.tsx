@@ -15,7 +15,7 @@ export const Root: React.FC = () => {
 
   const pageManager = useMemo(
     () => new PrimaryPageManager(routeManager.getRouteDictionary()),
-    [routeManager]
+    [routeManager],
   );
 
   const [pages, setPages] = useState(pageManager.getPages(features));

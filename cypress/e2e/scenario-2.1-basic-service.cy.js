@@ -73,7 +73,7 @@ if (Cypress.env("edition") === "iso") {
 
       cy.intercept(
         "GET",
-        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
       ).as("GetServiceInventory");
 
       cy.get('[aria-label="Environment card"]')
@@ -217,11 +217,11 @@ if (Cypress.env("edition") === "iso") {
 
       // Add interceptions for the delete and get call to be able to catch responses later on.
       cy.intercept("DELETE", "/lsm/v1/service_inventory/basic-service/**").as(
-        "DeleteInstance"
+        "DeleteInstance",
       );
       cy.intercept(
         "GET",
-        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
       ).as("GetServiceInventory");
 
       cy.get('[aria-label="Environment card"]')
@@ -256,7 +256,7 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get(".pf-c-modal-box__title-text").should(
         "contain",
-        "Delete instance"
+        "Delete instance",
       );
       cy.get(".pf-c-form__actions").contains("No").click();
 
@@ -266,7 +266,7 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get(".pf-c-modal-box__title-text").should(
         "contain",
-        "Delete instance"
+        "Delete instance",
       );
       cy.get(".pf-c-form__actions").contains("Yes").click();
 

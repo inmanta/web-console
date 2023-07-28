@@ -25,10 +25,10 @@ function setup() {
   const environmentsManager = GetEnvironmentsContinuousQueryManager(
     apiHelper,
     scheduler,
-    GetEnvironmentsContinuousStateHelper(store)
+    GetEnvironmentsContinuousStateHelper(store),
   );
   const queryResolver = new QueryResolverImpl(
-    new DynamicQueryManagerResolver([environmentsManager])
+    new DynamicQueryManagerResolver([environmentsManager]),
   );
   const component = (
     <MemoryRouter>
@@ -53,13 +53,13 @@ test("Home view shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Overview-Loading" })
+    await screen.findByRole("generic", { name: "Overview-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "Overview-Failed" })
+    await screen.findByRole("generic", { name: "Overview-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -68,16 +68,16 @@ test("Home View shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Overview-Loading" })
+    await screen.findByRole("generic", { name: "Overview-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
     Either.right({
       data: Project.filterable,
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("generic", { name: "Overview-Success" })
+    await screen.findByRole("generic", { name: "Overview-Success" }),
   ).toBeInTheDocument();
 });

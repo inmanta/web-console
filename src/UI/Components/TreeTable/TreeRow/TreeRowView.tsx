@@ -62,7 +62,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 className={"pf-m-truncate"}
                 key={`${label}-${value}`}
               />
-            )
+            ),
           )}
         </StyledTr>
       );
@@ -174,7 +174,7 @@ export const TreeRowView: React.FC<RowProps> = ({
                 className={"pf-m-truncate"}
                 key={`${label}-${value}`}
               />
-            )
+            ),
           )}
         </StyledTr>
       );

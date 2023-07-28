@@ -7,6 +7,6 @@ export function DeleteServiceCommandManager(apiHelper: ApiHelper) {
     ({ name }, environment) => {
       return () =>
         apiHelper.delete(`/lsm/v1/service_catalog/${name}`, environment);
-    }
+    },
   );
 }

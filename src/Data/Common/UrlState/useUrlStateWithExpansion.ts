@@ -10,13 +10,13 @@ type Config = Pick<StateConfig<string[]>, "route"> &
   Partial<Pick<StateConfig<string[]>, "key">>;
 
 export const useUrlStateWithExpansion = provide(
-  handleUrlStateWithExpansionWrapped
+  handleUrlStateWithExpansionWrapped,
 );
 
 export function handleUrlStateWithExpansion(
   config: Config,
   location: Location,
-  replace: Replace
+  replace: Replace,
 ): [string[], Update<string[]>] {
   return handleUrlState<string[]>(
     {
@@ -28,19 +28,19 @@ export function handleUrlStateWithExpansion(
       equals: isEqual,
     },
     location,
-    replace
+    replace,
   );
 }
 
 function handleUrlStateWithExpansionWrapped(
   config: Config,
   location: Location,
-  replace: Replace
+  replace: Replace,
 ): [IsExpanded, OnExpansion] {
   const [expandedKeys, setExpandedKeys] = handleUrlStateWithExpansion(
     config,
     location,
-    replace
+    replace,
   );
 
   return [

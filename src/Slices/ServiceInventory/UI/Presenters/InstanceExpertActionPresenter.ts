@@ -9,7 +9,7 @@ import { ExpertActions } from "../Components/ExpertActions";
 export class InstanceExpertActionPresenter implements ActionPresenter {
   constructor(
     private readonly instances: ServiceInstanceForAction[],
-    private readonly serviceEntity: ServiceModel
+    private readonly serviceEntity: ServiceModel,
   ) {}
 
   private getInstanceForId(id: string): ServiceInstanceForAction | undefined {
@@ -24,7 +24,7 @@ export class InstanceExpertActionPresenter implements ActionPresenter {
     const instance = this.getInstanceForId(id);
     if (typeof instance === "undefined") return null;
     const states = this.serviceEntity.lifecycle.states.map(
-      (state) => state.name
+      (state) => state.name,
     );
     return React.createElement(ExpertActions, {
       instance,

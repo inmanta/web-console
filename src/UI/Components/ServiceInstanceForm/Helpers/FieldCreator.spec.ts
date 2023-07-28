@@ -22,7 +22,7 @@ import { CreateModifierHandler, EditModifierHandler } from "./ModifierHandler";
 
 test("GIVEN FieldCreator for create form WHEN create is provided with a service THEN returns correct fields", () => {
   const fields = new FieldCreator(new CreateModifierHandler()).create(
-    Service.a
+    Service.a,
   );
   expect(fields).toHaveLength(6);
   expect((fields[5] as NestedField).fields).toHaveLength(3);
@@ -30,7 +30,7 @@ test("GIVEN FieldCreator for create form WHEN create is provided with a service 
 
 test("GIVEN FieldCreator for edit form WHEN create is provided with a service THEN returns correct fields", () => {
   const fields = new FieldCreator(new EditModifierHandler()).create(
-    Service.nestedEditable
+    Service.nestedEditable,
   );
 
   expect(fields).toHaveLength(7);
@@ -144,7 +144,7 @@ test("GIVEN FieldCreator WHEN an entity has inter service relations THEN they ar
     inter_service_relations: InterServiceRelations.listWithAll,
   });
   expect(fields).toHaveLength(
-    embedded.length + InterServiceRelations.listWithAll.length
+    embedded.length + InterServiceRelations.listWithAll.length,
   );
   expect(fields).toEqual([
     {
@@ -258,7 +258,7 @@ test.each`
     expect(entityFields.fields[18].isDisabled).toBeTruthy();
     expect(entityFields.fields[19].isDisabled).toBeFalsy();
     expect(entityFields.fields[20].isDisabled).toBeTruthy();
-  }
+  },
 );
 test.each`
   embeddedEntity
@@ -295,5 +295,5 @@ test.each`
     expect(entityFields.fields[18].isDisabled).toBeTruthy();
     expect(entityFields.fields[19].isDisabled).toBeFalsy();
     expect(entityFields.fields[20].isDisabled).toBeTruthy();
-  }
+  },
 );

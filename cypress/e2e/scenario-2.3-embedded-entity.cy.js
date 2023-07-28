@@ -192,14 +192,14 @@ if (Cypress.env("edition") === "iso") {
         .click();
       cy.get(".pf-c-modal-box__title-text").should(
         "contain",
-        "Delete instance"
+        "Delete instance",
       );
       cy.get(".pf-c-form__actions").contains("No").click();
 
       cy.get(".pf-c-description-list").contains("Delete").click();
       cy.get(".pf-c-modal-box__title-text").should(
         "contain",
-        "Delete instance"
+        "Delete instance",
       );
       cy.get(".pf-c-form__actions").contains("Yes").click();
 

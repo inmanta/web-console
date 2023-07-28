@@ -13,7 +13,7 @@ function reducer(
   action: {
     type: string;
     payload: EnvironmentSettings.ValuesMap | string;
-  }
+  },
 ) {
   const { type, payload } = action;
   switch (type) {
@@ -60,7 +60,7 @@ export const Provider: React.FC<Props> = ({
   const resetSetting = commandResolver.useGetTrigger<"ResetEnvironmentSetting">(
     {
       kind: "ResetEnvironmentSetting",
-    }
+    },
   );
   const handleReset = (id: string) => {
     dispatch({ type: "reset", payload: id });
@@ -72,7 +72,7 @@ export const Provider: React.FC<Props> = ({
     },
     updateSetting,
     handleReset,
-    setErrorMessage
+    setErrorMessage,
   ).create(settings, definition, state.settings);
 
   useEffect(() => {

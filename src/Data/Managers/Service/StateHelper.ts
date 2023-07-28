@@ -4,7 +4,7 @@ import { Store } from "@/Data/Store";
 
 export function ServiceStateHelper(
   store: Store,
-  keyMaker: KeyMaker<[string, string]>
+  keyMaker: KeyMaker<[string, string]>,
 ) {
   return PrimaryStateHelperWithEnv<"GetService">(
     store,
@@ -20,6 +20,6 @@ export function ServiceStateHelper(
       return state.services.byNameAndEnv[
         keyMaker.make([environment, query.name])
       ];
-    }
+    },
   );
 }

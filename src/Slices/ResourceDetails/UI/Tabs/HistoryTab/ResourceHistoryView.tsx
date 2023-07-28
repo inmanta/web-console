@@ -68,7 +68,7 @@ export const ResourceHistoryView: React.FC<Props> = ({
             );
           }
           const tablePresenter = new ResourceHistoryTablePresenter(
-            new MomentDatePresenter()
+            new MomentDatePresenter(),
           );
           const rows = tablePresenter.createRows(history.data);
           return (

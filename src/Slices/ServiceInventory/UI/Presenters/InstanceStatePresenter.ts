@@ -6,11 +6,11 @@ import { StatePresenter } from "./StatePresenter";
 export class InstanceStatePresenter implements StatePresenter {
   constructor(
     private readonly instances: ServiceInstanceModelWithTargetStates[],
-    private readonly serviceEntity: ServiceModel
+    private readonly serviceEntity: ServiceModel,
   ) {}
 
   private getInstanceForId(
-    id: string
+    id: string,
   ): ServiceInstanceModelWithTargetStates | undefined {
     return this.instances.find((instance) => instance.id === id);
   }
@@ -22,7 +22,7 @@ export class InstanceStatePresenter implements StatePresenter {
     }
     // The service entity lifecycle contains all of the states an instance of that entity can reach
     const lifecycleState = this.serviceEntity.lifecycle.states.find(
-      (state) => state.name === instance.state
+      (state) => state.name === instance.state,
     );
     if (!lifecycleState) {
       return null;

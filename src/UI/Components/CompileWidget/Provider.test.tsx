@@ -34,10 +34,10 @@ function setup({
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const commandResolver = new CommandResolverImpl(
-    new CommandManagerResolver(store, apiHelper, authHelper)
+    new CommandManagerResolver(store, apiHelper, authHelper),
   );
 
   const environmentModifier = new MockEnvironmentModifier(details);
@@ -245,7 +245,7 @@ test("GIVEN CompileButton WHEN 'isToastVisible' parameter is false and recompile
   });
 
   expect(
-    screen.queryByRole("generic", { name: "ToastAlert" })
+    screen.queryByRole("generic", { name: "ToastAlert" }),
   ).not.toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);

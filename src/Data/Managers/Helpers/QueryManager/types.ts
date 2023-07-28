@@ -2,16 +2,16 @@ import { Query, RemoteData } from "@/Core";
 
 export type Data<Kind extends Query.Kind> = [
   RemoteData.Type<Query.Error<Kind>, Query.UsedData<Kind>>,
-  () => void
+  () => void,
 ];
 
 type GetDependenciesWith<
   Kind extends Query.Kind,
-  WithEnv
+  WithEnv,
 > = WithEnv extends true
   ? (
       query: Query.SubQuery<Kind>,
-      environment: string
+      environment: string,
     ) => (string | number | boolean | undefined)[]
   : (query: Query.SubQuery<Kind>) => (string | number | boolean | undefined)[];
 
@@ -37,9 +37,9 @@ export type GetUrlWithEnv<Kind extends Query.Kind> = GetUniqueWith<Kind, true>;
 
 export type ToUsed<Kind extends Query.Kind> = (
   data: Query.Data<Kind>,
-  setUrl: (url: string) => void
+  setUrl: (url: string) => void,
 ) => Query.UsedData<Kind>;
 
 export type ReadOnlyToUsed<Kind extends Query.Kind> = (
-  data: Query.Data<Kind>
+  data: Query.Data<Kind>,
 ) => Query.UsedData<Kind>;

@@ -6,7 +6,7 @@ import { InstanceActions } from "@S/ServiceInventory/UI/Components";
 export class InstanceActionPresenter implements ActionPresenter {
   constructor(
     private readonly instances: ServiceInstanceForAction[],
-    private readonly serviceEntity: ServiceModel
+    private readonly serviceEntity: ServiceModel,
   ) {}
 
   private getInstanceForId(id: string): ServiceInstanceForAction | undefined {
@@ -26,7 +26,7 @@ export class InstanceActionPresenter implements ActionPresenter {
 
   isTransferDisabled(
     id: string,
-    transferType: "on_update" | "on_delete"
+    transferType: "on_update" | "on_delete",
   ): boolean {
     const instance = this.getInstanceForId(id);
     if (typeof instance === "undefined") {
@@ -37,7 +37,7 @@ export class InstanceActionPresenter implements ActionPresenter {
     const transfersFromCurrentSource =
       this.serviceEntity.lifecycle.transfers.filter(
         (transfer) =>
-          transfer.source === instance.state && transfer[transferType]
+          transfer.source === instance.state && transfer[transferType],
       );
     return transfersFromCurrentSource.length === 0;
   }

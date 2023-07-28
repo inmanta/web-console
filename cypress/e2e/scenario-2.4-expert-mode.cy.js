@@ -73,7 +73,7 @@ if (Cypress.env("edition") === "iso") {
 
       cy.intercept(
         "GET",
-        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc"
+        "/lsm/v1/service_inventory/basic-service?include_deployment_progress=True&limit=20&&sort=created_at.desc",
       ).as("GetServiceInventory");
 
       cy.get('[aria-label="Environment card"]')
@@ -213,7 +213,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Type invalid value and submit
       cy.get('[aria-label="new-attribute-input"]').type(
-        "{selectall}{backspace}invalid"
+        "{selectall}{backspace}invalid",
       );
       cy.get('[data-testid="inline-submit"]').click();
 
@@ -224,7 +224,7 @@ if (Cypress.env("edition") === "iso") {
       cy.get('[data-testid="dialog-cancel"]').click();
       cy.get('[aria-label="new-attribute-input"]', { timeout: 20000 }).should(
         "have.value",
-        "invalid"
+        "invalid",
       );
 
       // Send invalid value and expect toast alert with error message
@@ -234,12 +234,12 @@ if (Cypress.env("edition") === "iso") {
         .contains("Setting new attribute failed")
         .should("be.visible");
       cy.get(
-        '[aria-label="Close Danger alert: alert: Setting new attribute failed"]'
+        '[aria-label="Close Danger alert: alert: Setting new attribute failed"]',
       ).click();
 
       // Pass valid value then submit and expect new value to be pushed to the cell
       cy.get('[aria-label="new-attribute-input"]').type(
-        "{selectall}{backspace}1.2.3.8/32"
+        "{selectall}{backspace}1.2.3.8/32",
       );
       cy.get('[data-testid="inline-submit"]').click();
       cy.get('[data-testid="dialog-submit"]').click();
@@ -258,7 +258,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Type invalid value and submit
       cy.get('[aria-label="new-attribute-input"]').type(
-        "{selectall}{backspace}eth1"
+        "{selectall}{backspace}eth1",
       );
       cy.get('[data-testid="inline-submit"]').click();
 
@@ -296,7 +296,7 @@ if (Cypress.env("edition") === "iso") {
 
       // Type invalid value and submit
       cy.get('[aria-label="new-attribute-input"]').type(
-        "{selectall}{backspace}5"
+        "{selectall}{backspace}5",
       );
       cy.get('[data-testid="inline-submit"]').click();
 

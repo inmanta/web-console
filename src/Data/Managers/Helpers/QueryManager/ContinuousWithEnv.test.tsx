@@ -20,7 +20,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   const store = getStoreInstance();
   const scheduler = new StaticScheduler();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -40,7 +40,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
         repo_url: "repo",
         projectName: "project",
       },
-    ])
+    ]),
   );
 
   const Wrapper: React.FC<React.PropsWithChildren<unknown>> = ({
@@ -48,7 +48,7 @@ test("GIVEN QueryManager.ContinuousWithEnv WHEN environment changes THEN the api
   }) => {
     const environmentHandler = EnvironmentHandlerImpl(
       useLocation,
-      PrimaryRouteManager("")
+      PrimaryRouteManager(""),
     );
     return (
       <DependencyProvider

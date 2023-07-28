@@ -82,9 +82,9 @@ export default function diagramInit(canvas): DiagramHandlers {
       document.dispatchEvent(
         new CustomEvent("openDictsModal", {
           detail: event.target.parentElement.attributes.dict.value,
-        })
+        }),
       );
-    }
+    },
   );
 
   paper.on("cell:pointerup", function (cellView) {
@@ -138,7 +138,7 @@ export default function diagramInit(canvas): DiagramHandlers {
     (evt: dia.Event, ox: number, oy: number, delta: number) => {
       evt.preventDefault();
       zoom(ox, oy, delta);
-    }
+    },
   );
 
   paper.on(
@@ -146,7 +146,7 @@ export default function diagramInit(canvas): DiagramHandlers {
     (_, evt: dia.Event, ox: number, oy: number, delta: number) => {
       evt.preventDefault();
       zoom(ox, oy, delta);
-    }
+    },
   );
 
   /**
@@ -175,14 +175,14 @@ export default function diagramInit(canvas): DiagramHandlers {
     addInstance: (
       instance: InstanceWithReferences,
       services: ServiceModel[],
-      isMainInstance: boolean
+      isMainInstance: boolean,
     ) => {
       const appendedInstance = appendInstance(
         paper,
         graph,
         instance,
         services,
-        isMainInstance
+        isMainInstance,
       );
       const { x, y } = appendedInstance.getBBox();
       scroller.center(x, y + 200);
@@ -194,7 +194,7 @@ export default function diagramInit(canvas): DiagramHandlers {
         graph,
         service,
         instance,
-        addingCoreInstance
+        addingCoreInstance,
       );
       scroller.center(instanceCoordinates.x, instanceCoordinates.y + 200);
     },
@@ -209,12 +209,12 @@ export interface DiagramHandlers {
   addInstance: (
     instance: InstanceWithReferences,
     services: ServiceModel[],
-    isMainInstance: boolean
+    isMainInstance: boolean,
   ) => void;
   addEntity: (
     entity: InstanceAttributeModel,
     service: ServiceModel,
-    addingCoreInstance: boolean
+    addingCoreInstance: boolean,
   ) => void;
   zoom: (delta: 1 | -1) => void;
 }

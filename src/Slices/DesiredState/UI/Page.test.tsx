@@ -37,24 +37,24 @@ function setup() {
   const getDesiredStatesStateHelper = GetDesiredStatesStateHelper(store);
   const desiredStatesUpdater = new DesiredStatesUpdater(
     getDesiredStatesStateHelper,
-    apiHelper
+    apiHelper,
   );
   const queryResolver = new QueryResolverImpl(
     new DynamicQueryManagerResolver([
       GetDesiredStatesQueryManager(
         apiHelper,
         getDesiredStatesStateHelper,
-        scheduler
+        scheduler,
       ),
       GetCompilerStatusQueryManager(apiHelper, scheduler),
-    ])
+    ]),
   );
   const commandResolver = new CommandResolverImpl(
     new DynamicCommandManagerResolver([
       PromoteVersionCommandManager(apiHelper, desiredStatesUpdater),
       DeleteVersionCommandManager(apiHelper),
       TriggerCompileCommandManager(apiHelper),
-    ])
+    ]),
   );
 
   const component = (
@@ -85,7 +85,7 @@ test("DesiredStatesView shows empty table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Loading" })
+    await screen.findByRole("generic", { name: "DesiredStatesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -94,12 +94,12 @@ test("DesiredStatesView shows empty table", async () => {
         data: [],
         links: { self: "" },
         metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-      })
+      }),
     );
   });
 
   expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Empty" })
+    await screen.findByRole("generic", { name: "DesiredStatesView-Empty" }),
   ).toBeInTheDocument();
 });
 
@@ -112,7 +112,7 @@ test("DesiredStatesView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Loading" })
+    await screen.findByRole("generic", { name: "DesiredStatesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -120,7 +120,7 @@ test("DesiredStatesView shows failed table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Failed" })
+    await screen.findByRole("generic", { name: "DesiredStatesView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -133,7 +133,7 @@ test("AgentsView shows success table", async () => {
   });
 
   expect(
-    await screen.findByRole("generic", { name: "DesiredStatesView-Loading" })
+    await screen.findByRole("generic", { name: "DesiredStatesView-Loading" }),
   ).toBeInTheDocument();
 
   await act(async () => {
@@ -141,7 +141,7 @@ test("AgentsView shows success table", async () => {
   });
 
   expect(
-    await screen.findByRole("grid", { name: "DesiredStatesView-Success" })
+    await screen.findByRole("grid", { name: "DesiredStatesView-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -167,18 +167,20 @@ test("When using the status filter then only the matching desired states should 
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("option", { name: words("desiredState.columns.status") })
+      screen.getByRole("option", {
+        name: words("desiredState.columns.status"),
+      }),
     );
   });
 
   const input = screen.getByPlaceholderText(
-    words("agents.filters.status.placeholder")
+    words("agents.filters.status.placeholder"),
   );
   await act(async () => {
     await userEvent.click(input);
@@ -192,7 +194,7 @@ test("When using the status filter then only the matching desired states should 
   });
 
   expect(apiHelper.pendingRequests[0].url).toEqual(
-    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=skipped_candidate`
+    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=skipped_candidate`,
   );
 
   await act(async () => {
@@ -200,7 +202,7 @@ test("When using the status filter then only the matching desired states should 
       Either.right({
         ...DesiredStateVersions.response,
         data: DesiredStateVersions.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -233,13 +235,13 @@ test("When using the Date filter then the desired state versions within the rang
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("option", { name: words("desiredState.columns.date") })
+      screen.getByRole("option", { name: words("desiredState.columns.date") }),
     );
   });
 
@@ -263,7 +265,7 @@ test("When using the Date filter then the desired state versions within the rang
     await userEvent.click(screen.getByLabelText("Apply date filter"));
   });
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-05%2B23%3A00%3A00&filter.date=le%3A2021-12-06%2B23%3A00%3A00`
+    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.date=ge%3A2021-12-05%2B23%3A00%3A00&filter.date=le%3A2021-12-06%2B23%3A00%3A00`,
   );
 
   await act(async () => {
@@ -271,7 +273,7 @@ test("When using the Date filter then the desired state versions within the rang
       Either.right({
         ...DesiredStateVersions.response,
         data: DesiredStateVersions.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -288,10 +290,10 @@ test("When using the Date filter then the desired state versions within the rang
   });
 
   expect(
-    await screen.findByText("from | 2021/12/06 00:00:00", { exact: false })
+    await screen.findByText("from | 2021/12/06 00:00:00", { exact: false }),
   ).toBeVisible();
   expect(
-    await screen.findByText("to | 2021/12/07 00:00:00", { exact: false })
+    await screen.findByText("to | 2021/12/07 00:00:00", { exact: false }),
   ).toBeVisible();
 });
 
@@ -317,15 +319,15 @@ test("When using the Version filter then the desired state versions within the r
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
       screen.getByRole("option", {
         name: words("desiredState.columns.version"),
-      })
+      }),
     );
   });
 
@@ -349,7 +351,7 @@ test("When using the Version filter then the desired state versions within the r
     await userEvent.click(await screen.findByLabelText("Apply Version filter"));
   });
   expect(apiHelper.pendingRequests[0].url).toMatch(
-    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.version=ge%3A3&filter.version=le%3A5`
+    `/api/v2/desiredstate?limit=20&sort=version.desc&filter.status=active&filter.status=candidate&filter.status=retired&filter.version=ge%3A3&filter.version=le%3A5`,
   );
 
   await act(async () => {
@@ -357,7 +359,7 @@ test("When using the Version filter then the desired state versions within the r
       Either.right({
         ...DesiredStateVersions.response,
         data: DesiredStateVersions.response.data.slice(0, 3),
-      })
+      }),
     );
   });
 
@@ -396,29 +398,29 @@ test("Given the Desired states view When promoting a version, then the correct r
     await userEvent.click(
       within(rows[8]).getByRole("button", {
         name: "Actions",
-      })
+      }),
     );
   });
 
   expect(
     within(screen.getByRole("menu", { name: "Actions" })).getByText(
-      words("desiredState.actions.promote")
-    )
+      words("desiredState.actions.promote"),
+    ),
   ).toHaveAttribute("aria-disabled", "true");
 
   await act(async () => {
     await userEvent.click(
       within(rows[0]).getByRole("button", {
         name: "Actions",
-      })
+      }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
       within(screen.getByRole("menu", { name: "Actions" })).getByText(
-        words("desiredState.actions.promote")
-      )
+        words("desiredState.actions.promote"),
+      ),
     );
   });
 
@@ -464,18 +466,20 @@ test("Given the Desired states view with filters When promoting a version, then 
     await userEvent.click(
       within(screen.getByRole("generic", { name: "FilterBar" })).getByRole(
         "button",
-        { name: "FilterPicker" }
-      )
+        { name: "FilterPicker" },
+      ),
     );
   });
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("option", { name: words("desiredState.columns.status") })
+      screen.getByRole("option", {
+        name: words("desiredState.columns.status"),
+      }),
     );
   });
 
   const input = screen.getByPlaceholderText(
-    words("desiredState.filters.status.placeholder")
+    words("desiredState.filters.status.placeholder"),
   );
   await act(async () => {
     await userEvent.click(input);
@@ -499,15 +503,15 @@ test("Given the Desired states view with filters When promoting a version, then 
     await userEvent.click(
       within(rows[0]).getByRole("button", {
         name: "Actions",
-      })
+      }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
       within(screen.getByRole("menu", { name: "Actions" })).getByText(
-        words("desiredState.actions.promote")
-      )
+        words("desiredState.actions.promote"),
+      ),
     );
   });
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -560,15 +564,15 @@ test("Given the Desired states view When promoting a version results in an error
     await userEvent.click(
       within(rows[0]).getByRole("button", {
         name: "Actions",
-      })
+      }),
     );
   });
 
   await act(async () => {
     await userEvent.click(
       within(screen.getByRole("menu", { name: "Actions" })).getByText(
-        words("desiredState.actions.promote")
-      )
+        words("desiredState.actions.promote"),
+      ),
     );
   });
 
@@ -618,20 +622,20 @@ describe("DeleteModal ", () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "Actions",
-        })
+        }),
       );
     });
 
     await act(async () => {
       await userEvent.click(
         within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete"
-        )
+          "Delete",
+        ),
       );
     });
 
     expect(
-      await screen.findByText(words("inventory.deleteVersion.header")(9))
+      await screen.findByText(words("inventory.deleteVersion.header")(9)),
     ).toBeVisible();
     expect(await screen.findByText("Yes")).toBeVisible();
     expect(await screen.findByText("No")).toBeVisible();
@@ -656,15 +660,15 @@ describe("DeleteModal ", () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "Actions",
-        })
+        }),
       );
     });
 
     await act(async () => {
       await userEvent.click(
         within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete"
-        )
+          "Delete",
+        ),
       );
     });
     const noButton = await screen.findByText("No");
@@ -679,14 +683,14 @@ describe("DeleteModal ", () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "Actions",
-        })
+        }),
       );
     });
     await act(async () => {
       await userEvent.click(
         within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete"
-        )
+          "Delete",
+        ),
       );
     });
 
@@ -718,15 +722,15 @@ describe("DeleteModal ", () => {
       await userEvent.click(
         within(rows[0]).getByRole("button", {
           name: "Actions",
-        })
+        }),
       );
     });
 
     await act(async () => {
       await userEvent.click(
         within(screen.getByRole("menu", { name: "Actions" })).getByText(
-          "Delete"
-        )
+          "Delete",
+        ),
       );
     });
     const yesButton = await screen.findByText("Yes");

@@ -17,6 +17,6 @@ export function StateHelper(store: Store) {
       const slice = state.dryRuns.listByEnvAndVersion[environment];
       if (slice === undefined) return undefined;
       return slice[version];
-    }
+    },
   );
 }

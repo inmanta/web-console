@@ -18,7 +18,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
   ...props
 }) => {
   const projectNames = Array.from(
-    new Set(environments.map((environment) => environment.projectName))
+    new Set(environments.map((environment) => environment.projectName)),
   );
   const [filter, setFilter] = useUrlStateWithFilter<Filters>({ route: "Home" });
   const setProjectFilter = (projectFilter?: string[]) =>
@@ -37,7 +37,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
   const filteredByProjectName = filterByProject(environments, projectFilter);
   const filteredByEnvName = filterByName(
     filteredByProjectName,
-    environmentFilter
+    environmentFilter,
   );
   return (
     <>
@@ -58,7 +58,7 @@ export const EnvironmentsOverview: React.FC<Props> = ({
 
 function filterByName(
   filterableEnvironments: FlatEnvironment[],
-  environmentFilter: string
+  environmentFilter: string,
 ): FlatEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (environmentFilter && environmentFilter.length > 0) {
@@ -70,7 +70,7 @@ function filterByName(
 
 function filterByProject(
   filterableEnvironments: FlatEnvironment[],
-  projectFilter: string[]
+  projectFilter: string[],
 ): FlatEnvironment[] {
   return filterableEnvironments.filter((environment) => {
     if (projectFilter && projectFilter.length > 0) {

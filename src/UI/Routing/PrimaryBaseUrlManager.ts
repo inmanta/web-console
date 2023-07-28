@@ -5,7 +5,7 @@ export class PrimaryBaseUrlManager implements BaseUrlManager {
 
   constructor(
     private readonly origin: string,
-    private readonly pathname: string
+    private readonly pathname: string,
   ) {}
 
   getBasePathname(): string {

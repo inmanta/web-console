@@ -20,7 +20,7 @@ type Classify = (
   title: string,
   entryTitle: string,
   from: string,
-  to: string
+  to: string,
 ) => Classification;
 
 interface Props {
@@ -95,7 +95,7 @@ const Body: React.FC<{ item: Item; classify?: Classify }> = ({
     case "agent_down": {
       const agent = Maybe.withFallback(
         Resource.IdParser.getAgentName(item.id),
-        "???"
+        "???",
       );
       return (
         <BodyWithMessage

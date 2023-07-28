@@ -35,20 +35,20 @@ function setup() {
       GetInstanceLogsQueryManager(
         apiHelper,
         GetInstanceLogsStateHelper(store),
-        new StaticScheduler()
+        new StaticScheduler(),
       ),
-    ])
+    ]),
   );
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper
+    apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute])
+    new DynamicCommandManagerResolver([updateAttribute]),
   );
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -63,7 +63,7 @@ function setup() {
           enable_lsm_expert_mode: true,
         },
       },
-    ])
+    ]),
   );
   const component = (
     <MemoryRouter initialEntries={[{ search: "?env=aaa" }]}>
@@ -96,11 +96,13 @@ it("ServiceInstanceHistory renders", async () => {
       data: [],
       links: { self: "" },
       metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("generic", { name: "ServiceInstanceHistory-Empty" })
+    await screen.findByRole("generic", {
+      name: "ServiceInstanceHistory-Empty",
+    }),
   ).toBeVisible();
 });
 
@@ -113,16 +115,16 @@ it("ServiceInstanceHistory shows dates correctly", async () => {
       data: InstanceLog.listA,
       links: { self: "" },
       metadata: { total: 0, before: 0, after: 0, page_size: 1000 },
-    })
+    }),
   );
 
   expect(
     await screen.findByRole("generic", {
       name: "ServiceInstanceHistory-Success",
-    })
+    }),
   ).toBeVisible();
 
   expect(
-    screen.queryByRole("cell", { name: "Invalid date" })
+    screen.queryByRole("cell", { name: "Invalid date" }),
   ).not.toBeInTheDocument();
 });

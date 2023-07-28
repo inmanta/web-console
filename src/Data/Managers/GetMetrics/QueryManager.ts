@@ -4,7 +4,7 @@ import { QueryManager } from "../Helpers";
 
 export function GetMetricsQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelperWithEnv<"GetMetrics">
+  stateHelper: StateHelperWithEnv<"GetMetrics">,
 ) {
   return QueryManager.OneTimeWithEnv<"GetMetrics">(
     apiHelper,
@@ -18,6 +18,6 @@ export function GetMetricsQueryManager(
         isLsmAvailable ? lsmMetrics : ""
       }metrics=orchestrator.compile_time&metrics=orchestrator.compile_waiting_time&metrics=orchestrator.compile_rate&metrics=resource.agent_count&metrics=resource.resource_count&start_interval=${startDate}&end_interval=${endDate}&nb_datapoints=15`;
     },
-    identity
+    identity,
   );
 }

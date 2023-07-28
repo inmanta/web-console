@@ -19,23 +19,23 @@ import { ReadOnlyToUsed } from "./types";
 export function ReadOnlyWithEnv<Kind extends Query.Kind>(
   stateHelper: StateHelperWithEnv<Kind>,
   kind: Kind,
-  toUsed: ReadOnlyToUsed<Kind>
+  toUsed: ReadOnlyToUsed<Kind>,
 ): ReadOnlyQueryManager<Kind> {
   function useReadOnly(
-    query: Query.SubQuery<Kind>
+    query: Query.SubQuery<Kind>,
   ): RemoteData.Type<Query.Error<Kind>, Query.UsedData<Kind>> {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
 
     return RemoteData.mapSuccess(
       (data) => toUsed(data),
-      stateHelper.useGetHooked(query, environment)
+      stateHelper.useGetHooked(query, environment),
     );
   }
 
   function matches(
     query: Query.SubQuery<Kind>,
-    matchingKind: QueryManagerKind
+    matchingKind: QueryManagerKind,
   ): boolean {
     return query.kind === kind && matchingKind === "ReadOnly";
   }

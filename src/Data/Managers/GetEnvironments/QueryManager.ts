@@ -5,7 +5,7 @@ import { getUrl } from "@S/Settings/Data/GetProjects/getUrl";
 
 export function GetEnvironmentsQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelper<"GetEnvironments">
+  stateHelper: StateHelper<"GetEnvironments">,
 ) {
   return QueryManager.OneTime<"GetEnvironments">(
     apiHelper,
@@ -14,6 +14,6 @@ export function GetEnvironmentsQueryManager(
     "GetEnvironments",
     ({ details }) => getUrl(details),
     identity,
-    "MERGE"
+    "MERGE",
   );
 }

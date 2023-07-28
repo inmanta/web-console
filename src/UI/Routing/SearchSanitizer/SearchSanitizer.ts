@@ -39,7 +39,7 @@ export class SearchSanitizer {
     const parsedSearch = this.searchHelper.parse(search);
     const sanitizedSearch = keepKeys(
       this.getValidKeys(routeKind),
-      parsedSearch
+      parsedSearch,
     );
     const { state } = sanitizedSearch;
     if (typeof state === "undefined")
@@ -50,7 +50,7 @@ export class SearchSanitizer {
     return this.searchHelper.stringify(
       Object.assign(sanitizedSearch, {
         state: this.pageStateSanitizer.sanitize(routeKind, state),
-      })
+      }),
     );
   }
 

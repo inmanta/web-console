@@ -32,7 +32,7 @@ export const View: React.FC<Diff.Identifiers> = ({ from, to }) => {
   const filteredData = RemoteData.mapSuccess(
     (resources) =>
       resources.filter((resource) => statuses.includes(resource.status)),
-    data
+    data,
   );
 
   return (

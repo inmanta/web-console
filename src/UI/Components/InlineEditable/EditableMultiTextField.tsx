@@ -23,7 +23,7 @@ interface Props {
   initialValues: Record<string, string>;
   initiallyEditable?: boolean;
   onSubmit: (
-    fieldDescriptors: Record<string, string>
+    fieldDescriptors: Record<string, string>,
   ) => Promise<Maybe.Type<string>>;
 }
 

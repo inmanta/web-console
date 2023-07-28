@@ -8,7 +8,7 @@ import {
 import { Severity } from "@S/Notification/Core/Domain";
 
 export const getSeverityForNotification = (
-  severity: Severity
+  severity: Severity,
 ): VisualSeverity => {
   switch (severity) {
     case "error":

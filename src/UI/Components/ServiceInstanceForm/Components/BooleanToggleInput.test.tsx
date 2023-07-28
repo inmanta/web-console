@@ -12,7 +12,7 @@ describe("BooleanFormInput", () => {
         isChecked={true}
         description={"This is a bool parameter"}
         handleInputChange={handleClick}
-      />
+      />,
     );
     const toggle = await screen.findByLabelText("Toggle-bool_param");
     await act(async () => {

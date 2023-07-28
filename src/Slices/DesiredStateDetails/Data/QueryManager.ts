@@ -10,7 +10,7 @@ import { getUrl } from "./getUrl";
 export function GetVersionResourcesQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelperWithEnv<"GetVersionResources">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetVersionResources">(
     apiHelper,
@@ -33,6 +33,6 @@ export function GetVersionResourcesQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }

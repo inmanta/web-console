@@ -7,7 +7,7 @@ import { getUrl } from "./getUrl";
 export function NotificationContinuousQueryManager(
   apiHelper: ApiHelper,
   store: Store,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetNotifications">(
     apiHelper,
@@ -30,6 +30,6 @@ export function NotificationContinuousQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }

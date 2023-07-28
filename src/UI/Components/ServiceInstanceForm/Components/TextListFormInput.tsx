@@ -41,7 +41,7 @@ export const TextListFormInput: React.FC<Props> = ({
   /** callback for removing a chip from the chip selections */
   const deleteChip = (chipToDelete: string) => {
     const newChips = currentChips.filter(
-      (chip) => !Object.is(chip, chipToDelete)
+      (chip) => !Object.is(chip, chipToDelete),
     );
     setCurrentChips(newChips);
     handleInputChange(newChips, null);
@@ -50,7 +50,7 @@ export const TextListFormInput: React.FC<Props> = ({
   const handleChangeInput = (
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     event: React.FormEvent<HTMLInputElement>,
-    value: string
+    value: string,
   ) => {
     setInputValue(value);
   };

@@ -19,7 +19,7 @@ function setup() {
   const scheduler = new StaticScheduler();
   const store = getStoreInstance();
   const queryResolver = new QueryResolverImpl(
-    new QueryManagerResolver(store, apiHelper, scheduler, scheduler)
+    new QueryManagerResolver(store, apiHelper, scheduler, scheduler),
   );
   const urlManager = new UrlManagerImpl(dependencies.featureManager, "");
 
@@ -43,13 +43,13 @@ test("CompileDetailsView shows failed view", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" })
+    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Failed" })
+    await screen.findByRole("generic", { name: "CompileDetailsView-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -58,13 +58,13 @@ test("CompileDetailsView shows completed table with success: true", async () => 
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" })
+    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: Mock.data }));
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Success" })
+    await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
   ).toBeInTheDocument();
   expect(await screen.findByLabelText("checkBullet")).toBeInTheDocument();
 });
@@ -74,13 +74,13 @@ test("CompileDetailsView shows completed table with success: false, error indica
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" })
+    await screen.findByRole("generic", { name: "CompileDetailsView-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: Mock.DataFailed }));
 
   expect(
-    await screen.findByRole("generic", { name: "CompileDetailsView-Success" })
+    await screen.findByRole("generic", { name: "CompileDetailsView-Success" }),
   ).toBeInTheDocument();
 
   expect(await screen.findByLabelText("failedBullet")).toBeInTheDocument();

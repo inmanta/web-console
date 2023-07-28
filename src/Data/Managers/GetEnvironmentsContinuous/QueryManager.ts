@@ -6,7 +6,7 @@ import { getUrl } from "@S/Settings/Data/GetProjects/getUrl";
 export function GetEnvironmentsContinuousQueryManager(
   apiHelper: ApiHelper,
   scheduler: Scheduler,
-  stateHelper: StateHelper<"GetEnvironmentsContinuous">
+  stateHelper: StateHelper<"GetEnvironmentsContinuous">,
 ) {
   return QueryManager.Continuous<"GetEnvironmentsContinuous">(
     apiHelper,
@@ -16,6 +16,6 @@ export function GetEnvironmentsContinuousQueryManager(
     () => [],
     "GetEnvironmentsContinuous",
     ({ details }) => getUrl(details),
-    identity
+    identity,
   );
 }

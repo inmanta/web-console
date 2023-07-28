@@ -73,12 +73,12 @@ export const View: React.FC<Props> = ({ data, onClick }) => {
         );
       },
     },
-    data
+    data,
   );
 };
 
 const getVariantFromNotifications = (
-  notifications: Notification[]
+  notifications: Notification[],
 ): NotificationBadgeVariant => {
   if (notifications.some(isUnreadError)) {
     return NotificationBadgeVariant.attention;

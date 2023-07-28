@@ -24,13 +24,13 @@ export const TreeTable: React.FC<Props> = ({
   isExpertAvailable = false,
 }) => {
   const [expansionState, setExpansionState] = useState(
-    treeTableHelper.getExpansionState()
+    treeTableHelper.getExpansionState(),
   );
   const [isOpen, setIsOpen] = useState(false);
   const [firstColumn, ...columns] = treeTableHelper.getColumns();
   const { rows, closeAll, openAll } = treeTableHelper.createRows(
     expansionState,
-    setExpansionState
+    setExpansionState,
   );
   const emptyColumns = treeTableHelper.getEmptyAttributeSets();
 

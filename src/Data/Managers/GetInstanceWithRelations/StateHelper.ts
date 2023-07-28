@@ -11,7 +11,7 @@ export function GetInstanceWithRelationsStateHelper(store: Store) {
       //decided to set is a any to avoid having separate implementation just for this call
       const value = RemoteData.mapSuccess(
         (wrapped) => wrapped as unknown as InstanceWithReferences,
-        data
+        data,
       );
       store.dispatch.serviceInstanceWithRelations.setData({
         id: query.id,
@@ -20,6 +20,6 @@ export function GetInstanceWithRelationsStateHelper(store: Store) {
     },
     (state, query) => {
       return state.serviceInstanceWithRelations.byId[query.id];
-    }
+    },
   );
 }

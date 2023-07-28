@@ -58,7 +58,7 @@ interface PickerProps {
   setIsOpen: (open: boolean) => void;
   onSelect: (
     event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
-    value: string | SelectOptionObject
+    value: string | SelectOptionObject,
   ) => void;
 }
 

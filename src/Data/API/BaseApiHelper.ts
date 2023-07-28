@@ -16,7 +16,7 @@ export class BaseApiHelper implements ApiHelper {
   constructor(
     private readonly jsonParser: JsonParser = new BigIntJsonParser(),
     private readonly baseUrl: string = "",
-    private readonly keycloak?: Keycloak
+    private readonly keycloak?: Keycloak,
   ) {}
 
   async head(url: string): Promise<number> {
@@ -57,7 +57,7 @@ export class BaseApiHelper implements ApiHelper {
     }
 
     return words("error.server.intro")(
-      `${response.status} ${response.statusText} \n${errorMessage}`
+      `${response.status} ${response.statusText} \n${errorMessage}`,
     );
   }
 
@@ -73,7 +73,7 @@ export class BaseApiHelper implements ApiHelper {
     return this.execute<Data, string>(
       async (response) => this.jsonParser.parse(await response.text()),
       identity,
-      ...params
+      ...params,
     );
   }
 
@@ -83,7 +83,7 @@ export class BaseApiHelper implements ApiHelper {
     const result = await this.execute<string, string>(
       (response) => response.text(),
       identity,
-      ...params
+      ...params,
     );
     return Either.isLeft(result) ? Maybe.some(result.value) : Maybe.none();
   }
@@ -94,7 +94,7 @@ export class BaseApiHelper implements ApiHelper {
 
   async get<Data>(
     url: string,
-    environment: string
+    environment: string,
   ): Promise<Either.Type<string, Data>> {
     return this.executeJson<Data>(this.getFullUrl(url), {
       headers: this.getHeaders(environment),
@@ -102,7 +102,7 @@ export class BaseApiHelper implements ApiHelper {
   }
 
   async getWithoutEnvironment<Data>(
-    url: string
+    url: string,
   ): Promise<Either.Type<string, Data>> {
     return this.executeJson<Data>(this.getFullUrl(url), {
       headers: this.getHeaders(),
@@ -112,7 +112,7 @@ export class BaseApiHelper implements ApiHelper {
   async post<Data, Body>(
     url: string,
     environment: string,
-    body: Body
+    body: Body,
   ): Promise<Either.Type<string, Data>> {
     return this.executeJson<Data>(this.getFullUrl(url), {
       headers: {
@@ -127,7 +127,7 @@ export class BaseApiHelper implements ApiHelper {
   async postWithoutResponse<Body>(
     url: string,
     environment: string,
-    body: Body
+    body: Body,
   ): Promise<Maybe.Type<string>> {
     return this.executeWithoutResponse(this.getFullUrl(url), {
       headers: {
@@ -141,7 +141,7 @@ export class BaseApiHelper implements ApiHelper {
 
   async postWithoutResponseAndEnvironment<Body>(
     url: string,
-    body: Body
+    body: Body,
   ): Promise<Maybe.Type<string>> {
     return this.executeWithoutResponse(this.getFullUrl(url), {
       headers: {
@@ -155,7 +155,7 @@ export class BaseApiHelper implements ApiHelper {
 
   putWithoutEnvironment<Data, Body>(
     url: string,
-    body: Body
+    body: Body,
   ): Promise<Either.Type<string, Data>> {
     return this.executeJson(this.getFullUrl(url), {
       headers: {
@@ -170,7 +170,7 @@ export class BaseApiHelper implements ApiHelper {
   async patch<Body>(
     url: string,
     environment: string,
-    body: Body
+    body: Body,
   ): Promise<Maybe.Type<string>> {
     return this.executeWithoutResponse(this.getFullUrl(url), {
       headers: {
@@ -194,13 +194,13 @@ export class BaseApiHelper implements ApiHelper {
 
   getWithHTTPCode<Data>(
     url: string,
-    environment: string
+    environment: string,
   ): Promise<Either.Type<ErrorWithHTTPCode, Data>> {
     return this.execute<Data, ErrorWithHTTPCode>(
       async (response) => this.jsonParser.parse(await response.text()),
       async (message, status) => ({ message, status }),
       this.getFullUrl(url),
-      { headers: this.getHeaders(environment) }
+      { headers: this.getHeaders(environment) },
     );
   }
 
@@ -219,17 +219,17 @@ export class BaseApiHelper implements ApiHelper {
         await transformError(
           this.formatError(
             this.jsonParser.parse(await response.text()).message,
-            response
+            response,
           ),
-          response.status
-        )
+          response.status,
+        ),
       );
     } catch (error) {
       return Either.left(
         await transformError(
           this.errorHasMessage(error) ? error.message : `Error: ${error}`,
-          0
-        )
+          0,
+        ),
       );
     }
   }

@@ -52,7 +52,7 @@ export const FileEntry: React.FC<EntryInfo> = ({
               failed: (error) => <FailedView {...{ error, onShow }} />,
               success: (files) => <SuccessView {...{ onHide, files }} />,
             },
-            files
+            files,
           )}
         </GridItem>
       </Grid>

@@ -48,7 +48,7 @@ export const FieldInput: React.FC<Props> = ({
     (value) => {
       getUpdate(makePath(path, field.name), value);
     },
-    [getUpdate, path, field.name]
+    [getUpdate, path, field.name],
   );
   switch (field.kind) {
     case "Boolean":
@@ -247,7 +247,7 @@ const getPlaceholderForType = (typeName: string): string | undefined => {
 const getTypeHintForType = (typeName: string): string | undefined => {
   if (typeName.endsWith("[]")) {
     return words("inventory.form.typeHint.list")(
-      typeName.substring(0, typeName.indexOf("["))
+      typeName.substring(0, typeName.indexOf("[")),
     );
   } else if (typeName.includes("dict")) {
     return words("inventory.form.typeHint.dict");
@@ -271,7 +271,7 @@ const NestedFieldInput: React.FC<NestedProps> = ({
   path,
 }) => {
   const [showList, setShowList] = useState(
-    !field.isOptional || formState[field.name] !== null
+    !field.isOptional || formState[field.name] !== null,
   );
   const onAdd = () => {
     setShowList(true);
@@ -404,7 +404,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
         <StyledFormFieldGroupExpandable
           aria-label={`DictListFieldInputItem-${makePath(
             path,
-            `${field.name}.${index + 1}`
+            `${field.name}.${index + 1}`,
           )}`}
           key={makePath(path, `${field.name}.${index}`)}
           header={
@@ -413,7 +413,7 @@ const DictListFieldInput: React.FC<DictListProps> = ({
                 text: index + 1,
                 id: `DictListFieldInputItem-${makePath(
                   path,
-                  `${field.name}.${index + 1}`
+                  `${field.name}.${index + 1}`,
                 )}`,
               }}
               actions={

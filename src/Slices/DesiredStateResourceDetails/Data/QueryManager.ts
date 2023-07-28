@@ -8,7 +8,7 @@ import { getUrl } from "./getUrl";
 export function GetDesiredStateResourceDetailsQueryManager(
   apiHelper: ApiHelper,
   store: Store,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetVersionedResourceDetails">(
     apiHelper,
@@ -18,6 +18,6 @@ export function GetDesiredStateResourceDetailsQueryManager(
     ({ version, id }) => [version, id],
     "GetVersionedResourceDetails",
     getUrl,
-    identity
+    identity,
   );
 }

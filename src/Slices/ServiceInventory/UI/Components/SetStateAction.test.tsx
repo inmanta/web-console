@@ -22,11 +22,11 @@ import { SetStateAction } from "./SetStateAction";
 function setup() {
   const commandManager = TriggerSetStateCommandManager(
     new KeycloakAuthHelper(),
-    new BaseApiHelper()
+    new BaseApiHelper(),
   );
   return {
     commandResolver: new CommandResolverImpl(
-      new DynamicCommandManagerResolver([commandManager])
+      new DynamicCommandManagerResolver([commandManager]),
     ),
   };
 }
@@ -77,7 +77,7 @@ test("SetStateAction dropdown is disabled when no targets are found", async () =
         version={ServiceInstance.b.version}
         targets={[]}
       />
-    </DependencyProvider>
+    </DependencyProvider>,
   );
   const testid = `${id}-set-state-toggle`;
   expect(await screen.findByTestId(testid)).toBeDisabled();
@@ -173,7 +173,7 @@ test("SetStateAction calls onSetInstanceState when transfer is confirmed", async
   expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   await act(async () => {
     await userEvent.click(
-      await screen.findByTestId(`${id}-state-modal-confirm`)
+      await screen.findByTestId(`${id}-state-modal-confirm`),
     );
   });
   expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
@@ -196,7 +196,7 @@ test("SetStateAction closes confirmation modal when transfer is cancelled", asyn
   expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
   await act(async () => {
     await userEvent.click(
-      await screen.findByTestId(`${id}-state-modal-cancel`)
+      await screen.findByTestId(`${id}-state-modal-cancel`),
     );
   });
 
@@ -225,7 +225,7 @@ test("SetStateAction shows error message when transfer not successful", async ()
   // Confirm transfer
   await act(async () => {
     await userEvent.click(
-      await screen.findByTestId(`${id}-state-modal-confirm`)
+      await screen.findByTestId(`${id}-state-modal-confirm`),
     );
   });
   expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
@@ -234,7 +234,7 @@ test("SetStateAction shows error message when transfer not successful", async ()
   expect(await screen.findByTestId(`${id}-error-message`)).toBeVisible();
   await act(async () => {
     await userEvent.click(
-      await screen.findByTestId(`${id}-close-error-message`)
+      await screen.findByTestId(`${id}-close-error-message`),
     );
   });
 

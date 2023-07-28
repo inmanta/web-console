@@ -24,10 +24,10 @@ function inventorySetup(attributes: Attributes) {
 
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper
+    apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute])
+    new DynamicCommandManagerResolver([updateAttribute]),
   );
 
   const component = (
@@ -43,7 +43,7 @@ function inventorySetup(attributes: Attributes) {
             new PathHelper("$"),
             new TreeExpansionManager("$"),
             new InventoryAttributeHelper("$"),
-            attributes
+            attributes,
           )
         }
         version={1}
@@ -60,10 +60,10 @@ test("TreeTable 1st level of nested property can be expanded", async () => {
       candidate: null,
       active: { a: { b: { c: "d" } } },
       rollback: null,
-    })
+    }),
   );
   expect(
-    screen.queryByRole("row", { name: "Row-a$b" })
+    screen.queryByRole("row", { name: "Row-a$b" }),
   ).not.toBeInTheDocument();
 
   // Act
@@ -80,12 +80,12 @@ test("TreeTable 2nd level of nested property can be expanded", async () => {
       candidate: null,
       active: { a: { b: { c: "d" } } },
       rollback: null,
-    })
+    }),
   );
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
   expect(
-    screen.queryByRole("row", { name: "Row-a$b$c" })
+    screen.queryByRole("row", { name: "Row-a$b$c" }),
   ).not.toBeInTheDocument();
 
   // Act
@@ -100,10 +100,10 @@ function catalogSetup(service: EntityLike) {
 
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper
+    apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute])
+    new DynamicCommandManagerResolver([updateAttribute]),
   );
 
   const component = (
@@ -119,7 +119,7 @@ function catalogSetup(service: EntityLike) {
             new PathHelper("$"),
             new TreeExpansionManager("$"),
             new CatalogAttributeHelper("$"),
-            service
+            service,
           )
         }
         version={1}
@@ -152,7 +152,7 @@ test("TreeTable with catalog entries can be expanded", async () => {
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a" }));
 
   expect(
-    screen.queryByRole("row", { name: "Row-a$c$d" })
+    screen.queryByRole("row", { name: "Row-a$c$d" }),
   ).not.toBeInTheDocument();
 
   fireEvent.click(screen.getByRole("button", { name: "Toggle-a$c" }));
@@ -238,7 +238,7 @@ test("TreeTable with catalog entries all can be expanded at once", async () => {
 
   await act(async () => {
     await userEvent.click(
-      within(dropdown).getByText(words("inventory.tabs.collapse"))
+      within(dropdown).getByText(words("inventory.tabs.collapse")),
     );
   });
 

@@ -44,14 +44,14 @@ function setup(service: ServiceModel) {
 
   const updateAttribute = UpdateInstanceAttributeCommandManager(
     new KeycloakAuthHelper(),
-    apiHelper
+    apiHelper,
   );
   const commandResolver = new CommandResolverImpl(
-    new DynamicCommandManagerResolver([updateAttribute])
+    new DynamicCommandManagerResolver([updateAttribute]),
   );
   const environmentHandler = EnvironmentHandlerImpl(
     useLocation,
-    dependencies.routeManager
+    dependencies.routeManager,
   );
   store.dispatch.environment.setEnvironments(
     RemoteData.success([
@@ -66,7 +66,7 @@ function setup(service: ServiceModel) {
           enable_lsm_expert_mode: true,
         },
       },
-    ])
+    ]),
   );
 
   const component = (
@@ -107,7 +107,7 @@ test("GIVEN AttributeTable WHEN passed 1 attribute THEN 1 row is shown", async (
   render(component);
 
   expect(
-    await screen.findByRole("row", { name: "Row-order_id" })
+    await screen.findByRole("row", { name: "Row-order_id" }),
   ).toBeVisible();
 });
 
@@ -120,10 +120,10 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
   render(component);
 
   expect(
-    await screen.findByRole("row", { name: "Row-order_id" })
+    await screen.findByRole("row", { name: "Row-order_id" }),
   ).toBeVisible();
   expect(
-    await screen.findByRole("row", { name: "Row-service_mtu" })
+    await screen.findByRole("row", { name: "Row-service_mtu" }),
   ).toBeVisible();
 });
 
@@ -135,7 +135,7 @@ test("GIVEN AttributeTable WHEN passed no attributes but some embedded entities 
   render(component);
 
   expect(
-    await screen.findByRole("row", { name: "Row-circuits" })
+    await screen.findByRole("row", { name: "Row-circuits" }),
   ).toBeVisible();
 });
 
@@ -148,10 +148,10 @@ test("GIVEN AttributeTable WHEN passed 2 attributes THEN 2 rows are shown", asyn
   render(component);
 
   expect(
-    await screen.findByRole("row", { name: "Row-order_id" })
+    await screen.findByRole("row", { name: "Row-order_id" }),
   ).toBeVisible();
   expect(
-    await screen.findByRole("row", { name: "Row-service_mtu" })
+    await screen.findByRole("row", { name: "Row-service_mtu" }),
   ).toBeVisible();
 });
 
@@ -165,7 +165,7 @@ test("GIVEN AttributeTable WHEN passed embedded attributes THEN expendable rows 
 
   //default embedded entity
   expect(
-    await screen.findByRole("row", { name: "Row-bandwidth" })
+    await screen.findByRole("row", { name: "Row-bandwidth" }),
   ).toBeVisible();
 
   //scenario to expand and hide one child

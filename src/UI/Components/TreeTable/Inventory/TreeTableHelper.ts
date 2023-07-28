@@ -21,14 +21,14 @@ export class InventoryTreeTableHelper extends BaseTreeTableHelper<InventoryAttri
     pathHelper: PathHelper,
     expansionManager: TreeExpansionManager,
     attributeHelper: AttributeHelper<InventoryAttributeTree>,
-    attributes: InventoryAttributeTree["source"]
+    attributes: InventoryAttributeTree["source"],
   ) {
     super(
       pathHelper,
       expansionManager,
       attributeHelper,
       attributes,
-      extractInventoryValues
+      extractInventoryValues,
     );
   }
 

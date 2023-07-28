@@ -37,7 +37,7 @@ export const StatusList: React.FC<Props> = ({
       <StatusItem
         name={status.product}
         details={toDetails(
-          omit(status, ["product", "extensions", "slices", "features"])
+          omit(status, ["product", "extensions", "slices", "features"]),
         )}
         icon={<TagIcon color="var(--pf-global--palette--blue-500)" />}
       />

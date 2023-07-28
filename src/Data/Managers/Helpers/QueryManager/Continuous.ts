@@ -26,15 +26,15 @@ export function Continuous<Kind extends Query.Kind>(
   getDependencies: GetDependencies<Kind>,
   kind: Kind,
   getUrl: GetUrl<Kind>,
-  toUsed: ToUsed<Kind>
+  toUsed: ToUsed<Kind>,
 ): ContinuousQueryManager<Kind> {
   async function update(
     query: Query.SubQuery<Kind>,
-    url: string
+    url: string,
   ): Promise<void> {
     stateHelper.set(
       RemoteData.fromEither(await apiHelper.getWithoutEnvironment(url)),
-      query
+      query,
     );
   }
 
@@ -63,7 +63,7 @@ export function Continuous<Kind extends Query.Kind>(
     return [
       RemoteData.mapSuccess(
         (data) => toUsed(data, setUrl),
-        stateHelper.useGetHooked(query)
+        stateHelper.useGetHooked(query),
       ),
       () => update(query, url),
     ];
@@ -71,7 +71,7 @@ export function Continuous<Kind extends Query.Kind>(
 
   function matches(
     query: Query.SubQuery<Kind>,
-    matchingKind: QueryManagerKind
+    matchingKind: QueryManagerKind,
   ): boolean {
     return query.kind === kind && matchingKind === "Continuous";
   }

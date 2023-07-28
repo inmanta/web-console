@@ -16,7 +16,7 @@ export const InstanceState: React.FC<State> = ({ name, label }) => {
 };
 
 function getVisual(
-  label: State["label"]
+  label: State["label"],
 ): { icon: React.ReactNode; color: LabelProps["color"] } | null {
   switch (label) {
     case "danger":

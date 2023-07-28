@@ -4,7 +4,7 @@ import { CommandManagerWithoutEnv } from "@/Data/Common";
 export class CreateProjectCommandManager extends CommandManagerWithoutEnv<"CreateProject"> {
   constructor(
     private readonly apiHelper: ApiHelper,
-    private readonly updater: Updater<"GetProjects">
+    private readonly updater: Updater<"GetProjects">,
   ) {
     super("CreateProject", () => {
       return async (name: string) => {

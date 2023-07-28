@@ -15,13 +15,13 @@ export const PromoteAction: React.FC<Props> = ({ version, isDisabled }) => {
   const { commandResolver, environmentModifier } =
     useContext(DependencyContext);
   const { filter, pageSize, setErrorMessage } = useContext(
-    GetDesiredStatesContext
+    GetDesiredStatesContext,
   );
   const promoteVersionTrigger = commandResolver.useGetTrigger<"PromoteVersion">(
     {
       kind: "PromoteVersion",
       version,
-    }
+    },
   );
   const onSubmit = async () => {
     const result = await promoteVersionTrigger({

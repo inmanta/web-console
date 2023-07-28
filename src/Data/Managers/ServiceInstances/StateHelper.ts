@@ -12,6 +12,6 @@ export function ServiceInstancesStateHelper(store: Store) {
       });
     },
     (state, query, environment) =>
-      state.serviceInstances.instancesWithTargetStates(query, environment)
+      state.serviceInstances.instancesWithTargetStates(query, environment),
   );
 }

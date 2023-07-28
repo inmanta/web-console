@@ -21,5 +21,5 @@ test.each`
       sort,
     };
     expect(getUrl(query, "Europe/Brussels")).toEqual(url);
-  }
+  },
 );

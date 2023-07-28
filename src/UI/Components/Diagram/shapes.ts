@@ -62,7 +62,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           },
         },
       },
-      super.defaults
+      super.defaults,
     );
   }
 
@@ -107,7 +107,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
           JSON.stringify({
             title: item.name,
             value: item.value,
-          })
+          }),
         );
         this.attr(`itemLabel_${item.name}_value/cursor`, "pointer");
       } else {
@@ -124,7 +124,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             },
             {
               ellipsis: true,
-            }
+            },
           );
 
           if (reproducedDisplayText.includes(`\u2026`)) {

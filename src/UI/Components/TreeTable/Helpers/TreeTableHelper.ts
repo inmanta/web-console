@@ -17,7 +17,7 @@ export interface TreeTableHelper {
 
   createRows(
     expansionState: ExpansionState,
-    setState: (state: ExpansionState) => void
+    setState: (state: ExpansionState) => void,
   ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void };
 
   getEmptyAttributeSets(): string[];
@@ -32,20 +32,20 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
     private readonly attributeHelper: AttributeHelper<A>,
     protected readonly attributes: A["source"],
     private readonly extractValues: (
-      node: Extract<MultiAttributeNode<A["target"]>, { kind: "Leaf" }>
-    ) => Cell[]
+      node: Extract<MultiAttributeNode<A["target"]>, { kind: "Leaf" }>,
+    ) => Cell[],
   ) {}
   abstract getColumns(): string[];
 
   getExpansionState(): ExpansionState {
     return this.expansionManager.create(
-      this.attributeHelper.getPaths(this.attributes)
+      this.attributeHelper.getPaths(this.attributes),
     );
   }
 
   createRows(
     expansionState: ExpansionState,
-    setState: (state: ExpansionState) => void
+    setState: (state: ExpansionState) => void,
   ): { rows: TreeRow[]; openAll: () => void; closeAll: () => void } {
     const createOnToggle = (key: string) => () =>
       setState(this.expansionManager.toggle(expansionState, key));
@@ -57,7 +57,7 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
     const isExpandedByParent = (path: string) =>
       this.expansionManager.get(
         expansionState,
-        this.pathHelper.getParent(path)
+        this.pathHelper.getParent(path),
       );
 
     const isChildExpanded = (path: string) =>
@@ -69,7 +69,7 @@ export abstract class BaseTreeTableHelper<A extends AttributeTree>
       isChildExpanded,
       createOnToggle,
       this.extractValues,
-      this.attributes as Attributes
+      this.attributes as Attributes,
     );
 
     const nodes = this.attributeHelper.getMultiAttributeNodes(this.attributes);

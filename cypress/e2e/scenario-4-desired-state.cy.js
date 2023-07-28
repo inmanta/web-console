@@ -164,7 +164,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get("tbody").eq(0).contains("Show Details").click();
     cy.get(".pf-c-content").should(
       "have.text",
-      "frontend_model::TestResource[internal,name=default-0001]"
+      "frontend_model::TestResource[internal,name=default-0001]",
     );
 
     // Intercept the update filter call to make sure it is cleared before setting a new filter to avoid race condition.
@@ -227,7 +227,7 @@ describe("Scenario 4 Desired State", () => {
         .find(".pf-c-description-list__description")
         .should(
           "include.text",
-          "frontend_model::TestResource[internal,name=default-0001]"
+          "frontend_model::TestResource[internal,name=default-0001]",
         );
 
       cy.get(".pf-c-description-list__group")
@@ -239,7 +239,7 @@ describe("Scenario 4 Desired State", () => {
         .find(".pf-c-description-list__description")
         .should(
           "include.text",
-          '"frontend_model::TestResource[internal,name=default-0001]"'
+          '"frontend_model::TestResource[internal,name=default-0001]"',
         );
 
       cy.get(".pf-c-description-list__group")
@@ -283,7 +283,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get("@TABLE_LENGTH").then((length) => {
       cy.get("tbody", { timeout: 30000 }).should(
         "have.length",
-        isIso ? length : length + 1
+        isIso ? length : length + 1,
       );
     });
 
@@ -295,7 +295,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get("@TABLE_LENGTH").then((length) => {
       cy.get("tbody", { timeout: 30000 }).should(
         "have.length",
-        isIso ? length - 1 : length + 1
+        isIso ? length - 1 : length + 1,
       );
     });
 
@@ -305,7 +305,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get("@TABLE_LENGTH").then((length) => {
       cy.get("tbody", { timeout: 30000 }).should(
         "have.length",
-        isIso ? length : length + 1
+        isIso ? length : length + 1,
       );
 
       // the first element in the table shouldn't be available to promote, since it is already active.
@@ -386,7 +386,7 @@ describe("Scenario 4 Desired State", () => {
     cy.get('[aria-label="StatusFilter"]').click();
 
     cy.get('[aria-label="DiffItemList"]', { timeout: 20000 }).should(
-      "be.visible"
+      "be.visible",
     );
 
     cy.get(".pf-c-label.pf-m-outline.pf-m-compact");
@@ -396,12 +396,12 @@ describe("Scenario 4 Desired State", () => {
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
         expect($expandableRow.eq(0), "first-row").to.have.text(
-          "This resource has not been modified."
+          "This resource has not been modified.",
         );
         expect($expandableRow.eq(1), "second-row").to.have.text(
-          "This resource has not been modified."
+          "This resource has not been modified.",
         );
-      }
+      },
     );
 
     // go back to desired state page
@@ -437,7 +437,7 @@ describe("Scenario 4 Desired State", () => {
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
         expect($expandableRow.eq(0), "first-row").to.have.text(
-          "This resource has not been modified."
+          "This resource has not been modified.",
         );
 
         if (isIso) {
@@ -447,7 +447,7 @@ describe("Scenario 4 Desired State", () => {
           expect($tdElements.eq(2)).to.have.text("+");
           expect($tdElements.eq(3)).to.have.text("4");
         }
-      }
+      },
     );
 
     // click on filter by status dropdown
@@ -470,7 +470,7 @@ describe("Scenario 4 Desired State", () => {
             expect($tdElements.eq(2)).to.have.text("+");
             expect($tdElements.eq(3)).to.have.text("4");
           }
-        }
+        },
       );
     }
 
@@ -494,7 +494,7 @@ describe("Scenario 4 Desired State", () => {
       ($expandableRow) => {
         expect($expandableRow).to.have.length(isIso ? 2 : 5);
         expect($expandableRow.eq(0), "first-row").to.have.text(
-          "This resource has not been modified."
+          "This resource has not been modified.",
         );
 
         if (isIso) {
@@ -504,7 +504,7 @@ describe("Scenario 4 Desired State", () => {
           expect($tdElements.eq(2)).to.have.text("+");
           expect($tdElements.eq(3)).to.have.text("4");
         }
-      }
+      },
     );
 
     // click on Perform dry run

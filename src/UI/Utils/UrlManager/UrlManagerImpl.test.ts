@@ -6,16 +6,16 @@ test("GIVEN UrlManagerImpl WHEN based on internal variables THEN getDocumentatio
   const urlManagerOpenSource = new UrlManagerImpl(featureManager, "");
   const urlManagerStandard = new UrlManagerImpl(
     dependencies.featureManager,
-    ""
+    "",
   );
 
   expect(urlManagerOpenSource.getDocumentationLink()).not.toMatch(
-    urlManagerStandard.getDocumentationLink()
+    urlManagerStandard.getDocumentationLink(),
   );
   expect(urlManagerStandard.getDocumentationLink()).toContain(
-    dependencies.featureManager.getServerMajorVersion()
+    dependencies.featureManager.getServerMajorVersion(),
   );
   expect(urlManagerOpenSource.getDocumentationLink()).toContain(
-    featureManager.getServerVersion()
+    featureManager.getServerVersion(),
   );
 });

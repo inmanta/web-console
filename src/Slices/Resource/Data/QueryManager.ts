@@ -7,7 +7,7 @@ import { getUrl } from "./getUrl";
 export function GetResourcesQueryManager(
   store: Store,
   apiHelper: ApiHelper,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetResources">(
     apiHelper,
@@ -32,7 +32,7 @@ export function GetResourcesQueryManager(
         handlers: getPaginationHandlers(links, metadata, setUrl),
         metadata,
       };
-    }
+    },
   );
 }
 

@@ -16,14 +16,14 @@ test("GIVEN LegendBar WHEN items have an onClick handler THEN handler is execute
           onClick,
         },
       ]}
-    />
+    />,
   );
 
   expect(onClick).not.toHaveBeenCalled();
 
   await act(async () => {
     await userEvent.click(
-      screen.getByRole("generic", { name: "LegendItem-test" })
+      screen.getByRole("generic", { name: "LegendItem-test" }),
     );
   });
 

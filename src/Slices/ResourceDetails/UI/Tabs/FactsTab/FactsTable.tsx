@@ -101,7 +101,7 @@ function columnNameToIndex(columnName: string): number {
 export function sortFactRows(
   rows: FactRow[],
   columnName: string,
-  direction: Order
+  direction: Order,
 ): FactRow[] {
   return rows.sort((a: FactRow, b: FactRow) => {
     // sort by date

@@ -35,10 +35,10 @@ export const SelectIncludeExcludeFilter: React.FC<Props> = ({
   const onClick = (selection) => {
     const safeSelectedStates = ensureInvertedFilterIsNotPresent(
       selection,
-      selectedStates
+      selectedStates,
     );
     const updatedSelection = uniq(
-      toggleValueInList(selection, safeSelectedStates)
+      toggleValueInList(selection, safeSelectedStates),
     );
     update(updatedSelection);
     setIsFilterOpen(false);
@@ -147,7 +147,7 @@ const IncludeExcludeOption: React.FC<RowProps> = ({
 
 const ensureInvertedFilterIsNotPresent = (
   selection: string,
-  selectedStates: string[]
+  selectedStates: string[],
 ): string[] => {
   const invertedFilter = invertFilter(selection);
   if (selectedStates.includes(invertedFilter)) {

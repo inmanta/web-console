@@ -27,22 +27,22 @@ test("Should convert mixed-cased to title cased text", () => {
 });
 test("Should convert mixed upper-cased to title cased text", () => {
   expect(convertToTitleCase(testValues.mixed_upper_case)).toBe(
-    titleCasedResult
+    titleCasedResult,
   );
 });
 test("Should convert a snake cased string starting with an underscore to title cased text", () => {
   expect(convertToTitleCase(testValues.start_with_underscore)).toBe(
-    titleCasedResult
+    titleCasedResult,
   );
 });
 test("Should convert a snake cased string ending with an underscore to title cased text", () => {
   expect(convertToTitleCase(testValues.end_with_underscore)).toBe(
-    titleCasedResult
+    titleCasedResult,
   );
 });
 test("Should convert a hyphen cased string starting with a hyphen to title cased text", () => {
   expect(convertToTitleCase(testValues.start_with_hyphen)).toBe(
-    titleCasedResult
+    titleCasedResult,
   );
 });
 test("Should convert a hyphen cased string ending with a hyphen to title cased text", () => {
@@ -50,7 +50,7 @@ test("Should convert a hyphen cased string ending with a hyphen to title cased t
 });
 test("Should convert a snake cased string with double underscore to title cased text", () => {
   expect(convertToTitleCase(testValues.double_underscore)).toBe(
-    titleCasedResult
+    titleCasedResult,
   );
 });
 test("Should convert a hyphen cased string with double hyphen to title cased text", () => {

@@ -39,7 +39,7 @@ export class TreeExpansionManager {
    */
   private close(state: ExpansionState, key: string): ExpansionState {
     const keysToClose = Object.keys(state).filter((k) =>
-      k.startsWith(`${key}${this.separator}`)
+      k.startsWith(`${key}${this.separator}`),
     );
 
     const closedState = this.createState([...keysToClose, key]);

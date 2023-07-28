@@ -28,9 +28,9 @@ function setup() {
       DiagnosticsQueryManager(
         apiHelper,
         DiagnosticsStateHelper(store),
-        scheduler
+        scheduler,
       ),
-    ])
+    ]),
   );
 
   const component = (
@@ -55,13 +55,13 @@ test("Diagnose View shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Loading" })
+    await screen.findByRole("generic", { name: "Diagnostics-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: { failures: [], rejections: [] } }));
 
   expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Empty" })
+    await screen.findByRole("generic", { name: "Diagnostics-Empty" }),
   ).toBeInTheDocument();
 });
 
@@ -70,13 +70,13 @@ test("Diagnose View shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Loading" })
+    await screen.findByRole("generic", { name: "Diagnostics-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Failed" })
+    await screen.findByRole("generic", { name: "Diagnostics-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -85,13 +85,13 @@ test("Diagnose View shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Loading" })
+    await screen.findByRole("generic", { name: "Diagnostics-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: Diagnose.failure }));
 
   expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Success" })
+    await screen.findByRole("generic", { name: "Diagnostics-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -100,13 +100,13 @@ test("Diagnose View shows updated table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Loading" })
+    await screen.findByRole("generic", { name: "Diagnostics-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.right({ data: { rejections: [], failures: [] } }));
 
   expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Empty" })
+    await screen.findByRole("generic", { name: "Diagnostics-Empty" }),
   ).toBeInTheDocument();
 
   scheduler.executeAll();
@@ -114,6 +114,6 @@ test("Diagnose View shows updated table", async () => {
   apiHelper.resolve(Either.right({ data: Diagnose.failure }));
 
   expect(
-    await screen.findByRole("generic", { name: "Diagnostics-Success" })
+    await screen.findByRole("generic", { name: "Diagnostics-Success" }),
   ).toBeInTheDocument();
 });

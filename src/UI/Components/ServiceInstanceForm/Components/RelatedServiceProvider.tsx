@@ -66,6 +66,6 @@ export const RelatedServiceProvider: React.FC<Props> = ({
         );
       },
     },
-    data
+    data,
   );
 };

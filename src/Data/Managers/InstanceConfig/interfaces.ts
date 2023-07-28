@@ -34,6 +34,6 @@ export interface UpdateInstanceConfigManifest {
   trigger: (
     payload:
       | { kind: "RESET" }
-      | { kind: "UPDATE"; option: string; value: boolean }
+      | { kind: "UPDATE"; option: string; value: boolean },
   ) => void;
 }

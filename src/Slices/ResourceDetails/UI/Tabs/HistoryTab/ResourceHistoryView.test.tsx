@@ -31,14 +31,14 @@ function setup() {
       ResourceHistoryQueryManager(
         apiHelper,
         ResourceHistoryStateHelper(store),
-        scheduler
+        scheduler,
       ),
       ResourceDetailsQueryManager(
         apiHelper,
         ResourceDetailsStateHelper(store),
-        scheduler
+        scheduler,
       ),
-    ])
+    ]),
   );
 
   const component = (
@@ -67,7 +67,7 @@ test("ResourceHistoryView shows empty table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Loading" })
+    await screen.findByRole("generic", { name: "ResourceHistory-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(
@@ -75,11 +75,11 @@ test("ResourceHistoryView shows empty table", async () => {
       data: [],
       metadata: { total: 0, before: 0, after: 0, page_size: 10 },
       links: { self: "" },
-    })
+    }),
   );
 
   expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Empty" })
+    await screen.findByRole("generic", { name: "ResourceHistory-Empty" }),
   ).toBeInTheDocument();
 });
 
@@ -88,13 +88,13 @@ test("ResourceHistoryView shows failed table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Loading" })
+    await screen.findByRole("generic", { name: "ResourceHistory-Loading" }),
   ).toBeInTheDocument();
 
   apiHelper.resolve(Either.left("error"));
 
   expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Failed" })
+    await screen.findByRole("generic", { name: "ResourceHistory-Failed" }),
   ).toBeInTheDocument();
 });
 
@@ -103,7 +103,7 @@ test("ResourceHistory shows success table", async () => {
   render(component);
 
   expect(
-    await screen.findByRole("generic", { name: "ResourceHistory-Loading" })
+    await screen.findByRole("generic", { name: "ResourceHistory-Loading" }),
   ).toBeInTheDocument();
 
   expect(apiHelper.pendingRequests).toHaveLength(1);
@@ -116,7 +116,7 @@ test("ResourceHistory shows success table", async () => {
   apiHelper.resolve(Either.right(ResourceHistory.response));
 
   expect(
-    await screen.findByRole("grid", { name: "ResourceHistory-Success" })
+    await screen.findByRole("grid", { name: "ResourceHistory-Success" }),
   ).toBeInTheDocument();
 });
 
@@ -148,12 +148,12 @@ test("GIVEN The Resources table WHEN the user clicks on the expansion toggle THE
   });
   await act(async () => {
     await userEvent.click(
-      screen.getAllByRole("button", { name: "Details" })[0]
+      screen.getAllByRole("button", { name: "Details" })[0],
     );
   });
 
   expect(
-    screen.getAllByRole("tab", { name: "Desired State" })[0]
+    screen.getAllByRole("tab", { name: "Desired State" })[0],
   ).toBeVisible();
   expect(screen.getAllByRole("tab", { name: "Requires" })[0]).toBeVisible();
 });

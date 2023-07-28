@@ -46,7 +46,7 @@ export const Page: React.FC = () => {
             />
           ),
         },
-        data
+        data,
       )}
     </>
   );

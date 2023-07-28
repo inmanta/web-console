@@ -12,6 +12,6 @@ export function ServicesStateHelper(store: Store) {
         data: unwrapped,
       });
     },
-    (state, query, environment) => state.services.listByEnv[environment]
+    (state, query, environment) => state.services.listByEnv[environment],
   );
 }

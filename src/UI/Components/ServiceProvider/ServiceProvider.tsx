@@ -37,6 +37,6 @@ export const ServiceProvider: React.FunctionComponent<Props> = ({
       ),
       success: (service) => <Dependant service={service} />,
     },
-    data
+    data,
   );
 };

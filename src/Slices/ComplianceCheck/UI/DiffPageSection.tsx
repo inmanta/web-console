@@ -55,7 +55,7 @@ const DiffView: React.FC<{
   const diffData = RemoteData.mapSuccess(
     (report) =>
       report.diff.filter((resource) => statuses.includes(resource.status)),
-    reportData
+    reportData,
   );
 
   return (

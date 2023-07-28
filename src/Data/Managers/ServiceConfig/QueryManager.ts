@@ -17,7 +17,7 @@ type Data = RemoteData.Type<
 export function ServiceConfigQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetServiceConfig">,
-  configFinalizer: ConfigFinalizer<"GetServiceConfig">
+  configFinalizer: ConfigFinalizer<"GetServiceConfig">,
 ): OneTimeQueryManager<"GetServiceConfig"> {
   function getConfigUrl({ name }: Query.SubQuery<"GetServiceConfig">): string {
     return `/lsm/v1/service_catalog/${name}/config`;
@@ -33,16 +33,16 @@ export function ServiceConfigQueryManager(
   async function update(
     query: Query.SubQuery<"GetServiceConfig">,
     url: string,
-    environment: string
+    environment: string,
   ): Promise<void> {
     stateHelper.set(
       RemoteData.fromEither(await apiHelper.get(url, environment)),
-      query
+      query,
     );
   }
 
   function useOneTime(
-    query: Query.SubQuery<"GetServiceConfig">
+    query: Query.SubQuery<"GetServiceConfig">,
   ): [Data, () => void] {
     const { environmentHandler } = useContext(DependencyContext);
     const environment = environmentHandler.useId();
@@ -56,7 +56,7 @@ export function ServiceConfigQueryManager(
       configFinalizer.finalize(
         stateHelper.useGetHooked(query),
         name,
-        environment
+        environment,
       ),
       () => update(query, getConfigUrl(query), environment),
     ];

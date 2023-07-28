@@ -14,7 +14,7 @@ const presenter = new InventoryTablePresenter(
   new AttributesPresenter(),
   new DummyActionPresenter(),
   new DummyExpertActionPresenter(),
-  new DummyStatePresenter()
+  new DummyStatePresenter(),
 );
 const rows = presenter.createRows([ServiceInstance.a]);
 
@@ -52,7 +52,7 @@ describe("TablePresenter with identity ", () => {
     new DummyExpertActionPresenter(),
     new DummyStatePresenter(),
     "service_id",
-    "Service ID"
+    "Service ID",
   );
   test("returns sortable columns correctly", () => {
     expect(presenterWithIdentity.getSortableColumnNames()).toEqual([
@@ -64,7 +64,7 @@ describe("TablePresenter with identity ", () => {
   });
   test("converts column index to name correctly", () => {
     expect(presenterWithIdentity.getColumnNameForIndex(0)).toEqual(
-      "service_id"
+      "service_id",
     );
     expect(presenterWithIdentity.getColumnNameForIndex(1)).toEqual("state");
     expect(presenterWithIdentity.getColumnNameForIndex(-1)).toBeUndefined();
@@ -74,7 +74,7 @@ describe("TablePresenter with identity ", () => {
   test("converts column name to index correctly", () => {
     expect(presenterWithIdentity.getIndexForColumnName("id")).toEqual(-1);
     expect(presenterWithIdentity.getIndexForColumnName("service_id")).toEqual(
-      0
+      0,
     );
     expect(presenterWithIdentity.getIndexForColumnName("state")).toEqual(1);
     expect(presenterWithIdentity.getIndexForColumnName("history")).toEqual(-1);

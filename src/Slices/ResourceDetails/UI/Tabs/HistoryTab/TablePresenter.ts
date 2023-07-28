@@ -52,7 +52,7 @@ export class ResourceHistoryTablePresenter
 
   public getIndexForColumnName(columnName?: string): number {
     return this.columnHeads.findIndex(
-      (columnHead) => columnHead.apiName === columnName
+      (columnHead) => columnHead.apiName === columnName,
     );
   }
 

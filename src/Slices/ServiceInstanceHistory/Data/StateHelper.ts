@@ -9,6 +9,6 @@ export function GetInstanceLogsStateHelper(store: Store) {
       const value = RemoteData.mapSuccess((data) => data.data, data);
       store.dispatch.instanceLogs.setData({ id: query.id, value });
     },
-    (state, query) => state.instanceLogs.byId[query.id]
+    (state, query) => state.instanceLogs.byId[query.id],
   );
 }

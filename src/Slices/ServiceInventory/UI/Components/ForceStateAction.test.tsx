@@ -22,11 +22,11 @@ import { ForceStateAction } from "./ForceStateAction";
 function setup() {
   const commandManager = TriggerForceStateCommandManager(
     new KeycloakAuthHelper(),
-    new BaseApiHelper()
+    new BaseApiHelper(),
   );
   return {
     commandResolver: new CommandResolverImpl(
-      new DynamicCommandManagerResolver([commandManager])
+      new DynamicCommandManagerResolver([commandManager]),
     ),
   };
 }
@@ -145,7 +145,7 @@ describe("ForceStateAction", () => {
     expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
     await act(async () => {
       await userEvent.click(
-        await screen.findByTestId(`${id}-state-modal-confirm`)
+        await screen.findByTestId(`${id}-state-modal-confirm`),
       );
     });
     expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
@@ -167,7 +167,7 @@ describe("ForceStateAction", () => {
     expect(await screen.findByTestId(`${id}-state-modal`)).toBeVisible();
     await act(async () => {
       await userEvent.click(
-        await screen.findByTestId(`${id}-state-modal-cancel`)
+        await screen.findByTestId(`${id}-state-modal-cancel`),
       );
     });
     expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
@@ -196,7 +196,7 @@ describe("ForceStateAction", () => {
     // Confirm transfer
     await act(async () => {
       await userEvent.click(
-        await screen.findByTestId(`${id}-state-modal-confirm`)
+        await screen.findByTestId(`${id}-state-modal-confirm`),
       );
     });
     expect(screen.queryByTestId(`${id}-state-modal`)).not.toBeInTheDocument();
@@ -205,7 +205,7 @@ describe("ForceStateAction", () => {
     expect(await screen.findByTestId(`${id}-error-message`)).toBeVisible();
     await act(async () => {
       await userEvent.click(
-        await screen.findByTestId(`${id}-close-error-message`)
+        await screen.findByTestId(`${id}-close-error-message`),
       );
     });
     // Error message can be closed

@@ -5,7 +5,7 @@ import { QueryManager } from "@/Data/Managers/Helpers";
 export function ServiceInstanceQueryManager(
   apiHelper: ApiHelper,
   stateHelper: StateHelper<"GetServiceInstance">,
-  scheduler: Scheduler
+  scheduler: Scheduler,
 ) {
   return QueryManager.ContinuousWithEnv<"GetServiceInstance">(
     apiHelper,
@@ -16,13 +16,13 @@ export function ServiceInstanceQueryManager(
     "GetServiceInstance",
     ({ service_entity, id }) =>
       `/lsm/v1/service_inventory/${service_entity}/${id}`,
-    identity
+    identity,
   );
 }
 
 export function GetServiceInstanceOneTimeQueryManager(
   apiHelper: ApiHelper,
-  stateHelper: StateHelper<"GetServiceInstance">
+  stateHelper: StateHelper<"GetServiceInstance">,
 ) {
   return QueryManager.OneTimeWithEnv<"GetServiceInstance">(
     apiHelper,
@@ -32,6 +32,6 @@ export function GetServiceInstanceOneTimeQueryManager(
     ({ service_entity, id }) =>
       `/lsm/v1/service_inventory/${service_entity}/${id}`,
     identity,
-    "MERGE"
+    "MERGE",
   );
 }
