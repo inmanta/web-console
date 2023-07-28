@@ -1,0 +1,5 @@
+change-type: patch
+description: 'Adjust the script for the keycloak end to end tests.'
+destination-branches:
+- master
+- iso6
