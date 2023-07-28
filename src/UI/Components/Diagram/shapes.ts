@@ -17,9 +17,6 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
         itemOffset: 0,
         itemOverflow: true,
         attrs: {
-          root: {
-            magnet: false,
-          },
           body: {
             stroke: "#FFFFFF",
             fill: "#FFFFFF",
@@ -43,15 +40,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
             },
             cursor: "grab",
           },
-          itemBodies_0: {
-            // SVGRect which is an active magnet
-            // Do not use `true` to prevent CSS effects on hover
-            magnet: "item",
-            cursor: "default",
-          },
           group_1: {
-            // let the pointer events propagate to the group_0
-            // which spans over 2 columns
             cursor: "default",
           },
           itemLabels: {
@@ -124,21 +113,23 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       } else {
         value.label = item.value;
 
-        //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
-        const reproducedDisplayText = util.breakText(
-          item.value.toString(),
-          { width: 80, height: 22 },
-          {
-            "font-size": this.attr("itemLabels_1/fontSize"),
-            "font-family": this.attr("itemLabels_1/fontFamily"),
-          },
-          {
-            ellipsis: true,
-          },
-        );
+        if (item.value !== undefined && item.value !== null) {
+          //reproduce internal formatting of the text base on actual dimensions, if text includes elipsis add Tooltip
+          const reproducedDisplayText = util.breakText(
+            item.value.toString(),
+            { width: 80, height: 22 },
+            {
+              "font-size": this.attr("itemLabels_1/fontSize"),
+              "font-family": this.attr("itemLabels_1/fontFamily"),
+            },
+            {
+              ellipsis: true,
+            },
+          );
 
-        if (reproducedDisplayText.includes(`\u2026`)) {
-          this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
+          if (reproducedDisplayText.includes(`\u2026`)) {
+            this.attr(`itemLabel_${item.name}_value/data-tooltip`, item.value);
+          }
         }
       }
       values.push(value);
