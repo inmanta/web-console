@@ -50,6 +50,7 @@ export const createConnectionRules = (
       rules[service.name] = [];
     }
     const tempRules: Rule[] = [];
+
     service.embedded_entities.map((entity) => {
       tempRules.push({
         name: entity.name,
@@ -67,6 +68,7 @@ export const createConnectionRules = (
         });
       });
     }
+
     if (tempRules.length > 0) {
       rules[service.name] = rules[service.name].concat(tempRules);
     }
