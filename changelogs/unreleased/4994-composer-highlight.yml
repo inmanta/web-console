@@ -1,0 +1,6 @@
+change-type: minor
+description: "Created highlighting indicator for shapes that are compatible to link with each-other"
+issue-nr: 4994
+destination-branches:
+  - master
+  - iso6

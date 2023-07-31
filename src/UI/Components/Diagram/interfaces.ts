@@ -1,3 +1,5 @@
+import { ParsedNumber } from "@/Core";
+
 interface ColumnData {
   name: string;
   [key: string]: string;
@@ -11,4 +13,11 @@ interface DictDialogData {
   title: string;
   value: string;
 }
-export { ColumnData, RouterOptions, DictDialogData };
+interface Rule {
+  name: string;
+  upperLimit: ParsedNumber | null;
+}
+interface ConnectionRules {
+  [serviceName: string]: Rule[];
+}
+export { ColumnData, RouterOptions, DictDialogData, Rule, ConnectionRules };

@@ -8,6 +8,7 @@ import diagramInit, { DiagramHandlers } from "@/UI/Components/Diagram/init";
 import { CanvasWrapper } from "@/UI/Components/Diagram/styles";
 import FormModal from "./components/FormModal";
 import Toolbar from "./components/Toolbar";
+import { createConnectionRules } from "./helpers";
 import { DictDialogData } from "./interfaces";
 
 const Canvas = ({
@@ -35,8 +36,10 @@ const Canvas = ({
   };
 
   useEffect(() => {
-    const actions = diagramInit(canvas);
+    const connectionRules = createConnectionRules(services, {});
+    const actions = diagramInit(canvas, connectionRules);
     setDiagramHandlers(actions);
+
     if (instance) {
       const isMainInstance = true;
       actions.addInstance(instance, services, isMainInstance);
