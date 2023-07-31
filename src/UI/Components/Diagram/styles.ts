@@ -20,10 +20,6 @@ export const CanvasWrapper = styled.div`
 
     .joint-element {
       filter: drop-shadow(0.1rem 0.1rem 0.15rem rgba(0, 0, 0, 0.2));
-      .high {
-        background: rgba(0, 255, 25, 0.3);
-        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-      }
     }
     .joint-paper-background {
       background: #f3f7f6;
