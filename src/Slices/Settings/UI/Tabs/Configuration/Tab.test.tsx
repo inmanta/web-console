@@ -289,12 +289,12 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
     name: "Toggle-auto_deploy",
   });
 
-  expect(toggle.checked).toBeFalsy();
+  expect(toggle).not.toBeChecked();
   await act(async () => {
     await userEvent.click(toggle);
   });
 
-  expect(toggle.checked).toBeTruthy();
+  expect(toggle).toBeChecked();
   expect(apiHelper.resolvedRequests).toHaveLength(1);
 
   await act(async () => {
@@ -337,7 +337,7 @@ test("GIVEN ConfigurationTab and boolean input WHEN changing boolean value and s
   expect(await screen.findByText(words("settings.update"))).toBeVisible();
 
   expect(apiHelper.resolvedRequests).toHaveLength(3);
-  expect(toggle.checked).toBeTruthy();
+  expect(toggle).toBeChecked();
 });
 
 test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete is performed", async () => {
@@ -356,7 +356,7 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
     name: "Toggle-auto_deploy",
   });
 
-  expect(toggle.checked).toBeFalsy();
+  expect(toggle).not.toBeChecked();
 
   await act(async () => {
     await userEvent.click(
@@ -391,7 +391,7 @@ test("GIVEN ConfigurationTab and boolean input WHEN clicking reset THEN delete i
     );
   });
 
-  expect(toggle.checked).toBeTruthy();
+  expect(toggle).toBeChecked();
 });
 
 test("GIVEN ConfigurationTab and dict input WHEN adding an entry and saving THEN entry is locked in", async () => {
