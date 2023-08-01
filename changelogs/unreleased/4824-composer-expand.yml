@@ -1,0 +1,6 @@
+change-type: patch
+description: "Added button for shapes storing more than 4 attributes to expand/collapse them to preserve space"
+issue-nr: 4824
+destination-branches:
+  - master
+  - iso6
