@@ -4,9 +4,11 @@ import { InstanceWithReferences } from "@/Data/Managers/GetInstanceWithRelations
 import { appendEntity, appendInstance, showLinkTools } from "./actions";
 import { anchorNamespace } from "./anchors";
 import { checkIfConnectionIsAllowed } from "./helpers";
+import collapseButton from "./icons/collapse-icon.svg";
+import expandButton from "./icons/expand-icon.svg";
 import { ConnectionRules } from "./interfaces";
 import { routerNamespace } from "./routers";
-import { EntityConnection } from "./shapes";
+import { EntityConnection, ServiceEntityBlock } from "./shapes";
 
 export default function diagramInit(
   canvas,
@@ -93,6 +95,7 @@ export default function diagramInit(
       };
     },
   });
+
   canvas.current.appendChild(scroller.el);
   scroller.render().center();
   scroller.centerContent();
@@ -111,6 +114,32 @@ export default function diagramInit(
           detail: event.target.parentElement.attributes.dict.value,
         })
       );
+    }
+  );
+
+  paper.on(
+    "element:button:pointerdown",
+    (elementView: dia.ElementView, event: dia.Event) => {
+      event.preventDefault();
+      const elementAsShape = elementView.model as ServiceEntityBlock;
+
+      const isCollapsed = elementAsShape.get("isCollapsed");
+      const originalAttrs = elementAsShape.get("dataToDisplay");
+
+      elementAsShape.appendColumns(
+        isCollapsed ? originalAttrs : originalAttrs.slice(0, 4),
+        false
+      );
+      elementAsShape.attr(
+        "button/xlink:href",
+        isCollapsed ? collapseButton : expandButton
+      );
+
+      const bbox = elementAsShape.getBBox();
+      elementAsShape.attr("button/y", bbox.height - 24);
+      elementAsShape.attr("spacer/y", bbox.height - 33);
+
+      elementAsShape.set("isCollapsed", !isCollapsed);
     }
   );
 
@@ -143,44 +172,38 @@ export default function diagramInit(
         .findViewsInArea(area)
         .filter((shape) => shape.cid !== cellView.cid);
 
-      //to getNeighbors I need to use Element, and cellView.model could technically work, typeScript gives an error
-      const cellViewAsElement = graph
-        .getElements()
-        .find((element) => element.cid === cellView.model.cid);
+      //cellView.model has the same structure as dia.Element needed as parameter to .getNeighbors() yet typescript complains
+      const connectedElements = graph.getNeighbors(
+        cellView.model as dia.Element
+      );
 
-      if (cellViewAsElement) {
-        const connectedElements = graph.getNeighbors(cellViewAsElement);
-
-        elements.forEach((element) => {
-          const isAllowed = checkIfConnectionIsAllowed(
-            graph,
-            cellView,
-            element,
-            connectionRules
-          );
-          if (!isAllowed) {
-            return;
-          }
-          //if shape isn't found then it means it's not connected, so available to highlight
-          const unconnectedShape = connectedElements.find(
-            (connectedElement) => {
-              return connectedElement.cid === element.model.cid;
-            }
-          );
-
-          if (unconnectedShape === undefined) {
-            highlighters.mask.add(element, "body", "available-to-connect", {
-              padding: 0,
-              attrs: {
-                stroke: "#00FF19",
-                "stroke-opacity": 0.3,
-                "stroke-width": 5,
-                filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
-              },
-            });
-          }
+      elements.forEach((element) => {
+        const isAllowed = checkIfConnectionIsAllowed(
+          graph,
+          cellView,
+          element,
+          connectionRules
+        );
+        if (!isAllowed) {
+          return;
+        }
+        //if shape isn't found then it means it's not connected, so available to highlight
+        const unconnectedShape = connectedElements.find((connectedElement) => {
+          return connectedElement.cid === element.model.cid;
         });
-      }
+
+        if (unconnectedShape === undefined) {
+          highlighters.mask.add(element, "body", "available-to-connect", {
+            padding: 0,
+            attrs: {
+              stroke: "#00FF19",
+              "stroke-opacity": 0.3,
+              "stroke-width": 5,
+              filter: "drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4))",
+            },
+          });
+        }
+      });
     });
 
     //this event is fired even if we hang connection outside other shape
