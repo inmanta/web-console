@@ -231,6 +231,7 @@ export class ServiceEntityBlock extends shapes.standard.HeaderedRecord {
       y: bbox.height - 33,
       width: 180,
       height: 1,
+      cursor: "default",
     });
 
     this.attr("button", {
