@@ -43,7 +43,7 @@ export const createConnectionRules = (
   services: (ServiceModel | EmbeddedEntity)[],
   rules: {
     [serviceName: string]: Rule[];
-  }
+  },
 ): ConnectionRules => {
   services.map((service) => {
     if (rules[service.name] === undefined) {
@@ -91,7 +91,7 @@ export const checkIfConnectionIsAllowed = (
   graph: dia.Graph,
   tgtView: dia.CellView | dia.ElementView | undefined,
   srcView: dia.CellView | dia.ElementView,
-  rules: ConnectionRules
+  rules: ConnectionRules,
 ): boolean => {
   let areSourceConnectionsExhausted = false;
   let areTargetConnectionExhausted = false;
@@ -99,20 +99,20 @@ export const checkIfConnectionIsAllowed = (
   const targetName = tgtView?.model.attr(["headerLabel", "text"]);
   const sourceName = srcView.model.attr(["headerLabel", "text"]);
   const targetRule = rules[targetName].find(
-    (object) => object.name === sourceName
+    (object) => object.name === sourceName,
   );
 
   const sourceRule = rules[sourceName].find(
-    (object) => object.name === targetName
+    (object) => object.name === targetName,
   );
 
   //to receive neighbors we need to convert celView to Element
   const allElements = graph.getElements();
   const sourceAsElement = allElements.find(
-    (element) => element.cid === srcView.model.cid
+    (element) => element.cid === srcView.model.cid,
   );
   const targetAsElement = allElements.find(
-    (element) => element.cid === tgtView?.model.cid
+    (element) => element.cid === tgtView?.model.cid,
   );
 
   if (sourceAsElement && targetAsElement) {
@@ -120,10 +120,10 @@ export const checkIfConnectionIsAllowed = (
     const connectedElementsToTarget = graph.getNeighbors(targetAsElement);
 
     const targetConnectionsForGivenRule = connectedElementsToTarget.filter(
-      (element) => element.attr(["headerLabel", "text"]) === targetRule?.name
+      (element) => element.attr(["headerLabel", "text"]) === targetRule?.name,
     );
     const sourceConnectionsForGivenRule = connectedElementsToSource.filter(
-      (element) => element.attr(["headerLabel", "text"]) === sourceRule?.name
+      (element) => element.attr(["headerLabel", "text"]) === sourceRule?.name,
     );
 
     //undefined and null are equal to no limit
